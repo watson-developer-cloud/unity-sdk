@@ -248,7 +248,7 @@ public class WSTextToSpeech : WatsonService {
 		Dictionary<string, string> headers = form.headers.AddAuthorizationHeader(serviceCredentialUserName, serviceCredentialPassword);
 		WWW uri = new WWW (ttsURL, null, headers );
 
-		Debug.Log (uri.url);
+		//Debug.Log (uri.url);
 		StartCoroutine(SendVoiceRequest(uri, callback));
 	}
 
@@ -260,63 +260,50 @@ public class WSTextToSpeech : WatsonService {
 
 		if (www.error == null && www.isDone) 
 		{
-			byte[] data=www.bytes;
+			byte[] dataNewHeader = getAudioByteArrayAfterStrippingAndAddingNewWAVHeader(www.bytes);
 
-			byte[] dataNewHeader = stripAndAddWavHeader(data);
+			WAudioWAV wav = new WAudioWAV(dataNewHeader);
+			AudioClip audioClip = AudioClip.Create("WatsonTextToSpeech_AudioClip", wav.SampleCount, 1,wav.Frequency, false);
+			audioClip.SetData(wav.LeftChannel, 0);	//We are using left channel
 
-			WWUtils.Audio.WAV wav = new WWUtils.Audio.WAV(dataNewHeader);
-			AudioClip audioClip = AudioClip.Create("testSound", wav.SampleCount, 1,wav.Frequency, false, false);
-			audioClip.SetData(wav.LeftChannel, 0);
-			//audio.clip = audioClip;
-			//audio.Play();
-
-
-			Debug.Log("Reading Wav now: " + wav.ToString());
-			System.IO.File.WriteAllBytes("tempWavTesting_"+currentVoice+"."+currentFormat,data);
-
-//
-			//byte[] dataNewHeader = stripAndAddWavHeader(data);
-			System.IO.File.WriteAllBytes("tempWavTesting_CHANGED_"+currentVoice+"."+currentFormat,dataNewHeader);
-
-			//convertAudio(data);
-			//www.bytes
 			AudioSource attachedAudioSource = this.transform.GetComponent<AudioSource>();
-			//attachedAudioSource.clip = audioClip;
+			if(attachedAudioSource == null){
+				attachedAudioSource = this.gameObject.AddComponent<AudioSource>();
+			}
+
+			attachedAudioSource.spatialBlend = 0.0f; //2D Sound
 			attachedAudioSource.PlayOneShot(audioClip);
 			attachedAudioSource.Play();
-			//callback(data);
-			//Debug.Log ("FINISHED: " + www.url);
 		} 
 		else 
 		{
 			Debug.Log ("Error: " + www.error + " - url:" + www.url);
 		}
+
+		www.Dispose();
 	}
 
-	private byte[] stripAndAddWavHeader(byte[] wav) {
+	private byte[] getAudioByteArrayAfterStrippingAndAddingNewWAVHeader(byte[] wav) {
 		
 		int headerSize = 44;
 		int metadataSize = 48;
 
 		if(sampleRate == 0 && wav.Length > 28){
 			//Get WAV Sample rate from 24
-			sampleRate = WWUtils.Audio.WAV.bytesToInt(wav,24);
+			sampleRate = BitConverter.ToInt32(wav, 24);
 		}
-			
-		//byte[]	wavNoheader;
-		//NSData *wavNoheader= [NSMutableData dataWithData:[wav subdataWithRange:NSMakeRange(headerSize+metadataSize, [wav length])]];
 
+		//Creating a new WAV without header information
 		byte[] wavNoheader = new byte[wav.Length - (headerSize+metadataSize)];
 		System.Buffer.BlockCopy(wav,headerSize+metadataSize, wavNoheader, 0, wav.Length - (headerSize+metadataSize));
 
-		//NSMutableData *newWavData;
-		//newWavData = [self addWavHeader:wavNoheader];
-		byte[] newWavData = addWavHeader(wavNoheader);
+		//Adding WAV header information
+		byte[] newWavData = getAudioByteArrayWithWAVHeader(wavNoheader);
 
 		return newWavData;
 	}
 
-	byte[]	addWavHeader(byte[] wavNoheader) {
+	private byte[]	getAudioByteArrayWithWAVHeader(byte[] wavNoheader) {
 
 		int headerSize = 44;
 		long totalAudioLen = wavNoheader.Length;
@@ -380,148 +367,4 @@ public class WSTextToSpeech : WatsonService {
 		return newWavData;
 	}
 
-	private void convertAudio(byte[] data)
-	{
-		//First convert byte[] to float []
-		int rescaleFactor = 32767;
-		int dataLength = data.Length - 44;
-		float[] floatData = new float[dataLength / 2];
-		float[] newFloatData = new float[(floatData.Length / 3)];
-		int a = 0;
-		for(int i = 0; i<dataLength;i+=2)
-		{
-			byte[] aShort=new byte[]{data[i+44],data[i+45]};
-			floatData[a]=(float)BitConverter.ToInt16(data,i);
-			a++;
-		}
-		//Decimation from 48kHz to 16kHz decimation factor of 3 order of 1
-		
-		float b0 = 0.0584f;
-		float b1 = 0.8831f;
-		float b2 = 0.0584f;
-		//do float[0] seperatly
-		floatData [0] = b0 * data [44];
-		floatData [1] = b0 * data [45] + b1 * data[44]; 
-		for (int i = 2; i<floatData.Length; i++) 
-		{
-			//floatData[i]= b0*data[i+44] + b1*data[i+43]; first order
-			//y[n]=b0x[n]+b1x[n-1] for the float[]
-			//floatData[i] = b0 * data [i+44] + b1 * data [i+43] + b2 * data [i+42];
-		}
-		//Keep a number then remove 2
-		a = 0;
-		for (int i=0; i<newFloatData.Length; i+=3) 
-		{
-			newFloatData[a]=floatData[i];
-			a++;
-		}
-		
-		Int16[] intData = new Int16[newFloatData.Length];
-		Byte[] bytesData = new byte[(newFloatData.Length * 2)+44];
-		
-		string hexHeader = "5249464674ee000057415645666d74201000000001000100803e0000007d00000200100064617461e6ed0000";
-		
-		//create header
-		for (int i = 0; i<44; i++) 
-		{
-			bytesData[i]=byte.Parse(hexHeader.Substring(i*2,2),System.Globalization.NumberStyles.HexNumber);
-		}
-		
-		//reconvert to a byte[]
-		for (int i = 0; i < newFloatData.Length; i++) 
-		{
-			intData[i] = (short)(newFloatData[i]*rescaleFactor);
-			Byte[] byteArr = new byte[2];
-			byteArr = BitConverter.GetBytes(intData[i]);
-			byteArr.CopyTo(bytesData,i*2+44);
-		}
-		Debug.Log ("finished");
-		//save as a new file
-		System.IO.File.WriteAllBytes ("testingTTS.wav", bytesData);
-	}
 }
-
-/*
-
-- (NSMutableData *)addWavHeader:(NSData *)wavNoheader {
-    
-    int headerSize = 44;
-    long totalAudioLen = [wavNoheader length];
-    long totalDataLen = [wavNoheader length] + headerSize-8;
-    long longSampleRate = (self.sampleRate == 0 ? 48000 : self.sampleRate);
-    int channels = 1;
-    long byteRate = 16 * 11025 * channels/8;
-    
-    
-    
-    Byte *header = (Byte*)malloc(44);
-    header[0] = 'R';  // RIFF/WAVE header
-    header[1] = 'I';
-    header[2] = 'F';
-    header[3] = 'F';
-    header[4] = (Byte) (totalDataLen & 0xff);
-    header[5] = (Byte) ((totalDataLen >> 8) & 0xff);
-    header[6] = (Byte) ((totalDataLen >> 16) & 0xff);
-    header[7] = (Byte) ((totalDataLen >> 24) & 0xff);
-    header[8] = 'W';
-    header[9] = 'A';
-    header[10] = 'V';
-    header[11] = 'E';
-    header[12] = 'f';  // 'fmt ' chunk
-    header[13] = 'm';
-    header[14] = 't';
-    header[15] = ' ';
-    header[16] = 16;  // 4 bytes: size of 'fmt ' chunk
-    header[17] = 0;
-    header[18] = 0;
-    header[19] = 0;
-    header[20] = 1;  // format = 1
-    header[21] = 0;
-    header[22] = (Byte) channels;
-    header[23] = 0;
-    header[24] = (Byte) (longSampleRate & 0xff);
-    header[25] = (Byte) ((longSampleRate >> 8) & 0xff);
-    header[26] = (Byte) ((longSampleRate >> 16) & 0xff);
-    header[27] = (Byte) ((longSampleRate >> 24) & 0xff);
-    header[28] = (Byte) (byteRate & 0xff);
-    header[29] = (Byte) ((byteRate >> 8) & 0xff);
-    header[30] = (Byte) ((byteRate >> 16) & 0xff);
-    header[31] = (Byte) ((byteRate >> 24) & 0xff);
-    header[32] = (Byte) (2 * 8 / 8);  // block align
-    header[33] = 0;
-    header[34] = 16;  // bits per sample
-    header[35] = 0;
-    header[36] = 'd';
-    header[37] = 'a';
-    header[38] = 't';
-    header[39] = 'a';
-    header[40] = (Byte) (totalAudioLen & 0xff);
-    header[41] = (Byte) ((totalAudioLen >> 8) & 0xff);
-    header[42] = (Byte) ((totalAudioLen >> 16) & 0xff);
-    header[43] = (Byte) ((totalAudioLen >> 24) & 0xff);
-    
-    NSMutableData *newWavData = [NSMutableData dataWithBytes:header length:44];
-    [newWavData appendBytes:[wavNoheader bytes] length:[wavNoheader length]];
-    return newWavData;
-}
-
-
--(NSData*) stripAndAddWavHeader:(NSData*) wav {
-	
-	int headerSize = 44;
-	int metadataSize = 48;
-	
-	if(sampleRate == 0 && [wav length] > 28)
-		[wav getBytes:&sampleRate range: NSMakeRange(24, 4)]; // Read wav sample rate from 24
-	
-	NSData *wavNoheader= [NSMutableData dataWithData:[wav subdataWithRange:NSMakeRange(headerSize+metadataSize, [wav length])]];
-	
-	NSMutableData *newWavData;
-	newWavData = [self addWavHeader:wavNoheader];
-	
-	return newWavData;
-	
-	
-	
-}
-*/

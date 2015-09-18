@@ -21,7 +21,7 @@ public class Watson{
 	}
 }
 
-public class WConfiguration : MonoBehaviour {
+public class WConfiguration : MonoBehaviour{
 
 	#region Variables Watson uses globally 
 		public static string objectWatsonNameInScene = "~Watson";
