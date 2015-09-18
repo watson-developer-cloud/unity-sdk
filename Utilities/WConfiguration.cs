@@ -1,23 +1,43 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class WConstant : MonoBehaviour {
+public class Watson{
+
+	public static void WatsonStart(){
+		WConfiguration wConfiguration = WConfiguration.Instance;
+
+	}
+
+	public static void WatsonSaveState(){
+		//TODO: save all values and state into a file and retrieve if needed.
+	}
+
+	public static void WatsonReloadState(){
+		//TODO: load all values and state from a file that saved
+	}
+
+	public static void WatsonStop(){
+		//TODO: clearing all the values (used for when closing the application to clear memory)
+	}
+}
+
+public class WConfiguration : MonoBehaviour {
 
 	#region Variables Watson uses globally 
 		public static string objectWatsonNameInScene = "~Watson";
 	#endregion
 
-	#region Singleton For WConstant and GameObject Watson
+	#region Singleton For WConfiguration and GameObject Watson
 
-	private static WConstant _instance = null;
+	private static WConfiguration _instance = null;
 	/// <summary>
 	/// Gets the instance of Watson Constanct Class. It holds the all information about Watson and related services. 
 	/// </summary>
 	/// <value>The instance class of Watson Contstants</value>
-	public static WConstant instance{
+	public static WConfiguration Instance{
 		get{
 			if(_instance == null){
-				_instance = gameObjectWatson.AddComponent<WConstant>();
+				_instance = gameObjectWatson.AddComponent<WConfiguration>();
 			}
 			return _instance;
 		}
@@ -41,6 +61,6 @@ public class WConstant : MonoBehaviour {
 	}
 
 	#endregion
-
+	
 
 }
