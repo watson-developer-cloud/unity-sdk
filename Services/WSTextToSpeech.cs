@@ -9,9 +9,9 @@ public class WatsonTextToSpeech{
 	#region Enumarations Watson Text to Speech
 
 	public enum AudioFormatType{
-		oggWithCodecOpus = 0,
-		wav,
-		flac,
+		oggWithCodecOpus = 0,	
+		wav,					//Currently used
+		flac,					
 		NaN
 	};
 
@@ -42,7 +42,10 @@ public class WatsonTextToSpeech{
 	/// <param name="audioFormat">Audio format.</param>
 	public WatsonTextToSpeech(string textToSpeech, WatsonTextToSpeech.VoiceType voice = WatsonTextToSpeech.VoiceType.en_US_Michael, WatsonTextToSpeech.AudioFormatType audioFormat = WatsonTextToSpeech.AudioFormatType.wav){
 		this.textToSpeech = textToSpeech;
-		this.audioFormat = audioFormat;
+		if(audioFormat != AudioFormatType.wav){
+			Debug.LogWarning("Currently, WAV format is the only format supported by Unity; so using WAV format now.");
+		}
+		this.audioFormat = AudioFormatType.wav;
 		this.voice = voice;
 	}
 	
@@ -175,11 +178,11 @@ public class WatsonTextToSpeech{
 public class WSTextToSpeech : WatsonService {
 
 	#region Service URL , UserName, Password  - Each Service should be implement these variables!
-
+	
 	public override string serviceURL{
 		get{
 			if(String.IsNullOrEmpty(_serviceURL)){
-				_serviceURL = "TEST";
+				_serviceURL = "https://stream.watsonplatform.net/text-to-speech/api";
 			}
 			return _serviceURL;
 		}
@@ -191,7 +194,7 @@ public class WSTextToSpeech : WatsonService {
 	public override string serviceCredentialUserName{
 		get{
 			if(String.IsNullOrEmpty(_serviceCredentialUserName)){
-				_serviceCredentialUserName = "TEST";
+				_serviceCredentialUserName = "ABC";
 			}
 			return _serviceCredentialUserName;
 		}
@@ -203,7 +206,7 @@ public class WSTextToSpeech : WatsonService {
 	public override string serviceCredentialPassword{
 		get{
 			if(String.IsNullOrEmpty(_serviceCredentialPassword)){
-				_serviceCredentialPassword = "Test";
+				_serviceCredentialPassword = "YVeOHnAMm48F";
 			}
 			return _serviceCredentialPassword;
 		}
@@ -283,6 +286,11 @@ public class WSTextToSpeech : WatsonService {
 		{
 			if(watsonTextToSpeech.audioFormat == WatsonTextToSpeech.AudioFormatType.wav){
 				PlayAudioWAV(wwwRequestToBluemixForTextToSpeech.bytes);
+				yield return new WaitForEndOfFrame();
+				WaveFormTest waveFormTest = gameObject.GetComponent<WaveFormTest>();
+				if(waveFormTest == null){
+					this.gameObject.AddComponent<WaveFormTest> ();
+				}
 			}
 			else{
 				//TODO: add all supported file playing audio files!
@@ -303,7 +311,7 @@ public class WSTextToSpeech : WatsonService {
 	}
 
 	private void PlayAudioWAV(byte[] audio){
-		WAudioWAV wav = new WAudioWAV(audio);
+		WAudioWAV wav = new WAudioWAV(audio, true);
 		AudioClip audioClip = AudioClip.Create("WatsonTextToSpeech_AudioClip", wav.sampleCount, 1,wav.frequency, false);
 		audioClip.SetData(wav.leftChannel, 0);	//We are using left channel - as 2D sound
 		
@@ -311,18 +319,13 @@ public class WSTextToSpeech : WatsonService {
 		if(attachedAudioSource == null){
 			attachedAudioSource = this.gameObject.AddComponent<AudioSource>();
 		}
-		
+
+
 		attachedAudioSource.spatialBlend = 0.0f; //2D Sound
-		attachedAudioSource.PlayOneShot(audioClip);
+		attachedAudioSource.loop = true;
+		//attachedAudioSource.PlayOneShot(audioClip);
+		attachedAudioSource.clip = audioClip;
 		attachedAudioSource.Play();
-	}
-
-	private void PlayAudioOGG(byte[] audio){
-
-	}
-
-	private void PlayAudioAFF(byte[] audio){
-		
 	}
 
 	private void AsyncTextToSpeechRequestResult(WatsonTextToSpeech watsonTextToSpeech, TimeSpan timeRequestElapsed){
@@ -332,4 +335,87 @@ public class WSTextToSpeech : WatsonService {
 	#endregion
 
 	
+}
+
+
+
+public class WaveFormTest : MonoBehaviour {
+
+	private float modifierSpectrum = 10.0f;
+	int resolution = 60;
+	
+	float[] waveForm;
+	float[] samples;
+	AudioSource audioSource;
+
+	float[] spectrumData;
+
+	// Use this for initialization
+	void Start () {
+		spectrumData = new float[1024];
+		resolution = (int)(1 / Time.fixedDeltaTime);
+		audioSource = this.transform.GetComponent<AudioSource>();
+		resolution = audioSource.clip.frequency / resolution;
+		
+		samples = new float[audioSource.clip.samples*audioSource.clip.channels];
+		audioSource.clip.GetData(samples,0);
+		
+		waveForm = new float[(samples.Length/resolution)];
+		
+		for (int i = 0; i < waveForm.Length; i++)
+		{
+			waveForm[i] = 0;
+			
+			for(int ii = 0; ii<resolution; ii++)
+			{
+				waveForm[i] += Mathf.Abs(samples[(i * resolution) + ii]);
+			}          
+			
+			waveForm[i] /= resolution;
+		}
+	}
+	
+	// Update is called once per frame
+	void FixedUpdate () {
+		for (int i = 0; i < waveForm.Length - 1; i++)
+		{
+			Vector3 sv = new Vector3(i * 0.1f, waveForm[i]*10 , 0);
+			Vector3 ev = new Vector3(i * 0.1f, -waveForm[i] * 10, 0);
+			
+			Debug.DrawLine(sv, ev, Color.yellow);
+			Debug.Log ("waveForm[" + i + "] = " + waveForm[i]);
+		}
+		
+		int current = audioSource.timeSamples / resolution;
+
+		Debug.Log ("audio.timeSamples: " + audioSource.timeSamples + " - resolution: " + resolution + " - current: " + current + " - waveForm.Length: " + waveForm.Length);
+		//Debug.Break ();
+		//current *= 2;
+
+
+		Vector3 c = new Vector3(current* 0.1f,0,0);
+		
+		Debug.DrawLine(c, c + Vector3.up * 10, Color.white);
+	}
+
+	void Update () { 
+		AudioListener.GetOutputData (spectrumData, 0);
+		//float[] spectrum  = AudioListener.GetSpectrumData(1024, 0, FFTWindow.Hamming); 
+		/* c1 = 64hz c3 = 256hz c4 = 512hz c5 = 1024 */ 
+		float c1 = spectrumData[3] + spectrumData[2] + spectrumData[4]; 
+		float c3 = spectrumData[11] + spectrumData[12] + spectrumData[13]; 
+		float c4 = spectrumData[22] + spectrumData[23] + spectrumData[24]; 
+		float c5 = spectrumData[44] + spectrumData[45] + spectrumData[46] + spectrumData[47] + spectrumData[48] + spectrumData[49]; 
+
+		GameObject[] cubes = GameObject.FindGameObjectsWithTag("Player"); 
+
+		for(var i = 0; i < cubes.Length; i++) { 
+			switch (cubes[i].name) { 
+			case "c1": cubes[i].transform.localScale = new Vector3(cubes[i].transform.localScale.x, c1 * modifierSpectrum, cubes[i].transform.localScale.z); break; 
+			case "c3": cubes[i].transform.localScale = new Vector3(cubes[i].transform.localScale.x, c3 * modifierSpectrum, cubes[i].transform.localScale.z); ; break; 
+			case "c4": cubes[i].transform.localScale = new Vector3(cubes[i].transform.localScale.x, c4 * modifierSpectrum, cubes[i].transform.localScale.z); ; break; 
+			case "c5": cubes[i].transform.localScale = new Vector3(cubes[i].transform.localScale.x, c5 * modifierSpectrum, cubes[i].transform.localScale.z); ; break; 
+			} 
+		} 
+	}
 }

@@ -3,7 +3,8 @@ using System;
 using System.Collections;
 using System.IO;
 
-//REF: http://answers.unity3d.com/questions/737002/wav-byte-to-audioclip.html
+//REF1: https://github.com/watson-developer-cloud/speech-ios-sdk
+//REF2: http://answers.unity3d.com/questions/737002/wav-byte-to-audioclip.html
 
 public class WAudioWAV : WUtilities  {
 
@@ -15,9 +16,14 @@ public class WAudioWAV : WUtilities  {
 	public int frequency {get;internal set;}
 
 
-	public WAudioWAV(byte[] wavRaw){
+	public WAudioWAV(byte[] wavRaw, bool isRaw){
 
-		byte[] wav = getAudioByteArrayAfterStrippingAndAddingNewWAVHeader(wavRaw);
+		byte[] wav = null;
+		if(isRaw)
+			wav = getAudioByteArrayAfterStrippingAndAddingNewWAVHeader(wavRaw);
+		else
+			wav = wavRaw;
+
 		// Determine if mono or stereo - WAV Channel information
 		channelCount = BitConverter.ToInt16(wav,22);
 		
@@ -57,7 +63,7 @@ public class WAudioWAV : WUtilities  {
 		}
 	}
 
-	private byte[] getAudioByteArrayAfterStrippingAndAddingNewWAVHeader(byte[] wav) {
+	public static byte[] getAudioByteArrayAfterStrippingAndAddingNewWAVHeader(byte[] wav) {
 		
 		int headerSize = 44;
 		int metadataSize = 48;
@@ -77,7 +83,7 @@ public class WAudioWAV : WUtilities  {
 		return newWavData;
 	}
 	
-	private byte[]	getAudioByteArrayWithWAVHeader(byte[] wavNoheader, int sampleRate) {
+	public static byte[] getAudioByteArrayWithWAVHeader(byte[] wavNoheader, int sampleRate) {
 		
 		int headerSize = 44;
 		long totalAudioLen = wavNoheader.Length;

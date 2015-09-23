@@ -80,7 +80,7 @@ public class WatsonService : MonoBehaviour, IWatsonService{
 	}
 
 	public string getGETRequestUrl(string baseUrl, params string[] parameters){
-		return string.Concat(baseUrl, "?", string.Join("&", parameters));
+		return string.Concat(baseUrl, "?", string.Join("&", parameters)); //, , "&TEST=.ogg"
 	}
 
 	public string getServiceFunctionURL(string functionName){

@@ -11,7 +11,7 @@ public class WatsonTestTextToSpeech : MonoBehaviour {
 
 
 	public void TestTextToSpeech(){
-		WSTextToSpeech.StartSpeaking(textForTextToSpeech.text, voice: voiceForTextToSpeech ,audioFormat: this.audioFormat);
+		WSTextToSpeech.StartSpeaking(textForTextToSpeech.text, voice: voiceForTextToSpeech );
 	}
 
 	void Update () {
