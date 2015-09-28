@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿// Uncomment to enable debugging of the Runnable class.
+//#define ENABLE_RUNNABLE_DEBUGGING
+
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -28,10 +31,12 @@ namespace IBM.Watson.Utilities
                 ID = Runnable.Instance.m_NextRoutineId++;
 
                 Runnable.Instance.m_Routines[ID] = this;
+#if ENABLE_RUNNABLE_DEBUGGING
                 Debug.Log( string.Format("Coroutine {0} started.", ID ) ); 
+#endif
             }
 
-            #region IEnumerator Interface
+#region IEnumerator Interface
             public object Current { get { return m_enumerator.Current; } }
             public bool MoveNext()
             {
@@ -42,13 +47,15 @@ namespace IBM.Watson.Utilities
                 if (!m_bMoveNext)
                 {
                     Runnable.Instance.m_Routines.Remove(ID);      // remove from the mapping
+#if ENABLE_RUNNABLE_DEBUGGING
                     Debug.Log( string.Format("Coroutine {0} stopped.", ID ) );
+#endif
                 }
 
                 return m_bMoveNext;
             }
             public void Reset() { m_enumerator.Reset(); }
-            #endregion
+#endregion
         }
 
         public static int Run(IEnumerator a_Routine)
@@ -64,11 +71,11 @@ namespace IBM.Watson.Utilities
                 r.Stop = true;
         }
 
-        #region Private Data
+#region Private Data
         private static Runnable sm_Instance = null;
         private Dictionary<int, Routine> m_Routines = new Dictionary<int, Routine>();
         private int m_NextRoutineId = 0;
-        #endregion
+#endregion
 
         public static Runnable Instance
         {
