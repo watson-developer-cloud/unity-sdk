@@ -19,14 +19,13 @@ namespace IBM.Watson.Utilities
 
             #region Private Data
             private bool m_bMoveNext = false;
-            private IEnumerator m_enumerator = null;
-            private Coroutine m_coroutine = null;
+            private IEnumerator m_Enumerator = null;
             #endregion
 
             public Routine(IEnumerator a_enumerator)
             {
-                m_enumerator = a_enumerator;
-                m_coroutine = Runnable.Instance.StartCoroutine(this);
+                m_Enumerator = a_enumerator;
+                Runnable.Instance.StartCoroutine(this);
                 Stop = false;
                 ID = Runnable.Instance.m_NextRoutineId++;
 
@@ -37,10 +36,10 @@ namespace IBM.Watson.Utilities
             }
 
 #region IEnumerator Interface
-            public object Current { get { return m_enumerator.Current; } }
+            public object Current { get { return m_Enumerator.Current; } }
             public bool MoveNext()
             {
-                m_bMoveNext = m_enumerator.MoveNext();
+                m_bMoveNext = m_Enumerator.MoveNext();
                 if (m_bMoveNext && Stop)
                     m_bMoveNext = false;
 
@@ -54,7 +53,7 @@ namespace IBM.Watson.Utilities
 
                 return m_bMoveNext;
             }
-            public void Reset() { m_enumerator.Reset(); }
+            public void Reset() { m_Enumerator.Reset(); }
 #endregion
         }
 
