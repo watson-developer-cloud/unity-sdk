@@ -37,6 +37,11 @@ public class TestRunnable : MonoBehaviour
 
     private IEnumerator TestCoroutine(string a_Argument)
     {
+		Log.Debug("Test", a_Argument );
+		yield return new WaitForSeconds (1.0f);
+		Log.Debug("Test",  a_Argument );
+		//yield return null;
+
         yield return null;
         Log.Debug("Test", a_Argument);
     }
