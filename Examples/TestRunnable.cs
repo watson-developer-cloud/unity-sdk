@@ -14,17 +14,24 @@
  * limitations under the License.
 */
  
-namespace IBM.Watson.Utilities
-{
-    class Exception : System.Exception
+using UnityEngine;
+using System.Collections;
+using IBM.Watson.Utilities;
+
+public class TestRunnable : MonoBehaviour {
+
+    private void OnGUI()
     {
-        public Exception(string message) : base(message)
+        if ( GUILayout.Button( "Start Routine" ) )
         {
-            // TODO: hook up logging
-        }
-        public Exception(string message, Exception innerException ) : base(message, innerException )
-        {
-            // TODO: hook up logging
+            Runnable.Run( TestCoroutine("Test") );
         }
     }
+
+    private IEnumerator TestCoroutine( string a_Argument )
+    {
+        yield return null;
+        Debug.Log( a_Argument );
+    }
 }
+
