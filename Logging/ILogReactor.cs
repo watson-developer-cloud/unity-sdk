@@ -16,29 +16,11 @@
 
 using UnityEngine;
 using System.Collections;
-using IBM.Watson.Utilities;
-using IBM.Watson.Logging;
 
-public class TestRunnable : MonoBehaviour
+namespace IBM.Watson.Logging
 {
-
-    private void Start()
+    public interface ILogReactor
     {
-        Logger.InstallDefaultReactors();
-    }
-
-    private void OnGUI()
-    {
-        if (GUILayout.Button("Start Routine"))
-        {
-            Runnable.Run(TestCoroutine("Test"));
-        }
-    }
-
-    private IEnumerator TestCoroutine(string a_Argument)
-    {
-        yield return null;
-        Log.Debug("Test", a_Argument);
+        void ProcessLog(LogRecord a_Log);
     }
 }
-
