@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
- 
+
 // Uncomment to enable debugging of the Runnable class.
 //#define ENABLE_RUNNABLE_DEBUGGING
 
@@ -26,6 +26,26 @@ namespace IBM.Watson.Utilities
     // Helper class for running co-routines without having to inherit from MonoBehavior.
     public class Runnable : MonoBehaviour
     {
+        #region Public Properties
+        public static Runnable Instance { get { return Singleton<Runnable>.Instance; } }
+        #endregion
+
+        #region Public Interface
+        public static int Run(IEnumerator a_Routine)
+        {
+            Routine r = new Routine(a_Routine);
+            return r.ID;
+        }
+
+        public static void Stop(int a_ID)
+        {
+            Routine r = null;
+            if (Instance.m_Routines.TryGetValue(a_ID, out r))
+                r.Stop = true;
+        }
+        #endregion
+
+        #region Private Types
         private class Routine : IEnumerator
         {
             #region Public Properties
@@ -51,7 +71,7 @@ namespace IBM.Watson.Utilities
 #endif
             }
 
-#region IEnumerator Interface
+            #region IEnumerator Interface
             public object Current { get { return m_Enumerator.Current; } }
             public bool MoveNext()
             {
@@ -70,42 +90,13 @@ namespace IBM.Watson.Utilities
                 return m_bMoveNext;
             }
             public void Reset() { m_Enumerator.Reset(); }
-#endregion
+            #endregion
         }
+        #endregion
 
-        public static int Run(IEnumerator a_Routine)
-        {
-            Routine r = new Routine(a_Routine);
-            return r.ID;
-        }
-
-        public static void Stop(int a_ID)
-        {
-            Routine r = null;
-            if (Instance.m_Routines.TryGetValue(a_ID, out r))
-                r.Stop = true;
-        }
-
-#region Private Data
-        private static Runnable sm_Instance = null;
+        #region Private Data
         private Dictionary<int, Routine> m_Routines = new Dictionary<int, Routine>();
         private int m_NextRoutineId = 0;
-#endregion
-
-        public static Runnable Instance
-        {
-            get
-            {
-                if (sm_Instance == null)
-                {
-                    GameObject RunnableObject = new GameObject("_Runnable");
-                    RunnableObject.hideFlags = HideFlags.HideAndDontSave;
-
-                    sm_Instance = RunnableObject.AddComponent<Runnable>();
-                }
-
-                return sm_Instance;
-            }
-        }
+        #endregion
     }
 }
