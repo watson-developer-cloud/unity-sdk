@@ -194,7 +194,7 @@ public class WSTextToSpeech : WatsonService {
 	public override string serviceCredentialUserName{
 		get{
 			if(String.IsNullOrEmpty(_serviceCredentialUserName)){
-				_serviceCredentialUserName = "ABC";
+				_serviceCredentialUserName = "a5aa6c60-c917-4519-abf8-7256169536f2";
 			}
 			return _serviceCredentialUserName;
 		}
@@ -322,7 +322,7 @@ public class WSTextToSpeech : WatsonService {
 
 
 		attachedAudioSource.spatialBlend = 0.0f; //2D Sound
-		attachedAudioSource.loop = true;
+		attachedAudioSource.loop = false;
 		//attachedAudioSource.PlayOneShot(audioClip);
 		attachedAudioSource.clip = audioClip;
 		attachedAudioSource.Play();
@@ -341,10 +341,12 @@ public class WSTextToSpeech : WatsonService {
 
 public class WaveFormTest : MonoBehaviour {
 
-	private float modifierSpectrum = 10.0f;
+	private float modifierSpectrum = 5.0f;
 	int resolution = 60;
 	
 	float[] waveForm;
+	Transform[] waveFormCubes;
+
 	float[] samples;
 	AudioSource audioSource;
 
@@ -373,6 +375,19 @@ public class WaveFormTest : MonoBehaviour {
 			
 			waveForm[i] /= resolution;
 		}
+
+		int numberOfCubes = 50;
+		float displacementX = 0.5f;
+		Vector3 size = new Vector3 (0.1f, 1.0f, 1.0f);
+		waveFormCubes = new Transform[numberOfCubes];
+		for (int i = 0; i < numberOfCubes; i++) {
+			GameObject cubeTemp = GameObject.CreatePrimitive(PrimitiveType.Cube);
+			cubeTemp.transform.position = new Vector3(i * displacementX - (numberOfCubes/2)* displacementX, 1.0f, 1.0f);
+			cubeTemp.transform.localScale = size;
+			waveFormCubes[i] = cubeTemp.transform;
+		}
+
+
 	}
 	
 	// Update is called once per frame
@@ -383,12 +398,13 @@ public class WaveFormTest : MonoBehaviour {
 			Vector3 ev = new Vector3(i * 0.1f, -waveForm[i] * 10, 0);
 			
 			Debug.DrawLine(sv, ev, Color.yellow);
-			Debug.Log ("waveForm[" + i + "] = " + waveForm[i]);
+			//Debug.Log ("waveForm[" + i + "] = " + waveForm[i]);
 		}
 		
 		int current = audioSource.timeSamples / resolution;
 
-		Debug.Log ("audio.timeSamples: " + audioSource.timeSamples + " - resolution: " + resolution + " - current: " + current + " - waveForm.Length: " + waveForm.Length);
+		//Debug.Log ("audio.timeSamples: " + audioSource.timeSamples + " - resolution: " + resolution + " - current: " + current + " - waveForm.Length: " + waveForm.Length);
+
 		//Debug.Break ();
 		//current *= 2;
 
@@ -416,6 +432,43 @@ public class WaveFormTest : MonoBehaviour {
 			case "c4": cubes[i].transform.localScale = new Vector3(cubes[i].transform.localScale.x, c4 * modifierSpectrum, cubes[i].transform.localScale.z); ; break; 
 			case "c5": cubes[i].transform.localScale = new Vector3(cubes[i].transform.localScale.x, c5 * modifierSpectrum, cubes[i].transform.localScale.z); ; break; 
 			} 
-		} 
+		}
+
+		int current = audioSource.timeSamples / resolution;
+
+		//From Right to Left
+//		for(var i = 0; i < waveFormCubes.Length; i++) { 
+//			if(i < waveFormCubes.Length - 1){
+//				waveFormCubes[i].localScale = waveFormCubes[i+1].localScale;
+//			}
+//			else{
+//				if(current < waveForm.Length){
+//					Debug.Log ("waveForm[" + current + "] = " + waveForm[current]);
+//					waveFormCubes[i].localScale = new Vector3(waveFormCubes[i].localScale.x, waveForm[current] * 10, waveFormCubes[i].localScale.z);
+//				}
+//				else
+//					Debug.LogError("Current: " + current + " - waveForm.Length: " + waveForm.Length);
+//			}
+//		}
+
+		float modifierWaveform = 20.0f;
+		//From Center to Corners
+		for (var i = waveFormCubes.Length - 1; i > (waveFormCubes.Length/2); i--) { 
+			//Right part from the center
+			waveFormCubes[i].localScale = waveFormCubes[i-1].localScale;
+		}
+
+		for(var i = 0; i < (waveFormCubes.Length/2); i++) { 
+			//Left part from the center
+			waveFormCubes[i].localScale = waveFormCubes[i+1].localScale;
+		}
+
+		//center
+		if(current < waveForm.Length){
+			//Debug.Log ("waveForm[" + current + "] = " + waveForm[current]);
+			waveFormCubes[(waveFormCubes.Length/2)].localScale = new Vector3(waveFormCubes[(waveFormCubes.Length/2)].localScale.x, waveForm[current] * modifierWaveform, waveFormCubes[(waveFormCubes.Length/2)].localScale.z);
+		}
+		else
+			Debug.LogError("Current: " + current + " - waveForm.Length: " + waveForm.Length);
 	}
 }
