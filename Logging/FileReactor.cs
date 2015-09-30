@@ -19,6 +19,9 @@ using System.IO;
 
 namespace IBM.Watson.Logging
 {
+    /// <summary>
+    /// FileReactor log reactor class.
+    /// </summary>
     public class FileReactor : ILogReactor
     {
         #region Public Properties
@@ -27,13 +30,19 @@ namespace IBM.Watson.Logging
         #endregion
 
         #region Construction
-        public FileReactor(string a_LogFile, LogLevel a_Level = LogLevel.DEBUG, int a_LogHistory = 2 )
+        /// <summary>
+        /// FileReactor constructor.
+        /// </summary>
+        /// <param name="logFile">The FileName of the log file.</param>
+        /// <param name="level">The minimum level of log messages to be logged into the file.</param>
+        /// <param name="logHistory">How many log files to keep as they are rotated each time this reactor is constructed.</param>
+        public FileReactor(string logFile, LogLevel level = LogLevel.DEBUG, int logHistory = 2 )
         {
-            LogFile = a_LogFile;
-            Level = a_Level;
+            LogFile = logFile;
+            Level = level;
 
             // rotate existing log files..
-            for(int i=a_LogHistory;i>=0;--i)
+            for(int i=logHistory;i>=0;--i)
             {
                 string src = i > 0 ? LogFile + "." + i.ToString() : LogFile;
                 if ( File.Exists( src ) )
@@ -49,13 +58,13 @@ namespace IBM.Watson.Logging
         #endregion
 
         #region ILogReactor interface
-        public void ProcessLog(LogRecord a_Log)
+        public void ProcessLog(LogRecord log)
         {
-            if (a_Log.m_Level >= Level)
+            if (log.m_Level >= Level)
             {
                 File.AppendAllText(LogFile, string.Format("[{0}][{1}][{2}] {3}\n",
-                    a_Log.m_TimeStamp.ToString("MM/dd/yyyy HH:mm:ss"),
-                    a_Log.m_SubSystem, a_Log.m_Level.ToString(), a_Log.m_Message));
+                    log.m_TimeStamp.ToString("MM/dd/yyyy HH:mm:ss"),
+                    log.m_SubSystem, log.m_Level.ToString(), log.m_Message));
             }
         }
         #endregion

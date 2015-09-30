@@ -16,7 +16,9 @@
 
 namespace IBM.Watson.Logging
 {
-    //! Unity debug log reactor
+    /// <summary>
+    /// This log reactor logs into the UnityEngine.Debug.Log() function.
+    /// </summary>
     public class DebugReactor : ILogReactor
     {
         #region Public Properties
@@ -24,20 +26,24 @@ namespace IBM.Watson.Logging
         #endregion
 
         #region Construction
-        public DebugReactor( LogLevel a_Level = LogLevel.DEBUG )
+        /// <summary>
+        /// DebugReactor constructor.
+        /// </summary>
+        /// <param name="level">Minimum level of log messages to log.</param>
+        public DebugReactor( LogLevel level = LogLevel.DEBUG )
         {
-            Level = a_Level;
+            Level = level;
         }
         #endregion
 
         #region ILogReactor Interface
-        public void ProcessLog( LogRecord a_Log )
+        public void ProcessLog( LogRecord log )
         {
-            if ( a_Log.m_Level >= Level )
+            if ( log.m_Level >= Level )
             {
                 UnityEngine.Debug.Log( string.Format( "[{0}][{1}][{2}] {3}", 
-                    a_Log.m_TimeStamp.ToString("MM/dd/yyyy HH:mm:ss"),
-                    a_Log.m_SubSystem, a_Log.m_Level.ToString(), a_Log.m_Message ) );
+                    log.m_TimeStamp.ToString("MM/dd/yyyy HH:mm:ss"),
+                    log.m_SubSystem, log.m_Level.ToString(), log.m_Message ) );
             }
         }
         #endregion

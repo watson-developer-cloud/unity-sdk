@@ -13,18 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
- 
+
+using IBM.Watson.Logging; 
+
 namespace IBM.Watson.Utilities
 {
+    /// <summary>
+    /// Watson exception class.
+    /// </summary>
     class Exception : System.Exception
     {
         public Exception(string message) : base(message)
         {
-            // TODO: hook up logging
+            Log.Critical( "Exception", "Exception: {0}", message );
         }
         public Exception(string message, Exception innerException ) : base(message, innerException )
         {
-            // TODO: hook up logging
+            Log.Critical( "Exception", "Exception: {0}", message );
         }
     }
 }

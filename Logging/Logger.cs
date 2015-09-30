@@ -21,6 +21,10 @@ using UnityEngine;
 
 namespace IBM.Watson.Logging
 {
+    /// <summary>
+    /// All log messages are assigned to a log level, typically reactors have filters and will filter log
+    /// messages that have lower levels. NONE is considered the lowest level, ALL is considered the highest level.
+    /// </summary>
     public enum LogLevel
     {
         NONE,
@@ -32,6 +36,9 @@ namespace IBM.Watson.Logging
         ALL,
     };
 
+    /// <summary>
+    /// This data class is passed to all Reactors when a log message is passed into the Logger singleton.
+    /// </summary>
     public class LogRecord
     {
         public DateTime m_TimeStamp = DateTime.UtcNow;
@@ -39,17 +46,25 @@ namespace IBM.Watson.Logging
         public string m_SubSystem;
         public string m_Message;
 
-        public LogRecord(LogLevel a_Level, string a_SubSystem, string a_MessageFmt, params object[] a_Args)
+        public LogRecord(LogLevel level, string subSystem, string messageFmt, params object[] args)
         {
-            m_Level = a_Level;
-            m_SubSystem = a_SubSystem;
-            m_Message = string.Format(a_MessageFmt, a_Args);
+            m_Level = level;
+            m_SubSystem = subSystem;
+            m_Message = string.Format(messageFmt, args);
         }
     };
 
+    /// <summary>
+    /// This singleton class maintains the of list of installed reactors and handles all LogRecord 
+    /// objects. See the static class Log for functions the end user of this system should actually
+    /// be calling. This class is thread safe.
+    /// </summary>
     public class Logger
     {
         #region Public Properties
+        /// <summary>
+        /// Returns the singleton instance of the Logger object.
+        /// </summary>
         public static Logger Instance { get { return Singleton<Logger>.Instance; } }
         #endregion
 
@@ -59,6 +74,9 @@ namespace IBM.Watson.Logging
         #endregion
 
         #region Public Functions
+        /// <summary>
+        /// Install a default debug & file reactor.
+        /// </summary>
         public static void InstallDefaultReactors()
         {
             if (! sm_bInstalledDefaultReactors )
@@ -69,52 +87,101 @@ namespace IBM.Watson.Logging
                 Logger.Instance.InstallReactor( new FileReactor( Application.persistentDataPath + "/Watson.log" ) );
             }
         }
-        public void InstallReactor(ILogReactor a_Reactor)
+
+        /// <summary>
+        /// Installs a reactor into this Logger.
+        /// </summary>
+        /// <param name="reactor">The reactor object.</param>
+        public void InstallReactor(ILogReactor reactor)
         {
             lock (m_Reactors)
             {
-                m_Reactors.Add(a_Reactor);
+                m_Reactors.Add(reactor);
             }
         }
-        public bool RemoveReactor(ILogReactor a_Reactor)
+
+        /// <summary>
+        /// Removes a reactor from this Logger.
+        /// </summary>
+        /// <param name="reactor">The reactor to remove.</param>
+        /// <returns>Returns true on success.</returns>
+        public bool RemoveReactor(ILogReactor reactor)
         {
             lock (m_Reactors)
             {
-                return m_Reactors.Remove(a_Reactor);
+                return m_Reactors.Remove(reactor);
             }
         }
-        public void ProcessLog(LogRecord a_Log)
+
+        /// <summary>
+        /// Send the given LogRecord to all installed reactors.
+        /// </summary>
+        /// <param name="log">The LogRecord to pass to all reactors.</param>
+        public void ProcessLog(LogRecord log)
         {
             lock (m_Reactors)
             {
                 foreach (var reactor in m_Reactors)
-                    reactor.ProcessLog(a_Log);
+                    reactor.ProcessLog(log);
             }
         }
         #endregion
     }
 
+    /// <summary>
+    /// Helper static class for logging into the Logger.
+    /// </summary>
     public static class Log
     {
-        public static void Debug(string a_SubSystem, string a_MessageFmt, params object[] a_Args)
+        /// <summary>
+        /// Log a DEBUG level message.
+        /// </summary>
+        /// <param name="subSystem">Name of the subsystem.</param>
+        /// <param name="messageFmt">Message with formatting.</param>
+        /// <param name="args">Formatting arguments.</param>
+        public static void Debug(string subSystem, string messageFmt, params object[] args)
         {
-            Logger.Instance.ProcessLog(new LogRecord(LogLevel.DEBUG, a_SubSystem, a_MessageFmt, a_Args));
+            Logger.Instance.ProcessLog(new LogRecord(LogLevel.DEBUG, subSystem, messageFmt, args));
         }
-        public static void Status(string a_SubSystem, string a_MessageFmt, params object[] a_Args)
+        /// <summary>
+        /// Log a STATUS level message.
+        /// </summary>
+        /// <param name="subSystem">Name of the subsystem.</param>
+        /// <param name="messageFmt">Message with formatting.</param>
+        /// <param name="args">Formatting arguments.</param>
+        public static void Status(string subSystem, string messageFmt, params object[] args)
         {
-            Logger.Instance.ProcessLog(new LogRecord(LogLevel.STATUS, a_SubSystem, a_MessageFmt, a_Args));
+            Logger.Instance.ProcessLog(new LogRecord(LogLevel.STATUS, subSystem, messageFmt, args));
         }
-        public static void Warning(string a_SubSystem, string a_MessageFmt, params object[] a_Args)
+        /// <summary>
+        /// Log a WARNING level message.
+        /// </summary>
+        /// <param name="subSystem">Name of the subsystem.</param>
+        /// <param name="messageFmt">Message with formatting.</param>
+        /// <param name="args">Formatting arguments.</param>
+        public static void Warning(string subSystem, string messageFmt, params object[] args)
         {
-            Logger.Instance.ProcessLog(new LogRecord(LogLevel.WARNING, a_SubSystem, a_MessageFmt, a_Args));
+            Logger.Instance.ProcessLog(new LogRecord(LogLevel.WARNING, subSystem, messageFmt, args));
         }
-        public static void Error(string a_SubSystem, string a_MessageFmt, params object[] a_Args)
+        /// <summary>
+        /// Log a ERROR level message.
+        /// </summary>
+        /// <param name="subSystem">Name of the subsystem.</param>
+        /// <param name="messageFmt">Message with formatting.</param>
+        /// <param name="args">Formatting arguments.</param>
+        public static void Error(string subSystem, string messageFmt, params object[] args)
         {
-            Logger.Instance.ProcessLog(new LogRecord(LogLevel.ERROR, a_SubSystem, a_MessageFmt, a_Args));
+            Logger.Instance.ProcessLog(new LogRecord(LogLevel.ERROR, subSystem, messageFmt, args));
         }
-        public static void Critical(string a_SubSystem, string a_MessageFmt, params object[] a_Args)
+         /// <summary>
+        /// Log a CRITICAL level message.
+        /// </summary>
+        /// <param name="subSystem">Name of the subsystem.</param>
+        /// <param name="messageFmt">Message with formatting.</param>
+        /// <param name="args">Formatting arguments.</param>
+       public static void Critical(string subSystem, string messageFmt, params object[] args)
         {
-            Logger.Instance.ProcessLog(new LogRecord(LogLevel.CRITICAL, a_SubSystem, a_MessageFmt, a_Args));
+            Logger.Instance.ProcessLog(new LogRecord(LogLevel.CRITICAL, subSystem, messageFmt, args));
         }
     }
 }

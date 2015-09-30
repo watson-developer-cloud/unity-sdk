@@ -21,6 +21,11 @@ using System;
 
 namespace IBM.Watson.Utilities
 {
+    /// <summary>
+    /// Singleton pattern class. This class detects if T is a MonoBehavior and will 
+    /// make a containing GameObject.  
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     class Singleton<T> where T:class
     {
         #region Private Data
@@ -28,6 +33,9 @@ namespace IBM.Watson.Utilities
         #endregion
 
         #region Public Properties
+        /// <summary>
+        /// Returns the Singleton instance of T.
+        /// </summary>
         public static T Instance
         {
             get {
@@ -39,6 +47,9 @@ namespace IBM.Watson.Utilities
         #endregion
 
         #region Singleton Creation
+        /// <summary>
+        /// Create the singleton instance.
+        /// </summary>
         private static void CreateInstance()
         {
             if ( typeof(MonoBehaviour).IsAssignableFrom( typeof(T) ) )

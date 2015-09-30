@@ -19,8 +19,12 @@ using System.Collections;
 
 namespace IBM.Watson.Logging
 {
+    /// <summary>
+    /// Any class that implement this interface can be added to the Logger class as a reactor and hook
+    /// all log messages.
+    /// </summary>
     public interface ILogReactor
     {
-        void ProcessLog(LogRecord a_Log);
+        void ProcessLog(LogRecord log);
     }
 }

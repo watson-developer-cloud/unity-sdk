@@ -23,29 +23,46 @@ using System.Collections.Generic;
 
 namespace IBM.Watson.Utilities
 {
-    // Helper class for running co-routines without having to inherit from MonoBehavior.
+    /// <summary>
+    /// Helper class for running co-routines without having to inherit from MonoBehavior.
+    /// </summary>
     public class Runnable : MonoBehaviour
     {
         #region Public Properties
+        /// <summary>
+        /// Returns the Runnable instance.
+        /// </summary>
         public static Runnable Instance { get { return Singleton<Runnable>.Instance; } }
         #endregion
 
         #region Public Interface
-        public static int Run(IEnumerator a_Routine)
+        /// <summary>
+        /// Start a co-routine function.
+        /// </summary>
+        /// <param name="routine">The IEnumerator returns by the co-routine function the user is invoking.</param>
+        /// <returns>Returns a ID that can be pased into Stop() to halt the co-routine.</returns>
+        public static int Run(IEnumerator routine)
         {
-            Routine r = new Routine(a_Routine);
+            Routine r = new Routine(routine);
             return r.ID;
         }
 
-        public static void Stop(int a_ID)
+        /// <summary>
+        /// Stops a active co-routine.
+        /// </summary>
+        /// <param name="ID">THe ID of the co-routine to stop.</param>
+        public static void Stop(int ID)
         {
             Routine r = null;
-            if (Instance.m_Routines.TryGetValue(a_ID, out r))
+            if (Instance.m_Routines.TryGetValue(ID, out r))
                 r.Stop = true;
         }
         #endregion
 
         #region Private Types
+        /// <summary>
+        /// This class handles a running co-routine.
+        /// </summary>
         private class Routine : IEnumerator
         {
             #region Public Properties
