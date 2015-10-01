@@ -13,6 +13,7 @@ namespace IBM.Watson.Editor
         private void OnEnable()
         {
             titleContent.text = "Watson Config";
+            m_WatsonIcon = (Texture2D)Resources.Load( "WatsonIcon", typeof(Texture2D) );
         }
 
         private static void SaveConfig()
@@ -29,7 +30,7 @@ namespace IBM.Watson.Editor
             window.Show();
         }
 
-        private Texture m_WatsonIcon = (Texture2D)Resources.Load( "WatsonIcon", typeof(Texture2D) );
+        private Texture m_WatsonIcon = null;
         private Vector2 m_ScrollPos = Vector2.zero;
 
         private void OnGUI()
