@@ -14,19 +14,137 @@
 * limitations under the License.
 */
 
+using System.Collections;
+using System.Collections.Generic;
 using IBM.Watson.Logging;
 using UnityEngine;
+using FullSerializer;
 
 namespace IBM.Watson.Utilities
 {
     class Config
     {
-        #region Public Properties
-        public static Config Instance { get { return Singleton<Config>.Instance; } }
+        public static readonly string           CONFIG_FILE = "/Config.json";
+
+        /// <summary>
+        /// Serialzied class for holding the user credentials for a given service.
+        /// </summary>
+        public class CredentialsInfo
+        {
+            /// <summary>
+            /// The ID of the service this is the credentials.
+            /// </summary>
+            public string m_ServiceID;
+            public string m_User;
+            public string m_Password;
+        }
+
+        #region Private Data
+        [fsProperty]
+        private float m_TimeOut = 30.0f;
+        [fsProperty]
+        private List<CredentialsInfo> m_Credentials = new List<CredentialsInfo>();
+        private static fsSerializer sm_Serializer = new fsSerializer();
         #endregion
 
+        #region Public Properties
+        [fsIgnore]
+        public bool ConfigLoaded { get; private set; }
+        /// <summary>
+        /// Returns the Config singleton instance.
+        /// </summary>
+        public static Config Instance { get { return Singleton<Config>.Instance; } }
+        /// <summary>
+        /// Returns the Timeout for requests made to the server.
+        /// </summary>
+        public float TimeOut { get { return m_TimeOut; } set { m_TimeOut = value; } }
+        /// <summary>
+        /// Returns the list of credentials used to login to the various services.
+        /// </summary>
+        public List<CredentialsInfo> Credentials { get { return m_Credentials; } set { m_Credentials = value; } }
+        #endregion
+
+        /// <summary>
+        /// Default constructor will call LoadConfig() automatically.
+        /// </summary>
         public Config()
         {
+            LoadConfig();
         }
+
+        /// <summary>
+        /// Invoking this function will start the co-routine to load the config. The user should check the 
+        /// ConfigLoaded property to check when the configuration is actually loaded.
+        /// </summary>
+        public void LoadConfig()
+        {
+#if UNITY_EDITOR
+            try {
+                LoadConfig( System.IO.File.ReadAllText( Application.streamingAssetsPath + CONFIG_FILE ) );
+            }
+            catch( System.IO.FileNotFoundException )
+            {}
+#else
+            Runnable.Run(LoadConfigCR());
+#endif
+        }
+
+        /// <summary>
+        /// Load the config from the given json data.
+        /// </summary>
+        /// <param name="json">The string containing the config json data.</param>
+        /// <returns></returns>
+        public bool LoadConfig(string json)
+        {
+            fsData data = null;
+            fsResult r = fsJsonParser.Parse(json, out data);
+            if (!r.Succeeded)
+            {
+                Log.Error("Config", "Failed to parse Config.json: {0}", r.ToString());
+                return false;
+            }
+
+            object obj = this;
+            r = sm_Serializer.TryDeserialize(data, GetType(), ref obj);
+            if (!r.Succeeded)
+            {
+                Log.Error("Config", "Failed to parse Config.json: {0}", r.ToString());
+                return false;
+            }
+
+            ConfigLoaded = true;
+            return true;
+        }
+
+        /// <summary>
+        /// Save this COnfig into JSON.
+        /// </summary>
+        /// <param name="pretty">If true, then the json data will be formatted for readability.</param>
+        /// <returns></returns>
+        public string SaveConfig(bool pretty = true)
+        {
+            fsData data = null;
+            sm_Serializer.TrySerialize(GetType(), this, out data);
+
+            if (!System.IO.Directory.Exists(Application.streamingAssetsPath))
+                System.IO.Directory.CreateDirectory(Application.streamingAssetsPath);
+
+            if (pretty)
+                return fsJsonPrinter.PrettyJson(data);
+
+            return fsJsonPrinter.CompressedJson(data);
+        }
+
+        private IEnumerator LoadConfigCR()
+        {
+            // load the config using WWW, since this works on all platforms..
+            WWW request = new WWW(Application.streamingAssetsPath + CONFIG_FILE);
+            while (!request.isDone)
+                yield return null;
+
+            LoadConfig(request.text);
+            yield break;
+        }
+
     }
 }

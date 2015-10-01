@@ -21,13 +21,13 @@ namespace IBM.Watson.Utilities
     /// <summary>
     /// Watson exception class.
     /// </summary>
-    class Exception : System.Exception
+    class WatsonException : System.Exception
     {
-        public Exception(string message) : base(message)
+        public WatsonException(string message) : base(message)
         {
             Log.Critical( "Exception", "Exception: {0}", message );
         }
-        public Exception(string message, Exception innerException ) : base(message, innerException )
+        public WatsonException(string message, WatsonException innerException ) : base(message, innerException )
         {
             Log.Critical( "Exception", "Exception: {0}", message );
         }
