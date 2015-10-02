@@ -112,7 +112,7 @@ namespace IBM.Watson.Connection
 
         #region Public Properties
         /// <summary>
-        /// This delegate is invoked when the connection is opened successfully.
+        /// This delegate is invoked when the connection is opened.
         /// </summary>
         public ConnectorEvent OnOpen { get; set; }
         /// <summary>

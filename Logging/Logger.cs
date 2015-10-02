@@ -139,10 +139,17 @@ namespace IBM.Watson.Logging
         /// <param name="subSystem">Name of the subsystem.</param>
         /// <param name="messageFmt">Message with formatting.</param>
         /// <param name="args">Formatting arguments.</param>
+#if UNITY_EDITOR
         public static void Debug(string subSystem, string messageFmt, params object[] args)
         {
             Logger.Instance.ProcessLog(new LogRecord(LogLevel.DEBUG, subSystem, messageFmt, args));
         }
+#else
+        // We compile out Log.Debug() functions in release builds.
+        public static void Debug(string subSystem, string messageFmt, params object[] args )
+        {}
+#endif
+
         /// <summary>
         /// Log a STATUS level message.
         /// </summary>
