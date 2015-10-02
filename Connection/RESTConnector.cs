@@ -157,6 +157,9 @@ namespace IBM.Watson.Connection
                     resp.Error = string.Format( "Request Error.\nURL: {0}\nError: {1}\nResponse: {2}", url, string.IsNullOrEmpty( www.error ) ? "Timeout" : www.error, www.text );
                 }
 
+                // provide the time to took to get a response from the server..
+                resp.ElapsedTime = Time.time - startTime;
+
                 if ( OnClose != null )
                     OnClose( this );
                 if ( req.OnResponse != null )
