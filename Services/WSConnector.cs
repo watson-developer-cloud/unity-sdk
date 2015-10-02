@@ -29,6 +29,10 @@ namespace IBM.Watson.Services
             // TODO
             return false;
         }
-        #endregion
+        public override void Dispose()
+        {
+            
+        }
+       #endregion
     }
 }

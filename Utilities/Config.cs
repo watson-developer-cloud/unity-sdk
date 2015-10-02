@@ -43,11 +43,16 @@ namespace IBM.Watson.Utilities
         [fsProperty]
         private float m_TimeOut = 30.0f;
         [fsProperty]
+        private int m_MaxConnections = 5;
+        [fsProperty]
         private List<CredentialsInfo> m_Credentials = new List<CredentialsInfo>();
         private static fsSerializer sm_Serializer = new fsSerializer();
         #endregion
 
         #region Public Properties
+        /// <summary>
+        /// Returns true if the configuration is loaded or not.
+        /// </summary>
         [fsIgnore]
         public bool ConfigLoaded { get; private set; }
         /// <summary>
@@ -58,6 +63,10 @@ namespace IBM.Watson.Utilities
         /// Returns the Timeout for requests made to the server.
         /// </summary>
         public float TimeOut { get { return m_TimeOut; } set { m_TimeOut = value; } }
+        /// <summary>
+        /// Maximum number of simultanious connections Watson will make to the server backend.
+        /// </summary>
+        public int MaxConnections { get { return m_MaxConnections; } set { m_MaxConnections = value; } }
         /// <summary>
         /// Returns the list of credentials used to login to the various services.
         /// </summary>
@@ -70,6 +79,19 @@ namespace IBM.Watson.Utilities
         public Config()
         {
             LoadConfig();
+        }
+
+        /// <summary>
+        /// Find Credentials by the service ID.
+        /// </summary>
+        /// <param name="serviceID">The ID of the service to find.</param>
+        /// <returns>Returns null if the credentials cannot be found.</returns>
+        public CredentialsInfo FindCredentials( string serviceID )
+        {
+            foreach( var info in m_Credentials )
+                if ( info.m_ServiceID == serviceID )
+                    return info;
+            return null;
         }
 
         /// <summary>

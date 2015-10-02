@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using IBM.Watson.Utilities;
 using IBM.Watson.Logging;
 
 namespace IBM.Watson.Services
@@ -27,7 +28,7 @@ namespace IBM.Watson.Services
     {
         #region Public Types
         public delegate void ConnectorEvent( Connector connection );
-        public delegate void ResponseEvent( Response resp );
+        public delegate void ResponseEvent( Request req, Response resp );
 
         public enum ConnectionState
         {
@@ -46,36 +47,24 @@ namespace IBM.Watson.Services
         }
 
         /// <summary>
-        /// This object is required to authenticate with the server. If a SessionID is provided
-        /// then no user or password is needed. 
-        /// </summary>
-        public class Credential
-        {
-            public string SessionID { get; set; }
-            public string User { get; set; }
-            public string Password { get; set; }
-        }
-
-        /// <summary>
         /// The class is returned by a Request object containing the response to a request made
         /// by the client.
         /// </summary>
         public class Response
         {
-            public Response()
-            {
-                Parameters = new Dictionary<string, object>();
-            }
-
             #region Public Properties
             /// <summary>
-            /// The return code, anything other than 0 is considered an error response.
+            /// True if the request was successful.
             /// </summary>
-            public int ReponseCode { get; set; }
+            public bool Success { get; set; }
             /// <summary>
-            /// Data returned back from the server.
+            /// Error message if Success is false.
             /// </summary>
-            public Dictionary<string,object> Parameters { get; set; }
+            public string Error { get; set; }
+            /// <summary>
+            /// The data returned by the request.
+            /// </summary>
+            public byte [] Data { get; set; }
             #endregion
         };
 
@@ -123,11 +112,7 @@ namespace IBM.Watson.Services
         /// </summary>
         public ConnectorEvent OnOpen { get; set; }
         /// <summary>
-        /// This delegate is invoked if our connection is lost.
-        /// </summary>
-        public ConnectorEvent OnDisconnect { get; set; }
-        /// <summary>
-        /// This delegeta is invoked when the connection is closed gracefully.
+        /// This delegeta is invoked when the connection is closed.
         /// </summary>
         public ConnectorEvent OnClose { get; set; }
         /// <summary>
@@ -139,7 +124,7 @@ namespace IBM.Watson.Services
         /// <summary>
         /// Credentials used to authenticate with the server.
         /// </summary>
-        public Credential Authentication { get; set; }
+        public Config.CredentialsInfo Authentication { get; set; }
         /// <summary>
         /// The current state of this connector.
         /// </summary>
@@ -160,13 +145,14 @@ namespace IBM.Watson.Services
         #region Connector Creation
         /// <summary>
         /// This function creates the correct type of Connector based on the provided URI. THe connector
-        /// is initialized with the URI and credentials before being returned. 
+        /// is initialized with the URI and credentials before being returned. The returned object is ready
+        /// for the user to call Send().
         /// </summary>
         /// <param name="uri">The URI to the server.</param>
         /// <param name="credentials">The authentication information to use to connect with the server.</param>
         /// <returns>Returns a Connector object that can be used to send any number of requests to the server.
         /// null is returned if a correct Connector cannot be determined from the URI.</returns>
-        public static Connector Create( string uri, Credential credentials )
+        public static Connector Create( string uri, Config.CredentialsInfo credentials )
         {
             Connector connector = null;
             if (uri.StartsWith("ws://", StringComparison.OrdinalIgnoreCase)
