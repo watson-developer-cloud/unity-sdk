@@ -65,6 +65,10 @@ namespace IBM.Watson.Connection
             /// The data returned by the request.
             /// </summary>
             public byte[] Data { get; set; }
+            /// <summary>
+            /// The amount of time in seconds it took to get this response from the server.
+            /// </summary>
+            public float ElapsedTime { get; set; }
             #endregion
         };
 
