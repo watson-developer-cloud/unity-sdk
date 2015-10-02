@@ -111,6 +111,16 @@ namespace IBM.Watson.Services.v1
         /// <returns>Returns true if the request is sent.</returns>
         public bool ToSpeech(string text, ToSpeechCallback callback)
         {
+            if ( !m_AudioFormats.ContainsKey(m_AudioFormat) )
+            {
+                Log.Error( "TextToSpeech", "Unsupported audio format: {0}", m_AudioFormat.ToString() );
+                return false;
+            }
+            if ( !m_VoiceTypes.ContainsKey(m_Voice) )
+            {
+                Log.Error( "TextToSpeech", "Unsupported voice: {0}", m_Voice.ToString() );
+                return false;
+            }
             if (m_Connector == null)
             {
                 Config.CredentialsInfo info = Config.Instance.FindCredentials(ServiceID());
