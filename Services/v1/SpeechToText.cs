@@ -14,10 +14,14 @@
 * limitations under the License.
 */
 
-namespace IBM.Watson.Services
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace IBM.Watson.Services.v1
 {
-    interface IService
+    class SpeechToText
     {
-        string ServiceID();
     }
 }

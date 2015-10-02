@@ -26,7 +26,7 @@ using System;
 
 namespace IBM.Watson.Services.v1
 {
-    public class TextToSpeech : IService
+    public class TextToSpeech 
     {
         #region Public Types
         public delegate void ToSpeechCallback(AudioClip clip);
@@ -80,7 +80,7 @@ namespace IBM.Watson.Services.v1
             { AudioFormatType.WAV, "audio/wav" },
             { AudioFormatType.FLAC, "audio/flac" },
         };
-
+        private const string SERVICE_ID = "TextToSpeechV1";
         #endregion
 
         #region Public Properties
@@ -88,15 +88,11 @@ namespace IBM.Watson.Services.v1
         public VoiceType Voice { get { return m_Voice; } set { m_Voice = value; } }
         #endregion
 
-        #region IService Interface
-        public string ServiceID()
-        {
-            return "TextToSpeechV1";
-        }
-        #endregion
-
         #region ToSpeech Functions
 
+        /// <summary>
+        /// Private Request object that holds data specific to the ToSpeech request.
+        /// </summary>
         private class ToSpeechRequest : Connector.Request
         {
             public string Text { get; set; }
@@ -123,10 +119,10 @@ namespace IBM.Watson.Services.v1
             }
             if (m_Connector == null)
             {
-                Config.CredentialsInfo info = Config.Instance.FindCredentials(ServiceID());
+                Config.CredentialsInfo info = Config.Instance.FindCredentials(SERVICE_ID);
                 if (info == null)
                 {
-                    Log.Error("TextToSpeech", "Unable to find credentials for service ID: {0}", ServiceID());
+                    Log.Error("TextToSpeech", "Unable to find credentials for service ID: {0}", SERVICE_ID);
                     return false;
                 }
 
