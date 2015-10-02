@@ -34,13 +34,16 @@ public class TextToSpeechWidget : MonoBehaviour
 
     private void OnSpeech( AudioClip clip )
     {
- 		AudioSource source = GetComponent<AudioSource>();
-        if ( source != null )
+        if ( clip != null )
         {
-            source.spatialBlend = 0.0f;     // 2D sound
-            source.loop = false;            // do not loop
-            source.clip = clip;             // clip
-            source.Play();
+ 		    AudioSource source = GetComponent<AudioSource>();
+            if ( source != null )
+            {
+                source.spatialBlend = 0.0f;     // 2D sound
+                source.loop = false;            // do not loop
+                source.clip = clip;             // clip
+                source.Play();
+            }
         }
     }
 }

@@ -29,6 +29,9 @@ namespace IBM.Watson.Connection
         #region Connector Interface
         public override bool Send(Request request)
         {
+            if ( request == null )
+                throw new ArgumentNullException("request");
+
             m_Requests.Enqueue(request);
 
             // if we are not already running a co-routine to send the Requests
@@ -44,8 +47,7 @@ namespace IBM.Watson.Connection
         }
         public override void Dispose()
         {
-			if (m_Requests != null)
-				m_Requests.Clear ();
+			m_Requests.Clear ();
 		}
         #endregion
 
@@ -62,6 +64,9 @@ namespace IBM.Watson.Connection
 
         private void AddAuthorizationHeader(Dictionary<string, string> headers)
         {
+            if ( headers == null )
+                throw new ArgumentNullException("headers");
+
             headers.Add("Authorization", CreateAuthorization());
         }
 
@@ -165,10 +170,7 @@ namespace IBM.Watson.Connection
                 if ( req.OnResponse != null )
                     req.OnResponse( req, resp );
 
-				if(www != null)
-					www.Dispose();
-				else
-					Log.Error("RESTConnector", "www is null. This shouldn't happen!");
+				www.Dispose();
             }
 
             // reduce the connection count before we exit..
