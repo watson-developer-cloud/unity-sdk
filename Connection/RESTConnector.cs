@@ -43,7 +43,10 @@ namespace IBM.Watson.Connection
             return true;
         }
         public override void Dispose()
-        { }
+        {
+			if (m_Requests != null)
+				m_Requests.Clear ();
+		}
         #endregion
 
         #region Private Data
@@ -71,7 +74,7 @@ namespace IBM.Watson.Connection
             while (m_Requests.Count > 0)
             {
                 Request req = m_Requests.Dequeue();
-                string url = Authentication.m_URL + req.Function;
+                string url = string.Concat(Authentication.m_URL , req.Function);
 
                 float startTime = Time.time;
 
@@ -151,14 +154,18 @@ namespace IBM.Watson.Connection
                 {
                     State = ConnectionState.DISCONNECTED;
                     resp.Success = false;
-                    resp.Error = string.Format( "Request Error.\nURL: {0}\nError: {1}\nResponse: {2}",
-                        url, string.IsNullOrEmpty( www.error ) ? "Timeout" : www.error, www.text );
+                    resp.Error = string.Format( "Request Error.\nURL: {0}\nError: {1}\nResponse: {2}", url, string.IsNullOrEmpty( www.error ) ? "Timeout" : www.error, www.text );
                 }
 
                 if ( OnClose != null )
                     OnClose( this );
                 if ( req.OnResponse != null )
                     req.OnResponse( req, resp );
+
+				if(www != null)
+					www.Dispose();
+				else
+					Log.Error("RESTConnector", "www is null. This shouldn't happen!");
             }
 
             // reduce the connection count before we exit..
