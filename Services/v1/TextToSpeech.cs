@@ -22,7 +22,8 @@ using IBM.Watson.Logging;
 using System.Runtime.InteropServices;
 using System.IO;
 using System;
-
+using System.Text;
+using MiniJSON;
 
 namespace IBM.Watson.Services.v1
 {
@@ -104,8 +105,9 @@ namespace IBM.Watson.Services.v1
         /// </summary>
         /// <param name="text">The text to synthesis into speech.</param>
         /// <param name="callback">The callback to invoke with the AudioClip.</param>
+        /// <param name="post">If true, then we use post instead of get, this allows for text that exceeds the 5k limit.</param>
         /// <returns>Returns true if the request is sent.</returns>
-        public bool ToSpeech(string text, ToSpeechCallback callback)
+        public bool ToSpeech(string text, ToSpeechCallback callback, bool post = false )
         {
             if ( !m_AudioFormats.ContainsKey(m_AudioFormat) )
             {
@@ -141,8 +143,19 @@ namespace IBM.Watson.Services.v1
             req.Function = "/v1/synthesize";
             req.Parameters["accept"] = m_AudioFormats[m_AudioFormat];
             req.Parameters["voice"] = m_VoiceTypes[m_Voice];
-            req.Parameters["text"] = text;
             req.OnResponse = ToSpeechResponse;
+
+            if (post)
+            {
+                Dictionary<string,string> upload = new Dictionary<string, string>();
+                upload["text"] = text;
+
+                req.Send = Encoding.UTF8.GetBytes( Json.Serialize( upload ) );               
+            }
+            else
+            {
+                req.Parameters["text"] = text;
+            }
 
             return m_Connector.Send(req);
         }
@@ -152,6 +165,8 @@ namespace IBM.Watson.Services.v1
             ToSpeechRequest speechReq = req as ToSpeechRequest;
             if (speechReq == null)
                 throw new WatsonException("Wrong type of request object.");
+
+            Log.Debug( "TextToSpeech", "Request completed in {0} seconds.", resp.ElapsedTime );
 
             AudioClip clip = null;
             if (resp.Success)

@@ -12,6 +12,8 @@ public class TextToSpeechWidget : MonoBehaviour
     private string m_Text = "Hello world, my name is Watson.";
     [SerializeField]
     private TextToSpeech.VoiceType m_Voice = TextToSpeech.VoiceType.en_US_Michael;
+    [SerializeField]
+    private bool m_UsePost = false;
     #endregion
 
     private void OnEnable()
@@ -28,7 +30,7 @@ public class TextToSpeechWidget : MonoBehaviour
             if ( m_TTS.Voice != m_Voice )
                 m_TTS.Voice = m_Voice;
 
-            m_TTS.ToSpeech( m_Text, OnSpeech );
+            m_TTS.ToSpeech( m_Text, OnSpeech, m_UsePost );
         }
     }
 

@@ -81,35 +81,35 @@ namespace IBM.Watson.Connection
                 Request req = m_Requests.Dequeue();
                 string url = string.Concat(Authentication.m_URL , req.Function);
 
+                StringBuilder args = null;
+                foreach (var kp in req.Parameters)
+                {
+                    var key = kp.Key;
+                    var value = kp.Value;
+
+                    if (value is string)
+                        value = WWW.EscapeURL((string)value);             // escape the value
+                    else if (value is byte[])
+                        value = Convert.ToBase64String((byte[])value);    // convert any byte data into base64 string
+                    else
+                        Log.Warning( "RESTConnector", "Unsupported parameter value type {0}", value.GetType().Name );
+
+                    if (args == null)
+                        args = new StringBuilder();
+                    else
+                        args.Append("&");                  // append seperator
+
+                    args.Append(key + "=" + value);       // append key=value
+                }
+
+                if (args != null && args.Length > 0)
+                    url += "?" + args.ToString();
+
                 float startTime = Time.time;
 
                 WWW www = null;
-                if (req.Type == RequestType.GET)
+                if (req.Send == null)
                 {
-                    StringBuilder args = null;
-                    foreach (var kp in req.Parameters)
-                    {
-                        var key = kp.Key;
-                        var value = kp.Value;
-
-                        if (value is string)
-                            value = WWW.EscapeURL((string)value);             // escape the value
-                        else if (value is byte[])
-                            value = Convert.ToBase64String((byte[])value);    // convert any byte data into base64 string
-                        else
-                            Log.Warning( "RESTConnector", "Unsupported parameter value type {0}", value.GetType().Name );
-
-                        if (args == null)
-                            args = new StringBuilder();
-                        else
-                            args.Append("&");                  // append seperator
-
-                        args.Append(key + "=" + value);       // append key=value
-                    }
-
-                    if (args != null && args.Length > 0)
-                        url += "?" + args.ToString();
-
                     Dictionary<string,string> headers = new Dictionary<string, string>();
                     AddAuthorizationHeader( headers );
 
@@ -119,24 +119,17 @@ namespace IBM.Watson.Connection
 
                     www = new WWW( url, null, headers );
                 }
-                else //if (req.Type == RequestType.POST)
+                else
                 {
-                    WWWForm form = new WWWForm();
-                    foreach (var kp in req.Parameters)
-                    {
-                        var key = kp.Key;
-                        var value = kp.Value;
+                    Dictionary<string,string> headers = new Dictionary<string, string>();
+                    AddAuthorizationHeader( headers );
+                    headers["Content-Type"] = "application/json";
 
-                        if (value is byte[])
-                            form.AddBinaryData(key, (byte[])value);
-                        else if (value is string)
-                            form.AddField(key, (string)value);
-                        else
-                            Log.Warning( "RESTConnector", "Unsupported parameter value type {0}", value.GetType().Name );
-                    }
-                    AddAuthorizationHeader(form.headers);
+                    State = ConnectionState.CONNECTED;
+                    if ( OnOpen != null )
+                        OnOpen( this );
 
-                    www = new WWW( url, form );
+                    www = new WWW( url, req.Send, headers );
                 }
 
                 // wait for the request to complete.

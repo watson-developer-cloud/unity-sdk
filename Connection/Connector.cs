@@ -72,12 +72,6 @@ namespace IBM.Watson.Connection
             #endregion
         };
 
-        public enum RequestType
-        {
-            GET,
-            POST
-        };
-
         /// <summary>
         /// This class is created to make a request to send through the IConnector object to the server.
         /// </summary>
@@ -94,14 +88,13 @@ namespace IBM.Watson.Connection
             /// </summary>
             public string Function { get; set; }
             /// <summary>
-            /// The type of request, this is a recommendation to the connector
-            /// on how to make the request. This value is not used by the WSConnector.
-            /// </summary>
-            public RequestType Type { get; set; }
-            /// <summary>
             /// The parameters to pass to the function on the server.
             /// </summary>
             public Dictionary<string, object> Parameters { get; set; }
+            /// <summary>
+            /// The data to send through the connection.
+            /// </summary>
+            public byte [] Send { get; set; }
             /// <summary>
             /// The callback that is invoked when a response is received.
             /// </summary>
