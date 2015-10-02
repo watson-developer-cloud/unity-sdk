@@ -54,13 +54,19 @@ namespace IBM.Watson.Utilities
         {
             if ( typeof(MonoBehaviour).IsAssignableFrom( typeof(T) ) )
             {
-                GameObject singletonObject = new GameObject( "_" + typeof(T).Name );
+                string singletonName = "_" + typeof(T).Name;
+
+                GameObject singletonObject = GameObject.Find( singletonName );
+                if ( singletonObject == null )
+                    singletonObject = new GameObject( singletonName );
 #if SINGLETONS_VISIBLE
                 singletonObject.hideFlags = HideFlags.DontSave;
 #else
                 singletonObject.hideFlags = HideFlags.HideAndDontSave;
 #endif
-                sm_Instance = singletonObject.AddComponent( typeof(T) ) as T;
+                sm_Instance = singletonObject.GetComponent<T>();
+                if ( sm_Instance == null )
+                    sm_Instance = singletonObject.AddComponent( typeof(T) ) as T;
             }
             else
             {
@@ -68,7 +74,7 @@ namespace IBM.Watson.Utilities
             }
 
             if ( sm_Instance == null )
-                throw new Exception( "Failed to create instance " + typeof(T).Name );
+                throw new WatsonException( "Failed to create instance " + typeof(T).Name );
         }
         #endregion
     }
