@@ -22,7 +22,7 @@ using IBM.Watson.Logging;
 using UnityEngine;
 using System.Text;
 
-namespace IBM.Watson.Services
+namespace IBM.Watson.Connection
 {
     class RESTConnector : Connector
     {
@@ -71,7 +71,7 @@ namespace IBM.Watson.Services
             while (m_Requests.Count > 0)
             {
                 Request req = m_Requests.Dequeue();
-                string url = URI + req.Function;
+                string url = Authentication.m_URL + req.Function;
 
                 float startTime = Time.time;
 
@@ -151,8 +151,8 @@ namespace IBM.Watson.Services
                 {
                     State = ConnectionState.DISCONNECTED;
                     resp.Success = false;
-                    resp.Error = string.Format( "Request Error for URL: {0}, Error: {1}",
-                        url, string.IsNullOrEmpty( www.error ) ? "Timeout" : www.error );
+                    resp.Error = string.Format( "Request Error.\nURL: {0}\nError: {1}\nResponse: {2}",
+                        url, string.IsNullOrEmpty( www.error ) ? "Timeout" : www.error, www.text );
                 }
 
                 if ( OnClose != null )

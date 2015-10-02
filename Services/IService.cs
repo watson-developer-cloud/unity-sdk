@@ -14,25 +14,10 @@
 * limitations under the License.
 */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 namespace IBM.Watson.Services
 {
-    class WSConnector : Connector
+    interface IService
     {
-        #region Connector Interface
-        public override bool Send( Request request )
-        {
-            // TODO
-            return false;
-        }
-        public override void Dispose()
-        {
-            
-        }
-       #endregion
+        string ServiceID();
     }
 }

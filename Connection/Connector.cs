@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using IBM.Watson.Utilities;
 using IBM.Watson.Logging;
 
-namespace IBM.Watson.Services
+namespace IBM.Watson.Connection
 {
     /// <summary>
     ///  This abstract class is what all services use to transparently connect to the server backend. 
@@ -27,8 +27,8 @@ namespace IBM.Watson.Services
     abstract class Connector : IDisposable
     {
         #region Public Types
-        public delegate void ConnectorEvent( Connector connection );
-        public delegate void ResponseEvent( Request req, Response resp );
+        public delegate void ConnectorEvent(Connector connection);
+        public delegate void ResponseEvent(Request req, Response resp);
 
         public enum ConnectionState
         {
@@ -64,7 +64,7 @@ namespace IBM.Watson.Services
             /// <summary>
             /// The data returned by the request.
             /// </summary>
-            public byte [] Data { get; set; }
+            public byte[] Data { get; set; }
             #endregion
         };
 
@@ -97,7 +97,7 @@ namespace IBM.Watson.Services
             /// <summary>
             /// The parameters to pass to the function on the server.
             /// </summary>
-            public Dictionary<string,object> Parameters { get; set; }
+            public Dictionary<string, object> Parameters { get; set; }
             /// <summary>
             /// The callback that is invoked when a response is received.
             /// </summary>
@@ -115,13 +115,7 @@ namespace IBM.Watson.Services
         /// This delegeta is invoked when the connection is closed.
         /// </summary>
         public ConnectorEvent OnClose { get; set; }
-        /// <summary>
-        /// The URI of the connection. If this URI starts with ws:// or wss:// then a
-        /// websocket wil be used, if it begins with http:// or https:// then a REST
-        /// connection will be used.
-        /// </summary>
-        public string URI { get; set; }
-        /// <summary>
+         /// <summary>
         /// Credentials used to authenticate with the server.
         /// </summary>
         public Config.CredentialsInfo Authentication { get; set; }
@@ -139,7 +133,7 @@ namespace IBM.Watson.Services
         /// </summary>
         /// <param name="request">The request object.</param>
         /// <returns>true is returned on success, false is returned if the Request can't be sent.</returns>
-        public abstract bool Send( Request request );
+        public abstract bool Send(Request request);
         #endregion
 
         #region Connector Creation
@@ -152,27 +146,31 @@ namespace IBM.Watson.Services
         /// <param name="credentials">The authentication information to use to connect with the server.</param>
         /// <returns>Returns a Connector object that can be used to send any number of requests to the server.
         /// null is returned if a correct Connector cannot be determined from the URI.</returns>
-        public static Connector Create( string uri, Config.CredentialsInfo credentials )
+        public static Connector Create( Config.CredentialsInfo credentials)
         {
+            if (credentials == null)
+                throw new ArgumentNullException("credentials");
+
+            string url = credentials.m_URL;
+            
             Connector connector = null;
-            if (uri.StartsWith("ws://", StringComparison.OrdinalIgnoreCase)
-                || uri.StartsWith("wss://", StringComparison.OrdinalIgnoreCase))
+            if (url.StartsWith("ws://", StringComparison.OrdinalIgnoreCase)
+                || url.StartsWith("wss://", StringComparison.OrdinalIgnoreCase))
             {
                 connector = new WSConnector();
             }
-            else if ( uri.StartsWith( "http://", StringComparison.OrdinalIgnoreCase ) 
-                || uri.StartsWith( "https://", StringComparison.OrdinalIgnoreCase ) )
+            else if (url.StartsWith("http://", StringComparison.OrdinalIgnoreCase)
+                || url.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
             {
                 connector = new RESTConnector();
             }
 
-            if ( connector == null )
+            if (connector == null)
             {
-                Log.Error( "Connector", "Failed to create connector for URI: {0}", uri );
+                Log.Error("Connector", "Failed to create connector for URI: {0}", url);
                 return null;
             }
 
-            connector.URI = uri;
             connector.Authentication = credentials;
             return connector;
         }
@@ -186,7 +184,7 @@ namespace IBM.Watson.Services
         #endregion
 
         #region Private Data
-        private ConnectionState     m_ConnectionState = ConnectionState.CLOSED;
+        private ConnectionState m_ConnectionState = ConnectionState.CLOSED;
         #endregion
     }
 }

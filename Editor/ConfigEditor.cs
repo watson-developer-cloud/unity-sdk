@@ -65,6 +65,7 @@ namespace IBM.Watson.Editor
                 Config.CredentialsInfo info = cfg.Credentials[i];
 
                 info.m_ServiceID = EditorGUILayout.TextField( "ServiceID", info.m_ServiceID );
+                info.m_URL = EditorGUILayout.TextField( "URL", info.m_URL );
                 info.m_User = EditorGUILayout.TextField( "User", info.m_User );
                 info.m_Password = EditorGUILayout.TextField( "Password", info.m_Password );
 
