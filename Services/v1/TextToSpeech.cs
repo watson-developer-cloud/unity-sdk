@@ -230,8 +230,7 @@ namespace IBM.Watson.Services.v1
             BinaryReader reader = new BinaryReader(stream);
 
             IFF_FORM_CHUNK form = BytesToType<IFF_FORM_CHUNK>(reader);
-            //if (form.form_id != "RIFF" || form.id != "WAVE")
-            if (GetID(form.id) != "WAVE")
+            if ( GetID(form.form_id) != "RIFF" || GetID(form.id) != "WAVE")
             {
                 Log.Error("TextToSpeech", "Malformed WAV header: {0} != RIFF || {1} != WAVE", GetID(form.form_id), GetID(form.id) );
                 return null;
@@ -245,7 +244,7 @@ namespace IBM.Watson.Services.v1
                 IFF_CHUNK chunk = BytesToType<IFF_CHUNK>(reader);
 
                 int ChunkLength = (int)chunk.length;
-                if (ChunkLength < 0)  // Deal with TextToSpeech bug where the chunk length is not set for the data chunk..
+                if (ChunkLength < 0)  // HACK: Deal with TextToSpeech bug where the chunk length is not set for the data chunk..
                     ChunkLength = (int)(reader.BaseStream.Length - reader.BaseStream.Position);
                 if ((ChunkLength & 0x1) != 0)
                     ChunkLength += 1;
