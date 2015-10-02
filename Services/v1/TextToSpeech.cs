@@ -272,6 +272,9 @@ namespace IBM.Watson.Services.v1
                     int bytesps = bps / 8;
                     int samples = waveform.Length / bytesps;
 
+                    Log.Debug( "TextToSpeech", "WAV INFO, channels = {0}, bps = {1}, samples = {2}, rate = {3}", 
+                        channels, bps, samples, header.sample_rate );
+
                     float[] wf = new float[samples];
                     if (bps == 16)
                     {
