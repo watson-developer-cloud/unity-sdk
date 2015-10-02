@@ -401,7 +401,7 @@ public class WaveFormTest : MonoBehaviour {
 			//Debug.Log ("waveForm[" + i + "] = " + waveForm[i]);
 		}
 		
-		int current = audioSource.timeSamples / resolution;
+		int current = (int)(audioSource.timeSamples / (float)resolution);
 
 		//Debug.Log ("audio.timeSamples: " + audioSource.timeSamples + " - resolution: " + resolution + " - current: " + current + " - waveForm.Length: " + waveForm.Length);
 
