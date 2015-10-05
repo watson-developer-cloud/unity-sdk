@@ -96,6 +96,10 @@ namespace IBM.Watson.Connection
             /// </summary>
             public byte [] Send { get; set; }
             /// <summary>
+            /// The type of content to send, the default is "application/json"
+            /// </summary>
+            public string ContentType { get; set; }
+            /// <summary>
             /// The callback that is invoked when a response is received.
             /// </summary>
             public ResponseEvent OnResponse { get; set; }

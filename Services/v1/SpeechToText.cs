@@ -14,14 +14,27 @@
 * limitations under the License.
 */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using UnityEngine;
 
 namespace IBM.Watson.Services.v1
 {
     class SpeechToText
     {
+        public class Results
+        {
+
+        };
+        public delegate void OnSpeechToText( Results results );
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="clip"></param>
+        /// <param name="callback"></param>
+        /// <returns></returns>
+        public bool ToText( AudioClip clip, OnSpeechToText callback )
+        {
+            return true;
+        }
     }
 }

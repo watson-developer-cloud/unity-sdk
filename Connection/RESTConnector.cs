@@ -124,7 +124,11 @@ namespace IBM.Watson.Connection
                 {
                     Dictionary<string,string> headers = new Dictionary<string, string>();
                     AddAuthorizationHeader( headers );
-                    headers["Content-Type"] = "application/json";
+
+                    string sContentType = req.ContentType;
+                    if ( string.IsNullOrEmpty( sContentType ) )
+                        sContentType = "application/json";
+                    headers["Content-Type"] = sContentType;
 
                     State = ConnectionState.CONNECTED;
                     if ( OnOpen != null )
