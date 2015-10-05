@@ -17,33 +17,28 @@
 using UnityEngine;
 using System.Collections;
 using IBM.Watson.Utilities;
-using IBM.Watson.Logging;
 
-public class TestRunnable : MonoBehaviour
+namespace IBM.Watson.UnitTests
 {
-
-    private void Start()
+    public class TestRunnable : UnitTest
     {
-        Logger.InstallDefaultReactors();
-    }
+        bool m_CoroutineRan = false;
 
-    private void OnGUI()
-    {
-        if (GUILayout.Button("Start Routine"))
+        public override IEnumerator RunTest()
         {
             Runnable.Run(TestCoroutine("Test"));
+            yield return new WaitForSeconds(1.0f);
+            
+            Test( m_CoroutineRan );
+            yield break;
         }
-    }
 
-    private IEnumerator TestCoroutine(string a_Argument)
-    {
-		Log.Debug("Test", a_Argument );
-		yield return new WaitForSeconds (1.0f);
-		Log.Debug("Test",  a_Argument );
-		//yield return null;
-
-        yield return null;
-        Log.Debug("Test", a_Argument);
+        private IEnumerator TestCoroutine(string a_Argument)
+        {
+            Test( a_Argument == "Test" );
+            m_CoroutineRan = true;
+            yield break;
+        }
     }
 }
 
