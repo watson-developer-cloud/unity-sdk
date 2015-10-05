@@ -25,7 +25,10 @@ using System;
 
 namespace IBM.Watson.Editor
 {
-    [ExecuteInEditMode]
+    /// <summary>
+    /// This class implements a UI using OnGUI and allows the user to run a UnitTest by clicking on a button. Additionally,
+    /// it handles running any number of unit tests.
+    /// </summary>
     public class UnitTestManager : MonoBehaviour
     {
         public delegate void OnTestsComplete();
@@ -83,7 +86,8 @@ namespace IBM.Watson.Editor
         public void RunTests()
         {
             TestsFailed = TestsComplete = 0;
-            StartCoroutine(RunTestsCR());
+            // using Runnable, since we hook the editor update and handles those co-routines even if the editor isn't in play mode.
+            Runnable.Run(RunTestsCR());
         }
 
         #region Private Data
@@ -169,6 +173,9 @@ namespace IBM.Watson.Editor
 }
 
 
+/// <summary>
+/// This static class is for menu items and invoking a function from the command line, since it doesn't like namespaces.
+/// </summary>
 public static class RunUnitTest
 {
     /// <summary>
