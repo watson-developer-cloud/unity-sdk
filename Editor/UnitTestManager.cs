@@ -29,6 +29,11 @@ namespace IBM.Watson.Editor
     public class UnitTestManager : MonoBehaviour
     {
         /// <summary>
+        /// Maximum time in seconds a test can run before we consider it timed out.
+        /// </summary>
+        const float TEST_TIMEOUT = 300.0f;
+
+        /// <summary>
         /// Returns the instance of the UnitTestManager.
         /// </summary>
         public static UnitTestManager Instance { get { return Singleton<UnitTestManager>.Instance; } }
@@ -106,9 +111,18 @@ namespace IBM.Watson.Editor
                     Log.Status("UnitTestManager", "STARTING UnitTest {0} ...", testType.Name);
 
                     // wait for the test to complete..
+                    float fStartTime = Time.time;
                     IEnumerator e = m_ActiveTest.RunTest();
                     while ( e.MoveNext() )
+                    {
                         yield return null;
+                        if ( Time.time > (fStartTime + TEST_TIMEOUT) )
+                        {
+                            Log.Error( "UnitTestManager", "UnitTest {0} has timed out.", testType.Name );
+                            m_ActiveTest.TestFailed = true;
+                            break;
+                        }
+                    }
 
                     if (m_ActiveTest.TestFailed)
                     {

@@ -27,8 +27,7 @@ namespace IBM.Watson.UnitTests
                 
         public override IEnumerator RunTest()
         {
-            m_TTS.ToSpeech( "Hello World using GET", OnSpeech );                  // Test GET
-            m_TTS.ToSpeech( "Hello World using POST", OnSpeech, true );            // Test POST
+            m_TTS.ToSpeech( "Hello World using GET", OnSpeechGET );                  // Test GET
 
             // wait for both callbacks
             while (m_CallbackCount < 2 )
@@ -37,20 +36,39 @@ namespace IBM.Watson.UnitTests
             yield break;
         }
 
-        private void OnSpeech( AudioClip clip )
+        private void OnSpeechGET( AudioClip clip )
         {
             Test( clip != null );
             m_CallbackCount += 1;
 
-            GameObject audioObject = new GameObject( "AudioObject" );
-            AudioSource source = audioObject.AddComponent<AudioSource>();
-            source.spatialBlend = 0.0f;     // 2D sound
-            source.loop = false;            // do not loop
-            source.clip = clip;             // clip
-            source.Play();
+            PlayClip( clip );
 
-            // automatically destroy the object after the sound has played..
-            GameObject.Destroy( audioObject, clip.length );
+            m_TTS.ToSpeech( "Hello World using POST", OnSpeechPOST, true );            // Test POST
         }
+
+        private void OnSpeechPOST( AudioClip clip )
+        {
+            Test( clip != null );
+            m_CallbackCount += 1;
+
+            PlayClip( clip );
+        }
+
+        private void PlayClip( AudioClip clip )
+        {
+            if ( clip != null )
+            {
+                GameObject audioObject = new GameObject( "AudioObject" );
+                AudioSource source = audioObject.AddComponent<AudioSource>();
+                source.spatialBlend = 0.0f;     // 2D sound
+                source.loop = false;            // do not loop
+                source.clip = clip;             // clip
+                source.Play();
+
+                // automatically destroy the object after the sound has played..
+                GameObject.Destroy( audioObject, clip.length );
+            }
+        }
+
     }
 }

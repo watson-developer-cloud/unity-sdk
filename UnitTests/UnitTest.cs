@@ -25,7 +25,7 @@ namespace IBM.Watson.UnitTests {
     /// </summary>
     public abstract class UnitTest
     {
-        public bool TestFailed { get; private set; }
+        public bool TestFailed { get; set; }
 
         public abstract IEnumerator RunTest();
 
