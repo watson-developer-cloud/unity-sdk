@@ -115,5 +115,23 @@ namespace IBM.Watson.Utilities
         private Dictionary<int, Routine> m_Routines = new Dictionary<int, Routine>();
         private int m_NextRoutineId = 0;
         #endregion
+
+        /// <summary>
+        /// THis can be called by the user to force all co-routines to get a time slice, this is usually
+        /// invoked from an EditorApplication.Update callback so we can use runnable in Editor mode.
+        /// </summary>
+        public void UpdateRoutines()
+        {
+            if ( m_Routines.Count > 0 )
+            {
+                // we are not in play mode, so we must manually update our co-routines ourselves
+                List<Routine> routines = new List<Routine>();
+                foreach( var kp in m_Routines )
+                    routines.Add( kp.Value );
+
+                foreach( var r in routines )
+                    r.MoveNext();
+            }
+        }
     }
 }

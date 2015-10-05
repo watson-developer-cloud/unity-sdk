@@ -28,6 +28,8 @@ namespace IBM.Watson.Editor
     [ExecuteInEditMode]
     public class UnitTestManager : MonoBehaviour
     {
+        public delegate void OnTestsComplete();
+
         /// <summary>
         /// Maximum time in seconds a test can run before we consider it timed out.
         /// </summary>
@@ -50,21 +52,10 @@ namespace IBM.Watson.Editor
         /// If true, then the editor will exit with an error code once the last test is completed.
         /// </summary>
         public bool QuitOnTestsComplete { get; set; }
-
         /// <summary>
-        /// Public functions invoked from the command line to run all UnitTest objects.
-        /// (e.g. "C:\Program Files\Unity\Editor\Unity.exe" -quit -batchmode -executemethod UnitTestManager.RunAll)
+        /// This callback is invoked when all queued tests have been completed.
         /// </summary>
-        static public void RunAll()
-        {
-            UnitTestManager instance = Instance;
-            Type[] tests = Utility.FindAllDerivedTypes(typeof(UnitTest));
-            foreach (var t in tests)
-                instance.QueueTest(t);
-
-            instance.QuitOnTestsComplete = true;
-            instance.RunTests();
-        }
+        public OnTestsComplete OnTestCompleteCallback { get; set; }
 
         /// <summary>
         /// Queue test by Type to run.
@@ -74,6 +65,14 @@ namespace IBM.Watson.Editor
         public void QueueTest(Type test, bool run = false)
         {
             m_QueuedTests.Enqueue(test);
+            if (run)
+                RunTests();
+        }
+
+        public void QueueTests(Type[] tests, bool run = false)
+        {
+            foreach (var t in tests)
+                m_QueuedTests.Enqueue(t);
             if (run)
                 RunTests();
         }
@@ -94,11 +93,6 @@ namespace IBM.Watson.Editor
         #endregion
 
         #region Private Functions
-        private void Start()
-        {
-            Logger.InstallDefaultReactors();
-        }
-
         private IEnumerator RunTestsCR()
         {
             while (m_QueuedTests.Count > 0)
@@ -113,12 +107,12 @@ namespace IBM.Watson.Editor
                     // wait for the test to complete..
                     float fStartTime = Time.time;
                     IEnumerator e = m_ActiveTest.RunTest();
-                    while ( e.MoveNext() )
+                    while (e.MoveNext())
                     {
                         yield return null;
-                        if ( Time.time > (fStartTime + TEST_TIMEOUT) )
+                        if (Time.time > (fStartTime + TEST_TIMEOUT))
                         {
-                            Log.Error( "UnitTestManager", "UnitTest {0} has timed out.", testType.Name );
+                            Log.Error("UnitTestManager", "UnitTest {0} has timed out.", testType.Name);
                             m_ActiveTest.TestFailed = true;
                             break;
                         }
@@ -143,9 +137,12 @@ namespace IBM.Watson.Editor
 
             }
 
+            if (OnTestCompleteCallback != null)
+                OnTestCompleteCallback();
+
             if (QuitOnTestsComplete)
             {
-                Log.Error("UnitTestManager", "Exiting, Tests Completed: {0}, Tests Failed: {1}", TestsComplete, TestsFailed);
+                Log.Status("UnitTestManager", "Exiting, Tests Completed: {0}, Tests Failed: {1}", TestsComplete, TestsFailed);
                 EditorApplication.Exit(TestsFailed > 0 ? 1 : 0);
             }
         }
@@ -170,3 +167,46 @@ namespace IBM.Watson.Editor
         #endregion
     }
 }
+
+
+public static class RunUnitTest
+{
+    /// <summary>
+    /// Public functions invoked from the command line to run all UnitTest objects.
+    /// (e.g. "C:\Program Files\Unity\Editor\Unity.exe" -quit -batchmode -executemethod UnitTestManager.RunAll -projectPath <pathname>)
+    /// </summary>
+    /// 
+    static public void All()
+    {
+        Logger.InstallDefaultReactors();
+        EditorApplication.update += UpdateRunnable;
+
+        IBM.Watson.Editor.UnitTestManager instance = IBM.Watson.Editor.UnitTestManager.Instance;
+        instance.QuitOnTestsComplete = true;
+        instance.OnTestCompleteCallback = OnTestsComplete;
+        instance.QueueTests(Utility.FindAllDerivedTypes(typeof(UnitTest)), true);
+    }
+
+    [MenuItem("Watson/Run All UnitTests")]
+    static public void AllNoQuit()
+    {
+        Logger.InstallDefaultReactors();
+        EditorApplication.update += UpdateRunnable;
+
+        IBM.Watson.Editor.UnitTestManager instance = IBM.Watson.Editor.UnitTestManager.Instance;
+        instance.OnTestCompleteCallback = OnTestsComplete;
+        instance.QueueTests(Utility.FindAllDerivedTypes(typeof(UnitTest)), true);
+    }
+
+    static void UpdateRunnable()
+    {
+        Runnable.Instance.UpdateRoutines();
+    }
+
+    static void OnTestsComplete()
+    {
+        EditorApplication.update -= UpdateRunnable;
+    }
+
+}
+

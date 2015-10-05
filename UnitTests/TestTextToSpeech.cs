@@ -17,6 +17,7 @@
 using UnityEngine;
 using System.Collections;
 using IBM.Watson.Services.v1;
+using IBM.Watson.Logging;
 
 namespace IBM.Watson.UnitTests
 {
@@ -38,16 +39,21 @@ namespace IBM.Watson.UnitTests
 
         private void OnSpeechGET( AudioClip clip )
         {
+            Log.Debug( "TestTestToSpeech", "OnSpeechGET invoked." );
+
             Test( clip != null );
             m_CallbackCount += 1;
 
             PlayClip( clip );
 
+            Log.Debug( "TestTextToSpeech", "ToSpeech POST." );
             m_TTS.ToSpeech( "Hello World using POST", OnSpeechPOST, true );            // Test POST
         }
 
         private void OnSpeechPOST( AudioClip clip )
         {
+            Log.Debug( "TestTestToSpeech", "OnSpechPOST invoked." );
+
             Test( clip != null );
             m_CallbackCount += 1;
 
@@ -56,7 +62,7 @@ namespace IBM.Watson.UnitTests
 
         private void PlayClip( AudioClip clip )
         {
-            if ( clip != null )
+            if ( Application.isPlaying && clip != null )
             {
                 GameObject audioObject = new GameObject( "AudioObject" );
                 AudioSource source = audioObject.AddComponent<AudioSource>();
