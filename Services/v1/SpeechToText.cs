@@ -22,12 +22,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Text;
 
-namespace IBM.Watson.Services.v1
+namespace IBM.Watson.Services.v1            // Add DeveloperCloud
 {
     class SpeechToText
     {
         #region Constants
+        const string SERVICE_ID = "SpeechToTextV1";
         /// <summary>
         /// How often to refresh a session to prevent it from expiring.
         /// </summary>
@@ -36,7 +38,7 @@ namespace IBM.Watson.Services.v1
         /// Size in seconds of the recording buffer. AudioClips() will be generated each time
         /// the recording hits the halfway point.
         /// </summary>
-        const int RECORDING_BUFFER_SIZE = 3;
+        const int RECORDING_BUFFER_SIZE = 2;
         #endregion
 
         #region Public Types
@@ -76,7 +78,7 @@ namespace IBM.Watson.Services.v1
         };
         public delegate void OnRecordClip(RecordClip clip);
         public delegate void OnRecognize(ResultList results);
-        public delegate void OnGetModels( Model [] models );
+        public delegate void OnGetModels(Model[] models);
         #endregion
 
         #region Private Data
@@ -84,17 +86,18 @@ namespace IBM.Watson.Services.v1
         private OnRecognize m_RecognizeCallback = null;
         private string m_RecognizeModel = "en-US_BroadbandModel";    // ID of the model to use.
         private int m_MaxAlternatives = 1;                  // maximum number of alternatives to return.
-        private bool m_Timestamps = false;                  
+        private bool m_Timestamps = false;
         private bool m_WordConfidence = false;
         private bool m_UseSession = false;
         private string m_SessionID = null;
         private float m_LastSessionRefresh = 0.0f;          // last time when we refreshed our session ID
         private OnRecordClip m_RecordingCallback = null;
         private int m_RecordingID = 0;                      // ID of our co-routine when recording, 0 if not recording currently.
+        private AudioClip m_Recording = null;              
         private int m_RecordingHZ = 22050;                  // default recording HZ
         private string m_MicrophoneID = null;               // what microphone to use for recording.
         private bool m_DetectSilence = true;                // If true, then we will try not to record silence.
-        private float m_SilenceThreshold = 0.1f;            // IF the audio level is below this value, then it's considered silent.
+        private float m_SilenceThreshold = 0.03f;           // If the audio level is below this value, then it's considered silent.
         #endregion
 
         #region Public Properties
@@ -130,7 +133,6 @@ namespace IBM.Watson.Services.v1
         /// Microphone recording HZ.
         /// </summary>
         public int RecordingHZ { get { return m_RecordingHZ; } set { m_RecordingHZ = value; } }
-        public OnRecordClip RecordingCallback { get; set; }
         /// <summary>
         /// Returns the name of the selected microphone.
         /// </summary>
@@ -149,9 +151,9 @@ namespace IBM.Watson.Services.v1
         #region Listening Functions
         public bool StartListening(OnRecognize callback)
         {
-            if ( m_RecordingID != 0 )
+            if (m_RecordingID != 0)
             {
-                Log.Error( "SpeechToText", "Recording already active." );
+                Log.Error("SpeechToText", "Recording already active.");
                 return false;
             }
 
@@ -168,123 +170,111 @@ namespace IBM.Watson.Services.v1
 
         #region Recognize Functions
 
-        public bool GetModels( OnGetModels callback )
+        public bool GetModels(OnGetModels callback)
         {
             return true;
         }
+
         /// <summary>
-        /// 
+        /// This function POSTs the given audio clip the reconize function and convert speech into text. This function should be used
+        /// only on AudioClips under 4MB once they have been converted into WAV format.
         /// </summary>
-        /// <param name="clip"></param>
-        /// <param name="callback"></param>
+        /// <param name="clip">The AudioClip object.</param>
+        /// <param name="callback">A callback to invoke with the results.</param>
         /// <returns></returns>
         public bool Recognize(AudioClip clip, OnRecognize callback)
         {
+            if (clip == null )
+                throw new ArgumentNullException("clip");
+            if (callback == null )
+                throw new ArgumentNullException("callback");
 
-            m_RecognizeCallback = callback;
-            return true;
+            if (m_Connector == null)
+            {
+                Config.CredentialsInfo info = Config.Instance.FindCredentials(SERVICE_ID);
+                if (info == null)
+                {
+                    Log.Error("SpeechToText", "Unable to find credentials for Service ID: {0}", SERVICE_ID);
+                    return false;
+                }
+
+                m_Connector = Connector.Create(info);
+                if (m_Connector == null)
+                {
+                    Log.Error("SpeechToText", "Failed to create connection for URL: {0}", info.m_URL);
+                    return false;
+                }
+            }
+
+            RecognizeRequest req = new RecognizeRequest();
+            req.Clip = clip;
+            req.Callback = callback;
+
+            req.Function = "/v1/recognize";
+            req.ContentType = "audio/wav";
+            req.Send = WaveFile.CreateWAV( clip );     
+            if ( req.Send.Length > (4 * (1024 * 1024)) )
+            {
+                Log.Error( "SpeechToText", "AudioClip is too large for Recognize()." );
+                return false;
+            }
+            req.Parameters["model"] = m_RecognizeModel;
+            req.Parameters["continuous"] = "false";     // TODO: Support this query parameter
+            req.Parameters["max_alternatives"] = m_MaxAlternatives.ToString();
+            req.Parameters["timestamps"] = m_Timestamps ? "true" : "false";
+            req.Parameters["word_confidence"] = m_WordConfidence ? "true" : "false";
+            req.OnResponse = OnRecognizeResponse;
+
+            return m_Connector.Send( req );
         }
+
         private class RecognizeRequest : Connector.Request
         {
-            AudioClip m_Clip = null;
-            byte [] m_Wave = null;
-            OnRecognize m_Callback = null;
+            public AudioClip Clip { get; set; }
+            public OnRecognize Callback { get; set; }
         };
 
         private void OnRecognizeResponse(Connector.Request req, Connector.Response resp)
         {
-        }
-        #endregion
+            RecognizeRequest recognizeReq = req as RecognizeRequest;
+            if ( recognizeReq == null )
+                throw new WatsonException( "Unexpected request type." );
 
-        #region Recording Functions
-        public bool StartRecording(OnRecordClip callback)
-        {
-            if ( m_RecordingID != 0 )
+            ResultList result = null;
+            if ( resp.Success )
             {
-                Log.Error( "SpeechToText", "StartRecording() invoked, recording already active." );
-                return false;
-            }
-
-            m_RecordingCallback = callback;
-            m_RecordingID = Runnable.Run( RecordingHandler() );
-
-            return true;
-        }
-
-        public bool StopRecording()
-        {
-            if ( m_RecordingID == 0 )
-            {
-                Log.Error( "SpeechToText", "StopRecording() called, no active recording." );
-                return false;
-            }
-
-            Microphone.End( m_MicrophoneID );
-            Runnable.Stop( m_RecordingID );
-            m_RecordingID = 0;
-            m_RecordingCallback = null;
-
-            return true;
-        }
-
-        /// <summary>
-        /// This co-routine handles recording sounds from the microphone then passing on the recorded
-        /// blocks of audio to the recording callback.
-        /// </summary>
-        /// <returns></returns>
-        private IEnumerator RecordingHandler()
-        {
-#if UNITY_WEBPLAYER
-            yield return Application.RequestUserAuthorization( UserAuthorization.Microphone );
-#endif
-            AudioClip recording = Microphone.Start( m_MicrophoneID, true, RECORDING_BUFFER_SIZE, m_RecordingHZ );
-
-            bool bFirstBlock = true;
-            int midPoint = recording.samples / 2;
-            while( m_RecordingCallback != null )
-            {
-                int writePos = Microphone.GetPosition( m_MicrophoneID );
-                if ( (bFirstBlock && writePos >= midPoint)
-                    || (!bFirstBlock && writePos < midPoint) )
+                result = ParseRecognizeResponse( resp.Data );
+                if ( result == null )
                 {
-                    // front block is recorded, make a RecordClip and pass it onto our callback.
-                    float [] samples = new float[ midPoint ];
-                    recording.GetData( samples, bFirstBlock ? 0 : midPoint );
-
-                    RecordClip record = new RecordClip();
-                    record.MaxLevel = Mathf.Max( samples );
-                    record.Clip = AudioClip.Create( "Recording", midPoint, recording.channels, m_RecordingHZ, false );
-                    record.Clip.SetData( samples, 0 );
-
-                    if ( m_RecordingCallback != null )
-                        m_RecordingCallback( record );
-
-                    bFirstBlock = !bFirstBlock;
+                    Log.Error( "SpeechToText", "Failed to parse json response: {0}", 
+                        resp.Data != null ? Encoding.UTF8.GetString( resp.Data ) : "" );
                 }
                 else
                 {
-                    // calculate the number of samples remaining until we ready for a block of audio, 
-                    // and wait that amount of time it will take to record.
-                    int remaining = bFirstBlock ? (midPoint - writePos) : (recording.samples - writePos);
-                    float timeRemaining = (float)remaining / (float)m_RecordingHZ;
-                    yield return new WaitForSeconds( timeRemaining );
+                    Log.Status( "SpeechToText", "Received Recognize Response, Elapsed Time: {0}, Results: {1}",
+                        resp.ElapsedTime, result.Results.Length );
                 }
             }
-            
-            yield break;
-        }
-        #endregion
+            else
+            {
+                Log.Error( "SpeechToText", "Recognize Error: {0}", resp.Error );
+            }
 
-        /// <summary>
-        /// Parse a JSON response from the server into the ResultList object.
-        /// </summary>
-        /// <param name="json"></param>
-        /// <returns></returns>
-        private ResultList ParseRecognizeResponse(string json)
+            if ( recognizeReq.Callback != null )
+                recognizeReq.Callback( result );
+        }
+
+        private ResultList ParseRecognizeResponse( byte[] json)
         {
+            if ( json == null )
+                return null;
+
             try
             {
-                IDictionary resp = (IDictionary)Json.Deserialize(json);
+                string jsonString = Encoding.UTF8.GetString( json );
+                if ( jsonString == null )
+                    return null;
+                IDictionary resp = (IDictionary)Json.Deserialize( jsonString );
                 if (resp == null)
                     return null;
 
@@ -315,7 +305,7 @@ namespace IBM.Watson.Services.v1
 
                         Alternative alternative = new Alternative();
                         alternative.Transcript = (string)ialternative["transcript"];
-                        alternative.Confidence = (float)ialternative["confidence"];
+                        alternative.Confidence = (float)(double)ialternative["confidence"];
 
                         if (ialternative.Contains("timestamps"))
                         {
@@ -323,7 +313,7 @@ namespace IBM.Watson.Services.v1
 
                             float[] timestamps = new float[itimestamps.Count];
                             for (int i = 0; i < itimestamps.Count; ++i)
-                                timestamps[i] = (float)itimestamps[i];
+                                timestamps[i] = (float)(double)itimestamps[i];
 
                             alternative.Timestamps = timestamps;
                         }
@@ -333,10 +323,12 @@ namespace IBM.Watson.Services.v1
 
                             float[] confidence = new float[iconfidence.Count];
                             for (int i = 0; i < iconfidence.Count; ++i)
-                                confidence[i] = (float)iconfidence[i];
+                                confidence[i] = (float)(double)iconfidence[i];
 
                             alternative.WordConfidence = confidence;
                         }
+
+                        alternatives.Add( alternative );
                     }
                     result.Alternatives = alternatives.ToArray();
                     results.Add(result);
@@ -350,6 +342,96 @@ namespace IBM.Watson.Services.v1
                 return null;
             }
         }
+        #endregion
+
+        #region Recording Functions
+        /// <summary>
+        /// This function begins recording from the microphone and passes all recorded audio to the provided callback function. 
+        /// </summary>
+        /// <param name="callback"></param>
+        /// <returns>Returns true on success.</returns>
+        public bool StartRecording(OnRecordClip callback)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+
+            if (m_RecordingID != 0)
+            {
+                Log.Error("SpeechToText", "StartRecording() invoked, recording already active.");
+                return false;
+            }
+
+            m_RecordingCallback = callback;
+            m_RecordingID = Runnable.Run(RecordingHandler());
+
+            return true;
+        }
+
+        /// <summary>
+        /// Stop recording from the configured microphone.
+        /// </summary>
+        /// <returns>Returns true on success.</returns>
+        public bool StopRecording()
+        {
+            if (m_RecordingID == 0)
+            {
+                Log.Error("SpeechToText", "StopRecording() called, no active recording.");
+                return false;
+            }
+            
+            // TODO: We may need to figure out a method to get the last bit of audio out of our buffer.
+            Microphone.End(m_MicrophoneID);
+            Runnable.Stop(m_RecordingID);
+            m_RecordingID = 0;
+            m_RecordingCallback = null;
+            m_Recording = null;
+
+            return true;
+        }
+
+        private IEnumerator RecordingHandler()
+        {
+#if UNITY_WEBPLAYER
+            yield return Application.RequestUserAuthorization( UserAuthorization.Microphone );
+#endif
+            m_Recording = Microphone.Start(m_MicrophoneID, true, RECORDING_BUFFER_SIZE, m_RecordingHZ);
+
+            bool bFirstBlock = true;
+            int midPoint = m_Recording.samples / 2;
+            while (m_RecordingCallback != null)
+            {
+                int writePos = Microphone.GetPosition(m_MicrophoneID);
+                if ((bFirstBlock && writePos >= midPoint)
+                    || (!bFirstBlock && writePos < midPoint))
+                {
+                    // front block is recorded, make a RecordClip and pass it onto our callback.
+                    float[] samples = new float[midPoint];
+                    m_Recording.GetData(samples, bFirstBlock ? 0 : midPoint);
+
+                    RecordClip record = new RecordClip();
+                    record.MaxLevel = Mathf.Max(samples);
+                    record.Clip = AudioClip.Create("Recording", midPoint, m_Recording.channels, m_RecordingHZ, false);
+                    record.Clip.SetData(samples, 0);
+
+                    if (m_RecordingCallback != null)
+                        m_RecordingCallback(record);
+
+                    bFirstBlock = !bFirstBlock;
+                }
+                else
+                {
+                    // calculate the number of samples remaining until we ready for a block of audio, 
+                    // and wait that amount of time it will take to record.
+                    int remaining = bFirstBlock ? (midPoint - writePos) : (m_Recording.samples - writePos);
+                    float timeRemaining = (float)remaining / (float)m_RecordingHZ;
+                    yield return new WaitForSeconds(timeRemaining);
+                }
+            }
+
+            yield break;
+        }
+        #endregion
+
 
     }
 }
