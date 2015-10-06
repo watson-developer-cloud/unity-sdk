@@ -16,11 +16,6 @@
 * @author Richard Lyle (rolyle@us.ibm.com)
 */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 namespace IBM.Watson.Connection
 {
     class WSConnector : Connector

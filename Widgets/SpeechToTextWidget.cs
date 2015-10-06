@@ -54,6 +54,11 @@ public class SpeechToTextWidget : MonoBehaviour
             //byte[] waveFile = WaveFile.CreateWAV(recording);
             //System.IO.File.WriteAllBytes(Application.persistentDataPath + "/Recording.wav", waveFile);
         }
+
+        if ( GUILayout.Button( "Start Listening" ) )
+            m_STT.StartListening( OnRecognize );
+        if ( GUILayout.Button( "Stop Listening" ) )
+            m_STT.StopListening();
     }
 
     private void OnRecordClip(SpeechToText.RecordClip record)
@@ -69,17 +74,26 @@ public class SpeechToTextWidget : MonoBehaviour
     {
         if (result != null)
         {
-            if (m_Transcript != null && result.Results.Length > 0 && result.Results[0].Alternatives.Length > 0)
-                m_Transcript.text = result.Results[0].Alternatives[0].Transcript;
-
-            Log.Status("SpeechToText", "{0} result received.", result.Results.Length);
+            //Log.Status("SpeechToText", "{0} result received.", result.Results.Length);
             for (int i = 0; i < result.Results.Length; ++i)
             {
-                Log.Status("SpeechToText", "Result {0}: Alternatives {1}", i, result.Results[i].Alternatives.Length);
+                //Log.Status("SpeechToText", "Result {0}: Alternatives {1}", i, result.Results[i].Alternatives.Length);
                 for (int j = 0; j < result.Results[i].Alternatives.Length; ++j)
                 {
                     Log.Status("SpeechToText", "Result {0}, Alternative {1}, Transcript: {2}",
                         i, j, result.Results[i].Alternatives[j].Transcript);
+
+                    if ( m_Transcript != null )
+                        m_Transcript.text += result.Results[i].Alternatives[j].Transcript + "\n";
+
+                    // keep the length of the text under a reasonable number for display..
+                    while ( m_Transcript.text.Length > 5000 )
+                    {
+                        int nextNewline = m_Transcript.text.IndexOf( '\n' );
+                        if ( nextNewline < 0 )
+                            break;
+                        m_Transcript.text = m_Transcript.text.Substring( nextNewline + 1 );
+                    }
                 }
             }
         }

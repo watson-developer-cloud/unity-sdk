@@ -76,7 +76,7 @@ namespace IBM.Watson.Connection
         {
             // yield AFTER we increment the connection count, so the Send() function can return immediately
             m_ActiveConnections += 1;
-            Log.Debug( "RESTConnector", "ActiveConnections {0}", m_ActiveConnections );
+            //Log.Debug( "RESTConnector", "ActiveConnections {0}", m_ActiveConnections );
             yield return null;
 
             while (m_Requests.Count > 0)
@@ -175,7 +175,7 @@ namespace IBM.Watson.Connection
 
             // reduce the connection count before we exit..
             m_ActiveConnections -= 1;
-            Log.Debug( "RESTConnector", "ActiveConnections {0}", m_ActiveConnections );
+            //Log.Debug( "RESTConnector", "ActiveConnections {0}", m_ActiveConnections );
             yield break;
         }
         #endregion
