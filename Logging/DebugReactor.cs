@@ -12,6 +12,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * @author Richard Lyle (rolyle@us.ibm.com)
 */
 
 namespace IBM.Watson.Logging
@@ -30,20 +32,20 @@ namespace IBM.Watson.Logging
         /// DebugReactor constructor.
         /// </summary>
         /// <param name="level">Minimum level of log messages to log.</param>
-        public DebugReactor( LogLevel level = LogLevel.DEBUG )
+        public DebugReactor(LogLevel level = LogLevel.DEBUG)
         {
             Level = level;
         }
         #endregion
 
         #region ILogReactor Interface
-        public void ProcessLog( LogRecord log )
+        public void ProcessLog(LogRecord log)
         {
-            if ( log.m_Level >= Level )
+            if (log.m_Level >= Level)
             {
-                UnityEngine.Debug.Log( string.Format( "[{0}][{1}][{2}] {3}", 
+                UnityEngine.Debug.Log(string.Format("[{0}][{1}][{2}] {3}",
                     log.m_TimeStamp.ToString("MM/dd/yyyy HH:mm:ss"),
-                    log.m_SubSystem, log.m_Level.ToString(), log.m_Message ) );
+                    log.m_SubSystem, log.m_Level.ToString(), log.m_Message));
             }
         }
         #endregion
