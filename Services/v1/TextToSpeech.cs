@@ -174,7 +174,7 @@ namespace IBM.Watson.Services.v1
                 switch (m_AudioFormat)
                 {
                     case AudioFormatType.WAV:
-                        clip = ParseWAV(speechReq.Text, resp.Data);
+                        clip = WaveFile.ParseWAV(speechReq.Text, resp.Data);
                         break;
                     default:
                         Log.Error("TextToSpeech", "Unsupported audio format: {0}", m_AudioFormat.ToString());
@@ -190,137 +190,6 @@ namespace IBM.Watson.Services.v1
                 speechReq.Callback(clip);
         }
         #endregion
-
-        #region WAV Parsing
-        [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        struct IFF_FORM_CHUNK
-        {
-            public uint form_id;
-            public uint form_length;
-            public uint id;
-        };
-
-        [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        struct IFF_CHUNK
-        {
-            public uint id;
-            public uint length;
-        };
-
-        [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        struct WAV_PCM
-        {
-            public ushort format_tag;
-            public ushort channels;
-            public uint sample_rate;
-            public uint average_data_rate;
-            public ushort alignment;
-            public ushort bits_per_sample;
-        };
-
-        public static T BytesToType<T>(BinaryReader reader)
-        {
-            byte[] bytes = reader.ReadBytes(Marshal.SizeOf(typeof(T)));
-
-            GCHandle handle = GCHandle.Alloc(bytes, GCHandleType.Pinned);
-            T theStructure = (T)Marshal.PtrToStructure(handle.AddrOfPinnedObject(), typeof(T));
-            handle.Free();
-
-            return theStructure;
-        }
-
-        public static string GetID(uint id)
-        {
-            byte[] bytes = BitConverter.GetBytes(id);
-            return new string(new char[] { (char)bytes[0], (char)bytes[1], (char)bytes[2], (char)bytes[3] });
-        }
-
-        AudioClip ParseWAV(string clipName, byte[] data)
-        {
-            MemoryStream stream = new MemoryStream(data, false);
-            BinaryReader reader = new BinaryReader(stream);
-
-            IFF_FORM_CHUNK form = BytesToType<IFF_FORM_CHUNK>(reader);
-            if ( GetID(form.form_id) != "RIFF" || GetID(form.id) != "WAVE")
-            {
-                Log.Error("TextToSpeech", "Malformed WAV header: {0} != RIFF || {1} != WAVE", GetID(form.form_id), GetID(form.id) );
-                return null;
-            }
-
-            WAV_PCM header = new WAV_PCM();
-            bool bHeaderFound = false;
-
-            while (reader.BaseStream.Position < reader.BaseStream.Length)
-            {
-                IFF_CHUNK chunk = BytesToType<IFF_CHUNK>(reader);
-
-                int ChunkLength = (int)chunk.length;
-                if (ChunkLength < 0)  // HACK: Deal with TextToSpeech bug where the chunk length is not set for the data chunk..
-                    ChunkLength = (int)(reader.BaseStream.Length - reader.BaseStream.Position);
-                if ((ChunkLength & 0x1) != 0)
-                    ChunkLength += 1;
-
-                long ChunkEnd = reader.BaseStream.Position + ChunkLength;
-                if (GetID(chunk.id) == "fmt ")
-                {
-                    bHeaderFound = true;
-                    header = BytesToType<WAV_PCM>(reader);
-                }
-                else if (GetID(chunk.id) == "data")
-                {
-                    if (! bHeaderFound )
-                    {
-                        Log.Error( "TextToSpeech", "Failed to find header." );
-                        return null;
-                    }
-                    byte[] waveform = reader.ReadBytes(ChunkLength);
-
-                    // convert into a float based wave form..
-                    int channels = (int)header.channels;
-                    int bps = (int)header.bits_per_sample;
-                    float divisor = 1 << (bps - 1);
-                    int bytesps = bps / 8;
-                    int samples = waveform.Length / bytesps;
-
-                    Log.Debug( "TextToSpeech", "WAV INFO, channels = {0}, bps = {1}, samples = {2}, rate = {3}", 
-                        channels, bps, samples, header.sample_rate );
-
-                    float[] wf = new float[samples];
-                    if (bps == 16)
-                    {
-                        for (int s = 0; s < samples; ++s)
-                            wf[s] = ((float)BitConverter.ToInt16(waveform, s * bytesps)) / divisor;
-                    }
-                    else if (bps == 32)
-                    {
-                        for (int s = 0; s < samples; ++s)
-                            wf[s] = ((float)BitConverter.ToInt32(waveform, s * bytesps)) / divisor;
-                    }
-                    else if (bps == 8)
-                    {
-                        for (int s = 0; s < samples; ++s)
-                            wf[s] = ((float)BitConverter.ToChar(waveform, s * bytesps)) / divisor;
-                    }
-                    else
-                    {
-                        Log.Error("TextToSpeech", "Unspported BPS {0} in WAV data.", bps.ToString());
-                        return null;
-                    }
-
-                    AudioClip clip = AudioClip.Create(clipName, samples, channels, (int)header.sample_rate, false);
-                    clip.SetData(wf, 0);
-
-                    return clip;
-                }
-
-                reader.BaseStream.Position = ChunkEnd;
-            }
-
-            return null;
-        }
-
-        #endregion
-
     }
 
 }

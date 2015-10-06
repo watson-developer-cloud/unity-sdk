@@ -113,7 +113,7 @@ namespace IBM.Watson.Utilities
 
         #region Private Data
         private Dictionary<int, Routine> m_Routines = new Dictionary<int, Routine>();
-        private int m_NextRoutineId = 0;
+        private int m_NextRoutineId = 1;
         #endregion
 
         /// <summary>
