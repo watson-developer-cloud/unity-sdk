@@ -17,6 +17,7 @@
 */
 
 using UnityEngine;
+using UnityEngine.UI;
 using IBM.Watson.Services.v1;
 using IBM.Watson.Logging;
 
@@ -27,29 +28,35 @@ public class TextToSpeechWidget : MonoBehaviour
     TextToSpeech m_TTS = new TextToSpeech();
 
     [SerializeField]
-    private string m_Text = "Hello world, my name is Watson.";
+    private Button m_TextToSpeechButton = null;
+    [SerializeField]
+    private InputField m_Input = null;
+    [SerializeField]
+    private Text m_StatusText = null;
     [SerializeField]
     private TextToSpeech.VoiceType m_Voice = TextToSpeech.VoiceType.en_US_Michael;
     [SerializeField]
     private bool m_UsePost = false;
     #endregion
 
+    public void OnTextToSpeech()
+    {
+        if ( m_TTS.Voice != m_Voice )
+            m_TTS.Voice = m_Voice;
+        
+        m_TTS.ToSpeech( m_Input.text, OnSpeech, m_UsePost );
+        if ( m_StatusText != null )
+            m_StatusText.text = "THINKING";
+        if ( m_TextToSpeechButton != null )
+            m_TextToSpeechButton.interactable = false;
+    }
+
     private void OnEnable()
     {
         Logger.InstallDefaultReactors();
-    }
 
-    private void OnGUI()
-    {
-        m_Text = GUILayout.TextField( m_Text );
-
-        if ( GUILayout.Button( "Play" ) )
-        {
-            if ( m_TTS.Voice != m_Voice )
-                m_TTS.Voice = m_Voice;
-
-            m_TTS.ToSpeech( m_Text, OnSpeech, m_UsePost );
-        }
+        if ( m_StatusText != null )
+            m_StatusText.text = "READY";
     }
 
     private void OnSpeech( AudioClip clip )
@@ -65,5 +72,10 @@ public class TextToSpeechWidget : MonoBehaviour
                 source.Play();
             }
         }
+
+        if ( m_TextToSpeechButton != null )
+            m_TextToSpeechButton.interactable = true;
+        if ( m_StatusText != null )
+            m_StatusText.text = "READY";
     }
 }

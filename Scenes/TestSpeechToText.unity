@@ -85,12 +85,12 @@ NavMeshSettings:
     cellSize: .166666672
     manualCellSize: 0
   m_NavMeshData: {fileID: 0}
---- !u!1001 &543932379
+--- !u!1001 &34805248
 Prefab:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 770228764}
     m_Modifications:
     - target: {fileID: 22458978, guid: 21c74030c3726dd4492815aa7faa1707, type: 2}
       propertyPath: m_LocalPosition.x
@@ -122,23 +122,23 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22458978, guid: 21c74030c3726dd4492815aa7faa1707, type: 2}
       propertyPath: m_RootOrder
-      value: 4
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22458978, guid: 21c74030c3726dd4492815aa7faa1707, type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 675.5
       objectReference: {fileID: 0}
     - target: {fileID: 22458978, guid: 21c74030c3726dd4492815aa7faa1707, type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: 387
       objectReference: {fileID: 0}
     - target: {fileID: 22458978, guid: 21c74030c3726dd4492815aa7faa1707, type: 2}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 227
       objectReference: {fileID: 0}
     - target: {fileID: 22458978, guid: 21c74030c3726dd4492815aa7faa1707, type: 2}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 394
       objectReference: {fileID: 0}
     - target: {fileID: 22458978, guid: 21c74030c3726dd4492815aa7faa1707, type: 2}
       propertyPath: m_AnchorMin.x
@@ -158,15 +158,20 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22458978, guid: 21c74030c3726dd4492815aa7faa1707, type: 2}
       propertyPath: m_Pivot.x
-      value: 0
+      value: .5
       objectReference: {fileID: 0}
     - target: {fileID: 22458978, guid: 21c74030c3726dd4492815aa7faa1707, type: 2}
       propertyPath: m_Pivot.y
-      value: 0
+      value: .5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 21c74030c3726dd4492815aa7faa1707, type: 2}
   m_IsPrefabParent: 0
+--- !u!224 &34805249 stripped
+RectTransform:
+  m_PrefabParentObject: {fileID: 22458978, guid: 21c74030c3726dd4492815aa7faa1707,
+    type: 2}
+  m_PrefabInternal: {fileID: 34805248}
 --- !u!1 &770228763
 GameObject:
   m_ObjectHideFlags: 0
@@ -194,7 +199,8 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
-  m_Children: []
+  m_Children:
+  - {fileID: 34805249}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_AnchorMin: {x: 0, y: 0}
