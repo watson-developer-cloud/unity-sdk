@@ -57,6 +57,8 @@ public class TextToSpeechWidget : MonoBehaviour
 
         if ( m_StatusText != null )
             m_StatusText.text = "READY";
+        if ( m_Input != null )
+            m_Input.text = "No problem with opening the pod bay doors.";
     }
 
     private void OnSpeech( AudioClip clip )
