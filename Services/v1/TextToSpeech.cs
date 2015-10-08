@@ -59,7 +59,7 @@ namespace IBM.Watson.Services.v1
         #endregion
 
         #region Private Data
-        private Connector m_Connector = null;
+        private RESTConnector m_Connector = null;
         private VoiceType m_Voice = VoiceType.en_US_Michael;
         private AudioFormatType m_AudioFormat = AudioFormatType.WAV;
         private Dictionary<VoiceType, string> m_VoiceTypes = new Dictionary<VoiceType, string>()
@@ -96,7 +96,7 @@ namespace IBM.Watson.Services.v1
         /// <summary>
         /// Private Request object that holds data specific to the ToSpeech request.
         /// </summary>
-        private class ToSpeechRequest : Connector.Request
+        private class ToSpeechRequest : RESTConnector.Request
         {
             public string Text { get; set; }
             public ToSpeechCallback Callback { get; set; }
@@ -130,12 +130,8 @@ namespace IBM.Watson.Services.v1
                     return false;
                 }
 
-                m_Connector = Connector.Create(info);
-                if (m_Connector == null)
-                {
-                    Log.Error("TextToSpeech", "Failed to create connection for URL: {0}", info.m_URL);
-                    return false;
-                }
+                m_Connector = new RESTConnector();
+                m_Connector.Authentication = info;
             }
 
             ToSpeechRequest req = new ToSpeechRequest();
@@ -162,7 +158,7 @@ namespace IBM.Watson.Services.v1
             return m_Connector.Send(req);
         }
 
-        private void ToSpeechResponse(Connector.Request req, Connector.Response resp)
+        private void ToSpeechResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             ToSpeechRequest speechReq = req as ToSpeechRequest;
             if (speechReq == null)

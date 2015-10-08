@@ -16,20 +16,173 @@
 * @author Richard Lyle (rolyle@us.ibm.com)
 */
 
+using IBM.Watson.Logging;
+using IBM.Watson.Utilities;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using WebSocketSharp;
+
 namespace IBM.Watson.Connection
 {
-    class WSConnector : Connector
+    class WSConnector : IDisposable
     {
-        #region Connector Interface
-        public override bool Send( Request request )
+        #region Public Types
+        public delegate void ConnectorEvent(WSConnector connection);
+        public delegate void MessageEvent( Message resp);
+
+        public enum ConnectionState
         {
-            // TODO
+            /// <summary>
+            /// We are trying to connect.
+            /// </summary>
+            CONNECTING,
+            /// <summary>
+            /// Connector is connected to the server.
+            /// </summary>
+            CONNECTED,
+            /// <summary>
+            /// Connected has lost connection to the server.
+            /// </summary>
+            DISCONNECTED,
+            /// <summary>
+            /// Connected has been closed to the server.
+            /// </summary>
+            CLOSED
+        }
+
+        /// <summary>
+        /// The class is returned by a Request object containing the response to a request made
+        /// by the client.
+        /// </summary>
+        public class Message
+        {
+            #region Public Properties
+            /// <summary>
+            /// The data returned by the request.
+            /// </summary>
+            public byte[] Data { get; set; }
+            #endregion
+        };
+        #endregion
+
+        #region Public Properties
+        /// <summary>
+        /// This delegate is invoked when the connection is opened.
+        /// </summary>
+        public ConnectorEvent OnOpen { get; set; }
+        /// <summary>
+        /// This delegeta is invoked when the connection is closed.
+        /// </summary>
+        public ConnectorEvent OnClose { get; set; }
+        /// <summary>
+        /// This delegate is invoked when a message is received for a socket.
+        /// </summary>
+        public MessageEvent OnMessage { get; set; }
+        /// <summary>
+        /// The URL of the WebSocket.
+        /// </summary>
+        public string URL { get; set; }
+        /// <summary>
+        /// Credentials used to authenticate with the server.
+        /// </summary>
+        public Config.CredentialsInfo Authentication { get; set; }
+        /// <summary>
+        /// The current state of this connector.
+        /// </summary>
+        public ConnectionState State { get { return m_ConnectionState; } set { m_ConnectionState = value; } }
+        #endregion
+
+        #region Private Data
+        private ConnectionState m_ConnectionState = ConnectionState.CLOSED;
+        private WebSocket m_WebSocket = null;
+        private bool m_SendingMessages = false;
+        private Queue<Message> m_SendQueue = new Queue<Message>();
+        #endregion
+
+        #region Connector Interface
+        public bool Send(Message request)
+        {
+            m_SendQueue.Enqueue(request);
+            if (!m_SendingMessages)
+                Runnable.Run(SendMessages());
+
             return false;
         }
-        public override void Dispose()
+        public void Dispose()
         {
-            
+            if (m_WebSocket != null)
+                m_WebSocket.Close();
         }
-       #endregion
+        #endregion
+
+        IEnumerator SendMessages()
+        {
+            m_SendingMessages = true;
+            yield return null;
+
+            if (m_WebSocket == null)
+            {
+                m_ConnectionState = ConnectionState.CONNECTING;
+
+                m_WebSocket = new WebSocket(URL);
+                m_WebSocket.SetCredentials(Authentication.m_User, Authentication.m_Password, true);
+                m_WebSocket.OnOpen += OnWSOpen;
+                m_WebSocket.OnClose += OnWSClose;
+                m_WebSocket.OnError += OnWSError;
+                m_WebSocket.OnMessage += OnWSMessage;
+                m_WebSocket.ConnectAsync();
+
+                // wait for state to change from connecting..
+                while (m_ConnectionState == ConnectionState.CONNECTING)
+                    yield return null;
+            }
+
+            while (m_ConnectionState == ConnectionState.CONNECTED)
+            {
+                if (m_SendQueue.Count > 0)
+                {
+                    Message msg = m_SendQueue.Dequeue();
+                    if (msg == null)
+                        continue;
+
+
+                }
+                else
+                {
+                    yield return null;
+                }
+            }
+
+            m_SendingMessages = false;
+        }
+
+        private void OnWSOpen(object sender, System.EventArgs e)
+        {
+            m_ConnectionState = ConnectionState.CONNECTED;
+            if ( OnOpen != null )
+                OnOpen( this );
+        }
+
+        private void OnWSClose(object sender, CloseEventArgs e)
+        {
+            m_ConnectionState = e.WasClean ? ConnectionState.CLOSED : ConnectionState.DISCONNECTED;
+            if ( OnClose != null )
+                OnClose( this );
+        }
+
+        private void OnWSMessage(object sender, MessageEventArgs e)
+        {
+            Message msg = new Message();
+            msg.Data = e.RawData;
+
+            if ( OnMessage != null )
+                OnMessage( msg );
+        }
+
+        private void OnWSError(object sender, ErrorEventArgs e)
+        {
+            Log.Error("WSConnector", "WebSocket Error: {0}", e.Message);
+        }
     }
 }

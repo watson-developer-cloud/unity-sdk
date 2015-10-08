@@ -26,10 +26,88 @@ using System.Text;
 
 namespace IBM.Watson.Connection
 {
-    class RESTConnector : Connector
+    class RESTConnector
     {
-        #region Connector Interface
-        public override bool Send(Request request)
+        #region Public Types
+        public delegate void ResponseEvent(Request req, Response resp);
+
+        /// <summary>
+        /// The class is returned by a Request object containing the response to a request made
+        /// by the client.
+        /// </summary>
+        public class Response
+        {
+            #region Public Properties
+            /// <summary>
+            /// True if the request was successful.
+            /// </summary>
+            public bool Success { get; set; }
+            /// <summary>
+            /// Error message if Success is false.
+            /// </summary>
+            public string Error { get; set; }
+            /// <summary>
+            /// The data returned by the request.
+            /// </summary>
+            public byte[] Data { get; set; }
+            /// <summary>
+            /// The amount of time in seconds it took to get this response from the server.
+            /// </summary>
+            public float ElapsedTime { get; set; }
+            #endregion
+        };
+
+        /// <summary>
+        /// This class is created to make a request to send through the IConnector object to the server.
+        /// </summary>
+        public class Request
+        {
+            public Request()
+            {
+                Parameters = new Dictionary<string, object>();
+            }
+
+            #region Public Properties
+            /// <summary>
+            /// The name of the function to invoke on the server.
+            /// </summary>
+            public string Function { get; set; }
+            /// <summary>
+            /// The parameters to pass to the function on the server.
+            /// </summary>
+            public Dictionary<string, object> Parameters { get; set; }
+            /// <summary>
+            /// The data to send through the connection.
+            /// </summary>
+            public byte [] Send { get; set; }
+            /// <summary>
+            /// The type of content to send, the default is "application/json"
+            /// </summary>
+            public string ContentType { get; set; }
+            /// <summary>
+            /// The callback that is invoked when a response is received.
+            /// </summary>
+            public ResponseEvent OnResponse { get; set; }
+            #endregion
+        }
+        #endregion
+
+        #region Public Properties
+         /// <summary>
+        /// Credentials used to authenticate with the server.
+        /// </summary>
+        public Config.CredentialsInfo Authentication { get; set; }
+        #endregion
+
+        #region Send Interface
+        /// <summary>
+        /// Send a request to the server. The request contains a callback that is invoked
+        /// when a response is received. The request may be queued if multiple requests are
+        /// made at once.
+        /// </summary>
+        /// <param name="request">The request object.</param>
+        /// <returns>true is returned on success, false is returned if the Request can't be sent.</returns>
+        public bool Send(Request request)
         {
             if ( request == null )
                 throw new ArgumentNullException("request");
@@ -47,10 +125,6 @@ namespace IBM.Watson.Connection
 
             return true;
         }
-        public override void Dispose()
-        {
-			m_Requests.Clear ();
-		}
         #endregion
 
         #region Private Data
@@ -116,10 +190,6 @@ namespace IBM.Watson.Connection
                     Dictionary<string,string> headers = new Dictionary<string, string>();
                     AddAuthorizationHeader( headers );
 
-                    State = ConnectionState.CONNECTED;
-                    if ( OnOpen != null )
-                        OnOpen( this );
-
                     www = new WWW( url, null, headers );
                 }
                 else
@@ -131,10 +201,6 @@ namespace IBM.Watson.Connection
                     if ( string.IsNullOrEmpty( sContentType ) )
                         sContentType = "application/json";
                     headers["Content-Type"] = sContentType;
-
-                    State = ConnectionState.CONNECTED;
-                    if ( OnOpen != null )
-                        OnOpen( this );
 
                     www = new WWW( url, req.Send, headers );
                 }
@@ -151,13 +217,11 @@ namespace IBM.Watson.Connection
                 Response resp = new Response();
                 if ( www.isDone && string.IsNullOrEmpty( www.error ) )
                 {
-                    State = ConnectionState.CLOSED;
                     resp.Success = true;
                     resp.Data = www.bytes;
                 }
                 else
                 {
-                    State = ConnectionState.DISCONNECTED;
                     resp.Success = false;
                     resp.Error = string.Format( "Request Error.\nURL: {0}\nError: {1}\nResponse: {2}", url, string.IsNullOrEmpty( www.error ) ? "Timeout" : www.error, www.text );
                 }
@@ -165,8 +229,6 @@ namespace IBM.Watson.Connection
                 // provide the time to took to get a response from the server..
                 resp.ElapsedTime = Time.time - startTime;
 
-                if ( OnClose != null )
-                    OnClose( this );
                 if ( req.OnResponse != null )
                     req.OnResponse( req, resp );
 

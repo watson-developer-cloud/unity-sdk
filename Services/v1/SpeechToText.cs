@@ -84,15 +84,12 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         #endregion
 
         #region Private Data
-        private Connector m_Connector = null;
+        private RESTConnector m_Connector = null;
         private OnRecognize m_RecognizeCallback = null;
         private string m_RecognizeModel = "en-US_BroadbandModel";    // ID of the model to use.
         private int m_MaxAlternatives = 1;                  // maximum number of alternatives to return.
         private bool m_Timestamps = false;
         private bool m_WordConfidence = false;
-        private bool m_UseSession = false;
-        private string m_SessionID = null;
-        private float m_LastSessionRefresh = 0.0f;          // last time when we refreshed our session ID
         private OnRecordClip m_RecordingCallback = null;
         private int m_RecordingID = 0;                      // ID of our co-routine when recording, 0 if not recording currently.
         private AudioClip m_Recording = null;              
@@ -120,14 +117,6 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         /// </summary>
         public bool WordConfidence { get { return m_WordConfidence; } set { m_WordConfidence = value; } }
         /// <summary>
-        /// If true, Create a session to lock an engine to the session.
-        /// </summary>
-        public bool UseSession { get { return m_UseSession; } set { m_UseSession = value; } }
-        /// <summary>
-        /// The ID of our session.
-        /// </summary>
-        public string SessionID { get { return m_SessionID; } set { m_SessionID = value; } }
-        /// <summary>
         /// Returns a list of available microphone devices.
         /// </summary>
         public string[] Microphones { get { return Microphone.devices; } }
@@ -151,6 +140,11 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         #endregion
 
         #region Listening Functions
+        /// <summary>
+        /// This starts t
+        /// </summary>
+        /// <param name="callback"></param>
+        /// <returns></returns>
         public bool StartListening(OnRecognize callback)
         {
             if (m_RecordingID != 0)
@@ -179,7 +173,8 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
 
         /// <summary>
         /// This function POSTs the given audio clip the reconize function and convert speech into text. This function should be used
-        /// only on AudioClips under 4MB once they have been converted into WAV format.
+        /// only on AudioClips under 4MB once they have been converted into WAV format. Use the StartListening() for continous
+        /// recognition of text.
         /// </summary>
         /// <param name="clip">The AudioClip object.</param>
         /// <param name="callback">A callback to invoke with the results.</param>
@@ -200,12 +195,8 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                     return false;
                 }
 
-                m_Connector = Connector.Create(info);
-                if (m_Connector == null)
-                {
-                    Log.Error("SpeechToText", "Failed to create connection for URL: {0}", info.m_URL);
-                    return false;
-                }
+                m_Connector = new RESTConnector();
+                m_Connector.Authentication = info;
             }
 
             RecognizeRequest req = new RecognizeRequest();
@@ -230,13 +221,13 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
             return m_Connector.Send( req );
         }
 
-        private class RecognizeRequest : Connector.Request
+        private class RecognizeRequest : RESTConnector.Request
         {
             public AudioClip Clip { get; set; }
             public OnRecognize Callback { get; set; }
         };
 
-        private void OnRecognizeResponse(Connector.Request req, Connector.Response resp)
+        private void OnRecognizeResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             RecognizeRequest recognizeReq = req as RecognizeRequest;
             if ( recognizeReq == null )
