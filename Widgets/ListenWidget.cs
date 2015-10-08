@@ -53,7 +53,7 @@ public class ListenWidget : MonoBehaviour
         }
     }
 
-    private void OnEnable()
+    private void Start()
     {
         Logger.InstallDefaultReactors();
 

@@ -21,11 +21,12 @@ using IBM.Watson.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using WebSocketSharp;
 
 namespace IBM.Watson.Connection
 {
-    class WSConnector : IDisposable
+    class WSConnector
     {
         #region Public Types
         public delegate void ConnectorEvent(WSConnector connection);
@@ -90,10 +91,6 @@ namespace IBM.Watson.Connection
 
         #region Public Properties
         /// <summary>
-        /// This delegate is invoked when the connection is opened.
-        /// </summary>
-        public ConnectorEvent OnOpen { get; set; }
-        /// <summary>
         /// This delegeta is invoked when the connection is closed.
         /// </summary>
         public ConnectorEvent OnClose { get; set; }
@@ -110,6 +107,10 @@ namespace IBM.Watson.Connection
         /// </summary>
         public Config.CredentialsInfo Authentication { get; set; }
         /// <summary>
+        /// Additional headers to include when opening the web socket.
+        /// </summary>
+        public Dictionary<string,string> Headers { get; set; }
+        /// <summary>
         /// The current state of this connector.
         /// </summary>
         public ConnectionState State { get { return m_ConnectionState; } set { m_ConnectionState = value; } }
@@ -117,94 +118,123 @@ namespace IBM.Watson.Connection
 
         #region Private Data
         private ConnectionState m_ConnectionState = ConnectionState.CLOSED;
-        private WebSocket m_WebSocket = null;
-        private bool m_SendingMessages = false;
+        private Thread m_SendThread = null;
+        private AutoResetEvent m_SendEvent = new AutoResetEvent(false);
         private Queue<Message> m_SendQueue = new Queue<Message>();
+        private Queue<Message> m_ReceiveQueue = new Queue<Message>();
+        private int m_ReceiverID = 0;
         #endregion
 
-        #region Connector Interface
-        public bool Send(Message request)
+        #region Public Functions
+        public void Send(Message msg)
         {
-            m_SendQueue.Enqueue(request);
-            if (!m_SendingMessages)
-                Runnable.Run(SendMessages());
+            Log.Debug( "WSConnector", "Sending {0} message: {1}",
+                msg is TextMessage ? "TextMessage" : "BinaryMessage", 
+                msg is TextMessage ? ((TextMessage)msg).Text : ((BinaryMessage)msg).Data.Length.ToString() + " bytes" );
+            lock( m_SendQueue )
+            {
+                m_SendQueue.Enqueue(msg);
+                m_SendEvent.Set();
+            }
 
-            return false;
-        }
-        public void Dispose()
-        {
-            if (m_WebSocket != null)
-                m_WebSocket.Close();
-        }
-        #endregion
-
-        IEnumerator SendMessages()
-        {
-            m_SendingMessages = true;
-            yield return null;
-
-            if (m_WebSocket == null)
+            if (m_SendThread == null )
             {
                 m_ConnectionState = ConnectionState.CONNECTING;
-
-                m_WebSocket = new WebSocket(URL);
-                m_WebSocket.SetCredentials(Authentication.m_User, Authentication.m_Password, true);
-                m_WebSocket.OnOpen += OnWSOpen;
-                m_WebSocket.OnClose += OnWSClose;
-                m_WebSocket.OnError += OnWSError;
-                m_WebSocket.OnMessage += OnWSMessage;
-                m_WebSocket.ConnectAsync();
-
-                // wait for state to change from connecting..
-                while (m_ConnectionState == ConnectionState.CONNECTING)
-                    yield return null;
+                m_SendThread = new Thread( SendMessages );
+                m_SendThread.Start();
             }
+
+            if ( m_ReceiverID == 0 )
+                m_ReceiverID = Runnable.Run( ProcessReceiveQueue() ); 
+        }
+        public void Close()
+        {
+            m_ConnectionState = ConnectionState.CLOSED;
+
+            if ( m_ReceiverID != 0 )
+            {
+                Runnable.Stop( m_ReceiverID );
+                m_ReceiverID = 0;
+            }
+        }
+        #endregion
+
+        #region Private Functions
+        private IEnumerator ProcessReceiveQueue()
+        {
+            while( m_ConnectionState == ConnectionState.CONNECTED 
+                || m_ConnectionState == ConnectionState.CONNECTING )
+            {
+                yield return null;
+
+                lock( m_ReceiveQueue )
+                {
+                    while( m_ReceiveQueue.Count > 0 )
+                    {
+                        Message msg = m_ReceiveQueue.Dequeue();
+                        Log.Debug( "WSConnector", "Received {0} message: {1}",
+                            msg is TextMessage ? "TextMessage" : "BinaryMessage", 
+                            msg is TextMessage ? ((TextMessage)msg).Text : ((BinaryMessage)msg).Data.Length.ToString() + " bytes" );
+
+                        if ( OnMessage != null )
+                            OnMessage( msg );
+                    }
+                }
+            }
+
+            if ( OnClose != null )
+                OnClose( this );
+            m_ReceiverID = 0;
+        }
+        #endregion
+
+        #region Threaded Functions
+        // NOTE: ALl functions in this region are operating in a background thread, do NOT call any Unity functions!
+
+        void SendMessages()
+        {
+            WebSocket ws = null;
+
+            ws = new WebSocket(URL);
+            ws.Headers = Headers;
+            ws.SetCredentials(Authentication.m_User, Authentication.m_Password, true);
+            ws.OnOpen += OnWSOpen;
+            ws.OnClose += OnWSClose;
+            ws.OnError += OnWSError;
+            ws.OnMessage += OnWSMessage;
+            ws.Connect();
 
             while (m_ConnectionState == ConnectionState.CONNECTED)
             {
-                if (m_SendQueue.Count > 0)
-                {
-                    Message msg = m_SendQueue.Dequeue();
-                    if (msg == null )
-                        continue;
+                m_SendEvent.WaitOne();
 
-                    if ( msg is TextMessage )
-                        m_WebSocket.SendAsync( ((TextMessage)msg).Text, OnMessageSent );
-                    else if ( msg is BinaryMessage )
-                        m_WebSocket.SendAsync( ((BinaryMessage)msg).Data, OnMessageSent );
-                }
-                else
+                Message msg = null;
+                lock( m_SendQueue )
                 {
-                    yield return null;
+                    if (m_SendQueue.Count > 0)
+                        msg = m_SendQueue.Dequeue();
                 }
+
+                if (msg == null )
+                    continue;
+
+                if ( msg is TextMessage )
+                    ws.Send( ((TextMessage)msg).Text );
+                else if ( msg is BinaryMessage )
+                    ws.Send( ((BinaryMessage)msg).Data );
             }
 
-            m_SendingMessages = false;
+            ws.Close();
         }
 
         private void OnWSOpen(object sender, System.EventArgs e)
         {
             m_ConnectionState = ConnectionState.CONNECTED;
-            if ( OnOpen != null )
-                OnOpen( this );
         }
 
         private void OnWSClose(object sender, CloseEventArgs e)
         {
             m_ConnectionState = e.WasClean ? ConnectionState.CLOSED : ConnectionState.DISCONNECTED;
-            if ( OnClose != null )
-                OnClose( this );
-        }
-
-        private void OnMessageSent( bool completed )
-        {
-            if (! completed )
-            {
-                Log.Error( "WSConnector", "Failed to send message." );
-                m_ConnectionState = ConnectionState.DISCONNECTED;
-                if ( OnClose != null )
-                    OnClose( this );
-            }
         }
 
         private void OnWSMessage(object sender, MessageEventArgs e)
@@ -215,13 +245,18 @@ namespace IBM.Watson.Connection
             else if ( e.Type == Opcode.Binary )
                 msg = new BinaryMessage( e.RawData );
 
-            if ( OnMessage != null )
-                OnMessage( msg );
+            lock( m_ReceiveQueue )
+                m_ReceiveQueue.Enqueue( msg );
         }
 
         private void OnWSError(object sender, ErrorEventArgs e)
         {
-            Log.Error("WSConnector", "WebSocket Error: {0}", e.Message);
+            Dictionary<string,object> err = new Dictionary<string, object>();
+            err["error"] = string.Format( "WebSocket Error: {0}", e.Message );
+
+            lock( m_ReceiveQueue )
+                m_ReceiveQueue.Enqueue( new TextMessage( MiniJSON.Json.Serialize( err ) ) );
         }
+        #endregion
     }
 }

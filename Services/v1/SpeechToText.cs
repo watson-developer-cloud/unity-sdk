@@ -89,6 +89,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         private RESTConnector m_REST = null;                // REST connector used by Recognize() & GetModels()
         private OnRecognize m_ListenCallback = null;        // Callback is set by StartListening()                                                             
         private WSConnector m_WS = null;                    // WebSocket object used when StartListening() is invoked  
+        private bool m_ListenActive = false;
         private int m_KeepAliveID = 0;                      // ID of the keep alive co-routine
         private float m_LastWSMessage = 0.0f;               // last time we sent a message on the WS
         private string m_RecognizeModel = "en-US_BroadbandModel";    // ID of the model to use.
@@ -176,6 +177,9 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
             
             m_ListenCallback = callback;
             StartRecording( OnListenRecord );
+
+            m_KeepAliveID = Runnable.Run( KeepAlive() );
+
             return true;
         }
 
@@ -195,6 +199,11 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                 URL = URL.Replace( "https://", "wss://" );
 
             m_WS = new WSConnector();
+
+            //Dictionary<string,string> headers = new Dictionary<string,string>();
+            //headers["Content-Type"] = "audio/116;rate=" + m_RecordingHZ.ToString();
+            //m_WS.Headers = headers;
+
             m_WS.Authentication = info;
             m_WS.URL = URL;
             m_WS.OnMessage = OnListenMessage;
@@ -202,14 +211,17 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
 
             Dictionary<string,object> start = new Dictionary<string, object>();
             start["action"] = "start";
-            start["content-type"] = "audio/116;rate=" + m_RecordingHZ.ToString();
-            start["continous"] = true;
+            //start["content-type"] = "audio/wav";
+            start["content-type"] = "audio/l16;rate=" + m_RecordingHZ.ToString() + ";channels=1;";
+            start["continuous"] = true;
             start["max_alternatives"] = m_MaxAlternatives;
             start["interim_results"] = false;
             start["word_confidence"] = m_WordConfidence;
             start["timestamps"] = m_Timestamps;
 
             m_WS.Send( new WSConnector.TextMessage( Json.Serialize( start ) ) );
+            m_LastWSMessage = Time.time;
+
             return true;
         }
 
@@ -228,7 +240,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
             StopRecording();
 
             m_ListenCallback = null;
-            m_WS.Dispose();
+            m_WS.Close();
             m_WS = null;
 
             return true;
@@ -245,7 +257,6 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                     Dictionary<string,string> nop = new Dictionary<string, string>();
                     nop["action"] = "no-op";
 
-                    Log.Status( "SpeechToText", "Sending keep-alive." );
                     m_WS.Send( new WSConnector.TextMessage( Json.Serialize( nop ) ) );
                     m_LastWSMessage = Time.time;
                 }
@@ -273,6 +284,14 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                     {
                         Log.Status( "SpeechToText", "Server state is {0}", (string)json["state"] );
                     }
+                    else if (json.Contains( "error" ) )
+                    {
+                        Log.Error( "SpeechToText", "WebSocket error: {0}", (string)json["error"] );
+                    }
+                    else
+                    {
+                        Log.Warning( "SpeechToText", "Unknown message: {0}", tm.Text );
+                    }
                 }
                 else
                 {
@@ -283,9 +302,30 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
 
         private void OnListenClosed( WSConnector connector )
         {
-            Log.Status( "SpeechToText", "WebSocket connection closed, reconnecting." );
-            if (! ListenConnect() )
-                Log.Error( "SpeechToText", "Failed to reconnect." );
+            if ( connector.State == WSConnector.ConnectionState.DISCONNECTED )
+            {
+                Log.Status( "SpeechToText", "WebSocket connection closed, reconnecting." );
+                if (! ListenConnect() )
+                    Log.Error( "SpeechToText", "Failed to reconnect." );
+            }
+        }
+
+        private static byte[] GetPCM(AudioClip clip)
+        {
+            MemoryStream stream = new MemoryStream();
+            BinaryWriter writer = new BinaryWriter(stream);
+
+            float[] samples = new float[clip.samples * clip.channels];
+            clip.GetData(samples, 0);
+
+            float divisor = (1 << 15);
+            for (int i = 0; i < samples.Length; ++i)
+                writer.Write((short)(samples[i] * divisor));
+
+            byte[] data = new byte[samples.Length * 2];
+            Array.Copy(stream.GetBuffer(), data, data.Length);
+
+            return data;
         }
 
         private void OnListenRecord(RecordClip clip)
@@ -294,18 +334,20 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
             {
                 if (!DetectSilence || clip.MaxLevel >= m_SilenceThreshold )
                 {
-                    MemoryStream stream = new MemoryStream();
-                    BinaryWriter writer = new BinaryWriter(stream);
-                                
-                    float[] samples = new float[clip.Clip.samples * clip.Clip.channels];
-                    clip.Clip.GetData(samples, 0);
+                    m_ListenActive = true;
 
-                    float divisor = (float)( 1 << 15 );
-                    for (int i = 0; i < samples.Length; ++i)
-                        writer.Write((short)(samples[i] * divisor));
-
-                    m_WS.Send( new WSConnector.BinaryMessage( stream.GetBuffer() ) );
+                    //Log.Debug( "SpeechToText", "Sending {0} bytes of sample data.", data.Length );
+                    m_WS.Send( new WSConnector.BinaryMessage( GetPCM( clip.Clip ) ) );
                     m_LastWSMessage = Time.time;
+                }
+                else if ( m_ListenActive )
+                {
+                    Dictionary<string,string> stop = new Dictionary<string, string>();
+                    stop["action"] = "stop";
+
+                    m_WS.Send( new WSConnector.TextMessage( Json.Serialize( stop ) ) );
+                    m_LastWSMessage = Time.time;
+                    m_ListenActive = false;
                 }
            }
         }
