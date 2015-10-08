@@ -62,7 +62,7 @@ GameObject:
   - 114: {fileID: 11443268}
   - 82: {fileID: 8256878}
   m_Layer: 0
-  m_Name: SpeechToText
+  m_Name: SpeechToTextWidget
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

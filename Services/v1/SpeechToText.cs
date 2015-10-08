@@ -25,6 +25,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Text;
+using System.IO;
 
 namespace IBM.Watson.Services.v1            // Add DeveloperCloud
 {
@@ -33,9 +34,9 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         #region Constants
         const string SERVICE_ID = "SpeechToTextV1";
         /// <summary>
-        /// How often to refresh a session to prevent it from expiring.
+        /// How often to send a message to the web socket to keep it alive.
         /// </summary>
-        const float SESSION_REFRESH_TIME = 20.0f;
+        const float WS_KEEP_ALIVE_TIME = 20.0f;
         /// <summary>
         /// Size in seconds of the recording buffer. AudioClips() will be generated each time
         /// the recording hits the halfway point.
@@ -81,11 +82,15 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         public delegate void OnRecordClip(RecordClip clip);
         public delegate void OnRecognize(ResultList results);
         public delegate void OnGetModels(Model[] models);
+        public delegate void ErrorEvent( string error );
         #endregion
 
         #region Private Data
-        private RESTConnector m_Connector = null;
-        private OnRecognize m_RecognizeCallback = null;
+        private RESTConnector m_REST = null;                // REST connector used by Recognize() & GetModels()
+        private OnRecognize m_ListenCallback = null;        // Callback is set by StartListening()                                                             
+        private WSConnector m_WS = null;                    // WebSocket object used when StartListening() is invoked  
+        private int m_KeepAliveID = 0;                      // ID of the keep alive co-routine
+        private float m_LastWSMessage = 0.0f;               // last time we sent a message on the WS
         private string m_RecognizeModel = "en-US_BroadbandModel";    // ID of the model to use.
         private int m_MaxAlternatives = 1;                  // maximum number of alternatives to return.
         private bool m_Timestamps = false;
@@ -100,6 +105,10 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         #endregion
 
         #region Public Properties
+        /// <summary>
+        /// This delegate is invoked when an error occurs.
+        /// </summary>
+        public ErrorEvent OnError { get; set; }
         /// <summary>
         /// What is our currently active reconize model.
         /// </summary>
@@ -140,6 +149,12 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         #endregion
 
         #region Listening Functions
+
+        public bool IsListening()
+        {
+            return m_WS != null;
+        }
+
         /// <summary>
         /// This starts t
         /// </summary>
@@ -147,25 +162,157 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         /// <returns></returns>
         public bool StartListening(OnRecognize callback)
         {
-            if (m_RecordingID != 0)
+            if ( callback == null )
+                throw new ArgumentNullException("callback");
+
+            if (m_WS != null || m_RecordingID != 0 )
             {
                 Log.Error("SpeechToText", "Recording already active.");
                 return false;
             }
 
-            m_RecognizeCallback = callback;
+            if (! ListenConnect() )
+                return false;
+            
+            m_ListenCallback = callback;
+            StartRecording( OnListenRecord );
+            return true;
+        }
+
+        private bool ListenConnect()
+        {
+            Config.CredentialsInfo info = Config.Instance.FindCredentials(SERVICE_ID);
+            if (info == null)
+            {
+                Log.Error("SpeechToText", "Unable to find credentials for Service ID: {0}", SERVICE_ID);
+                return false;
+            }
+
+            string URL = info.m_URL + "/v1/recognize?model=" + WWW.EscapeURL( m_RecognizeModel );
+            if ( URL.StartsWith( "http://" ) )
+                URL = URL.Replace( "http://", "ws://" );
+            else if ( URL.StartsWith( "https://" ) )
+                URL = URL.Replace( "https://", "wss://" );
+
+            m_WS = new WSConnector();
+            m_WS.Authentication = info;
+            m_WS.URL = URL;
+            m_WS.OnMessage = OnListenMessage;
+            m_WS.OnClose = OnListenClosed;
+
+            Dictionary<string,object> start = new Dictionary<string, object>();
+            start["action"] = "start";
+            start["content-type"] = "audio/116;rate=" + m_RecordingHZ.ToString();
+            start["continous"] = true;
+            start["max_alternatives"] = m_MaxAlternatives;
+            start["interim_results"] = false;
+            start["word_confidence"] = m_WordConfidence;
+            start["timestamps"] = m_Timestamps;
+
+            m_WS.Send( new WSConnector.TextMessage( Json.Serialize( start ) ) );
             return true;
         }
 
         public bool StopListening()
         {
+            if ( m_WS == null )
+            {
+                Log.Error( "SpeechToText", "Not currently listening." );
+                return false;
+            }
+
+            // stop our keep alive co-routine
+            Runnable.Stop( m_KeepAliveID );
+            m_KeepAliveID = 0;
+            // stop the recording co-routine
+            StopRecording();
+
+            m_ListenCallback = null;
+            m_WS.Dispose();
+            m_WS = null;
+
             return true;
+        }
+
+        private IEnumerator KeepAlive()
+        {
+            while( m_WS != null )
+            {
+                yield return null;
+
+                if ( Time.time > (m_LastWSMessage + WS_KEEP_ALIVE_TIME) )
+                {
+                    Dictionary<string,string> nop = new Dictionary<string, string>();
+                    nop["action"] = "no-op";
+
+                    Log.Status( "SpeechToText", "Sending keep-alive." );
+                    m_WS.Send( new WSConnector.TextMessage( Json.Serialize( nop ) ) );
+                    m_LastWSMessage = Time.time;
+                }
+            }
+        }
+
+        private void OnListenMessage( WSConnector.Message msg )
+        {
+            if ( msg is WSConnector.TextMessage )
+            {
+                WSConnector.TextMessage tm = (WSConnector.TextMessage)msg;
+
+                IDictionary json = Json.Deserialize( tm.Text ) as IDictionary;
+                if ( json != null )
+                {
+                    if (json.Contains("results"))
+                    {
+                        ResultList results = ParseRecognizeResponse( json );
+                        if ( results != null )
+                            m_ListenCallback( results );
+                        else
+                            Log.Error( "SpeechToText", "Failed to parse results: {0}", tm.Text );
+                    }
+                    else if (json.Contains( "state") )
+                    {
+                        Log.Status( "SpeechToText", "Server state is {0}", (string)json["state"] );
+                    }
+                }
+                else
+                {
+                    Log.Error( "SpeechToText", "Failed to parse JSON from server: {0}", tm.Text );
+                }
+            }
+        }
+
+        private void OnListenClosed( WSConnector connector )
+        {
+            Log.Status( "SpeechToText", "WebSocket connection closed, reconnecting." );
+            if (! ListenConnect() )
+                Log.Error( "SpeechToText", "Failed to reconnect." );
+        }
+
+        private void OnListenRecord(RecordClip clip)
+        {
+            if ( m_WS != null )
+            {
+                if (!DetectSilence || clip.MaxLevel >= m_SilenceThreshold )
+                {
+                    MemoryStream stream = new MemoryStream();
+                    BinaryWriter writer = new BinaryWriter(stream);
+                                
+                    float[] samples = new float[clip.Clip.samples * clip.Clip.channels];
+                    clip.Clip.GetData(samples, 0);
+
+                    float divisor = (float)( 1 << 15 );
+                    for (int i = 0; i < samples.Length; ++i)
+                        writer.Write((short)(samples[i] * divisor));
+
+                    m_WS.Send( new WSConnector.BinaryMessage( stream.GetBuffer() ) );
+                    m_LastWSMessage = Time.time;
+                }
+           }
         }
         #endregion
 
 
         #region Recognize Functions
-
         public bool GetModels(OnGetModels callback)
         {
             return true;
@@ -186,7 +333,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
             if (callback == null )
                 throw new ArgumentNullException("callback");
 
-            if (m_Connector == null)
+            if (m_REST == null)
             {
                 Config.CredentialsInfo info = Config.Instance.FindCredentials(SERVICE_ID);
                 if (info == null)
@@ -195,8 +342,8 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                     return false;
                 }
 
-                m_Connector = new RESTConnector();
-                m_Connector.Authentication = info;
+                m_REST = new RESTConnector();
+                m_REST.Authentication = info;
             }
 
             RecognizeRequest req = new RecognizeRequest();
@@ -218,7 +365,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
             req.Parameters["word_confidence"] = m_WordConfidence ? "true" : "false";
             req.OnResponse = OnRecognizeResponse;
 
-            return m_Connector.Send( req );
+            return m_REST.Send( req );
         }
 
         private class RecognizeRequest : RESTConnector.Request
@@ -257,20 +404,26 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                 recognizeReq.Callback( result );
         }
 
-        private ResultList ParseRecognizeResponse( byte[] json)
+        private ResultList ParseRecognizeResponse( byte [] json )
         {
-            if ( json == null )
+            string jsonString = Encoding.UTF8.GetString( json );
+            if ( jsonString == null )
+                return null;
+
+            IDictionary resp = (IDictionary)Json.Deserialize( jsonString );
+            if (resp == null)
+                return null;
+
+            return ParseRecognizeResponse( resp );
+        }
+
+        private ResultList ParseRecognizeResponse( IDictionary resp )
+        {
+            if ( resp == null )
                 return null;
 
             try
             {
-                string jsonString = Encoding.UTF8.GetString( json );
-                if ( jsonString == null )
-                    return null;
-                IDictionary resp = (IDictionary)Json.Deserialize( jsonString );
-                if (resp == null)
-                    return null;
-
                 List<Result> results = new List<Result>();
                 IList iresults = resp["results"] as IList;
                 if (iresults == null)
@@ -338,6 +491,11 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         #endregion
 
         #region Recording Functions
+        public bool IsRecording()
+        {
+            return m_RecordingID != 0;
+        }
+
         /// <summary>
         /// This function begins recording from the microphone and passes all recorded audio to the provided callback function. 
         /// </summary>

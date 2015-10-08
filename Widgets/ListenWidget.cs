@@ -23,45 +23,34 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SpeechToTextWidget : MonoBehaviour
+public class ListenWidget : MonoBehaviour
 {
     #region Private Data
     private SpeechToText m_STT = new SpeechToText();
-    private List<AudioClip> m_Recordings = new List<AudioClip>();
-    private int m_SilentBlocks = 0;
-
     [SerializeField]
     private Text m_StatusText = null;
     [SerializeField]
-    private Button m_RecordButton = null;
+    private Button m_ListenButton = null;
     [SerializeField]
     private float m_SilenceThreshold = 0.03f;
     [SerializeField]
     private Text m_Transcript = null;
     #endregion
 
-    public void OnRecordStart()
+    public void OnListenButton()
     {
-        m_STT.StartRecording(OnRecordClip);
-        if ( m_RecordButton != null )
-            m_RecordButton.interactable = false;
-        if ( m_StatusText != null )
-            m_StatusText.text = "LISTENING";
-    }
-
-    public void OnRecordEnd()
-    {
-        m_STT.StopRecording();
-        if ( m_RecordButton != null )
-            m_RecordButton.interactable = true;
-        if ( m_StatusText != null )
-            m_StatusText.text = "RECOGNIZING";
-
-        AudioClip recording = AudioClipUtil.Combine(m_Recordings.ToArray());
-        m_Recordings.Clear();
-        m_SilentBlocks = 0;
-
-        m_STT.Recognize(recording, OnRecognize);
+        if (! m_STT.IsListening() )
+        {
+            m_STT.StartListening( OnRecognize );
+            if ( m_StatusText != null )
+                m_StatusText.text = "LISTENING";
+        }
+        else
+        {
+            m_STT.StopListening();
+            if ( m_StatusText != null )
+                m_StatusText.text = "READY";
+        }
     }
 
     private void OnEnable()
@@ -70,23 +59,6 @@ public class SpeechToTextWidget : MonoBehaviour
 
         if ( m_StatusText != null )
             m_StatusText.text = "READY";
-    }
-
-    private void OnRecordClip(SpeechToText.RecordClip record)
-    {
-        if (record != null)
-        {
-            Log.Status("SpeechToTextWidget", "MaxLevel = {0}", record.MaxLevel);
-            m_Recordings.Add(record.Clip);
-
-            if ( record.MaxLevel < m_SilenceThreshold )
-                m_SilentBlocks += 1;
-            else
-                m_SilentBlocks = 0;
-
-            if ( m_SilentBlocks >= 2 )
-                OnRecordEnd();
-        }
     }
 
     private void OnRecognize(SpeechToText.ResultList result)
@@ -107,7 +79,5 @@ public class SpeechToTextWidget : MonoBehaviour
                 }
             }
         }
-        if ( m_StatusText != null )
-            m_StatusText.text = "READY";
     }
 }

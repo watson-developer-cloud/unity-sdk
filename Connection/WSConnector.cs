@@ -55,13 +55,35 @@ namespace IBM.Watson.Connection
         /// The class is returned by a Request object containing the response to a request made
         /// by the client.
         /// </summary>
-        public class Message
+        public abstract class Message
+        {};
+
+        public class BinaryMessage : Message
         {
+            public BinaryMessage(byte[] data)
+            {
+                Data = data;
+            }
+
             #region Public Properties
             /// <summary>
-            /// The data returned by the request.
+            /// Binary payload.
             /// </summary>
             public byte[] Data { get; set; }
+            #endregion
+        };
+        public class TextMessage : Message
+        {
+            public TextMessage( string text )
+            {
+                Text = text;
+            }
+
+            #region Public Properties
+            /// <summary>
+            /// Text payload.
+            /// </summary>
+            public string Text { get; set; }
             #endregion
         };
         #endregion
@@ -143,10 +165,13 @@ namespace IBM.Watson.Connection
                 if (m_SendQueue.Count > 0)
                 {
                     Message msg = m_SendQueue.Dequeue();
-                    if (msg == null)
+                    if (msg == null )
                         continue;
 
-
+                    if ( msg is TextMessage )
+                        m_WebSocket.SendAsync( ((TextMessage)msg).Text, OnMessageSent );
+                    else if ( msg is BinaryMessage )
+                        m_WebSocket.SendAsync( ((BinaryMessage)msg).Data, OnMessageSent );
                 }
                 else
                 {
@@ -171,10 +196,24 @@ namespace IBM.Watson.Connection
                 OnClose( this );
         }
 
+        private void OnMessageSent( bool completed )
+        {
+            if (! completed )
+            {
+                Log.Error( "WSConnector", "Failed to send message." );
+                m_ConnectionState = ConnectionState.DISCONNECTED;
+                if ( OnClose != null )
+                    OnClose( this );
+            }
+        }
+
         private void OnWSMessage(object sender, MessageEventArgs e)
         {
-            Message msg = new Message();
-            msg.Data = e.RawData;
+            Message msg = null;
+            if ( e.Type == Opcode.Text )
+                msg = new TextMessage( e.Data );
+            else if ( e.Type == Opcode.Binary )
+                msg = new BinaryMessage( e.RawData );
 
             if ( OnMessage != null )
                 OnMessage( msg );
