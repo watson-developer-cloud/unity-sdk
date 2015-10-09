@@ -53,12 +53,23 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
             public string Description { get; set; }
             public string URL { get; set; }
         };
+        public class WordConfidence
+        {
+            public string Word { get; set; }
+            public double Confidence { get; set; }
+        };
+        public class TimeStamp
+        {
+            public string Word { get; set; }
+            public double Start { get; set; }
+            public double End { get; set; }
+        };
         public class Alternative
         {
             public string Transcript { get; set; }
-            public float Confidence { get; set; }
-            public float[] Timestamps { get; set; }
-            public float[] WordConfidence { get; set; }
+            public double Confidence { get; set; }
+            public TimeStamp[] Timestamps { get; set; }
+            public WordConfidence[] WordConfidence { get; set; }
         };
         public class Result
         {
@@ -92,14 +103,14 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         private bool m_ListenActive = false;
         private bool m_AudioSent = false;
         private Queue<AudioClip> m_ListenRecordings = new Queue<AudioClip>();
-        private int m_KeepAliveID = 0;                      // ID of the keep alive co-routine
+        private int m_KeepAliveRoutine = 0;                      // ID of the keep alive co-routine
         private float m_LastWSMessage = 0.0f;               // last time we sent a message on the WS
         private string m_RecognizeModel = "en-US_BroadbandModel";    // ID of the model to use.
         private int m_MaxAlternatives = 1;                  // maximum number of alternatives to return.
         private bool m_Timestamps = false;
         private bool m_WordConfidence = false;
         private OnRecordClip m_RecordingCallback = null;
-        private int m_RecordingID = 0;                      // ID of our co-routine when recording, 0 if not recording currently.
+        private int m_RecordingRoutine = 0;                      // ID of our co-routine when recording, 0 if not recording currently.
         private AudioClip m_Recording = null;              
         private int m_RecordingHZ = 22050;                  // default recording HZ
         private string m_MicrophoneID = null;               // what microphone to use for recording.
@@ -159,34 +170,34 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         }
 
         /// <summary>
-        /// This starts t
+        /// This starts the service listening to the microphone and invoking the callback for any recognized 
+        /// speech. StopListening() should be called to stop this service from sending audio data to the
+        /// server. This function can send a continous stream of audio to the server for processing.
         /// </summary>
-        /// <param name="callback"></param>
-        /// <returns></returns>
+        /// <param name="callback">All recognize results are passed to this callback.</param>
+        /// <returns>Returns true on success, false on failure.</returns>
         public bool StartListening(OnRecognize callback)
         {
             if ( callback == null )
                 throw new ArgumentNullException("callback");
-
-            if (m_WS != null || m_RecordingID != 0 )
-            {
-                Log.Error("SpeechToText", "Recording already active.");
-                return false;
-            }
-
-            if (! ListenConnect() )
+            if (! ConnectRecognize() )
                 return false;
             
             m_ListenCallback = callback;
             StartRecording( OnListenRecord );
 
-            m_KeepAliveID = Runnable.Run( KeepAlive() );
+            m_KeepAliveRoutine = Runnable.Run( KeepAlive() );
 
             return true;
         }
 
-        private bool ListenConnect()
+        private bool ConnectRecognize()
         {
+            if ( m_WS != null )
+            {
+                Log.Error("SpeechToText", "WSConnector is already created.");
+                return false;
+            }
             Config.CredentialsInfo info = Config.Instance.FindCredentials(SERVICE_ID);
             if (info == null)
             {
@@ -206,22 +217,42 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
             m_WS.OnMessage = OnListenMessage;
             m_WS.OnClose = OnListenClosed;
 
+            SendStart();
+            return true;
+        }
+
+        private void SendStart()
+        {
             Dictionary<string,object> start = new Dictionary<string, object>();
             start["action"] = "start";
-            //start["content-type"] = "audio/wav";
             start["content-type"] = "audio/l16;rate=" + m_RecordingHZ.ToString() + ";channels=1;";
             start["continuous"] = true;
             start["max_alternatives"] = m_MaxAlternatives;
-            start["interim_results"] = false;
+            start["interim_results"] = true;
             start["word_confidence"] = m_WordConfidence;
             start["timestamps"] = m_Timestamps;
 
             m_WS.Send( new WSConnector.TextMessage( Json.Serialize( start ) ) );
             m_LastWSMessage = Time.time;
-
-            return true;
         }
 
+        private void SendStop()
+        {
+            if ( m_ListenActive )
+            {
+                Dictionary<string,string> stop = new Dictionary<string, string>();
+                stop["action"] = "stop";
+
+                m_WS.Send( new WSConnector.TextMessage( Json.Serialize( stop ) ) );
+                m_LastWSMessage = Time.time;
+                m_ListenActive = false;
+            }
+        }
+
+        /// <summary>
+        /// Invoke this function stop stop this service from listening.
+        /// </summary>
+        /// <returns>Returns true on success, false on failure.</returns>
         public bool StopListening()
         {
             if ( m_WS == null )
@@ -230,19 +261,23 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                 return false;
             }
 
-            // stop our keep alive co-routine
-            Runnable.Stop( m_KeepAliveID );
-            m_KeepAliveID = 0;
-            // stop the recording co-routine
-            StopRecording();
+            if ( m_KeepAliveRoutine != 0 )
+            {
+                Runnable.Stop( m_KeepAliveRoutine );
+                m_KeepAliveRoutine = 0;
+            }
 
-            m_ListenCallback = null;
+            if ( IsRecording() )
+                StopRecording();
+
             m_WS.Close();
             m_WS = null;
+            m_ListenCallback = null;
 
             return true;
         }
 
+        // This keeps the WebSocket connected when we are not sending any data.
         private IEnumerator KeepAlive()
         {
             while( m_WS != null )
@@ -321,7 +356,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
             if ( connector.State == WSConnector.ConnectionState.DISCONNECTED )
             {
                 Log.Status( "SpeechToText", "WebSocket connection closed, reconnecting." );
-                if (! ListenConnect() )
+                if (! ConnectRecognize() )
                     Log.Error( "SpeechToText", "Failed to reconnect." );
             }
         }
@@ -366,12 +401,8 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                 }
                 else if ( m_AudioSent )
                 {
-                    Dictionary<string,string> stop = new Dictionary<string, string>();
-                    stop["action"] = "stop";
-
-                    m_WS.Send( new WSConnector.TextMessage( Json.Serialize( stop ) ) );
-                    m_LastWSMessage = Time.time;
-                    m_AudioSent = m_ListenActive = false;
+                    SendStop();
+                    m_AudioSent = false;
                 }
            }
         }
@@ -517,15 +548,26 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
 
                         Alternative alternative = new Alternative();
                         alternative.Transcript = (string)ialternative["transcript"];
-                        alternative.Confidence = (float)(double)ialternative["confidence"];
+                        if ( ialternative.Contains( "confidence" ) )
+                            alternative.Confidence = (double)ialternative["confidence"];
 
                         if (ialternative.Contains("timestamps"))
                         {
                             IList itimestamps = ialternative["timestamps"] as IList;
 
-                            float[] timestamps = new float[itimestamps.Count];
+                            TimeStamp[] timestamps = new TimeStamp[itimestamps.Count];
                             for (int i = 0; i < itimestamps.Count; ++i)
-                                timestamps[i] = (float)(double)itimestamps[i];
+                            {
+                                IList itimestamp = itimestamps[i] as IList;
+                                if ( itimestamp == null )
+                                    continue;
+
+                                TimeStamp ts = new TimeStamp();
+                                ts.Word = (string)itimestamp[0];
+                                ts.Start = (double)itimestamp[1];
+                                ts.End = (double)itimestamp[2];
+                                timestamps[i] = ts;
+                            }
 
                             alternative.Timestamps = timestamps;
                         }
@@ -533,9 +575,18 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                         {
                             IList iconfidence = ialternative["word_confidence"] as IList;
 
-                            float[] confidence = new float[iconfidence.Count];
+                            WordConfidence[] confidence = new WordConfidence[iconfidence.Count];
                             for (int i = 0; i < iconfidence.Count; ++i)
-                                confidence[i] = (float)(double)iconfidence[i];
+                            {
+                                IList iwordconf = iconfidence[i] as IList;
+                                if ( iwordconf == null )
+                                    continue;
+
+                                WordConfidence wc = new WordConfidence();
+                                wc.Word = (string)iwordconf[0];
+                                wc.Confidence = (double)iwordconf[1];
+                                confidence[i] = wc;
+                            }
 
                             alternative.WordConfidence = confidence;
                         }
@@ -559,7 +610,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         #region Recording Functions
         public bool IsRecording()
         {
-            return m_RecordingID != 0;
+            return m_RecordingRoutine != 0;
         }
 
         /// <summary>
@@ -572,14 +623,14 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
             if (callback == null)
                 throw new ArgumentNullException("callback");
 
-            if (m_RecordingID != 0)
+            if (m_RecordingRoutine != 0)
             {
                 Log.Error("SpeechToText", "StartRecording() invoked, recording already active.");
                 return false;
             }
 
             m_RecordingCallback = callback;
-            m_RecordingID = Runnable.Run(RecordingHandler());
+            m_RecordingRoutine = Runnable.Run(RecordingHandler());
 
             return true;
         }
@@ -590,7 +641,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         /// <returns>Returns true on success.</returns>
         public bool StopRecording()
         {
-            if (m_RecordingID == 0)
+            if (m_RecordingRoutine == 0)
             {
                 Log.Error("SpeechToText", "StopRecording() called, no active recording.");
                 return false;
@@ -598,8 +649,8 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
             
             // TODO: We may need to figure out a method to get the last bit of audio out of our buffer.
             Microphone.End(m_MicrophoneID);
-            Runnable.Stop(m_RecordingID);
-            m_RecordingID = 0;
+            Runnable.Stop(m_RecordingRoutine);
+            m_RecordingRoutine = 0;
             m_RecordingCallback = null;
             m_Recording = null;
 

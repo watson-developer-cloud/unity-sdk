@@ -17,7 +17,7 @@
 */
 
 //! Uncomment to enable message debugging
-#define ENABLE_MESSAGE_DEBUGGING
+//#define ENABLE_MESSAGE_DEBUGGING
 
 using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
@@ -124,9 +124,10 @@ namespace IBM.Watson.Connection
         private ConnectionState m_ConnectionState = ConnectionState.CLOSED;
         private Thread m_SendThread = null;
         private AutoResetEvent m_SendEvent = new AutoResetEvent(false);
+        private AutoResetEvent m_SendThreadExit = new AutoResetEvent(false);
         private Queue<Message> m_SendQueue = new Queue<Message>();
         private Queue<Message> m_ReceiveQueue = new Queue<Message>();
-        private int m_ReceiverID = 0;
+        private int m_ReceiverRoutine = 0;
         #endregion
 
         #region Public Functions
@@ -150,21 +151,37 @@ namespace IBM.Watson.Connection
             if (m_SendThread == null )
             {
                 m_ConnectionState = ConnectionState.CONNECTING;
+
+                // start an actual thread for working with the WebSocket, otherwise
+                // we'll get errors from deep inside the library code.
                 m_SendThread = new Thread( SendMessages );
                 m_SendThread.Start();
             }
 
-            if ( m_ReceiverID == 0 )
-                m_ReceiverID = Runnable.Run( ProcessReceiveQueue() ); 
+            // Run our receiver as a co-routine so it can invoke functions 
+            // on the main thread.
+            if ( m_ReceiverRoutine == 0 )
+                m_ReceiverRoutine = Runnable.Run( ProcessReceiveQueue() ); 
         }
+        /// <summary>
+        /// This closes this connector, it will block until the send thread exits.
+        /// </summary>
         public void Close()
         {
+            // setting the state to closed will make the SendThread automatically exit.
             m_ConnectionState = ConnectionState.CLOSED;
 
-            if ( m_ReceiverID != 0 )
+            if ( m_SendThread != null )
             {
-                Runnable.Stop( m_ReceiverID );
-                m_ReceiverID = 0;
+                m_SendEvent.Set();             
+                m_SendThreadExit.WaitOne();    
+                m_SendThread = null;
+            }
+
+            if ( m_ReceiverRoutine != 0 )
+            {
+                Runnable.Stop( m_ReceiverRoutine );
+                m_ReceiverRoutine = 0;
             }
         }
         #endregion
@@ -195,14 +212,13 @@ namespace IBM.Watson.Connection
 
             if ( OnClose != null )
                 OnClose( this );
-            m_ReceiverID = 0;
+            m_ReceiverRoutine = 0;
         }
         #endregion
 
         #region Threaded Functions
         // NOTE: ALl functions in this region are operating in a background thread, do NOT call any Unity functions!
-
-        void SendMessages()
+        private void SendMessages()
         {
             WebSocket ws = null;
 
@@ -235,6 +251,7 @@ namespace IBM.Watson.Connection
             }
 
             ws.Close();
+            m_SendThreadExit.Set();
         }
 
         private void OnWSOpen(object sender, System.EventArgs e)
