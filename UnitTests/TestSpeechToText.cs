@@ -16,15 +16,34 @@
 * @author Richard Lyle (rolyle@us.ibm.com)
 */
 
+using IBM.Watson.Logging;
+using IBM.Watson.Services.v1;
 using System.Collections;
 
 namespace IBM.Watson.UnitTests
 {
     public class TestSpeechToText : UnitTest
     {
+        private SpeechToText m_STT = new SpeechToText();
+        private bool m_GetModelsTested = false;
+
         public override IEnumerator RunTest()
         {
+            m_STT.GetModels( OnGetModels );
+
+            while(! m_GetModelsTested )
+                yield return null;
+
             yield break;
+        }
+
+        private void OnGetModels( SpeechToText.Model [] models )
+        {
+            Test( models != null );
+            if ( models != null )
+                Log.Status( "TestSpeechToText", "GetModels() returned {0} models.", models.Length );
+
+            m_GetModelsTested = true;
         }
     }
 }

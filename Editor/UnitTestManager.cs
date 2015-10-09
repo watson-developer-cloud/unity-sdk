@@ -153,6 +153,11 @@ namespace IBM.Watson.Editor
             }
         }
 
+        private void Start()
+        {
+            Logger.InstallDefaultReactors();
+        }
+
         private void OnGUI()
         {
             if (m_TestsAvailable == null)

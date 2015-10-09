@@ -50,8 +50,8 @@ public class ListenWidget : MonoBehaviour
         if (! m_STT.IsListening() )
         {
             m_STT.DetectSilence = m_DetectSilence;
-            m_STT.WordConfidence = m_WordConfidence;
-            m_STT.Timestamps = m_TimeStamps;
+            m_STT.EnableWordConfidence = m_WordConfidence;
+            m_STT.EnableTimestamps = m_TimeStamps;
             m_STT.SilenceThreshold = m_SilenceThreshold;
             m_STT.RecordingHZ = m_RecordingHZ;
             m_STT.MaxAlternatives = m_MaxAlternatives;

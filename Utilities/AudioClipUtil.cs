@@ -17,6 +17,8 @@
 */
 
 using IBM.Watson.Logging;
+using System;
+using System.IO;
 using UnityEngine;
 
 namespace IBM.Watson.Utilities
@@ -77,6 +79,24 @@ namespace IBM.Watson.Utilities
             result.SetData(data, 0);
 
             return result;
+        }
+
+        public static byte[] GetL16(AudioClip clip)
+        {
+            MemoryStream stream = new MemoryStream();
+            BinaryWriter writer = new BinaryWriter(stream);
+
+            float[] samples = new float[clip.samples * clip.channels];
+            clip.GetData(samples, 0);
+
+            float divisor = (1 << 15);
+            for (int i = 0; i < samples.Length; ++i)
+                writer.Write((short)(samples[i] * divisor));
+
+            byte[] data = new byte[samples.Length * 2];
+            Array.Copy(stream.GetBuffer(), data, data.Length);
+
+            return data;
         }
     }
 }
