@@ -107,10 +107,6 @@ namespace IBM.Watson.Connection
         /// </summary>
         public Config.CredentialsInfo Authentication { get; set; }
         /// <summary>
-        /// Additional headers to include when opening the web socket.
-        /// </summary>
-        public Dictionary<string,string> Headers { get; set; }
-        /// <summary>
         /// The current state of this connector.
         /// </summary>
         public ConnectionState State { get { return m_ConnectionState; } set { m_ConnectionState = value; } }
@@ -196,7 +192,6 @@ namespace IBM.Watson.Connection
             WebSocket ws = null;
 
             ws = new WebSocket(URL);
-            ws.Headers = Headers;
             ws.SetCredentials(Authentication.m_User, Authentication.m_Password, true);
             ws.OnOpen += OnWSOpen;
             ws.OnClose += OnWSClose;

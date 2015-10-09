@@ -199,11 +199,6 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                 URL = URL.Replace( "https://", "wss://" );
 
             m_WS = new WSConnector();
-
-            //Dictionary<string,string> headers = new Dictionary<string,string>();
-            //headers["Content-Type"] = "audio/116;rate=" + m_RecordingHZ.ToString();
-            //m_WS.Headers = headers;
-
             m_WS.Authentication = info;
             m_WS.URL = URL;
             m_WS.OnMessage = OnListenMessage;
