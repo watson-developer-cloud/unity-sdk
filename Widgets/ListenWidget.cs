@@ -30,9 +30,11 @@ public class ListenWidget : MonoBehaviour
     [SerializeField]
     private Text m_StatusText = null;
     [SerializeField]
-    private Button m_ListenButton = null;
-    [SerializeField]
     private float m_SilenceThreshold = 0.03f;
+    [SerializeField]
+    private int m_RecordingHZ = 22050;
+    [SerializeField]
+    private int m_MaxAlternatives = 1;
     [SerializeField]
     private Text m_Transcript = null;
     #endregion
@@ -41,6 +43,9 @@ public class ListenWidget : MonoBehaviour
     {
         if (! m_STT.IsListening() )
         {
+            m_STT.SilenceThreshold = m_SilenceThreshold;
+            m_STT.RecordingHZ = m_RecordingHZ;
+            m_STT.MaxAlternatives = m_MaxAlternatives;
             m_STT.StartListening( OnRecognize );
             if ( m_StatusText != null )
                 m_StatusText.text = "LISTENING";

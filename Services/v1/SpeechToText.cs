@@ -90,6 +90,8 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         private OnRecognize m_ListenCallback = null;        // Callback is set by StartListening()                                                             
         private WSConnector m_WS = null;                    // WebSocket object used when StartListening() is invoked  
         private bool m_ListenActive = false;
+        private bool m_AudioSent = false;
+        private Queue<AudioClip> m_ListenRecordings = new Queue<AudioClip>();
         private int m_KeepAliveID = 0;                      // ID of the keep alive co-routine
         private float m_LastWSMessage = 0.0f;               // last time we sent a message on the WS
         private string m_RecognizeModel = "en-US_BroadbandModel";    // ID of the model to use.
@@ -277,7 +279,26 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                     }
                     else if (json.Contains( "state") )
                     {
-                        Log.Status( "SpeechToText", "Server state is {0}", (string)json["state"] );
+                        string state = (string)json["state"];
+
+                        Log.Status( "SpeechToText", "Server state is {0}", state );
+                        if ( state == "listening" )
+                        {
+                            if ( m_ListenActive )
+                                Log.Warning( "SpeechToText", "Already in listen active state." );
+
+                            m_ListenActive = true;
+
+                            // send all pending audio clips ..
+                            while( m_ListenRecordings.Count > 0 )
+                            {
+                                AudioClip clip = m_ListenRecordings.Dequeue();
+                                m_WS.Send( new WSConnector.BinaryMessage( GetL16( clip ) ) );
+                                m_LastWSMessage = Time.time;
+                                m_AudioSent = true;
+                            }
+                        }
+                        
                     }
                     else if (json.Contains( "error" ) )
                     {
@@ -305,7 +326,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
             }
         }
 
-        private static byte[] GetPCM(AudioClip clip)
+        private static byte[] GetL16(AudioClip clip)
         {
             MemoryStream stream = new MemoryStream();
             BinaryWriter writer = new BinaryWriter(stream);
@@ -329,20 +350,28 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
             {
                 if (!DetectSilence || clip.MaxLevel >= m_SilenceThreshold )
                 {
-                    m_ListenActive = true;
-
-                    //Log.Debug( "SpeechToText", "Sending {0} bytes of sample data.", data.Length );
-                    m_WS.Send( new WSConnector.BinaryMessage( GetPCM( clip.Clip ) ) );
-                    m_LastWSMessage = Time.time;
+                    if ( m_ListenActive )
+                    {
+                        m_WS.Send( new WSConnector.BinaryMessage( GetL16( clip.Clip ) ) );
+                        m_LastWSMessage = Time.time;
+                        m_AudioSent = true;
+                    }
+                    else
+                    {
+                        // we have not received the "listening" state yet from the server, so just queue
+                        // the audio clips until that happens.
+                        m_ListenRecordings.Enqueue( clip.Clip );
+                        // TODO: We need to check the length of this queue and do something if it gets too full.
+                    }
                 }
-                else if ( m_ListenActive )
+                else if ( m_AudioSent )
                 {
                     Dictionary<string,string> stop = new Dictionary<string, string>();
                     stop["action"] = "stop";
 
                     m_WS.Send( new WSConnector.TextMessage( Json.Serialize( stop ) ) );
                     m_LastWSMessage = Time.time;
-                    m_ListenActive = false;
+                    m_AudioSent = m_ListenActive = false;
                 }
            }
         }

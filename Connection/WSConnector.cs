@@ -16,6 +16,9 @@
 * @author Richard Lyle (rolyle@us.ibm.com)
 */
 
+//! Uncomment to enable message debugging
+#define ENABLE_MESSAGE_DEBUGGING
+
 using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
 using System;
@@ -53,12 +56,14 @@ namespace IBM.Watson.Connection
         }
 
         /// <summary>
-        /// The class is returned by a Request object containing the response to a request made
-        /// by the client.
+        /// The base abstract class for a Message that can be sent/received by this class.
         /// </summary>
         public abstract class Message
         {};
 
+        /// <summary>
+        /// BinaryMessage for sending raw binaray data.
+        /// </summary>
         public class BinaryMessage : Message
         {
             public BinaryMessage(byte[] data)
@@ -73,6 +78,9 @@ namespace IBM.Watson.Connection
             public byte[] Data { get; set; }
             #endregion
         };
+        /// <summary>
+        /// TextMessage is used for sending text messages (e.g. JSON, XML)
+        /// </summary>
         public class TextMessage : Message
         {
             public TextMessage( string text )
@@ -122,11 +130,17 @@ namespace IBM.Watson.Connection
         #endregion
 
         #region Public Functions
+        /// <summary>
+        /// This function sends the given message object.
+        /// </summary>
+        /// <param name="msg">This is either a BinaryMessage or TextMessage object.</param>
         public void Send(Message msg)
         {
+#if ENABLE_MESSAGE_DEBUGGING
             Log.Debug( "WSConnector", "Sending {0} message: {1}",
                 msg is TextMessage ? "TextMessage" : "BinaryMessage", 
                 msg is TextMessage ? ((TextMessage)msg).Text : ((BinaryMessage)msg).Data.Length.ToString() + " bytes" );
+#endif
             lock( m_SendQueue )
             {
                 m_SendQueue.Enqueue(msg);
@@ -168,10 +182,11 @@ namespace IBM.Watson.Connection
                     while( m_ReceiveQueue.Count > 0 )
                     {
                         Message msg = m_ReceiveQueue.Dequeue();
+#if ENABLE_MESSAGE_DEBUGGING
                         Log.Debug( "WSConnector", "Received {0} message: {1}",
                             msg is TextMessage ? "TextMessage" : "BinaryMessage", 
                             msg is TextMessage ? ((TextMessage)msg).Text : ((BinaryMessage)msg).Data.Length.ToString() + " bytes" );
-
+#endif 
                         if ( OnMessage != null )
                             OnMessage( msg );
                     }
@@ -239,6 +254,8 @@ namespace IBM.Watson.Connection
                 msg = new TextMessage( e.Data );
             else if ( e.Type == Opcode.Binary )
                 msg = new BinaryMessage( e.RawData );
+            else
+                Log.Warning( "WSConnector", "Unsupported opcode {0}", e.Type.ToString() );
 
             lock( m_ReceiveQueue )
                 m_ReceiveQueue.Enqueue( msg );
