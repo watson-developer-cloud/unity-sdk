@@ -21,9 +21,6 @@ using System.Collections.Generic;
 using IBM.Watson.Connection;
 using IBM.Watson.Utilities;
 using IBM.Watson.Logging;
-using System.Runtime.InteropServices;
-using System.IO;
-using System;
 using System.Text;
 using MiniJSON;
 

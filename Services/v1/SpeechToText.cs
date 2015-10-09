@@ -32,6 +32,9 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
     class SpeechToText
     {
         #region Constants
+        /// <summary>
+        /// This ID is used to match up a configuration record with this service.
+        /// </summary>
         const string SERVICE_ID = "SpeechToTextV1";
         /// <summary>
         /// How often to send a message to the web socket to keep it alive.
@@ -102,6 +105,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         private WSConnector m_ListenSocket = null;          // WebSocket object used when StartListening() is invoked  
         private bool m_ListenActive = false;
         private bool m_AudioSent = false;
+        private bool m_IsListening = false;
         private Queue<AudioClip> m_ListenRecordings = new Queue<AudioClip>();
         private int m_KeepAliveRoutine = 0;                      // ID of the keep alive co-routine
         private float m_LastWSMessage = 0.0f;               // last time we sent a message on the WS
@@ -171,7 +175,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         /// <returns>true is returned if we are already listening.</returns>
         public bool IsListening()
         {
-            return m_ListenSocket != null;
+            return m_IsListening;
         }
 
         /// <summary>
@@ -190,6 +194,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
             if (!CreateListenConnector())
                 return false;
 
+            m_IsListening = true;
             m_ListenCallback = callback;
             StartRecording(OnListenRecord);
             m_KeepAliveRoutine = Runnable.Run(KeepAlive());
@@ -204,12 +209,13 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         /// <returns>Returns true on success, false on failure.</returns>
         public bool StopListening()
         {
-            if (m_ListenSocket == null)
+            if (!m_IsListening)
             {
                 Log.Error("SpeechToText", "Not currently listening.");
                 return false;
             }
 
+            m_IsListening = false;
             CloseListenConnector();
 
             if (m_KeepAliveRoutine != 0)
@@ -222,7 +228,6 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                 StopRecording();
 
             m_ListenCallback = null;
-
             return true;
         }
 
@@ -327,7 +332,12 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                     {
                         ResultList results = ParseRecognizeResponse(json);
                         if (results != null)
-                            m_ListenCallback(results);
+                        {
+                            if ( m_ListenCallback != null )
+                                m_ListenCallback(results);
+                            else
+                                StopListening();            // automatically stop listening if our callback is destroyed.
+                        }
                         else
                             Log.Error("SpeechToText", "Failed to parse results: {0}", tm.Text);
                     }
@@ -341,15 +351,18 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                             if (m_ListenActive)
                                 Log.Warning("SpeechToText", "Already in listen active state.");
 
-                            m_ListenActive = true;
-
-                            // send all pending audio clips ..
-                            while (m_ListenRecordings.Count > 0)
+                            if ( m_IsListening )
                             {
-                                AudioClip clip = m_ListenRecordings.Dequeue();
-                                m_ListenSocket.Send(new WSConnector.BinaryMessage(AudioClipUtil.GetL16(clip)));
-                                m_LastWSMessage = Time.time;
-                                m_AudioSent = true;
+                                m_ListenActive = true;
+
+                                // send all pending audio clips ..
+                                while (m_ListenRecordings.Count > 0)
+                                {
+                                    AudioClip clip = m_ListenRecordings.Dequeue();
+                                    m_ListenSocket.Send(new WSConnector.BinaryMessage(AudioClipUtil.GetL16(clip)));
+                                    m_LastWSMessage = Time.time;
+                                    m_AudioSent = true;
+                                }
                             }
                         }
 
@@ -386,7 +399,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
 
         private void OnListenRecord(RecordClip clip)
         {
-            if (m_ListenSocket != null)
+            if ( m_IsListening )
             {
                 if (!DetectSilence || clip.MaxLevel >= m_SilenceThreshold)
                 {
@@ -415,11 +428,6 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
 
 
         #region GetModels Functions
-        private class GetModelsRequest : RESTConnector.Request
-        {
-            public OnGetModels Callback { get; set; }
-        };
-
         /// <summary>
         /// This function retreives all the language models that the user may use by setting the RecognizeModel 
         /// public property.
@@ -439,6 +447,11 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
 
             return m_REST.Send(req);
         }
+
+        private class GetModelsRequest : RESTConnector.Request
+        {
+            public OnGetModels Callback { get; set; }
+        };
 
         private void OnGetModelsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
@@ -782,6 +795,8 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
 
                     if (m_RecordingCallback != null)
                         m_RecordingCallback(record);
+                    else
+                        StopRecording();        // automatically stop recording if the callback goes away.
 
                     bFirstBlock = !bFirstBlock;
                 }
