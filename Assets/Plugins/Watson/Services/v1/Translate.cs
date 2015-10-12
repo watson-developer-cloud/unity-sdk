@@ -115,7 +115,9 @@ namespace IBM.Watson.Services.v1
             req.OnResponse = TranslateResponse;
             req.Function = "/v2/translate";
             req.Send = Encoding.UTF8.GetBytes( json );
-            req.ContentType = "application/json";
+
+            req.Headers["accept"] = "application/json";
+            req.Headers["Content-Type"] = "application/json";
 
             return m_Connector.Send(req);
         }
@@ -134,7 +136,8 @@ namespace IBM.Watson.Services.v1
             {
                 Translation translation = new Translation();
 
-                IDictionary json = Json.Deserialize(Encoding.UTF8.GetString(resp.Data)) as IDictionary;
+                string jsonString = Encoding.UTF8.GetString(resp.Data);
+                IDictionary json = Json.Deserialize(jsonString) as IDictionary;
 
                 translation.WordCount = (long)json["word_count"];
                 translation.CharacterCount = (long)json["character_count"];
@@ -238,7 +241,7 @@ namespace IBM.Watson.Services.v1
             req.Callback = callback;
             req.Function = "/v2/identify";
             req.Send = Encoding.UTF8.GetBytes(text);
-            req.ContentType = "text/plain";
+            req.Headers["Content-Type"] = "text/plain";
             req.OnResponse = OnIdentifyResponse;
 
             return m_Connector.Send(req);

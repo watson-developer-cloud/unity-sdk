@@ -145,7 +145,8 @@ namespace IBM.Watson.Services.v1
                 Dictionary<string,string> upload = new Dictionary<string, string>();
                 upload["text"] = text;
 
-                req.Send = Encoding.UTF8.GetBytes( Json.Serialize( upload ) );               
+                req.Send = Encoding.UTF8.GetBytes( Json.Serialize( upload ) ); 
+                req.Headers["Content-Type"] = "application/json";              
             }
             else
             {

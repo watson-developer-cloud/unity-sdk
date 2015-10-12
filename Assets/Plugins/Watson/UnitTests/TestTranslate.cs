@@ -39,7 +39,7 @@ namespace IBM.Watson.UnitTests
             while(! m_IdentifyTested )
                 yield return null;
 
-            m_Translate.GetTranslation( "What does the fox say?", "en", "de", OnGetTranslation );
+            m_Translate.GetTranslation( "What does the fox say?", "en", "es", OnGetTranslation );
             while(! m_TranslateTested )
                 yield return null;
 

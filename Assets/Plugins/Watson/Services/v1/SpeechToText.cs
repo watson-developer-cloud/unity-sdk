@@ -559,7 +559,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
             req.Callback = callback;
 
             req.Function = "/v1/recognize";
-            req.ContentType = "audio/wav";
+            req.Headers["Content-Type"] = "audio/wav";
             req.Send = WaveFile.CreateWAV(clip);
             if (req.Send.Length > MAX_RECOGNIZE_CLIP_SIZE )
             {

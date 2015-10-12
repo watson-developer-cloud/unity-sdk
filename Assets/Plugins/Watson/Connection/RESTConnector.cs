@@ -65,6 +65,7 @@ namespace IBM.Watson.Connection
             public Request()
             {
                 Parameters = new Dictionary<string, object>();
+                Headers = new Dictionary<string, string>();
             }
 
             #region Public Properties
@@ -77,13 +78,13 @@ namespace IBM.Watson.Connection
             /// </summary>
             public Dictionary<string, object> Parameters { get; set; }
             /// <summary>
+            /// Additional headers to provide in the request.
+            /// </summary>
+            public Dictionary<string,string> Headers { get; set; }
+            /// <summary>
             /// The data to send through the connection.
             /// </summary>
             public byte [] Send { get; set; }
-            /// <summary>
-            /// The type of content to send, the default is "application/json"
-            /// </summary>
-            public string ContentType { get; set; }
             /// <summary>
             /// The callback that is invoked when a response is received.
             /// </summary>
@@ -182,28 +183,15 @@ namespace IBM.Watson.Connection
                 if (args != null && args.Length > 0)
                     url += "?" + args.ToString();
 
+                AddAuthorizationHeader( req.Headers );
+
                 float startTime = Time.time;
 
                 WWW www = null;
                 if (req.Send == null)
-                {
-                    Dictionary<string,string> headers = new Dictionary<string, string>();
-                    AddAuthorizationHeader( headers );
-
-                    www = new WWW( url, null, headers );
-                }
+                    www = new WWW( url, null, req.Headers );
                 else
-                {
-                    Dictionary<string,string> headers = new Dictionary<string, string>();
-                    AddAuthorizationHeader( headers );
-
-                    string sContentType = req.ContentType;
-                    if ( string.IsNullOrEmpty( sContentType ) )
-                        sContentType = "application/json";
-                    headers["Content-Type"] = sContentType;
-
-                    www = new WWW( url, req.Send, headers );
-                }
+                    www = new WWW( url, req.Send, req.Headers );
 
                 // wait for the request to complete.
                 while(! www.isDone )
