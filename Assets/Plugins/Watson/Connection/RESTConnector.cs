@@ -116,7 +116,7 @@ namespace IBM.Watson.Connection
 
             // if we are not already running a co-routine to send the Requests
             // then start one at this point.
-            if ( m_ActiveConnections < Config.Instance.MaxConnections )
+            if ( m_ActiveConnections < Config.Instance.MaxRestConnections )
             {
                 // This co-routine will increment m_ActiveConnections then yield back to us so
                 // we can return from the Send() as quickly as possible.

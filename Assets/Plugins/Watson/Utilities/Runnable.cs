@@ -42,7 +42,7 @@ namespace IBM.Watson.Utilities
         /// Start a co-routine function.
         /// </summary>
         /// <param name="routine">The IEnumerator returns by the co-routine function the user is invoking.</param>
-        /// <returns>Returns a ID that can be pased into Stop() to halt the co-routine.</returns>
+        /// <returns>Returns a ID that can be passed into Stop() to halt the co-routine.</returns>
         public static int Run(IEnumerator routine)
         {
             Routine r = new Routine(routine);

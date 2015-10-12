@@ -23,6 +23,9 @@ using UnityEngine;
 
 namespace IBM.Watson.Utilities
 {
+    /// <summary>
+    /// AudioClip helper functions.
+    /// </summary>
     public static class AudioClipUtil
     {
         /// <summary>
@@ -81,6 +84,11 @@ namespace IBM.Watson.Utilities
             return result;
         }
 
+        /// <summary>
+        /// Returns linear 16-bit audio data for the given AudioClip object.
+        /// </summary>
+        /// <param name="clip">The AudioClip object.</param>
+        /// <returns>A byte array of 16-bit audio data.</returns>
         public static byte[] GetL16(AudioClip clip)
         {
             MemoryStream stream = new MemoryStream();

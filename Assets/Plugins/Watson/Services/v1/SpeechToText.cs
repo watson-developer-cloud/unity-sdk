@@ -45,6 +45,14 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         /// the recording hits the halfway point.
         /// </summary>
         const int RECORDING_BUFFER_SIZE = 2;
+        /// <summary>
+        /// How many recording AudioClips will we queue before we enter a error state.
+        /// </summary>
+        const int MAX_QUEUED_RECORDINGS = 30;
+        /// <summary>
+        /// Size of a clip in bytes that can be sent through the Recognize function.
+        /// </summary>
+        const int MAX_RECOGNIZE_CLIP_SIZE = 4 * (1024 * 1024);
         #endregion
 
         #region Public Types
@@ -181,7 +189,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         /// <summary>
         /// This starts the service listening to the microphone and invoking the callback for any recognized 
         /// speech. StopListening() should be called to stop this service from sending audio data to the
-        /// server. This function can send a continous stream of audio to the server for processing.
+        /// server. This function can send a continuous stream of audio to the server for processing.
         /// </summary>
         /// <param name="callback">All recognize results are passed to this callback.</param>
         /// <returns>Returns true on success, false on failure.</returns>
@@ -204,16 +212,13 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         }
 
         /// <summary>
-        /// Invoke this function stop stop this service from listening.
+        /// Invoke this function stop this service from listening.
         /// </summary>
         /// <returns>Returns true on success, false on failure.</returns>
         public bool StopListening()
         {
-            if (!m_IsListening)
-            {
-                Log.Error("SpeechToText", "Not currently listening.");
+            if (!IsListening())
                 return false;
-            }
 
             m_IsListening = false;
             CloseListenConnector();
@@ -227,7 +232,9 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
             if (IsRecording())
                 StopRecording();
 
+            m_ListenRecordings.Clear();
             m_ListenCallback = null;
+
             return true;
         }
 
@@ -414,7 +421,16 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                         // we have not received the "listening" state yet from the server, so just queue
                         // the audio clips until that happens.
                         m_ListenRecordings.Enqueue(clip.Clip);
-                        // TODO: We need to check the length of this queue and do something if it gets too full.
+
+                        // We need to check the length of this queue and do something if it gets too full.
+                        if ( m_ListenRecordings.Count > MAX_QUEUED_RECORDINGS )
+                        {
+                            Log.Error( "SpeechToText", "Recording queue has hit the maximum size." );
+
+                            StopListening();
+                            if ( OnError != null )
+                                OnError( "Recording queue is full." );
+                        }
                     }
                 }
                 else if (m_AudioSent)
@@ -429,7 +445,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
 
         #region GetModels Functions
         /// <summary>
-        /// This function retreives all the language models that the user may use by setting the RecognizeModel 
+        /// This function retrieves all the language models that the user may use by setting the RecognizeModel 
         /// public property.
         /// </summary>
         /// <param name="callback">This callback is invoked with an array of all available models. The callback will
@@ -482,7 +498,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
             IDictionary json = (IDictionary)Json.Deserialize(jsonString);
             if (json == null)
             {
-                Log.Error("SpechToText", "Failed to parse json: {0}", jsonString);
+                Log.Error("SpechToText", "Failed to parse JSON: {0}", jsonString);
                 return null;
             }
 
@@ -522,8 +538,8 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
 
         #region Recognize Functions
         /// <summary>
-        /// This function POSTs the given audio clip the reconize function and convert speech into text. This function should be used
-        /// only on AudioClips under 4MB once they have been converted into WAV format. Use the StartListening() for continous
+        /// This function POSTs the given audio clip the recognize function and convert speech into text. This function should be used
+        /// only on AudioClips under 4MB once they have been converted into WAV format. Use the StartListening() for continuous
         /// recognition of text.
         /// </summary>
         /// <param name="clip">The AudioClip object.</param>
@@ -545,13 +561,13 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
             req.Function = "/v1/recognize";
             req.ContentType = "audio/wav";
             req.Send = WaveFile.CreateWAV(clip);
-            if (req.Send.Length > (4 * (1024 * 1024)))
+            if (req.Send.Length > MAX_RECOGNIZE_CLIP_SIZE )
             {
                 Log.Error("SpeechToText", "AudioClip is too large for Recognize().");
                 return false;
             }
             req.Parameters["model"] = m_RecognizeModel;
-            req.Parameters["continuous"] = "false";     // TODO: Support this query parameter
+            req.Parameters["continuous"] = "false";   
             req.Parameters["max_alternatives"] = m_MaxAlternatives.ToString();
             req.Parameters["timestamps"] = m_Timestamps ? "true" : "false";
             req.Parameters["word_confidence"] = m_WordConfidence ? "true" : "false";

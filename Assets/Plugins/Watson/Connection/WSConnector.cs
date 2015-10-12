@@ -62,7 +62,7 @@ namespace IBM.Watson.Connection
         {};
 
         /// <summary>
-        /// BinaryMessage for sending raw binaray data.
+        /// BinaryMessage for sending raw binary data.
         /// </summary>
         public class BinaryMessage : Message
         {
@@ -99,7 +99,7 @@ namespace IBM.Watson.Connection
 
         #region Public Properties
         /// <summary>
-        /// This delegeta is invoked when the connection is closed.
+        /// This delegate is invoked when the connection is closed.
         /// </summary>
         public ConnectorEvent OnClose { get; set; }
         /// <summary>
@@ -126,6 +126,7 @@ namespace IBM.Watson.Connection
         private AutoResetEvent m_SendEvent = new AutoResetEvent(false);
         private AutoResetEvent m_SendThreadExit = new AutoResetEvent(false);
         private Queue<Message> m_SendQueue = new Queue<Message>();
+        private AutoResetEvent m_ReceiveEvent = new AutoResetEvent(false);
         private Queue<Message> m_ReceiveQueue = new Queue<Message>();
         private int m_ReceiverRoutine = 0;
         #endregion
@@ -194,18 +195,23 @@ namespace IBM.Watson.Connection
             {
                 yield return null;
 
-                lock( m_ReceiveQueue )
+                // check for a signal with a timeout of 0, this it just a quicker way to know if we have messages
+                // without having to lock the m_ReceiveQueue object.
+                if ( m_ReceiveEvent.WaitOne( 0 ) )
                 {
-                    while( m_ReceiveQueue.Count > 0 )
+                    lock( m_ReceiveQueue )
                     {
-                        Message msg = m_ReceiveQueue.Dequeue();
+                        while( m_ReceiveQueue.Count > 0 )
+                        {
+                            Message msg = m_ReceiveQueue.Dequeue();
 #if ENABLE_MESSAGE_DEBUGGING
-                        Log.Debug( "WSConnector", "Received {0} message: {1}",
-                            msg is TextMessage ? "TextMessage" : "BinaryMessage", 
-                            msg is TextMessage ? ((TextMessage)msg).Text : ((BinaryMessage)msg).Data.Length.ToString() + " bytes" );
+                            Log.Debug( "WSConnector", "Received {0} message: {1}",
+                                msg is TextMessage ? "TextMessage" : "BinaryMessage", 
+                                msg is TextMessage ? ((TextMessage)msg).Text : ((BinaryMessage)msg).Data.Length.ToString() + " bytes" );
 #endif 
-                        if ( OnMessage != null )
-                            OnMessage( msg );
+                            if ( OnMessage != null )
+                                OnMessage( msg );
+                        }
                     }
                 }
             }
@@ -276,6 +282,7 @@ namespace IBM.Watson.Connection
 
             lock( m_ReceiveQueue )
                 m_ReceiveQueue.Enqueue( msg );
+            m_ReceiveEvent.Set();
         }
 
         private void OnWSError(object sender, ErrorEventArgs e)

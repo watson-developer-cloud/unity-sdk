@@ -26,14 +26,17 @@ namespace IBM.Watson.UnitTests
     public class TestTextToSpeech : UnitTest
     {
         private TextToSpeech m_TTS = new TextToSpeech();
-        private int m_CallbackCount = 0;
+        private bool m_GetTested = false;
+        private bool m_PostTested = false;
                 
         public override IEnumerator RunTest()
         {
             m_TTS.ToSpeech( "Hello World using GET", OnSpeechGET );                  // Test GET
+            while (!m_GetTested)
+                yield return null;
 
-            // wait for both callbacks
-            while (m_CallbackCount < 2 )
+            m_TTS.ToSpeech( "Hello World using POST", OnSpeechPOST, true );            // Test POST
+            while (!m_PostTested)
                 yield return null;
 
             yield break;
@@ -44,12 +47,10 @@ namespace IBM.Watson.UnitTests
             Log.Debug( "TestTestToSpeech", "OnSpeechGET invoked." );
 
             Test( clip != null );
-            m_CallbackCount += 1;
+            m_GetTested = true;
 
             PlayClip( clip );
 
-            Log.Debug( "TestTextToSpeech", "ToSpeech POST." );
-            m_TTS.ToSpeech( "Hello World using POST", OnSpeechPOST, true );            // Test POST
         }
 
         private void OnSpeechPOST( AudioClip clip )
@@ -57,7 +58,7 @@ namespace IBM.Watson.UnitTests
             Log.Debug( "TestTestToSpeech", "OnSpechPOST invoked." );
 
             Test( clip != null );
-            m_CallbackCount += 1;
+            m_PostTested = true;
 
             PlayClip( clip );
         }

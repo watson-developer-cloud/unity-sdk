@@ -58,7 +58,7 @@ namespace IBM.Watson.Editor
 
             m_ScrollPos = EditorGUILayout.BeginScrollView( m_ScrollPos );
             cfg.TimeOut = EditorGUILayout.FloatField( "Timeout", cfg.TimeOut );
-            cfg.MaxConnections = EditorGUILayout.IntField( "Max Connections", cfg.MaxConnections );
+            cfg.MaxRestConnections = EditorGUILayout.IntField( "Max Connections", cfg.MaxRestConnections );
 
             EditorGUILayout.LabelField( "Credentials" );
             EditorGUI.indentLevel += 1;

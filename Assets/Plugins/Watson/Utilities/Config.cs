@@ -29,7 +29,7 @@ namespace IBM.Watson.Utilities
         public static readonly string           CONFIG_FILE = "/Config.json";
 
         /// <summary>
-        /// Serialzied class for holding the user credentials for a given service.
+        /// Serialized class for holding the user credentials for a given service.
         /// </summary>
         public class CredentialsInfo
         {
@@ -59,7 +59,7 @@ namespace IBM.Watson.Utilities
         [fsIgnore]
         public bool ConfigLoaded { get; private set; }
         /// <summary>
-        /// Returns the Config singleton instance.
+        /// Returns the singleton instance.
         /// </summary>
         public static Config Instance { get { return Singleton<Config>.Instance; } }
         /// <summary>
@@ -67,9 +67,9 @@ namespace IBM.Watson.Utilities
         /// </summary>
         public float TimeOut { get { return m_TimeOut; } set { m_TimeOut = value; } }
         /// <summary>
-        /// Maximum number of simultanious connections Watson will make to the server backend.
+        /// Maximum number of connections Watson will make to the server back-end at any one time.
         /// </summary>
-        public int MaxConnections { get { return m_MaxConnections; } set { m_MaxConnections = value; } }
+        public int MaxRestConnections { get { return m_MaxConnections; } set { m_MaxConnections = value; } }
         /// <summary>
         /// Returns the list of credentials used to login to the various services.
         /// </summary>
@@ -98,7 +98,7 @@ namespace IBM.Watson.Utilities
         }
 
         /// <summary>
-        /// Invoking this function will start the co-routine to load the config. The user should check the 
+        /// Invoking this function will start the co-routine to load the configuration. The user should check the 
         /// ConfigLoaded property to check when the configuration is actually loaded.
         /// </summary>
         public void LoadConfig()
@@ -115,9 +115,9 @@ namespace IBM.Watson.Utilities
         }
 
         /// <summary>
-        /// Load the config from the given json data.
+        /// Load the configuration from the given JSON data.
         /// </summary>
-        /// <param name="json">The string containing the config json data.</param>
+        /// <param name="json">The string containing the configuration JSON data.</param>
         /// <returns></returns>
         public bool LoadConfig(string json)
         {

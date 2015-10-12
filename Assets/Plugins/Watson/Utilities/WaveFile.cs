@@ -94,6 +94,12 @@ namespace IBM.Watson.Utilities
         #endregion
 
         #region Public Functions
+        /// <summary>
+        /// Creates a AudioClip object from WAV file data.
+        /// </summary>
+        /// <param name="clipName">What name to give the AudioClip.</param>
+        /// <param name="data">The raw data of the WAV file.</param>
+        /// <returns>Returns an AudioClip object on success, null on failure.</returns>
         public static AudioClip ParseWAV(string clipName, byte[] data)
         {
             MemoryStream stream = new MemoryStream(data, false);
@@ -178,6 +184,12 @@ namespace IBM.Watson.Utilities
             return null;
         }
 
+        /// <summary>
+        /// Creates a WAV file from a AudioClip object.
+        /// </summary>
+        /// <param name="clip">The AudioClip object to generate the WAV file from.</param>
+        /// <param name="bps">How many bits per sample we should use in the WAV file, 8, 16, or 32.</param>
+        /// <returns>Returns a byte array of the raw data of the WAV file.</returns>
         public static byte[] CreateWAV(AudioClip clip, int bps = 16)
         {
             MemoryStream stream = new MemoryStream();
@@ -231,7 +243,7 @@ namespace IBM.Watson.Utilities
             }
             else
             {
-                Log.Error("CreateWAV", "Unspported BPS {0} in WAV data.", bps.ToString());
+                Log.Error("CreateWAV", "Unsupported BPS {0} in WAV data.", bps.ToString());
                 return null;
             }
 
