@@ -25,12 +25,22 @@ namespace IBM.Watson.UnitTests
     public class TestTranslate : UnitTest
     {
         private Translate m_Translate = new Translate();
+        private bool m_GetModelTested = false;
+        private bool m_GetModelsTested = false;
         private bool m_GetLanguagesTested = false;
         private bool m_IdentifyTested = false;
         private bool m_TranslateTested = false;
 
         public override IEnumerator RunTest()
         {
+            m_Translate.GetModel( "en-es", OnGetModel );
+            while(! m_GetModelTested )
+                yield return null;
+
+            m_Translate.GetModels( OnGetModels );
+            while(! m_GetModelsTested )
+                yield return null;
+
             m_Translate.GetLanguages( OnGetLanguages );
             while(! m_GetLanguagesTested )
                 yield return null;
@@ -44,6 +54,31 @@ namespace IBM.Watson.UnitTests
                 yield return null;
 
             yield break;
+        }
+
+        private void OnGetModel( Translate.Model model )
+        {
+            Test( model != null );
+            if ( model != null )
+            {
+                Log.Status( "TestTranslate", "ModelID: {0}, Source: {1}, Target: {2}, Domain: {3}", 
+                    model.ModelId, model.Source, model.Target, model.Domain );
+            }
+            m_GetModelTested = true;
+        }
+
+        private void OnGetModels( Translate.Model [] models )
+        {
+            Test( models != null );
+            if ( models != null )
+            {
+                foreach( var model in models )
+                {
+                    Log.Status( "TestTranslate", "ModelID: {0}, Source: {1}, Target: {2}, Domain: {3}", 
+                        model.ModelId, model.Source, model.Target, model.Domain );
+                }
+            }
+            m_GetModelsTested = true;
         }
 
         private void OnGetTranslation( Translate.Translation translation )

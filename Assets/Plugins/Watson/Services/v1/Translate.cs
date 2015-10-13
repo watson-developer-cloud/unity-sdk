@@ -42,6 +42,21 @@ namespace IBM.Watson.Services.v1
             public long CharacterCount { get; set; }
             public string[] Translations { get; set; }
         }
+        public class Model
+        {
+            public string ModelId { get; set; }
+            public string Name { get; set; }
+            public string Source { get; set; }
+            public string Target { get; set; }
+            public string BaseModelId { get; set; }
+            public string Domain { get; set; }
+            public bool Cutomizable { get; set; }
+            public bool Default { get; set; }
+            public string Owner { get; set; }
+            public string Status { get; set; }
+        }
+        public delegate void GetModelsCallback( Model [] models );
+        public delegate void GetModelCallback( Model model );
         public delegate void GetLanguagesCallback(Language[] languages);
         public delegate void IdentifyCallback(string languages);
         public delegate void TranslateCallback(Translation translation);
@@ -56,6 +71,7 @@ namespace IBM.Watson.Services.v1
         #region Public Properties
         #endregion
 
+        #region Common Functions
         private bool CreateConnector()
         {
             if (m_Connector == null)
@@ -72,8 +88,16 @@ namespace IBM.Watson.Services.v1
             }
             return true;
         }
+        #endregion
 
         #region GetTranslation Functions
+        /// <summary>
+        /// Translate the provided text using the specified model.
+        /// </summary>
+        /// <param name="text">The text to translate.</param>
+        /// <param name="model_id">The ID of the model to use.</param>
+        /// <param name="callback">The callback to receive the translated text.</param>
+        /// <returns>Returns true on success.</returns>
         public bool GetTranslation(string text, string model_id, TranslateCallback callback)
         {
             if (string.IsNullOrEmpty(text))
@@ -87,6 +111,14 @@ namespace IBM.Watson.Services.v1
 
             return GetTranslation(Json.Serialize(parameters), callback);
         }
+        /// <summary>
+        /// Translate the provided text using the specified source and target.
+        /// </summary>
+        /// <param name="text">The text to translate.</param>
+        /// <param name="source">The ID of the source language.</param>
+        /// <param name="target">The ID of the target language.</param>
+        /// <param name="callback">The callback to receive the translated text.</param>
+        /// <returns>Returns true on success.</returns>
         public bool GetTranslation(string text, string source, string target, TranslateCallback callback)
         {
             if (string.IsNullOrEmpty(text))
@@ -165,8 +197,150 @@ namespace IBM.Watson.Services.v1
         }
         #endregion
 
-        #region GetModels Functions
+        #region Models Functions
+        public enum TypeFilter {
+            DEFAULT,
+            NON_DEFAULT,
+            ALL
+        }
 
+        /// <summary>
+        /// Retrieve the translation models with optional filters.
+        /// </summary>
+        /// <param name="callback">The callback to invoke with the array of models.</param>
+        /// <param name="sourceFilter">Optional source language filter.</param>
+        /// <param name="targetFilter">Optional target language filter.</param>
+        /// <param name="defaults">Controls if we get default, non-default, or all models.</param>
+        /// <returns>Returns a true on success, false if it failed to submit the request.</returns>
+        public bool GetModels( GetModelsCallback callback, 
+            string sourceFilter = null, 
+            string targetFilter = null, 
+            TypeFilter defaults = TypeFilter.ALL )
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (!CreateConnector())
+                return false;
+
+            GetModelsReq req = new GetModelsReq();
+            req.Callback = callback;
+            req.Function = "/v2/models";
+            req.OnResponse = GetModelsResponse;
+
+            if (! string.IsNullOrEmpty( sourceFilter ) )
+                req.Parameters["source"] = sourceFilter;
+            if (! string.IsNullOrEmpty( targetFilter ) )
+                req.Parameters["target"] = targetFilter;
+            if ( defaults == TypeFilter.DEFAULT )
+                req.Parameters["default"] = "true";
+            else if ( defaults == TypeFilter.NON_DEFAULT )
+                req.Parameters["default"] = "false";
+
+            return m_Connector.Send( req );                
+        }
+
+        private class GetModelsReq : RESTConnector.Request
+        {
+            public GetModelsCallback Callback { get; set; }
+        }
+
+        private void GetModelsResponse( RESTConnector.Request r, RESTConnector.Response resp )
+        {
+            GetModelsReq req = r as GetModelsReq;
+            if (req == null)
+                throw new WatsonException("Unexpected Request type.");
+
+            if (resp.Success)
+            {
+                List<Model> models = new List<Model>();
+
+                string jsonData = Encoding.UTF8.GetString(resp.Data);
+                IDictionary json = Json.Deserialize(jsonData) as IDictionary;
+
+                IList imodels = json["models"] as IList;
+                foreach (var m in imodels)
+                {
+                    IDictionary imodel = m as IDictionary;
+                    models.Add(ParseModelJson( imodel ) );
+                }
+
+                if (req.Callback != null)
+                    req.Callback(models.ToArray());
+            }
+            else
+            {
+                Log.Error("Translate", "GetModels() failed: {0}", resp.Error);
+                if (req.Callback != null)
+                    req.Callback(null);
+            }
+        }
+
+        private Model ParseModelJson( IDictionary imodel )
+        {
+            Model model = new Model();
+            model.ModelId = (string)imodel["model_id"];
+            model.Name = (string)imodel["name"];
+            model.Source = (string)imodel["source"];
+            model.Target = (string)imodel["target"];
+            model.BaseModelId = (string)imodel["base_model_id"];
+            model.Domain = (string)imodel["domain"];
+            model.Cutomizable = (bool)imodel["customizable"];
+            model.Default = (bool)imodel["default_model"];
+            model.Owner = (string)imodel["owner"];
+            model.Status = (string)imodel["status"];
+            return model;
+        }
+
+        /// <summary>
+        /// Get a specific model by it's ID.
+        /// </summary>
+        /// <param name="model_id"></param>
+        /// <param name="callback"></param>
+        /// <returns></returns>
+        public bool GetModel( string model_id, GetModelCallback callback )
+        {
+            if (string.IsNullOrEmpty(model_id) )
+                throw new ArgumentNullException("model_id");
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (!CreateConnector())
+                return false;
+
+            GetModelReq req = new GetModelReq();
+            req.Callback = callback;
+            req.Function = "/v2/models/" + WWW.EscapeURL( model_id );
+            req.OnResponse = GetModelResponse;
+
+            return m_Connector.Send( req );                
+        }
+
+        private class GetModelReq : RESTConnector.Request
+        {
+            public GetModelCallback Callback { get; set; }
+        }
+
+        private void GetModelResponse( RESTConnector.Request r, RESTConnector.Response resp )
+        {
+            GetModelReq req = r as GetModelReq;
+            if (req == null)
+                throw new WatsonException("Unexpected Request type.");
+
+            if (resp.Success)
+            {
+                string jsonData = Encoding.UTF8.GetString(resp.Data);
+                IDictionary json = Json.Deserialize(jsonData) as IDictionary;
+                Model model = ParseModelJson( json );
+
+                if (req.Callback != null)
+                    req.Callback(model);
+            }
+            else
+            {
+                Log.Error("Translate", "GetModel() failed: {0}", resp.Error);
+                if (req.Callback != null)
+                    req.Callback(null);
+            }
+        }
         #endregion
 
         #region GetLanguages Functions
