@@ -118,7 +118,8 @@ namespace IBM.Watson.Connection
         //! value which is needed by the gateway. 
         private static Dictionary<string,string> sm_GatewayServiceTypes = new Dictionary<string,string>()
         {
-            { "TextToSpeechV1/v1/synthesize", "tts" }
+            { "TextToSpeechV1/v1/synthesize", "tts" },
+            { "SpeechToTextV1/v1/recognize", "stt" },
         };
         //! Dictionary of connectors by service & function.
         private static Dictionary<string,RESTConnector > sm_Connectors = new Dictionary<string, RESTConnector>();
