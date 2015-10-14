@@ -142,8 +142,8 @@ namespace IBM.Watson.Connection
                 connector.UsingGateway = true;
                 connector.URL = cfg.GatewayURL + "/v1/en/service";
                 connector.Headers = new Dictionary<string, string>();
-                connector.Headers["ROBOT_KEY"] = cfg.AppKey;
-                connector.Headers["MAC_ID"] = cfg.SecretKey;
+                connector.Headers["ROBOT_KEY"] = cfg.CompanyKey;
+                connector.Headers["MAC_ID"] = cfg.ProductKey;
                 connector.Headers["Service-Type" ] = serviceType;
 
                 sm_Connectors[ connectorID ] = connector;
@@ -205,18 +205,13 @@ namespace IBM.Watson.Connection
         #endregion
 
         #region Private Functions
-        private string CreateAuthorization()
-        {
-            return "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(Authentication.User + ":" + Authentication.Password));
-        }
-
         private void AddHeaders(Dictionary<string, string> headers)
         {
             if ( Authentication != null )
             {
                 if ( headers == null )
                     throw new ArgumentNullException("headers");
-                headers.Add("Authorization", CreateAuthorization());
+                headers.Add("Authorization", Authentication.CreateAuthorization() );
             }
 
             if ( Headers != null )

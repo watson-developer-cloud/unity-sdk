@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace IBM.Watson.Utilities
@@ -20,5 +18,10 @@ namespace IBM.Watson.Utilities
 
         public string User { get; set; }
         public string Password { get; set; }
+
+        public string CreateAuthorization()
+        {
+            return "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(User + ":" + Password));
+        }
     };
 }

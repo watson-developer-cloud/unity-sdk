@@ -21,8 +21,6 @@ using System.Collections.Generic;
 using IBM.Watson.Logging;
 using UnityEngine;
 using FullSerializer;
-using IBM.Watson.Connection;
-using System.IO;
 
 namespace IBM.Watson.Utilities
 {
@@ -52,11 +50,11 @@ namespace IBM.Watson.Utilities
         [fsProperty]
         private bool m_EnableGateway = true;
         [fsProperty]
-        private string m_GatewayURL = "https://9.53.162.55:9443/webApp/";
+        private string m_GatewayURL = "https://9.53.162.55:9443/webApp";
         [fsProperty]
-        private string m_AppKey = null;
+        private string m_CompanyKey = null;
         [fsProperty]
-        private string m_SecretKey = null;
+        private string m_ProductKey = null;
         [fsProperty]
         private List<BlueMixCred> m_Credentials = new List<BlueMixCred>();
 
@@ -89,9 +87,18 @@ namespace IBM.Watson.Utilities
         /// Enable the gateway usage.
         /// </summary>
         public bool EnableGateway { get { return m_EnableGateway; } set { m_EnableGateway = value; } }
+        /// <summary>
+        /// The URL of the gateway to use.
+        /// </summary>
         public string GatewayURL { get { return m_GatewayURL; } set { m_GatewayURL = value; } }
-        public string AppKey { get { return m_AppKey; } set { m_AppKey = value; } }
-        public string SecretKey { get { return m_SecretKey; } set { m_SecretKey = value; } }
+        /// <summary>
+        /// The company key used to communicate with the gateway.
+        /// </summary>
+        public string CompanyKey { get { return m_CompanyKey; } set { m_CompanyKey = value; } }
+        /// <summary>
+        /// The product key used to communicate with the gateway.
+        /// </summary>
+        public string ProductKey { get { return m_ProductKey; } set { m_ProductKey = value; } }
 
         #endregion
 
