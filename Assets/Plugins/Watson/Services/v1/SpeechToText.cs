@@ -241,22 +241,10 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         {
             if (m_ListenSocket == null)
             {
-                Config.BlueMixCred cred = Config.Instance.FindCredentials(SERVICE_ID);
-                if (cred == null)
-                {
-                    Log.Error("SpeechToText", "Unable to find credentials for Service ID: {0}", SERVICE_ID);
+                m_ListenSocket = WSConnector.CreateConnector( SERVICE_ID, "/v1/recognize", "?model=" + WWW.EscapeURL(m_RecognizeModel) );
+                if ( m_ListenSocket == null )
                     return false;
-                }
 
-                string URL = cred.m_URL + "/v1/recognize?model=" + WWW.EscapeURL(m_RecognizeModel);
-                if (URL.StartsWith("http://"))
-                    URL = URL.Replace("http://", "ws://");
-                else if (URL.StartsWith("https://"))
-                    URL = URL.Replace("https://", "wss://");
-
-                m_ListenSocket = new WSConnector();
-                m_ListenSocket.Authentication = new Credentials( cred.m_User, cred.m_Password );
-                m_ListenSocket.URL = URL;
                 m_ListenSocket.OnMessage = OnListenMessage;
                 m_ListenSocket.OnClose = OnListenClosed;
             }

@@ -55,6 +55,7 @@ public class ListenWidget : MonoBehaviour
             m_STT.SilenceThreshold = m_SilenceThreshold;
             m_STT.RecordingHZ = m_RecordingHZ;
             m_STT.MaxAlternatives = m_MaxAlternatives;
+            m_STT.OnError = OnError;
             m_STT.StartListening( OnRecognize );
             if ( m_StatusText != null )
                 m_StatusText.text = "LISTENING";
@@ -73,6 +74,12 @@ public class ListenWidget : MonoBehaviour
 
         if ( m_StatusText != null )
             m_StatusText.text = "READY";
+    }
+
+    private void OnError( string error )
+    {
+        if ( m_StatusText != null )
+            m_StatusText.text = "ERROR: " + error;
     }
 
     private void OnRecognize(SpeechToText.ResultList result)

@@ -274,6 +274,11 @@ namespace WebSocketSharp
     #region Public Properties
 
     /// <summary>
+    /// Additional headers to send when opening the connection.
+    /// </summary>
+    public Dictionary<string,string> Headers { get; set; }
+
+    /// <summary>
     /// Gets or sets the compression method used to compress the message on
     /// the WebSocket connection.
     /// </summary>
@@ -862,6 +867,12 @@ namespace WebSocketSharp
     private HttpRequest createHandshakeRequest ()
     {
       var ret = HttpRequest.CreateWebSocketRequest (_uri);
+
+      if ( Headers != null )
+      {
+           foreach( var kp in Headers )
+                Headers[ kp.Key ] = kp.Value;
+      }
 
       var headers = ret.Headers;
       if (!_origin.IsNullOrEmpty ())
