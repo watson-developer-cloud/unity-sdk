@@ -82,7 +82,8 @@ namespace IBM.Watson.Editor
                 m_GatewayPassword = EditorGUILayout.TextField( "Gateway Password", m_GatewayPassword );
 
                 cfg.CompanyKey = EditorGUILayout.TextField( "Company Key", cfg.CompanyKey );
-                if ( GUILayout.Button( "Create Company Key" ) )
+                if ( GUILayout.Button( "Create Company Key" ) 
+                    && (string.IsNullOrEmpty( cfg.CompanyKey ) || EditorUtility.DisplayDialog( "Confirm", "Please confirm you replacing your current key.", "Yes", "No" ) ) )
                 {
                     cfg.CompanyKey = Guid.NewGuid().ToString();
 
@@ -121,7 +122,8 @@ namespace IBM.Watson.Editor
                 {
                     cfg.ProductKey = EditorGUILayout.TextField( "Product Key", cfg.ProductKey );
 
-                    if ( GUILayout.Button( "Create Product Key" ) )
+                    if ( GUILayout.Button( "Create Product Key" )
+                        && (string.IsNullOrEmpty( cfg.ProductKey ) || EditorUtility.DisplayDialog( "Confirm", "Please confirm you replacing your current key.", "Yes", "No" ) ) )
                     {
                         cfg.ProductKey = Guid.NewGuid().ToString();
 

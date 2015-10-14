@@ -279,7 +279,7 @@ namespace IBM.Watson.Connection
 
                 // generate the Response object now..
                 Response resp = new Response();
-                if ( www.isDone && string.IsNullOrEmpty( www.error ) )
+                if ( www.isDone && www.bytes != null )
                 {
                     resp.Success = true;
                     resp.Data = www.bytes;
@@ -287,7 +287,8 @@ namespace IBM.Watson.Connection
                 else
                 {
                     resp.Success = false;
-                    resp.Error = string.Format( "Request Error.\nURL: {0}\nError: {1}\nResponse: {2}", url, string.IsNullOrEmpty( www.error ) ? "Timeout" : www.error, www.text );
+                    resp.Error = string.Format( "Request Error.\nURL: {0}\nError: {1}\nResponse: {2}",
+                        url, string.IsNullOrEmpty( www.error ) ? "Timeout" : www.error, www.text );
                 }
 
                 // provide the time to took to get a response from the server..
