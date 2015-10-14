@@ -23,6 +23,7 @@ using IBM.Watson.Utilities;
 using IBM.Watson.Logging;
 using UnityEngine;
 using System.Text;
+using System.IO;
 
 namespace IBM.Watson.Connection
 {
@@ -94,11 +95,81 @@ namespace IBM.Watson.Connection
         #endregion
 
         #region Public Properties
+        /// <summary>
+        /// Base URL for REST requests.
+        /// </summary>
+        public string URL { get; set; }
          /// <summary>
         /// Credentials used to authenticate with the server.
         /// </summary>
-        public Config.CredentialsInfo Authentication { get; set; }
+        public Credentials Authentication { get; set; }
+        /// <summary>
+        /// Additional headers to attach to all requests.
+        /// </summary>
+        public Dictionary<string,string> Headers { get; set; }
+        /// <summary>
+        /// Returns true if this connector is going through the gateway.
+        /// </summary>
+        public bool UsingGateway { get; set; }
         #endregion
+
+        #region Private Data
+        //! This dictionary is used to translated from a service ID & function into a service-type 
+        //! value which is needed by the gateway. 
+        private static Dictionary<string,string> sm_GatewayServiceTypes = new Dictionary<string,string>()
+        {
+            { "TextToSpeechV1/v1/synthesize", "tts" }
+        };
+        //! Dictionary of connectors by service & function.
+        private static Dictionary<string,RESTConnector > sm_Connectors = new Dictionary<string, RESTConnector>();
+        #endregion
+
+        public static RESTConnector GetConnector( string serviceID, string function )
+        {
+            RESTConnector connector = null;
+
+            string connectorID = serviceID + function;
+            if ( sm_Connectors.TryGetValue( connectorID, out connector ) )
+                return connector;
+
+            Config cfg = Config.Instance;
+           
+            string serviceType = null;
+            if ( cfg.EnableGateway 
+                && sm_GatewayServiceTypes.TryGetValue( connectorID, out serviceType ) )
+            {
+                connector = new RESTConnector();
+                connector.UsingGateway = true;
+                connector.URL = cfg.GatewayURL + "/v1/en/service";
+                connector.Headers = new Dictionary<string, string>();
+                connector.Headers["ROBOT_KEY"] = cfg.AppKey;
+                connector.Headers["MAC_ID"] = cfg.SecretKey;
+                connector.Headers["Service-Type" ] = serviceType;
+
+                sm_Connectors[ connectorID ] = connector;
+                return connector;
+            }
+
+            Config.BlueMixCred cred = cfg.FindCredentials( serviceID );
+            if (cred == null)
+            {
+                Log.Error( "Config", "Failed to find BLueMix Credentials for service {0}.", serviceID );
+                return null;
+            }
+
+            connector = new RESTConnector();
+            connector.UsingGateway = false;
+            connector.URL = cred.m_URL + function;
+            connector.Authentication = new Credentials( cred.m_User, cred.m_Password );
+            sm_Connectors[ connectorID ] = connector;
+
+            return connector;
+        }
+
+        public static void FlushConnectors()
+        {
+            sm_Connectors.Clear();
+        }
 
         #region Send Interface
         /// <summary>
@@ -136,15 +207,23 @@ namespace IBM.Watson.Connection
         #region Private Functions
         private string CreateAuthorization()
         {
-            return "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(Authentication.m_User + ":" + Authentication.m_Password));
+            return "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(Authentication.User + ":" + Authentication.Password));
         }
 
-        private void AddAuthorizationHeader(Dictionary<string, string> headers)
+        private void AddHeaders(Dictionary<string, string> headers)
         {
-            if ( headers == null )
-                throw new ArgumentNullException("headers");
+            if ( Authentication != null )
+            {
+                if ( headers == null )
+                    throw new ArgumentNullException("headers");
+                headers.Add("Authorization", CreateAuthorization());
+            }
 
-            headers.Add("Authorization", CreateAuthorization());
+            if ( Headers != null )
+            {
+                foreach( var kp in Headers )
+                    headers[ kp.Key ] = kp.Value;
+            }
         }
 
         private IEnumerator ProcessRequestQueue()
@@ -157,7 +236,9 @@ namespace IBM.Watson.Connection
             while (m_Requests.Count > 0)
             {
                 Request req = m_Requests.Dequeue();
-                string url = string.Concat(Authentication.m_URL , req.Function);
+                string url = URL;
+                if (! string.IsNullOrEmpty( req.Function ) )
+                    url += req.Function;
 
                 StringBuilder args = null;
                 foreach (var kp in req.Parameters)
@@ -175,7 +256,7 @@ namespace IBM.Watson.Connection
                     if (args == null)
                         args = new StringBuilder();
                     else
-                        args.Append("&");                  // append seperator
+                        args.Append("&");                  // append separator
 
                     args.Append(key + "=" + value);       // append key=value
                 }
@@ -183,7 +264,7 @@ namespace IBM.Watson.Connection
                 if (args != null && args.Length > 0)
                     url += "?" + args.ToString();
 
-                AddAuthorizationHeader( req.Headers );
+                AddHeaders( req.Headers );
 
                 float startTime = Time.time;
 

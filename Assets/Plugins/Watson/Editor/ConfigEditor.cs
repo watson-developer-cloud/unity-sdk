@@ -60,11 +60,21 @@ namespace IBM.Watson.Editor
             cfg.TimeOut = EditorGUILayout.FloatField( "Timeout", cfg.TimeOut );
             cfg.MaxRestConnections = EditorGUILayout.IntField( "Max Connections", cfg.MaxRestConnections );
 
+            cfg.EnableGateway = EditorGUILayout.ToggleLeft( "Enable Gateway", cfg.EnableGateway );
+            if ( cfg.EnableGateway )
+            {
+                EditorGUI.indentLevel += 1;
+                cfg.GatewayURL = EditorGUILayout.TextField( "Gateway URL", cfg.GatewayURL );
+                cfg.AppKey = EditorGUILayout.TextField( "Application Key", cfg.AppKey );
+                cfg.SecretKey = EditorGUILayout.TextField( "Secret Key", cfg.SecretKey );
+                EditorGUI.indentLevel -= 1;
+            }
+
             EditorGUILayout.LabelField( "Credentials" );
             EditorGUI.indentLevel += 1;
             for(int i=0;i<cfg.Credentials.Count;++i)
             {
-                Config.CredentialsInfo info = cfg.Credentials[i];
+                Config.BlueMixCred info = cfg.Credentials[i];
 
                 info.m_ServiceID = EditorGUILayout.TextField( "ServiceID", info.m_ServiceID );
                 info.m_URL = EditorGUILayout.TextField( "URL", info.m_URL );
@@ -76,7 +86,7 @@ namespace IBM.Watson.Editor
             }
 
             if ( GUILayout.Button( "Add" ) )
-                cfg.Credentials.Add( new Config.CredentialsInfo() );
+                cfg.Credentials.Add( new Config.BlueMixCred() );
             EditorGUI.indentLevel -= 1;
 
             if ( GUILayout.Button( "Save" ) )

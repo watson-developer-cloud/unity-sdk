@@ -113,7 +113,7 @@ namespace IBM.Watson.Connection
         /// <summary>
         /// Credentials used to authenticate with the server.
         /// </summary>
-        public Config.CredentialsInfo Authentication { get; set; }
+        public Credentials Authentication { get; set; }
         /// <summary>
         /// The current state of this connector.
         /// </summary>
@@ -229,7 +229,8 @@ namespace IBM.Watson.Connection
             WebSocket ws = null;
 
             ws = new WebSocket(URL);
-            ws.SetCredentials(Authentication.m_User, Authentication.m_Password, true);
+            if ( Authentication != null )
+                ws.SetCredentials(Authentication.User, Authentication.Password, true);
             ws.OnOpen += OnWSOpen;
             ws.OnClose += OnWSClose;
             ws.OnError += OnWSError;

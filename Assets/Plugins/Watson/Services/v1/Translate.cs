@@ -55,8 +55,8 @@ namespace IBM.Watson.Services.v1
             public string Owner { get; set; }
             public string Status { get; set; }
         }
-        public delegate void GetModelsCallback( Model [] models );
-        public delegate void GetModelCallback( Model model );
+        public delegate void GetModelsCallback(Model[] models);
+        public delegate void GetModelCallback(Model model);
         public delegate void GetLanguagesCallback(Language[] languages);
         public delegate void IdentifyCallback(string languages);
         public delegate void TranslateCallback(Translation translation);
@@ -64,30 +64,10 @@ namespace IBM.Watson.Services.v1
         #endregion
 
         #region Private Data
-        private RESTConnector m_Connector = null;
         private const string SERVICE_ID = "TranslateV1";
         #endregion
 
         #region Public Properties
-        #endregion
-
-        #region Common Functions
-        private bool CreateConnector()
-        {
-            if (m_Connector == null)
-            {
-                Config.CredentialsInfo info = Config.Instance.FindCredentials(SERVICE_ID);
-                if (info == null)
-                {
-                    Log.Error("Translate", "Unable to find credentials for service ID: {0}", SERVICE_ID);
-                    return false;
-                }
-
-                m_Connector = new RESTConnector();
-                m_Connector.Authentication = info;
-            }
-            return true;
-        }
         #endregion
 
         #region GetTranslation Functions
@@ -139,19 +119,19 @@ namespace IBM.Watson.Services.v1
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
-            if (!CreateConnector())
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/v2/translate");
+            if (connector == null)
                 return false;
 
             TranslateReq req = new TranslateReq();
             req.Callback = callback;
             req.OnResponse = TranslateResponse;
-            req.Function = "/v2/translate";
-            req.Send = Encoding.UTF8.GetBytes( json );
-
+            req.Send = Encoding.UTF8.GetBytes(json);
             req.Headers["accept"] = "application/json";
             req.Headers["Content-Type"] = "application/json";
 
-            return m_Connector.Send(req);
+            return connector.Send(req);
         }
 
         private class TranslateReq : RESTConnector.Request
@@ -198,7 +178,8 @@ namespace IBM.Watson.Services.v1
         #endregion
 
         #region Models Functions
-        public enum TypeFilter {
+        public enum TypeFilter
+        {
             DEFAULT,
             NON_DEFAULT,
             ALL
@@ -212,31 +193,32 @@ namespace IBM.Watson.Services.v1
         /// <param name="targetFilter">Optional target language filter.</param>
         /// <param name="defaults">Controls if we get default, non-default, or all models.</param>
         /// <returns>Returns a true on success, false if it failed to submit the request.</returns>
-        public bool GetModels( GetModelsCallback callback, 
-            string sourceFilter = null, 
-            string targetFilter = null, 
-            TypeFilter defaults = TypeFilter.ALL )
+        public bool GetModels(GetModelsCallback callback,
+            string sourceFilter = null,
+            string targetFilter = null,
+            TypeFilter defaults = TypeFilter.ALL)
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
-            if (!CreateConnector())
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/v2/models");
+            if (connector == null)
                 return false;
 
             GetModelsReq req = new GetModelsReq();
             req.Callback = callback;
-            req.Function = "/v2/models";
             req.OnResponse = GetModelsResponse;
 
-            if (! string.IsNullOrEmpty( sourceFilter ) )
+            if (!string.IsNullOrEmpty(sourceFilter))
                 req.Parameters["source"] = sourceFilter;
-            if (! string.IsNullOrEmpty( targetFilter ) )
+            if (!string.IsNullOrEmpty(targetFilter))
                 req.Parameters["target"] = targetFilter;
-            if ( defaults == TypeFilter.DEFAULT )
+            if (defaults == TypeFilter.DEFAULT)
                 req.Parameters["default"] = "true";
-            else if ( defaults == TypeFilter.NON_DEFAULT )
+            else if (defaults == TypeFilter.NON_DEFAULT)
                 req.Parameters["default"] = "false";
 
-            return m_Connector.Send( req );                
+            return connector.Send(req);
         }
 
         private class GetModelsReq : RESTConnector.Request
@@ -244,7 +226,7 @@ namespace IBM.Watson.Services.v1
             public GetModelsCallback Callback { get; set; }
         }
 
-        private void GetModelsResponse( RESTConnector.Request r, RESTConnector.Response resp )
+        private void GetModelsResponse(RESTConnector.Request r, RESTConnector.Response resp)
         {
             GetModelsReq req = r as GetModelsReq;
             if (req == null)
@@ -261,7 +243,7 @@ namespace IBM.Watson.Services.v1
                 foreach (var m in imodels)
                 {
                     IDictionary imodel = m as IDictionary;
-                    models.Add(ParseModelJson( imodel ) );
+                    models.Add(ParseModelJson(imodel));
                 }
 
                 if (req.Callback != null)
@@ -275,7 +257,7 @@ namespace IBM.Watson.Services.v1
             }
         }
 
-        private Model ParseModelJson( IDictionary imodel )
+        private Model ParseModelJson(IDictionary imodel)
         {
             Model model = new Model();
             model.ModelId = (string)imodel["model_id"];
@@ -297,21 +279,23 @@ namespace IBM.Watson.Services.v1
         /// <param name="model_id"></param>
         /// <param name="callback"></param>
         /// <returns></returns>
-        public bool GetModel( string model_id, GetModelCallback callback )
+        public bool GetModel(string model_id, GetModelCallback callback)
         {
-            if (string.IsNullOrEmpty(model_id) )
+            if (string.IsNullOrEmpty(model_id))
                 throw new ArgumentNullException("model_id");
             if (callback == null)
                 throw new ArgumentNullException("callback");
-            if (!CreateConnector())
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/v2/models/");
+            if (connector == null)
                 return false;
 
             GetModelReq req = new GetModelReq();
             req.Callback = callback;
-            req.Function = "/v2/models/" + WWW.EscapeURL( model_id );
+            req.Function = WWW.EscapeURL(model_id);
             req.OnResponse = GetModelResponse;
 
-            return m_Connector.Send( req );                
+            return connector.Send(req);
         }
 
         private class GetModelReq : RESTConnector.Request
@@ -319,7 +303,7 @@ namespace IBM.Watson.Services.v1
             public GetModelCallback Callback { get; set; }
         }
 
-        private void GetModelResponse( RESTConnector.Request r, RESTConnector.Response resp )
+        private void GetModelResponse(RESTConnector.Request r, RESTConnector.Response resp)
         {
             GetModelReq req = r as GetModelReq;
             if (req == null)
@@ -329,7 +313,7 @@ namespace IBM.Watson.Services.v1
             {
                 string jsonData = Encoding.UTF8.GetString(resp.Data);
                 IDictionary json = Json.Deserialize(jsonData) as IDictionary;
-                Model model = ParseModelJson( json );
+                Model model = ParseModelJson(json);
 
                 if (req.Callback != null)
                     req.Callback(model);
@@ -353,15 +337,16 @@ namespace IBM.Watson.Services.v1
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
-            if (!CreateConnector())
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/v2/identifiable_languages");
+            if (connector == null)
                 return false;
 
             GetLanguagesReq req = new GetLanguagesReq();
             req.Callback = callback;
-            req.Function = "/v2/identifiable_languages";
             req.OnResponse = GetLanguagesResponse;
 
-            return m_Connector.Send(req);
+            return connector.Send(req);
         }
 
         private class GetLanguagesReq : RESTConnector.Request
@@ -411,14 +396,17 @@ namespace IBM.Watson.Services.v1
             if (callback == null)
                 throw new ArgumentNullException("callback");
 
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/v2/identify");
+            if (connector == null)
+                return false;
+
             IdentifyReq req = new IdentifyReq();
             req.Callback = callback;
-            req.Function = "/v2/identify";
             req.Send = Encoding.UTF8.GetBytes(text);
             req.Headers["Content-Type"] = "text/plain";
             req.OnResponse = OnIdentifyResponse;
 
-            return m_Connector.Send(req);
+            return connector.Send(req);
         }
 
         private class IdentifyReq : RESTConnector.Request
