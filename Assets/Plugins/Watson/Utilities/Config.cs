@@ -105,7 +105,7 @@ namespace IBM.Watson.Utilities
         {
 #if UNITY_EDITOR
             try {
-                LoadConfig( System.IO.File.ReadAllText( Application.streamingAssetsPath + CONFIG_FILE ) );
+				LoadConfig( System.IO.File.ReadAllText( System.IO.Path.Combine( Application.streamingAssetsPath, CONFIG_FILE)  ) );
             }
             catch( System.IO.FileNotFoundException )
             {}
