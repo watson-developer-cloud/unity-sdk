@@ -121,6 +121,7 @@ namespace IBM.Watson.Connection
             { "TextToSpeechV1/v1/synthesize", "tts" },
             // TODO: Uncomment once gateway is fixed.
             //{ "SpeechToTextV1/v1/recognize", "stt" },
+            { "TranslateV1/v2/translate", "language-translation" },
         };
         //! Dictionary of connectors by service & function.
         private static Dictionary<string,RESTConnector > sm_Connectors = new Dictionary<string, RESTConnector>();
