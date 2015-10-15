@@ -111,28 +111,39 @@ namespace IBM.Watson.Editor
                     Log.Status("UnitTestManager", "STARTING UnitTest {0} ...", testType.Name);
 
                     // wait for the test to complete..
+                    bool bTestException = true;
                     float fStartTime = Time.time;
-                    IEnumerator e = m_ActiveTest.RunTest();
-                    while (e.MoveNext())
-                    {
-                        yield return null;
-                        if (Time.time > (fStartTime + TEST_TIMEOUT))
+                    try {
+                        IEnumerator e = m_ActiveTest.RunTest();
+                        while (e.MoveNext())
                         {
-                            Log.Error("UnitTestManager", "UnitTest {0} has timed out.", testType.Name);
-                            m_ActiveTest.TestFailed = true;
-                            break;
+                            yield return null;
+                            if (Time.time > (fStartTime + TEST_TIMEOUT))
+                            {
+                                Log.Error("UnitTestManager", "UnitTest {0} has timed out.", testType.Name);
+                                m_ActiveTest.TestFailed = true;
+                                break;
+                            }
+                        }
+                    
+                        bTestException = false;
+                        if (m_ActiveTest.TestFailed)
+                        {
+                            Log.Error("UnitTestManager", "... UnitTest {0} FAILED.", testType.Name);
+                            TestsFailed += 1;
+                        }
+                        else
+                        {
+                            Log.Status("UnitTestManager", "... UnitTest {0} COMPLETED.", testType.Name);
+                            TestsComplete += 1;
                         }
                     }
+                    finally {}
 
-                    if (m_ActiveTest.TestFailed)
+                    if ( bTestException )
                     {
-                        Log.Error("UnitTestManager", "... UnitTest {0} FAILED.", testType.Name);
+                        Log.Error("UnitTestManager", "... UnitTest {0} threw exception.", testType.Name );
                         TestsFailed += 1;
-                    }
-                    else
-                    {
-                        Log.Status("UnitTestManager", "... UnitTest {0} COMPLETED.", testType.Name);
-                        TestsComplete += 1;
                     }
                 }
                 else

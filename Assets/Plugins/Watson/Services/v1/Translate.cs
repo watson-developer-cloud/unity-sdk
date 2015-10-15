@@ -144,31 +144,40 @@ namespace IBM.Watson.Services.v1
             if (req == null)
                 throw new WatsonException("Unexpected Request type.");
 
+            bool bSuccess = false;
             if (resp.Success)
             {
-                Translation translation = new Translation();
+                try {
+                    Translation translation = new Translation();
 
-                string jsonString = Encoding.UTF8.GetString(resp.Data);
-                IDictionary json = Json.Deserialize(jsonString) as IDictionary;
+                    string jsonString = Encoding.UTF8.GetString(resp.Data);
+                    IDictionary json = Json.Deserialize(jsonString) as IDictionary;
 
-                translation.WordCount = (long)json["word_count"];
-                translation.CharacterCount = (long)json["character_count"];
+                    translation.WordCount = (long)json["word_count"];
+                    translation.CharacterCount = (long)json["character_count"];
 
-                List<string> translations = new List<string>();
+                    List<string> translations = new List<string>();
 
-                IList itranslations = json["translations"] as IList;
-                foreach (var t in itranslations)
-                {
-                    IDictionary itranslation = t as IDictionary;
-                    translations.Add((string)itranslation["translation"]);
+                    IList itranslations = json["translations"] as IList;
+                    foreach (var t in itranslations)
+                    {
+                        IDictionary itranslation = t as IDictionary;
+                        translations.Add((string)itranslation["translation"]);
+                    }
+
+                    translation.Translations = translations.ToArray();
+                    bSuccess = true;
+
+                    if (req.Callback != null)
+                        req.Callback(translation);
                 }
-
-                translation.Translations = translations.ToArray();
-
-                if (req.Callback != null)
-                    req.Callback(translation);
+                catch( Exception e )
+                {
+                    Log.Error( "Translate", "Translate response exception: {0}", e.ToString() );
+                }
             }
-            else
+
+            if (! bSuccess )
             {
                 Log.Error("Translate", "GetTranslation() failed: {0}", resp.Error);
                 if (req.Callback != null)
