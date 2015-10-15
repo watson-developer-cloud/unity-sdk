@@ -23,75 +23,98 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ListenWidget : MonoBehaviour
+namespace IBM.Watson.Editor
 {
-    #region Private Data
-    private SpeechToText m_STT = new SpeechToText();
-    [SerializeField]
-    private Text m_StatusText = null;
-    [SerializeField]
-    private bool m_DetectSilence = true;
-    [SerializeField]
-    private float m_SilenceThreshold = 0.03f;
-    [SerializeField]
-    private bool m_WordConfidence = false;
-    [SerializeField]
-    private bool m_TimeStamps = false;
-    [SerializeField]
-    private int m_RecordingHZ = 22050;
-    [SerializeField]
-    private int m_MaxAlternatives = 1;
-    [SerializeField]
-    private Text m_Transcript = null;
-    #endregion
 
-    public void OnListenButton()
-    {
-        if (! m_STT.IsListening() )
-        {
-            m_STT.DetectSilence = m_DetectSilence;
-            m_STT.EnableWordConfidence = m_WordConfidence;
-            m_STT.EnableTimestamps = m_TimeStamps;
-            m_STT.SilenceThreshold = m_SilenceThreshold;
-            m_STT.RecordingHZ = m_RecordingHZ;
-            m_STT.MaxAlternatives = m_MaxAlternatives;
-            m_STT.StartListening( OnRecognize );
-            if ( m_StatusText != null )
-                m_StatusText.text = "LISTENING";
-        }
-        else
-        {
-            m_STT.StopListening();
-            if ( m_StatusText != null )
-                m_StatusText.text = "READY";
-        }
-    }
+	public class ListenWidget : Widget
+	{
+	    #region Private Data
+	    private SpeechToText m_STT = new SpeechToText();
+	    [SerializeField]
+	    private Text m_StatusText = null;
+	    [SerializeField]
+	    private bool m_DetectSilence = true;
+	    [SerializeField]
+	    private float m_SilenceThreshold = 0.03f;
+	    [SerializeField]
+	    private bool m_WordConfidence = false;
+	    [SerializeField]
+	    private bool m_TimeStamps = false;
+	    [SerializeField]
+	    private int m_RecordingHZ = 22050;
+	    [SerializeField]
+	    private int m_MaxAlternatives = 1;
+	    [SerializeField]
+	    private Text m_Transcript = null;
+	    #endregion
 
-    private void Start()
-    {
-        Logger.InstallDefaultReactors();
+	    public void OnListenButton()
+	    {
+	        if (! m_STT.IsListening() )
+	        {
+	            m_STT.DetectSilence = m_DetectSilence;
+	            m_STT.EnableWordConfidence = m_WordConfidence;
+	            m_STT.EnableTimestamps = m_TimeStamps;
+	            m_STT.SilenceThreshold = m_SilenceThreshold;
+	            m_STT.RecordingHZ = m_RecordingHZ;
+	            m_STT.MaxAlternatives = m_MaxAlternatives;
+	            m_STT.StartListening( OnRecognize );
+	            if ( m_StatusText != null )
+	                m_StatusText.text = "LISTENING";
+	        }
+	        else
+	        {
+	            m_STT.StopListening();
+	            if ( m_StatusText != null )
+	                m_StatusText.text = "READY";
+	        }
+	    }
 
-        if ( m_StatusText != null )
-            m_StatusText.text = "READY";
-    }
+	    private void Start()
+	    {
+	        Logger.InstallDefaultReactors();
 
-    private void OnRecognize(SpeechToText.ResultList result)
-    {
-        if (result != null)
-        {
-            //Log.Status("SpeechToText", "{0} result received.", result.Results.Length);
-            for (int i = 0; i < result.Results.Length; ++i)
-            {
-                //Log.Status("SpeechToText", "Result {0}: Alternatives {1}", i, result.Results[i].Alternatives.Length);
-                for (int j = 0; j < result.Results[i].Alternatives.Length; ++j)
-                {
-                    Log.Status("SpeechToText", "Result {0}, Alternative {1}, Transcript: {2}",
-                        i, j, result.Results[i].Alternatives[j].Transcript);
+	        if ( m_StatusText != null )
+	            m_StatusText.text = "READY";
 
-                    if ( m_Transcript != null )
-                        m_Transcript.text = result.Results[i].Alternatives[j].Transcript + "\n";
-                }
-            }
-        }
-    }
+	    }
+
+	    private void OnRecognize(SpeechToText.ResultList result)
+	    {
+	        if (result != null)
+	        {
+	            //Log.Status("SpeechToText", "{0} result received.", result.Results.Length);
+	            for (int i = 0; i < result.Results.Length; ++i)
+	            {
+	                //Log.Status("SpeechToText", "Result {0}: Alternatives {1}", i, result.Results[i].Alternatives.Length);
+	                for (int j = 0; j < result.Results[i].Alternatives.Length; ++j)
+	                {
+	                    Log.Status("SpeechToText", "Result {0}, Alternative {1}, Transcript: {2}",
+	                        i, j, result.Results[i].Alternatives[j].Transcript);
+
+	                    if ( m_Transcript != null )
+	                        m_Transcript.text = result.Results[i].Alternatives[j].Transcript + "\n";
+	                }
+	            }
+	        }
+	    }
+
+		public override void OnInput(WatsonIO watsonIO){
+		 	//TODO
+		}
+
+		public override void OnOutput(WatsonIO watsonIO){
+			//TODO
+		}
+
+		public override void SetupWidgetIOForEditor ()
+		{
+			if(inputList.Count == 0)
+				inputList.Add(IOType.AudioFromMicrophone, OnInput);
+
+			if (outputList.Count == 0)
+				outputList.Add (IOType.Text, OnOutput);
+		}
+	}
+
 }

@@ -67,7 +67,7 @@ namespace IBM.Watson.Logging
         /// <summary>
         /// Returns the singleton instance of the Logger object.
         /// </summary>
-        public static Logger Instance { get { return Singleton<Logger>.Instance; } }
+		public static Logger Instance { get { if(! sm_bInstalledDefaultReactors) InstallDefaultReactors(); return Singleton<Logger>.Instance; } }
         #endregion
 
         #region Private Data

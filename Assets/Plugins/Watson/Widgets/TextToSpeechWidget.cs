@@ -21,63 +21,68 @@ using UnityEngine.UI;
 using IBM.Watson.Services.v1;
 using IBM.Watson.Logging;
 
-[RequireComponent(typeof(AudioSource))]
-public class TextToSpeechWidget : MonoBehaviour
+namespace IBM.Watson.Editor
 {
-    #region Private Data
-    TextToSpeech m_TTS = new TextToSpeech();
+	
+	[RequireComponent(typeof(AudioSource))]
+	public class TextToSpeechWidget : Widget
+	{
+	    #region Private Data
+	    TextToSpeech m_TTS = new TextToSpeech();
 
-    [SerializeField]
-    private Button m_TextToSpeechButton = null;
-    [SerializeField]
-    private InputField m_Input = null;
-    [SerializeField]
-    private Text m_StatusText = null;
-    [SerializeField]
-    private TextToSpeech.VoiceType m_Voice = TextToSpeech.VoiceType.en_US_Michael;
-    [SerializeField]
-    private bool m_UsePost = false;
-    #endregion
+	    [SerializeField]
+	    private Button m_TextToSpeechButton = null;
+	    [SerializeField]
+	    private InputField m_Input = null;
+	    [SerializeField]
+	    private Text m_StatusText = null;
+	    [SerializeField]
+	    private TextToSpeech.VoiceType m_Voice = TextToSpeech.VoiceType.en_US_Michael;
+	    [SerializeField]
+	    private bool m_UsePost = false;
+	    #endregion
 
-    public void OnTextToSpeech()
-    {
-        if ( m_TTS.Voice != m_Voice )
-            m_TTS.Voice = m_Voice;
-        
-        m_TTS.ToSpeech( m_Input.text, OnSpeech, m_UsePost );
-        if ( m_StatusText != null )
-            m_StatusText.text = "THINKING";
-        if ( m_TextToSpeechButton != null )
-            m_TextToSpeechButton.interactable = false;
-    }
+	    public void OnTextToSpeech()
+	    {
+	        if ( m_TTS.Voice != m_Voice )
+	            m_TTS.Voice = m_Voice;
+	        
+	        m_TTS.ToSpeech( m_Input.text, OnSpeech, m_UsePost );
+	        if ( m_StatusText != null )
+	            m_StatusText.text = "THINKING";
+	        if ( m_TextToSpeechButton != null )
+	            m_TextToSpeechButton.interactable = false;
+	    }
 
-    private void OnEnable()
-    {
-        Logger.InstallDefaultReactors();
+	    private void OnEnable()
+	    {
+	        Logger.InstallDefaultReactors();
 
-        if ( m_StatusText != null )
-            m_StatusText.text = "READY";
-        if ( m_Input != null )
-            m_Input.text = "No problem with opening the pod bay doors.";
-    }
+	        if ( m_StatusText != null )
+	            m_StatusText.text = "READY";
+	        if ( m_Input != null )
+	            m_Input.text = "No problem with opening the pod bay doors.";
+	    }
 
-    private void OnSpeech( AudioClip clip )
-    {
-        if ( clip != null )
-        {
- 		    AudioSource source = GetComponent<AudioSource>();
-            if ( source != null )
-            {
-                source.spatialBlend = 0.0f;     // 2D sound
-                source.loop = false;            // do not loop
-                source.clip = clip;             // clip
-                source.Play();
-            }
-        }
+	    private void OnSpeech( AudioClip clip )
+	    {
+	        if ( clip != null )
+	        {
+	 		    AudioSource source = GetComponent<AudioSource>();
+	            if ( source != null )
+	            {
+	                source.spatialBlend = 0.0f;     // 2D sound
+	                source.loop = false;            // do not loop
+	                source.clip = clip;             // clip
+	                source.Play();
+	            }
+	        }
 
-        if ( m_TextToSpeechButton != null )
-            m_TextToSpeechButton.interactable = true;
-        if ( m_StatusText != null )
-            m_StatusText.text = "READY";
-    }
+	        if ( m_TextToSpeechButton != null )
+	            m_TextToSpeechButton.interactable = true;
+	        if ( m_StatusText != null )
+	            m_StatusText.text = "READY";
+	    }
+	}
+
 }
