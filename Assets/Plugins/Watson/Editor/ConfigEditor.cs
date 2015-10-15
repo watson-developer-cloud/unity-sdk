@@ -81,15 +81,15 @@ namespace IBM.Watson.Editor
                 m_GatewayUser = EditorGUILayout.TextField( "Gateway User", m_GatewayUser );
                 m_GatewayPassword = EditorGUILayout.TextField( "Gateway Password", m_GatewayPassword );
 
-                cfg.CompanyKey = EditorGUILayout.TextField( "Company Key", cfg.CompanyKey );
-                if ( GUILayout.Button( "Create Company Key" ) 
-                    && (string.IsNullOrEmpty( cfg.CompanyKey ) || EditorUtility.DisplayDialog( "Confirm", "Please confirm you replacing your current key.", "Yes", "No" ) ) )
+                cfg.ProductKey = EditorGUILayout.TextField( "Product Key", cfg.ProductKey );
+                if ( GUILayout.Button( "Create Product Key" ) 
+                    && (string.IsNullOrEmpty( cfg.ProductKey ) || EditorUtility.DisplayDialog( "Confirm", "Please confirm you replacing your current key.", "Yes", "No" ) ) )
                 {
-                    cfg.CompanyKey = Guid.NewGuid().ToString();
+                    cfg.ProductKey = Guid.NewGuid().ToString();
 
                     Dictionary<string,object> addKeyReq = new Dictionary<string, object>();
-                    addKeyReq["robotKey"] = cfg.CompanyKey;
-                    addKeyReq["groupName"] = Application.companyName;
+                    addKeyReq["robotKey"] = cfg.ProductKey;
+                    addKeyReq["groupName"] = Application.productName;
                     addKeyReq["deviceLimit"] = "9999";
 
                     Dictionary<string,string> headers = new Dictionary<string, string>();
@@ -111,51 +111,33 @@ namespace IBM.Watson.Editor
                             bRegistered = (long)json["status"] != 0;
                     }
 
-                    if (! bRegistered)
+                    if ( bRegistered )
                     {
-                        Config.Instance.CompanyKey = string.Empty;
-                        EditorUtility.DisplayDialog( "Error", "Failed to register company with gateway.", "OK" );
-                    }
-                }
-
-                if (! string.IsNullOrEmpty( cfg.CompanyKey ) )
-                {
-                    cfg.ProductKey = EditorGUILayout.TextField( "Product Key", cfg.ProductKey );
-
-                    if ( GUILayout.Button( "Create Product Key" )
-                        && (string.IsNullOrEmpty( cfg.ProductKey ) || EditorUtility.DisplayDialog( "Confirm", "Please confirm you replacing your current key.", "Yes", "No" ) ) )
-                    {
-                        cfg.ProductKey = Guid.NewGuid().ToString();
-
                         Dictionary<string,object> registerReq = new Dictionary<string, object>();
-                        registerReq["robotKey"] = cfg.CompanyKey;
+                        registerReq["robotKey"] = cfg.ProductKey;
                         registerReq["robotName"] = Application.productName;
-                        registerReq["macId" ] = cfg.ProductKey;
+                        registerReq["macId" ] = "UnitySDK"; 
 
-                        Dictionary<string,string> headers = new Dictionary<string, string>();
-                        headers["Authorization"] = new Credentials( m_GatewayUser, m_GatewayPassword ).CreateAuthorization();
-                        headers["Content-Type"] = "application/json";
-
-                        byte [] data = Encoding.UTF8.GetBytes( MiniJSON.Json.Serialize( registerReq ) );
-                        WWW www = new WWW( cfg.GatewayURL + "/v1/admin/addRobot", data, headers );
+                        data = Encoding.UTF8.GetBytes( MiniJSON.Json.Serialize( registerReq ) );
+                        www = new WWW( cfg.GatewayURL + "/v1/admin/addRobot", data, headers );
                         while(! www.isDone );
 
                         if (! string.IsNullOrEmpty( www.error ) )
                             Log.Warning( "ConfigEditor", "Register Secret Error: {0}", www.error );
 
-                        bool bRegistered = false;
+                        bRegistered = false;
                         if (! string.IsNullOrEmpty( www.text ) )
                         {
                             IDictionary json = MiniJSON.Json.Deserialize( www.text ) as IDictionary;
                             if ( json.Contains( "status" ) )
                                 bRegistered = (long)json["status"] != 0;
                         }
+                    }
 
-                        if (! bRegistered)
-                        {
-                            Config.Instance.ProductKey = string.Empty;
-                            EditorUtility.DisplayDialog( "Error", "Failed to register product with gateway.", "OK" );
-                        }
+                    if (! bRegistered)
+                    {
+                        Config.Instance.ProductKey = string.Empty;
+                        EditorUtility.DisplayDialog( "Error", "Failed to register product with gateway.", "OK" );
                     }
                 }
 

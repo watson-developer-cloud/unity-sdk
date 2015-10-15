@@ -173,8 +173,8 @@ namespace IBM.Watson.Connection
                 connector.URL = FixupURL( cfg.GatewayURL ) + "/" + serviceType; // + args;
 
                 Dictionary<string,object> auth = new Dictionary<string, object>();
-                auth["ROBOT_KEY"] = cfg.CompanyKey;
-                auth["MAC_ID"] = cfg.ProductKey;
+                auth["ROBOT_KEY"] = cfg.ProductKey;
+                auth["MAC_ID"] = "UnitySDK";
                 connector.Send( new TextMessage( MiniJSON.Json.Serialize( auth ) ), true );       // just queue, we want to let the user do any fix-ups before we actually try to connect
 
                 return connector;

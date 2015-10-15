@@ -145,8 +145,8 @@ namespace IBM.Watson.Connection
                 connector.UsingGateway = true;
                 connector.URL = cfg.GatewayURL + "/v1/en/service";
                 connector.Headers = new Dictionary<string, string>();
-                connector.Headers["ROBOT_KEY"] = cfg.CompanyKey;
-                connector.Headers["MAC_ID"] = cfg.ProductKey;
+                connector.Headers["ROBOT_KEY"] = cfg.ProductKey;
+                connector.Headers["MAC_ID"] = "UnitySDK";
                 connector.Headers["Service-Type" ] = serviceType;
 
                 sm_Connectors[ connectorID ] = connector;

@@ -52,8 +52,6 @@ namespace IBM.Watson.Utilities
         [fsProperty]
         private string m_GatewayURL = "https://9.53.162.55:9443/webApp";
         [fsProperty]
-        private string m_CompanyKey = null;
-        [fsProperty]
         private string m_ProductKey = null;
         [fsProperty]
         private List<BlueMixCred> m_Credentials = new List<BlueMixCred>();
@@ -91,10 +89,6 @@ namespace IBM.Watson.Utilities
         /// The URL of the gateway to use.
         /// </summary>
         public string GatewayURL { get { return m_GatewayURL; } set { m_GatewayURL = value; } }
-        /// <summary>
-        /// The company key used to communicate with the gateway.
-        /// </summary>
-        public string CompanyKey { get { return m_CompanyKey; } set { m_CompanyKey = value; } }
         /// <summary>
         /// The product key used to communicate with the gateway.
         /// </summary>
