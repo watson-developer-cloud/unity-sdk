@@ -99,6 +99,10 @@ namespace IBM.Watson.Connection
 
         #region Public Properties
         /// <summary>
+        /// Returns true if this connection is setup to use the gateway.
+        /// </summary>
+        public bool UsingGateway { get; set; }
+        /// <summary>
         /// This delegate is invoked when the connection is closed.
         /// </summary>
         public ConnectorEvent OnClose { get; set; }
@@ -111,9 +115,13 @@ namespace IBM.Watson.Connection
         /// </summary>
         public string URL { get; set; }
         /// <summary>
+        /// Headers to pass when making the socket.
+        /// </summary>
+        public Dictionary<string,string> Headers { get; set; }
+        /// <summary>
         /// Credentials used to authenticate with the server.
         /// </summary>
-        public Config.CredentialsInfo Authentication { get; set; }
+        public Credentials Authentication { get; set; }
         /// <summary>
         /// The current state of this connector.
         /// </summary>
@@ -129,14 +137,70 @@ namespace IBM.Watson.Connection
         private AutoResetEvent m_ReceiveEvent = new AutoResetEvent(false);
         private Queue<Message> m_ReceiveQueue = new Queue<Message>();
         private int m_ReceiverRoutine = 0;
+
+        //! This dictionary is used to translated from a service ID & function into a service-type 
+        //! value which is needed by the gateway. 
+        private static Dictionary<string,string> sm_GatewayServiceTypes = new Dictionary<string,string>()
+        {
+            // TODO: Uncomment once gateway is fixed.
+            //{ "SpeechToTextV1/v1/recognize", "stt-stream" },
+        };
         #endregion
+
+        public static string FixupURL( string URL )
+        {
+            if (URL.StartsWith("http://"))
+                URL = URL.Replace("http://", "ws://");
+            else if (URL.StartsWith("https://"))
+                URL = URL.Replace("https://", "wss://");
+
+            return URL;
+        }
+
+        public static WSConnector CreateConnector( string serviceID, string function, string args )
+        {
+            WSConnector connector = null;
+            string connectorID = serviceID + function;
+
+            Config cfg = Config.Instance;
+           
+            string serviceType = null;
+            if ( cfg.EnableGateway 
+                && sm_GatewayServiceTypes.TryGetValue( connectorID, out serviceType ) )
+            {
+                connector = new WSConnector();
+                connector.UsingGateway = true;
+                connector.URL = FixupURL( cfg.GatewayURL ) + "/" + serviceType; // + args;
+
+                Dictionary<string,object> auth = new Dictionary<string, object>();
+                auth["ROBOT_KEY"] = cfg.ProductKey;
+                auth["MAC_ID"] = "UnitySDK";
+                connector.Send( new TextMessage( MiniJSON.Json.Serialize( auth ) ), true );       // just queue, we want to let the user do any fix-ups before we actually try to connect
+
+                return connector;
+            }
+
+            Config.BlueMixCred cred = cfg.FindCredentials( serviceID );
+            if (cred == null)
+            {
+                Log.Error( "Config", "Failed to find BLueMix Credentials for service {0}.", serviceID );
+                return null;
+            }
+
+            connector = new WSConnector();
+            connector.UsingGateway = false;
+            connector.URL = FixupURL( cred.m_URL ) + function + args;
+            connector.Authentication = new Credentials( cred.m_User, cred.m_Password );
+
+            return connector;
+        }
 
         #region Public Functions
         /// <summary>
         /// This function sends the given message object.
         /// </summary>
         /// <param name="msg">This is either a BinaryMessage or TextMessage object.</param>
-        public void Send(Message msg)
+        public void Send(Message msg, bool queue = false )
         {
 #if ENABLE_MESSAGE_DEBUGGING
             Log.Debug( "WSConnector", "Sending {0} message: {1}",
@@ -146,10 +210,11 @@ namespace IBM.Watson.Connection
             lock( m_SendQueue )
             {
                 m_SendQueue.Enqueue(msg);
-                m_SendEvent.Set();
+                if (! queue )
+                    m_SendEvent.Set();
             }
 
-            if (m_SendThread == null )
+            if (!queue && m_SendThread == null )
             {
                 m_ConnectionState = ConnectionState.CONNECTING;
 
@@ -229,7 +294,10 @@ namespace IBM.Watson.Connection
             WebSocket ws = null;
 
             ws = new WebSocket(URL);
-            ws.SetCredentials(Authentication.m_User, Authentication.m_Password, true);
+            if ( Headers != null )
+                ws.Headers = Headers;
+            if ( Authentication != null )
+                ws.SetCredentials(Authentication.User, Authentication.Password, true);
             ws.OnOpen += OnWSOpen;
             ws.OnClose += OnWSClose;
             ws.OnError += OnWSError;

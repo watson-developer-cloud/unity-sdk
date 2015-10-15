@@ -29,9 +29,9 @@ namespace IBM.Watson.Utilities
         public static readonly string           CONFIG_FILE = "/Config.json";
 
         /// <summary>
-        /// Serialized class for holding the user credentials for a given service.
+        /// Serialized class for holding the user credentials for a BlueMix service.
         /// </summary>
-        public class CredentialsInfo
+        public class BlueMixCred
         {
             /// <summary>
             /// The ID of the service this is the credentials.
@@ -46,9 +46,16 @@ namespace IBM.Watson.Utilities
         [fsProperty]
         private float m_TimeOut = 30.0f;
         [fsProperty]
-        private int m_MaxConnections = 5;
+        private int m_MaxRestConnections = 5;
         [fsProperty]
-        private List<CredentialsInfo> m_Credentials = new List<CredentialsInfo>();
+        private bool m_EnableGateway = true;
+        [fsProperty]
+        private string m_GatewayURL = "https://9.53.162.55:9443/webApp";
+        [fsProperty]
+        private string m_ProductKey = null;
+        [fsProperty]
+        private List<BlueMixCred> m_Credentials = new List<BlueMixCred>();
+
         private static fsSerializer sm_Serializer = new fsSerializer();
         #endregion
 
@@ -69,11 +76,24 @@ namespace IBM.Watson.Utilities
         /// <summary>
         /// Maximum number of connections Watson will make to the server back-end at any one time.
         /// </summary>
-        public int MaxRestConnections { get { return m_MaxConnections; } set { m_MaxConnections = value; } }
+        public int MaxRestConnections { get { return m_MaxRestConnections; } set { m_MaxRestConnections = value; } }
         /// <summary>
         /// Returns the list of credentials used to login to the various services.
         /// </summary>
-        public List<CredentialsInfo> Credentials { get { return m_Credentials; } set { m_Credentials = value; } }
+        public List<BlueMixCred> Credentials { get { return m_Credentials; } set { m_Credentials = value; } }
+        /// <summary>
+        /// Enable the gateway usage.
+        /// </summary>
+        public bool EnableGateway { get { return m_EnableGateway; } set { m_EnableGateway = value; } }
+        /// <summary>
+        /// The URL of the gateway to use.
+        /// </summary>
+        public string GatewayURL { get { return m_GatewayURL; } set { m_GatewayURL = value; } }
+        /// <summary>
+        /// The product key used to communicate with the gateway.
+        /// </summary>
+        public string ProductKey { get { return m_ProductKey; } set { m_ProductKey = value; } }
+
         #endregion
 
         /// <summary>
@@ -85,11 +105,11 @@ namespace IBM.Watson.Utilities
         }
 
         /// <summary>
-        /// Find Credentials by the service ID.
+        /// Find BlueMix credentials by the service ID.
         /// </summary>
         /// <param name="serviceID">The ID of the service to find.</param>
         /// <returns>Returns null if the credentials cannot be found.</returns>
-        public CredentialsInfo FindCredentials( string serviceID )
+        public BlueMixCred FindCredentials( string serviceID )
         {
             foreach( var info in m_Credentials )
                 if ( info.m_ServiceID == serviceID )
@@ -170,6 +190,8 @@ namespace IBM.Watson.Utilities
             LoadConfig(request.text);
             yield break;
         }
+
+
 
     }
 }

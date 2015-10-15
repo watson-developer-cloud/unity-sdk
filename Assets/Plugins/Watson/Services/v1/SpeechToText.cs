@@ -108,7 +108,6 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         #endregion
 
         #region Private Data
-        private RESTConnector m_REST = null;                // REST connector used by Recognize() & GetModels()
         private OnRecognize m_ListenCallback = null;        // Callback is set by StartListening()                                                             
         private WSConnector m_ListenSocket = null;          // WebSocket object used when StartListening() is invoked  
         private bool m_ListenActive = false;
@@ -242,22 +241,10 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         {
             if (m_ListenSocket == null)
             {
-                Config.CredentialsInfo info = Config.Instance.FindCredentials(SERVICE_ID);
-                if (info == null)
-                {
-                    Log.Error("SpeechToText", "Unable to find credentials for Service ID: {0}", SERVICE_ID);
+                m_ListenSocket = WSConnector.CreateConnector( SERVICE_ID, "/v1/recognize", "?model=" + WWW.EscapeURL(m_RecognizeModel) );
+                if ( m_ListenSocket == null )
                     return false;
-                }
 
-                string URL = info.m_URL + "/v1/recognize?model=" + WWW.EscapeURL(m_RecognizeModel);
-                if (URL.StartsWith("http://"))
-                    URL = URL.Replace("http://", "ws://");
-                else if (URL.StartsWith("https://"))
-                    URL = URL.Replace("https://", "wss://");
-
-                m_ListenSocket = new WSConnector();
-                m_ListenSocket.Authentication = info;
-                m_ListenSocket.URL = URL;
                 m_ListenSocket.OnMessage = OnListenMessage;
                 m_ListenSocket.OnClose = OnListenClosed;
             }
@@ -453,15 +440,15 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         /// <returns>Returns true if request has been made.</returns>
         public bool GetModels(OnGetModels callback)
         {
-            if (!CreateRestConnector())
+            RESTConnector connector = RESTConnector.GetConnector( SERVICE_ID, "/v1/models" );
+            if ( connector == null )
                 return false;
 
             GetModelsRequest req = new GetModelsRequest();
             req.Callback = callback;
-            req.Function = "/v1/models";
             req.OnResponse = OnGetModelsResponse;
 
-            return m_REST.Send(req);
+            return connector.Send(req);
         }
 
         private class GetModelsRequest : RESTConnector.Request
@@ -551,14 +538,15 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                 throw new ArgumentNullException("clip");
             if (callback == null)
                 throw new ArgumentNullException("callback");
-            if (!CreateRestConnector())
+
+            RESTConnector connector = RESTConnector.GetConnector( SERVICE_ID, "/v1/recognize" );
+            if (connector == null )
                 return false;
 
             RecognizeRequest req = new RecognizeRequest();
             req.Clip = clip;
             req.Callback = callback;
 
-            req.Function = "/v1/recognize";
             req.Headers["Content-Type"] = "audio/wav";
             req.Send = WaveFile.CreateWAV(clip);
             if (req.Send.Length > MAX_RECOGNIZE_CLIP_SIZE )
@@ -573,24 +561,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
             req.Parameters["word_confidence"] = m_WordConfidence ? "true" : "false";
             req.OnResponse = OnRecognizeResponse;
 
-            return m_REST.Send(req);
-        }
-
-        private bool CreateRestConnector()
-        {
-            if (m_REST == null)
-            {
-                Config.CredentialsInfo info = Config.Instance.FindCredentials(SERVICE_ID);
-                if (info == null)
-                {
-                    Log.Error("SpeechToText", "Unable to find credentials for Service ID: {0}", SERVICE_ID);
-                    return false;
-                }
-
-                m_REST = new RESTConnector();
-                m_REST.Authentication = info;
-            }
-            return true;
+            return connector.Send(req);
         }
 
         private class RecognizeRequest : RESTConnector.Request

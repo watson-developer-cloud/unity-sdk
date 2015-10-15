@@ -56,7 +56,6 @@ namespace IBM.Watson.Services.v1
         #endregion
 
         #region Private Data
-        private RESTConnector m_Connector = null;
         private VoiceType m_Voice = VoiceType.en_US_Michael;
         private AudioFormatType m_AudioFormat = AudioFormatType.WAV;
         private Dictionary<VoiceType, string> m_VoiceTypes = new Dictionary<VoiceType, string>()
@@ -104,9 +103,9 @@ namespace IBM.Watson.Services.v1
         /// </summary>
         /// <param name="text">The text to synthesis into speech.</param>
         /// <param name="callback">The callback to invoke with the AudioClip.</param>
-        /// <param name="post">If true, then we use post instead of get, this allows for text that exceeds the 5k limit.</param>
+        /// <param name="usePost">If true, then we use post instead of get, this allows for text that exceeds the 5k limit.</param>
         /// <returns>Returns true if the request is sent.</returns>
-        public bool ToSpeech(string text, ToSpeechCallback callback, bool post = false )
+        public bool ToSpeech(string text, ToSpeechCallback callback, bool usePost = false )
         {
             if ( !m_AudioFormats.ContainsKey(m_AudioFormat) )
             {
@@ -118,29 +117,22 @@ namespace IBM.Watson.Services.v1
                 Log.Error( "TextToSpeech", "Unsupported voice: {0}", m_Voice.ToString() );
                 return false;
             }
-            if (m_Connector == null)
-            {
-                Config.CredentialsInfo info = Config.Instance.FindCredentials(SERVICE_ID);
-                if (info == null)
-                {
-                    Log.Error("TextToSpeech", "Unable to find credentials for service ID: {0}", SERVICE_ID);
-                    return false;
-                }
 
-                m_Connector = new RESTConnector();
-                m_Connector.Authentication = info;
+            RESTConnector connector = RESTConnector.GetConnector( SERVICE_ID, "/v1/synthesize" );
+            if (connector == null)
+            {
+                Log.Error( "TextToSpeech", "Failed to get connector." );
+                return false;
             }
 
             ToSpeechRequest req = new ToSpeechRequest();
             req.Text = text;
             req.Callback = callback;
-
-            req.Function = "/v1/synthesize";
             req.Parameters["accept"] = m_AudioFormats[m_AudioFormat];
             req.Parameters["voice"] = m_VoiceTypes[m_Voice];
             req.OnResponse = ToSpeechResponse;
 
-            if (post)
+            if (connector.UsingGateway || usePost )
             {
                 Dictionary<string,string> upload = new Dictionary<string, string>();
                 upload["text"] = text;
@@ -153,7 +145,7 @@ namespace IBM.Watson.Services.v1
                 req.Parameters["text"] = text;
             }
 
-            return m_Connector.Send(req);
+            return connector.Send(req);
         }
 
         private void ToSpeechResponse(RESTConnector.Request req, RESTConnector.Response resp)
