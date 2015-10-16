@@ -8,7 +8,8 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 224: {fileID: 22439340}
-  - 114: {fileID: 11452044}
+  - 114: {fileID: 11460060}
+  - 114: {fileID: 11431514}
   m_Layer: 0
   m_Name: ListenWidget
   m_TagString: Untagged
@@ -183,6 +184,26 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 
+--- !u!114 &11431514
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 113798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 131721b15c8a68d438d5b7163a1c05df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AudioOutput:
+    m_TargetObject: {fileID: 113798}
+    m_TargetConnection: 
+  m_ActivateOutput:
+    m_TargetObject: {fileID: 113798}
+    m_TargetConnection: 
+  m_RecordingBufferSize: 2
+  m_RecordingHZ: 22050
+  m_MicrophoneID: 
 --- !u!114 &11442158
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -222,8 +243,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11452044}
-        m_MethodName: OnListenButton
+      - m_Target: {fileID: 11431514}
+        m_MethodName: OnToggleActive
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -235,21 +256,6 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
---- !u!114 &11452044
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 113798}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0724d11ba02d3854ca7008cb018e24ae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_StatusText: {fileID: 11479722}
-  m_ListenButton: {fileID: 11442158}
-  m_SilenceThreshold: .0299999993
-  m_Transcript: {fileID: 11422764}
 --- !u!114 &11458322
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -301,7 +307,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: ba1391e119309d54693513c6de896b32, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 7fde5f3ff6b64ef4aa5833a3824583d6, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -309,6 +315,30 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &11460060
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 113798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ba780a4e1f9a824895da80178f4406c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StatusText: {fileID: 11479722}
+  m_DetectSilence: 1
+  m_SilenceThreshold: .0299999993
+  m_WordConfidence: 0
+  m_TimeStamps: 0
+  m_MaxAlternatives: 1
+  m_Transcript: {fileID: 11422764}
+  m_TextOutput:
+    m_TargetObject: {fileID: 0}
+    m_TargetConnection: 
+  m_ResultOutput:
+    m_TargetObject: {fileID: 0}
+    m_TargetConnection: 
 --- !u!114 &11468312
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -535,7 +565,19 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: m_Inputs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Outputs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 113798}

@@ -20,13 +20,47 @@ using UnityEditor;
 using UnityEngine;
 using System.Collections.Generic;
 using IBM.Watson.Logging;
+using IBM.Watson.Widgets;
 
 namespace IBM.Watson.Editor
 {
-	/// <summary>
-	/// Widget editor to use Widgets with drag/drop
-	/// </summary>
-	public class WidgetEditor: EditorWindow {
+    //[CustomPropertyDrawer(typeof(Widget.Input))]
+    //public class WidgetInputDrawer : PropertyDrawer
+    //{
+    //    public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+    //    {
+    //        // Using BeginProperty / EndProperty on the parent property means that
+    //        // prefab override logic works on the entire property.
+    //        EditorGUI.BeginProperty(position, label, property);
+
+    //        // Draw label
+    //        position = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
+
+    //        // Don't make child fields be indented
+    //        var indent = EditorGUI.indentLevel;
+    //        EditorGUI.indentLevel = 0;
+
+    //        // Calculate rects
+    //        var amountRect = new Rect(position.x, position.y, 30, position.height);
+    //        var unitRect = new Rect(position.x + 35, position.y, 50, position.height);
+    //        var nameRect = new Rect(position.x + 90, position.y, position.width - 90, position.height);
+
+    //        // Draw fields - passs GUIContent.none to each so they are drawn without labels
+    //        EditorGUI.PropertyField(amountRect, property.FindPropertyRelative("amount"), GUIContent.none);
+    //        EditorGUI.PropertyField(unitRect, property.FindPropertyRelative("unit"), GUIContent.none);
+    //        EditorGUI.PropertyField(nameRect, property.FindPropertyRelative("name"), GUIContent.none);
+
+    //        // Set indent back to what it was
+    //        EditorGUI.indentLevel = indent;
+
+    //        EditorGUI.EndProperty();
+    //    }
+    //}
+
+    /// <summary>
+    /// Widget editor to use Widgets with drag/drop
+    /// </summary>
+    public class WidgetEditor: EditorWindow {
 
 		private Texture m_WatsonIcon = null;
 
@@ -52,18 +86,18 @@ namespace IBM.Watson.Editor
 		Widget[] widgetsOnSceen = null;
 		public void Init() {
 
-			widgetsOnSceen = GameObject.FindObjectsOfType<Widget> ();
-			if (widgetsOnSceen != null) {
-				windows = new Rect[widgetsOnSceen.Length];
-				for (int indexWidget = 0; indexWidget < widgetsOnSceen.Length; indexWidget++) {
-					widgetsOnSceen[indexWidget].SetupWidgetIOForEditor();
-					windows [indexWidget] = new Rect (100 + indexWidget * 300, 0, 100, 200);  
-					//windows [indexWidget].min = new Vector2(10, 10);
-					//windows [indexWidget].max = new Vector2(200, 200);
-				}
-			} else {
-				windows = null;
-			}
+			//widgetsOnSceen = GameObject.FindObjectsOfType<Widget> ();
+			//if (widgetsOnSceen != null) {
+			//	windows = new Rect[widgetsOnSceen.Length];
+			//	for (int indexWidget = 0; indexWidget < widgetsOnSceen.Length; indexWidget++) {
+			//		widgetsOnSceen[indexWidget].SetupWidgetIOForEditor();
+			//		windows [indexWidget] = new Rect (100 + indexWidget * 300, 0, 100, 200);  
+			//		//windows [indexWidget].min = new Vector2(10, 10);
+			//		//windows [indexWidget].max = new Vector2(200, 200);
+			//	}
+			//} else {
+			//	windows = null;
+			//}
 		}
 
 		void OnInspectorUpdate(){
@@ -80,47 +114,47 @@ namespace IBM.Watson.Editor
 			BeginWindows();
 
 
-			if (windows != null) {
-				for (int i = 0; i < windows.Length; i++) {
+//			if (windows != null) {
+//				for (int i = 0; i < windows.Length; i++) {
 
-					//
+//					//
 
-					GUI.BeginGroup(new Rect (windows[i].x - 100, windows[i].y, 300, 200));
-					windows[i] =  GUI.Window(i, windows[i], DrawNodeWindow, widgetsOnSceen[i].name.Replace("Widget", "")); 
-					//GUI.Box(new Rect(0, 0, 50, 20), "TEST");
+//					GUI.BeginGroup(new Rect (windows[i].x - 100, windows[i].y, 300, 200));
+//					windows[i] =  GUI.Window(i, windows[i], DrawNodeWindow, widgetsOnSceen[i].name.Replace("Widget", "")); 
+//					//GUI.Box(new Rect(0, 0, 50, 20), "TEST");
 
-					//if (GUI.Button(new Rect(0, 25, 50, 20), "Hello World"))
-					//	Debug.Log("Got a click in window with color " + GUI.color);
+//					//if (GUI.Button(new Rect(0, 25, 50, 20), "Hello World"))
+//					//	Debug.Log("Got a click in window with color " + GUI.color);
 
-//					for (int indexInput = 0; indexInput < widgetsOnSceen[i].inputList.Count; indexInput++) {
-//						GUI.Box(new Rect(0, indexInput * 20 , 100, 20), widgetsOnSceen[i].inputList[indexInput].name);
+////					for (int indexInput = 0; indexInput < widgetsOnSceen[i].inputList.Count; indexInput++) {
+////						GUI.Box(new Rect(0, indexInput * 20 , 100, 20), widgetsOnSceen[i].inputList[indexInput].name);
+////					}
+
+//					int indexInput = 0;
+//					foreach( KeyValuePair <IOType, System.Action<WatsonIO>> inputItem in widgetsOnSceen[i].inputList )
+//					{
+//						GUI.Box(new Rect(0, indexInput * 20 , 100, 20), inputItem.Key.ToFriendlyString());
+//						indexInput ++;
 //					}
 
-					int indexInput = 0;
-					foreach( KeyValuePair <IOType, System.Action<WatsonIO>> inputItem in widgetsOnSceen[i].inputList )
-					{
-						GUI.Box(new Rect(0, indexInput * 20 , 100, 20), inputItem.Key.ToFriendlyString());
-						indexInput ++;
-					}
-
-					int indexOutput = 0;
-					foreach( KeyValuePair <IOType, System.Action<WatsonIO>> outputItem in widgetsOnSceen[i].outputList )
-					{
-						indexOutput ++;
-						//Debug.Log(" widgetsOnSceen[i].outputList[indexOutput].Target.GetType().ToString() : " +  outputItem.Key.ToString());
-						GUI.Box(new Rect(200, 200 - (indexOutput) * 20 , 100, 20), outputItem.Key.ToFriendlyString());
-					}
-
-//					for (int indexOutput = 0; indexOutput < widgetsOnSceen[i].outputList.Keys.Count; indexOutput++) {
-//						Debug.Log(" widgetsOnSceen[i].outputList[indexOutput].Target.GetType().ToString() : " +  widgetsOnSceen[i].outputList.Keys[indexOutput]);
-//						//GUI.Box(new Rect(200, 200 - (indexOutput + 1) * 20 , 100, 20), widgetsOnSceen[i].outputList.Keys[indexOutput]);
+//					int indexOutput = 0;
+//					foreach( KeyValuePair <IOType, System.Action<WatsonIO>> outputItem in widgetsOnSceen[i].outputList )
+//					{
+//						indexOutput ++;
+//						//Debug.Log(" widgetsOnSceen[i].outputList[indexOutput].Target.GetType().ToString() : " +  outputItem.Key.ToString());
+//						GUI.Box(new Rect(200, 200 - (indexOutput) * 20 , 100, 20), outputItem.Key.ToFriendlyString());
 //					}
 
-					GUI.EndGroup();
+////					for (int indexOutput = 0; indexOutput < widgetsOnSceen[i].outputList.Keys.Count; indexOutput++) {
+////						Debug.Log(" widgetsOnSceen[i].outputList[indexOutput].Target.GetType().ToString() : " +  widgetsOnSceen[i].outputList.Keys[indexOutput]);
+////						//GUI.Box(new Rect(200, 200 - (indexOutput + 1) * 20 , 100, 20), widgetsOnSceen[i].outputList.Keys[indexOutput]);
+////					}
+
+//					GUI.EndGroup();
 
 
-				}
-			}
+//				}
+//			}
 
 			EndWindows();
 			//window1 = GUI.Window(1, window1, DrawNodeWindow, "Node 1");   // Updates the Rect's when these are dragged

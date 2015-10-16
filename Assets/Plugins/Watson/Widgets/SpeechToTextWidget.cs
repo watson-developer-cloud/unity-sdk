@@ -18,96 +18,115 @@
 
 using IBM.Watson.Services.v1;
 using IBM.Watson.Logging;
-using IBM.Watson.Utilities;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SpeechToTextWidget : MonoBehaviour
+namespace IBM.Watson.Widgets
 {
-    #region Private Data
-    private SpeechToText m_STT = new SpeechToText();
-    private List<AudioClip> m_Recordings = new List<AudioClip>();
-    private int m_SilentBlocks = 0;
+	public class SpeechToTextWidget : Widget
+	{
+	    #region Private Data
+	    private SpeechToText m_STT = new SpeechToText();
+	    [SerializeField]
+	    private Text m_StatusText = null;
+	    [SerializeField]
+	    private bool m_DetectSilence = true;
+	    [SerializeField]
+	    private float m_SilenceThreshold = 0.03f;
+	    [SerializeField]
+	    private bool m_WordConfidence = false;
+	    [SerializeField]
+	    private bool m_TimeStamps = false;
+	    [SerializeField]
+	    private int m_MaxAlternatives = 1;
+	    [SerializeField]
+	    private Text m_Transcript = null;
+        [SerializeField]
+        private Input m_ActivateInput = new Input( "Activate", typeof(BooleanData), "OnActivate" );
+        [SerializeField]
+        private Input m_AudioInput = new Input( "AudioIn", typeof(AudioData), "OnAudio" );
+        [SerializeField]
+        private Output m_TextOutput = new Output( typeof(TextData) );
+        [SerializeField]
+        private Output m_ResultOutput = new Output( typeof(SpeechToTextData) );
+	    #endregion
 
-    [SerializeField]
-    private Text m_StatusText = null;
-    [SerializeField]
-    private Button m_RecordButton = null;
-    [SerializeField]
-    private float m_SilenceThreshold = 0.03f;
-    [SerializeField]
-    private Text m_Transcript = null;
-    #endregion
-
-    public void OnRecordStart()
-    {
-        m_STT.StartRecording(OnRecordClip);
-        if ( m_RecordButton != null )
-            m_RecordButton.interactable = false;
-        if ( m_StatusText != null )
-            m_StatusText.text = "LISTENING";
-    }
-
-    public void OnRecordEnd()
-    {
-        m_STT.StopRecording();
-        if ( m_RecordButton != null )
-            m_RecordButton.interactable = true;
-        if ( m_StatusText != null )
-            m_StatusText.text = "RECOGNIZING";
-
-        AudioClip recording = AudioClipUtil.Combine(m_Recordings.ToArray());
-        m_Recordings.Clear();
-        m_SilentBlocks = 0;
-
-        m_STT.Recognize(recording, OnRecognize);
-    }
-
-    private void OnEnable()
-    {
-        Logger.InstallDefaultReactors();
-
-        if ( m_StatusText != null )
-            m_StatusText.text = "READY";
-    }
-
-    private void OnRecordClip(SpeechToText.RecordClip record)
-    {
-        if (record != null)
+        public bool Active
         {
-            Log.Status("SpeechToTextWidget", "MaxLevel = {0}", record.MaxLevel);
-            m_Recordings.Add(record.Clip);
-
-            if ( record.MaxLevel < m_SilenceThreshold )
-                m_SilentBlocks += 1;
-            else
-                m_SilentBlocks = 0;
-
-            if ( m_SilentBlocks >= 2 )
-                OnRecordEnd();
-        }
-    }
-
-    private void OnRecognize(SpeechToText.ResultList result)
-    {
-        if (result != null)
-        {
-            //Log.Status("SpeechToText", "{0} result received.", result.Results.Length);
-            for (int i = 0; i < result.Results.Length; ++i)
-            {
-                //Log.Status("SpeechToText", "Result {0}: Alternatives {1}", i, result.Results[i].Alternatives.Length);
-                for (int j = 0; j < result.Results[i].Alternatives.Length; ++j)
+            get { return m_STT.IsListening(); }
+            set {
+                if ( value && !m_STT.IsListening() )
                 {
-                    Log.Status("SpeechToText", "Result {0}, Alternative {1}, Transcript: {2}",
-                        i, j, result.Results[i].Alternatives[j].Transcript);
-
-                    if ( m_Transcript != null )
-                        m_Transcript.text = result.Results[i].Alternatives[j].Transcript + "\n";
+ 	                m_STT.DetectSilence = m_DetectSilence;
+	                m_STT.EnableWordConfidence = m_WordConfidence;
+	                m_STT.EnableTimestamps = m_TimeStamps;
+	                m_STT.SilenceThreshold = m_SilenceThreshold;
+	                m_STT.MaxAlternatives = m_MaxAlternatives;
+	                m_STT.OnError = OnError;
+	                m_STT.StartListening( OnRecognize );
+	                if ( m_StatusText != null )
+	                    m_StatusText.text = "LISTENING";
                 }
+                else if ( !value && m_STT.IsListening() )
+                {
+ 	                m_STT.StopListening();
+	                if ( m_StatusText != null )
+	                    m_StatusText.text = "READY";
+                   }
             }
         }
-        if ( m_StatusText != null )
-            m_StatusText.text = "READY";
-    }
+
+	    public void OnListenButton()
+	    {
+            Active = !Active;
+	    }
+
+        private void Start()
+	    {
+	        Logger.InstallDefaultReactors();
+
+	        if ( m_StatusText != null )
+	            m_StatusText.text = "READY";
+	    }
+
+	    private void OnError( string error )
+	    {
+	        if ( m_StatusText != null )
+	            m_StatusText.text = "ERROR: " + error;
+	    }
+        
+        private void OnActivate( Data data )
+        {
+            Active = ((BooleanData)data).Boolean;
+        }
+
+        private void OnAudio( Data data )
+        {
+            if (! Active )
+                Active = true;
+
+            m_STT.OnListen( (AudioData)data );
+        }
+
+	    private void OnRecognize(SpeechToText.ResultList result)
+	    {
+            m_ResultOutput.SendData( new SpeechToTextData( result ) );
+
+	        if (result != null && result.Results.Length > 0 
+                && result.Results[0].Alternatives.Length > 0 )
+	        {
+                string text = result.Results[0].Alternatives[0].Transcript;
+                m_TextOutput.SendData( new TextData( text ) );
+
+	            if ( m_Transcript != null )
+	                m_Transcript.text = text + "\n";
+	        }
+	    }
+
+        protected override string GetName()
+        {
+            return "SpeechToText";
+        }
+
+	}
 }

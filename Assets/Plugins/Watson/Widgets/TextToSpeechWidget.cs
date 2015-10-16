@@ -21,11 +21,10 @@ using UnityEngine.UI;
 using IBM.Watson.Services.v1;
 using IBM.Watson.Logging;
 
-namespace IBM.Watson.Editor
+namespace IBM.Watson.Widgets
 {
-	
 	[RequireComponent(typeof(AudioSource))]
-	public class TextToSpeechWidget : Widget
+	public class TextToSpeechWidget : MonoBehaviour
 	{
 	    #region Private Data
 	    TextToSpeech m_TTS = new TextToSpeech();

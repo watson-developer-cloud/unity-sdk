@@ -25,11 +25,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Text;
-using System.IO;
+using IBM.Watson.Widgets;
 
 namespace IBM.Watson.Services.v1            // Add DeveloperCloud
 {
-    class SpeechToText
+    public class SpeechToText
     {
         #region Constants
         /// <summary>
@@ -40,12 +40,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         /// How often to send a message to the web socket to keep it alive.
         /// </summary>
         const float WS_KEEP_ALIVE_TIME = 20.0f;
-        /// <summary>
-        /// Size in seconds of the recording buffer. AudioClips() will be generated each time
-        /// the recording hits the halfway point.
-        /// </summary>
-        const int RECORDING_BUFFER_SIZE = 2;
-        /// <summary>
+       /// <summary>
         /// How many recording AudioClips will we queue before we enter a error state.
         /// </summary>
         const int MAX_QUEUED_RECORDINGS = 30;
@@ -96,12 +91,6 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                 Results = results;
             }
         };
-        public class RecordClip
-        {
-            public AudioClip Clip { get; set; }
-            public float MaxLevel { get; set; }
-        };
-        public delegate void OnRecordClip(RecordClip clip);
         public delegate void OnRecognize(ResultList results);
         public delegate void OnGetModels(Model[] models);
         public delegate void ErrorEvent(string error);
@@ -120,13 +109,9 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         private int m_MaxAlternatives = 1;                  // maximum number of alternatives to return.
         private bool m_Timestamps = false;
         private bool m_WordConfidence = false;
-        private OnRecordClip m_RecordingCallback = null;
-        private int m_RecordingRoutine = 0;                      // ID of our co-routine when recording, 0 if not recording currently.
-        private AudioClip m_Recording = null;
-        private int m_RecordingHZ = 22050;                  // default recording HZ
-        private string m_MicrophoneID = null;               // what microphone to use for recording.
         private bool m_DetectSilence = true;                // If true, then we will try not to record silence.
         private float m_SilenceThreshold = 0.03f;           // If the audio level is below this value, then it's considered silent.
+        private int m_RecordingHZ = -1;
         #endregion
 
         #region Public Properties
@@ -150,18 +135,6 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         /// True to return word confidence with results.
         /// </summary>
         public bool EnableWordConfidence { get { return m_WordConfidence; } set { m_WordConfidence = value; } }
-        /// <summary>
-        /// Returns a list of available microphone devices.
-        /// </summary>
-        public string[] Microphones { get { return Microphone.devices; } }
-        /// <summary>
-        /// Microphone recording HZ.
-        /// </summary>
-        public int RecordingHZ { get { return m_RecordingHZ; } set { m_RecordingHZ = value; } }
-        /// <summary>
-        /// Returns the name of the selected microphone. If this is null or empty, then the default microphone will be used.
-        /// </summary>
-        public string MicrophoneID { get { return m_MicrophoneID; } set { m_MicrophoneID = value; } }
         /// <summary>
         /// If true, then we will try not to send silent audio clips to the server. This can save bandwidth
         /// when no sound is happening.
@@ -203,11 +176,52 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
 
             m_IsListening = true;
             m_ListenCallback = callback;
-            StartRecording(OnListenRecord);
             m_KeepAliveRoutine = Runnable.Run(KeepAlive());
 
-            SendStart();
             return true;
+        }
+
+        public void OnListen(AudioData clip)
+        {
+            if (m_IsListening)
+            {
+                if ( m_RecordingHZ < 0 )
+                {
+                    m_RecordingHZ = clip.Clip.frequency;
+                    SendStart();
+                }
+
+                if (!DetectSilence || clip.MaxLevel >= m_SilenceThreshold)
+                {
+                    if (m_ListenActive)
+                    {
+                        m_ListenSocket.Send(new WSConnector.BinaryMessage(AudioClipUtil.GetL16(clip.Clip)));
+                        m_LastWSMessage = Time.time;
+                        m_AudioSent = true;
+                    }
+                    else
+                    {
+                        // we have not received the "listening" state yet from the server, so just queue
+                        // the audio clips until that happens.
+                        m_ListenRecordings.Enqueue(clip.Clip);
+
+                        // We need to check the length of this queue and do something if it gets too full.
+                        if (m_ListenRecordings.Count > MAX_QUEUED_RECORDINGS)
+                        {
+                            Log.Error("SpeechToText", "Recording queue has hit the maximum size.");
+
+                            StopListening();
+                            if (OnError != null)
+                                OnError("Recording queue is full.");
+                        }
+                    }
+                }
+                else if (m_AudioSent)
+                {
+                    SendStop();
+                    m_AudioSent = false;
+                }
+            }
         }
 
         /// <summary>
@@ -228,11 +242,9 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                 m_KeepAliveRoutine = 0;
             }
 
-            if (IsRecording())
-                StopRecording();
-
             m_ListenRecordings.Clear();
             m_ListenCallback = null;
+            m_RecordingHZ = -1;
 
             return true;
         }
@@ -241,8 +253,8 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         {
             if (m_ListenSocket == null)
             {
-                m_ListenSocket = WSConnector.CreateConnector( SERVICE_ID, "/v1/recognize", "?model=" + WWW.EscapeURL(m_RecognizeModel) );
-                if ( m_ListenSocket == null )
+                m_ListenSocket = WSConnector.CreateConnector(SERVICE_ID, "/v1/recognize", "?model=" + WWW.EscapeURL(m_RecognizeModel));
+                if (m_ListenSocket == null)
                     return false;
 
                 m_ListenSocket.OnMessage = OnListenMessage;
@@ -327,7 +339,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                         ResultList results = ParseRecognizeResponse(json);
                         if (results != null)
                         {
-                            if ( m_ListenCallback != null )
+                            if (m_ListenCallback != null)
                                 m_ListenCallback(results);
                             else
                                 StopListening();            // automatically stop listening if our callback is destroyed.
@@ -345,7 +357,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                             if (m_ListenActive)
                                 Log.Warning("SpeechToText", "Already in listen active state.");
 
-                            if ( m_IsListening )
+                            if (m_IsListening)
                             {
                                 m_ListenActive = true;
 
@@ -391,42 +403,6 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
             }
         }
 
-        private void OnListenRecord(RecordClip clip)
-        {
-            if ( m_IsListening )
-            {
-                if (!DetectSilence || clip.MaxLevel >= m_SilenceThreshold)
-                {
-                    if (m_ListenActive)
-                    {
-                        m_ListenSocket.Send(new WSConnector.BinaryMessage(AudioClipUtil.GetL16(clip.Clip)));
-                        m_LastWSMessage = Time.time;
-                        m_AudioSent = true;
-                    }
-                    else
-                    {
-                        // we have not received the "listening" state yet from the server, so just queue
-                        // the audio clips until that happens.
-                        m_ListenRecordings.Enqueue(clip.Clip);
-
-                        // We need to check the length of this queue and do something if it gets too full.
-                        if ( m_ListenRecordings.Count > MAX_QUEUED_RECORDINGS )
-                        {
-                            Log.Error( "SpeechToText", "Recording queue has hit the maximum size." );
-
-                            StopListening();
-                            if ( OnError != null )
-                                OnError( "Recording queue is full." );
-                        }
-                    }
-                }
-                else if (m_AudioSent)
-                {
-                    SendStop();
-                    m_AudioSent = false;
-                }
-            }
-        }
         #endregion
 
 
@@ -440,8 +416,8 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         /// <returns>Returns true if request has been made.</returns>
         public bool GetModels(OnGetModels callback)
         {
-            RESTConnector connector = RESTConnector.GetConnector( SERVICE_ID, "/v1/models" );
-            if ( connector == null )
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/v1/models");
+            if (connector == null)
                 return false;
 
             GetModelsRequest req = new GetModelsRequest();
@@ -489,18 +465,19 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                 return null;
             }
 
-            try {
+            try
+            {
                 List<Model> models = new List<Model>();
 
                 IList imodels = json["models"] as IList;
                 if (imodels == null)
-                    throw new Exception( "Expected IList" );
+                    throw new Exception("Expected IList");
 
-                foreach( var m in imodels )
+                foreach (var m in imodels)
                 {
                     IDictionary imodel = m as IDictionary;
                     if (imodel == null)
-                        throw new Exception( "Expected IDictionary" );
+                        throw new Exception("Expected IDictionary");
 
                     Model model = new Model();
                     model.Name = (string)imodel["name"];
@@ -508,15 +485,15 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                     model.Language = (string)imodel["language"];
                     model.Description = (string)imodel["description"];
                     model.URL = (string)imodel["url"];
-                    
-                    models.Add( model );
+
+                    models.Add(model);
                 }
 
                 return models.ToArray();
             }
-            catch( Exception e )
+            catch (Exception e)
             {
-                Log.Error( "SpeechToText", "Caught exception {0} when parsing GetModels() response: {1}", e.ToString(), jsonString );
+                Log.Error("SpeechToText", "Caught exception {0} when parsing GetModels() response: {1}", e.ToString(), jsonString);
             }
 
             return null;
@@ -539,8 +516,8 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
             if (callback == null)
                 throw new ArgumentNullException("callback");
 
-            RESTConnector connector = RESTConnector.GetConnector( SERVICE_ID, "/v1/recognize" );
-            if (connector == null )
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/v1/recognize");
+            if (connector == null)
                 return false;
 
             RecognizeRequest req = new RecognizeRequest();
@@ -549,13 +526,13 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
 
             req.Headers["Content-Type"] = "audio/wav";
             req.Send = WaveFile.CreateWAV(clip);
-            if (req.Send.Length > MAX_RECOGNIZE_CLIP_SIZE )
+            if (req.Send.Length > MAX_RECOGNIZE_CLIP_SIZE)
             {
                 Log.Error("SpeechToText", "AudioClip is too large for Recognize().");
                 return false;
             }
             req.Parameters["model"] = m_RecognizeModel;
-            req.Parameters["continuous"] = "false";   
+            req.Parameters["continuous"] = "false";
             req.Parameters["max_alternatives"] = m_MaxAlternatives.ToString();
             req.Parameters["timestamps"] = m_Timestamps ? "true" : "false";
             req.Parameters["word_confidence"] = m_WordConfidence ? "true" : "false";
@@ -705,102 +682,5 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
             }
         }
         #endregion
-
-        #region Recording Functions
-        public bool IsRecording()
-        {
-            return m_RecordingRoutine != 0;
-        }
-
-        /// <summary>
-        /// This function begins recording from the microphone and passes all recorded audio to the provided callback function. 
-        /// </summary>
-        /// <param name="callback"></param>
-        /// <returns>Returns true on success.</returns>
-        public bool StartRecording(OnRecordClip callback)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
-
-            if (m_RecordingRoutine != 0)
-            {
-                Log.Error("SpeechToText", "StartRecording() invoked, recording already active.");
-                return false;
-            }
-
-            m_RecordingCallback = callback;
-            m_RecordingRoutine = Runnable.Run(RecordingHandler());
-
-            return true;
-        }
-
-        /// <summary>
-        /// Stop recording from the configured microphone.
-        /// </summary>
-        /// <returns>Returns true on success.</returns>
-        public bool StopRecording()
-        {
-            if (m_RecordingRoutine == 0)
-            {
-                Log.Error("SpeechToText", "StopRecording() called, no active recording.");
-                return false;
-            }
-
-            // TODO: We may need to figure out a method to get the last bit of audio out of our buffer.
-            Microphone.End(m_MicrophoneID);
-            Runnable.Stop(m_RecordingRoutine);
-            m_RecordingRoutine = 0;
-            m_RecordingCallback = null;
-            m_Recording = null;
-
-            return true;
-        }
-
-        private IEnumerator RecordingHandler()
-        {
-#if UNITY_WEBPLAYER
-            yield return Application.RequestUserAuthorization( UserAuthorization.Microphone );
-#endif
-            m_Recording = Microphone.Start(m_MicrophoneID, true, RECORDING_BUFFER_SIZE, m_RecordingHZ);
-
-            bool bFirstBlock = true;
-            int midPoint = m_Recording.samples / 2;
-            while (m_RecordingCallback != null)
-            {
-                int writePos = Microphone.GetPosition(m_MicrophoneID);
-                if ((bFirstBlock && writePos >= midPoint)
-                    || (!bFirstBlock && writePos < midPoint))
-                {
-                    // front block is recorded, make a RecordClip and pass it onto our callback.
-                    float[] samples = new float[midPoint];
-                    m_Recording.GetData(samples, bFirstBlock ? 0 : midPoint);
-
-                    RecordClip record = new RecordClip();
-                    record.MaxLevel = Mathf.Max(samples);
-                    record.Clip = AudioClip.Create("Recording", midPoint, m_Recording.channels, m_RecordingHZ, false);
-                    record.Clip.SetData(samples, 0);
-
-                    if (m_RecordingCallback != null)
-                        m_RecordingCallback(record);
-                    else
-                        StopRecording();        // automatically stop recording if the callback goes away.
-
-                    bFirstBlock = !bFirstBlock;
-                }
-                else
-                {
-                    // calculate the number of samples remaining until we ready for a block of audio, 
-                    // and wait that amount of time it will take to record.
-                    int remaining = bFirstBlock ? (midPoint - writePos) : (m_Recording.samples - writePos);
-                    float timeRemaining = (float)remaining / (float)m_RecordingHZ;
-                    yield return new WaitForSeconds(timeRemaining);
-                }
-            }
-
-            yield break;
-        }
-        #endregion
-
-
     }
 }
