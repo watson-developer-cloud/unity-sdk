@@ -20,6 +20,8 @@ using IBM.Watson.Utilities;
 using System.Collections;
 using UnityEngine;
 
+#pragma warning disable 414
+
 namespace IBM.Watson.Widgets
 {
     /// <summary>
