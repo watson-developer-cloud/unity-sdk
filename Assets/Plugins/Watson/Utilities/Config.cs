@@ -123,7 +123,7 @@ namespace IBM.Watson.Utilities
         /// </summary>
         public void LoadConfig()
         {
-#if UNITY_EDITOR
+#if !UNITY_ANDROID
             try {
 				LoadConfig( System.IO.File.ReadAllText( Application.streamingAssetsPath + CONFIG_FILE ) );
             }

@@ -17,6 +17,8 @@
  * @author Richard Lyle (rolyle@us.ibm.com)
 */
 
+#if UNITY_EDITOR
+
 using UnityEditor;
 using UnityEngine;
 using IBM.Watson.Widgets;
@@ -70,3 +72,5 @@ namespace IBM.Watson.Editor
         }
 	}
 }
+
+#endif
