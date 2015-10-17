@@ -1,7 +1,4 @@
-﻿
-
-using IBM.Watson.Logging;
-/**
+﻿/**
 * Copyright 2015 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,15 +15,16 @@ using IBM.Watson.Logging;
 *
 * @author Richard Lyle (rolyle@us.ibm.com)
 */
-using System.Collections.Generic;
 
+using IBM.Watson.Logging;
+using System.Collections.Generic;
 
 namespace IBM.Watson.Utilities
 {
     /// <summary>
     /// Singleton class for sending and receiving events.
     /// </summary>
-    class EventManager
+    public class EventManager
     {
         #region Public Properties
         public static EventManager Instance { get { return Singleton<EventManager>.Instance; } }
