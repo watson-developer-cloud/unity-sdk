@@ -11,5 +11,8 @@ public class CubeTestRotate : MonoBehaviour {
 
 //		if (isRotating)
 //			transform.RotateAround (Vector3.zero, Vector3.up, speed);
+		if (isRotating) {
+			transform.Rotate (Vector3.up * Time.deltaTime * speed);
+		}
 	}
 }
