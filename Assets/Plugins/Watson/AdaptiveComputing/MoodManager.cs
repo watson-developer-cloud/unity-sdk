@@ -1,24 +1,29 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MoodManager : MonoBehaviour {
+public class MoodManager{
 
 	public enum MoodType
 	{
-		Idle = 0,
-		Listening,
-		Thinking,
-		Speaking,
-		InHurry
+		Idle = 0,	//Bored
+		Interested,
+		Urgent,
+		Upset,
+		Shy
 	}
 
-	// Use this for initialization
-	void Start () {
-	
+	private MoodType m_currentMood = MoodType.Idle;
+	public MoodType currentMood{
+		get{
+			return m_currentMood;
+		}
+		set{
+			ChangeMood(value);
+		}
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+
+	public void ChangeMood(MoodType moodType){
+		m_currentMood = moodType;
+		//TODO: Sent event to change mood!
 	}
 }

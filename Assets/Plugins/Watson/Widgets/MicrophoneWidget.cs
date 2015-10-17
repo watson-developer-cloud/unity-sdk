@@ -27,7 +27,7 @@ namespace IBM.Watson.Widgets
     /// <summary>
     /// This widget records audio from the microphone device.
     /// </summary>
-    class MicrophoneWidget : Widget
+    public class MicrophoneWidget : Widget
     {
         #region Public Properties
         /// <summary>
@@ -119,39 +119,46 @@ namespace IBM.Watson.Widgets
             int midPoint = m_Recording.samples / 2;
 
             bool bOutputLevelData = m_LevelOutput.IsConnected;
+			bool bOutputAudio = m_AudioOutput.IsConnected;
+
             int lastReadPos = 0;
             float [] samples = null;
 
             while (m_RecordingRoutine != 0)
             {
                 int writePos = Microphone.GetPosition(m_MicrophoneID);
-                if ((bFirstBlock && writePos >= midPoint)
-                    || (!bFirstBlock && writePos < midPoint))
-                {
-                    // front block is recorded, make a RecordClip and pass it onto our callback.
-                    samples = new float[midPoint];
-                    m_Recording.GetData(samples, bFirstBlock ? 0 : midPoint);
+				if(bOutputAudio){
+	                if ((bFirstBlock && writePos >= midPoint)
+	                    || (!bFirstBlock && writePos < midPoint))
+	                {
+	                    // front block is recorded, make a RecordClip and pass it onto our callback.
+	                    samples = new float[midPoint];
+	                    m_Recording.GetData(samples, bFirstBlock ? 0 : midPoint);
 
-                    AudioData record = new AudioData();
-                    record.MaxLevel = Mathf.Max(samples);
-                    record.Clip = AudioClip.Create("Recording", midPoint, m_Recording.channels, m_RecordingHZ, false);
-                    record.Clip.SetData(samples, 0);
+	                    AudioData record = new AudioData();
+	                    record.MaxLevel = Mathf.Max(samples);
+	                    record.Clip = AudioClip.Create("Recording", midPoint, m_Recording.channels, m_RecordingHZ, false);
+	                    record.Clip.SetData(samples, 0);
 
-                    if (!m_AudioOutput.SendData(record))
-                        StopRecording();        // automatically stop recording if the callback goes away.
+	                    if (!m_AudioOutput.SendData(record))
+	                        StopRecording();        // automatically stop recording if the callback goes away.
 
-                    bFirstBlock = !bFirstBlock;
-                }
-                else
-                {
-                    // calculate the number of samples remaining until we ready for a block of audio, 
-                    // and wait that amount of time it will take to record.
-                    int remaining = bFirstBlock ? (midPoint - writePos) : (m_Recording.samples - writePos);
-                    float timeRemaining = (float)remaining / (float)m_RecordingHZ;
-                    if ( bOutputLevelData && timeRemaining > m_LevelOutputInterval )
-                        timeRemaining = m_LevelOutputInterval;                                        
-                    yield return new WaitForSeconds(timeRemaining);
-                }
+	                    bFirstBlock = !bFirstBlock;
+	                }
+	                else
+	                {
+	                    // calculate the number of samples remaining until we ready for a block of audio, 
+	                    // and wait that amount of time it will take to record.
+	                    int remaining = bFirstBlock ? (midPoint - writePos) : (m_Recording.samples - writePos);
+	                    float timeRemaining = (float)remaining / (float)m_RecordingHZ;
+	                    if ( bOutputLevelData && timeRemaining > m_LevelOutputInterval )
+	                        timeRemaining = m_LevelOutputInterval;                                        
+	                    yield return new WaitForSeconds(timeRemaining);
+	                }
+				}
+				else{
+					yield return new WaitForSeconds(m_LevelOutputInterval);
+				}
 
                 if ( bOutputLevelData )
                 {
@@ -173,7 +180,7 @@ namespace IBM.Watson.Widgets
                     if ( lastReadPos < writePos )
                     {
                         samples = new float[writePos - lastReadPos];
-                        m_Recording.GetData( samples, lastReadPos );
+						m_Recording.GetData( samples, lastReadPos );
                         for(int i=0;i<samples.Length;++i)
                             fLevel += Mathf.Abs( samples[i] );
                         fDivisor += samples.Length;       // average them..

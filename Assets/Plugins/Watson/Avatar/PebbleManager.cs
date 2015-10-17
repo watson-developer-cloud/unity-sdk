@@ -58,6 +58,10 @@ public class PebbleManager : MonoBehaviour {
 
 	public void SetAudioData(float centerHitNormalized, bool setDataOnFrame = true){
 		this.setDataOnFrame = setDataOnFrame;
+		if (centerHitNormalized == float.NaN) {
+			Log.Error("PebbleManager", "Value for SetAudioData is NAN");
+			centerHitNormalized = 0.0f;
+		}
 		latestValueReceived = centerHitNormalized;
 
 		for (int i = pebbleRowList.Length - 1; i >= 0; i--) {
