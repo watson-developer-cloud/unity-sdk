@@ -1,0 +1,215 @@
+fileFormatVersion: 2
+guid: 379921b9732e94b4788959c3223e5122
+timeCreated: 1445120968
+licenseType: Pro
+ModelImporter:
+  serializedVersion: 18
+  fileIDToRecycleName:
+    100000: Back_hex_panel_01
+    100002: Back_hex_panel_01 1
+    100004: Back_hex_panel_01 2
+    100006: Back_hex_panel_01 3
+    100008: Back_hex_panel_01 4
+    100010: Back_hex_panel_01 5
+    100012: Center_Bottom
+    100014: Hex_edge_01
+    100016: Hex_edge_02
+    100018: Hex_edge_03
+    100020: Hex_edge_04
+    100022: Hex_edge_05
+    100024: Hex_edge_06
+    100026: Hex_Geo3_smooth
+    100028: Hex_Glass
+    100030: Hex_Glass 1
+    100032: Hex_Glass 2
+    100034: Hex_Glass 3
+    100036: Hex_Glass 4
+    100038: Hex_Glass 5
+    100040: Hex_group
+    100042: Hex_Light_frame
+    100044: Hex_Light_frame 1
+    100046: Hex_Light_frame 2
+    100048: Hex_Light_frame 3
+    100050: Hex_Light_frame 4
+    100052: Hex_Light_frame 5
+    100054: Hex_Outter_frame
+    100056: Hex_Outter_frame 1
+    100058: Hex_Outter_frame 2
+    100060: Hex_Outter_frame 3
+    100062: Hex_Outter_frame 4
+    100064: Hex_Outter_frame 5
+    100066: //RootNode
+    400000: Back_hex_panel_01
+    400002: Back_hex_panel_01 1
+    400004: Back_hex_panel_01 2
+    400006: Back_hex_panel_01 3
+    400008: Back_hex_panel_01 4
+    400010: Back_hex_panel_01 5
+    400012: Center_Bottom
+    400014: Hex_edge_01
+    400016: Hex_edge_02
+    400018: Hex_edge_03
+    400020: Hex_edge_04
+    400022: Hex_edge_05
+    400024: Hex_edge_06
+    400026: Hex_Geo3_smooth
+    400028: Hex_Glass
+    400030: Hex_Glass 1
+    400032: Hex_Glass 2
+    400034: Hex_Glass 3
+    400036: Hex_Glass 4
+    400038: Hex_Glass 5
+    400040: Hex_group
+    400042: Hex_Light_frame
+    400044: Hex_Light_frame 1
+    400046: Hex_Light_frame 2
+    400048: Hex_Light_frame 3
+    400050: Hex_Light_frame 4
+    400052: Hex_Light_frame 5
+    400054: Hex_Outter_frame
+    400056: Hex_Outter_frame 1
+    400058: Hex_Outter_frame 2
+    400060: Hex_Outter_frame 3
+    400062: Hex_Outter_frame 4
+    400064: Hex_Outter_frame 5
+    400066: //RootNode
+    2300000: Back_hex_panel_01
+    2300002: Back_hex_panel_01 1
+    2300004: Back_hex_panel_01 2
+    2300006: Back_hex_panel_01 3
+    2300008: Back_hex_panel_01 4
+    2300010: Back_hex_panel_01 5
+    2300012: Center_Bottom
+    2300014: Hex_Glass
+    2300016: Hex_Glass 1
+    2300018: Hex_Glass 2
+    2300020: Hex_Glass 3
+    2300022: Hex_Glass 4
+    2300024: Hex_Glass 5
+    2300026: Hex_Light_frame
+    2300028: Hex_Light_frame 1
+    2300030: Hex_Light_frame 2
+    2300032: Hex_Light_frame 3
+    2300034: Hex_Light_frame 4
+    2300036: Hex_Light_frame 5
+    2300038: Hex_Outter_frame
+    2300040: Hex_Outter_frame 1
+    2300042: Hex_Outter_frame 2
+    2300044: Hex_Outter_frame 3
+    2300046: Hex_Outter_frame 4
+    2300048: Hex_Outter_frame 5
+    3300000: Back_hex_panel_01
+    3300002: Back_hex_panel_01 1
+    3300004: Back_hex_panel_01 2
+    3300006: Back_hex_panel_01 3
+    3300008: Back_hex_panel_01 4
+    3300010: Back_hex_panel_01 5
+    3300012: Center_Bottom
+    3300014: Hex_Glass
+    3300016: Hex_Glass 1
+    3300018: Hex_Glass 2
+    3300020: Hex_Glass 3
+    3300022: Hex_Glass 4
+    3300024: Hex_Glass 5
+    3300026: Hex_Light_frame
+    3300028: Hex_Light_frame 1
+    3300030: Hex_Light_frame 2
+    3300032: Hex_Light_frame 3
+    3300034: Hex_Light_frame 4
+    3300036: Hex_Light_frame 5
+    3300038: Hex_Outter_frame
+    3300040: Hex_Outter_frame 1
+    3300042: Hex_Outter_frame 2
+    3300044: Hex_Outter_frame 3
+    3300046: Hex_Outter_frame 4
+    3300048: Hex_Outter_frame 5
+    4300000: Center_Bottom
+    4300002: Hex_Glass
+    4300004: Hex_Light_frame
+    4300006: Hex_Outter_frame
+    4300008: Back_hex_panel_01
+    4300010: Hex_Glass
+    4300012: Hex_Light_frame
+    4300014: Hex_Outter_frame
+    4300016: Back_hex_panel_01
+    4300018: Hex_Glass
+    4300020: Hex_Light_frame
+    4300022: Hex_Outter_frame
+    4300024: Back_hex_panel_01
+    4300026: Hex_Glass
+    4300028: Hex_Light_frame
+    4300030: Hex_Outter_frame
+    4300032: Back_hex_panel_01
+    4300034: Hex_Glass
+    4300036: Hex_Light_frame
+    4300038: Hex_Outter_frame
+    4300040: Back_hex_panel_01
+    4300042: Hex_Glass
+    4300044: Hex_Light_frame
+    4300046: Hex_Outter_frame
+    4300048: Back_hex_panel_01
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
