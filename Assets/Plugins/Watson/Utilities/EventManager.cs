@@ -24,7 +24,7 @@ namespace IBM.Watson.Utilities
     /// <summary>
     /// Singleton class for sending and receiving events.
     /// </summary>
-    class EventManager
+    public class EventManager
     {
         #region Public Properties
         public static EventManager Instance { get { return Singleton<EventManager>.Instance; } }
