@@ -2,7 +2,7 @@
 echo Building Windows Player...
 
 SET PROJECT=%CD%\..\
-IF "%UNITY_EXE%"=="" SET UNITY_EXE='C:\Program Files\Unity\Editor\Unity.exe'
+IF "%UNITY_EXE%"=="" SET "UNITY_EXE=C:\Program Files\Unity\Editor\Unity.exe"
 
 mkdir %CD%\Clients\Windows\
 "%UNITY_EXE%" -batchmode -quit -projectPath %PROJECT% -buildWindowsPlayer %CD%\Clients\Windows\UnityTest.exe
