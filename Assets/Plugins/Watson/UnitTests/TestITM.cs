@@ -27,6 +27,7 @@ namespace IBM.Watson.UnitTests
         ITM m_ITM = new ITM();
         bool m_GetPipelineTested = false;
         bool m_GetPipelinesTested = false;
+        bool m_GetQuestionsTested = false;
         bool m_ParseTested = false;
 
         public override IEnumerator RunTest()
@@ -37,6 +38,10 @@ namespace IBM.Watson.UnitTests
 
             m_ITM.GetPipelines( OnGetPipelines );
             while(! m_GetPipelinesTested )
+                yield return null;
+
+            m_ITM.GetQuestions( OnGetQuestions );
+            while(! m_GetQuestionsTested )
                 yield return null;
 
             m_ITM.GetParseData( -1773927182, OnGetParseData );
@@ -60,6 +65,14 @@ namespace IBM.Watson.UnitTests
 
             m_GetPipelinesTested = true;
         }
+
+        private void OnGetQuestions( ITM.Question [] questions )
+        {
+            Test( questions != null );
+            for(int i=0;i<questions.Length;++i)
+                Log.Status( "TestITM", "Question: {0}", questions[i].QuestionText );
+        }
+
         private void OnGetParseData( ITM.ParseData parse)
         {
             Test ( parse != null );
