@@ -47,6 +47,7 @@ namespace IBM.Watson.Services.v1
             public string AnswerKey { get; set; }
             public string Model { get; set; }
         };
+        public delegate void OnGetPipeline( Pipeline pipeline );
         public delegate void OnGetPipelines( Pipeline [] pipes );
 
         public enum WordPosition
@@ -90,7 +91,12 @@ namespace IBM.Watson.Services.v1
         public delegate void OnParseData( ParseData data );
         #endregion
 
+        #region Public Properties
+        public Pipeline SelectedPipeline { get { return m_SelectedPipeline; } set { m_SelectedPipeline = value; } }
+        #endregion
+
         #region Private Data
+        private Pipeline m_SelectedPipeline = null;
         private static Dictionary<string,WordPosition> sm_WordPositions = new Dictionary<string, WordPosition>()
         {
             { "noun", WordPosition.NOUN },
@@ -107,8 +113,68 @@ namespace IBM.Watson.Services.v1
         private const string TEST_PARSE_DATA = "{\"_id\":\"47f26baa682b4c939cda4164f5b9059b\",\"_rev\":\"1-c353e16c83c2a903f367c30042a4eba1\",\"transactionId\":-1773927182,\"parse\":{\"pos\":[{\"text\":\"What\",\"value\":\"noun\"},{\"text\":\"is\",\"value\":\"verb\"},{\"text\":\"the\",\"value\":\"det\"},{\"text\":\"best\",\"value\":\"adj\"},{\"text\":\"treatment\",\"value\":\"noun\"},{\"text\":\"for\",\"value\":\"prep\"},{\"text\":\"an\",\"value\":\"det\"},{\"text\":\"african american\",\"value\":\"noun\"},{\"text\":\"male\",\"value\":\"noun\"},{\"text\":\"with\",\"value\":\"prep\"},{\"text\":\"heart\",\"value\":\"noun\"},{\"text\":\"failure\",\"value\":\"noun\"}],\"slot\":[{\"text\":\"What\",\"value\":\"subj\"},{\"text\":\"is\",\"value\":\"top\"},{\"text\":\"the\",\"value\":\"ndet\"},{\"text\":\"best\",\"value\":\"nadj\"},{\"text\":\"treatment\",\"value\":\"pred\"},{\"text\":\"for\",\"value\":\"ncomp\"},{\"text\":\"an\",\"value\":\"ndet\"},{\"text\":\"african american\",\"value\":\"nadj\"},{\"text\":\"male\",\"value\":\"objprep\"},{\"text\":\"with\",\"value\":\"nprep\"},{\"text\":\"heart\",\"value\":\"nnoun\"},{\"text\":\"failure\",\"value\":\"objprep\"}],\"features\":[{\"text\":\"What\",\"value\":[\"pron\",\"sg\",\"wh\",\"whnom\"]},{\"text\":\"is\",\"value\":[\"vfin\",\"vpres\",\"sg\",\"wh\",\"whnom\",\"vsubj\",\"absubj\",\"auxv\"]},{\"text\":\"the\",\"value\":[\"sg\",\"def\",\"the\",\"ingdet\"]},{\"text\":\"best\",\"value\":[\"superl\",\"adjnoun\"]},{\"text\":\"treatment\",\"value\":[\"cn\",\"sg\",\"evnt\",\"act\",\"abst\",\"cognsa\",\"activity\",\"groupact\",\"(latrwd 0.051600)\",\"(vform treat)\"]},{\"text\":\"for\",\"value\":[\"pprefv\",\"nonlocp\",\"pobjp\"]},{\"text\":\"an\",\"value\":[\"sg\",\"indef\"]},{\"text\":\"african american\",\"value\":[\"propn\",\"sg\",\"glom\",\"notfnd\",\"unkph\"]},{\"text\":\"male\",\"value\":[\"cn\",\"sg\",\"m\",\"h\",\"physobj\",\"anim\",\"anml\",\"liv\",\"(latrwd 0.051600)\"]},{\"text\":\"with\",\"value\":[\"pprefv\",\"nonlocp\"]},{\"text\":\"heart\",\"value\":[\"cn\",\"sg\",\"abst\",\"cognsa\",\"(latrwd 0.032630)\"]},{\"text\":\"failure\",\"value\":[\"cn\",\"sg\",\"abst\",\"massn\",\"illness\",\"cond\",\"state\",\"(* heart failure)\",\"(vform fail)\"]}],\"hierarchy\":[\"african american\"],\"words\":[\"What\",\"is\",\"the\",\"best\",\"treatment\",\"for\",\"an\",\"african american\",\"male\",\"with\",\"heart\",\"failure\"],\"flags\":[\"african american\"]},\"preContext\":0,\"postContext\":0,\"sessionKey\":null}";
         #endregion
 
-        #region Question and Answer Functions
+        #region GetPipeline
+        /// <summary>
+        /// Gets/Selects a pipeline by name.
+        /// </summary>
+        /// <param name="name">The name of the pipeline to get.</param>
+        /// <param name="select">If true, then pipeline will be set as the active pipeline.</param>
+        /// <param name="callback">Optional callback to invoke.</param>
+        /// <returns></returns>
+        public bool GetPipeline( string name, bool select, OnGetPipeline callback = null )
+        {
+            if ( string.IsNullOrEmpty( name ) )
+                throw new ArgumentNullException( "pipelineName" );
 
+            new GetPipelineReq( name, select, callback, this );
+            return true;
+        }
+
+        private class GetPipelineReq
+        {
+            private string m_Name = null;
+            private bool m_Select = false;
+            private OnGetPipeline m_Callback = null;
+            private ITM m_Service = null;
+
+            public GetPipelineReq( string name, bool select, OnGetPipeline callback, ITM service )
+            {
+                m_Name = name;
+                m_Select = select;
+                m_Callback = callback;
+                m_Service = service;
+
+                m_Service.GetPipelines( OnGetPipelines );
+            }
+
+            public void OnGetPipelines( Pipeline [] pipelines )
+            {
+                bool bFound = false;
+                for(int i=0;i<pipelines.Length;++i)
+                    if ( pipelines[i].Name == m_Name )
+                    {
+                        bFound = true;
+                        if ( m_Callback != null )
+                            m_Callback( pipelines[i] );
+                        if ( m_Select )
+                            m_Service.SelectedPipeline = pipelines[i];
+                    }
+
+                if (! bFound )
+                {
+                    if ( m_Callback != null )
+                        m_Callback( null );
+                    if ( m_Select )
+                        Log.Error( "ITM", "Failed to select pipeline {0}", m_Name );
+                }
+            }
+        };
+
+        /// <summary>
+        /// Get all pipelines from the ITM service. This invokes the callback with an array of all available pipelines.
+        /// </summary>
+        /// <param name="callback">The callback to invoke.</param>
+        /// <returns>Returns true if request was sent, if a failure occurs the callback will be invoked with null.</returns>
         public bool GetPipelines( OnGetPipelines callback )
         {
             if ( callback == null )
@@ -168,7 +234,9 @@ namespace IBM.Watson.Services.v1
             if ( req.Callback != null )
                 req.Callback( pipelines.ToArray() );
         }
+        #endregion
 
+        #region GetParseData
         /// <summary>
         /// This returns the parse data for specific transaction ID.
         /// </summary>

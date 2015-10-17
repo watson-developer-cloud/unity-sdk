@@ -25,11 +25,16 @@ namespace IBM.Watson.UnitTests
     public class TestITM : UnitTest
     {
         ITM m_ITM = new ITM();
+        bool m_GetPipelineTested = false;
         bool m_GetPipelinesTested = false;
         bool m_ParseTested = false;
 
         public override IEnumerator RunTest()
         {
+            m_ITM.GetPipeline( "thunderstone", true, OnGetPipeline );
+            while(! m_GetPipelineTested )
+                yield return null;
+
             m_ITM.GetPipelines( OnGetPipelines );
             while(! m_GetPipelinesTested )
                 yield return null;
@@ -39,6 +44,12 @@ namespace IBM.Watson.UnitTests
                 yield return null;
 
             yield break;
+        }
+
+        private void OnGetPipeline( ITM.Pipeline pipeline )
+        {
+            Test( pipeline != null );
+            m_GetPipelineTested = true;
         }
 
         private void OnGetPipelines( ITM.Pipeline [] pipelines )
