@@ -1,4 +1,7 @@
-﻿/**
+﻿
+
+using System;
+/**
 * Copyright 2015 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +18,6 @@
 *
 * @author Richard Lyle (rolyle@us.ibm.com)
 */
-
 using IBM.Watson.Services.v1;
 using UnityEngine;
 
@@ -71,6 +73,21 @@ namespace IBM.Watson.Widgets
         public bool Boolean { get; set; }
     };
 
+    public class FloatData : Widget.Data
+    {
+        public FloatData()
+        { }
+        public FloatData( float f )
+        {
+            Float = f;
+        }
+        public override string GetName()
+        {
+            return "Float";
+        }
+
+        public float Float { get; set; }
+    };
     public class SpeechToTextData : Widget.Data
     {
         public SpeechToTextData()

@@ -67,6 +67,8 @@ namespace IBM.Watson.Widgets
         [SerializeField]
         private Output m_AudioOutput = new Output(typeof(AudioData));
         [SerializeField]
+        private Output m_LevelOutput = new Output(typeof(FloatData));
+        [SerializeField]
         private Output m_ActivateOutput = new Output(typeof(BooleanData));
         [SerializeField, Tooltip("Size of recording buffer in seconds.")]
         private int m_RecordingBufferSize = 2;
@@ -74,6 +76,8 @@ namespace IBM.Watson.Widgets
         private int m_RecordingHZ = 22050;                  // default recording HZ
         [SerializeField, Tooltip("ID of the microphone to use.")]
         private string m_MicrophoneID = null;               // what microphone to use for recording.
+        [SerializeField, Tooltip("How often to sample for level output.")]
+        private float m_LevelOutputInterval = 0.05f;
 
         private int m_RecordingRoutine = 0;                      // ID of our co-routine when recording, 0 if not recording currently.
         private AudioClip m_Recording = null;
@@ -113,6 +117,11 @@ namespace IBM.Watson.Widgets
 
             bool bFirstBlock = true;
             int midPoint = m_Recording.samples / 2;
+
+            bool bOutputLevelData = m_LevelOutput.IsConnected;
+            int lastReadPos = 0;
+            float [] samples = null;
+
             while (m_RecordingRoutine != 0)
             {
                 int writePos = Microphone.GetPosition(m_MicrophoneID);
@@ -120,7 +129,7 @@ namespace IBM.Watson.Widgets
                     || (!bFirstBlock && writePos < midPoint))
                 {
                     // front block is recorded, make a RecordClip and pass it onto our callback.
-                    float[] samples = new float[midPoint];
+                    samples = new float[midPoint];
                     m_Recording.GetData(samples, bFirstBlock ? 0 : midPoint);
 
                     AudioData record = new AudioData();
@@ -139,7 +148,41 @@ namespace IBM.Watson.Widgets
                     // and wait that amount of time it will take to record.
                     int remaining = bFirstBlock ? (midPoint - writePos) : (m_Recording.samples - writePos);
                     float timeRemaining = (float)remaining / (float)m_RecordingHZ;
+                    if ( bOutputLevelData && timeRemaining > m_LevelOutputInterval )
+                        timeRemaining = m_LevelOutputInterval;                                        
                     yield return new WaitForSeconds(timeRemaining);
+                }
+
+                if ( bOutputLevelData )
+                {
+                    float fLevel = 0.0f;
+                    float fDivisor = 0.0f;
+
+                    if ( writePos < lastReadPos )
+                    {
+                        // write has wrapped, grab the last bit from the buffer..
+                        samples = new float[ m_Recording.samples - lastReadPos ];
+                        m_Recording.GetData( samples, lastReadPos );
+                        for(int i=0;i<samples.Length;++i)
+                            fLevel += Mathf.Abs( samples[i] );
+                        fDivisor += samples.Length;       // average them..
+
+                        lastReadPos = 0;
+                    }
+
+                    if ( lastReadPos < writePos )
+                    {
+                        samples = new float[writePos - lastReadPos];
+                        m_Recording.GetData( samples, lastReadPos );
+                        for(int i=0;i<samples.Length;++i)
+                            fLevel += Mathf.Abs( samples[i] );
+                        fDivisor += samples.Length;       // average them..
+
+                        lastReadPos = writePos;
+                    }
+
+                    fLevel /= fDivisor;
+                    m_LevelOutput.SendData( new FloatData( fLevel ) );
                 }
             }
 
