@@ -152,7 +152,7 @@ namespace IBM.Watson.Editor
             EditorGUI.indentLevel += 1;
             for(int i=0;i<cfg.Credentials.Count;++i)
             {
-                Config.BlueMixCred info = cfg.Credentials[i];
+                Config.CredentialInfo info = cfg.Credentials[i];
 
                 info.m_ServiceID = EditorGUILayout.TextField( "ServiceID", info.m_ServiceID );
                 info.m_URL = EditorGUILayout.TextField( "URL", info.m_URL );
@@ -164,7 +164,7 @@ namespace IBM.Watson.Editor
             }
 
             if ( GUILayout.Button( "Add" ) )
-                cfg.Credentials.Add( new Config.BlueMixCred() );
+                cfg.Credentials.Add( new Config.CredentialInfo() );
             EditorGUI.indentLevel -= 1;
 
             if ( GUILayout.Button( "Save" ) )

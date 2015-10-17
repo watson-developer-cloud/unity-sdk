@@ -17,19 +17,41 @@
 */
 
 
+using IBM.Watson.Connection;
 using IBM.Watson.Logging;
+using IBM.Watson.Utilities;
 using MiniJSON;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 
 namespace IBM.Watson.Services.v1
 {
-    class ITM
+    /// <summary>
+    /// This class wraps the ITM back-end service.
+    /// </summary>
+    public class ITM
     {
         #region Public Types
+        public class Pipeline
+        {
+            public string Id { get; set; }
+            public string Rev { get; set; }
+            public string ClientId { get; set; }
+            public string Name { get; set; }
+            public string Type { get; set; }
+            public string Label { get; set; }
+            public string URL { get; set; }
+            public string CAS { get; set; }
+            public string AnswerKey { get; set; }
+            public string Model { get; set; }
+        };
+        public delegate void OnGetPipelines( Pipeline [] pipes );
+
         public enum WordPosition
         {
+            INVALID = -1,
             NOUN,
             PRONOUN,
             ADJECTIVE,
@@ -46,6 +68,15 @@ namespace IBM.Watson.Services.v1
             public WordPosition Pos { get; set; }
             public string Slot { get; set; }
             public string [] Features { get; set; }
+
+            public string PosName {
+                set {
+                    WordPosition pos = WordPosition.INVALID;
+                    if (! sm_WordPositions.TryGetValue( value, out pos ) )
+                        Log.Error( "ITM", "Failed to find position type for {0}, Word: {1}", value, Word );
+                    Pos = pos;
+                }
+            }
         };
         public class ParseData
         {
@@ -60,12 +91,83 @@ namespace IBM.Watson.Services.v1
         #endregion
 
         #region Private Data
+        private static Dictionary<string,WordPosition> sm_WordPositions = new Dictionary<string, WordPosition>()
+        {
+            { "noun", WordPosition.NOUN },
+            { "pronoun", WordPosition.PRONOUN },        // ?
+            { "adj", WordPosition.ADJECTIVE },
+            { "det", WordPosition.DETERMINIER },
+            { "verb", WordPosition.VERB },
+            { "adverb", WordPosition.ADVERB },          // ?
+            { "prep", WordPosition.PREPOSITION },
+            { "conj", WordPosition.CONJUNCTION },       // ?
+            { "inter", WordPosition.INTERJECTION },     // ?
+        };
         private const string SERVICE_ID = "ITMV1";
         private const string TEST_PARSE_DATA = "{\"_id\":\"47f26baa682b4c939cda4164f5b9059b\",\"_rev\":\"1-c353e16c83c2a903f367c30042a4eba1\",\"transactionId\":-1773927182,\"parse\":{\"pos\":[{\"text\":\"What\",\"value\":\"noun\"},{\"text\":\"is\",\"value\":\"verb\"},{\"text\":\"the\",\"value\":\"det\"},{\"text\":\"best\",\"value\":\"adj\"},{\"text\":\"treatment\",\"value\":\"noun\"},{\"text\":\"for\",\"value\":\"prep\"},{\"text\":\"an\",\"value\":\"det\"},{\"text\":\"african american\",\"value\":\"noun\"},{\"text\":\"male\",\"value\":\"noun\"},{\"text\":\"with\",\"value\":\"prep\"},{\"text\":\"heart\",\"value\":\"noun\"},{\"text\":\"failure\",\"value\":\"noun\"}],\"slot\":[{\"text\":\"What\",\"value\":\"subj\"},{\"text\":\"is\",\"value\":\"top\"},{\"text\":\"the\",\"value\":\"ndet\"},{\"text\":\"best\",\"value\":\"nadj\"},{\"text\":\"treatment\",\"value\":\"pred\"},{\"text\":\"for\",\"value\":\"ncomp\"},{\"text\":\"an\",\"value\":\"ndet\"},{\"text\":\"african american\",\"value\":\"nadj\"},{\"text\":\"male\",\"value\":\"objprep\"},{\"text\":\"with\",\"value\":\"nprep\"},{\"text\":\"heart\",\"value\":\"nnoun\"},{\"text\":\"failure\",\"value\":\"objprep\"}],\"features\":[{\"text\":\"What\",\"value\":[\"pron\",\"sg\",\"wh\",\"whnom\"]},{\"text\":\"is\",\"value\":[\"vfin\",\"vpres\",\"sg\",\"wh\",\"whnom\",\"vsubj\",\"absubj\",\"auxv\"]},{\"text\":\"the\",\"value\":[\"sg\",\"def\",\"the\",\"ingdet\"]},{\"text\":\"best\",\"value\":[\"superl\",\"adjnoun\"]},{\"text\":\"treatment\",\"value\":[\"cn\",\"sg\",\"evnt\",\"act\",\"abst\",\"cognsa\",\"activity\",\"groupact\",\"(latrwd 0.051600)\",\"(vform treat)\"]},{\"text\":\"for\",\"value\":[\"pprefv\",\"nonlocp\",\"pobjp\"]},{\"text\":\"an\",\"value\":[\"sg\",\"indef\"]},{\"text\":\"african american\",\"value\":[\"propn\",\"sg\",\"glom\",\"notfnd\",\"unkph\"]},{\"text\":\"male\",\"value\":[\"cn\",\"sg\",\"m\",\"h\",\"physobj\",\"anim\",\"anml\",\"liv\",\"(latrwd 0.051600)\"]},{\"text\":\"with\",\"value\":[\"pprefv\",\"nonlocp\"]},{\"text\":\"heart\",\"value\":[\"cn\",\"sg\",\"abst\",\"cognsa\",\"(latrwd 0.032630)\"]},{\"text\":\"failure\",\"value\":[\"cn\",\"sg\",\"abst\",\"massn\",\"illness\",\"cond\",\"state\",\"(* heart failure)\",\"(vform fail)\"]}],\"hierarchy\":[\"african american\"],\"words\":[\"What\",\"is\",\"the\",\"best\",\"treatment\",\"for\",\"an\",\"african american\",\"male\",\"with\",\"heart\",\"failure\"],\"flags\":[\"african american\"]},\"preContext\":0,\"postContext\":0,\"sessionKey\":null}";
         #endregion
 
         #region Question and Answer Functions
 
+        public bool GetPipelines( OnGetPipelines callback )
+        {
+            if ( callback == null )
+                throw new ArgumentNullException( "callback" );
+
+            RESTConnector connector = RESTConnector.GetConnector( SERVICE_ID, "/ITM/en/user/ibm" );
+            if ( connector == null )
+                return false;
+
+            GetPipelinesReq req = new GetPipelinesReq();
+            req.Callback = callback;
+            req.OnResponse = OnGetPipelinesResponse;
+
+            return connector.Send( req );
+        }
+
+        private class GetPipelinesReq : RESTConnector.Request
+        {
+            public OnGetPipelines Callback { get; set; }
+        };
+
+        private void OnGetPipelinesResponse( RESTConnector.Request r, RESTConnector.Response resp )
+        {
+            List<Pipeline> pipelines = new List<Pipeline>();
+
+            GetPipelinesReq req = (GetPipelinesReq)r;
+            if ( resp.Success )
+            {
+                try {
+                    IDictionary json = (IDictionary)Json.Deserialize( Encoding.UTF8.GetString( resp.Data ) );
+
+                    IList iPipelines = (IList)json["pipelines"];
+                    for(int i=0;i<iPipelines.Count;++i)
+                    {
+                        Pipeline pipeline = new Pipeline();
+                        pipeline.Id = (string)((IDictionary)iPipelines[i])["_id"];
+                        pipeline.Rev = (string)((IDictionary)iPipelines[i])["_rev"];
+                        pipeline.ClientId = (string)((IDictionary)iPipelines[i])["clientId"];
+                        pipeline.Name = (string)((IDictionary)iPipelines[i])["pipelineName"];
+                        pipeline.Type = (string)((IDictionary)iPipelines[i])["pipelineType"];
+                        pipeline.Label = (string)((IDictionary)iPipelines[i])["pipelineLabel"];
+                        pipeline.URL = (string)((IDictionary)iPipelines[i])["pipelineUrl"];
+                        pipeline.CAS = (string)((IDictionary)iPipelines[i])["pipelineCas"];
+                        pipeline.AnswerKey = (string)((IDictionary)iPipelines[i])["pipelineAnswerKey"];
+                        pipeline.Model = (string)((IDictionary)iPipelines[i])["pipelineModel"];
+                        pipelines.Add( pipeline );
+                    }
+
+                }
+                catch( Exception e )
+                {
+                    Log.Error( "ITM", "GetPipelines Exception: {0}", e.ToString() );
+                    pipelines = null;
+                }
+            }
+
+            if ( req.Callback != null )
+                req.Callback( pipelines.ToArray() );
+        }
 
         /// <summary>
         /// This returns the parse data for specific transaction ID.
@@ -73,9 +175,22 @@ namespace IBM.Watson.Services.v1
         /// <param name="transactionId"></param>
         /// <param name="callback"></param>
         /// <returns></returns>
-        public bool GetParseData( string transactionId, OnParseData callback )
+        public bool GetParseData( long transactionId, OnParseData callback )
         {
-            return false;
+            if ( transactionId == 0 )
+                throw new ArgumentNullException( "transactionId" );
+            if (callback == null )
+                throw new ArgumentNullException("callback");
+
+            //RESTConnector connector = RESTConnector.GetConnector( SERVICE_ID, "/ITM/en/parse" );
+            callback( CreateParseData( TEST_PARSE_DATA ) );
+
+            return true;
+        }
+
+        private void OnGetParseData( RESTConnector.Request req, RESTConnector.Response resp )
+        {
+
         }
 
         private ParseData CreateParseData( string jsonResponse )
@@ -86,26 +201,50 @@ namespace IBM.Watson.Services.v1
                 IDictionary json = Json.Deserialize( jsonResponse ) as IDictionary;
                 parse.Id = (string)json["_id"];
                 parse.Rev = (string)json["_rev"];
-                parse.TransactionId = (long)json["tansactionId"];
+                parse.TransactionId = (long)json["transactionId"];
 
+                IDictionary iparse = (IDictionary)json["parse"];
                 List<string> heirarchy = new List<string>();
-                IList iheirarchy = (IList)json["hierarchy"];
+                IList iheirarchy = (IList)iparse["hierarchy"];
                 foreach( var h in iheirarchy )
                     heirarchy.Add( (string)h );
                 parse.Heirarchy = heirarchy.ToArray();
 
                 List<string> flags = new List<string>();
-                IList iflags = (IList)json["flags"];
+                IList iflags = (IList)iparse["flags"];
                 foreach( var f in iflags )
-                    heirarchy.Add( (string)f );
-                parse.Heirarchy = heirarchy.ToArray();
+                    flags.Add( (string)f );
+                parse.Flags = flags.ToArray();
 
                 List<ParseWord> words = new List<ParseWord>();
 
-                IList iwords = (IList)json["words"];
-                foreach( var w in iwords )
+                IList iWords = (IList)iparse["words"];
+                for(int i=0;i<iWords.Count;++i)
                 {
+                    ParseWord word = new ParseWord();
+                    word.Word = (string)iWords[i];
                     
+                    IList iPos = (IList)iparse["pos"];
+                    if ( iPos.Count != iWords.Count )
+                        throw new WatsonException( "ipos.Count != iwords.Count" );
+                    word.PosName = (string)((IDictionary)iPos[i])["value"]; 
+
+                    IList iSlots = (IList)iparse["slot"];
+                    if (iSlots.Count != iWords.Count )
+                        throw new WatsonException( "islots.Count != iwords.Count" );
+                    word.Slot = (string)((IDictionary)iSlots[i])["value"];
+
+                    IList iFeatures = (IList)iparse["features"];
+                    if ( iFeatures.Count != iWords.Count )
+                        throw new WatsonException( "ifeatures.Count != iwords.Count" );
+                    
+                    List<string> features = new List<string>();
+                    IList iWordFeatures = (IList)((IDictionary)iFeatures[i])["value"];
+                    foreach( var k in iWordFeatures )
+                        features.Add( (string)k );
+                    word.Features = features.ToArray();                            
+                                                          
+                    words.Add( word );                    
                 }
 
                 parse.Words = words.ToArray();
