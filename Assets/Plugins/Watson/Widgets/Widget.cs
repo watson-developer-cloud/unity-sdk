@@ -52,7 +52,7 @@ namespace IBM.Watson.Widgets
         /// This object handles input on a widget.
         /// </summary>
         [Serializable]
-        public class Input
+        public class Input 
         {
             #region Construction
             public Input(string name, Type dataType, string receiverFunction)
@@ -65,8 +65,11 @@ namespace IBM.Watson.Widgets
 
             #region Public Properties
             public Widget Owner { get; set; }
+            public string OwnerName { get { return Owner.WidgetName; } }
             public string InputName { get; set; }
+            public string FullInputName { get { return OwnerName + "/" + InputName; } }
             public Type DataType { get; set; }
+            public string DataTypeName { get { return DataType.Name; } }
             public string ReceiverFunction { get; set; }
             public OnReceiveData DataReceiver { get; set; }
             #endregion

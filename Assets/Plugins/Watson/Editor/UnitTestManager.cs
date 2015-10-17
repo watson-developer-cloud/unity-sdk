@@ -17,7 +17,9 @@
 */
 
 using UnityEngine;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
 using IBM.Watson.UnitTests;
@@ -160,7 +162,9 @@ namespace IBM.Watson.Editor
             if (QuitOnTestsComplete)
             {
                 Log.Status("UnitTestManager", "Exiting, Tests Completed: {0}, Tests Failed: {1}", TestsComplete, TestsFailed);
+#if UNITY_EDITOR
                 EditorApplication.Exit(TestsFailed > 0 ? 1 : 0);
+#endif
             }
         }
 
@@ -204,7 +208,9 @@ public static class RunUnitTest
     static public void All()
     {
         Logger.InstallDefaultReactors();
+#if UNITY_EDITOR
         EditorApplication.update += UpdateRunnable;
+#endif
 
         IBM.Watson.Editor.UnitTestManager instance = IBM.Watson.Editor.UnitTestManager.Instance;
         instance.QuitOnTestsComplete = true;
@@ -212,6 +218,7 @@ public static class RunUnitTest
         instance.QueueTests(Utility.FindAllDerivedTypes(typeof(UnitTest)), true);
     }
 
+#if UNITY_EDITOR
     [MenuItem("Watson/Run All UnitTests")]
     static public void AllNoQuit()
     {
@@ -222,6 +229,7 @@ public static class RunUnitTest
         instance.OnTestCompleteCallback = OnTestsComplete;
         instance.QueueTests(Utility.FindAllDerivedTypes(typeof(UnitTest)), true);
     }
+#endif
 
     static void UpdateRunnable()
     {
@@ -230,7 +238,9 @@ public static class RunUnitTest
 
     static void OnTestsComplete()
     {
+#if UNITY_EDITOR
         EditorApplication.update -= UpdateRunnable;
+#endif
     }
 
 }

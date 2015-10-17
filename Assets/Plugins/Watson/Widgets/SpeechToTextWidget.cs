@@ -21,6 +21,8 @@ using IBM.Watson.Logging;
 using UnityEngine;
 using UnityEngine.UI;
 
+#pragma warning disable 414
+
 namespace IBM.Watson.Widgets
 {
 	public class SpeechToTextWidget : Widget

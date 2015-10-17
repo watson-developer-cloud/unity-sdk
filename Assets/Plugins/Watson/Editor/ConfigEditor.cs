@@ -16,6 +16,8 @@
 * @author Richard Lyle (rolyle@us.ibm.com)
 */
 
+#if UNITY_EDITOR
+
 using IBM.Watson.Connection;
 using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
@@ -35,7 +37,9 @@ namespace IBM.Watson.Editor
     {
         private void OnEnable()
         {
+#if UNITY_5_2
             titleContent.text = "Watson Config";
+#endif
             m_WatsonIcon = (Texture2D)Resources.Load( "WatsonIcon", typeof(Texture2D) );
         }
 
@@ -185,3 +189,5 @@ namespace IBM.Watson.Editor
         }
     }
 }
+
+#endif
