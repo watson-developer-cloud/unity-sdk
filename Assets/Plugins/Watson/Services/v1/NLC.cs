@@ -29,7 +29,7 @@ using IBM.Watson.Widgets;
 
 namespace IBM.Watson.Services.v1
 {
-    public class NaturalLanguageClassifier
+    public class NLC
     {
     }
 }

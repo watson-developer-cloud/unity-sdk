@@ -17,12 +17,14 @@
 */
 
 
+using IBM.Watson.Connection;
 using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
 using MiniJSON;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 
 namespace IBM.Watson.Services.v1
 {
@@ -32,6 +34,21 @@ namespace IBM.Watson.Services.v1
     public class ITM
     {
         #region Public Types
+        public class Pipeline
+        {
+            public string Id { get; set; }
+            public string Rev { get; set; }
+            public string ClientId { get; set; }
+            public string Name { get; set; }
+            public string Type { get; set; }
+            public string Label { get; set; }
+            public string URL { get; set; }
+            public string CAS { get; set; }
+            public string AnswerKey { get; set; }
+            public string Model { get; set; }
+        };
+        public delegate void OnGetPipelines( Pipeline [] pipes );
+
         public enum WordPosition
         {
             INVALID = -1,
@@ -92,6 +109,65 @@ namespace IBM.Watson.Services.v1
 
         #region Question and Answer Functions
 
+        public bool GetPipelines( OnGetPipelines callback )
+        {
+            if ( callback == null )
+                throw new ArgumentNullException( "callback" );
+
+            RESTConnector connector = RESTConnector.GetConnector( SERVICE_ID, "/ITM/en/user/ibm" );
+            if ( connector == null )
+                return false;
+
+            GetPipelinesReq req = new GetPipelinesReq();
+            req.Callback = callback;
+            req.OnResponse = OnGetPipelinesResponse;
+
+            return connector.Send( req );
+        }
+
+        private class GetPipelinesReq : RESTConnector.Request
+        {
+            public OnGetPipelines Callback { get; set; }
+        };
+
+        private void OnGetPipelinesResponse( RESTConnector.Request r, RESTConnector.Response resp )
+        {
+            List<Pipeline> pipelines = new List<Pipeline>();
+
+            GetPipelinesReq req = (GetPipelinesReq)r;
+            if ( resp.Success )
+            {
+                try {
+                    IDictionary json = (IDictionary)Json.Deserialize( Encoding.UTF8.GetString( resp.Data ) );
+
+                    IList iPipelines = (IList)json["pipelines"];
+                    for(int i=0;i<iPipelines.Count;++i)
+                    {
+                        Pipeline pipeline = new Pipeline();
+                        pipeline.Id = (string)((IDictionary)iPipelines[i])["_id"];
+                        pipeline.Rev = (string)((IDictionary)iPipelines[i])["_rev"];
+                        pipeline.ClientId = (string)((IDictionary)iPipelines[i])["clientId"];
+                        pipeline.Name = (string)((IDictionary)iPipelines[i])["pipelineName"];
+                        pipeline.Type = (string)((IDictionary)iPipelines[i])["pipelineType"];
+                        pipeline.Label = (string)((IDictionary)iPipelines[i])["pipelineLabel"];
+                        pipeline.URL = (string)((IDictionary)iPipelines[i])["pipelineUrl"];
+                        pipeline.CAS = (string)((IDictionary)iPipelines[i])["pipelineCas"];
+                        pipeline.AnswerKey = (string)((IDictionary)iPipelines[i])["pipelineAnswerKey"];
+                        pipeline.Model = (string)((IDictionary)iPipelines[i])["pipelineModel"];
+                        pipelines.Add( pipeline );
+                    }
+
+                }
+                catch( Exception e )
+                {
+                    Log.Error( "ITM", "GetPipelines Exception: {0}", e.ToString() );
+                    pipelines = null;
+                }
+            }
+
+            if ( req.Callback != null )
+                req.Callback( pipelines.ToArray() );
+        }
 
         /// <summary>
         /// This returns the parse data for specific transaction ID.
@@ -106,9 +182,15 @@ namespace IBM.Watson.Services.v1
             if (callback == null )
                 throw new ArgumentNullException("callback");
 
+            //RESTConnector connector = RESTConnector.GetConnector( SERVICE_ID, "/ITM/en/parse" );
             callback( CreateParseData( TEST_PARSE_DATA ) );
 
             return true;
+        }
+
+        private void OnGetParseData( RESTConnector.Request req, RESTConnector.Response resp )
+        {
+
         }
 
         private ParseData CreateParseData( string jsonResponse )

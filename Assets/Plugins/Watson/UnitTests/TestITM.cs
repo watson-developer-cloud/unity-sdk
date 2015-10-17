@@ -16,20 +16,24 @@
 * @author Richard Lyle (rolyle@us.ibm.com)
 */
 
-using UnityEngine;
 using System.Collections;
-using IBM.Watson.Utilities;
 using IBM.Watson.Services.v1;
+using IBM.Watson.Logging;
 
 namespace IBM.Watson.UnitTests
 {
     public class TestITM : UnitTest
     {
         ITM m_ITM = new ITM();
+        bool m_GetPipelinesTested = false;
         bool m_ParseTested = false;
 
         public override IEnumerator RunTest()
         {
+            m_ITM.GetPipelines( OnGetPipelines );
+            while(! m_GetPipelinesTested )
+                yield return null;
+
             m_ITM.GetParseData( -1773927182, OnGetParseData );
             while(! m_ParseTested )
                 yield return null;
@@ -37,6 +41,14 @@ namespace IBM.Watson.UnitTests
             yield break;
         }
 
+        private void OnGetPipelines( ITM.Pipeline [] pipelines )
+        {
+            Test( pipelines != null );
+            for(int i=0;i<pipelines.Length;++i)
+                Log.Status( "TestITM", "Pipeline: {0}", pipelines[i].Label );
+
+            m_GetPipelinesTested = true;
+        }
         private void OnGetParseData( ITM.ParseData parse)
         {
             Test ( parse != null );
