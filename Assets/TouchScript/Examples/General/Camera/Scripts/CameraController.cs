@@ -11,6 +11,7 @@ namespace TouchScript.Examples.CameraControl
 		public float PanSpeed = 200f;
 		public float RotationSpeed = 200f;
 		public float ZoomSpeed = 10f;
+		public GameObject camTarget;
 
 		private Transform pivot;
 		private Transform cam;
@@ -39,8 +40,8 @@ namespace TouchScript.Examples.CameraControl
 			                                -ManipulationGesture.DeltaPosition.x / Screen.width * RotationSpeed, 
 			                                ManipulationGesture.DeltaRotation);
 			pivot.localRotation *= rotation;
-
-			cam.transform.localPosition += Vector3.forward * (ManipulationGesture.DeltaScale - 1f) * ZoomSpeed;
+			cam.LookAt (camTarget.transform.position);
+			cam.transform.localPosition += Vector3.forward * (ManipulationGesture.DeltaScale - 1) * ZoomSpeed;
 		}
 
 		private void twoFingerTransformHandler(object sender, System.EventArgs e)
