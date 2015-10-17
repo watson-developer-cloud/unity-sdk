@@ -4,7 +4,7 @@
 QualitySettings:
   m_ObjectHideFlags: 0
   serializedVersion: 5
-  m_CurrentQuality: 5
+  m_CurrentQuality: 0
   m_QualitySettings:
   - serializedVersion: 2
     name: Fastest
@@ -136,11 +136,11 @@ QualitySettings:
     shadowDistance: 150
     shadowNearPlaneOffset: 2
     shadowCascade2Split: .333333343
-    shadowCascade4Split: {x: .0666666701, y: .200000003, z: .466666669}
+    shadowCascade4Split: {x: .0666666701, y: .199999988, z: .466666639}
     blendWeights: 4
     textureQuality: 0
     anisotropicTextures: 2
-    antiAliasing: 2
+    antiAliasing: 4
     softParticles: 1
     softVegetation: 1
     realtimeReflectionProbes: 1
@@ -150,4 +150,11 @@ QualitySettings:
     maximumLODLevel: 0
     particleRaycastBudget: 4096
     excludedTargetPlatforms: []
-  m_PerPlatformDefaultQuality: {}
+  m_PerPlatformDefaultQuality:
+    Android: 0
+    Samsung TV: 0
+    Standalone: 0
+    Tizen: 0
+    Web: 0
+    WebGL: 0
+    iPhone: 0
