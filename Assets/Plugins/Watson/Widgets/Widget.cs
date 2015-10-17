@@ -52,7 +52,7 @@ namespace IBM.Watson.Widgets
         /// This object handles input on a widget.
         /// </summary>
         [Serializable]
-        public class Input 
+        public class Input
         {
             #region Construction
             public Input(string name, Type dataType, string receiverFunction)
@@ -90,11 +90,11 @@ namespace IBM.Watson.Widgets
                     if (info != null)
                     {
                         DataReceiver = Delegate.CreateDelegate(typeof(OnReceiveData), Owner, info) as OnReceiveData;
-                        if ( DataReceiver == null )
-                            Log.Error( "Widget", "CreateDelegate failed for function {0}", ReceiverFunction );
+                        if (DataReceiver == null)
+                            Log.Error("Widget", "CreateDelegate failed for function {0}", ReceiverFunction);
                     }
                     else
-                        Log.Error( "Widget", "Failed to find receiver function {0}.", ReceiverFunction );
+                        Log.Error("Widget", "Failed to find receiver function {0}.", ReceiverFunction);
                 }
             }
 
@@ -118,13 +118,14 @@ namespace IBM.Watson.Widgets
         public class Output
         {
             #region Constructor
-            public Output( Type dataType)
+            public Output(Type dataType)
             {
                 DataType = dataType;
             }
             #endregion
 
             #region Public Properties
+            public bool IsConnected { get { return ResolveTargetInput(); } }
             public Widget Owner { get; set; }
             public Type DataType { get; set; }
 
@@ -148,7 +149,7 @@ namespace IBM.Watson.Widgets
             /// <param name="data">Data object to send.</param>
             public virtual bool SendData(Data data)
             {
-                if (ResolveTargetInput( data ))
+                if (ResolveTargetInput())
                 {
                     try
                     {
@@ -167,7 +168,7 @@ namespace IBM.Watson.Widgets
             #endregion
 
             #region Private Functions
-            private bool ResolveTargetInput( Data data )
+            private bool ResolveTargetInput()
             {
                 if (!m_TargetInputResolved)
                 {
@@ -196,10 +197,10 @@ namespace IBM.Watson.Widgets
 
                         foreach (Input input in widget.Inputs)
                         {
-                            if ( !string.IsNullOrEmpty( inputName )
+                            if (!string.IsNullOrEmpty(inputName)
                                 && input.InputName != inputName)
                                 continue;
-                           if ( input.DataType != data.GetType() )
+                            if (input.DataType != this.DataType)
                                 continue;
 
                             m_TargetInput = input;
