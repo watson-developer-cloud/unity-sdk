@@ -39,7 +39,7 @@ namespace TouchScript.Examples.CameraControl
 			var rotation = Quaternion.Euler(ManipulationGesture.DeltaPosition.y / Screen.height * RotationSpeed, 
 			                                -ManipulationGesture.DeltaPosition.x / Screen.width * RotationSpeed, 
 			                                ManipulationGesture.DeltaRotation);
-			pivot.localRotation *= rotation;
+			pivot.rotation *= rotation;
 			cam.LookAt (camTarget.transform.position);
 			cam.transform.localPosition += Vector3.forward * (ManipulationGesture.DeltaScale - 1) * ZoomSpeed;
 		}

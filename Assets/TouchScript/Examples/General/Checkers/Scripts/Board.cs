@@ -19,7 +19,7 @@ namespace TouchScript.Examples.Checkers
 
 		private void transformedHandler(object sender, System.EventArgs e)
 		{
-			transform.localRotation *= Quaternion.AngleAxis(gesture.DeltaRotation, gesture.RotationAxis);
+			transform.rotation *= Quaternion.AngleAxis(gesture.DeltaRotation, gesture.RotationAxis);
 		}
 	}
 }
