@@ -40,7 +40,7 @@ namespace TouchScript.Examples.CameraControl
 			                                -ManipulationGesture.DeltaPosition.x / Screen.width * RotationSpeed, 
 			                                ManipulationGesture.DeltaRotation);
 			pivot.rotation *= rotation;
-			cam.LookAt (camTarget.transform.position);
+			//cam.LookAt (camTarget.transform.position);
 			cam.transform.localPosition += Vector3.forward * (ManipulationGesture.DeltaScale - 1) * ZoomSpeed;
 		}
 
