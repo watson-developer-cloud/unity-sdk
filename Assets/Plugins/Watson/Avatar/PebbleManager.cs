@@ -80,7 +80,7 @@ public class PebbleManager : MonoBehaviour {
 						else{
 						pebbleRowList[i].pebbleList[j].transform.localPosition = Vector3.Lerp(pebbleRowList[i].pebbleList[j].transform.localPosition, 
 						                                                                      new Vector3(pebbleRowList[i].pebbleList[j].transform.localPosition.x, centerHitNormalized, pebbleRowList[i].pebbleList[j].transform.localPosition.z),
-							                                                                      smoothnessBetweenRows);
+							                                                                      1.0f);
 						}
 						//LeanTween.cancel(pebbleRowList[i].pebbleList[j]);
 						//LeanTween.moveLocalY(pebbleRowList[i].pebbleList[j], centerHitNormalized, Time.deltaTime).setDelay(i * 0.5f);
