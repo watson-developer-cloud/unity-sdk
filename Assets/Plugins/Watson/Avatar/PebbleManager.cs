@@ -36,13 +36,30 @@ public class PebbleManager : MonoBehaviour {
 	public float modifier = 1.0f;
 	public Vector2 smoothnessLimitBetweenRows; //Smothness MIN, MAX
 
+	public bool test = false;
+	public bool setDataOnFrame = false;
+	public float latestValueReceived = 0.0f;
 	// Update is called once per frame
 	void Update () {
-		float data = (Mathf.PingPong (Time.time, timeLimit) / timeLimit);
-		AddSoundData (data * modifier);
+		if (test) {
+			test = false;
+			float data = (Mathf.PingPong (Time.time, timeLimit) / timeLimit);
+			SetAudioData (data * modifier);
+		}
+
+		if (setDataOnFrame) {
+			//skip value lowering
+			setDataOnFrame = false;
+		} else {
+			latestValueReceived = Mathf.Lerp(latestValueReceived, 0.0f, 0.1f);
+			SetAudioData(latestValueReceived, setDataOnFrame: false);
+		}
 	}
 
-	void AddSoundData(float centerHitNormalized){
+	public void SetAudioData(float centerHitNormalized, bool setDataOnFrame = true){
+		this.setDataOnFrame = setDataOnFrame;
+		latestValueReceived = centerHitNormalized;
+
 		for (int i = pebbleRowList.Length - 1; i >= 0; i--) {
 			float smoothnessBetweenRows = Mathf.Lerp(smoothnessLimitBetweenRows.y, smoothnessLimitBetweenRows.x, (float)i / pebbleRowList.Length);
 
