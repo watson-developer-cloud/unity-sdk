@@ -167,8 +167,71 @@ namespace IBM.Watson.Services.v1
             public ParseWord [] Words { get; set; }
             public string [] Heirarchy { get; set; }
             public string [] Flags { get; set; }
+
+            public bool ParseJson(IDictionary json)
+            {
+                try
+                {
+                    Id = (string)json["_id"];
+                    Rev = (string)json["_rev"];
+                    TransactionId = (long)json["transactionId"];
+
+                    IDictionary iparse = (IDictionary)json["parse"];
+                    List<string> heirarchy = new List<string>();
+                    IList iheirarchy = (IList)iparse["hierarchy"];
+                    foreach (var h in iheirarchy)
+                        heirarchy.Add((string)h);
+                    Heirarchy = heirarchy.ToArray();
+
+                    List<string> flags = new List<string>();
+                    IList iflags = (IList)iparse["flags"];
+                    foreach (var f in iflags)
+                        flags.Add((string)f);
+                    Flags = flags.ToArray();
+
+                    List<ParseWord> words = new List<ParseWord>();
+
+                    IList iWords = (IList)iparse["words"];
+                    for (int i = 0; i < iWords.Count; ++i)
+                    {
+                        ParseWord word = new ParseWord();
+                        word.Word = (string)iWords[i];
+
+                        IList iPos = (IList)iparse["pos"];
+                        if (iPos.Count != iWords.Count)
+                            throw new WatsonException("ipos.Count != iwords.Count");
+                        word.PosName = (string)((IDictionary)iPos[i])["value"];
+
+                        IList iSlots = (IList)iparse["slot"];
+                        if (iSlots.Count != iWords.Count)
+                            throw new WatsonException("islots.Count != iwords.Count");
+                        word.Slot = (string)((IDictionary)iSlots[i])["value"];
+
+                        IList iFeatures = (IList)iparse["features"];
+                        if (iFeatures.Count != iWords.Count)
+                            throw new WatsonException("ifeatures.Count != iwords.Count");
+
+                        List<string> features = new List<string>();
+                        IList iWordFeatures = (IList)((IDictionary)iFeatures[i])["value"];
+                        foreach (var k in iWordFeatures)
+                            features.Add((string)k);
+                        word.Features = features.ToArray();
+
+                        words.Add(word);
+                    }
+
+                    Words = words.ToArray();
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    Log.Error("ITM", "Exception during parse: {0}", e.ToString());
+                }
+
+                return false;
+            }
         };
-        public delegate void OnParseData( ParseData data );
+        public delegate void OnGetParseData( ParseData data );
         #endregion
 
         #region Public Properties
@@ -370,87 +433,52 @@ namespace IBM.Watson.Services.v1
         /// <param name="transactionId"></param>
         /// <param name="callback"></param>
         /// <returns></returns>
-        public bool GetParseData( long transactionId, OnParseData callback )
+        public bool GetParseData( long transactionId, OnGetParseData callback )
         {
             if ( transactionId == 0 )
                 throw new ArgumentNullException( "transactionId" );
             if (callback == null )
                 throw new ArgumentNullException("callback");
+            if ( SelectedPipeline == null )
+                throw new WatsonException( "You must select a pipeline before calling GetParseData()" );
 
-            //RESTConnector connector = RESTConnector.GetConnector( SERVICE_ID, "/ITM/en/parse" );
-            callback( CreateParseData( TEST_PARSE_DATA ) );
+            RESTConnector connector = RESTConnector.GetConnector( SERVICE_ID, "/ITM/en/parse" );
+            if ( connector == null )
+                return false;
 
-            return true;
+            GetParseDataReq req = new GetParseDataReq();
+            req.Callback = callback;
+            req.Function = "/" + transactionId.ToString() + "/" + SelectedPipeline.ClientId;
+            req.OnResponse = GetParseDataResponse;
+
+            return connector.Send( req );
         }
 
-        private void OnGetParseData( RESTConnector.Request req, RESTConnector.Response resp )
+        private class GetParseDataReq : RESTConnector.Request
         {
-
+            public OnGetParseData Callback { get; set; }
         }
 
-        private ParseData CreateParseData( string jsonResponse )
+        private void GetParseDataResponse( RESTConnector.Request req, RESTConnector.Response resp )
         {
             ParseData parse = new ParseData();
             try {
-
-                IDictionary json = Json.Deserialize( jsonResponse ) as IDictionary;
-                parse.Id = (string)json["_id"];
-                parse.Rev = (string)json["_rev"];
-                parse.TransactionId = (long)json["transactionId"];
-
-                IDictionary iparse = (IDictionary)json["parse"];
-                List<string> heirarchy = new List<string>();
-                IList iheirarchy = (IList)iparse["hierarchy"];
-                foreach( var h in iheirarchy )
-                    heirarchy.Add( (string)h );
-                parse.Heirarchy = heirarchy.ToArray();
-
-                List<string> flags = new List<string>();
-                IList iflags = (IList)iparse["flags"];
-                foreach( var f in iflags )
-                    flags.Add( (string)f );
-                parse.Flags = flags.ToArray();
-
-                List<ParseWord> words = new List<ParseWord>();
-
-                IList iWords = (IList)iparse["words"];
-                for(int i=0;i<iWords.Count;++i)
-                {
-                    ParseWord word = new ParseWord();
-                    word.Word = (string)iWords[i];
-                    
-                    IList iPos = (IList)iparse["pos"];
-                    if ( iPos.Count != iWords.Count )
-                        throw new WatsonException( "ipos.Count != iwords.Count" );
-                    word.PosName = (string)((IDictionary)iPos[i])["value"]; 
-
-                    IList iSlots = (IList)iparse["slot"];
-                    if (iSlots.Count != iWords.Count )
-                        throw new WatsonException( "islots.Count != iwords.Count" );
-                    word.Slot = (string)((IDictionary)iSlots[i])["value"];
-
-                    IList iFeatures = (IList)iparse["features"];
-                    if ( iFeatures.Count != iWords.Count )
-                        throw new WatsonException( "ifeatures.Count != iwords.Count" );
-                    
-                    List<string> features = new List<string>();
-                    IList iWordFeatures = (IList)((IDictionary)iFeatures[i])["value"];
-                    foreach( var k in iWordFeatures )
-                        features.Add( (string)k );
-                    word.Features = features.ToArray();                            
-                                                          
-                    words.Add( word );                    
-                }
-
-                parse.Words = words.ToArray();
+                if (! parse.ParseJson( (IDictionary)Json.Deserialize( Encoding.UTF8.GetString( resp.Data ) ) ) )
+                    resp.Success = false;
             }
             catch( Exception e )
             {
                 Log.Error( "ITM", "Exception during parse: {0}", e.ToString() );
-                parse = null;
+                resp.Success = false;
             }
 
-            return parse;
+            if ( ((GetParseDataReq)req).Callback != null )
+                ((GetParseDataReq)req).Callback( resp.Success ? parse : null );
+        }
+
+        private ParseData CreateParseData( string jsonResponse )
+        {
+            return null;
         }
         #endregion
     }

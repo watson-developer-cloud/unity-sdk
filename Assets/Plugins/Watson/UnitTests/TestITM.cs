@@ -71,6 +71,7 @@ namespace IBM.Watson.UnitTests
             Test( questions != null );
             for(int i=0;i<questions.Length;++i)
                 Log.Status( "TestITM", "Question: {0}", questions[i].QuestionText );
+            m_GetQuestionsTested = true;
         }
 
         private void OnGetParseData( ITM.ParseData parse)
