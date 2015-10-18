@@ -53,7 +53,7 @@ namespace IBM.Watson.Services.v1
             public Pipeline[] pipelines { get; set; }
         };
         public delegate void OnGetPipeline(Pipeline pipeline);
-        public delegate void OnGetPipelines(Pipeline[] pipes);
+        public delegate void OnGetPipelines(Pipelines pipes);
 
         public class QuestionText
         {
@@ -79,7 +79,7 @@ namespace IBM.Watson.Services.v1
         {
             public Question[] questions { get; set; }
         };
-        public delegate void OnGetQuestions(Question[] questions);
+        public delegate void OnGetQuestions(Questions questions);
 
         public enum WordPosition
         {
@@ -225,6 +225,7 @@ namespace IBM.Watson.Services.v1
             public double featureScoreRange { get; set; }
             public Answer[] answers { get; set; }
         };
+        public delegate void OnGetAnswers( Answers answers );
         #endregion
 
         #region Public Properties
@@ -284,19 +285,19 @@ namespace IBM.Watson.Services.v1
                 m_Service.GetPipelines(OnGetPipelines);
             }
 
-            public void OnGetPipelines(Pipeline[] pipelines)
+            public void OnGetPipelines(Pipelines pipes)
             {
                 bool bFound = false;
-                if (pipelines != null)
+                if (pipes != null)
                 {
-                    for (int i = 0; i < pipelines.Length; ++i)
-                        if (pipelines[i].pipelineName == m_Name)
+                    for (int i = 0; i < pipes.pipelines.Length; ++i)
+                        if (pipes.pipelines[i].pipelineName == m_Name)
                         {
                             bFound = true;
                             if (m_Callback != null)
-                                m_Callback(pipelines[i]);
+                                m_Callback(pipes.pipelines[i]);
                             if (m_Select)
-                                m_Service.SelectedPipeline = pipelines[i];
+                                m_Service.SelectedPipeline = pipes.pipelines[i];
                         }
                 }
 
@@ -361,7 +362,7 @@ namespace IBM.Watson.Services.v1
             }
 
             if (((GetPipelinesReq)req).Callback != null)
-                ((GetPipelinesReq)req).Callback(resp.Success ? pipelines.pipelines : null);
+                ((GetPipelinesReq)req).Callback(resp.Success ? pipelines : null);
         }
         #endregion
 
@@ -418,7 +419,59 @@ namespace IBM.Watson.Services.v1
             }
 
             if (((GetQuestionsReq)req).Callback != null)
-                ((GetQuestionsReq)req).Callback(resp.Success ? questions.questions : null);
+                ((GetQuestionsReq)req).Callback(resp.Success ? questions : null);
+        }
+
+        #endregion
+
+        #region GetAnswers
+        public bool GetAnswers(long transactionId, OnGetAnswers callback )
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/ITM/en/answers");
+            if (connector == null)
+                return false;
+
+            GetAnswersReq req = new GetAnswersReq();
+            req.Function = "/" + transactionId.ToString();
+            req.Callback = callback;
+            req.OnResponse = OnGetAnswersResponse;
+
+            return connector.Send(req);
+        }
+        private class GetAnswersReq : RESTConnector.Request
+        {
+            public OnGetAnswers Callback { get; set; }
+        };
+        private void OnGetAnswersResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            Answers answers = new Answers();
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = answers;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("ITM", "GetQuestions Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((GetAnswersReq)req).Callback != null)
+                ((GetAnswersReq)req).Callback(resp.Success ? answers : null);
         }
 
         #endregion

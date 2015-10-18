@@ -28,6 +28,7 @@ namespace IBM.Watson.UnitTests
         bool m_GetPipelineTested = false;
         bool m_GetPipelinesTested = false;
         bool m_GetQuestionsTested = false;
+        bool m_GetAnswersTested = false;
         bool m_ParseTested = false;
 
         public override IEnumerator RunTest()
@@ -44,6 +45,10 @@ namespace IBM.Watson.UnitTests
             while(! m_GetQuestionsTested )
                 yield return null;
 
+            m_ITM.GetAnswers( -1773927182, OnGetAnswers );
+            while(! m_GetAnswersTested )
+                yield return null;
+
             m_ITM.GetParseData( -1773927182, OnGetParseData );
             while(! m_ParseTested )
                 yield return null;
@@ -57,26 +62,37 @@ namespace IBM.Watson.UnitTests
             m_GetPipelineTested = true;
         }
 
-        private void OnGetPipelines( ITM.Pipeline [] pipelines )
+        private void OnGetPipelines( ITM.Pipelines pipes )
         {
-            Test( pipelines != null );
-            if ( pipelines != null )
+            Test( pipes != null );
+            if ( pipes != null )
             {
-                for(int i=0;i<pipelines.Length;++i)
-                    Log.Status( "TestITM", "Pipeline: {0}", pipelines[i].pipelineName );
+                for(int i=0;i<pipes.pipelines.Length;++i)
+                    Log.Status( "TestITM", "Pipeline: {0}", pipes.pipelines[i].pipelineName );
             }
             m_GetPipelinesTested = true;
         }
 
-        private void OnGetQuestions( ITM.Question [] questions )
+        private void OnGetQuestions( ITM.Questions questions )
         {
             Test( questions != null );
             if ( questions != null )
             {
-                for(int i=0;i<questions.Length;++i)
-                    Log.Status( "TestITM", "Question: {0}", questions[i].question.questionText );
+                for(int i=0;i<questions.questions.Length;++i)
+                    Log.Status( "TestITM", "Question: {0}", questions.questions[i].question.questionText );
             }
             m_GetQuestionsTested = true;
+        }
+
+        private void OnGetAnswers( ITM.Answers answers )
+        {
+            Test( answers != null );
+            if ( answers != null )
+            {
+                for(int i=0;i<answers.answers.Length;++i)
+                    Log.Status( "TestITM", "Answer: {0}", answers.answers[i].answerText );
+            }
+            m_GetAnswersTested = true;
         }
 
         private void OnGetParseData( ITM.ParseData parse)
