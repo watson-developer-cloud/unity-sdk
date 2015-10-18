@@ -367,6 +367,13 @@ namespace IBM.Watson.Services.v1
         #endregion
 
         #region GetQuestions
+        /// <summary>
+        /// This returns an array of questions from the DB that have been asked recently. 
+        /// </summary>
+        /// <param name="callback">The callback to invoke with the array of questions.</param>
+        /// <param name="limit">Maximum number of questions to return.</param>
+        /// <param name="skip">Number of questions to skip in the table.</param>
+        /// <returns></returns>
         public bool GetQuestions(OnGetQuestions callback, int limit = 10, int skip = 0)
         {
             if (callback == null)
@@ -425,6 +432,13 @@ namespace IBM.Watson.Services.v1
         #endregion
 
         #region GetAnswers
+        /// <summary>
+        /// Returns answers for the given transactionId. 
+        /// </summary>
+        /// <param name="transactionId">The transaction ID to look up the answers for.</param>
+        /// <param name="callback">The callback to invoke with the results.</param>
+        /// <returns>Returns false if unable to submit the result. If true is returned, the
+        /// the callback will always be invoked on failure or success.</returns>
         public bool GetAnswers(long transactionId, OnGetAnswers callback )
         {
             if (callback == null)
@@ -465,7 +479,7 @@ namespace IBM.Watson.Services.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("ITM", "GetQuestions Exception: {0}", e.ToString());
+                    Log.Error("ITM", "GetAnswers Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
