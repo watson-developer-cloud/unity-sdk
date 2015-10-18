@@ -3,67 +3,89 @@ using System.Collections;
 using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
 using IBM.Watson.Widgets;
+using IBM.Watson.AdaptiveComputing;
 
+namespace IBM.Watson.Widgets
+{
+	/// <summary>
+	/// Avatar of Watson 
+	/// </summary>
+	public class AvatarWidget : Widget {
 
-public class AvatarWidget : Widget {
+		#region Singleton Instance
+		public static AvatarWidget Instance;
+		#endregion
 
-	public static AvatarWidget Instance;
+		#region Widget Name
 
-	private PebbleManager m_pebbleManager;
-	public PebbleManager pebbleManager{
-		get{
-			m_pebbleManager = transform.GetComponentInChildren<PebbleManager> ();
-			if (m_pebbleManager == null) {
-				Log.Error("AvatarManager", "PebbleManager couldn't found!");
+		protected override string GetName (){
+			return "Avatar";
+		}
+
+		#endregion
+
+		#region Pebble Manager for Visualization
+		private PebbleManager m_pebbleManager;
+
+		/// <summary>
+		/// Gets the pebble manager. Sound Visualization on the avatar. 
+		/// </summary>
+		/// <value>The pebble manager.</value>
+		public PebbleManager pebbleManager{
+			get{
+				m_pebbleManager = transform.GetComponentInChildren<PebbleManager> ();
+				if (m_pebbleManager == null) {
+					Log.Error("AvatarManager", "PebbleManager couldn't found!");
+				}
+
+				return m_pebbleManager;
 			}
-
-			return m_pebbleManager;
 		}
-	}
+		#endregion
 
-	public float modifier = 1.0f;
 
-	void Awake(){
-		Instance = this;
-	}
-	// Use this for initialization
-	void Start () {
-		microphoneWidget.Active = true;
-	}
+		#region Public Variables
 
-#if UNITY_EDITOR
-	public float timeLimit = 1.0f;
-	public bool test = false;
-	
-	// Update is called once per frame
-	void Update () {
-		if (test) {
-			test = false;
-			float data = (Mathf.PingPong (Time.time, timeLimit) / timeLimit);
-			SetAudioData (data);
+		public float soundVisualizerModifier = 1.0f;
+		public MicrophoneWidget microphoneWidget;
+
+		#endregion
+
+		#region Initialization
+		void Awake(){
+			Instance = this;
+			MoodManager.Instance.currentMood = MoodType.Idle;
+			BehaviorManager.Instance.currentBehavior = BehaviorType.Idle;
 		}
+		
+		// Use this for initialization
+		void Start () {
+			microphoneWidget.Active = true;
+		}
+
+		#endregion
+
+		#region AudioData Input
+
+		/// <summary>
+		/// Sets the audio data for Audio visualization on Avatar
+		/// </summary>
+		/// <param name="value">Value.</param>
+		public static void SetAudioData(float value){
+			Instance.pebbleManager.SetAudioData (value);
+		}
+
+		public Input m_levelInput = new Input("LevelInput", typeof(FloatData), "SetAudioFloatData");
+		public void SetAudioFloatData(Widget.Data levelInputFloatData){
+			FloatData levelInput = (FloatData)levelInputFloatData;
+			SetAudioData(levelInput.Float * soundVisualizerModifier);
+		}
+		
+
+
+		#endregion
+
+
+
 	}
-#endif
-
-
-	public static void SetAudioData(float value){
-		Instance.pebbleManager.SetAudioData (value);
-	}
-
-	public Input m_levelInput = new Input("LevelInput", typeof(FloatData), "SetAudioFloatData");
-
-	public void SetAudioFloatData(Widget.Data levelInputFloatData){
-		FloatData levelInput = (FloatData)levelInputFloatData;
-		SetAudioData(levelInput.Float * modifier);
-		Debug.Log ("SetAudioFloatData: " + levelInput.Float);
-	}
-
-	protected override string GetName ()
-	{
-		return "Avatar";
-	}
-
-	public MicrophoneWidget microphoneWidget;
-
-
 }

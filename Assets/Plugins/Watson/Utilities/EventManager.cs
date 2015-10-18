@@ -37,7 +37,10 @@ namespace IBM.Watson.Utilities
         #region Public Functions
         public void RegisterEventReceiver(string eventName, OnReceiveEvent callback)
         {
-            m_EventMap[eventName].Add(callback);
+			if (!m_EventMap.ContainsKey (eventName))
+				m_EventMap.Add (eventName, new List<OnReceiveEvent> (){callback});
+			else	
+            	m_EventMap[eventName].Add(callback);
         }
 
         public void UnregisterAllEventReceivers()
@@ -80,5 +83,18 @@ namespace IBM.Watson.Utilities
         #region Private Data
         private Dictionary<string, List<OnReceiveEvent>> m_EventMap = new Dictionary<string, List<OnReceiveEvent>>();
         #endregion
+
+		#region Public Static - Event Names
+
+		//Mood Changes
+		public static string onMoodChange = "onMoodChange";
+		public static string onMoodChangeFinish = "onMoodChangeFinish";
+
+		//Behavior Changes
+		public static string onBehaviorChange = "onBehaviorChange";
+		public static string onBehaviorChangeFinish = "onBehaviorChangeFinish";
+
+		#endregion
     }
+	
 }

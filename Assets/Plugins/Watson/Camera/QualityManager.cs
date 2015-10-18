@@ -19,7 +19,7 @@ public class QualityManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(Input.GetKeyDown(KeyCode.A)){
+		if(Input.GetKeyDown(KeyCode.Q)){
 			currentQuality = (currentQuality + 1) % qualityNames.Length;
 			QualitySettings.SetQualityLevel(currentQuality, true);
 			m_Text.text = string.Format(display, qualityNames[currentQuality]);

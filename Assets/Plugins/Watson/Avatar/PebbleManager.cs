@@ -82,6 +82,8 @@ public class PebbleManager : MonoBehaviour {
 							                                                                      smoothnessBetweenRows);
 						}
 						else{
+							//Debug.Log("centerHitNormalized: " + centerHitNormalized);
+						
 						pebbleRowList[i].pebbleList[j].transform.localPosition = Vector3.Lerp(pebbleRowList[i].pebbleList[j].transform.localPosition, 
 						                                                                      new Vector3(pebbleRowList[i].pebbleList[j].transform.localPosition.x, centerHitNormalized, pebbleRowList[i].pebbleList[j].transform.localPosition.z),
 							                                                                      1.0f);
