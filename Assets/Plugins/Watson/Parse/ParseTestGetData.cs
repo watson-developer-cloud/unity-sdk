@@ -6,24 +6,19 @@ using IBM.Watson.Logging;
 public class ParseTestGetData : MonoBehaviour {
 	ITM m_ITM = new ITM();
 	bool m_GetPipelineTested = false;
-	bool m_ParseTested = false;
 	
 	void Start ()
 	{
-		StartCoroutine (GetParseData());
+		StartCoroutine (getPipeline());
 	}
 
-	private IEnumerator GetParseData() 
+	private IEnumerator getPipeline() 
 	{
 		m_ITM.GetPipeline( "thunderstone", true, OnGetPipeline );
-		while(! m_GetPipelineTested )
+		while (! m_GetPipelineTested)
 			yield return null;
-		
-		m_ITM.GetParseData( -1773927182, OnGetParseData );
-		while(! m_ParseTested )
-			yield return null;
-		
-		yield break;
+
+		GetParse ();
 	}
 	
 	private void OnGetPipeline( ITM.Pipeline pipeline )
@@ -32,9 +27,17 @@ public class ParseTestGetData : MonoBehaviour {
 		m_GetPipelineTested = true;
 	}
 
-	private void OnGetParseData( ITM.ParseData parse)
+	private void GetParse()
 	{
-		Debug.Log ("testing parse: " + parse);
-		m_ParseTested = true;
+		m_ITM.GetParseData( -1773927182, OnParseDataReceived);
+	}
+
+	private void OnParseDataReceived(ITM.ParseData data)
+	{
+		Debug.Log ("parse data words: " + data.Words.Length);
+
+		for (int i = 0; i < data.Words.Length; i++) {
+			Debug.Log("word " + i + ": " + data.Words[i].Word);
+		}
 	}
 }

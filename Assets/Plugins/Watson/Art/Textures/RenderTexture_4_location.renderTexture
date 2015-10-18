@@ -14,11 +14,11 @@ RenderTexture:
   m_AntiAliasing: 1
   m_DepthFormat: 2
   m_ColorFormat: 0
-  m_MipMap: 0
+  m_MipMap: 1
   m_GenerateMips: 1
   m_SRGB: 0
   m_TextureSettings:
-    m_FilterMode: 0
+    m_FilterMode: 2
     m_Aniso: 0
     m_MipBias: 0
     m_WrapMode: 1

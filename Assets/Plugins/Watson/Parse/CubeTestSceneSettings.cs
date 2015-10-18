@@ -40,6 +40,20 @@ public class CubeTestSceneSettings : MonoBehaviour {
 	[SerializeField]
 	private GameObject p5_r;
 
+	[Header("Render Textures")]
+	[SerializeField]
+	private RenderTexture renderTex_0;
+	[SerializeField]
+	private RenderTexture renderTex_1;
+	[SerializeField]
+	private RenderTexture renderTex_2;
+	[SerializeField]
+	private RenderTexture renderTex_3;
+	[SerializeField]
+	private RenderTexture renderTex_4;
+	[SerializeField]
+	private RenderTexture renderTex_5;
+
 	private Vector3 p0_position_open = new Vector3 (0f, 0f, 10f);
 	private Quaternion p0_rotation_open = Quaternion.Euler (0f, 0f, 0f);
 	private Vector3 p0_position_closed = new Vector3 (0f, 0f, 10f);
@@ -73,6 +87,12 @@ public class CubeTestSceneSettings : MonoBehaviour {
 	void Start ()
 	{
 //		QualitySettings.antiAliasing = 16;
+		renderTex_0.useMipMap = true;
+		renderTex_1.useMipMap = true;
+		renderTex_2.useMipMap = true;
+		renderTex_3.useMipMap = true;
+		renderTex_4.useMipMap = true;
+		renderTex_5.useMipMap = true;
 	}
 
 	void Update()

@@ -104,7 +104,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &9750544
 Transform:
   m_ObjectHideFlags: 0
@@ -170,7 +170,7 @@ MeshRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 9750543}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_Materials:
@@ -875,6 +875,12 @@ MonoBehaviour:
   p3_r: {fileID: 1037069243}
   p4_r: {fileID: 822007532}
   p5_r: {fileID: 340847960}
+  renderTex_0: {fileID: 8400000, guid: afcbb068b8c90401babc29866368f207, type: 2}
+  renderTex_1: {fileID: 8400000, guid: d225ad6d2882840a8a98e82d67268a0d, type: 2}
+  renderTex_2: {fileID: 8400000, guid: 7e3f4cd72fe354335be72e02f5d51a4a, type: 2}
+  renderTex_3: {fileID: 8400000, guid: 0ecc6e0cd139f40f49ac8bc7f8b7043e, type: 2}
+  renderTex_4: {fileID: 8400000, guid: 97937d4c48c3a4758a1d67d2af8ff321, type: 2}
+  renderTex_5: {fileID: 8400000, guid: 6abe509fcab54478888289f427bb1db7, type: 2}
 --- !u!114 &217471872
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -903,7 +909,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &252159939
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1602,7 +1608,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &420776074
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2056,7 +2062,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &585361641
 Transform:
   m_ObjectHideFlags: 0
@@ -2122,7 +2128,7 @@ MeshRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 585361640}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_Materials:
@@ -2572,7 +2578,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &702878974
 Transform:
   m_ObjectHideFlags: 0
@@ -2638,7 +2644,7 @@ MeshRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 702878973}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_Materials:
@@ -3462,7 +3468,7 @@ RectTransform:
   m_AnchorMin: {x: .5, y: .5}
   m_AnchorMax: {x: .5, y: .5}
   m_AnchoredPosition: {x: -392, y: 525.219971}
-  m_SizeDelta: {x: 878.440002, y: 0}
+  m_SizeDelta: {x: 878.440002, y: 106}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &848628924
 MonoBehaviour:
@@ -4641,7 +4647,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1124313271
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5125,7 +5131,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1191719167
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5375,7 +5381,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1249331347
 Transform:
   m_ObjectHideFlags: 0
@@ -5441,7 +5447,7 @@ MeshRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1249331346}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_Materials:
@@ -5488,7 +5494,7 @@ GameObject:
   - 4: {fileID: 1259674774}
   - 114: {fileID: 1259674775}
   m_Layer: 0
-  m_Name: PlaneCube_test_closed_ui
+  m_Name: PlaneCube_test_closed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5630,7 +5636,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1305360551
 Transform:
   m_ObjectHideFlags: 0
@@ -5664,7 +5670,7 @@ MeshRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1305360550}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_Materials:
@@ -8087,7 +8093,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1949575439
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8238,7 +8244,7 @@ RectTransform:
   m_AnchorMin: {x: .5, y: .5}
   m_AnchorMax: {x: .5, y: .5}
   m_AnchoredPosition: {x: -391.999847, y: 389.700012}
-  m_SizeDelta: {x: 878.440002, y: 0}
+  m_SizeDelta: {x: 878.440002, y: 53}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1971956041
 MonoBehaviour:
