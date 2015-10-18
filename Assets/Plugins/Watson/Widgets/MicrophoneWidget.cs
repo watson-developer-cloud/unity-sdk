@@ -163,16 +163,12 @@ namespace IBM.Watson.Widgets
                 if ( bOutputLevelData )
                 {
                     float fLevel = 0.0f;
-                    float fDivisor = 0.0f;
-
                     if ( writePos < lastReadPos )
                     {
                         // write has wrapped, grab the last bit from the buffer..
                         samples = new float[ m_Recording.samples - lastReadPos ];
                         m_Recording.GetData( samples, lastReadPos );
-                        for(int i=0;i<samples.Length;++i)
-                            fLevel += Mathf.Abs( samples[i] );
-                        fDivisor += samples.Length;       // average them..
+                        fLevel = Mathf.Max( fLevel, Mathf.Max( samples ) );
 
                         lastReadPos = 0;
                     }
@@ -181,14 +177,11 @@ namespace IBM.Watson.Widgets
                     {
                         samples = new float[writePos - lastReadPos];
 						m_Recording.GetData( samples, lastReadPos );
-                        for(int i=0;i<samples.Length;++i)
-                            fLevel += Mathf.Abs( samples[i] );
-                        fDivisor += samples.Length;       // average them..
+                        fLevel = Mathf.Max( fLevel, Mathf.Max( samples ) );
 
                         lastReadPos = writePos;
                     }
 
-                    fLevel /= fDivisor;
                     m_LevelOutput.SendData( new FloatData( fLevel ) );
                 }
             }
