@@ -25,6 +25,11 @@ public class MainUI : MonoBehaviour {
         Application.LoadLevel( "TestTTS" );
     }
 
+    public void OnCubeTest()
+    {
+        Application.LoadLevel( "CubeTest" );
+    }
+
     public void OnMain()
     {
         Application.LoadLevel( "Main" );

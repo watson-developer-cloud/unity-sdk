@@ -58,6 +58,20 @@ namespace IBM.Watson.Connection
             #endregion
         };
 
+        public class Form
+        {
+            public Form( byte [] contents, string fileName = null, string mimeType = null )
+            {
+                Contents = contents;
+                FileName = fileName;
+                MimeType = mimeType;
+            }
+
+            public byte [] Contents { get; set; }
+            public string FileName { get; set; }
+            public string MimeType { get; set; }
+        };
+
         /// <summary>
         /// This class is created to make a request to send through the IConnector object to the server.
         /// </summary>
@@ -83,9 +97,13 @@ namespace IBM.Watson.Connection
             /// </summary>
             public Dictionary<string,string> Headers { get; set; }
             /// <summary>
-            /// The data to send through the connection.
+            /// The data to send through the connection. Do not use Forms if set.
             /// </summary>
             public byte [] Send { get; set; }
+            /// <summary>
+            /// Multi-part form data that needs to be sent. Do not use Send if set.
+            /// </summary>
+            public Dictionary<string,Form> Forms { get; set; }
             /// <summary>
             /// The callback that is invoked when a response is received.
             /// </summary>
@@ -267,9 +285,22 @@ namespace IBM.Watson.Connection
                 float startTime = Time.time;
 
                 WWW www = null;
-                if (req.Send == null)
+                if ( req.Forms != null )
+                {
+                    if ( req.Send != null )
+                        throw new WatsonException( "Do not use both Send & Form fields in a Request object." );
+
+                    WWWForm form = new WWWForm();
+                    foreach( var kp in req.Forms )
+                        form.AddBinaryData( kp.Key, kp.Value.Contents, kp.Value.FileName, kp.Value.MimeType );
+                    foreach( var kp in form.headers )
+                        req.Headers[ kp.Key ] = kp.Value;
+                
+                    www = new WWW( url, form.data, req.Headers );
+                }
+                else if (req.Send == null)
                     www = new WWW( url, null, req.Headers );
-                else
+                else 
                     www = new WWW( url, req.Send, req.Headers );
 
                 // wait for the request to complete.

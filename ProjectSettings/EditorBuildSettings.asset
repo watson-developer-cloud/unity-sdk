@@ -5,13 +5,13 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
+  - enabled: 1
     path: Assets/Plugins/Watson/Scenes/Main.unity
-  - enabled: 0
+  - enabled: 1
     path: Assets/Plugins/Watson/Scenes/TestSTT.unity
-  - enabled: 0
+  - enabled: 1
     path: Assets/Plugins/Watson/Scenes/UnitTests.unity
-  - enabled: 0
+  - enabled: 1
     path: Assets/Plugins/Watson/Scenes/TestTTS.unity
   - enabled: 1
     path: Assets/Plugins/Watson/Scenes/CubeTest.unity
