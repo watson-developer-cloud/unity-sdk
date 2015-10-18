@@ -29,9 +29,9 @@ namespace IBM.Watson.Utilities
         public static readonly string           CONFIG_FILE = "/Config.json";
 
         /// <summary>
-        /// Serialized class for holding the user credentials for a BlueMix service.
+        /// Serialized class for holding the user credentials for a service.
         /// </summary>
-        public class BlueMixCred
+        public class CredentialInfo
         {
             /// <summary>
             /// The ID of the service this is the credentials.
@@ -54,7 +54,7 @@ namespace IBM.Watson.Utilities
         [fsProperty]
         private string m_ProductKey = null;
         [fsProperty]
-        private List<BlueMixCred> m_Credentials = new List<BlueMixCred>();
+        private List<CredentialInfo> m_Credentials = new List<CredentialInfo>();
 
         private static fsSerializer sm_Serializer = new fsSerializer();
         #endregion
@@ -80,7 +80,7 @@ namespace IBM.Watson.Utilities
         /// <summary>
         /// Returns the list of credentials used to login to the various services.
         /// </summary>
-        public List<BlueMixCred> Credentials { get { return m_Credentials; } set { m_Credentials = value; } }
+        public List<CredentialInfo> Credentials { get { return m_Credentials; } set { m_Credentials = value; } }
         /// <summary>
         /// Enable the gateway usage.
         /// </summary>
@@ -109,7 +109,7 @@ namespace IBM.Watson.Utilities
         /// </summary>
         /// <param name="serviceID">The ID of the service to find.</param>
         /// <returns>Returns null if the credentials cannot be found.</returns>
-        public BlueMixCred FindCredentials( string serviceID )
+        public CredentialInfo FindCredentials( string serviceID )
         {
             foreach( var info in m_Credentials )
                 if ( info.m_ServiceID == serviceID )

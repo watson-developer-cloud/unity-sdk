@@ -9,7 +9,7 @@ namespace TouchScript.Examples.Portal
 
 		void Update () 
 		{
-			transform.localRotation *= Quaternion.Euler(0, 0, Time.deltaTime * RotationSpeed);
+			transform.rotation *= Quaternion.Euler(0, 0, Time.deltaTime * RotationSpeed);
 		}
 	}
 }

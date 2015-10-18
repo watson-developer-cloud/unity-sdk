@@ -21,14 +21,22 @@ using UnityEngine.UI;
 using IBM.Watson.Services.v1;
 using IBM.Watson.Logging;
 
+#pragma warning disable 414
+
 namespace IBM.Watson.Widgets
 {
 	[RequireComponent(typeof(AudioSource))]
-	public class TextToSpeechWidget : MonoBehaviour
+	public class TextToSpeechWidget : Widget
 	{
 	    #region Private Data
 	    TextToSpeech m_TTS = new TextToSpeech();
 
+        [SerializeField]
+        private Input m_TextInput = new Input( "TextInput", typeof(TextData), "OnTextInput" ); 
+        [SerializeField]
+        private Output m_AudioOut = new Output( typeof(AudioData) );
+        [SerializeField]
+        private Output m_Speaking = new Output( typeof(BooleanData) );
 	    [SerializeField]
 	    private Button m_TextToSpeechButton = null;
 	    [SerializeField]
@@ -39,19 +47,27 @@ namespace IBM.Watson.Widgets
 	    private TextToSpeech.VoiceType m_Voice = TextToSpeech.VoiceType.en_US_Michael;
 	    [SerializeField]
 	    private bool m_UsePost = false;
+        [SerializeField]
+        private bool m_EnableAudioSource = true;
 	    #endregion
 
 	    public void OnTextToSpeech()
 	    {
 	        if ( m_TTS.Voice != m_Voice )
 	            m_TTS.Voice = m_Voice;
-	        
-	        m_TTS.ToSpeech( m_Input.text, OnSpeech, m_UsePost );
+            if ( m_Input != null )
+	            m_TTS.ToSpeech( m_Input.text, OnSpeech, m_UsePost );
 	        if ( m_StatusText != null )
 	            m_StatusText.text = "THINKING";
 	        if ( m_TextToSpeechButton != null )
 	            m_TextToSpeechButton.interactable = false;
 	    }
+
+        #region Private Functions
+        private void OnTextInput( Data data )
+        {
+            m_TTS.ToSpeech( ((TextData)data).Text, OnSpeech, m_UsePost );
+        }
 
 	    private void OnEnable()
 	    {
@@ -67,14 +83,25 @@ namespace IBM.Watson.Widgets
 	    {
 	        if ( clip != null )
 	        {
-	 		    AudioSource source = GetComponent<AudioSource>();
-	            if ( source != null )
-	            {
-	                source.spatialBlend = 0.0f;     // 2D sound
-	                source.loop = false;            // do not loop
-	                source.clip = clip;             // clip
-	                source.Play();
-	            }
+                if ( m_AudioOut.IsConnected )
+                    m_AudioOut.SendData( new AudioData( clip, -1.0f ) );
+
+                if ( m_EnableAudioSource )
+                {
+                    if ( m_Speaking.IsConnected )
+                        m_Speaking.SendData( new BooleanData( true ) );
+
+	 		        AudioSource source = GetComponent<AudioSource>();
+	                if ( source != null )
+	                {
+	                    source.spatialBlend = 0.0f;     // 2D sound
+	                    source.loop = false;            // do not loop
+	                    source.clip = clip;             // clip
+	                    source.Play();
+
+                        Invoke( "OnEndSpeech", (float)clip.samples / (float)clip.frequency );
+	                }
+                }
 	        }
 
 	        if ( m_TextToSpeechButton != null )
@@ -82,6 +109,18 @@ namespace IBM.Watson.Widgets
 	        if ( m_StatusText != null )
 	            m_StatusText.text = "READY";
 	    }
-	}
+
+        private void OnEndSpeech()
+        {
+            if ( m_Speaking.IsConnected )
+                m_Speaking.SendData( new BooleanData( false ) );
+        }
+
+        protected override string GetName()
+        {
+            return "TextToSpeech";
+        }
+        #endregion
+    }
 
 }

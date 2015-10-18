@@ -153,10 +153,10 @@ namespace IBM.Watson.Connection
                 return connector;
             }
 
-            Config.BlueMixCred cred = cfg.FindCredentials( serviceID );
+            Config.CredentialInfo cred = cfg.FindCredentials( serviceID );
             if (cred == null)
             {
-                Log.Error( "Config", "Failed to find BLueMix Credentials for service {0}.", serviceID );
+                Log.Error( "Config", "Failed to find credentials for service {0}.", serviceID );
                 return null;
             }
 

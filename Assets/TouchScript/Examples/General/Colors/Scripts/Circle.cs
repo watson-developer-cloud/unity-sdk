@@ -36,7 +36,7 @@ namespace TouchScript.Examples.Colors
 			var obj = Instantiate(gameObject) as GameObject;
 			obj.transform.SetParent(transform.parent);
 			obj.transform.localPosition = transform.localPosition;
-			obj.transform.localRotation = transform.localRotation;
+			obj.transform.rotation = transform.rotation;
 			obj.transform.localScale = new Vector3(scale, 1, scale);
 			obj.GetComponent<Renderer>().sharedMaterial.color = color;
 
