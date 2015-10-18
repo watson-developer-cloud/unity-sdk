@@ -60,17 +60,22 @@ namespace IBM.Watson.UnitTests
         private void OnGetPipelines( ITM.Pipeline [] pipelines )
         {
             Test( pipelines != null );
-            for(int i=0;i<pipelines.Length;++i)
-                Log.Status( "TestITM", "Pipeline: {0}", pipelines[i].Label );
-
+            if ( pipelines != null )
+            {
+                for(int i=0;i<pipelines.Length;++i)
+                    Log.Status( "TestITM", "Pipeline: {0}", pipelines[i].pipelineName );
+            }
             m_GetPipelinesTested = true;
         }
 
         private void OnGetQuestions( ITM.Question [] questions )
         {
             Test( questions != null );
-            for(int i=0;i<questions.Length;++i)
-                Log.Status( "TestITM", "Question: {0}", questions[i].QuestionText );
+            if ( questions != null )
+            {
+                for(int i=0;i<questions.Length;++i)
+                    Log.Status( "TestITM", "Question: {0}", questions[i].question.questionText );
+            }
             m_GetQuestionsTested = true;
         }
 
