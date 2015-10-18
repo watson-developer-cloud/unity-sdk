@@ -37,6 +37,10 @@ namespace IBM.Watson.Widgets
         private Output m_AudioOut = new Output( typeof(AudioData) );
         [SerializeField]
         private Output m_Speaking = new Output( typeof(BooleanData) );
+        [SerializeField]
+        private Output m_LevelOut = new Output( typeof(FloatData) );
+        [SerializeField, Tooltip( "How often to send level out data in seconds.") ] 
+        private float m_LevelOutInterval = 0.05f;
 	    [SerializeField]
 	    private Button m_TextToSpeechButton = null;
 	    [SerializeField]
@@ -49,6 +53,9 @@ namespace IBM.Watson.Widgets
 	    private bool m_UsePost = false;
         [SerializeField]
         private bool m_EnableAudioSource = true;
+
+        private AudioSource m_Source = null;
+        private int m_LastPlayPos = 0;
 	    #endregion
 
 	    public void OnTextToSpeech()
@@ -79,6 +86,11 @@ namespace IBM.Watson.Widgets
 	            m_Input.text = "No problem with opening the pod bay doors.";
 	    }
 
+        private void Start()
+        {
+            m_Source = GetComponent<AudioSource>();
+        }
+
 	    private void OnSpeech( AudioClip clip )
 	    {
 	        if ( clip != null )
@@ -91,15 +103,19 @@ namespace IBM.Watson.Widgets
                     if ( m_Speaking.IsConnected )
                         m_Speaking.SendData( new BooleanData( true ) );
 
-	 		        AudioSource source = GetComponent<AudioSource>();
-	                if ( source != null )
+	                if ( m_Source != null )
 	                {
-	                    source.spatialBlend = 0.0f;     // 2D sound
-	                    source.loop = false;            // do not loop
-	                    source.clip = clip;             // clip
-	                    source.Play();
+	                    m_Source.spatialBlend = 0.0f;     // 2D sound
+	                    m_Source.loop = false;            // do not loop
+	                    m_Source.clip = clip;             // clip
+	                    m_Source.Play();
 
                         Invoke( "OnEndSpeech", (float)clip.samples / (float)clip.frequency );
+                        if ( m_LevelOut.IsConnected )
+                        {
+                            m_LastPlayPos = 0;
+                            InvokeRepeating( "OnLevelOut", m_LevelOutInterval, m_LevelOutInterval );
+                        }
 	                }
                 }
 	        }
@@ -110,6 +126,22 @@ namespace IBM.Watson.Widgets
 	            m_StatusText.text = "READY";
 	    }
 
+        private void OnLevelOut()
+        {
+            if ( m_Source != null && m_Source.isPlaying )
+            {
+                int currentPos = m_Source.timeSamples;
+                if ( currentPos > m_LastPlayPos )
+                {
+                    float [] samples = new float[ currentPos - m_LastPlayPos ];
+                    m_Source.clip.GetData( samples, m_LastPlayPos );
+                    m_LevelOut.SendData( new FloatData( Mathf.Max( samples ) ) );
+                    m_LastPlayPos = currentPos;
+                }
+            }
+            else
+                CancelInvoke( "OnLevelOut" );
+        }
         private void OnEndSpeech()
         {
             if ( m_Speaking.IsConnected )
