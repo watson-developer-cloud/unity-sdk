@@ -4,6 +4,7 @@ using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
 using IBM.Watson.Widgets;
 using IBM.Watson.AdaptiveComputing;
+using IBM.Watson.Avatar;
 
 namespace IBM.Watson.Widgets
 {

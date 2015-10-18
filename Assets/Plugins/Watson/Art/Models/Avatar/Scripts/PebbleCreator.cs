@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using IBM.Watson.Avatar;
 
 #if UNITY_EDITOR
 [ExecuteInEditMode]
