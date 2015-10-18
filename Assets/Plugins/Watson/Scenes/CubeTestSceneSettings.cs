@@ -12,6 +12,7 @@ public class CubeTestSceneSettings : MonoBehaviour {
 		}
 	}
 
+	[Header("UI Faces")]
 	[SerializeField]
 	private GameObject p0;
 	[SerializeField]
@@ -24,6 +25,20 @@ public class CubeTestSceneSettings : MonoBehaviour {
 	private GameObject p4;
 	[SerializeField]
 	private GameObject p5;
+
+	[Header("Render Texture Faces")]
+	[SerializeField]
+	private GameObject p0_r;
+	[SerializeField]
+	private GameObject p1_r;
+	[SerializeField]
+	private GameObject p2_r;
+	[SerializeField]
+	private GameObject p3_r;
+	[SerializeField]
+	private GameObject p4_r;
+	[SerializeField]
+	private GameObject p5_r;
 
 	private Vector3 p0_position_open = new Vector3 (0f, 0f, 10f);
 	private Quaternion p0_rotation_open = Quaternion.Euler (0f, 0f, 0f);
@@ -57,7 +72,7 @@ public class CubeTestSceneSettings : MonoBehaviour {
 
 	void Start ()
 	{
-		QualitySettings.antiAliasing = 16;
+//		QualitySettings.antiAliasing = 16;
 	}
 
 	void Update()
@@ -79,5 +94,19 @@ public class CubeTestSceneSettings : MonoBehaviour {
 		p3.transform.localPosition = (isOpen) ? Vector3.Lerp(p3.transform.localPosition, p3_position_open, Time.deltaTime * smooth) : Vector3.Lerp(p3.transform.localPosition, p3_position_closed, Time.deltaTime * smooth);
 		p4.transform.localPosition = (isOpen) ? Vector3.Lerp(p4.transform.localPosition, p4_position_open, Time.deltaTime * smooth) : Vector3.Lerp(p4.transform.localPosition, p4_position_closed, Time.deltaTime * smooth);
 		p5.transform.localPosition = (isOpen) ? Vector3.Lerp(p5.transform.localPosition, p5_position_open, Time.deltaTime * smooth) : Vector3.Lerp(p5.transform.localPosition, p5_position_closed, Time.deltaTime * smooth);
+
+		p0_r.transform.localRotation = (isOpen) ? p0_r.transform.localRotation = Quaternion.Slerp (p0_r.transform.localRotation, p0_rotation_open, Time.deltaTime * smooth) : p0_r.transform.localRotation = Quaternion.Slerp (p0_r.transform.localRotation, p0_rotation_closed, Time.deltaTime * smooth);
+		p1_r.transform.localRotation = (isOpen) ? p1_r.transform.localRotation = Quaternion.Slerp (p1_r.transform.localRotation, p1_rotation_open, Time.deltaTime * smooth) : p1_r.transform.localRotation = Quaternion.Slerp (p1_r.transform.localRotation, p1_rotation_closed, Time.deltaTime * smooth);
+		p2_r.transform.localRotation = (isOpen) ? p2_r.transform.localRotation = Quaternion.Slerp (p2_r.transform.localRotation, p2_rotation_open, Time.deltaTime * smooth) : p2_r.transform.localRotation = Quaternion.Slerp (p2_r.transform.localRotation, p2_rotation_closed, Time.deltaTime * smooth);
+		p3_r.transform.localRotation = (isOpen) ? p3_r.transform.localRotation = Quaternion.Slerp (p3_r.transform.localRotation, p3_rotation_open, Time.deltaTime * smooth) : p3_r.transform.localRotation = Quaternion.Slerp (p3_r.transform.localRotation, p3_rotation_closed, Time.deltaTime * smooth);
+		p4_r.transform.localRotation = (isOpen) ? p4_r.transform.localRotation = Quaternion.Slerp (p4_r.transform.localRotation, p4_rotation_open, Time.deltaTime * smooth) : p4_r.transform.localRotation = Quaternion.Slerp (p4_r.transform.localRotation, p4_rotation_closed, Time.deltaTime * smooth);
+		p5_r.transform.localRotation = (isOpen) ? p5_r.transform.localRotation = Quaternion.Slerp (p5_r.transform.localRotation, p5_rotation_open, Time.deltaTime * smooth) : p5_r.transform.localRotation = Quaternion.Slerp (p5_r.transform.localRotation, p5_rotation_closed, Time.deltaTime * smooth);
+		
+		p0_r.transform.localPosition = (isOpen) ? Vector3.Lerp(p0_r.transform.localPosition, p0_position_open, Time.deltaTime * smooth) : Vector3.Lerp(p0_r.transform.localPosition, p0_position_closed, Time.deltaTime * smooth);
+		p1_r.transform.localPosition = (isOpen) ? Vector3.Lerp(p1_r.transform.localPosition, p1_position_open, Time.deltaTime * smooth) : Vector3.Lerp(p1_r.transform.localPosition, p1_position_closed, Time.deltaTime * smooth);
+		p2_r.transform.localPosition = (isOpen) ? Vector3.Lerp(p2_r.transform.localPosition, p2_position_open, Time.deltaTime * smooth) : Vector3.Lerp(p2_r.transform.localPosition, p2_position_closed, Time.deltaTime * smooth);
+		p3_r.transform.localPosition = (isOpen) ? Vector3.Lerp(p3_r.transform.localPosition, p3_position_open, Time.deltaTime * smooth) : Vector3.Lerp(p3_r.transform.localPosition, p3_position_closed, Time.deltaTime * smooth);
+		p4_r.transform.localPosition = (isOpen) ? Vector3.Lerp(p4_r.transform.localPosition, p4_position_open, Time.deltaTime * smooth) : Vector3.Lerp(p4_r.transform.localPosition, p4_position_closed, Time.deltaTime * smooth);
+		p5_r.transform.localPosition = (isOpen) ? Vector3.Lerp(p5_r.transform.localPosition, p5_position_open, Time.deltaTime * smooth) : Vector3.Lerp(p5_r.transform.localPosition, p5_position_closed, Time.deltaTime * smooth);
 	}
 }
