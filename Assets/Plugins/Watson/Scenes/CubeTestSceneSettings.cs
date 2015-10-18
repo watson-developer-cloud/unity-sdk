@@ -57,7 +57,7 @@ public class CubeTestSceneSettings : MonoBehaviour {
 
 	void Start ()
 	{
-//		QualitySettings.antiAliasing = 16;
+		QualitySettings.antiAliasing = 16;
 	}
 
 	void Update()
