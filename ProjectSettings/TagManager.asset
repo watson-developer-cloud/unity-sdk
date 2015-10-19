@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - CameraForParseView
   layers:
   - Default
   - TransparentFX
@@ -25,7 +26,7 @@ TagManager:
   - Side3_half
   - Side4_half
   - Side5_half
-  - 
+  - Parseview
   - 
   - 
   - 

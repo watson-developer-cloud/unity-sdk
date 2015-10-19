@@ -51,6 +51,8 @@ public class CubeAnimationManager : MonoBehaviour {
 	private Vector3[] positionFold;
 	private Quaternion[] rotationFold;
 
+	private Vector3[] positionZoom;
+
 	private LTDescr[] animationPositionOnSide;
 	private LTDescr[] animationRotationOnSide;
 	private LTDescr animationRotationCube;
@@ -92,6 +94,16 @@ public class CubeAnimationManager : MonoBehaviour {
 			Quaternion.Euler (0f, 0f, 270f),
 			Quaternion.Euler (0f, 0f, 90f)
 		};
+
+		positionZoom = new Vector3[]{
+			new Vector3 (20f, 0f, 22.0f),	//XRay Logo on right most 
+			new Vector3 (-20f, 0f, 3.15f),	//Our Hero Side
+			new Vector3 (20f, 2.5f, 14f),
+			new Vector3 (20f, 0f, 13.5f),
+			new Vector3 (20f, -2.5f, 14f),
+			new Vector3 (20f, -2.5f, 17.5f)
+		};
+
 
 		if (uiFaceOnSide.Length != renderTexSide.Length 
 			|| uiFaceOnSide.Length != positionUnfold.Length 
