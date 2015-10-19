@@ -6502,7 +6502,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 161818}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: -1.62920685e-07}
-  m_LocalPosition: {x: 0, y: 55, z: 0}
+  m_LocalPosition: {x: 0, y: 65, z: 0}
   m_LocalScale: {x: 7, y: 7, z: 7}
   m_Children:
   - {fileID: 433158}
@@ -14279,21 +14279,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ae469cfa8dd5487d85fe0964e340659, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  smooth: 2
   statinoaryRotationSpeed: 10
   statinoaryRotationVector: {x: 0, y: 1, z: 0}
-  p0: {fileID: 176488}
-  p1: {fileID: 173190}
-  p2: {fileID: 112784}
-  p3: {fileID: 104190}
-  p4: {fileID: 175640}
-  p5: {fileID: 187408}
-  renderTex_0: {fileID: 8400000, guid: afcbb068b8c90401babc29866368f207, type: 2}
-  renderTex_1: {fileID: 8400000, guid: d225ad6d2882840a8a98e82d67268a0d, type: 2}
-  renderTex_2: {fileID: 8400000, guid: 7e3f4cd72fe354335be72e02f5d51a4a, type: 2}
-  renderTex_3: {fileID: 8400000, guid: 0ecc6e0cd139f40f49ac8bc7f8b7043e, type: 2}
-  renderTex_4: {fileID: 8400000, guid: 97937d4c48c3a4758a1d67d2af8ff321, type: 2}
-  renderTex_5: {fileID: 8400000, guid: 6abe509fcab54478888289f427bb1db7, type: 2}
+  mainCamera: {fileID: 0}
+  parseViewCamera: {fileID: 0}
+  timeForFoldingUnfolding: 1.5
+  easeForFoldungUnfolding: 7
+  uiFaceOnSide:
+  - {fileID: 176488}
+  - {fileID: 173190}
+  - {fileID: 112784}
+  - {fileID: 104190}
+  - {fileID: 175640}
+  - {fileID: 187408}
+  renderTexSide:
+  - {fileID: 8400000, guid: afcbb068b8c90401babc29866368f207, type: 2}
+  - {fileID: 8400000, guid: d225ad6d2882840a8a98e82d67268a0d, type: 2}
+  - {fileID: 8400000, guid: 7e3f4cd72fe354335be72e02f5d51a4a, type: 2}
+  - {fileID: 8400000, guid: 0ecc6e0cd139f40f49ac8bc7f8b7043e, type: 2}
+  - {fileID: 8400000, guid: 97937d4c48c3a4758a1d67d2af8ff321, type: 2}
+  - {fileID: 8400000, guid: 6abe509fcab54478888289f427bb1db7, type: 2}
+  m_isAlreadyUnfold: 0
+  m_isAlreadyFold: 0
 --- !u!114 &11424242
 MonoBehaviour:
   m_ObjectHideFlags: 1
