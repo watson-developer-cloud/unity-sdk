@@ -25,6 +25,9 @@ using UnityEngine.UI;
 
 namespace IBM.Watson.Widgets
 {
+    /// <summary>
+    /// SpeechToText Widget that wraps the SpeechToText service.
+    /// </summary>
 	public class SpeechToTextWidget : Widget
 	{
 	    #region Private Data
@@ -51,8 +54,9 @@ namespace IBM.Watson.Widgets
         private Output m_TextOutput = new Output( typeof(TextData) );
         [SerializeField]
         private Output m_ResultOutput = new Output( typeof(SpeechToTextData) );
-	    #endregion
+        #endregion
 
+        #region Public Properties
         public bool Active
         {
             get { return m_STT.IsListening(); }
@@ -77,8 +81,9 @@ namespace IBM.Watson.Widgets
                    }
             }
         }
+        #endregion
 
-	    public void OnListenButton()
+        public void OnListenButton()
 	    {
             Active = !Active;
 	    }

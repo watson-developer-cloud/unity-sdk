@@ -26,6 +26,9 @@ using IBM.Watson.Utilities;
 
 namespace IBM.Watson.Widgets
 {
+    /// <summary>
+    /// Natural Language Classifier Widget.
+    /// </summary>
 	public class NlcWidget : Widget
 	{
 	    #region Private Data

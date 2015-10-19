@@ -26,6 +26,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using UnityEngine;
 
 namespace IBM.Watson.Services.v1
 {
@@ -225,11 +226,12 @@ namespace IBM.Watson.Services.v1
             public double featureScoreRange { get; set; }
             public Answer[] answers { get; set; }
         };
-        public delegate void OnGetAnswers( Answers answers );
+        public delegate void OnGetAnswers(Answers answers);
         #endregion
 
         #region Public Properties
         public Pipeline SelectedPipeline { get { return m_SelectedPipeline; } set { m_SelectedPipeline = value; } }
+        public long SessionKey { get; set; }
         #endregion
 
         #region Private Data
@@ -249,6 +251,50 @@ namespace IBM.Watson.Services.v1
         };
         private const string SERVICE_ID = "ITMV1";
         private const string TEST_PARSE_DATA = "{\"_id\":\"47f26baa682b4c939cda4164f5b9059b\",\"_rev\":\"1-c353e16c83c2a903f367c30042a4eba1\",\"transactionId\":-1773927182,\"parse\":{\"pos\":[{\"text\":\"What\",\"value\":\"noun\"},{\"text\":\"is\",\"value\":\"verb\"},{\"text\":\"the\",\"value\":\"det\"},{\"text\":\"best\",\"value\":\"adj\"},{\"text\":\"treatment\",\"value\":\"noun\"},{\"text\":\"for\",\"value\":\"prep\"},{\"text\":\"an\",\"value\":\"det\"},{\"text\":\"african american\",\"value\":\"noun\"},{\"text\":\"male\",\"value\":\"noun\"},{\"text\":\"with\",\"value\":\"prep\"},{\"text\":\"heart\",\"value\":\"noun\"},{\"text\":\"failure\",\"value\":\"noun\"}],\"slot\":[{\"text\":\"What\",\"value\":\"subj\"},{\"text\":\"is\",\"value\":\"top\"},{\"text\":\"the\",\"value\":\"ndet\"},{\"text\":\"best\",\"value\":\"nadj\"},{\"text\":\"treatment\",\"value\":\"pred\"},{\"text\":\"for\",\"value\":\"ncomp\"},{\"text\":\"an\",\"value\":\"ndet\"},{\"text\":\"african american\",\"value\":\"nadj\"},{\"text\":\"male\",\"value\":\"objprep\"},{\"text\":\"with\",\"value\":\"nprep\"},{\"text\":\"heart\",\"value\":\"nnoun\"},{\"text\":\"failure\",\"value\":\"objprep\"}],\"features\":[{\"text\":\"What\",\"value\":[\"pron\",\"sg\",\"wh\",\"whnom\"]},{\"text\":\"is\",\"value\":[\"vfin\",\"vpres\",\"sg\",\"wh\",\"whnom\",\"vsubj\",\"absubj\",\"auxv\"]},{\"text\":\"the\",\"value\":[\"sg\",\"def\",\"the\",\"ingdet\"]},{\"text\":\"best\",\"value\":[\"superl\",\"adjnoun\"]},{\"text\":\"treatment\",\"value\":[\"cn\",\"sg\",\"evnt\",\"act\",\"abst\",\"cognsa\",\"activity\",\"groupact\",\"(latrwd 0.051600)\",\"(vform treat)\"]},{\"text\":\"for\",\"value\":[\"pprefv\",\"nonlocp\",\"pobjp\"]},{\"text\":\"an\",\"value\":[\"sg\",\"indef\"]},{\"text\":\"african american\",\"value\":[\"propn\",\"sg\",\"glom\",\"notfnd\",\"unkph\"]},{\"text\":\"male\",\"value\":[\"cn\",\"sg\",\"m\",\"h\",\"physobj\",\"anim\",\"anml\",\"liv\",\"(latrwd 0.051600)\"]},{\"text\":\"with\",\"value\":[\"pprefv\",\"nonlocp\"]},{\"text\":\"heart\",\"value\":[\"cn\",\"sg\",\"abst\",\"cognsa\",\"(latrwd 0.032630)\"]},{\"text\":\"failure\",\"value\":[\"cn\",\"sg\",\"abst\",\"massn\",\"illness\",\"cond\",\"state\",\"(* heart failure)\",\"(vform fail)\"]}],\"hierarchy\":[\"african american\"],\"words\":[\"What\",\"is\",\"the\",\"best\",\"treatment\",\"for\",\"an\",\"african american\",\"male\",\"with\",\"heart\",\"failure\"],\"flags\":[\"african american\"]},\"preContext\":0,\"postContext\":0,\"sessionKey\":null}";
+        #endregion
+
+        #region Login
+        public delegate void OnLogin(bool success);
+
+        public bool Login(OnLogin callback)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/ITM/en/user/");
+            if (connector == null)
+                return false;
+
+            LoginReq req = new LoginReq();
+            req.Callback = callback;
+            req.OnResponse = OLoginResponse;
+            req.Function = connector.Authentication.User;
+
+            return connector.Send(req);
+        }
+
+        private class LoginReq : RESTConnector.Request
+        {
+            public OnLogin Callback { get; set; }
+        };
+
+        private void OLoginResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            if (resp.Success)
+            {
+                string jsonString = Encoding.UTF8.GetString(resp.Data);
+
+                IDictionary json = Json.Deserialize(jsonString) as IDictionary;
+                if (json != null && json.Contains("sessionKey"))
+                    SessionKey = (long)json["sessionKey"];
+                else
+                    resp.Success = false;
+            }
+
+            if (((LoginReq)req).Callback != null)
+                ((LoginReq)req).Callback(resp.Success);
+        }
+
         #endregion
 
         #region GetPipeline
@@ -439,7 +485,7 @@ namespace IBM.Watson.Services.v1
         /// <param name="callback">The callback to invoke with the results.</param>
         /// <returns>Returns false if unable to submit the result. If true is returned, the
         /// the callback will always be invoked on failure or success.</returns>
-        public bool GetAnswers(long transactionId, OnGetAnswers callback )
+        public bool GetAnswers(long transactionId, OnGetAnswers callback)
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -541,9 +587,64 @@ namespace IBM.Watson.Services.v1
                 ((GetParseDataReq)req).Callback(resp.Success ? parse : null);
         }
 
-        private ParseData CreateParseData(string jsonResponse)
+        #endregion
+
+        #region AskQuestion
+        public delegate void OnAskQuestion(Question question);
+
+        public bool AskQuestion(string question, OnAskQuestion callback)
         {
-            return null;
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+
+            question = WWW.EscapeURL(question);
+            question = question.Replace("+", "%20");
+            question = question.Replace("%0a", "");
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/ITM/en/ask/" + SelectedPipeline.clientId + "/" + SelectedPipeline.pipelineName);
+            if (connector == null)
+                return false;
+
+            AskQuestionReq req = new AskQuestionReq();
+            req.Function = "/" + question;
+            //req.Parameters["sessionKey"] = SessionKey.ToString();
+            req.Callback = callback;
+            req.OnResponse = AskQuestionResponse;
+
+            return connector.Send(req);
+        }
+
+        private class AskQuestionReq : RESTConnector.Request
+        {
+            public OnAskQuestion Callback { get; set; }
+        };
+
+        private void AskQuestionResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            Question question = new Question();
+            if (resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = question;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("ITM", "GetAnswers Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((AskQuestionReq)req).Callback != null)
+                ((AskQuestionReq)req).Callback(resp.Success ? question : null);
         }
         #endregion
     }

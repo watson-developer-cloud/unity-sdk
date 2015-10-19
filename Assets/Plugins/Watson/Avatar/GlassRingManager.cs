@@ -16,8 +16,8 @@ namespace IBM.Watson.Avatar
 		}
 		
 		void OnDisable(){
-			EventManager.Instance.RegisterEventReceiver (EventManager.onMoodChangeFinish, OnChangedMood);
-			EventManager.Instance.RegisterEventReceiver (EventManager.onBehaviorChangeFinish, OnChangedBehavior);
+			EventManager.Instance.UnregisterEventReceiver (EventManager.onMoodChangeFinish, OnChangedMood);
+			EventManager.Instance.UnregisterEventReceiver (EventManager.onBehaviorChangeFinish, OnChangedBehavior);
 
 			if (glassRingMaterial != null) {
 				glassRingMaterial.SetColor("_SpecColor", initialColor);

@@ -15,6 +15,10 @@ namespace IBM.Watson.AdaptiveComputing
 
 	public class BehaviorManager : MonoBehaviour {
 
+        void OnApplicationQuit()
+        {
+            DestroyImmediate( gameObject );
+        }
 		void OnEnable(){
 			EventManager.Instance.RegisterEventReceiver (EventManager.onBehaviorChange, OnChangeBehavior);
 		}

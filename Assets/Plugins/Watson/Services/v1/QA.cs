@@ -23,7 +23,7 @@ using System.Text;
 
 namespace IBM.Watson.Services.v1
 {
-    class QuestionAnswer
+    class QA
     {
         #region Public Types
         #endregion
