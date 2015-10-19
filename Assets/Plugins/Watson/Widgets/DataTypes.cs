@@ -1,7 +1,4 @@
-﻿
-
-using System;
-/**
+﻿/**
 * Copyright 2015 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,6 +15,8 @@ using System;
 *
 * @author Richard Lyle (rolyle@us.ibm.com)
 */
+
+
 using IBM.Watson.Services.v1;
 using UnityEngine;
 
