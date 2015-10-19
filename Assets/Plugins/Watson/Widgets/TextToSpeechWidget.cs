@@ -25,6 +25,9 @@ using IBM.Watson.Logging;
 
 namespace IBM.Watson.Widgets
 {
+    /// <summary>
+    /// TextToSpeech widget class wraps the TextToSpeech serivce.
+    /// </summary>
 	[RequireComponent(typeof(AudioSource))]
 	public class TextToSpeechWidget : Widget
 	{
@@ -73,6 +76,8 @@ namespace IBM.Watson.Widgets
         #region Private Functions
         private void OnTextInput( Data data )
         {
+	        if ( m_TTS.Voice != m_Voice )
+	            m_TTS.Voice = m_Voice;
             m_TTS.ToSpeech( ((TextData)data).Text, OnSpeech, m_UsePost );
         }
 
