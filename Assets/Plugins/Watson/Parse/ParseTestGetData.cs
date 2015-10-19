@@ -4,8 +4,9 @@ using IBM.Watson.Services.v1;
 using IBM.Watson.Logging;
 
 public class ParseTestGetData : MonoBehaviour {
-	ITM m_ITM = new ITM();
-	bool m_GetPipelineTested = false;
+	private ITM m_ITM = new ITM();
+	private bool m_GetPipelineTested = false;
+	public GameObject parseCubeWidget;
 	
 	void Start ()
 	{

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CubeTestRotate : MonoBehaviour {
+public class CubeRotate : MonoBehaviour {
 	public float speed = .01f;
 	private bool isRotating = true;
 
