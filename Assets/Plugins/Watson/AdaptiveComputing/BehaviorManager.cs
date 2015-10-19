@@ -25,9 +25,6 @@ namespace IBM.Watson.AdaptiveComputing
 		void OnDisable(){
 			EventManager.Instance.UnregisterEventReceiver (EventManager.onBehaviorChange, OnChangeBehavior);
 		}
-		void OnApplicationQuit() {
-			DestroyImmediate (gameObject);
-		}
 
 		public static BehaviorManager Instance { get { return Singleton<BehaviorManager>.Instance; } }
 
