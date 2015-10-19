@@ -25,6 +25,16 @@ public class MainUI : MonoBehaviour {
         Application.LoadLevel( "TestTTS" );
     }
 
+    public void OnTestNLC()
+    {
+        Application.LoadLevel( "TestNLC" );
+    }
+
+    public void OnXRAY()
+    {
+        Application.LoadLevel( "XRay" );
+    }
+
     public void OnCubeTest()
     {
         Application.LoadLevel( "CubeTest" );
