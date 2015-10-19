@@ -118,16 +118,16 @@ public class ParseTestGetData : MonoBehaviour {
 		answer8.text = answers.answers [8].answerText;
 		answer9.text = answers.answers [9].answerText;
 
-		confidence0.text = answers.answers [0].confidence;
-		confidence1.text = answers.answers [1].confidence;
-		confidence2.text = answers.answers [2].confidence;
-		confidence3.text = answers.answers [3].confidence;
-		confidence4.text = answers.answers [4].confidence;
-		confidence5.text = answers.answers [5].confidence;
-		confidence6.text = answers.answers [6].confidence;
-		confidence7.text = answers.answers [7].confidence;
-		confidence8.text = answers.answers [8].confidence;
-		confidence9.text = answers.answers [9].confidence;
+		confidence0.text = answers.answers [0].confidence.ToString();
+		confidence1.text = answers.answers [1].confidence.ToString();
+		confidence2.text = answers.answers [2].confidence.ToString();
+		confidence3.text = answers.answers [3].confidence.ToString();
+		confidence4.text = answers.answers [4].confidence.ToString();
+		confidence5.text = answers.answers [5].confidence.ToString();
+		confidence6.text = answers.answers [6].confidence.ToString();
+		confidence7.text = answers.answers [7].confidence.ToString();
+		confidence8.text = answers.answers [8].confidence.ToString();
+		confidence9.text = answers.answers [9].confidence.ToString();
 
 	}
 }
