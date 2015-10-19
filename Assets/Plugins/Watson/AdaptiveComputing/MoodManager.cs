@@ -22,6 +22,9 @@ namespace IBM.Watson.AdaptiveComputing
 		void OnDisable(){
 			EventManager.Instance.UnregisterEventReceiver (EventManager.onMoodChange, OnChangeMood);
 		}
+		void OnApplicationQuit() {
+			DestroyImmediate (gameObject);
+		}
 
 		public static MoodManager Instance { get { return Singleton<MoodManager>.Instance; } }
 

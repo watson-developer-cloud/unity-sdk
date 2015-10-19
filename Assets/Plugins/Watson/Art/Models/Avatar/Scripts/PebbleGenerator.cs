@@ -5,7 +5,7 @@ using IBM.Watson.Avatar;
 #if UNITY_EDITOR
 [ExecuteInEditMode]
 [RequireComponent (typeof (PebbleManager))]
-public class PebbleCreator : MonoBehaviour {
+public class PebbleGenerator : MonoBehaviour {
 
 	private float m_angleSlice = 1.0f;
 	private float m_distanceFromCenter = 10.0f;
@@ -24,6 +24,8 @@ public class PebbleCreator : MonoBehaviour {
 	public PrimitiveType primitiveType = PrimitiveType.Sphere;
 	public Material material;
 
+	public bool isUsingSharedMesh = false;
+
 	private GameObject[] rowObjects;
 	private GameObject[] spehereList;
 
@@ -41,6 +43,9 @@ public class PebbleCreator : MonoBehaviour {
 			ClearAllSpheres ();
 			ClearList ();
 			CreateSpheres();
+			if(isUsingSharedMesh){
+				MakeAllIndividualRowsAsSharedMesh();
+			}
 		}
 	}
 
@@ -143,7 +148,33 @@ public class PebbleCreator : MonoBehaviour {
 				
 			}
 		}
+	}
 
+	void MakeAllIndividualRowsAsSharedMesh(){
+		//For each row we combine all meshes separetly
+		for (int indexOfRow = 0; indexOfRow < numberOfRow; indexOfRow++) {
+
+			MeshFilter[] meshFilters = rowObjects[indexOfRow].transform.GetComponentsInChildren<MeshFilter>();
+			CombineInstance[] combine = new CombineInstance[meshFilters.Length];
+
+			int i = 0;
+			while (i < meshFilters.Length) {
+				combine[i].mesh = meshFilters[i].sharedMesh;
+				combine[i].transform = meshFilters[i].transform.localToWorldMatrix;
+				combine[i].subMeshIndex = i;
+				meshFilters[i].gameObject.active = false;
+				i++;
+			}
+
+			MeshFilter meshFilterOnParent = rowObjects[indexOfRow].transform.GetComponent<MeshFilter>();
+			if(meshFilterOnParent == null){
+				meshFilterOnParent = rowObjects[indexOfRow].gameObject.AddComponent<MeshFilter>();
+			}
+
+			rowObjects[indexOfRow].transform.GetComponent<MeshFilter>().sharedMesh = new Mesh();
+			rowObjects[indexOfRow].transform.GetComponent<MeshFilter>().sharedMesh.CombineMeshes(combine);
+			rowObjects[indexOfRow].transform.gameObject.active = true;
+		}
 	}
 }
 

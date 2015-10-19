@@ -22,7 +22,7 @@ namespace IBM.Watson.Avatar
 
 		void OnDisable(){
 			EventManager.Instance.UnregisterEventReceiver (EventManager.onMoodChangeFinish, OnChangedMood);
-			EventManager.Instance.RegisterEventReceiver (EventManager.onBehaviorChangeFinish, OnChangedBehavior);
+			EventManager.Instance.UnregisterEventReceiver (EventManager.onBehaviorChangeFinish, OnChangedBehavior);
 		}
 
 		void Awake(){
@@ -57,10 +57,11 @@ namespace IBM.Watson.Avatar
 			}
 		}
 		// Use this for initialization
-		void Start () {
-			ChangeToColor (MoodManager.Instance.currentMoodColor);
-			AnimateLightFlare ();
-		}
+
+//		void Start () {
+//			ChangeToColor (MoodManager.Instance.currentMoodColor);
+//			AnimateLightFlare ();
+//		}
 
 		public void OnChangedMood(System.Object[] args){
 			ChangeToColor (MoodManager.Instance.currentMoodColor);
