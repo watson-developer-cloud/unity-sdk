@@ -25,35 +25,46 @@ namespace IBM.Watson.UnitTests
     public class TestITM : UnitTest
     {
         ITM m_ITM = new ITM();
+        bool m_LoginTested = false;
         bool m_GetPipelineTested = false;
-        bool m_GetPipelinesTested = false;
+        bool m_AskQuestionTested = false;
         bool m_GetQuestionsTested = false;
+        bool m_GetQuestionTested = false;
         bool m_GetAnswersTested = false;
         bool m_ParseTested = false;
 
         public override IEnumerator RunTest()
         {
+            m_ITM.Login( OnLogin );
+            while(! m_LoginTested )
+                yield return null;
+
             m_ITM.GetPipeline( "thunderstone", true, OnGetPipeline );
             while(! m_GetPipelineTested )
                 yield return null;
 
-            m_ITM.GetPipelines( OnGetPipelines );
-            while(! m_GetPipelinesTested )
+            m_ITM.GetQuestions(OnGetQuestions);
+            while (!m_GetQuestionsTested)
                 yield return null;
 
-            m_ITM.GetQuestions( OnGetQuestions );
-            while(! m_GetQuestionsTested )
+            m_ITM.AskQuestion( "What is the capital of Texas", OnAskQuestion );
+            while(! m_AskQuestionTested )
                 yield return null;
 
-            m_ITM.GetAnswers( -1773927182, OnGetAnswers );
-            while(! m_GetAnswersTested )
+            while (!m_GetQuestionTested)
                 yield return null;
-
-            m_ITM.GetParseData( -1773927182, OnGetParseData );
-            while(! m_ParseTested )
+            while (!m_GetAnswersTested)
+                yield return null;
+            while (!m_ParseTested)
                 yield return null;
 
             yield break;
+        }
+
+        private void OnLogin( bool success )
+        {
+            Test( success );
+            m_LoginTested = true;
         }
 
         private void OnGetPipeline( ITM.Pipeline pipeline )
@@ -62,24 +73,40 @@ namespace IBM.Watson.UnitTests
             m_GetPipelineTested = true;
         }
 
-        private void OnGetPipelines( ITM.Pipelines pipes )
+        private void OnAskQuestion( ITM.Question question )
         {
-            Test( pipes != null );
-            if ( pipes != null )
+            Test( question != null );
+            if ( question != null  )
             {
-                for(int i=0;i<pipes.pipelines.Length;++i)
-                    Log.Status( "TestITM", "Pipeline: {0}", pipes.pipelines[i].pipelineName );
+                Log.Status( "TestITM", "OnAskQuestion: {0}", question.question.questionText );
+                m_ITM.GetAnswers( question.transactionId, OnGetAnswers );
+                m_ITM.GetParseData( question.transactionId, OnGetParseData );
+                m_ITM.GetQuestion( question.transactionId, OnGetQuestion );
             }
-            m_GetPipelinesTested = true;
+            else
+            {
+                // don't hang the unit test
+                m_GetAnswersTested = m_ParseTested = true;
+            }
+
+            m_AskQuestionTested = true;
+        }
+
+        private void OnGetQuestion( ITM.Questions questions )
+        {
+            Test( questions != null );
+            if ( questions != null && questions.questions != null && questions.questions.Length > 0 )
+                Log.Status( "TestITM", "OnGetQuestion: {0}",  questions.questions[0].question.questionText );
+            m_GetQuestionTested = true;
         }
 
         private void OnGetQuestions( ITM.Questions questions )
         {
-            Test( questions != null );
-            if ( questions != null )
+            Test( questions != null && questions.questions != null );
+            if ( questions != null && questions.questions != null )
             {
                 for(int i=0;i<questions.questions.Length;++i)
-                    Log.Status( "TestITM", "Question: {0}", questions.questions[i].question.questionText );
+                    Log.Status( "TestITM", "OnGetQuestions: {0}", questions.questions[i].question.questionText );
             }
             m_GetQuestionsTested = true;
         }
@@ -90,7 +117,8 @@ namespace IBM.Watson.UnitTests
             if ( answers != null )
             {
                 for(int i=0;i<answers.answers.Length;++i)
-                    Log.Status( "TestITM", "Answer: {0}", answers.answers[i].answerText );
+                    Log.Status( "TestITM", "OnGetAnswers: {0}, Confidence: {1}",
+                        answers.answers[i].answerText, answers.answers[i].confidence.ToString() );
             }
             m_GetAnswersTested = true;
         }
