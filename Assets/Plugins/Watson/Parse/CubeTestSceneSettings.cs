@@ -3,6 +3,7 @@ using System.Collections;
 
 public class CubeTestSceneSettings : MonoBehaviour {
 	public float smooth = 2f;
+
 	private bool _isOpen = false;
 	public bool isOpen {
 		get { return _isOpen; }
