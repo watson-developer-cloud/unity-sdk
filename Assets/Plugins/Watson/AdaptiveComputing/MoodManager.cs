@@ -16,6 +16,10 @@ namespace IBM.Watson.AdaptiveComputing
 
 	public class MoodManager : MonoBehaviour{
 
+        void OnApplicationQuit()
+        {
+            DestroyImmediate( gameObject );
+        }
 		void OnEnable(){
 			EventManager.Instance.RegisterEventReceiver (EventManager.onMoodChange, OnChangeMood);
 		}
