@@ -29,6 +29,7 @@ namespace IBM.Watson.UnitTests
         bool m_GetPipelineTested = false;
         bool m_AskQuestionTested = false;
         bool m_GetQuestionsTested = false;
+        bool m_GetQuestionTested = false;
         bool m_GetAnswersTested = false;
         bool m_ParseTested = false;
 
@@ -42,14 +43,16 @@ namespace IBM.Watson.UnitTests
             while(! m_GetPipelineTested )
                 yield return null;
 
-            //m_ITM.GetQuestions( OnGetQuestions );
-            //while(! m_GetQuestionsTested )
-            //    yield return null;
+            m_ITM.GetQuestions(OnGetQuestions);
+            while (!m_GetQuestionsTested)
+                yield return null;
 
             m_ITM.AskQuestion( "What is the capital of Texas", OnAskQuestion );
             while(! m_AskQuestionTested )
                 yield return null;
 
+            while (!m_GetQuestionTested)
+                yield return null;
             while (!m_GetAnswersTested)
                 yield return null;
             while (!m_ParseTested)
@@ -75,9 +78,10 @@ namespace IBM.Watson.UnitTests
             Test( question != null );
             if ( question != null  )
             {
-                Log.Status( "TestITM", "Question: {0}", question.question.questionText );
+                Log.Status( "TestITM", "OnAskQuestion: {0}", question.question.questionText );
                 m_ITM.GetAnswers( question.transactionId, OnGetAnswers );
                 m_ITM.GetParseData( question.transactionId, OnGetParseData );
+                m_ITM.GetQuestion( question.transactionId, OnGetQuestion );
             }
             else
             {
@@ -88,13 +92,21 @@ namespace IBM.Watson.UnitTests
             m_AskQuestionTested = true;
         }
 
-        private void OnGetQuestions( ITM.Questions questions )
+        private void OnGetQuestion( ITM.Questions questions )
         {
             Test( questions != null );
-            if ( questions != null )
+            if ( questions != null && questions.questions != null && questions.questions.Length > 0 )
+                Log.Status( "TestITM", "OnGetQuestion: {0}",  questions.questions[0].question.questionText );
+            m_GetQuestionTested = true;
+        }
+
+        private void OnGetQuestions( ITM.Questions questions )
+        {
+            Test( questions != null && questions.questions != null );
+            if ( questions != null && questions.questions != null )
             {
                 for(int i=0;i<questions.questions.Length;++i)
-                    Log.Status( "TestITM", "Question: {0}", questions.questions[i].question.questionText );
+                    Log.Status( "TestITM", "OnGetQuestions: {0}", questions.questions[i].question.questionText );
             }
             m_GetQuestionsTested = true;
         }
@@ -105,7 +117,7 @@ namespace IBM.Watson.UnitTests
             if ( answers != null )
             {
                 for(int i=0;i<answers.answers.Length;++i)
-                    Log.Status( "TestITM", "Answer: {0}, Confidence: {1}",
+                    Log.Status( "TestITM", "OnGetAnswers: {0}, Confidence: {1}",
                         answers.answers[i].answerText, answers.answers[i].confidence.ToString() );
             }
             m_GetAnswersTested = true;

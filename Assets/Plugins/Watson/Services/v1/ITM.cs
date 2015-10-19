@@ -474,7 +474,31 @@ namespace IBM.Watson.Services.v1
             if (((GetQuestionsReq)req).Callback != null)
                 ((GetQuestionsReq)req).Callback(resp.Success ? questions : null);
         }
+        #endregion
 
+        #region GetQuestion
+        /// <summary>
+        /// This returns a single question by transaction ID.
+        /// </summary>
+        /// <param name="transactionId">The transaction ID.</param>
+        /// <param name="callback">The callback.</param>
+        /// <returns>Returns true if the request was submitted correctly.</returns>
+        public bool GetQuestion( long transactionId, OnGetQuestions callback )
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/ITM/en/transaction");
+            if (connector == null)
+                return false;
+
+            GetQuestionsReq req = new GetQuestionsReq();
+            req.Callback = callback;
+            req.OnResponse = OnGetQuestionsResponse;        // we use the same callback as GetQuestions()
+            req.Function = "/" + transactionId.ToString();
+
+            return connector.Send(req);
+        }
         #endregion
 
         #region GetAnswers
