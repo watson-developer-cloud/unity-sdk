@@ -80,54 +80,63 @@ public class ParseTestGetData : MonoBehaviour {
 		Debug.Log ("answers: " + answers);
 	}
 
-	public Text answer0;
-	public Text answer1;
-	public Text answer2;
-	public Text answer3;
-	public Text answer4;
-	public Text answer5;
-	public Text answer6;
-	public Text answer7;
-	public Text answer8;
-	public Text answer9;
-	public Text confidence0;
-	public Text confidence1;
-	public Text confidence2;
-	public Text confidence3;
-	public Text confidence4;
-	public Text confidence5;
-	public Text confidence6;
-	public Text confidence7;
-	public Text confidence8;
-	public Text confidence9;
+	//	panel 1
+	public Text tf_answer0;
+	public Text tf_answer1;
+	public Text tf_answer2;
+	public Text tf_answer3;
+	public Text tf_answer4;
+	public Text tf_answer5;
+	public Text tf_answer6;
+	public Text tf_answer7;
+	public Text tf_answer8;
+	public Text tf_answer9;
+	public Text tf_confidence0;
+	public Text tf_confidence1;
+	public Text tf_confidence2;
+	public Text tf_confidence3;
+	public Text tf_confidence4;
+	public Text tf_confidence5;
+	public Text tf_confidence6;
+	public Text tf_confidence7;
+	public Text tf_confidence8;
+	public Text tf_confidence9;
 
-	private void populate0(ITM.Answers answers)
+	//	panel 2
+	public Text tf_question;
+	public Text tf_answer;
+	public Text tf_topConfidence;
+
+	private void populateCube(ITM.Answers answers, ITM.Questions questions, ITM.ParseData parse)
 	{
 //		for(int i = 0; i < answers.answers.Length; i++) {
 //
 //		}
 
-		answer0.text = answers.answers [0].answerText;
-		answer1.text = answers.answers [1].answerText;
-		answer2.text = answers.answers [2].answerText;
-		answer3.text = answers.answers [3].answerText;
-		answer4.text = answers.answers [4].answerText;
-		answer5.text = answers.answers [5].answerText;
-		answer6.text = answers.answers [6].answerText;
-		answer7.text = answers.answers [7].answerText;
-		answer8.text = answers.answers [8].answerText;
-		answer9.text = answers.answers [9].answerText;
+		//	panel 1
+		tf_answer0.text = answers.answers [0].answerText;
+		tf_answer1.text = answers.answers [1].answerText;
+		tf_answer2.text = answers.answers [2].answerText;
+		tf_answer3.text = answers.answers [3].answerText;
+		tf_answer4.text = answers.answers [4].answerText;
+		tf_answer5.text = answers.answers [5].answerText;
+		tf_answer6.text = answers.answers [6].answerText;
+		tf_answer7.text = answers.answers [7].answerText;
+		tf_answer8.text = answers.answers [8].answerText;
+		tf_answer9.text = answers.answers [9].answerText;
 
-		confidence0.text = answers.answers [0].confidence.ToString();
-		confidence1.text = answers.answers [1].confidence.ToString();
-		confidence2.text = answers.answers [2].confidence.ToString();
-		confidence3.text = answers.answers [3].confidence.ToString();
-		confidence4.text = answers.answers [4].confidence.ToString();
-		confidence5.text = answers.answers [5].confidence.ToString();
-		confidence6.text = answers.answers [6].confidence.ToString();
-		confidence7.text = answers.answers [7].confidence.ToString();
-		confidence8.text = answers.answers [8].confidence.ToString();
-		confidence9.text = answers.answers [9].confidence.ToString();
+		tf_confidence0.text = answers.answers [0].confidence.ToString();
+		tf_confidence1.text = answers.answers [1].confidence.ToString();
+		tf_confidence2.text = answers.answers [2].confidence.ToString();
+		tf_confidence3.text = answers.answers [3].confidence.ToString();
+		tf_confidence4.text = answers.answers [4].confidence.ToString();
+		tf_confidence5.text = answers.answers [5].confidence.ToString();
+		tf_confidence6.text = answers.answers [6].confidence.ToString();
+		tf_confidence7.text = answers.answers [7].confidence.ToString();
+		tf_confidence8.text = answers.answers [8].confidence.ToString();
+		tf_confidence9.text = answers.answers [9].confidence.ToString();
 
+		//	panel 2
+//		tf_question.text = questions.questions
 	}
 }
