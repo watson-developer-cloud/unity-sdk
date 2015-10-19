@@ -21,12 +21,10 @@ using IBM.Watson.Connection;
 using IBM.Watson.Utilities;
 using MiniJSON;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using System.Text;
-using IBM.Watson.Widgets;
 using FullSerializer;
+using System.Net;
 
 namespace IBM.Watson.Services.v1
 {
@@ -198,12 +196,11 @@ namespace IBM.Watson.Services.v1
             if (callback == null)
                 throw new ArgumentNullException("callback");
 
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/v1/classifiers");
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/v1/classifiers/" + classifierId );
             if (connector == null)
                 return false;
 
             GetClassifierReq req = new GetClassifierReq();
-            req.Function = "/" + classifierId;
             req.Callback = callback;
             req.OnResponse = OnGetClassifierResp;
 
@@ -248,7 +245,7 @@ namespace IBM.Watson.Services.v1
         /// </summary>
         /// <param name="classifierName">A name to give the classifier.</param>
         /// <param name="language">Language of the classifier.</param>
-        /// <param name="trainingData">CSV taining data.</param>
+        /// <param name="trainingData">CSV training data.</param>
         /// <param name="callback">Callback to invoke with the results.</param>
         /// <returns>Returns true if training data was submitted correctly.</returns>
         public bool TrainClassifier( string classifierName, string language, string trainingData, OnTrainClassifier callback)
@@ -273,7 +270,6 @@ namespace IBM.Watson.Services.v1
             TrainClassifierReq req = new TrainClassifierReq();
             req.Callback = callback;
             req.OnResponse = OnTrainClassifierResp;
-            //req.Headers["accept"] = "application/json";
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             req.Forms["training_metadata"] = new RESTConnector.Form( Encoding.UTF8.GetBytes( Json.Serialize( trainingMetaData ) ) );
             req.Forms["training_data"] = new RESTConnector.Form( Encoding.UTF8.GetBytes( trainingData ) );
@@ -320,15 +316,32 @@ namespace IBM.Watson.Services.v1
         /// <param name="classiferId">The ID of the classifier.</param>
         /// <param name="callback">The callback to invoke with the results.</param>
         /// <returns>Returns false if we failed to submit a request.</returns>
-        public bool DeleteClassifer( string classiferId, OnDeleteClassifier callback )
+        public bool DeleteClassifer( string classifierId, OnDeleteClassifier callback )
         {
-            if ( string.IsNullOrEmpty( classiferId ) )
+            if ( string.IsNullOrEmpty( classifierId ) )
                 throw new ArgumentNullException( "classiferId" );
             if ( callback == null )
                 throw new ArgumentNullException("callback" );
 
-            Log.Error( "NLC", "DeleteClassifer() is not supported by Unity currently." );
-            return false;
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/v1/classifiers/" + classifierId );
+            if (connector == null)
+                return false;
+
+            DeleteClassifierReq req = new DeleteClassifierReq();
+            req.Callback = callback;
+            req.OnResponse = OnDeleteClassifierResp;
+            req.Delete = true;
+
+            return connector.Send(req);
+        }
+        private class DeleteClassifierReq : RESTConnector.Request
+        {
+            public OnDeleteClassifier Callback { get; set; }
+        };
+        private void OnDeleteClassifierResp(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            if (((DeleteClassifierReq)req).Callback != null)
+                ((DeleteClassifierReq)req).Callback(resp.Success);
         }
         #endregion
 

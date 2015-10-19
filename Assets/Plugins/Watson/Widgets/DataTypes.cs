@@ -103,4 +103,21 @@ namespace IBM.Watson.Widgets
 
         public SpeechToText.ResultList Results { get; set; }
     };
+
+    public class ClassifyResultData : Widget.Data
+    {
+        public ClassifyResultData()
+        { }
+        public ClassifyResultData( NLC.ClassifyResult result )
+        {
+            Result = result;
+        }
+
+        public override string GetName()
+        {
+            return "ClassifyResult";
+        }
+
+        public NLC.ClassifyResult Result { get; set; }
+    };
 }

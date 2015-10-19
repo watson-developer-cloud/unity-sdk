@@ -23,7 +23,11 @@ using IBM.Watson.Utilities;
 using IBM.Watson.Logging;
 using UnityEngine;
 using System.Text;
-using System.IO;
+
+#if UNITY_EDITOR
+using System.Net;
+using System.Net.Security;
+#endif
 
 namespace IBM.Watson.Connection
 {
@@ -58,6 +62,9 @@ namespace IBM.Watson.Connection
             #endregion
         };
 
+        /// <summary>
+        /// multi-part form data class.
+        /// </summary>
         public class Form
         {
             public Form( byte [] contents, string fileName = null, string mimeType = null )
@@ -84,6 +91,10 @@ namespace IBM.Watson.Connection
             }
 
             #region Public Properties
+            /// <summary>
+            /// True to send a delete method.
+            /// </summary>
+            public bool Delete { get; set; }
             /// <summary>
             /// The name of the function to invoke on the server.
             /// </summary>
@@ -140,6 +151,7 @@ namespace IBM.Watson.Connection
             // TODO: Uncomment once gateway is fixed.
             //{ "SpeechToTextV1/v1/recognize", "stt" },
             { "TranslateV1/v2/translate", "language-translation" },
+            //{ "NlcV1/v1/delete", "natural-language-delete" },
         };
         //! Dictionary of connectors by service & function.
         private static Dictionary<string,RESTConnector > sm_Connectors = new Dictionary<string, RESTConnector>();
@@ -282,47 +294,71 @@ namespace IBM.Watson.Connection
 
                 AddHeaders( req.Headers );
 
-                float startTime = Time.time;
-
-                WWW www = null;
-                if ( req.Forms != null )
-                {
-                    if ( req.Send != null )
-                        throw new WatsonException( "Do not use both Send & Form fields in a Request object." );
-
-                    WWWForm form = new WWWForm();
-                    foreach( var kp in req.Forms )
-                        form.AddBinaryData( kp.Key, kp.Value.Contents, kp.Value.FileName, kp.Value.MimeType );
-                    foreach( var kp in form.headers )
-                        req.Headers[ kp.Key ] = kp.Value;
-                
-                    www = new WWW( url, form.data, req.Headers );
-                }
-                else if (req.Send == null)
-                    www = new WWW( url, null, req.Headers );
-                else 
-                    www = new WWW( url, req.Send, req.Headers );
-
-                // wait for the request to complete.
-                while(! www.isDone )
-                {
-                    if ( Time.time > (startTime + Config.Instance.TimeOut) )
-                        break;
-                    yield return null;
-                }
-
-                // generate the Response object now..
                 Response resp = new Response();
-                if ( www.isDone && www.bytes != null )
+
+                float startTime = Time.time;
+                if (! req.Delete )
                 {
-                    resp.Success = true;
-                    resp.Data = www.bytes;
+                    WWW www = null;
+                    if ( req.Forms != null )
+                    {
+                        if ( req.Send != null )
+                            Log.Warning( "RESTConnector", "Do not use both Send & Form fields in a Request object." );
+
+                        WWWForm form = new WWWForm();
+                        foreach( var kp in req.Forms )
+                            form.AddBinaryData( kp.Key, kp.Value.Contents, kp.Value.FileName, kp.Value.MimeType );
+                        foreach( var kp in form.headers )
+                            req.Headers[ kp.Key ] = kp.Value;
+                
+                        www = new WWW( url, form.data, req.Headers );
+                    }
+                    else if (req.Send == null)
+                        www = new WWW( url, null, req.Headers );
+                    else 
+                        www = new WWW( url, req.Send, req.Headers );
+
+                    // wait for the request to complete.
+                    while(! www.isDone )
+                    {
+                        if ( Time.time > (startTime + Config.Instance.TimeOut) )
+                            break;
+                        yield return null;
+                    }
+
+                    if (! string.IsNullOrEmpty( www.error ) )
+                        Log.Warning( "RESTConnector", "WWW.error: {0}", www.error );
+
+                    // generate the Response object now..
+                    if ( www.isDone && www.bytes != null )
+                    {
+                        resp.Success = true;
+                        resp.Data = www.bytes;
+                    }
+                    else
+                    {
+                        resp.Success = false;
+                        resp.Error = string.Format( "Request Error.\nURL: {0}\nError: {1}\nResponse: {2}",
+                            url, string.IsNullOrEmpty( www.error ) ? "Timeout" : www.error, www.text );
+                    }
+
+				    www.Dispose();
                 }
                 else
                 {
-                    resp.Success = false;
-                    resp.Error = string.Format( "Request Error.\nURL: {0}\nError: {1}\nResponse: {2}",
-                        url, string.IsNullOrEmpty( www.error ) ? "Timeout" : www.error, www.text );
+#if UNITY_EDITOR
+                    // This fixes the exception thrown by self-signed certificates.
+                    ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(delegate { return true; });
+
+                    WebRequest deleteReq = WebRequest.Create( url );
+                    foreach( var kp in req.Headers )
+                        deleteReq.Headers.Add( kp.Key, kp.Value );
+                    deleteReq.Method = "DELETE";
+                    HttpWebResponse deleteResp = deleteReq.GetResponse() as HttpWebResponse;
+                    resp.Success = deleteResp.StatusCode == HttpStatusCode.OK;
+#else
+                    Log.Warning( "RESTConnector", "DELETE method is supported in the editor only." );
+#endif
                 }
 
                 // provide the time to took to get a response from the server..
@@ -331,7 +367,6 @@ namespace IBM.Watson.Connection
                 if ( req.OnResponse != null )
                     req.OnResponse( req, resp );
 
-				www.Dispose();
             }
 
             // reduce the connection count before we exit..

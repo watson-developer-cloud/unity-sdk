@@ -115,9 +115,11 @@ namespace IBM.Watson.Widgets
             m_ResultOutput.SendData( new SpeechToTextData( result ) );
 
 	        if (result != null && result.Results.Length > 0 
+                && result.Results[0].Final
                 && result.Results[0].Alternatives.Length > 0 )
 	        {
                 string text = result.Results[0].Alternatives[0].Transcript;
+                Log.Debug( "SpeechToTextWidget", "OnRecognize: {0}", text );
                 m_TextOutput.SendData( new TextData( text ) );
 
 	            if ( m_Transcript != null )
