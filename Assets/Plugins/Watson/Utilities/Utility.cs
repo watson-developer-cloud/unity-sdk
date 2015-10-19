@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace IBM.Watson.Utilities
 {
@@ -44,5 +45,20 @@ namespace IBM.Watson.Utilities
 
             return types.ToArray();
         }
+
+		private static float deltaFloat = 0.0001f;
+		public static bool Approximately(float a, float b, float tolerance)
+		{
+			return (Mathf.Abs(a - b) < tolerance);
+		}
+		
+		public static bool CheckEqualityQuaternion(Quaternion a, Quaternion b){
+			return 
+				(Approximately(a.eulerAngles.x, b.eulerAngles.x, deltaFloat) || Approximately((a.eulerAngles.x < 0 ? a.eulerAngles.x + 360.0f : a.eulerAngles.x) , (b.eulerAngles.x < 0 ? b.eulerAngles.x + 360.0f : b.eulerAngles.x), deltaFloat)) &&
+					(Approximately(a.eulerAngles.y, b.eulerAngles.y, deltaFloat) || Approximately((a.eulerAngles.y < 0 ? a.eulerAngles.y + 360.0f : a.eulerAngles.y) , (b.eulerAngles.y < 0 ? b.eulerAngles.y + 360.0f : b.eulerAngles.y), deltaFloat)) &&
+					(Approximately(a.eulerAngles.z, b.eulerAngles.z, deltaFloat) || Approximately((a.eulerAngles.z < 0 ? a.eulerAngles.z + 360.0f : a.eulerAngles.z) , (b.eulerAngles.z < 0 ? b.eulerAngles.z + 360.0f : b.eulerAngles.z), deltaFloat));
+		}
     }
+
+
 }

@@ -103,17 +103,20 @@ namespace IBM.Watson.Avatar
 		public void AnimateLightFlare(){
 			if (moveAnimationOnFlare != null) {
 				for (int i = 0; i < moveAnimationOnFlare.Length; i++) {
-					LeanTween.cancel (moveAnimationOnFlare [i].uniqueId);
+					//LeanTween.cancel (moveAnimationOnFlare [i].uniqueId);
+					moveAnimationOnFlare [i].setTime(lightFlareAnimationTime * MoodManager.Instance.currentMoodTimeModifier);
 				}
 			} else {
 				moveAnimationOnFlare = new LTDescr[lightFlareList.Length]; 
-			}
 
-			if (lightFlareList.Length == listFlarePathList.Length) {
-				for (int i = 0; i < lightFlareList.Length; i++) {
-					moveAnimationOnFlare [i] = LeanTween.moveLocal (lightFlareList[i], listFlarePathList [i], lightFlareAnimationTime * MoodManager.Instance.currentMoodTimeModifier).setOrientToPath(true).setAxis(Vector3.forward).setEase(lightFlareEase).setLoopPingPong ();
+				if (lightFlareList.Length == listFlarePathList.Length) {
+					for (int i = 0; i < lightFlareList.Length; i++) {
+						moveAnimationOnFlare [i] = LeanTween.moveLocal (lightFlareList[i], listFlarePathList [i], lightFlareAnimationTime * MoodManager.Instance.currentMoodTimeModifier).setOrientToPath(true).setAxis(Vector3.forward).setEase(lightFlareEase).setLoopPingPong ();
+					}
 				}
 			}
+
+
 		}
 
 		public void StopAnimationLightFlare(){
