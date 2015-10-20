@@ -47,6 +47,7 @@ namespace IBM.Watson.Widgets
         #endregion
 
         #region Public Properties
+        public AvatarWidget Avatar { get; set; }
         public ITM.Questions Questions { get; set; }
         public ITM.Answers Answers { get; set; }
         #endregion

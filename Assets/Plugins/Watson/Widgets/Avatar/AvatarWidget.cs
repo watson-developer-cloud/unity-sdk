@@ -262,6 +262,7 @@ namespace IBM.Watson.Widgets
                     QuestionWidget question = m_FocusQuestion.GetComponentInChildren<QuestionWidget>();
                     if ( question != null )
                     {
+                        question.Avatar = this;
                         question.Questions = m_QuestionResult;
                         question.Answers = answers;
                     }
