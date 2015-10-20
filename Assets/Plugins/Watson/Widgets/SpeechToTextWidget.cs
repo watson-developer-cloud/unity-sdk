@@ -125,7 +125,7 @@ namespace IBM.Watson.Widgets
                 && result.Results[0].Alternatives.Length > 0 )
 	        {
                 string text = result.Results[0].Alternatives[0].Transcript;
-                Log.Debug( "SpeechToTextWidget", "OnRecognize: {0}", text );
+                // Log.Debug( "SpeechToTextWidget", "OnRecognize: {0}", text );
                 m_TextOutput.SendData( new TextData( text ) );
 
 	            if ( m_Transcript != null )

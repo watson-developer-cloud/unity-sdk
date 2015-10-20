@@ -7813,7 +7813,7 @@ Transform:
   m_GameObject: {fileID: 161818}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 40, z: 0}
-  m_LocalScale: {x: 3.5, y: 3.5, z: 3.5}
+  m_LocalScale: {x: 4, y: 4, z: 4}
   m_Children:
   - {fileID: 433158}
   - {fileID: 403504}
@@ -15926,14 +15926,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ae469cfa8dd5487d85fe0964e340659, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  avatarGameobject: {fileID: 0}
+  avatarPositionUnfold: {x: 0, y: -9.5, z: 0}
+  positionCubeOffsetUnfold: {x: 0, y: 2.5, z: 0}
   statinoaryRotationSpeed: 10
   statinoaryRotationVector: {x: 0, y: 1, z: 0}
-  distanceFromCameraInZAfterUnfolding: 100
+  distanceFromCameraInZAfterUnfolding: 120
   m_initialPosition: {x: 0, y: 0, z: 0}
-  mainCamera: {fileID: 0}
-  parseViewCamera: {fileID: 0}
-  timeForFoldingUnfolding: 1.5
-  easeForFoldungUnfolding: 7
+  timeForComingToScene: 1
+  easeForComingToScene: 6
+  timeForFoldingUnfolding: 1
+  easeForFolding: 7
+  easeForUnfolding: 7
+  timeForZoominUnZooming: 1
+  easeForZooming: 7
   uiFaceOnSide:
   - {fileID: 176488}
   - {fileID: 173190}

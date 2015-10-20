@@ -3,7 +3,12 @@ using System.Collections;
 using IBM.Watson.Utilities;
 using IBM.Watson.Logging;
 
+/// <summary>
+/// Cube animation manager. All animations related with Cube located here.
+/// </summary>
 public class CubeAnimationManager : MonoBehaviour {
+
+	#region Enumarations Related with Animation and Cube Sides
 
 	public enum CubeSideType
 	{
@@ -26,28 +31,40 @@ public class CubeAnimationManager : MonoBehaviour {
 		ZoomedToSide
 	}
 
+	#endregion
+
+	#region Private and Public Members
+
+	private CubeAnimationState m_currentState;
+
+	/// <summary>
+	/// Gets the state of the current animation.
+	/// </summary>
+	/// <value>The state of the current animation.</value>
+	public CubeAnimationState currentAnimationState{
+		get{
+			return m_currentState;
+		}
+	}
+
+	public GameObject avatarGameobject;
+	public Vector3 avatarPositionUnfold = new Vector3 (0, -9.5f, 0);
+	public Vector3 positionCubeOffsetUnfold = Vector3.zero;
+
 	public float statinoaryRotationSpeed = 10.0f;
 	public Vector3  statinoaryRotationVector;
 	public float distanceFromCameraInZAfterUnfolding = 100f;
 	public Vector3 m_initialPosition;
 
-	public Camera mainCamera;
-	public Camera parseViewCamera;
-
 	private bool isRotating = true;
 
-	public float timeForFoldingUnfolding = 2.0f;
-	public LeanTweenType easeForFoldungUnfolding = LeanTweenType.easeInOutCubic;
-
-	private bool _isOpen = false;
-	public bool isUnFolding {
-		get { return _isOpen; }
-		set
-		{
-			_isOpen = value;
-		}
-	}
-
+	public float timeForComingToScene = 1.0f;
+	public LeanTweenType easeForComingToScene = LeanTweenType.easeOutElastic;
+	public float timeForFoldingUnfolding = 1.0f;
+	public LeanTweenType easeForFolding = LeanTweenType.easeInOutCubic;
+	public LeanTweenType easeForUnfolding = LeanTweenType.easeInOutCubic;
+	public float timeForZoominUnZooming = 1.0f;
+	public LeanTweenType easeForZooming = LeanTweenType.easeInOutCubic;
 
 	[Header("UI Faces")]
 	[SerializeField]
@@ -72,6 +89,11 @@ public class CubeAnimationManager : MonoBehaviour {
 	private LTDescr[] animationRotationOnSide;
 	private LTDescr animationRotationCube;
 	private LTDescr animationPositionCube;
+
+	private LTDescr[] animationPositionOnSidePresentation;
+
+	private LTDescr animationAvatarPosition;
+	#endregion
 
 	void Awake ()
 	{
@@ -111,7 +133,7 @@ public class CubeAnimationManager : MonoBehaviour {
 		};
 
 		positionZoom = new Vector3[]{
-			new Vector3 (-17.5f, 1f, 	-2f), 	//Our Hero Side - Zoomed to the camera
+			new Vector3 (-21.0f, -0.6f, 	-2f), 	//Our Hero Side - Zoomed to the camera
 			new Vector3 (17.5f, 2.5f, 	25.0f),	//XRay Logo on right most 
 			new Vector3 (17.5f, 10f, 	11.5f),	//Top - backup
 			new Vector3 (17.5f, 2.5f, 	16f),	//Between XRay logo and hero
@@ -141,15 +163,12 @@ public class CubeAnimationManager : MonoBehaviour {
 	private int currentZoom = 0;
 	void Update()
 	{
-		if (Input.GetKeyDown (KeyCode.Return)) {
-			isUnFolding = !isUnFolding;
+		if (Input.GetKeyDown (KeyCode.F)) {
+			Fold();
+		}
 
-			if(isUnFolding){
-				UnFold();
-			}
-			else{
-				Fold();
-			}
+		if (Input.GetKeyDown (KeyCode.U)) {
+			UnFold();
 		}
 
 		if (Input.GetKeyDown (KeyCode.Z)) {
@@ -170,7 +189,7 @@ public class CubeAnimationManager : MonoBehaviour {
 	}
 
 	private void CubeStatinoaryAnimation(){
-		if (isRotating && !isUnFolding) {	//If it is fold already and rotation is true we are rotating.
+		if (isRotating && (m_currentState == CubeAnimationState.IdleOnScene || m_currentState == CubeAnimationState.Folding)) {	//If it is fold already and rotation is true we are rotating.
 			transform.Rotate (statinoaryRotationVector * Time.deltaTime * statinoaryRotationSpeed);
 		}
 	}
@@ -178,57 +197,76 @@ public class CubeAnimationManager : MonoBehaviour {
 	#region Folding - Unfolding Animations
 		
 	public void Fold(){
+		StopAllCubeAnimations ();
+		if (m_currentState == CubeAnimationState.ZoomingToSide || m_currentState == CubeAnimationState.ZoomedToSide) {
+			AnimateUnfocus(AnimateFold, null);
+		} else {
+			AnimateFold (null, null);
+		}
+	}
 
-		CubeAnimationStop ();
+	private void AnimateFold(System.Object paramOnComplete = null){
+		AnimateFold (null, null);
+	}
 
+	private void AnimateFold(System.Action<System.Object> callBackOnComplete = null, System.Object paramOnComplete = null){
+		m_currentState = CubeAnimationState.Folding;
 		for (int i = 0; i < uiFaceOnSide.Length; i++) {
-			animationPositionOnSide[i] = LeanTween.moveLocal (uiFaceOnSide[i], positionFold[i], timeForFoldingUnfolding).setEase (easeForFoldungUnfolding);
-			animationRotationOnSide[i] = LeanTween.rotateLocal (uiFaceOnSide[i], rotationFold[i].eulerAngles, timeForFoldingUnfolding).setEase (easeForFoldungUnfolding);
+			animationPositionOnSide[i] = LeanTween.moveLocal (uiFaceOnSide[i], positionFold[i], timeForFoldingUnfolding).setEase (easeForFolding);
+			if(i == uiFaceOnSide.Length - 1)
+				animationRotationOnSide[i] = LeanTween.rotateLocal (uiFaceOnSide[i], rotationFold[i].eulerAngles, timeForFoldingUnfolding).setEase (easeForFolding).setOnComplete(
+					()=>{
+					m_currentState = CubeAnimationState.IdleOnScene;	//Folding finish
+
+					if(callBackOnComplete != null)
+						callBackOnComplete(paramOnComplete);
+				});
+			else
+			animationRotationOnSide[i] = LeanTween.rotateLocal (uiFaceOnSide[i], rotationFold[i].eulerAngles, timeForFoldingUnfolding).setEase (easeForFolding);
 		}
 
 		//Move object cloase to camera
-		animationPositionCube = LeanTween.move (gameObject, m_initialPosition, timeForFoldingUnfolding);
+		animationPositionCube = LeanTween.move (gameObject, m_initialPosition, timeForFoldingUnfolding).setEase (easeForFolding);
+
+		//Avatar Object position change
+		animationAvatarPosition = LeanTween.moveLocal (avatarGameobject, Vector3.zero, timeForFoldingUnfolding).setEase(easeForUnfolding);
 	}
 	
 	public void UnFold(){
-		CubeAnimationStop ();
-		
-		for (int i = 0; i < uiFaceOnSide.Length; i++) {
-			animationPositionOnSide[i] = LeanTween.moveLocal (uiFaceOnSide[i], positionUnfold[i], timeForFoldingUnfolding).setEase (easeForFoldungUnfolding);
-			animationRotationOnSide[i] = LeanTween.rotateLocal (uiFaceOnSide[i], rotationUnfold[i].eulerAngles, timeForFoldingUnfolding).setEase (easeForFoldungUnfolding);
+		StopAllCubeAnimations ();
+		if (m_currentState == CubeAnimationState.ZoomingToSide || m_currentState == CubeAnimationState.ZoomedToSide) {
+			AnimateUnfocus(AnimateUnFold, null);
+		} else {
+			AnimateUnFold (null, null);
 		}
 
-		//Rotate to camera 
-		animationRotationCube = LeanTween.rotateLocal(gameObject, parseViewCamera.transform.rotation.eulerAngles - new Vector3(0.0f, 90.0f, 0.0f), timeForFoldingUnfolding).setEase(LeanTweenType.easeInOutCubic);
-
-		//Move object cloase to camera
-		animationPositionCube = LeanTween.move (gameObject, parseViewCamera.transform.position + distanceFromCameraInZAfterUnfolding * parseViewCamera.transform.forward, timeForFoldingUnfolding).setEase(LeanTweenType.easeInOutCubic);
 	}
 
-	private void CubeAnimationStop(){
-		if (animationPositionOnSide == null) {
-			animationPositionOnSide = new LTDescr[uiFaceOnSide.Length];
-		} else {
-			for (int i = 0; i < animationPositionOnSide.Length; i++) {
-				LeanTween.cancel(animationPositionOnSide[i].uniqueId);
-			}
+	private void AnimateUnFold(System.Object paramOnComplete = null){
+		AnimateUnFold (null, null);
+	}
+
+	private void AnimateUnFold(System.Action<System.Object> callBackOnComplete = null, System.Object paramOnComplete = null){
+		m_currentState = CubeAnimationState.UnFolding;
+		for (int i = 0; i < uiFaceOnSide.Length; i++) {
+			animationPositionOnSide[i] = LeanTween.moveLocal (uiFaceOnSide[i], positionUnfold[i], timeForFoldingUnfolding).setEase (easeForUnfolding);
+			animationRotationOnSide[i] = LeanTween.rotateLocal (uiFaceOnSide[i], rotationUnfold[i].eulerAngles, timeForFoldingUnfolding).setEase (easeForUnfolding);
 		}
 		
-		if (animationRotationOnSide == null) {
-			animationRotationOnSide = new LTDescr[uiFaceOnSide.Length];
-		} else {
-			for (int i = 0; i < animationRotationOnSide.Length; i++) {
-				LeanTween.cancel(animationRotationOnSide[i].uniqueId);
-			}
-		}
+		//Rotate to camera 
+		animationRotationCube = LeanTween.rotateLocal(gameObject, Camera.main.transform.rotation.eulerAngles - new Vector3(0.0f, 90.0f, 0.0f), timeForFoldingUnfolding).setEase(easeForUnfolding).setOnComplete(
+			() => {
+			m_currentState = CubeAnimationState.Unfolded;	//unfolding finish
 
-		if (animationRotationCube != null) {
-			LeanTween.cancel(animationRotationCube.uniqueId);
-		}
+			if(callBackOnComplete != null)
+				callBackOnComplete(paramOnComplete);
+		});
+		
+		//Move object cloase to camera
+		animationPositionCube = LeanTween.move (gameObject, Camera.main.transform.position + distanceFromCameraInZAfterUnfolding * Camera.main.transform.forward + positionCubeOffsetUnfold, timeForFoldingUnfolding).setEase(easeForUnfolding);
 
-		if (animationPositionCube != null) {
-			LeanTween.cancel (animationPositionCube.uniqueId);
-		}
+		//Avatar Object position change
+		animationAvatarPosition = LeanTween.moveLocal (avatarGameobject, avatarPositionUnfold, timeForFoldingUnfolding).setEase(easeForUnfolding);
 	}
 
 	#endregion
@@ -236,50 +274,146 @@ public class CubeAnimationManager : MonoBehaviour {
 
 	#region Focus - UnFocus Animations
 
+	/// <summary>
+	/// Focuses the on side of the cube
+	/// </summary>
+	/// <param name="sideType">Side type.</param>
 	public void FocusOnSide(CubeSideType sideType){
 		if(presentationSide.Length < (int) sideType){
 			Log.Error("CubeAnimationManager", "CubeAnimationManager - FocusOnSide {0} has wrong number as side. ", (int) sideType);
 			return;
 		}
 
-		CubeAnimationStop ();
+		StopAllCubeAnimations ();
 
+		if (currentAnimationState == CubeAnimationState.Unfolded || currentAnimationState == CubeAnimationState.ZoomedToSide  || currentAnimationState == CubeAnimationState.ZoomingToSide) {
+			AnimateFocusOnSide(sideType);
+		} else {
+			AnimateUnFold (AnimateFocusOnSide, (System.Object)sideType);
+		}
+	}
+
+	private void AnimateFocusOnSide(System.Object sideType){
+		AnimateFocusOnSide ((CubeSideType)sideType);
+	}
+	               
+	private void AnimateFocusOnSide(CubeSideType sideType){
+		m_currentState = CubeAnimationState.ZoomingToSide;
 
 		for (int i = 0; i < presentationSide.Length; i++) {
-
 			Vector3 offsetPosition = presentationSide[i].transform.parent.localPosition + presentationSide[i].transform.parent.parent.localPosition;
 			if(i == 0){
 				offsetPosition += presentationSide[i].transform.parent.parent.parent.localPosition;
 			}
 
 			if(i == (int) sideType){	//Our hero object!
-				//Our Hero object
-				animationPositionOnSide[i] = LeanTween.moveLocal (presentationSide[i], positionZoom[0] - offsetPosition, timeForFoldingUnfolding).setEase (easeForFoldungUnfolding);
+				animationPositionOnSidePresentation[i] = LeanTween.moveLocal (presentationSide[i], positionZoom[0] - offsetPosition, timeForZoominUnZooming).setEase (easeForZooming).setOnComplete(()=>{
+					m_currentState = CubeAnimationState.ZoomedToSide;
+				});
 			}
 			else if(i < (int) sideType){
-				animationPositionOnSide[i] = LeanTween.moveLocal (presentationSide[i], positionZoom[ ((i + 1) % uiFaceOnSide.Length) ] - offsetPosition, timeForFoldingUnfolding).setEase (easeForFoldungUnfolding);
+//				Vector3[] splineVec = new Vector3[]{ presentationSide[i].transform.localPosition,presentationSide[i].transform.localPosition - Vector3.right * (i  * 2) * (i % 2 == 0 ? 1.0f : -1.0f), positionZoom[ ((i + 1) % uiFaceOnSide.Length) ] - offsetPosition  - Vector3.right * (i  * 2) * (i % 2 == 0 ? 1.0f : -1.0f),positionZoom[ ((i + 1) % uiFaceOnSide.Length) ] - offsetPosition};
+				animationPositionOnSidePresentation[i] = LeanTween.moveLocal (presentationSide[i], positionZoom[ ((i + 1) % uiFaceOnSide.Length) ] - offsetPosition, timeForZoominUnZooming).setEase (easeForZooming);
 			}
 			else{
-				animationPositionOnSide[i] = LeanTween.moveLocal (presentationSide[i], positionZoom[i] - offsetPosition, timeForFoldingUnfolding).setEase (easeForFoldungUnfolding);
+//				Vector3[] splineVec = new Vector3[]{presentationSide[i].transform.localPosition, presentationSide[i].transform.localPosition - Vector3.right * (i * 2) * (i % 2 == 0 ? 1.0f : -1.0f), positionZoom[i] - offsetPosition  - Vector3.right * (i * 2) * (i % 2 == 0 ? 1.0f : -1.0f),positionZoom[i] - offsetPosition};
+				animationPositionOnSidePresentation[i] = LeanTween.moveLocal (presentationSide[i], positionZoom[i] - offsetPosition, timeForZoominUnZooming).setEase (easeForZooming);
 			}
-
 		}
 
 		//Make sure that our sides are in right rotation
 		for (int i = 0; i < uiFaceOnSide.Length; i++) {
-			animationRotationOnSide[i] = LeanTween.rotateLocal (uiFaceOnSide[i], rotationUnfold[i].eulerAngles, timeForFoldingUnfolding).setEase (easeForFoldungUnfolding);
+			animationRotationOnSide[i] = LeanTween.rotateLocal (uiFaceOnSide[i], rotationUnfold[i].eulerAngles, timeForZoominUnZooming).setEase (easeForZooming);
 		}
 
 	}
 
+	/// <summary>
+	/// Unfocus from the current focus and returning back to unfold state
+	/// </summary>
 	public void UnFocus(){
-
-		CubeAnimationStop ();
-
-		for (int i = 0; i < uiFaceOnSide.Length; i++) {
-			animationPositionOnSide[i] = LeanTween.moveLocal (presentationSide[i], Vector3.zero, timeForFoldingUnfolding).setEase (easeForFoldungUnfolding);
+		if (currentAnimationState == CubeAnimationState.ZoomedToSide || currentAnimationState == CubeAnimationState.ZoomingToSide) {
+			StopAllCubeAnimations ();
+			AnimateUnfocus (null, null);
 		}
+	}
 
+	private void AnimateUnfocus(System.Action<System.Object> callBackOnComplete = null, System.Object paramOnComplete = null){
+		
+		m_currentState = CubeAnimationState.ZoomingToSide;	
+		for (int i = 0; i < uiFaceOnSide.Length; i++) {
+			if(i == uiFaceOnSide.Length - 1){
+				animationPositionOnSide [i] = LeanTween.moveLocal (presentationSide [i], Vector3.zero, timeForZoominUnZooming).setEase (easeForZooming).setOnComplete(()=>{
+					m_currentState = CubeAnimationState.Unfolded;
+
+					if(callBackOnComplete != null){
+						callBackOnComplete(paramOnComplete);
+					}
+				});
+			}
+			else{
+				animationPositionOnSide [i] = LeanTween.moveLocal (presentationSide [i], Vector3.zero, timeForZoominUnZooming).setEase (easeForZooming);
+			}
+		}
+	}
+
+	#endregion
+
+	#region Animation Stop / Reset
+
+	private void StopAllCubeAnimations(){
+		StopFoldingAnimation ();
+		StopAvatarAnimation ();
+		StopFocusAnimation ();
+		StopCubeCameraFacingRotationAnimation ();
+	}
+
+	private void StopAvatarAnimation(){
+		if (animationAvatarPosition != null) {
+			LeanTween.cancel(animationAvatarPosition.uniqueId);
+		}
+	}
+
+	private void StopFoldingAnimation(){
+		if (animationPositionOnSide == null) {
+			animationPositionOnSide = new LTDescr[uiFaceOnSide.Length];
+		} else {
+			for (int i = 0; i < animationPositionOnSide.Length; i++) {
+				if(animationPositionOnSide[i] != null)
+					LeanTween.cancel(animationPositionOnSide[i].uniqueId);
+			}
+		}
+		
+		if (animationRotationOnSide == null) {
+			animationRotationOnSide = new LTDescr[uiFaceOnSide.Length];
+		} else {
+			for (int i = 0; i < animationRotationOnSide.Length; i++) {
+				if(animationRotationOnSide[i] != null)
+					LeanTween.cancel(animationRotationOnSide[i].uniqueId);
+			}
+		}
+	}
+
+	private void StopFocusAnimation(){
+		if (animationPositionOnSidePresentation == null) {
+			animationPositionOnSidePresentation = new LTDescr[uiFaceOnSide.Length];
+		} else {
+			for (int i = 0; i < animationPositionOnSide.Length; i++) {
+				if(animationPositionOnSidePresentation[i] != null)
+					LeanTween.cancel(animationPositionOnSidePresentation[i].uniqueId);
+			}
+		}
+	}
+
+
+	private void StopCubeCameraFacingRotationAnimation(){
+		if (animationRotationCube != null) {
+			LeanTween.cancel(animationRotationCube.uniqueId);
+		}
+		
+		if (animationPositionCube != null) {
+			LeanTween.cancel (animationPositionCube.uniqueId);
+		}
 	}
 
 	#endregion
@@ -287,8 +421,16 @@ public class CubeAnimationManager : MonoBehaviour {
 	#region Focus
 
 	public void ShowCube(){
-		LeanTween.moveLocal (gameObject, new Vector3 (0, 40, 0), 2.0f).setFrom (new Vector3 (0, -40, 0)).setEase (LeanTweenType.easeSpring);
-		LeanTween.scale (gameObject, Vector3.one * 3.5f, 2.0f).setFrom (Vector3.one);
+		StopAllCubeAnimations ();
+		AnimateShowingCube ();
+	}
+
+	private void AnimateShowingCube(){
+		m_currentState = CubeAnimationState.ComingToScene;
+		LeanTween.moveLocal (gameObject, new Vector3 (0, 40, 0), timeForComingToScene).setFrom (new Vector3 (0, -40, 0)).setEase (easeForComingToScene);
+		LeanTween.scale (gameObject, gameObject.transform.localScale, timeForComingToScene).setFrom (Vector3.one).setEase (easeForComingToScene).setOnComplete(()=>{
+			m_currentState = CubeAnimationState.IdleOnScene;
+		});
 	}
 
 
