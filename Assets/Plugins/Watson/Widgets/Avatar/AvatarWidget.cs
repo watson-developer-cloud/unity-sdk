@@ -69,8 +69,12 @@ namespace IBM.Watson.Widgets
         private Output m_TextOutput = new Output( typeof(TextData) );
         [SerializeField, Tooltip("Recognized speech is put into this Text UI field.") ]
         private Text m_RecognizeText = null;    
+        [SerializeField]
+        private Text m_QuestionText = null;
         [SerializeField, Tooltip("The results of the NLC is placed in this text field.") ]
         private Text m_ClassifyText = null;
+        [SerializeField]
+        private Text m_AnswerText = null;
         [SerializeField]
         private GameObject m_CubePrefab = null;
         #endregion
@@ -156,7 +160,7 @@ namespace IBM.Watson.Widgets
                     Log.Debug( "AvatarWidget", "OnRecognize: {0}", text );
 
 	                if ( m_RecognizeText != null )
-	                    m_RecognizeText.text = "Recognized: " + text;
+	                    m_RecognizeText.text = "R: " + text;
 
                     State = AvatarState.THINKING;
                     m_ClassifyResult = null;
@@ -192,7 +196,7 @@ namespace IBM.Watson.Widgets
         {
             Log.Debug( "Avatar", "TopClass: {0}", m_ClassifyResult.top_class );
             if ( m_ClassifyText != null )
-                m_ClassifyText.text = "Classified: " + m_ClassifyResult.top_class;
+                m_ClassifyText.text = "C: " + m_ClassifyResult.top_class;
 
             Dictionary<string,OnAction> classifyActions = new Dictionary<string, OnAction>()
             {
@@ -220,7 +224,11 @@ namespace IBM.Watson.Widgets
             {
                 ITM.Question topQuestion = m_QuestionResult.questions.Length > 0 ? m_QuestionResult.questions[0] : null;
                 if ( topQuestion != null )
+                {
+                    if ( m_QuestionText != null )
+                        m_QuestionText.text = "Q: " + topQuestion.question.questionText;
                     bGettingAnswers = m_ITM.GetAnswers( topQuestion.transactionId, OnAnswerQuestion );
+                }
             }
 
             if (! bGettingAnswers )
@@ -234,7 +242,13 @@ namespace IBM.Watson.Widgets
         {
             if ( answers != null && answers.answers.Length > 0 )
             {
-                m_TextOutput.SendData( new TextData( answers.answers[0].answerText ) );
+                foreach( var a in answers.answers )
+                    Log.Debug( "AvatarWidget", "A: {0} ({1})", a.answerText, a.confidence );
+
+                string answer = answers.answers[0].answerText;
+                if ( m_AnswerText != null )
+                    m_AnswerText.text = "A: " + answer;
+                m_TextOutput.SendData( new TextData( answer ) );
 
                 if ( m_CubePrefab != null )
                 {
