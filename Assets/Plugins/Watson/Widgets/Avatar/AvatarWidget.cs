@@ -52,6 +52,7 @@ namespace IBM.Watson.Widgets
         private ITM m_ITM = new ITM();                      // ITM service is used to get question & answer details
         private NLC m_NLC = new NLC();                      // natural language classifier
         private AvatarState m_State = AvatarState.LISTENING;
+        private GameObject m_FocusQuestion = null;
 
         [SerializeField]
         private TextToSpeech.VoiceType m_VoiceType = TextToSpeech.VoiceType.en_US_Michael;
@@ -76,7 +77,7 @@ namespace IBM.Watson.Widgets
         [SerializeField]
         private Text m_AnswerText = null;
         [SerializeField]
-        private GameObject m_CubePrefab = null;
+        private GameObject m_QuestionPrefab = null;
         #endregion
 
         #region Public Properties
@@ -250,10 +251,22 @@ namespace IBM.Watson.Widgets
                     m_AnswerText.text = "A: " + answer;
                 m_TextOutput.SendData( new TextData( answer ) );
 
-                if ( m_CubePrefab != null )
+                if ( m_QuestionPrefab != null )
                 {
-                    GameObject cube = GameObject.Instantiate( m_CubePrefab );
+                    if ( m_FocusQuestion != null )
+                        Destroy( m_FocusQuestion );
 
+                    m_FocusQuestion = GameObject.Instantiate( m_QuestionPrefab );
+                    m_FocusQuestion.transform.SetParent( transform, false );
+
+                    QuestionWidget question = m_FocusQuestion.GetComponentInChildren<QuestionWidget>();
+                    if ( question != null )
+                    {
+                        question.Questions = m_QuestionResult;
+                        question.Answers = answers;
+                    }
+                    else
+                        Log.Error( "AvatarWidget", "Failed to find QuestionWidget in question prefab." );
                 }
             }
             State = AvatarState.LISTENING;
