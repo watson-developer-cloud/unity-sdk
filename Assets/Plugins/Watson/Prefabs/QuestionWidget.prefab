@@ -3956,7 +3956,7 @@ GameObject:
   - 114: {fileID: 11429846}
   m_Layer: 0
   m_Name: QuestionWidget
-  m_TagString: Untagged
+  m_TagString: QuestionOnFocus
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15935,6 +15935,7 @@ MonoBehaviour:
   m_initialPosition: {x: 0, y: 0, z: 0}
   timeForComingToScene: 1
   easeForComingToScene: 6
+  easeForGoingFromScene: 21
   timeForFoldingUnfolding: 1
   easeForFolding: 7
   easeForUnfolding: 7
@@ -22518,7 +22519,11 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: m_TagString
+      value: QuestionOnFocus
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 165892}
