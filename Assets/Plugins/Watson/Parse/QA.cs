@@ -2,13 +2,13 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class AnswerConfidenceBar : MonoBehaviour {
+public class QA : MonoBehaviour {
+	[SerializeField]
+	private Text m_QuestionText;
 	[SerializeField]
 	private Text m_AnswerText;
 	[SerializeField]
 	private Text m_ConfidenceText;
-	[SerializeField]
-	private RectTransform m_barMask;
 
 	private string _m_Answer;
 	public string m_Answer
@@ -18,6 +18,17 @@ public class AnswerConfidenceBar : MonoBehaviour {
 		{
 			_m_Answer = value;
 			UpdateAnswer();
+		}
+	}
+
+	private string _m_Question;
+	public string m_Question
+	{
+		get { return _m_Question; }
+		set 
+		{
+			_m_Question = value;
+			UpdateQuestion();
 		}
 	}
 
@@ -36,10 +47,14 @@ public class AnswerConfidenceBar : MonoBehaviour {
 		m_AnswerText.text = m_Answer;
 	}
 
+	private void UpdateQuestion()
+	{
+		m_QuestionText.text = m_Question;
+	}
+
 	private void UpdateConfidence()
 	{
 		float confidence = (float)m_Confidence;
 		m_ConfidenceText.text = m_Confidence.ToString ("f1");
-		m_barMask.localScale = new Vector3(confidence, 1f, 1f);
 	}
 }
