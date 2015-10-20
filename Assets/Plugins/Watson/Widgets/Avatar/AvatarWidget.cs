@@ -81,6 +81,8 @@ namespace IBM.Watson.Widgets
         #endregion
 
         #region Public Properties
+        public ITM ITM { get { return m_ITM; } }
+        public NLC NLC { get { return m_NLC; } }
         public AvatarState State { get { return m_State; }
             private set {
                 m_State = value;
