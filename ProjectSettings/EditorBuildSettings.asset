@@ -6,16 +6,16 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Plugins/Watson/Resources/Scenes/Main.unity
+    path: Assets/Plugins/Watson/Scenes/Main.unity
   - enabled: 1
-    path: Assets/Plugins/Watson/Resources/Scenes/TestSTT.unity
+    path: Assets/Plugins/Watson/Scenes/TestSTT.unity
   - enabled: 1
-    path: Assets/Plugins/Watson/Resources/Scenes/UnitTests.unity
+    path: Assets/Plugins/Watson/Scenes/UnitTests.unity
   - enabled: 1
-    path: Assets/Plugins/Watson/Resources/Scenes/TestTTS.unity
+    path: Assets/Plugins/Watson/Scenes/TestTTS.unity
   - enabled: 1
-    path: Assets/Plugins/Watson/Resources/Scenes/CubeTest.unity
+    path: Assets/Plugins/Watson/Scenes/CubeTest.unity
   - enabled: 1
-    path: Assets/Plugins/Watson/Resources/Scenes/TestNLC.unity
+    path: Assets/Plugins/Watson/Scenes/TestNLC.unity
   - enabled: 1
-    path: Assets/Plugins/Watson/Resources/Scenes/XRay.unity
+    path: Assets/Plugins/Watson/Scenes/XRay.unity
