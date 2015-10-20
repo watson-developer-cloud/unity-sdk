@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using IBM.Watson.Logging;
 using UnityEngine;
 using FullSerializer;
+using System.IO;
 
 namespace IBM.Watson.Utilities
 {
@@ -125,6 +126,8 @@ namespace IBM.Watson.Utilities
         {
 #if !UNITY_ANDROID
             try {
+                if (! Directory.Exists( Application.streamingAssetsPath ) )
+                    Directory.CreateDirectory( Application.streamingAssetsPath );
 				LoadConfig( System.IO.File.ReadAllText( Application.streamingAssetsPath + CONFIG_FILE ) );
             }
             catch( System.IO.FileNotFoundException )

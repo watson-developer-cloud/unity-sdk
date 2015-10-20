@@ -8,7 +8,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 486334}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_edge_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42,7 +42,7 @@ GameObject:
   - 4: {fileID: 467354}
   - 33: {fileID: 3344186}
   - 23: {fileID: 2386112}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Back_hex_panel_01 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -60,7 +60,7 @@ GameObject:
   - 223: {fileID: 22345484}
   - 114: {fileID: 11461518}
   - 114: {fileID: 11478248}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: p2_canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -77,7 +77,7 @@ GameObject:
   - 4: {fileID: 472334}
   - 33: {fileID: 3321622}
   - 23: {fileID: 2368516}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Glass 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -111,7 +111,7 @@ GameObject:
   - 4: {fileID: 479326}
   - 33: {fileID: 3396346}
   - 23: {fileID: 2346442}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Glass 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -143,7 +143,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 407568}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Geo3_smooth
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -160,7 +160,7 @@ GameObject:
   - 4: {fileID: 436284}
   - 33: {fileID: 3376356}
   - 23: {fileID: 2301328}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Back_hex_panel_01 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -177,7 +177,7 @@ GameObject:
   - 4: {fileID: 494336}
   - 33: {fileID: 3317176}
   - 23: {fileID: 2369586}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Glass 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -192,7 +192,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 489540}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: p3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -209,7 +209,7 @@ GameObject:
   - 224: {fileID: 22419818}
   - 222: {fileID: 22233790}
   - 114: {fileID: 11471526}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: HexTexture
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -243,7 +243,7 @@ GameObject:
   - 4: {fileID: 493740}
   - 33: {fileID: 3346174}
   - 23: {fileID: 2335848}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Light_frame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -260,7 +260,7 @@ GameObject:
   - 4: {fileID: 441548}
   - 33: {fileID: 3369638}
   - 23: {fileID: 2302852}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Light_frame 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -290,7 +290,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 496490}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_edge_06
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -307,7 +307,7 @@ GameObject:
   - 4: {fileID: 422026}
   - 33: {fileID: 3339188}
   - 23: {fileID: 2328144}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Glass 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -325,7 +325,7 @@ GameObject:
   - 223: {fileID: 22392068}
   - 114: {fileID: 11470234}
   - 114: {fileID: 11428634}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: p0_canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -340,7 +340,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 495240}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_edge_06
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -375,7 +375,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 430996}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_edge_05
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -406,7 +406,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 433956}
   - 95: {fileID: 9590382}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_panel_gen_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -421,7 +421,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 426704}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_edge_06
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -455,7 +455,7 @@ GameObject:
   - 4: {fileID: 450284}
   - 33: {fileID: 3397440}
   - 23: {fileID: 2304408}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Glass 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -470,7 +470,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 440428}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_edge_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -487,7 +487,7 @@ GameObject:
   - 4: {fileID: 460760}
   - 33: {fileID: 3375612}
   - 23: {fileID: 2391414}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Outter_frame 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -502,7 +502,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 412772}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_edge_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -536,7 +536,7 @@ GameObject:
   - 4: {fileID: 468904}
   - 33: {fileID: 3389846}
   - 23: {fileID: 2395538}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Light_frame 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -553,7 +553,7 @@ GameObject:
   - 4: {fileID: 499234}
   - 33: {fileID: 3308008}
   - 23: {fileID: 2350110}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Light_frame 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -570,7 +570,7 @@ GameObject:
   - 4: {fileID: 418556}
   - 33: {fileID: 3307566}
   - 23: {fileID: 2324370}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Outter_frame 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -587,7 +587,7 @@ GameObject:
   - 4: {fileID: 454620}
   - 33: {fileID: 3341468}
   - 23: {fileID: 2343410}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Glass 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -602,7 +602,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 403504}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: p2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -619,7 +619,7 @@ GameObject:
   - 4: {fileID: 494594}
   - 33: {fileID: 3384580}
   - 23: {fileID: 2322160}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Glass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -634,7 +634,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 459306}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_edge_04
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -651,7 +651,7 @@ GameObject:
   - 4: {fileID: 403588}
   - 33: {fileID: 3396196}
   - 23: {fileID: 2320062}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Outter_frame 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -668,7 +668,7 @@ GameObject:
   - 4: {fileID: 496816}
   - 33: {fileID: 3367966}
   - 23: {fileID: 2354256}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Outter_frame 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -685,7 +685,7 @@ GameObject:
   - 4: {fileID: 477530}
   - 33: {fileID: 3340166}
   - 23: {fileID: 2344504}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Back_hex_panel_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -700,7 +700,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 402356}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_group
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -734,7 +734,7 @@ GameObject:
   - 4: {fileID: 494448}
   - 33: {fileID: 3343030}
   - 23: {fileID: 2348978}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Back_hex_panel_01 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -769,7 +769,7 @@ GameObject:
   - 4: {fileID: 465018}
   - 33: {fileID: 3319954}
   - 23: {fileID: 2385682}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Glass 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -823,7 +823,7 @@ GameObject:
   - 4: {fileID: 422506}
   - 33: {fileID: 3372948}
   - 23: {fileID: 2347184}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Glass 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -840,7 +840,7 @@ GameObject:
   - 4: {fileID: 488492}
   - 33: {fileID: 3334184}
   - 23: {fileID: 2358602}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Outter_frame 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -874,7 +874,7 @@ GameObject:
   - 4: {fileID: 473910}
   - 33: {fileID: 3346392}
   - 23: {fileID: 2381750}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Light_frame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -891,7 +891,7 @@ GameObject:
   - 4: {fileID: 420880}
   - 33: {fileID: 3384270}
   - 23: {fileID: 2300366}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Outter_frame 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -908,7 +908,7 @@ GameObject:
   - 4: {fileID: 494376}
   - 33: {fileID: 3325024}
   - 23: {fileID: 2356940}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Outter_frame 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -925,7 +925,7 @@ GameObject:
   - 4: {fileID: 490502}
   - 33: {fileID: 3312522}
   - 23: {fileID: 2310286}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Outter_frame 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -942,7 +942,7 @@ GameObject:
   - 4: {fileID: 415212}
   - 33: {fileID: 3359462}
   - 23: {fileID: 2314462}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Outter_frame 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -959,7 +959,7 @@ GameObject:
   - 4: {fileID: 496082}
   - 33: {fileID: 3360854}
   - 23: {fileID: 2361178}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Outter_frame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -976,7 +976,7 @@ GameObject:
   - 4: {fileID: 474646}
   - 33: {fileID: 3398908}
   - 23: {fileID: 2352152}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Outter_frame 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -993,7 +993,7 @@ GameObject:
   - 4: {fileID: 487078}
   - 33: {fileID: 3388384}
   - 23: {fileID: 2386582}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Back_hex_panel_01 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1008,7 +1008,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 470296}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_edge_04
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1025,7 +1025,7 @@ GameObject:
   - 224: {fileID: 22476592}
   - 222: {fileID: 22200222}
   - 114: {fileID: 11406570}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: HexTexture
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1040,7 +1040,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 425716}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_edge_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1113,7 +1113,7 @@ GameObject:
   - 4: {fileID: 470678}
   - 33: {fileID: 3377890}
   - 23: {fileID: 2390326}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Outter_frame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1130,7 +1130,7 @@ GameObject:
   - 4: {fileID: 486158}
   - 33: {fileID: 3389104}
   - 23: {fileID: 2351520}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Outter_frame 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1147,7 +1147,7 @@ GameObject:
   - 4: {fileID: 453658}
   - 33: {fileID: 3376998}
   - 23: {fileID: 2334690}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Light_frame 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1162,7 +1162,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 443138}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Geo3_smooth
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1179,7 +1179,7 @@ GameObject:
   - 4: {fileID: 445628}
   - 33: {fileID: 3382754}
   - 23: {fileID: 2377646}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Outter_frame 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1196,7 +1196,7 @@ GameObject:
   - 4: {fileID: 426246}
   - 33: {fileID: 3380480}
   - 23: {fileID: 2398346}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Outter_frame 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1213,7 +1213,7 @@ GameObject:
   - 4: {fileID: 418898}
   - 33: {fileID: 3347996}
   - 23: {fileID: 2373380}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Glass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1230,7 +1230,7 @@ GameObject:
   - 4: {fileID: 495774}
   - 33: {fileID: 3317944}
   - 23: {fileID: 2313092}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Back_hex_panel_01 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1247,7 +1247,7 @@ GameObject:
   - 4: {fileID: 492742}
   - 33: {fileID: 3388980}
   - 23: {fileID: 2312224}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Back_hex_panel_01 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1264,7 +1264,7 @@ GameObject:
   - 4: {fileID: 419560}
   - 33: {fileID: 3374320}
   - 23: {fileID: 2396734}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Light_frame 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1300,9 +1300,7 @@ GameObject:
   - 33: {fileID: 3324414}
   - 64: {fileID: 6497418}
   - 23: {fileID: 2343402}
-  - 54: {fileID: 5428938}
-  - 59: {fileID: 5978468}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: p4_geo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1337,7 +1335,7 @@ GameObject:
   - 4: {fileID: 456278}
   - 33: {fileID: 3329494}
   - 23: {fileID: 2395290}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Back_hex_panel_01 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1354,7 +1352,7 @@ GameObject:
   - 4: {fileID: 428092}
   - 33: {fileID: 3341812}
   - 23: {fileID: 2303798}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Outter_frame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1371,7 +1369,7 @@ GameObject:
   - 4: {fileID: 494106}
   - 33: {fileID: 3322580}
   - 23: {fileID: 2386394}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Center_Bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1405,7 +1403,7 @@ GameObject:
   - 4: {fileID: 475002}
   - 33: {fileID: 3364386}
   - 23: {fileID: 2312612}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Light_frame 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1422,7 +1420,7 @@ GameObject:
   - 4: {fileID: 484772}
   - 33: {fileID: 3374502}
   - 23: {fileID: 2358156}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Outter_frame 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1457,7 +1455,7 @@ GameObject:
   - 4: {fileID: 467466}
   - 33: {fileID: 3327558}
   - 23: {fileID: 2347974}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Glass 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1510,7 +1508,7 @@ GameObject:
   - 223: {fileID: 22357976}
   - 114: {fileID: 11440222}
   - 114: {fileID: 11444216}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: p5_canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1525,7 +1523,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 457132}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_edge_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1540,7 +1538,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 446398}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_group
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1556,7 +1554,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 488754}
   - 95: {fileID: 9544944}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_panel_gen_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1573,7 +1571,7 @@ GameObject:
   - 4: {fileID: 494318}
   - 33: {fileID: 3316704}
   - 23: {fileID: 2397788}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Glass 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1590,7 +1588,7 @@ GameObject:
   - 4: {fileID: 423814}
   - 33: {fileID: 3399828}
   - 23: {fileID: 2327024}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Outter_frame 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1607,7 +1605,7 @@ GameObject:
   - 4: {fileID: 447948}
   - 33: {fileID: 3352470}
   - 23: {fileID: 2312656}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Outter_frame 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1624,7 +1622,7 @@ GameObject:
   - 4: {fileID: 415682}
   - 33: {fileID: 3391334}
   - 23: {fileID: 2371416}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Back_hex_panel_01 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1674,7 +1672,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 492620}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_edge_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1689,7 +1687,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 405720}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_edge_04
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1706,7 +1704,7 @@ GameObject:
   - 4: {fileID: 462190}
   - 33: {fileID: 3397800}
   - 23: {fileID: 2353936}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Center_Bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1723,7 +1721,7 @@ GameObject:
   - 4: {fileID: 438286}
   - 33: {fileID: 3394280}
   - 23: {fileID: 2371666}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Light_frame 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1740,7 +1738,7 @@ GameObject:
   - 4: {fileID: 447150}
   - 33: {fileID: 3368382}
   - 23: {fileID: 2338280}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Light_frame 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1757,7 +1755,7 @@ GameObject:
   - 4: {fileID: 412592}
   - 33: {fileID: 3378932}
   - 23: {fileID: 2340892}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Light_frame 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1791,7 +1789,7 @@ GameObject:
   - 4: {fileID: 467066}
   - 33: {fileID: 3339684}
   - 23: {fileID: 2347438}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Light_frame 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1808,7 +1806,7 @@ GameObject:
   - 4: {fileID: 421066}
   - 33: {fileID: 3300754}
   - 23: {fileID: 2339462}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Back_hex_panel_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1842,7 +1840,7 @@ GameObject:
   - 4: {fileID: 472286}
   - 33: {fileID: 3325560}
   - 23: {fileID: 2342498}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Glass 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1876,7 +1874,7 @@ GameObject:
   - 4: {fileID: 405790}
   - 33: {fileID: 3387290}
   - 23: {fileID: 2308890}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Center_Bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1893,7 +1891,7 @@ GameObject:
   - 4: {fileID: 446516}
   - 33: {fileID: 3337806}
   - 23: {fileID: 2360388}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Light_frame 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1910,7 +1908,7 @@ GameObject:
   - 4: {fileID: 412188}
   - 33: {fileID: 3349434}
   - 23: {fileID: 2320704}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Back_hex_panel_01 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1928,9 +1926,7 @@ GameObject:
   - 33: {fileID: 3329872}
   - 64: {fileID: 6428216}
   - 23: {fileID: 2373396}
-  - 54: {fileID: 5473320}
-  - 59: {fileID: 5918344}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: p5_geo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1947,7 +1943,7 @@ GameObject:
   - 4: {fileID: 489352}
   - 33: {fileID: 3325888}
   - 23: {fileID: 2354036}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Glass 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1981,7 +1977,7 @@ GameObject:
   - 4: {fileID: 465652}
   - 33: {fileID: 3339688}
   - 23: {fileID: 2310336}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Light_frame 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2015,7 +2011,7 @@ GameObject:
   - 4: {fileID: 423838}
   - 33: {fileID: 3370616}
   - 23: {fileID: 2358012}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Glass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2030,7 +2026,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 405260}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_edge_05
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2064,7 +2060,7 @@ GameObject:
   - 4: {fileID: 447774}
   - 33: {fileID: 3361758}
   - 23: {fileID: 2350624}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Light_frame 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2081,7 +2077,7 @@ GameObject:
   - 4: {fileID: 451040}
   - 33: {fileID: 3317598}
   - 23: {fileID: 2395818}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Back_hex_panel_01 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2096,7 +2092,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 499938}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Geo3_smooth
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2130,7 +2126,7 @@ GameObject:
   - 4: {fileID: 490398}
   - 33: {fileID: 3303388}
   - 23: {fileID: 2331550}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Light_frame 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2147,7 +2143,7 @@ GameObject:
   - 4: {fileID: 467474}
   - 33: {fileID: 3396348}
   - 23: {fileID: 2341066}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Light_frame 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2164,7 +2160,7 @@ GameObject:
   - 4: {fileID: 467222}
   - 33: {fileID: 3324992}
   - 23: {fileID: 2344984}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Back_hex_panel_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2196,7 +2192,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 494112}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_edge_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2213,7 +2209,7 @@ GameObject:
   - 224: {fileID: 22474820}
   - 222: {fileID: 22251442}
   - 114: {fileID: 11452792}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: HexTexture
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2230,7 +2226,7 @@ GameObject:
   - 4: {fileID: 424388}
   - 33: {fileID: 3356020}
   - 23: {fileID: 2354936}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Light_frame 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2264,7 +2260,7 @@ GameObject:
   - 4: {fileID: 478230}
   - 33: {fileID: 3361620}
   - 23: {fileID: 2306308}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Light_frame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2279,7 +2275,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 426954}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_edge_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2296,7 +2292,7 @@ GameObject:
   - 4: {fileID: 431286}
   - 33: {fileID: 3383392}
   - 23: {fileID: 2305012}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Light_frame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2311,7 +2307,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 473266}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_group
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2329,9 +2325,7 @@ GameObject:
   - 33: {fileID: 3367380}
   - 64: {fileID: 6493442}
   - 23: {fileID: 2377496}
-  - 54: {fileID: 5482484}
-  - 59: {fileID: 5965674}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: p3_geo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2348,7 +2342,7 @@ GameObject:
   - 4: {fileID: 422692}
   - 33: {fileID: 3305392}
   - 23: {fileID: 2311238}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Outter_frame 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2363,7 +2357,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 429708}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_edge_05
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2381,7 +2375,7 @@ GameObject:
   - 223: {fileID: 22350188}
   - 114: {fileID: 11490470}
   - 114: {fileID: 11420172}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: p1_canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2398,7 +2392,7 @@ GameObject:
   - 4: {fileID: 444006}
   - 33: {fileID: 3322454}
   - 23: {fileID: 2322228}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Glass 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2413,7 +2407,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 442176}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_edge_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2430,7 +2424,7 @@ GameObject:
   - 4: {fileID: 447096}
   - 33: {fileID: 3363956}
   - 23: {fileID: 2335640}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Back_hex_panel_01 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2447,7 +2441,7 @@ GameObject:
   - 4: {fileID: 486390}
   - 33: {fileID: 3324876}
   - 23: {fileID: 2309164}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Outter_frame 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2486,6 +2480,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &153664
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 486046}
+  m_Layer: 0
+  m_Name: p1_presentation
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &153786
 GameObject:
   m_ObjectHideFlags: 1
@@ -2494,7 +2503,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 448406}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_edge_05
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2528,7 +2537,7 @@ GameObject:
   - 4: {fileID: 491042}
   - 33: {fileID: 3328540}
   - 23: {fileID: 2392898}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Light_frame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2543,7 +2552,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 450956}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_edge_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2560,7 +2569,7 @@ GameObject:
   - 4: {fileID: 439432}
   - 33: {fileID: 3359034}
   - 23: {fileID: 2309208}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Glass 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2575,7 +2584,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 453484}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Geo3_smooth
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2592,7 +2601,7 @@ GameObject:
   - 4: {fileID: 412486}
   - 33: {fileID: 3352190}
   - 23: {fileID: 2351440}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Outter_frame 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2607,7 +2616,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 426262}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_edge_06
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2623,7 +2632,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 430680}
   - 95: {fileID: 9532232}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_panel_gen_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2640,7 +2649,7 @@ GameObject:
   - 4: {fileID: 405366}
   - 33: {fileID: 3355072}
   - 23: {fileID: 2326692}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Glass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2655,7 +2664,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 489084}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_edge_04
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2672,7 +2681,7 @@ GameObject:
   - 4: {fileID: 415632}
   - 33: {fileID: 3388884}
   - 23: {fileID: 2360098}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Light_frame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2689,7 +2698,7 @@ GameObject:
   - 4: {fileID: 483308}
   - 33: {fileID: 3341558}
   - 23: {fileID: 2317632}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Back_hex_panel_01 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2705,7 +2714,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 449170}
   - 95: {fileID: 9578380}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_panel_gen_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2722,7 +2731,7 @@ GameObject:
   - 4: {fileID: 442612}
   - 33: {fileID: 3360088}
   - 23: {fileID: 2301640}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Light_frame 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2739,7 +2748,7 @@ GameObject:
   - 4: {fileID: 456422}
   - 33: {fileID: 3328024}
   - 23: {fileID: 2349718}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Back_hex_panel_01 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2756,7 +2765,7 @@ GameObject:
   - 4: {fileID: 484226}
   - 33: {fileID: 3307792}
   - 23: {fileID: 2386618}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Outter_frame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2773,7 +2782,7 @@ GameObject:
   - 4: {fileID: 440154}
   - 33: {fileID: 3362266}
   - 23: {fileID: 2357846}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Back_hex_panel_01 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2790,7 +2799,7 @@ GameObject:
   - 4: {fileID: 418822}
   - 33: {fileID: 3392796}
   - 23: {fileID: 2351122}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Back_hex_panel_01 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2807,7 +2816,7 @@ GameObject:
   - 4: {fileID: 435458}
   - 33: {fileID: 3399750}
   - 23: {fileID: 2337504}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Back_hex_panel_01 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2859,7 +2868,7 @@ GameObject:
   - 4: {fileID: 457426}
   - 33: {fileID: 3384772}
   - 23: {fileID: 2385336}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Glass 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2874,7 +2883,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 489462}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_group
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2890,8 +2899,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 445074}
   - 114: {fileID: 11424070}
-  - 114: {fileID: 11460728}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: ParseCube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2906,7 +2914,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 435836}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_edge_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2921,7 +2929,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 424984}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_group
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2938,7 +2946,7 @@ GameObject:
   - 4: {fileID: 492810}
   - 33: {fileID: 3387368}
   - 23: {fileID: 2337160}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Back_hex_panel_01 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2955,7 +2963,7 @@ GameObject:
   - 4: {fileID: 410184}
   - 33: {fileID: 3398026}
   - 23: {fileID: 2339172}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Light_frame 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2972,7 +2980,7 @@ GameObject:
   - 4: {fileID: 463940}
   - 33: {fileID: 3340068}
   - 23: {fileID: 2318848}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Glass 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2989,7 +2997,7 @@ GameObject:
   - 4: {fileID: 490424}
   - 33: {fileID: 3327370}
   - 23: {fileID: 2391832}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Glass 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3026,7 +3034,7 @@ GameObject:
   - 4: {fileID: 406082}
   - 33: {fileID: 3337446}
   - 23: {fileID: 2335270}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Light_frame 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3043,7 +3051,7 @@ GameObject:
   - 4: {fileID: 489432}
   - 33: {fileID: 3336596}
   - 23: {fileID: 2326690}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Light_frame 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3060,7 +3068,7 @@ GameObject:
   - 4: {fileID: 420338}
   - 33: {fileID: 3329316}
   - 23: {fileID: 2324926}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Glass 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3077,7 +3085,7 @@ GameObject:
   - 4: {fileID: 463950}
   - 33: {fileID: 3316906}
   - 23: {fileID: 2388072}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Center_Bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3094,7 +3102,7 @@ GameObject:
   - 4: {fileID: 434452}
   - 33: {fileID: 3386818}
   - 23: {fileID: 2344286}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Light_frame 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3111,7 +3119,7 @@ GameObject:
   - 4: {fileID: 411586}
   - 33: {fileID: 3322272}
   - 23: {fileID: 2333414}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Light_frame 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3143,7 +3151,7 @@ GameObject:
   - 4: {fileID: 489624}
   - 33: {fileID: 3346548}
   - 23: {fileID: 2330514}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Glass 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3160,7 +3168,7 @@ GameObject:
   - 4: {fileID: 432156}
   - 33: {fileID: 3396232}
   - 23: {fileID: 2371604}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Light_frame 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3177,7 +3185,7 @@ GameObject:
   - 4: {fileID: 409694}
   - 33: {fileID: 3380716}
   - 23: {fileID: 2398760}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Light_frame 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3194,7 +3202,7 @@ GameObject:
   - 4: {fileID: 405598}
   - 33: {fileID: 3354764}
   - 23: {fileID: 2393522}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Outter_frame 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3211,7 +3219,7 @@ GameObject:
   - 4: {fileID: 450364}
   - 33: {fileID: 3325538}
   - 23: {fileID: 2372016}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Outter_frame 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3227,7 +3235,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 454348}
   - 95: {fileID: 9508418}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_panel_gen_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3278,7 +3286,7 @@ GameObject:
   - 4: {fileID: 449516}
   - 33: {fileID: 3302780}
   - 23: {fileID: 2343514}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Glass 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3295,7 +3303,7 @@ GameObject:
   - 4: {fileID: 437266}
   - 33: {fileID: 3369578}
   - 23: {fileID: 2323438}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Back_hex_panel_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3312,7 +3320,7 @@ GameObject:
   - 4: {fileID: 444146}
   - 33: {fileID: 3338906}
   - 23: {fileID: 2354534}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Back_hex_panel_01 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3329,7 +3337,7 @@ GameObject:
   - 4: {fileID: 465028}
   - 33: {fileID: 3356718}
   - 23: {fileID: 2389710}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Back_hex_panel_01 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3346,7 +3354,7 @@ GameObject:
   - 4: {fileID: 416654}
   - 33: {fileID: 3344882}
   - 23: {fileID: 2349176}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Back_hex_panel_01 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3380,7 +3388,7 @@ GameObject:
   - 4: {fileID: 423364}
   - 33: {fileID: 3355734}
   - 23: {fileID: 2347804}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Outter_frame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3395,7 +3403,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 433350}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_edge_06
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3412,7 +3420,7 @@ GameObject:
   - 4: {fileID: 462624}
   - 33: {fileID: 3354854}
   - 23: {fileID: 2397166}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Outter_frame 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3429,7 +3437,7 @@ GameObject:
   - 4: {fileID: 468610}
   - 33: {fileID: 3354178}
   - 23: {fileID: 2374240}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Light_frame 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3444,7 +3452,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 433158}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: p1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3461,7 +3469,7 @@ GameObject:
   - 4: {fileID: 465324}
   - 33: {fileID: 3311566}
   - 23: {fileID: 2335132}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Outter_frame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3478,7 +3486,7 @@ GameObject:
   - 4: {fileID: 470410}
   - 33: {fileID: 3339796}
   - 23: {fileID: 2369478}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Glass 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3512,7 +3520,7 @@ GameObject:
   - 4: {fileID: 407736}
   - 33: {fileID: 3340646}
   - 23: {fileID: 2378190}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Glass 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3527,7 +3535,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 499012}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: p4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3544,7 +3552,7 @@ GameObject:
   - 4: {fileID: 416822}
   - 33: {fileID: 3376632}
   - 23: {fileID: 2314958}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Glass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3561,7 +3569,7 @@ GameObject:
   - 4: {fileID: 486086}
   - 33: {fileID: 3328448}
   - 23: {fileID: 2334462}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Back_hex_panel_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3576,7 +3584,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 412190}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: p0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3625,7 +3633,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 468866}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_edge_05
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3642,7 +3650,7 @@ GameObject:
   - 4: {fileID: 448946}
   - 33: {fileID: 3388532}
   - 23: {fileID: 2356880}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Light_frame 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3657,7 +3665,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 459818}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_edge_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3674,7 +3682,7 @@ GameObject:
   - 4: {fileID: 407726}
   - 33: {fileID: 3347750}
   - 23: {fileID: 2327632}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Glass 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3691,7 +3699,7 @@ GameObject:
   - 4: {fileID: 429834}
   - 33: {fileID: 3305790}
   - 23: {fileID: 2390898}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Outter_frame 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3723,7 +3731,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 489278}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_edge_05
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3740,7 +3748,7 @@ GameObject:
   - 4: {fileID: 426264}
   - 33: {fileID: 3370200}
   - 23: {fileID: 2359060}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Light_frame 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3778,9 +3786,7 @@ GameObject:
   - 33: {fileID: 3348046}
   - 64: {fileID: 6462106}
   - 23: {fileID: 2318982}
-  - 54: {fileID: 5435116}
-  - 59: {fileID: 5906438}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: p1_geo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3797,7 +3803,7 @@ GameObject:
   - 4: {fileID: 442962}
   - 33: {fileID: 3310336}
   - 23: {fileID: 2392956}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Outter_frame 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3829,7 +3835,7 @@ GameObject:
   - 4: {fileID: 441004}
   - 33: {fileID: 3327220}
   - 23: {fileID: 2337588}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Back_hex_panel_01 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3901,7 +3907,7 @@ GameObject:
   - 4: {fileID: 496558}
   - 33: {fileID: 3340164}
   - 23: {fileID: 2333242}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Back_hex_panel_01 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3936,7 +3942,7 @@ GameObject:
   - 4: {fileID: 449730}
   - 33: {fileID: 3350080}
   - 23: {fileID: 2326888}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Outter_frame 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3953,7 +3959,7 @@ GameObject:
   - 4: {fileID: 471756}
   - 33: {fileID: 3346248}
   - 23: {fileID: 2359324}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Outter_frame 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3988,7 +3994,7 @@ GameObject:
   - 223: {fileID: 22309396}
   - 114: {fileID: 11457272}
   - 114: {fileID: 11444914}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: p3_canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4005,7 +4011,7 @@ GameObject:
   - 4: {fileID: 425478}
   - 33: {fileID: 3372120}
   - 23: {fileID: 2317264}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Back_hex_panel_01 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4020,7 +4026,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 416266}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_edge_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4055,7 +4061,7 @@ GameObject:
   - 4: {fileID: 406114}
   - 33: {fileID: 3314682}
   - 23: {fileID: 2392178}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Back_hex_panel_01 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4072,7 +4078,7 @@ GameObject:
   - 4: {fileID: 477828}
   - 33: {fileID: 3385894}
   - 23: {fileID: 2398606}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Light_frame 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4136,7 +4142,7 @@ GameObject:
   - 4: {fileID: 447916}
   - 33: {fileID: 3329120}
   - 23: {fileID: 2387158}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Outter_frame 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4170,7 +4176,7 @@ GameObject:
   - 4: {fileID: 414888}
   - 33: {fileID: 3383138}
   - 23: {fileID: 2318980}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Outter_frame 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4185,7 +4191,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 442972}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_edge_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4200,7 +4206,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 402428}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Geo3_smooth
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4232,7 +4238,7 @@ GameObject:
   - 4: {fileID: 449288}
   - 33: {fileID: 3353974}
   - 23: {fileID: 2387284}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Back_hex_panel_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4249,7 +4255,7 @@ GameObject:
   - 4: {fileID: 485452}
   - 33: {fileID: 3382902}
   - 23: {fileID: 2344238}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Back_hex_panel_01 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4266,7 +4272,7 @@ GameObject:
   - 4: {fileID: 456306}
   - 33: {fileID: 3340996}
   - 23: {fileID: 2395884}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Back_hex_panel_01 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4281,7 +4287,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 442008}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_edge_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4298,7 +4304,7 @@ GameObject:
   - 224: {fileID: 22435544}
   - 222: {fileID: 22216866}
   - 114: {fileID: 11431846}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: HexTexture
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4315,7 +4321,7 @@ GameObject:
   - 224: {fileID: 22488976}
   - 222: {fileID: 22241438}
   - 114: {fileID: 11498338}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: HexTexture
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4332,7 +4338,7 @@ GameObject:
   - 4: {fileID: 446336}
   - 33: {fileID: 3364576}
   - 23: {fileID: 2324222}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Glass 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4347,7 +4353,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 415008}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_edge_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4364,7 +4370,7 @@ GameObject:
   - 4: {fileID: 497306}
   - 33: {fileID: 3383190}
   - 23: {fileID: 2317646}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Back_hex_panel_01 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4379,7 +4385,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 447318}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: p5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4467,8 +4473,7 @@ GameObject:
   - 33: {fileID: 3346230}
   - 64: {fileID: 6430234}
   - 23: {fileID: 2319124}
-  - 54: {fileID: 5492686}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: p2_geo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4483,7 +4488,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 420774}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_edge_04
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4517,7 +4522,7 @@ GameObject:
   - 4: {fileID: 404362}
   - 33: {fileID: 3339988}
   - 23: {fileID: 2321750}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Outter_frame 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4532,7 +4537,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 452052}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_edge_06
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4547,7 +4552,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 414256}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_group
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4564,7 +4569,7 @@ GameObject:
   - 4: {fileID: 479988}
   - 33: {fileID: 3348668}
   - 23: {fileID: 2347224}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Back_hex_panel_01 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4581,7 +4586,7 @@ GameObject:
   - 4: {fileID: 498484}
   - 33: {fileID: 3389346}
   - 23: {fileID: 2394354}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Light_frame 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4598,7 +4603,7 @@ GameObject:
   - 4: {fileID: 416858}
   - 33: {fileID: 3364280}
   - 23: {fileID: 2311692}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Center_Bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4615,7 +4620,7 @@ GameObject:
   - 4: {fileID: 400764}
   - 33: {fileID: 3395544}
   - 23: {fileID: 2381596}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Glass 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4630,7 +4635,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 409812}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_edge_04
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4664,7 +4669,7 @@ GameObject:
   - 4: {fileID: 444300}
   - 33: {fileID: 3350328}
   - 23: {fileID: 2328682}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Glass 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4679,7 +4684,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 450930}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_edge_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4696,7 +4701,7 @@ GameObject:
   - 4: {fileID: 414076}
   - 33: {fileID: 3369186}
   - 23: {fileID: 2375104}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Back_hex_panel_01 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4713,7 +4718,7 @@ GameObject:
   - 4: {fileID: 411466}
   - 33: {fileID: 3322706}
   - 23: {fileID: 2341430}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Glass 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4783,7 +4788,7 @@ GameObject:
   - 4: {fileID: 436888}
   - 33: {fileID: 3310698}
   - 23: {fileID: 2310280}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Light_frame 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4800,7 +4805,7 @@ GameObject:
   - 4: {fileID: 493826}
   - 33: {fileID: 3338032}
   - 23: {fileID: 2398666}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Glass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4815,7 +4820,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 457262}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_edge_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4832,7 +4837,7 @@ GameObject:
   - 4: {fileID: 474274}
   - 33: {fileID: 3365946}
   - 23: {fileID: 2307886}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Center_Bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4864,7 +4869,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 413504}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Geo3_smooth
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4881,7 +4886,7 @@ GameObject:
   - 4: {fileID: 430900}
   - 33: {fileID: 3384886}
   - 23: {fileID: 2351422}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Glass 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4898,7 +4903,7 @@ GameObject:
   - 4: {fileID: 474050}
   - 33: {fileID: 3376982}
   - 23: {fileID: 2386908}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Glass 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4932,7 +4937,7 @@ GameObject:
   - 4: {fileID: 454490}
   - 33: {fileID: 3308970}
   - 23: {fileID: 2303962}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Back_hex_panel_01 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4949,7 +4954,7 @@ GameObject:
   - 224: {fileID: 22405350}
   - 222: {fileID: 22299064}
   - 114: {fileID: 11444090}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: HexTexture
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4967,7 +4972,7 @@ GameObject:
   - 223: {fileID: 22361494}
   - 114: {fileID: 11414860}
   - 114: {fileID: 11490058}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: p4_canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5018,7 +5023,7 @@ GameObject:
   - 4: {fileID: 445332}
   - 33: {fileID: 3342526}
   - 23: {fileID: 2343396}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Outter_frame 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5035,7 +5040,7 @@ GameObject:
   - 4: {fileID: 443350}
   - 33: {fileID: 3370052}
   - 23: {fileID: 2348144}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_Glass 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5053,9 +5058,7 @@ GameObject:
   - 33: {fileID: 3386038}
   - 64: {fileID: 6466900}
   - 23: {fileID: 2377812}
-  - 54: {fileID: 5446908}
-  - 59: {fileID: 5994434}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: p0_geo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5071,7 +5074,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 437076}
   - 95: {fileID: 9510826}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hex_panel_gen_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5452,7 +5455,7 @@ Transform:
   - {fileID: 22439040}
   - {fileID: 482730}
   m_Father: {fileID: 433158}
-  m_RootOrder: 3
+  m_RootOrder: 0
 --- !u!4 &412486
 Transform:
   m_ObjectHideFlags: 1
@@ -6145,10 +6148,8 @@ Transform:
   m_LocalPosition: {x: -5, y: 0, z: 5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 433956}
-  - {fileID: 22476636}
-  - {fileID: 441894}
   - {fileID: 412190}
+  - {fileID: 486046}
   m_Father: {fileID: 445074}
   m_RootOrder: 0
 --- !u!4 &433350
@@ -6173,12 +6174,12 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 109828}
-  m_LocalRotation: {x: -.500000238, y: .499999821, z: -.499999911, w: -.500000119}
+  m_LocalRotation: {x: -.500000238, y: .499999791, z: -.499999911, w: -.500000119}
   m_LocalPosition: {x: 0, y: 0, z: 5}
   m_LocalScale: {x: 25, y: 25, z: 25}
   m_Children:
   - {fileID: 414256}
-  m_Father: {fileID: 433158}
+  m_Father: {fileID: 486046}
   m_RootOrder: 0
 --- !u!4 &434452
 Transform:
@@ -6351,11 +6352,11 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 178000}
-  m_LocalRotation: {x: -.500000238, y: .499999821, z: -.499999911, w: -.500000119}
+  m_LocalRotation: {x: -.500000238, y: .499999791, z: -.499999911, w: -.500000119}
   m_LocalPosition: {x: 0, y: 0, z: 5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 433158}
+  m_Father: {fileID: 486046}
   m_RootOrder: 2
 --- !u!4 &442008
 Transform:
@@ -6503,8 +6504,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 161818}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: -1.62920685e-07}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 65, z: 0}
+  m_LocalScale: {x: 7, y: 7, z: 7}
   m_Children:
   - {fileID: 433158}
   - {fileID: 403504}
@@ -7558,6 +7559,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 425716}
   m_RootOrder: 0
+--- !u!4 &486046
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 153664}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 433956}
+  - {fileID: 22476636}
+  - {fileID: 441894}
+  m_Father: {fileID: 433158}
+  m_RootOrder: 1
 --- !u!4 &486086
 Transform:
   m_ObjectHideFlags: 1
@@ -13176,256 +13192,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 134098}
   m_Mesh: {fileID: 4300038, guid: 379921b9732e94b4788959c3223e5122, type: 3}
---- !u!54 &5428938
-Rigidbody:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 126832}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
---- !u!54 &5435116
-Rigidbody:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 178000}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
---- !u!54 &5446908
-Rigidbody:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 199658}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
---- !u!54 &5473320
-Rigidbody:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 139208}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
---- !u!54 &5482484
-Rigidbody:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 151144}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
---- !u!54 &5492686
-Rigidbody:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 188372}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
---- !u!59 &5906438
-HingeJoint:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 178000}
-  m_ConnectedBody: {fileID: 5492686}
-  m_Anchor: {x: -5, y: 0, z: 0}
-  m_Axis: {x: 0, y: 0, z: 1}
-  m_AutoConfigureConnectedAnchor: 0
-  m_ConnectedAnchor: {x: 5, y: 0, z: 0}
-  m_UseSpring: 0
-  m_Spring:
-    spring: 0
-    damper: 0
-    targetPosition: 0
-  m_UseMotor: 0
-  m_Motor:
-    targetVelocity: 0
-    force: 0
-    freeSpin: 0
-  m_UseLimits: 0
-  m_Limits:
-    min: 0
-    max: 0
-    bounciness: 0
-    bounceMinVelocity: .200000003
-    contactDistance: 0
-  m_BreakForce: Infinity
-  m_BreakTorque: Infinity
-  m_EnableCollision: 0
-  m_EnablePreprocessing: 1
---- !u!59 &5918344
-HingeJoint:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 139208}
-  m_ConnectedBody: {fileID: 5492686}
-  m_Anchor: {x: 0, y: 0, z: -5}
-  m_Axis: {x: 1, y: 0, z: 0}
-  m_AutoConfigureConnectedAnchor: 0
-  m_ConnectedAnchor: {x: 0, y: 0, z: 5}
-  m_UseSpring: 0
-  m_Spring:
-    spring: 0
-    damper: 0
-    targetPosition: 0
-  m_UseMotor: 0
-  m_Motor:
-    targetVelocity: 0
-    force: 0
-    freeSpin: 0
-  m_UseLimits: 0
-  m_Limits:
-    min: 0
-    max: 0
-    bounciness: 0
-    bounceMinVelocity: .200000003
-    contactDistance: 0
-  m_BreakForce: Infinity
-  m_BreakTorque: Infinity
-  m_EnableCollision: 0
-  m_EnablePreprocessing: 1
---- !u!59 &5965674
-HingeJoint:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 151144}
-  m_ConnectedBody: {fileID: 5492686}
-  m_Anchor: {x: 5, y: 0, z: 0}
-  m_Axis: {x: 0, y: 0, z: 1}
-  m_AutoConfigureConnectedAnchor: 0
-  m_ConnectedAnchor: {x: -5, y: 0, z: 0}
-  m_UseSpring: 0
-  m_Spring:
-    spring: 0
-    damper: 0
-    targetPosition: 0
-  m_UseMotor: 0
-  m_Motor:
-    targetVelocity: 0
-    force: 0
-    freeSpin: 0
-  m_UseLimits: 0
-  m_Limits:
-    min: 0
-    max: 0
-    bounciness: 0
-    bounceMinVelocity: .200000003
-    contactDistance: 0
-  m_BreakForce: Infinity
-  m_BreakTorque: Infinity
-  m_EnableCollision: 0
-  m_EnablePreprocessing: 1
---- !u!59 &5978468
-HingeJoint:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 126832}
-  m_ConnectedBody: {fileID: 5492686}
-  m_Anchor: {x: 0, y: 0, z: 5}
-  m_Axis: {x: 1, y: 0, z: 0}
-  m_AutoConfigureConnectedAnchor: 0
-  m_ConnectedAnchor: {x: 0, y: 0, z: -5}
-  m_UseSpring: 0
-  m_Spring:
-    spring: 0
-    damper: 0
-    targetPosition: 0
-  m_UseMotor: 0
-  m_Motor:
-    targetVelocity: 0
-    force: 0
-    freeSpin: 0
-  m_UseLimits: 0
-  m_Limits:
-    min: 0
-    max: 0
-    bounciness: 0
-    bounceMinVelocity: .200000003
-    contactDistance: 0
-  m_BreakForce: Infinity
-  m_BreakTorque: Infinity
-  m_EnableCollision: 0
-  m_EnablePreprocessing: 1
---- !u!59 &5994434
-HingeJoint:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 199658}
-  m_ConnectedBody: {fileID: 5435116}
-  m_Anchor: {x: -5, y: 0, z: 0}
-  m_Axis: {x: 0, y: 0, z: 1}
-  m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 5, y: 1.93715141e-06, z: -5.9604622e-07}
-  m_UseSpring: 0
-  m_Spring:
-    spring: 0
-    damper: 0
-    targetPosition: 0
-  m_UseMotor: 0
-  m_Motor:
-    targetVelocity: 0
-    force: 0
-    freeSpin: 0
-  m_UseLimits: 0
-  m_Limits:
-    min: 0
-    max: 0
-    bounciness: 0
-    bounceMinVelocity: .200000003
-    contactDistance: 0
-  m_BreakForce: Infinity
-  m_BreakTorque: Infinity
-  m_EnableCollision: 0
-  m_EnablePreprocessing: 1
 --- !u!64 &6428216
 MeshCollider:
   m_ObjectHideFlags: 1
@@ -14280,19 +14046,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ae469cfa8dd5487d85fe0964e340659, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  smooth: 2
-  p0: {fileID: 176488}
-  p1: {fileID: 173190}
-  p2: {fileID: 112784}
-  p3: {fileID: 104190}
-  p4: {fileID: 175640}
-  p5: {fileID: 187408}
-  renderTex_0: {fileID: 8400000, guid: afcbb068b8c90401babc29866368f207, type: 2}
-  renderTex_1: {fileID: 8400000, guid: d225ad6d2882840a8a98e82d67268a0d, type: 2}
-  renderTex_2: {fileID: 8400000, guid: 7e3f4cd72fe354335be72e02f5d51a4a, type: 2}
-  renderTex_3: {fileID: 8400000, guid: 0ecc6e0cd139f40f49ac8bc7f8b7043e, type: 2}
-  renderTex_4: {fileID: 8400000, guid: 97937d4c48c3a4758a1d67d2af8ff321, type: 2}
-  renderTex_5: {fileID: 8400000, guid: 6abe509fcab54478888289f427bb1db7, type: 2}
+  statinoaryRotationSpeed: 10
+  statinoaryRotationVector: {x: 0, y: 1, z: 0}
+  distanceFromCameraInZAfterUnfolding: 100
+  m_initialPosition: {x: 0, y: 0, z: 0}
+  mainCamera: {fileID: 0}
+  parseViewCamera: {fileID: 0}
+  timeForFoldingUnfolding: 1.5
+  easeForFoldungUnfolding: 7
+  uiFaceOnSide:
+  - {fileID: 176488}
+  - {fileID: 173190}
+  - {fileID: 112784}
+  - {fileID: 104190}
+  - {fileID: 175640}
+  - {fileID: 187408}
+  renderTexSide:
+  - {fileID: 8400000, guid: afcbb068b8c90401babc29866368f207, type: 2}
+  - {fileID: 8400000, guid: d225ad6d2882840a8a98e82d67268a0d, type: 2}
+  - {fileID: 8400000, guid: 7e3f4cd72fe354335be72e02f5d51a4a, type: 2}
+  - {fileID: 8400000, guid: 0ecc6e0cd139f40f49ac8bc7f8b7043e, type: 2}
+  - {fileID: 8400000, guid: 97937d4c48c3a4758a1d67d2af8ff321, type: 2}
+  - {fileID: 8400000, guid: 6abe509fcab54478888289f427bb1db7, type: 2}
 --- !u!114 &11424242
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -15133,18 +14908,6 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1.21000004
   m_Text: 47.0
---- !u!114 &11460728
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 161818}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 43f5b73d721454279a77796b74f34fae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 10
 --- !u!114 &11461518
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -18029,14 +17792,14 @@ RectTransform:
   m_GameObject: {fileID: 151286}
   m_LocalRotation: {x: 0, y: .707106829, z: 0, w: .707106709}
   m_LocalPosition: {x: 0, y: 0, z: 5}
-  m_LocalScale: {x: .00488500018, y: .00488500018, z: .00488500018}
+  m_LocalScale: {x: .00488500064, y: .00488500064, z: .00488500064}
   m_Children:
   - {fileID: 22405350}
-  m_Father: {fileID: 433158}
+  m_Father: {fileID: 486046}
   m_RootOrder: 1
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -3.10746464e-13, y: 0}
   m_SizeDelta: {x: 2048, y: 2048}
   m_Pivot: {x: .5, y: .5}
 --- !u!224 &22477106
