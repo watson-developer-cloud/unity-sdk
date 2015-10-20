@@ -79,7 +79,7 @@ public class ParseTestGetData : MonoBehaviour {
 	{
 		Debug.Log ("answers: " + answers);
 	}
-
+/*
 	//	panel 1
 	public Text tf_answer0;
 	public Text tf_answer1;
@@ -138,5 +138,5 @@ public class ParseTestGetData : MonoBehaviour {
 
 		//	panel 2
 //		tf_question.text = questions.questions
-	}
+	}*/
 }
