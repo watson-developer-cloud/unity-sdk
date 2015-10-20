@@ -63,7 +63,11 @@ namespace IBM.Watson.Widgets
 
         #region Private Data
         [SerializeField]
+        private bool m_ActivateOnStart = true;
+        [SerializeField]
         private Input m_ActivateInput = new Input("Activate", typeof(BooleanData), "OnActivate");
+        [SerializeField]
+        private Input m_DisableInput = new Input("Disable", typeof(BooleanData), "OnDisableInput" );
         [SerializeField]
         private Output m_AudioOutput = new Output(typeof(AudioData));
         [SerializeField]
@@ -84,16 +88,28 @@ namespace IBM.Watson.Widgets
         #endregion
 
         #region Private Functions
+        protected override void Start()
+        {
+            base.Start();
+            if ( m_ActivateOnStart )
+                Active = true;
+        }
         private void OnActivate(Data data)
         {
             Active = ((BooleanData)data).Boolean;
-            m_ActivateOutput.SendData( data );
+        }
+        private void OnDisableInput(Data data )
+        {
+            Active = !((BooleanData)data).Boolean;
         }
 
         private void StartRecording()
         {
             if (m_RecordingRoutine == 0)
+            {
                 m_RecordingRoutine = Runnable.Run(RecordingHandler());
+                m_ActivateOutput.SendData( new BooleanData( true ) );
+            }
         }
 
         private void StopRecording()
@@ -104,6 +120,8 @@ namespace IBM.Watson.Widgets
                 Runnable.Stop(m_RecordingRoutine);
                 m_RecordingRoutine = 0;
                 m_Recording = null;
+
+                m_ActivateOutput.SendData( new BooleanData( false ) );
             }
         }
 
@@ -160,7 +178,7 @@ namespace IBM.Watson.Widgets
 					yield return new WaitForSeconds(m_LevelOutputInterval);
 				}
 
-                if ( bOutputLevelData )
+                if ( m_Recording != null && bOutputLevelData )
                 {
                     float fLevel = 0.0f;
                     if ( writePos < lastReadPos )

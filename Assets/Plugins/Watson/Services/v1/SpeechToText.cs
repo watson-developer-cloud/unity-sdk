@@ -116,6 +116,14 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
 
         #region Public Properties
         /// <summary>
+        /// True if StartListening() has been called.
+        /// </summary>
+        public bool IsListening { get { return m_IsListening; } private set { m_IsListening = value; } }
+        /// <summary>
+        /// True if AudioData has been sent and we are recognizing speech.
+        /// </summary>
+        public bool AudioSent { get { return m_AudioSent; } }
+        /// <summary>
         /// This delegate is invoked when an error occurs.
         /// </summary>
         public ErrorEvent OnError { get; set; }
@@ -150,15 +158,6 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         #region Listening Functions
 
         /// <summary>
-        /// Checks if StartListening() has already been called.
-        /// </summary>
-        /// <returns>true is returned if we are already listening.</returns>
-        public bool IsListening()
-        {
-            return m_IsListening;
-        }
-
-        /// <summary>
         /// This starts the service listening to the microphone and invoking the callback for any recognized 
         /// speech. StopListening() should be called to stop this service from sending audio data to the
         /// server. This function can send a continuous stream of audio to the server for processing.
@@ -169,7 +168,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
-            if (IsListening())
+            if (m_IsListening)
                 return false;
             if (!CreateListenConnector())
                 return false;
@@ -230,7 +229,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         /// <returns>Returns true on success, false on failure.</returns>
         public bool StopListening()
         {
-            if (!IsListening())
+            if (!m_IsListening)
                 return false;
 
             m_IsListening = false;
@@ -323,6 +322,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                     m_LastWSMessage = Time.time;
                 }
             }
+            Log.Debug( "SpeechToText", "KeepAlive exited." );
         }
 
         private void OnListenMessage(WSConnector.Message msg)
@@ -376,6 +376,8 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                     else if (json.Contains("error"))
                     {
                         Log.Error("SpeechToText", "WebSocket error: {0}", (string)json["error"]);
+                        if ( OnError != null )
+                            OnError( (string)json["error"] );
                     }
                     else
                     {

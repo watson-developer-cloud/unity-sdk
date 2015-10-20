@@ -63,6 +63,18 @@ namespace IBM.Watson.Services.v1
             public string text { get; set; }
             public string top_class { get; set; }
             public Class[] classes { get; set; }
+
+            public double topConfidence { 
+                get {
+                    double fTop = 0.0;
+                    if ( classes != null )
+                    {
+                        foreach( var c in classes )
+                            fTop = Math.Max( c.confidence, fTop );
+                    }
+                    return fTop;
+                }
+            }
         };
         public delegate void OnClassify( ClassifyResult classify );
         public delegate void OnDeleteClassifier( bool success );

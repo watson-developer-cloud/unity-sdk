@@ -35,7 +35,7 @@ namespace IBM.Watson.Widgets
 	    TextToSpeech m_TTS = new TextToSpeech();
 
         [SerializeField]
-        private Input m_TextInput = new Input( "TextInput", typeof(TextData), "OnTextInput" ); 
+        private Input m_TextInput = new Input( "Text", typeof(TextData), "OnTextInput" ); 
         [SerializeField]
         private Output m_AudioOut = new Output( typeof(AudioData) );
         [SerializeField]
@@ -91,8 +91,9 @@ namespace IBM.Watson.Widgets
 	            m_Input.text = "No problem with opening the pod bay doors.";
 	    }
 
-        private void Start()
+        protected override void Start()
         {
+            base.Start();
             m_Source = GetComponent<AudioSource>();
         }
 
