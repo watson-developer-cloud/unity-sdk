@@ -36,8 +36,6 @@ namespace IBM.Watson.Widgets
     [RequireComponent(typeof(AudioSource))]
     public class QuestionWidget : Widget
     {
-        #region Private Data
-        #endregion
 
         #region Widget Interface
         protected override string GetName()
@@ -47,12 +45,22 @@ namespace IBM.Watson.Widgets
         #endregion
 
         #region Public Properties
+        public AvatarWidget Avatar { get; set; }
         public ITM.Questions Questions { get; set; }
         public ITM.Answers Answers { get; set; }
         #endregion
 
+        protected override void Start()
+        {
+            base.Start();
 
+            if (! Avatar.ITM.GetParseData( Questions.questions[0].transactionId, OnParseData ) )
+                Log.Error( "QuestionWidget", "Failed to request ParseData." );
+        }
 
+        private void OnParseData( ITM.ParseData parse )
+        {
 
+        }
     }
 }
