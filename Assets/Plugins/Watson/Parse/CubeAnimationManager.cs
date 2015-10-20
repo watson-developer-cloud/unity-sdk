@@ -15,6 +15,17 @@ public class CubeAnimationManager : MonoBehaviour {
 		Chat
 	}
 
+	public enum CubeAnimationState{
+		NotPresent = 0, 	//Cube is not created OR not visible on the scene
+		ComingToScene,
+		IdleOnScene,
+		UnFolding,
+		Unfolded,
+		Folding,
+		ZoomingToSide,
+		ZoomedToSide
+	}
+
 	public float statinoaryRotationSpeed = 10.0f;
 	public Vector3  statinoaryRotationVector;
 	public float distanceFromCameraInZAfterUnfolding = 100f;
@@ -41,6 +52,10 @@ public class CubeAnimationManager : MonoBehaviour {
 	[Header("UI Faces")]
 	[SerializeField]
 	private GameObject[] uiFaceOnSide;
+
+	[Header("UI Faces for Zoom")]
+	[SerializeField]
+	private GameObject[] presentationSide;
 
 	[Header("Render Textures")]
 	[SerializeField]
@@ -96,12 +111,12 @@ public class CubeAnimationManager : MonoBehaviour {
 		};
 
 		positionZoom = new Vector3[]{
-			new Vector3 (20f, 0f, 22.0f),	//XRay Logo on right most 
-			new Vector3 (-20f, 0f, 3.15f),	//Our Hero Side
-			new Vector3 (20f, 2.5f, 14f),
-			new Vector3 (20f, 0f, 13.5f),
-			new Vector3 (20f, -2.5f, 14f),
-			new Vector3 (20f, -2.5f, 17.5f)
+			new Vector3 (-17.5f, 1f, 	-2f), 	//Our Hero Side - Zoomed to the camera
+			new Vector3 (17.5f, 2.5f, 	25.0f),	//XRay Logo on right most 
+			new Vector3 (17.5f, 10f, 	11.5f),	//Top - backup
+			new Vector3 (17.5f, 2.5f, 	16f),	//Between XRay logo and hero
+			new Vector3 (17.5f, -5f, 	11.5f),	//Bottom close to hero
+			new Vector3 (17.5f, -5f, 	20.5f) 	//Bottom close to logo
 		};
 
 
@@ -119,8 +134,11 @@ public class CubeAnimationManager : MonoBehaviour {
 		}
 
 		m_initialPosition = transform.position;
+
+		ShowCube ();
 	}
 
+	private int currentZoom = 0;
 	void Update()
 	{
 		if (Input.GetKeyDown (KeyCode.Return)) {
@@ -135,8 +153,12 @@ public class CubeAnimationManager : MonoBehaviour {
 		}
 
 		if (Input.GetKeyDown (KeyCode.Z)) {
+			FocusOnSide((CubeSideType) currentZoom );
+			currentZoom = (currentZoom + 1) % uiFaceOnSide.Length;
+		}
 
-			//FocusOnSide();
+		if(Input.GetKeyDown (KeyCode.X)){
+			UnFocus();
 		}
 
 		if (Input.GetKeyDown (KeyCode.Space)) {
@@ -153,7 +175,7 @@ public class CubeAnimationManager : MonoBehaviour {
 		}
 	}
 
-	#region Public Functions for Fold / Unfold / Focus On Side / Defocus etc.
+	#region Folding - Unfolding Animations
 		
 	public void Fold(){
 
@@ -177,7 +199,7 @@ public class CubeAnimationManager : MonoBehaviour {
 		}
 
 		//Rotate to camera 
-		animationRotationCube = LeanTween.rotateLocal(gameObject, parseViewCamera.transform.rotation.eulerAngles, timeForFoldingUnfolding).setEase(LeanTweenType.easeInOutCubic);
+		animationRotationCube = LeanTween.rotateLocal(gameObject, parseViewCamera.transform.rotation.eulerAngles - new Vector3(0.0f, 90.0f, 0.0f), timeForFoldingUnfolding).setEase(LeanTweenType.easeInOutCubic);
 
 		//Move object cloase to camera
 		animationPositionCube = LeanTween.move (gameObject, parseViewCamera.transform.position + distanceFromCameraInZAfterUnfolding * parseViewCamera.transform.forward, timeForFoldingUnfolding).setEase(LeanTweenType.easeInOutCubic);
@@ -212,21 +234,63 @@ public class CubeAnimationManager : MonoBehaviour {
 	#endregion
 
 
-	#region Folding - Unfolding Animations
+	#region Focus - UnFocus Animations
 
 	public void FocusOnSide(CubeSideType sideType){
-		if(uiFaceOnSide.Length < (int) sideType){
+		if(presentationSide.Length < (int) sideType){
 			Log.Error("CubeAnimationManager", "CubeAnimationManager - FocusOnSide {0} has wrong number as side. ", (int) sideType);
 			return;
 		}
 
+		CubeAnimationStop ();
 
+
+		for (int i = 0; i < presentationSide.Length; i++) {
+
+			Vector3 offsetPosition = presentationSide[i].transform.parent.localPosition + presentationSide[i].transform.parent.parent.localPosition;
+			if(i == 0){
+				offsetPosition += presentationSide[i].transform.parent.parent.parent.localPosition;
+			}
+
+			if(i == (int) sideType){	//Our hero object!
+				//Our Hero object
+				animationPositionOnSide[i] = LeanTween.moveLocal (presentationSide[i], positionZoom[0] - offsetPosition, timeForFoldingUnfolding).setEase (easeForFoldungUnfolding);
+			}
+			else if(i < (int) sideType){
+				animationPositionOnSide[i] = LeanTween.moveLocal (presentationSide[i], positionZoom[ ((i + 1) % uiFaceOnSide.Length) ] - offsetPosition, timeForFoldingUnfolding).setEase (easeForFoldungUnfolding);
+			}
+			else{
+				animationPositionOnSide[i] = LeanTween.moveLocal (presentationSide[i], positionZoom[i] - offsetPosition, timeForFoldingUnfolding).setEase (easeForFoldungUnfolding);
+			}
+
+		}
+
+		//Make sure that our sides are in right rotation
+		for (int i = 0; i < uiFaceOnSide.Length; i++) {
+			animationRotationOnSide[i] = LeanTween.rotateLocal (uiFaceOnSide[i], rotationUnfold[i].eulerAngles, timeForFoldingUnfolding).setEase (easeForFoldungUnfolding);
+		}
+
+	}
+
+	public void UnFocus(){
+
+		CubeAnimationStop ();
+
+		for (int i = 0; i < uiFaceOnSide.Length; i++) {
+			animationPositionOnSide[i] = LeanTween.moveLocal (presentationSide[i], Vector3.zero, timeForFoldingUnfolding).setEase (easeForFoldungUnfolding);
+		}
 
 	}
 
 	#endregion
 
 	#region Focus
+
+	public void ShowCube(){
+		LeanTween.moveLocal (gameObject, new Vector3 (0, 40, 0), 2.0f).setFrom (new Vector3 (0, -40, 0)).setEase (LeanTweenType.easeSpring);
+		LeanTween.scale (gameObject, Vector3.one * 3.5f, 2.0f).setFrom (Vector3.one);
+	}
+
 
 	#endregion
 
