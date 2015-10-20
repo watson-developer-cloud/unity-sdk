@@ -49,7 +49,7 @@ namespace IBM.Watson.Widgets
         [SerializeField]
         private Input m_ActivateInput = new Input( "Activate", typeof(BooleanData), "OnActivate" );
         [SerializeField]
-        private Input m_AudioInput = new Input( "AudioIn", typeof(AudioData), "OnAudio" );
+        private Input m_AudioInput = new Input( "Audio", typeof(AudioData), "OnAudio" );
         [SerializeField]
         private Output m_TextOutput = new Output( typeof(TextData) );
         [SerializeField]
@@ -59,9 +59,9 @@ namespace IBM.Watson.Widgets
         #region Public Properties
         public bool Active
         {
-            get { return m_STT.IsListening(); }
+            get { return m_STT.IsListening; }
             set {
-                if ( value && !m_STT.IsListening() )
+                if ( value && !m_STT.IsListening )
                 {
  	                m_STT.DetectSilence = m_DetectSilence;
 	                m_STT.EnableWordConfidence = m_WordConfidence;
@@ -73,7 +73,7 @@ namespace IBM.Watson.Widgets
 	                if ( m_StatusText != null )
 	                    m_StatusText.text = "LISTENING";
                 }
-                else if ( !value && m_STT.IsListening() )
+                else if ( !value && m_STT.IsListening )
                 {
  	                m_STT.StopListening();
 	                if ( m_StatusText != null )
@@ -88,8 +88,9 @@ namespace IBM.Watson.Widgets
             Active = !Active;
 	    }
 
-        private void Start()
+        protected override void Start()
 	    {
+            base.Start();
 	        Logger.InstallDefaultReactors();
 
 	        if ( m_StatusText != null )

@@ -175,6 +175,7 @@ namespace IBM.Watson.Widgets
                     m_TargetInputResolved = true;
                     m_TargetInput = null;
 
+                    // if we have no target object, then default to our own game object..
                     if (m_TargetObject == null)
                         return false;
 
@@ -229,41 +230,32 @@ namespace IBM.Watson.Widgets
         #endregion
 
         #region Private Data
+        private bool m_Initialized = false;
         private Input[] m_Inputs = null;
         private Output[] m_Outputs = null;
         #endregion
 
         #region Public Properties
         public string WidgetName { get { return GetName(); } }
-        public Input[] Inputs
-        {
-            get
-            {
-                if (m_Inputs == null)
-                {
-                    m_Inputs = GetMembersByType<Input>();
-                    foreach (var input in m_Inputs)
-                        input.Start(this);
-                }
-                return m_Inputs;
-            }
-        }
-        public Output[] Outputs
-        {
-            get
-            {
-                if (m_Outputs == null)
-                {
-                    m_Outputs = GetMembersByType<Output>();
-                    foreach (var output in m_Outputs)
-                        output.Start(this);
-                }
-                return m_Outputs;
-            }
-        }
+        public Input[] Inputs { get { if (! m_Initialized ) InitializeIO(); return m_Inputs; } }
+        public Output[] Outputs { get { if (! m_Initialized ) InitializeIO(); return m_Outputs; } }
         #endregion
 
         #region Private Functions
+        private void InitializeIO()
+        {
+            if (! m_Initialized )
+            {
+                m_Outputs = GetMembersByType<Output>();
+                foreach (var output in m_Outputs)
+                    output.Start(this);
+                m_Inputs = GetMembersByType<Input>();
+                foreach (var input in m_Inputs)
+                    input.Start(this);
+                m_Initialized = true;
+            }
+        }
+
         private T[] GetMembersByType<T>() where T : class
         {
             List<T> inputs = new List<T>();
@@ -285,6 +277,10 @@ namespace IBM.Watson.Widgets
             }
 
             return inputs.ToArray();
+        }
+        protected virtual void Start()
+        {
+            InitializeIO();
         }
         #endregion
 

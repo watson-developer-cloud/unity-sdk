@@ -73,15 +73,18 @@ namespace IBM.Watson.UnitTests
             m_GetPipelineTested = true;
         }
 
-        private void OnAskQuestion( ITM.Question question )
+        private void OnAskQuestion( ITM.Questions questions )
         {
-            Test( question != null );
-            if ( question != null  )
+            Test( questions != null );
+            if ( questions != null  )
             {
-                Log.Status( "TestITM", "OnAskQuestion: {0}", question.question.questionText );
-                m_ITM.GetAnswers( question.transactionId, OnGetAnswers );
-                m_ITM.GetParseData( question.transactionId, OnGetParseData );
-                m_ITM.GetQuestion( question.transactionId, OnGetQuestion );
+                foreach( var question in questions.questions )
+                {
+                    Log.Status( "TestITM", "OnAskQuestion: {0} ({1})", question.question.questionText, question.topConfidence );
+                    m_ITM.GetAnswers( question.transactionId, OnGetAnswers );
+                    m_ITM.GetParseData( question.transactionId, OnGetParseData );
+                    m_ITM.GetQuestion( question.transactionId, OnGetQuestion );
+                }
             }
             else
             {
