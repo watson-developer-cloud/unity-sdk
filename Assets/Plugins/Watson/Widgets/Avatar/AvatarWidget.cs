@@ -96,6 +96,7 @@ namespace IBM.Watson.Widgets
             {
                 m_State = value;
                 Log.Debug( "AvatarWidget", "State {0}", m_State.ToString() );
+
                 if (m_State == AvatarState.LISTENING)
                     EventManager.Instance.SendEvent(EventManager.onMoodChange, MoodType.Idle);
                 else if (m_State == AvatarState.THINKING)
@@ -199,9 +200,9 @@ namespace IBM.Watson.Widgets
             }
             else if (m_FocusQuestion != null)
             {
+                State = AvatarState.LISTENING;
                 // send event to question then..
                 m_FocusQuestion.GetComponent<QuestionWidget>().EventManager.SendEvent(m_ClassifyResult.top_class);
-                State = AvatarState.LISTENING;
             }
         }
 
@@ -246,7 +247,7 @@ namespace IBM.Watson.Widgets
                         Destroy(m_FocusQuestion);
 
                     m_FocusQuestion = GameObject.Instantiate(m_QuestionPrefab);
-                    m_FocusQuestion.transform.SetParent(transform, false);
+                    //m_FocusQuestion.transform.SetParent(transform, false);
 
                     QuestionWidget question = m_FocusQuestion.GetComponentInChildren<QuestionWidget>();
                     if (question != null)

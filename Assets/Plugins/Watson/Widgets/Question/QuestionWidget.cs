@@ -110,6 +110,9 @@ namespace IBM.Watson.Widgets
             m_EventManager.RegisterEventReceiver("features", OnDisplayFeatures);
             m_EventManager.RegisterEventReceiver("location", OnDisplayLocation);
             m_EventManager.RegisterEventReceiver("answers", OnDisplayAnswers);
+
+            // give the cube animation manager the game object
+            Cube.avatarGameobject = Avatar.gameObject;
         }
 
         private void OnParseData(ITM.ParseData parse)
