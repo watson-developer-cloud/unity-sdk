@@ -36,6 +36,10 @@ namespace IBM.Watson.Widgets
     [RequireComponent(typeof(AudioSource))]
     public class QuestionWidget : Widget
     {
+        #region Private Data
+        private EventManager m_EventManager = new EventManager();
+        private CubeAnimationManager m_CubeAnimMgr = null;
+        #endregion
 
         #region Widget Interface
         protected override string GetName()
@@ -45,20 +49,70 @@ namespace IBM.Watson.Widgets
         #endregion
 
         #region Public Properties
+        public EventManager EventManager { get { return m_EventManager; } }
         public AvatarWidget Avatar { get; set; }
         public ITM.Questions Questions { get; set; }
         public ITM.Answers Answers { get; set; }
+        public CubeAnimationManager Cube {
+            get {
+                if ( m_CubeAnimMgr == null )
+                    m_CubeAnimMgr = GetComponentInChildren<CubeAnimationManager>();
+                return m_CubeAnimMgr;
+            }
+        }
         #endregion
+
+        public void OnDisplayAnswers(object[] args)
+        {
+            Cube.FocusOnSide( CubeAnimationManager.CubeSideType.Answers );
+        }
+
+        public void OnDisplayParse(object[] args)
+        {
+            Cube.FocusOnSide( CubeAnimationManager.CubeSideType.Parse );
+        }
+
+        public void OnDisplayEvidence(object[] args)
+        {
+            Cube.FocusOnSide( CubeAnimationManager.CubeSideType.Evidence );
+        }
+
+        public void OnDisplayFeatures(object[] args)
+        {
+            Cube.FocusOnSide( CubeAnimationManager.CubeSideType.Chat );
+        }
+
+        public void OnDisplayLocation(object[] args)
+        {
+            Cube.FocusOnSide( CubeAnimationManager.CubeSideType.Location );
+        }
+
+        public void OnFold(object[] args)
+        {
+            Cube.Fold();
+        }
+        public void OnUnfold(object[] args)
+        {
+            Cube.UnFold();
+        }
 
         protected override void Start()
         {
             base.Start();
 
-            if (! Avatar.ITM.GetParseData( Questions.questions[0].transactionId, OnParseData ) )
-                Log.Error( "QuestionWidget", "Failed to request ParseData." );
+            if (!Avatar.ITM.GetParseData(Questions.questions[0].transactionId, OnParseData))
+                Log.Error("QuestionWidget", "Failed to request ParseData.");
+
+            m_EventManager.RegisterEventReceiver("fold", OnFold);
+            m_EventManager.RegisterEventReceiver("unfold", OnUnfold);
+            m_EventManager.RegisterEventReceiver("evidence", OnDisplayEvidence);
+            m_EventManager.RegisterEventReceiver("parse", OnDisplayParse);
+            m_EventManager.RegisterEventReceiver("features", OnDisplayFeatures);
+            m_EventManager.RegisterEventReceiver("location", OnDisplayLocation);
+            m_EventManager.RegisterEventReceiver("answers", OnDisplayAnswers);
         }
 
-        private void OnParseData( ITM.ParseData parse )
+        private void OnParseData(ITM.ParseData parse)
         {
 
         }

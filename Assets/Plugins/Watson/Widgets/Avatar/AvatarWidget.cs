@@ -41,7 +41,8 @@ namespace IBM.Watson.Widgets
     public class AvatarWidget : Widget
     {
         #region Public Types
-        public enum AvatarState {
+        public enum AvatarState
+        {
             LISTENING,
             THINKING,
             ANSWERING
@@ -52,6 +53,11 @@ namespace IBM.Watson.Widgets
         private ITM m_ITM = new ITM();                      // ITM service is used to get question & answer details
         private NLC m_NLC = new NLC();                      // natural language classifier
         private AvatarState m_State = AvatarState.LISTENING;
+        private NLC.ClassifyResult m_ClassifyResult = null;
+
+        private SpeechToText.ResultList m_SpeechResult = null;
+        private string m_SpeechText = null;
+        private ITM.Questions m_QuestionResult = null;
         private GameObject m_FocusQuestion = null;
 
         [SerializeField]
@@ -63,16 +69,16 @@ namespace IBM.Watson.Widgets
         [SerializeField]
         private string m_Pipeline = "thunderstone";
         [SerializeField]
-        private Input m_RecognizeInput = new Input( "Recognize", typeof(SpeechToTextData), "OnRecognize" );
+        private Input m_RecognizeInput = new Input("Recognize", typeof(SpeechToTextData), "OnRecognize");
         [SerializeField]
         private Input m_levelInput = new Input("Level", typeof(FloatData), "OnLevelInput");
         [SerializeField]
-        private Output m_TextOutput = new Output( typeof(TextData) );
-        [SerializeField, Tooltip("Recognized speech is put into this Text UI field.") ]
-        private Text m_RecognizeText = null;    
+        private Output m_TextOutput = new Output(typeof(TextData));
+        [SerializeField, Tooltip("Recognized speech is put into this Text UI field.")]
+        private Text m_RecognizeText = null;
         [SerializeField]
         private Text m_QuestionText = null;
-        [SerializeField, Tooltip("The results of the NLC is placed in this text field.") ]
+        [SerializeField, Tooltip("The results of the NLC is placed in this text field.")]
         private Text m_ClassifyText = null;
         [SerializeField]
         private Text m_AnswerText = null;
@@ -83,15 +89,19 @@ namespace IBM.Watson.Widgets
         #region Public Properties
         public ITM ITM { get { return m_ITM; } }
         public NLC NLC { get { return m_NLC; } }
-        public AvatarState State { get { return m_State; }
-            private set {
+        public AvatarState State
+        {
+            get { return m_State; }
+            private set
+            {
                 m_State = value;
-                if ( m_State == AvatarState.LISTENING )
-                    EventManager.Instance.SendEvent(EventManager.onMoodChange, MoodType.Idle );
-                else if ( m_State == AvatarState.THINKING )
-                    EventManager.Instance.SendEvent(EventManager.onMoodChange, MoodType.Urgent );
+                Log.Debug( "AvatarWidget", "State {0}", m_State.ToString() );
+                if (m_State == AvatarState.LISTENING)
+                    EventManager.Instance.SendEvent(EventManager.onMoodChange, MoodType.Idle);
+                else if (m_State == AvatarState.THINKING)
+                    EventManager.Instance.SendEvent(EventManager.onMoodChange, MoodType.Urgent);
                 else
-                    EventManager.Instance.SendEvent(EventManager.onMoodChange, MoodType.Interested );
+                    EventManager.Instance.SendEvent(EventManager.onMoodChange, MoodType.Interested);
             }
         }
         #endregion
@@ -114,7 +124,7 @@ namespace IBM.Watson.Widgets
         {
             get
             {
-                if ( m_pebbleManager == null )
+                if (m_pebbleManager == null)
                     m_pebbleManager = GetComponentInChildren<PebbleManager>();
                 return m_pebbleManager;
             }
@@ -130,13 +140,13 @@ namespace IBM.Watson.Widgets
         protected override void Start()
         {
             base.Start();
-            m_ITM.Login( OnItmLogin );
-            m_ITM.GetPipeline( m_Pipeline, true );
+            m_ITM.Login(OnItmLogin);
+            m_ITM.GetPipeline(m_Pipeline, true);
         }
         private void OnItmLogin(bool success)
         {
-            if (! success )
-                Log.Error( "AvtarWidget", "Failed to login to ITM." );
+            if (!success)
+                Log.Error("AvtarWidget", "Failed to login to ITM.");
         }
         #endregion
 
@@ -150,162 +160,105 @@ namespace IBM.Watson.Widgets
         #endregion
 
         #region Audio Input
-        private void OnRecognize( Data data)
-	    {
+        private void OnRecognize(Data data)
+        {
             SpeechToText.ResultList result = ((SpeechToTextData)data).Results;
-            if ( State == AvatarState.LISTENING )
+            if (State == AvatarState.LISTENING)
             {
-	            if (result != null && result.Results.Length > 0 
+                if (result != null && result.Results.Length > 0
                     && result.Results[0].Final
-                    && result.Results[0].Alternatives.Length > 0 )
-	            {
-                    string text = result.Results[0].Alternatives[0].Transcript;
-                    Log.Debug( "AvatarWidget", "OnRecognize: {0}", text );
-
-	                if ( m_RecognizeText != null )
-	                    m_RecognizeText.text = "R: " + text;
-
+                    && result.Results[0].Alternatives.Length > 0)
+                {
                     State = AvatarState.THINKING;
-                    m_ClassifyResult = null;
-                    m_QuestionResult = null;
+                    m_SpeechResult = result;
+                    m_SpeechText = result.Results[0].Alternatives[0].Transcript;
 
-                    if (! m_NLC.Classify( m_ClassifierId, text, OnSpeechClassified ) )
-                        Log.Error( "AvatarWidget", "Failed to send {0} to NLC.", text );
-                    if (! m_ITM.AskQuestion( text, OnAskQuestion ) )
-                        Log.Error( "AvatarWidget", "Failed to send {0} to ITM.", text );
-	            }
+                    Log.Debug("AvatarWidget", "OnRecognize: {0}", m_SpeechText);
+
+                    if (m_RecognizeText != null)
+                        m_RecognizeText.text = "R: " + m_SpeechText;
+
+                    if (!m_NLC.Classify(m_ClassifierId, m_SpeechText, OnSpeechClassified))
+                        Log.Error("AvatarWidget", "Failed to send {0} to NLC.", m_SpeechText);
+                }
             }
-	    }
-
-        private NLC.ClassifyResult m_ClassifyResult = null;
-        private void OnSpeechClassified( NLC.ClassifyResult classify )
-        {
-            m_ClassifyResult = classify;      
-            if ( m_ClassifyResult != null && m_QuestionResult != null )
-                OnClassifiedAction();
         }
 
-        private ITM.Questions m_QuestionResult = null;
-        private void OnAskQuestion( ITM.Questions questions )
+        private void OnSpeechClassified(NLC.ClassifyResult classify)
         {
-            m_QuestionResult = questions;
-            if ( m_ClassifyResult != null && m_QuestionResult != null )
-                OnClassifiedAction();
-        }
+            m_ClassifyResult = classify;
 
-        private delegate void OnAction();
-
-        private void OnClassifiedAction()
-        {
-            Log.Debug( "Avatar", "TopClass: {0}", m_ClassifyResult.top_class );
-            if ( m_ClassifyText != null )
+            Log.Debug("Avatar", "TopClass: {0}", m_ClassifyResult.top_class);
+            if (m_ClassifyText != null)
                 m_ClassifyText.text = "C: " + m_ClassifyResult.top_class;
 
-            Dictionary<string,OnAction> classifyActions = new Dictionary<string, OnAction>()
+            if (m_ClassifyResult.top_class == "question")
             {
-                {"parse", OnDisplayParse },
-                {"question", OnNewQuestion },
-                {"evidence", OnDisplayEvidence },
-                {"features", OnDisplayFeatures },
-                {"location", OnDisplayLocation },
-                {"answers", OnDisplayAnswers }, 
-                {"unfold", OnUnfold },
-                {"fold", OnFold },
-            };
-
-            OnAction action = null;
-            if ( classifyActions.TryGetValue( m_ClassifyResult.top_class, out action ) )
-                action();
-            else
+                if (!m_ITM.AskQuestion(m_SpeechResult.Results[0].Alternatives[0].Transcript, OnAskQuestion))
+                    Log.Error("AvatarWidget", "Failed to send question to ITM." );
+            }
+            else if (m_FocusQuestion != null)
+            {
+                // send event to question then..
+                m_FocusQuestion.GetComponent<QuestionWidget>().EventManager.SendEvent(m_ClassifyResult.top_class);
                 State = AvatarState.LISTENING;
+            }
         }
 
-        private void OnNewQuestion()
+        private void OnAskQuestion(ITM.Questions questions)
         {
+            m_QuestionResult = questions;
+
             bool bGettingAnswers = false;
-            if ( m_QuestionResult != null && m_QuestionResult.questions != null )
+            if (m_QuestionResult != null && m_QuestionResult.questions != null)
             {
                 ITM.Question topQuestion = m_QuestionResult.questions.Length > 0 ? m_QuestionResult.questions[0] : null;
-                if ( topQuestion != null )
+                if (topQuestion != null)
                 {
-                    if ( m_QuestionText != null )
+                    if (m_QuestionText != null)
                         m_QuestionText.text = "Q: " + topQuestion.question.questionText;
-                    bGettingAnswers = m_ITM.GetAnswers( topQuestion.transactionId, OnAnswerQuestion );
+                    bGettingAnswers = m_ITM.GetAnswers(topQuestion.transactionId, OnAnswerQuestion);
                 }
             }
 
-            if (! bGettingAnswers )
+            if (!bGettingAnswers)
             {
-                m_TextOutput.SendData( new TextData( "Does not compute. beep." ) );
+                m_TextOutput.SendData(new TextData("Does not compute. beep."));
                 State = AvatarState.LISTENING;
             }
         }
 
-        private void OnAnswerQuestion( ITM.Answers answers )
+        private void OnAnswerQuestion(ITM.Answers answers)
         {
-            if ( answers != null && answers.answers.Length > 0 )
+            if (answers != null && answers.answers.Length > 0)
             {
-                foreach( var a in answers.answers )
-                    Log.Debug( "AvatarWidget", "A: {0} ({1})", a.answerText, a.confidence );
+                foreach (var a in answers.answers)
+                    Log.Debug("AvatarWidget", "A: {0} ({1})", a.answerText, a.confidence);
 
                 string answer = answers.answers[0].answerText;
-                if ( m_AnswerText != null )
+                if (m_AnswerText != null)
                     m_AnswerText.text = "A: " + answer;
-                m_TextOutput.SendData( new TextData( answer ) );
+                m_TextOutput.SendData(new TextData(answer));
 
-                if ( m_QuestionPrefab != null )
+                if (m_QuestionPrefab != null)
                 {
-                    if ( m_FocusQuestion != null )
-                        Destroy( m_FocusQuestion );
+                    if (m_FocusQuestion != null)
+                        Destroy(m_FocusQuestion);
 
-                    m_FocusQuestion = GameObject.Instantiate( m_QuestionPrefab );
-                    m_FocusQuestion.transform.SetParent( transform, false );
+                    m_FocusQuestion = GameObject.Instantiate(m_QuestionPrefab);
+                    m_FocusQuestion.transform.SetParent(transform, false);
 
                     QuestionWidget question = m_FocusQuestion.GetComponentInChildren<QuestionWidget>();
-                    if ( question != null )
+                    if (question != null)
                     {
                         question.Avatar = this;
                         question.Questions = m_QuestionResult;
                         question.Answers = answers;
                     }
                     else
-                        Log.Error( "AvatarWidget", "Failed to find QuestionWidget in question prefab." );
+                        Log.Error("AvatarWidget", "Failed to find QuestionWidget in question prefab.");
                 }
             }
-            State = AvatarState.LISTENING;
-        }
-
-        private void OnDisplayAnswers()
-        {
-            State = AvatarState.LISTENING;
-        }
-
-        private void OnDisplayParse()
-        {
-            State = AvatarState.LISTENING;
-        }
-
-        private void OnDisplayEvidence()
-        {
-            State = AvatarState.LISTENING;
-        }
-
-        private void OnDisplayFeatures()
-        {
-            State = AvatarState.LISTENING;
-        }
-
-        private void OnDisplayLocation()
-        {
-            State = AvatarState.LISTENING;
-        }
-
-        private void OnFold()
-        {
-            State = AvatarState.LISTENING;
-        }
-        private void OnUnfold()
-        {
             State = AvatarState.LISTENING;
         }
 
