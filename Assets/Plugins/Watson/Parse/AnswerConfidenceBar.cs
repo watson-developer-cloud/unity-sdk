@@ -8,7 +8,7 @@ public class AnswerConfidenceBar : MonoBehaviour {
 	[SerializeField]
 	private Text m_ConfidenceText;
 	[SerializeField]
-	private RectTransform m_barMask;
+	private RectTransform m_barProgress;
 
 	private string _m_Answer;
 	public string m_Answer
@@ -38,8 +38,14 @@ public class AnswerConfidenceBar : MonoBehaviour {
 
 	private void UpdateConfidence()
 	{
-		float confidence = (float)m_Confidence;
-		m_ConfidenceText.text = m_Confidence.ToString ("f1");
-		m_barMask.localScale = new Vector3(confidence, 1f, 1f);
+		float confidence = (float)m_Confidence * 100;
+		m_ConfidenceText.text = confidence.ToString ("f1");
+		m_barProgress.localScale = new Vector3((float)m_Confidence, 1f, 1f);
+	}
+
+	void Start()
+	{
+		m_Answer = "Here is my answer";
+		m_Confidence = 0.125851;
 	}
 }
