@@ -48,8 +48,9 @@ namespace IBM.Watson.Widgets
         private Text m_TopClassText = null;
 	    #endregion
 
-        private void Start()
+        protected override void Start()
 	    {
+            base.Start();
 	        Logger.InstallDefaultReactors();
 	    }
 

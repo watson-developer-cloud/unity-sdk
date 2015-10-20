@@ -483,7 +483,7 @@ namespace IBM.Watson.Services.v1
         /// <param name="transactionId">The transaction ID.</param>
         /// <param name="callback">The callback.</param>
         /// <returns>Returns true if the request was submitted correctly.</returns>
-        public bool GetQuestion( long transactionId, OnGetQuestions callback )
+        public bool GetQuestion(long transactionId, OnGetQuestions callback)
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -614,12 +614,15 @@ namespace IBM.Watson.Services.v1
         #endregion
 
         #region AskQuestion
-        public delegate void OnAskQuestion(Question question);
+        public delegate void OnAskQuestion(Questions questions);
 
         public bool AskQuestion(string question, OnAskQuestion callback)
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
+            if (SelectedPipeline == null)
+                throw new WatsonException("You must select a pipeline before calling AskQuestion()");
+
 
             question = WWW.EscapeURL(question);
             question = question.Replace("+", "%20");
@@ -645,7 +648,7 @@ namespace IBM.Watson.Services.v1
 
         private void AskQuestionResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            Question question = new Question();
+            Questions questions = new Questions();
             if (resp.Success)
             {
                 try
@@ -655,7 +658,7 @@ namespace IBM.Watson.Services.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = question;
+                    object obj = questions;
                     r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -668,7 +671,7 @@ namespace IBM.Watson.Services.v1
             }
 
             if (((AskQuestionReq)req).Callback != null)
-                ((AskQuestionReq)req).Callback(resp.Success ? question : null);
+                ((AskQuestionReq)req).Callback(resp.Success ? questions : null);
         }
         #endregion
     }
