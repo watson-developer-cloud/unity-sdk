@@ -243,10 +243,8 @@ namespace IBM.Watson.Widgets
 
                 if (m_QuestionPrefab != null)
                 {
-                    if (m_FocusQuestion != null)
-                        Destroy(m_FocusQuestion);
-
-                    m_FocusQuestion = GameObject.Instantiate(m_QuestionPrefab);
+                    if (m_FocusQuestion == null)
+                        m_FocusQuestion = GameObject.Instantiate(m_QuestionPrefab);
                     //m_FocusQuestion.transform.SetParent(transform, false);
 
                     QuestionWidget question = m_FocusQuestion.GetComponentInChildren<QuestionWidget>();
