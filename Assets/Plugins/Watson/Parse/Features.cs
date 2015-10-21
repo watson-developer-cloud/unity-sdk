@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using IBM.Watson.Utilities;
 
 public class Features : QuestionComponentBase {
 	private List<FeatureItem> FeatureItems = new List<FeatureItem>();
