@@ -100,6 +100,11 @@ namespace IBM.Watson.Widgets
         {
             base.Start();
 
+			if (Questions == null) {
+				Log.Error("QuestionWidget", "There is no Questions object!");
+				return;
+			}
+
             if (!Avatar.ITM.GetParseData(Questions.questions[0].transactionId, OnParseData))
                 Log.Error("QuestionWidget", "Failed to request ParseData.");
 
