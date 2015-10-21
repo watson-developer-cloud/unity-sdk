@@ -35,7 +35,7 @@ public class Semantic : QuestionComponentBase {
 		base.Start ();
 
 		m_lat = qWidget.Questions.questions [0].question.lat[0];
-		m_semantic = qWidget.
+//		m_semantic = qWidget.
 	}
 
 	private void UpdateLat()
