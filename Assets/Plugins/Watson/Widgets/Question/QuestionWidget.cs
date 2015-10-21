@@ -139,9 +139,6 @@ namespace IBM.Watson.Widgets
 				return;
 			}
 
-            if (!Avatar.ITM.GetParseData(Questions.questions[0].transactionId, OnParseData))
-                Log.Error("QuestionWidget", "Failed to request ParseData.");
-
             // give the cube animation manager the game object
 
 
@@ -159,7 +156,7 @@ namespace IBM.Watson.Widgets
 			qa.Init ();
 		}
 
-        private void OnParseData(ITM.ParseData parse)
+        public void OnParseData(ITM.ParseData parse)
         {
 			ParseData = parse;
 			semantic.OnUpdateSemantic ();
