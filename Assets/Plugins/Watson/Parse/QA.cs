@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class QA : MonoBehaviour {
+public class QA : QuestionComponentBase {
 	[SerializeField]
 	private Text m_QuestionText;
 	[SerializeField]
@@ -40,6 +40,11 @@ public class QA : MonoBehaviour {
 			_m_Confidence = value;
 			UpdateConfidence();
 		}
+	}
+
+	void Start()
+	{
+		base.Start ();
 	}
 
 	private void UpdateAnswer()

@@ -42,10 +42,4 @@ public class AnswerConfidenceBar : MonoBehaviour {
 		m_ConfidenceText.text = confidence.ToString ("f1");
 		m_barProgress.localScale = new Vector3((float)m_Confidence, 1f, 1f);
 	}
-
-	void Start()
-	{
-		m_Answer = "Here is my answer";
-		m_Confidence = 0.125851;
-	}
 }
