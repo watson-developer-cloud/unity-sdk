@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class Semantic : MonoBehaviour {
+public class Semantic : QuestionComponentBase {
 	[SerializeField]
 	private Text m_LatText;
 	[SerializeField]
@@ -28,6 +28,11 @@ public class Semantic : MonoBehaviour {
 			_m_semantic = value;
 			UpdateSemantic();
 		}
+	}
+
+	void Start()
+	{
+		base.Start ();
 	}
 
 	private void UpdateLat()

@@ -2,15 +2,21 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Evidence : MonoBehaviour {
-	private EvidenceItem[] EvidenceItems;
+public class Evidence : QuestionComponentBase {
+	private List<EvidenceItem> m_EvidenceItems = new List<EvidenceItem>();
+	private ObservedList<string> m_EvidenceData = new ObservedList<string>();
 
-	/*private List<Object> _m_EvidenceData = new List<Object>();
-	public List<Object> m_EvidenceData {
-		get { return _m_EvidenceData; }
-		set
-		{
+	void Start()
+	{
+		base.Start();
+		m_EvidenceData.Added += onAdd;
+	}
 
-		}
-	}*/
+	private void onAdd()
+	{
+		Debug.Log ("evidence added");
+		EvidenceItem evidenceItem = new EvidenceItem ();
+		m_EvidenceItems.Add (evidenceItem);
+		evidenceItem.m_Evidence = m_EvidenceData [m_EvidenceData.Count];
+	}
 }
