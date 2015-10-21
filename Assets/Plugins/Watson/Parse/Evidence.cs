@@ -20,7 +20,7 @@ public class Evidence : QuestionComponentBase {
 	{
 		base.Init ();
 
-		//	TODO do this correctly
+		//	TODO instantiate FeatureItems from resources
 		if(qWidget.Answers.answers[0].evidence.Length < 2) {
 			m_EvidenceItems[0].m_Evidence = qWidget.Answers.answers[0].evidence[0].decoratedPassage;
 			m_EvidenceItems[1].gameObject.SetActive(false);

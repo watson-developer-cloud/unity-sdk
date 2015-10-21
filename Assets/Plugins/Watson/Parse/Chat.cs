@@ -10,5 +10,6 @@ public class Chat : QuestionComponentBase {
 	new public void Init()
 	{
 		base.Init ();
+		//	TODO Location from chat log
 	}
 }
