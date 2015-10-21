@@ -490,5 +490,4 @@ public class CubeAnimationManager : MonoBehaviour {
 			renderTexSide[i].Release();
 		}
 	}
-
 }

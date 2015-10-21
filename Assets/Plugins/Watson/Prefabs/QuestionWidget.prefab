@@ -16263,6 +16263,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d68ab12fb77e4fd2887f34d527586ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_AnswerConfidenceBars:
+  - {fileID: 11483764}
+  - {fileID: 11440810}
+  - {fileID: 11423218}
+  - {fileID: 11431908}
+  - {fileID: 11436848}
+  - {fileID: 11461718}
+  - {fileID: 11416178}
+  - {fileID: 11438090}
+  - {fileID: 11482276}
 --- !u!114 &11434920
 MonoBehaviour:
   m_ObjectHideFlags: 1
