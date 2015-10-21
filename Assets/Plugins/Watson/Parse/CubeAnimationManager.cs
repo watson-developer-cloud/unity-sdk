@@ -8,7 +8,7 @@ using IBM.Watson.Logging;
 /// </summary>
 public class CubeAnimationManager : MonoBehaviour {
 
-	#region Enumarations Related with Animation and Cube Sides
+	#region Enumerations Related with Animation and Cube Sides
 
 	public enum CubeSideType
 	{
