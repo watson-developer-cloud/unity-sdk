@@ -52,6 +52,10 @@ namespace IBM.Watson.Services.v1
         public class Pipelines
         {
             public Pipeline[] pipelines { get; set; }
+            public bool itm { get; set; }
+            public string user { get; set; }
+            public string location { get; set; }
+            public long sessionKey { get; set; }
         };
         public delegate void OnGetPipeline(Pipeline pipeline);
         public delegate void OnGetPipelines(Pipelines pipes);
@@ -232,6 +236,7 @@ namespace IBM.Watson.Services.v1
         #region Public Properties
         public Pipeline SelectedPipeline { get { return m_SelectedPipeline; } set { m_SelectedPipeline = value; } }
         public long SessionKey { get; set; }
+        public string Location { get; set; }
         #endregion
 
         #region Private Data
@@ -286,7 +291,11 @@ namespace IBM.Watson.Services.v1
 
                 IDictionary json = Json.Deserialize(jsonString) as IDictionary;
                 if (json != null && json.Contains("sessionKey"))
+                {
                     SessionKey = (long)json["sessionKey"];
+                    if ( json.Contains( "location" ) )
+                        Location = (string)json["location"];
+                }
                 else
                     resp.Success = false;
             }

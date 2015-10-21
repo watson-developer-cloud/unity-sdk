@@ -304,8 +304,11 @@ namespace IBM.Watson.Widgets
                 {
                     if (m_QuestionText != null)
                         m_QuestionText.text = "Q: " + topQuestion.question.questionText;
+<<<<<<< HEAD
+=======
                     AddChatLog( "Q:" + topQuestion.question.questionText );
 
+>>>>>>> develop
                     bGettingAnswers = m_ITM.GetAnswers(topQuestion.transactionId, OnAnswerQuestion);
 				}
             }
@@ -356,6 +359,8 @@ namespace IBM.Watson.Widgets
         }
 
         #endregion
+<<<<<<< HEAD
+=======
 
         private void AddChatLog( string chat )
         {
@@ -363,5 +368,6 @@ namespace IBM.Watson.Widgets
             while( m_ChatLogHistory > 0 && m_ChatLog.Count > m_ChatLogHistory )
                 m_ChatLog.RemoveAt( 0 );
         }
+>>>>>>> develop
     }
 }
