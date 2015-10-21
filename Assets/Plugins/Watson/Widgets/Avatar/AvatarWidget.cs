@@ -25,6 +25,7 @@ using IBM.Watson.Avatar;
 using IBM.Watson.Services.v1;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 #pragma warning disable 414
 
@@ -60,7 +61,8 @@ namespace IBM.Watson.Widgets
         private string m_SpeechText = null;
         private ITM.Questions m_QuestionResult = null;
         private GameObject m_FocusQuestion = null;
-
+        private List<string> m_ChatLog = new List<string>();
+                
         [SerializeField]
         private TextToSpeech.VoiceType m_VoiceType = TextToSpeech.VoiceType.en_US_Michael;
         [SerializeField]
@@ -97,6 +99,8 @@ namespace IBM.Watson.Widgets
         private Text m_StateText = null;
         [SerializeField]
         private GameObject m_QuestionPrefab = null;
+        [SerializeField, Tooltip("How many lines to keep of the chat log.")]
+        private int m_ChatLogHistory = 100;
         #endregion
 
         #region Public Properties
@@ -120,9 +124,10 @@ namespace IBM.Watson.Widgets
                     EventManager.Instance.SendEvent(EventManager.onMoodChange, MoodType.Upset);
 
                 if ( m_StateText != null )
-                    m_StateText.text = m_State.ToString();
+                    m_StateText.text = m_Sleeping ? "SLEEPING" : m_State.ToString();
             }
         }
+        public List<string> ChatLog { get { return m_ChatLog; } }
         #endregion
 
         #region Widget Interface
@@ -248,8 +253,8 @@ namespace IBM.Watson.Widgets
                 if ( m_ClassifyResult.top_class == "wakeup" )
                 {
                     m_Sleeping = false;
-
                     State = AvatarState.LISTENING;
+
                     m_TextOutput.SendData( new TextData( m_Hello ) );
 
                     if (m_FocusQuestion == null )
@@ -269,8 +274,8 @@ namespace IBM.Watson.Widgets
                     if ( m_FocusQuestion != null )
                         m_FocusQuestion.SetActive( false );
 
-                    State = AvatarState.LISTENING;
                     m_Sleeping = true;
+                    State = AvatarState.LISTENING;
                 }
                 else if ( m_ClassifyResult.top_class == "question" || m_ClassifyResult.top_class == "watson-thunder" )
                 {
@@ -299,6 +304,8 @@ namespace IBM.Watson.Widgets
                 {
                     if (m_QuestionText != null)
                         m_QuestionText.text = "Q: " + topQuestion.question.questionText;
+                    AddChatLog( "Q:" + topQuestion.question.questionText );
+
                     bGettingAnswers = m_ITM.GetAnswers(topQuestion.transactionId, OnAnswerQuestion);
 				}
             }
@@ -320,6 +327,7 @@ namespace IBM.Watson.Widgets
                 string answer = answers.answers[0].answerText;
                 if (m_AnswerText != null)
                     m_AnswerText.text = "A: " + answer;
+                AddChatLog( "A: " + answer );
                 m_TextOutput.SendData(new TextData(answer));
 
                 if (m_QuestionPrefab != null)
@@ -348,5 +356,12 @@ namespace IBM.Watson.Widgets
         }
 
         #endregion
+
+        private void AddChatLog( string chat )
+        {
+            m_ChatLog.Add( chat );
+            while( m_ChatLogHistory > 0 && m_ChatLog.Count > m_ChatLogHistory )
+                m_ChatLog.RemoveAt( 0 );
+        }
     }
 }
