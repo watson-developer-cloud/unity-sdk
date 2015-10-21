@@ -27,8 +27,8 @@ public class CubeAnimationManager : MonoBehaviour {
 		UnFolding,
 		Unfolded,
 		Folding,
-		ZoomingToSide,
-		ZoomedToSide,
+		FocusingToSide,
+		FocusedToSide,
 		GoingFromScene		//Animating just before destroying
 	}
 
@@ -56,6 +56,7 @@ public class CubeAnimationManager : MonoBehaviour {
 	public Vector3  statinoaryRotationVector;
 	public float distanceFromCameraInZAfterUnfolding = 100f;
 	public Vector3 m_initialPosition;
+	private Vector3 m_initialLocalScale;
 
 	private bool isRotating = true;
 
@@ -65,8 +66,8 @@ public class CubeAnimationManager : MonoBehaviour {
 	public float timeForFoldingUnfolding = 1.0f;
 	public LeanTweenType easeForFolding = LeanTweenType.easeInOutCubic;
 	public LeanTweenType easeForUnfolding = LeanTweenType.easeInOutCubic;
-	public float timeForZoominUnZooming = 1.0f;
-	public LeanTweenType easeForZooming = LeanTweenType.easeInOutCubic;
+	public float timeForFocusing = 1.0f;
+	public LeanTweenType easeForFocusing = LeanTweenType.easeInOutCubic;
 
 	[Header("UI Faces")]
 	[SerializeField]
@@ -85,7 +86,7 @@ public class CubeAnimationManager : MonoBehaviour {
 	private Vector3[] positionFold;
 	private Quaternion[] rotationFold;
 
-	private Vector3[] positionZoom;
+	private Vector3[] positionFocus;
 
 	private LTDescr[] animationPositionOnSide;
 	private LTDescr[] animationRotationOnSide;
@@ -95,6 +96,7 @@ public class CubeAnimationManager : MonoBehaviour {
 	private LTDescr[] animationPositionOnSidePresentation;
 
 	private LTDescr animationAvatarPosition;
+	//private LTDescr animationCubeScale;
 	#endregion
 
 	void Awake ()
@@ -134,7 +136,7 @@ public class CubeAnimationManager : MonoBehaviour {
 			Quaternion.Euler (0f, 0f, 90f)
 		};
 
-		positionZoom = new Vector3[]{
+		positionFocus = new Vector3[]{
 			new Vector3 (-21.0f, -0.6f, 	-2f), 	//Our Hero Side - Zoomed to the camera
 			new Vector3 (17.5f, 2.5f, 	25.0f),	//XRay Logo on right most 
 			new Vector3 (17.5f, 10f, 	11.5f),	//Top - backup
@@ -159,6 +161,7 @@ public class CubeAnimationManager : MonoBehaviour {
 		}
 
 		m_initialPosition = transform.position;
+		m_initialLocalScale = transform.localScale;
 
 		if (avatarGameobject == null) {
 			avatarGameobject = GameObject.Find("Avatar/Avatar_01");
@@ -202,6 +205,15 @@ public class CubeAnimationManager : MonoBehaviour {
 		if (Input.GetKeyDown (KeyCode.Space)) {
 			isRotating = !isRotating;
 		}
+
+		if (Input.GetKey (KeyCode.Alpha9)) {
+			MakeZoom(0.9f);	//Zoom-in
+		}
+
+		if (Input.GetKey (KeyCode.Alpha0)) {
+			MakeZoom(1.1f);	//Zoom-in
+		}
+
 	
 		//CubeFoldingAnimation ();
 		CubeStatinoaryAnimation ();
@@ -218,7 +230,7 @@ public class CubeAnimationManager : MonoBehaviour {
 	public void Fold(){
 		StopAllCubeAnimations ();
 
-		if (m_currentState == CubeAnimationState.ZoomingToSide || m_currentState == CubeAnimationState.ZoomedToSide) {
+		if (m_currentState == CubeAnimationState.FocusingToSide || m_currentState == CubeAnimationState.FocusedToSide) {
 			AnimateUnfocus (AnimateFold, null);
 		}else if( m_currentState == CubeAnimationState.GoingFromScene){
 			//do nothing - it is going from scene
@@ -256,7 +268,7 @@ public class CubeAnimationManager : MonoBehaviour {
 	
 	public void UnFold(){
 		StopAllCubeAnimations ();
-		if (m_currentState == CubeAnimationState.ZoomingToSide || m_currentState == CubeAnimationState.ZoomedToSide) {
+		if (m_currentState == CubeAnimationState.FocusingToSide || m_currentState == CubeAnimationState.FocusedToSide) {
 			AnimateUnfocus(AnimateUnFold, null);
 		} else if( m_currentState == CubeAnimationState.GoingFromScene){
 			//do nothing - it is going from scene
@@ -310,7 +322,7 @@ public class CubeAnimationManager : MonoBehaviour {
 
 		StopAllCubeAnimations ();
 
-		if (currentAnimationState == CubeAnimationState.Unfolded || currentAnimationState == CubeAnimationState.ZoomedToSide  || currentAnimationState == CubeAnimationState.ZoomingToSide) {
+		if (currentAnimationState == CubeAnimationState.Unfolded || currentAnimationState == CubeAnimationState.FocusedToSide  || currentAnimationState == CubeAnimationState.FocusingToSide) {
 			AnimateFocusOnSide(sideType);
 		} else if( m_currentState == CubeAnimationState.GoingFromScene){
 			//do nothing - it is going from scene
@@ -324,7 +336,7 @@ public class CubeAnimationManager : MonoBehaviour {
 	}
 	               
 	private void AnimateFocusOnSide(CubeSideType sideType){
-		m_currentState = CubeAnimationState.ZoomingToSide;
+		m_currentState = CubeAnimationState.FocusingToSide;
 
 		for (int i = 0; i < presentationSide.Length; i++) {
 			Vector3 offsetPosition = presentationSide[i].transform.parent.localPosition + presentationSide[i].transform.parent.parent.localPosition;
@@ -333,23 +345,23 @@ public class CubeAnimationManager : MonoBehaviour {
 			}
 
 			if(i == (int) sideType){	//Our hero object!
-				animationPositionOnSidePresentation[i] = LeanTween.moveLocal (presentationSide[i], positionZoom[0] - offsetPosition, timeForZoominUnZooming).setEase (easeForZooming).setOnComplete(()=>{
-					m_currentState = CubeAnimationState.ZoomedToSide;
+				animationPositionOnSidePresentation[i] = LeanTween.moveLocal (presentationSide[i], positionFocus[0] - offsetPosition, timeForFocusing).setEase (easeForFocusing).setOnComplete(()=>{
+					m_currentState = CubeAnimationState.FocusedToSide;
 				});
 			}
 			else if(i < (int) sideType){
 //				Vector3[] splineVec = new Vector3[]{ presentationSide[i].transform.localPosition,presentationSide[i].transform.localPosition - Vector3.right * (i  * 2) * (i % 2 == 0 ? 1.0f : -1.0f), positionZoom[ ((i + 1) % uiFaceOnSide.Length) ] - offsetPosition  - Vector3.right * (i  * 2) * (i % 2 == 0 ? 1.0f : -1.0f),positionZoom[ ((i + 1) % uiFaceOnSide.Length) ] - offsetPosition};
-				animationPositionOnSidePresentation[i] = LeanTween.moveLocal (presentationSide[i], positionZoom[ ((i + 1) % uiFaceOnSide.Length) ] - offsetPosition, timeForZoominUnZooming).setEase (easeForZooming);
+				animationPositionOnSidePresentation[i] = LeanTween.moveLocal (presentationSide[i], positionFocus[ ((i + 1) % uiFaceOnSide.Length) ] - offsetPosition, timeForFocusing).setEase (easeForFocusing);
 			}
 			else{
 //				Vector3[] splineVec = new Vector3[]{presentationSide[i].transform.localPosition, presentationSide[i].transform.localPosition - Vector3.right * (i * 2) * (i % 2 == 0 ? 1.0f : -1.0f), positionZoom[i] - offsetPosition  - Vector3.right * (i * 2) * (i % 2 == 0 ? 1.0f : -1.0f),positionZoom[i] - offsetPosition};
-				animationPositionOnSidePresentation[i] = LeanTween.moveLocal (presentationSide[i], positionZoom[i] - offsetPosition, timeForZoominUnZooming).setEase (easeForZooming);
+				animationPositionOnSidePresentation[i] = LeanTween.moveLocal (presentationSide[i], positionFocus[i] - offsetPosition, timeForFocusing).setEase (easeForFocusing);
 			}
 		}
 
 		//Make sure that our sides are in right rotation
 		for (int i = 0; i < uiFaceOnSide.Length; i++) {
-			animationRotationOnSide[i] = LeanTween.rotateLocal (uiFaceOnSide[i], rotationUnfold[i].eulerAngles, timeForZoominUnZooming).setEase (easeForZooming);
+			animationRotationOnSide[i] = LeanTween.rotateLocal (uiFaceOnSide[i], rotationUnfold[i].eulerAngles, timeForFocusing).setEase (easeForFocusing);
 		}
 
 	}
@@ -358,7 +370,7 @@ public class CubeAnimationManager : MonoBehaviour {
 	/// Unfocus from the current focus and returning back to unfold state
 	/// </summary>
 	public void UnFocus(){
-		if (currentAnimationState == CubeAnimationState.ZoomedToSide || currentAnimationState == CubeAnimationState.ZoomingToSide) {
+		if (currentAnimationState == CubeAnimationState.FocusedToSide || currentAnimationState == CubeAnimationState.FocusingToSide) {
 			StopAllCubeAnimations ();
 			AnimateUnfocus (null, null);
 		}
@@ -366,10 +378,10 @@ public class CubeAnimationManager : MonoBehaviour {
 
 	private void AnimateUnfocus(System.Action<System.Object> callBackOnComplete = null, System.Object paramOnComplete = null){
 		
-		m_currentState = CubeAnimationState.ZoomingToSide;	
+		m_currentState = CubeAnimationState.FocusingToSide;	
 		for (int i = 0; i < uiFaceOnSide.Length; i++) {
 			if(i == uiFaceOnSide.Length - 1){
-				animationPositionOnSide [i] = LeanTween.moveLocal (presentationSide [i], Vector3.zero, timeForZoominUnZooming).setEase (easeForZooming).setOnComplete(()=>{
+				animationPositionOnSide [i] = LeanTween.moveLocal (presentationSide [i], Vector3.zero, timeForFocusing).setEase (easeForFocusing).setOnComplete(()=>{
 					m_currentState = CubeAnimationState.Unfolded;
 
 					if(callBackOnComplete != null){
@@ -378,7 +390,7 @@ public class CubeAnimationManager : MonoBehaviour {
 				});
 			}
 			else{
-				animationPositionOnSide [i] = LeanTween.moveLocal (presentationSide [i], Vector3.zero, timeForZoominUnZooming).setEase (easeForZooming);
+				animationPositionOnSide [i] = LeanTween.moveLocal (presentationSide [i], Vector3.zero, timeForFocusing).setEase (easeForFocusing);
 			}
 		}
 	}
@@ -481,6 +493,20 @@ public class CubeAnimationManager : MonoBehaviour {
 		});
 	}
 
+
+	#endregion
+
+	#region Zoom 
+
+
+
+	public void MakeZoom(float zoom){
+		float zoomDiff = Mathf.Abs (1.0f - zoom);
+		if (zoomDiff == 0.0f)
+			zoomDiff = 0.0001f;
+
+		LeanTween.scale (gameObject, transform.localScale * zoom, 1.0f * zoomDiff).setEase (LeanTweenType.linear);
+	}
 
 	#endregion
 
