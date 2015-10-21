@@ -14,6 +14,7 @@ public class Features : QuestionComponentBase {
 
 	new public void Init()
 	{
+		base.Init ();
 		m_FeatureData.Added += onAdd;
 	}
 	

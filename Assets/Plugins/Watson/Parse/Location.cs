@@ -9,6 +9,6 @@ public class Location : QuestionComponentBase {
 
 	new public void Init()
 	{
-
+		base.Init ();
 	}
 }

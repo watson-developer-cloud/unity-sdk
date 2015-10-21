@@ -7,8 +7,11 @@ public class QuestionComponentBase : MonoBehaviour {
 
 	protected void Start () 
 	{
-		qWidget = gameObject.GetComponent<QuestionWidget>();
+
 	}
 
-	public void Init(){}
+	public void Init()
+	{
+		qWidget = gameObject.GetComponent<QuestionWidget>();
+	}
 }

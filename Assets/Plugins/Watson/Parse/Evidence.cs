@@ -19,6 +19,7 @@ public class Evidence : QuestionComponentBase {
 
 	private void onAdd()
 	{
+		base.Init ();
 		Debug.Log ("evidence added");
 		EvidenceItem evidenceItem = new EvidenceItem ();
 		m_EvidenceItems.Add (evidenceItem);

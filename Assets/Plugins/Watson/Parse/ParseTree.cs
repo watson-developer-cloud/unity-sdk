@@ -9,6 +9,6 @@ public class ParseTree : QuestionComponentBase {
 
 	new public void Init()
 	{
-
+		base.Init ();
 	}
 }
