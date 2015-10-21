@@ -38,7 +38,11 @@ public class Semantic : QuestionComponentBase {
 	new public void Init()
 	{
 		base.Init ();
-		m_lat = qWidget.Questions.questions [0].question.lat[0];
+		if (qWidget.Questions.questions [0].question.lat.Length > 0) {
+			m_lat = qWidget.Questions.questions [0].question.lat [0];
+		} else {
+			m_lat = "no lat";
+		}
 		//		m_semantic = qWidget.
 	}
 
