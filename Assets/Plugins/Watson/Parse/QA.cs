@@ -45,6 +45,10 @@ public class QA : QuestionComponentBase {
 	void Start()
 	{
 		base.Start ();
+		Debug.Log (qWidget.Questions);
+		m_Question = qWidget.Questions.questions[0].question.questionText;
+		m_Answer = qWidget.Answers.answers [0].answerText;
+		m_Confidence = qWidget.Answers.answers [0].confidence;
 	}
 
 	private void UpdateAnswer()
@@ -59,7 +63,7 @@ public class QA : QuestionComponentBase {
 
 	private void UpdateConfidence()
 	{
-		float confidence = (float)m_Confidence;
-		m_ConfidenceText.text = m_Confidence.ToString ("f1");
+		float confidence = (float)m_Confidence * 100;
+		m_ConfidenceText.text = confidence.ToString ("f1");
 	}
 }

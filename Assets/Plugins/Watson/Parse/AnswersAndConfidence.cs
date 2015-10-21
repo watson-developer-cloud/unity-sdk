@@ -9,7 +9,6 @@ public class AnswersAndConfidence : QuestionComponentBase {
 	void Start ()
 	{
 		base.Start ();
-		Debug.Log ("answers: " + qWidget.Answers.answers);
 		for(int i = 0; i < m_AnswerConfidenceBars.Length; i++) {
 			m_AnswerConfidenceBars[i].m_Answer = qWidget.Answers.answers[i].answerText;
 			m_AnswerConfidenceBars[i].m_Confidence = qWidget.Answers.answers[i].confidence;
