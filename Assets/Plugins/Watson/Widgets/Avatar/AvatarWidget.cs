@@ -55,6 +55,7 @@ namespace IBM.Watson.Widgets
         private AvatarState m_State = AvatarState.CONNECTING;
         private NLC.ClassifyResult m_ClassifyResult = null;
 
+        private bool m_Sleeping = true;
         private SpeechToText.ResultList m_SpeechResult = null;
         private string m_SpeechText = null;
         private ITM.Questions m_QuestionResult = null;
@@ -67,7 +68,13 @@ namespace IBM.Watson.Widgets
         [SerializeField]
         private float m_SoundVisualizerModifier = 20.0f;
         [SerializeField,Tooltip("What is the minimum word confidence needed to send onto the NLC?")]
-        private double m_MinWordConfidence = 0.9;
+        private double m_MinWordConfidence = 0.9; 
+        [SerializeField,Tooltip("Recognized speech below this confidence is just ignored.")]
+        private double m_IgnoreWordConfidence = 0.5;
+        [SerializeField]
+        private string m_Hello = "Hello";
+        [SerializeField]
+        private string m_Goodbye = "Goodbye";
         [SerializeField]
         private string m_RecognizeFailure = "I'm sorry, but I didn't understand your question.";
         [SerializeField]
@@ -87,6 +94,8 @@ namespace IBM.Watson.Widgets
         [SerializeField]
         private Text m_AnswerText = null;
         [SerializeField]
+        private Text m_StateText = null;
+        [SerializeField]
         private GameObject m_QuestionPrefab = null;
         #endregion
 
@@ -101,12 +110,17 @@ namespace IBM.Watson.Widgets
                 m_State = value;
                 Log.Debug( "AvatarWidget", "State {0}", m_State.ToString() );
 
-                if (m_State == AvatarState.LISTENING)
+                if ( m_Sleeping )
+                    EventManager.Instance.SendEvent(EventManager.onMoodChange, MoodType.Idle );
+                else if (m_State == AvatarState.LISTENING)
                     EventManager.Instance.SendEvent(EventManager.onMoodChange, MoodType.Shy);
                 else if (m_State == AvatarState.THINKING)
                     EventManager.Instance.SendEvent(EventManager.onMoodChange, MoodType.Interested);
                 else
                     EventManager.Instance.SendEvent(EventManager.onMoodChange, MoodType.Upset);
+
+                if ( m_StateText != null )
+                    m_StateText.text = m_State.ToString();
             }
         }
         #endregion
@@ -148,6 +162,9 @@ namespace IBM.Watson.Widgets
 
             // login to ITM, then select the pipeline
             m_ITM.Login(OnItmLogin);
+            // TEMP: spin up a cube right off the bat
+            //m_FocusQuestion = GameObject.Instantiate(m_QuestionPrefab);
+            //m_FocusQuestion.GetComponentInChildren<QuestionWidget>().Avatar = this;
         }
         private void OnItmLogin(bool success)
         {
@@ -179,15 +196,21 @@ namespace IBM.Watson.Widgets
         private void OnRecognize(Data data)
         {
             SpeechToText.ResultList result = ((SpeechToTextData)data).Results;
-            if (State == AvatarState.LISTENING)
+            if (State == AvatarState.LISTENING )
             {
-
                 if (result != null && result.Results.Length > 0
                     && result.Results[0].Final
                     && result.Results[0].Alternatives.Length > 0 )
                 {
                     string text = result.Results[0].Alternatives[0].Transcript;
                     double textConfidence = result.Results[0].Alternatives[0].Confidence;
+
+                    if (m_RecognizeText != null)
+                    {
+                        m_RecognizeText.text = string.Format( "R: {0} ({1})", text, textConfidence );
+                        m_RecognizeText.color = textConfidence > m_MinWordConfidence ? Color.white : Color.red;
+                    }
+
                     Log.Debug( "AvatarWidget", "OnRecognize: {0} ({1})", text, textConfidence );
 
                     if ( textConfidence > m_MinWordConfidence )
@@ -199,16 +222,14 @@ namespace IBM.Watson.Widgets
                         if (m_FocusQuestion != null )
                             m_FocusQuestion.GetComponent<QuestionWidget>().OnFold(null);
 
-                        if (m_RecognizeText != null)
-                            m_RecognizeText.text = "R: " + m_SpeechText;
-
                         if (!m_NLC.Classify(m_ClassifierId, m_SpeechText, OnSpeechClassified))
                             Log.Error("AvatarWidget", "Failed to send {0} to NLC.", m_SpeechText);
                     }
                     else
                     {
                         State = AvatarState.LISTENING;
-                        m_TextOutput.SendData( new TextData(m_RecognizeFailure) );
+                        if ( textConfidence > m_IgnoreWordConfidence )
+                            m_TextOutput.SendData( new TextData(m_RecognizeFailure) );
                     }
                 }
             }
@@ -222,16 +243,47 @@ namespace IBM.Watson.Widgets
             if (m_ClassifyText != null)
                 m_ClassifyText.text = "C: " + m_ClassifyResult.top_class;
 
-            if (m_ClassifyResult.top_class == "question")
+            if ( m_Sleeping )
             {
-                if (!m_ITM.AskQuestion(m_SpeechResult.Results[0].Alternatives[0].Transcript, OnAskQuestion))
-                    Log.Error("AvatarWidget", "Failed to send question to ITM." );
+                if ( m_ClassifyResult.top_class == "wakeup" )
+                {
+                    m_Sleeping = false;
+
+                    State = AvatarState.LISTENING;
+                    m_TextOutput.SendData( new TextData( m_Hello ) );
+
+                    if (m_FocusQuestion == null )
+                    {
+                        m_FocusQuestion = GameObject.Instantiate(m_QuestionPrefab);
+                        m_FocusQuestion.GetComponentInChildren<QuestionWidget>().Avatar = this;
+                    }
+                    else
+                        m_FocusQuestion.SetActive( true );
+                }
             }
-            else if (m_FocusQuestion != null)
+            else
             {
-                State = AvatarState.LISTENING;
-                // send event to question then..
-                m_FocusQuestion.GetComponent<QuestionWidget>().EventManager.SendEvent(m_ClassifyResult.top_class);
+                if ( m_ClassifyResult.top_class == "sleep" )
+                {
+                    m_TextOutput.SendData( new TextData( m_Goodbye ) );
+                    if ( m_FocusQuestion != null )
+                        m_FocusQuestion.SetActive( false );
+
+                    State = AvatarState.LISTENING;
+                    m_Sleeping = true;
+                }
+                else if ( m_ClassifyResult.top_class == "question" || m_ClassifyResult.top_class == "watson-thunder" )
+                {
+                    if (!m_ITM.AskQuestion(m_SpeechResult.Results[0].Alternatives[0].Transcript, OnAskQuestion))
+                        Log.Error("AvatarWidget", "Failed to send question to ITM." );
+                }
+                else
+                {
+                    State = AvatarState.LISTENING;
+                    // send event to question then..
+                    if (m_FocusQuestion != null)
+                        m_FocusQuestion.GetComponent<QuestionWidget>().EventManager.SendEvent(m_ClassifyResult.top_class);
+                }
             }
         }
 
@@ -289,7 +341,7 @@ namespace IBM.Watson.Widgets
 						question.Init();
 
                         // show the answer panel
-                        question.EventManager.SendEvent( "answers" );
+                        //question.EventManager.SendEvent( "answers" );
                     }
                     else
                         Log.Error("AvatarWidget", "Failed to find QuestionWidget in question prefab.");
