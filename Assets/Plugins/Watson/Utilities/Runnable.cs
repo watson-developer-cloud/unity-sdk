@@ -62,11 +62,6 @@ namespace IBM.Watson.Utilities
         #endregion
 
         #region Private Types
-        private void OnApplicationQuit()
-        {
-            DestroyImmediate( gameObject );
-        }
-
         /// <summary>
         /// This class handles a running co-routine.
         /// </summary>
