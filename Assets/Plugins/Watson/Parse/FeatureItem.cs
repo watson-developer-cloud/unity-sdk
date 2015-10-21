@@ -19,8 +19,8 @@ public class FeatureItem : MonoBehaviour {
 		}
 	}
 
-	private float _m_FeatureIndex;
-	public float m_featureIndex
+	private double _m_FeatureIndex;
+	public double m_featureIndex
 	{
 		get { return _m_FeatureIndex; }
 		set
@@ -32,12 +32,22 @@ public class FeatureItem : MonoBehaviour {
 
 	private void UpdateFeature()
 	{
-		m_FeatureText.text = m_feature;
+		if (m_feature != "") {
+			gameObject.SetActive (true);
+			if(m_feature.Length > 15) {
+				string temp = m_feature.Substring (0, 15);
+				m_FeatureText.text = temp + "...";
+			} else {
+				m_FeatureText.text = m_feature;
+			}
+		} else {
+			gameObject.SetActive(false);
+		}
 	}
 
 	private void UpdateFeatureIndex()
 	{
 		float featureIndex = (float)m_featureIndex;
-		m_FeatureIndexText.text = featureIndex.ToString ("f1");
+		m_FeatureIndexText.text = featureIndex.ToString ("f2");
 	}
 }

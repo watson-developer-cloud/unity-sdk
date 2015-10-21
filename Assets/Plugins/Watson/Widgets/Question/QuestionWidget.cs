@@ -148,7 +148,6 @@ namespace IBM.Watson.Widgets
 
 		public void Init()
 		{
-			Debug.Log ("QuestionWIdget.init();");
 			answersAndConfidence.Init ();
 			evidence.Init ();
 			semantic.Init ();
