@@ -373,12 +373,6 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                         }
 
                     }
-                    else if (json.Contains("error"))
-                    {
-                        Log.Error("SpeechToText", "WebSocket error: {0}", (string)json["error"]);
-                        if ( OnError != null )
-                            OnError( (string)json["error"] );
-                    }
                     else
                     {
                         Log.Warning("SpeechToText", "Unknown message: {0}", tm.Text);
@@ -393,13 +387,13 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
 
         private void OnListenClosed(WSConnector connector)
         {
+            Log.Debug( "SpeechToText", "OnListenClosed(), State = {0}", connector.State.ToString() );
+
+            m_ListenActive = false;
+            StopListening();
+
             if (connector.State == WSConnector.ConnectionState.DISCONNECTED)
             {
-                Log.Error("SpeechToText", "Disconnected from server.");
-
-                m_ListenActive = false;
-                StopListening();
-
                 if (OnError != null)
                     OnError("Disconnected from server.");
             }

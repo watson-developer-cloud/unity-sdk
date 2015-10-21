@@ -99,6 +99,7 @@ namespace IBM.Watson.Widgets
 
 	    private void OnError( string error )
 	    {
+            Active = false;
 	        if ( m_StatusText != null )
 	            m_StatusText.text = "ERROR: " + error;
 	    }
