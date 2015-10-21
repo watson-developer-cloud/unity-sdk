@@ -44,7 +44,6 @@ namespace IBM.Watson.Widgets
 		private Evidence evidence;
 		private Semantic semantic;
 		private Features features;
-		private Chat chat;
 		private Location location;
 		private ParseTree parseTree;
 		private QA qa;
@@ -81,6 +80,11 @@ namespace IBM.Watson.Widgets
             Cube.FocusOnSide( CubeAnimationManager.CubeSideType.Answers );
         }
 
+        public void OnDisplayChat( object[] args )
+        {
+            Cube.FocusOnSide( CubeAnimationManager.CubeSideType.Chat );
+        }
+
         public void OnDisplayParse(object[] args)
         {
             Cube.FocusOnSide( CubeAnimationManager.CubeSideType.Parse );
@@ -89,11 +93,6 @@ namespace IBM.Watson.Widgets
         public void OnDisplayEvidence(object[] args)
         {
             Cube.FocusOnSide( CubeAnimationManager.CubeSideType.Evidence );
-        }
-
-        public void OnDisplayFeatures(object[] args)
-        {
-            Cube.FocusOnSide( CubeAnimationManager.CubeSideType.Chat );
         }
 
         public void OnDisplayLocation(object[] args)
@@ -116,15 +115,14 @@ namespace IBM.Watson.Widgets
             m_EventManager.RegisterEventReceiver("unfold", OnUnfold);
             m_EventManager.RegisterEventReceiver("evidence", OnDisplayEvidence);
             m_EventManager.RegisterEventReceiver("parse", OnDisplayParse);
-            m_EventManager.RegisterEventReceiver("features", OnDisplayFeatures);
             m_EventManager.RegisterEventReceiver("location", OnDisplayLocation);
             m_EventManager.RegisterEventReceiver("answers", OnDisplayAnswers);
+            m_EventManager.RegisterEventReceiver("chat", OnDisplayChat );
 
 			answersAndConfidence = gameObject.GetComponent<AnswersAndConfidence>();
 			evidence = gameObject.GetComponent<Evidence>();
 			semantic = gameObject.GetComponent<Semantic>();
 			features = gameObject.GetComponent<Features>();
-			chat = gameObject.GetComponent<Chat>();
 			location = gameObject.GetComponent<Location>();
 			parseTree = gameObject.GetComponent<ParseTree>();
 			qa = gameObject.GetComponent<QA>();
@@ -153,7 +151,6 @@ namespace IBM.Watson.Widgets
 			evidence.Init ();
 			semantic.Init ();
 			features.Init ();
-			chat.Init ();
 			location.Init ();
 			parseTree.Init ();
 			qa.Init ();

@@ -61,7 +61,6 @@ namespace IBM.Watson.Widgets
         private string m_SpeechText = null;
         private ITM.Questions m_QuestionResult = null;
         private GameObject m_FocusQuestion = null;
-        private List<string> m_ChatLog = new List<string>();
                 
         [SerializeField]
         private TextToSpeech.VoiceType m_VoiceType = TextToSpeech.VoiceType.en_US_Michael;
@@ -99,11 +98,16 @@ namespace IBM.Watson.Widgets
         private Text m_StateText = null;
         [SerializeField]
         private GameObject m_QuestionPrefab = null;
-        [SerializeField, Tooltip("How many lines to keep of the chat log.")]
-        private int m_ChatLogHistory = 100;
+        #endregion
+
+        #region Public Types
+        public delegate void OnQuestion( string question );
+        public delegate void OnAnswer( string answer );
         #endregion
 
         #region Public Properties
+        public OnQuestion QuestionEvent { get; set; }
+        public OnAnswer AnswerEvent { get; set; }
         public ITM ITM { get { return m_ITM; } }
         public NLC NLC { get { return m_NLC; } }
         public AvatarState State
@@ -127,7 +131,6 @@ namespace IBM.Watson.Widgets
                     m_StateText.text = m_Sleeping ? "SLEEPING" : m_State.ToString();
             }
         }
-        public List<string> ChatLog { get { return m_ChatLog; } }
         #endregion
 
         #region Widget Interface
@@ -253,8 +256,6 @@ namespace IBM.Watson.Widgets
                 if ( m_ClassifyResult.top_class == "wakeup" )
                 {
                     m_Sleeping = false;
-                    State = AvatarState.LISTENING;
-
                     m_TextOutput.SendData( new TextData( m_Hello ) );
 
                     if (m_FocusQuestion == null )
@@ -265,6 +266,7 @@ namespace IBM.Watson.Widgets
                     else
                         m_FocusQuestion.SetActive( true );
                 }
+                State = AvatarState.LISTENING;
             }
             else
             {
@@ -304,7 +306,8 @@ namespace IBM.Watson.Widgets
                 {
                     if (m_QuestionText != null)
                         m_QuestionText.text = "Q: " + topQuestion.question.questionText;
-                    AddChatLog( "Q:" + topQuestion.question.questionText );
+                    if ( QuestionEvent != null )
+                        QuestionEvent( topQuestion.question.questionText );
 
                     bGettingAnswers = m_ITM.GetAnswers(topQuestion.transactionId, OnAnswerQuestion);
 				}
@@ -327,7 +330,8 @@ namespace IBM.Watson.Widgets
                 string answer = answers.answers[0].answerText;
                 if (m_AnswerText != null)
                     m_AnswerText.text = "A: " + answer;
-                AddChatLog( "A: " + answer );
+                if ( AnswerEvent != null )
+                    AnswerEvent( answer );
                 m_TextOutput.SendData(new TextData(answer));
 
                 if (m_QuestionPrefab != null)
@@ -356,12 +360,5 @@ namespace IBM.Watson.Widgets
         }
 
         #endregion
-
-        private void AddChatLog( string chat )
-        {
-            m_ChatLog.Add( chat );
-            while( m_ChatLogHistory > 0 && m_ChatLog.Count > m_ChatLogHistory )
-                m_ChatLog.RemoveAt( 0 );
-        }
     }
 }
