@@ -25,6 +25,7 @@ public class Location : QuestionComponentBase {
 	new public void Init()
 	{
 		base.Init ();
+		//	TODO Location from data
 		//m_Location = qWidget.Questions.questions[0].question.;
 	}
 

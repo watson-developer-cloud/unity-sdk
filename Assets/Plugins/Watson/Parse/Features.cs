@@ -19,7 +19,7 @@ public class Features : QuestionComponentBase {
 	new public void Init()
 	{
 		base.Init ();
-		//	TODO do this correctly
+		//	TODO instantiate FeatureItems from resources
 		for (int i = 0; i < m_FeatureItems.Length; i++) {
 			m_FeatureItems[i].m_feature = qWidget.Answers.answers[0].features[i].displayLabel;
 			m_FeatureItems[i].m_featureIndex = qWidget.Answers.answers[0].features[i].weightedScore;
