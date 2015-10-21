@@ -7,9 +7,14 @@ public class Features : QuestionComponentBase {
 	private List<FeatureItem> FeatureItems = new List<FeatureItem>();
 	private ObservedList<string> m_FeatureData = new ObservedList<string>();
 	
-	void Start()
+	new void Start()
 	{
 		base.Start ();
+	}
+
+	new public void Init()
+	{
+		base.Init ();
 		m_FeatureData.Added += onAdd;
 	}
 	

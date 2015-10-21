@@ -42,10 +42,14 @@ public class QA : QuestionComponentBase {
 		}
 	}
 
-	void Start()
+	new void Start()
 	{
 		base.Start ();
-		Debug.Log (qWidget.Questions);
+	}
+
+	new public void Init()
+	{
+		base.Init ();
 		m_Question = qWidget.Questions.questions[0].question.questionText;
 		m_Answer = qWidget.Answers.answers [0].answerText;
 		m_Confidence = qWidget.Answers.answers [0].confidence;

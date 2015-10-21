@@ -3823,6 +3823,9 @@ GameObject:
   - 114: {fileID: 11465610}
   - 114: {fileID: 11465216}
   - 114: {fileID: 11488250}
+  - 114: {fileID: 11426570}
+  - 114: {fileID: 11445104}
+  - 114: {fileID: 11472426}
   m_Layer: 0
   m_Name: QuestionWidget
   m_TagString: QuestionOnFocus
@@ -15823,6 +15826,17 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: EVIDENCE
+--- !u!114 &11426570
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 165892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f87dd1c986694aa796dbdab55fa27cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &11426844
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -16775,6 +16789,17 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &11445104
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 165892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4b07868a323143b6b5ba0287d5074af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &11445244
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -17695,6 +17720,17 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &11472426
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 165892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3707040e5c834784a76258f288a0e87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &11472476
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -20142,8 +20178,8 @@ RectTransform:
   m_RootOrder: 11
   m_AnchorMin: {x: .5, y: .5}
   m_AnchorMax: {x: .5, y: .5}
-  m_AnchoredPosition: {x: -609, y: 35.0998497}
-  m_SizeDelta: {x: 542.47998, y: 0}
+  m_AnchoredPosition: {x: -630, y: 35.0998497}
+  m_SizeDelta: {x: 565.97998, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!224 &22418400
 RectTransform:
