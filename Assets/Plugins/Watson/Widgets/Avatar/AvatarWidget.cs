@@ -149,6 +149,14 @@ namespace IBM.Watson.Widgets
             if (!success)
                 Log.Error("AvtarWidget", "Failed to login to ITM.");
         }
+
+		//TODO: Delete - don't push
+		void Update(){
+			if (UnityEngine.Input.GetKeyDown(KeyCode.Alpha1)) {
+				//m_ITM.GetAnswers(-260374797, OnAnswerQuestion);
+				GameObject.Instantiate(m_QuestionPrefab);
+			}
+		}
         #endregion
 
         #region Level Input

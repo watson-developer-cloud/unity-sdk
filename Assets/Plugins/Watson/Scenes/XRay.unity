@@ -185,11 +185,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   visualizeFocus: 0
-  focalLength: 40
-  focalSize: .289999992
+  focalLength: 53.5
+  focalSize: .400000006
   aperture: .5
   focalTransform: {fileID: 0}
-  maxBlurSize: 2
+  maxBlurSize: 1
   highResolution: 0
   blurType: 0
   blurSampleCount: 2

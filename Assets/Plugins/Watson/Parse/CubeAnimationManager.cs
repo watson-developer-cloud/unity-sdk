@@ -28,7 +28,8 @@ public class CubeAnimationManager : MonoBehaviour {
 		Unfolded,
 		Folding,
 		ZoomingToSide,
-		ZoomedToSide
+		ZoomedToSide,
+		GoingFromScene		//Animating just before destroying
 	}
 
 	#endregion
@@ -60,6 +61,7 @@ public class CubeAnimationManager : MonoBehaviour {
 
 	public float timeForComingToScene = 1.0f;
 	public LeanTweenType easeForComingToScene = LeanTweenType.easeOutElastic;
+	public LeanTweenType easeForGoingFromScene = LeanTweenType.easeOutCirc;
 	public float timeForFoldingUnfolding = 1.0f;
 	public LeanTweenType easeForFolding = LeanTweenType.easeInOutCubic;
 	public LeanTweenType easeForUnfolding = LeanTweenType.easeInOutCubic;
@@ -152,10 +154,27 @@ public class CubeAnimationManager : MonoBehaviour {
 		}
 
 		for (int i = 0; i < renderTexSide.Length; i++) {
-			renderTexSide[i].useMipMap = true;
+			if(!renderTexSide[i].useMipMap)
+				renderTexSide[i].useMipMap = true;
 		}
 
 		m_initialPosition = transform.position;
+
+		if (avatarGameobject == null) {
+			avatarGameobject = GameObject.Find("Avatar/Avatar_01");
+		}
+
+		GameObject[] questionsCreated = GameObject.FindGameObjectsWithTag ("QuestionOnFocus");
+		if (questionsCreated != null) {
+			for (int i = 0; i < questionsCreated.Length; i++) {
+				if(questionsCreated[i] != transform.parent.gameObject){
+					CubeAnimationManager animationManager = questionsCreated[i].GetComponentInChildren<CubeAnimationManager>();
+					if(animationManager != null){
+						animationManager.DestroyCube();
+					}
+				}
+			}
+		}
 
 		ShowCube ();
 	}
@@ -198,8 +217,11 @@ public class CubeAnimationManager : MonoBehaviour {
 		
 	public void Fold(){
 		StopAllCubeAnimations ();
+
 		if (m_currentState == CubeAnimationState.ZoomingToSide || m_currentState == CubeAnimationState.ZoomedToSide) {
-			AnimateUnfocus(AnimateFold, null);
+			AnimateUnfocus (AnimateFold, null);
+		}else if( m_currentState == CubeAnimationState.GoingFromScene){
+			//do nothing - it is going from scene
 		} else {
 			AnimateFold (null, null);
 		}
@@ -236,7 +258,9 @@ public class CubeAnimationManager : MonoBehaviour {
 		StopAllCubeAnimations ();
 		if (m_currentState == CubeAnimationState.ZoomingToSide || m_currentState == CubeAnimationState.ZoomedToSide) {
 			AnimateUnfocus(AnimateUnFold, null);
-		} else {
+		} else if( m_currentState == CubeAnimationState.GoingFromScene){
+			//do nothing - it is going from scene
+		}else {
 			AnimateUnFold (null, null);
 		}
 
@@ -288,7 +312,9 @@ public class CubeAnimationManager : MonoBehaviour {
 
 		if (currentAnimationState == CubeAnimationState.Unfolded || currentAnimationState == CubeAnimationState.ZoomedToSide  || currentAnimationState == CubeAnimationState.ZoomingToSide) {
 			AnimateFocusOnSide(sideType);
-		} else {
+		} else if( m_currentState == CubeAnimationState.GoingFromScene){
+			//do nothing - it is going from scene
+		}else {
 			AnimateUnFold (AnimateFocusOnSide, (System.Object)sideType);
 		}
 	}
@@ -362,6 +388,11 @@ public class CubeAnimationManager : MonoBehaviour {
 	#region Animation Stop / Reset
 
 	private void StopAllCubeAnimations(){
+		if( m_currentState == CubeAnimationState.GoingFromScene){
+			//do nothing - it is going from scene, early return before any animation stopping!
+			return;
+		}
+
 		StopFoldingAnimation ();
 		StopAvatarAnimation ();
 		StopFocusAnimation ();
@@ -421,6 +452,11 @@ public class CubeAnimationManager : MonoBehaviour {
 	#region Focus
 
 	public void ShowCube(){
+		if( m_currentState == CubeAnimationState.GoingFromScene){
+			//do nothing - it is going from scene, early return before any animation stopping!
+			return;
+		}
+
 		StopAllCubeAnimations ();
 		AnimateShowingCube ();
 	}
@@ -430,6 +466,18 @@ public class CubeAnimationManager : MonoBehaviour {
 		LeanTween.moveLocal (gameObject, new Vector3 (0, 40, 0), timeForComingToScene).setFrom (new Vector3 (0, -40, 0)).setEase (easeForComingToScene);
 		LeanTween.scale (gameObject, gameObject.transform.localScale, timeForComingToScene).setFrom (Vector3.one).setEase (easeForComingToScene).setOnComplete(()=>{
 			m_currentState = CubeAnimationState.IdleOnScene;
+		});
+	}
+
+	public void DestroyCube(){
+		StopAllCubeAnimations ();
+		AnimateDestroyingCube ();
+	}
+
+	private void AnimateDestroyingCube(){
+		m_currentState = CubeAnimationState.GoingFromScene;
+		LeanTween.moveLocal (gameObject, new Vector3 (0, 240, 0), timeForComingToScene).setEase (easeForGoingFromScene).setOnComplete(()=>{
+			Destroy(transform.parent.gameObject);
 		});
 	}
 
