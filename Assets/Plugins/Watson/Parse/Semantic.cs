@@ -38,12 +38,34 @@ public class Semantic : QuestionComponentBase {
 	new public void Init()
 	{
 		base.Init ();
-		if (qWidget.Questions.questions [0].question.lat.Length > 0) {
+		if (qWidget.Questions.questions.Length > 0) {
 			m_lat = qWidget.Questions.questions [0].question.lat [0];
 		} else {
 			m_lat = "no lat";
 		}
-		//		m_semantic = qWidget.
+	}
+
+	public void OnUpdateSemantic()
+	{
+		string semanticText = "";
+		
+		int latIndex = -1;
+		for(int i = 0 ; i < qWidget.ParseData.Words.Length; i++) {
+			if(qWidget.ParseData.Words[i].Word == m_lat) {
+				latIndex = i;
+			}
+		}
+		
+		for(int k = 0; k < qWidget.ParseData.Words[latIndex].Features.Length; k++) {
+			semanticText += qWidget.ParseData.Words[latIndex].Features[k];
+			if(k < qWidget.ParseData.Words[latIndex].Features.Length - 1) {
+				semanticText += ", ";
+			} else {
+				semanticText += ".";
+			}
+		}
+		
+		m_semantic = semanticText;
 	}
 
 	private void UpdateLat()

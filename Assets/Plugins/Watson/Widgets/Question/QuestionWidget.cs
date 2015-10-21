@@ -63,6 +63,7 @@ namespace IBM.Watson.Widgets
         public AvatarWidget Avatar { get; set; }
         public ITM.Questions Questions { get; set; }
         public ITM.Answers Answers { get; set; }
+		public ITM.ParseData ParseData { get; set; }
         public CubeAnimationManager Cube {
             get {
                 if ( m_CubeAnimMgr == null )
@@ -160,7 +161,8 @@ namespace IBM.Watson.Widgets
 
         private void OnParseData(ITM.ParseData parse)
         {
-
+			ParseData = parse;
+			semantic.OnUpdateSemantic ();
         }
     }
 }
