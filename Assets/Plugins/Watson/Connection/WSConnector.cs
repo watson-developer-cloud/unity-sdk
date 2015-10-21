@@ -132,7 +132,6 @@ namespace IBM.Watson.Connection
         private ConnectionState m_ConnectionState = ConnectionState.CLOSED;
         private Thread m_SendThread = null;
         private AutoResetEvent m_SendEvent = new AutoResetEvent(false);
-        private AutoResetEvent m_SendThreadExit = new AutoResetEvent(false);
         private Queue<Message> m_SendQueue = new Queue<Message>();
         private AutoResetEvent m_ReceiveEvent = new AutoResetEvent(false);
         private Queue<Message> m_ReceiveQueue = new Queue<Message>();
@@ -229,6 +228,7 @@ namespace IBM.Watson.Connection
             if ( m_ReceiverRoutine == 0 )
                 m_ReceiverRoutine = Runnable.Run( ProcessReceiveQueue() ); 
         }
+
         /// <summary>
         /// This closes this connector, it will block until the send thread exits.
         /// </summary>
@@ -236,19 +236,6 @@ namespace IBM.Watson.Connection
         {
             // setting the state to closed will make the SendThread automatically exit.
             m_ConnectionState = ConnectionState.CLOSED;
-
-            if ( m_SendThread != null )
-            {
-                m_SendEvent.Set();             
-                m_SendThreadExit.WaitOne();    
-                m_SendThread = null;
-            }
-
-            if ( m_ReceiverRoutine != 0 )
-            {
-                Runnable.Stop( m_ReceiverRoutine );
-                m_ReceiverRoutine = 0;
-            }
         }
         #endregion
 
@@ -280,10 +267,8 @@ namespace IBM.Watson.Connection
                     }
                 }
             }
-
             if ( OnClose != null )
                 OnClose( this );
-            m_ReceiverRoutine = 0;
         }
         #endregion
 
@@ -325,7 +310,6 @@ namespace IBM.Watson.Connection
             }
 
             ws.Close();
-            m_SendThreadExit.Set();
         }
 
         private void OnWSOpen(object sender, System.EventArgs e)
@@ -345,8 +329,6 @@ namespace IBM.Watson.Connection
                 msg = new TextMessage( e.Data );
             else if ( e.Type == Opcode.Binary )
                 msg = new BinaryMessage( e.RawData );
-            else
-                Log.Warning( "WSConnector", "Unsupported opcode {0}", e.Type.ToString() );
 
             lock( m_ReceiveQueue )
                 m_ReceiveQueue.Enqueue( msg );
@@ -355,11 +337,7 @@ namespace IBM.Watson.Connection
 
         private void OnWSError(object sender, ErrorEventArgs e)
         {
-            Dictionary<string,object> err = new Dictionary<string, object>();
-            err["error"] = string.Format( "WebSocket Error: {0}", e.Message );
-
-            lock( m_ReceiveQueue )
-                m_ReceiveQueue.Enqueue( new TextMessage( MiniJSON.Json.Serialize( err ) ) );
+            m_ConnectionState = ConnectionState.DISCONNECTED;
         }
         #endregion
     }
