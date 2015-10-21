@@ -300,10 +300,7 @@ namespace IBM.Watson.Widgets
                     if (m_QuestionText != null)
                         m_QuestionText.text = "Q: " + topQuestion.question.questionText;
                     bGettingAnswers = m_ITM.GetAnswers(topQuestion.transactionId, OnAnswerQuestion);
-
-//					if (!ITM.GetParseData(questions.questions[0].transactionId, OnParseData))
-//						Log.Error("QuestionWidget", "Failed to request ParseData.");
-                }
+				}
             }
 
             if (!bGettingAnswers)
@@ -351,14 +348,5 @@ namespace IBM.Watson.Widgets
         }
 
         #endregion
-
-
-//		private void OnParseData(ITM.ParseData parse)
-//		{
-//			QuestionWidget question = m_FocusQuestion.GetComponentInChildren<QuestionWidget>();
-//			if (question != null) {
-//				question.ParseData = parse;
-//			}
-//		}
     }
 }
