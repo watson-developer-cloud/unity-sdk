@@ -484,4 +484,10 @@ public class CubeAnimationManager : MonoBehaviour {
 
 	#endregion
 
+	void OnDestroy()
+	{
+		for (int i = 0; i < renderTexSide.Length; i++) {
+			renderTexSide[i].Release();
+		}
+	}
 }
