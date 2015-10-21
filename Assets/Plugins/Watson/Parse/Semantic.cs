@@ -38,7 +38,7 @@ public class Semantic : QuestionComponentBase {
 	new public void Init()
 	{
 		base.Init ();
-		if (qWidget.Questions.questions.Length > 0) {
+		if (qWidget.Questions.questions.Length > 0 && qWidget.Questions.questions [0].question.lat.Length > 0) {
 			m_lat = qWidget.Questions.questions [0].question.lat [0];
 		} else {
 			m_lat = "no lat";
@@ -55,13 +55,17 @@ public class Semantic : QuestionComponentBase {
 				latIndex = i;
 			}
 		}
-		
-		for(int k = 0; k < qWidget.ParseData.Words[latIndex].Features.Length; k++) {
-			semanticText += qWidget.ParseData.Words[latIndex].Features[k];
-			if(k < qWidget.ParseData.Words[latIndex].Features.Length - 1) {
-				semanticText += ", ";
-			} else {
-				semanticText += ".";
+
+		if (latIndex == -1) {
+			semanticText = "";
+		} else {
+			for (int k = 0; k < qWidget.ParseData.Words[latIndex].Features.Length; k++) {
+				semanticText += qWidget.ParseData.Words [latIndex].Features [k];
+				if (k < qWidget.ParseData.Words [latIndex].Features.Length - 1) {
+					semanticText += ", ";
+				} else {
+					semanticText += ".";
+				}
 			}
 		}
 		
