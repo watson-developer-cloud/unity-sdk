@@ -19,3 +19,25 @@ EditorBuildSettings:
     path: Assets/Plugins/Watson/Scenes/TestNLC.unity
   - enabled: 1
     path: Assets/Plugins/Watson/Scenes/XRay.unity
+  - enabled: 1
+    path: Assets/Plugins/Watson/ThirdParty/TouchScript/Examples/Examples.unity
+  - enabled: 1
+    path: Assets/Plugins/Watson/ThirdParty/TouchScript/Examples/General/Camera/Camera.unity
+  - enabled: 1
+    path: Assets/Plugins/Watson/ThirdParty/TouchScript/Examples/General/Checkers/Checkers.unity
+  - enabled: 1
+    path: Assets/Plugins/Watson/ThirdParty/TouchScript/Examples/General/Colors/Colors.unity
+  - enabled: 1
+    path: Assets/Plugins/Watson/ThirdParty/TouchScript/Examples/General/Input/Input.unity
+  - enabled: 1
+    path: Assets/Plugins/Watson/ThirdParty/TouchScript/Examples/General/Multiuser/Multiuser.unity
+  - enabled: 1
+    path: Assets/Plugins/Watson/ThirdParty/TouchScript/Examples/General/Photos/Photos.unity
+  - enabled: 1
+    path: Assets/Plugins/Watson/ThirdParty/TouchScript/Examples/General/Photos/Photos2D.unity
+  - enabled: 1
+    path: Assets/Plugins/Watson/ThirdParty/TouchScript/Examples/General/Portal/Portal.unity
+  - enabled: 1
+    path: Assets/Plugins/Watson/ThirdParty/TouchScript/Examples/General/Taps/Taps.unity
+  - enabled: 1
+    path: Assets/Plugins/Watson/ThirdParty/TouchScript/Examples/General/UI/InputModule.unity
