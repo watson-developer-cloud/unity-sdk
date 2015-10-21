@@ -18,16 +18,15 @@
 */
 
 
-using System.Collections;
 using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
-using IBM.Watson.Widgets;
 using IBM.Watson.AdaptiveComputing;
 using IBM.Watson.Avatar;
 using IBM.Watson.Services.v1;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections.Generic;
+
+#pragma warning disable 414
 
 namespace IBM.Watson.Widgets
 {
@@ -270,10 +269,9 @@ namespace IBM.Watson.Widgets
 
                 if (m_QuestionPrefab != null)
                 {
-                    if (m_FocusQuestion != null)
-                        Destroy( m_FocusQuestion );
+                    if (m_FocusQuestion == null)
+                        m_FocusQuestion = GameObject.Instantiate(m_QuestionPrefab);
 
-                    m_FocusQuestion = GameObject.Instantiate(m_QuestionPrefab);
                     //m_FocusQuestion.transform.SetParent(transform, false);
 
                     QuestionWidget question = m_FocusQuestion.GetComponentInChildren<QuestionWidget>();

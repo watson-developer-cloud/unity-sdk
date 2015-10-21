@@ -162,7 +162,7 @@ public class PebbleGenerator : MonoBehaviour {
 				combine[i].mesh = meshFilters[i].sharedMesh;
 				combine[i].transform = meshFilters[i].transform.localToWorldMatrix;
 				combine[i].subMeshIndex = i;
-				meshFilters[i].gameObject.active = false;
+				meshFilters[i].gameObject.SetActive( false );
 				i++;
 			}
 
@@ -173,7 +173,7 @@ public class PebbleGenerator : MonoBehaviour {
 
 			rowObjects[indexOfRow].transform.GetComponent<MeshFilter>().sharedMesh = new Mesh();
 			rowObjects[indexOfRow].transform.GetComponent<MeshFilter>().sharedMesh.CombineMeshes(combine);
-			rowObjects[indexOfRow].transform.gameObject.active = true;
+			rowObjects[indexOfRow].transform.gameObject.SetActive( true );
 		}
 	}
 }

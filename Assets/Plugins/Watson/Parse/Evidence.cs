@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using IBM.Watson.Utilities;
 
 public class Evidence : QuestionComponentBase {
 	private List<EvidenceItem> m_EvidenceItems = new List<EvidenceItem>();
