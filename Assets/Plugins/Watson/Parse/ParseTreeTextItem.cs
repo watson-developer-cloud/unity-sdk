@@ -18,6 +18,14 @@ public class ParseTreeTextItem : MonoBehaviour {
 		}
 	}
 
+	private string _m_pos;
+	public string m_pos {
+		get { return _m_pos; }
+		set {
+			_m_pos = value;
+		}
+	}
+
 	private string _m_slot;
 	public string m_slot
 	{
@@ -29,6 +37,6 @@ public class ParseTreeTextItem : MonoBehaviour {
 
 	private void UpdateParseTreeTextField()
 	{
-		m_ParseTreeTextField.text = _m_ParseTreeWord;
+		m_ParseTreeTextField.text = m_ParseTreeWord;
 	}
 }

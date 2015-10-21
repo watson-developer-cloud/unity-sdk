@@ -1,58 +1,57 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &159250
+--- !u!1 &125562
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 4
   m_Component:
-  - 224: {fileID: 22466808}
-  - 222: {fileID: 22261176}
-  - 114: {fileID: 11408492}
-  - 114: {fileID: 11437870}
+  - 224: {fileID: 22478832}
+  - 222: {fileID: 22268954}
+  - 114: {fileID: 11449536}
+  - 114: {fileID: 11489454}
   m_Layer: 5
-  m_Name: ParseTreeText
+  m_Name: POSText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!1 &177304
+--- !u!1 &142456
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 4
   m_Component:
-  - 224: {fileID: 22435056}
-  - 114: {fileID: 11407422}
+  - 224: {fileID: 22460064}
+  - 114: {fileID: 11403242}
   m_Layer: 5
-  m_Name: ParseTreeTextItem
+  m_Name: POSTextItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &11407422
+--- !u!114 &11403242
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 177304}
+  m_GameObject: {fileID: 142456}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f2edbfa308cf4fa58f54e249d194736, type: 3}
+  m_Script: {fileID: 11500000, guid: 56dca753a5385410d9b4eeae99f63e34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ParseTreeTextField: {fileID: 11408492}
-  m_Features: []
---- !u!114 &11408492
+  m_POSTextField: {fileID: 11449536}
+--- !u!114 &11449536
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 159250}
+  m_GameObject: {fileID: 125562}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 708705254, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
@@ -79,12 +78,12 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 
---- !u!114 &11437870
+--- !u!114 &11489454
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 159250}
+  m_GameObject: {fileID: 125562}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 1741964061, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
@@ -92,23 +91,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 2
   m_VerticalFit: 0
---- !u!222 &22261176
+--- !u!222 &22268954
 CanvasRenderer:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 159250}
---- !u!224 &22435056
+  m_GameObject: {fileID: 125562}
+--- !u!224 &22460064
 RectTransform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 177304}
+  m_GameObject: {fileID: 142456}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 22466808}
+  - {fileID: 22478832}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_AnchorMin: {x: .5, y: .5}
@@ -116,17 +115,17 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 50}
   m_Pivot: {x: .5, y: .5}
---- !u!224 &22466808
+--- !u!224 &22478832
 RectTransform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 159250}
+  m_GameObject: {fileID: 125562}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 22435056}
+  m_Father: {fileID: 22460064}
   m_RootOrder: 0
   m_AnchorMin: {x: .5, y: .5}
   m_AnchorMax: {x: .5, y: .5}
@@ -139,12 +138,8 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 0}
-      propertyPath: m_ParseTreeTextField
-      value: 
-      objectReference: {fileID: 11408492}
+    m_Modifications: []
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 177304}
+  m_RootGameObject: {fileID: 142456}
   m_IsPrefabParent: 1
