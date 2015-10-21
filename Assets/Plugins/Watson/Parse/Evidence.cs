@@ -21,6 +21,7 @@ public class Evidence : QuestionComponentBase {
 		base.Init ();
 
 		//	TODO instantiate FeatureItems from resources
+		//	TODO replace <answer> with the outline
 		if(qWidget.Answers.answers[0].evidence.Length < 2) {
 			m_EvidenceItems[0].m_Evidence = qWidget.Answers.answers[0].evidence[0].decoratedPassage;
 			m_EvidenceItems[1].gameObject.SetActive(false);
