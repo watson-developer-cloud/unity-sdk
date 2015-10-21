@@ -196,6 +196,9 @@ namespace IBM.Watson.Widgets
                         m_SpeechResult = result;
                         m_SpeechText = text;
 
+                        if (m_FocusQuestion != null )
+                            m_FocusQuestion.GetComponent<QuestionWidget>().OnFold(null);
+
                         if (m_RecognizeText != null)
                             m_RecognizeText.text = "R: " + m_SpeechText;
 
