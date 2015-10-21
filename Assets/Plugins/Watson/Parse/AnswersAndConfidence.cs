@@ -6,7 +6,7 @@ public class AnswersAndConfidence : QuestionComponentBase {
 	[SerializeField]
 	private AnswerConfidenceBar[] m_AnswerConfidenceBars;
 
-	void Start ()
+	new void Start ()
 	{
 		base.Start ();
 		for(int i = 0; i < m_AnswerConfidenceBars.Length; i++) {

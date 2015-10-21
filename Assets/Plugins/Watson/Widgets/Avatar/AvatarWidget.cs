@@ -18,16 +18,15 @@
 */
 
 
-using System.Collections;
 using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
-using IBM.Watson.Widgets;
 using IBM.Watson.AdaptiveComputing;
 using IBM.Watson.Avatar;
 using IBM.Watson.Services.v1;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections.Generic;
+
+#pragma warning disable 414
 
 namespace IBM.Watson.Widgets
 {
