@@ -39,6 +39,16 @@ namespace IBM.Watson.Widgets
         #region Private Data
         private EventManager m_EventManager = new EventManager();
         private CubeAnimationManager m_CubeAnimMgr = null;
+
+		private AnswersAndConfidence answersAndConfidence;
+		private Evidence evidence;
+		private Semantic semantic;
+		private Features features;
+		private Chat chat;
+		private Location location;
+		private ParseTree parseTree;
+		private QA qa;
+
         #endregion
 
         #region Widget Interface
@@ -123,7 +133,28 @@ namespace IBM.Watson.Widgets
                 Log.Error("QuestionWidget", "Failed to request ParseData.");
 
             // give the cube animation manager the game object
+
+			answersAndConfidence = gameObject.GetComponent<AnswersAndConfidence>();
+			evidence = gameObject.GetComponent<Evidence>();
+			semantic = gameObject.GetComponent<Semantic>();
+			features = gameObject.GetComponent<Features>();
+			chat = gameObject.GetComponent<Chat>();
+			location = gameObject.GetComponent<Location>();
+			parseTree = gameObject.GetComponent<ParseTree>();
+			qa = gameObject.GetComponent<QA>();
         }
+
+		public void Init()
+		{
+			answersAndConfidence.Init ();
+			evidence.Init ();
+			semantic.Init ();
+			features.Init ();
+			chat.Init ();
+			location.Init ();
+			parseTree.Init ();
+			qa.Init ();
+		}
 
         private void OnParseData(ITM.ParseData parse)
         {

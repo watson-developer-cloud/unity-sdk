@@ -282,6 +282,7 @@ namespace IBM.Watson.Widgets
                         question.Avatar = this;
                         question.Questions = m_QuestionResult;
                         question.Answers = answers;
+						question.Init();
 
                         // show the answer panel
                         question.EventManager.SendEvent( "answers" );

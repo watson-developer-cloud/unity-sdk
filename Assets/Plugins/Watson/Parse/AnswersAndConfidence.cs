@@ -6,9 +6,13 @@ public class AnswersAndConfidence : QuestionComponentBase {
 	[SerializeField]
 	private AnswerConfidenceBar[] m_AnswerConfidenceBars;
 
-	void Start ()
+	new void Start ()
 	{
 		base.Start ();
+	}
+
+	new public void Init()
+	{
 		for(int i = 0; i < m_AnswerConfidenceBars.Length; i++) {
 			m_AnswerConfidenceBars[i].m_Answer = qWidget.Answers.answers[i].answerText;
 			m_AnswerConfidenceBars[i].m_Confidence = qWidget.Answers.answers[i].confidence;

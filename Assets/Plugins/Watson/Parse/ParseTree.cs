@@ -2,8 +2,13 @@
 using System.Collections;
 
 public class ParseTree : QuestionComponentBase {
-	void Start () 
+	new void Start () 
 	{
 		base.Start ();
+	}
+
+	new public void Init()
+	{
+
 	}
 }

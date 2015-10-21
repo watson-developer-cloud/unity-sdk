@@ -5,7 +5,10 @@ using IBM.Watson.Widgets;
 public class QuestionComponentBase : MonoBehaviour {
 	protected QuestionWidget qWidget;
 
-	protected void Start () {
+	protected void Start () 
+	{
 		qWidget = gameObject.GetComponent<QuestionWidget>();
 	}
+
+	public void Init(){}
 }

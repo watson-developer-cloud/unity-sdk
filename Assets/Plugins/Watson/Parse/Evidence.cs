@@ -6,9 +6,13 @@ public class Evidence : QuestionComponentBase {
 	private List<EvidenceItem> m_EvidenceItems = new List<EvidenceItem>();
 	private ObservedList<string> m_EvidenceData = new ObservedList<string>();
 
-	void Start()
+	new void Start()
 	{
 		base.Start();
+	}
+
+	new public void Init()
+	{
 		m_EvidenceData.Added += onAdd;
 	}
 
