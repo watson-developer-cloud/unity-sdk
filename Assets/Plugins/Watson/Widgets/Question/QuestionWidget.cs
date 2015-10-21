@@ -160,6 +160,7 @@ namespace IBM.Watson.Widgets
         {
 			ParseData = parse;
 			semantic.OnUpdateSemantic ();
+			parseTree.GenerateParseTree ();
         }
     }
 }
