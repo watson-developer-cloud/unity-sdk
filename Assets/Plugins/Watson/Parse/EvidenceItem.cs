@@ -19,7 +19,12 @@ public class EvidenceItem : MonoBehaviour {
 
 	private void UpdateEvidence()
 	{
-		m_EvidenceText.text = m_Evidence;
+		if (m_Evidence != "") {
+			gameObject.SetActive (true);
+			m_EvidenceText.text = m_Evidence;
+		} else {
+			gameObject.SetActive(false);
+		}
 		//	TODO highlight evidence words
 	}
 }
