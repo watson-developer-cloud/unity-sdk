@@ -80,7 +80,12 @@ public class ParseTree : QuestionComponentBase {
 			GameObject wordGO = Instantiate(Resources.Load("ParseTreeTextItem", typeof(GameObject))) as GameObject;
 			RectTransform wordRectTransform = wordGO.GetComponent<RectTransform>();
 			wordRectTransform.SetParent(m_ParseCanvasRectTransform, false);
-			wordRectTransform.localPosition = positionList[i];
+			if(i < positionList.Count) {
+				wordRectTransform.localPosition = positionList[i];
+			} else {
+				//	TODO fix this
+				wordRectTransform.localPosition = new Vector3(5000f, 5000, 5000f);
+			}
 			ParseTreeTextItem word = wordGO.GetComponent<ParseTreeTextItem>();
 			word.m_ParseTreeWord = qWidget.ParseData.Words[i].Word;
 			word.m_pos = qWidget.ParseData.Words[i].Pos.ToString();
