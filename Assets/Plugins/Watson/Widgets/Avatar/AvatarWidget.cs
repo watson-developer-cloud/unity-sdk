@@ -86,6 +86,8 @@ namespace IBM.Watson.Widgets
         private Input m_levelInput = new Input("Level", typeof(FloatData), "OnLevelInput");
         [SerializeField]
         private Output m_TextOutput = new Output(typeof(TextData));
+        [SerializeField]
+        private Output m_ListenOutput = new Output( typeof(BooleanData) );
         [SerializeField, Tooltip("Recognized speech is put into this Text UI field.")]
         private Text m_RecognizeText = null;
         [SerializeField]
@@ -115,20 +117,26 @@ namespace IBM.Watson.Widgets
             get { return m_State; }
             private set
             {
-                m_State = value;
-                Log.Debug( "AvatarWidget", "State {0}", m_State.ToString() );
+                if ( m_State != value )
+                {
+                    m_State = value;
+                    Log.Debug( "AvatarWidget", "State {0}", m_State.ToString() );
 
-                if ( m_Sleeping )
-                    EventManager.Instance.SendEvent(EventManager.onMoodChange, MoodType.Idle );
-                else if (m_State == AvatarState.LISTENING)
-                    EventManager.Instance.SendEvent(EventManager.onMoodChange, MoodType.Shy);
-                else if (m_State == AvatarState.THINKING)
-                    EventManager.Instance.SendEvent(EventManager.onMoodChange, MoodType.Interested);
-                else
-                    EventManager.Instance.SendEvent(EventManager.onMoodChange, MoodType.Upset);
+                    if ( m_ListenOutput.IsConnected )
+                        m_ListenOutput.SendData( new BooleanData( m_State == AvatarState.LISTENING ) );
 
-                if ( m_StateText != null )
-                    m_StateText.text = m_Sleeping ? "SLEEPING" : m_State.ToString();
+                    if ( m_Sleeping )
+                        EventManager.Instance.SendEvent(EventManager.onMoodChange, MoodType.Idle );
+                    else if (m_State == AvatarState.LISTENING)
+                        EventManager.Instance.SendEvent(EventManager.onMoodChange, MoodType.Shy);
+                    else if (m_State == AvatarState.THINKING)
+                        EventManager.Instance.SendEvent(EventManager.onMoodChange, MoodType.Interested);
+                    else
+                        EventManager.Instance.SendEvent(EventManager.onMoodChange, MoodType.Upset);
+
+                    if ( m_StateText != null )
+                        m_StateText.text = m_Sleeping ? "SLEEPING" : m_State.ToString();
+                }
             }
         }
         #endregion
@@ -236,7 +244,7 @@ namespace IBM.Watson.Widgets
                     else
                     {
                         State = AvatarState.LISTENING;
-                        if ( textConfidence > m_IgnoreWordConfidence )
+                        if ( !m_Sleeping && textConfidence > m_IgnoreWordConfidence )
                             m_TextOutput.SendData( new TextData(m_RecognizeFailure) );
                     }
                 }

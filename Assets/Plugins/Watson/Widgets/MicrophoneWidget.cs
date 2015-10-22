@@ -39,15 +39,34 @@ namespace IBM.Watson.Widgets
         /// </summary>
         public bool Active
         {
-            get { return m_RecordingRoutine != 0; }
+            get { return m_Active; }
             set
             {
-                if (value)
-                    StartRecording();
-                else
-                    StopRecording();
+                if ( m_Active != value )
+                {
+                    m_Active = value;
+                    if (m_Active && !m_Disabled )
+                        StartRecording();
+                    else
+                        StopRecording();
+                }
             }
         }
+        public bool Disable
+        {
+            get { return m_Disabled; }
+            set {
+                if ( m_Disabled != value )
+                {
+                    m_Disabled = value;
+                    if (m_Active && !m_Disabled )
+                        StartRecording();
+                    else
+                        StopRecording();
+                }
+            }
+        }
+
         public void OnToggleActive()
         {
             Active = !Active;
@@ -62,10 +81,13 @@ namespace IBM.Watson.Widgets
         #endregion
 
         #region Private Data
+        private bool m_Active = false;
+        private bool m_Disabled = false;
+
         [SerializeField]
         private bool m_ActivateOnStart = true;
         [SerializeField]
-        private Input m_ActivateInput = new Input("Activate", typeof(BooleanData), "OnActivate");
+        private Input m_ActivateInput = new Input("Activate", typeof(BooleanData), "OnActivateInput");
         [SerializeField]
         private Input m_DisableInput = new Input("Disable", typeof(BooleanData), "OnDisableInput" );
         [SerializeField]
@@ -94,13 +116,13 @@ namespace IBM.Watson.Widgets
             if ( m_ActivateOnStart )
                 Active = true;
         }
-        private void OnActivate(Data data)
+        private void OnActivateInput(Data data)
         {
             Active = ((BooleanData)data).Boolean;
         }
         private void OnDisableInput(Data data )
         {
-            Active = !((BooleanData)data).Boolean;
+            Disable = ((BooleanData)data).Boolean;
         }
 
         private void StartRecording()
@@ -119,7 +141,6 @@ namespace IBM.Watson.Widgets
                 Microphone.End(m_MicrophoneID);
                 Runnable.Stop(m_RecordingRoutine);
                 m_RecordingRoutine = 0;
-                m_Recording = null;
 
                 m_ActivateOutput.SendData( new BooleanData( false ) );
             }
