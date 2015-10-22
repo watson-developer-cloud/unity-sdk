@@ -510,6 +510,7 @@ public class CubeAnimationManager : MonoBehaviour {
     {
         for (int i = 0; i < uiFaceOnSide.Length; i++)
         {
+            presentationSide[i].transform.localPosition = Vector3.zero;
             uiFaceOnSide[i].transform.localPosition = positionFold[i];
             uiFaceOnSide[i].transform.localRotation = rotationFold[i];
         }
@@ -517,12 +518,17 @@ public class CubeAnimationManager : MonoBehaviour {
         transform.position = m_initialPosition;
         transform.localScale = m_initialLocalScale;
         transform.localRotation = m_initialLocalRotation;
+
     }
 
     void OnDisable()
     {
         StopAllCubeAnimations();
-        AnimateDestroyingCube(false);
+
+        //Avatar Object position change
+        animationAvatarPosition = LeanTween.moveLocal(avatarGameobject, Vector3.zero, timeForFoldingUnfolding).setEase(easeForUnfolding);
+
+        //AnimateDestroyingCube(false);
     }
     #endregion
 

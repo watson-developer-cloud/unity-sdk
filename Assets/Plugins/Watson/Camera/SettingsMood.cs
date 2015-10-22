@@ -22,7 +22,7 @@ public class SettingsMood : MonoBehaviour {
 	private Text m_Text;
 	const string display = "Mood: {0}";
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		currentMood = (int)MoodManager.Instance.currentMood;
 		moodTypeList = MoodManager.Instance.moodTypeList;
 		m_Text = GetComponent<Text>();
