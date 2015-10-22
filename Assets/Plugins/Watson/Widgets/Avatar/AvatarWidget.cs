@@ -402,12 +402,16 @@ namespace IBM.Watson.Widgets
                     if (question != null)
                     {
                         question.Avatar = this;
+						question.parseTree.ClearParseTree();
                         question.Questions = m_QuestionResult;
                         question.Answers = answers;
 						question.Init();
 
                         // show the answer panel
                         //question.EventManager.SendEvent( "answers" );
+
+						if (!ITM.GetParseData(question.Questions.questions[0].transactionId, question.OnParseData));
+							Log.Error("QuestionWidget", "Failed to request ParseData.");
                     }
                     else
                         Log.Error("AvatarWidget", "Failed to find QuestionWidget in question prefab.");
