@@ -7,7 +7,17 @@ using IBM.Watson.Utilities;
 [RequireComponent(typeof (Text))]
 public class SettingsBehavior : MonoBehaviour {
 
-	BehaviorType[] behaviorTypeList = null;
+    void OnEnable()
+    {
+        EventManager.Instance.RegisterEventReceiver(EventManager.onBehaviorChangeFinish, UpdateBehavior);
+    }
+
+    void OnDisable()
+    {
+        EventManager.Instance.UnregisterEventReceiver(EventManager.onBehaviorChangeFinish, UpdateBehavior);
+    }
+
+    BehaviorType[] behaviorTypeList = null;
 	private int currentBehavior = 0;
 	private Text m_Text;
 	const string display = "Behavior: {0}";
@@ -27,4 +37,9 @@ public class SettingsBehavior : MonoBehaviour {
 			m_Text.text = string.Format(display, behaviorTypeList[currentBehavior].ToString());
 		}
 	}
+
+    void UpdateBehavior(System.Object[] args)
+    {
+        m_Text.text = string.Format(display, BehaviorManager.Instance.currentBehavior);
+    }
 }

@@ -33,6 +33,7 @@ public class ParseTreeTextItem : MonoBehaviour {
 			_isHighlighted = value;
 			m_rectTransform = m_ParseTreeTextField.gameObject.GetComponent<RectTransform>();
 			LeanTween.textColor(m_rectTransform, isHighlighted ? colorLight : colorDark, m_transitionTime);
+			LeanTween.scale(m_rectTransform, isHighlighted ? scaleUpSize : scaleDownSize, m_transitionTime);
 		}
 	}
 
@@ -69,6 +70,8 @@ public class ParseTreeTextItem : MonoBehaviour {
 	private RectTransform m_rectTransform;
 	private Color colorLight = new Color (0.8f, 0.8f, 0.8f);
 	private Color colorDark = new Color (0.3f, 0.3f, 0.3f);
+	private Vector3 scaleUpSize = new Vector3(1.25f, 1.25f, 1.25f);
+	private Vector3 scaleDownSize = new Vector3(1f, 1f, 1f);
 	private float m_transitionTime = 0.5f;
 
 	void Start()
