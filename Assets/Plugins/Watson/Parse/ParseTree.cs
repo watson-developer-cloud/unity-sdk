@@ -18,20 +18,55 @@
 
 using UnityEngine;
 using System.Collections;
-using IBM.Watson.Utilities;
+using System.Collections.Generic;
 using UnityEngine.UI;
 
 public class ParseTree : QuestionComponentBase {
 	[SerializeField]
 	private RectTransform m_ParseCanvasRectTransform;
 
-	private ObservedList<ParseTreeTextItem> m_WordList = new ObservedList<ParseTreeTextItem>();
+	[SerializeField]
+	private List<GameObject> m_POSList = new List<GameObject>();
+	private List<ParseTreeTextItem> m_WordList = new List<ParseTreeTextItem>();
+	private List<Vector3> positionList = new List<Vector3> ();
+	
+	private int _wordIndex = 0;
+	public int wordIndex 
+	{
+		get { return _wordIndex; }
+		set {
+			if(value > m_WordList.Count - 1) {
+				_wordIndex = 0;
+			} else if(value < 0) {
+				_wordIndex = m_WordList.Count;
+			} else {
+				_wordIndex = value;
+			}
+			UpdateHighlightedWord();
+		}
+	}
 
 	new void Start () 
 	{
 		base.Start ();
-		m_WordList.Added += OnAdd;
-		m_WordList.Removed += OnRemove;
+		positionList.Add(new Vector3(-583f, 188f, 0f));
+		positionList.Add(new Vector3(-408f,	64f, 0f));
+		positionList.Add(new Vector3(-184f, -49f, 0f));
+		positionList.Add(new Vector3(27f, -168f, 0f));
+		positionList.Add(new Vector3(259f, -301f, 0f));
+		positionList.Add(new Vector3(407f, -468f, 0f));
+		positionList.Add(new Vector3(-638f, -31f, 0f));
+		positionList.Add(new Vector3(-417f, -144f, 0f));
+		positionList.Add(new Vector3(-144f, 282f, 0f));
+		positionList.Add(new Vector3(109f, -397f, 0f));
+		positionList.Add(new Vector3(348f, -560f, 0f));
+		positionList.Add(new Vector3(-643f, -268f, 0f));
+		positionList.Add(new Vector3(-346f, -393f, 0f));
+		positionList.Add(new Vector3(-115f, -514f, 0f));
+		positionList.Add(new Vector3(91f, -641f, 0f));
+
+//		m_WordList.Added += OnAdd;
+//		m_WordList.Removed += OnRemove;
 	}
 
 	new public void Init()
@@ -45,6 +80,7 @@ public class ParseTree : QuestionComponentBase {
 			GameObject wordGO = Instantiate(Resources.Load("ParseTreeTextItem", typeof(GameObject))) as GameObject;
 			RectTransform wordRectTransform = wordGO.GetComponent<RectTransform>();
 			wordRectTransform.SetParent(m_ParseCanvasRectTransform, false);
+			wordRectTransform.localPosition = positionList[i];
 			ParseTreeTextItem word = wordGO.GetComponent<ParseTreeTextItem>();
 			word.m_ParseTreeWord = qWidget.ParseData.Words[i].Word;
 			word.m_pos = qWidget.ParseData.Words[i].Pos.ToString();
@@ -56,23 +92,77 @@ public class ParseTree : QuestionComponentBase {
 
 			m_WordList.Add(word);
 		}
+
+		wordIndex = 0;
+		InvokeRepeating ("CycleWords", 2f, 2f);
 	}
 
 	public void ClearParseTree()
 	{
+		CancelInvoke ();
 		while(m_WordList.Count != 0) {
 			Destroy(m_WordList[0].gameObject);
 			m_WordList.Remove(m_WordList[0]);
 		}
 	}
 
-	private void OnAdd()
-	{
+//	private void OnAdd()
+//	{
 //		Debug.Log ("word added: " + m_WordList[m_WordList.Count - 1].m_pos);
+//	}
+//
+//	private void OnRemove()
+//	{
+//		Debug.Log ("word removed: " + m_WordList.Count);
+//	}
+
+	private void UpdateHighlightedWord()
+	{
+		for (int i = 0; i < m_WordList.Count; i++) {
+			m_WordList [i].isHighlighted = false;
+		}
+
+		Debug.Log ("this: " + wordIndex +"/"+ + m_WordList.Count);
+		m_WordList [wordIndex].isHighlighted = true;
+
+		for (int j = 0; j < m_POSList.Count; j++) {
+			POSControl posControl = m_POSList[j].GetComponent<POSControl>();
+			Debug.Log("posControl.m_POS: " + posControl.m_POS + ", WordPOS: " + m_WordList [wordIndex].m_pos.ToLower());
+			if(posControl.m_POS == m_WordList [wordIndex].m_pos.ToLower()) {
+				posControl.isHighlighted = true;
+			} else {
+				posControl.isHighlighted = false;
+			}
+		}
+
+		if(qWidget.Questions.questions [0].question.lat.Length == 0 && qWidget.Questions.questions [0].question.focus.Length == 0) m_POSList[2].GetComponent<POSControl>().isHighlighted = true;
+		if (qWidget.Questions.questions [0].question.lat.Length > 0) {
+			if (m_WordList [wordIndex].m_ParseTreeWord.ToLower () == qWidget.Questions.questions [0].question.lat [0].ToLower ()) {
+				m_POSList [1].GetComponent<POSControl> ().isHighlighted = true;
+			}
+		}
+
+
+		if (qWidget.Questions.questions [0].question.focus.Length > 0) {
+			if (m_WordList [wordIndex].m_ParseTreeWord.ToLower () == qWidget.Questions.questions [0].question.focus [0].ToLower ()) {
+				m_POSList [0].GetComponent<POSControl> ().isHighlighted = true;
+			}
+		}
 	}
 
-	private void OnRemove()
+	void Update()
 	{
-//		Debug.Log ("word removed: " + m_WordList.Count);
+		if (Input.GetKeyDown (KeyCode.C)) {
+			wordIndex --;
+		}
+
+		if (Input.GetKeyDown (KeyCode.V)) {
+			wordIndex ++;
+		}
+	}
+
+	private void CycleWords()
+	{
+		wordIndex ++;
 	}
 }

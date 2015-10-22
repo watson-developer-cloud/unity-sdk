@@ -25,6 +25,17 @@ public class ParseTreeTextItem : MonoBehaviour {
 	[SerializeField]
 	private Text m_ParseTreeTextField;
 
+	private bool _isHighlighted = false;
+	public bool isHighlighted
+	{
+		get { return _isHighlighted; }
+		set {
+			_isHighlighted = value;
+			m_rectTransform = m_ParseTreeTextField.gameObject.GetComponent<RectTransform>();
+			LeanTween.textColor(m_rectTransform, isHighlighted ? colorLight : colorDark, m_transitionTime);
+		}
+	}
+
 	private string _m_ParseTreeWord;
 	public string m_ParseTreeWord
 	{
@@ -36,6 +47,7 @@ public class ParseTreeTextItem : MonoBehaviour {
 		}
 	}
 
+	[SerializeField]
 	private string _m_pos;
 	public string m_pos {
 		get { return _m_pos; }
@@ -44,6 +56,7 @@ public class ParseTreeTextItem : MonoBehaviour {
 		}
 	}
 
+	[SerializeField]
 	private string _m_slot;
 	public string m_slot
 	{
@@ -52,6 +65,16 @@ public class ParseTreeTextItem : MonoBehaviour {
 	}
 
 	public List<string> m_Features = new List<string>();
+
+	private RectTransform m_rectTransform;
+	private Color colorLight = new Color (0.8f, 0.8f, 0.8f);
+	private Color colorDark = new Color (0.3f, 0.3f, 0.3f);
+	private float m_transitionTime = 0.5f;
+
+	void Start()
+	{
+		m_rectTransform = m_ParseTreeTextField.gameObject.GetComponent<RectTransform>();
+	}
 
 	private void UpdateParseTreeTextField()
 	{

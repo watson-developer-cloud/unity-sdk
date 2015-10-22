@@ -40,13 +40,19 @@ public class Evidence : QuestionComponentBase {
 
 		//	TODO instantiate FeatureItems from resources
 		//	TODO replace <answer> with the outline
-		if(qWidget.Answers.answers[0].evidence.Length == 1) {
-			m_EvidenceItems[0].m_Evidence = qWidget.Answers.answers[0].evidence[0].decoratedPassage;
-			m_EvidenceItems[1].gameObject.SetActive(false);
+		if (qWidget.Answers.answers.Length == 0)
+			return;
+
+		if (qWidget.Answers.answers [0].evidence.Length == 1) {
+			m_EvidenceItems [0].m_Evidence = qWidget.Answers.answers [0].evidence [0].decoratedPassage;
+			m_EvidenceItems [1].gameObject.SetActive (false);
+		} else if (qWidget.Answers.answers [0].evidence.Length > 1) {
+			m_EvidenceItems [1].gameObject.SetActive (true);
+			m_EvidenceItems [0].m_Evidence = qWidget.Answers.answers [0].evidence [0].decoratedPassage;
+			m_EvidenceItems [1].m_Evidence = qWidget.Answers.answers [0].evidence [1].decoratedPassage;
 		} else {
-			m_EvidenceItems[1].gameObject.SetActive(true);
-			m_EvidenceItems[0].m_Evidence = qWidget.Answers.answers[0].evidence[0].decoratedPassage;
-			m_EvidenceItems[1].m_Evidence = qWidget.Answers.answers[0].evidence[1].decoratedPassage;
+			m_EvidenceItems [0].gameObject.SetActive (false);
+			m_EvidenceItems [1].gameObject.SetActive (false);
 		}
 
 		m_EvidenceData.Added += onAdd;

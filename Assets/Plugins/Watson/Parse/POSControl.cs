@@ -22,8 +22,8 @@ using UnityEngine.UI;
 
 public class POSControl : MonoBehaviour {
 	private RectTransform m_rectTransform;
-	private Color colorDark = new Color (0.8f, 0.8f, 0.8f);
-	private Color colorLight = new Color (0.3f, 0.3f, 0.3f);
+	private Color colorLight = new Color (0.8f, 0.8f, 0.8f);
+	private Color colorDark = new Color (0.3f, 0.3f, 0.3f);
 	private float m_transitionTime = 0.5f;
 
 	private bool _isHighlighted = true;
@@ -35,6 +35,8 @@ public class POSControl : MonoBehaviour {
 			LeanTween.textColor(m_rectTransform, isHighlighted ? colorLight : colorDark, m_transitionTime);
 		}
 	}
+
+	public string m_POS;
 
 	void Start()
 	{
