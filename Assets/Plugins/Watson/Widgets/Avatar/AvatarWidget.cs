@@ -250,8 +250,6 @@ namespace IBM.Watson.Widgets
                         m_SpeechResult = result;
                         m_SpeechText = text;
 
-                        if (m_FocusQuestion != null )
-                            m_FocusQuestion.GetComponent<QuestionWidget>().OnFold(null);
 
                         if (!m_NLC.Classify(m_ClassifierId, m_SpeechText, OnSpeechClassified))
                             Log.Error("AvatarWidget", "Failed to send {0} to NLC.", m_SpeechText);
@@ -320,6 +318,10 @@ namespace IBM.Watson.Widgets
                 }
                 else if ( m_ClassifyResult.top_class == "question" || m_ClassifyResult.top_class == "watson-thunder" )
                 {
+
+                    if (m_FocusQuestion != null)
+                        m_FocusQuestion.GetComponent<QuestionWidget>().OnFold(null);
+
                     if (!m_ITM.AskQuestion(m_SpeechResult.Results[0].Alternatives[0].Transcript, OnAskQuestion))
                         Log.Error("AvatarWidget", "Failed to send question to ITM." );
                 }

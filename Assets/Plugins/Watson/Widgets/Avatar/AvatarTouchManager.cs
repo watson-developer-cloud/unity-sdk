@@ -69,6 +69,9 @@ public class AvatarTouchManager: MonoBehaviour
 
     private void TapGesture_Tapped(object sender, System.EventArgs e)
     {
+        if (CubeAnimationManager.instance == null)
+            return;
+
        Log.Status("AvatarTouchManager", "TapGesture_Tapped: {0}", tapGesture.ScreenPosition);
         Ray rayForTab = Camera.main.ScreenPointToRay(tapGesture.ScreenPosition);
 

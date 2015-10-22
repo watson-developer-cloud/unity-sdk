@@ -214,7 +214,7 @@ public class CubeAnimationManager : MonoBehaviour {
 			}
 		}
 
-		ShowCube ();
+		//ShowCube ();
 	}
 
 	private int currentZoom = 0;
@@ -494,11 +494,25 @@ public class CubeAnimationManager : MonoBehaviour {
 		}
 	}
 
-	#endregion
+    #endregion
 
-	#region Focus
+    #region On Enable / Disable
+    void OnEnable()
+    {
+        StopAllCubeAnimations();
+        ShowCube();
+    }
 
-	public void ShowCube(){
+    void OnDisable()
+    {
+        StopAllCubeAnimations();
+        AnimateDestroyingCube(false);
+    }
+    #endregion
+
+    #region Focus
+
+    public void ShowCube(){
 		if( currentAnimationState == CubeAnimationState.GoingFromScene){
 			//do nothing - it is going from scene, early return before any animation stopping!
 			return;
@@ -518,13 +532,14 @@ public class CubeAnimationManager : MonoBehaviour {
 
 	public void DestroyCube(){
 		StopAllCubeAnimations ();
-		AnimateDestroyingCube ();
+		AnimateDestroyingCube (true);
 	}
 
-	private void AnimateDestroyingCube(){
+	private void AnimateDestroyingCube(bool destroy){
 		currentAnimationState = CubeAnimationState.GoingFromScene;
 		LeanTween.moveLocal (gameObject, new Vector3 (0, 240, 0), timeForComingToScene).setEase (easeForGoingFromScene).setOnComplete(()=>{
-			Destroy(transform.parent.gameObject);
+            if(destroy)
+			    Destroy(transform.parent.gameObject);
 		});
 	}
 
