@@ -122,7 +122,6 @@ public class ParseTree : QuestionComponentBase {
 			m_WordList [i].isHighlighted = false;
 		}
 
-		Debug.Log ("this: " + wordIndex +"/"+ + m_WordList.Count);
 		m_WordList [wordIndex].isHighlighted = true;
 
 		for (int j = 0; j < m_POSList.Count; j++) {
