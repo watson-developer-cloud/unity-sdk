@@ -16,7 +16,6 @@
 * @author Richard Lyle (rolyle@us.ibm.com)
 */
 
-using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
 using System.Collections;
 using UnityEngine;
@@ -132,11 +131,6 @@ namespace IBM.Watson.Widgets
             yield return Application.RequestUserAuthorization( UserAuthorization.Microphone );
 #endif
             m_Recording = Microphone.Start(m_MicrophoneID, true, m_RecordingBufferSize, m_RecordingHZ);
-            if ( m_Recording == null )
-            {
-                Log.Error( "MicrophoneWidget", "Failed to start microphone {0}", m_MicrophoneID );
-                yield break;
-            }
             yield return null;      // let m_RecordingRoutine get set..
 
             bool bFirstBlock = true;

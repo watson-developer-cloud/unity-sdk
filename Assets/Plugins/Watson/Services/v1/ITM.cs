@@ -254,7 +254,8 @@ namespace IBM.Watson.Services.v1
             { "conj", WordPosition.CONJUNCTION },       // ?
             { "inter", WordPosition.INTERJECTION },     // ?
         };
-        private const string SERVICE_ID = "ItmV1";
+        private const string SERVICE_ID = "ITMV1";
+        private const string TEST_PARSE_DATA = "{\"_id\":\"47f26baa682b4c939cda4164f5b9059b\",\"_rev\":\"1-c353e16c83c2a903f367c30042a4eba1\",\"transactionId\":-1773927182,\"parse\":{\"pos\":[{\"text\":\"What\",\"value\":\"noun\"},{\"text\":\"is\",\"value\":\"verb\"},{\"text\":\"the\",\"value\":\"det\"},{\"text\":\"best\",\"value\":\"adj\"},{\"text\":\"treatment\",\"value\":\"noun\"},{\"text\":\"for\",\"value\":\"prep\"},{\"text\":\"an\",\"value\":\"det\"},{\"text\":\"african american\",\"value\":\"noun\"},{\"text\":\"male\",\"value\":\"noun\"},{\"text\":\"with\",\"value\":\"prep\"},{\"text\":\"heart\",\"value\":\"noun\"},{\"text\":\"failure\",\"value\":\"noun\"}],\"slot\":[{\"text\":\"What\",\"value\":\"subj\"},{\"text\":\"is\",\"value\":\"top\"},{\"text\":\"the\",\"value\":\"ndet\"},{\"text\":\"best\",\"value\":\"nadj\"},{\"text\":\"treatment\",\"value\":\"pred\"},{\"text\":\"for\",\"value\":\"ncomp\"},{\"text\":\"an\",\"value\":\"ndet\"},{\"text\":\"african american\",\"value\":\"nadj\"},{\"text\":\"male\",\"value\":\"objprep\"},{\"text\":\"with\",\"value\":\"nprep\"},{\"text\":\"heart\",\"value\":\"nnoun\"},{\"text\":\"failure\",\"value\":\"objprep\"}],\"features\":[{\"text\":\"What\",\"value\":[\"pron\",\"sg\",\"wh\",\"whnom\"]},{\"text\":\"is\",\"value\":[\"vfin\",\"vpres\",\"sg\",\"wh\",\"whnom\",\"vsubj\",\"absubj\",\"auxv\"]},{\"text\":\"the\",\"value\":[\"sg\",\"def\",\"the\",\"ingdet\"]},{\"text\":\"best\",\"value\":[\"superl\",\"adjnoun\"]},{\"text\":\"treatment\",\"value\":[\"cn\",\"sg\",\"evnt\",\"act\",\"abst\",\"cognsa\",\"activity\",\"groupact\",\"(latrwd 0.051600)\",\"(vform treat)\"]},{\"text\":\"for\",\"value\":[\"pprefv\",\"nonlocp\",\"pobjp\"]},{\"text\":\"an\",\"value\":[\"sg\",\"indef\"]},{\"text\":\"african american\",\"value\":[\"propn\",\"sg\",\"glom\",\"notfnd\",\"unkph\"]},{\"text\":\"male\",\"value\":[\"cn\",\"sg\",\"m\",\"h\",\"physobj\",\"anim\",\"anml\",\"liv\",\"(latrwd 0.051600)\"]},{\"text\":\"with\",\"value\":[\"pprefv\",\"nonlocp\"]},{\"text\":\"heart\",\"value\":[\"cn\",\"sg\",\"abst\",\"cognsa\",\"(latrwd 0.032630)\"]},{\"text\":\"failure\",\"value\":[\"cn\",\"sg\",\"abst\",\"massn\",\"illness\",\"cond\",\"state\",\"(* heart failure)\",\"(vform fail)\"]}],\"hierarchy\":[\"african american\"],\"words\":[\"What\",\"is\",\"the\",\"best\",\"treatment\",\"for\",\"an\",\"african american\",\"male\",\"with\",\"heart\",\"failure\"],\"flags\":[\"african american\"]},\"preContext\":0,\"postContext\":0,\"sessionKey\":null}";
         #endregion
 
         #region Login
@@ -286,22 +287,17 @@ namespace IBM.Watson.Services.v1
         {
             if (resp.Success)
             {
-                try {
-                    IDictionary json = Json.Deserialize(Encoding.UTF8.GetString(resp.Data)) as IDictionary;
-                    if (json != null && json.Contains("sessionKey"))
-                    {
-                        SessionKey = (long)json["sessionKey"];
-                        if ( json.Contains( "location" ) )
-                            Location = (string)json["location"];
-                    }
-                    else
-                        resp.Success = false;
-                }
-                catch( Exception e )
+                string jsonString = Encoding.UTF8.GetString(resp.Data);
+
+                IDictionary json = Json.Deserialize(jsonString) as IDictionary;
+                if (json != null && json.Contains("sessionKey"))
                 {
-                    Log.Error( "ITM", "Login exception: {0}", e.ToString() );
-                    resp.Success = false;
+                    SessionKey = (long)json["sessionKey"];
+                    if ( json.Contains( "location" ) )
+                        Location = (string)json["location"];
                 }
+                else
+                    resp.Success = false;
             }
 
             if (((LoginReq)req).Callback != null)

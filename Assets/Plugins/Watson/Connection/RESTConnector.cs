@@ -67,27 +67,13 @@ namespace IBM.Watson.Connection
         /// </summary>
         public class Form
         {
-            public Form( string s )
-            {
-                IsBinary = false;
-                BoxedObject = s;
-            }
-            public Form( int n )
-            {
-                IsBinary = false;
-                BoxedObject = n;
-            }
-
             public Form( byte [] contents, string fileName = null, string mimeType = null )
             {
-                IsBinary = true;
                 Contents = contents;
                 FileName = fileName;
                 MimeType = mimeType;
             }
 
-            public bool IsBinary { get; set; }
-            public object BoxedObject { get; set; }
             public byte [] Contents { get; set; }
             public string FileName { get; set; }
             public string MimeType { get; set; }
@@ -321,16 +307,7 @@ namespace IBM.Watson.Connection
 
                         WWWForm form = new WWWForm();
                         foreach( var kp in req.Forms )
-                        {
-                            if ( kp.Value.IsBinary )
-                                form.AddBinaryData( kp.Key, kp.Value.Contents, kp.Value.FileName, kp.Value.MimeType );
-                            else if ( kp.Value.BoxedObject is string )
-                                form.AddField( kp.Key, (string)kp.Value.BoxedObject );
-                            else if ( kp.Value.BoxedObject is int )
-                                form.AddField( kp.Key, (int)kp.Value.BoxedObject );
-                            else if ( kp.Value.BoxedObject != null )
-                                Log.Warning( "RESTCOnnector", "Unsupported form field type {0}", kp.Value.BoxedObject.GetType().ToString() );
-                        }
+                            form.AddBinaryData( kp.Key, kp.Value.Contents, kp.Value.FileName, kp.Value.MimeType );
                         foreach( var kp in form.headers )
                             req.Headers[ kp.Key ] = kp.Value;
                 
