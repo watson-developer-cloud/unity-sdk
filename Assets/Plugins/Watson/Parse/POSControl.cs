@@ -22,8 +22,8 @@ using UnityEngine.UI;
 
 public class POSControl : MonoBehaviour {
 	private RectTransform m_rectTransform;
-	private Color colorDark;
-	private Color colorLight;
+	private Color colorDark = new Color (0.8f, 0.8f, 0.8f);
+	private Color colorLight = new Color (0.3f, 0.3f, 0.3f);
 	private float m_transitionTime = 0.5f;
 
 	private bool _isHighlighted = true;
@@ -32,15 +32,12 @@ public class POSControl : MonoBehaviour {
 		get { return _isHighlighted; }
 		set {
 			_isHighlighted = value;
-			Debug.Log("isHighlighted: " + isHighlighted);
 			LeanTween.textColor(m_rectTransform, isHighlighted ? colorLight : colorDark, m_transitionTime);
 		}
 	}
 
 	void Start()
 	{
-		colorLight = new Color (0.8f, 0.8f, 0.8f);
-		colorDark = new Color (0.3f, 0.3f, 0.3f);
 		m_rectTransform = gameObject.GetComponent<RectTransform>();
 	}
 }
