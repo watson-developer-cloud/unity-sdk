@@ -94,7 +94,10 @@ namespace IBM.Watson.Utilities
 		public static string onBehaviorChange = "onBehaviorChange";
 		public static string onBehaviorChangeFinish = "onBehaviorChangeFinish";
 
-		#endregion
+        //Cube Animation
+        public static string onCubeAnimationStateChanged = "onCubeAnimationStateChanged";
+
+        #endregion
     }
 	
 }

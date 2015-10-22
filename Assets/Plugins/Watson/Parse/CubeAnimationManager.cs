@@ -32,11 +32,14 @@ public class CubeAnimationManager : MonoBehaviour {
 		GoingFromScene		//Animating just before destroying
 	}
 
-	#endregion
+    #endregion
 
-	#region Private and Public Members
+    #region Private and Public Members
 
-	private CubeAnimationState m_currentState;
+    private static CubeAnimationManager _instance;
+    public static CubeAnimationManager instance { get { return _instance; } }
+
+    private CubeAnimationState m_currentState;
 
 	/// <summary>
 	/// Gets the state of the current animation.
@@ -46,6 +49,16 @@ public class CubeAnimationManager : MonoBehaviour {
 		get{
 			return m_currentState;
 		}
+        set
+        {
+            bool hasStateChanged = (m_currentState != value);
+            m_currentState = value;
+
+            if (hasStateChanged){
+                EventManager.Instance.SendEvent(EventManager.onCubeAnimationStateChanged);
+            }
+
+        }
 	}
 
 	public GameObject avatarGameobject;
@@ -57,6 +70,7 @@ public class CubeAnimationManager : MonoBehaviour {
 	public float distanceFromCameraInZAfterUnfolding = 100f;
 	public Vector3 m_initialPosition;
 	private Vector3 m_initialLocalScale;
+    private Vector3 m_initialPositionMainCamera;
 
 	private bool isRotating = true;
 
@@ -101,7 +115,9 @@ public class CubeAnimationManager : MonoBehaviour {
 
 	void Awake ()
 	{
-		positionUnfold = new Vector3[]{
+        _instance = this;
+
+        positionUnfold = new Vector3[]{
 			new Vector3 (0f, 0f, 10f), 
 			new Vector3 (-5f + 2.5f, 0f, 5f), 
 			new Vector3 (-5f + 2.5f, 0f, -5f), 
@@ -162,8 +178,9 @@ public class CubeAnimationManager : MonoBehaviour {
 
 		m_initialPosition = transform.position;
 		m_initialLocalScale = transform.localScale;
+        m_initialPositionMainCamera = Camera.main.transform.position;
 
-		if (avatarGameobject == null) {
+        if (avatarGameobject == null) {
 			avatarGameobject = GameObject.Find("Avatar/Avatar_01");
 		}
 
@@ -220,8 +237,8 @@ public class CubeAnimationManager : MonoBehaviour {
 	}
 
 	private void CubeStatinoaryAnimation(){
-		if (isRotating && (m_currentState == CubeAnimationState.IdleOnScene || m_currentState == CubeAnimationState.Folding)) {	//If it is fold already and rotation is true we are rotating.
-			transform.Rotate (statinoaryRotationVector * Time.deltaTime * statinoaryRotationSpeed);
+		if (isRotating && (currentAnimationState == CubeAnimationState.IdleOnScene || currentAnimationState == CubeAnimationState.Folding)) {	//If it is fold already and rotation is true we are rotating.
+			transform.Rotate (statinoaryRotationVector * Time.deltaTime * statinoaryRotationSpeed, Space.World);
 		}
 	}
 
@@ -230,9 +247,9 @@ public class CubeAnimationManager : MonoBehaviour {
 	public void Fold(){
 		StopAllCubeAnimations ();
 
-		if (m_currentState == CubeAnimationState.FocusingToSide || m_currentState == CubeAnimationState.FocusedToSide) {
+		if (currentAnimationState == CubeAnimationState.FocusingToSide || currentAnimationState == CubeAnimationState.FocusedToSide) {
 			AnimateUnfocus (AnimateFold, null);
-		}else if( m_currentState == CubeAnimationState.GoingFromScene){
+		}else if( currentAnimationState == CubeAnimationState.GoingFromScene){
 			//do nothing - it is going from scene
 		} else {
 			AnimateFold (null, null);
@@ -244,13 +261,13 @@ public class CubeAnimationManager : MonoBehaviour {
 	}
 
 	private void AnimateFold(System.Action<System.Object> callBackOnComplete = null, System.Object paramOnComplete = null){
-		m_currentState = CubeAnimationState.Folding;
+		currentAnimationState = CubeAnimationState.Folding;
 		for (int i = 0; i < uiFaceOnSide.Length; i++) {
 			animationPositionOnSide[i] = LeanTween.moveLocal (uiFaceOnSide[i], positionFold[i], timeForFoldingUnfolding).setEase (easeForFolding);
 			if(i == uiFaceOnSide.Length - 1)
 				animationRotationOnSide[i] = LeanTween.rotateLocal (uiFaceOnSide[i], rotationFold[i].eulerAngles, timeForFoldingUnfolding).setEase (easeForFolding).setOnComplete(
 					()=>{
-					m_currentState = CubeAnimationState.IdleOnScene;	//Folding finish
+					currentAnimationState = CubeAnimationState.IdleOnScene;	//Folding finish
 
 					if(callBackOnComplete != null)
 						callBackOnComplete(paramOnComplete);
@@ -268,9 +285,9 @@ public class CubeAnimationManager : MonoBehaviour {
 	
 	public void UnFold(){
 		StopAllCubeAnimations ();
-		if (m_currentState == CubeAnimationState.FocusingToSide || m_currentState == CubeAnimationState.FocusedToSide) {
+		if (currentAnimationState == CubeAnimationState.FocusingToSide || currentAnimationState == CubeAnimationState.FocusedToSide) {
 			AnimateUnfocus(AnimateUnFold, null);
-		} else if( m_currentState == CubeAnimationState.GoingFromScene){
+		} else if( currentAnimationState == CubeAnimationState.GoingFromScene){
 			//do nothing - it is going from scene
 		}else {
 			AnimateUnFold (null, null);
@@ -283,7 +300,7 @@ public class CubeAnimationManager : MonoBehaviour {
 	}
 
 	private void AnimateUnFold(System.Action<System.Object> callBackOnComplete = null, System.Object paramOnComplete = null){
-		m_currentState = CubeAnimationState.UnFolding;
+		currentAnimationState = CubeAnimationState.UnFolding;
 		for (int i = 0; i < uiFaceOnSide.Length; i++) {
 			animationPositionOnSide[i] = LeanTween.moveLocal (uiFaceOnSide[i], positionUnfold[i], timeForFoldingUnfolding).setEase (easeForUnfolding);
 			animationRotationOnSide[i] = LeanTween.rotateLocal (uiFaceOnSide[i], rotationUnfold[i].eulerAngles, timeForFoldingUnfolding).setEase (easeForUnfolding);
@@ -292,14 +309,14 @@ public class CubeAnimationManager : MonoBehaviour {
 		//Rotate to camera 
 		animationRotationCube = LeanTween.rotateLocal(gameObject, Camera.main.transform.rotation.eulerAngles - new Vector3(0.0f, 90.0f, 0.0f), timeForFoldingUnfolding).setEase(easeForUnfolding).setOnComplete(
 			() => {
-			m_currentState = CubeAnimationState.Unfolded;	//unfolding finish
+			currentAnimationState = CubeAnimationState.Unfolded;	//unfolding finish
 
 			if(callBackOnComplete != null)
 				callBackOnComplete(paramOnComplete);
 		});
 		
 		//Move object cloase to camera
-		animationPositionCube = LeanTween.move (gameObject, Camera.main.transform.position + distanceFromCameraInZAfterUnfolding * Camera.main.transform.forward + positionCubeOffsetUnfold, timeForFoldingUnfolding).setEase(easeForUnfolding);
+		animationPositionCube = LeanTween.move (gameObject, m_initialPositionMainCamera + distanceFromCameraInZAfterUnfolding * Camera.main.transform.forward + positionCubeOffsetUnfold, timeForFoldingUnfolding).setEase(easeForUnfolding);
 
 		//Avatar Object position change
 		animationAvatarPosition = LeanTween.moveLocal (avatarGameobject, avatarPositionUnfold, timeForFoldingUnfolding).setEase(easeForUnfolding);
@@ -324,7 +341,7 @@ public class CubeAnimationManager : MonoBehaviour {
 
 		if (currentAnimationState == CubeAnimationState.Unfolded || currentAnimationState == CubeAnimationState.FocusedToSide  || currentAnimationState == CubeAnimationState.FocusingToSide) {
 			AnimateFocusOnSide(sideType);
-		} else if( m_currentState == CubeAnimationState.GoingFromScene){
+		} else if( currentAnimationState == CubeAnimationState.GoingFromScene){
 			//do nothing - it is going from scene
 		}else {
 			AnimateUnFold (AnimateFocusOnSide, (System.Object)sideType);
@@ -336,7 +353,7 @@ public class CubeAnimationManager : MonoBehaviour {
 	}
 	               
 	private void AnimateFocusOnSide(CubeSideType sideType){
-		m_currentState = CubeAnimationState.FocusingToSide;
+		currentAnimationState = CubeAnimationState.FocusingToSide;
 
 		for (int i = 0; i < presentationSide.Length; i++) {
 			Vector3 offsetPosition = presentationSide[i].transform.parent.localPosition + presentationSide[i].transform.parent.parent.localPosition;
@@ -346,7 +363,7 @@ public class CubeAnimationManager : MonoBehaviour {
 
 			if(i == (int) sideType){	//Our hero object!
 				animationPositionOnSidePresentation[i] = LeanTween.moveLocal (presentationSide[i], positionFocus[0] - offsetPosition, timeForFocusing).setEase (easeForFocusing).setOnComplete(()=>{
-					m_currentState = CubeAnimationState.FocusedToSide;
+					currentAnimationState = CubeAnimationState.FocusedToSide;
 				});
 			}
 			else if(i < (int) sideType){
@@ -378,11 +395,11 @@ public class CubeAnimationManager : MonoBehaviour {
 
 	private void AnimateUnfocus(System.Action<System.Object> callBackOnComplete = null, System.Object paramOnComplete = null){
 		
-		m_currentState = CubeAnimationState.FocusingToSide;	
+		currentAnimationState = CubeAnimationState.FocusingToSide;	
 		for (int i = 0; i < uiFaceOnSide.Length; i++) {
 			if(i == uiFaceOnSide.Length - 1){
 				animationPositionOnSide [i] = LeanTween.moveLocal (presentationSide [i], Vector3.zero, timeForFocusing).setEase (easeForFocusing).setOnComplete(()=>{
-					m_currentState = CubeAnimationState.Unfolded;
+					currentAnimationState = CubeAnimationState.Unfolded;
 
 					if(callBackOnComplete != null){
 						callBackOnComplete(paramOnComplete);
@@ -400,7 +417,7 @@ public class CubeAnimationManager : MonoBehaviour {
 	#region Animation Stop / Reset
 
 	private void StopAllCubeAnimations(){
-		if( m_currentState == CubeAnimationState.GoingFromScene){
+		if( currentAnimationState == CubeAnimationState.GoingFromScene){
 			//do nothing - it is going from scene, early return before any animation stopping!
 			return;
 		}
@@ -464,7 +481,7 @@ public class CubeAnimationManager : MonoBehaviour {
 	#region Focus
 
 	public void ShowCube(){
-		if( m_currentState == CubeAnimationState.GoingFromScene){
+		if( currentAnimationState == CubeAnimationState.GoingFromScene){
 			//do nothing - it is going from scene, early return before any animation stopping!
 			return;
 		}
@@ -474,10 +491,10 @@ public class CubeAnimationManager : MonoBehaviour {
 	}
 
 	private void AnimateShowingCube(){
-		m_currentState = CubeAnimationState.ComingToScene;
+		currentAnimationState = CubeAnimationState.ComingToScene;
 		LeanTween.moveLocal (gameObject, new Vector3 (0, 40, 0), timeForComingToScene).setFrom (new Vector3 (0, -40, 0)).setEase (easeForComingToScene);
 		LeanTween.scale (gameObject, gameObject.transform.localScale, timeForComingToScene).setFrom (Vector3.one).setEase (easeForComingToScene).setOnComplete(()=>{
-			m_currentState = CubeAnimationState.IdleOnScene;
+			currentAnimationState = CubeAnimationState.IdleOnScene;
 		});
 	}
 
@@ -487,7 +504,7 @@ public class CubeAnimationManager : MonoBehaviour {
 	}
 
 	private void AnimateDestroyingCube(){
-		m_currentState = CubeAnimationState.GoingFromScene;
+		currentAnimationState = CubeAnimationState.GoingFromScene;
 		LeanTween.moveLocal (gameObject, new Vector3 (0, 240, 0), timeForComingToScene).setEase (easeForGoingFromScene).setOnComplete(()=>{
 			Destroy(transform.parent.gameObject);
 		});
