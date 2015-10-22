@@ -16,6 +16,8 @@
 * @author Richard Lyle (rolyle@us.ibm.com)
 */
 
+#define ENABLE_DEBUGGING
+
 using IBM.Watson.Services.v1;
 using IBM.Watson.Logging;
 using UnityEngine;
@@ -119,6 +121,17 @@ namespace IBM.Watson.Widgets
 
 	    private void OnRecognize(SpeechToText.ResultList result)
 	    {
+#if ENABLE_DEBUGGING
+            if ( result != null && result.Results != null )
+            {
+                foreach( var r in result.Results )
+                {
+                    foreach( var a in r.Alternatives )
+                        Log.Debug( "SpeechToTextWidget", "OnRecognize: {0}, Final: {1}", a.Transcript, r.Final );
+                }
+            }
+#endif
+
             m_ResultOutput.SendData( new SpeechToTextData( result ) );
 
 	        if (result != null && result.Results.Length > 0 
@@ -126,7 +139,6 @@ namespace IBM.Watson.Widgets
                 && result.Results[0].Alternatives.Length > 0 )
 	        {
                 string text = result.Results[0].Alternatives[0].Transcript;
-                // Log.Debug( "SpeechToTextWidget", "OnRecognize: {0}", text );
                 m_TextOutput.SendData( new TextData( text ) );
 
 	            if ( m_Transcript != null )
