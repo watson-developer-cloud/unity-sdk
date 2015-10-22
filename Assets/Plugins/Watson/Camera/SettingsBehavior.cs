@@ -21,9 +21,10 @@ public class SettingsBehavior : MonoBehaviour {
 	private int currentBehavior = 0;
 	private Text m_Text;
 	const string display = "Behavior: {0}";
-	// Use this for initialization
-	void Start () {
-		currentBehavior = (int)BehaviorManager.Instance.currentBehavior;
+    // Use this for initialization
+    void Awake()
+    {
+        currentBehavior = (int)BehaviorManager.Instance.currentBehavior;
 		behaviorTypeList = BehaviorManager.Instance.behaviorTypeList;
 		m_Text = GetComponent<Text>();
 		m_Text.text = string.Format(display, behaviorTypeList[currentBehavior].ToString());
