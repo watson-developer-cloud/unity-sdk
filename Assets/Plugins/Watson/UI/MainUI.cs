@@ -40,6 +40,11 @@ public class MainUI : MonoBehaviour {
         Application.LoadLevel( "CubeTest" );
     }
 
+    public void OnTestMic()
+    {
+        Application.LoadLevel( "TestMic" );
+    }
+
     public void OnMain()
     {
         Application.LoadLevel( "Main" );

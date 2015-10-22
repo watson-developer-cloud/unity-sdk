@@ -1,4 +1,7 @@
-﻿/**
+﻿
+
+using IBM.Watson.Logging;
+/**
 * Copyright 2015 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,10 +18,11 @@
 *
 * @author Richard Lyle (rolyle@us.ibm.com)
 */
-
 using IBM.Watson.Utilities;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 #pragma warning disable 414
 
@@ -42,10 +46,10 @@ namespace IBM.Watson.Widgets
             get { return m_Active; }
             set
             {
-                if ( m_Active != value )
+                if (m_Active != value)
                 {
                     m_Active = value;
-                    if (m_Active && !m_Disabled )
+                    if (m_Active && !m_Disabled)
                         StartRecording();
                     else
                         StopRecording();
@@ -55,11 +59,12 @@ namespace IBM.Watson.Widgets
         public bool Disable
         {
             get { return m_Disabled; }
-            set {
-                if ( m_Disabled != value )
+            set
+            {
+                if (m_Disabled != value)
                 {
                     m_Disabled = value;
-                    if (m_Active && !m_Disabled )
+                    if (m_Active && !m_Disabled)
                         StartRecording();
                     else
                         StopRecording();
@@ -89,7 +94,7 @@ namespace IBM.Watson.Widgets
         [SerializeField]
         private Input m_ActivateInput = new Input("Activate", typeof(BooleanData), "OnActivateInput");
         [SerializeField]
-        private Input m_DisableInput = new Input("Disable", typeof(BooleanData), "OnDisableInput" );
+        private Input m_DisableInput = new Input("Disable", typeof(BooleanData), "OnDisableInput");
         [SerializeField]
         private Output m_AudioOutput = new Output(typeof(AudioData));
         [SerializeField]
@@ -104,23 +109,29 @@ namespace IBM.Watson.Widgets
         private string m_MicrophoneID = null;               // what microphone to use for recording.
         [SerializeField, Tooltip("How often to sample for level output.")]
         private float m_LevelOutputInterval = 0.05f;
+        [SerializeField, Tooltip("If true, microphone will playback recorded audio on stop.")]
+        private bool m_PlaybackRecording = false;
+        [SerializeField]
+        private Text m_StatusText = null;
 
         private int m_RecordingRoutine = 0;                      // ID of our co-routine when recording, 0 if not recording currently.
         private AudioClip m_Recording = null;
+        private List<AudioClip> m_Playback = new List<AudioClip>();
+
         #endregion
 
         #region Private Functions
         protected override void Start()
         {
             base.Start();
-            if ( m_ActivateOnStart )
+            if (m_ActivateOnStart)
                 Active = true;
         }
         private void OnActivateInput(Data data)
         {
             Active = ((BooleanData)data).Boolean;
         }
-        private void OnDisableInput(Data data )
+        private void OnDisableInput(Data data)
         {
             Disable = ((BooleanData)data).Boolean;
         }
@@ -130,7 +141,10 @@ namespace IBM.Watson.Widgets
             if (m_RecordingRoutine == 0)
             {
                 m_RecordingRoutine = Runnable.Run(RecordingHandler());
-                m_ActivateOutput.SendData( new BooleanData( true ) );
+                m_ActivateOutput.SendData(new BooleanData(true));
+
+                if (m_StatusText != null)
+                    m_StatusText.text = "RECORDING";
             }
         }
 
@@ -142,7 +156,28 @@ namespace IBM.Watson.Widgets
                 Runnable.Stop(m_RecordingRoutine);
                 m_RecordingRoutine = 0;
 
-                m_ActivateOutput.SendData( new BooleanData( false ) );
+                m_ActivateOutput.SendData(new BooleanData(false));
+                if (m_StatusText != null)
+                    m_StatusText.text = "STOPPED";
+
+                if (m_PlaybackRecording && m_Playback.Count > 0)
+                {
+                    AudioClip combined = AudioClipUtil.Combine(m_Playback.ToArray());
+                    if (combined != null)
+                    {
+                        AudioSource source = GetComponentInChildren<AudioSource>();
+                        if (source != null)
+                        {
+                            source.spatialBlend = 0.0f;     // 2D sound
+                            source.loop = false;            // do not loop
+                            source.clip = combined;             // clip
+                            source.Play();
+                        }
+                        else
+                            Log.Warning("MicrophoneWidget", "Failed to find AudioSource.");
+                    }
+                    m_Playback.Clear();
+                }
             }
         }
 
@@ -158,70 +193,74 @@ namespace IBM.Watson.Widgets
             int midPoint = m_Recording.samples / 2;
 
             bool bOutputLevelData = m_LevelOutput.IsConnected;
-			bool bOutputAudio = m_AudioOutput.IsConnected;
+            bool bOutputAudio = m_AudioOutput.IsConnected || m_PlaybackRecording;
 
             int lastReadPos = 0;
-            float [] samples = null;
+            float[] samples = null;
 
             while (m_RecordingRoutine != 0)
             {
                 int writePos = Microphone.GetPosition(m_MicrophoneID);
-				if(bOutputAudio){
-	                if ((bFirstBlock && writePos >= midPoint)
-	                    || (!bFirstBlock && writePos < midPoint))
-	                {
-	                    // front block is recorded, make a RecordClip and pass it onto our callback.
-	                    samples = new float[midPoint];
-	                    m_Recording.GetData(samples, bFirstBlock ? 0 : midPoint);
+                if (bOutputAudio)
+                {
+                    if ((bFirstBlock && writePos >= midPoint)
+                        || (!bFirstBlock && writePos < midPoint))
+                    {
+                        // front block is recorded, make a RecordClip and pass it onto our callback.
+                        samples = new float[midPoint];
+                        m_Recording.GetData(samples, bFirstBlock ? 0 : midPoint);
 
-	                    AudioData record = new AudioData();
-	                    record.MaxLevel = Mathf.Max(samples);
-	                    record.Clip = AudioClip.Create("Recording", midPoint, m_Recording.channels, m_RecordingHZ, false);
-	                    record.Clip.SetData(samples, 0);
+                        AudioData record = new AudioData();
+                        record.MaxLevel = Mathf.Max(samples);
+                        record.Clip = AudioClip.Create("Recording", midPoint, m_Recording.channels, m_RecordingHZ, false);
+                        record.Clip.SetData(samples, 0);
 
-	                    if (!m_AudioOutput.SendData(record))
-	                        StopRecording();        // automatically stop recording if the callback goes away.
+                        if (m_PlaybackRecording)
+                            m_Playback.Add(record.Clip);
+                        if ( m_AudioOutput.IsConnected && !m_AudioOutput.SendData(record))
+                            StopRecording();        // automatically stop recording if the callback goes away.
 
-	                    bFirstBlock = !bFirstBlock;
-	                }
-	                else
-	                {
-	                    // calculate the number of samples remaining until we ready for a block of audio, 
-	                    // and wait that amount of time it will take to record.
-	                    int remaining = bFirstBlock ? (midPoint - writePos) : (m_Recording.samples - writePos);
-	                    float timeRemaining = (float)remaining / (float)m_RecordingHZ;
-	                    if ( bOutputLevelData && timeRemaining > m_LevelOutputInterval )
-	                        timeRemaining = m_LevelOutputInterval;                                        
-	                    yield return new WaitForSeconds(timeRemaining);
-	                }
-				}
-				else{
-					yield return new WaitForSeconds(m_LevelOutputInterval);
-				}
+                        bFirstBlock = !bFirstBlock;
+                    }
+                    else
+                    {
+                        // calculate the number of samples remaining until we ready for a block of audio, 
+                        // and wait that amount of time it will take to record.
+                        int remaining = bFirstBlock ? (midPoint - writePos) : (m_Recording.samples - writePos);
+                        float timeRemaining = (float)remaining / (float)m_RecordingHZ;
+                        if (bOutputLevelData && timeRemaining > m_LevelOutputInterval)
+                            timeRemaining = m_LevelOutputInterval;
+                        yield return new WaitForSeconds(timeRemaining);
+                    }
+                }
+                else
+                {
+                    yield return new WaitForSeconds(m_LevelOutputInterval);
+                }
 
-                if ( m_Recording != null && bOutputLevelData )
+                if (m_Recording != null && bOutputLevelData)
                 {
                     float fLevel = 0.0f;
-                    if ( writePos < lastReadPos )
+                    if (writePos < lastReadPos)
                     {
                         // write has wrapped, grab the last bit from the buffer..
-                        samples = new float[ m_Recording.samples - lastReadPos ];
-                        m_Recording.GetData( samples, lastReadPos );
-                        fLevel = Mathf.Max( fLevel, Mathf.Max( samples ) );
+                        samples = new float[m_Recording.samples - lastReadPos];
+                        m_Recording.GetData(samples, lastReadPos);
+                        fLevel = Mathf.Max(fLevel, Mathf.Max(samples));
 
                         lastReadPos = 0;
                     }
 
-                    if ( lastReadPos < writePos )
+                    if (lastReadPos < writePos)
                     {
                         samples = new float[writePos - lastReadPos];
-						m_Recording.GetData( samples, lastReadPos );
-                        fLevel = Mathf.Max( fLevel, Mathf.Max( samples ) );
+                        m_Recording.GetData(samples, lastReadPos);
+                        fLevel = Mathf.Max(fLevel, Mathf.Max(samples));
 
                         lastReadPos = writePos;
                     }
 
-                    m_LevelOutput.SendData( new FloatData( fLevel ) );
+                    m_LevelOutput.SendData(new FloatData(fLevel));
                 }
             }
 

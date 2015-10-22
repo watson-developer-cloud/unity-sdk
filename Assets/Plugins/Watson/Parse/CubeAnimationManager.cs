@@ -88,6 +88,7 @@ public class CubeAnimationManager : MonoBehaviour {
 	public float distanceFromCameraInZAfterUnfolding = 100f;
 	public Vector3 m_initialPosition;
 	private Vector3 m_initialLocalScale;
+    private Quaternion m_initialLocalRotation;
     private Vector3 m_initialPositionMainCamera;
 
 	private bool isRotating = true;
@@ -197,6 +198,7 @@ public class CubeAnimationManager : MonoBehaviour {
 		m_initialPosition = transform.position;
 		m_initialLocalScale = transform.localScale;
         m_initialPositionMainCamera = Camera.main.transform.position;
+        m_initialLocalRotation = transform.localRotation;
 
         if (avatarGameobject == null) {
 			avatarGameobject = GameObject.Find("Avatar/Avatar_01");
@@ -500,7 +502,21 @@ public class CubeAnimationManager : MonoBehaviour {
     void OnEnable()
     {
         StopAllCubeAnimations();
+        SetInitialConditions();
         ShowCube();
+    }
+
+    void SetInitialConditions()
+    {
+        for (int i = 0; i < uiFaceOnSide.Length; i++)
+        {
+            uiFaceOnSide[i].transform.localPosition = positionFold[i];
+            uiFaceOnSide[i].transform.localRotation = rotationFold[i];
+        }
+
+        transform.position = m_initialPosition;
+        transform.localScale = m_initialLocalScale;
+        transform.localRotation = m_initialLocalRotation;
     }
 
     void OnDisable()
@@ -520,14 +536,18 @@ public class CubeAnimationManager : MonoBehaviour {
 	private void AnimateShowingCube(){
 		currentAnimationState = CubeAnimationState.ComingToScene;
 		LeanTween.moveLocal (gameObject, new Vector3 (0, 40, 0), timeForComingToScene).setFrom (new Vector3 (0, -40, 0)).setEase (easeForComingToScene);
-		LeanTween.scale (gameObject, gameObject.transform.localScale, timeForComingToScene).setFrom (Vector3.one).setEase (easeForComingToScene).setOnComplete(()=>{
+        
+        //Avatar Object position change
+        animationAvatarPosition = LeanTween.moveLocal(avatarGameobject, Vector3.zero, timeForFoldingUnfolding).setEase(easeForUnfolding);
+
+        LeanTween.scale (gameObject, gameObject.transform.localScale, timeForComingToScene).setFrom (Vector3.one).setEase (easeForComingToScene).setOnComplete(()=>{
 			currentAnimationState = CubeAnimationState.IdleOnScene;
 		});
 	}
 
 	public void DestroyCube(){
 		StopAllCubeAnimations ();
-		AnimateDestroyingCube (true);
+		//AnimateDestroyingCube (true);
 	}
 
 	private void AnimateDestroyingCube(bool destroy){
@@ -536,7 +556,10 @@ public class CubeAnimationManager : MonoBehaviour {
             if(destroy)
 			    Destroy(transform.parent.gameObject);
 		});
-	}
+
+        //Avatar Object position change
+        animationAvatarPosition = LeanTween.moveLocal(avatarGameobject, Vector3.zero, timeForFoldingUnfolding).setEase(easeForUnfolding);
+    }
 
 
 	#endregion
