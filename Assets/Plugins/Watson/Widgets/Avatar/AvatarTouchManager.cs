@@ -202,7 +202,7 @@ public class AvatarTouchManager: MonoBehaviour
         if (Input.GetKey(KeyCode.Alpha6))
             ZoomSpeed += 0.1f;
 
-        if (isActive && CubeAnimationManager.instance != null)
+        if (isActive && CubeAnimationManager.instance != null )
         {
             if (CubeAnimationManager.instance.currentAnimationState == CubeAnimationManager.CubeAnimationState.IdleOnScene)
             {
