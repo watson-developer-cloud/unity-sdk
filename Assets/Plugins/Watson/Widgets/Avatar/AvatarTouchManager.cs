@@ -46,14 +46,16 @@ public class AvatarTouchManager: MonoBehaviour
     private Quaternion targetCubeRotation;
 
     private bool isActive = true;
+    private GameObject mainCamera;
 
     private void OnEnable()
     {
         Log.Status("AvatarTouchManager", "OnEnable");
-        initialCameraLocation = Camera.main.transform.localPosition;
+        mainCamera = Camera.main.gameObject;
+        initialCameraLocation = mainCamera.transform.localPosition;
         targetCameraLocation = initialCameraLocation;
         targetCubeRotation = Quaternion.identity;
-
+        
         TwoFingerMoveGesture.Transformed += twoFingerTransformHandler;
         OneFingerManipulationGesture.Transformed += oneFingerManipulationTransformedHandler;
         tapGesture.Tapped += TapGesture_Tapped;
@@ -73,7 +75,7 @@ public class AvatarTouchManager: MonoBehaviour
             return;
 
        Log.Status("AvatarTouchManager", "TapGesture_Tapped: {0}", tapGesture.ScreenPosition);
-        Ray rayForTab = Camera.main.ScreenPointToRay(tapGesture.ScreenPosition);
+        Ray rayForTab = mainCamera.GetComponent<Camera>().ScreenPointToRay(tapGesture.ScreenPosition);
 
         RaycastHit hit;
         if (Physics.Raycast(rayForTab, out hit, Mathf.Infinity, layerForQuestionWidget))
@@ -179,7 +181,7 @@ public class AvatarTouchManager: MonoBehaviour
         
         targetCameraLocation += (TwoFingerMoveGesture.DeltaPosition * PanSpeed * -1.0f);
         
-        targetCameraLocation += Camera.main.transform.forward * (TwoFingerMoveGesture.DeltaScale - 1.0f) * ZoomSpeed;
+        targetCameraLocation += mainCamera.transform.forward * (TwoFingerMoveGesture.DeltaScale - 1.0f) * ZoomSpeed;
     }
 
     private void CubeAnimationStateChanged(System.Object[] args)
@@ -188,7 +190,7 @@ public class AvatarTouchManager: MonoBehaviour
         targetCameraLocation = initialCameraLocation;
         targetCubeRotation = Quaternion.identity;
         //Reset all camera animation.
-        LeanTween.moveLocal(Camera.main.gameObject, initialCameraLocation, timeForCameraResetAnimation).setEase(easeCameraReset).setOnComplete(()=>
+        LeanTween.moveLocal(mainCamera.gameObject, initialCameraLocation, timeForCameraResetAnimation).setEase(easeCameraReset).setOnComplete(()=>
         {
             isActive = true;
         });
@@ -215,7 +217,7 @@ public class AvatarTouchManager: MonoBehaviour
             }
 
             //For Zooming
-            Camera.main.transform.localPosition = Vector3.Lerp(Camera.main.transform.localPosition, targetCameraLocation, Time.deltaTime * speedForCameraAnimation);
+            mainCamera.transform.localPosition = Vector3.Lerp(mainCamera.transform.localPosition, targetCameraLocation, Time.deltaTime * speedForCameraAnimation);
         }
 
 

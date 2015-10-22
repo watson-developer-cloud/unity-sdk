@@ -513,11 +513,6 @@ public class CubeAnimationManager : MonoBehaviour {
     #region Focus
 
     public void ShowCube(){
-		if( currentAnimationState == CubeAnimationState.GoingFromScene){
-			//do nothing - it is going from scene, early return before any animation stopping!
-			return;
-		}
-
 		StopAllCubeAnimations ();
 		AnimateShowingCube ();
 	}
