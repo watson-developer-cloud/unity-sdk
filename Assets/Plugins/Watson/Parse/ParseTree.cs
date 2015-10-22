@@ -54,10 +54,10 @@ public class ParseTree : QuestionComponentBase {
 		positionList.Add(new Vector3(-184f, -49f, 0f));
 		positionList.Add(new Vector3(27f, -168f, 0f));
 		positionList.Add(new Vector3(259f, -301f, 0f));
-		positionList.Add(new Vector3(407f, -468f, 0f));
+		positionList.Add(new Vector3(469f, -424f, 0f));
 		positionList.Add(new Vector3(-638f, -31f, 0f));
 		positionList.Add(new Vector3(-417f, -144f, 0f));
-		positionList.Add(new Vector3(-144f, 282f, 0f));
+		positionList.Add(new Vector3(-144f, -282f, 0f));
 		positionList.Add(new Vector3(109f, -397f, 0f));
 		positionList.Add(new Vector3(348f, -560f, 0f));
 		positionList.Add(new Vector3(-643f, -268f, 0f));
