@@ -202,11 +202,8 @@ public class AvatarTouchManager: MonoBehaviour
         if (Input.GetKey(KeyCode.Alpha6))
             ZoomSpeed += 0.1f;
 
-<<<<<<< Temporary merge branch 1
-        if (isActive && CubeAnimationManager.instance != null)
-=======
+
         if (isActive && CubeAnimationManager.instance != null )
->>>>>>> Temporary merge branch 2
         {
             if (CubeAnimationManager.instance.currentAnimationState == CubeAnimationManager.CubeAnimationState.IdleOnScene)
             {
