@@ -20,29 +20,23 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 
-public class EvidenceItem : MonoBehaviour {
+public class POSTextItem : MonoBehaviour {
 	[SerializeField]
-	private Text m_EvidenceText;
-
-	private string _m_Evidence;
-	public string m_Evidence
+	private Text m_POSTextField;
+	
+	private string _m_POSWord;
+	public string m_POSWord
 	{
-		get { return _m_Evidence; }
+		get { return _m_POSWord; }
 		set 
 		{
-			_m_Evidence = value;
-			UpdateEvidence();
+			_m_POSWord = value;
+			UpdatePOSTextField();
 		}
 	}
 
-	private void UpdateEvidence()
+	private void UpdatePOSTextField()
 	{
-		if (m_Evidence != "") {
-			gameObject.SetActive (true);
-			m_EvidenceText.text = m_Evidence;
-		} else {
-			gameObject.SetActive(false);
-		}
-		//	TODO highlight evidence words
+		m_POSTextField.text = m_POSWord;
 	}
 }

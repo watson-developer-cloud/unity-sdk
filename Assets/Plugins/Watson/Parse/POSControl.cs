@@ -20,29 +20,26 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 
-public class EvidenceItem : MonoBehaviour {
-	[SerializeField]
-	private Text m_EvidenceText;
+public class POSControl : MonoBehaviour {
+	private RectTransform m_rectTransform;
+	private Color colorLight = new Color (0.8f, 0.8f, 0.8f);
+	private Color colorDark = new Color (0.3f, 0.3f, 0.3f);
+	private float m_transitionTime = 0.5f;
 
-	private string _m_Evidence;
-	public string m_Evidence
+	private bool _isHighlighted = true;
+	public bool isHighlighted
 	{
-		get { return _m_Evidence; }
-		set 
-		{
-			_m_Evidence = value;
-			UpdateEvidence();
+		get { return _isHighlighted; }
+		set {
+			_isHighlighted = value;
+			LeanTween.textColor(m_rectTransform, isHighlighted ? colorLight : colorDark, m_transitionTime);
 		}
 	}
 
-	private void UpdateEvidence()
+	public string m_POS;
+
+	void Start()
 	{
-		if (m_Evidence != "") {
-			gameObject.SetActive (true);
-			m_EvidenceText.text = m_Evidence;
-		} else {
-			gameObject.SetActive(false);
-		}
-		//	TODO highlight evidence words
+		m_rectTransform = gameObject.GetComponent<RectTransform>();
 	}
 }
