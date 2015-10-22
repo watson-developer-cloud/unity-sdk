@@ -300,7 +300,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1576984384}
   m_RootOrder: 0
---- !u!1001 &789926800
+--- !u!1001 &775981240
 Prefab:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -341,11 +341,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22446202, guid: 3ef744c88ba744c2fbae1ce7de5150ce, type: 2}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 22446202, guid: 3ef744c88ba744c2fbae1ce7de5150ce, type: 2}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 22426456, guid: 3ef744c88ba744c2fbae1ce7de5150ce, type: 2}
       propertyPath: m_AnchorMax.x
@@ -398,6 +398,10 @@ Prefab:
     - target: {fileID: 22450990, guid: 3ef744c88ba744c2fbae1ce7de5150ce, type: 2}
       propertyPath: m_SizeDelta.y
       value: 53
+      objectReference: {fileID: 0}
+    - target: {fileID: 165892, guid: 3ef744c88ba744c2fbae1ce7de5150ce, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3ef744c88ba744c2fbae1ce7de5150ce, type: 2}

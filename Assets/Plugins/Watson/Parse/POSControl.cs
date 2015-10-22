@@ -20,23 +20,27 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 
-public class POSTextItem : MonoBehaviour {
-	[SerializeField]
-	private Text m_POSTextField;
-	
-	private string _m_POSWord;
-	public string m_POSWord
+public class POSControl : MonoBehaviour {
+	private RectTransform m_rectTransform;
+	private Color colorDark;
+	private Color colorLight;
+	private float m_transitionTime = 0.5f;
+
+	private bool _isHighlighted = true;
+	public bool isHighlighted
 	{
-		get { return _m_POSWord; }
-		set 
-		{
-			_m_POSWord = value;
-			UpdatePOSTextField();
+		get { return _isHighlighted; }
+		set {
+			_isHighlighted = value;
+			Debug.Log("isHighlighted: " + isHighlighted);
+			LeanTween.textColor(m_rectTransform, isHighlighted ? colorLight : colorDark, m_transitionTime);
 		}
 	}
 
-	private void UpdatePOSTextField()
+	void Start()
 	{
-		m_POSTextField.text = m_POSWord;
+		colorLight = new Color (0.8f, 0.8f, 0.8f);
+		colorDark = new Color (0.3f, 0.3f, 0.3f);
+		m_rectTransform = gameObject.GetComponent<RectTransform>();
 	}
 }
