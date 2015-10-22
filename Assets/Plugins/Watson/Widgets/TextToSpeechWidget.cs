@@ -20,6 +20,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using IBM.Watson.Services.v1;
 using IBM.Watson.Logging;
+using System.Collections.Generic;
 
 #pragma warning disable 414
 
@@ -59,6 +60,7 @@ namespace IBM.Watson.Widgets
 
         private AudioSource m_Source = null;
         private int m_LastPlayPos = 0;
+        private Queue<AudioClip> m_SpeechQueue = new Queue<AudioClip>();
 	    #endregion
 
 	    public void OnTextToSpeech()
@@ -100,7 +102,14 @@ namespace IBM.Watson.Widgets
 	    private void OnSpeech( AudioClip clip )
 	    {
 	        if ( clip != null )
+                m_SpeechQueue.Enqueue( clip );
+        }
+
+        private void Update()
+        {
+            if ( m_SpeechQueue.Count > 0 && m_Source != null && !m_Source.isPlaying )
 	        {
+                AudioClip clip = m_SpeechQueue.Dequeue();
                 if ( m_AudioOut.IsConnected )
                     m_AudioOut.SendData( new AudioData( clip, -1.0f ) );
 
@@ -109,20 +118,17 @@ namespace IBM.Watson.Widgets
                     if ( m_Speaking.IsConnected )
                         m_Speaking.SendData( new BooleanData( true ) );
 
-	                if ( m_Source != null )
-	                {
-	                    m_Source.spatialBlend = 0.0f;     // 2D sound
-	                    m_Source.loop = false;            // do not loop
-	                    m_Source.clip = clip;             // clip
-	                    m_Source.Play();
+	                m_Source.spatialBlend = 0.0f;     // 2D sound
+	                m_Source.loop = false;            // do not loop
+	                m_Source.clip = clip;             // clip
+	                m_Source.Play();
 
-                        Invoke( "OnEndSpeech", (float)clip.samples / (float)clip.frequency );
-                        if ( m_LevelOut.IsConnected )
-                        {
-                            m_LastPlayPos = 0;
-                            InvokeRepeating( "OnLevelOut", m_LevelOutInterval, m_LevelOutInterval );
-                        }
-	                }
+                    Invoke( "OnEndSpeech", (float)clip.samples / (float)clip.frequency );
+                    if ( m_LevelOut.IsConnected )
+                    {
+                        m_LastPlayPos = 0;
+                        InvokeRepeating( "OnLevelOut", m_LevelOutInterval, m_LevelOutInterval );
+                    }
                 }
 	        }
 

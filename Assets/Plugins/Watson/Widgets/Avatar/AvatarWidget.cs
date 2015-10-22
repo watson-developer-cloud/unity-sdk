@@ -51,8 +51,10 @@ namespace IBM.Watson.Widgets
         #endregion
 
         #region Private Data
-        private ITM m_ITM = new ITM();                      // ITM service is used to get question & answer details
-        private NLC m_NLC = new NLC();                      // natural language classifier
+        private ITM m_ITM = new ITM();                      // ITM service
+        private NLC m_NLC = new NLC();                      // NLC service
+        private Dialog m_Dialog = new Dialog();             // Dialog service
+
         private AvatarState m_State = AvatarState.CONNECTING;
         private NLC.ClassifyResult m_ClassifyResult = null;
 
@@ -86,8 +88,6 @@ namespace IBM.Watson.Widgets
         private Input m_levelInput = new Input("Level", typeof(FloatData), "OnLevelInput");
         [SerializeField]
         private Output m_TextOutput = new Output(typeof(TextData));
-        [SerializeField]
-        private Output m_ListenOutput = new Output( typeof(BooleanData) );
         [SerializeField, Tooltip("Recognized speech is put into this Text UI field.")]
         private Text m_RecognizeText = null;
         [SerializeField]
@@ -100,6 +100,11 @@ namespace IBM.Watson.Widgets
         private Text m_StateText = null;
         [SerializeField]
         private GameObject m_QuestionPrefab = null;
+        [SerializeField]
+        private string m_DialogName = "xray";
+        private string m_DialogId = null;    
+        private int m_DialogClientId = 0;
+        private int m_DialogConversationId = 0;
         #endregion
 
         #region Public Types
@@ -117,26 +122,20 @@ namespace IBM.Watson.Widgets
             get { return m_State; }
             private set
             {
-                if ( m_State != value )
-                {
-                    m_State = value;
-                    Log.Debug( "AvatarWidget", "State {0}", m_State.ToString() );
+                m_State = value;
+                Log.Debug( "AvatarWidget", "State {0}", m_State.ToString() );
 
-                    if ( m_ListenOutput.IsConnected )
-                        m_ListenOutput.SendData( new BooleanData( m_State == AvatarState.LISTENING ) );
+                if ( m_Sleeping )
+                    EventManager.Instance.SendEvent(EventManager.onMoodChange, MoodType.Idle );
+                else if (m_State == AvatarState.LISTENING)
+                    EventManager.Instance.SendEvent(EventManager.onMoodChange, MoodType.Shy);
+                else if (m_State == AvatarState.THINKING)
+                    EventManager.Instance.SendEvent(EventManager.onMoodChange, MoodType.Interested);
+                else
+                    EventManager.Instance.SendEvent(EventManager.onMoodChange, MoodType.Upset);
 
-                    if ( m_Sleeping )
-                        EventManager.Instance.SendEvent(EventManager.onMoodChange, MoodType.Idle );
-                    else if (m_State == AvatarState.LISTENING)
-                        EventManager.Instance.SendEvent(EventManager.onMoodChange, MoodType.Shy);
-                    else if (m_State == AvatarState.THINKING)
-                        EventManager.Instance.SendEvent(EventManager.onMoodChange, MoodType.Interested);
-                    else
-                        EventManager.Instance.SendEvent(EventManager.onMoodChange, MoodType.Upset);
-
-                    if ( m_StateText != null )
-                        m_StateText.text = m_Sleeping ? "SLEEPING" : m_State.ToString();
-                }
+                if ( m_StateText != null )
+                    m_StateText.text = m_Sleeping ? "SLEEPING" : m_State.ToString();
             }
         }
         #endregion
@@ -178,10 +177,26 @@ namespace IBM.Watson.Widgets
 
             // login to ITM, then select the pipeline
             m_ITM.Login(OnItmLogin);
-            // TEMP: spin up a cube right off the bat
-            //m_FocusQuestion = GameObject.Instantiate(m_QuestionPrefab);
-            //m_FocusQuestion.GetComponentInChildren<QuestionWidget>().Avatar = this;
+            // Find our dialog ID
+            if (! string.IsNullOrEmpty( m_DialogName ) )
+                m_Dialog.GetDialogs( OnFindDialog );
         }
+
+        private void OnFindDialog( Dialog.Dialogs dialogs )
+        {
+            if ( dialogs != null )
+            {
+                foreach( var dialog in dialogs.dialogs )
+                {
+                    if ( dialog.name == m_DialogName )
+                        m_DialogId = dialog.dialog_id;
+                }
+            }
+
+            if (string.IsNullOrEmpty( m_DialogId ) )
+                Log.Error( "AvatarWidget", "Failed to find dialog ID for {0}", m_DialogName );
+        }
+
         private void OnItmLogin(bool success)
         {
             if (success)
@@ -244,7 +259,7 @@ namespace IBM.Watson.Widgets
                     else
                     {
                         State = AvatarState.LISTENING;
-                        if ( !m_Sleeping && textConfidence > m_IgnoreWordConfidence )
+                        if ( textConfidence > m_IgnoreWordConfidence )
                             m_TextOutput.SendData( new TextData(m_RecognizeFailure) );
                     }
                 }
@@ -264,8 +279,6 @@ namespace IBM.Watson.Widgets
                 if ( m_ClassifyResult.top_class == "wakeup" )
                 {
                     m_Sleeping = false;
-                    m_TextOutput.SendData( new TextData( m_Hello ) );
-
                     if (m_FocusQuestion == null )
                     {
                         m_FocusQuestion = GameObject.Instantiate(m_QuestionPrefab);
@@ -273,12 +286,28 @@ namespace IBM.Watson.Widgets
                     }
                     else
                         m_FocusQuestion.SetActive( true );
+
+                    // start a conversation with the dialog..
+                    if (! string.IsNullOrEmpty( m_DialogId ) )
+                        m_Dialog.Converse( m_DialogId, m_SpeechText, OnDialog, 0, m_DialogClientId );                      
+                    else
+                        m_TextOutput.SendData( new TextData( m_Hello ) );
                 }
                 State = AvatarState.LISTENING;
             }
             else
             {
-                if ( m_ClassifyResult.top_class == "sleep" )
+                if ( m_ClassifyResult.top_class == "dialog" )
+                {
+                    if (! string.IsNullOrEmpty( m_DialogId ) )
+                    {
+                        m_Dialog.Converse( m_DialogId, m_SpeechText, OnDialog, 
+                            m_DialogConversationId, m_DialogClientId );
+                    }
+
+                    State = AvatarState.LISTENING;
+                }
+                else if ( m_ClassifyResult.top_class == "sleep" )
                 {
                     m_TextOutput.SendData( new TextData( m_Goodbye ) );
                     if ( m_FocusQuestion != null )
@@ -286,6 +315,8 @@ namespace IBM.Watson.Widgets
 
                     m_Sleeping = true;
                     State = AvatarState.LISTENING;
+                    m_DialogConversationId = 0;
+                    m_DialogClientId = 0;
                 }
                 else if ( m_ClassifyResult.top_class == "question" || m_ClassifyResult.top_class == "watson-thunder" )
                 {
@@ -298,6 +329,24 @@ namespace IBM.Watson.Widgets
                     // send event to question then..
                     if (m_FocusQuestion != null)
                         m_FocusQuestion.GetComponent<QuestionWidget>().EventManager.SendEvent(m_ClassifyResult.top_class);
+                }
+            }
+        }
+
+        private void OnDialog( Dialog.Response resp )
+        {
+            if ( resp != null )
+            {
+                m_DialogClientId = resp.client_id;
+                m_DialogConversationId = resp.conversation_id;
+
+                if ( resp.response != null )
+                {
+                    foreach( var t in resp.response )
+                    {
+                        if (! string.IsNullOrEmpty( t ) )
+                            m_TextOutput.SendData( new TextData( t ) );
+                    }
                 }
             }
         }
