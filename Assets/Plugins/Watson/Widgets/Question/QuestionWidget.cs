@@ -45,7 +45,7 @@ namespace IBM.Watson.Widgets
 		private Semantic semantic;
 		private Features features;
 		private Location location;
-		private ParseTree parseTree;
+		public ParseTree parseTree;
 		private QA qa;
 
         #endregion

@@ -30,7 +30,8 @@ public class ParseTree : QuestionComponentBase {
 	new void Start () 
 	{
 		base.Start ();
-		m_WordList.Added += onAdd;
+		m_WordList.Added += OnAdd;
+		m_WordList.Removed += OnRemove;
 	}
 
 	new public void Init()
@@ -57,8 +58,21 @@ public class ParseTree : QuestionComponentBase {
 		}
 	}
 
-	private void onAdd()
+	public void ClearParseTree()
 	{
-		Debug.Log ("word added: " + m_WordList[m_WordList.Count - 1].m_pos);
+		while(m_WordList.Count != 0) {
+			Destroy(m_WordList[0].gameObject);
+			m_WordList.Remove(m_WordList[0]);
+		}
+	}
+
+	private void OnAdd()
+	{
+//		Debug.Log ("word added: " + m_WordList[m_WordList.Count - 1].m_pos);
+	}
+
+	private void OnRemove()
+	{
+//		Debug.Log ("word removed: " + m_WordList.Count);
 	}
 }

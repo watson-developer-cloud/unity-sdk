@@ -345,6 +345,7 @@ namespace IBM.Watson.Widgets
                     if (question != null)
                     {
                         question.Avatar = this;
+						question.parseTree.ClearParseTree();
                         question.Questions = m_QuestionResult;
                         question.Answers = answers;
 						question.Init();
