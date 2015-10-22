@@ -122,13 +122,12 @@ public class ParseTree : QuestionComponentBase {
 			m_WordList [i].isHighlighted = false;
 		}
 
-		Debug.Log ("this: " + wordIndex +"/"+ + m_WordList.Count);
 		m_WordList [wordIndex].isHighlighted = true;
 
 		for (int j = 0; j < m_POSList.Count; j++) {
 			POSControl posControl = m_POSList[j].GetComponent<POSControl>();
 			//Debug.Log("posControl.m_POS: " + posControl.m_POS + ", WordPOS: " + m_WordList [wordIndex].m_pos.ToLower());
-			if(posControl.m_POS == m_WordList [wordIndex].m_pos.ToLower()) {
+			if(posControl.m_POS == m_WordList [wordIndex].m_pos.ToLower() || posControl.m_POS == m_WordList[wordIndex].m_slot.ToLower()) {
 				posControl.isHighlighted = true;
 			} else {
 				posControl.isHighlighted = false;
