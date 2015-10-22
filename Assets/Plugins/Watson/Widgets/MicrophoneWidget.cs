@@ -198,7 +198,7 @@ namespace IBM.Watson.Widgets
             int lastReadPos = 0;
             float[] samples = null;
 
-            while (m_RecordingRoutine != 0)
+            while (m_RecordingRoutine != 0 && m_Recording != null)
             {
                 int writePos = Microphone.GetPosition(m_MicrophoneID);
                 if (bOutputAudio)
