@@ -106,7 +106,6 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         private bool m_IsListening = false;
         private Queue<AudioClip> m_ListenRecordings = new Queue<AudioClip>();
         private int m_KeepAliveRoutine = 0;                      // ID of the keep alive co-routine
-        private float m_LastWSMessage = 0.0f;               // last time we sent a message on the WS
         private float m_LastKeepAlive = 0.0f;
         private string m_RecognizeModel = "en-US_BroadbandModel";    // ID of the model to use.
         private int m_MaxAlternatives = 1;                  // maximum number of alternatives to return.
@@ -208,7 +207,6 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                     if (m_ListenActive)
                     {
                         m_ListenSocket.Send(new WSConnector.BinaryMessage(AudioClipUtil.GetL16(clip.Clip)));
-                        m_LastWSMessage = Time.time;
                         m_AudioSent = true;
                     }
                     else
@@ -300,7 +298,6 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
             start["timestamps"] = m_Timestamps;
 
             m_ListenSocket.Send(new WSConnector.TextMessage(Json.Serialize(start)));
-            m_LastWSMessage = Time.time;
         }
 
         private void SendStop()
@@ -314,7 +311,6 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                 stop["action"] = "stop";
 
                 m_ListenSocket.Send(new WSConnector.TextMessage(Json.Serialize(stop)));
-                m_LastWSMessage = Time.time;
                 m_ListenActive = false;
             }
         }
@@ -388,7 +384,6 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                                     {
                                         AudioClip clip = m_ListenRecordings.Dequeue();
                                         m_ListenSocket.Send(new WSConnector.BinaryMessage(AudioClipUtil.GetL16(clip)));
-                                        m_LastWSMessage = Time.time;
                                         m_AudioSent = true;
                                     }
                                 }
