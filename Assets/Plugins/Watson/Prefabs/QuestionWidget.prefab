@@ -1242,7 +1242,6 @@ GameObject:
   m_Component:
   - 224: {fileID: 22435884}
   - 114: {fileID: 11475262}
-  - 114: {fileID: 11482178}
   m_Layer: 13
   m_Name: Content
   m_TagString: Untagged
@@ -18481,7 +18480,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Content: {fileID: 22435884}
-  m_Horizontal: 0
+  m_Horizontal: 1
   m_Vertical: 1
   m_MovementType: 1
   m_Elasticity: .100000001
