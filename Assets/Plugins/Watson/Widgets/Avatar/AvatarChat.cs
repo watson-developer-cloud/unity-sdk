@@ -39,65 +39,68 @@ namespace IBM.Watson.Widgets.Avatar
         [SerializeField]
         private int m_HistoryCount = 50;
         [SerializeField]
-        private Scrollbar m_ScrollBar = null;
+        private ScrollRect m_ScrollRect = null;
 
         private AvatarWidget m_Avatar = null;
-        private ObservedList<string> m_InputLogs = null;
-        private ObservedList<string> m_OutputLogs = null;
 
         private void Start()
         {
             QuestionWidget question = GetComponentInParent<QuestionWidget>();
-            if ( question != null )
+            if (question != null)
                 m_Avatar = question.Avatar;
             else
                 m_Avatar = GetComponentInParent<AvatarWidget>();
 
-            if ( m_Avatar != null ) 
+            if (m_Avatar != null)
             {
                 m_Avatar.QuestionEvent += OnQuestion;
                 m_Avatar.AnswerEvent += OnAnswer;
             }
             else
-                Log.Warning( "AvatarChat", "Unable to find AvatarWidget." );
+                Log.Warning("AvatarChat", "Unable to find AvatarWidget.");
         }
 
         private void OnDestroy()
         {
-            if ( m_Avatar != null )
+            if (m_Avatar != null)
             {
                 m_Avatar.QuestionEvent -= OnQuestion;
                 m_Avatar.AnswerEvent -= OnAnswer;
             }
         }
 
-        private void OnQuestion( string add )
+        private void OnQuestion(string add)
         {
-            AddChat( add, m_QuestionPrefab.gameObject );
+            AddChat(add, m_QuestionPrefab.gameObject);
         }
 
-        private void OnAnswer( string add )
+        private void OnAnswer(string add)
         {
-            AddChat( add, m_AnswerPrefab.gameObject );
+            AddChat(add, m_AnswerPrefab.gameObject);
         }
 
-        private void AddChat( string add, GameObject prefab )
+        private void AddChat(string add, GameObject prefab)
         {
-            if ( m_ChatLayout == null )
-                throw new WatsonException( "m_ChatLayout is null." );
-            if ( prefab == null )
-                throw new ArgumentNullException( "prefab" );
+            if (m_ChatLayout == null)
+                throw new WatsonException("m_ChatLayout is null.");
+            if (prefab == null)
+                throw new ArgumentNullException("prefab");
 
-            GameObject textObject = Instantiate( prefab ) as GameObject;
+            GameObject textObject = Instantiate(prefab) as GameObject;
             textObject.GetComponent<Text>().text = add;
-            textObject.transform.SetParent( m_ChatLayout.transform, false );
+            textObject.transform.SetParent(m_ChatLayout.transform, false);
 
             // remove old children..
-            while( m_ChatLayout.transform.childCount > m_HistoryCount )
-                DestroyImmediate( m_ChatLayout.transform.GetChild(0).gameObject );
+            while (m_ChatLayout.transform.childCount > m_HistoryCount)
+                DestroyImmediate(m_ChatLayout.transform.GetChild(0).gameObject);
 
-            if ( m_ScrollBar != null )
-                m_ScrollBar.value = 1.0f;
+            Invoke("ScrollToEnd", 0.5f);
+        }
+
+        private void ScrollToEnd()
+        {
+            if (m_ScrollRect != null)
+                m_ScrollRect.verticalNormalizedPosition = 0.0f;
         }
     }
 

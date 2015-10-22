@@ -16,6 +16,8 @@
 * @author Richard Lyle (rolyle@us.ibm.com)
 */
 
+#define ENABLE_DEBUGGING
+
 using IBM.Watson.Logging;
 using IBM.Watson.Connection;
 using IBM.Watson.Utilities;
@@ -104,7 +106,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         private bool m_IsListening = false;
         private Queue<AudioClip> m_ListenRecordings = new Queue<AudioClip>();
         private int m_KeepAliveRoutine = 0;                      // ID of the keep alive co-routine
-        private float m_LastWSMessage = 0.0f;               // last time we sent a message on the WS
+        private float m_LastKeepAlive = 0.0f;
         private string m_RecognizeModel = "en-US_BroadbandModel";    // ID of the model to use.
         private int m_MaxAlternatives = 1;                  // maximum number of alternatives to return.
         private bool m_Timestamps = false;
@@ -144,6 +146,15 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         /// </summary>
         public bool EnableWordConfidence { get { return m_WordConfidence; } set { m_WordConfidence = value; } }
         /// <summary>
+        /// If true, then we will try to continuously recognize speech.
+        /// </summary>
+        public bool EnableContinousRecognition { get; set; }
+        /// <summary>
+        /// If true, then we will get interim results while recognizing. The user will then need to check 
+        /// the Final flag on the results.
+        /// </summary>
+        public bool EnableInterumResults { get; set; }
+        /// <summary>
         /// If true, then we will try not to send silent audio clips to the server. This can save bandwidth
         /// when no sound is happening.
         /// </summary>
@@ -176,6 +187,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
             m_IsListening = true;
             m_ListenCallback = callback;
             m_KeepAliveRoutine = Runnable.Run(KeepAlive());
+            m_LastKeepAlive = Time.time;
 
             return true;
         }
@@ -195,7 +207,6 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                     if (m_ListenActive)
                     {
                         m_ListenSocket.Send(new WSConnector.BinaryMessage(AudioClipUtil.GetL16(clip.Clip)));
-                        m_LastWSMessage = Time.time;
                         m_AudioSent = true;
                     }
                     else
@@ -280,14 +291,13 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
             Dictionary<string, object> start = new Dictionary<string, object>();
             start["action"] = "start";
             start["content-type"] = "audio/l16;rate=" + m_RecordingHZ.ToString() + ";channels=1;";
-            start["continuous"] = true;
+            start["continuous"] = EnableContinousRecognition;
             start["max_alternatives"] = m_MaxAlternatives;
-            start["interim_results"] = true;
+            start["interim_results"] = EnableInterumResults;
             start["word_confidence"] = m_WordConfidence;
             start["timestamps"] = m_Timestamps;
 
             m_ListenSocket.Send(new WSConnector.TextMessage(Json.Serialize(start)));
-            m_LastWSMessage = Time.time;
         }
 
         private void SendStop()
@@ -301,7 +311,6 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                 stop["action"] = "stop";
 
                 m_ListenSocket.Send(new WSConnector.TextMessage(Json.Serialize(stop)));
-                m_LastWSMessage = Time.time;
                 m_ListenActive = false;
             }
         }
@@ -313,13 +322,16 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
             {
                 yield return null;
 
-                if (Time.time > (m_LastWSMessage + WS_KEEP_ALIVE_TIME))
+                if (Time.time > (m_LastKeepAlive + WS_KEEP_ALIVE_TIME))
                 {
                     Dictionary<string, string> nop = new Dictionary<string, string>();
                     nop["action"] = "no-op";
 
+#if ENABLE_DEBUGGING
+                    Log.Debug( "SpeechToText", "Sending keep alive." );
+#endif
                     m_ListenSocket.Send(new WSConnector.TextMessage(Json.Serialize(nop)));
-                    m_LastWSMessage = Time.time;
+                    m_LastKeepAlive = Time.time;
                 }
             }
             Log.Debug( "SpeechToText", "KeepAlive exited." );
@@ -336,6 +348,11 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                 {
                     if (json.Contains("results"))
                     {
+                        // when we get results, start listening for the next block ..
+                        // if continuous is true, then we don't need to do this..
+                        if (! EnableContinousRecognition )
+                            SendStart();
+
                         ResultList results = ParseRecognizeResponse(json);
                         if (results != null)
                         {
@@ -351,23 +368,24 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                     {
                         string state = (string)json["state"];
 
-                        Log.Status("SpeechToText", "Server state is {0}", state);
+#if ENABLE_DEBUGGING
+                        Log.Debug("SpeechToText", "Server state is {0}", state);
+#endif
                         if (state == "listening")
                         {
-                            if (m_ListenActive)
-                                Log.Warning("SpeechToText", "Already in listen active state.");
-
                             if (m_IsListening)
                             {
-                                m_ListenActive = true;
-
-                                // send all pending audio clips ..
-                                while (m_ListenRecordings.Count > 0)
+                                if (! m_ListenActive )
                                 {
-                                    AudioClip clip = m_ListenRecordings.Dequeue();
-                                    m_ListenSocket.Send(new WSConnector.BinaryMessage(AudioClipUtil.GetL16(clip)));
-                                    m_LastWSMessage = Time.time;
-                                    m_AudioSent = true;
+                                    m_ListenActive = true;
+
+                                    // send all pending audio clips ..
+                                    while (m_ListenRecordings.Count > 0)
+                                    {
+                                        AudioClip clip = m_ListenRecordings.Dequeue();
+                                        m_ListenSocket.Send(new WSConnector.BinaryMessage(AudioClipUtil.GetL16(clip)));
+                                        m_AudioSent = true;
+                                    }
                                 }
                             }
                         }
@@ -387,7 +405,9 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
 
         private void OnListenClosed(WSConnector connector)
         {
+#if ENABLE_DEBUGGING
             Log.Debug( "SpeechToText", "OnListenClosed(), State = {0}", connector.State.ToString() );
+#endif
 
             m_ListenActive = false;
             StopListening();
@@ -399,10 +419,10 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
             }
         }
 
-        #endregion
+#endregion
 
 
-        #region GetModels Functions
+#region GetModels Functions
         /// <summary>
         /// This function retrieves all the language models that the user may use by setting the RecognizeModel 
         /// public property.
@@ -494,9 +514,9 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
 
             return null;
         }
-        #endregion
+#endregion
 
-        #region Recognize Functions
+#region Recognize Functions
         /// <summary>
         /// This function POSTs the given audio clip the recognize function and convert speech into text. This function should be used
         /// only on AudioClips under 4MB once they have been converted into WAV format. Use the StartListening() for continuous
@@ -677,6 +697,6 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                 return null;
             }
         }
-        #endregion
+#endregion
     }
 }

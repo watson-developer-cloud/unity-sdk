@@ -127,7 +127,7 @@ public class ParseTree : QuestionComponentBase {
 
 		for (int j = 0; j < m_POSList.Count; j++) {
 			POSControl posControl = m_POSList[j].GetComponent<POSControl>();
-			Debug.Log("posControl.m_POS: " + posControl.m_POS + ", WordPOS: " + m_WordList [wordIndex].m_pos.ToLower());
+			//Debug.Log("posControl.m_POS: " + posControl.m_POS + ", WordPOS: " + m_WordList [wordIndex].m_pos.ToLower());
 			if(posControl.m_POS == m_WordList [wordIndex].m_pos.ToLower()) {
 				posControl.isHighlighted = true;
 			} else {
