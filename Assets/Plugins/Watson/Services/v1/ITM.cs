@@ -287,17 +287,22 @@ namespace IBM.Watson.Services.v1
         {
             if (resp.Success)
             {
-                string jsonString = Encoding.UTF8.GetString(resp.Data);
-
-                IDictionary json = Json.Deserialize(jsonString) as IDictionary;
-                if (json != null && json.Contains("sessionKey"))
-                {
-                    SessionKey = (long)json["sessionKey"];
-                    if ( json.Contains( "location" ) )
-                        Location = (string)json["location"];
+                try {
+                    IDictionary json = Json.Deserialize(Encoding.UTF8.GetString(resp.Data)) as IDictionary;
+                    if (json != null && json.Contains("sessionKey"))
+                    {
+                        SessionKey = (long)json["sessionKey"];
+                        if ( json.Contains( "location" ) )
+                            Location = (string)json["location"];
+                    }
+                    else
+                        resp.Success = false;
                 }
-                else
+                catch( Exception e )
+                {
+                    Log.Error( "ITM", "Login exception: {0}", e.ToString() );
                     resp.Success = false;
+                }
             }
 
             if (((LoginReq)req).Callback != null)

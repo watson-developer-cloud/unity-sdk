@@ -39,7 +39,7 @@ namespace IBM.Watson.Widgets.Avatar
         [SerializeField]
         private int m_HistoryCount = 50;
         [SerializeField]
-        private Scrollbar m_ScrollBar = null;
+        private ScrollRect m_ScrollRect = null;
 
         private AvatarWidget m_Avatar = null;
         private ObservedList<string> m_InputLogs = null;
@@ -96,8 +96,13 @@ namespace IBM.Watson.Widgets.Avatar
             while( m_ChatLayout.transform.childCount > m_HistoryCount )
                 DestroyImmediate( m_ChatLayout.transform.GetChild(0).gameObject );
 
-            if ( m_ScrollBar != null )
-                m_ScrollBar.value = 1.0f;
+            Invoke( "ScrollToEnd", 0.5f );
+        }
+
+        private void ScrollToEnd()
+        {
+            if ( m_ScrollRect != null )
+                m_ScrollRect.verticalNormalizedPosition = 0.0f;
         }
     }
 
