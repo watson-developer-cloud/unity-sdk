@@ -25,7 +25,7 @@ using System.IO;
 
 namespace IBM.Watson.Utilities
 {
-    class Config
+    public class Config
     {
         public static readonly string           CONFIG_FILE = "/Config.json";
 

@@ -28,7 +28,7 @@ namespace IBM.Watson.Utilities
     /// make a containing GameObject.  
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    class Singleton<T> where T:class
+    public class Singleton<T> where T:class
     {
         #region Private Data
         static private T sm_Instance = null;

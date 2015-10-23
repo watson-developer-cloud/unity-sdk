@@ -22,7 +22,7 @@ using UnityEngine;
 
 namespace IBM.Watson.Utilities
 {
-    static class Utility
+    static public class Utility
     {
         /// <summary>
         /// This helper functions returns all Type's that inherit from the given type.
