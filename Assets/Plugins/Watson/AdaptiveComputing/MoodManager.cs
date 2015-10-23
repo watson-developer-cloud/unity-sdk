@@ -16,6 +16,13 @@ namespace IBM.Watson.AdaptiveComputing
 
 	public class MoodManager : MonoBehaviour{
 
+        public Material[] materialToChangeColor;
+        private LTDescr[] m_animationsForMaterial;
+
+        void Awake()
+        {
+            _instance = null;
+        }
   
 		void OnEnable(){
 			EventManager.Instance.RegisterEventReceiver (EventManager.onMoodChange, OnChangeMood);
@@ -27,7 +34,8 @@ namespace IBM.Watson.AdaptiveComputing
 			DestroyImmediate (gameObject);
 		}
 
-		public static MoodManager Instance { get { return Singleton<MoodManager>.Instance; } }
+        private static MoodManager _instance;
+		public static MoodManager Instance { get { if (_instance == null) _instance = Singleton<MoodManager>.Instance; return _instance; } }
 
 		private MoodType m_currentMood = MoodType.Idle;
 		public MoodType currentMood{
@@ -112,6 +120,30 @@ namespace IBM.Watson.AdaptiveComputing
 		public void ChangeMood(MoodType moodType){
 			m_currentMood = moodType;
 			EventManager.Instance.SendEvent (EventManager.onMoodChangeFinish);
+
+            if(materialToChangeColor != null)
+            {
+                if(m_animationsForMaterial == null)
+                {
+                    m_animationsForMaterial = new LTDescr[materialToChangeColor.Length];
+                }
+                else
+                {
+                    for (int i = 0; i < m_animationsForMaterial.Length; i++)
+                    {
+                        if (m_animationsForMaterial[i] != null)
+                            LeanTween.cancel(m_animationsForMaterial[i].uniqueId);
+                    }
+                }
+
+                for (int i = 0; i < materialToChangeColor.Length; i++)
+                {
+                    m_animationsForMaterial[i] = LeanTween.value(gameObject, Color.white, currentMoodColor, currentMoodTimeModifier).setLoopPingPong().setOnUpdateColor((Color a) =>
+                    {
+
+                    });
+                }
+            }
 		}
 
 		public void OnChangeMood(System.Object[] args){
