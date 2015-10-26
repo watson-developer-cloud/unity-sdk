@@ -30,7 +30,7 @@ namespace IBM.Watson.Widgets.Question.Facet.FacetElement
 		private Text m_FeatureIndexText;
 
 		private string _m_Feature;
-		public string m_feature
+		public string m_Feature
 		{
 			get { return _m_Feature; }
 			set
@@ -41,7 +41,7 @@ namespace IBM.Watson.Widgets.Question.Facet.FacetElement
 		}
 
 		private double _m_FeatureIndex;
-		public double m_featureIndex
+		public double m_FeatureIndex
 		{
 			get { return _m_FeatureIndex; }
 			set
@@ -53,13 +53,13 @@ namespace IBM.Watson.Widgets.Question.Facet.FacetElement
 
 		private void UpdateFeature()
 		{
-			if (m_feature != "") {
+			if (m_Feature != "") {
 				gameObject.SetActive (true);
-				if(m_feature.Length > 15) {
-					string temp = m_feature.Substring (0, 15);
+				if(m_Feature.Length > 15) {
+					string temp = m_Feature.Substring (0, 15);
 					m_FeatureText.text = temp + "...";
 				} else {
-					m_FeatureText.text = m_feature;
+					m_FeatureText.text = m_Feature;
 				}
 			} else {
 				gameObject.SetActive(false);
@@ -68,7 +68,7 @@ namespace IBM.Watson.Widgets.Question.Facet.FacetElement
 
 		private void UpdateFeatureIndex()
 		{
-			float featureIndex = (float)m_featureIndex;
+			float featureIndex = (float)m_FeatureIndex;
 			m_FeatureIndexText.text = featureIndex.ToString ("f2");
 	}
 	}

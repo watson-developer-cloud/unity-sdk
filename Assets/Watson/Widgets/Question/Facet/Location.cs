@@ -42,7 +42,7 @@ namespace IBM.Watson.Widgets.Question.Facet
 		{
 			base.Init ();
 
-			m_Location = m_questionWidget.Avatar.ITM.Location;
+			m_Location = m_QuestionWidget.Avatar.ITM.Location;
 		}
 
 		private void UpdateLocation()

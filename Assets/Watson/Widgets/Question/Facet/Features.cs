@@ -36,8 +36,8 @@ namespace IBM.Watson.Widgets.Question.Facet
 
 			//	TODO instantiate FeatureItems from resources
 			for (int i = 0; i < m_FeatureItems.Length; i++) {
-				m_FeatureItems[i].m_feature = m_questionWidget.Answers.answers[0].features[i].displayLabel;
-				m_FeatureItems[i].m_featureIndex = m_questionWidget.Answers.answers[0].features[i].weightedScore;
+				m_FeatureItems[i].m_Feature = m_QuestionWidget.Answers.answers[0].features[i].displayLabel;
+				m_FeatureItems[i].m_FeatureIndex = m_QuestionWidget.Answers.answers[0].features[i].weightedScore;
 			}
 		}
 	}

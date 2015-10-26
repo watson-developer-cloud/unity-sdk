@@ -25,28 +25,28 @@ namespace IBM.Watson.Widgets.Question.Facet
 	public class Semantic : FacetBase
 		{
 		[SerializeField]
-		private Text m_LatText;
+		private Text m_LATText;
 		[SerializeField]
 		private Text m_SemanticText;
 
-		private string _m_lat;
-		public string m_lat
+		private string _m_LAT;
+		public string m_LAT
 		{
-			get { return _m_lat; }
+			get { return _m_LAT; }
 			set
 			{
-				_m_lat = value;
-				UpdateLat();
+				_m_LAT = value;
+				UpdateLAT();
 			}
 		}
 
-		private string _m_semantic;
-		public string m_semantic
+		private string _m_Semantic;
+		public string m_Semantic
 		{
-			get { return _m_semantic; }
+			get { return _m_Semantic; }
 			set
 			{
-				_m_semantic = value;
+				_m_Semantic = value;
 				UpdateSemantic();
 			}
 		}
@@ -55,10 +55,10 @@ namespace IBM.Watson.Widgets.Question.Facet
 		{
 			base.Init ();
 
-			if (m_questionWidget.Questions.questions.Length > 0 && m_questionWidget.Questions.questions [0].question.lat.Length > 0) {
-				m_lat = m_questionWidget.Questions.questions [0].question.lat [0];
+			if (m_QuestionWidget.Questions.questions.Length > 0 && m_QuestionWidget.Questions.questions [0].question.lat.Length > 0) {
+				m_LAT = m_QuestionWidget.Questions.questions [0].question.lat [0];
 			} else {
-				m_lat = "n/a";
+				m_LAT = "n/a";
 			}
 		}
 
@@ -66,19 +66,19 @@ namespace IBM.Watson.Widgets.Question.Facet
 		{
 			string semanticText = "";
 			
-			int latIndex = -1;
-			for(int i = 0 ; i < m_questionWidget.ParseData.Words.Length; i++) {
-				if(m_questionWidget.ParseData.Words[i].Word == m_lat) {
-					latIndex = i;
+			int LATIndex = -1;
+			for(int i = 0 ; i < m_QuestionWidget.ParseData.Words.Length; i++) {
+				if(m_QuestionWidget.ParseData.Words[i].Word == m_LAT) {
+					LATIndex = i;
 				}
 			}
 
-			if (latIndex == -1) {
+			if (LATIndex == -1) {
 				semanticText = "";
 			} else {
-				for (int k = 0; k < m_questionWidget.ParseData.Words[latIndex].Features.Length; k++) {
-					semanticText += m_questionWidget.ParseData.Words [latIndex].Features [k];
-					if (k < m_questionWidget.ParseData.Words [latIndex].Features.Length - 1) {
+				for (int k = 0; k < m_QuestionWidget.ParseData.Words[LATIndex].Features.Length; k++) {
+					semanticText += m_QuestionWidget.ParseData.Words [LATIndex].Features [k];
+					if (k < m_QuestionWidget.ParseData.Words [LATIndex].Features.Length - 1) {
 						semanticText += ", ";
 					} else {
 						semanticText += ".";
@@ -86,17 +86,17 @@ namespace IBM.Watson.Widgets.Question.Facet
 				}
 			}
 			
-			m_semantic = semanticText;
+			m_Semantic = semanticText;
 		}
 
-		private void UpdateLat()
+		private void UpdateLAT()
 		{
-			m_LatText.text = m_lat;
+			m_LATText.text = m_LAT;
 		}
 
 		private void UpdateSemantic()
 		{
-			m_SemanticText.text = m_semantic;
+			m_SemanticText.text = m_Semantic;
 		}
 	}
 }

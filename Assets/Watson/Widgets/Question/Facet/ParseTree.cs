@@ -27,7 +27,7 @@ namespace IBM.Watson.Widgets.Question.Facet
 	public class ParseTree : FacetBase
 		{
 		[SerializeField]
-		private GameObject m_parseTreeTextItem;
+		private GameObject m_ParseTreeTextItem;
 
 		[SerializeField]
 		private RectTransform m_ParseCanvasRectTransform;
@@ -35,19 +35,19 @@ namespace IBM.Watson.Widgets.Question.Facet
 		[SerializeField]
 		private List<GameObject> m_POSList = new List<GameObject>();
 		private List<ParseTreeTextItem> m_WordList = new List<ParseTreeTextItem>();
-		private List<Vector3> m_positionList = new List<Vector3> ();
+		private List<Vector3> m_PositionList = new List<Vector3> ();
 		
-		private int _m_wordIndex = 0;
-		public int m_wordIndex 
+		private int _m_WordIndex = 0;
+		public int m_WordIndex 
 		{
-			get { return _m_wordIndex; }
+			get { return _m_WordIndex; }
 			set {
 				if(value > m_WordList.Count - 1) {
-					_m_wordIndex = 0;
+					_m_WordIndex = 0;
 				} else if(value < 0) {
-					_m_wordIndex = m_WordList.Count;
+					_m_WordIndex = m_WordList.Count;
 				} else {
-					_m_wordIndex = value;
+					_m_WordIndex = value;
 				}
 				UpdateHighlightedWord();
 			}
@@ -55,21 +55,21 @@ namespace IBM.Watson.Widgets.Question.Facet
 
 		void Start () 
 		{
-			m_positionList.Add(new Vector3(-583f, 188f, 0f));
-			m_positionList.Add(new Vector3(-408f,	64f, 0f));
-			m_positionList.Add(new Vector3(-184f, -49f, 0f));
-			m_positionList.Add(new Vector3(27f, -168f, 0f));
-			m_positionList.Add(new Vector3(259f, -301f, 0f));
-			m_positionList.Add(new Vector3(469f, -424f, 0f));
-			m_positionList.Add(new Vector3(-638f, -31f, 0f));
-			m_positionList.Add(new Vector3(-417f, -144f, 0f));
-			m_positionList.Add(new Vector3(-144f, -282f, 0f));
-			m_positionList.Add(new Vector3(109f, -397f, 0f));
-			m_positionList.Add(new Vector3(348f, -560f, 0f));
-			m_positionList.Add(new Vector3(-643f, -268f, 0f));
-			m_positionList.Add(new Vector3(-346f, -393f, 0f));
-			m_positionList.Add(new Vector3(-115f, -514f, 0f));
-			m_positionList.Add(new Vector3(91f, -641f, 0f));
+			m_PositionList.Add(new Vector3(-583f, 188f, 0f));
+			m_PositionList.Add(new Vector3(-408f,	64f, 0f));
+			m_PositionList.Add(new Vector3(-184f, -49f, 0f));
+			m_PositionList.Add(new Vector3(27f, -168f, 0f));
+			m_PositionList.Add(new Vector3(259f, -301f, 0f));
+			m_PositionList.Add(new Vector3(469f, -424f, 0f));
+			m_PositionList.Add(new Vector3(-638f, -31f, 0f));
+			m_PositionList.Add(new Vector3(-417f, -144f, 0f));
+			m_PositionList.Add(new Vector3(-144f, -282f, 0f));
+			m_PositionList.Add(new Vector3(109f, -397f, 0f));
+			m_PositionList.Add(new Vector3(348f, -560f, 0f));
+			m_PositionList.Add(new Vector3(-643f, -268f, 0f));
+			m_PositionList.Add(new Vector3(-346f, -393f, 0f));
+			m_PositionList.Add(new Vector3(-115f, -514f, 0f));
+			m_PositionList.Add(new Vector3(91f, -641f, 0f));
 		}
 
 		public override void Init()
@@ -79,29 +79,29 @@ namespace IBM.Watson.Widgets.Question.Facet
 
 		public void GenerateParseTree()
 		{
-			for (int i = 0; i < m_questionWidget.ParseData.Words.Length; i++) {
-				GameObject wordGO = Instantiate(m_parseTreeTextItem) as GameObject;
+			for (int i = 0; i < m_QuestionWidget.ParseData.Words.Length; i++) {
+				GameObject wordGO = Instantiate(m_ParseTreeTextItem) as GameObject;
 				RectTransform wordRectTransform = wordGO.GetComponent<RectTransform>();
 				wordRectTransform.SetParent(m_ParseCanvasRectTransform, false);
-				if(i < m_positionList.Count) {
-					wordRectTransform.localPosition = m_positionList[i];
+				if(i < m_PositionList.Count) {
+					wordRectTransform.localPosition = m_PositionList[i];
 				} else {
 					//	TODO fix this
 					wordRectTransform.localPosition = new Vector3(5000f, 5000, 5000f);
 				}
 				ParseTreeTextItem word = wordGO.GetComponent<ParseTreeTextItem>();
-				word.m_ParseTreeWord = m_questionWidget.ParseData.Words[i].Word;
-				word.m_pos = m_questionWidget.ParseData.Words[i].Pos.ToString();
-				word.m_slot = m_questionWidget.ParseData.Words[i].Slot;
+				word.m_ParseTreeWord = m_QuestionWidget.ParseData.Words[i].Word;
+				word.m_POS = m_QuestionWidget.ParseData.Words[i].Pos.ToString();
+				word.m_Slot = m_QuestionWidget.ParseData.Words[i].Slot;
 
-				for(int j = 0; j < m_questionWidget.ParseData.Words[i].Features.Length; j++) {
-					word.m_Features.Add(m_questionWidget.ParseData.Words[i].Features[j]);
+				for(int j = 0; j < m_QuestionWidget.ParseData.Words[i].Features.Length; j++) {
+					word.m_Features.Add(m_QuestionWidget.ParseData.Words[i].Features[j]);
 				}
 
 				m_WordList.Add(word);
 			}
 
-			m_wordIndex = 0;
+			m_WordIndex = 0;
 			InvokeRepeating ("CycleWords", 2f, 2f);
 		}
 
@@ -117,31 +117,31 @@ namespace IBM.Watson.Widgets.Question.Facet
 		private void UpdateHighlightedWord()
 		{
 			for (int i = 0; i < m_WordList.Count; i++) {
-				m_WordList [i].m_isHighlighted = false;
+				m_WordList [i].m_IsHighlighted = false;
 			}
 
-			m_WordList [m_wordIndex].m_isHighlighted = true;
+			m_WordList [m_WordIndex].m_IsHighlighted = true;
 
 			for (int j = 0; j < m_POSList.Count; j++) {
 				POSControl posControl = m_POSList[j].GetComponent<POSControl>();
-				if(posControl.m_POS == m_WordList [m_wordIndex].m_pos.ToLower() || posControl.m_POS == m_WordList[m_wordIndex].m_slot.ToLower()) {
-					posControl.m_isHighlighted = true;
+				if(posControl.m_POS == m_WordList [m_WordIndex].m_POS.ToLower() || posControl.m_POS == m_WordList[m_WordIndex].m_Slot.ToLower()) {
+					posControl.m_IsHighlighted = true;
 				} else {
-					posControl.m_isHighlighted = false;
+					posControl.m_IsHighlighted = false;
 				}
 			}
 
-			if(m_questionWidget.Questions.questions [0].question.lat.Length == 0 && m_questionWidget.Questions.questions [0].question.focus.Length == 0) m_POSList[2].GetComponent<POSControl>().m_isHighlighted = true;
-			if (m_questionWidget.Questions.questions [0].question.lat.Length > 0) {
-				if (m_WordList [m_wordIndex].m_ParseTreeWord.ToLower () == m_questionWidget.Questions.questions [0].question.lat [0].ToLower ()) {
-					m_POSList [1].GetComponent<POSControl> ().m_isHighlighted = true;
+			if(m_QuestionWidget.Questions.questions [0].question.lat.Length == 0 && m_QuestionWidget.Questions.questions [0].question.focus.Length == 0) m_POSList[2].GetComponent<POSControl>().m_IsHighlighted = true;
+			if (m_QuestionWidget.Questions.questions [0].question.lat.Length > 0) {
+				if (m_WordList [m_WordIndex].m_ParseTreeWord.ToLower () == m_QuestionWidget.Questions.questions [0].question.lat [0].ToLower ()) {
+					m_POSList [1].GetComponent<POSControl> ().m_IsHighlighted = true;
 				}
 			}
 
 
-			if (m_questionWidget.Questions.questions [0].question.focus.Length > 0) {
-				if (m_WordList [m_wordIndex].m_ParseTreeWord.ToLower () == m_questionWidget.Questions.questions [0].question.focus [0].ToLower ()) {
-					m_POSList [0].GetComponent<POSControl> ().m_isHighlighted = true;
+			if (m_QuestionWidget.Questions.questions [0].question.focus.Length > 0) {
+				if (m_WordList [m_WordIndex].m_ParseTreeWord.ToLower () == m_QuestionWidget.Questions.questions [0].question.focus [0].ToLower ()) {
+					m_POSList [0].GetComponent<POSControl> ().m_IsHighlighted = true;
 				}
 			}
 		}
@@ -149,17 +149,17 @@ namespace IBM.Watson.Widgets.Question.Facet
 		void Update()
 		{
 			if (Input.GetKeyDown (KeyCode.C)) {
-				m_wordIndex --;
+				m_WordIndex --;
 			}
 
 			if (Input.GetKeyDown (KeyCode.V)) {
-				m_wordIndex ++;
+				m_WordIndex ++;
 			}
 		}
 
 		private void CycleWords()
 		{
-			m_wordIndex ++;
+			m_WordIndex ++;
 		}
 	}
 }

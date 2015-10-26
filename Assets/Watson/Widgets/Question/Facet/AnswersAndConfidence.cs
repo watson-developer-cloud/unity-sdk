@@ -33,8 +33,8 @@ namespace IBM.Watson.Widgets.Question.Facet
 			base.Init ();
 
 			for(int i = 0; i < m_AnswerConfidenceBars.Length; i++) {
-				m_AnswerConfidenceBars[i].m_Answer = m_questionWidget.Answers.answers[i].answerText;
-				m_AnswerConfidenceBars[i].m_Confidence = m_questionWidget.Answers.answers[i].confidence;
+				m_AnswerConfidenceBars[i].m_Answer = m_QuestionWidget.Answers.answers[i].answerText;
+				m_AnswerConfidenceBars[i].m_Confidence = m_QuestionWidget.Answers.answers[i].confidence;
 			}
 		}
 	}

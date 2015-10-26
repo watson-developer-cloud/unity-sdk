@@ -29,7 +29,7 @@ namespace IBM.Watson.Widgets.Question.Facet.FacetElement
 		[SerializeField]
 		private Text m_ConfidenceText;
 		[SerializeField]
-		private RectTransform m_barProgress;
+		private RectTransform m_BarProgress;
 
 		private string _m_Answer;
 		public string m_Answer
@@ -61,7 +61,7 @@ namespace IBM.Watson.Widgets.Question.Facet.FacetElement
 		{
 			float confidence = (float)m_Confidence * 100;
 			m_ConfidenceText.text = confidence.ToString ("f1");
-			m_barProgress.localScale = new Vector3((float)m_Confidence, 1f, 1f);
+			m_BarProgress.localScale = new Vector3((float)m_Confidence, 1f, 1f);
 		}
 	}
 }

@@ -35,16 +35,16 @@ namespace IBM.Watson.Widgets.Question.Facet
 			base.Init ();
 
 			//	TODO replace <answer> with the outline
-			if (m_questionWidget.Answers.answers.Length == 0)
+			if (m_QuestionWidget.Answers.answers.Length == 0)
 				return;
 
-			if (m_questionWidget.Answers.answers [0].evidence.Length == 1) {
-				m_EvidenceItems [0].m_Evidence = m_questionWidget.Answers.answers [0].evidence [0].decoratedPassage;
+			if (m_QuestionWidget.Answers.answers [0].evidence.Length == 1) {
+				m_EvidenceItems [0].m_Evidence = m_QuestionWidget.Answers.answers [0].evidence [0].decoratedPassage;
 				m_EvidenceItems [1].gameObject.SetActive (false);
-			} else if (m_questionWidget.Answers.answers [0].evidence.Length > 1) {
+			} else if (m_QuestionWidget.Answers.answers [0].evidence.Length > 1) {
 				m_EvidenceItems [1].gameObject.SetActive (true);
-				m_EvidenceItems [0].m_Evidence = m_questionWidget.Answers.answers [0].evidence [0].decoratedPassage;
-				m_EvidenceItems [1].m_Evidence = m_questionWidget.Answers.answers [0].evidence [1].decoratedPassage;
+				m_EvidenceItems [0].m_Evidence = m_QuestionWidget.Answers.answers [0].evidence [0].decoratedPassage;
+				m_EvidenceItems [1].m_Evidence = m_QuestionWidget.Answers.answers [0].evidence [1].decoratedPassage;
 			} else {
 				m_EvidenceItems [0].gameObject.SetActive (false);
 				m_EvidenceItems [1].gameObject.SetActive (false);

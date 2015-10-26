@@ -24,21 +24,21 @@ namespace IBM.Watson.Widgets.Question.Facet.FacetElement
 {
 	public class POSControl : MonoBehaviour
 	{
-		private RectTransform m_rectTransform;
-		private Color m_colorLight = new Color (0.8f, 0.8f, 0.8f);
-		private Color m_colorDark = new Color (0.3f, 0.3f, 0.3f);
-		private Vector3 m_scaleUpSize = new Vector3(1.25f, 1.25f, 1.25f);
-		private Vector3 m_scaleDownSize = new Vector3(1f, 1f, 1f);
-		private float m_transitionTime = 0.5f;
+		private RectTransform m_RectTransform;
+		private Color m_ColorLight = new Color (0.8f, 0.8f, 0.8f);
+		private Color m_ColorDark = new Color (0.3f, 0.3f, 0.3f);
+		private Vector3 m_ScaleUpSize = new Vector3(1.25f, 1.25f, 1.25f);
+		private Vector3 m_ScaleDownSize = new Vector3(1f, 1f, 1f);
+		private float m_TransitionTime = 0.5f;
 
-		private bool _m_isHighlighted = true;
-		public bool m_isHighlighted
+		private bool _m_IsHighlighted = true;
+		public bool m_IsHighlighted
 		{
-			get { return _m_isHighlighted; }
+			get { return _m_IsHighlighted; }
 			set {
-				_m_isHighlighted = value;
-				LeanTween.textColor(m_rectTransform, m_isHighlighted ? m_colorLight : m_colorDark, m_transitionTime);
-				LeanTween.scale(m_rectTransform, m_isHighlighted ? m_scaleUpSize : m_scaleDownSize, m_transitionTime);
+				_m_IsHighlighted = value;
+				LeanTween.textColor(m_RectTransform, m_IsHighlighted ? m_ColorLight : m_ColorDark, m_TransitionTime);
+				LeanTween.scale(m_RectTransform, m_IsHighlighted ? m_ScaleUpSize : m_ScaleDownSize, m_TransitionTime);
 			}
 		}
 
@@ -46,7 +46,7 @@ namespace IBM.Watson.Widgets.Question.Facet.FacetElement
 
 		void Start()
 		{
-			m_rectTransform = gameObject.GetComponent<RectTransform> ();
+			m_RectTransform = gameObject.GetComponent<RectTransform> ();
 		}
 	}
 }

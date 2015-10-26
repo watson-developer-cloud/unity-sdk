@@ -28,15 +28,15 @@ namespace IBM.Watson.Widgets.Question.Facet.FacetElement
 		[SerializeField]
 		private Text m_ParseTreeTextField;
 
-		private bool _m_isHighlighted = false;
-		public bool m_isHighlighted
+		private bool _m_IsHighlighted = false;
+		public bool m_IsHighlighted
 		{
-			get { return _m_isHighlighted; }
+			get { return _m_IsHighlighted; }
 			set {
-				_m_isHighlighted = value;
-				m_rectTransform = m_ParseTreeTextField.gameObject.GetComponent<RectTransform>();
-				LeanTween.textColor(m_rectTransform, m_isHighlighted ? m_colorLight : m_colorDark, m_transitionTime);
-				LeanTween.scale(m_rectTransform, m_isHighlighted ? m_scaleUpSize : m_scaleDownSize, m_transitionTime);
+				_m_IsHighlighted = value;
+				m_RectTransform = m_ParseTreeTextField.gameObject.GetComponent<RectTransform>();
+				LeanTween.textColor(m_RectTransform, m_IsHighlighted ? m_ColorLight : m_ColorDark, m_TransitionTime);
+				LeanTween.scale(m_RectTransform, m_IsHighlighted ? m_ScaleUpSize : m_ScaleDownSize, m_TransitionTime);
 			}
 		}
 
@@ -52,34 +52,34 @@ namespace IBM.Watson.Widgets.Question.Facet.FacetElement
 		}
 
 		[SerializeField]
-		private string _m_pos;
-		public string m_pos {
-			get { return _m_pos; }
+		private string _m_POS;
+		public string m_POS {
+			get { return _m_POS; }
 			set {
-				_m_pos = value;
+				_m_POS = value;
 			}
 		}
 
 		[SerializeField]
-		private string _m_slot;
-		public string m_slot
+		private string _m_Slot;
+		public string m_Slot
 		{
-			get { return _m_slot; }
-			set { _m_slot = value; }
+			get { return _m_Slot; }
+			set { _m_Slot = value; }
 		}
 
 		public List<string> m_Features = new List<string>();
 
-		private RectTransform m_rectTransform;
-		private Color m_colorLight = new Color (0.8f, 0.8f, 0.8f);
-		private Color m_colorDark = new Color (0.3f, 0.3f, 0.3f);
-		private Vector3 m_scaleUpSize = new Vector3(1.25f, 1.25f, 1.25f);
-		private Vector3 m_scaleDownSize = new Vector3(1f, 1f, 1f);
-		private float m_transitionTime = 0.5f;
+		private RectTransform m_RectTransform;
+		private Color m_ColorLight = new Color (0.8f, 0.8f, 0.8f);
+		private Color m_ColorDark = new Color (0.3f, 0.3f, 0.3f);
+		private Vector3 m_ScaleUpSize = new Vector3(1.25f, 1.25f, 1.25f);
+		private Vector3 m_ScaleDownSize = new Vector3(1f, 1f, 1f);
+		private float m_TransitionTime = 0.5f;
 
 		void Start()
 		{
-			m_rectTransform = m_ParseTreeTextField.gameObject.GetComponent<RectTransform>();
+			m_RectTransform = m_ParseTreeTextField.gameObject.GetComponent<RectTransform>();
 		}
 
 		private void UpdateParseTreeTextField()

@@ -68,9 +68,9 @@ namespace IBM.Watson.Widgets.Question.Facet
 		{
 			base.Init ();
 
-			m_Question = m_questionWidget.Questions.questions[0].question.questionText;
-			m_Answer = m_questionWidget.Answers.answers [0].answerText;
-			m_Confidence = m_questionWidget.Answers.answers [0].confidence;
+			m_Question = m_QuestionWidget.Questions.questions[0].question.questionText;
+			m_Answer = m_QuestionWidget.Answers.answers [0].answerText;
+			m_Confidence = m_QuestionWidget.Answers.answers [0].confidence;
 		}
 
 		private void UpdateAnswer()
