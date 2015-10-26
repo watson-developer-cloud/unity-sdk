@@ -23,6 +23,9 @@ using UnityEngine.UI;
 
 public class ParseTree : QuestionComponentBase {
 	[SerializeField]
+	private GameObject m_parseTreeTextItem;
+
+	[SerializeField]
 	private RectTransform m_ParseCanvasRectTransform;
 
 	[SerializeField]
@@ -77,7 +80,7 @@ public class ParseTree : QuestionComponentBase {
 	public void GenerateParseTree()
 	{
 		for (int i = 0; i < qWidget.ParseData.Words.Length; i++) {
-			GameObject wordGO = Instantiate(Resources.Load("ParseTreeTextItem", typeof(GameObject))) as GameObject;
+			GameObject wordGO = Instantiate(m_parseTreeTextItem) as GameObject;
 			RectTransform wordRectTransform = wordGO.GetComponent<RectTransform>();
 			wordRectTransform.SetParent(m_ParseCanvasRectTransform, false);
 			if(i < positionList.Count) {

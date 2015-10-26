@@ -17695,6 +17695,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4b07868a323143b6b5ba0287d5074af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_parseTreeTextItem: {fileID: 177304, guid: 84846fcf5d62d42479eab869bd345ece, type: 2}
   m_ParseCanvasRectTransform: {fileID: 22477106}
   m_POSList:
   - {fileID: 194936}

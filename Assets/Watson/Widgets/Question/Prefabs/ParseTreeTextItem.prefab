@@ -46,6 +46,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ParseTreeTextField: {fileID: 11408492}
+  _m_pos: 
+  _m_slot: 
   m_Features: []
 --- !u!114 &11408492
 MonoBehaviour:
