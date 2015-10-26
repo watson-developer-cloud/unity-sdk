@@ -1,15 +1,65 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Constants : MonoBehaviour {
+namespace IBM.Watson.Utilities
+{
+    public class Constants
+    {
+        /// <summary>
+        /// All Keycodes used via keyboard listed here.
+        /// </summary>
+        public class KeyCodes
+        {
+            //Debug Mode Keyboard keycodes
+            public const KeyCode CHANGE_QUALITY = KeyCode.Q;
+            public const KeyCode CHANGE_MOOD = KeyCode.M;
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+            //Cube actions keycodes
+            public const KeyCode CUBE_TO_FOLD = KeyCode.F;
+            public const KeyCode CUBE_TO_UNFOLD = KeyCode.U;
+            public const KeyCode CUBE_TO_FOCUS = KeyCode.Z;
+            public const KeyCode CUBE_TO_UNFOCUS = KeyCode.X;
+        }
+
+        /// <summary>
+        /// All Event related constants listed here. Exp. Event names to call.
+        /// </summary>
+        public class Event
+        {
+            public const string ON_CHANGE_MOOD = "ON_CHANGE_MOOD";
+
+            //Quality Settings
+            public const string ON_CHANGE_QUALITY = "ON_CHANGE_QUALITY";
+            public const string ON_CHANGE_QUALITY_FINISH = "ON_CHANGE_QUALITY_FINISH";
+        }
+
+        /// <summary>
+        /// All constant path variables liste here. Exp. Configuration file
+        /// </summary>
+        public class Path
+        {
+
+        }
+
+        /// <summary>
+        /// All resources (files names under resource directory) used in the SDK listed here. Exp. Watson Logo
+        /// </summary>
+        public class Resources
+        {
+
+        }
+
+        /// <summary>
+        /// All string variables or string formats used in the SDK listed here. Exp. Quality Debug Format = Quality {0}
+        /// </summary>
+        public class String
+        {
+            public const string DEBUG_DISPLAY_QUALITY = "Quality: {0}";
+
+        }
+
+
+    }
 }
+
+
