@@ -18,7 +18,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Watson/Scenes/TestNLC.unity
   - enabled: 1
-    path: Assets/Watson/Scenes/XRay.unity
+    path: Assets/Watson/Scenes/Experimental/XRay.unity
   - enabled: 1
     path: Assets/Watson/ThirdParty/TouchScript/Examples/Examples.unity
   - enabled: 1
