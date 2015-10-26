@@ -34,7 +34,7 @@ namespace IBM.Watson.Widgets.Question.Facet
 		[SerializeField]
 		private FeatureItem[] m_FeatureItems;
 
-		new public void Init()
+		public void Init()
 		{
 			qWidget = gameObject.GetComponent<QuestionWidget>();
 

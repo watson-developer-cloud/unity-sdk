@@ -65,7 +65,7 @@ namespace IBM.Watson.Widgets.Question.Facet
 			}
 		}
 
-		new public void Init()
+		public void Init()
 		{
 			qWidget = gameObject.GetComponent<QuestionWidget>();
 			m_Question = qWidget.Questions.questions[0].question.questionText;

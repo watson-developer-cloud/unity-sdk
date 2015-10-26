@@ -26,7 +26,7 @@ namespace IBM.Watson.Widgets.Question.Facet
 {
 	public class Evidence : MonoBehaviour
 	{
-		private List<EvidenceItem> EvidenceItems = new List<EvidenceItem>();
+		//private List<EvidenceItem> EvidenceItems = new List<EvidenceItem>();
 		private ObservedList<string> m_EvidenceData = new ObservedList<string>();
 		private QuestionWidget qWidget;
 
@@ -34,7 +34,7 @@ namespace IBM.Watson.Widgets.Question.Facet
 		[SerializeField]
 		private EvidenceItem[] m_EvidenceItems;
 
-		new public void Init()
+		public void Init()
 		{
 			qWidget = gameObject.GetComponent<QuestionWidget>();
 

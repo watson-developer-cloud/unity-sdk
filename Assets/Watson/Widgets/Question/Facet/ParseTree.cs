@@ -54,7 +54,7 @@ namespace IBM.Watson.Widgets.Question.Facet
 			}
 		}
 
-		new void Start () 
+		void Start () 
 		{
 			positionList.Add(new Vector3(-583f, 188f, 0f));
 			positionList.Add(new Vector3(-408f,	64f, 0f));
@@ -76,7 +76,7 @@ namespace IBM.Watson.Widgets.Question.Facet
 	//		m_WordList.Removed += OnRemove;
 		}
 
-		new public void Init()
+		public void Init()
 		{
 			qWidget = gameObject.GetComponent<QuestionWidget>();
 		}

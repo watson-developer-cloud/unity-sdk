@@ -40,7 +40,7 @@ namespace IBM.Watson.Widgets.Question.Facet
 			}
 		}
 
-		new public void Init()
+		public void Init()
 		{
 			qWidget = gameObject.GetComponent<QuestionWidget>();
 

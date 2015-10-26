@@ -53,7 +53,7 @@ namespace IBM.Watson.Widgets.Question.Facet
 			}
 		}
 
-		new public void Init()
+		public void Init()
 		{
 			qWidget = gameObject.GetComponent<QuestionWidget>();
 			if (qWidget.Questions.questions.Length > 0 && qWidget.Questions.questions [0].question.lat.Length > 0) {
