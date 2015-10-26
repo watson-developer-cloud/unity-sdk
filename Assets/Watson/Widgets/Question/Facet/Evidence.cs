@@ -1,0 +1,68 @@
+﻿/**
+* Copyright 2015 IBM Corp. All Rights Reserved.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*
+* @author Taj Santiago
+*/
+
+using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+using IBM.Watson.Utilities;
+using IBM.Watson.Widgets.Question.Facet.FacetElement;
+
+namespace IBM.Watson.Widgets.Question.Facet
+{
+	public class Evidence : MonoBehaviour
+	{
+		private List<EvidenceItem> EvidenceItems = new List<EvidenceItem>();
+		private ObservedList<string> m_EvidenceData = new ObservedList<string>();
+		private QuestionWidget qWidget;
+
+		[Header("Evidence")]
+		[SerializeField]
+		private EvidenceItem[] m_EvidenceItems;
+
+		new public void Init()
+		{
+			qWidget = gameObject.GetComponent<QuestionWidget>();
+
+			//	TODO instantiate FeatureItems from resources
+			//	TODO replace <answer> with the outline
+			if (qWidget.Answers.answers.Length == 0)
+				return;
+
+			if (qWidget.Answers.answers [0].evidence.Length == 1) {
+				m_EvidenceItems [0].m_Evidence = qWidget.Answers.answers [0].evidence [0].decoratedPassage;
+				m_EvidenceItems [1].gameObject.SetActive (false);
+			} else if (qWidget.Answers.answers [0].evidence.Length > 1) {
+				m_EvidenceItems [1].gameObject.SetActive (true);
+				m_EvidenceItems [0].m_Evidence = qWidget.Answers.answers [0].evidence [0].decoratedPassage;
+				m_EvidenceItems [1].m_Evidence = qWidget.Answers.answers [0].evidence [1].decoratedPassage;
+			} else {
+				m_EvidenceItems [0].gameObject.SetActive (false);
+				m_EvidenceItems [1].gameObject.SetActive (false);
+			}
+
+//			m_EvidenceData.Added += onAdd;
+		}
+
+//		private void onAdd()
+//		{
+//			EvidenceItem evidenceItem = new EvidenceItem ();
+//			EvidenceItems.Add (evidenceItem);
+//			evidenceItem.m_Evidence = m_EvidenceData [m_EvidenceData.Count];
+//		}
+	}
+}

@@ -20,23 +20,36 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 
-public class POSTextItem : MonoBehaviour {
-	[SerializeField]
-	private Text m_POSTextField;
-	
-	private string _m_POSWord;
-	public string m_POSWord
+namespace IBM.Watson.Widgets.Question.Facet
+{
+	public class Location : MonoBehaviour
 	{
-		get { return _m_POSWord; }
-		set 
-		{
-			_m_POSWord = value;
-			UpdatePOSTextField();
-		}
-	}
+		[SerializeField]
+		private Text m_LocationText;
 
-	private void UpdatePOSTextField()
-	{
-		m_POSTextField.text = m_POSWord;
+		private QuestionWidget qWidget;
+
+		private string _m_Location;
+		public string m_Location
+		{
+			get { return _m_Location; }
+			set 
+			{
+				_m_Location = value;
+				UpdateLocation();
+			}
+		}
+
+		new public void Init()
+		{
+			qWidget = gameObject.GetComponent<QuestionWidget>();
+
+			m_Location = qWidget.Avatar.ITM.Location;
+		}
+
+		private void UpdateLocation()
+		{
+			m_LocationText.text = m_Location;
+		}
 	}
 }

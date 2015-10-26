@@ -23,6 +23,8 @@ using IBM.Watson.Utilities;
 using IBM.Watson.Widgets;
 using IBM.Watson.AdaptiveComputing;
 using IBM.Watson.Avatar;
+using IBM.Watson.Widgets.Question;
+using IBM.Watson.Widgets.Question.Facet;
 using IBM.Watson.Services.v1;
 using UnityEngine;
 using UnityEngine.UI;
@@ -46,7 +48,7 @@ namespace IBM.Watson.Widgets
 		private Features features;
 		private Location location;
 		public ParseTree parseTree;
-		private QA qa;
+		private QuestionAndAnswer questionAndAnswer;
 
         #endregion
 
@@ -125,7 +127,7 @@ namespace IBM.Watson.Widgets
 			features = gameObject.GetComponent<Features>();
 			location = gameObject.GetComponent<Location>();
 			parseTree = gameObject.GetComponent<ParseTree>();
-			qa = gameObject.GetComponent<QA>();
+			questionAndAnswer = gameObject.GetComponent<QuestionAndAnswer>();
         }
 
         protected override void Start()
@@ -150,7 +152,7 @@ namespace IBM.Watson.Widgets
 			features.Init ();
 			location.Init ();
 			parseTree.Init ();
-			qa.Init ();
+			questionAndAnswer.Init ();
 		}
 
         public void OnParseData(ITM.ParseData parse)

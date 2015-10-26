@@ -18,18 +18,26 @@
 
 using UnityEngine;
 using System.Collections;
-using IBM.Watson.Widgets;
+using IBM.Watson.Widgets.Question.Facet.FacetElement;
 
-public class QuestionComponentBase : MonoBehaviour {
-	protected QuestionWidget qWidget;
-
-	protected void Start () 
+namespace IBM.Watson.Widgets.Question.Facet
+{
+	public class AnswersAndConfidence : MonoBehaviour 
 	{
+		[Header("UI Faces")]
+		[SerializeField]
+		private AnswerConfidenceBar[] m_AnswerConfidenceBars;
 
-	}
+		private QuestionWidget qWidget;
 
-	public void Init()
-	{
-		qWidget = gameObject.GetComponent<QuestionWidget>();
+		public void Init()
+		{
+			qWidget = gameObject.GetComponent<QuestionWidget>();
+
+			for(int i = 0; i < m_AnswerConfidenceBars.Length; i++) {
+				m_AnswerConfidenceBars[i].m_Answer = qWidget.Answers.answers[i].answerText;
+				m_AnswerConfidenceBars[i].m_Confidence = qWidget.Answers.answers[i].confidence;
+			}
+		}
 	}
 }

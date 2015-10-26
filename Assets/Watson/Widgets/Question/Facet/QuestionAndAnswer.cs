@@ -20,14 +20,18 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 
-
-	public class AnswerConfidenceBar : MonoBehaviour {
+namespace IBM.Watson.Widgets.Question.Facet
+{
+	public class QuestionAndAnswer : MonoBehaviour
+		{
+		[SerializeField]
+		private Text m_QuestionText;
 		[SerializeField]
 		private Text m_AnswerText;
 		[SerializeField]
 		private Text m_ConfidenceText;
-		[SerializeField]
-		private RectTransform m_barProgress;
+
+		private QuestionWidget qWidget;
 
 		private string _m_Answer;
 		public string m_Answer
@@ -37,6 +41,17 @@ using UnityEngine.UI;
 			{
 				_m_Answer = value;
 				UpdateAnswer();
+			}
+		}
+
+		private string _m_Question;
+		public string m_Question
+		{
+			get { return _m_Question; }
+			set 
+			{
+				_m_Question = value;
+				UpdateQuestion();
 			}
 		}
 
@@ -50,16 +65,28 @@ using UnityEngine.UI;
 			}
 		}
 
+		new public void Init()
+		{
+			qWidget = gameObject.GetComponent<QuestionWidget>();
+			m_Question = qWidget.Questions.questions[0].question.questionText;
+			m_Answer = qWidget.Answers.answers [0].answerText;
+			m_Confidence = qWidget.Answers.answers [0].confidence;
+		}
+
 		private void UpdateAnswer()
 		{
 			m_AnswerText.text = m_Answer;
+		}
+
+		private void UpdateQuestion()
+		{
+			m_QuestionText.text = m_Question;
 		}
 
 		private void UpdateConfidence()
 		{
 			float confidence = (float)m_Confidence * 100;
 			m_ConfidenceText.text = confidence.ToString ("f1");
-			m_barProgress.localScale = new Vector3((float)m_Confidence, 1f, 1f);
 		}
-
+	}
 }
