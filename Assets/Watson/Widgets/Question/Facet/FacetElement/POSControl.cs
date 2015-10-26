@@ -42,8 +42,14 @@ namespace IBM.Watson.Widgets.Question.Facet.FacetElement
 			}
 		}
 
+		/// <summary>
+		/// Part of speech - assigned in inspector window.
+		/// </summary>
 		public string m_POS;
 
+		/// <summary>
+		/// Start this instance.
+		/// </summary>
 		void Start()
 		{
 			m_RectTransform = gameObject.GetComponent<RectTransform> ();

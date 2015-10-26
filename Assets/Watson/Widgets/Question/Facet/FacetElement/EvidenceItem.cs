@@ -38,6 +38,9 @@ namespace IBM.Watson.Widgets.Question.Facet.FacetElement
 			}
 		}
 
+		/// <summary>
+		/// Update the evidence view.
+		/// </summary>
 		private void UpdateEvidence()
 		{
 			if (m_Evidence != "") {

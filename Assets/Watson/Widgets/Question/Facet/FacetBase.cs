@@ -26,6 +26,9 @@ namespace IBM.Watson.Widgets.Question.Facet
 	{
 		protected QuestionWidget m_QuestionWidget;
 
+		/// <summary>
+		/// Set reference to QuestionWidget.
+		/// </summary>
 		public virtual void Init()
 		{
 			m_QuestionWidget = gameObject.GetComponent<QuestionWidget>();

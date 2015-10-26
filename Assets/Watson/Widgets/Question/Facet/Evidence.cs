@@ -30,6 +30,9 @@ namespace IBM.Watson.Widgets.Question.Facet
 		[SerializeField]
 		private EvidenceItem[] m_EvidenceItems;
 
+		/// <summary>
+		/// Initialize with data from Question Widget.
+		/// </summary>
 		public override void Init()
 		{
 			base.Init ();

@@ -51,6 +51,9 @@ namespace IBM.Watson.Widgets.Question.Facet
 			}
 		}
 
+		/// <summary>
+		/// Initialize with data from Question Widget.
+		/// </summary>
 		public override void Init()
 		{
 			base.Init ();
@@ -62,6 +65,9 @@ namespace IBM.Watson.Widgets.Question.Facet
 			}
 		}
 
+		/// <summary>
+		/// Update semantic when QuestionWidget loads ParseData.
+		/// </summary>
 		public void OnUpdateSemantic()
 		{
 			string semanticText = "";
@@ -89,11 +95,17 @@ namespace IBM.Watson.Widgets.Question.Facet
 			m_Semantic = semanticText;
 		}
 
+		/// <summary>
+		/// Update the LAT view.
+		/// </summary>
 		private void UpdateLAT()
 		{
 			m_LATText.text = m_LAT;
 		}
 
+		/// <summary>
+		/// Update the Semantic View.
+		/// </summary>
 		private void UpdateSemantic()
 		{
 			m_SemanticText.text = m_Semantic;

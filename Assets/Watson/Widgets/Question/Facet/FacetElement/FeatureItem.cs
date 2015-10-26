@@ -51,6 +51,9 @@ namespace IBM.Watson.Widgets.Question.Facet.FacetElement
 			}
 		}
 
+		/// <summary>
+		/// Updates the features. Displays only the first 15 characters.
+		/// </summary>
 		private void UpdateFeature()
 		{
 			if (m_Feature != "") {

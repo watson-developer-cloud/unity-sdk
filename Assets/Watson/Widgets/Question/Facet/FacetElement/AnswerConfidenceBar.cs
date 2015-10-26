@@ -52,11 +52,17 @@ namespace IBM.Watson.Widgets.Question.Facet.FacetElement
 			}
 		}
 
+		/// <summary>
+		/// Update the answer view.
+		/// </summary>
 		private void UpdateAnswer()
 		{
 			m_AnswerText.text = m_Answer;
 		}
 
+		/// <summary>
+		/// Update the confidence view.
+		/// </summary>
 		private void UpdateConfidence()
 		{
 			float confidence = (float)m_Confidence * 100;

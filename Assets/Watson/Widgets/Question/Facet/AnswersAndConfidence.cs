@@ -27,7 +27,10 @@ namespace IBM.Watson.Widgets.Question.Facet
 		[Header("UI Faces")]
 		[SerializeField]
 		private AnswerConfidenceBar[] m_AnswerConfidenceBars;
-		 
+
+		/// <summary>
+		/// Initialize with data from Question Widget.
+		/// </summary>
 		public override void Init()
 		{
 			base.Init ();

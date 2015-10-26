@@ -53,8 +53,12 @@ namespace IBM.Watson.Widgets.Question.Facet
 			}
 		}
 
+		/// <summary>
+		/// Set hard coded positions.
+		/// </summary>
 		void Start () 
 		{
+			//	TODO parse tree from hiearchy
 			m_PositionList.Add(new Vector3(-583f, 188f, 0f));
 			m_PositionList.Add(new Vector3(-408f,	64f, 0f));
 			m_PositionList.Add(new Vector3(-184f, -49f, 0f));
@@ -72,11 +76,17 @@ namespace IBM.Watson.Widgets.Question.Facet
 			m_PositionList.Add(new Vector3(91f, -641f, 0f));
 		}
 
+		/// <summary>
+		/// Set reference to QuestionWidget.
+		/// </summary>
 		public override void Init()
 		{
 			base.Init ();
 		}
 
+		/// <summary>
+		/// Generate parse tree from Parse Data.
+		/// </summary>
 		public void GenerateParseTree()
 		{
 			for (int i = 0; i < m_QuestionWidget.ParseData.Words.Length; i++) {
@@ -105,6 +115,9 @@ namespace IBM.Watson.Widgets.Question.Facet
 			InvokeRepeating ("CycleWords", 2f, 2f);
 		}
 
+		/// <summary>
+		/// Delete parse list and parse GameObjects.
+		/// </summary>
 		public void ClearParseTree()
 		{
 			CancelInvoke ();
@@ -114,6 +127,9 @@ namespace IBM.Watson.Widgets.Question.Facet
 			}
 		}
 
+		/// <summary>
+		/// Highlight words, POS and Slots based on highlighted word.
+		/// </summary>
 		private void UpdateHighlightedWord()
 		{
 			for (int i = 0; i < m_WordList.Count; i++) {
@@ -146,17 +162,9 @@ namespace IBM.Watson.Widgets.Question.Facet
 			}
 		}
 
-		void Update()
-		{
-			if (Input.GetKeyDown (KeyCode.C)) {
-				m_WordIndex --;
-			}
-
-			if (Input.GetKeyDown (KeyCode.V)) {
-				m_WordIndex ++;
-			}
-		}
-
+		/// <summary>
+		/// Cycles the words.
+		/// </summary>
 		private void CycleWords()
 		{
 			m_WordIndex ++;

@@ -64,6 +64,9 @@ namespace IBM.Watson.Widgets.Question.Facet
 			}
 		}
 
+		/// <summary>
+		/// Initialize with data from Question Widget.
+		/// </summary>
 		public override void Init()
 		{
 			base.Init ();
@@ -73,16 +76,25 @@ namespace IBM.Watson.Widgets.Question.Facet
 			m_Confidence = m_QuestionWidget.Answers.answers [0].confidence;
 		}
 
+		/// <summary>
+		/// Update answer view.
+		/// </summary>
 		private void UpdateAnswer()
 		{
 			m_AnswerText.text = m_Answer;
 		}
 
+		/// <summary>
+		/// Update question view.
+		/// </summary>
 		private void UpdateQuestion()
 		{
 			m_QuestionText.text = m_Question;
 		}
 
+		/// <summary>
+		/// Update confidence view.
+		/// </summary>
 		private void UpdateConfidence()
 		{
 			float confidence = (float)m_Confidence * 100;

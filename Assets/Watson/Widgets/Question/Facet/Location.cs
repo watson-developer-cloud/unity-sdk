@@ -38,6 +38,9 @@ namespace IBM.Watson.Widgets.Question.Facet
 			}
 		}
 
+		/// <summary>
+		/// Initialize with data from Question Widget.
+		/// </summary>
 		public override void Init()
 		{
 			base.Init ();
@@ -45,6 +48,9 @@ namespace IBM.Watson.Widgets.Question.Facet
 			m_Location = m_QuestionWidget.Avatar.ITM.Location;
 		}
 
+		/// <summary>
+		/// Update the Location view.
+		/// </summary>
 		private void UpdateLocation()
 		{
 			m_LocationText.text = m_Location;

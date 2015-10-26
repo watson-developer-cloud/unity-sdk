@@ -38,6 +38,9 @@ namespace IBM.Watson.Widgets.Question.Facet.FacetElement
 			}
 		}
 
+		/// <summary>
+		/// Update the POS view.
+		/// </summary>
 		private void UpdatePOSTextField()
 		{
 			m_POSTextField.text = m_POSWord;

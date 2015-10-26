@@ -77,11 +77,17 @@ namespace IBM.Watson.Widgets.Question.Facet.FacetElement
 		private Vector3 m_ScaleDownSize = new Vector3(1f, 1f, 1f);
 		private float m_TransitionTime = 0.5f;
 
+		/// <summary>
+		/// Start this instance.
+		/// </summary>
 		void Start()
 		{
 			m_RectTransform = m_ParseTreeTextField.gameObject.GetComponent<RectTransform>();
 		}
 
+		/// <summary>
+		/// Update the ParseTree text view.
+		/// </summary>
 		private void UpdateParseTreeTextField()
 		{
 			m_ParseTreeTextField.text = m_ParseTreeWord;
