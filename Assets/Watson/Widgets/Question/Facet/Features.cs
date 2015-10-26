@@ -24,34 +24,21 @@ using IBM.Watson.Widgets.Question.Facet.FacetElement;
 
 namespace IBM.Watson.Widgets.Question.Facet
 {
-	public class Features : MonoBehaviour
+	public class Features : FacetBase
 	{
-		private List<FeatureItem> FeatureItems = new List<FeatureItem>();
-		private ObservedList<string> m_FeatureData = new ObservedList<string>();
-		private QuestionWidget qWidget;
-
 		[Header("Features")]
 		[SerializeField]
 		private FeatureItem[] m_FeatureItems;
 
-		public void Init()
+		public override void Init()
 		{
-			qWidget = gameObject.GetComponent<QuestionWidget>();
+			base.Init ();
 
 			//	TODO instantiate FeatureItems from resources
 			for (int i = 0; i < m_FeatureItems.Length; i++) {
-				m_FeatureItems[i].m_feature = qWidget.Answers.answers[0].features[i].displayLabel;
-				m_FeatureItems[i].m_featureIndex = qWidget.Answers.answers[0].features[i].weightedScore;
+				m_FeatureItems[i].m_feature = m_questionWidget.Answers.answers[0].features[i].displayLabel;
+				m_FeatureItems[i].m_featureIndex = m_questionWidget.Answers.answers[0].features[i].weightedScore;
 			}
-			m_FeatureData.Added += onAdd;
-		}
-		
-		private void onAdd()
-		{
-			Debug.Log ("feature added");
-			FeatureItem featureItem = new FeatureItem ();
-			FeatureItems.Add (featureItem);
-			featureItem.m_feature = m_FeatureData [m_FeatureData.Count];
 		}
 	}
 }

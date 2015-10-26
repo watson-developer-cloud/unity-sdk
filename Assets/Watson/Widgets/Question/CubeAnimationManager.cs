@@ -205,7 +205,7 @@ namespace IBM.Watson.Widgets.Question
 			        m_initialLocalRotation = transform.localRotation;
 
 			        if (avatarGameobject == null) {
-						avatarGameobject = GameObject.Find("Avatar/Avatar_01");
+						avatarGameobject = GameObject.Find("AvatarWidget/Avatar_01");
 					}
 
 					GameObject[] questionsCreated = GameObject.FindGameObjectsWithTag ("QuestionOnFocus");

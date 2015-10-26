@@ -22,7 +22,7 @@ using UnityEngine.UI;
 
 namespace IBM.Watson.Widgets.Question.Facet
 {
-	public class QuestionAndAnswer : MonoBehaviour
+	public class QuestionAndAnswer : FacetBase
 		{
 		[SerializeField]
 		private Text m_QuestionText;
@@ -31,7 +31,6 @@ namespace IBM.Watson.Widgets.Question.Facet
 		[SerializeField]
 		private Text m_ConfidenceText;
 
-		private QuestionWidget qWidget;
 
 		private string _m_Answer;
 		public string m_Answer
@@ -65,12 +64,13 @@ namespace IBM.Watson.Widgets.Question.Facet
 			}
 		}
 
-		public void Init()
+		public override void Init()
 		{
-			qWidget = gameObject.GetComponent<QuestionWidget>();
-			m_Question = qWidget.Questions.questions[0].question.questionText;
-			m_Answer = qWidget.Answers.answers [0].answerText;
-			m_Confidence = qWidget.Answers.answers [0].confidence;
+			base.Init ();
+
+			m_Question = m_questionWidget.Questions.questions[0].question.questionText;
+			m_Answer = m_questionWidget.Answers.answers [0].answerText;
+			m_Confidence = m_questionWidget.Answers.answers [0].confidence;
 		}
 
 		private void UpdateAnswer()

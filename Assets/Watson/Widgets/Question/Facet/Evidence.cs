@@ -24,45 +24,31 @@ using IBM.Watson.Widgets.Question.Facet.FacetElement;
 
 namespace IBM.Watson.Widgets.Question.Facet
 {
-	public class Evidence : MonoBehaviour
+	public class Evidence : FacetBase
 	{
-		//private List<EvidenceItem> EvidenceItems = new List<EvidenceItem>();
-		private ObservedList<string> m_EvidenceData = new ObservedList<string>();
-		private QuestionWidget qWidget;
-
 		[Header("Evidence")]
 		[SerializeField]
 		private EvidenceItem[] m_EvidenceItems;
 
-		public void Init()
+		public override void Init()
 		{
-			qWidget = gameObject.GetComponent<QuestionWidget>();
+			base.Init ();
 
-			//	TODO instantiate FeatureItems from resources
 			//	TODO replace <answer> with the outline
-			if (qWidget.Answers.answers.Length == 0)
+			if (m_questionWidget.Answers.answers.Length == 0)
 				return;
 
-			if (qWidget.Answers.answers [0].evidence.Length == 1) {
-				m_EvidenceItems [0].m_Evidence = qWidget.Answers.answers [0].evidence [0].decoratedPassage;
+			if (m_questionWidget.Answers.answers [0].evidence.Length == 1) {
+				m_EvidenceItems [0].m_Evidence = m_questionWidget.Answers.answers [0].evidence [0].decoratedPassage;
 				m_EvidenceItems [1].gameObject.SetActive (false);
-			} else if (qWidget.Answers.answers [0].evidence.Length > 1) {
+			} else if (m_questionWidget.Answers.answers [0].evidence.Length > 1) {
 				m_EvidenceItems [1].gameObject.SetActive (true);
-				m_EvidenceItems [0].m_Evidence = qWidget.Answers.answers [0].evidence [0].decoratedPassage;
-				m_EvidenceItems [1].m_Evidence = qWidget.Answers.answers [0].evidence [1].decoratedPassage;
+				m_EvidenceItems [0].m_Evidence = m_questionWidget.Answers.answers [0].evidence [0].decoratedPassage;
+				m_EvidenceItems [1].m_Evidence = m_questionWidget.Answers.answers [0].evidence [1].decoratedPassage;
 			} else {
 				m_EvidenceItems [0].gameObject.SetActive (false);
 				m_EvidenceItems [1].gameObject.SetActive (false);
 			}
-
-//			m_EvidenceData.Added += onAdd;
 		}
-
-//		private void onAdd()
-//		{
-//			EvidenceItem evidenceItem = new EvidenceItem ();
-//			EvidenceItems.Add (evidenceItem);
-//			evidenceItem.m_Evidence = m_EvidenceData [m_EvidenceData.Count];
-//		}
 	}
 }

@@ -28,15 +28,15 @@ namespace IBM.Watson.Widgets.Question.Facet.FacetElement
 		[SerializeField]
 		private Text m_ParseTreeTextField;
 
-		private bool _isHighlighted = false;
-		public bool isHighlighted
+		private bool _m_isHighlighted = false;
+		public bool m_isHighlighted
 		{
-			get { return _isHighlighted; }
+			get { return _m_isHighlighted; }
 			set {
-				_isHighlighted = value;
+				_m_isHighlighted = value;
 				m_rectTransform = m_ParseTreeTextField.gameObject.GetComponent<RectTransform>();
-				LeanTween.textColor(m_rectTransform, isHighlighted ? colorLight : colorDark, m_transitionTime);
-				LeanTween.scale(m_rectTransform, isHighlighted ? scaleUpSize : scaleDownSize, m_transitionTime);
+				LeanTween.textColor(m_rectTransform, m_isHighlighted ? m_colorLight : m_colorDark, m_transitionTime);
+				LeanTween.scale(m_rectTransform, m_isHighlighted ? m_scaleUpSize : m_scaleDownSize, m_transitionTime);
 			}
 		}
 
@@ -71,10 +71,10 @@ namespace IBM.Watson.Widgets.Question.Facet.FacetElement
 		public List<string> m_Features = new List<string>();
 
 		private RectTransform m_rectTransform;
-		private Color colorLight = new Color (0.8f, 0.8f, 0.8f);
-		private Color colorDark = new Color (0.3f, 0.3f, 0.3f);
-		private Vector3 scaleUpSize = new Vector3(1.25f, 1.25f, 1.25f);
-		private Vector3 scaleDownSize = new Vector3(1f, 1f, 1f);
+		private Color m_colorLight = new Color (0.8f, 0.8f, 0.8f);
+		private Color m_colorDark = new Color (0.3f, 0.3f, 0.3f);
+		private Vector3 m_scaleUpSize = new Vector3(1.25f, 1.25f, 1.25f);
+		private Vector3 m_scaleDownSize = new Vector3(1f, 1f, 1f);
 		private float m_transitionTime = 0.5f;
 
 		void Start()

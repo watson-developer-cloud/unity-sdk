@@ -1,16 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
+using IBM.Watson.Widgets;
 
 public class FacetBase: MonoBehaviour
 {
+	protected QuestionWidget m_questionWidget;
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+	public virtual void Init()
+	{
+		m_questionWidget = gameObject.GetComponent<QuestionWidget>();
 	}
 }

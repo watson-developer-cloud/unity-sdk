@@ -22,12 +22,10 @@ using UnityEngine.UI;
 
 namespace IBM.Watson.Widgets.Question.Facet
 {
-	public class Location : MonoBehaviour
+	public class Location : FacetBase
 	{
 		[SerializeField]
 		private Text m_LocationText;
-
-		private QuestionWidget qWidget;
 
 		private string _m_Location;
 		public string m_Location
@@ -40,11 +38,11 @@ namespace IBM.Watson.Widgets.Question.Facet
 			}
 		}
 
-		public void Init()
+		public override void Init()
 		{
-			qWidget = gameObject.GetComponent<QuestionWidget>();
+			base.Init ();
 
-			m_Location = qWidget.Avatar.ITM.Location;
+			m_Location = m_questionWidget.Avatar.ITM.Location;
 		}
 
 		private void UpdateLocation()

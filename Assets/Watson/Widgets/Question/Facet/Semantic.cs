@@ -22,14 +22,12 @@ using UnityEngine.UI;
 
 namespace IBM.Watson.Widgets.Question.Facet
 {
-	public class Semantic : MonoBehaviour
+	public class Semantic : FacetBase
 		{
 		[SerializeField]
 		private Text m_LatText;
 		[SerializeField]
 		private Text m_SemanticText;
-
-		private QuestionWidget qWidget;
 
 		private string _m_lat;
 		public string m_lat
@@ -53,13 +51,14 @@ namespace IBM.Watson.Widgets.Question.Facet
 			}
 		}
 
-		public void Init()
+		public override void Init()
 		{
-			qWidget = gameObject.GetComponent<QuestionWidget>();
-			if (qWidget.Questions.questions.Length > 0 && qWidget.Questions.questions [0].question.lat.Length > 0) {
-				m_lat = qWidget.Questions.questions [0].question.lat [0];
+			base.Init ();
+
+			if (m_questionWidget.Questions.questions.Length > 0 && m_questionWidget.Questions.questions [0].question.lat.Length > 0) {
+				m_lat = m_questionWidget.Questions.questions [0].question.lat [0];
 			} else {
-				m_lat = "no lat";
+				m_lat = "n/a";
 			}
 		}
 
@@ -68,8 +67,8 @@ namespace IBM.Watson.Widgets.Question.Facet
 			string semanticText = "";
 			
 			int latIndex = -1;
-			for(int i = 0 ; i < qWidget.ParseData.Words.Length; i++) {
-				if(qWidget.ParseData.Words[i].Word == m_lat) {
+			for(int i = 0 ; i < m_questionWidget.ParseData.Words.Length; i++) {
+				if(m_questionWidget.ParseData.Words[i].Word == m_lat) {
 					latIndex = i;
 				}
 			}
@@ -77,9 +76,9 @@ namespace IBM.Watson.Widgets.Question.Facet
 			if (latIndex == -1) {
 				semanticText = "";
 			} else {
-				for (int k = 0; k < qWidget.ParseData.Words[latIndex].Features.Length; k++) {
-					semanticText += qWidget.ParseData.Words [latIndex].Features [k];
-					if (k < qWidget.ParseData.Words [latIndex].Features.Length - 1) {
+				for (int k = 0; k < m_questionWidget.ParseData.Words[latIndex].Features.Length; k++) {
+					semanticText += m_questionWidget.ParseData.Words [latIndex].Features [k];
+					if (k < m_questionWidget.ParseData.Words [latIndex].Features.Length - 1) {
 						semanticText += ", ";
 					} else {
 						semanticText += ".";
