@@ -71,10 +71,10 @@ namespace IBM.Watson.Services.v1
 
         #region GetDialogs
         /// <summary>
-        /// 
+        /// Grabs a list of all available dialogs from the service.
         /// </summary>
-        /// <param name="callback"></param>
-        /// <returns></returns>
+        /// <param name="callback">The callback to receive the list of dialogs.</param>
+        /// <returns>Returns true if request has been sent.</returns>
         public bool GetDialogs(OnGetDialogs callback)
         {
             if (callback == null)
