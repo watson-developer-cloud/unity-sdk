@@ -195,8 +195,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 131721b15c8a68d438d5b7163a1c05df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_ActivateOnStart: 1
   m_AudioOutput:
     m_TargetObject: {fileID: 113798}
+    m_TargetConnection: 
+  m_LevelOutput:
+    m_TargetObject: {fileID: 0}
     m_TargetConnection: 
   m_ActivateOutput:
     m_TargetObject: {fileID: 113798}
@@ -204,6 +208,9 @@ MonoBehaviour:
   m_RecordingBufferSize: 2
   m_RecordingHZ: 22050
   m_MicrophoneID: 
+  m_LevelOutputInterval: .0500000007
+  m_PlaybackRecording: 0
+  m_StatusText: {fileID: 0}
 --- !u!114 &11442158
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -332,6 +339,8 @@ MonoBehaviour:
   m_WordConfidence: 0
   m_TimeStamps: 0
   m_MaxAlternatives: 1
+  m_EnableContinous: 1
+  m_EnableInterumResults: 1
   m_Transcript: {fileID: 11422764}
   m_TextOutput:
     m_TargetObject: {fileID: 0}
@@ -481,9 +490,9 @@ RectTransform:
   - {fileID: 22471924}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 675.5, y: 387}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 113.5, y: -196.5}
   m_SizeDelta: {x: 227, y: 394}
   m_Pivot: {x: .5, y: .5}
 --- !u!224 &22456468

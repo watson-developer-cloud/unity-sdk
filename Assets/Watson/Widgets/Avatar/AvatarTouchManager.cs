@@ -3,6 +3,7 @@ using System.Collections;
 using TouchScript.Gestures;
 using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
+using IBM.Watson.Widgets.Question;
 
 public class AvatarTouchManager: MonoBehaviour
 {
