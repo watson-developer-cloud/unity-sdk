@@ -21,6 +21,7 @@ using IBM.Watson.Logging;
 using UnityEngine;
 using UnityEngine.UI;
 using IBM.Watson.Utilities;
+using IBM.Watson.Data;
 
 #pragma warning disable 414
 

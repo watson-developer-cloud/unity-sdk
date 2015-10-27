@@ -28,6 +28,10 @@ using System.Collections;
 
 namespace IBM.Watson.Services.v1
 {
+    /// <summary>
+    /// This class wraps the Language Translation service.
+    /// </summary>
+    /// <a href="http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/language-translation.html">Language Translation Service</a>
     public class Translate
     {
         #region Public Types

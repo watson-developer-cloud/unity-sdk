@@ -1,13 +1,24 @@
 ﻿using UnityEngine;
 using System.Collections;
-using IBM.Watson.AdaptiveComputing;
 using IBM.Watson.Utilities;
+using IBM.Watson.Logging;
 
-namespace IBM.Watson.Avatar
+namespace IBM.Watson.Widgets.Avatar
 {
-	public class LightRingManager : MonoBehaviour {
+    /// <summary>
+    /// LightRingManager manages the Avatar 3d models' animated light rings according to mood / behavior change. 
+    /// </summary>
+	public class LightRingManager : AvatarModelManager
+    {
 
-		public LeanTweenType lightFlareEase;
+        #region Public Variables
+        #endregion
+
+        #region Private Variables
+
+        #endregion
+
+        public LeanTweenType lightFlareEase;
 		public float lightFlareAnimationTime = 1.0f;
 		public GameObject[] lightFlareList;
 		public GameObject[] lightFlareChild;
@@ -15,18 +26,12 @@ namespace IBM.Watson.Avatar
 
 		public Color colorTest;
 
-		void OnEnable(){
-			EventManager.Instance.RegisterEventReceiver (EventManager.onMoodChangeFinish, OnChangedMood);	//After finishing mood change we will change Light ring
-			EventManager.Instance.RegisterEventReceiver (EventManager.onBehaviorChangeFinish, OnChangedBehavior);
-		}
+        #region OnEnable / OnDisable / OnApplicationQuit / Awake
+        
+        protected override void Awake(){
+            base.Awake();
 
-		void OnDisable(){
-			EventManager.Instance.UnregisterEventReceiver (EventManager.onMoodChangeFinish, OnChangedMood);
-			EventManager.Instance.UnregisterEventReceiver (EventManager.onBehaviorChangeFinish, OnChangedBehavior);
-		}
-
-		void Awake(){
-			listFlarePathList = new Vector3[3][];
+            listFlarePathList = new Vector3[3][];
 			
 			listFlarePathList [0] = new Vector3[] {
 				new Vector3 (28.365f, -6.06f, -16.385f),
@@ -56,26 +61,19 @@ namespace IBM.Watson.Avatar
 				}
 			}
 		}
-		// Use this for initialization
 
-//		void Start () {
-//			ChangeToColor (MoodManager.Instance.currentMoodColor);
-//			AnimateLightFlare ();
-//		}
+        #endregion
 
-		public void OnChangedMood(System.Object[] args){
-			ChangeToColor (MoodManager.Instance.currentMoodColor);
-			AnimateLightFlare ();
+        public override void OnChangedMood(System.Object[] args){
+            base.OnChangedMood(args);
+			AnimateLightFlare (m_AvatarWidgetAttached.MoodSpeedModifier);
 		}
-
-		public void OnChangedBehavior(System.Object[] args){
-			ChangeToColor (BehaviorManager.Instance.currentBehaviourColor);
-		}
-
+        
 
 		LTDescr colorAnimationOnRing = null;
 		LTDescr[] colorAnimationOnFlare = null;
-		public void ChangeToColor(Color color){
+		public override void ChangeToColor(Color color, float timeModifier)
+        {
 			if (colorAnimationOnRing != null) {
 				LeanTween.cancel(colorAnimationOnRing.uniqueId);
 			}
@@ -92,7 +90,7 @@ namespace IBM.Watson.Avatar
 			for (int i = 0; i < colorAnimationOnFlare.Length; i++) {
 				//LeanTween.va
 				GameObject lightFlareObject = lightFlareChild[i];
-				colorAnimationOnFlare[i] = LeanTween.value (lightFlareChild[i], Color.white, color, 1.0f * MoodManager.Instance.currentMoodTimeModifier).setLoopPingPong ().setOnUpdateColor(
+				colorAnimationOnFlare[i] = LeanTween.value (lightFlareChild[i], Color.white, color, 1.0f * timeModifier).setLoopPingPong ().setOnUpdateColor(
 					(Color a)=>{
 					lightFlareObject.transform.GetComponent<MeshRenderer>().sharedMaterial.SetColor("_TintColor", a);
 				});
@@ -100,18 +98,19 @@ namespace IBM.Watson.Avatar
 		}
 
 		LTDescr[] moveAnimationOnFlare = null;
-		public void AnimateLightFlare(){
+		public void AnimateLightFlare(float timeModifier)
+        {
 			if (moveAnimationOnFlare != null) {
 				for (int i = 0; i < moveAnimationOnFlare.Length; i++) {
 					//LeanTween.cancel (moveAnimationOnFlare [i].uniqueId);
-					moveAnimationOnFlare [i].setTime(lightFlareAnimationTime * MoodManager.Instance.currentMoodTimeModifier);
+					moveAnimationOnFlare [i].setTime(lightFlareAnimationTime * timeModifier);
 				}
 			} else {
 				moveAnimationOnFlare = new LTDescr[lightFlareList.Length]; 
 
 				if (lightFlareList.Length == listFlarePathList.Length) {
 					for (int i = 0; i < lightFlareList.Length; i++) {
-						moveAnimationOnFlare [i] = LeanTween.moveLocal (lightFlareList[i], listFlarePathList [i], lightFlareAnimationTime * MoodManager.Instance.currentMoodTimeModifier).setOrientToPath(true).setAxis(Vector3.forward).setEase(lightFlareEase).setLoopPingPong ();
+						moveAnimationOnFlare [i] = LeanTween.moveLocal (lightFlareList[i], listFlarePathList [i], lightFlareAnimationTime * timeModifier).setOrientToPath(true).setAxis(Vector3.forward).setEase(lightFlareEase).setLoopPingPong ();
 					}
 				}
 			}

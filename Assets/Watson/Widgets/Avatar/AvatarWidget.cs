@@ -20,12 +20,11 @@
 
 using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
-using IBM.Watson.AdaptiveComputing;
 using IBM.Watson.Avatar;
+using IBM.Watson.Data;
 using IBM.Watson.Services.v1;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections.Generic;
 
 #pragma warning disable 414
 
@@ -41,21 +40,67 @@ namespace IBM.Watson.Widgets
     public class AvatarWidget : Widget
     {
         #region Public Types
+        /// <summary>
+        /// State of the Avatar in terms of its behavior.
+        /// </summary>
         public enum AvatarState
         {
+            /// <summary>
+            /// Connecting - initial state
+            /// </summary>
             CONNECTING, 
+            /// <summary>
+            /// Connected - Listening continuously to understand the input
+            /// </summary>
             LISTENING, 
+            /// <summary>
+            /// Connected - After some input it is the time for thinking the understand the input
+            /// </summary>
             THINKING,
+            /// <summary>
+            /// Connected - After semantically understanding, Watson is responding. 
+            /// If Watson didn't understand the input, then it goes to listening mode while giving some response about not understood input.
+            /// </summary>
             ANSWERING
         };
         
+        /// <summary>
+        /// Avatar Mood which effects various things in the application like Animation speed, coloring etc.
+        /// </summary>
         public enum MoodType
         {
-            IDLE = 0,   //Bored
+            /// <summary>
+            /// Connecting - initial state
+            /// </summary>
+            CONNECTING = 0,     
+            /// <summary>
+            /// Connection Failed
+            /// </summary>
+            DISCONNECTED,
+            /// <summary>
+            /// Connected - Waiting to be waken-up
+            /// </summary>
+            SLEEPING,          
+            /// <summary>
+            /// Connected - After wake up - waits a mood change
+            /// </summary>
+            IDLE,
+            /// <summary>
+            /// Connected - After wake up - set interested mood
+            /// </summary>
             INTERESTED,
+            /// <summary>
+            /// Connected - After wake up - set urgent mood
+            /// </summary>
             URGENT,
+            /// <summary>
+            /// Connected - After wake up - set upset mood
+            /// </summary>
             UPSET,
-            SHY
+            /// <summary>
+            /// Connected - After wake up - set shy mood
+            /// </summary>
+            SHY                 
         }
 
         #endregion
@@ -67,8 +112,7 @@ namespace IBM.Watson.Widgets
 
         private AvatarState m_State = AvatarState.CONNECTING;
         private NLC.ClassifyResult m_ClassifyResult = null;
-
-        private bool m_Sleeping = true;
+        
         private SpeechToText.ResultList m_SpeechResult = null;
         private string m_SpeechText = null;
         private ITM.Questions m_QuestionResult = null;
@@ -133,116 +177,10 @@ namespace IBM.Watson.Widgets
             private set
             {
                 m_State = value;
-                Log.Debug( "AvatarWidget", "State {0}", m_State.ToString() );
-
-                if ( m_Sleeping )
-                    EventManager.Instance.SendEvent(EventManager.onMoodChange, MoodType.IDLE );
-                else if (m_State == AvatarState.LISTENING)
-                    EventManager.Instance.SendEvent(EventManager.onMoodChange, MoodType.SHY);
-                else if (m_State == AvatarState.THINKING)
-                    EventManager.Instance.SendEvent(EventManager.onMoodChange, MoodType.INTERESTED);
-                else
-                    EventManager.Instance.SendEvent(EventManager.onMoodChange, MoodType.UPSET);
-
-                if ( m_StateText != null )
-                    m_StateText.text = m_Sleeping ? "SLEEPING" : m_State.ToString();
+                EventManager.Instance.SendEvent(Constants.Event.ON_CHANGE_AVATAR_STATE_FINISH, this, value);
             }
         }
         
-        public Color BehaviourColor
-        {
-            get
-            {
-                Color color = Color.white;
-                switch (m_State)
-                {
-                    case AvatarState.CONNECTING:    color = new Color(241 / 255.0f, 241 / 255.0f, 242 / 255.0f);    break;     //Idle color 
-                    case AvatarState.LISTENING:     color = new Color(0 / 255.0f, 166 / 255.0f, 160 / 255.0f);      break;    
-                    case AvatarState.THINKING:      color = new Color(238 / 255.0f, 62 / 255.0f, 150 / 255.0f);     break;
-                    case AvatarState.ANSWERING:     color = new Color(140 / 255.0f, 198 / 255.0f, 63 / 255.0f);     break;
-                    default:                        Log.Error("AvatarWidget", "AvatarState is not defined for color!");  color = Color.white; break;
-                }
-                return color;
-            }
-        }
-
-        private MoodType m_currentMood = MoodType.IDLE;
-        public MoodType Mood
-        {
-            get
-            {
-                return m_currentMood;
-            }
-            set
-            {
-                m_currentMood = value;
-                EventManager.Instance.SendEvent(Constants.Event.ON_CHANGE_AVATAR_MOOD_FINISH, (int) value);
-            }
-        }
-
-        MoodType[] m_moodTypeList = null;
-        public MoodType[] MoodTypeList
-        {
-            get
-            {
-                if (m_moodTypeList == null)
-                {
-                    m_moodTypeList = new MoodType[] { MoodType.IDLE, MoodType.INTERESTED, MoodType.URGENT, MoodType.UPSET, MoodType.SHY };
-                }
-                return m_moodTypeList;
-            }
-        }
-
-        public Color MoodColor
-        {
-            get
-            {
-                Color color = Color.white;
-                switch (Mood)
-                {
-                    case MoodType.IDLE:         color = new Color(241 / 255.0f, 241 / 255.0f, 242 / 255.0f); break;
-                    case MoodType.INTERESTED:   color = new Color(131 / 255.0f, 209 / 255.0f, 245 / 255.0f); break;
-                    case MoodType.URGENT:       color = new Color(221 / 255.0f, 115 / 255.0f, 28 / 255.0f); break;
-                    case MoodType.UPSET:        color = new Color(217 / 255.0f, 24 / 255.0f, 45 / 255.0f); break;
-                    case MoodType.SHY:          color = new Color(243 / 255.0f, 137 / 255.0f, 175 / 255.0f); break;
-                    default:                    Log.Error("AvatarWidget", "MoodType is not defined for color!");     color = Color.white;    break;
-                }
-                return color;
-            }
-        }
-
-        public float MoodSpeedModifier
-        {
-            get
-            {
-                float value = 1.0f;
-                switch (Mood)
-                {
-                    case MoodType.IDLE:             value = 1.0f; break;
-                    case MoodType.INTERESTED:       value = 1.1f; break;
-                    case MoodType.URGENT:           value = 2.0f; break;
-                    case MoodType.UPSET:            value = 1.5f; break;
-                    case MoodType.SHY:              value = 0.9f; break;
-                    default:                        Log.Error("AvatarWidget", "MoodType is not defined for spped modifier!"); value = 1.0f; break;
-                }
-                return value;
-            }
-        }
-
-        public float MoodTimeModifier
-        {
-            get
-            {
-                float value = MoodSpeedModifier;
-                if (value != 0.0f)
-                    value = 1.0f / value;
-                else
-                    value = 0.00001f;
-
-                return value;
-            }
-        }
-
 
         #endregion
 
@@ -382,11 +320,11 @@ namespace IBM.Watson.Widgets
             if (m_ClassifyText != null)
                 m_ClassifyText.text = "C: " + m_ClassifyResult.top_class;
 
-            if ( m_Sleeping )
+            if ( Mood == MoodType.SLEEPING )
             {
                 if ( m_ClassifyResult.top_class == "wakeup" )
                 {
-                    m_Sleeping = false;
+                    Mood = MoodType.IDLE;
                     if (m_FocusQuestion == null )
                     {
                         m_FocusQuestion = GameObject.Instantiate(m_QuestionPrefab);
@@ -421,7 +359,7 @@ namespace IBM.Watson.Widgets
                     if ( m_FocusQuestion != null )
                         m_FocusQuestion.SetActive( false );
 
-                    m_Sleeping = true;
+                    Mood = MoodType.SLEEPING;
                     State = AvatarState.LISTENING;
                     m_DialogConversationId = 0;
                     m_DialogClientId = 0;
@@ -534,8 +472,103 @@ namespace IBM.Watson.Widgets
 
         #endregion
 
-        #region Avatar Mood / Behavior 
-        public void OnChangeMood(System.Object[] args)
+        #region Avatar Mood / Behavior  - Adaptive Computing
+        
+        public Color BehaviourColor
+        {
+            get
+            {
+                Color color = Color.white;
+                switch (m_State)
+                {
+                    case AvatarState.CONNECTING: color = new Color(241 / 255.0f, 241 / 255.0f, 242 / 255.0f); break;     //Idle color 
+                    case AvatarState.LISTENING: color = new Color(0 / 255.0f, 166 / 255.0f, 160 / 255.0f); break;
+                    case AvatarState.THINKING: color = new Color(238 / 255.0f, 62 / 255.0f, 150 / 255.0f); break;
+                    case AvatarState.ANSWERING: color = new Color(140 / 255.0f, 198 / 255.0f, 63 / 255.0f); break;
+                    default: Log.Error("AvatarWidget", "AvatarState is not defined for color!"); color = Color.white; break;
+                }
+                return color;
+            }
+        }
+
+        private MoodType m_currentMood = MoodType.SLEEPING;
+        public MoodType Mood
+        {
+            get
+            {
+                return m_currentMood;
+            }
+            set
+            {
+                m_currentMood = value;
+                EventManager.Instance.SendEvent(Constants.Event.ON_CHANGE_AVATAR_MOOD_FINISH, (int)value);
+            }
+        }
+
+        MoodType[] m_moodTypeList = null;
+        public MoodType[] MoodTypeList
+        {
+            get
+            {
+                if (m_moodTypeList == null)
+                {
+                    m_moodTypeList = new MoodType[] { MoodType.IDLE, MoodType.INTERESTED, MoodType.URGENT, MoodType.UPSET, MoodType.SHY };
+                }
+                return m_moodTypeList;
+            }
+        }
+
+        public Color MoodColor
+        {
+            get
+            {
+                Color color = Color.white;
+                switch (Mood)
+                {
+                    case MoodType.IDLE: color = new Color(241 / 255.0f, 241 / 255.0f, 242 / 255.0f); break;
+                    case MoodType.INTERESTED: color = new Color(131 / 255.0f, 209 / 255.0f, 245 / 255.0f); break;
+                    case MoodType.URGENT: color = new Color(221 / 255.0f, 115 / 255.0f, 28 / 255.0f); break;
+                    case MoodType.UPSET: color = new Color(217 / 255.0f, 24 / 255.0f, 45 / 255.0f); break;
+                    case MoodType.SHY: color = new Color(243 / 255.0f, 137 / 255.0f, 175 / 255.0f); break;
+                    default: Log.Error("AvatarWidget", "MoodType is not defined for color!"); color = Color.white; break;
+                }
+                return color;
+            }
+        }
+
+        public float MoodSpeedModifier
+        {
+            get
+            {
+                float value = 1.0f;
+                switch (Mood)
+                {
+                    case MoodType.IDLE: value = 1.0f; break;
+                    case MoodType.INTERESTED: value = 1.1f; break;
+                    case MoodType.URGENT: value = 2.0f; break;
+                    case MoodType.UPSET: value = 1.5f; break;
+                    case MoodType.SHY: value = 0.9f; break;
+                    default: Log.Error("AvatarWidget", "MoodType is not defined for speed modifier!"); value = 1.0f; break;
+                }
+                return value;
+            }
+        }
+
+        public float MoodTimeModifier
+        {
+            get
+            {
+                float value = MoodSpeedModifier;
+                if (value != 0.0f)
+                    value = 1.0f / value;
+                else
+                    value = 0.00001f;
+
+                return value;
+            }
+        }
+
+        void OnChangeMood(System.Object[] args)
         {
             if (args.Length == 1)
             {
@@ -544,4 +577,5 @@ namespace IBM.Watson.Widgets
         }
         #endregion
     }
+
     }
