@@ -27,7 +27,7 @@ namespace IBM.Watson.Widgets.Question.Facet
 	public class ParseTree : Base
 		{
 		[SerializeField]
-		private GameObject m_ParseTreeTextItem;
+		private GameObject m_ParseTreeTextItemPrefab;
 
 		[SerializeField]
 		private RectTransform m_ParseCanvasRectTransform;
@@ -79,11 +79,11 @@ namespace IBM.Watson.Widgets.Question.Facet
 		/// <summary>
 		/// Generate parse tree from Parse Data.
 		/// </summary>
-		public void GenerateParseTree()
+		private void GenerateParseTree()
 		{
 			for (int i = 0; i < m_ParseData.Words.Length; i++) {
-				GameObject wordGO = Instantiate(m_ParseTreeTextItem) as GameObject;
-				RectTransform wordRectTransform = wordGO.GetComponent<RectTransform>();
+				GameObject wordGameObject = Instantiate(m_ParseTreeTextItemPrefab) as GameObject;
+				RectTransform wordRectTransform = wordGameObject.GetComponent<RectTransform>();
 				wordRectTransform.SetParent(m_ParseCanvasRectTransform, false);
 				if(i < m_PositionList.Count) {
 					wordRectTransform.localPosition = m_PositionList[i];
@@ -91,7 +91,7 @@ namespace IBM.Watson.Widgets.Question.Facet
 					//	TODO fix this
 					wordRectTransform.localPosition = new Vector3(5000f, 5000, 5000f);
 				}
-				ParseTreeTextItem word = wordGO.GetComponent<ParseTreeTextItem>();
+				ParseTreeTextItem word = wordGameObject.GetComponent<ParseTreeTextItem>();
 				word.m_ParseTreeWord = m_ParseData.Words[i].Word;
 				word.m_POS = m_ParseData.Words[i].Pos.ToString();
 				word.m_Slot = m_ParseData.Words[i].Slot;
@@ -108,9 +108,9 @@ namespace IBM.Watson.Widgets.Question.Facet
 		}
 
 		/// <summary>
-		/// Delete parse list and parse GameObjects.
+		/// Clears dynamically generated Facet Elements when a question is answered. Called from Question Widget.
 		/// </summary>
-		public void ClearParseTree()
+		override public void Clear()
 		{
 			CancelInvoke ();
 			while(m_WordList.Count != 0) {
