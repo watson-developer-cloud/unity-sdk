@@ -33,8 +33,16 @@ namespace IBM.Watson.Services.v1
     public class TextToSpeech 
     {
         #region Public Types
+
+        /// <summary>
+        /// This callback is passed into the ToSpeech() method.
+        /// </summary>
+        /// <param name="clip">The AudioClip containing the audio to play.</param>
         public delegate void ToSpeechCallback(AudioClip clip);
 
+        /// <summary>
+        /// Audio format types that can be requested from the service.
+        /// </summary>
         public enum AudioFormatType
         {
             OGG = 0,
@@ -42,6 +50,9 @@ namespace IBM.Watson.Services.v1
             FLAC
         };
 
+        /// <summary>
+        /// The available voices for synthesized speech.
+        /// </summary>
         public enum VoiceType
         {
             en_US_Michael = 0,
@@ -87,7 +98,13 @@ namespace IBM.Watson.Services.v1
         #endregion
 
         #region Public Properties
+        /// <summary>
+        /// This property allows the user to set the AudioFormat to use. Currently, only WAV is supported.
+        /// </summary>
         public AudioFormatType AudioFormat { get { return m_AudioFormat; } set { m_AudioFormat = value; } }
+        /// <summary>
+        /// This property allows the user to specify the voice to use.
+        /// </summary>
         public VoiceType Voice { get { return m_Voice; } set { m_Voice = value; } }
         #endregion
 

@@ -49,7 +49,7 @@ namespace IBM.Watson.Widgets
         [SerializeField]
         private bool m_EnableContinous = false;
         [SerializeField]
-        private bool m_EnableInterumResults = false;
+        private bool m_EnableInterimResults = false;
 	    [SerializeField]
 	    private Text m_Transcript = null;
         [SerializeField]
@@ -63,6 +63,9 @@ namespace IBM.Watson.Widgets
         #endregion
 
         #region Public Properties
+        /// <summary>
+        /// This property starts or stop's this widget listening for speech.
+        /// </summary>
         public bool Active
         {
             get { return m_STT.IsListening; }
@@ -75,7 +78,7 @@ namespace IBM.Watson.Widgets
 	                m_STT.SilenceThreshold = m_SilenceThreshold;
 	                m_STT.MaxAlternatives = m_MaxAlternatives;
                     m_STT.EnableContinousRecognition = m_EnableContinous;
-                    m_STT.EnableInterumResults = m_EnableInterumResults;
+                    m_STT.EnableInterimResults = m_EnableInterimResults;
 	                m_STT.OnError = OnError;
 	                m_STT.StartListening( OnRecognize );
 	                if ( m_StatusText != null )
@@ -91,11 +94,21 @@ namespace IBM.Watson.Widgets
         }
         #endregion
 
+        /// <summary>
+        /// Button handler to toggle the active state of this widget.
+        /// </summary>
         public void OnListenButton()
 	    {
             Active = !Active;
 	    }
 
+        /// <exclude />
+        protected override string GetName()
+        {
+            return "SpeechToText";
+        }
+
+        /// <exclude />
         protected override void Start()
 	    {
             base.Start();
@@ -149,11 +162,6 @@ namespace IBM.Watson.Widgets
                 }
             }
 	    }
-
-        protected override string GetName()
-        {
-            return "SpeechToText";
-        }
 
 	}
 }

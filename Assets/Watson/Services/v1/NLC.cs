@@ -30,8 +30,8 @@ namespace IBM.Watson.Services.v1
 {
     /// <summary>
     /// This class wraps the Natural Language Classifier service.
-    /// http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/nl-classifier.html
     /// </summary>
+    /// <a href="http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/nl-classifier.html">NLC Service</a>
     public class NLC
     {
         #region Public Types

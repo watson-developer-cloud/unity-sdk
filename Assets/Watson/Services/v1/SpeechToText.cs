@@ -31,70 +31,156 @@ using IBM.Watson.Widgets;
 
 namespace IBM.Watson.Services.v1            // Add DeveloperCloud
 {
+    /// <summary>
+    /// This class wraps the Watson SpeechToText service.
+    /// </summary>
+    /// <a href="http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/speech-to-text.html">SpeechToText Service</a>
     public class SpeechToText
     {
         #region Constants
         /// <summary>
         /// This ID is used to match up a configuration record with this service.
         /// </summary>
-        const string SERVICE_ID = "SpeechToTextV1";
+        private const string SERVICE_ID = "SpeechToTextV1";
         /// <summary>
         /// How often to send a message to the web socket to keep it alive.
         /// </summary>
-        const float WS_KEEP_ALIVE_TIME = 20.0f;
-       /// <summary>
+        private const float WS_KEEP_ALIVE_TIME = 20.0f;
+        /// <summary>
         /// How many recording AudioClips will we queue before we enter a error state.
         /// </summary>
-        const int MAX_QUEUED_RECORDINGS = 30;
+        private const int MAX_QUEUED_RECORDINGS = 30;
         /// <summary>
         /// Size of a clip in bytes that can be sent through the Recognize function.
         /// </summary>
-        const int MAX_RECOGNIZE_CLIP_SIZE = 4 * (1024 * 1024);
+        private const int MAX_RECOGNIZE_CLIP_SIZE = 4 * (1024 * 1024);
         #endregion
 
         #region Public Types
+        /// <summary>
+        /// This data class holds the data for a given speech model.
+        /// </summary>
         public class Model
         {
+            /// <summary>
+            /// The name of the speech model.
+            /// </summary>
             public string Name { get; set; }
+            /// <summary>
+            /// The optimal sample rate for this model.
+            /// </summary>
             public long Rate { get; set; }
+            /// <summary>
+            /// The language ID for this model. (e.g. en)
+            /// </summary>
             public string Language { get; set; }
+            /// <summary>
+            /// A description for this model.
+            /// </summary>
             public string Description { get; set; }
+            /// <summary>
+            /// The URL for this model.
+            /// </summary>
             public string URL { get; set; }
         };
+        /// <summary>
+        /// This data class holds the confidence value for a given recognized word.
+        /// </summary>
         public class WordConfidence
         {
+            /// <summary>
+            /// The word as a string.
+            /// </summary>
             public string Word { get; set; }
+            /// <summary>
+            /// The confidence value for this word.
+            /// </summary>
             public double Confidence { get; set; }
         };
+        /// <summary>
+        /// This data class holds the start and stop times for a word.
+        /// </summary>
         public class TimeStamp
         {
+            /// <summary>
+            /// The word.
+            /// </summary>
             public string Word { get; set; }
+            /// <summary>
+            /// The start time.
+            /// </summary>
             public double Start { get; set; }
+            /// <summary>
+            /// The stop time.
+            /// </summary>
             public double End { get; set; }
         };
+        /// <summary>
+        /// This data class holds the actual transcript for the text generated from speech audio data.
+        /// </summary>
         public class Alternative
         {
+            /// <summary>
+            /// The transcript of what was understood.
+            /// </summary>
             public string Transcript { get; set; }
+            /// <summary>
+            /// The confidence in this transcript of the audio data.
+            /// </summary>
             public double Confidence { get; set; }
+            /// <summary>
+            /// A optional array of timestamps objects.
+            /// </summary>
             public TimeStamp[] Timestamps { get; set; }
+            /// <summary>
+            /// A option array of word confidence values.
+            /// </summary>
             public WordConfidence[] WordConfidence { get; set; }
         };
+        /// <summary>
+        /// A Result object that is returned by the Recognize() method.
+        /// </summary>
         public class Result
         {
+            /// <summary>
+            /// If true, then this is the final result and no more results will be sent for the given audio data.
+            /// </summary>
             public bool Final { get; set; }
+            /// <summary>
+            /// A array of alternatives speech to text results, this is controlled by the MaxAlternatives property.
+            /// </summary>
             public Alternative[] Alternatives { get; set; }
         };
+        /// <summary>
+        /// This data class holds a list of Result objects returned by the Recognize() method.
+        /// </summary>
         public class ResultList
         {
+            /// <summary>
+            /// The array of Result objects.
+            /// </summary>
             public Result[] Results { get; set; }
 
+            /// <exclude />
             public ResultList(Result[] results)
             {
                 Results = results;
             }
         };
+        /// <summary>
+        /// This callback object is used by the Recognize() and StartListening() methods.
+        /// </summary>
+        /// <param name="results">The ResultList object containing the results.</param>
         public delegate void OnRecognize(ResultList results);
+        /// <summary>
+        /// This callback object is used by the GetModels() method.
+        /// </summary>
+        /// <param name="models"></param>
         public delegate void OnGetModels(Model[] models);
+        /// <summary>
+        /// This callback is used to return errors through the OnError property.
+        /// </summary>
+        /// <param name="error">A string containing the error message.</param>
         public delegate void ErrorEvent(string error);
         #endregion
 
@@ -153,7 +239,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         /// If true, then we will get interim results while recognizing. The user will then need to check 
         /// the Final flag on the results.
         /// </summary>
-        public bool EnableInterumResults { get; set; }
+        public bool EnableInterimResults { get; set; }
         /// <summary>
         /// If true, then we will try not to send silent audio clips to the server. This can save bandwidth
         /// when no sound is happening.
@@ -192,6 +278,12 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
             return true;
         }
 
+        /// <summary>
+        /// This function should be invoked with the AudioData input after StartListening() method has been invoked.
+        /// The user should continue to invoke this function until they are ready to call StopListening(), typically
+        /// microphone input is feed into this function.
+        /// </summary>
+        /// <param name="clip">A AudioData object containing the AudioClip and max level found in the clip.</param>
         public void OnListen(AudioData clip)
         {
             if (m_IsListening)
@@ -293,7 +385,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
             start["content-type"] = "audio/l16;rate=" + m_RecordingHZ.ToString() + ";channels=1;";
             start["continuous"] = EnableContinousRecognition;
             start["max_alternatives"] = m_MaxAlternatives;
-            start["interim_results"] = EnableInterumResults;
+            start["interim_results"] = EnableInterimResults;
             start["word_confidence"] = m_WordConfidence;
             start["timestamps"] = m_Timestamps;
 
