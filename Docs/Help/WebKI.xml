@@ -35,8 +35,8 @@
   <HelpKINode Title="Answers class">
     <HelpKINode Title="properties" Url="html/c8f6663b-6f1c-72c4-600e-e92ee3bf7eb4.htm" />
   </HelpKINode>
-  <HelpKINode Title="Answers property" Url="html/d8fb7016-24f2-07be-275a-9091cdcd96ca.htm" />
   <HelpKINode Title="answers property" Url="html/29bd5cbb-7c35-4faa-27a1-4fe59b4b77c1.htm" />
+  <HelpKINode Title="Answers property" Url="html/d8fb7016-24f2-07be-275a-9091cdcd96ca.htm" />
   <HelpKINode Title="AnswersAndConfidence class">
     <HelpKINode Title="AnswersAndConfidence Class" Url="html/900674b2-c2f5-7dbe-7837-ba8b4c13af54.htm" />
     <HelpKINode Title="about AnswersAndConfidence class" Url="html/900674b2-c2f5-7dbe-7837-ba8b4c13af54.htm" />
@@ -137,6 +137,7 @@
     <HelpKINode Title="properties" Url="html/9073dab6-c199-f52a-6103-76052d35d9ae.htm" />
   </HelpKINode>
   <HelpKINode Title="Base.Base constructor" Url="html/3de3e6ab-e03f-7d26-b1c8-c5612bd2df8c.htm" />
+  <HelpKINode Title="Base.Clear method" Url="html/faa1919a-84ba-ca08-9218-85fb54edab62.htm" />
   <HelpKINode Title="Base.Hide method" Url="html/9d8a47fe-816d-a787-19c5-93554d9fd727.htm" />
   <HelpKINode Title="Base.Init method" Url="html/c3fdd1b9-4218-aa81-7577-7140a6cad25c.htm" />
   <HelpKINode Title="Base.m_Answers property" Url="html/981613ad-5e00-b509-b51c-2567dbba5d2a.htm" />
@@ -147,7 +148,7 @@
   <HelpKINode Title="Base.OnParseData method" Url="html/7641203d-8edb-94ab-fc48-7b0bcda172ca.htm" />
   <HelpKINode Title="Base.OnQuestionData method" Url="html/1b4d3acc-28d8-b4aa-7d81-86499304d79e.htm" />
   <HelpKINode Title="Base.Show method" Url="html/fff13abb-0ff4-b194-985d-1b4e91e21929.htm" />
-  <HelpKINode Title="BaseModelId property" Url="html/9b90dfc9-371d-8bf6-94a7-ff92e01158e1.htm" />
+  <HelpKINode Title="base_model_id property" Url="html/30964d57-60eb-c8ae-abef-38bb960f6fbd.htm" />
   <HelpKINode Title="BehaviourColor property" Url="html/0d04c2de-3bce-cb78-ef75-59a938cee291.htm" />
   <HelpKINode Title="Boolean property" Url="html/357bc3a4-33b7-1c8a-8ab8-f0f71fe2d175.htm" />
   <HelpKINode Title="BooleanData class">
@@ -168,7 +169,7 @@
   </HelpKINode>
   <HelpKINode Title="CHANGE_MOOD field" Url="html/1ce9ecb2-eb20-1286-cce1-0e06d8f915a2.htm" />
   <HelpKINode Title="CHANGE_QUALITY field" Url="html/9933d8f2-f208-b9ad-9cee-9ea992a4bd55.htm" />
-  <HelpKINode Title="CharacterCount property" Url="html/3d5edaa3-072d-fd32-12c9-cd058e90ff4b.htm" />
+  <HelpKINode Title="character_count property" Url="html/3f1caf65-c274-b91c-8dcb-ef19fa4df08b.htm" />
   <HelpKINode Title="CheckEqualityQuaternion method" Url="html/d895333d-19e9-ad80-f694-63f27bea9ebe.htm" />
   <HelpKINode Title="Class class">
     <HelpKINode Title="properties" Url="html/299b5aa6-55ab-0091-24ee-1834af886ff1.htm" />
@@ -200,25 +201,27 @@
   <HelpKINode Title="ClassifyResultData.GetName method" Url="html/5290d2d2-2f8c-43a0-208c-cee6bd50652b.htm" />
   <HelpKINode Title="ClassifyResultData.Result property" Url="html/8510237c-ed0a-2809-9211-f13835205971.htm" />
   <HelpKINode Title="class_name property" Url="html/74aa2a26-a54d-77d0-4425-fdc8b7b9cbce.htm" />
-  <HelpKINode Title="Clear method" Url="html/02f1ec5b-3b1a-fedd-65bb-17054761c8fa.htm" />
-  <HelpKINode Title="ClearParseTree method">
-    <HelpKINode Title="ParseTree.ClearParseTree Method " Url="html/e9d83715-d148-5d16-16c9-4129f417e193.htm" />
-    <HelpKINode Title="QuestionWidget.ClearParseTree Method " Url="html/f5d57759-8668-33fd-a5be-24ad1c2fae11.htm" />
+  <HelpKINode Title="Clear method">
+    <HelpKINode Title="Base.Clear Method " Url="html/faa1919a-84ba-ca08-9218-85fb54edab62.htm" />
+    <HelpKINode Title="Evidence.Clear Method " Url="html/2a36044b-a63d-01fb-d675-72761e4ab3cb.htm" />
+    <HelpKINode Title="Features.Clear Method " Url="html/ed3ae223-4604-f5ac-3d1d-f5430770d251.htm" />
+    <HelpKINode Title="ObservedList(T).Clear Method " Url="html/02f1ec5b-3b1a-fedd-65bb-17054761c8fa.htm" />
+    <HelpKINode Title="ParseTree.Clear Method " Url="html/785dbed4-ec16-6593-e868-e83f45667d9a.htm" />
   </HelpKINode>
+  <HelpKINode Title="ClearFacets method" Url="html/9f44ef39-f8e0-05a7-bb9e-31c3f421aa65.htm" />
   <HelpKINode Title="clientId property" Url="html/47afb28e-aa7d-5573-2386-ac846b8ead37.htm" />
   <HelpKINode Title="client_id property" Url="html/b9a5e671-d7d2-dc16-f991-1b863509349d.htm" />
   <HelpKINode Title="Clip property" Url="html/529c6846-2f06-5e37-06f6-2ec627173b39.htm" />
-  <HelpKINode Title="Code property" Url="html/1f0264a8-8649-7972-e07d-4fc96d4ce740.htm" />
   <HelpKINode Title="colorTest field" Url="html/a3caee52-1957-ad63-6633-e6d051a2977b.htm" />
   <HelpKINode Title="Combine method" Url="html/e76abe8f-2606-989e-b9e2-4d0e1109dfbb.htm" />
+  <HelpKINode Title="Confidence property">
+    <HelpKINode Title="SpeechToText.Alternative.Confidence Property " Url="html/1e0c08bd-2d45-7df1-c73a-d0ec2b5399a7.htm" />
+    <HelpKINode Title="SpeechToText.WordConfidence.Confidence Property " Url="html/2ab1ce44-ff9a-0c59-74d5-ee04d9a0f57f.htm" />
+  </HelpKINode>
   <HelpKINode Title="confidence property">
     <HelpKINode Title="Dialog.Response.confidence Property " Url="html/b7bce410-db3f-a0b8-d852-9936fab714c9.htm" />
     <HelpKINode Title="ITM.Answer.confidence Property " Url="html/efb68a4f-99c4-477f-fa38-24c9a7185a6b.htm" />
     <HelpKINode Title="NLC.Class.confidence Property " Url="html/725e8e74-97ba-cbe8-3514-d080e635679f.htm" />
-  </HelpKINode>
-  <HelpKINode Title="Confidence property">
-    <HelpKINode Title="SpeechToText.Alternative.Confidence Property " Url="html/1e0c08bd-2d45-7df1-c73a-d0ec2b5399a7.htm" />
-    <HelpKINode Title="SpeechToText.WordConfidence.Confidence Property " Url="html/2ab1ce44-ff9a-0c59-74d5-ee04d9a0f57f.htm" />
   </HelpKINode>
   <HelpKINode Title="Config class">
     <HelpKINode Title="Config Class" Url="html/3c641cbf-3352-3929-5c9c-179b62a37a59.htm" />
@@ -340,7 +343,7 @@
   <HelpKINode Title="CUBE_TO_FOLD field" Url="html/6ca0d194-63a4-71ab-a7aa-64f5a1dba4b3.htm" />
   <HelpKINode Title="CUBE_TO_UNFOCUS field" Url="html/b7ee6ead-6d03-b671-d4a4-6008ed36db24.htm" />
   <HelpKINode Title="CUBE_TO_UNFOLD field" Url="html/6993c43c-2da7-2537-1f2d-b5cb4ddb04be.htm" />
-  <HelpKINode Title="Cutomizable property" Url="html/a70c6590-87a9-bbc7-8456-a8b058fc4ada.htm" />
+  <HelpKINode Title="customizable property" Url="html/2e8ac714-b7e4-99c3-ac9f-dc6200fde61d.htm" />
   <HelpKINode Title="Data class">
     <HelpKINode Title="methods" Url="html/1a7a3758-6704-f07d-eed4-0e97f8819df8.htm" />
     <HelpKINode Title="properties" Url="html/2dcf3eba-778d-7636-a4ec-d059d3cb18ca.htm" />
@@ -367,7 +370,7 @@
   <HelpKINode Title="DEBUG_DISPLAY_QUALITY field" Url="html/6f79bf6b-6927-d7c8-09e1-bf0355d11b2a.htm" />
   <HelpKINode Title="decoratedPassage property" Url="html/ea950d4b-4fe8-db23-2202-4129943b9358.htm" />
   <HelpKINode Title="DEFAULT enumeration member" Url="html/95f3ef9c-b95e-a341-5a2d-4fd54d903843.htm" />
-  <HelpKINode Title="Default property" Url="html/9249965f-78b6-583c-11a7-dddfa74763d2.htm" />
+  <HelpKINode Title="default property" Url="html/40ea2235-e1eb-0322-8f55-7970081bd349.htm" />
   <HelpKINode Title="DeleteClassifer method" Url="html/7ecf5912-4226-47a2-d09c-2a466507c965.htm" />
   <HelpKINode Title="Description property" Url="html/54059719-e321-6342-311b-dc34cbf9a570.htm" />
   <HelpKINode Title="DetectSilence property" Url="html/638d9a1f-702b-a693-4100-cd75562cc7f9.htm" />
@@ -427,7 +430,7 @@
   <HelpKINode Title="Disable property" Url="html/a51ba2d9-5a9a-27c5-9a2a-b46821f25eae.htm" />
   <HelpKINode Title="DISCONNECTED enumeration member" Url="html/07db7a12-9e93-5888-4e48-2d0af2bf15bd.htm" />
   <HelpKINode Title="displayLabel property" Url="html/eb83dd71-4bc5-6861-781f-066b366b27f8.htm" />
-  <HelpKINode Title="Domain property" Url="html/8d5e8a70-39b0-d74b-8d89-6f72602e3017.htm" />
+  <HelpKINode Title="domain property" Url="html/16f9393e-f753-b5f5-f0bc-ab290b39c684.htm" />
   <HelpKINode Title="EnableContinousRecognition property" Url="html/d19c914e-63ab-2c33-6f99-e09e4ab36f7a.htm" />
   <HelpKINode Title="EnableGateway property" Url="html/1e91698d-e70e-9663-f1c7-7555f7875c85.htm" />
   <HelpKINode Title="EnableInterimResults property" Url="html/39321152-e0f2-2b99-c8f8-f67d89d95f84.htm" />
@@ -470,6 +473,7 @@
     <HelpKINode Title="properties" Url="html/1110487a-cd57-0e27-42a9-f2a104bab50e.htm" />
   </HelpKINode>
   <HelpKINode Title="evidence property" Url="html/2b25638b-c13d-a468-75cb-33d84fa0eacc.htm" />
+  <HelpKINode Title="Evidence.Clear method" Url="html/2a36044b-a63d-01fb-d675-72761e4ab3cb.htm" />
   <HelpKINode Title="Evidence.Evidence constructor" Url="html/192456fc-f32b-3f3a-2ee1-d1184265de68.htm" />
   <HelpKINode Title="Evidence.OnAnswerData method" Url="html/4d3b4a47-1c89-cb85-ddaf-a23f56ff60b6.htm" />
   <HelpKINode Title="EvidenceItem class">
@@ -501,6 +505,7 @@
   </HelpKINode>
   <HelpKINode Title="Features property" Url="html/ab28e0df-87b6-8bab-17d1-35e21755ed7f.htm" />
   <HelpKINode Title="features property" Url="html/1d60556f-83ed-5ce7-e970-d050240e0d7e.htm" />
+  <HelpKINode Title="Features.Clear method" Url="html/ed3ae223-4604-f5ac-3d1d-f5430770d251.htm" />
   <HelpKINode Title="Features.Features constructor" Url="html/40f8d86f-bfa2-d9dc-87b2-96143f299d20.htm" />
   <HelpKINode Title="Features.OnAnswerData method" Url="html/8cc443e1-17f9-2cd5-f025-03a571b814a2.htm" />
   <HelpKINode Title="featureScoreMax property" Url="html/500c5473-d631-fac7-a28a-a515acb2cff5.htm" />
@@ -538,7 +543,6 @@
   <HelpKINode Title="fr_FR_Renee enumeration member" Url="html/fbf1cef8-b912-d317-41c8-25bfa695130f.htm" />
   <HelpKINode Title="FullInputName property" Url="html/f6951c73-2404-404f-cc47-97a14f081037.htm" />
   <HelpKINode Title="GatewayURL property" Url="html/8af01b81-ee18-691a-3a3e-e56b6a71eece.htm" />
-  <HelpKINode Title="GenerateParseTree method" Url="html/a1abc45d-a4cb-a8e7-afb7-b9cc5c4c5406.htm" />
   <HelpKINode Title="GetAnswers method" Url="html/3d24b217-c1d2-e5ce-54a3-3544bb450fba.htm" />
   <HelpKINode Title="GetClassifier method" Url="html/c58cf215-66eb-c6c3-ffd5-50f36cfaae87.htm" />
   <HelpKINode Title="GetClassifiers method" Url="html/07387281-f2b2-0b6f-bdce-560a70005424.htm" />
@@ -595,6 +599,9 @@
   <HelpKINode Title="IBM.Watson.Debug namespace" Url="html/ab0cc62f-23a9-d5b2-655a-34aa3ae3c872.htm" />
   <HelpKINode Title="IBM.Watson.Debug.AvatarMood class" Url="html/e6ffe132-c809-4e09-1005-101fce0960ab.htm" />
   <HelpKINode Title="IBM.Watson.Debug.Quality class" Url="html/0709d633-2b12-6421-5eb1-b3f03ca09b10.htm" />
+  <HelpKINode Title="IBM.Watson.Editor namespace" Url="html/ffdcfed0-43e0-f125-45b4-7fc12b4efad4.htm" />
+  <HelpKINode Title="IBM.Watson.Editor.UnitTestManager class" Url="html/61649d3a-a8a2-c8d7-09f5-93404e6f175d.htm" />
+  <HelpKINode Title="IBM.Watson.Editor.UnitTestManager.OnTestsComplete delegate" Url="html/cec7dfee-f19b-0f37-0c7f-4c8fbaf13ca4.htm" />
   <HelpKINode Title="IBM.Watson.Logging namespace" Url="html/e9416531-301a-f7ae-5dcd-b35bb51af631.htm" />
   <HelpKINode Title="IBM.Watson.Logging.DebugReactor class" Url="html/3896490d-028e-838d-84ea-3b033754d549.htm" />
   <HelpKINode Title="IBM.Watson.Logging.FileReactor class" Url="html/944bb1d5-c948-5709-d525-162c80efc5e2.htm" />
@@ -664,9 +671,12 @@
   <HelpKINode Title="IBM.Watson.Services.v1.Translate.GetModelsCallback delegate" Url="html/71af6e23-b3fd-d2e3-6f8f-c96b511641b7.htm" />
   <HelpKINode Title="IBM.Watson.Services.v1.Translate.IdentifyCallback delegate" Url="html/0412971a-1d85-d6fe-277c-0b53ee1988a5.htm" />
   <HelpKINode Title="IBM.Watson.Services.v1.Translate.Language class" Url="html/7cba4ec3-c5e0-433e-81ec-541494fe12ab.htm" />
+  <HelpKINode Title="IBM.Watson.Services.v1.Translate.Languages class" Url="html/18b557c2-c959-2754-0542-f9b07f2689d7.htm" />
   <HelpKINode Title="IBM.Watson.Services.v1.Translate.Model class" Url="html/a7e41ab9-931f-1dd1-d631-f9e76cdeb024.htm" />
+  <HelpKINode Title="IBM.Watson.Services.v1.Translate.Models class" Url="html/3202e787-c931-2a01-1e40-9370df8a7647.htm" />
   <HelpKINode Title="IBM.Watson.Services.v1.Translate.TranslateCallback delegate" Url="html/8e7aa3f5-a0da-05de-7204-d45e6ffb5f42.htm" />
   <HelpKINode Title="IBM.Watson.Services.v1.Translate.Translation class" Url="html/1a0f372d-362a-7b1c-80af-447dd2008704.htm" />
+  <HelpKINode Title="IBM.Watson.Services.v1.Translate.Translations class" Url="html/5b4cff53-157a-bfba-d5d6-aa74191aabed.htm" />
   <HelpKINode Title="IBM.Watson.Services.v1.Translate.TypeFilter enumeration" Url="html/95f3ef9c-b95e-a341-5a2d-4fd54d903843.htm" />
   <HelpKINode Title="IBM.Watson.Utilities namespace" Url="html/f586889f-e6f8-e30c-5a7d-0e4f826c9775.htm" />
   <HelpKINode Title="IBM.Watson.Utilities.AudioClipUtil class" Url="html/2c3d344a-e9f9-ba80-2779-74d19269e753.htm" />
@@ -755,6 +765,7 @@
     <HelpKINode Title="Logger.Instance Property " Url="html/a7670e56-e527-19e0-f105-9aa4f1dad49d.htm" />
     <HelpKINode Title="Runnable.Instance Property " Url="html/98964394-3db7-f154-cfe6-a092c424bdce.htm" />
     <HelpKINode Title="Singleton(T).Instance Property " Url="html/c18ec8a5-2cea-0f8a-6413-02403bf4ffb2.htm" />
+    <HelpKINode Title="UnitTestManager.Instance Property " Url="html/59fca394-cb6a-e470-1260-d9607977a528.htm" />
   </HelpKINode>
   <HelpKINode Title="INTERESTED enumeration member" Url="html/07db7a12-9e93-5888-4e48-2d0af2bf15bd.htm" />
   <HelpKINode Title="INTERJECTION enumeration member" Url="html/bbc55bd8-5b79-2dc0-aecb-b2b55272b785.htm" />
@@ -769,8 +780,8 @@
     <HelpKINode Title="methods" Url="html/54c1fcca-db0c-9827-3e01-55a81b6a685e.htm" />
     <HelpKINode Title="properties" Url="html/8106c5e7-38de-2598-2718-50d0183e196d.htm" />
   </HelpKINode>
-  <HelpKINode Title="ITM property" Url="html/d02fc2a4-709b-8e5a-47e1-3273d5b3ed80.htm" />
   <HelpKINode Title="itm property" Url="html/c8c6c989-f21b-637d-8a32-1ee7b053f40c.htm" />
+  <HelpKINode Title="ITM property" Url="html/d02fc2a4-709b-8e5a-47e1-3273d5b3ed80.htm" />
   <HelpKINode Title="ITM.Answer class">
     <HelpKINode Title="ITM.Answer Class" Url="html/5a51dfc4-15fd-c77e-a34c-ec1ac38335da.htm" />
     <HelpKINode Title="about ITM.Answer class" Url="html/5a51dfc4-15fd-c77e-a34c-ec1ac38335da.htm" />
@@ -939,7 +950,14 @@
     <HelpKINode Title="properties" Url="html/1ba8cd13-5d91-2cc1-cc9e-82c0adcf714c.htm" />
   </HelpKINode>
   <HelpKINode Title="Language property" Url="html/fdf89df3-16b5-a7e2-3327-82547706ff7a.htm" />
-  <HelpKINode Title="language property" Url="html/9f4593d1-41a0-1202-84fa-68481d8fab61.htm" />
+  <HelpKINode Title="language property">
+    <HelpKINode Title="NLC.Classifier.language Property " Url="html/9f4593d1-41a0-1202-84fa-68481d8fab61.htm" />
+    <HelpKINode Title="Translate.Language.language Property " Url="html/dcf3bb47-45c8-9982-5af0-5d7fc7a10bef.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Languages class">
+    <HelpKINode Title="properties" Url="html/660bd60b-7173-0909-a69b-1517b16d2174.htm" />
+  </HelpKINode>
+  <HelpKINode Title="languages property" Url="html/686ec73c-f5f0-26c1-87aa-4c2175fa50cf.htm" />
   <HelpKINode Title="lat property" Url="html/ad579630-921e-96c1-13e7-13116540c549.htm" />
   <HelpKINode Title="latestValueReceived field" Url="html/e1c06028-1d87-048d-b3ae-3d826a1470fa.htm" />
   <HelpKINode Title="Level property">
@@ -980,8 +998,8 @@
     <HelpKINode Title="methods" Url="html/a7707710-58f6-ef1e-2fcd-f608c193a863.htm" />
     <HelpKINode Title="properties" Url="html/ae02dbea-c223-81b5-fd2f-24c311b49b52.htm" />
   </HelpKINode>
-  <HelpKINode Title="Location property" Url="html/524b9a61-53d6-c067-e3df-cb500dc8b3af.htm" />
   <HelpKINode Title="location property" Url="html/c200bd20-e86f-a4da-4171-afacda97f169.htm" />
+  <HelpKINode Title="Location property" Url="html/524b9a61-53d6-c067-e3df-cb500dc8b3af.htm" />
   <HelpKINode Title="Location.Location constructor" Url="html/8e710886-1b66-a6ef-7daa-66e90928f92f.htm" />
   <HelpKINode Title="Location.m_Location property" Url="html/ed69db1f-fbb5-4cf5-1647-9fa435fd8083.htm" />
   <HelpKINode Title="Location.OnParseData method" Url="html/986c653c-ac05-a8c5-b4e7-ff1b9fce4653.htm" />
@@ -1044,7 +1062,11 @@
     <HelpKINode Title="properties" Url="html/9008b973-94b4-aed1-855d-46f08573fc07.htm" />
     <HelpKINode Title="properties" Url="html/f8c5bd38-4fa1-b315-39bc-5ac2c1493032.htm" />
   </HelpKINode>
-  <HelpKINode Title="ModelId property" Url="html/3c749e01-1f05-0489-2fbc-1272aba06ae6.htm" />
+  <HelpKINode Title="Models class">
+    <HelpKINode Title="properties" Url="html/5bc403b9-5c3e-16fc-c62d-058c805b0485.htm" />
+  </HelpKINode>
+  <HelpKINode Title="models property" Url="html/172e661d-56c4-e59b-acc1-786958e5e0c9.htm" />
+  <HelpKINode Title="model_id property" Url="html/6c57615a-4be9-1891-dddd-50a811631522.htm" />
   <HelpKINode Title="Mood property" Url="html/810b9b78-2ed5-d82f-a82e-53257eeb3c19.htm" />
   <HelpKINode Title="MoodColor property" Url="html/b4d49556-4435-8f2e-3bca-6a06ede147de.htm" />
   <HelpKINode Title="MoodSpeedModifier property" Url="html/0b9cf36e-9fa5-9183-86d5-ca580a637fd5.htm" />
@@ -1090,13 +1112,13 @@
   <HelpKINode Title="m_User field" Url="html/128cd657-86bb-d9da-b360-1f6d073bccf5.htm" />
   <HelpKINode Title="m_WordIndex property" Url="html/e5ab9f71-4a8c-8ee2-3873-f28b29af062f.htm" />
   <HelpKINode Title="name property">
-    <HelpKINode Title="Dialog.DialogEntry.name Property " Url="html/ade83f10-1f71-e9c9-ee18-af1cabc64c2b.htm" />
     <HelpKINode Title="NLC.Classifier.name Property " Url="html/d13588d9-6ac2-e997-8cfc-f1242e9a9c08.htm" />
+    <HelpKINode Title="Dialog.DialogEntry.name Property " Url="html/ade83f10-1f71-e9c9-ee18-af1cabc64c2b.htm" />
+    <HelpKINode Title="Translate.Language.name Property " Url="html/56c68680-f24a-0a20-4226-4ca0146f60db.htm" />
+    <HelpKINode Title="Translate.Model.name Property " Url="html/b420085c-dc2b-ca26-37e2-90a342655655.htm" />
   </HelpKINode>
   <HelpKINode Title="Name property">
     <HelpKINode Title="SpeechToText.Model.Name Property " Url="html/4a16c016-1c98-b3dd-0205-c101d2aded8a.htm" />
-    <HelpKINode Title="Translate.Language.Name Property " Url="html/18e91f6f-9fc9-729e-573b-0b58e420ef6e.htm" />
-    <HelpKINode Title="Translate.Model.Name Property " Url="html/34e742e4-4468-8a5f-d2da-57d52f713fa2.htm" />
     <HelpKINode Title="Widget.Data.Name Property " Url="html/8262455a-8f86-aeae-6758-112cc91bf602.htm" />
   </HelpKINode>
   <HelpKINode Title="NLC class">
@@ -1251,6 +1273,7 @@
     <HelpKINode Title="QuestionAndAnswer.OnQuestionData Method " Url="html/5cbf65f6-96f3-e451-a1b2-4d10764b3689.htm" />
     <HelpKINode Title="Semantic.OnQuestionData Method " Url="html/a8c72690-2b0f-2fbc-5d02-c433dd267020.htm" />
   </HelpKINode>
+  <HelpKINode Title="OnTestCompleteCallback property" Url="html/4a317e2a-5dc1-697b-8b07-b3c0efc9d2e9.htm" />
   <HelpKINode Title="OnTextToSpeech method" Url="html/81f0afe6-a32f-3743-dc47-4be78234417a.htm" />
   <HelpKINode Title="OnToggleActive method" Url="html/4ce998e2-3e94-2dff-2605-515e4492ca70.htm" />
   <HelpKINode Title="OnUnfold method" Url="html/5ae8f822-d8d9-4980-7c42-5b091dd01581.htm" />
@@ -1267,10 +1290,10 @@
   </HelpKINode>
   <HelpKINode Title="Outputs property" Url="html/71079fb2-619f-99e1-53a7-aacb17e88e59.htm" />
   <HelpKINode Title="Owner property">
-    <HelpKINode Title="Translate.Model.Owner Property " Url="html/1e13f14e-c631-2e6f-a2e8-9d81017769a8.htm" />
     <HelpKINode Title="Widget.Input.Owner Property " Url="html/88e05c79-c8a8-79cc-85fa-3d465a33cfc6.htm" />
     <HelpKINode Title="Widget.Output.Owner Property " Url="html/173b30a3-f2b4-1f99-91c7-cb4888253375.htm" />
   </HelpKINode>
+  <HelpKINode Title="owner property" Url="html/704ca60d-e79f-4dae-d602-c3fff19d444b.htm" />
   <HelpKINode Title="OwnerName property" Url="html/1a9c1b63-4ba0-0f53-b1ca-6a800fa99807.htm" />
   <HelpKINode Title="ParseData class">
     <HelpKINode Title="methods" Url="html/fae02875-a916-fa89-d3a6-ac7091182912.htm" />
@@ -1285,8 +1308,7 @@
     <HelpKINode Title="methods" Url="html/dd300042-7e89-029e-3535-917f4b17821b.htm" />
     <HelpKINode Title="properties" Url="html/a19e48be-2920-0c75-0064-8061e0542835.htm" />
   </HelpKINode>
-  <HelpKINode Title="ParseTree.ClearParseTree method" Url="html/e9d83715-d148-5d16-16c9-4129f417e193.htm" />
-  <HelpKINode Title="ParseTree.GenerateParseTree method" Url="html/a1abc45d-a4cb-a8e7-afb7-b9cc5c4c5406.htm" />
+  <HelpKINode Title="ParseTree.Clear method" Url="html/785dbed4-ec16-6593-e868-e83f45667d9a.htm" />
   <HelpKINode Title="ParseTree.m_WordIndex property" Url="html/e5ab9f71-4a8c-8ee2-3873-f28b29af062f.htm" />
   <HelpKINode Title="ParseTree.OnParseData method" Url="html/19fe9b24-c01c-c0f7-253e-936b9f01f0f6.htm" />
   <HelpKINode Title="ParseTree.ParseTree constructor" Url="html/858e3eca-da14-3dda-a5a0-452e18600408.htm" />
@@ -1420,7 +1442,7 @@
   <HelpKINode Title="QuestionWidget.Answers property" Url="html/d8fb7016-24f2-07be-275a-9091cdcd96ca.htm" />
   <HelpKINode Title="QuestionWidget.Avatar property" Url="html/d01d84c9-be3f-7472-a4c6-d426da0b5bd2.htm" />
   <HelpKINode Title="QuestionWidget.Awake method" Url="html/f8cd7c9c-7bae-3dbd-416a-5b3ffb72602d.htm" />
-  <HelpKINode Title="QuestionWidget.ClearParseTree method" Url="html/f5d57759-8668-33fd-a5be-24ad1c2fae11.htm" />
+  <HelpKINode Title="QuestionWidget.ClearFacets method" Url="html/9f44ef39-f8e0-05a7-bb9e-31c3f421aa65.htm" />
   <HelpKINode Title="QuestionWidget.Cube property" Url="html/a4f9fbe9-0edd-1df1-ec3c-5546b49b2829.htm" />
   <HelpKINode Title="QuestionWidget.EventManager property" Url="html/78a0715c-7ba1-4aed-4877-eb4d38c25cf9.htm" />
   <HelpKINode Title="QuestionWidget.GetName method" Url="html/b0c9b8c5-03d4-721d-45ba-b8ab1fe7001b.htm" />
@@ -1437,6 +1459,9 @@
   <HelpKINode Title="QuestionWidget.Questions property" Url="html/5159e114-08e3-06bf-007e-6a67b4b602c7.htm" />
   <HelpKINode Title="QuestionWidget.QuestionWidget constructor" Url="html/7cc00b2a-a241-74f7-ef2b-8bb3976040ae.htm" />
   <HelpKINode Title="QuestionWidget.Start method" Url="html/65ded266-5113-89f0-308c-f7c8fc4aff6f.htm" />
+  <HelpKINode Title="QueueTest method" Url="html/6126f2ee-570f-33ce-e3f9-64db0c6722ca.htm" />
+  <HelpKINode Title="QueueTests method" Url="html/3271a032-cbc0-8d6a-9473-88672fca222c.htm" />
+  <HelpKINode Title="QuitOnTestsComplete property" Url="html/1026651d-6dcb-8d61-1454-f2cdb27b33ce.htm" />
   <HelpKINode Title="Rate property" Url="html/88b12e43-2157-0f0d-c2bf-40583a7f208d.htm" />
   <HelpKINode Title="ReceiveData method" Url="html/36d355d5-8fcd-b67a-e7ce-42d7e4b2bfa9.htm" />
   <HelpKINode Title="ReceiverFunction property" Url="html/e4d41ab1-a8ad-f112-e30b-896c21e2eb38.htm" />
@@ -1478,6 +1503,7 @@
   <HelpKINode Title="Runnable.Runnable constructor" Url="html/427bce45-912f-1d7e-bfa0-08d5e17a29c8.htm" />
   <HelpKINode Title="Runnable.Stop method" Url="html/81d91227-30a2-a80b-60a1-466a66902d6c.htm" />
   <HelpKINode Title="Runnable.UpdateRoutines method" Url="html/e76d1482-d6a0-99e7-f7e1-e1b0d79e7ea5.htm" />
+  <HelpKINode Title="RunTests method" Url="html/2fa7cd15-0400-5a31-ee5a-65b930d9359f.htm" />
   <HelpKINode Title="SaveConfig method" Url="html/9305adfd-c5f0-b731-1ea2-30f2290a558e.htm" />
   <HelpKINode Title="SelectedPipeline property" Url="html/ac61bc06-d332-5b15-3337-8519d1a8fdd6.htm" />
   <HelpKINode Title="Semantic class">
@@ -1520,7 +1546,7 @@
   <HelpKINode Title="SLEEPING enumeration member" Url="html/07db7a12-9e93-5888-4e48-2d0af2bf15bd.htm" />
   <HelpKINode Title="Slot property" Url="html/ef04cc3f-85ba-e42c-1b8f-cf92af0dda03.htm" />
   <HelpKINode Title="smoothnessLimitBetweenRows field" Url="html/3409f6d3-0898-399e-74f0-e3ac37a56c2b.htm" />
-  <HelpKINode Title="Source property" Url="html/68b65012-f6c6-7bd4-79d9-38fda9a9905d.htm" />
+  <HelpKINode Title="source property" Url="html/9b711c96-f002-8bf8-f0e8-d92e940399fd.htm" />
   <HelpKINode Title="SpeechToText class">
     <HelpKINode Title="SpeechToText Class" Url="html/1fbefd33-e83d-e7c9-a416-d55216ce520e.htm" />
     <HelpKINode Title="about SpeechToText class" Url="html/1fbefd33-e83d-e7c9-a416-d55216ce520e.htm" />
@@ -1634,8 +1660,10 @@
   <HelpKINode Title="State property" Url="html/5ac06ab6-dfc0-8656-51a1-5945b0e1db72.htm" />
   <HelpKINode Title="STATUS enumeration member" Url="html/453d36d6-98b0-5450-8e0f-5a20e5f9c556.htm" />
   <HelpKINode Title="Status method" Url="html/f89606b1-7479-e31b-b76e-f55b3bbfcf78.htm" />
-  <HelpKINode Title="Status property" Url="html/4e86dc52-dadd-1529-8ada-34b0e991e8a5.htm" />
-  <HelpKINode Title="status property" Url="html/87ac58f2-f0b9-0e43-d045-caefd6d82df7.htm" />
+  <HelpKINode Title="status property">
+    <HelpKINode Title="NLC.Classifier.status Property " Url="html/87ac58f2-f0b9-0e43-d045-caefd6d82df7.htm" />
+    <HelpKINode Title="Translate.Model.status Property " Url="html/5f858e77-0c97-5aac-b521-140c29c1ee0f.htm" />
+  </HelpKINode>
   <HelpKINode Title="status_description property" Url="html/7fd5df35-e9c2-1dfc-bba1-d6a8db6581d4.htm" />
   <HelpKINode Title="Stop method" Url="html/81d91227-30a2-a80b-60a1-466a66902d6c.htm" />
   <HelpKINode Title="StopAnimationLightFlare method" Url="html/7435e43f-8254-6b9e-5c4b-ae4744560ae7.htm" />
@@ -1644,10 +1672,12 @@
     <HelpKINode Title="fields" Url="html/2539fd0f-33c0-7829-c5f9-37d29bfde6c7.htm" />
   </HelpKINode>
   <HelpKINode Title="taggedText property" Url="html/411d4ca4-0424-eb82-2fef-4e98e747ecc2.htm" />
-  <HelpKINode Title="Target property" Url="html/b2f22313-1955-32fb-ede5-73222f09171d.htm" />
+  <HelpKINode Title="target property" Url="html/a41ac7d1-a166-a07e-2bae-61ac386dc405.htm" />
   <HelpKINode Title="TargetConnection property" Url="html/7fb5673f-08b2-5be9-c9ce-c19cc2ac40ba.htm" />
   <HelpKINode Title="TargetInput property" Url="html/114a503f-bcc7-bd15-f644-e68d2b2b610e.htm" />
   <HelpKINode Title="TargetObject property" Url="html/d1dd517e-b772-018d-3b49-4f2c4481db56.htm" />
+  <HelpKINode Title="TestsComplete property" Url="html/a7072077-6e4b-2fae-6a38-a83fa0f32f16.htm" />
+  <HelpKINode Title="TestsFailed property" Url="html/81f8d686-a2c7-e20e-2613-38c97269aebd.htm" />
   <HelpKINode Title="text property">
     <HelpKINode Title="ITM.Variant.text Property " Url="html/4f0a13a6-725b-7631-e7b7-4d531e5d1da6.htm" />
     <HelpKINode Title="NLC.ClassifyResult.text Property " Url="html/d6c060ba-d79d-3ae4-079a-f080ca2249b3.htm" />
@@ -1728,25 +1758,39 @@
     <HelpKINode Title="about Translate.Language class" Url="html/7cba4ec3-c5e0-433e-81ec-541494fe12ab.htm" />
     <HelpKINode Title="constructor" Url="html/1f256d78-d264-07ee-4611-91c951b2ea8b.htm" />
   </HelpKINode>
-  <HelpKINode Title="Translate.Language.Code property" Url="html/1f0264a8-8649-7972-e07d-4fc96d4ce740.htm" />
   <HelpKINode Title="Translate.Language.Language constructor" Url="html/1f256d78-d264-07ee-4611-91c951b2ea8b.htm" />
-  <HelpKINode Title="Translate.Language.Name property" Url="html/18e91f6f-9fc9-729e-573b-0b58e420ef6e.htm" />
+  <HelpKINode Title="Translate.Language.language property" Url="html/dcf3bb47-45c8-9982-5af0-5d7fc7a10bef.htm" />
+  <HelpKINode Title="Translate.Language.name property" Url="html/56c68680-f24a-0a20-4226-4ca0146f60db.htm" />
+  <HelpKINode Title="Translate.Languages class">
+    <HelpKINode Title="Translate.Languages Class" Url="html/18b557c2-c959-2754-0542-f9b07f2689d7.htm" />
+    <HelpKINode Title="about Translate.Languages class" Url="html/18b557c2-c959-2754-0542-f9b07f2689d7.htm" />
+    <HelpKINode Title="constructor" Url="html/69318a77-31cb-6051-48a9-402426615cd6.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Translate.Languages.Languages constructor" Url="html/69318a77-31cb-6051-48a9-402426615cd6.htm" />
+  <HelpKINode Title="Translate.Languages.languages property" Url="html/686ec73c-f5f0-26c1-87aa-4c2175fa50cf.htm" />
   <HelpKINode Title="Translate.Model class">
     <HelpKINode Title="Translate.Model Class" Url="html/a7e41ab9-931f-1dd1-d631-f9e76cdeb024.htm" />
     <HelpKINode Title="about Translate.Model class" Url="html/a7e41ab9-931f-1dd1-d631-f9e76cdeb024.htm" />
     <HelpKINode Title="constructor" Url="html/be4918f2-cbc4-a9c3-5f86-5047c2b904b8.htm" />
   </HelpKINode>
-  <HelpKINode Title="Translate.Model.BaseModelId property" Url="html/9b90dfc9-371d-8bf6-94a7-ff92e01158e1.htm" />
-  <HelpKINode Title="Translate.Model.Cutomizable property" Url="html/a70c6590-87a9-bbc7-8456-a8b058fc4ada.htm" />
-  <HelpKINode Title="Translate.Model.Default property" Url="html/9249965f-78b6-583c-11a7-dddfa74763d2.htm" />
-  <HelpKINode Title="Translate.Model.Domain property" Url="html/8d5e8a70-39b0-d74b-8d89-6f72602e3017.htm" />
+  <HelpKINode Title="Translate.Model.base_model_id property" Url="html/30964d57-60eb-c8ae-abef-38bb960f6fbd.htm" />
+  <HelpKINode Title="Translate.Model.customizable property" Url="html/2e8ac714-b7e4-99c3-ac9f-dc6200fde61d.htm" />
+  <HelpKINode Title="Translate.Model.default property" Url="html/40ea2235-e1eb-0322-8f55-7970081bd349.htm" />
+  <HelpKINode Title="Translate.Model.domain property" Url="html/16f9393e-f753-b5f5-f0bc-ab290b39c684.htm" />
   <HelpKINode Title="Translate.Model.Model constructor" Url="html/be4918f2-cbc4-a9c3-5f86-5047c2b904b8.htm" />
-  <HelpKINode Title="Translate.Model.ModelId property" Url="html/3c749e01-1f05-0489-2fbc-1272aba06ae6.htm" />
-  <HelpKINode Title="Translate.Model.Name property" Url="html/34e742e4-4468-8a5f-d2da-57d52f713fa2.htm" />
-  <HelpKINode Title="Translate.Model.Owner property" Url="html/1e13f14e-c631-2e6f-a2e8-9d81017769a8.htm" />
-  <HelpKINode Title="Translate.Model.Source property" Url="html/68b65012-f6c6-7bd4-79d9-38fda9a9905d.htm" />
-  <HelpKINode Title="Translate.Model.Status property" Url="html/4e86dc52-dadd-1529-8ada-34b0e991e8a5.htm" />
-  <HelpKINode Title="Translate.Model.Target property" Url="html/b2f22313-1955-32fb-ede5-73222f09171d.htm" />
+  <HelpKINode Title="Translate.Model.model_id property" Url="html/6c57615a-4be9-1891-dddd-50a811631522.htm" />
+  <HelpKINode Title="Translate.Model.name property" Url="html/b420085c-dc2b-ca26-37e2-90a342655655.htm" />
+  <HelpKINode Title="Translate.Model.owner property" Url="html/704ca60d-e79f-4dae-d602-c3fff19d444b.htm" />
+  <HelpKINode Title="Translate.Model.source property" Url="html/9b711c96-f002-8bf8-f0e8-d92e940399fd.htm" />
+  <HelpKINode Title="Translate.Model.status property" Url="html/5f858e77-0c97-5aac-b521-140c29c1ee0f.htm" />
+  <HelpKINode Title="Translate.Model.target property" Url="html/a41ac7d1-a166-a07e-2bae-61ac386dc405.htm" />
+  <HelpKINode Title="Translate.Models class">
+    <HelpKINode Title="Translate.Models Class" Url="html/3202e787-c931-2a01-1e40-9370df8a7647.htm" />
+    <HelpKINode Title="about Translate.Models class" Url="html/3202e787-c931-2a01-1e40-9370df8a7647.htm" />
+    <HelpKINode Title="constructor" Url="html/4b04254a-53ae-67d4-3061-687836be892e.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Translate.Models.Models constructor" Url="html/4b04254a-53ae-67d4-3061-687836be892e.htm" />
+  <HelpKINode Title="Translate.Models.models property" Url="html/172e661d-56c4-e59b-acc1-786958e5e0c9.htm" />
   <HelpKINode Title="Translate.Translate constructor" Url="html/0e359d2e-9386-2521-48b4-b234276d81a2.htm" />
   <HelpKINode Title="Translate.TranslateCallback delegate" Url="html/8e7aa3f5-a0da-05de-7204-d45e6ffb5f42.htm" />
   <HelpKINode Title="Translate.Translation class">
@@ -1754,15 +1798,43 @@
     <HelpKINode Title="about Translate.Translation class" Url="html/1a0f372d-362a-7b1c-80af-447dd2008704.htm" />
     <HelpKINode Title="constructor" Url="html/6a3ddd79-80a0-2b06-4e6c-a15e0c3f7234.htm" />
   </HelpKINode>
-  <HelpKINode Title="Translate.Translation.CharacterCount property" Url="html/3d5edaa3-072d-fd32-12c9-cd058e90ff4b.htm" />
   <HelpKINode Title="Translate.Translation.Translation constructor" Url="html/6a3ddd79-80a0-2b06-4e6c-a15e0c3f7234.htm" />
-  <HelpKINode Title="Translate.Translation.Translations property" Url="html/b0550a94-b9df-295e-05ee-aab994940528.htm" />
-  <HelpKINode Title="Translate.Translation.WordCount property" Url="html/7b84ae72-6314-4f1d-ff92-04415fee80e8.htm" />
+  <HelpKINode Title="Translate.Translation.translation property" Url="html/a22c2a30-9f27-7138-28fd-a5998f887d3c.htm" />
+  <HelpKINode Title="Translate.Translations class">
+    <HelpKINode Title="Translate.Translations Class" Url="html/5b4cff53-157a-bfba-d5d6-aa74191aabed.htm" />
+    <HelpKINode Title="about Translate.Translations class" Url="html/5b4cff53-157a-bfba-d5d6-aa74191aabed.htm" />
+    <HelpKINode Title="constructor" Url="html/fb06bda5-5fa6-c597-fba4-b162795af493.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Translate.Translations.character_count property" Url="html/3f1caf65-c274-b91c-8dcb-ef19fa4df08b.htm" />
+  <HelpKINode Title="Translate.Translations.Translations constructor" Url="html/fb06bda5-5fa6-c597-fba4-b162795af493.htm" />
+  <HelpKINode Title="Translate.Translations.translations property" Url="html/11ccd227-6b0f-103c-73a5-1394a8538d45.htm" />
+  <HelpKINode Title="Translate.Translations.word_count property" Url="html/09b4e5f2-c5da-f249-eb3e-f43dbecb642d.htm" />
   <HelpKINode Title="Translate.TypeFilter enumeration" Url="html/95f3ef9c-b95e-a341-5a2d-4fd54d903843.htm" />
   <HelpKINode Title="Translation class">
     <HelpKINode Title="properties" Url="html/4011da94-4c1a-611c-4e99-30b01c21a72c.htm" />
   </HelpKINode>
-  <HelpKINode Title="Translations property" Url="html/b0550a94-b9df-295e-05ee-aab994940528.htm" />
+  <HelpKINode Title="translation property" Url="html/a22c2a30-9f27-7138-28fd-a5998f887d3c.htm" />
+  <HelpKINode Title="Translations class">
+    <HelpKINode Title="properties" Url="html/5d3f74df-5b52-f97a-d240-fb5be859a6d9.htm" />
+  </HelpKINode>
+  <HelpKINode Title="translations property" Url="html/11ccd227-6b0f-103c-73a5-1394a8538d45.htm" />
+  <HelpKINode Title="UnitTestManager class">
+    <HelpKINode Title="UnitTestManager Class" Url="html/61649d3a-a8a2-c8d7-09f5-93404e6f175d.htm" />
+    <HelpKINode Title="about UnitTestManager class" Url="html/61649d3a-a8a2-c8d7-09f5-93404e6f175d.htm" />
+    <HelpKINode Title="constructor" Url="html/407962d7-fb80-2186-dad1-9037a5e221c6.htm" />
+    <HelpKINode Title="methods" Url="html/4153a24d-db42-7d00-e91b-7f9c49d12bb5.htm" />
+    <HelpKINode Title="properties" Url="html/1e3d220c-68e7-92d4-68dc-6c2d2c6260e9.htm" />
+  </HelpKINode>
+  <HelpKINode Title="UnitTestManager.Instance property" Url="html/59fca394-cb6a-e470-1260-d9607977a528.htm" />
+  <HelpKINode Title="UnitTestManager.OnTestCompleteCallback property" Url="html/4a317e2a-5dc1-697b-8b07-b3c0efc9d2e9.htm" />
+  <HelpKINode Title="UnitTestManager.OnTestsComplete delegate" Url="html/cec7dfee-f19b-0f37-0c7f-4c8fbaf13ca4.htm" />
+  <HelpKINode Title="UnitTestManager.QueueTest method" Url="html/6126f2ee-570f-33ce-e3f9-64db0c6722ca.htm" />
+  <HelpKINode Title="UnitTestManager.QueueTests method" Url="html/3271a032-cbc0-8d6a-9473-88672fca222c.htm" />
+  <HelpKINode Title="UnitTestManager.QuitOnTestsComplete property" Url="html/1026651d-6dcb-8d61-1454-f2cdb27b33ce.htm" />
+  <HelpKINode Title="UnitTestManager.RunTests method" Url="html/2fa7cd15-0400-5a31-ee5a-65b930d9359f.htm" />
+  <HelpKINode Title="UnitTestManager.TestsComplete property" Url="html/a7072077-6e4b-2fae-6a38-a83fa0f32f16.htm" />
+  <HelpKINode Title="UnitTestManager.TestsFailed property" Url="html/81f8d686-a2c7-e20e-2613-38c97269aebd.htm" />
+  <HelpKINode Title="UnitTestManager.UnitTestManager constructor" Url="html/407962d7-fb80-2186-dad1-9037a5e221c6.htm" />
   <HelpKINode Title="UnregisterAllEventReceivers method" Url="html/d304b606-f2eb-3d4c-fc1a-20e8f78f6ca9.htm" />
   <HelpKINode Title="UnregisterEventReceiver method" Url="html/f19ad77d-bdc9-b7c9-445f-cbcf60e11d21.htm" />
   <HelpKINode Title="UnregisterEventReceivers method" Url="html/af29919f-ce2e-d44d-6d54-581bacb0f2ce.htm" />
@@ -1772,11 +1844,11 @@
   <HelpKINode Title="UploadDialog method" Url="html/94788d7f-9054-d893-f9eb-fb4a08bd7d85.htm" />
   <HelpKINode Title="UPSET enumeration member" Url="html/07db7a12-9e93-5888-4e48-2d0af2bf15bd.htm" />
   <HelpKINode Title="URGENT enumeration member" Url="html/07db7a12-9e93-5888-4e48-2d0af2bf15bd.htm" />
+  <HelpKINode Title="URL property" Url="html/72849c23-c7ba-e4bc-4cef-2f99f6e386fa.htm" />
   <HelpKINode Title="url property">
     <HelpKINode Title="NLC.Classifier.url Property " Url="html/ab0a9204-8db0-7151-e5c2-f697b06a8290.htm" />
     <HelpKINode Title="NLC.ClassifyResult.url Property " Url="html/26bfff4e-2828-1b7b-3b58-34e6954e69e0.htm" />
   </HelpKINode>
-  <HelpKINode Title="URL property" Url="html/72849c23-c7ba-e4bc-4cef-2f99f6e386fa.htm" />
   <HelpKINode Title="User property" Url="html/6c15d7b6-68f7-789e-443a-8709fd054679.htm" />
   <HelpKINode Title="user property" Url="html/b551562e-7e0a-8f5d-e24c-58bac8ba6120.htm" />
   <HelpKINode Title="Utility class">
@@ -1866,8 +1938,8 @@
     <HelpKINode Title="properties" Url="html/014acf9d-f3b1-0f8f-18db-da137b707aab.htm" />
   </HelpKINode>
   <HelpKINode Title="WordConfidence property" Url="html/3ce39924-b228-959b-e19d-944cf2cc6bb4.htm" />
-  <HelpKINode Title="WordCount property" Url="html/7b84ae72-6314-4f1d-ff92-04415fee80e8.htm" />
   <HelpKINode Title="Words property" Url="html/21aa3e05-db7e-2ae5-b5e0-edc4645ccd83.htm" />
+  <HelpKINode Title="word_count property" Url="html/09b4e5f2-c5da-f249-eb3e-f43dbecb642d.htm" />
   <HelpKINode Title="_id property">
     <HelpKINode Title="ITM.Answers._id Property " Url="html/3fea23bb-19c5-e5d1-aa52-b2ac25de1fdc.htm" />
     <HelpKINode Title="ITM.Pipeline._id Property " Url="html/6bba1a6b-73ec-ec3a-ea26-699bcf5c9daf.htm" />
