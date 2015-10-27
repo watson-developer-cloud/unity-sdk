@@ -18,23 +18,40 @@
 
 using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
-public class AnswersAndConfidence : QuestionComponentBase {
-	[Header("UI Faces")]
-	[SerializeField]
-	private AnswerConfidenceBar[] m_AnswerConfidenceBars;
-
-	new void Start ()
+namespace IBM.Watson.Widgets.Question.Facet
+{
+	public class Location : Base
 	{
-		base.Start ();
-	}
+		[SerializeField]
+		private Text m_LocationText;
 
-	new public void Init()
-	{
-		base.Init ();
-		for(int i = 0; i < m_AnswerConfidenceBars.Length; i++) {
-			m_AnswerConfidenceBars[i].m_Answer = qWidget.Answers.answers[i].answerText;
-			m_AnswerConfidenceBars[i].m_Confidence = qWidget.Answers.answers[i].confidence;
+		private string _m_Location;
+		public string m_Location
+		{
+			get { return _m_Location; }
+			set 
+			{
+				_m_Location = value;
+				UpdateLocation();
+			}
+		}
+
+		/// <summary>
+		/// Update the Location view.
+		/// </summary>
+		private void UpdateLocation()
+		{
+			m_LocationText.text = m_Location;
+		}
+
+		/// <summary>
+		/// Fired when Parse Data is set. Sets the value of Location from the Avatar Widget.
+		/// </summary>
+		override protected void OnParseData()
+		{
+			m_Location = m_Avatar.ITM.Location;
 		}
 	}
 }

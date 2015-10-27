@@ -18,31 +18,25 @@
 
 using UnityEngine;
 using System.Collections;
-using UnityEngine.UI;
+using IBM.Watson.Widgets.Question.Facet.FacetElement;
 
-public class EvidenceItem : MonoBehaviour {
-	[SerializeField]
-	private Text m_EvidenceText;
-
-	private string _m_Evidence;
-	public string m_Evidence
+namespace IBM.Watson.Widgets.Question.Facet
+{
+	public class AnswersAndConfidence : Base 
 	{
-		get { return _m_Evidence; }
-		set 
+		[Header("UI Faces")]
+		[SerializeField]
+		private AnswerConfidenceBar[] m_AnswerConfidenceBars;
+
+		/// <summary>
+		/// Fired when Answer Data is set. Sets the answer value and the confidence value in each of the confidence bars.
+		/// </summary>
+		override protected void OnAnswerData()
 		{
-			_m_Evidence = value;
-			UpdateEvidence();
+			for(int i = 0; i < m_AnswerConfidenceBars.Length; i++) {
+				m_AnswerConfidenceBars[i].m_Answer = m_Answers.answers[i].answerText;
+				m_AnswerConfidenceBars[i].m_Confidence = m_Answers.answers[i].confidence;
+			}
 		}
-	}
-
-	private void UpdateEvidence()
-	{
-		if (m_Evidence != "") {
-			gameObject.SetActive (true);
-			m_EvidenceText.text = m_Evidence;
-		} else {
-			gameObject.SetActive(false);
-		}
-		//	TODO highlight evidence words
 	}
 }

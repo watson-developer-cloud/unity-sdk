@@ -16457,7 +16457,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AnswerText: {fileID: 11458352}
   m_ConfidenceText: {fileID: 11421644}
-  m_barProgress: {fileID: 22466570}
+  m_BarProgress: {fileID: 22475944}
 --- !u!114 &11422254
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -16513,7 +16513,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ae469cfa8dd5487d85fe0964e340659, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  avatarGameobject: {fileID: 0}
+  avatarGameobject: {fileID: 108938, guid: 98d604b28f18d4d39b08f225836ab0d3, type: 2}
   avatarPositionUnfold: {x: 0, y: -14, z: 0}
   positionCubeOffsetUnfold: {x: 0, y: 2.5, z: 0}
   statinoaryRotationSpeed: 10
@@ -16654,7 +16654,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AnswerText: {fileID: 11495760}
   m_ConfidenceText: {fileID: 11483826}
-  m_barProgress: {fileID: 22405348}
+  m_BarProgress: {fileID: 22412528}
 --- !u!114 &11427388
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -16850,7 +16850,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77245c42da8d0d045bfaed8f04105f03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parseTree: {fileID: 0}
 --- !u!114 &11430492
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -17695,6 +17694,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4b07868a323143b6b5ba0287d5074af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_ParseTreeTextItem: {fileID: 177304, guid: 84846fcf5d62d42479eab869bd345ece, type: 2}
   m_ParseCanvasRectTransform: {fileID: 22477106}
   m_POSList:
   - {fileID: 194936}
@@ -18025,7 +18025,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AnswerText: {fileID: 11407066}
   m_ConfidenceText: {fileID: 11446252}
-  m_barProgress: {fileID: 22474158}
+  m_BarProgress: {fileID: 22418646}
 --- !u!114 &11454250
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -18171,7 +18171,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AnswerText: {fileID: 11480914}
   m_ConfidenceText: {fileID: 11465948}
-  m_barProgress: {fileID: 22431634}
+  m_BarProgress: {fileID: 22442786}
 --- !u!114 &11456168
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -18569,7 +18569,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AnswerText: {fileID: 11414288}
   m_ConfidenceText: {fileID: 11449300}
-  m_barProgress: {fileID: 22440536}
+  m_BarProgress: {fileID: 22414866}
 --- !u!114 &11461064
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -18583,7 +18583,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AnswerText: {fileID: 11426440}
   m_ConfidenceText: {fileID: 11457358}
-  m_barProgress: {fileID: 22450124}
+  m_BarProgress: {fileID: 22430646}
 --- !u!114 &11461518
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -18788,7 +18788,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51324dd6b68ec48cc9d6f706e1f20473, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_LatText: {fileID: 11472204}
+  m_LATText: {fileID: 11472204}
   m_SemanticText: {fileID: 11497156}
 --- !u!114 &11465606
 MonoBehaviour:
@@ -19351,7 +19351,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AnswerText: {fileID: 11456168}
   m_ConfidenceText: {fileID: 11470212}
-  m_barProgress: {fileID: 22435296}
+  m_BarProgress: {fileID: 22439620}
 --- !u!114 &11473484
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -20223,7 +20223,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AnswerText: {fileID: 11420724}
   m_ConfidenceText: {fileID: 11460528}
-  m_barProgress: {fileID: 22492924}
+  m_BarProgress: {fileID: 22447392}
 --- !u!114 &11490058
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -20515,7 +20515,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AnswerText: {fileID: 11482788}
   m_ConfidenceText: {fileID: 11428788}
-  m_barProgress: {fileID: 22470958}
+  m_BarProgress: {fileID: 22481226}
 --- !u!114 &11496680
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -22295,9 +22295,9 @@ RectTransform:
   m_Father: {fileID: 22416442}
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -17, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!224 &22427780
 RectTransform:
@@ -23368,7 +23368,7 @@ RectTransform:
   m_RootOrder: 1
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: .000110626221, y: -67.8399963}
+  m_AnchoredPosition: {x: 0, y: -67.8399963}
   m_SizeDelta: {x: 1100, y: 53}
   m_Pivot: {x: 0, y: 1}
 --- !u!224 &22458764

@@ -20,23 +20,36 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 
-public class POSTextItem : MonoBehaviour {
-	[SerializeField]
-	private Text m_POSTextField;
-	
-	private string _m_POSWord;
-	public string m_POSWord
+namespace IBM.Watson.Widgets.Question.Facet.FacetElement
+{
+	public class EvidenceItem : MonoBehaviour
 	{
-		get { return _m_POSWord; }
-		set 
-		{
-			_m_POSWord = value;
-			UpdatePOSTextField();
-		}
-	}
+		[SerializeField]
+		private Text m_EvidenceText;
 
-	private void UpdatePOSTextField()
-	{
-		m_POSTextField.text = m_POSWord;
+		private string _m_Evidence;
+		public string m_Evidence
+		{
+			get { return _m_Evidence; }
+			set 
+			{
+				_m_Evidence = value;
+				UpdateEvidence();
+			}
+		}
+
+		/// <summary>
+		/// Update the evidence view.
+		/// </summary>
+		private void UpdateEvidence()
+		{
+			if (m_Evidence != "") {
+				gameObject.SetActive (true);
+				m_EvidenceText.text = m_Evidence;
+			} else {
+				gameObject.SetActive(false);
+			}
+			//	TODO highlight evidence words
+		}
 	}
 }
