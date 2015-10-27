@@ -30,30 +30,84 @@ using System.IO;
 
 namespace IBM.Watson.Services.v1
 {
+    /// <summary>
+    /// This class wraps the Watson Dialog service. 
+    /// </summary>
+    /// <a href="http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/dialog.html">Dialog Service</a>
     public class Dialog
     {
         #region Public Types
+        /// <summary>
+        /// This data class is contained by Dialogs, it represents a single dialog available.
+        /// </summary>
         public class DialogEntry
         {
+            /// <summary>
+            /// The dialog ID.
+            /// </summary>
             public string dialog_id { get; set; }
+            /// <summary>
+            /// The user supplied name for the dialog.
+            /// </summary>
             public string name { get; set; }
         };
+        /// <summary>
+        /// The object returned by GetDialogs().
+        /// </summary>
         public class Dialogs
         {
+            /// <summary>
+            /// The array of Dialog's available.
+            /// </summary>
             public DialogEntry [] dialogs { get; set; }
         };
+        /// <summary>
+        /// This callback is passed into GetDialogs().
+        /// </summary>
+        /// <param name="dialogs">The list of dialogs returned by GetDialogs().</param>
         public delegate void OnGetDialogs( Dialogs dialogs );
+        /// <summary>
+        /// The callback for UploadDialog().
+        /// </summary>
+        /// <param name="dialog_id"></param>
         public delegate void OnUploadDialog( string dialog_id );
+        /// <summary>
+        /// The delegate for loading a file, used by UploadDialog().
+        /// </summary>
+        /// <param name="filename">The filename to load.</param>
+        /// <returns>Should return a byte array of the file contents or null of failure.</returns>
         public delegate byte [] LoadFileDelegate( string filename );
 
+        /// <summary>
+        /// This data class holds the response to a call to Converse().
+        /// </summary>
         public class Response
         {
+            /// <summary>
+            /// An array of response strings.
+            /// </summary>
             public string [] response { get; set; }
+            /// <summary>
+            /// The text input passed into Converse().
+            /// </summary>
             public string input { get; set; }
+            /// <summary>
+            /// The conversation ID to use in future calls to Converse().
+            /// </summary>
             public int conversation_id { get; set; }
+            /// <summary>
+            /// The confidence in this response.
+            /// </summary>
             public double confidence { get; set; }
+            /// <summary>
+            /// The client ID of the user.
+            /// </summary>
             public int client_id { get; set; }
         };
+        /// <summary>
+        /// The callback delegate for the Converse() function.
+        /// </summary>
+        /// <param name="resp">The response object to a call to Converse().</param>
         public delegate void OnConverse( Response resp );
         #endregion
 
@@ -125,12 +179,12 @@ namespace IBM.Watson.Services.v1
 
         #region UploadDialog
         /// <summary>
-        /// 
+        /// This creates a new dialog from a local dialog file.
         /// </summary>
-        /// <param name="dialogName"></param>
-        /// <param name="callback"></param>
-        /// <param name="dialogFileName"></param>
-        /// <returns></returns>
+        /// <param name="dialogName">The name of the dialog.</param>
+        /// <param name="callback">The callback to receive the dialog ID.</param>
+        /// <param name="dialogFileName">The filename of the dialog file to upload.</param>
+        /// <returns>Returns true if the upload was submitted.</returns>
         public bool UploadDialog( string dialogName, OnUploadDialog callback, string dialogFileName = null )
         {
             if (string.IsNullOrEmpty(dialogName))
@@ -193,6 +247,15 @@ namespace IBM.Watson.Services.v1
         #endregion
 
         #region Converse
+        /// <summary>
+        /// Converse with the dialog system.
+        /// </summary>
+        /// <param name="dialogId">The dialog ID of the dialog to use.</param>
+        /// <param name="input">The text input.</param>
+        /// <param name="callback">The callback for receiving the responses.</param>
+        /// <param name="conversation_id">The conversation ID to use, if 0 then a new conversation will be started.</param>
+        /// <param name="client_id">The client ID of the user.</param>
+        /// <returns>Returns true if the request was submitted to the back-end.</returns>
         public bool Converse( string dialogId, string input, OnConverse callback, 
             int conversation_id = 0, int client_id = 0 )
         {

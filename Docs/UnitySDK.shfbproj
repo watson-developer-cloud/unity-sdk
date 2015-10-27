@@ -32,61 +32,65 @@
     <SdkLinkTarget>Blank</SdkLinkTarget>
     <RootNamespaceContainer>True</RootNamespaceContainer>
     <PresentationStyle>VS2013</PresentationStyle>
-    <Preliminary>False</Preliminary>
+    <Preliminary>True</Preliminary>
     <NamingMethod>Guid</NamingMethod>
     <HelpTitle>Watson Unity SDK</HelpTitle>
     <ContentPlacement>AboveNamespaces</ContentPlacement>
     <DocumentationSources>
       <DocumentationSource sourceFile="..\Temp\UnityVS_bin\Debug\Assembly-CSharp.dll" />
-<DocumentationSource sourceFile="..\Temp\UnityVS_bin\Debug\Assembly-CSharp.xml" /></DocumentationSources>
+      <DocumentationSource sourceFile="..\Temp\UnityVS_bin\Debug\Assembly-CSharp.xml" />
+    </DocumentationSources>
     <NamespaceSummaries>
       <NamespaceSummaryItem name="DentedPixel.LTEditor" isDocumented="True" />
-<NamespaceSummaryItem name="FullSerializer" isDocumented="True" />
-<NamespaceSummaryItem name="FullSerializer.Internal" isDocumented="True" />
-<NamespaceSummaryItem name="FullSerializer.Internal.DirectConverters" isDocumented="True" />
-<NamespaceSummaryItem name="MiniJSON" isDocumented="True" />
-<NamespaceSummaryItem name="TouchScript.Examples" isDocumented="True" />
-<NamespaceSummaryItem name="TouchScript.Examples.CameraControl" isDocumented="True" />
-<NamespaceSummaryItem name="TouchScript.Examples.Checkers" isDocumented="True" />
-<NamespaceSummaryItem name="TouchScript.Examples.Colors" isDocumented="True" />
-<NamespaceSummaryItem name="TouchScript.Examples.Input" isDocumented="True" />
-<NamespaceSummaryItem name="TouchScript.Examples.Multiuser" isDocumented="True" />
-<NamespaceSummaryItem name="TouchScript.Examples.Photos" isDocumented="True" />
-<NamespaceSummaryItem name="TouchScript.Examples.Portal" isDocumented="True" />
-<NamespaceSummaryItem name="TouchScript.Examples.Tap" isDocumented="True" />
-<NamespaceSummaryItem name="TouchScript.Examples.UI" isDocumented="True" />
-<NamespaceSummaryItem name="UnityStandardAssets.ImageEffects" isDocumented="True" />
-<NamespaceSummaryItem name="UnityStandardAssets.Utility" isDocumented="True" />
-<NamespaceSummaryItem name="WebSocketSharp" isDocumented="True" />
-<NamespaceSummaryItem name="WebSocketSharp.Net" isDocumented="True" />
-<NamespaceSummaryItem name="WebSocketSharp.Net.WebSockets" isDocumented="True" />
-<NamespaceSummaryItem name="WebSocketSharp.Server" isDocumented="True" />
-<NamespaceSummaryItem name="(global)" isDocumented="True" /></NamespaceSummaries>
+      <NamespaceSummaryItem name="FullSerializer" isDocumented="True" />
+      <NamespaceSummaryItem name="FullSerializer.Internal" isDocumented="True" />
+      <NamespaceSummaryItem name="FullSerializer.Internal.DirectConverters" isDocumented="True" />
+      <NamespaceSummaryItem name="MiniJSON" isDocumented="True" />
+      <NamespaceSummaryItem name="TouchScript.Examples" isDocumented="True" />
+      <NamespaceSummaryItem name="TouchScript.Examples.CameraControl" isDocumented="True" />
+      <NamespaceSummaryItem name="TouchScript.Examples.Checkers" isDocumented="True" />
+      <NamespaceSummaryItem name="TouchScript.Examples.Colors" isDocumented="True" />
+      <NamespaceSummaryItem name="TouchScript.Examples.Input" isDocumented="True" />
+      <NamespaceSummaryItem name="TouchScript.Examples.Multiuser" isDocumented="True" />
+      <NamespaceSummaryItem name="TouchScript.Examples.Photos" isDocumented="True" />
+      <NamespaceSummaryItem name="TouchScript.Examples.Portal" isDocumented="True" />
+      <NamespaceSummaryItem name="TouchScript.Examples.Tap" isDocumented="True" />
+      <NamespaceSummaryItem name="TouchScript.Examples.UI" isDocumented="True" />
+      <NamespaceSummaryItem name="UnityStandardAssets.ImageEffects" isDocumented="True" />
+      <NamespaceSummaryItem name="UnityStandardAssets.Utility" isDocumented="True" />
+      <NamespaceSummaryItem name="WebSocketSharp" isDocumented="True" />
+      <NamespaceSummaryItem name="WebSocketSharp.Net" isDocumented="True" />
+      <NamespaceSummaryItem name="WebSocketSharp.Net.WebSockets" isDocumented="True" />
+      <NamespaceSummaryItem name="WebSocketSharp.Server" isDocumented="True" />
+      <NamespaceSummaryItem name="(global)" isDocumented="True" />
+    </NamespaceSummaries>
     <ApiFilter>
-      <Filter entryType="Namespace" fullName="" isExposed="False" xmlns="" />
-<Filter entryType="Namespace" fullName="DentedPixel.LTEditor" isExposed="False" xmlns="" />
-<Filter entryType="Namespace" fullName="FullSerializer" isExposed="False" xmlns="" />
-<Filter entryType="Namespace" fullName="FullSerializer.Internal" isExposed="False" xmlns="" />
-<Filter entryType="Namespace" fullName="FullSerializer.Internal.DirectConverters" isExposed="False" xmlns="" />
-<Filter entryType="Namespace" fullName="MiniJSON" isExposed="False" xmlns="" />
-<Filter entryType="Namespace" fullName="TouchScript.Examples" isExposed="False" xmlns="" />
-<Filter entryType="Namespace" fullName="TouchScript.Examples.CameraControl" isExposed="False" xmlns="" />
-<Filter entryType="Namespace" fullName="TouchScript.Examples.Checkers" isExposed="False" xmlns="" />
-<Filter entryType="Namespace" fullName="TouchScript.Examples.Colors" isExposed="False" xmlns="" />
-<Filter entryType="Namespace" fullName="TouchScript.Examples.Input" isExposed="False" xmlns="" />
-<Filter entryType="Namespace" fullName="TouchScript.Examples.Multiuser" isExposed="False" xmlns="" />
-<Filter entryType="Namespace" fullName="TouchScript.Examples.Photos" isExposed="False" xmlns="" />
-<Filter entryType="Namespace" fullName="TouchScript.Examples.Portal" isExposed="False" xmlns="" />
-<Filter entryType="Namespace" fullName="TouchScript.Examples.Tap" isExposed="False" xmlns="" />
-<Filter entryType="Namespace" fullName="TouchScript.Examples.UI" isExposed="False" xmlns="" />
-<Filter entryType="Namespace" fullName="UnityStandardAssets.ImageEffects" isExposed="False" xmlns="" />
-<Filter entryType="Namespace" fullName="UnityStandardAssets.Utility" isExposed="False" xmlns="" />
-<Filter entryType="Namespace" fullName="WebSocketSharp" isExposed="False" xmlns="" />
-<Filter entryType="Namespace" fullName="WebSocketSharp.Net" isExposed="False" xmlns="" />
-<Filter entryType="Namespace" fullName="WebSocketSharp.Net.WebSockets" isExposed="False" xmlns="" />
-<Filter entryType="Namespace" fullName="WebSocketSharp.Server" isExposed="False" xmlns="" /></ApiFilter>
-    <VisibleItems>InheritedMembers, InheritedFrameworkMembers, Protected, ProtectedInternalAsProtected</VisibleItems>
+      <Filter entryType="Namespace" fullName="" isExposed="False" />
+<Filter entryType="Namespace" fullName="DentedPixel.LTEditor" isExposed="False" />
+<Filter entryType="Namespace" fullName="FullSerializer" isExposed="False" />
+<Filter entryType="Namespace" fullName="FullSerializer.Internal" isExposed="False" />
+<Filter entryType="Namespace" fullName="FullSerializer.Internal.DirectConverters" isExposed="False" />
+<Filter entryType="Namespace" fullName="IBM.Watson.UnitTests" isExposed="False" />
+<Filter entryType="Namespace" fullName="MiniJSON" isExposed="False" />
+<Filter entryType="Namespace" fullName="TouchScript.Examples" isExposed="False" />
+<Filter entryType="Namespace" fullName="TouchScript.Examples.CameraControl" isExposed="False" />
+<Filter entryType="Namespace" fullName="TouchScript.Examples.Checkers" isExposed="False" />
+<Filter entryType="Namespace" fullName="TouchScript.Examples.Colors" isExposed="False" />
+<Filter entryType="Namespace" fullName="TouchScript.Examples.Input" isExposed="False" />
+<Filter entryType="Namespace" fullName="TouchScript.Examples.Multiuser" isExposed="False" />
+<Filter entryType="Namespace" fullName="TouchScript.Examples.Photos" isExposed="False" />
+<Filter entryType="Namespace" fullName="TouchScript.Examples.Portal" isExposed="False" />
+<Filter entryType="Namespace" fullName="TouchScript.Examples.Tap" isExposed="False" />
+<Filter entryType="Namespace" fullName="TouchScript.Examples.UI" isExposed="False" />
+<Filter entryType="Namespace" fullName="UnityStandardAssets.ImageEffects" isExposed="False" />
+<Filter entryType="Namespace" fullName="UnityStandardAssets.Utility" isExposed="False" />
+<Filter entryType="Namespace" fullName="WebSocketSharp" isExposed="False" />
+<Filter entryType="Namespace" fullName="WebSocketSharp.Net" isExposed="False" />
+<Filter entryType="Namespace" fullName="WebSocketSharp.Net.WebSockets" isExposed="False" />
+<Filter entryType="Namespace" fullName="WebSocketSharp.Server" isExposed="False" /></ApiFilter>
+    <VisibleItems>Protected, ProtectedInternalAsProtected</VisibleItems>
     <RootNamespaceTitle>IBM.Watson</RootNamespaceTitle>
+    <MissingTags>Summary, Parameter, Returns, Namespace, TypeParameter</MissingTags>
   </PropertyGroup>
   <!-- There are no properties for these groups.  AnyCPU needs to appear in order for Visual Studio to perform
 			 the build.  The others are optional common platform types that may appear. -->

@@ -35,7 +35,7 @@ namespace IBM.Watson.UnitTests
 
         public override IEnumerator RunTest()
         {
-            m_NLC.FindCLassiifer( "TestNLC", OnFindClassifier );
+            m_NLC.FindClassifier( "TestNLC", OnFindClassifier );
             while(! m_FindClassifierTested )
                 yield return null;
 

@@ -26,6 +26,10 @@ using MiniJSON;
 
 namespace IBM.Watson.Services.v1
 {
+    /// <summary>
+    /// This class wraps the TextToSpeech service.
+    /// </summary>
+    /// <a href="http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/text-to-speech.html">TextToSpeech Service</a>
     public class TextToSpeech 
     {
         #region Public Types
