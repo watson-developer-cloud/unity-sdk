@@ -46,6 +46,10 @@ namespace IBM.Watson.Widgets
 	    private bool m_TimeStamps = false;
 	    [SerializeField]
 	    private int m_MaxAlternatives = 1;
+        [SerializeField]
+        private bool m_EnableContinous = false;
+        [SerializeField]
+        private bool m_EnableInterumResults = false;
 	    [SerializeField]
 	    private Text m_Transcript = null;
         [SerializeField]
@@ -70,6 +74,8 @@ namespace IBM.Watson.Widgets
 	                m_STT.EnableTimestamps = m_TimeStamps;
 	                m_STT.SilenceThreshold = m_SilenceThreshold;
 	                m_STT.MaxAlternatives = m_MaxAlternatives;
+                    m_STT.EnableContinousRecognition = m_EnableContinous;
+                    m_STT.EnableInterumResults = m_EnableInterumResults;
 	                m_STT.OnError = OnError;
 	                m_STT.StartListening( OnRecognize );
 	                if ( m_StatusText != null )
@@ -121,29 +127,27 @@ namespace IBM.Watson.Widgets
 
 	    private void OnRecognize(SpeechToText.ResultList result)
 	    {
-#if ENABLE_DEBUGGING
-            if ( result != null && result.Results != null )
-            {
-                foreach( var r in result.Results )
-                {
-                    foreach( var a in r.Alternatives )
-                        Log.Debug( "SpeechToTextWidget", "OnRecognize: {0}, Final: {1}", a.Transcript, r.Final );
-                }
-            }
-#endif
-
             m_ResultOutput.SendData( new SpeechToTextData( result ) );
 
-	        if (result != null && result.Results.Length > 0 
-                && result.Results[0].Final
-                && result.Results[0].Alternatives.Length > 0 )
-	        {
-                string text = result.Results[0].Alternatives[0].Transcript;
-                m_TextOutput.SendData( new TextData( text ) );
+            if (result != null && result.Results.Length > 0)
+            {
+                if ( m_Transcript != null )
+                    m_Transcript.text = "";
 
-	            if ( m_Transcript != null )
-	                m_Transcript.text = text + "\n";
-	        }
+                foreach( var res in result.Results )
+                {
+                    foreach( var alt in res.Alternatives )
+                    {
+                        string text = alt.Transcript;
+                        if ( res.Final )
+                            m_TextOutput.SendData( new TextData( text ) );
+
+                        if ( m_Transcript != null )
+                            m_Transcript.text += string.Format( "{0} ({1}, {2:0.00})\n",
+                                text, res.Final ? "Final" : "Interim", alt.Confidence );
+                    }
+                }
+            }
 	    }
 
         protected override string GetName()

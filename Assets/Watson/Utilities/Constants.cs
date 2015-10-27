@@ -26,7 +26,9 @@ namespace IBM.Watson.Utilities
         /// </summary>
         public class Event
         {
-            public const string ON_CHANGE_MOOD = "ON_CHANGE_MOOD";
+            //Avatar Mood Changes
+            public const string ON_CHANGE_AVATAR_MOOD = "ON_CHANGE_AVATAR_MOOD";
+            public const string ON_CHANGE_AVATAR_MOOD_FINISH = "ON_CHANGE_AVATAR_MOOD_FINISH";
 
             //Quality Settings
             public const string ON_CHANGE_QUALITY = "ON_CHANGE_QUALITY";
@@ -55,7 +57,7 @@ namespace IBM.Watson.Utilities
         public class String
         {
             public const string DEBUG_DISPLAY_QUALITY = "Quality: {0}";
-
+            public const string DEBUG_DISPLAY_AVATAR_MOOD = "Mood: {0}";
         }
 
 

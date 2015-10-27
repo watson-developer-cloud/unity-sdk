@@ -40,14 +40,14 @@ namespace IBM.Watson.Debug
 
         void Start()
         {
-            EventManager.Instance.SendEvent(Constants.Event.ON_CHANGE_QUALITY_FINISH);
+            EventManager.Instance.SendEvent(Constants.Event.ON_CHANGE_QUALITY_FINISH, m_currentQualityIndex);
         }
         
         void Update()
         {
             if (Input.GetKeyDown(Constants.KeyCodes.CHANGE_QUALITY))
             {
-                EventManager.Instance.SendEvent(Constants.Event.ON_CHANGE_QUALITY);
+                EventManager.Instance.SendEvent(Constants.Event.ON_CHANGE_QUALITY, (m_currentQualityIndex + 1) % m_qualitySettingsNames.Length);
             }
         }
 
@@ -55,7 +55,7 @@ namespace IBM.Watson.Debug
         {
             m_currentQualityIndex = (m_currentQualityIndex + 1) % m_qualitySettingsNames.Length;
             QualitySettings.SetQualityLevel(m_currentQualityIndex, true);
-            EventManager.Instance.SendEvent(Constants.Event.ON_CHANGE_QUALITY_FINISH);
+            EventManager.Instance.SendEvent(Constants.Event.ON_CHANGE_QUALITY_FINISH, m_qualitySettingsNames[m_currentQualityIndex]);
         }
 
         void UpdateQualitySettings(System.Object[] args)
