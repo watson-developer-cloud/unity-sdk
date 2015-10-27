@@ -22,7 +22,7 @@ using UnityEngine.UI;
 
 namespace IBM.Watson.Widgets.Question.Facet
 {
-	public class Location : FacetBase
+	public class Location : Base
 	{
 		[SerializeField]
 		private Text m_LocationText;
@@ -39,21 +39,19 @@ namespace IBM.Watson.Widgets.Question.Facet
 		}
 
 		/// <summary>
-		/// Initialize with data from Question Widget.
-		/// </summary>
-		public override void Init()
-		{
-			base.Init ();
-
-			m_Location = m_QuestionWidget.Avatar.ITM.Location;
-		}
-
-		/// <summary>
 		/// Update the Location view.
 		/// </summary>
 		private void UpdateLocation()
 		{
 			m_LocationText.text = m_Location;
+		}
+
+		/// <summary>
+		/// Fired when Parse Data is set. Sets the value of Location from the Avatar Widget.
+		/// </summary>
+		override protected void OnParseData()
+		{
+			m_Location = m_Avatar.ITM.Location;
 		}
 	}
 }

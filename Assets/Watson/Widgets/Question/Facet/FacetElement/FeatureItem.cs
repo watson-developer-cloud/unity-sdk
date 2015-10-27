@@ -52,7 +52,7 @@ namespace IBM.Watson.Widgets.Question.Facet.FacetElement
 		}
 
 		/// <summary>
-		/// Updates the features. Displays only the first 15 characters.
+		/// Updates the Features. Displays only the first 15 characters.
 		/// </summary>
 		private void UpdateFeature()
 		{
@@ -69,6 +69,9 @@ namespace IBM.Watson.Widgets.Question.Facet.FacetElement
 			}
 		}
 
+		/// <summary>
+		/// Updates the Feature Index. 
+		/// </summary>
 		private void UpdateFeatureIndex()
 		{
 			float featureIndex = (float)m_FeatureIndex;

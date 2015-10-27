@@ -22,22 +22,20 @@ using IBM.Watson.Widgets.Question.Facet.FacetElement;
 
 namespace IBM.Watson.Widgets.Question.Facet
 {
-	public class AnswersAndConfidence : FacetBase 
+	public class AnswersAndConfidence : Base 
 	{
 		[Header("UI Faces")]
 		[SerializeField]
 		private AnswerConfidenceBar[] m_AnswerConfidenceBars;
 
 		/// <summary>
-		/// Initialize with data from Question Widget.
+		/// Fired when Answer Data is set. Sets the answer value and the confidence value in each of the confidence bars.
 		/// </summary>
-		public override void Init()
+		override protected void OnAnswerData()
 		{
-			base.Init ();
-
 			for(int i = 0; i < m_AnswerConfidenceBars.Length; i++) {
-				m_AnswerConfidenceBars[i].m_Answer = m_QuestionWidget.Answers.answers[i].answerText;
-				m_AnswerConfidenceBars[i].m_Confidence = m_QuestionWidget.Answers.answers[i].confidence;
+				m_AnswerConfidenceBars[i].m_Answer = m_Answers.answers[i].answerText;
+				m_AnswerConfidenceBars[i].m_Confidence = m_Answers.answers[i].confidence;
 			}
 		}
 	}

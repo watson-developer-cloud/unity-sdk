@@ -78,7 +78,7 @@ namespace IBM.Watson.Widgets.Question.Facet.FacetElement
 		private float m_TransitionTime = 0.5f;
 
 		/// <summary>
-		/// Start this instance.
+		/// Sets a reference of the RectTransform.
 		/// </summary>
 		void Start()
 		{

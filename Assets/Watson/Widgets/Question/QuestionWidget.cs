@@ -42,13 +42,14 @@ namespace IBM.Watson.Widgets
         private EventManager m_EventManager = new EventManager();
         private CubeAnimationManager m_CubeAnimMgr = null;
 
-		private AnswersAndConfidence answersAndConfidence;
-		private Evidence evidence;
-		private Semantic semantic;
-		private Features features;
-		private Location location;
-		public ParseTree parseTree;
-		private QuestionAndAnswer questionAndAnswer;
+		private AnswersAndConfidence m_AnswersAndConfidence;
+		private Evidence m_Evidence;
+		private Semantic m_Semantic;
+		private Features m_Features;
+		private Location m_Location;
+		private ParseTree m_ParseTree;
+		private QuestionAndAnswer m_QuestionAndAnswer;
+		private List<Base> m_facets = new List<Base>();
 
         #endregion
 
@@ -111,6 +112,9 @@ namespace IBM.Watson.Widgets
             Cube.UnFold();
         }
 
+		/// <summary>
+		/// Register events, set facet references, add facets to a List.
+		/// </summary>
         protected void Awake()
         {
             m_EventManager.RegisterEventReceiver("fold", OnFold);
@@ -121,13 +125,21 @@ namespace IBM.Watson.Widgets
             m_EventManager.RegisterEventReceiver("answers", OnDisplayAnswers);
             m_EventManager.RegisterEventReceiver("chat", OnDisplayChat );
 
-			answersAndConfidence = gameObject.GetComponent<AnswersAndConfidence>();
-			evidence = gameObject.GetComponent<Evidence>();
-			semantic = gameObject.GetComponent<Semantic>();
-			features = gameObject.GetComponent<Features>();
-			location = gameObject.GetComponent<Location>();
-			parseTree = gameObject.GetComponent<ParseTree>();
-			questionAndAnswer = gameObject.GetComponent<QuestionAndAnswer>();
+			m_AnswersAndConfidence = gameObject.GetComponent<AnswersAndConfidence>();
+			m_Evidence = gameObject.GetComponent<Evidence>();
+			m_Semantic = gameObject.GetComponent<Semantic>();
+			m_Features = gameObject.GetComponent<Features>();
+			m_Location = gameObject.GetComponent<Location>();
+			m_ParseTree = gameObject.GetComponent<ParseTree>();
+			m_QuestionAndAnswer = gameObject.GetComponent<QuestionAndAnswer>();
+
+			m_facets.Add (m_AnswersAndConfidence);
+			m_facets.Add (m_Evidence);
+			m_facets.Add (m_Semantic);
+			m_facets.Add (m_Features);
+			m_facets.Add (m_Location);
+			m_facets.Add (m_ParseTree);
+			m_facets.Add (m_QuestionAndAnswer);
         }
 
         protected override void Start()
@@ -140,26 +152,39 @@ namespace IBM.Watson.Widgets
 			}
 
             // give the cube animation manager the game object
-
-
         }
 
+		/// <summary>
+		/// Sets Question, Answer and Avatar for each facet. Init is called by the Avatar Widget.
+		/// </summary>
 		public void Init()
 		{
-			answersAndConfidence.Init ();
-			evidence.Init ();
-			semantic.Init ();
-			features.Init ();
-			location.Init ();
-			parseTree.Init ();
-			questionAndAnswer.Init ();
+			foreach (Base facet in m_facets)
+			{
+				facet.m_Questions = Questions;
+				facet.m_Answers = Answers;
+				facet.m_Avatar = Avatar;
+			}
 		}
 
+		/// <summary>
+		/// Sets parse data for each facet when Avatar receives it.
+		/// </summary>
+		/// <param name="parse">Parse Data</param>
         public void OnParseData(ITM.ParseData parse)
         {
-			ParseData = parse;
-			semantic.OnUpdateSemantic ();
-			parseTree.GenerateParseTree ();
+			foreach (Base facet in m_facets)
+			{
+				facet.m_ParseData = parse;
+			}
         }
+
+		/// <summary>
+		/// Clears parse tree in the Parse Tree facet when AvatarWidget answers a new question.
+		/// </summary>
+		public void ClearParseTree()
+		{
+			m_ParseTree.ClearParseTree ();
+		}
     }
 }

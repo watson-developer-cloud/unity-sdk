@@ -24,7 +24,7 @@ using IBM.Watson.Widgets.Question.Facet.FacetElement;
 
 namespace IBM.Watson.Widgets.Question.Facet
 {
-	public class ParseTree : FacetBase
+	public class ParseTree : Base
 		{
 		[SerializeField]
 		private GameObject m_ParseTreeTextItem;
@@ -77,19 +77,11 @@ namespace IBM.Watson.Widgets.Question.Facet
 		}
 
 		/// <summary>
-		/// Set reference to QuestionWidget.
-		/// </summary>
-		public override void Init()
-		{
-			base.Init ();
-		}
-
-		/// <summary>
 		/// Generate parse tree from Parse Data.
 		/// </summary>
 		public void GenerateParseTree()
 		{
-			for (int i = 0; i < m_QuestionWidget.ParseData.Words.Length; i++) {
+			for (int i = 0; i < m_ParseData.Words.Length; i++) {
 				GameObject wordGO = Instantiate(m_ParseTreeTextItem) as GameObject;
 				RectTransform wordRectTransform = wordGO.GetComponent<RectTransform>();
 				wordRectTransform.SetParent(m_ParseCanvasRectTransform, false);
@@ -100,12 +92,12 @@ namespace IBM.Watson.Widgets.Question.Facet
 					wordRectTransform.localPosition = new Vector3(5000f, 5000, 5000f);
 				}
 				ParseTreeTextItem word = wordGO.GetComponent<ParseTreeTextItem>();
-				word.m_ParseTreeWord = m_QuestionWidget.ParseData.Words[i].Word;
-				word.m_POS = m_QuestionWidget.ParseData.Words[i].Pos.ToString();
-				word.m_Slot = m_QuestionWidget.ParseData.Words[i].Slot;
+				word.m_ParseTreeWord = m_ParseData.Words[i].Word;
+				word.m_POS = m_ParseData.Words[i].Pos.ToString();
+				word.m_Slot = m_ParseData.Words[i].Slot;
 
-				for(int j = 0; j < m_QuestionWidget.ParseData.Words[i].Features.Length; j++) {
-					word.m_Features.Add(m_QuestionWidget.ParseData.Words[i].Features[j]);
+				for(int j = 0; j < m_ParseData.Words[i].Features.Length; j++) {
+					word.m_Features.Add(m_ParseData.Words[i].Features[j]);
 				}
 
 				m_WordList.Add(word);
@@ -128,7 +120,7 @@ namespace IBM.Watson.Widgets.Question.Facet
 		}
 
 		/// <summary>
-		/// Highlight words, POS and Slots based on highlighted word.
+		/// Highlight words, POS and Slots based on the Word Index.
 		/// </summary>
 		private void UpdateHighlightedWord()
 		{
@@ -147,27 +139,36 @@ namespace IBM.Watson.Widgets.Question.Facet
 				}
 			}
 
-			if(m_QuestionWidget.Questions.questions [0].question.lat.Length == 0 && m_QuestionWidget.Questions.questions [0].question.focus.Length == 0) m_POSList[2].GetComponent<POSControl>().m_IsHighlighted = true;
-			if (m_QuestionWidget.Questions.questions [0].question.lat.Length > 0) {
-				if (m_WordList [m_WordIndex].m_ParseTreeWord.ToLower () == m_QuestionWidget.Questions.questions [0].question.lat [0].ToLower ()) {
+			if(m_Questions.questions [0].question.lat.Length == 0 && m_Questions.questions [0].question.focus.Length == 0) m_POSList[2].GetComponent<POSControl>().m_IsHighlighted = true;
+			if (m_Questions.questions [0].question.lat.Length > 0) {
+				if (m_WordList [m_WordIndex].m_ParseTreeWord.ToLower () == m_Questions.questions [0].question.lat [0].ToLower ()) {
 					m_POSList [1].GetComponent<POSControl> ().m_IsHighlighted = true;
 				}
 			}
 
 
-			if (m_QuestionWidget.Questions.questions [0].question.focus.Length > 0) {
-				if (m_WordList [m_WordIndex].m_ParseTreeWord.ToLower () == m_QuestionWidget.Questions.questions [0].question.focus [0].ToLower ()) {
+			if (m_Questions.questions [0].question.focus.Length > 0) {
+				if (m_WordList [m_WordIndex].m_ParseTreeWord.ToLower () == m_Questions.questions [0].question.focus [0].ToLower ()) {
 					m_POSList [0].GetComponent<POSControl> ().m_IsHighlighted = true;
 				}
 			}
 		}
 
 		/// <summary>
-		/// Cycles the words.
+		/// Cycles through words via WordIndex.
 		/// </summary>
 		private void CycleWords()
 		{
 			m_WordIndex ++;
+		}
+
+
+		/// <summary>
+		/// Fired when Parse Data is set. Initiates generation of the ParseTree.
+		/// </summary>
+		override protected void OnParseData()
+		{
+			GenerateParseTree ();
 		}
 	}
 }

@@ -24,23 +24,21 @@ using IBM.Watson.Widgets.Question.Facet.FacetElement;
 
 namespace IBM.Watson.Widgets.Question.Facet
 {
-	public class Features : FacetBase
+	public class Features : Base
 	{
 		[Header("Features")]
 		[SerializeField]
 		private FeatureItem[] m_FeatureItems;
 
 		/// <summary>
-		/// Initialize with data from Question Widget.
+		/// Fired when Answer Data is set. Sets the value of the Feature Item and index.
 		/// </summary>
-		public override void Init()
+		override protected void OnAnswerData()
 		{
-			base.Init ();
-
-			//	TODO instantiate FeatureItems from resources
+			//	TODO Dynamically create feature items
 			for (int i = 0; i < m_FeatureItems.Length; i++) {
-				m_FeatureItems[i].m_Feature = m_QuestionWidget.Answers.answers[0].features[i].displayLabel;
-				m_FeatureItems[i].m_FeatureIndex = m_QuestionWidget.Answers.answers[0].features[i].weightedScore;
+				m_FeatureItems[i].m_Feature = m_Answers.answers[0].features[i].displayLabel;
+				m_FeatureItems[i].m_FeatureIndex = m_Answers.answers[0].features[i].weightedScore;
 			}
 		}
 	}

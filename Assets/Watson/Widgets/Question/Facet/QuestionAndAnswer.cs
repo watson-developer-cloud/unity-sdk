@@ -22,7 +22,7 @@ using UnityEngine.UI;
 
 namespace IBM.Watson.Widgets.Question.Facet
 {
-	public class QuestionAndAnswer : FacetBase
+	public class QuestionAndAnswer : Base
 		{
 		[SerializeField]
 		private Text m_QuestionText;
@@ -65,18 +65,6 @@ namespace IBM.Watson.Widgets.Question.Facet
 		}
 
 		/// <summary>
-		/// Initialize with data from Question Widget.
-		/// </summary>
-		public override void Init()
-		{
-			base.Init ();
-
-			m_Question = m_QuestionWidget.Questions.questions[0].question.questionText;
-			m_Answer = m_QuestionWidget.Answers.answers [0].answerText;
-			m_Confidence = m_QuestionWidget.Answers.answers [0].confidence;
-		}
-
-		/// <summary>
 		/// Update answer view.
 		/// </summary>
 		private void UpdateAnswer()
@@ -99,6 +87,23 @@ namespace IBM.Watson.Widgets.Question.Facet
 		{
 			float confidence = (float)m_Confidence * 100;
 			m_ConfidenceText.text = confidence.ToString ("f1");
+		}
+
+		/// <summary>
+		/// Fired when Question Data is set. Sets the value of the Question.
+		/// </summary>
+		override protected void OnQuestionData()
+		{
+			m_Question = m_Questions.questions[0].question.questionText;
+		}
+
+		/// <summary>
+		/// Fired when Answer Data is set. Sets the value of the Answer.
+		/// </summary>
+		override protected void OnAnswerData()
+		{
+			m_Answer = m_Answers.answers [0].answerText;
+			m_Confidence = m_Answers.answers [0].confidence;
 		}
 	}
 }
