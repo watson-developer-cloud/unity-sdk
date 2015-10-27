@@ -33,22 +33,59 @@ namespace IBM.Watson.Services.v1
     /// <summary>
     /// This class wraps the ITM back-end service.
     /// </summary>
+    /// <remarks>This is an experimental service.</remarks>
     public class ITM
     {
         #region Public Types
+        /// <summary>
+        /// This data class holds the data for a given pipeline.
+        /// </summary>
         public class Pipeline
         {
+            /// <summary>
+            /// The ID of the pipeline.
+            /// </summary>
             public string _id { get; set; }
+            /// <summary>
+            /// The revision number of the pipeline.
+            /// </summary>
             public string _rev { get; set; }
+            /// <summary>
+            /// The users client ID.
+            /// </summary>
             public string clientId { get; set; }
+            /// <summary>
+            /// Name of the pipeline.
+            /// </summary>
             public string pipelineName { get; set; }
+            /// <summary>
+            /// Type of pipeline.
+            /// </summary>
             public string pipelineType { get; set; }
+            /// <summary>
+            /// The pipeline label.
+            /// </summary>
             public string pipelineLabel { get; set; }
+            /// <summary>
+            /// The URL of the pipeline.
+            /// </summary>
             public string pipelineUrl { get; set; }
+            /// <summary>
+            /// Path to the CAS for the pipeline.
+            /// </summary>
             public string pipelineCas { get; set; }
+            /// <summary>
+            /// 
+            /// </summary>
             public string pipelineAnswerKey { get; set; }
+            /// <summary>
+            /// 
+            /// </summary>
             public string pipelineModel { get; set; }
         };
+        /// <summary>
+        /// This data class is returned by the GetPipelines() function.
+        /// </summary>
         public class Pipelines
         {
             public Pipeline[] pipelines { get; set; }
@@ -86,6 +123,9 @@ namespace IBM.Watson.Services.v1
         };
         public delegate void OnGetQuestions(Questions questions);
 
+        /// <summary>
+        /// The position of a word in the parse tree data.
+        /// </summary>
         public enum WordPosition
         {
             INVALID = -1,
@@ -99,6 +139,9 @@ namespace IBM.Watson.Services.v1
             CONJUNCTION,
             INTERJECTION
         };
+        /// <summary>
+        /// This data class holds a single word of the ParseData.
+        /// </summary>
         public class ParseWord
         {
             public string Word { get; set; }
@@ -117,6 +160,9 @@ namespace IBM.Watson.Services.v1
                 }
             }
         };
+        /// <summary>
+        /// This data class is returned by the GetParseData() function.
+        /// </summary>
         public class ParseData
         {
             public string Id { get; set; }
@@ -234,8 +280,17 @@ namespace IBM.Watson.Services.v1
         #endregion
 
         #region Public Properties
+        /// <summary>
+        /// The currently selected pipeline.
+        /// </summary>
         public Pipeline SelectedPipeline { get { return m_SelectedPipeline; } set { m_SelectedPipeline = value; } }
+        /// <summary>
+        /// Our session key, this is set when Login() is invoked.
+        /// </summary>
         public long SessionKey { get; set; }
+        /// <summary>
+        /// The users current location, this is set when Login() is invoked.
+        /// </summary>
         public string Location { get; set; }
         #endregion
 
@@ -258,8 +313,17 @@ namespace IBM.Watson.Services.v1
         #endregion
 
         #region Login
+        /// <summary>
+        /// The callback delegate for Login().
+        /// </summary>
+        /// <param name="success">True on success, False on failure.</param>
         public delegate void OnLogin(bool success);
 
+        /// <summary>
+        /// Login into ITM.
+        /// </summary>
+        /// <param name="callback">The callback to invoke on success or failure.</param>
+        /// <returns>Returns true if the request is submitted.</returns>
         public bool Login(OnLogin callback)
         {
             if (callback == null)
@@ -627,8 +691,18 @@ namespace IBM.Watson.Services.v1
         #endregion
 
         #region AskQuestion
+        /// <summary>
+        /// The callback delegate for AskQuestion().
+        /// </summary>
+        /// <param name="questions">The </param>
         public delegate void OnAskQuestion(Questions questions);
 
+        /// <summary>
+        /// Ask a question.
+        /// </summary>
+        /// <param name="question">The text of the question to ask.</param>
+        /// <param name="callback">The callback to received the Questions object.</param>
+        /// <returns>Returns true if the request was submitted.</returns>
         public bool AskQuestion(string question, OnAskQuestion callback)
         {
             if (callback == null)
