@@ -94,9 +94,20 @@ namespace IBM.Watson.Services.v1
             public string location { get; set; }
             public long sessionKey { get; set; }
         };
+        /// <summary>
+        /// Callback for GetPipeline() method.
+        /// </summary>
+        /// <param name="pipeline"></param>
         public delegate void OnGetPipeline(Pipeline pipeline);
+        /// <summary>
+        /// Callback for GetPipelines() method.
+        /// </summary>
+        /// <param name="pipes"></param>
         public delegate void OnGetPipelines(Pipelines pipes);
 
+        /// <summary>
+        /// Data class for GetQuestions() method.
+        /// </summary>
         public class QuestionText
         {
             public string[] focus { get; set; }
@@ -104,6 +115,9 @@ namespace IBM.Watson.Services.v1
             public string questionText { get; set; }
             public string taggedText { get; set; }
         };
+        /// <summary>
+        /// Data class for GetQuestions() method.
+        /// </summary>
         public class Question
         {
             public string _id { get; set; }
@@ -117,10 +131,20 @@ namespace IBM.Watson.Services.v1
             public string authorizationKey { get; set; }
             public QuestionText question { get; set; }
         };
+        /// <summary>
+        /// Data class for GetQuestions() method.
+        /// </summary>
         public class Questions
         {
+            /// <summary>
+            /// Array of questions returned by GetQuestions().
+            /// </summary>
             public Question[] questions { get; set; }
         };
+        /// <summary>
+        /// Callback for GetQuestions() method.
+        /// </summary>
+        /// <param name="questions"></param>
         public delegate void OnGetQuestions(Questions questions);
 
         /// <summary>

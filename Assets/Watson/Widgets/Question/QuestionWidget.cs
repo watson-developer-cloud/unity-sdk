@@ -32,7 +32,7 @@ using System.Collections.Generic;
 namespace IBM.Watson.Widgets
 {
     /// <summary>
-    /// Avatar of Watson 
+    /// This class manages the answers, question, and other data related to a question asked of the AvatarWidget.
     /// </summary>
     [RequireComponent(typeof(AudioSource))]
     public class QuestionWidget : Widget

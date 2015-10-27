@@ -40,7 +40,7 @@ namespace IBM.Watson.Widgets
         /// </summary>
         public string[] Microphones { get { return Microphone.devices; } }
         /// <summary>
-        /// 
+        /// True if microphone is active, false if inactive.
         /// </summary>
         public bool Active
         {
@@ -57,6 +57,9 @@ namespace IBM.Watson.Widgets
                 }
             }
         }
+        /// <summary>
+        /// True if microphone is disabled, false if enabled.
+        /// </summary>
         public bool Disable
         {
             get { return m_Disabled; }
@@ -72,7 +75,9 @@ namespace IBM.Watson.Widgets
                 }
             }
         }
-
+        /// <summary>
+        /// Button handler for toggling the active state.
+        /// </summary>
         public void OnToggleActive()
         {
             Active = !Active;
@@ -80,9 +85,20 @@ namespace IBM.Watson.Widgets
         #endregion
 
         #region Widget interface
+        /// <exclude />
         protected override string GetName()
         {
             return "Microphone";
+        }
+        #endregion
+
+        #region MonoBehaviour interface
+        /// <exclude />
+        protected override void Start()
+        {
+            base.Start();
+            if (m_ActivateOnStart)
+                Active = true;
         }
         #endregion
 
@@ -122,12 +138,6 @@ namespace IBM.Watson.Widgets
         #endregion
 
         #region Private Functions
-        protected override void Start()
-        {
-            base.Start();
-            if (m_ActivateOnStart)
-                Active = true;
-        }
         private void OnActivateInput(Data data)
         {
             Active = ((BooleanData)data).Boolean;
