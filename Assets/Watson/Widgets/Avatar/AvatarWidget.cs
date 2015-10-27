@@ -491,7 +491,7 @@ namespace IBM.Watson.Widgets
             }
         }
 
-        private MoodType m_currentMood = MoodType.IDLE;
+        private MoodType m_currentMood = MoodType.SLEEPING;
         public MoodType Mood
         {
             get
