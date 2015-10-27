@@ -57,7 +57,7 @@ namespace IBM.Watson.Widgets.Avatar
         /// <summary>
         /// On Mood Change of the avatar, this function gets called. 
         /// </summary>
-        /// <param name="args">If there 2 paremeteres we consider 1st paremeter is AvatarWidget object, otherwise we are using initial AvatarWidget object's values to call other functions</param>
+        /// <param name="args">If there 2 parameters we consider 1st parameter is AvatarWidget object, otherwise we are using initial AvatarWidget object's values to call other functions</param>
         public virtual void OnChangedMood(System.Object[] args)
         {
             if (args.Length == 0 || args.Length == 1)
