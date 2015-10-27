@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
-using IBM.Watson.AdaptiveComputing;
 using IBM.Watson.Utilities;
 using IBM.Watson.Widgets;
+using IBM.Watson.Logging;
 
 namespace IBM.Watson.Debug
 {
@@ -16,9 +16,10 @@ namespace IBM.Watson.Debug
 
         #region Private Variable
 
-        private MoodType[] moodTypeList = null;
-        private int m_currentMoodIndex = 0;
+        private AvatarWidget.MoodType[] m_MoodTypeList = null;
+        private int m_CurrentMoodIndex = 0;
         private Text m_Text;
+        private AvatarWidget m_AvatarWidget;
 
         #endregion
 
@@ -40,17 +41,23 @@ namespace IBM.Watson.Debug
         // Use this for initialization
         void Awake()
         {
-            //AvatarWidget avatarWidget = GameObject.FindObjectOfType<AvatarWidget>();
-           
-            //TODO: Avatar Widget with Mood Managment integration
-            m_currentMoodIndex = (int)MoodManager.Instance.currentMood;
-            moodTypeList = MoodManager.Instance.moodTypeList;
             m_Text = GetComponent<Text>();
+            m_AvatarWidget = GameObject.FindObjectOfType<AvatarWidget>();
+            if(m_AvatarWidget != null)
+            {
+                m_CurrentMoodIndex = (int)m_AvatarWidget.Mood;
+                m_MoodTypeList = m_AvatarWidget.MoodTypeList;
+            }
+            else
+            {
+                Log.Error("AvatarMood", "AvatarWidget couldn't find in the scene.");
+                this.enabled = false;
+            }
         }
 
         void Start()
         {
-            EventManager.Instance.SendEvent(Constants.Event.ON_CHANGE_AVATAR_MOOD_FINISH, m_currentMoodIndex);
+            EventManager.Instance.SendEvent(Constants.Event.ON_CHANGE_AVATAR_MOOD_FINISH, m_CurrentMoodIndex);
         }
 
         // Update is called once per frame
@@ -58,19 +65,52 @@ namespace IBM.Watson.Debug
         {
             if (Input.GetKeyDown(Constants.KeyCodes.CHANGE_MOOD))
             {
-                EventManager.Instance.SendEvent(Constants.Event.ON_CHANGE_AVATAR_MOOD, (m_currentMoodIndex + 1) % moodTypeList.Length);
+                if (m_AvatarWidget != null)
+                    EventManager.Instance.SendEvent(Constants.Event.ON_CHANGE_AVATAR_MOOD, m_AvatarWidget, (m_CurrentMoodIndex + 1) % m_MoodTypeList.Length);
+                else
+                    EventManager.Instance.SendEvent(Constants.Event.ON_CHANGE_AVATAR_MOOD, (m_CurrentMoodIndex + 1) % m_MoodTypeList.Length);
             }
         }
 
         void UpdateMood(System.Object[] args)
         {
-            m_Text.text = string.Format(Constants.String.DEBUG_DISPLAY_AVATAR_MOOD, moodTypeList[m_currentMoodIndex].ToString());
+            if (m_AvatarWidget != null)
+                m_Text.text = string.Format(Constants.String.DEBUG_DISPLAY_AVATAR_MOOD, m_AvatarWidget.State, m_AvatarWidget.Mood);
+            else
+                m_Text.text = string.Format(Constants.String.DEBUG_DISPLAY_AVATAR_MOOD, m_MoodTypeList[m_CurrentMoodIndex].ToString());
+
         }
 
         void ChangeMood(System.Object[] args)
         {
-            m_currentMoodIndex = (m_currentMoodIndex + 1) % moodTypeList.Length;
-            EventManager.Instance.SendEvent(Constants.Event.ON_CHANGE_AVATAR_MOOD_FINISH, m_currentMoodIndex);
+            if (args.Length == 0)
+            {
+                m_CurrentMoodIndex = (m_CurrentMoodIndex + 1) % m_MoodTypeList.Length;
+                EventManager.Instance.SendEvent(Constants.Event.ON_CHANGE_AVATAR_MOOD_FINISH, m_CurrentMoodIndex);
+            }
+            else if (args.Length == 1)
+            {
+                int.TryParse(args[0].ToString(), out m_CurrentMoodIndex);
+                EventManager.Instance.SendEvent(Constants.Event.ON_CHANGE_AVATAR_MOOD_FINISH, m_CurrentMoodIndex);
+            }
+            else if (args.Length == 2)
+            {
+                AvatarWidget avatarWidget = args[0] as AvatarWidget;
+                if (avatarWidget != null)
+                {
+                    int.TryParse(args[1].ToString(), out m_CurrentMoodIndex);
+                    EventManager.Instance.SendEvent(Constants.Event.ON_CHANGE_AVATAR_MOOD_FINISH, avatarWidget, m_CurrentMoodIndex);
+                }
+                else
+                {
+                    Log.Error("AvatarMood", "Change Mood has invalid object type in arguments");
+                }
+            }
+            else
+            {
+                Log.Error("AvatarMood", "Change Mood has undefined number of arguments {0}", args.Length);
+            }
+
         }
 
         #endregion

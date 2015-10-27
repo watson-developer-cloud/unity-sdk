@@ -73,7 +73,7 @@ public class CubeAnimationManager : MonoBehaviour {
             m_currentState = value;
 
             if (hasStateChanged){
-                EventManager.Instance.SendEvent(EventManager.onCubeAnimationStateChanged);
+                EventManager.Instance.SendEvent(Constants.Event.ON_CHANGE_STATE_QUESTIONCUBE_ANIMATION);
             }
 
         }

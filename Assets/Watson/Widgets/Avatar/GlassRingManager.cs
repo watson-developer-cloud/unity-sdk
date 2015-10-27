@@ -1,65 +1,77 @@
 ﻿using UnityEngine;
 using System.Collections;
-using IBM.Watson.AdaptiveComputing;
 using IBM.Watson.Utilities;
 using IBM.Watson.Logging;
 
-namespace IBM.Watson.Avatar
+namespace IBM.Watson.Widgets.Avatar
 {
-	public class GlassRingManager : MonoBehaviour {
+    /// <summary>
+    /// GlassRingManager manages the Avatar's 3D models' ring material color according to mood and behavior change.
+    /// </summary>
+	public class GlassRingManager : AvatarModelManager
+    {
 
-		Material glassRingMaterial;
-		Color initialColor;
-		void OnEnable(){
-			EventManager.Instance.RegisterEventReceiver (EventManager.onMoodChangeFinish, OnChangedMood);
-			EventManager.Instance.RegisterEventReceiver (EventManager.onBehaviorChangeFinish, OnChangedBehavior);
-		}
-		
-		void OnDisable(){
-			EventManager.Instance.UnregisterEventReceiver (EventManager.onMoodChangeFinish, OnChangedMood);
-			EventManager.Instance.UnregisterEventReceiver (EventManager.onBehaviorChangeFinish, OnChangedBehavior);
+        #region Private Variables
+        Material m_GlassRingMaterial;
+		Color m_InitialColorOfGlassRingMaterial;
+        #endregion
 
-			if (glassRingMaterial != null) {
-				glassRingMaterial.SetColor("_SpecColor", initialColor);
-			}
-		}
-		// Use this for initialization
-		void Awake () {
-			MeshRenderer childMeshRenderer = transform.GetComponentInChildren<MeshRenderer> ();
-			if (childMeshRenderer != null) {
-				glassRingMaterial = childMeshRenderer.sharedMaterial;
-				initialColor = glassRingMaterial.GetColor("_SpecColor");
-			} else {
-				Log.Error("GlassRingManager", "There is not mesh renderer in any child object");
-			}
-		}
-		
-		// Update is called once per frame
-		void Update () {
-		
+        #region OnEnable / OnDisable / OnApplicationQuit / Awake
+ 
+        void OnApplicationQuit()
+        {
+            if (m_GlassRingMaterial != null)
+            {
+                m_GlassRingMaterial.SetColor("_SpecColor", m_InitialColorOfGlassRingMaterial);
+            }
+        }
+        
+		public override void Awake () {
+            base.Awake();
+
+            m_AvatarWidgetAttached = this.transform.GetComponentInParent<AvatarWidget>();
+            if(m_AvatarWidgetAttached != null)
+            {
+                MeshRenderer childMeshRenderer = transform.GetComponentInChildren<MeshRenderer>();
+                if (childMeshRenderer != null)
+                {
+                    m_GlassRingMaterial = childMeshRenderer.sharedMaterial;
+                    m_InitialColorOfGlassRingMaterial = m_GlassRingMaterial.GetColor("_SpecColor");
+                }
+                else
+                {
+                    Log.Error("GlassRingManager", "There is not mesh renderer in any child object");
+                    this.enabled = false;
+                }
+            }
+            else
+            {
+                Log.Error("GlassRingManager", "There is no Avatar Widget on any parent.");
+                this.enabled = false;
+            }
+
 		}
 
-		public void OnChangedMood(System.Object[] args){
-			ChangeToColor (MoodManager.Instance.currentMoodColor);
-		} 
+        #endregion
 
-		public void OnChangedBehavior(System.Object[] args){
-			ChangeToColor (BehaviorManager.Instance.currentBehaviourColor);
-		}
+        #region Changing Mood / Avatar State
+
 
 		LTDescr colorAnimationOnGlass = null;
-		public void ChangeToColor(Color color){
-			if (glassRingMaterial != null) {
+		public override void ChangeToColor(Color color, float timeModifier){
+			if (m_GlassRingMaterial != null) {
 				if (colorAnimationOnGlass != null) {
 					LeanTween.cancel(colorAnimationOnGlass.uniqueId);
 				}
 				
-				colorAnimationOnGlass = LeanTween.value (gameObject, Color.white, color, 1.0f * MoodManager.Instance.currentMoodTimeModifier).setLoopPingPong ().setOnUpdateColor(
+				colorAnimationOnGlass = LeanTween.value (gameObject, Color.white, color, timeModifier).setLoopPingPong ().setOnUpdateColor(
 					(Color a)=>{
-					glassRingMaterial.SetColor("_SpecColor", a);
+					m_GlassRingMaterial.SetColor("_SpecColor", a);
 				});
 			}
 		}
-	}
+
+        #endregion
+    }
 
 }
