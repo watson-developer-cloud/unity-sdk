@@ -160,9 +160,9 @@ namespace IBM.Watson.Widgets
 		{
 			foreach (Base facet in m_facets)
 			{
-				facet.m_Questions = Questions;
-				facet.m_Answers = Answers;
-				facet.m_Avatar = Avatar;
+				facet.Questions = Questions;
+				facet.Answers = Answers;
+				facet.Avatar = Avatar;
 			}
 		}
 
@@ -174,7 +174,7 @@ namespace IBM.Watson.Widgets
         {
 			foreach (Base facet in m_facets)
 			{
-				facet.m_ParseData = parse;
+				facet.ParseData = parse;
 			}
         }
 

@@ -31,14 +31,14 @@ namespace IBM.Watson.Widgets.Question.Facet.FacetElement
 		private Vector3 m_ScaleDownSize = new Vector3(1f, 1f, 1f);
 		private float m_TransitionTime = 0.5f;
 
-		private bool _m_IsHighlighted = true;
-		public bool m_IsHighlighted
+		private bool _IsHighlighted = true;
+		public bool IsHighlighted
 		{
-			get { return _m_IsHighlighted; }
+			get { return _IsHighlighted; }
 			set {
-				_m_IsHighlighted = value;
-				LeanTween.textColor(m_RectTransform, m_IsHighlighted ? m_ColorLight : m_ColorDark, m_TransitionTime);
-				LeanTween.scale(m_RectTransform, m_IsHighlighted ? m_ScaleUpSize : m_ScaleDownSize, m_TransitionTime);
+				_IsHighlighted = value;
+				LeanTween.textColor(m_RectTransform, IsHighlighted ? m_ColorLight : m_ColorDark, m_TransitionTime);
+				LeanTween.scale(m_RectTransform, IsHighlighted ? m_ScaleUpSize : m_ScaleDownSize, m_TransitionTime);
 			}
 		}
 

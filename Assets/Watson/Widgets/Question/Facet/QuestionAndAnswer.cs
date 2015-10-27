@@ -32,24 +32,24 @@ namespace IBM.Watson.Widgets.Question.Facet
 		private Text m_ConfidenceText;
 
 
-		private string _m_Answer;
-		public string m_Answer
+		private string _Answer;
+		public string Answer
 		{
-			get { return _m_Answer; }
+			get { return _Answer; }
 			set 
 			{
-				_m_Answer = value;
+				_Answer = value;
 				UpdateAnswer();
 			}
 		}
 
-		private string _m_Question;
-		public string m_Question
+		private string _Question;
+		public string Question
 		{
-			get { return _m_Question; }
+			get { return _Question; }
 			set 
 			{
-				_m_Question = value;
+				_Question = value;
 				UpdateQuestion();
 			}
 		}
@@ -69,7 +69,7 @@ namespace IBM.Watson.Widgets.Question.Facet
 		/// </summary>
 		private void UpdateAnswer()
 		{
-			m_AnswerText.text = m_Answer;
+			m_AnswerText.text = Answer;
 		}
 
 		/// <summary>
@@ -77,7 +77,7 @@ namespace IBM.Watson.Widgets.Question.Facet
 		/// </summary>
 		private void UpdateQuestion()
 		{
-			m_QuestionText.text = m_Question;
+			m_QuestionText.text = Question;
 		}
 
 		/// <summary>
@@ -94,7 +94,7 @@ namespace IBM.Watson.Widgets.Question.Facet
 		/// </summary>
 		override protected void OnQuestionData()
 		{
-			m_Question = m_Questions.questions[0].question.questionText;
+			Question = Questions.questions[0].question.questionText;
 		}
 
 		/// <summary>
@@ -102,8 +102,8 @@ namespace IBM.Watson.Widgets.Question.Facet
 		/// </summary>
 		override protected void OnAnswerData()
 		{
-			m_Answer = m_Answers.answers [0].answerText;
-			m_Confidence = m_Answers.answers [0].confidence;
+			Answer = Answers.answers [0].answerText;
+			m_Confidence = Answers.answers [0].confidence;
 		}
 	}
 }

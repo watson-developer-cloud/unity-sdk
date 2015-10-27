@@ -27,13 +27,13 @@ namespace IBM.Watson.Widgets.Question.Facet.FacetElement
 		[SerializeField]
 		private Text m_EvidenceText;
 
-		private string _m_Evidence;
-		public string m_Evidence
+		private string _EvidenceString;
+		public string EvidenceString
 		{
-			get { return _m_Evidence; }
+			get { return _EvidenceString; }
 			set 
 			{
-				_m_Evidence = value;
+				_EvidenceString = value;
 				UpdateEvidence();
 			}
 		}
@@ -44,9 +44,9 @@ namespace IBM.Watson.Widgets.Question.Facet.FacetElement
 		private void UpdateEvidence()
 		{
 			//	TODO replace <answer> with the outline
-			if (m_Evidence != "") {
+			if (EvidenceString != "") {
 				gameObject.SetActive (true);
-				m_EvidenceText.text = m_Evidence;
+				m_EvidenceText.text = EvidenceString;
 			} else {
 				gameObject.SetActive(false);
 			}

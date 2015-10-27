@@ -27,13 +27,13 @@ namespace IBM.Watson.Widgets.Question.Facet
 		[SerializeField]
 		private Text m_LocationText;
 
-		private string _m_Location;
-		public string m_Location
+		private string _LocationString;
+		public string LocationString
 		{
-			get { return _m_Location; }
+			get { return _LocationString; }
 			set 
 			{
-				_m_Location = value;
+				_LocationString = value;
 				UpdateLocation();
 			}
 		}
@@ -43,7 +43,7 @@ namespace IBM.Watson.Widgets.Question.Facet
 		/// </summary>
 		private void UpdateLocation()
 		{
-			m_LocationText.text = m_Location;
+			m_LocationText.text = LocationString;
 		}
 
 		/// <summary>
@@ -51,7 +51,7 @@ namespace IBM.Watson.Widgets.Question.Facet
 		/// </summary>
 		override protected void OnParseData()
 		{
-			m_Location = m_Avatar.ITM.Location;
+			LocationString = Avatar.ITM.Location;
 		}
 	}
 }

@@ -39,7 +39,7 @@ namespace IBM.Watson.Widgets.Question.Facet
 		/// </summary>
 		override protected void OnAnswerData()
 		{
-			for(int i = 0; i < m_Answers.answers[0].evidence.Length; i++)
+			for(int i = 0; i < Answers.answers[0].evidence.Length; i++)
 			{
 				if(i >= 3) return;
 
@@ -48,7 +48,7 @@ namespace IBM.Watson.Widgets.Question.Facet
 				evidenceItemRectTransform.SetParent(m_EvidenceCanvasRectTransform, false);
 				EvidenceItem evidenceItem = evidenceItemGameObject.GetComponent<EvidenceItem>();
 				m_EvidenceItems.Add(evidenceItem);
-				evidenceItem.m_Evidence = m_Answers.answers[0].evidence[i].decoratedPassage;
+				evidenceItem.EvidenceString = Answers.answers[0].evidence[i].decoratedPassage;
 			}
 		}
 

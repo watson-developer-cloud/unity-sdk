@@ -39,15 +39,15 @@ namespace IBM.Watson.Widgets.Question.Facet
 		/// </summary>
 		override protected void OnAnswerData()
 		{
-			for(int i = 0; i < m_Answers.answers[0].features.Length; i++)
+			for(int i = 0; i < Answers.answers[0].features.Length; i++)
 			{
 				GameObject featureItemGameObject = Instantiate(m_FeatureItemPrefab, new Vector3(95f, -i*50f - 150f, 0f), Quaternion.identity) as GameObject;
 				RectTransform featureItemRectTransform = featureItemGameObject.GetComponent<RectTransform>();
 				featureItemRectTransform.SetParent(m_FeaturesCanvasRectTransform, false);
 				FeatureItem featureItem = featureItemGameObject.GetComponent<FeatureItem>();
 				m_FeatureItems.Add(featureItem);
-				featureItem.m_Feature = m_Answers.answers[0].features[i].displayLabel;
-				featureItem.m_FeatureIndex = m_Answers.answers[0].features[i].weightedScore;
+				featureItem.FeatureString = Answers.answers[0].features[i].displayLabel;
+				featureItem.FeatureIndex = Answers.answers[0].features[i].weightedScore;
 			}
 		}
 

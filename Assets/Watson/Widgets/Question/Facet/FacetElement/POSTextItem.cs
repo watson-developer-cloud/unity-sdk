@@ -27,13 +27,13 @@ namespace IBM.Watson.Widgets.Question.Facet.FacetElement
 		[SerializeField]
 		private Text m_POSTextField;
 		
-		private string _m_POSWord;
-		public string m_POSWord
+		private string _POSWord;
+		public string POSWord
 		{
-			get { return _m_POSWord; }
+			get { return _POSWord; }
 			set 
 			{
-				_m_POSWord = value;
+				_POSWord = value;
 				UpdatePOSTextField();
 			}
 		}
@@ -43,7 +43,7 @@ namespace IBM.Watson.Widgets.Question.Facet.FacetElement
 		/// </summary>
 		private void UpdatePOSTextField()
 		{
-			m_POSTextField.text = m_POSWord;
+			m_POSTextField.text = POSWord;
 		}
 	}
 }

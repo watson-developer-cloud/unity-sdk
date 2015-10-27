@@ -28,25 +28,25 @@ namespace IBM.Watson.Widgets.Question.Facet.FacetElement
 		[SerializeField]
 		private Text m_ParseTreeTextField;
 
-		private bool _m_IsHighlighted = false;
-		public bool m_IsHighlighted
+		private bool _IsHighlighted = false;
+		public bool IsHighlighted
 		{
-			get { return _m_IsHighlighted; }
+			get { return _IsHighlighted; }
 			set {
-				_m_IsHighlighted = value;
+				_IsHighlighted = value;
 				m_RectTransform = m_ParseTreeTextField.gameObject.GetComponent<RectTransform>();
-				LeanTween.textColor(m_RectTransform, m_IsHighlighted ? m_ColorLight : m_ColorDark, m_TransitionTime);
-				LeanTween.scale(m_RectTransform, m_IsHighlighted ? m_ScaleUpSize : m_ScaleDownSize, m_TransitionTime);
+				LeanTween.textColor(m_RectTransform, _IsHighlighted ? m_ColorLight : m_ColorDark, m_TransitionTime);
+				LeanTween.scale(m_RectTransform, _IsHighlighted ? m_ScaleUpSize : m_ScaleDownSize, m_TransitionTime);
 			}
 		}
 
-		private string _m_ParseTreeWord;
-		public string m_ParseTreeWord
+		private string _ParseTreeWord;
+		public string ParseTreeWord
 		{
-			get { return _m_ParseTreeWord; }
+			get { return _ParseTreeWord; }
 			set 
 			{
-				_m_ParseTreeWord = value;
+				_ParseTreeWord = value;
 				UpdateParseTreeTextField();
 			}
 		}
@@ -90,7 +90,7 @@ namespace IBM.Watson.Widgets.Question.Facet.FacetElement
 		/// </summary>
 		private void UpdateParseTreeTextField()
 		{
-			m_ParseTreeTextField.text = m_ParseTreeWord;
+			m_ParseTreeTextField.text = ParseTreeWord;
 		}
 	}
 }

@@ -29,18 +29,18 @@ namespace IBM.Watson.Widgets.Question.Facet
 		/// Holds a reference to the Avatar from the Question Widget.
 		/// </summary>
 		/// <value>The Avatar.</value>
-		public AvatarWidget m_Avatar { get; set; }
+		public AvatarWidget Avatar { get; set; }
 
 		/// <summary>
 		/// Holds a reference to the Questions from the Question Widget.
 		/// </summary>
-		private ITM.Questions _m_Questions;
-		public ITM.Questions m_Questions
+		private ITM.Questions _Questions;
+		public ITM.Questions Questions
 		{
-			get { return _m_Questions; }
+			get { return _Questions; }
 			set
 			{
-				_m_Questions = value;
+				_Questions = value;
 				OnQuestionData ();
 			}
 		}
@@ -48,13 +48,13 @@ namespace IBM.Watson.Widgets.Question.Facet
 		/// <summary>
 		/// Holds a reference to to the Answers from the Question Widget.
 		/// </summary>
-		private ITM.Answers _m_Answers;
-		public ITM.Answers m_Answers
+		private ITM.Answers _Answers;
+		public ITM.Answers Answers
 		{
-			get { return _m_Answers; }
+			get { return _Answers; }
 			set
 			{
-				_m_Answers = value;
+				_Answers = value;
 				OnAnswerData ();
 			}
 		}
@@ -62,13 +62,13 @@ namespace IBM.Watson.Widgets.Question.Facet
 		/// <summary>
 		/// Holds a reference to the Parse Data from the Question Widget.
 		/// </summary>
-		private ITM.ParseData _m_ParseData;
-		public ITM.ParseData m_ParseData
+		private ITM.ParseData _ParseData;
+		public ITM.ParseData ParseData
 		{
-			get { return _m_ParseData; }
+			get { return _ParseData; }
 			set
 			{
-				_m_ParseData = value;
+				_ParseData = value;
 				OnParseData ();
 			}
 		}

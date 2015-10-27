@@ -34,8 +34,8 @@ namespace IBM.Watson.Widgets.Question.Facet
 		override protected void OnAnswerData()
 		{
 			for(int i = 0; i < m_AnswerConfidenceBars.Length; i++) {
-				m_AnswerConfidenceBars[i].m_Answer = m_Answers.answers[i].answerText;
-				m_AnswerConfidenceBars[i].m_Confidence = m_Answers.answers[i].confidence;
+				m_AnswerConfidenceBars[i].Answer = Answers.answers[i].answerText;
+				m_AnswerConfidenceBars[i].Confidence = Answers.answers[i].confidence;
 			}
 		}
 	}
