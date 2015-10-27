@@ -20,8 +20,7 @@
 using System.Collections;
 using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
-using IBM.Watson.Widgets;
-using IBM.Watson.Avatar;
+using IBM.Watson.Widgets.Avatar;
 using IBM.Watson.Widgets.Question;
 using IBM.Watson.Widgets.Question.Facet;
 using IBM.Watson.Services.v1;

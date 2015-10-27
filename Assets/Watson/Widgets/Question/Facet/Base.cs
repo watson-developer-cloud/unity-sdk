@@ -18,7 +18,7 @@
 
 using UnityEngine;
 using System.Collections;
-using IBM.Watson.Widgets;
+using IBM.Watson.Widgets.Avatar;
 using IBM.Watson.Services.v1;
 
 namespace IBM.Watson.Widgets.Question.Facet

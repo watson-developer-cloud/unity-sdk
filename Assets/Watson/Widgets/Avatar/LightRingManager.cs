@@ -28,6 +28,11 @@ namespace IBM.Watson.Widgets.Avatar
 
         #region OnEnable / OnDisable / OnApplicationQuit / Awake
         
+		void OnApplicationQuit()
+		{
+			//TODO: Go back to initial coloring
+		}
+
         protected override void Awake(){
             base.Awake();
 
@@ -64,20 +69,21 @@ namespace IBM.Watson.Widgets.Avatar
 
         #endregion
 
-        public override void OnChangedMood(System.Object[] args){
-            base.OnChangedMood(args);
-			AnimateLightFlare (m_AvatarWidgetAttached.MoodSpeedModifier);
+       
+		public override void ChangedMood (Color colorToChange, float speedModifier)
+		{
+			//We are not changing color in flare in mood change!
+			AnimateLightFlare (speedModifier);
 		}
-        
 
 		LTDescr colorAnimationOnRing = null;
 		LTDescr[] colorAnimationOnFlare = null;
-		public override void ChangeToColor(Color color, float timeModifier)
+		public override void ChangedBehavior(Color color, float timeModifier)
         {
 			if (colorAnimationOnRing != null) {
 				LeanTween.cancel(colorAnimationOnRing.uniqueId);
 			}
-			colorAnimationOnRing = LeanTween.color (gameObject, color, 1.0f).setFromColor (Color.white).setLoopPingPong ();
+			colorAnimationOnRing = LeanTween.color (gameObject, color, timeModifier); //.setFromColor (Color.white).setLoopPingPong ();
 
 			if (colorAnimationOnFlare != null) {
 				for (int i = 0; i < colorAnimationOnFlare.Length; i++) {
@@ -90,7 +96,8 @@ namespace IBM.Watson.Widgets.Avatar
 			for (int i = 0; i < colorAnimationOnFlare.Length; i++) {
 				//LeanTween.va
 				GameObject lightFlareObject = lightFlareChild[i];
-				colorAnimationOnFlare[i] = LeanTween.value (lightFlareChild[i], Color.white, color, 1.0f * timeModifier).setLoopPingPong ().setOnUpdateColor(
+			
+				colorAnimationOnFlare[i] = LeanTween.value (lightFlareChild[i], Color.white, color, timeModifier).setLoopPingPong ().setOnUpdateColor(
 					(Color a)=>{
 					lightFlareObject.transform.GetComponent<MeshRenderer>().sharedMaterial.SetColor("_TintColor", a);
 				});
@@ -102,15 +109,24 @@ namespace IBM.Watson.Widgets.Avatar
         {
 			if (moveAnimationOnFlare != null) {
 				for (int i = 0; i < moveAnimationOnFlare.Length; i++) {
-					//LeanTween.cancel (moveAnimationOnFlare [i].uniqueId);
-					moveAnimationOnFlare [i].setTime(lightFlareAnimationTime * timeModifier);
+					if(moveAnimationOnFlare [i] != null){
+						moveAnimationOnFlare [i].setTime(lightFlareAnimationTime * timeModifier);
+					}
 				}
 			} else {
-				moveAnimationOnFlare = new LTDescr[lightFlareList.Length]; 
+				if(timeModifier > 0.0f){
+					moveAnimationOnFlare = new LTDescr[lightFlareList.Length]; 
+				}
 
 				if (lightFlareList.Length == listFlarePathList.Length) {
 					for (int i = 0; i < lightFlareList.Length; i++) {
-						moveAnimationOnFlare [i] = LeanTween.moveLocal (lightFlareList[i], listFlarePathList [i], lightFlareAnimationTime * timeModifier).setOrientToPath(true).setAxis(Vector3.forward).setEase(lightFlareEase).setLoopPingPong ();
+						if(timeModifier > 0.0f){
+							lightFlareList[i].gameObject.SetActive(true);
+							moveAnimationOnFlare [i] = LeanTween.moveLocal (lightFlareList[i], listFlarePathList [i], lightFlareAnimationTime * timeModifier).setOrientToPath(true).setAxis(Vector3.forward).setEase(lightFlareEase).setLoopPingPong ();
+						}
+						else{
+							lightFlareList[i].gameObject.SetActive(false);
+						}
 					}
 				}
 			}

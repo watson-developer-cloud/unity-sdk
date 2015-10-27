@@ -28,7 +28,7 @@ using UnityEngine.UI;
 
 #pragma warning disable 414
 
-namespace IBM.Watson.Widgets
+namespace IBM.Watson.Widgets.Avatar
 {
     /// <summary>
     /// Avatar of Watson 
@@ -70,17 +70,9 @@ namespace IBM.Watson.Widgets
         public enum MoodType
         {
             /// <summary>
-            /// Connecting - initial state
-            /// </summary>
-            CONNECTING = 0,     
-            /// <summary>
-            /// Connection Failed
-            /// </summary>
-            DISCONNECTED,
-            /// <summary>
-            /// Connected - Waiting to be waken-up
-            /// </summary>
-            SLEEPING,          
+			/// Connecting / Disconnected - Waiting to be waken-up ( initial state )
+			/// </summary>
+            SLEEPING = 0,          
             /// <summary>
             /// Connected - After wake up - waits a mood change
             /// </summary>
@@ -177,7 +169,7 @@ namespace IBM.Watson.Widgets
             private set
             {
                 m_State = value;
-                EventManager.Instance.SendEvent(Constants.Event.ON_CHANGE_AVATAR_STATE_FINISH, this, value);
+				EventManager.Instance.SendEvent(Constants.Event.ON_CHANGE_AVATAR_STATE_FINISH, this, value);
             }
         }
         
@@ -222,6 +214,9 @@ namespace IBM.Watson.Widgets
         protected override void Start()
         {
             base.Start();
+
+			Mood = MoodType.SLEEPING;
+			State = AvatarState.CONNECTING;
 
             // login to ITM, then select the pipeline
             m_ITM.Login(OnItmLogin);
@@ -525,7 +520,8 @@ namespace IBM.Watson.Widgets
                 Color color = Color.white;
                 switch (Mood)
                 {
-                    case MoodType.IDLE: color = new Color(241 / 255.0f, 241 / 255.0f, 242 / 255.0f); break;
+					case MoodType.SLEEPING: color = new Color(255 / 255.0f, 255 / 255.0f, 255 / 255.0f); break;
+					case MoodType.IDLE: color = new Color(241 / 255.0f, 241 / 255.0f, 242 / 255.0f); break;
                     case MoodType.INTERESTED: color = new Color(131 / 255.0f, 209 / 255.0f, 245 / 255.0f); break;
                     case MoodType.URGENT: color = new Color(221 / 255.0f, 115 / 255.0f, 28 / 255.0f); break;
                     case MoodType.UPSET: color = new Color(217 / 255.0f, 24 / 255.0f, 45 / 255.0f); break;
@@ -543,12 +539,13 @@ namespace IBM.Watson.Widgets
                 float value = 1.0f;
                 switch (Mood)
                 {
-                    case MoodType.IDLE: value = 1.0f; break;
+					case MoodType.SLEEPING: value = 0.0f; break;
+					case MoodType.IDLE: value = 1.0f; break;
                     case MoodType.INTERESTED: value = 1.1f; break;
                     case MoodType.URGENT: value = 2.0f; break;
                     case MoodType.UPSET: value = 1.5f; break;
                     case MoodType.SHY: value = 0.9f; break;
-                    default: Log.Error("AvatarWidget", "MoodType is not defined for speed modifier!"); value = 1.0f; break;
+					default: Log.Error("AvatarWidget", "MoodType : {0} is not defined for speed modifier!", Mood); value = 1.0f; break;
                 }
                 return value;
             }
@@ -561,12 +558,39 @@ namespace IBM.Watson.Widgets
                 float value = MoodSpeedModifier;
                 if (value != 0.0f)
                     value = 1.0f / value;
-                else
-                    value = 0.00001f;
 
                 return value;
             }
         }
+
+		public float BehaviorSpeedModifier
+		{
+			get
+			{
+				float value = 1.0f;
+				switch (State)
+				{
+				case AvatarState.CONNECTING: value = 0.0f; break;
+				case AvatarState.ANSWERING: value = 1.0f; break;
+				case AvatarState.LISTENING: value = 1.0f; break;
+				case AvatarState.THINKING: value = 1.0f; break;
+				default: Log.Error("AvatarWidget", "State : {0} is not defined for speed modifier!", State); value = 1.0f; break;
+				}
+				return value;
+			}
+		}
+
+		public float BehaviorTimeModifier
+		{
+			get
+			{
+				float value = BehaviorSpeedModifier;
+				if (value != 0.0f)
+					value = 1.0f / value;
+
+				return value;
+			}
+		}
 
         void OnChangeMood(System.Object[] args)
         {
