@@ -21,10 +21,10 @@
 using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
 using IBM.Watson.Avatar;
+using IBM.Watson.Data;
 using IBM.Watson.Services.v1;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections.Generic;
 
 #pragma warning disable 414
 
@@ -50,16 +50,16 @@ namespace IBM.Watson.Widgets
             /// </summary>
             CONNECTING, 
             /// <summary>
-            /// Connected - Listening continously to understand the input
+            /// Connected - Listening continuously to understand the input
             /// </summary>
             LISTENING, 
             /// <summary>
-            /// Connected - After some input it is the time for thiking the understand the input
+            /// Connected - After some input it is the time for thinking the understand the input
             /// </summary>
             THINKING,
             /// <summary>
             /// Connected - After semantically understanding, Watson is responding. 
-            /// If Watson didn't understand the input, then it goes to listening mode while giving some resonse about not undertood input.
+            /// If Watson didn't understand the input, then it goes to listening mode while giving some response about not understood input.
             /// </summary>
             ANSWERING
         };
@@ -548,7 +548,7 @@ namespace IBM.Watson.Widgets
                     case MoodType.URGENT: value = 2.0f; break;
                     case MoodType.UPSET: value = 1.5f; break;
                     case MoodType.SHY: value = 0.9f; break;
-                    default: Log.Error("AvatarWidget", "MoodType is not defined for spped modifier!"); value = 1.0f; break;
+                    default: Log.Error("AvatarWidget", "MoodType is not defined for speed modifier!"); value = 1.0f; break;
                 }
                 return value;
             }

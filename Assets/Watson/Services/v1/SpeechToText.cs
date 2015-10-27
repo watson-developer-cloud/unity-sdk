@@ -27,7 +27,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Text;
-using IBM.Watson.Widgets;
+using IBM.Watson.Data;
 
 namespace IBM.Watson.Services.v1            // Add DeveloperCloud
 {

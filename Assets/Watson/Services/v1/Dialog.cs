@@ -32,8 +32,8 @@ namespace IBM.Watson.Services.v1
 {
     /// <summary>
     /// This class wraps the Watson Dialog service. 
-    /// </summary>
     /// <a href="http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/dialog.html">Dialog Service</a>
+    /// </summary>
     public class Dialog
     {
         #region Public Types
