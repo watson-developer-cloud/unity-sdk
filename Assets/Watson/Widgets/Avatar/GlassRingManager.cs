@@ -13,11 +13,11 @@ namespace IBM.Watson.Widgets.Avatar
 
         #region Private Variables
         Material m_GlassRingMaterial;
-		Color m_InitialColorOfGlassRingMaterial;
+        Color m_InitialColorOfGlassRingMaterial;
         #endregion
 
         #region OnEnable / OnDisable / OnApplicationQuit / Awake
- 
+
         void OnApplicationQuit()
         {
             if (m_GlassRingMaterial != null)
@@ -25,12 +25,13 @@ namespace IBM.Watson.Widgets.Avatar
                 m_GlassRingMaterial.SetColor("_SpecColor", m_InitialColorOfGlassRingMaterial);
             }
         }
-        
-		public override void Awake () {
+
+        protected override void Awake()
+        {
             base.Awake();
 
             m_AvatarWidgetAttached = this.transform.GetComponentInParent<AvatarWidget>();
-            if(m_AvatarWidgetAttached != null)
+            if (m_AvatarWidgetAttached != null)
             {
                 MeshRenderer childMeshRenderer = transform.GetComponentInChildren<MeshRenderer>();
                 if (childMeshRenderer != null)
@@ -50,26 +51,30 @@ namespace IBM.Watson.Widgets.Avatar
                 this.enabled = false;
             }
 
-		}
+        }
 
         #endregion
 
         #region Changing Mood / Avatar State
 
 
-		LTDescr colorAnimationOnGlass = null;
-		public override void ChangeToColor(Color color, float timeModifier){
-			if (m_GlassRingMaterial != null) {
-				if (colorAnimationOnGlass != null) {
-					LeanTween.cancel(colorAnimationOnGlass.uniqueId);
-				}
-				
-				colorAnimationOnGlass = LeanTween.value (gameObject, Color.white, color, timeModifier).setLoopPingPong ().setOnUpdateColor(
-					(Color a)=>{
-					m_GlassRingMaterial.SetColor("_SpecColor", a);
-				});
-			}
-		}
+        LTDescr colorAnimationOnGlass = null;
+        public override void ChangeToColor(Color color, float timeModifier)
+        {
+            if (m_GlassRingMaterial != null)
+            {
+                if (colorAnimationOnGlass != null)
+                {
+                    LeanTween.cancel(colorAnimationOnGlass.uniqueId);
+                }
+
+                colorAnimationOnGlass = LeanTween.value(gameObject, Color.white, color, timeModifier).setLoopPingPong().setOnUpdateColor(
+                    (Color a) =>
+                    {
+                        m_GlassRingMaterial.SetColor("_SpecColor", a);
+                    });
+            }
+        }
 
         #endregion
     }
