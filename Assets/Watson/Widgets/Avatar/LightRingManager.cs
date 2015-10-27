@@ -28,7 +28,7 @@ namespace IBM.Watson.Widgets.Avatar
 
         #region OnEnable / OnDisable / OnApplicationQuit / Awake
         
-        public override void Awake(){
+        protected override void Awake(){
             base.Awake();
 
             listFlarePathList = new Vector3[3][];
