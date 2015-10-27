@@ -84,15 +84,45 @@ namespace IBM.Watson.Services.v1
         /// </summary>
         public class Model
         {
+            /// <summary>
+            /// The language model ID.
+            /// </summary>
             public string model_id { get; set; }
+            /// <summary>
+            /// The name of the language model.
+            /// </summary>
             public string name { get; set; }
+            /// <summary>
+            /// The source language ID.
+            /// </summary>
             public string source { get; set; }
+            /// <summary>
+            /// The target language ID.
+            /// </summary>
             public string target { get; set; }
+            /// <summary>
+            /// The model of which this model was based.
+            /// </summary>
             public string base_model_id { get; set; }
+            /// <summary>
+            /// The domain of the language model.
+            /// </summary>
             public string domain { get; set; }
+            /// <summary>
+            /// Is this model customizable?
+            /// </summary>
             public bool customizable { get; set; }
+            /// <summary>
+            /// Is this model default.
+            /// </summary>
             public bool @default { get; set; }
+            /// <summary>
+            /// Who is the owner of this model.
+            /// </summary>
             public string owner { get; set; }
+            /// <summary>
+            /// What is the status of this model.
+            /// </summary>
             public string status { get; set; }
         }
         /// <summary>
@@ -102,20 +132,36 @@ namespace IBM.Watson.Services.v1
         {
             public Model [] models { get; set; }
         }
+        /// <summary>
+        /// Callback for GetModels() method.
+        /// </summary>
+        /// <param name="models"></param>
         public delegate void GetModelsCallback(Models models);
+        /// <summary>
+        /// Callback for GetModel() method.
+        /// </summary>
+        /// <param name="model"></param>
         public delegate void GetModelCallback(Model model);
+        /// <summary>
+        /// Callback for GetLanguages() method.
+        /// </summary>
+        /// <param name="languages"></param>
         public delegate void GetLanguagesCallback(Languages languages);
+        /// <summary>
+        /// Callback for Identify() method.
+        /// </summary>
+        /// <param name="languages"></param>
         public delegate void IdentifyCallback(string languages);
+        /// <summary>
+        /// Callback for Translate() method.
+        /// </summary>
+        /// <param name="translation"></param>
         public delegate void TranslateCallback(Translations translation);
-
         #endregion
 
         #region Private Data
         private const string SERVICE_ID = "TranslateV1";
         private static fsSerializer sm_Serializer = new fsSerializer();
-        #endregion
-
-        #region Public Properties
         #endregion
 
         #region GetTranslation Functions
@@ -358,7 +404,7 @@ namespace IBM.Watson.Services.v1
         /// <summary>
         /// This function returns a list to the callback of all identifiable languages.
         /// </summary>
-        /// <param name="callback">The callback to invoke with a Langage array, null on error.</param>
+        /// <param name="callback">The callback to invoke with a Language array, null on error.</param>
         /// <returns>Returns true if the request was submitted.</returns>
         public bool GetLanguages(GetLanguagesCallback callback)
         {
