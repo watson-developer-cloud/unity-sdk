@@ -26,31 +26,40 @@ namespace IBM.Watson.Widgets.Question.Facet
 {
 	public class Evidence : Base
 	{
-		[Header("Evidence")]
 		[SerializeField]
-		private EvidenceItem[] m_EvidenceItems;
+		private GameObject m_EvidenceItemPrefab;
+
+		[SerializeField]
+		private RectTransform m_EvidenceCanvasRectTransform;
+
+		private List<EvidenceItem> m_EvidenceItems = new List<EvidenceItem>();
 
 		/// <summary>
-		/// Fired when Answer Data is set. Sets the evidence value in each evidence item.
+		/// Fired when Answer Data is set. Sets the evidence value in each evidence item. Limited to 3 evidence items.
 		/// </summary>
 		override protected void OnAnswerData()
 		{
-			//	TODO replace <answer> with the outline
-			//	TODO dynamically generate evidence items
-			if (m_Answers.answers.Length == 0)
-				return;
-			
-			if (m_Answers.answers [0].evidence.Length == 1) {
-				m_EvidenceItems [0].m_Evidence = m_Answers.answers [0].evidence [0].decoratedPassage;
-				m_EvidenceItems [1].gameObject.SetActive (false);
-			} else if (m_Answers.answers [0].evidence.Length > 1) {
-				m_EvidenceItems [0].gameObject.SetActive (true);
-				m_EvidenceItems [1].gameObject.SetActive (true);
-				m_EvidenceItems [0].m_Evidence = m_Answers.answers [0].evidence [0].decoratedPassage;
-				m_EvidenceItems [1].m_Evidence = m_Answers.answers [0].evidence [1].decoratedPassage;
-			} else {
-				m_EvidenceItems [0].gameObject.SetActive (false);
-				m_EvidenceItems [1].gameObject.SetActive (false);
+			for(int i = 0; i < m_Answers.answers[0].evidence.Length; i++)
+			{
+				if(i >= 3) return;
+
+				GameObject evidenceItemGameObject = Instantiate(m_EvidenceItemPrefab, new Vector3(0f, -i*60f, 0f), Quaternion.identity) as GameObject;
+				RectTransform evidenceItemRectTransform = evidenceItemGameObject.GetComponent<RectTransform>();
+				evidenceItemRectTransform.SetParent(m_EvidenceCanvasRectTransform, false);
+				EvidenceItem evidenceItem = evidenceItemGameObject.GetComponent<EvidenceItem>();
+				m_EvidenceItems.Add(evidenceItem);
+				evidenceItem.m_Evidence = m_Answers.answers[0].evidence[i].decoratedPassage;
+			}
+		}
+
+		/// <summary>
+		/// Clears dynamically generated Facet Elements when a question is answered. Called from Question Widget.
+		/// </summary>
+		override public void Clear()
+		{
+			while(m_EvidenceItems.Count != 0) {
+				Destroy(m_EvidenceItems[0].gameObject);
+				m_EvidenceItems.Remove(m_EvidenceItems[0]);
 			}
 		}
 	}

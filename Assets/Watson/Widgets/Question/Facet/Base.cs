@@ -78,6 +78,11 @@ namespace IBM.Watson.Widgets.Question.Facet
 		protected virtual void Hide() {}
 
 		/// <summary>
+		/// Clears dynamically generated Facet Elements when a question is answered. Called from Question Widget.
+		/// </summary>
+		public virtual void Clear() {}
+
+		/// <summary>
 		/// Fired when Parse Data is set.
 		/// </summary>
 		protected virtual void OnParseData() {}

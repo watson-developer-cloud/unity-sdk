@@ -43,13 +43,13 @@ namespace IBM.Watson.Widgets.Question.Facet.FacetElement
 		/// </summary>
 		private void UpdateEvidence()
 		{
+			//	TODO replace <answer> with the outline
 			if (m_Evidence != "") {
 				gameObject.SetActive (true);
 				m_EvidenceText.text = m_Evidence;
 			} else {
 				gameObject.SetActive(false);
 			}
-			//	TODO highlight evidence words
 		}
 	}
 }

@@ -31,7 +31,7 @@ using System.Collections.Generic;
 namespace IBM.Watson.Widgets
 {
     /// <summary>
-    /// Avatar of Watson 
+    /// This class manages the answers, question, and other data related to a question asked of the AvatarWidget.
     /// </summary>
     [RequireComponent(typeof(AudioSource))]
     public class QuestionWidget : Widget
@@ -178,11 +178,13 @@ namespace IBM.Watson.Widgets
         }
 
 		/// <summary>
-		/// Clears parse tree in the Parse Tree facet when AvatarWidget answers a new question.
+		/// Clears dynamically generated objects when AvatarWidget answers a new question.
 		/// </summary>
-		public void ClearParseTree()
+		public void ClearFacets()
 		{
-			m_ParseTree.ClearParseTree ();
+			foreach (Base facet in m_facets) {
+				facet.Clear ();
+			}
 		}
     }
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shfbBuild product="Sandcastle Help File Builder and Tools" version="2015.7.25.0" projectFile="C:\Work\UnitySDK\Docs\UnitySDK.shfbproj" started="10/27/2015 3:58:57 PM">
+<shfbBuild product="Sandcastle Help File Builder and Tools" version="2015.7.25.0" projectFile="C:\Work\UnitySDK\Docs\UnitySDK.shfbproj" started="10/27/2015 4:34:24 PM">
 <buildStep step="Initializing">
 Finding tools...
 The Sandcastle tools are located in &#39;C:\Program Files (x86)\EWSoftware\Sandcastle Help File Builder\&#39;
@@ -28,16 +28,16 @@ Copying XML comments files
 <buildStep step="GenerateSharedContent">
 Generating shared content files (en-US, English (United States))...
 <plugIn name="Lightweight Website Style" behavior="After" priority="1000">
-</plugIn>    Last step completed in 00:00:00.0000
+</plugIn>    Last step completed in 00:00:00.0139
 </buildStep>
 <buildStep step="GenerateApiFilter">
 Generating API filter for MRefBuilder...
-    Last step completed in 00:00:00.0156
+    Last step completed in 00:00:00.0030
 </buildStep>
 <buildStep step="GenerateReflectionInfo">
 Generating reflection information...
 [C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe - GenerateRefInfo.proj]
-Build started 10/27/2015 3:58:58 PM.
+Build started 10/27/2015 4:34:25 PM.
 Project &quot;C:\Work\UnitySDK\Docs\Help\Working\GenerateRefInfo.proj&quot; on node 1 (default targets).
 PrepareForBuild:
   Creating directory &quot;obj\Debug\&quot;.
@@ -46,7 +46,7 @@ GenerateRefInfo:
   Copyright c 2006-2015, Microsoft Corporation, All Rights Reserved.
   Portions Copyright c 2006-2015, Eric Woodruff, All Rights Reserved.
   Loaded 1 assemblies for reflection and 1 dependency assemblies.
-  Wrote information on 10 namespaces, 131 types, and 547 members
+  Wrote information on 11 namespaces, 136 types, and 564 members
   Copying file from &quot;reflection.org&quot; to &quot;reflection.all&quot;.
   XslTransform (v2015.7.25.0)
   Copyright c 2006-2015, Microsoft Corporation, All Rights Reserved.
@@ -56,13 +56,13 @@ Done Building Project &quot;C:\Work\UnitySDK\Docs\Help\Working\GenerateRefInfo.p
 
 Build succeeded.
 
-Time Elapsed 00:00:01.35
-    Last step completed in 00:00:01.8420
+Time Elapsed 00:00:01.14
+    Last step completed in 00:00:01.5408
 </buildStep>
 <buildStep step="TransformReflectionInfo">
 Transforming reflection output...
 [C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe - TransformManifest.proj]
-Build started 10/27/2015 3:59:00 PM.
+Build started 10/27/2015 4:34:27 PM.
 Project &quot;C:\Work\UnitySDK\Docs\Help\Working\TransformManifest.proj&quot; on node 1 (default targets).
 TransformManifest:
   XslTransform (v2015.7.25.0)
@@ -82,12 +82,12 @@ Done Building Project &quot;C:\Work\UnitySDK\Docs\Help\Working\TransformManifest
 
 Build succeeded.
 
-Time Elapsed 00:00:00.82
-    Last step completed in 00:00:01.1230
+Time Elapsed 00:00:00.78
+    Last step completed in 00:00:01.0781
 </buildStep>
 <buildStep step="GenerateNamespaceSummaries">
 Generating namespace summary information...
-    Last step completed in 00:00:00.0312
+    Last step completed in 00:00:00.0156
 </buildStep>
 <buildStep step="CopyAdditionalContent">
 Copying additional content files...
@@ -101,7 +101,7 @@ Merging conceptual and additional tables of contents...
 <buildStep step="GenerateIntermediateTableOfContents">
 Generating intermediate table of contents file...
 [C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe - GenerateIntermediateTOC.proj]
-Build started 10/27/2015 3:59:01 PM.
+Build started 10/27/2015 4:34:28 PM.
 Project &quot;C:\Work\UnitySDK\Docs\Help\Working\GenerateIntermediateTOC.proj&quot; on node 1 (default targets).
 GenerateIntermediateTOC:
   XslTransform (v2015.7.25.0)
@@ -112,14 +112,14 @@ Done Building Project &quot;C:\Work\UnitySDK\Docs\Help\Working\GenerateIntermedi
 
 Build succeeded.
 
-Time Elapsed 00:00:00.50
+Time Elapsed 00:00:00.46
 Generating conceptual content intermediate TOC file...
-    Last step completed in 00:00:00.7844
+    Last step completed in 00:00:00.8126
 </buildStep>
 <buildStep step="CreateBuildAssemblerConfigs">
 Creating Sandcastle configuration files...
     sandcastle.config
-    Last step completed in 00:00:00.0781
+    Last step completed in 00:00:00.0938
 </buildStep>
 <buildStep step="MergeCustomConfigs">
 Merging custom build component configurations
@@ -129,7 +129,7 @@ C:\Work\UnitySDK\Docs\Help\Working\sandcastle.config
 <buildStep step="BuildReferenceTopics">
 Building reference help topics...
 [C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe - BuildReferenceTopics.proj]
-Build started 10/27/2015 3:59:02 PM.
+Build started 10/27/2015 4:34:29 PM.
 Project &quot;C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj&quot; on node 1 (default targets).
 BuildReferenceTopics:
   BuildAssembler (v2015.7.25.0)
@@ -208,6 +208,16 @@ BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Debug.Q
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Debug.Quality] Unknown reference link target &#39;T:UnityEngine.Behaviour&#39;. [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Debug.Quality] Unknown reference link target &#39;T:UnityEngine.MonoBehaviour&#39;. [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Debug.Quality.#ctor] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
+BuildAssembler : warning : ShowMissingComponent: [N:IBM.Watson.Editor] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
+BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Editor.UnitTestManager] Unknown reference link target &#39;T:UnityEngine.Object&#39;. [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
+BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Editor.UnitTestManager] Unknown reference link target &#39;T:UnityEngine.Component&#39;. [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
+BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Editor.UnitTestManager] Unknown reference link target &#39;T:UnityEngine.Behaviour&#39;. [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
+BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Editor.UnitTestManager] Unknown reference link target &#39;T:UnityEngine.MonoBehaviour&#39;. [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
+BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Editor.UnitTestManager.#ctor] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
+BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Editor.UnitTestManager.QueueTests(System.Type[],System.Boolean)] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
+BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Editor.UnitTestManager.QueueTests(System.Type[],System.Boolean)] Missing &lt;param name=&quot;tests&quot;/&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
+BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Editor.UnitTestManager.QueueTests(System.Type[],System.Boolean)] Missing &lt;param name=&quot;run&quot;/&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
+BuildAssembler : warning : ShowMissingComponent: [T:IBM.Watson.Editor.UnitTestManager.OnTestsComplete] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [N:IBM.Watson.Logging] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.Logging.DebugReactor.Level] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Logging.DebugReactor.ProcessLog(IBM.Watson.Logging.LogRecord)] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
@@ -347,37 +357,17 @@ BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Services.v1.Trans
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Services.v1.Translate.GetModel(System.String,IBM.Watson.Services.v1.Translate.GetModelCallback)] Missing &lt;returns&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Services.v1.Translate.GetModel(System.String,IBM.Watson.Services.v1.Translate.GetModelCallback)] Missing &lt;param name=&quot;model_id&quot;/&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Services.v1.Translate.GetModel(System.String,IBM.Watson.Services.v1.Translate.GetModelCallback)] Missing &lt;param name=&quot;callback&quot;/&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Services.v1.Translate.Identify(System.String,IBM.Watson.Services.v1.Translate.IdentifyCallback)] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Services.v1.Translate.Identify(System.String,IBM.Watson.Services.v1.Translate.IdentifyCallback)] Missing &lt;returns&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Services.v1.Translate.Identify(System.String,IBM.Watson.Services.v1.Translate.IdentifyCallback)] Missing &lt;param name=&quot;text&quot;/&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Services.v1.Translate.Identify(System.String,IBM.Watson.Services.v1.Translate.IdentifyCallback)] Missing &lt;param name=&quot;callback&quot;/&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [T:IBM.Watson.Services.v1.Translate.GetLanguagesCallback] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [T:IBM.Watson.Services.v1.Translate.GetModelCallback] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [T:IBM.Watson.Services.v1.Translate.GetModelsCallback] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [T:IBM.Watson.Services.v1.Translate.IdentifyCallback] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [T:IBM.Watson.Services.v1.Translate.Language] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Services.v1.Translate.Language.#ctor] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.Services.v1.Translate.Language.Code] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.Services.v1.Translate.Language.Name] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [T:IBM.Watson.Services.v1.Translate.Model] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
+BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Services.v1.Translate.Languages.#ctor] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Services.v1.Translate.Model.#ctor] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.Services.v1.Translate.Model.BaseModelId] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.Services.v1.Translate.Model.Cutomizable] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.Services.v1.Translate.Model.Default] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.Services.v1.Translate.Model.Domain] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.Services.v1.Translate.Model.ModelId] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.Services.v1.Translate.Model.Name] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.Services.v1.Translate.Model.Owner] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.Services.v1.Translate.Model.Source] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.Services.v1.Translate.Model.Status] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.Services.v1.Translate.Model.Target] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [T:IBM.Watson.Services.v1.Translate.TranslateCallback] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [T:IBM.Watson.Services.v1.Translate.Translation] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
+BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Services.v1.Translate.Models.#ctor] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
+BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.Services.v1.Translate.Models.models] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Services.v1.Translate.Translation.#ctor] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.Services.v1.Translate.Translation.CharacterCount] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.Services.v1.Translate.Translation.Translations] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.Services.v1.Translate.Translation.WordCount] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [T:IBM.Watson.Services.v1.Translate.TypeFilter] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
+BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Services.v1.Translate.Translations.#ctor] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
+BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.Services.v1.Translate.Translations.character_count] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
+BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.Services.v1.Translate.Translations.translations] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
+BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.Services.v1.Translate.Translations.word_count] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [N:IBM.Watson.Utilities] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Utilities.AudioClipUtil.Combine(UnityEngine.AudioClip[])] Missing &lt;returns&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [M:IBM.Watson.Utilities.AudioClipUtil.Combine(UnityEngine.AudioClip[])] Unknown reference link target &#39;T:UnityEngine.AudioClip&#39;. [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
@@ -783,20 +773,20 @@ BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.Question.Facet.FacetElement.POSTextItem] Unknown reference link target &#39;T:UnityEngine.MonoBehaviour&#39;. [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.Question.Facet.FacetElement.POSTextItem.#ctor] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.Widgets.Question.Facet.FacetElement.POSTextItem.m_POSWord] Missing &lt;summary&gt; documentation [C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj]
-  Processed 778 topic(s)
-  646 warning(s)
+  Processed 806 topic(s)
+  636 warning(s)
   CopyFromIndexComponent: &quot;reflection&quot; in-memory cache entries used: 4 of 15.
   CopyFromIndexComponent: &quot;comments&quot; in-memory cache entries used: 1 of 30.
 Done Building Project &quot;C:\Work\UnitySDK\Docs\Help\Working\BuildReferenceTopics.proj&quot; (default targets).
 
 Build succeeded.
 
-Time Elapsed 00:00:10.44
-    Last step completed in 00:00:10.7782
+Time Elapsed 00:00:09.99
+    Last step completed in 00:00:10.3237
 </buildStep>
 <buildStep step="CombiningIntermediateTocFiles">
 Combining conceptual and API intermediate TOC files...
-    Last step completed in 00:00:00.0065
+    Last step completed in 00:00:00.0080
 </buildStep>
 <buildStep step="ExtractingHtmlInfo">
 Extracting HTML info for HTML Help 1 and/or website...
@@ -808,11 +798,11 @@ E-Mail: Eric@EWoodruff.us
 Using LCID &#39;1033&#39;, code page &#39;65001&#39;, encoding charset &#39;UTF-8&#39;.
 
 Processing website files in C:\Work\UnitySDK\Docs\Help\Working\Output\Website
-Processed 778 HTML files
+Processed 806 HTML files
 Sorting keywords and generating See Also indices
 Saving website keyword index to C:\Work\UnitySDK\Docs\Help\Working\WebKI.xml
 Saving website table of contents to C:\Work\UnitySDK\Docs\Help\Working\WebTOC.xml
-    Last step completed in 00:00:01.1302
+    Last step completed in 00:00:01.1617
 </buildStep>
 <buildStep step="CopyStandardHelpContent">
 Copying standard help content...
@@ -891,7 +881,7 @@ C:\Program Files (x86)\EWSoftware\Sandcastle Help File Builder\PresentationStyle
 C:\Program Files (x86)\EWSoftware\Sandcastle Help File Builder\PresentationStyles\VS2013\Web\icons\TocOpen.gif -&gt; C:\Work\UnitySDK\Docs\Help\Working\Output\Website\icons\TocOpen.gif
 C:\Program Files (x86)\EWSoftware\Sandcastle Help File Builder\PresentationStyles\VS2013\Web\scripts\branding-Website.js -&gt; C:\Work\UnitySDK\Docs\Help\Working\Output\Website\scripts\branding-Website.js
 C:\Program Files (x86)\EWSoftware\Sandcastle Help File Builder\PresentationStyles\VS2013\Web\scripts\jquery-1.11.0.min.js -&gt; C:\Work\UnitySDK\Docs\Help\Working\Output\Website\scripts\jquery-1.11.0.min.js
-    Last step completed in 00:00:00.0778
+    Last step completed in 00:00:00.0937
 </buildStep>
 <buildStep step="GenerateHelpFormatTableOfContents">
 Generating website table of contents file...
@@ -902,23 +892,23 @@ Generating full-text index for the website...
 
 <plugIn name="Lightweight Website Style" behavior="After" priority="1000">
 Adding lightweight search and TOC elements to each topic...
-</plugIn>    Last step completed in 00:00:01.8699
+</plugIn>    Last step completed in 00:00:02.0546
 </buildStep>
 <buildStep step="CopyingWebsiteFiles">
 Copying website files to output folder...
 
 Copied 500 files
 Copied 1000 files
-Copied 1120 files for the website content
-    Last step completed in 00:00:01.2515
+Copied 1158 files for the website content
+    Last step completed in 00:00:01.4856
 </buildStep>
 <buildStep step="CleanIntermediates">
 Removing intermediate files...
-    Last step completed in 00:00:00.2819
+    Last step completed in 00:00:00.2812
 </buildStep>
 <buildStep step="Completed">
 
-Build completed successfully at 10/27/2015 3:59:17 PM.  Total time: 00:00:19.8797
+Build completed successfully at 10/27/2015 4:34:44 PM.  Total time: 00:00:19.5358
 
 </buildStep>
 </shfbBuild>

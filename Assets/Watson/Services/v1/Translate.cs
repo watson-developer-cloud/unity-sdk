@@ -25,6 +25,7 @@ using System.Text;
 using MiniJSON;
 using System;
 using System.Collections;
+using FullSerializer;
 
 namespace IBM.Watson.Services.v1
 {
@@ -35,43 +36,132 @@ namespace IBM.Watson.Services.v1
     public class Translate
     {
         #region Public Types
+        /// <summary>
+        /// Language data class.
+        /// </summary>
         public class Language
         {
-            public string Code { get; set; }        // country code of the language 
-            public string Name { get; set; }        // name of the language                                    
+            /// <summary>
+            /// String that contains the country code.
+            /// </summary>
+            public string language { get; set; }        // country code of the language 
+            /// <summary>
+            /// The language name.
+            /// </summary>
+            public string name { get; set; }        // name of the language                                    
         }
+        /// <summary>
+        /// Languages data class.
+        /// </summary>
+        public class Languages
+        {
+            /// <summary>
+            /// Array of language objects.
+            /// </summary>
+            public Language [] languages { get; set; }
+        }
+        /// <summary>
+        /// Translation data class.
+        /// </summary>
         public class Translation
         {
-            public long WordCount { get; set; }
-            public long CharacterCount { get; set; }
-            public string[] Translations { get; set; }
+            /// <summary>
+            /// Translation text.
+            /// </summary>
+            public string translation { get; set; }
+        };
+        /// <summary>
+        /// Translate data class returned by the TranslateCallback.
+        /// </summary>
+        public class Translations
+        {
+            public long word_count { get; set; }
+            public long character_count { get; set; }
+            public Translation[] translations { get; set; }
         }
+        /// <summary>
+        /// Language model data class.
+        /// </summary>
         public class Model
         {
-            public string ModelId { get; set; }
-            public string Name { get; set; }
-            public string Source { get; set; }
-            public string Target { get; set; }
-            public string BaseModelId { get; set; }
-            public string Domain { get; set; }
-            public bool Cutomizable { get; set; }
-            public bool Default { get; set; }
-            public string Owner { get; set; }
-            public string Status { get; set; }
+            /// <summary>
+            /// The language model ID.
+            /// </summary>
+            public string model_id { get; set; }
+            /// <summary>
+            /// The name of the language model.
+            /// </summary>
+            public string name { get; set; }
+            /// <summary>
+            /// The source language ID.
+            /// </summary>
+            public string source { get; set; }
+            /// <summary>
+            /// The target language ID.
+            /// </summary>
+            public string target { get; set; }
+            /// <summary>
+            /// The model of which this model was based.
+            /// </summary>
+            public string base_model_id { get; set; }
+            /// <summary>
+            /// The domain of the language model.
+            /// </summary>
+            public string domain { get; set; }
+            /// <summary>
+            /// Is this model customizable?
+            /// </summary>
+            public bool customizable { get; set; }
+            /// <summary>
+            /// Is this model default.
+            /// </summary>
+            public bool @default { get; set; }
+            /// <summary>
+            /// Who is the owner of this model.
+            /// </summary>
+            public string owner { get; set; }
+            /// <summary>
+            /// What is the status of this model.
+            /// </summary>
+            public string status { get; set; }
         }
-        public delegate void GetModelsCallback(Model[] models);
+        /// <summary>
+        /// Models data class.
+        /// </summary>
+        public class Models
+        {
+            public Model [] models { get; set; }
+        }
+        /// <summary>
+        /// Callback for GetModels() method.
+        /// </summary>
+        /// <param name="models"></param>
+        public delegate void GetModelsCallback(Models models);
+        /// <summary>
+        /// Callback for GetModel() method.
+        /// </summary>
+        /// <param name="model"></param>
         public delegate void GetModelCallback(Model model);
-        public delegate void GetLanguagesCallback(Language[] languages);
+        /// <summary>
+        /// Callback for GetLanguages() method.
+        /// </summary>
+        /// <param name="languages"></param>
+        public delegate void GetLanguagesCallback(Languages languages);
+        /// <summary>
+        /// Callback for Identify() method.
+        /// </summary>
+        /// <param name="languages"></param>
         public delegate void IdentifyCallback(string languages);
-        public delegate void TranslateCallback(Translation translation);
-
+        /// <summary>
+        /// Callback for Translate() method.
+        /// </summary>
+        /// <param name="translation"></param>
+        public delegate void TranslateCallback(Translations translation);
         #endregion
 
         #region Private Data
         private const string SERVICE_ID = "TranslateV1";
-        #endregion
-
-        #region Public Properties
+        private static fsSerializer sm_Serializer = new fsSerializer();
         #endregion
 
         #region GetTranslation Functions
@@ -142,55 +232,39 @@ namespace IBM.Watson.Services.v1
         {
             public TranslateCallback Callback { get; set; }
         };
-        private void TranslateResponse(RESTConnector.Request r, RESTConnector.Response resp)
+        private void TranslateResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            TranslateReq req = r as TranslateReq;
-            if (req == null)
-                throw new WatsonException("Unexpected Request type.");
-
-            bool bSuccess = false;
+            Translations translations = new Translations();
             if (resp.Success)
             {
-                try {
-                    Translation translation = new Translation();
-
-                    string jsonString = Encoding.UTF8.GetString(resp.Data);
-                    IDictionary json = Json.Deserialize(jsonString) as IDictionary;
-
-                    translation.WordCount = (long)json["word_count"];
-                    translation.CharacterCount = (long)json["character_count"];
-
-                    List<string> translations = new List<string>();
-
-                    IList itranslations = json["translations"] as IList;
-                    foreach (var t in itranslations)
-                    {
-                        IDictionary itranslation = t as IDictionary;
-                        translations.Add((string)itranslation["translation"]);
-                    }
-
-                    translation.Translations = translations.ToArray();
-                    bSuccess = true;
-
-                    if (req.Callback != null)
-                        req.Callback(translation);
-                }
-                catch( Exception e )
+                try
                 {
-                    Log.Error( "Translate", "Translate response exception: {0}", e.ToString() );
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = translations;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("NLC", "GetTranslation Exception: {0}", e.ToString());
+                    resp.Success = false;
                 }
             }
 
-            if (! bSuccess )
-            {
-                Log.Error("Translate", "GetTranslation() failed: {0}", resp.Error);
-                if (req.Callback != null)
-                    req.Callback(null);
-            }
+            if (((TranslateReq)req).Callback != null)
+                ((TranslateReq)req).Callback(resp.Success ? translations : null);
         }
         #endregion
 
         #region Models Functions
+        /// <summary>
+        /// This determines the types of models to return with GetModels.
+        /// </summary>
         public enum TypeFilter
         {
             DEFAULT,
@@ -239,51 +313,32 @@ namespace IBM.Watson.Services.v1
             public GetModelsCallback Callback { get; set; }
         }
 
-        private void GetModelsResponse(RESTConnector.Request r, RESTConnector.Response resp)
+        private void GetModelsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            GetModelsReq req = r as GetModelsReq;
-            if (req == null)
-                throw new WatsonException("Unexpected Request type.");
-
+            Models models = new Models();
             if (resp.Success)
             {
-                List<Model> models = new List<Model>();
-
-                string jsonData = Encoding.UTF8.GetString(resp.Data);
-                IDictionary json = Json.Deserialize(jsonData) as IDictionary;
-
-                IList imodels = json["models"] as IList;
-                foreach (var m in imodels)
+                try
                 {
-                    IDictionary imodel = m as IDictionary;
-                    models.Add(ParseModelJson(imodel));
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = models;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
                 }
-
-                if (req.Callback != null)
-                    req.Callback(models.ToArray());
+                catch (Exception e)
+                {
+                    Log.Error("NLC", "GetModels Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
             }
-            else
-            {
-                Log.Error("Translate", "GetModels() failed: {0}", resp.Error);
-                if (req.Callback != null)
-                    req.Callback(null);
-            }
-        }
 
-        private Model ParseModelJson(IDictionary imodel)
-        {
-            Model model = new Model();
-            model.ModelId = (string)imodel["model_id"];
-            model.Name = (string)imodel["name"];
-            model.Source = (string)imodel["source"];
-            model.Target = (string)imodel["target"];
-            model.BaseModelId = (string)imodel["base_model_id"];
-            model.Domain = (string)imodel["domain"];
-            model.Cutomizable = (bool)imodel["customizable"];
-            model.Default = (bool)imodel["default_model"];
-            model.Owner = (string)imodel["owner"];
-            model.Status = (string)imodel["status"];
-            return model;
+            if (((GetModelsReq)req).Callback != null)
+                ((GetModelsReq)req).Callback(resp.Success ? models : null);
         }
 
         /// <summary>
@@ -316,27 +371,32 @@ namespace IBM.Watson.Services.v1
             public GetModelCallback Callback { get; set; }
         }
 
-        private void GetModelResponse(RESTConnector.Request r, RESTConnector.Response resp)
+        private void GetModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            GetModelReq req = r as GetModelReq;
-            if (req == null)
-                throw new WatsonException("Unexpected Request type.");
-
+            Model model = new Model();
             if (resp.Success)
             {
-                string jsonData = Encoding.UTF8.GetString(resp.Data);
-                IDictionary json = Json.Deserialize(jsonData) as IDictionary;
-                Model model = ParseModelJson(json);
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
 
-                if (req.Callback != null)
-                    req.Callback(model);
+                    object obj = model;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("NLC", "GetModel Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
             }
-            else
-            {
-                Log.Error("Translate", "GetModel() failed: {0}", resp.Error);
-                if (req.Callback != null)
-                    req.Callback(null);
-            }
+
+            if (((GetModelReq)req).Callback != null)
+                ((GetModelReq)req).Callback(resp.Success ? model : null);
         }
         #endregion
 
@@ -344,7 +404,7 @@ namespace IBM.Watson.Services.v1
         /// <summary>
         /// This function returns a list to the callback of all identifiable languages.
         /// </summary>
-        /// <param name="callback">The callback to invoke with a Langage array, null on error.</param>
+        /// <param name="callback">The callback to invoke with a Language array, null on error.</param>
         /// <returns>Returns true if the request was submitted.</returns>
         public bool GetLanguages(GetLanguagesCallback callback)
         {
@@ -367,41 +427,42 @@ namespace IBM.Watson.Services.v1
             public GetLanguagesCallback Callback { get; set; }
         }
 
-        private void GetLanguagesResponse(RESTConnector.Request r, RESTConnector.Response resp)
+        private void GetLanguagesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            GetLanguagesReq req = r as GetLanguagesReq;
-            if (req == null)
-                throw new WatsonException("Unexpected Request type.");
-
+            Languages langs = new Languages();
             if (resp.Success)
             {
-                List<Language> languages = new List<Language>();
-
-                IDictionary json = Json.Deserialize(Encoding.UTF8.GetString(resp.Data)) as IDictionary;
-                IList ilanguages = json["languages"] as IList;
-                foreach (var l in ilanguages)
+                try
                 {
-                    IDictionary ilang = l as IDictionary;
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
 
-                    Language lang = new Language();
-                    lang.Code = (string)ilang["language"];
-                    lang.Name = (string)ilang["name"];
-                    languages.Add(lang);
+                    object obj = langs;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
                 }
+                catch (Exception e)
+                {
+                    Log.Error("NLC", "GetLanguages Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
 
-                if (req.Callback != null)
-                    req.Callback(languages.ToArray());
-            }
-            else
-            {
-                Log.Error("Translate", "GetLanguages() failed: {0}", resp.Error);
-                if (req.Callback != null)
-                    req.Callback(null);
-            }
+            if (((GetLanguagesReq)req).Callback != null)
+                ((GetLanguagesReq)req).Callback(resp.Success ? langs : null);
         }
         #endregion
 
         #region Identify Functions
+        /// <summary>
+        /// Identifies a language from the given text.
+        /// </summary>
+        /// <param name="text">The text sample to ID.</param>
+        /// <param name="callback">The callback to receive the results.</param>
+        /// <returns></returns>
         public bool Identify(string text, IdentifyCallback callback)
         {
             if (string.IsNullOrEmpty(text))

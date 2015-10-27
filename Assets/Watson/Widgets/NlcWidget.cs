@@ -47,13 +47,24 @@ namespace IBM.Watson.Widgets
         private bool m_SendAsEvent = true;
         [SerializeField]
         private Text m_TopClassText = null;
-	    #endregion
+        #endregion
 
+        #region MonoBehaviour interface
+        /// <exclude />
         protected override void Start()
 	    {
             base.Start();
 	        Logger.InstallDefaultReactors();
 	    }
+        #endregion
+
+        #region Widget interface
+        /// <exclude />
+        protected override string GetName()
+        {
+            return "NlcWidget";
+        }
+        #endregion
 
         private void OnClasify( Data data )
         {
@@ -74,9 +85,5 @@ namespace IBM.Watson.Widgets
                 EventManager.Instance.SendEvent( result.top_class );
 	    }
 
-        protected override string GetName()
-        {
-            return "NlcWidget";
-        }
 	}
 }

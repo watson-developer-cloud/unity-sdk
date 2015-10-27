@@ -62,30 +62,30 @@ namespace IBM.Watson.UnitTests
             if ( model != null )
             {
                 Log.Status( "TestTranslate", "ModelID: {0}, Source: {1}, Target: {2}, Domain: {3}", 
-                    model.ModelId, model.Source, model.Target, model.Domain );
+                    model.model_id, model.source, model.target, model.domain );
             }
             m_GetModelTested = true;
         }
 
-        private void OnGetModels( Translate.Model [] models )
+        private void OnGetModels( Translate.Models models )
         {
             Test( models != null );
             if ( models != null )
             {
-                foreach( var model in models )
+                foreach( var model in models.models )
                 {
                     Log.Status( "TestTranslate", "ModelID: {0}, Source: {1}, Target: {2}, Domain: {3}", 
-                        model.ModelId, model.Source, model.Target, model.Domain );
+                        model.model_id, model.source, model.target, model.domain );
                 }
             }
             m_GetModelsTested = true;
         }
 
-        private void OnGetTranslation( Translate.Translation translation )
+        private void OnGetTranslation( Translate.Translations translation )
         {
             Test( translation != null );
-            if ( translation != null && translation.Translations.Length > 0 )
-                Log.Status( "TestTranslate", "Translation: {0}", translation.Translations[0] );
+            if ( translation != null && translation.translations.Length > 0 )
+                Log.Status( "TestTranslate", "Translation: {0}", translation.translations[0].translation );
             m_TranslateTested = true;
         }
 
@@ -97,13 +97,13 @@ namespace IBM.Watson.UnitTests
             m_IdentifyTested = true;
         }
 
-        private void OnGetLanguages( Translate.Language [] languages )
+        private void OnGetLanguages( Translate.Languages languages )
         {
             Test( languages != null );
             if ( languages != null )
             {
-                foreach( var lang in languages )
-                    Log.Status( "TestTranslate", "Language: {0}, Name: {1}", lang.Code, lang.Name );
+                foreach( var lang in languages.languages )
+                    Log.Status( "TestTranslate", "Language: {0}, Name: {1}", lang.language, lang.name );
             }
 
             m_GetLanguagesTested = true;
