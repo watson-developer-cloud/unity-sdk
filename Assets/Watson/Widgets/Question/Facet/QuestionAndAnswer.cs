@@ -32,24 +32,24 @@ namespace IBM.Watson.Widgets.Question.Facet
 		private Text m_ConfidenceText;
 
 
-		private string _m_Answer;
-		public string m_Answer
+		private string _Answer;
+		public string Answer
 		{
-			get { return _m_Answer; }
+			get { return _Answer; }
 			set 
 			{
-				_m_Answer = value;
+				_Answer = value;
 				UpdateAnswer();
 			}
 		}
 
-		private string _m_Question;
-		public string m_Question
+		private string _QuestionString;
+		public string QuestionString
 		{
-			get { return _m_Question; }
+			get { return _QuestionString; }
 			set 
 			{
-				_m_Question = value;
+				_QuestionString = value;
 				UpdateQuestion();
 			}
 		}
@@ -64,12 +64,19 @@ namespace IBM.Watson.Widgets.Question.Facet
 			}
 		}
 
+		override public void Init()
+		{
+			QuestionString = m_Question.QuestionData.QuestionDataObject.questions [0].question.questionText;
+			Answer = m_Question.QuestionData.AnswerDataObject.answers [0].answerText;
+			m_Confidence = m_Question.QuestionData.AnswerDataObject.answers [0].confidence;
+		}
+
 		/// <summary>
 		/// Update answer view.
 		/// </summary>
 		private void UpdateAnswer()
 		{
-			m_AnswerText.text = m_Answer;
+			m_AnswerText.text = Answer;
 		}
 
 		/// <summary>
@@ -77,7 +84,7 @@ namespace IBM.Watson.Widgets.Question.Facet
 		/// </summary>
 		private void UpdateQuestion()
 		{
-			m_QuestionText.text = m_Question;
+			m_QuestionText.text = QuestionString;
 		}
 
 		/// <summary>
@@ -87,23 +94,6 @@ namespace IBM.Watson.Widgets.Question.Facet
 		{
 			float confidence = (float)m_Confidence * 100;
 			m_ConfidenceText.text = confidence.ToString ("f1");
-		}
-
-		/// <summary>
-		/// Fired when Question Data is set. Sets the value of the Question.
-		/// </summary>
-		override protected void OnQuestionData()
-		{
-			m_Question = m_Questions.questions[0].question.questionText;
-		}
-
-		/// <summary>
-		/// Fired when Answer Data is set. Sets the value of the Answer.
-		/// </summary>
-		override protected void OnAnswerData()
-		{
-			m_Answer = m_Answers.answers [0].answerText;
-			m_Confidence = m_Answers.answers [0].confidence;
 		}
 	}
 }

@@ -29,24 +29,24 @@ namespace IBM.Watson.Widgets.Question.Facet
 		[SerializeField]
 		private Text m_SemanticText;
 
-		private string _m_LAT;
-		public string m_LAT
+		private string _LAT;
+		public string LAT
 		{
-			get { return _m_LAT; }
+			get { return _LAT; }
 			set
 			{
-				_m_LAT = value;
+				_LAT = value;
 				UpdateLAT();
 			}
 		}
 
-		private string _m_Semantic;
-		public string m_Semantic
+		private string _SemanticString;
+		public string SemanticString
 		{
-			get { return _m_Semantic; }
+			get { return _SemanticString; }
 			set
 			{
-				_m_Semantic = value;
+				_SemanticString = value;
 				UpdateSemantic();
 			}
 		}
@@ -56,7 +56,7 @@ namespace IBM.Watson.Widgets.Question.Facet
 		/// </summary>
 		private void UpdateLAT()
 		{
-			m_LATText.text = m_LAT;
+			m_LATText.text = LAT;
 		}
 
 		/// <summary>
@@ -64,20 +64,31 @@ namespace IBM.Watson.Widgets.Question.Facet
 		/// </summary>
 		private void UpdateSemantic()
 		{
-			m_SemanticText.text = m_Semantic;
+			m_SemanticText.text = SemanticString;
+		}
+
+		override public void Init()
+		{
+			if (m_Question.QuestionData.QuestionDataObject.questions.Length > 0 && m_Question.QuestionData.QuestionDataObject.questions [0].question.lat.Length > 0) {
+				LAT = m_Question.QuestionData.QuestionDataObject.questions [0].question.lat [0];
+			} else {
+				LAT = "n/a";
+			}
+
+			SemanticString = GenerateSemanticString ();
 		}
 
 		/// <summary>
 		/// Fired when Parse Data is set. Iterates through the LAT's features and concantinates features into a string.
 		/// </summary>
-		override protected void OnParseData()
+		private string GenerateSemanticString()
 		{
 			string semanticText = "";
 
 			//	Find the LAT index in the Parse Words
 			int LATIndex = -1;
-			for(int i = 0 ; i < m_ParseData.Words.Length; i++) {
-				if(m_ParseData.Words[i].Word == m_LAT) {
+			for(int i = 0 ; i < m_Question.QuestionData.ParseDataObject.Words.Length; i++) {
+				if(m_Question.QuestionData.ParseDataObject.Words[i].Word == LAT) {
 					LATIndex = i;
 				}
 			}
@@ -86,9 +97,9 @@ namespace IBM.Watson.Widgets.Question.Facet
 
 			//	Iterate through the LAT's features and concantinate the strings together.
 			if (LATIndex != -1) {
-				for (int k = 0; k < m_ParseData.Words[LATIndex].Features.Length; k++) {
-					semanticText += m_ParseData.Words [LATIndex].Features [k];
-					if (k < m_ParseData.Words [LATIndex].Features.Length - 1) {
+				for (int k = 0; k < m_Question.QuestionData.ParseDataObject.Words[LATIndex].Features.Length; k++) {
+					semanticText += m_Question.QuestionData.ParseDataObject.Words [LATIndex].Features [k];
+					if (k < m_Question.QuestionData.ParseDataObject.Words [LATIndex].Features.Length - 1) {
 						semanticText += ", ";
 					} else {
 						semanticText += ".";
@@ -96,19 +107,7 @@ namespace IBM.Watson.Widgets.Question.Facet
 				}
 			}
 			
-			m_Semantic = semanticText;
-		}
-
-		/// <summary>
-		/// Fired when Question Data is set. Sets the value of the LAT.
-		/// </summary>
-		override protected void OnQuestionData()
-		{
-			if (m_Questions.questions.Length > 0 && m_Questions.questions [0].question.lat.Length > 0) {
-				m_LAT = m_Questions.questions [0].question.lat [0];
-			} else {
-				m_LAT = "n/a";
-			}
+			return semanticText;
 		}
 	}
 }
