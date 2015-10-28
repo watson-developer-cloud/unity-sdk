@@ -513,21 +513,36 @@ namespace IBM.Watson.Widgets.Avatar
 
         #endregion
 
-        #region Avatar Mood / Behavior  - Adaptive Computing
+        #region Avatar Mood / Behavior
+
+        [Serializable]
+        private class AvatarStateInfo
+        {
+            public AvatarState m_State;
+            public Color m_Color;
+            public float m_Speed;
+        };
+
+        [SerializeField]
+        private AvatarStateInfo [] m_StateInfo = new AvatarStateInfo[] 
+        {
+            new AvatarStateInfo() { m_State = AvatarState.CONNECTING, m_Color = new Color(241 / 255.0f, 241 / 255.0f, 242 / 255.0f), m_Speed = 0.0f },
+            new AvatarStateInfo() { m_State = AvatarState.LISTENING, m_Color = new Color(0 / 255.0f, 166 / 255.0f, 160 / 255.0f), m_Speed = 1.0f },
+            new AvatarStateInfo() { m_State = AvatarState.THINKING, m_Color = new Color(238 / 255.0f, 62 / 255.0f, 150 / 255.0f), m_Speed = 1.0f },
+            new AvatarStateInfo() { m_State = AvatarState.CONNECTING, m_Color = new Color(140 / 255.0f, 198 / 255.0f, 63 / 255.0f), m_Speed = 1.0f },
+            new AvatarStateInfo() { m_State = AvatarState.ERROR, m_Color = new Color(255 / 255.0f, 0 / 255.0f, 0 / 255.0f), m_Speed = 0.0f },
+        };
+
         public Color BehaviourColor
         {
             get
             {
-                Color color = Color.white;
-                switch (m_State)
-                {
-                    case AvatarState.CONNECTING: color = new Color(241 / 255.0f, 241 / 255.0f, 242 / 255.0f); break;     //Idle color 
-                    case AvatarState.LISTENING: color = new Color(0 / 255.0f, 166 / 255.0f, 160 / 255.0f); break;
-                    case AvatarState.THINKING: color = new Color(238 / 255.0f, 62 / 255.0f, 150 / 255.0f); break;
-                    case AvatarState.ANSWERING: color = new Color(140 / 255.0f, 198 / 255.0f, 63 / 255.0f); break;
-                    default: Log.Error("AvatarWidget", "AvatarState is not defined for color!"); color = Color.white; break;
-                }
-                return color;
+                foreach( var c in m_StateInfo )
+                    if ( c.m_State == m_State )
+                        return c.m_Color;
+
+                Log.Warning("AvatarWidget", "StateColor not defined for state {0}.", m_State.ToString() );
+                return Color.white;
             }
         }
 
@@ -540,40 +555,76 @@ namespace IBM.Watson.Widgets.Avatar
             }
             set
             {
-                m_currentMood = value;
-                EventManager.Instance.SendEvent(Constants.Event.ON_CHANGE_AVATAR_MOOD_FINISH, (int)value);
+                if ( m_currentMood != value )
+                {
+                    m_currentMood = value;
+                    EventManager.Instance.SendEvent(Constants.Event.ON_CHANGE_AVATAR_MOOD_FINISH, (int)value);
+                }
             }
         }
 
-        MoodType[] m_moodTypeList = null;
         public MoodType[] MoodTypeList
         {
             get
             {
-                if (m_moodTypeList == null)
-                {
-                    m_moodTypeList = new MoodType[] { MoodType.IDLE, MoodType.INTERESTED, MoodType.URGENT, MoodType.UPSET, MoodType.SHY };
-                }
-                return m_moodTypeList;
+                return Enum.GetValues( typeof(MoodType) ) as MoodType[];
             }
         }
+
+		public float BehaviorSpeedModifier
+		{
+			get
+			{
+                foreach( var info in m_StateInfo )
+                    if ( info.m_State == State )
+                        return info.m_Speed;
+
+                Log.Warning( "AvatarWidget", "StateInfo not defined for {0}.", State.ToString() );
+                return 1.0f;
+			}
+		}
+
+		public float BehaviorTimeModifier
+		{
+			get
+			{
+				float value = BehaviorSpeedModifier;
+				if (value != 0.0f)
+					value = 1.0f / value;
+
+				return value;
+			}
+		}
+
+        [Serializable]
+        private class AvatarMoodInfo
+        {
+            public MoodType m_Mood;
+            public Color m_Color;
+            public float m_Speed;
+        };
+
+        [SerializeField]
+        private AvatarMoodInfo [] m_MoodInfo = new AvatarMoodInfo[] 
+        {
+            new AvatarMoodInfo() { m_Mood = MoodType.SLEEPING, m_Color = new Color(255 / 255.0f, 255 / 255.0f, 255 / 255.0f), m_Speed = 0.0f },
+            new AvatarMoodInfo() { m_Mood = MoodType.IDLE, m_Color = new Color(241 / 255.0f, 241 / 255.0f, 242 / 255.0f), m_Speed = 1.0f },
+            new AvatarMoodInfo() { m_Mood = MoodType.INTERESTED, m_Color = new Color(131 / 255.0f, 209 / 255.0f, 245 / 255.0f), m_Speed = 1.1f },
+            new AvatarMoodInfo() { m_Mood = MoodType.URGENT, m_Color = new Color(221 / 255.0f, 115 / 255.0f, 28 / 255.0f), m_Speed = 2.0f },
+            new AvatarMoodInfo() { m_Mood = MoodType.UPSET, m_Color = new Color(217 / 255.0f, 24 / 255.0f, 45 / 255.0f), m_Speed = 1.5f },
+            new AvatarMoodInfo() { m_Mood = MoodType.SHY, m_Color = new Color(243 / 255.0f, 137 / 255.0f, 175 / 255.0f), m_Speed = 0.9f },
+        };
 
         public Color MoodColor
         {
             get
             {
-                Color color = Color.white;
-                switch (Mood)
-                {
-					case MoodType.SLEEPING: color = new Color(255 / 255.0f, 255 / 255.0f, 255 / 255.0f); break;
-					case MoodType.IDLE: color = new Color(241 / 255.0f, 241 / 255.0f, 242 / 255.0f); break;
-                    case MoodType.INTERESTED: color = new Color(131 / 255.0f, 209 / 255.0f, 245 / 255.0f); break;
-                    case MoodType.URGENT: color = new Color(221 / 255.0f, 115 / 255.0f, 28 / 255.0f); break;
-                    case MoodType.UPSET: color = new Color(217 / 255.0f, 24 / 255.0f, 45 / 255.0f); break;
-                    case MoodType.SHY: color = new Color(243 / 255.0f, 137 / 255.0f, 175 / 255.0f); break;
-                    default: Log.Error("AvatarWidget", "MoodType is not defined for color!"); color = Color.white; break;
-                }
-                return color;
+                foreach( var c in m_MoodInfo )
+                    if ( c.m_Mood == Mood )
+                        return c.m_Color;
+
+                Log.Warning( "AvatarWidget", "Mood not defined for {0}.", Mood.ToString() );
+                return Color.white;
             }
         }
 
@@ -581,18 +632,12 @@ namespace IBM.Watson.Widgets.Avatar
         {
             get
             {
-                float value = 1.0f;
-                switch (Mood)
-                {
-					case MoodType.SLEEPING: value = 0.0f; break;
-					case MoodType.IDLE: value = 1.0f; break;
-                    case MoodType.INTERESTED: value = 1.1f; break;
-                    case MoodType.URGENT: value = 2.0f; break;
-                    case MoodType.UPSET: value = 1.5f; break;
-                    case MoodType.SHY: value = 0.9f; break;
-					default: Log.Error("AvatarWidget", "MoodType : {0} is not defined for speed modifier!", Mood); value = 1.0f; break;
-                }
-                return value;
+                foreach( var c in m_MoodInfo )
+                    if ( c.m_Mood == Mood )
+                        return c.m_Speed;
+
+                Log.Warning( "AvatarWidget", "Mood not defined for {0}.", Mood.ToString() );
+                return 1.0f;
             }
         }
 
@@ -608,34 +653,6 @@ namespace IBM.Watson.Widgets.Avatar
             }
         }
 
-		public float BehaviorSpeedModifier
-		{
-			get
-			{
-				float value = 1.0f;
-				switch (State)
-				{
-				case AvatarState.CONNECTING: value = 0.0f; break;
-				case AvatarState.ANSWERING: value = 1.0f; break;
-				case AvatarState.LISTENING: value = 1.0f; break;
-				case AvatarState.THINKING: value = 1.0f; break;
-				default: Log.Error("AvatarWidget", "State : {0} is not defined for speed modifier!", State); value = 1.0f; break;
-				}
-				return value;
-			}
-		}
-
-		public float BehaviorTimeModifier
-		{
-			get
-			{
-				float value = BehaviorSpeedModifier;
-				if (value != 0.0f)
-					value = 1.0f / value;
-
-				return value;
-			}
-		}
 
         void OnChangeMood(System.Object[] args)
         {
