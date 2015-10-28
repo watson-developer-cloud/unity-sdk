@@ -17,6 +17,7 @@
 */
 
 using IBM.Watson.Logging;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace IBM.Watson.Utilities
@@ -27,14 +28,26 @@ namespace IBM.Watson.Utilities
     public class EventManager
     {
         #region Public Properties
+        /// <summary>
+        /// Returns the singleton event manager instance.
+        /// </summary>
         public static EventManager Instance { get { return Singleton<EventManager>.Instance; } }
         #endregion
 
         #region Public Types
+        /// <summary>
+        /// The delegate for an event receiver.
+        /// </summary>
+        /// <param name="args">The arguments passed into SendEvent().</param>
         public delegate void OnReceiveEvent(object[] args);
         #endregion
 
         #region Public Functions
+        /// <summary>
+        /// Register an event receiver with this EventManager.
+        /// </summary>
+        /// <param name="eventName">The name of the event.</param>
+        /// <param name="callback">The event receiver function.</param>
         public void RegisterEventReceiver(string eventName, OnReceiveEvent callback)
         {
 			if (!m_EventMap.ContainsKey (eventName))
@@ -43,22 +56,40 @@ namespace IBM.Watson.Utilities
             	m_EventMap[eventName].Add(callback);
         }
 
+        /// <summary>
+        /// Unregisters all event receivers.
+        /// </summary>
         public void UnregisterAllEventReceivers()
         {
             m_EventMap.Clear();
         }
 
+        /// <summary>
+        /// Unregister all event receivers for a given event.
+        /// </summary>
+        /// <param name="eventName">Name of the event to unregister.</param>
         public void UnregisterEventReceivers(string eventName)
         {
             m_EventMap.Remove(eventName);
         }
 
+        /// <summary>
+        /// Unregister a specific receiver.
+        /// </summary>
+        /// <param name="eventName">Name of the event.</param>
+        /// <param name="callback">The event handler.</param>
         public void UnregisterEventReceiver(string eventName, OnReceiveEvent callback)
         {
             if (m_EventMap.ContainsKey(eventName))
                 m_EventMap[eventName].Remove(callback);
         }
 
+        /// <summary>
+        /// Send an event to all registered receivers.
+        /// </summary>
+        /// <param name="eventName">The name of the event to send.</param>
+        /// <param name="args">Arguments to send to the event receiver.</param>
+        /// <returns>Returns true if a event receiver was found for the event.</returns>
         public bool SendEvent(string eventName, params object[] args)
         {
             List<OnReceiveEvent> receivers = null;
@@ -78,10 +109,44 @@ namespace IBM.Watson.Utilities
             }
             return false;
         }
+
+        /// <summary>
+        /// Queues an event to be sent, returns immediately.
+        /// </summary>
+        /// <param name="eventName">The name of the event to send.</param>
+        /// <param name="args">Arguments to send to the event receiver.</param>
+        public void SendEventAsync( string eventName, params object[] args )
+        {
+            m_AsyncEvents.Enqueue( new AsyncEvent() { m_EventName = eventName, m_Args = args } );
+            if ( m_ProcesserCount == 0 )
+                Runnable.Run( ProcessAsyncEvents() );
+        }
         #endregion
 
         #region Private Data
         private Dictionary<string, List<OnReceiveEvent>> m_EventMap = new Dictionary<string, List<OnReceiveEvent>>();
+
+        private class AsyncEvent
+        {
+            public string m_EventName;
+            public object [] m_Args;
+        }
+        private Queue<AsyncEvent> m_AsyncEvents = new Queue<AsyncEvent>();
+        private int m_ProcesserCount = 0;
+
+        private IEnumerator ProcessAsyncEvents()
+        {
+            m_ProcesserCount += 1;
+            yield return null;
+
+            while( m_AsyncEvents.Count > 0 )
+            {
+                AsyncEvent send = m_AsyncEvents.Dequeue();
+                SendEvent( send.m_EventName, send.m_Args ); 
+            }
+
+            m_ProcesserCount -= 1;
+        }
         #endregion
         
     }
