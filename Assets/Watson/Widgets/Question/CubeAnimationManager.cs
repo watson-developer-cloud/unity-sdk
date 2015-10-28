@@ -20,6 +20,7 @@ using UnityEngine;
 using System.Collections;
 using IBM.Watson.Utilities;
 using IBM.Watson.Logging;
+using IBM.Watson.Widgets.Avatar;
 
 /// <summary>
 /// Cube animation manager. All animations related with Cube located here.
@@ -201,7 +202,10 @@ public class CubeAnimationManager : MonoBehaviour {
         m_initialLocalRotation = transform.localRotation;
 
         if (avatarGameobject == null) {
-			avatarGameobject = GameObject.Find("Avatar/Avatar_01");
+			AvatarWidget avatarWidget = GameObject.FindObjectOfType<AvatarWidget>();
+			if(avatarWidget != null){
+				avatarGameobject = Utility.FindObject(avatarWidget.gameObject, "Avatar_01");
+			}
 		}
 
 		GameObject[] questionsCreated = GameObject.FindGameObjectsWithTag ("QuestionOnFocus");
@@ -526,7 +530,8 @@ public class CubeAnimationManager : MonoBehaviour {
         StopAllCubeAnimations();
 
         //Avatar Object position change
-        animationAvatarPosition = LeanTween.moveLocal(avatarGameobject, Vector3.zero, timeForFoldingUnfolding).setEase(easeForUnfolding);
+		if(avatarGameobject)
+       		animationAvatarPosition = LeanTween.moveLocal(avatarGameobject, Vector3.zero, timeForFoldingUnfolding).setEase(easeForUnfolding);
 
         //AnimateDestroyingCube(false);
     }

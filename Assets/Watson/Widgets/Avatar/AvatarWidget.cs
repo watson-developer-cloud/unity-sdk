@@ -567,7 +567,7 @@ namespace IBM.Watson.Widgets.Avatar
             }
         }
 
-        private MoodType m_currentMood = MoodType.SLEEPING;
+        private MoodType m_currentMood = MoodType.IDLE;
         public MoodType Mood
         {
             get
