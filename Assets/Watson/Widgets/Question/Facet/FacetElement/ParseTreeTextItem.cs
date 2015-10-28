@@ -69,7 +69,6 @@ namespace IBM.Watson.Widgets.Question.Facet.FacetElement
 		}
 
 		public List<string> m_Features = new List<string>();
-
 		private RectTransform m_RectTransform;
 		private Color m_ColorLight = new Color (0.8f, 0.8f, 0.8f);
 		private Color m_ColorDark = new Color (0.3f, 0.3f, 0.3f);

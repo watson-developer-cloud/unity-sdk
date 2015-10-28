@@ -35,22 +35,20 @@ namespace IBM.Watson.Widgets.Question.Facet
 		private List<EvidenceItem> m_EvidenceItems = new List<EvidenceItem>();
 
 		/// <summary>
-		/// Fired when Answer Data is set. Sets the evidence value in each evidence item. Limited to 3 evidence items.
+		/// Dynamically creates up to three Evidence Items based on returned data.
 		/// </summary>
-		override protected void OnAnswer(string data)
+		override public void Init()
 		{
-			base.OnAnswer (data);
-
-			for(int i = 0; i < Answers.answers[0].evidence.Length; i++)
+			for(int i = 0; i < m_Question.QuestionData.AnswerDataObject.answers[0].evidence.Length; i++)
 			{
 				if(i >= 3) return;
-				
+
 				GameObject evidenceItemGameObject = Instantiate(m_EvidenceItemPrefab, new Vector3(0f, -i*60f, 0f), Quaternion.identity) as GameObject;
 				RectTransform evidenceItemRectTransform = evidenceItemGameObject.GetComponent<RectTransform>();
 				evidenceItemRectTransform.SetParent(m_EvidenceCanvasRectTransform, false);
 				EvidenceItem evidenceItem = evidenceItemGameObject.GetComponent<EvidenceItem>();
 				m_EvidenceItems.Add(evidenceItem);
-				evidenceItem.EvidenceString = Answers.answers[0].evidence[i].decoratedPassage;
+				evidenceItem.EvidenceString =  m_Question.QuestionData.AnswerDataObject.answers[0].evidence[i].decoratedPassage;
 			}
 		}
 

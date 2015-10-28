@@ -35,21 +35,19 @@ namespace IBM.Watson.Widgets.Question.Facet
 		private List<FeatureItem> m_FeatureItems = new List<FeatureItem>();
 
 		/// <summary>
-		/// Fired when Answer Data is set. Creates Feature Items from prefab reference and adds them to m_featureItems List.
+		/// Dynamically creates Features Items based on data.
 		/// </summary>
-		override protected void OnAnswer(string data)
+		override public void Init()
 		{
-			base.OnAnswer (data);
-
-			for(int i = 0; i < Answers.answers[0].features.Length; i++)
+			for(int i = 0; i < m_Question.QuestionData.AnswerDataObject.answers[0].features.Length; i++)
 			{
 				GameObject featureItemGameObject = Instantiate(m_FeatureItemPrefab, new Vector3(95f, -i*50f - 150f, 0f), Quaternion.identity) as GameObject;
 				RectTransform featureItemRectTransform = featureItemGameObject.GetComponent<RectTransform>();
 				featureItemRectTransform.SetParent(m_FeaturesCanvasRectTransform, false);
 				FeatureItem featureItem = featureItemGameObject.GetComponent<FeatureItem>();
 				m_FeatureItems.Add(featureItem);
-				featureItem.FeatureString = Answers.answers[0].features[i].displayLabel;
-				featureItem.FeatureIndex = Answers.answers[0].features[i].weightedScore;
+				featureItem.FeatureString = m_Question.QuestionData.AnswerDataObject.answers[0].features[i].displayLabel;
+				featureItem.FeatureIndex = m_Question.QuestionData.AnswerDataObject.answers[0].features[i].weightedScore;
 			}
 		}
 

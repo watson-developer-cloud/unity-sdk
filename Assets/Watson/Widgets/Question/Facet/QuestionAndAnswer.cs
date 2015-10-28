@@ -64,6 +64,13 @@ namespace IBM.Watson.Widgets.Question.Facet
 			}
 		}
 
+		override public void Init()
+		{
+			QuestionString = m_Question.QuestionData.QuestionDataObject.questions [0].question.questionText;
+			Answer = m_Question.QuestionData.AnswerDataObject.answers [0].answerText;
+			m_Confidence = m_Question.QuestionData.AnswerDataObject.answers [0].confidence;
+		}
+
 		/// <summary>
 		/// Update answer view.
 		/// </summary>
@@ -87,27 +94,6 @@ namespace IBM.Watson.Widgets.Question.Facet
 		{
 			float confidence = (float)m_Confidence * 100;
 			m_ConfidenceText.text = confidence.ToString ("f1");
-		}
-
-		/// <summary>
-		/// Fired when Question Data is set. Sets the value of the Question.
-		/// </summary>
-		override protected void OnQuestion(string data)
-		{
-			base.OnQuestion (data);
-
-			QuestionString = Questions.questions [0].question.questionText;
-		}
-
-		/// <summary>
-		/// Fired when Answer Data is set. Sets the value of the Answer.
-		/// </summary>
-		override protected void OnAnswer(string data)
-		{
-			base.OnAnswer (data);
-
-			Answer = Answers.answers [0].answerText;
-			m_Confidence = Answers.answers [0].confidence;
 		}
 	}
 }

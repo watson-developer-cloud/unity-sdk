@@ -21,6 +21,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using IBM.Watson.Widgets.Question.Facet.FacetElement;
+using IBM.Watson.Logging;
 
 namespace IBM.Watson.Widgets.Question.Facet
 {
@@ -56,8 +57,9 @@ namespace IBM.Watson.Widgets.Question.Facet
 		/// <summary>
 		/// Set hard coded positions.
 		/// </summary>
-		void Start () 
+		override protected void Start () 
 		{
+			base.Start ();
 			//	TODO parse tree from hiearchy
 			m_PositionList.Add(new Vector3(-583f, 188f, 0f));
 			m_PositionList.Add(new Vector3(-408f,	64f, 0f));
@@ -77,11 +79,19 @@ namespace IBM.Watson.Widgets.Question.Facet
 		}
 
 		/// <summary>
+		/// Generates Parse tree on Initialization of data.
+		/// </summary>
+		override public void Init()
+		{
+			GenerateParseTree ();
+		}
+
+		/// <summary>
 		/// Generate parse tree from Parse Data.
 		/// </summary>
 		private void GenerateParseTree()
-		{
-			for (int i = 0; i < ParseData.Words.Length; i++) {
+		{	
+			for (int i = 0; i < m_Question.QuestionData.ParseDataObject.Words.Length; i++) {
 				GameObject wordGameObject = Instantiate(m_ParseTreeTextItemPrefab) as GameObject;
 				RectTransform wordRectTransform = wordGameObject.GetComponent<RectTransform>();
 				wordRectTransform.SetParent(m_ParseCanvasRectTransform, false);
@@ -92,12 +102,12 @@ namespace IBM.Watson.Widgets.Question.Facet
 					wordRectTransform.localPosition = new Vector3(5000f, 5000, 5000f);
 				}
 				ParseTreeTextItem word = wordGameObject.GetComponent<ParseTreeTextItem>();
-				word.ParseTreeWord = ParseData.Words[i].Word;
-				word.m_POS = ParseData.Words[i].Pos.ToString();
-				word.m_Slot = ParseData.Words[i].Slot;
+				word.ParseTreeWord = m_Question.QuestionData.ParseDataObject.Words[i].Word;
+				word.m_POS = m_Question.QuestionData.ParseDataObject.Words[i].Pos.ToString();
+				word.m_Slot = m_Question.QuestionData.ParseDataObject.Words[i].Slot;
 
-				for(int j = 0; j < ParseData.Words[i].Features.Length; j++) {
-					word.m_Features.Add(ParseData.Words[i].Features[j]);
+				for(int j = 0; j < m_Question.QuestionData.ParseDataObject.Words[i].Features.Length; j++) {
+					word.m_Features.Add(m_Question.QuestionData.ParseDataObject.Words[i].Features[j]);
 				}
 
 				m_WordList.Add(word);
@@ -139,16 +149,16 @@ namespace IBM.Watson.Widgets.Question.Facet
 				}
 			}
 
-			if(Questions.questions [0].question.lat.Length == 0 && Questions.questions [0].question.focus.Length == 0) m_POSList[2].GetComponent<POSControl>().IsHighlighted = true;
-			if (Questions.questions [0].question.lat.Length > 0) {
-				if (m_WordList [WordIndex].ParseTreeWord.ToLower () == Questions.questions [0].question.lat [0].ToLower ()) {
+			if(m_Question.QuestionData.QuestionDataObject.questions [0].question.lat.Length == 0 && m_Question.QuestionData.QuestionDataObject.questions [0].question.focus.Length == 0) m_POSList[2].GetComponent<POSControl>().IsHighlighted = true;
+			if (m_Question.QuestionData.QuestionDataObject.questions [0].question.lat.Length > 0) {
+				if (m_WordList [WordIndex].ParseTreeWord.ToLower () == m_Question.QuestionData.QuestionDataObject.questions [0].question.lat [0].ToLower ()) {
 					m_POSList [1].GetComponent<POSControl> ().IsHighlighted = true;
 				}
 			}
 
 
-			if (Questions.questions [0].question.focus.Length > 0) {
-				if (m_WordList [WordIndex].ParseTreeWord.ToLower () == Questions.questions [0].question.focus [0].ToLower ()) {
+			if (m_Question.QuestionData.QuestionDataObject.questions [0].question.focus.Length > 0) {
+				if (m_WordList [WordIndex].ParseTreeWord.ToLower () == m_Question.QuestionData.QuestionDataObject.questions [0].question.focus [0].ToLower ()) {
 					m_POSList [0].GetComponent<POSControl> ().IsHighlighted = true;
 				}
 			}
@@ -160,15 +170,6 @@ namespace IBM.Watson.Widgets.Question.Facet
 		private void CycleWords()
 		{
 			WordIndex ++;
-		}
-
-
-		/// <summary>
-		/// Fired when Parse Data is set. Initiates generation of the ParseTree.
-		/// </summary>
-		override protected void OnParseData()
-		{
-			GenerateParseTree ();
 		}
 	}
 }

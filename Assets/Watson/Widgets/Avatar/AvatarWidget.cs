@@ -38,7 +38,7 @@ namespace IBM.Watson.Widgets.Avatar
     [RequireComponent(typeof(MicrophoneWidget))]
     [RequireComponent(typeof(SpeechToTextWidget))]
     [RequireComponent(typeof(TextToSpeechWidget))]
-    public class AvatarWidget : Widget
+    public class AvatarWidget : Widget, IQuestionData
     {
         #region Public Types
         /// <summary>
@@ -113,7 +113,11 @@ namespace IBM.Watson.Widgets.Avatar
         private SpeechResultList m_SpeechResult = null;
         private string m_SpeechText = null;
         private Questions m_QuestionResult = null;
+		private Answers m_AnswerResult = null;
+		private ParseData m_ParseData = null;
         private GameObject m_FocusQuestion = null;
+		private bool m_GettingAnswers = false;
+		private bool m_GettingParse = false;
                 
         [SerializeField]
         private TextToSpeech.VoiceType m_VoiceType = TextToSpeech.VoiceType.en_US_Michael;
@@ -446,25 +450,24 @@ namespace IBM.Watson.Widgets.Avatar
         {
             m_QuestionResult = questions;
 
-            bool bGettingAnswers = false;
             if (m_QuestionResult != null && m_QuestionResult.questions != null)
             {
                 Watson.Data.Question topQuestion = m_QuestionResult.questions.Length > 0 ? m_QuestionResult.questions[0] : null;
                 if (topQuestion != null)
                 {
-					QuestionWidget question = m_FocusQuestion.GetComponentInChildren<QuestionWidget>();
-					question.Questions = m_QuestionResult;
+//					QuestionWidget question = m_FocusQuestion.GetComponentInChildren<QuestionWidget>();
+//					question.Questions = m_QuestionResult;
 
                     if (m_QuestionText != null)
                         m_QuestionText.text = "Q: " + topQuestion.question.questionText;
                     if ( QuestionEvent != null )
                         QuestionEvent( topQuestion.question.questionText );
 
-                    bGettingAnswers = m_ITM.GetAnswers(topQuestion.transactionId, OnAnswerQuestion);
+                    m_GettingAnswers = m_ITM.GetAnswers(topQuestion.transactionId, OnAnswerQuestion);
+					m_GettingParse = ITM.GetParseData(topQuestion.transactionId, OnParseData);
 				}
             }
 
-            if (!bGettingAnswers)
             {
                 m_TextOutput.SendData(new TextData("Does not compute. beep."));
                 State = AvatarState.LISTENING;
@@ -473,6 +476,7 @@ namespace IBM.Watson.Widgets.Avatar
 
         private void OnAnswerQuestion(Answers answers)
         {
+			m_AnswerResult = answers;
             if (answers != null && answers.answers.Length > 0)
             {
                 foreach (var a in answers.answers)
@@ -492,15 +496,16 @@ namespace IBM.Watson.Widgets.Avatar
                     QuestionWidget question = m_FocusQuestion.GetComponentInChildren<QuestionWidget>();
                     if (question != null)
                     {
-                        question.Avatar = this;
-                        question.Answers = answers;
-						question.Init();
+//                        question.Avatar = this;
+						InitQuestion();
+//						question.Init(this);
 
                         // show the answer panel
                         //question.EventManager.SendEvent( "answers" );
 
-						if (!ITM.GetParseData(question.Questions.questions[0].transactionId, question.OnParseData))
-							Log.Error("QuestionWidget", "Failed to request ParseData.");
+						//	request parse data
+//						if (!ITM.GetParseData(question.Questions.questions[0].transactionId, question.OnParseData))
+//							Log.Error("QuestionWidget", "Failed to request ParseData.");
                     }
                     else
                         Log.Error("AvatarWidget", "Failed to find QuestionWidget in question prefab.");
@@ -512,6 +517,20 @@ namespace IBM.Watson.Widgets.Avatar
             }
             State = AvatarState.LISTENING;
         }
+
+		private void OnParseData(ParseData data)
+		{
+			m_ParseData = data;
+			InitQuestion ();
+		}
+
+		private void InitQuestion()
+		{
+			if (m_ParseData != null  && m_AnswerResult != null) {
+				QuestionWidget question = m_FocusQuestion.GetComponentInChildren<QuestionWidget>();
+				question.Init(this);
+			}
+		}
 
         #endregion
 
@@ -620,7 +639,7 @@ namespace IBM.Watson.Widgets.Avatar
         public Color MoodColor
         {
             get
-            {
+			{
                 foreach( var c in m_MoodInfo )
                     if ( c.m_Mood == Mood )
                         return c.m_Color;
@@ -664,6 +683,54 @@ namespace IBM.Watson.Widgets.Avatar
             }
         }
         #endregion
-    }
 
+
+		#region IQuestionData implementation
+		/// <summary>
+		/// Gets the location.
+		/// </summary>
+		/// <value>The location.</value>
+		public string Location
+		{
+			get 
+			{
+				return ITM.Location;
+			}
+		}
+
+		/// <summary>
+		/// Gets the question data object.
+		/// </summary>
+		/// <value>The question data object.</value>
+		public Questions QuestionDataObject {
+			get 
+			{
+				return m_QuestionResult;
+			}
+		}
+
+		/// <summary>
+		/// Gets the answer data object.
+		/// </summary>
+		/// <value>The answer data object.</value>
+		public Answers AnswerDataObject {
+			get 
+			{
+				return m_AnswerResult;
+			}
+		}
+
+		/// <summary>
+		/// Gets the parse data object.
+		/// </summary>
+		/// <value>The parse data object.</value>
+		public ParseData ParseDataObject {
+			get 
+			{
+				return m_ParseData;
+			}
+		}
+		
+		#endregion
     }
+}

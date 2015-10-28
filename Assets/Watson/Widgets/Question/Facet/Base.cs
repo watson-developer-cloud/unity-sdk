@@ -39,109 +39,32 @@ namespace IBM.Watson.Widgets.Question.Facet
 		/// Holds a reference to the Question Widget.
 		/// </summary>
 		/// <value>The m_ question.</value>
-		private QuestionWidget m_Question { get; set; }
+		protected QuestionWidget m_Question { get; set; }
 
-		/// <summary>
-		/// Holds a reference to the Questions from the Question Widget.
-		/// </summary>
-		private Questions _Questions;
-		public Questions Questions
-		{
-			get { return _Questions; }
-			set
-			{
-				_Questions = value;
-//				OnQuestionData ();
-			}
-		}
-
-		/// <summary>
-		/// Holds a reference to to the Answers from the Question Widget.
-		/// </summary>
-		private Answers _Answers;
-		public Answers Answers
-		{
-			get { return _Answers; }
-			set
-			{
-				_Answers = value;
-//				OnAnswerData ();
-			}
-		}
-
-		/// <summary>
-		/// Holds a reference to the Parse Data from the Question Widget.
-		/// </summary>
-		private ParseData _ParseData;
-		public ParseData ParseData
-		{
-			get { return _ParseData; }
-			set
-			{
-				_ParseData = value;
-				OnParseData ();
-			}
-		}
-
-//		public virtual void Init() {}
 		protected virtual void Show() {}
 		protected virtual void Hide() {}
 
-		void Start()
+		/// <summary>
+		/// Sets reference to Avatar and Question Widgets
+		/// </summary>
+		protected virtual void Start()
 		{
+			//	set reference to Avatar and Question Widget
 			m_Question = GetComponentInParent<QuestionWidget>();
 			if (m_Question != null)
 				m_Avatar = m_Question.Avatar;
 			else
 				m_Avatar = GetComponentInParent<AvatarWidget>();
-			
-			if (m_Avatar != null)
-			{
-				m_Avatar.QuestionEvent += OnQuestion;
-				m_Avatar.AnswerEvent += OnAnswer;
-			}
-			else
-				Log.Warning("Facet Base", "Unable to find AvatarWidget.");
 		}
+
+		/// <summary>
+		/// Initalization function
+		/// </summary>
+		public virtual void Init() {}
 
 		/// <summary>
 		/// Clears dynamically generated Facet Elements when a question is answered. Called from answer event handler.
 		/// </summary>
 		protected virtual void Clear() {}
-
-		/// <summary>
-		/// Fired when Parse Data is set.
-		/// </summary>
-		protected virtual void OnParseData() {}
-
-		/// <summary>
-		/// Callback for Avatar Question.
-		/// </summary>
-		protected virtual void OnQuestion(string data) {
-			Questions = m_Question.Questions;
-		}
-
-		/// <summary>
-		/// Callback for Avatar Answer
-		/// </summary>
-		protected virtual void OnAnswer(string data) {
-			Clear ();
-			Answers = m_Question.Answers;
-		}
-
-		/// <summary>
-		/// Remove event listeners OnDestroy
-		/// </summary>
-		protected virtual void OnDestroy()
-		{
-			if (m_Avatar != null)
-			{
-				m_Avatar.QuestionEvent -= OnQuestion;
-				m_Avatar.AnswerEvent -= OnAnswer;
-			}
-		}
-
-//		protected virtual void OnQuestionData() {}
-//		protected virtual void OnAnswerData() {}
 	}
 }

@@ -36,14 +36,14 @@ namespace IBM.Watson.Widgets
         private EventManager m_EventManager = new EventManager();
         private CubeAnimationManager m_CubeAnimMgr = null;
 
-//		private AnswersAndConfidence m_AnswersAndConfidence;
-//		private Evidence m_Evidence;
-//		private Semantic m_Semantic;
-//		private Features m_Features;
-//		private Location m_Location;
-//		private ParseTree m_ParseTree;
-//		private QuestionAndAnswer m_QuestionAndAnswer;
-//		private List<Base> m_facets = new List<Base>();
+		private AnswersAndConfidence m_AnswersAndConfidence;
+		private IBM.Watson.Widgets.Question.Facet.Evidence m_Evidence;
+		private Semantic m_Semantic;
+		private Features m_Features;
+		private Location m_Location;
+		private ParseTree m_ParseTree;
+		private QuestionAndAnswer m_QuestionAndAnswer;
+		private List<Base> m_Facets = new List<Base>();
 
         #endregion
 
@@ -57,9 +57,6 @@ namespace IBM.Watson.Widgets
         #region Public Properties
         public EventManager EventManager { get { return m_EventManager; } }
         public AvatarWidget Avatar { get; set; }
-        public Questions Questions { get; set; }
-        public Answers Answers { get; set; }
-		public ParseData ParseData { get; set; }
         public CubeAnimationManager Cube {
             get {
                 if ( m_CubeAnimMgr == null )
@@ -70,6 +67,9 @@ namespace IBM.Watson.Widgets
                 return m_CubeAnimMgr;
             }
         }
+
+		public IQuestionData QuestionData { get; set; }
+
         #endregion
 
         public void OnDisplayAnswers(object[] args)
@@ -119,68 +119,47 @@ namespace IBM.Watson.Widgets
             m_EventManager.RegisterEventReceiver("answers", OnDisplayAnswers);
             m_EventManager.RegisterEventReceiver("chat", OnDisplayChat );
 
-//			AnswersAndConfidence = gameObject.GetComponent<AnswersAndConfidence>();
-//			Evidence = gameObject.GetComponent<Question.Facet.Evidence>();
-//			Semantic = gameObject.GetComponent<Semantic>();
-//			Features = gameObject.GetComponent<Features>();
-//			Location = gameObject.GetComponent<Location>();
-//			ParseTree = gameObject.GetComponent<ParseTree>();
-//			QuestionAndAnswer = gameObject.GetComponent<QuestionAndAnswer>();
-//
-//			m_facets.Add (m_AnswersAndConfidence);
-//			m_facets.Add (m_Evidence);
-//			m_facets.Add (m_Semantic);
-//			m_facets.Add (m_Features);
-//			m_facets.Add (m_Location);
-//			m_facets.Add (m_ParseTree);
-//			m_facets.Add (m_QuestionAndAnswer);
+			m_AnswersAndConfidence = gameObject.GetComponent<AnswersAndConfidence>();
+			m_Evidence = gameObject.GetComponent<IBM.Watson.Widgets.Question.Facet.Evidence>();
+			m_Semantic = gameObject.GetComponent<Semantic>();
+			m_Features = gameObject.GetComponent<Features>();
+			m_Location = gameObject.GetComponent<Location>();
+			m_ParseTree = gameObject.GetComponent<ParseTree>();
+			m_QuestionAndAnswer = gameObject.GetComponent<QuestionAndAnswer>();
+
+			m_Facets.Add (m_AnswersAndConfidence);
+			m_Facets.Add (m_Evidence);
+			m_Facets.Add (m_Semantic);
+			m_Facets.Add (m_Features);
+			m_Facets.Add (m_Location);
+			m_Facets.Add (m_ParseTree);
+			m_Facets.Add (m_QuestionAndAnswer);
         }
 
         protected override void Start()
         {
             base.Start();
-
-			if (Questions == null) {
-				Log.Error("QuestionWidget", "There is no Questions object!");
-				return;
-			}
-
-            // give the cube animation manager the game object
         }
 
 		/// <summary>
 		/// Sets Question, Answer and Avatar for each facet. Init is called by the Avatar Widget.
 		/// </summary>
-		public void Init()
+		public void Init(IQuestionData data) 
 		{
-//			foreach (Base facet in m_facets)
-//			{
-//				facet.Questions = Questions;
-//				facet.Answers = Answers;
-//				facet.Avatar = Avatar;
-//			}
+			QuestionData = data;
+
+			foreach (Base facet in m_Facets)
+			{
+				facet.Init();
+			}
 		}
-
-		/// <summary>
-		/// Sets parse data for each facet when Avatar receives it.
-		/// </summary>
-		/// <param name="parse">Parse Data</param>
-        public void OnParseData(ParseData parse)
-        {
-//			foreach (Base facet in m_facets)
-//			{
-//				facet.ParseData = parse;
-//			}
-        }
-
-		/// <summary>
-		/// Clears dynamically generated objects when AvatarWidget answers a new question.
-		/// </summary>
-//		public void ClearFacets()
-//		{
-//			foreach (Base facet in m_facets) {
-//				facet.Clear ();
-//			}
-//		}
     }
+
+	public interface IQuestionData
+	{
+		Questions QuestionDataObject { get; }
+		Answers AnswerDataObject { get; }
+		ParseData ParseDataObject { get; }
+		string Location { get; }
+	}
 }

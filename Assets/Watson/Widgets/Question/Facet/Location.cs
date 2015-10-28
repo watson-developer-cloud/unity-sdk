@@ -38,20 +38,17 @@ namespace IBM.Watson.Widgets.Question.Facet
 			}
 		}
 
+		override public void Init()
+		{
+			LocationString = m_Question.QuestionData.Location;
+		}
+
 		/// <summary>
 		/// Update the Location view.
 		/// </summary>
 		private void UpdateLocation()
 		{
 			m_LocationText.text = LocationString;
-		}
-
-		/// <summary>
-		/// Fired when Parse Data is set. Sets the value of Location from the Avatar Widget.
-		/// </summary>
-		override protected void OnParseData()
-		{
-			LocationString = m_Avatar.ITM.Location;
 		}
 	}
 }
