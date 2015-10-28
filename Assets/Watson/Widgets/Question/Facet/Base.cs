@@ -19,17 +19,25 @@
 using UnityEngine;
 using System.Collections;
 using IBM.Watson.Widgets;
+using IBM.Watson.Logging;
 using IBM.Watson.Services.v1;
 
 namespace IBM.Watson.Widgets.Question.Facet
 {
 	public class Base: MonoBehaviour
 	{
+		//	TODO 
 		/// <summary>
 		/// Holds a reference to the Avatar from the Question Widget.
 		/// </summary>
 		/// <value>The Avatar.</value>
-		public AvatarWidget Avatar { get; set; }
+		protected AvatarWidget m_Avatar { get; set; }
+
+		/// <summary>
+		/// Holds a reference to the Question Widget.
+		/// </summary>
+		/// <value>The m_ question.</value>
+		private QuestionWidget m_Question { get; set; }
 
 		/// <summary>
 		/// Holds a reference to the Questions from the Question Widget.
@@ -41,7 +49,7 @@ namespace IBM.Watson.Widgets.Question.Facet
 			set
 			{
 				_Questions = value;
-				OnQuestionData ();
+//				OnQuestionData ();
 			}
 		}
 
@@ -55,7 +63,7 @@ namespace IBM.Watson.Widgets.Question.Facet
 			set
 			{
 				_Answers = value;
-				OnAnswerData ();
+//				OnAnswerData ();
 			}
 		}
 
@@ -73,14 +81,31 @@ namespace IBM.Watson.Widgets.Question.Facet
 			}
 		}
 
-		public virtual void Init() {}
+//		public virtual void Init() {}
 		protected virtual void Show() {}
 		protected virtual void Hide() {}
 
+		void Start()
+		{
+			m_Question = GetComponentInParent<QuestionWidget>();
+			if (m_Question != null)
+				m_Avatar = m_Question.Avatar;
+			else
+				m_Avatar = GetComponentInParent<AvatarWidget>();
+			
+			if (m_Avatar != null)
+			{
+				m_Avatar.QuestionEvent += OnQuestion;
+				m_Avatar.AnswerEvent += OnAnswer;
+			}
+			else
+				Log.Warning("Facet Base", "Unable to find AvatarWidget.");
+		}
+
 		/// <summary>
-		/// Clears dynamically generated Facet Elements when a question is answered. Called from Question Widget.
+		/// Clears dynamically generated Facet Elements when a question is answered. Called from answer event handler.
 		/// </summary>
-		public virtual void Clear() {}
+		protected virtual void Clear() {}
 
 		/// <summary>
 		/// Fired when Parse Data is set.
@@ -88,13 +113,33 @@ namespace IBM.Watson.Widgets.Question.Facet
 		protected virtual void OnParseData() {}
 
 		/// <summary>
-		/// Fired when Answer Data is set.
+		/// Callback for Avatar Question.
 		/// </summary>
-		protected virtual void OnAnswerData() {}
+		protected virtual void OnQuestion(string data) {
+			Questions = m_Question.Questions;
+		}
 
 		/// <summary>
-		/// Fired when Question Data is set.
+		/// Callback for Avatar Answer
 		/// </summary>
-		protected virtual void OnQuestionData() {}
+		protected virtual void OnAnswer(string data) {
+			Clear ();
+			Answers = m_Question.Answers;
+		}
+
+		/// <summary>
+		/// Remove event listeners OnDestroy
+		/// </summary>
+		protected virtual void OnDestroy()
+		{
+			if (m_Avatar != null)
+			{
+				m_Avatar.QuestionEvent -= OnQuestion;
+				m_Avatar.AnswerEvent -= OnAnswer;
+			}
+		}
+
+//		protected virtual void OnQuestionData() {}
+//		protected virtual void OnAnswerData() {}
 	}
 }

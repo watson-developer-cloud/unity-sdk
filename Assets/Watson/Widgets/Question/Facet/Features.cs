@@ -37,8 +37,10 @@ namespace IBM.Watson.Widgets.Question.Facet
 		/// <summary>
 		/// Fired when Answer Data is set. Creates Feature Items from prefab reference and adds them to m_featureItems List.
 		/// </summary>
-		override protected void OnAnswerData()
+		override protected void OnAnswer(string data)
 		{
+			base.OnAnswer (data);
+
 			for(int i = 0; i < Answers.answers[0].features.Length; i++)
 			{
 				GameObject featureItemGameObject = Instantiate(m_FeatureItemPrefab, new Vector3(95f, -i*50f - 150f, 0f), Quaternion.identity) as GameObject;
@@ -54,7 +56,7 @@ namespace IBM.Watson.Widgets.Question.Facet
 		/// <summary>
 		/// Clears dynamically generated Facet Elements when a question is answered. Called from Question Widget.
 		/// </summary>
-		override public void Clear()
+		override protected void Clear()
 		{
 			while(m_FeatureItems.Count != 0) {
 				Destroy(m_FeatureItems[0].gameObject);

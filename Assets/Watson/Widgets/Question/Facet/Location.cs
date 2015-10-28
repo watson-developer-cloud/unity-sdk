@@ -51,7 +51,7 @@ namespace IBM.Watson.Widgets.Question.Facet
 		/// </summary>
 		override protected void OnParseData()
 		{
-			LocationString = Avatar.ITM.Location;
+			LocationString = m_Avatar.ITM.Location;
 		}
 	}
 }

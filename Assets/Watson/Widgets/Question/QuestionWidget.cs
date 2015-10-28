@@ -41,14 +41,14 @@ namespace IBM.Watson.Widgets
         private EventManager m_EventManager = new EventManager();
         private CubeAnimationManager m_CubeAnimMgr = null;
 
-		private AnswersAndConfidence m_AnswersAndConfidence;
-		private Evidence m_Evidence;
-		private Semantic m_Semantic;
-		private Features m_Features;
-		private Location m_Location;
-		private ParseTree m_ParseTree;
-		private QuestionAndAnswer m_QuestionAndAnswer;
-		private List<Base> m_facets = new List<Base>();
+//		private AnswersAndConfidence m_AnswersAndConfidence;
+//		private Evidence m_Evidence;
+//		private Semantic m_Semantic;
+//		private Features m_Features;
+//		private Location m_Location;
+//		private ParseTree m_ParseTree;
+//		private QuestionAndAnswer m_QuestionAndAnswer;
+//		private List<Base> m_facets = new List<Base>();
 
         #endregion
 
@@ -124,21 +124,21 @@ namespace IBM.Watson.Widgets
             m_EventManager.RegisterEventReceiver("answers", OnDisplayAnswers);
             m_EventManager.RegisterEventReceiver("chat", OnDisplayChat );
 
-			m_AnswersAndConfidence = gameObject.GetComponent<AnswersAndConfidence>();
-			m_Evidence = gameObject.GetComponent<Evidence>();
-			m_Semantic = gameObject.GetComponent<Semantic>();
-			m_Features = gameObject.GetComponent<Features>();
-			m_Location = gameObject.GetComponent<Location>();
-			m_ParseTree = gameObject.GetComponent<ParseTree>();
-			m_QuestionAndAnswer = gameObject.GetComponent<QuestionAndAnswer>();
-
-			m_facets.Add (m_AnswersAndConfidence);
-			m_facets.Add (m_Evidence);
-			m_facets.Add (m_Semantic);
-			m_facets.Add (m_Features);
-			m_facets.Add (m_Location);
-			m_facets.Add (m_ParseTree);
-			m_facets.Add (m_QuestionAndAnswer);
+//			m_AnswersAndConfidence = gameObject.GetComponent<AnswersAndConfidence>();
+//			m_Evidence = gameObject.GetComponent<Evidence>();
+//			m_Semantic = gameObject.GetComponent<Semantic>();
+//			m_Features = gameObject.GetComponent<Features>();
+//			m_Location = gameObject.GetComponent<Location>();
+//			m_ParseTree = gameObject.GetComponent<ParseTree>();
+//			m_QuestionAndAnswer = gameObject.GetComponent<QuestionAndAnswer>();
+//
+//			m_facets.Add (m_AnswersAndConfidence);
+//			m_facets.Add (m_Evidence);
+//			m_facets.Add (m_Semantic);
+//			m_facets.Add (m_Features);
+//			m_facets.Add (m_Location);
+//			m_facets.Add (m_ParseTree);
+//			m_facets.Add (m_QuestionAndAnswer);
         }
 
         protected override void Start()
@@ -158,12 +158,12 @@ namespace IBM.Watson.Widgets
 		/// </summary>
 		public void Init()
 		{
-			foreach (Base facet in m_facets)
-			{
-				facet.Questions = Questions;
-				facet.Answers = Answers;
-				facet.Avatar = Avatar;
-			}
+//			foreach (Base facet in m_facets)
+//			{
+//				facet.Questions = Questions;
+//				facet.Answers = Answers;
+//				facet.Avatar = Avatar;
+//			}
 		}
 
 		/// <summary>
@@ -172,20 +172,20 @@ namespace IBM.Watson.Widgets
 		/// <param name="parse">Parse Data</param>
         public void OnParseData(ITM.ParseData parse)
         {
-			foreach (Base facet in m_facets)
-			{
-				facet.ParseData = parse;
-			}
+//			foreach (Base facet in m_facets)
+//			{
+//				facet.ParseData = parse;
+//			}
         }
 
 		/// <summary>
 		/// Clears dynamically generated objects when AvatarWidget answers a new question.
 		/// </summary>
-		public void ClearFacets()
-		{
-			foreach (Base facet in m_facets) {
-				facet.Clear ();
-			}
-		}
+//		public void ClearFacets()
+//		{
+//			foreach (Base facet in m_facets) {
+//				facet.Clear ();
+//			}
+//		}
     }
 }

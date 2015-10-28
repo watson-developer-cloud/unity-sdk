@@ -102,8 +102,10 @@ namespace IBM.Watson.Widgets.Question.Facet
 		/// <summary>
 		/// Fired when Question Data is set. Sets the value of the LAT.
 		/// </summary>
-		override protected void OnQuestionData()
+		override protected void OnQuestion(string data)
 		{
+			base.OnQuestion (data);
+
 			if (Questions.questions.Length > 0 && Questions.questions [0].question.lat.Length > 0) {
 				LAT = Questions.questions [0].question.lat [0];
 			} else {

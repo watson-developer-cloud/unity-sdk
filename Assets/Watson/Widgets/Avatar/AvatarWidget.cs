@@ -411,6 +411,9 @@ namespace IBM.Watson.Widgets
                 ITM.Question topQuestion = m_QuestionResult.questions.Length > 0 ? m_QuestionResult.questions[0] : null;
                 if (topQuestion != null)
                 {
+					QuestionWidget question = m_FocusQuestion.GetComponentInChildren<QuestionWidget>();
+					question.Questions = m_QuestionResult;
+
                     if (m_QuestionText != null)
                         m_QuestionText.text = "Q: " + topQuestion.question.questionText;
                     if ( QuestionEvent != null )
@@ -437,9 +440,6 @@ namespace IBM.Watson.Widgets
                 string answer = answers.answers[0].answerText;
                 if (m_AnswerText != null)
                     m_AnswerText.text = "A: " + answer;
-                if ( AnswerEvent != null )
-                    AnswerEvent( answer );
-                m_TextOutput.SendData(new TextData(answer));
 
                 if (m_QuestionPrefab != null)
                 {
@@ -452,8 +452,6 @@ namespace IBM.Watson.Widgets
                     if (question != null)
                     {
                         question.Avatar = this;
-						question.ClearFacets();
-                        question.Questions = m_QuestionResult;
                         question.Answers = answers;
 						question.Init();
 
@@ -465,7 +463,11 @@ namespace IBM.Watson.Widgets
                     }
                     else
                         Log.Error("AvatarWidget", "Failed to find QuestionWidget in question prefab.");
+
                 }
+				if ( AnswerEvent != null )
+					AnswerEvent( answer );
+				m_TextOutput.SendData(new TextData(answer));
             }
             State = AvatarState.LISTENING;
         }

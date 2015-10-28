@@ -31,8 +31,15 @@ namespace IBM.Watson.Widgets.Question.Facet
 		/// <summary>
 		/// Fired when Answer Data is set. Sets the answer value and the confidence value in each of the confidence bars.
 		/// </summary>
-		override protected void OnAnswerData()
+//		override protected void OnAnswerData()
+//		{
+//
+//		}
+
+		override protected void OnAnswer(string data)
 		{
+			base.OnAnswer (data);
+
 			for(int i = 0; i < m_AnswerConfidenceBars.Length; i++) {
 				m_AnswerConfidenceBars[i].Answer = Answers.answers[i].answerText;
 				m_AnswerConfidenceBars[i].Confidence = Answers.answers[i].confidence;

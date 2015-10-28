@@ -43,13 +43,13 @@ namespace IBM.Watson.Widgets.Question.Facet
 			}
 		}
 
-		private string _Question;
-		public string Question
+		private string _QuestionString;
+		public string QuestionString
 		{
-			get { return _Question; }
+			get { return _QuestionString; }
 			set 
 			{
-				_Question = value;
+				_QuestionString = value;
 				UpdateQuestion();
 			}
 		}
@@ -77,7 +77,7 @@ namespace IBM.Watson.Widgets.Question.Facet
 		/// </summary>
 		private void UpdateQuestion()
 		{
-			m_QuestionText.text = Question;
+			m_QuestionText.text = QuestionString;
 		}
 
 		/// <summary>
@@ -92,16 +92,20 @@ namespace IBM.Watson.Widgets.Question.Facet
 		/// <summary>
 		/// Fired when Question Data is set. Sets the value of the Question.
 		/// </summary>
-		override protected void OnQuestionData()
+		override protected void OnQuestion(string data)
 		{
-			Question = Questions.questions[0].question.questionText;
+			base.OnQuestion (data);
+
+			QuestionString = Questions.questions [0].question.questionText;
 		}
 
 		/// <summary>
 		/// Fired when Answer Data is set. Sets the value of the Answer.
 		/// </summary>
-		override protected void OnAnswerData()
+		override protected void OnAnswer(string data)
 		{
+			base.OnAnswer (data);
+
 			Answer = Answers.answers [0].answerText;
 			m_Confidence = Answers.answers [0].confidence;
 		}

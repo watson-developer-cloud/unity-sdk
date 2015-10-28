@@ -110,7 +110,7 @@ namespace IBM.Watson.Widgets.Question.Facet
 		/// <summary>
 		/// Clears dynamically generated Facet Elements when a question is answered. Called from Question Widget.
 		/// </summary>
-		override public void Clear()
+		override protected void Clear()
 		{
 			CancelInvoke ();
 			while(m_WordList.Count != 0) {
