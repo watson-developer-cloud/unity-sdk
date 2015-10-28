@@ -119,21 +119,21 @@ namespace IBM.Watson.Widgets
             m_EventManager.RegisterEventReceiver("answers", OnDisplayAnswers);
             m_EventManager.RegisterEventReceiver("chat", OnDisplayChat );
 
-			m_AnswersAndConfidence = gameObject.GetComponent<AnswersAndConfidence>();
-			m_Evidence = gameObject.GetComponent<Question.Facet.Evidence>();
-			m_Semantic = gameObject.GetComponent<Semantic>();
-			m_Features = gameObject.GetComponent<Features>();
-			m_Location = gameObject.GetComponent<Location>();
-			m_ParseTree = gameObject.GetComponent<ParseTree>();
-			m_QuestionAndAnswer = gameObject.GetComponent<QuestionAndAnswer>();
-
-			m_facets.Add (m_AnswersAndConfidence);
-			m_facets.Add (m_Evidence);
-			m_facets.Add (m_Semantic);
-			m_facets.Add (m_Features);
-			m_facets.Add (m_Location);
-			m_facets.Add (m_ParseTree);
-			m_facets.Add (m_QuestionAndAnswer);
+//			AnswersAndConfidence = gameObject.GetComponent<AnswersAndConfidence>();
+//			Evidence = gameObject.GetComponent<Question.Facet.Evidence>();
+//			Semantic = gameObject.GetComponent<Semantic>();
+//			Features = gameObject.GetComponent<Features>();
+//			Location = gameObject.GetComponent<Location>();
+//			ParseTree = gameObject.GetComponent<ParseTree>();
+//			QuestionAndAnswer = gameObject.GetComponent<QuestionAndAnswer>();
+//
+//			m_facets.Add (m_AnswersAndConfidence);
+//			m_facets.Add (m_Evidence);
+//			m_facets.Add (m_Semantic);
+//			m_facets.Add (m_Features);
+//			m_facets.Add (m_Location);
+//			m_facets.Add (m_ParseTree);
+//			m_facets.Add (m_QuestionAndAnswer);
         }
 
         protected override void Start()
