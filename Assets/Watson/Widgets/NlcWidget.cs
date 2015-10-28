@@ -73,7 +73,7 @@ namespace IBM.Watson.Widgets
                 Log.Error( "NlcWidget", "Failed to request classify." );
         }
 
-	    private void OnClassified(NLC.ClassifyResult result)
+	    private void OnClassified(ClassifyResult result)
 	    {
             if ( m_TopClassOutput.IsConnected )
                 m_TopClassOutput.SendData( new TextData( result.top_class ) );

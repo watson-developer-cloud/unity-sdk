@@ -19,8 +19,8 @@
 using System.Collections;
 using IBM.Watson.Services.v1;
 using IBM.Watson.Logging;
+using IBM.Watson.Data;
 using UnityEngine;
-using System;
 
 namespace IBM.Watson.UnitTests
 {
@@ -60,7 +60,7 @@ namespace IBM.Watson.UnitTests
             yield break;
         }
 
-        private void OnConverse( Dialog.Response resp )
+        private void OnConverse( ConverseResponse resp )
         {
             Test( resp != null );
             if ( resp != null )
@@ -85,7 +85,7 @@ namespace IBM.Watson.UnitTests
             m_UploadTested = true;
         }
 
-        private void OnGetDialogs( Dialog.Dialogs dialogs )
+        private void OnGetDialogs( Dialogs dialogs )
         {
             Test( dialogs != null );
             if (dialogs != null && dialogs.dialogs != null )

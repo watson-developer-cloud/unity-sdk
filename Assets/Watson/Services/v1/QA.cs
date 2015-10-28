@@ -25,8 +25,8 @@ namespace IBM.Watson.Services.v1
 {
     /// <summary>
     /// This class wraps the QA service.
-    /// </summary>
     /// <a href="http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/question-answer.html">Question and Answer Service</a>
+    /// </summary>
     class QA
     {
         #region Public Types

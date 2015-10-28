@@ -18,17 +18,12 @@
 
 #if UNITY_EDITOR
 
-using IBM.Watson.Connection;
-using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
 using IBM.Watson.Services.v1;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
 using UnityEditor;
 using UnityEngine;
 using System.IO;
+using IBM.Watson.Data;
 
 namespace IBM.Watson.Editor
 {
@@ -63,18 +58,18 @@ namespace IBM.Watson.Editor
         private Texture m_WatsonIcon = null;
         private Vector2 m_ScrollPos = Vector2.zero;
         private NLC m_NLC = new NLC();
-        private NLC.Classifiers m_Classifiers = null;
+        private Classifiers m_Classifiers = null;
         private string m_NewClassifierName = null;
         private string m_NewClassifierLang = "en";
 
-        private void OnGetClassifiers(NLC.Classifiers classifiers)
+        private void OnGetClassifiers(Classifiers classifiers)
         {
             m_Classifiers = classifiers;
             foreach (var c in m_Classifiers.classifiers)
                 m_NLC.GetClassifier(c.classifier_id, OnGetClassifier);
         }
 
-        private void OnGetClassifier(NLC.Classifier details)
+        private void OnGetClassifier(Classifier details)
         {
             foreach (var c in m_Classifiers.classifiers)
                 if (c.classifier_id == details.classifier_id)
@@ -92,7 +87,7 @@ namespace IBM.Watson.Editor
                 OnRefresh();
         }
 
-        private void OnClassiferTrained( NLC.Classifier classifier )
+        private void OnClassiferTrained( Classifier classifier )
         {
             if (classifier == null)
                 EditorUtility.DisplayDialog( "Error", "Failed to train new classifier.", "OK" );
@@ -121,7 +116,7 @@ namespace IBM.Watson.Editor
             {
                 for (int i = 0; i < m_Classifiers.classifiers.Length; ++i)
                 {
-                    NLC.Classifier cl = m_Classifiers.classifiers[i];
+                    Classifier cl = m_Classifiers.classifiers[i];
                     EditorGUI.BeginDisabledGroup(true);
                     EditorGUILayout.TextField("Name", cl.name);
                     EditorGUILayout.TextField("ID", cl.classifier_id);

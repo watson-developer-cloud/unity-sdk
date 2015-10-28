@@ -139,7 +139,7 @@ namespace IBM.Watson.Widgets
             m_STT.OnListen( (AudioData)data );
         }
 
-	    private void OnRecognize(SpeechToText.ResultList result)
+	    private void OnRecognize(SpeechResultList result)
 	    {
             m_ResultOutput.SendData( new SpeechToTextData( result ) );
 

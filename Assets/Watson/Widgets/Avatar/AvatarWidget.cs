@@ -108,11 +108,11 @@ namespace IBM.Watson.Widgets.Avatar
         private Dialog m_Dialog = new Dialog();             // Dialog service
 
         private AvatarState m_State = AvatarState.CONNECTING;
-        private NLC.ClassifyResult m_ClassifyResult = null;
+        private ClassifyResult m_ClassifyResult = null;
         
-        private SpeechToText.ResultList m_SpeechResult = null;
+        private SpeechResultList m_SpeechResult = null;
         private string m_SpeechText = null;
-        private ITM.Questions m_QuestionResult = null;
+        private Questions m_QuestionResult = null;
         private GameObject m_FocusQuestion = null;
                 
         [SerializeField]
@@ -263,7 +263,7 @@ namespace IBM.Watson.Widgets.Avatar
                 m_Dialog.GetDialogs( OnFindDialog );
         }
 
-        private void OnFindDialog( Dialog.Dialogs dialogs )
+        private void OnFindDialog( Dialogs dialogs )
         {
             if ( dialogs != null )
             {
@@ -291,7 +291,7 @@ namespace IBM.Watson.Widgets.Avatar
             else
                 m_ITM.GetPipeline(m_Pipeline, true, OnPipeline );
         }
-        private void OnPipeline( ITM.Pipeline pipeline )
+        private void OnPipeline( Pipeline pipeline )
         {
             if ( pipeline == null )
             {
@@ -315,7 +315,7 @@ namespace IBM.Watson.Widgets.Avatar
         #region Audio Input
         private void OnRecognize(Data data)
         {
-            SpeechToText.ResultList result = ((SpeechToTextData)data).Results;
+            SpeechResultList result = ((SpeechToTextData)data).Results;
             if (State == AvatarState.LISTENING )
             {
                 if (result != null && result.Results.Length > 0
@@ -353,7 +353,7 @@ namespace IBM.Watson.Widgets.Avatar
             }
         }
 
-        private void OnSpeechClassified(NLC.ClassifyResult classify)
+        private void OnSpeechClassified(ClassifyResult classify)
         {
             m_ClassifyResult = classify;
 
@@ -424,7 +424,7 @@ namespace IBM.Watson.Widgets.Avatar
             }
         }
 
-        private void OnDialog( Dialog.Response resp )
+        private void OnDialog( ConverseResponse resp )
         {
             if ( resp != null )
             {
@@ -442,14 +442,14 @@ namespace IBM.Watson.Widgets.Avatar
             }
         }
 
-		private void OnAskQuestion(ITM.Questions questions)
+		private void OnAskQuestion(Questions questions)
         {
             m_QuestionResult = questions;
 
             bool bGettingAnswers = false;
             if (m_QuestionResult != null && m_QuestionResult.questions != null)
             {
-                ITM.Question topQuestion = m_QuestionResult.questions.Length > 0 ? m_QuestionResult.questions[0] : null;
+                Watson.Data.Question topQuestion = m_QuestionResult.questions.Length > 0 ? m_QuestionResult.questions[0] : null;
                 if (topQuestion != null)
                 {
                     if (m_QuestionText != null)
@@ -468,7 +468,7 @@ namespace IBM.Watson.Widgets.Avatar
             }
         }
 
-        private void OnAnswerQuestion(ITM.Answers answers)
+        private void OnAnswerQuestion(Answers answers)
         {
             if (answers != null && answers.answers.Length > 0)
             {
