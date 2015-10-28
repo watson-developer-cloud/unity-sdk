@@ -12,8 +12,15 @@ namespace IBM.Watson.Widgets.Avatar
     {
 
         #region Private Variables
+		[SerializeField]
+		float m_AnimationTime = 1.0f;
+
         Material m_GlassRingMaterial;
         Color m_InitialColorOfGlassRingMaterial;
+
+		LTDescr m_ColorAnimationOnGlass = null;
+		LTDescr m_ColorAnimationOnGlassLoop = null;
+		Color m_LastColorUsedInAnimation = Color.white;
         #endregion
 
         #region OnEnable / OnDisable / OnApplicationQuit / Awake
@@ -57,40 +64,35 @@ namespace IBM.Watson.Widgets.Avatar
 
         #region Changing Mood / Avatar State
 
-		LTDescr colorAnimationOnGlass = null;
-        LTDescr colorAnimationOnGlassLoop = null;
-		Color lastColor = Color.white;
         public override void ChangedBehavior(Color color, float timeModifier)
         {
             if (m_GlassRingMaterial != null)
             {
-				if(colorAnimationOnGlass != null){
-					LeanTween.cancel(colorAnimationOnGlass.uniqueId);
+				if(m_ColorAnimationOnGlass != null){
+					LeanTween.cancel(m_ColorAnimationOnGlass.uniqueId);
 				}
 
-                if (colorAnimationOnGlassLoop != null)
+                if (m_ColorAnimationOnGlassLoop != null)
                 {
-                    LeanTween.cancel(colorAnimationOnGlassLoop.uniqueId);
+                    LeanTween.cancel(m_ColorAnimationOnGlassLoop.uniqueId);
                 }
 
-				colorAnimationOnGlass = LeanTween.value(gameObject, lastColor, color, timeModifier).setOnUpdateColor(
+				m_ColorAnimationOnGlass = LeanTween.value(gameObject, m_LastColorUsedInAnimation, color, m_AnimationTime).setOnUpdateColor(
 					(Color colorToFadeIn)=>{
-						
+						m_LastColorUsedInAnimation = colorToFadeIn;
 						m_GlassRingMaterial.SetColor("_SpecColor", colorToFadeIn);
-
 					}).setOnComplete(
 					()=>{
 
-						colorAnimationOnGlassLoop = LeanTween.value(gameObject, Color.white, color, timeModifier).setLoopPingPong().setOnUpdateColor(
+					m_ColorAnimationOnGlassLoop = LeanTween.value(gameObject, color, Color.white, m_AnimationTime * timeModifier).setLoopPingPong().setOnUpdateColor(
 						(Color colorToLoop) =>
 						{
 							m_GlassRingMaterial.SetColor("_SpecColor", colorToLoop);
-							lastColor = colorToLoop;
+							m_LastColorUsedInAnimation = colorToLoop;
 						});	
 
 					});
 
-                
             }
         }
 

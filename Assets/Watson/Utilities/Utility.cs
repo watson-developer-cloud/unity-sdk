@@ -47,16 +47,61 @@ namespace IBM.Watson.Utilities
         }
 
 		private static float deltaFloat = 0.0001f;
+		/// <summary>
+		/// Approximately the specified a, b and tolerance.
+		/// </summary>
+		/// <param name="a">The alpha component.</param>
+		/// <param name="b">The blue component.</param>
+		/// <param name="tolerance">Tolerance.</param>
 		public static bool Approximately(float a, float b, float tolerance)
 		{
 			return (Mathf.Abs(a - b) < tolerance);
 		}
-		
+
+		/// <summary>
+		/// Checks the equality quaternion.
+		/// </summary>
+		/// <returns><c>true</c>, if equality quaternion was checked, <c>false</c> otherwise.</returns>
+		/// <param name="a">The alpha component.</param>
+		/// <param name="b">The blue component.</param>
 		public static bool CheckEqualityQuaternion(Quaternion a, Quaternion b){
 			return 
 				(Approximately(a.eulerAngles.x, b.eulerAngles.x, deltaFloat) || Approximately((a.eulerAngles.x < 0 ? a.eulerAngles.x + 360.0f : a.eulerAngles.x) , (b.eulerAngles.x < 0 ? b.eulerAngles.x + 360.0f : b.eulerAngles.x), deltaFloat)) &&
 					(Approximately(a.eulerAngles.y, b.eulerAngles.y, deltaFloat) || Approximately((a.eulerAngles.y < 0 ? a.eulerAngles.y + 360.0f : a.eulerAngles.y) , (b.eulerAngles.y < 0 ? b.eulerAngles.y + 360.0f : b.eulerAngles.y), deltaFloat)) &&
 					(Approximately(a.eulerAngles.z, b.eulerAngles.z, deltaFloat) || Approximately((a.eulerAngles.z < 0 ? a.eulerAngles.z + 360.0f : a.eulerAngles.z) , (b.eulerAngles.z < 0 ? b.eulerAngles.z + 360.0f : b.eulerAngles.z), deltaFloat));
+		}
+
+		/// <summary>
+		/// Finds the object in child of parent object by name of child
+		/// </summary>
+		/// <returns>The object.</returns>
+		/// <param name="parent">Parent Object.</param>
+		/// <param name="nameChild">Name child.</param>
+		public static GameObject FindObject(GameObject parent, string nameChild){
+			GameObject childObject = null;
+
+			string[] childPath = nameChild.Split ('/');
+
+			for (int i = 0; i < childPath.Length; i++) {
+				string childTransformName = childPath[i];
+
+				Transform[] childerenTransform = parent.GetComponentsInChildren<Transform> (includeInactive: true);
+				if (childerenTransform != null) {
+					foreach (Transform item in childerenTransform) {
+						if(string.Equals(item.name, childTransformName)){
+							if(i == childPath.Length - 1){
+								childObject = item.gameObject;
+							}
+							else{
+								parent = item.gameObject;
+							}
+							break;
+						}
+					}
+				}
+			}
+
+			return childObject;
 		}
     }
 

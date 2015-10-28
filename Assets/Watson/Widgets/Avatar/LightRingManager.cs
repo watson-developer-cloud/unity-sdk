@@ -11,20 +11,30 @@ namespace IBM.Watson.Widgets.Avatar
 	public class LightRingManager : AvatarModelManager
     {
 
-        #region Public Variables
-        #endregion
-
         #region Private Variables
 
+		[SerializeField]
+		LeanTweenType m_LightFlareEase = LeanTweenType.easeInOutQuad;
+
+		[SerializeField]
+		float m_AnimationTime = 1.0f;
+
+		int m_NumberOfLightFlare = 3;
+
+		[SerializeField]
+		GameObject[] m_LightFlarePivotParentList;
+		GameObject[] m_LightFlareChild;
+		Vector3[][] m_ListFlareBezierPathList;
+
+		Material m_SharedMaterialLightFlare;
+		Color m_ColorAnimationFlareLast = Color.white;
+
+		LTDescr m_ColorAnimationOnRing = null;
+		LTDescr m_ColorAnimationOnFlareInitial = null;
+		LTDescr m_ColorAnimationOnFlareLoop = null;
+		LTDescr[] m_MoveAnimationOnFlare = null;
+
         #endregion
-
-        public LeanTweenType lightFlareEase;
-		public float lightFlareAnimationTime = 1.0f;
-		public GameObject[] lightFlareList;
-		public GameObject[] lightFlareChild;
-		public Vector3[][] listFlarePathList;
-
-		public Color colorTest;
 
         #region OnEnable / OnDisable / OnApplicationQuit / Awake
         
@@ -36,109 +46,149 @@ namespace IBM.Watson.Widgets.Avatar
         protected override void Awake(){
             base.Awake();
 
-            listFlarePathList = new Vector3[3][];
+            m_ListFlareBezierPathList = new Vector3[3][];
 			
-			listFlarePathList [0] = new Vector3[] {
+			m_ListFlareBezierPathList [0] = new Vector3[] {
 				new Vector3 (28.365f, -6.06f, -16.385f),
 				new Vector3 (22.58f, -6.06f, 32.78f),
 				new Vector3 (41.7f, -6.06f, 8.4f),
 				new Vector3 (0.062f, -6.06f, 32.764f)
 			};
 			
-			listFlarePathList [1] = new Vector3[] {
+			m_ListFlareBezierPathList [1] = new Vector3[] {
 				new Vector3 (-28.37233f, -6.06f, -16.3723f),
 				new Vector3 (17.0983f, -6.06f, -35.94485f),
 				new Vector3 (-13.57539f, -6.06f, -40.31325f),
 				new Vector3 (28.34345f, -6.06f, -16.4357f)
 			};
 			
-			listFlarePathList [2] = new Vector3[] {
+			m_ListFlareBezierPathList [2] = new Vector3[] {
 				new Vector3 (0.007372856f, -6.060182f, 32.75727f),
 				new Vector3 (-39.67829f, -6.060145f, 3.164852f),
 				new Vector3 (-28.12456f, -6.060268f, 31.91325f),
 				new Vector3 (-28.40545f, -6.06f, -16.32832f)
 			};
-			
-			if (lightFlareList != null) {
-				lightFlareChild = new GameObject[lightFlareList.Length];
-				for (int i = 0; i < lightFlareList.Length; i++) {
-					lightFlareChild[i] = lightFlareList[i].GetComponentInChildren<MeshRenderer>().gameObject;
+
+			if (m_LightFlarePivotParentList == null || m_LightFlarePivotParentList.Length == 0 || m_LightFlarePivotParentList[0] == null) {
+				m_LightFlarePivotParentList = new GameObject[m_NumberOfLightFlare];
+				for (int i = 0; i < m_LightFlarePivotParentList.Length; i++) {
+					m_LightFlarePivotParentList[i] = Utility.FindObject(this.gameObject, string.Concat((i + 1).ToString(), "/LightFlareParent"));
 				}
+			}
+
+
+			if (m_LightFlarePivotParentList != null) {
+				m_LightFlareChild = new GameObject[m_LightFlarePivotParentList.Length];
+				for (int i = 0; i < m_LightFlarePivotParentList.Length; i++) {
+					m_LightFlareChild[i] = m_LightFlarePivotParentList[i].GetComponentInChildren<MeshRenderer>().gameObject;
+				}
+				m_SharedMaterialLightFlare = m_LightFlareChild[0].transform.GetComponent<MeshRenderer>().sharedMaterial;
 			}
 		}
 
         #endregion
 
-       
-		public override void ChangedMood (Color colorToChange, float speedModifier)
+		#region Change Mood / Behavior 
+
+        /// <summary>
+        /// After Mood Change, this function gets called. 
+		/// It changes light flare movement on mood change.
+        /// </summary>
+        /// <param name="colorToChange">Color to change.</param>
+        /// <param name="speedModifier">Speed modifier.</param>
+        /// <param name="timeModifier">Time modifier.</param>
+		public override void ChangedMood (Color colorToChange, float timeModifier)
 		{
-			//We are not changing color in flare in mood change!
-			AnimateLightFlare (speedModifier);
+			//We are changing movement in flare in mood change! (not color, color change depends on behavior)
+			AnimateLightFlareMovement (m_AnimationTime * timeModifier);
 		}
 
-		LTDescr colorAnimationOnRing = null;
-		LTDescr[] colorAnimationOnFlare = null;
+		/// <summary>
+		/// On Behavior Change, this function gets called. 
+		/// Light Ring and Flare colors are changing on behavior change on avatar.
+		/// </summary>
+		/// <param name="colorToChange">Color to be used in animations of Avatar Model</param>
+		/// <param name="speedModifier">Speed modifier to be used in animations of Avatar Model</param>
+		/// <param name="color">Color.</param>
+		/// <param name="timeModifier">Time modifier.</param>
 		public override void ChangedBehavior(Color color, float timeModifier)
         {
-			if (colorAnimationOnRing != null) {
-				LeanTween.cancel(colorAnimationOnRing.uniqueId);
-			}
-			colorAnimationOnRing = LeanTween.color (gameObject, color, timeModifier); //.setFromColor (Color.white).setLoopPingPong ();
-
-			if (colorAnimationOnFlare != null) {
-				for (int i = 0; i < colorAnimationOnFlare.Length; i++) {
-					LeanTween.cancel (colorAnimationOnFlare [i].uniqueId);
-				}
-			} else {
-				colorAnimationOnFlare = new LTDescr[3];
-			}
-
-			for (int i = 0; i < colorAnimationOnFlare.Length; i++) {
-				//LeanTween.va
-				GameObject lightFlareObject = lightFlareChild[i];
-			
-				colorAnimationOnFlare[i] = LeanTween.value (lightFlareChild[i], Color.white, color, timeModifier).setLoopPingPong ().setOnUpdateColor(
-					(Color a)=>{
-					lightFlareObject.transform.GetComponent<MeshRenderer>().sharedMaterial.SetColor("_TintColor", a);
-				});
-			}
+			AnimateLightRingColor (color, m_AnimationTime * timeModifier);
+			AnimateLightFlareColor (color, m_AnimationTime * timeModifier);
 		}
 
-		LTDescr[] moveAnimationOnFlare = null;
-		public void AnimateLightFlare(float timeModifier)
+		#endregion
+
+		#region Animations on Light Ring 
+
+		private void AnimateLightRingColor(Color color, float animationTime)
+		{
+			if (m_ColorAnimationOnRing != null) {
+				LeanTween.cancel(m_ColorAnimationOnRing.uniqueId);
+			}
+			m_ColorAnimationOnRing = LeanTween.color (gameObject, color, animationTime); //.setFromColor (Color.white).setLoopPingPong ();
+
+		}
+
+		private void AnimateLightFlareColor(Color color, float animationTime){
+			if (m_SharedMaterialLightFlare == null) {
+				Log.Warning("LightRingManager", "AnimateLightFlareColor : light flare should have a shared material.");
+				return;
+			}
+
+			if (m_ColorAnimationOnFlareLoop != null) {
+				LeanTween.cancel (m_ColorAnimationOnFlareLoop.uniqueId);
+			}
+
+			if (m_ColorAnimationOnFlareInitial != null) {
+				LeanTween.cancel (m_ColorAnimationOnFlareInitial.uniqueId);
+			}
+
+			m_ColorAnimationOnFlareInitial = LeanTween.value(gameObject, m_ColorAnimationFlareLast, color, animationTime).setOnUpdateColor(
+				(Color colorToFadeIn)=>{
+				m_ColorAnimationFlareLast = colorToFadeIn;
+				m_SharedMaterialLightFlare.SetColor("_TintColor", colorToFadeIn);
+			}).setOnComplete(
+				()=>{
+				
+				m_ColorAnimationOnFlareLoop = LeanTween.value(gameObject, color, Color.white, animationTime).setLoopPingPong().setOnUpdateColor(
+					(Color colorToLoop) =>
+					{
+					m_SharedMaterialLightFlare.SetColor("_TintColor", colorToLoop);
+					m_ColorAnimationFlareLast = colorToLoop;
+				});	
+				
+			});
+		}
+
+		private void AnimateLightFlareMovement(float animationTime)
         {
-			if (moveAnimationOnFlare != null) {
-				for (int i = 0; i < moveAnimationOnFlare.Length; i++) {
-					if(moveAnimationOnFlare [i] != null){
-						moveAnimationOnFlare [i].setTime(lightFlareAnimationTime * timeModifier);
+			if (m_LightFlarePivotParentList == null || m_LightFlarePivotParentList[0] == null) {
+				Log.Warning("LightRingManager", "AnimateLightFlareMovement : light flare should have a pivot parent assigned.");
+				return;
+			}
+
+			for (int i = 0; i < m_LightFlarePivotParentList.Length; i++) {
+				m_LightFlarePivotParentList[i].gameObject.SetActive((animationTime > 0.0f));
+			}
+
+			if (m_MoveAnimationOnFlare != null) {
+				for (int i = 0; i < m_MoveAnimationOnFlare.Length; i++) {
+					if(m_MoveAnimationOnFlare [i] != null){
+						m_MoveAnimationOnFlare [i].setTime(animationTime);
 					}
 				}
 			} else {
-				if(timeModifier > 0.0f){
-					moveAnimationOnFlare = new LTDescr[lightFlareList.Length]; 
-				}
-
-				if (lightFlareList.Length == listFlarePathList.Length) {
-					for (int i = 0; i < lightFlareList.Length; i++) {
-						if(timeModifier > 0.0f){
-							lightFlareList[i].gameObject.SetActive(true);
-							moveAnimationOnFlare [i] = LeanTween.moveLocal (lightFlareList[i], listFlarePathList [i], lightFlareAnimationTime * timeModifier).setOrientToPath(true).setAxis(Vector3.forward).setEase(lightFlareEase).setLoopPingPong ();
-						}
-						else{
-							lightFlareList[i].gameObject.SetActive(false);
-						}
+				if (m_LightFlarePivotParentList.Length == m_ListFlareBezierPathList.Length && animationTime > 0.0f) {
+					m_MoveAnimationOnFlare = new LTDescr[m_LightFlarePivotParentList.Length]; 
+					for (int i = 0; i < m_LightFlarePivotParentList.Length; i++) {
+						m_MoveAnimationOnFlare [i] = LeanTween.moveLocal (m_LightFlarePivotParentList[i], m_ListFlareBezierPathList [i], animationTime).setOrientToPath(true).setAxis(Vector3.forward).setEase(m_LightFlareEase).setLoopPingPong ();
 					}
 				}
 			}
-
-
 		}
 
-		public void StopAnimationLightFlare(){
-			for (int i = 0; i < lightFlareList.Length; i++) {
-				LeanTween.cancel(lightFlareList[i]);
-			}
-		}
+		#endregion
 
 	}
 
