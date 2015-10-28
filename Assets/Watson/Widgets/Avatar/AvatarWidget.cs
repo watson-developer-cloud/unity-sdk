@@ -25,10 +25,11 @@ using IBM.Watson.Data;
 using IBM.Watson.Services.v1;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 #pragma warning disable 414
 
-namespace IBM.Watson.Widgets
+namespace IBM.Watson.Widgets.Avatar
 {
     /// <summary>
     /// Avatar of Watson 
@@ -61,7 +62,11 @@ namespace IBM.Watson.Widgets
             /// Connected - After semantically understanding, Watson is responding. 
             /// If Watson didn't understand the input, then it goes to listening mode while giving some response about not understood input.
             /// </summary>
-            ANSWERING
+            ANSWERING,
+            /// <summary>
+            /// Some type of error occured that is keeping the avatar from working.
+            /// </summary>
+            ERROR
         };
         
         /// <summary>
@@ -70,17 +75,9 @@ namespace IBM.Watson.Widgets
         public enum MoodType
         {
             /// <summary>
-            /// Connecting - initial state
-            /// </summary>
-            CONNECTING = 0,     
-            /// <summary>
-            /// Connection Failed
-            /// </summary>
-            DISCONNECTED,
-            /// <summary>
-            /// Connected - Waiting to be waken-up
-            /// </summary>
-            SLEEPING,          
+			/// Connecting / Disconnected - Waiting to be waken-up ( initial state )
+			/// </summary>
+            SLEEPING = 0,          
             /// <summary>
             /// Connected - After wake up - waits a mood change
             /// </summary>
@@ -111,11 +108,11 @@ namespace IBM.Watson.Widgets
         private Dialog m_Dialog = new Dialog();             // Dialog service
 
         private AvatarState m_State = AvatarState.CONNECTING;
-        private NLC.ClassifyResult m_ClassifyResult = null;
+        private ClassifyResult m_ClassifyResult = null;
         
-        private SpeechToText.ResultList m_SpeechResult = null;
+        private SpeechResultList m_SpeechResult = null;
         private string m_SpeechText = null;
-        private ITM.Questions m_QuestionResult = null;
+        private Questions m_QuestionResult = null;
         private GameObject m_FocusQuestion = null;
                 
         [SerializeField]
@@ -159,6 +156,8 @@ namespace IBM.Watson.Widgets
         private string m_DialogId = null;    
         private int m_DialogClientId = 0;
         private int m_DialogConversationId = 0;
+        [SerializeField,Tooltip("If disconnected, how many seconds until we try to restart the avatar.")]
+        private float m_RestartInterval = 30.0f;
         #endregion
 
         #region Public Types
@@ -167,17 +166,39 @@ namespace IBM.Watson.Widgets
         #endregion
 
         #region Public Properties
+        /// <summary>
+        /// This event is invoked each time a question is asked.
+        /// </summary>
         public OnQuestion QuestionEvent { get; set; }
+        /// <summary>
+        /// This event is invoked each time a answer is given.
+        /// </summary>
         public OnAnswer AnswerEvent { get; set; }
+        /// <summary>
+        /// Access the contained ITM service object.
+        /// </summary>
         public ITM ITM { get { return m_ITM; } }
+        /// <summary>
+        /// Access to the NLC service object.
+        /// </summary>
         public NLC NLC { get { return m_NLC; } }
+        /// <summary>
+        /// What is the current state of this avatar.
+        /// </summary>
         public AvatarState State
         {
             get { return m_State; }
             private set
             {
-                m_State = value;
-                EventManager.Instance.SendEvent(Constants.Event.ON_CHANGE_AVATAR_STATE_FINISH, this, value);
+                if ( m_State != value )
+                {
+                    m_State = value;
+				    EventManager.Instance.SendEvent(Constants.Event.ON_CHANGE_AVATAR_STATE_FINISH, this, value);
+
+                    // if we went into an error state, automatically try to reconnect after a timeout..
+                    if ( m_State == AvatarState.ERROR )
+                        Invoke( "StartAvatar", m_RestartInterval );
+                }
             }
         }
         
@@ -219,10 +240,22 @@ namespace IBM.Watson.Widgets
             EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_CHANGE_AVATAR_MOOD, OnChangeMood);
         }
 
+        /// <exclude />
         protected override void Start()
         {
             base.Start();
 
+			Mood = MoodType.SLEEPING;
+			State = AvatarState.CONNECTING;
+
+            StartAvatar();
+        }
+
+        private void StartAvatar()
+        {
+            Log.Status( "AvatarWidget", "Starting avatar." );
+
+            State = AvatarState.CONNECTING;
             // login to ITM, then select the pipeline
             m_ITM.Login(OnItmLogin);
             // Find our dialog ID
@@ -230,7 +263,7 @@ namespace IBM.Watson.Widgets
                 m_Dialog.GetDialogs( OnFindDialog );
         }
 
-        private void OnFindDialog( Dialog.Dialogs dialogs )
+        private void OnFindDialog( Dialogs dialogs )
         {
             if ( dialogs != null )
             {
@@ -242,23 +275,31 @@ namespace IBM.Watson.Widgets
             }
 
             if (string.IsNullOrEmpty( m_DialogId ) )
+            {
                 Log.Error( "AvatarWidget", "Failed to find dialog ID for {0}", m_DialogName );
+                State = AvatarState.ERROR;
+            }
         }
 
         private void OnItmLogin(bool success)
         {
-            if (success)
-                m_ITM.GetPipeline(m_Pipeline, true, OnPipeline );
-            else
+            if (!success)
+            {
                 Log.Error("AvtarWidget", "Failed to login to ITM.");
-        }
-        private void OnPipeline( ITM.Pipeline pipeline )
-        {
-            if ( pipeline != null )
-                State = AvatarState.LISTENING;
+                State = AvatarState.ERROR;
+            }
             else
+                m_ITM.GetPipeline(m_Pipeline, true, OnPipeline );
+        }
+        private void OnPipeline( Pipeline pipeline )
+        {
+            if ( pipeline == null )
+            {
                 Log.Equals( "AvatarWidget", "Failed to select pipeline." );
-
+                State = AvatarState.ERROR;
+            }
+            else
+                State = AvatarState.LISTENING;
         }
         #endregion
 
@@ -274,7 +315,7 @@ namespace IBM.Watson.Widgets
         #region Audio Input
         private void OnRecognize(Data data)
         {
-            SpeechToText.ResultList result = ((SpeechToTextData)data).Results;
+            SpeechResultList result = ((SpeechToTextData)data).Results;
             if (State == AvatarState.LISTENING )
             {
                 if (result != null && result.Results.Length > 0
@@ -312,7 +353,7 @@ namespace IBM.Watson.Widgets
             }
         }
 
-        private void OnSpeechClassified(NLC.ClassifyResult classify)
+        private void OnSpeechClassified(ClassifyResult classify)
         {
             m_ClassifyResult = classify;
 
@@ -383,7 +424,7 @@ namespace IBM.Watson.Widgets
             }
         }
 
-        private void OnDialog( Dialog.Response resp )
+        private void OnDialog( ConverseResponse resp )
         {
             if ( resp != null )
             {
@@ -401,14 +442,14 @@ namespace IBM.Watson.Widgets
             }
         }
 
-		private void OnAskQuestion(ITM.Questions questions)
+		private void OnAskQuestion(Questions questions)
         {
             m_QuestionResult = questions;
 
             bool bGettingAnswers = false;
             if (m_QuestionResult != null && m_QuestionResult.questions != null)
             {
-                ITM.Question topQuestion = m_QuestionResult.questions.Length > 0 ? m_QuestionResult.questions[0] : null;
+                Watson.Data.Question topQuestion = m_QuestionResult.questions.Length > 0 ? m_QuestionResult.questions[0] : null;
                 if (topQuestion != null)
                 {
 					QuestionWidget question = m_FocusQuestion.GetComponentInChildren<QuestionWidget>();
@@ -430,7 +471,7 @@ namespace IBM.Watson.Widgets
             }
         }
 
-        private void OnAnswerQuestion(ITM.Answers answers)
+        private void OnAnswerQuestion(Answers answers)
         {
             if (answers != null && answers.answers.Length > 0)
             {
@@ -474,22 +515,36 @@ namespace IBM.Watson.Widgets
 
         #endregion
 
-        #region Avatar Mood / Behavior  - Adaptive Computing
-        
+        #region Avatar Mood / Behavior
+
+        [Serializable]
+        private class AvatarStateInfo
+        {
+            public AvatarState m_State;
+            public Color m_Color;
+            public float m_Speed;
+        };
+
+        [SerializeField]
+        private AvatarStateInfo [] m_StateInfo = new AvatarStateInfo[] 
+        {
+            new AvatarStateInfo() { m_State = AvatarState.CONNECTING, m_Color = new Color(241 / 255.0f, 241 / 255.0f, 242 / 255.0f), m_Speed = 0.0f },
+            new AvatarStateInfo() { m_State = AvatarState.LISTENING, m_Color = new Color(0 / 255.0f, 166 / 255.0f, 160 / 255.0f), m_Speed = 1.0f },
+            new AvatarStateInfo() { m_State = AvatarState.THINKING, m_Color = new Color(238 / 255.0f, 62 / 255.0f, 150 / 255.0f), m_Speed = 1.0f },
+            new AvatarStateInfo() { m_State = AvatarState.CONNECTING, m_Color = new Color(140 / 255.0f, 198 / 255.0f, 63 / 255.0f), m_Speed = 1.0f },
+            new AvatarStateInfo() { m_State = AvatarState.ERROR, m_Color = new Color(255 / 255.0f, 0 / 255.0f, 0 / 255.0f), m_Speed = 0.0f },
+        };
+
         public Color BehaviourColor
         {
             get
             {
-                Color color = Color.white;
-                switch (m_State)
-                {
-                    case AvatarState.CONNECTING: color = new Color(241 / 255.0f, 241 / 255.0f, 242 / 255.0f); break;     //Idle color 
-                    case AvatarState.LISTENING: color = new Color(0 / 255.0f, 166 / 255.0f, 160 / 255.0f); break;
-                    case AvatarState.THINKING: color = new Color(238 / 255.0f, 62 / 255.0f, 150 / 255.0f); break;
-                    case AvatarState.ANSWERING: color = new Color(140 / 255.0f, 198 / 255.0f, 63 / 255.0f); break;
-                    default: Log.Error("AvatarWidget", "AvatarState is not defined for color!"); color = Color.white; break;
-                }
-                return color;
+                foreach( var c in m_StateInfo )
+                    if ( c.m_State == m_State )
+                        return c.m_Color;
+
+                Log.Warning("AvatarWidget", "StateColor not defined for state {0}.", m_State.ToString() );
+                return Color.white;
             }
         }
 
@@ -502,39 +557,76 @@ namespace IBM.Watson.Widgets
             }
             set
             {
-                m_currentMood = value;
-                EventManager.Instance.SendEvent(Constants.Event.ON_CHANGE_AVATAR_MOOD_FINISH, (int)value);
+                if ( m_currentMood != value )
+                {
+                    m_currentMood = value;
+                    EventManager.Instance.SendEvent(Constants.Event.ON_CHANGE_AVATAR_MOOD_FINISH, (int)value);
+                }
             }
         }
 
-        MoodType[] m_moodTypeList = null;
         public MoodType[] MoodTypeList
         {
             get
             {
-                if (m_moodTypeList == null)
-                {
-                    m_moodTypeList = new MoodType[] { MoodType.IDLE, MoodType.INTERESTED, MoodType.URGENT, MoodType.UPSET, MoodType.SHY };
-                }
-                return m_moodTypeList;
+                return Enum.GetValues( typeof(MoodType) ) as MoodType[];
             }
         }
+
+		public float BehaviorSpeedModifier
+		{
+			get
+			{
+                foreach( var info in m_StateInfo )
+                    if ( info.m_State == State )
+                        return info.m_Speed;
+
+                Log.Warning( "AvatarWidget", "StateInfo not defined for {0}.", State.ToString() );
+                return 1.0f;
+			}
+		}
+
+		public float BehaviorTimeModifier
+		{
+			get
+			{
+				float value = BehaviorSpeedModifier;
+				if (value != 0.0f)
+					value = 1.0f / value;
+
+				return value;
+			}
+		}
+
+        [Serializable]
+        private class AvatarMoodInfo
+        {
+            public MoodType m_Mood;
+            public Color m_Color;
+            public float m_Speed;
+        };
+
+        [SerializeField]
+        private AvatarMoodInfo [] m_MoodInfo = new AvatarMoodInfo[] 
+        {
+            new AvatarMoodInfo() { m_Mood = MoodType.SLEEPING, m_Color = new Color(255 / 255.0f, 255 / 255.0f, 255 / 255.0f), m_Speed = 0.0f },
+            new AvatarMoodInfo() { m_Mood = MoodType.IDLE, m_Color = new Color(241 / 255.0f, 241 / 255.0f, 242 / 255.0f), m_Speed = 1.0f },
+            new AvatarMoodInfo() { m_Mood = MoodType.INTERESTED, m_Color = new Color(131 / 255.0f, 209 / 255.0f, 245 / 255.0f), m_Speed = 1.1f },
+            new AvatarMoodInfo() { m_Mood = MoodType.URGENT, m_Color = new Color(221 / 255.0f, 115 / 255.0f, 28 / 255.0f), m_Speed = 2.0f },
+            new AvatarMoodInfo() { m_Mood = MoodType.UPSET, m_Color = new Color(217 / 255.0f, 24 / 255.0f, 45 / 255.0f), m_Speed = 1.5f },
+            new AvatarMoodInfo() { m_Mood = MoodType.SHY, m_Color = new Color(243 / 255.0f, 137 / 255.0f, 175 / 255.0f), m_Speed = 0.9f },
+        };
 
         public Color MoodColor
         {
             get
             {
-                Color color = Color.white;
-                switch (Mood)
-                {
-                    case MoodType.IDLE: color = new Color(241 / 255.0f, 241 / 255.0f, 242 / 255.0f); break;
-                    case MoodType.INTERESTED: color = new Color(131 / 255.0f, 209 / 255.0f, 245 / 255.0f); break;
-                    case MoodType.URGENT: color = new Color(221 / 255.0f, 115 / 255.0f, 28 / 255.0f); break;
-                    case MoodType.UPSET: color = new Color(217 / 255.0f, 24 / 255.0f, 45 / 255.0f); break;
-                    case MoodType.SHY: color = new Color(243 / 255.0f, 137 / 255.0f, 175 / 255.0f); break;
-                    default: Log.Error("AvatarWidget", "MoodType is not defined for color!"); color = Color.white; break;
-                }
-                return color;
+                foreach( var c in m_MoodInfo )
+                    if ( c.m_Mood == Mood )
+                        return c.m_Color;
+
+                Log.Warning( "AvatarWidget", "Mood not defined for {0}.", Mood.ToString() );
+                return Color.white;
             }
         }
 
@@ -542,17 +634,12 @@ namespace IBM.Watson.Widgets
         {
             get
             {
-                float value = 1.0f;
-                switch (Mood)
-                {
-                    case MoodType.IDLE: value = 1.0f; break;
-                    case MoodType.INTERESTED: value = 1.1f; break;
-                    case MoodType.URGENT: value = 2.0f; break;
-                    case MoodType.UPSET: value = 1.5f; break;
-                    case MoodType.SHY: value = 0.9f; break;
-                    default: Log.Error("AvatarWidget", "MoodType is not defined for speed modifier!"); value = 1.0f; break;
-                }
-                return value;
+                foreach( var c in m_MoodInfo )
+                    if ( c.m_Mood == Mood )
+                        return c.m_Speed;
+
+                Log.Warning( "AvatarWidget", "Mood not defined for {0}.", Mood.ToString() );
+                return 1.0f;
             }
         }
 
@@ -563,12 +650,11 @@ namespace IBM.Watson.Widgets
                 float value = MoodSpeedModifier;
                 if (value != 0.0f)
                     value = 1.0f / value;
-                else
-                    value = 0.00001f;
 
                 return value;
             }
         }
+
 
         void OnChangeMood(System.Object[] args)
         {

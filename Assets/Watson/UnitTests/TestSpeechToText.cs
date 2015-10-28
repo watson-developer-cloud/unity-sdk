@@ -16,6 +16,8 @@
 * @author Richard Lyle (rolyle@us.ibm.com)
 */
 
+
+using IBM.Watson.Data;
 using IBM.Watson.Logging;
 using IBM.Watson.Services.v1;
 using System.Collections;
@@ -37,7 +39,7 @@ namespace IBM.Watson.UnitTests
             yield break;
         }
 
-        private void OnGetModels( SpeechToText.Model [] models )
+        private void OnGetModels( SpeechModel [] models )
         {
             Test( models != null );
             if ( models != null )

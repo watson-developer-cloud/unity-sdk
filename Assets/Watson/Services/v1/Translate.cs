@@ -21,101 +21,51 @@ using System.Collections.Generic;
 using IBM.Watson.Connection;
 using IBM.Watson.Utilities;
 using IBM.Watson.Logging;
+using IBM.Watson.Data;
 using System.Text;
 using MiniJSON;
 using System;
-using System.Collections;
 using FullSerializer;
 
 namespace IBM.Watson.Services.v1
 {
     /// <summary>
     /// This class wraps the Language Translation service.
-    /// </summary>
     /// <a href="http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/language-translation.html">Language Translation Service</a>
+    /// </summary>
     public class Translate
     {
         #region Public Types
         /// <summary>
-        /// Language data class.
+        /// Callback for GetModels() method.
         /// </summary>
-        public class Language
-        {
-            /// <summary>
-            /// String that contains the country code.
-            /// </summary>
-            public string language { get; set; }        // country code of the language 
-            /// <summary>
-            /// The language name.
-            /// </summary>
-            public string name { get; set; }        // name of the language                                    
-        }
+        /// <param name="models"></param>
+        public delegate void GetModelsCallback(TranslationModels models);
         /// <summary>
-        /// Languages data class.
+        /// Callback for GetModel() method.
         /// </summary>
-        public class Languages
-        {
-            /// <summary>
-            /// Array of language objects.
-            /// </summary>
-            public Language [] languages { get; set; }
-        }
+        /// <param name="model"></param>
+        public delegate void GetModelCallback(TranslationModel model);
         /// <summary>
-        /// Translation data class.
+        /// Callback for GetLanguages() method.
         /// </summary>
-        public class Translation
-        {
-            /// <summary>
-            /// Translation text.
-            /// </summary>
-            public string translation { get; set; }
-        };
-        /// <summary>
-        /// Translate data class returned by the TranslateCallback.
-        /// </summary>
-        public class Translations
-        {
-            public long word_count { get; set; }
-            public long character_count { get; set; }
-            public Translation[] translations { get; set; }
-        }
-        /// <summary>
-        /// Language model data class.
-        /// </summary>
-        public class Model
-        {
-            public string model_id { get; set; }
-            public string name { get; set; }
-            public string source { get; set; }
-            public string target { get; set; }
-            public string base_model_id { get; set; }
-            public string domain { get; set; }
-            public bool customizable { get; set; }
-            public bool @default { get; set; }
-            public string owner { get; set; }
-            public string status { get; set; }
-        }
-        /// <summary>
-        /// Models data class.
-        /// </summary>
-        public class Models
-        {
-            public Model [] models { get; set; }
-        }
-        public delegate void GetModelsCallback(Models models);
-        public delegate void GetModelCallback(Model model);
+        /// <param name="languages"></param>
         public delegate void GetLanguagesCallback(Languages languages);
+        /// <summary>
+        /// Callback for Identify() method.
+        /// </summary>
+        /// <param name="languages"></param>
         public delegate void IdentifyCallback(string languages);
+        /// <summary>
+        /// Callback for Translate() method.
+        /// </summary>
+        /// <param name="translation"></param>
         public delegate void TranslateCallback(Translations translation);
-
         #endregion
 
         #region Private Data
         private const string SERVICE_ID = "TranslateV1";
         private static fsSerializer sm_Serializer = new fsSerializer();
-        #endregion
-
-        #region Public Properties
         #endregion
 
         #region GetTranslation Functions
@@ -269,7 +219,7 @@ namespace IBM.Watson.Services.v1
 
         private void GetModelsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            Models models = new Models();
+            TranslationModels models = new TranslationModels();
             if (resp.Success)
             {
                 try
@@ -327,7 +277,7 @@ namespace IBM.Watson.Services.v1
 
         private void GetModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            Model model = new Model();
+            TranslationModel model = new TranslationModel();
             if (resp.Success)
             {
                 try
@@ -358,7 +308,7 @@ namespace IBM.Watson.Services.v1
         /// <summary>
         /// This function returns a list to the callback of all identifiable languages.
         /// </summary>
-        /// <param name="callback">The callback to invoke with a Langage array, null on error.</param>
+        /// <param name="callback">The callback to invoke with a Language array, null on error.</param>
         /// <returns>Returns true if the request was submitted.</returns>
         public bool GetLanguages(GetLanguagesCallback callback)
         {

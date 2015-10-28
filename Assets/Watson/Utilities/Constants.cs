@@ -65,7 +65,7 @@ namespace IBM.Watson.Utilities
         public class String
         {
             public const string DEBUG_DISPLAY_QUALITY = "Quality: {0}";
-            public const string DEBUG_DISPLAY_AVATAR_MOOD = "State:{0} \nMood: {1}";
+            public const string DEBUG_DISPLAY_AVATAR_MOOD = "Behavior:{0} Mood: {1}";
         }
 
 

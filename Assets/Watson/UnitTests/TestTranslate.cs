@@ -16,6 +16,8 @@
 * @author Richard Lyle (rolyle@us.ibm.com)
 */
 
+
+using IBM.Watson.Data;
 using IBM.Watson.Logging;
 using IBM.Watson.Services.v1;
 using System.Collections;
@@ -56,7 +58,7 @@ namespace IBM.Watson.UnitTests
             yield break;
         }
 
-        private void OnGetModel( Translate.Model model )
+        private void OnGetModel( TranslationModel model )
         {
             Test( model != null );
             if ( model != null )
@@ -67,7 +69,7 @@ namespace IBM.Watson.UnitTests
             m_GetModelTested = true;
         }
 
-        private void OnGetModels( Translate.Models models )
+        private void OnGetModels( TranslationModels models )
         {
             Test( models != null );
             if ( models != null )
@@ -81,7 +83,7 @@ namespace IBM.Watson.UnitTests
             m_GetModelsTested = true;
         }
 
-        private void OnGetTranslation( Translate.Translations translation )
+        private void OnGetTranslation( Translations translation )
         {
             Test( translation != null );
             if ( translation != null && translation.translations.Length > 0 )
@@ -97,7 +99,7 @@ namespace IBM.Watson.UnitTests
             m_IdentifyTested = true;
         }
 
-        private void OnGetLanguages( Translate.Languages languages )
+        private void OnGetLanguages( Languages languages )
         {
             Test( languages != null );
             if ( languages != null )

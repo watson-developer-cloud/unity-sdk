@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 using IBM.Watson.Utilities;
-using IBM.Watson.Widgets;
+using IBM.Watson.Widgets.Avatar;
 using IBM.Watson.Logging;
 
 namespace IBM.Watson.Debug
@@ -29,12 +29,14 @@ namespace IBM.Watson.Debug
         {
             EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_CHANGE_AVATAR_MOOD, ChangeMood);
             EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_CHANGE_AVATAR_MOOD_FINISH, UpdateMood);
+			EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_CHANGE_AVATAR_STATE_FINISH, UpdateBehavior);
         }
 
         void OnDisable()
         {
             EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_CHANGE_AVATAR_MOOD, ChangeMood);
             EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_CHANGE_AVATAR_MOOD_FINISH, UpdateMood);
+			EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_CHANGE_AVATAR_STATE_FINISH, UpdateBehavior);
         }
 
 
@@ -55,10 +57,10 @@ namespace IBM.Watson.Debug
             }
         }
 
-        void Start()
-        {
-            EventManager.Instance.SendEvent(Constants.Event.ON_CHANGE_AVATAR_MOOD_FINISH, m_CurrentMoodIndex);
-        }
+//        void Start()
+//        {
+//            EventManager.Instance.SendEvent(Constants.Event.ON_CHANGE_AVATAR_MOOD_FINISH, m_CurrentMoodIndex);
+//        }
 
         // Update is called once per frame
         void Update()
@@ -80,6 +82,13 @@ namespace IBM.Watson.Debug
                 m_Text.text = string.Format(Constants.String.DEBUG_DISPLAY_AVATAR_MOOD, m_MoodTypeList[m_CurrentMoodIndex].ToString());
 
         }
+
+		void UpdateBehavior(System.Object[] args){
+			if (m_AvatarWidget != null)
+				m_Text.text = string.Format(Constants.String.DEBUG_DISPLAY_AVATAR_MOOD, m_AvatarWidget.State, m_AvatarWidget.Mood);
+			else
+				m_Text.text = string.Format(Constants.String.DEBUG_DISPLAY_AVATAR_MOOD, m_MoodTypeList[m_CurrentMoodIndex].ToString());
+		}
 
         void ChangeMood(System.Object[] args)
         {

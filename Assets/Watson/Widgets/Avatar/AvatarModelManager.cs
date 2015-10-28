@@ -58,11 +58,11 @@ namespace IBM.Watson.Widgets.Avatar
         /// On Mood Change of the avatar, this function gets called. 
         /// </summary>
         /// <param name="args">If there 2 paremeteres we consider 1st paremeter is AvatarWidget object, otherwise we are using initial AvatarWidget object's values to call other functions</param>
-        public virtual void OnChangedMood(System.Object[] args)
+		private void OnChangedMood(System.Object[] args)
         {
             if (args.Length == 0 || args.Length == 1)
             {
-                ChangeToColor(m_AvatarWidgetAttached.MoodColor, m_AvatarWidgetAttached.MoodSpeedModifier);
+				ChangedMood(m_AvatarWidgetAttached.MoodColor, m_AvatarWidgetAttached.MoodTimeModifier);
             }
             else if (args.Length == 2)
             {
@@ -71,7 +71,7 @@ namespace IBM.Watson.Widgets.Avatar
                 {
                     if (avatarWidget == m_AvatarWidgetAttached)
                     {
-                        ChangeToColor(m_AvatarWidgetAttached.MoodColor, m_AvatarWidgetAttached.MoodSpeedModifier);
+						ChangedMood(m_AvatarWidgetAttached.MoodColor, m_AvatarWidgetAttached.MoodTimeModifier);
                     }
                     else
                     {
@@ -93,11 +93,11 @@ namespace IBM.Watson.Widgets.Avatar
         /// On Behavior Change of the avater, this function gets called
         /// </summary>
         /// <param name="args">If there 2 paremeteres we consider 1st paremeter is AvatarWidget object, otherwise we are using initial AvatarWidget object's values to call other functions</param>
-        public virtual void OnChangedBehavior(System.Object[] args)
+        private void OnChangedBehavior(System.Object[] args)
         {
             if (args.Length == 0 || args.Length == 1)
             {
-                ChangeToColor(m_AvatarWidgetAttached.BehaviourColor, m_AvatarWidgetAttached.MoodSpeedModifier);
+				ChangedBehavior(m_AvatarWidgetAttached.BehaviourColor, m_AvatarWidgetAttached.BehaviorTimeModifier);
             }
             else if (args.Length == 2)
             {
@@ -106,7 +106,7 @@ namespace IBM.Watson.Widgets.Avatar
                 {
                     if (avatarWidget == m_AvatarWidgetAttached)
                     {
-                        ChangeToColor(m_AvatarWidgetAttached.BehaviourColor, m_AvatarWidgetAttached.MoodSpeedModifier);
+						ChangedBehavior(m_AvatarWidgetAttached.BehaviourColor, m_AvatarWidgetAttached.BehaviorTimeModifier);
                     }
                     else
                     {
@@ -125,11 +125,18 @@ namespace IBM.Watson.Widgets.Avatar
         }
 
         /// <summary>
-        /// On Mood change or Behavior Change, this function gets called. 
+        /// On Behavior Change, this function gets called. 
         /// </summary>
         /// <param name="colorToChange">Color to be used in animations of Avatar Model</param>
         /// <param name="speedModifier">Speed modifier to be used in animations of Avatar Model</param>
-        public virtual void ChangeToColor(Color colorToChange, float speedModifier) { }
+        public virtual void ChangedBehavior(Color colorToChange, float speedModifier) { }
+
+		/// <summary>
+		/// After Mood Change, this function gets called.
+		/// </summary>
+		/// <param name="colorToChange">Color to change.</param>
+		/// <param name="speedModifier">Speed modifier.</param>
+		public virtual void ChangedMood(Color colorToChange, float speedModifier) { }
 
         #endregion
     }

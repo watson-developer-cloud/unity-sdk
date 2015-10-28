@@ -16,23 +16,18 @@
 * @author Richard Lyle (rolyle@us.ibm.com)
 */
 
-
-using System.Collections;
 using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
-using IBM.Watson.Widgets;
-using IBM.Watson.Avatar;
-using IBM.Watson.Widgets.Question;
+using IBM.Watson.Widgets.Avatar;
 using IBM.Watson.Widgets.Question.Facet;
-using IBM.Watson.Services.v1;
+using IBM.Watson.Data;
 using UnityEngine;
-using UnityEngine.UI;
 using System.Collections.Generic;
 
 namespace IBM.Watson.Widgets
 {
     /// <summary>
-    /// Avatar of Watson 
+    /// This class manages the answers, question, and other data related to a question asked of the AvatarWidget.
     /// </summary>
     [RequireComponent(typeof(AudioSource))]
     public class QuestionWidget : Widget
@@ -62,9 +57,9 @@ namespace IBM.Watson.Widgets
         #region Public Properties
         public EventManager EventManager { get { return m_EventManager; } }
         public AvatarWidget Avatar { get; set; }
-        public ITM.Questions Questions { get; set; }
-        public ITM.Answers Answers { get; set; }
-		public ITM.ParseData ParseData { get; set; }
+        public Questions Questions { get; set; }
+        public Answers Answers { get; set; }
+		public ParseData ParseData { get; set; }
         public CubeAnimationManager Cube {
             get {
                 if ( m_CubeAnimMgr == null )
@@ -124,21 +119,21 @@ namespace IBM.Watson.Widgets
             m_EventManager.RegisterEventReceiver("answers", OnDisplayAnswers);
             m_EventManager.RegisterEventReceiver("chat", OnDisplayChat );
 
-//			m_AnswersAndConfidence = gameObject.GetComponent<AnswersAndConfidence>();
-//			m_Evidence = gameObject.GetComponent<Evidence>();
-//			m_Semantic = gameObject.GetComponent<Semantic>();
-//			m_Features = gameObject.GetComponent<Features>();
-//			m_Location = gameObject.GetComponent<Location>();
-//			m_ParseTree = gameObject.GetComponent<ParseTree>();
-//			m_QuestionAndAnswer = gameObject.GetComponent<QuestionAndAnswer>();
-//
-//			m_facets.Add (m_AnswersAndConfidence);
-//			m_facets.Add (m_Evidence);
-//			m_facets.Add (m_Semantic);
-//			m_facets.Add (m_Features);
-//			m_facets.Add (m_Location);
-//			m_facets.Add (m_ParseTree);
-//			m_facets.Add (m_QuestionAndAnswer);
+			m_AnswersAndConfidence = gameObject.GetComponent<AnswersAndConfidence>();
+			m_Evidence = gameObject.GetComponent<Question.Facet.Evidence>();
+			m_Semantic = gameObject.GetComponent<Semantic>();
+			m_Features = gameObject.GetComponent<Features>();
+			m_Location = gameObject.GetComponent<Location>();
+			m_ParseTree = gameObject.GetComponent<ParseTree>();
+			m_QuestionAndAnswer = gameObject.GetComponent<QuestionAndAnswer>();
+
+			m_facets.Add (m_AnswersAndConfidence);
+			m_facets.Add (m_Evidence);
+			m_facets.Add (m_Semantic);
+			m_facets.Add (m_Features);
+			m_facets.Add (m_Location);
+			m_facets.Add (m_ParseTree);
+			m_facets.Add (m_QuestionAndAnswer);
         }
 
         protected override void Start()
@@ -170,7 +165,7 @@ namespace IBM.Watson.Widgets
 		/// Sets parse data for each facet when Avatar receives it.
 		/// </summary>
 		/// <param name="parse">Parse Data</param>
-        public void OnParseData(ITM.ParseData parse)
+        public void OnParseData(ParseData parse)
         {
 //			foreach (Base facet in m_facets)
 //			{

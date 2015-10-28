@@ -19,12 +19,12 @@
 using IBM.Watson.Logging;
 using IBM.Watson.Connection;
 using IBM.Watson.Utilities;
+using IBM.Watson.Data;
 using MiniJSON;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using FullSerializer;
-using System.Net;
 
 namespace IBM.Watson.Services.v1
 {
@@ -35,40 +35,6 @@ namespace IBM.Watson.Services.v1
     public class NLC
     {
         #region Public Types
-        /// <summary>
-        /// This data class holds the data for a given classifier returned by GetClassifier().
-        /// </summary>
-        public class Classifier
-        {
-            /// <summary>
-            /// The name of the classifier.
-            /// </summary>
-            public string name { get; set; }
-            /// <summary>
-            /// The language ID of the classifier (e.g. en)
-            /// </summary>
-            public string language { get; set; }
-            /// <summary>
-            /// The URL for the classifier.
-            /// </summary>
-            public string url { get; set; }
-            /// <summary>
-            /// The classifier ID.
-            /// </summary>
-            public string classifier_id { get; set; }
-            /// <summary>
-            /// When was this classifier created.
-            /// </summary>
-            public string created { get; set; }
-            /// <summary>
-            /// Whats the current status of this classifier.
-            /// </summary>
-            public string status { get; set; }
-            /// <summary>
-            /// A description of the classifier status.
-            /// </summary>
-            public string status_description { get; set; }
-        };
         /// <summary>
         /// Callback used by the GetClassifier() method.
         /// </summary>
@@ -86,73 +52,11 @@ namespace IBM.Watson.Services.v1
         public delegate void OnFindClassifier(Classifier classifier);
 
         /// <summary>
-        /// This data class wraps an array of Classifiers.
-        /// </summary>
-        public class Classifiers
-        {
-            public Classifier[] classifiers { get; set; }
-        };
-        /// <summary>
         /// The callback used by the GetClassifiers() method.
         /// </summary>
         /// <param name="classifiers"></param>
         public delegate void OnGetClassifiers(Classifiers classifiers);
 
-        /// <summary>
-        /// A class returned by the ClassifyResult object.
-        /// </summary>
-        public class Class
-        {
-            /// <summary>
-            /// The confidence in this class.
-            /// </summary>
-            public double confidence { get; set; }
-            /// <summary>
-            /// The name of the class.
-            /// </summary>
-            public string class_name { get; set; }
-        };
-        /// <summary>
-        /// This result object is returned by the Classify() method.
-        /// </summary>
-        public class ClassifyResult
-        {
-            /// <summary>
-            /// The ID of the classifier used.
-            /// </summary>
-            public string classifier_id { get; set; }
-            /// <summary>
-            /// The URL of the classifier.
-            /// </summary>
-            public string url { get; set; }
-            /// <summary>
-            /// The input text into the classifier.
-            /// </summary>
-            public string text { get; set; }
-            /// <summary>
-            /// The top class found for the text.
-            /// </summary>
-            public string top_class { get; set; }
-            /// <summary>
-            /// A array of all classifications for the input text.
-            /// </summary>
-            public Class[] classes { get; set; }
-
-            /// <summary>
-            /// Helper function to return the top confidence value of all the returned classes.
-            /// </summary>
-            public double topConfidence { 
-                get {
-                    double fTop = 0.0;
-                    if ( classes != null )
-                    {
-                        foreach( var c in classes )
-                            fTop = Math.Max( c.confidence, fTop );
-                    }
-                    return fTop;
-                }
-            }
-        };
         /// <summary>
         /// This callback is used by the Classify() method.
         /// </summary>

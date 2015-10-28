@@ -29,12 +29,18 @@ using WebSocketSharp;
 
 namespace IBM.Watson.Connection
 {
-    class WSConnector
+    /// <summary>
+    /// WebSocket connector class.
+    /// </summary>
+    public class WSConnector
     {
         #region Public Types
         public delegate void ConnectorEvent(WSConnector connection);
         public delegate void MessageEvent( Message resp);
 
+        /// <summary>
+        /// ConnectionState enumeration describes the current state of this connector.
+        /// </summary>
         public enum ConnectionState
         {
             /// <summary>

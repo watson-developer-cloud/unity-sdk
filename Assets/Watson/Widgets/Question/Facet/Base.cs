@@ -19,8 +19,8 @@
 using UnityEngine;
 using System.Collections;
 using IBM.Watson.Widgets;
-using IBM.Watson.Logging;
 using IBM.Watson.Services.v1;
+using IBM.Watson.Data;
 
 namespace IBM.Watson.Widgets.Question.Facet
 {
@@ -42,8 +42,8 @@ namespace IBM.Watson.Widgets.Question.Facet
 		/// <summary>
 		/// Holds a reference to the Questions from the Question Widget.
 		/// </summary>
-		private ITM.Questions _Questions;
-		public ITM.Questions Questions
+		private Questions _m_Questions;
+		public Questions m_Questions
 		{
 			get { return _Questions; }
 			set
@@ -56,8 +56,8 @@ namespace IBM.Watson.Widgets.Question.Facet
 		/// <summary>
 		/// Holds a reference to to the Answers from the Question Widget.
 		/// </summary>
-		private ITM.Answers _Answers;
-		public ITM.Answers Answers
+		private Answers _m_Answers;
+		public Answers m_Answers
 		{
 			get { return _Answers; }
 			set
@@ -70,8 +70,8 @@ namespace IBM.Watson.Widgets.Question.Facet
 		/// <summary>
 		/// Holds a reference to the Parse Data from the Question Widget.
 		/// </summary>
-		private ITM.ParseData _ParseData;
-		public ITM.ParseData ParseData
+		private ParseData _m_ParseData;
+		public ParseData m_ParseData
 		{
 			get { return _ParseData; }
 			set

@@ -31,7 +31,10 @@ using System.Net.Security;
 
 namespace IBM.Watson.Connection
 {
-    class RESTConnector
+    /// <summary>
+    /// REST connector class.
+    /// </summary>
+    public class RESTConnector
     {
         #region Public Types
         public delegate void ResponseEvent(Request req, Response resp);

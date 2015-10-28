@@ -57,22 +57,40 @@ namespace IBM.Watson.Widgets.Avatar
 
         #region Changing Mood / Avatar State
 
-
-        LTDescr colorAnimationOnGlass = null;
-        public override void ChangeToColor(Color color, float timeModifier)
+		LTDescr colorAnimationOnGlass = null;
+        LTDescr colorAnimationOnGlassLoop = null;
+		Color lastColor = Color.white;
+        public override void ChangedBehavior(Color color, float timeModifier)
         {
             if (m_GlassRingMaterial != null)
             {
-                if (colorAnimationOnGlass != null)
+				if(colorAnimationOnGlass != null){
+					LeanTween.cancel(colorAnimationOnGlass.uniqueId);
+				}
+
+                if (colorAnimationOnGlassLoop != null)
                 {
-                    LeanTween.cancel(colorAnimationOnGlass.uniqueId);
+                    LeanTween.cancel(colorAnimationOnGlassLoop.uniqueId);
                 }
 
-                colorAnimationOnGlass = LeanTween.value(gameObject, Color.white, color, timeModifier).setLoopPingPong().setOnUpdateColor(
-                    (Color a) =>
-                    {
-                        m_GlassRingMaterial.SetColor("_SpecColor", a);
-                    });
+				colorAnimationOnGlass = LeanTween.value(gameObject, lastColor, color, timeModifier).setOnUpdateColor(
+					(Color colorToFadeIn)=>{
+						
+						m_GlassRingMaterial.SetColor("_SpecColor", colorToFadeIn);
+
+					}).setOnComplete(
+					()=>{
+
+						colorAnimationOnGlassLoop = LeanTween.value(gameObject, Color.white, color, timeModifier).setLoopPingPong().setOnUpdateColor(
+						(Color colorToLoop) =>
+						{
+							m_GlassRingMaterial.SetColor("_SpecColor", colorToLoop);
+							lastColor = colorToLoop;
+						});	
+
+					});
+
+                
             }
         }
 
