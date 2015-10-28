@@ -650,6 +650,17 @@ namespace IBM.Watson.Data
         {
             Results = results;
         }
+
+        public bool HasResult()
+        {
+            return Results != null && Results.Length > 0 
+                && Results[0].Alternatives != null && Results[0].Alternatives.Length > 0;
+        }
+
+        public bool HasFinalResult()
+        {
+            return HasResult() && Results[0].Final;
+        }
     };
     #endregion
 

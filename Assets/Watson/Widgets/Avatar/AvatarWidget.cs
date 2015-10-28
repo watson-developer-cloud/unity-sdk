@@ -26,6 +26,7 @@ using IBM.Watson.Services.v1;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using IBM.Watson.Debug;
 
 #pragma warning disable 414
 
@@ -139,16 +140,6 @@ namespace IBM.Watson.Widgets.Avatar
         private Input m_levelInput = new Input("Level", typeof(FloatData), "OnLevelInput");
         [SerializeField]
         private Output m_TextOutput = new Output(typeof(TextData));
-        [SerializeField, Tooltip("Recognized speech is put into this Text UI field.")]
-        private Text m_RecognizeText = null;
-        [SerializeField]
-        private Text m_QuestionText = null;
-        [SerializeField, Tooltip("The results of the NLC is placed in this text field.")]
-        private Text m_ClassifyText = null;
-        [SerializeField]
-        private Text m_AnswerText = null;
-        [SerializeField]
-        private Text m_StateText = null;
         [SerializeField]
         private GameObject m_QuestionPrefab = null;
         [SerializeField]
@@ -248,7 +239,53 @@ namespace IBM.Watson.Widgets.Avatar
 			Mood = MoodType.SLEEPING;
 			State = AvatarState.CONNECTING;
 
+            DebugConsole.Instance.RegisterDebugInfo( "STATE", OnStateDebugInfo );
+            DebugConsole.Instance.RegisterDebugInfo( "MOOD", OnMoodDebugInfo );
+            DebugConsole.Instance.RegisterDebugInfo( "C", OnClassifyDebugInfo );
+            DebugConsole.Instance.RegisterDebugInfo( "Q", OnQuestionDebugInfo );
+            DebugConsole.Instance.RegisterDebugInfo( "A", OnAnwserDebugInfo );
+
+            KeyEventManager.Instance.RegisterKeyEvent( Constants.KeyCodes.CHANGE_MOOD, OnNextMood );
+
             StartAvatar();
+        }
+
+        private string OnStateDebugInfo()
+        {
+            return State.ToString();
+        }
+        private string OnMoodDebugInfo()
+        {
+            return Mood.ToString();
+        }
+        private string OnClassifyDebugInfo()
+        {
+            if ( m_ClassifyResult != null )
+            {
+                return string.Format( "{0} ({1:0.00})", 
+                    m_ClassifyResult.top_class, 
+                    m_ClassifyResult.topConfidence );
+            }
+            return string.Empty;
+        }
+        private string OnQuestionDebugInfo()
+        {
+            if ( m_QuestionResult != null )
+            {
+                return string.Format( "{0} ({1:0.00})", 
+                    m_QuestionResult.questions[0].question.questionText, 
+                    m_QuestionResult.questions[0].topConfidence );
+            }
+            return string.Empty;
+        }
+        private string OnAnwserDebugInfo()
+        {
+            return string.Empty;
+        }
+
+        private void OnNextMood()
+        {
+            Mood = (MoodType)((((int)Mood) + 1) % Enum.GetValues(typeof(MoodType)).Length);
         }
 
         private void StartAvatar()
@@ -318,27 +355,20 @@ namespace IBM.Watson.Widgets.Avatar
             SpeechResultList result = ((SpeechToTextData)data).Results;
             if (State == AvatarState.LISTENING )
             {
-                if (result != null && result.Results.Length > 0
-                    && result.Results[0].Final
-                    && result.Results[0].Alternatives.Length > 0 )
+                m_SpeechResult = result;
+
+                if ( m_SpeechResult.HasFinalResult() )
                 {
                     string text = result.Results[0].Alternatives[0].Transcript;
                     double textConfidence = result.Results[0].Alternatives[0].Confidence;
 
-                    if (m_RecognizeText != null)
-                    {
-                        m_RecognizeText.text = string.Format( "R: {0} ({1})", text, textConfidence );
-                        m_RecognizeText.color = textConfidence > m_MinWordConfidence ? Color.white : Color.red;
-                    }
-
-                    Log.Debug( "AvatarWidget", "OnRecognize: {0} ({1})", text, textConfidence );
+                    Log.Debug( "AvatarWidget", "OnRecognize: {0} ({1:0.00})", text, textConfidence );
+                    EventManager.Instance.SendEvent( Constants.Event.ON_DEBUG_MESSAGE, string.Format( "{0} ({1:0.00})", text, textConfidence ) );
 
                     if ( textConfidence > m_MinWordConfidence )
                     {
                         State = AvatarState.THINKING;
-                        m_SpeechResult = result;
                         m_SpeechText = text;
-
 
                         if (!m_NLC.Classify(m_ClassifierId, m_SpeechText, OnSpeechClassified))
                             Log.Error("AvatarWidget", "Failed to send {0} to NLC.", m_SpeechText);
@@ -358,9 +388,6 @@ namespace IBM.Watson.Widgets.Avatar
             m_ClassifyResult = classify;
 
             Log.Debug("Avatar", "TopClass: {0}", m_ClassifyResult.top_class);
-            if (m_ClassifyText != null)
-                m_ClassifyText.text = "C: " + m_ClassifyResult.top_class;
-
             if ( Mood == MoodType.SLEEPING )
             {
                 if ( m_ClassifyResult.top_class == "wakeup" )
@@ -452,8 +479,6 @@ namespace IBM.Watson.Widgets.Avatar
                 Watson.Data.Question topQuestion = m_QuestionResult.questions.Length > 0 ? m_QuestionResult.questions[0] : null;
                 if (topQuestion != null)
                 {
-                    if (m_QuestionText != null)
-                        m_QuestionText.text = "Q: " + topQuestion.question.questionText;
                     if ( QuestionEvent != null )
                         QuestionEvent( topQuestion.question.questionText );
 
@@ -476,8 +501,6 @@ namespace IBM.Watson.Widgets.Avatar
                     Log.Debug("AvatarWidget", "A: {0} ({1})", a.answerText, a.confidence);
 
                 string answer = answers.answers[0].answerText;
-                if (m_AnswerText != null)
-                    m_AnswerText.text = "A: " + answer;
                 if ( AnswerEvent != null )
                     AnswerEvent( answer );
                 m_TextOutput.SendData(new TextData(answer));
