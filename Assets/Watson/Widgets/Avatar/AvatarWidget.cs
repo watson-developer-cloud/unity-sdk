@@ -25,6 +25,7 @@ using IBM.Watson.Data;
 using IBM.Watson.Services.v1;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 #pragma warning disable 414
 
@@ -61,7 +62,11 @@ namespace IBM.Watson.Widgets.Avatar
             /// Connected - After semantically understanding, Watson is responding. 
             /// If Watson didn't understand the input, then it goes to listening mode while giving some response about not understood input.
             /// </summary>
-            ANSWERING
+            ANSWERING,
+            /// <summary>
+            /// Some type of error occured that is keeping the avatar from working.
+            /// </summary>
+            ERROR
         };
         
         /// <summary>
@@ -151,6 +156,8 @@ namespace IBM.Watson.Widgets.Avatar
         private string m_DialogId = null;    
         private int m_DialogClientId = 0;
         private int m_DialogConversationId = 0;
+        [SerializeField,Tooltip("If disconnected, how many seconds until we try to restart the avatar.")]
+        private float m_RestartInterval = 30.0f;
         #endregion
 
         #region Public Types
@@ -159,17 +166,39 @@ namespace IBM.Watson.Widgets.Avatar
         #endregion
 
         #region Public Properties
+        /// <summary>
+        /// This event is invoked each time a question is asked.
+        /// </summary>
         public OnQuestion QuestionEvent { get; set; }
+        /// <summary>
+        /// This event is invoked each time a answer is given.
+        /// </summary>
         public OnAnswer AnswerEvent { get; set; }
+        /// <summary>
+        /// Access the contained ITM service object.
+        /// </summary>
         public ITM ITM { get { return m_ITM; } }
+        /// <summary>
+        /// Access to the NLC service object.
+        /// </summary>
         public NLC NLC { get { return m_NLC; } }
+        /// <summary>
+        /// What is the current state of this avatar.
+        /// </summary>
         public AvatarState State
         {
             get { return m_State; }
             private set
             {
-                m_State = value;
-				EventManager.Instance.SendEvent(Constants.Event.ON_CHANGE_AVATAR_STATE_FINISH, this, value);
+                if ( m_State != value )
+                {
+                    m_State = value;
+				    EventManager.Instance.SendEvent(Constants.Event.ON_CHANGE_AVATAR_STATE_FINISH, this, value);
+
+                    // if we went into an error state, automatically try to reconnect after a timeout..
+                    if ( m_State == AvatarState.ERROR )
+                        Invoke( "StartAvatar", m_RestartInterval );
+                }
             }
         }
         
@@ -211,6 +240,7 @@ namespace IBM.Watson.Widgets.Avatar
             EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_CHANGE_AVATAR_MOOD, OnChangeMood);
         }
 
+        /// <exclude />
         protected override void Start()
         {
             base.Start();
@@ -218,6 +248,14 @@ namespace IBM.Watson.Widgets.Avatar
 			Mood = MoodType.SLEEPING;
 			State = AvatarState.CONNECTING;
 
+            StartAvatar();
+        }
+
+        private void StartAvatar()
+        {
+            Log.Status( "AvatarWidget", "Starting avatar." );
+
+            State = AvatarState.CONNECTING;
             // login to ITM, then select the pipeline
             m_ITM.Login(OnItmLogin);
             // Find our dialog ID
@@ -237,23 +275,31 @@ namespace IBM.Watson.Widgets.Avatar
             }
 
             if (string.IsNullOrEmpty( m_DialogId ) )
+            {
                 Log.Error( "AvatarWidget", "Failed to find dialog ID for {0}", m_DialogName );
+                State = AvatarState.ERROR;
+            }
         }
 
         private void OnItmLogin(bool success)
         {
-            if (success)
-                m_ITM.GetPipeline(m_Pipeline, true, OnPipeline );
-            else
+            if (!success)
+            {
                 Log.Error("AvtarWidget", "Failed to login to ITM.");
+                State = AvatarState.ERROR;
+            }
+            else
+                m_ITM.GetPipeline(m_Pipeline, true, OnPipeline );
         }
         private void OnPipeline( ITM.Pipeline pipeline )
         {
-            if ( pipeline != null )
-                State = AvatarState.LISTENING;
-            else
+            if ( pipeline == null )
+            {
                 Log.Equals( "AvatarWidget", "Failed to select pipeline." );
-
+                State = AvatarState.ERROR;
+            }
+            else
+                State = AvatarState.LISTENING;
         }
         #endregion
 
@@ -468,7 +514,6 @@ namespace IBM.Watson.Widgets.Avatar
         #endregion
 
         #region Avatar Mood / Behavior  - Adaptive Computing
-        
         public Color BehaviourColor
         {
             get
