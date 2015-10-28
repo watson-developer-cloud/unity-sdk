@@ -16,7 +16,6 @@
 * @author Richard Lyle (rolyle@us.ibm.com)
 */
 
-
 using IBM.Watson.Services.v1;
 using IBM.Watson.Widgets;
 using UnityEngine;
@@ -110,7 +109,7 @@ namespace IBM.Watson.Data
     {
         public SpeechToTextData()
         { }
-        public SpeechToTextData(SpeechToText.ResultList result)
+        public SpeechToTextData(SpeechResultList result)
         {
             Results = result;
         }
@@ -119,7 +118,7 @@ namespace IBM.Watson.Data
             return "SpeechToText";
         }
 
-        public SpeechToText.ResultList Results { get; set; }
+        public SpeechResultList Results { get; set; }
     };
 
     /// <summary>
@@ -129,7 +128,7 @@ namespace IBM.Watson.Data
     {
         public ClassifyResultData()
         { }
-        public ClassifyResultData( NLC.ClassifyResult result )
+        public ClassifyResultData( ClassifyResult result )
         {
             Result = result;
         }
@@ -139,6 +138,6 @@ namespace IBM.Watson.Data
             return "ClassifyResult";
         }
 
-        public NLC.ClassifyResult Result { get; set; }
+        public ClassifyResult Result { get; set; }
     };
 }

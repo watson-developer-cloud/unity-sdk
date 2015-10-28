@@ -18,6 +18,7 @@
 
 #define ENABLE_DEBUGGING
 
+using IBM.Watson.Data;
 using IBM.Watson.Logging;
 using IBM.Watson.Connection;
 using IBM.Watson.Utilities;
@@ -27,14 +28,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Text;
-using IBM.Watson.Data;
 
 namespace IBM.Watson.Services.v1            // Add DeveloperCloud
 {
     /// <summary>
     /// This class wraps the Watson SpeechToText service.
-    /// </summary>
     /// <a href="http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/speech-to-text.html">SpeechToText Service</a>
+    /// </summary>
     public class SpeechToText
     {
         #region Constants
@@ -58,125 +58,15 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
 
         #region Public Types
         /// <summary>
-        /// This data class holds the data for a given speech model.
-        /// </summary>
-        public class Model
-        {
-            /// <summary>
-            /// The name of the speech model.
-            /// </summary>
-            public string Name { get; set; }
-            /// <summary>
-            /// The optimal sample rate for this model.
-            /// </summary>
-            public long Rate { get; set; }
-            /// <summary>
-            /// The language ID for this model. (e.g. en)
-            /// </summary>
-            public string Language { get; set; }
-            /// <summary>
-            /// A description for this model.
-            /// </summary>
-            public string Description { get; set; }
-            /// <summary>
-            /// The URL for this model.
-            /// </summary>
-            public string URL { get; set; }
-        };
-        /// <summary>
-        /// This data class holds the confidence value for a given recognized word.
-        /// </summary>
-        public class WordConfidence
-        {
-            /// <summary>
-            /// The word as a string.
-            /// </summary>
-            public string Word { get; set; }
-            /// <summary>
-            /// The confidence value for this word.
-            /// </summary>
-            public double Confidence { get; set; }
-        };
-        /// <summary>
-        /// This data class holds the start and stop times for a word.
-        /// </summary>
-        public class TimeStamp
-        {
-            /// <summary>
-            /// The word.
-            /// </summary>
-            public string Word { get; set; }
-            /// <summary>
-            /// The start time.
-            /// </summary>
-            public double Start { get; set; }
-            /// <summary>
-            /// The stop time.
-            /// </summary>
-            public double End { get; set; }
-        };
-        /// <summary>
-        /// This data class holds the actual transcript for the text generated from speech audio data.
-        /// </summary>
-        public class Alternative
-        {
-            /// <summary>
-            /// The transcript of what was understood.
-            /// </summary>
-            public string Transcript { get; set; }
-            /// <summary>
-            /// The confidence in this transcript of the audio data.
-            /// </summary>
-            public double Confidence { get; set; }
-            /// <summary>
-            /// A optional array of timestamps objects.
-            /// </summary>
-            public TimeStamp[] Timestamps { get; set; }
-            /// <summary>
-            /// A option array of word confidence values.
-            /// </summary>
-            public WordConfidence[] WordConfidence { get; set; }
-        };
-        /// <summary>
-        /// A Result object that is returned by the Recognize() method.
-        /// </summary>
-        public class Result
-        {
-            /// <summary>
-            /// If true, then this is the final result and no more results will be sent for the given audio data.
-            /// </summary>
-            public bool Final { get; set; }
-            /// <summary>
-            /// A array of alternatives speech to text results, this is controlled by the MaxAlternatives property.
-            /// </summary>
-            public Alternative[] Alternatives { get; set; }
-        };
-        /// <summary>
-        /// This data class holds a list of Result objects returned by the Recognize() method.
-        /// </summary>
-        public class ResultList
-        {
-            /// <summary>
-            /// The array of Result objects.
-            /// </summary>
-            public Result[] Results { get; set; }
-
-            /// <exclude />
-            public ResultList(Result[] results)
-            {
-                Results = results;
-            }
-        };
-        /// <summary>
         /// This callback object is used by the Recognize() and StartListening() methods.
         /// </summary>
         /// <param name="results">The ResultList object containing the results.</param>
-        public delegate void OnRecognize(ResultList results);
+        public delegate void OnRecognize(SpeechResultList results);
         /// <summary>
         /// This callback object is used by the GetModels() method.
         /// </summary>
         /// <param name="models"></param>
-        public delegate void OnGetModels(Model[] models);
+        public delegate void OnGetModels(SpeechModel[] models);
         /// <summary>
         /// This callback is used to return errors through the OnError property.
         /// </summary>
@@ -445,7 +335,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                         if (! EnableContinousRecognition )
                             SendStart();
 
-                        ResultList results = ParseRecognizeResponse(json);
+                        SpeechResultList results = ParseRecognizeResponse(json);
                         if (results != null)
                         {
                             if (m_ListenCallback != null)
@@ -546,7 +436,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
             if (gmr == null)
                 throw new WatsonException("Unexpected request type.");
 
-            Model[] models = null;
+            SpeechModel[] models = null;
             if (resp.Success)
             {
                 models = ParseGetModelsResponse(resp.Data);
@@ -557,7 +447,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                 gmr.Callback(models);
         }
 
-        private Model[] ParseGetModelsResponse(byte[] data)
+        private SpeechModel[] ParseGetModelsResponse(byte[] data)
         {
             string jsonString = Encoding.UTF8.GetString(data);
             if (jsonString == null)
@@ -575,7 +465,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
 
             try
             {
-                List<Model> models = new List<Model>();
+                List<SpeechModel> models = new List<SpeechModel>();
 
                 IList imodels = json["models"] as IList;
                 if (imodels == null)
@@ -587,7 +477,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                     if (imodel == null)
                         throw new Exception("Expected IDictionary");
 
-                    Model model = new Model();
+                    SpeechModel model = new SpeechModel();
                     model.Name = (string)imodel["name"];
                     model.Rate = (long)imodel["rate"];
                     model.Language = (string)imodel["language"];
@@ -661,7 +551,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
             if (recognizeReq == null)
                 throw new WatsonException("Unexpected request type.");
 
-            ResultList result = null;
+            SpeechResultList result = null;
             if (resp.Success)
             {
                 result = ParseRecognizeResponse(resp.Data);
@@ -685,7 +575,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                 recognizeReq.Callback(result);
         }
 
-        private ResultList ParseRecognizeResponse(byte[] json)
+        private SpeechResultList ParseRecognizeResponse(byte[] json)
         {
             string jsonString = Encoding.UTF8.GetString(json);
             if (jsonString == null)
@@ -698,14 +588,14 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
             return ParseRecognizeResponse(resp);
         }
 
-        private ResultList ParseRecognizeResponse(IDictionary resp)
+        private SpeechResultList ParseRecognizeResponse(IDictionary resp)
         {
             if (resp == null)
                 return null;
 
             try
             {
-                List<Result> results = new List<Result>();
+                List<SpeechResult> results = new List<SpeechResult>();
                 IList iresults = resp["results"] as IList;
                 if (iresults == null)
                     return null;
@@ -716,21 +606,21 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                     if (iresults == null)
                         continue;
 
-                    Result result = new Result();
+                    SpeechResult result = new SpeechResult();
                     result.Final = (bool)iresult["final"];
 
                     IList ialternatives = iresult["alternatives"] as IList;
                     if (ialternatives == null)
                         continue;
 
-                    List<Alternative> alternatives = new List<Alternative>();
+                    List<SpeechAlt> alternatives = new List<SpeechAlt>();
                     foreach (var a in ialternatives)
                     {
                         IDictionary ialternative = a as IDictionary;
                         if (ialternative == null)
                             continue;
 
-                        Alternative alternative = new Alternative();
+                        SpeechAlt alternative = new SpeechAlt();
                         alternative.Transcript = (string)ialternative["transcript"];
                         if (ialternative.Contains("confidence"))
                             alternative.Confidence = (double)ialternative["confidence"];
@@ -781,7 +671,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                     results.Add(result);
                 }
 
-                return new ResultList(results.ToArray());
+                return new SpeechResultList(results.ToArray());
             }
             catch (Exception e)
             {

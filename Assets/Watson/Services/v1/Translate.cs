@@ -21,127 +21,31 @@ using System.Collections.Generic;
 using IBM.Watson.Connection;
 using IBM.Watson.Utilities;
 using IBM.Watson.Logging;
+using IBM.Watson.Data;
 using System.Text;
 using MiniJSON;
 using System;
-using System.Collections;
 using FullSerializer;
 
 namespace IBM.Watson.Services.v1
 {
     /// <summary>
     /// This class wraps the Language Translation service.
-    /// </summary>
     /// <a href="http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/language-translation.html">Language Translation Service</a>
+    /// </summary>
     public class Translate
     {
         #region Public Types
         /// <summary>
-        /// Language data class.
-        /// </summary>
-        public class Language
-        {
-            /// <summary>
-            /// String that contains the country code.
-            /// </summary>
-            public string language { get; set; }        // country code of the language 
-            /// <summary>
-            /// The language name.
-            /// </summary>
-            public string name { get; set; }        // name of the language                                    
-        }
-        /// <summary>
-        /// Languages data class.
-        /// </summary>
-        public class Languages
-        {
-            /// <summary>
-            /// Array of language objects.
-            /// </summary>
-            public Language [] languages { get; set; }
-        }
-        /// <summary>
-        /// Translation data class.
-        /// </summary>
-        public class Translation
-        {
-            /// <summary>
-            /// Translation text.
-            /// </summary>
-            public string translation { get; set; }
-        };
-        /// <summary>
-        /// Translate data class returned by the TranslateCallback.
-        /// </summary>
-        public class Translations
-        {
-            public long word_count { get; set; }
-            public long character_count { get; set; }
-            public Translation[] translations { get; set; }
-        }
-        /// <summary>
-        /// Language model data class.
-        /// </summary>
-        public class Model
-        {
-            /// <summary>
-            /// The language model ID.
-            /// </summary>
-            public string model_id { get; set; }
-            /// <summary>
-            /// The name of the language model.
-            /// </summary>
-            public string name { get; set; }
-            /// <summary>
-            /// The source language ID.
-            /// </summary>
-            public string source { get; set; }
-            /// <summary>
-            /// The target language ID.
-            /// </summary>
-            public string target { get; set; }
-            /// <summary>
-            /// The model of which this model was based.
-            /// </summary>
-            public string base_model_id { get; set; }
-            /// <summary>
-            /// The domain of the language model.
-            /// </summary>
-            public string domain { get; set; }
-            /// <summary>
-            /// Is this model customizable?
-            /// </summary>
-            public bool customizable { get; set; }
-            /// <summary>
-            /// Is this model default.
-            /// </summary>
-            public bool @default { get; set; }
-            /// <summary>
-            /// Who is the owner of this model.
-            /// </summary>
-            public string owner { get; set; }
-            /// <summary>
-            /// What is the status of this model.
-            /// </summary>
-            public string status { get; set; }
-        }
-        /// <summary>
-        /// Models data class.
-        /// </summary>
-        public class Models
-        {
-            public Model [] models { get; set; }
-        }
-        /// <summary>
         /// Callback for GetModels() method.
         /// </summary>
         /// <param name="models"></param>
-        public delegate void GetModelsCallback(Models models);
+        public delegate void GetModelsCallback(TranslationModels models);
         /// <summary>
         /// Callback for GetModel() method.
         /// </summary>
         /// <param name="model"></param>
-        public delegate void GetModelCallback(Model model);
+        public delegate void GetModelCallback(TranslationModel model);
         /// <summary>
         /// Callback for GetLanguages() method.
         /// </summary>
@@ -315,7 +219,7 @@ namespace IBM.Watson.Services.v1
 
         private void GetModelsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            Models models = new Models();
+            TranslationModels models = new TranslationModels();
             if (resp.Success)
             {
                 try
@@ -373,7 +277,7 @@ namespace IBM.Watson.Services.v1
 
         private void GetModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            Model model = new Model();
+            TranslationModel model = new TranslationModel();
             if (resp.Success)
             {
                 try
