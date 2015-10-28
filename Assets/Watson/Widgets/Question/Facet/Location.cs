@@ -27,15 +27,20 @@ namespace IBM.Watson.Widgets.Question.Facet
 		[SerializeField]
 		private Text m_LocationText;
 
-		private string _m_Location;
-		public string m_Location
+		private string _LocationString;
+		public string LocationString
 		{
-			get { return _m_Location; }
+			get { return _LocationString; }
 			set 
 			{
-				_m_Location = value;
+				_LocationString = value;
 				UpdateLocation();
 			}
+		}
+
+		override public void Init()
+		{
+			LocationString = m_Question.QuestionData.Location;
 		}
 
 		/// <summary>
@@ -43,15 +48,7 @@ namespace IBM.Watson.Widgets.Question.Facet
 		/// </summary>
 		private void UpdateLocation()
 		{
-			m_LocationText.text = m_Location;
-		}
-
-		/// <summary>
-		/// Fired when Parse Data is set. Sets the value of Location from the Avatar Widget.
-		/// </summary>
-		override protected void OnParseData()
-		{
-			m_Location = m_Avatar.ITM.Location;
+			m_LocationText.text = LocationString;
 		}
 	}
 }

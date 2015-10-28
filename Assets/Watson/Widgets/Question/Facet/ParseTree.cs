@@ -21,6 +21,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using IBM.Watson.Widgets.Question.Facet.FacetElement;
+using IBM.Watson.Logging;
 
 namespace IBM.Watson.Widgets.Question.Facet
 {
@@ -37,17 +38,17 @@ namespace IBM.Watson.Widgets.Question.Facet
 		private List<ParseTreeTextItem> m_WordList = new List<ParseTreeTextItem>();
 		private List<Vector3> m_PositionList = new List<Vector3> ();
 		
-		private int _m_WordIndex = 0;
-		public int m_WordIndex 
+		private int _WordIndex = 0;
+		public int WordIndex 
 		{
-			get { return _m_WordIndex; }
+			get { return _WordIndex; }
 			set {
 				if(value > m_WordList.Count - 1) {
-					_m_WordIndex = 0;
+					_WordIndex = 0;
 				} else if(value < 0) {
-					_m_WordIndex = m_WordList.Count;
+					_WordIndex = m_WordList.Count;
 				} else {
-					_m_WordIndex = value;
+					_WordIndex = value;
 				}
 				UpdateHighlightedWord();
 			}
@@ -56,8 +57,9 @@ namespace IBM.Watson.Widgets.Question.Facet
 		/// <summary>
 		/// Set hard coded positions.
 		/// </summary>
-		void Start () 
+		override protected void Start () 
 		{
+			base.Start ();
 			//	TODO parse tree from hiearchy
 			m_PositionList.Add(new Vector3(-583f, 188f, 0f));
 			m_PositionList.Add(new Vector3(-408f,	64f, 0f));
@@ -77,11 +79,19 @@ namespace IBM.Watson.Widgets.Question.Facet
 		}
 
 		/// <summary>
+		/// Generates Parse tree on Initialization of data.
+		/// </summary>
+		override public void Init()
+		{
+			GenerateParseTree ();
+		}
+
+		/// <summary>
 		/// Generate parse tree from Parse Data.
 		/// </summary>
 		private void GenerateParseTree()
-		{
-			for (int i = 0; i < m_ParseData.Words.Length; i++) {
+		{	
+			for (int i = 0; i < m_Question.QuestionData.ParseDataObject.Words.Length; i++) {
 				GameObject wordGameObject = Instantiate(m_ParseTreeTextItemPrefab) as GameObject;
 				RectTransform wordRectTransform = wordGameObject.GetComponent<RectTransform>();
 				wordRectTransform.SetParent(m_ParseCanvasRectTransform, false);
@@ -92,25 +102,25 @@ namespace IBM.Watson.Widgets.Question.Facet
 					wordRectTransform.localPosition = new Vector3(5000f, 5000, 5000f);
 				}
 				ParseTreeTextItem word = wordGameObject.GetComponent<ParseTreeTextItem>();
-				word.m_ParseTreeWord = m_ParseData.Words[i].Word;
-				word.m_POS = m_ParseData.Words[i].Pos.ToString();
-				word.m_Slot = m_ParseData.Words[i].Slot;
+				word.ParseTreeWord = m_Question.QuestionData.ParseDataObject.Words[i].Word;
+				word.m_POS = m_Question.QuestionData.ParseDataObject.Words[i].Pos.ToString();
+				word.m_Slot = m_Question.QuestionData.ParseDataObject.Words[i].Slot;
 
-				for(int j = 0; j < m_ParseData.Words[i].Features.Length; j++) {
-					word.m_Features.Add(m_ParseData.Words[i].Features[j]);
+				for(int j = 0; j < m_Question.QuestionData.ParseDataObject.Words[i].Features.Length; j++) {
+					word.m_Features.Add(m_Question.QuestionData.ParseDataObject.Words[i].Features[j]);
 				}
 
 				m_WordList.Add(word);
 			}
 
-			m_WordIndex = 0;
+			WordIndex = 0;
 			InvokeRepeating ("CycleWords", 2f, 2f);
 		}
 
 		/// <summary>
 		/// Clears dynamically generated Facet Elements when a question is answered. Called from Question Widget.
 		/// </summary>
-		override public void Clear()
+		override protected void Clear()
 		{
 			CancelInvoke ();
 			while(m_WordList.Count != 0) {
@@ -125,31 +135,31 @@ namespace IBM.Watson.Widgets.Question.Facet
 		private void UpdateHighlightedWord()
 		{
 			for (int i = 0; i < m_WordList.Count; i++) {
-				m_WordList [i].m_IsHighlighted = false;
+				m_WordList [i].IsHighlighted = false;
 			}
 
-			m_WordList [m_WordIndex].m_IsHighlighted = true;
+			m_WordList [WordIndex].IsHighlighted = true;
 
 			for (int j = 0; j < m_POSList.Count; j++) {
 				POSControl posControl = m_POSList[j].GetComponent<POSControl>();
-				if(posControl.m_POS == m_WordList [m_WordIndex].m_POS.ToLower() || posControl.m_POS == m_WordList[m_WordIndex].m_Slot.ToLower()) {
-					posControl.m_IsHighlighted = true;
+				if(posControl.m_POS == m_WordList [WordIndex].m_POS.ToLower() || posControl.m_POS == m_WordList[WordIndex].m_Slot.ToLower()) {
+					posControl.IsHighlighted = true;
 				} else {
-					posControl.m_IsHighlighted = false;
+					posControl.IsHighlighted = false;
 				}
 			}
 
-			if(m_Questions.questions [0].question.lat.Length == 0 && m_Questions.questions [0].question.focus.Length == 0) m_POSList[2].GetComponent<POSControl>().m_IsHighlighted = true;
-			if (m_Questions.questions [0].question.lat.Length > 0) {
-				if (m_WordList [m_WordIndex].m_ParseTreeWord.ToLower () == m_Questions.questions [0].question.lat [0].ToLower ()) {
-					m_POSList [1].GetComponent<POSControl> ().m_IsHighlighted = true;
+			if(m_Question.QuestionData.QuestionDataObject.questions [0].question.lat.Length == 0 && m_Question.QuestionData.QuestionDataObject.questions [0].question.focus.Length == 0) m_POSList[2].GetComponent<POSControl>().IsHighlighted = true;
+			if (m_Question.QuestionData.QuestionDataObject.questions [0].question.lat.Length > 0) {
+				if (m_WordList [WordIndex].ParseTreeWord.ToLower () == m_Question.QuestionData.QuestionDataObject.questions [0].question.lat [0].ToLower ()) {
+					m_POSList [1].GetComponent<POSControl> ().IsHighlighted = true;
 				}
 			}
 
 
-			if (m_Questions.questions [0].question.focus.Length > 0) {
-				if (m_WordList [m_WordIndex].m_ParseTreeWord.ToLower () == m_Questions.questions [0].question.focus [0].ToLower ()) {
-					m_POSList [0].GetComponent<POSControl> ().m_IsHighlighted = true;
+			if (m_Question.QuestionData.QuestionDataObject.questions [0].question.focus.Length > 0) {
+				if (m_WordList [WordIndex].ParseTreeWord.ToLower () == m_Question.QuestionData.QuestionDataObject.questions [0].question.focus [0].ToLower ()) {
+					m_POSList [0].GetComponent<POSControl> ().IsHighlighted = true;
 				}
 			}
 		}
@@ -159,16 +169,7 @@ namespace IBM.Watson.Widgets.Question.Facet
 		/// </summary>
 		private void CycleWords()
 		{
-			m_WordIndex ++;
-		}
-
-
-		/// <summary>
-		/// Fired when Parse Data is set. Initiates generation of the ParseTree.
-		/// </summary>
-		override protected void OnParseData()
-		{
-			GenerateParseTree ();
+			WordIndex ++;
 		}
 	}
 }

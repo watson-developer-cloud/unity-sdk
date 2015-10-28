@@ -31,23 +31,23 @@ namespace IBM.Watson.Widgets.Question.Facet.FacetElement
 		[SerializeField]
 		private RectTransform m_BarProgress;
 
-		private string _m_Answer;
-		public string m_Answer
+		private string _Answer;
+		public string Answer
 		{
-			get { return _m_Answer; }
+			get { return _Answer; }
 			set 
 			{
-				_m_Answer = value;
+				_Answer = value;
 				UpdateAnswer();
 			}
 		}
 
-		private double _m_Confidence;
-		public double m_Confidence 
+		private double _Confidence;
+		public double Confidence 
 		{
-			get { return _m_Confidence; }
+			get { return _Confidence; }
 			set {
-				_m_Confidence = value;
+				_Confidence = value;
 				UpdateConfidence();
 			}
 		}
@@ -57,7 +57,7 @@ namespace IBM.Watson.Widgets.Question.Facet.FacetElement
 		/// </summary>
 		private void UpdateAnswer()
 		{
-			m_AnswerText.text = m_Answer;
+			m_AnswerText.text = Answer;
 		}
 
 		/// <summary>
@@ -65,9 +65,9 @@ namespace IBM.Watson.Widgets.Question.Facet.FacetElement
 		/// </summary>
 		private void UpdateConfidence()
 		{
-			float confidence = (float)m_Confidence * 100;
+			float confidence = (float)Confidence * 100;
 			m_ConfidenceText.text = confidence.ToString ("f1");
-			m_BarProgress.localScale = new Vector3((float)m_Confidence, 1f, 1f);
+			m_BarProgress.localScale = new Vector3((float)Confidence, 1f, 1f);
 		}
 	}
 }

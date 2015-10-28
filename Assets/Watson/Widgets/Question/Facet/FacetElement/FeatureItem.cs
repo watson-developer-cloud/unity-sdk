@@ -29,24 +29,24 @@ namespace IBM.Watson.Widgets.Question.Facet.FacetElement
 		[SerializeField]
 		private Text m_FeatureIndexText;
 
-		private string _m_Feature;
-		public string m_Feature
+		private string _FeatureString;
+		public string FeatureString
 		{
-			get { return _m_Feature; }
+			get { return _FeatureString; }
 			set
 			{
-				_m_Feature = value;
+				_FeatureString = value;
 				UpdateFeature();
 			}
 		}
 
-		private double _m_FeatureIndex;
-		public double m_FeatureIndex
+		private double _FeatureIndex;
+		public double FeatureIndex
 		{
-			get { return _m_FeatureIndex; }
+			get { return _FeatureIndex; }
 			set
 			{
-				_m_FeatureIndex = value;
+				_FeatureIndex = value;
 				UpdateFeatureIndex();
 			}
 		}
@@ -56,13 +56,13 @@ namespace IBM.Watson.Widgets.Question.Facet.FacetElement
 		/// </summary>
 		private void UpdateFeature()
 		{
-			if (m_Feature != "") {
+			if (FeatureString != "") {
 				gameObject.SetActive (true);
-				if(m_Feature.Length > 15) {
-					string temp = m_Feature.Substring (0, 15);
+				if(FeatureString.Length > 15) {
+					string temp = FeatureString.Substring (0, 15);
 					m_FeatureText.text = temp + "...";
 				} else {
-					m_FeatureText.text = m_Feature;
+					m_FeatureText.text = FeatureString;
 				}
 			} else {
 				gameObject.SetActive(false);
@@ -74,7 +74,7 @@ namespace IBM.Watson.Widgets.Question.Facet.FacetElement
 		/// </summary>
 		private void UpdateFeatureIndex()
 		{
-			float featureIndex = (float)m_FeatureIndex;
+			float featureIndex = (float)FeatureIndex;
 			m_FeatureIndexText.text = featureIndex.ToString ("f2");
 	}
 	}
