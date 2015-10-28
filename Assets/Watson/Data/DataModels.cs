@@ -171,6 +171,11 @@ namespace IBM.Watson.Data
         /// Array of questions returned by GetQuestions().
         /// </summary>
         public Question[] questions { get; set; }
+
+        public bool HasQuestion()
+        {
+            return questions != null && questions.Length > 0;
+        }
     };
 
     /// <summary>
@@ -337,6 +342,11 @@ namespace IBM.Watson.Data
         public double featureScoreMax { get; set; }
         public double featureScoreRange { get; set; }
         public Answer[] answers { get; set; }
+
+        public bool HasAnswer()
+        {
+            return answers != null && answers.Length > 0;
+        }
     };
     #endregion
 

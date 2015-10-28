@@ -220,12 +220,14 @@ namespace IBM.Watson.Debug
             }
         }
 
-        private void OnEndEdit()
+        public void OnEndEdit()
         {
             if ( m_CommandInput != null )
             {
                 EventManager.Instance.SendEvent( Constants.Event.ON_DEBUG_COMMAND, m_CommandInput.text );
-                m_CommandInput.text = "";               
+                m_CommandInput.text = string.Empty;
+                m_CommandInput.DeactivateInputField();
+                m_CommandInput.gameObject.SetActive( false );   // hide the input            
             }
         }
     }

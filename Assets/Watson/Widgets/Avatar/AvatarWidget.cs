@@ -245,13 +245,30 @@ namespace IBM.Watson.Widgets.Avatar
 
             DebugConsole.Instance.RegisterDebugInfo( "STATE", OnStateDebugInfo );
             DebugConsole.Instance.RegisterDebugInfo( "MOOD", OnMoodDebugInfo );
-            DebugConsole.Instance.RegisterDebugInfo( "C", OnClassifyDebugInfo );
+            DebugConsole.Instance.RegisterDebugInfo( "CLASS", OnClassifyDebugInfo );
             DebugConsole.Instance.RegisterDebugInfo( "Q", OnQuestionDebugInfo );
             DebugConsole.Instance.RegisterDebugInfo( "A", OnAnwserDebugInfo );
 
             KeyEventManager.Instance.RegisterKeyEvent( Constants.KeyCodes.CHANGE_MOOD, OnNextMood );
+            EventManager.Instance.RegisterEventReceiver( Constants.Event.ON_DEBUG_COMMAND, OnDebugCommand );
 
             StartAvatar();
+        }
+
+        private void OnDebugCommand( object [] args )
+        {
+            if ( args.Length > 0 && args[0] is string )
+            {
+                string text = args[0] as string;
+                if (! string.IsNullOrEmpty( text ) )
+                {
+                    State = AvatarState.THINKING;
+                    m_SpeechText = text;
+
+                    if (!m_NLC.Classify(m_ClassifierId, m_SpeechText, OnSpeechClassified))
+                        Log.Error("AvatarWidget", "Failed to send {0} to NLC.", m_SpeechText);
+                }
+            }
         }
 
         private string OnStateDebugInfo()
@@ -274,7 +291,7 @@ namespace IBM.Watson.Widgets.Avatar
         }
         private string OnQuestionDebugInfo()
         {
-            if ( m_QuestionResult != null )
+            if ( m_QuestionResult != null && m_QuestionResult.HasQuestion() )
             {
                 return string.Format( "{0} ({1:0.00})", 
                     m_QuestionResult.questions[0].question.questionText, 
@@ -284,6 +301,12 @@ namespace IBM.Watson.Widgets.Avatar
         }
         private string OnAnwserDebugInfo()
         {
+            if ( m_AnswerResult != null && m_AnswerResult.HasAnswer() )
+            {
+                return string.Format( "{0} ({1:0.00})",
+                    m_AnswerResult.answers[0].answerText,
+                    m_AnswerResult.answers[0].confidence );
+            }
             return string.Empty;
         }
 
@@ -380,7 +403,7 @@ namespace IBM.Watson.Widgets.Avatar
                     else
                     {
                         State = AvatarState.LISTENING;
-                        if ( textConfidence > m_IgnoreWordConfidence )
+                        if ( textConfidence > m_IgnoreWordConfidence && Mood != MoodType.SLEEPING )
                             m_TextOutput.SendData( new TextData(m_RecognizeFailure) );
                     }
                 }
@@ -438,11 +461,10 @@ namespace IBM.Watson.Widgets.Avatar
                 }
                 else if ( m_ClassifyResult.top_class == "question" || m_ClassifyResult.top_class == "watson-thunder" )
                 {
-
                     if (m_FocusQuestion != null)
                         m_FocusQuestion.GetComponent<QuestionWidget>().OnFold(null);
 
-                    if (!m_ITM.AskQuestion(m_SpeechResult.Results[0].Alternatives[0].Transcript, OnAskQuestion))
+                    if (!m_ITM.AskQuestion( m_SpeechText, OnAskQuestion))
                         Log.Error("AvatarWidget", "Failed to send question to ITM." );
                 }
                 else
@@ -477,21 +499,25 @@ namespace IBM.Watson.Widgets.Avatar
         {
             m_QuestionResult = questions;
 
-            if (m_QuestionResult != null && m_QuestionResult.questions != null)
+            if (m_QuestionResult != null && m_QuestionResult.HasQuestion() )
             {
-                Watson.Data.Question topQuestion = m_QuestionResult.questions.Length > 0 ? m_QuestionResult.questions[0] : null;
-                if (topQuestion != null)
+                Watson.Data.Question topQuestion = m_QuestionResult.questions[0];
+                if ( QuestionEvent != null )
+                    QuestionEvent( topQuestion.question.questionText );
+
+                m_AnswerResult = null;
+                m_ParseData = null;
+
+                if ( !m_ITM.GetAnswers(topQuestion.transactionId, OnAnswerQuestion)
+                    || !ITM.GetParseData(topQuestion.transactionId, OnParseData) )
                 {
-                    if ( QuestionEvent != null )
-                        QuestionEvent( topQuestion.question.questionText );
-
-                    m_GettingAnswers = m_ITM.GetAnswers(topQuestion.transactionId, OnAnswerQuestion);
-					m_GettingParse = ITM.GetParseData(topQuestion.transactionId, OnParseData);
-				}
+                    Log.Error( "AvatarWidget", "Failed to call GetAnswers()" );
+                    State = AvatarState.ERROR;
+                }
             }
-
+            else
             {
-                m_TextOutput.SendData(new TextData("Does not compute. beep."));
+                m_TextOutput.SendData(new TextData(m_RecognizeFailure));
                 State = AvatarState.LISTENING;
             }
         }
@@ -499,56 +525,45 @@ namespace IBM.Watson.Widgets.Avatar
         private void OnAnswerQuestion(Answers answers)
         {
 			m_AnswerResult = answers;
-            if (answers != null && answers.answers.Length > 0)
+            InstatiateQuestionPrefab();
+
+            if (answers != null && answers.HasAnswer() )
             {
                 foreach (var a in answers.answers)
                     Log.Debug("AvatarWidget", "A: {0} ({1})", a.answerText, a.confidence);
 
                 string answer = answers.answers[0].answerText;
+                EventManager.Instance.SendEvent( Constants.Event.ON_DEBUG_MESSAGE, answer );
 
-                if (m_QuestionPrefab != null)
-                {
-                    if (m_FocusQuestion == null)
-                        m_FocusQuestion = GameObject.Instantiate(m_QuestionPrefab);
-
-                    //m_FocusQuestion.transform.SetParent(transform, false);
-
-                    QuestionWidget question = m_FocusQuestion.GetComponentInChildren<QuestionWidget>();
-                    if (question != null)
-                    {
-//                        question.Avatar = this;
-						InitQuestion();
-//						question.Init(this);
-
-                        // show the answer panel
-                        //question.EventManager.SendEvent( "answers" );
-
-						//	request parse data
-//						if (!ITM.GetParseData(question.Questions.questions[0].transactionId, question.OnParseData))
-//							Log.Error("QuestionWidget", "Failed to request ParseData.");
-                    }
-                    else
-                        Log.Error("AvatarWidget", "Failed to find QuestionWidget in question prefab.");
-
-                }
 				if ( AnswerEvent != null )
 					AnswerEvent( answer );
 				m_TextOutput.SendData(new TextData(answer));
             }
-            State = AvatarState.LISTENING;
         }
 
 		private void OnParseData(ParseData data)
 		{
 			m_ParseData = data;
-			InitQuestion ();
+			InstatiateQuestionPrefab ();
 		}
 
-		private void InitQuestion()
+		private void InstatiateQuestionPrefab()
 		{
-			if (m_ParseData != null  && m_AnswerResult != null) {
-				QuestionWidget question = m_FocusQuestion.GetComponentInChildren<QuestionWidget>();
-				question.Init(this);
+			if (m_ParseData != null  && m_AnswerResult != null)
+            {
+                if (m_QuestionPrefab != null)
+                {
+                    if (m_FocusQuestion == null)
+                        m_FocusQuestion = GameObject.Instantiate(m_QuestionPrefab);
+
+                    QuestionWidget question = m_FocusQuestion.GetComponentInChildren<QuestionWidget>();
+                    if (question != null)
+        				question.Init(this);
+                    else
+                        Log.Error("AvatarWidget", "Failed to find QuestionWidget in question prefab.");
+
+                }
+                State = AvatarState.LISTENING;
 			}
 		}
 
