@@ -47,7 +47,15 @@ namespace IBM.Watson.Widgets.Question
         /// <summary>
         /// Part of speech - assigned in inspector window.
         /// </summary>
-        public string POS { get; set; }
+		[SerializeField]
+		private string m_POS;
+		public string POS {
+			get { return m_POS; }
+			set
+			{
+				m_POS = value;
+			}
+		}
 
         /// <summary>
         /// Start this instance.
