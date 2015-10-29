@@ -21,6 +21,9 @@ using System.Collections.Generic;
 
 namespace IBM.Watson.Widgets.Question
 {
+	/// <summary>
+	/// Handles all Features Facet functionality. 
+	/// </summary>
     public class Features : Base
     {
         [SerializeField]
@@ -36,6 +39,8 @@ namespace IBM.Watson.Widgets.Question
         /// </summary>
         override public void Init()
         {
+			base.Init ();
+
             for (int i = 0; i < m_Question.QuestionData.AnswerDataObject.answers[0].features.Length; i++)
             {
                 GameObject featureItemGameObject = Instantiate(m_FeatureItemPrefab, new Vector3(95f, -i * 50f - 150f, 0f), Quaternion.identity) as GameObject;

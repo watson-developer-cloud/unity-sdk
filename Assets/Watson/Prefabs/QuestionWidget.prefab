@@ -15932,11 +15932,11 @@ MonoBehaviour:
   statinoaryRotationVector: {x: 0, y: 1, z: 0}
   distanceFromCameraInZAfterUnfolding: 120
   m_initialPosition: {x: 0, y: 0, z: 0}
-  timeForComingToScene: 1
   easeForComingToScene: 6
   easeForGoingFromScene: 21
   timeForFoldingUnfolding: 1
   easeForFolding: 7
+  timeForComingToScene: 1
   easeForUnfolding: 7
   timeForFocusing: 1
   easeForFocusing: 7
@@ -21538,7 +21538,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 299.999878}
+  m_AnchoredPosition: {x: 0, y: 6.10351562e-05}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!224 &22437190

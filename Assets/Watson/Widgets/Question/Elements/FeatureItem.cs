@@ -21,6 +21,9 @@ using UnityEngine.UI;
 
 namespace IBM.Watson.Widgets.Question
 {
+	/// <summary>
+	/// Controls FeatureItem View. Attached to FeatureItem prewfab.
+	/// </summary>
     public class FeatureItem : MonoBehaviour
     {
         [SerializeField]

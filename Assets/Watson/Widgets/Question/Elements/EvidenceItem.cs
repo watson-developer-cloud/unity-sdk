@@ -21,6 +21,9 @@ using UnityEngine.UI;
 
 namespace IBM.Watson.Widgets.Question
 {
+	/// <summary>
+	/// Controls EvidenceItem views. Attached to EvidenceItem prefab.
+	/// </summary>
     public class EvidenceItem : MonoBehaviour
     {
         [SerializeField]

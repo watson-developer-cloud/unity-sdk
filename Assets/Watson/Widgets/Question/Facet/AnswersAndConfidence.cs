@@ -20,14 +20,23 @@ using UnityEngine;
 
 namespace IBM.Watson.Widgets.Question
 {
+	/// <summary>
+	/// Handles all AnswersAndConfidence Facet functionality.
+	/// </summary>
     public class AnswersAndConfidence : Base
     {
         [Header("UI Faces")]
         [SerializeField]
         private AnswerConfidenceBar[] m_AnswerConfidenceBars;
 
+		/// <summary>
+		/// Iterate through Answer and Confidence bars and set the Answer and ConfidenceIndex
+		/// </summary>
+		//	TODO dynamically create bars?
         override public void Init()
         {
+			base.Init ();
+
             for (int i = 0; i < m_AnswerConfidenceBars.Length; i++)
             {
                 m_AnswerConfidenceBars[i].Answer = m_Question.QuestionData.AnswerDataObject.answers[i].answerText;

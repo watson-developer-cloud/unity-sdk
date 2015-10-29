@@ -20,6 +20,9 @@ using UnityEngine;
 
 namespace IBM.Watson.Widgets.Question
 {
+	/// <summary>
+	/// Base class for all QuestionWidget Facets except for Chat.
+	/// </summary>
     public class Base : MonoBehaviour
     {
         /// <summary>
@@ -43,7 +46,10 @@ namespace IBM.Watson.Widgets.Question
         /// <summary>
         /// Initialization function
         /// </summary>
-        public virtual void Init() { }
+        public virtual void Init() 
+		{ 
+			Clear ();
+		}
 
         /// <summary>
         /// Clears dynamically generated Facet Elements when a question is answered. Called from answer event handler.
