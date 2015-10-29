@@ -72,6 +72,8 @@ namespace IBM.Watson.Widgets.Question
 		/// </summary>
         override public void Init()
         {
+			base.Init ();
+
             QuestionString = m_Question.QuestionData.QuestionDataObject.questions[0].question.questionText;
 			AnswerString = m_Question.QuestionData.AnswerDataObject.answers[0].answerText;
             Confidence = m_Question.QuestionData.AnswerDataObject.answers[0].confidence;

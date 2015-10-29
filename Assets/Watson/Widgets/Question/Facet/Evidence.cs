@@ -39,6 +39,8 @@ namespace IBM.Watson.Widgets.Question
         /// </summary>
         override public void Init()
         {
+			base.Init ();
+
             for (int i = 0; i < m_Question.QuestionData.AnswerDataObject.answers[0].evidence.Length; i++)
             {
                 if (i >= 3) return;

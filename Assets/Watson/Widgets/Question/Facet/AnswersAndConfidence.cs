@@ -35,6 +35,8 @@ namespace IBM.Watson.Widgets.Question
 		//	TODO dynamically create bars?
         override public void Init()
         {
+			base.Init ();
+
             for (int i = 0; i < m_AnswerConfidenceBars.Length; i++)
             {
                 m_AnswerConfidenceBars[i].Answer = m_Question.QuestionData.AnswerDataObject.answers[i].answerText;

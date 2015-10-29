@@ -88,6 +88,8 @@ namespace IBM.Watson.Widgets.Question
         /// </summary>
         override public void Init()
         {
+			base.Init ();
+
             GenerateParseTree();
         }
 
