@@ -226,7 +226,7 @@ public class CubeAnimationManager : MonoBehaviour {
 //			}
 //		}
 
-		SetVisible (false);
+		//SetVisible (false);
 
 		//RotateCube ();
 		//ShowCube ();
