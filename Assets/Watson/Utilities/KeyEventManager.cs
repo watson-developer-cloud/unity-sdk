@@ -23,11 +23,29 @@ using UnityEngine;
 namespace IBM.Watson.Utilities
 {
     /// <summary>
+    /// Key press modifiers
+    /// </summary>
+    public enum KeyModifiers
+    {
+        NONE = 0x0,
+        SHIFT = 0x1,
+        CONTROL = 0x2,
+        ALT = 0x4
+    };
+
+    /// <summary>
     /// This class handles key presses and will sent events and/or invoke a delegate when a key is pressed.
     /// </summary>
     public class KeyEventManager : MonoBehaviour
     {
         #region Public Types
+        /// <summary>
+        /// How many bits to shift modifier up/down when mapped into the dictionary. This may need to be adjusted
+        /// if KeyCOde
+        /// </summary>
+        private int MODIFIER_SHIFT_BITS = 10;
+        private int KEYCODE_MASK = (1 << 10) - 1;
+
         /// <summary>
         /// Key press delegate callback.
         /// </summary>
@@ -46,17 +64,13 @@ namespace IBM.Watson.Utilities
             /// Callback to invoke when the key is pressed.
             /// </summary>
             public KeyEventDelegate m_Delegate;
-            /// <summary>
-            /// Additional keys that must be down to fire this event.
-            /// </summary>
-            public KeyCode[] m_Modifiers;
         };
         #endregion
 
         #region Private Data
         private bool m_Active = true;
         private bool m_UpdateActivate = true;
-        private Dictionary<KeyCode, KeyEvent> m_KeyEvents = new Dictionary<KeyCode, KeyEvent>();
+        private Dictionary<int, KeyEvent> m_KeyEvents = new Dictionary<int, KeyEvent>();
         #endregion
 
         #region Public Properties
@@ -75,13 +89,15 @@ namespace IBM.Watson.Utilities
         /// Register a key event.
         /// </summary>
         /// <param name="key">The KeyCode of the key.</param>
+        /// <param name="modifiers">KeyCode modifiers</param>
         /// <param name="ke">The KeyEvent object.</param>
         /// <returns>True is returned on success.</returns>
-        public bool RegisterKeyEvent(KeyCode key, KeyEvent ke)
+        public bool RegisterKeyEvent(KeyCode key, KeyModifiers modifiers, KeyEvent ke)
         {
-            if (m_KeyEvents.ContainsKey(key))
+            int code = ((int)key) | (((int)modifiers) << MODIFIER_SHIFT_BITS);
+            if (m_KeyEvents.ContainsKey(code))
                 return false;
-            m_KeyEvents[key] = ke;
+            m_KeyEvents[code] = ke;
             return true;
         }
         /// <summary>
@@ -91,9 +107,9 @@ namespace IBM.Watson.Utilities
         /// <param name="callback">The delegate to invoke.</param>
         /// <param name="modifiers">Additional keys that must be down as well to fire the event.</param>
         /// <returns>True is returned on success.</returns>
-        public bool RegisterKeyEvent(KeyCode key, KeyEventDelegate callback, KeyCode[] modifiers = null)
+        public bool RegisterKeyEvent(KeyCode key, KeyEventDelegate callback, KeyModifiers modifiers = KeyModifiers.NONE)
         {
-            return RegisterKeyEvent(key, new KeyEvent() { m_Delegate = callback, m_Modifiers = modifiers });
+            return RegisterKeyEvent(key, modifiers, new KeyEvent() { m_Delegate = callback }) ;
         }
         /// <summary>
         /// Send a event when a key is released. 
@@ -102,19 +118,26 @@ namespace IBM.Watson.Utilities
         /// <param name="eventName">The event to send when the key is released.</param>
         /// <param name="modifiers">Additional keys that must be down as well to fire the event.</param>
         /// <returns>True is returned on success.</returns>
-        public bool RegisterKeyEvent(KeyCode key, string eventName, KeyCode[] modifiers = null)
+        public bool RegisterKeyEvent(KeyCode key, string eventName, KeyModifiers modifiers = KeyModifiers.NONE )
         {
-            return RegisterKeyEvent(key, new KeyEvent() { m_SendEvent = eventName, m_Modifiers = modifiers });
+            return RegisterKeyEvent(key, modifiers, new KeyEvent() { m_SendEvent = eventName });
         }
         /// <summary>
         /// Unregister a key event.
         /// </summary>
         /// <param name="key">The KeyCode to unregister.</param>
+        /// <param name="modifiers">Additional keys that must be down as well to fire the event.</param>
+        /// <param name="callback">If provided, then the key will be unregistered only the callback matches the existing registration.</param>
         /// <returns>True is returned on success.</returns>
-        public bool UnregisterKeyEvent(KeyCode key)
+        public bool UnregisterKeyEvent(KeyCode key, KeyModifiers modifiers = KeyModifiers.NONE, KeyEventDelegate callback = null)
         {
-            return m_KeyEvents.Remove(key);
+            int code = ((int)key) | (((int)modifiers) << MODIFIER_SHIFT_BITS);
+            if ( callback != null && m_KeyEvents.ContainsKey( code ) && m_KeyEvents[code].m_Delegate != callback )
+                return false;
+
+            return m_KeyEvents.Remove(code);
         }
+
         #endregion
 
         private void Update()
@@ -123,17 +146,30 @@ namespace IBM.Watson.Utilities
             {
                 foreach (var kp in m_KeyEvents)
                 {
-                    if (Input.GetKeyDown(kp.Key))
+                    KeyCode key = (KeyCode)(kp.Key & KEYCODE_MASK);
+
+                    if (Input.GetKeyDown(key))
                     {
                         bool bFireEvent = true;
-                        if (kp.Value.m_Modifiers != null)
+
+                        int modifiers = kp.Key >> MODIFIER_SHIFT_BITS;
+                        if (modifiers != 0)
                         {
-                            foreach (var mod in kp.Value.m_Modifiers)
-                                if (!Input.GetKey(mod))
-                                {
-                                    bFireEvent = false;
-                                    break;
-                                }
+                            if ( (modifiers & (int)KeyModifiers.SHIFT) != 0 
+                                && !Input.GetKey( KeyCode.RightShift ) && !Input.GetKey( KeyCode.LeftShift ) )
+                            {
+                                bFireEvent = false;
+                            }
+                            if ( (modifiers & (int)KeyModifiers.CONTROL) != 0 
+                                && !Input.GetKey( KeyCode.RightControl ) && !Input.GetKey( KeyCode.LeftControl ) )
+                            {
+                                bFireEvent = false;
+                            }
+                            if ( (modifiers & (int)KeyModifiers.ALT) != 0 
+                                && !Input.GetKey( KeyCode.RightAlt ) && !Input.GetKey( KeyCode.LeftAlt ) )
+                            {
+                                bFireEvent = false;
+                            }
                         }
 
                         if (bFireEvent)
