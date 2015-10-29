@@ -21,6 +21,7 @@ using IBM.Watson.Data;
 using IBM.Watson.Widgets.Question;
 using UnityEngine;
 using System.Collections.Generic;
+using IBM.Watson.Utilities;
 
 namespace IBM.Watson.Widgets.Question
 {
@@ -33,14 +34,14 @@ namespace IBM.Watson.Widgets.Question
         #region Private Data
         private CubeAnimationManager m_CubeAnimMgr = null;
 
-		private AnswersAndConfidence m_AnswersAndConfidence;
-		private Question.Evidence m_Evidence;
-		private Semantic m_Semantic;
-		private Features m_Features;
-		private Location m_Location;
-		private ParseTree m_ParseTree;
-		private QuestionAndAnswer m_QuestionAndAnswer;
-		private List<Base> m_Facets = new List<Base>();
+        private AnswersAndConfidence m_AnswersAndConfidence;
+        private Question.Evidence m_Evidence;
+        private Semantic m_Semantic;
+        private Features m_Features;
+        private Location m_Location;
+        private ParseTree m_ParseTree;
+        private QuestionAndAnswer m_QuestionAndAnswer;
+        private List<Base> m_Facets = new List<Base>();
 
         #endregion
 
@@ -52,42 +53,71 @@ namespace IBM.Watson.Widgets.Question
         #endregion
 
         #region Public Properties
-        public CubeAnimationManager Cube {
-            get {
-                if ( m_CubeAnimMgr == null )
+
+        private bool m_Focused = false;
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="IBM.Watson.Widgets.Question.QuestionWidget"/> is focused.
+        /// </summary>
+        /// <value><c>true</c> if focused; otherwise, <c>false</c>.</value>
+        public bool Focused
+        {
+            get
+            {
+                return m_Focused;
+            }
+            set
+            {
+                m_Focused = value;
+
+                if (value)
+                {
+                    KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CUBE_TO_FOLD, OnFold, KeyModifiers.CONTROL);
+                }
+                else
+                {
+                    KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_FOLD, KeyModifiers.CONTROL, OnFold);
+                }
+            }
+        }
+
+        public CubeAnimationManager Cube
+        {
+            get
+            {
+                if (m_CubeAnimMgr == null)
                     m_CubeAnimMgr = GetComponentInChildren<CubeAnimationManager>();
                 return m_CubeAnimMgr;
             }
         }
 
-		public IQuestionData QuestionData { get; set; }
+        public IQuestionData QuestionData { get; set; }
 
         #endregion
 
         #region Cube Actions
         public void OnDisplayAnswers()
         {
-            Cube.FocusOnSide( CubeAnimationManager.CubeSideType.ANSWERS );
+            Cube.FocusOnSide(CubeAnimationManager.CubeSideType.ANSWERS);
         }
 
         public void OnDisplayChat()
         {
-            Cube.FocusOnSide( CubeAnimationManager.CubeSideType.CHAT );
+            Cube.FocusOnSide(CubeAnimationManager.CubeSideType.CHAT);
         }
 
         public void OnDisplayParse()
         {
-            Cube.FocusOnSide( CubeAnimationManager.CubeSideType.PARSE );
+            Cube.FocusOnSide(CubeAnimationManager.CubeSideType.PARSE);
         }
 
         public void OnDisplayEvidence()
         {
-            Cube.FocusOnSide( CubeAnimationManager.CubeSideType.EVIDENCE );
+            Cube.FocusOnSide(CubeAnimationManager.CubeSideType.EVIDENCE);
         }
 
         public void OnDisplayLocation()
         {
-            Cube.FocusOnSide( CubeAnimationManager.CubeSideType.LOCATION );
+            Cube.FocusOnSide(CubeAnimationManager.CubeSideType.LOCATION);
         }
 
         public void OnFold()
@@ -99,24 +129,24 @@ namespace IBM.Watson.Widgets.Question
             Cube.UnFold();
         }
 
-        public void ExecuteAction( string action )
+        public void ExecuteAction(string action)
         {
-            if ( action == "fold" )
+            if (action == "fold")
                 OnFold();
-            else if ( action == "unfold" )
+            else if (action == "unfold")
                 OnUnfold();
-            else if ( action == "evidence" )
+            else if (action == "evidence")
                 OnDisplayEvidence();
-            else if ( action == "parse" )
+            else if (action == "parse")
                 OnDisplayParse();
-            else if ( action == "location" )
+            else if (action == "location")
                 OnDisplayLocation();
-            else if ( action == "answers" )
+            else if (action == "answers")
                 OnDisplayAnswers();
-            else if ( action == "chat" )
+            else if (action == "chat")
                 OnDisplayChat();
             else
-                Log.Warning( "QuestionWidget", "Unknown action {0}", action );
+                Log.Warning("QuestionWidget", "Unknown action {0}", action);
         }
         #endregion
 
@@ -125,21 +155,21 @@ namespace IBM.Watson.Widgets.Question
         /// </summary>
         protected void Awake()
         {
-			m_AnswersAndConfidence = gameObject.GetComponent<AnswersAndConfidence>();
-			m_Evidence = gameObject.GetComponent<Question.Evidence>();
-			m_Semantic = gameObject.GetComponent<Semantic>();
-			m_Features = gameObject.GetComponent<Features>();
-			m_Location = gameObject.GetComponent<Location>();
-			m_ParseTree = gameObject.GetComponent<ParseTree>();
-			m_QuestionAndAnswer = gameObject.GetComponent<QuestionAndAnswer>();
+            m_AnswersAndConfidence = gameObject.GetComponent<AnswersAndConfidence>();
+            m_Evidence = gameObject.GetComponent<Question.Evidence>();
+            m_Semantic = gameObject.GetComponent<Semantic>();
+            m_Features = gameObject.GetComponent<Features>();
+            m_Location = gameObject.GetComponent<Location>();
+            m_ParseTree = gameObject.GetComponent<ParseTree>();
+            m_QuestionAndAnswer = gameObject.GetComponent<QuestionAndAnswer>();
 
-			m_Facets.Add (m_AnswersAndConfidence);
-			m_Facets.Add (m_Evidence);
-			m_Facets.Add (m_Semantic);
-			m_Facets.Add (m_Features);
-			m_Facets.Add (m_Location);
-			m_Facets.Add (m_ParseTree);
-			m_Facets.Add (m_QuestionAndAnswer);
+            m_Facets.Add(m_AnswersAndConfidence);
+            m_Facets.Add(m_Evidence);
+            m_Facets.Add(m_Semantic);
+            m_Facets.Add(m_Features);
+            m_Facets.Add(m_Location);
+            m_Facets.Add(m_ParseTree);
+            m_Facets.Add(m_QuestionAndAnswer);
         }
 
         protected override void Start()
@@ -147,25 +177,25 @@ namespace IBM.Watson.Widgets.Question
             base.Start();
         }
 
-		/// <summary>
-		/// Sets Question, Answer and Avatar for each facet. Init is called by the Avatar Widget.
-		/// </summary>
+        /// <summary>
+        /// Sets Question, Answer and Avatar for each facet. Init is called by the Avatar Widget.
+        /// </summary>
         public void UpdateFacets()
         {
-			foreach (Base facet in m_Facets)
-				facet.Init();
+            foreach (Base facet in m_Facets)
+                facet.Init();
         }
     }
 
-    public delegate void OnMessage( string msg );
+    public delegate void OnMessage(string msg);
 
-	public interface IQuestionData
-	{
-		Questions QuestionDataObject { get; }
-		Answers AnswerDataObject { get; }
-		ParseData ParseDataObject { get; }
-		string Location { get; }
+    public interface IQuestionData
+    {
+        Questions QuestionDataObject { get; }
+        Answers AnswerDataObject { get; }
+        ParseData ParseDataObject { get; }
+        string Location { get; }
         OnMessage OnQuestion { get; set; }
         OnMessage OnAnswer { get; set; }
-	}
+    }
 }

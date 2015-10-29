@@ -230,6 +230,7 @@ public class CubeAnimationManager : MonoBehaviour {
 	private int currentZoom = 0;
 	void Update()
 	{
+		/*
 		if (Input.GetKeyDown (Constants.KeyCodes.CUBE_TO_FOLD)) {
 			Fold();
 		}
@@ -259,7 +260,7 @@ public class CubeAnimationManager : MonoBehaviour {
 			ChangeScale(1.1f);	//Zoom-in
 		}
 
-	
+	*/
 		//CubeFoldingAnimation ();
 		CubeStatinoaryAnimation ();
 	}
@@ -580,8 +581,6 @@ public class CubeAnimationManager : MonoBehaviour {
 	#endregion
 
 	#region Zoom 
-
-
 
 	public void ChangeScale(float zoom){
 		float zoomDiff = Mathf.Abs (1.0f - zoom);
