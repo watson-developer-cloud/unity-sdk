@@ -105,7 +105,7 @@ namespace IBM.Watson.Widgets.Question
         }
 
 		/// <summary>
-		/// Concantinates 
+		/// Concantinates Variants.
 		/// </summary>
 		private string Variants()
 		{
