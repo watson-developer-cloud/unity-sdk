@@ -67,12 +67,12 @@ public class AvatarTouchManager: MonoBehaviour
     {
         int touchedSide = 0;
         int.TryParse(hitTransform.name.Substring(1, 1), out touchedSide);
-        CubeAnimationManager.instance.FocusOnSide((CubeAnimationManager.CubeSideType)touchedSide);
+        CubeAnimationManager.Instance.FocusOnSide((CubeAnimationManager.CubeSideType)touchedSide);
     }
 
     private void TapGesture_Tapped(object sender, System.EventArgs e)
     {
-        if (CubeAnimationManager.instance == null)
+        if (CubeAnimationManager.Instance == null)
             return;
 
        Log.Status("AvatarTouchManager", "TapGesture_Tapped: {0}", tapGesture.ScreenPosition);
@@ -82,31 +82,31 @@ public class AvatarTouchManager: MonoBehaviour
         if (Physics.Raycast(rayForTab, out hit, Mathf.Infinity, layerForQuestionWidget))
         {
             //Touch on side
-            switch (CubeAnimationManager.instance.currentAnimationState)
+            switch (CubeAnimationManager.Instance.currentAnimationState)
             {
-                case CubeAnimationManager.CubeAnimationState.NotPresent:
+                case CubeAnimationManager.CubeAnimationState.NOT_PRESENT:
                     break;
-                case CubeAnimationManager.CubeAnimationState.ComingToScene:
+                case CubeAnimationManager.CubeAnimationState.COMING_TO_SCENE:
                     break;
-                case CubeAnimationManager.CubeAnimationState.IdleOnScene:
-                    CubeAnimationManager.instance.UnFold();
+                case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOLDED:
+                    CubeAnimationManager.Instance.UnFold();
                     break;
-                case CubeAnimationManager.CubeAnimationState.UnFolding:
+                case CubeAnimationManager.CubeAnimationState.UNFOLDING:
                     FocusOnSide(hit.transform);
                     break;
-                case CubeAnimationManager.CubeAnimationState.Unfolded:
+                case CubeAnimationManager.CubeAnimationState.IDLE_AS_UNFOLDED:
                     FocusOnSide(hit.transform);
                     break;
-                case CubeAnimationManager.CubeAnimationState.Folding:
-                    CubeAnimationManager.instance.UnFold();
+                case CubeAnimationManager.CubeAnimationState.FOLDING:
+                    CubeAnimationManager.Instance.UnFold();
                     break;
-                case CubeAnimationManager.CubeAnimationState.FocusingToSide:
+                case CubeAnimationManager.CubeAnimationState.FOCUSING_TO_SIDE:
                     FocusOnSide(hit.transform);
                     break;
-                case CubeAnimationManager.CubeAnimationState.FocusedToSide:
+                case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOCUSED:
                     FocusOnSide(hit.transform);
                     break;
-                case CubeAnimationManager.CubeAnimationState.GoingFromScene:
+                case CubeAnimationManager.CubeAnimationState.GOING_FROM_SCENE:
                     break;
                 default:
                     break;
@@ -114,31 +114,31 @@ public class AvatarTouchManager: MonoBehaviour
         }
         else
         {
-            Log.Status("AvatarTouchManager", "Touch-outside current state: " + CubeAnimationManager.instance.currentAnimationState);
+            Log.Status("AvatarTouchManager", "Touch-outside current state: " + CubeAnimationManager.Instance.currentAnimationState);
             //Touch out-side
-            switch (CubeAnimationManager.instance.currentAnimationState)
+            switch (CubeAnimationManager.Instance.currentAnimationState)
             {
-                case CubeAnimationManager.CubeAnimationState.NotPresent:
+                case CubeAnimationManager.CubeAnimationState.NOT_PRESENT:
                     break;
-                case CubeAnimationManager.CubeAnimationState.ComingToScene:
+                case CubeAnimationManager.CubeAnimationState.COMING_TO_SCENE:
                     break;
-                case CubeAnimationManager.CubeAnimationState.IdleOnScene:
+                case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOLDED:
                     break;
-                case CubeAnimationManager.CubeAnimationState.UnFolding:
-                    CubeAnimationManager.instance.Fold();
+                case CubeAnimationManager.CubeAnimationState.UNFOLDING:
+                    CubeAnimationManager.Instance.Fold();
                     break;
-                case CubeAnimationManager.CubeAnimationState.Unfolded:
-                    CubeAnimationManager.instance.Fold();
+                case CubeAnimationManager.CubeAnimationState.IDLE_AS_UNFOLDED:
+                    CubeAnimationManager.Instance.Fold();
                     break;
-                case CubeAnimationManager.CubeAnimationState.Folding:
+                case CubeAnimationManager.CubeAnimationState.FOLDING:
                     break;
-                case CubeAnimationManager.CubeAnimationState.FocusingToSide:
-                    CubeAnimationManager.instance.UnFocus();
+                case CubeAnimationManager.CubeAnimationState.FOCUSING_TO_SIDE:
+                    CubeAnimationManager.Instance.UnFocus();
                     break;
-                case CubeAnimationManager.CubeAnimationState.FocusedToSide:
-                    CubeAnimationManager.instance.UnFocus();
+                case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOCUSED:
+                    CubeAnimationManager.Instance.UnFocus();
                     break;
-                case CubeAnimationManager.CubeAnimationState.GoingFromScene:
+                case CubeAnimationManager.CubeAnimationState.GOING_FROM_SCENE:
                     break;
                 default:
                     break;
@@ -208,9 +208,9 @@ public class AvatarTouchManager: MonoBehaviour
         if (Input.GetKey(KeyCode.Alpha6))
             ZoomSpeed += 0.1f;
 
-        if (isActive && CubeAnimationManager.instance != null)
+        if (isActive && CubeAnimationManager.Instance != null)
         {
-            if (CubeAnimationManager.instance.currentAnimationState == CubeAnimationManager.CubeAnimationState.IdleOnScene)
+            if (CubeAnimationManager.Instance.currentAnimationState == CubeAnimationManager.CubeAnimationState.IDLE_AS_FOLDED)
             {
                 //For Rotating the cube
                 targetCubeRotation = Quaternion.Lerp(targetCubeRotation, Quaternion.identity, Time.deltaTime * speedForCubeRotationAnimation);
