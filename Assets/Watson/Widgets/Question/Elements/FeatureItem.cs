@@ -21,60 +21,66 @@ using UnityEngine.UI;
 
 namespace IBM.Watson.Widgets.Question
 {
-	public class FeatureItem : MonoBehaviour
-	{
-		[SerializeField]
-		private Text m_FeatureText;
-		[SerializeField]
-		private Text m_FeatureIndexText;
+    public class FeatureItem : MonoBehaviour
+    {
+        [SerializeField]
+        private Text m_FeatureText;
+        [SerializeField]
+        private Text m_FeatureIndexText;
 
-		private string _FeatureString;
-		public string FeatureString
-		{
-			get { return _FeatureString; }
-			set
-			{
-				_FeatureString = value;
-				UpdateFeature();
-			}
-		}
+        private string m_FeatureString;
+        public string FeatureString
+        {
+            get { return m_FeatureString; }
+            set
+            {
+                m_FeatureString = value;
+                UpdateFeature();
+            }
+        }
 
-		private double _FeatureIndex;
-		public double FeatureIndex
-		{
-			get { return _FeatureIndex; }
-			set
-			{
-				_FeatureIndex = value;
-				UpdateFeatureIndex();
-			}
-		}
+        private double m_FeatureIndex;
+        public double FeatureIndex
+        {
+            get { return m_FeatureIndex; }
+            set
+            {
+                m_FeatureIndex = value;
+                UpdateFeatureIndex();
+            }
+        }
 
-		/// <summary>
-		/// Updates the Features. Displays only the first 15 characters.
-		/// </summary>
-		private void UpdateFeature()
-		{
-			if (FeatureString != "") {
-				gameObject.SetActive (true);
-				if(FeatureString.Length > 15) {
-					string temp = FeatureString.Substring (0, 15);
-					m_FeatureText.text = temp + "...";
-				} else {
-					m_FeatureText.text = FeatureString;
-				}
-			} else {
-				gameObject.SetActive(false);
-			}
-		}
+        /// <summary>
+        /// Updates the Features. Displays only the first 15 characters.
+        /// </summary>
+        private void UpdateFeature()
+        {
+            if (FeatureString != "")
+            {
+                gameObject.SetActive(true);
+                if (FeatureString.Length > 15)
+                {
+                    string temp = FeatureString.Substring(0, 15);
+                    m_FeatureText.text = temp + "...";
+                }
+                else
+                {
+                    m_FeatureText.text = FeatureString;
+                }
+            }
+            else
+            {
+                gameObject.SetActive(false);
+            }
+        }
 
-		/// <summary>
-		/// Updates the Feature Index. 
-		/// </summary>
-		private void UpdateFeatureIndex()
-		{
-			float featureIndex = (float)FeatureIndex;
-			m_FeatureIndexText.text = featureIndex.ToString ("f2");
-	}
-	}
+        /// <summary>
+        /// Updates the Feature Index. 
+        /// </summary>
+        private void UpdateFeatureIndex()
+        {
+            float featureIndex = (float)FeatureIndex;
+            m_FeatureIndexText.text = featureIndex.ToString("f2");
+        }
+    }
 }

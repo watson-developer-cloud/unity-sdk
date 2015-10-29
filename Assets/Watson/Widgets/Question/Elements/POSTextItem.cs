@@ -21,28 +21,28 @@ using UnityEngine.UI;
 
 namespace IBM.Watson.Widgets.Question
 {
-	public class POSTextItem : MonoBehaviour
-		{
-		[SerializeField]
-		private Text m_POSTextField;
-		
-		private string _POSWord;
-		public string POSWord
-		{
-			get { return _POSWord; }
-			set 
-			{
-				_POSWord = value;
-				UpdatePOSTextField();
-			}
-		}
+    public class POSTextItem : MonoBehaviour
+    {
+        [SerializeField]
+        private Text m_POSTextField;
 
-		/// <summary>
-		/// Update the POS view.
-		/// </summary>
-		private void UpdatePOSTextField()
-		{
-			m_POSTextField.text = POSWord;
-		}
-	}
+        private string m_POSWord;
+        public string POSWord
+        {
+            get { return m_POSWord; }
+            set
+            {
+                m_POSWord = value;
+                UpdatePOSTextField();
+            }
+        }
+
+        /// <summary>
+        /// Update the POS view.
+        /// </summary>
+        private void UpdatePOSTextField()
+        {
+            m_POSTextField.text = POSWord;
+        }
+    }
 }

@@ -22,73 +22,76 @@ using UnityEngine.UI;
 
 namespace IBM.Watson.Widgets.Question
 {
-	public class ParseTreeTextItem : MonoBehaviour
-		{
-		[SerializeField]
-		private Text m_ParseTreeTextField;
+    public class ParseTreeTextItem : MonoBehaviour
+    {
+        [SerializeField]
+        private Text m_ParseTreeTextField;
 
-		private bool _IsHighlighted = false;
-		public bool IsHighlighted
-		{
-			get { return _IsHighlighted; }
-			set {
-				_IsHighlighted = value;
-				m_RectTransform = m_ParseTreeTextField.gameObject.GetComponent<RectTransform>();
-				LeanTween.textColor(m_RectTransform, _IsHighlighted ? m_ColorLight : m_ColorDark, m_TransitionTime);
-				LeanTween.scale(m_RectTransform, _IsHighlighted ? m_ScaleUpSize : m_ScaleDownSize, m_TransitionTime);
-			}
-		}
+        private bool m_IsHighlighted = false;
+        public bool IsHighlighted
+        {
+            get { return m_IsHighlighted; }
+            set
+            {
+                m_IsHighlighted = value;
+                m_RectTransform = m_ParseTreeTextField.gameObject.GetComponent<RectTransform>();
+                LeanTween.textColor(m_RectTransform, m_IsHighlighted ? m_ColorLight : m_ColorDark, m_TransitionTime);
+                LeanTween.scale(m_RectTransform, m_IsHighlighted ? m_ScaleUpSize : m_ScaleDownSize, m_TransitionTime);
+            }
+        }
 
-		private string _ParseTreeWord;
-		public string ParseTreeWord
-		{
-			get { return _ParseTreeWord; }
-			set 
-			{
-				_ParseTreeWord = value;
-				UpdateParseTreeTextField();
-			}
-		}
+        private string m_ParseTreeWord;
+        public string ParseTreeWord
+        {
+            get { return m_ParseTreeWord; }
+            set
+            {
+                m_ParseTreeWord = value;
+                UpdateParseTreeTextField();
+            }
+        }
 
-		[SerializeField]
-		private string _m_POS;
-		public string m_POS {
-			get { return _m_POS; }
-			set {
-				_m_POS = value;
-			}
-		}
+        [SerializeField]
+        private string m_POS;
+        public string POS
+        {
+            get { return m_POS; }
+            set
+            {
+                m_POS = value;
+            }
+        }
 
-		[SerializeField]
-		private string _m_Slot;
-		public string m_Slot
-		{
-			get { return _m_Slot; }
-			set { _m_Slot = value; }
-		}
+        [SerializeField]
+        private string m_Slot;
+        public string Slot
+        {
+            get { return m_Slot; }
+            set { m_Slot = value; }
+        }
 
-		public List<string> m_Features = new List<string>();
-		private RectTransform m_RectTransform;
-		private Color m_ColorLight = new Color (0.8f, 0.8f, 0.8f);
-		private Color m_ColorDark = new Color (0.3f, 0.3f, 0.3f);
-		private Vector3 m_ScaleUpSize = new Vector3(1.25f, 1.25f, 1.25f);
-		private Vector3 m_ScaleDownSize = new Vector3(1f, 1f, 1f);
-		private float m_TransitionTime = 0.5f;
+        public List<string> m_Features = new List<string>();
+        private RectTransform m_RectTransform;
+        private Color m_ColorLight = new Color(0.8f, 0.8f, 0.8f);
+        private Color m_ColorDark = new Color(0.3f, 0.3f, 0.3f);
+        private Vector3 m_ScaleUpSize = new Vector3(1.25f, 1.25f, 1.25f);
+        private Vector3 m_ScaleDownSize = new Vector3(1f, 1f, 1f);
+        private float m_TransitionTime = 0.5f;
 
-		/// <summary>
-		/// Sets a reference of the RectTransform.
-		/// </summary>
-		void Start()
-		{
-			m_RectTransform = m_ParseTreeTextField.gameObject.GetComponent<RectTransform>();
-		}
+        /// <summary>
+        /// Sets a reference of the RectTransform.
+        /// </summary>
+        void Start()
+        {
+            m_RectTransform = m_ParseTreeTextField.gameObject.GetComponent<RectTransform>();
+        }
 
-		/// <summary>
-		/// Update the ParseTree text view.
-		/// </summary>
-		private void UpdateParseTreeTextField()
-		{
-			m_ParseTreeTextField.text = ParseTreeWord;
-		}
-	}
+        /// <summary>
+        /// Update the ParseTree text view.
+        /// </summary>
+        private void UpdateParseTreeTextField()
+        {
+            m_ParseTreeTextField.text = ParseTreeWord;
+        }
+    }
 }

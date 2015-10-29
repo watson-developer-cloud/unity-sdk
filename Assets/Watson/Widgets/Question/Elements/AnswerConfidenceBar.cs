@@ -21,52 +21,53 @@ using UnityEngine.UI;
 
 namespace IBM.Watson.Widgets.Question
 {
-	public class AnswerConfidenceBar : MonoBehaviour 
-	{
-		[SerializeField]
-		private Text m_AnswerText;
-		[SerializeField]
-		private Text m_ConfidenceText;
-		[SerializeField]
-		private RectTransform m_BarProgress;
+    public class AnswerConfidenceBar : MonoBehaviour
+    {
+        [SerializeField]
+        private Text m_AnswerText;
+        [SerializeField]
+        private Text m_ConfidenceText;
+        [SerializeField]
+        private RectTransform m_BarProgress;
 
-		private string _Answer;
-		public string Answer
-		{
-			get { return _Answer; }
-			set 
-			{
-				_Answer = value;
-				UpdateAnswer();
-			}
-		}
+        private string m_Answer;
+        public string Answer
+        {
+            get { return m_Answer; }
+            set
+            {
+                m_Answer = value;
+                UpdateAnswer();
+            }
+        }
 
-		private double _Confidence;
-		public double Confidence 
-		{
-			get { return _Confidence; }
-			set {
-				_Confidence = value;
-				UpdateConfidence();
-			}
-		}
+        private double m_Confidence;
+        public double Confidence
+        {
+            get { return m_Confidence; }
+            set
+            {
+                m_Confidence = value;
+                UpdateConfidence();
+            }
+        }
 
-		/// <summary>
-		/// Update the answer view.
-		/// </summary>
-		private void UpdateAnswer()
-		{
-			m_AnswerText.text = Answer;
-		}
+        /// <summary>
+        /// Update the answer view.
+        /// </summary>
+        private void UpdateAnswer()
+        {
+            m_AnswerText.text = Answer;
+        }
 
-		/// <summary>
-		/// Update the confidence view.
-		/// </summary>
-		private void UpdateConfidence()
-		{
-			float confidence = (float)Confidence * 100;
-			m_ConfidenceText.text = confidence.ToString ("f1");
-			m_BarProgress.localScale = new Vector3((float)Confidence, 1f, 1f);
-		}
-	}
+        /// <summary>
+        /// Update the confidence view.
+        /// </summary>
+        private void UpdateConfidence()
+        {
+            float confidence = (float)Confidence * 100;
+            m_ConfidenceText.text = confidence.ToString("f1");
+            m_BarProgress.localScale = new Vector3((float)Confidence, 1f, 1f);
+        }
+    }
 }

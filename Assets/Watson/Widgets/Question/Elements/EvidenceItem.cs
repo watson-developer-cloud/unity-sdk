@@ -21,34 +21,37 @@ using UnityEngine.UI;
 
 namespace IBM.Watson.Widgets.Question
 {
-	public class EvidenceItem : MonoBehaviour
-	{
-		[SerializeField]
-		private Text m_EvidenceText;
+    public class EvidenceItem : MonoBehaviour
+    {
+        [SerializeField]
+        private Text m_EvidenceText;
 
-		private string _EvidenceString;
-		public string EvidenceString
-		{
-			get { return _EvidenceString; }
-			set 
-			{
-				_EvidenceString = value;
-				UpdateEvidence();
-			}
-		}
+        private string m_EvidenceString;
+        public string EvidenceString
+        {
+            get { return m_EvidenceString; }
+            set
+            {
+                m_EvidenceString = value;
+                UpdateEvidence();
+            }
+        }
 
-		/// <summary>
-		/// Update the evidence view.
-		/// </summary>
-		private void UpdateEvidence()
-		{
-			//	TODO replace <answer> with the outline
-			if (EvidenceString != "") {
-				gameObject.SetActive (true);
-				m_EvidenceText.text = EvidenceString;
-			} else {
-				gameObject.SetActive(false);
-			}
-		}
-	}
+        /// <summary>
+        /// Update the evidence view.
+        /// </summary>
+        private void UpdateEvidence()
+        {
+            //	TODO replace <answer> with the outline
+            if (EvidenceString != "")
+            {
+                gameObject.SetActive(true);
+                m_EvidenceText.text = EvidenceString;
+            }
+            else
+            {
+                gameObject.SetActive(false);
+            }
+        }
+    }
 }
