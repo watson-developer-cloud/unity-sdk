@@ -23,12 +23,12 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace IBM.Watson.Widgets.Avatar
+namespace IBM.Watson.Widgets.Question
 {
     /// <summary>
     /// This class handles displaying the avatar chat.
     /// </summary>
-    public class AvatarChat : MonoBehaviour
+    public class Chat : MonoBehaviour
     {
         [SerializeField]
         private VerticalLayoutGroup m_ChatLayout = null;
@@ -41,31 +41,23 @@ namespace IBM.Watson.Widgets.Avatar
         [SerializeField]
         private ScrollRect m_ScrollRect = null;
 
-        private AvatarWidget m_Avatar = null;
-
         private void Start()
         {
             QuestionWidget question = GetComponentInParent<QuestionWidget>();
             if (question != null)
-                m_Avatar = question.Avatar;
-            else
-                m_Avatar = GetComponentInParent<AvatarWidget>();
-
-            if (m_Avatar != null)
             {
-                m_Avatar.QuestionEvent += OnQuestion;
-                m_Avatar.AnswerEvent += OnAnswer;
+                question.QuestionData.OnAnswer += OnAnswer;
+                question.QuestionData.OnQuestion += OnQuestion;
             }
-            else
-                Log.Warning("AvatarChat", "Unable to find AvatarWidget.");
         }
 
         private void OnDestroy()
         {
-            if (m_Avatar != null)
+            QuestionWidget question = GetComponentInParent<QuestionWidget>();
+            if (question != null)
             {
-                m_Avatar.QuestionEvent -= OnQuestion;
-                m_Avatar.AnswerEvent -= OnAnswer;
+                question.QuestionData.OnAnswer -= OnAnswer;
+                question.QuestionData.OnQuestion -= OnQuestion;
             }
         }
 

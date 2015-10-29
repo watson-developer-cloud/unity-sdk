@@ -99,7 +99,7 @@ namespace IBM.Watson.Debug
         #endregion
 
         /// <summary>
-        /// 
+        /// Register a debug info 
         /// </summary>
         /// <param name="label"></param>
         /// <param name="callback"></param>

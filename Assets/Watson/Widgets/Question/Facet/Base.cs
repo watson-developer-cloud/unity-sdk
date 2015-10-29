@@ -26,45 +26,34 @@ using IBM.Watson.Logging;
 
 namespace IBM.Watson.Widgets.Question.Facet
 {
-	public class Base: MonoBehaviour
-	{
-		//	TODO 
-		/// <summary>
-		/// Holds a reference to the Avatar from the Question Widget.
-		/// </summary>
-		/// <value>The Avatar.</value>
-		protected AvatarWidget m_Avatar { get; set; }
+    public class Base : MonoBehaviour
+    {
+        /// <summary>
+        /// Holds a reference to the Question Widget.
+        /// </summary>
+        /// <value>The m_ question.</value>
+        protected QuestionWidget m_Question { get; set; }
 
-		/// <summary>
-		/// Holds a reference to the Question Widget.
-		/// </summary>
-		/// <value>The m_ question.</value>
-		protected QuestionWidget m_Question { get; set; }
+        protected virtual void Show() { }
+        protected virtual void Hide() { }
 
-		protected virtual void Show() {}
-		protected virtual void Hide() {}
+        /// <summary>
+        /// Sets reference to Avatar and Question Widgets
+        /// </summary>
+        protected virtual void Start()
+        {
+            //	set reference to Avatar and Question Widget
+            m_Question = GetComponentInParent<QuestionWidget>();
+        }
 
-		/// <summary>
-		/// Sets reference to Avatar and Question Widgets
-		/// </summary>
-		protected virtual void Start()
-		{
-			//	set reference to Avatar and Question Widget
-			m_Question = GetComponentInParent<QuestionWidget>();
-			if (m_Question != null)
-				m_Avatar = m_Question.Avatar;
-			else
-				m_Avatar = GetComponentInParent<AvatarWidget>();
-		}
+        /// <summary>
+        /// Initialization function
+        /// </summary>
+        public virtual void Init() { }
 
-		/// <summary>
-		/// Initalization function
-		/// </summary>
-		public virtual void Init() {}
-
-		/// <summary>
-		/// Clears dynamically generated Facet Elements when a question is answered. Called from answer event handler.
-		/// </summary>
-		protected virtual void Clear() {}
-	}
+        /// <summary>
+        /// Clears dynamically generated Facet Elements when a question is answered. Called from answer event handler.
+        /// </summary>
+        protected virtual void Clear() { }
+    }
 }
