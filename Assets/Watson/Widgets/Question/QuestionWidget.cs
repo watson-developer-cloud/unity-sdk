@@ -21,6 +21,7 @@ using IBM.Watson.Data;
 using IBM.Watson.Widgets.Question;
 using UnityEngine;
 using System.Collections.Generic;
+using IBM.Watson.Utilities;
 
 namespace IBM.Watson.Widgets.Question
 {
@@ -52,6 +53,28 @@ namespace IBM.Watson.Widgets.Question
         #endregion
 
         #region Public Properties
+
+		private bool m_Focused = false;	
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="IBM.Watson.Widgets.Question.QuestionWidget"/> is focused.
+		/// </summary>
+		/// <value><c>true</c> if focused; otherwise, <c>false</c>.</value>
+		public bool Focused{
+			get{
+				return m_Focused;
+			}
+			set{
+				m_Focused = value;
+
+				if(value){
+					KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CUBE_TO_FOLD, OnFold, new KeyCode[]{Constants.KeyCodes.MODIFIER_KEY});
+				}
+				else{
+					KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_FOLD, OnFold, new KeyCode[]{Constants.KeyCodes.MODIFIER_KEY});
+				}
+			}
+		}
+
         public CubeAnimationManager Cube {
             get {
                 if ( m_CubeAnimMgr == null )
