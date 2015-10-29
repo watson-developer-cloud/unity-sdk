@@ -20,6 +20,9 @@ using UnityEngine;
 
 namespace IBM.Watson.Widgets.Question
 {
+	/// <summary>
+	/// Base class for all QuestionWidget Facets except for Chat.
+	/// </summary>
     public class Base : MonoBehaviour
     {
         /// <summary>

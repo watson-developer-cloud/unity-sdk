@@ -20,6 +20,9 @@ using UnityEngine;
 
 namespace IBM.Watson.Widgets.Question
 {
+	/// <summary>
+	/// Controls highlighting of Parts Of Speech TextItem.
+	/// </summary>
     public class POSControl : MonoBehaviour
     {
         private RectTransform m_RectTransform;

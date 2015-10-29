@@ -21,6 +21,9 @@ using UnityEngine.UI;
 
 namespace IBM.Watson.Widgets.Question
 {
+	/// <summary>
+	/// Controls Parts of Speech Text item.
+	/// </summary>
     public class POSTextItem : MonoBehaviour
     {
         [SerializeField]

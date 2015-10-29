@@ -21,6 +21,9 @@ using System.Collections.Generic;
 
 namespace IBM.Watson.Widgets.Question
 {
+	/// <summary>
+	/// Handles all Evidence Facet functionality. 
+	/// </summary>
     public class Evidence : Base
     {
         [SerializeField]

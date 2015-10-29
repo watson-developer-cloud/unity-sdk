@@ -21,6 +21,9 @@ using UnityEngine.UI;
 
 namespace IBM.Watson.Widgets.Question
 {
+	/// <summary>
+	/// Handles all Location Facet functionality.
+	/// </summary>
     public class Location : Base
     {
         [SerializeField]
@@ -37,6 +40,9 @@ namespace IBM.Watson.Widgets.Question
             }
         }
 
+		/// <summary>
+		/// Set LocationString from data.
+		/// </summary>
         override public void Init()
         {
             LocationString = m_Question.QuestionData.Location;

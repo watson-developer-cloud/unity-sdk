@@ -21,6 +21,9 @@ using UnityEngine.UI;
 
 namespace IBM.Watson.Widgets.Question
 {
+	/// <summary>
+	/// Handles all QuestionAndAndswer Facet functionality.
+	/// </summary>
     public class QuestionAndAnswer : Base
     {
         [SerializeField]
@@ -64,6 +67,9 @@ namespace IBM.Watson.Widgets.Question
             }
         }
 
+		/// <summary>
+		/// Set QuestionString, AnswerString and Confidence from data.
+		/// </summary>
         override public void Init()
         {
             QuestionString = m_Question.QuestionData.QuestionDataObject.questions[0].question.questionText;

@@ -21,6 +21,9 @@ using UnityEngine.UI;
 
 namespace IBM.Watson.Widgets.Question
 {
+	/// <summary>
+	/// Handles all Semantic Facet functionality.
+	/// </summary>
     public class Semantic : Base
     {
         [SerializeField]

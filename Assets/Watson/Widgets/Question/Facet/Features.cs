@@ -21,6 +21,9 @@ using System.Collections.Generic;
 
 namespace IBM.Watson.Widgets.Question
 {
+	/// <summary>
+	/// Handles all Features Facet functionality. 
+	/// </summary>
     public class Features : Base
     {
         [SerializeField]
