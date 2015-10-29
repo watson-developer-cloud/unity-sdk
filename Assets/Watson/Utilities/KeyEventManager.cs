@@ -129,7 +129,7 @@ namespace IBM.Watson.Utilities
         /// <param name="modifiers">Additional keys that must be down as well to fire the event.</param>
         /// <param name="callback">If provided, then the key will be unregistered only the callback matches the existing registration.</param>
         /// <returns>True is returned on success.</returns>
-        public bool UnregisterKeyEvent(KeyCode key, KeyModifiers modifiers = KeyModifiers.NONE, KeyEventDelegate callback = null)
+		public bool UnregisterKeyEvent(KeyCode key, KeyEventDelegate callback = null, KeyModifiers modifiers = KeyModifiers.NONE)
         {
             int code = ((int)key) | (((int)modifiers) << MODIFIER_SHIFT_BITS);
             if ( callback != null && m_KeyEvents.ContainsKey( code ) && m_KeyEvents[code].m_Delegate != callback )

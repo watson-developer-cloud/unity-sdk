@@ -215,10 +215,32 @@ namespace IBM.Watson.Widgets.Avatar
         void OnEnable()
         {
             EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_CHANGE_AVATAR_MOOD, OnChangeMood);
+			EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_DEBUG_COMMAND, OnDebugCommand);
+
+			DebugConsole.Instance.RegisterDebugInfo("STATE", OnStateDebugInfo);
+			DebugConsole.Instance.RegisterDebugInfo("MOOD", OnMoodDebugInfo);
+			DebugConsole.Instance.RegisterDebugInfo("CLASS", OnClassifyDebugInfo);
+			DebugConsole.Instance.RegisterDebugInfo("Q", OnQuestionDebugInfo);
+			DebugConsole.Instance.RegisterDebugInfo("A", OnAnwserDebugInfo);
+			
+			KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.QUESTION_WAKEUP, OnExampleQuestion, Constants.KeyCodes.MODIFIER_KEY);
+			KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CHANGE_MOOD, OnNextMood, Constants.KeyCodes.MODIFIER_KEY);
+
         }
         void OnDisable()
         {
-            EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_CHANGE_AVATAR_MOOD, OnChangeMood);
+			
+			EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_CHANGE_AVATAR_MOOD, OnChangeMood);
+			EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_DEBUG_COMMAND, OnDebugCommand);
+
+			DebugConsole.Instance.UnregisterDebugInfo("STATE", OnStateDebugInfo);
+			DebugConsole.Instance.UnregisterDebugInfo("MOOD", OnMoodDebugInfo);
+			DebugConsole.Instance.UnregisterDebugInfo("CLASS", OnClassifyDebugInfo);
+			DebugConsole.Instance.UnregisterDebugInfo("Q", OnQuestionDebugInfo);
+			DebugConsole.Instance.UnregisterDebugInfo("A", OnAnwserDebugInfo);
+
+			KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.QUESTION_WAKEUP, OnExampleQuestion, Constants.KeyCodes.MODIFIER_KEY);
+			KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CHANGE_MOOD, OnNextMood, Constants.KeyCodes.MODIFIER_KEY);
         }
 
         /// <exclude />
@@ -228,15 +250,6 @@ namespace IBM.Watson.Widgets.Avatar
 
             Mood = MoodType.SLEEPING;
             State = AvatarState.CONNECTING;
-
-            DebugConsole.Instance.RegisterDebugInfo("STATE", OnStateDebugInfo);
-            DebugConsole.Instance.RegisterDebugInfo("MOOD", OnMoodDebugInfo);
-            DebugConsole.Instance.RegisterDebugInfo("CLASS", OnClassifyDebugInfo);
-            DebugConsole.Instance.RegisterDebugInfo("Q", OnQuestionDebugInfo);
-            DebugConsole.Instance.RegisterDebugInfo("A", OnAnwserDebugInfo);
-
-            KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CHANGE_MOOD, OnNextMood);
-            EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_DEBUG_COMMAND, OnDebugCommand);
 
             StartAvatar();
         }
@@ -303,6 +316,11 @@ namespace IBM.Watson.Widgets.Avatar
         {
             Mood = (MoodType)((((int)Mood) + 1) % Enum.GetValues(typeof(MoodType)).Length);
         }
+
+		private void OnExampleQuestion(){
+			//TODO
+			InstatiateQuestionWidget ();
+		}
 
         private void StartAvatar()
         {
@@ -410,10 +428,7 @@ namespace IBM.Watson.Widgets.Avatar
                 {
                     Mood = MoodType.IDLE;
 
-                    if (m_FocusQuestion == null)
-                        InstatiateQuestionWidget();
-                    else
-                        m_FocusQuestion.gameObject.SetActive(true);
+					InstatiateQuestionWidget();
 
                     // start a conversation with the dialog..
                     if (!string.IsNullOrEmpty(m_DialogId))
@@ -553,13 +568,18 @@ namespace IBM.Watson.Widgets.Avatar
 
         private void InstatiateQuestionWidget()
         {
-            if (m_FocusQuestion == null && m_QuestionPrefab != null)
+			if (m_FocusQuestion != null) {
+				m_FocusQuestion.Focused = false;	//lost focus and sent out the scene!
+			}
+
+			if (m_QuestionPrefab != null)	//m_FocusQuestion == null && 
             {
                 GameObject questionObject = GameObject.Instantiate(m_QuestionPrefab);
                 m_FocusQuestion = questionObject.GetComponentInChildren<QuestionWidget>();
                 if (m_FocusQuestion == null)
                     throw new WatsonException("Question prefab is missing QuestionWidget");
                 m_FocusQuestion.QuestionData = this;
+				m_FocusQuestion.Focused = true;	//currently our focus object
             }
         }
 

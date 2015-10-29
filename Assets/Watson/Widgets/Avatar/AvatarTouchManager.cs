@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using TouchScript.Gestures;
 using IBM.Watson.Logging;
@@ -82,7 +82,7 @@ public class AvatarTouchManager: MonoBehaviour
         if (Physics.Raycast(rayForTab, out hit, Mathf.Infinity, layerForQuestionWidget))
         {
             //Touch on side
-            switch (CubeAnimationManager.Instance.currentAnimationState)
+            switch (CubeAnimationManager.Instance.AnimationState)
             {
                 case CubeAnimationManager.CubeAnimationState.NOT_PRESENT:
                     break;
@@ -114,9 +114,9 @@ public class AvatarTouchManager: MonoBehaviour
         }
         else
         {
-            Log.Status("AvatarTouchManager", "Touch-outside current state: " + CubeAnimationManager.Instance.currentAnimationState);
+            Log.Status("AvatarTouchManager", "Touch-outside current state: " + CubeAnimationManager.Instance.AnimationState);
             //Touch out-side
-            switch (CubeAnimationManager.Instance.currentAnimationState)
+            switch (CubeAnimationManager.Instance.AnimationState)
             {
                 case CubeAnimationManager.CubeAnimationState.NOT_PRESENT:
                     break;
@@ -210,7 +210,7 @@ public class AvatarTouchManager: MonoBehaviour
 
         if (isActive && CubeAnimationManager.Instance != null)
         {
-            if (CubeAnimationManager.Instance.currentAnimationState == CubeAnimationManager.CubeAnimationState.IDLE_AS_FOLDED)
+            if (CubeAnimationManager.Instance.AnimationState == CubeAnimationManager.CubeAnimationState.IDLE_AS_FOLDED)
             {
                 //For Rotating the cube
                 targetCubeRotation = Quaternion.Lerp(targetCubeRotation, Quaternion.identity, Time.deltaTime * speedForCubeRotationAnimation);

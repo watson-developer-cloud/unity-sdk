@@ -11,7 +11,7 @@ namespace IBM.Watson.Utilities
         public static class KeyCodes
         {
 			//Debug Mode Key Pressed to use the keys given below
-			public const KeyCode MODIFIER_KEY = KeyCode.LeftControl;
+			public const KeyModifiers MODIFIER_KEY = KeyModifiers.CONTROL;
 
             //Debug Mode Keyboard keycodes
             public const KeyCode CHANGE_QUALITY = KeyCode.Q;
@@ -26,6 +26,8 @@ namespace IBM.Watson.Utilities
 
 			//Application - General
 			public const KeyCode APPLICATION_PAUSE = KeyCode.Space;
+
+			public const KeyCode QUESTION_WAKEUP = KeyCode.W;
         }
 
         /// <summary>
