@@ -65,7 +65,7 @@ namespace IBM.Watson.Widgets.Question
         override protected void Start()
         {
             base.Start();
-            //	TODO parse tree from hiearchy
+            //	TODO parse tree from hierarchy
             m_PositionList.Add(new Vector3(-583f, 188f, 0f));
             m_PositionList.Add(new Vector3(-408f, 64f, 0f));
             m_PositionList.Add(new Vector3(-184f, -49f, 0f));

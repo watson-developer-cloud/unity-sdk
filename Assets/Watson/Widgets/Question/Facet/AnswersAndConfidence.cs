@@ -39,8 +39,16 @@ namespace IBM.Watson.Widgets.Question
 
             for (int i = 0; i < m_AnswerConfidenceBars.Length; i++)
             {
-                m_AnswerConfidenceBars[i].Answer = m_Question.QuestionData.AnswerDataObject.answers[i].answerText;
-                m_AnswerConfidenceBars[i].Confidence = m_Question.QuestionData.AnswerDataObject.answers[i].confidence;
+                if ( i < m_Question.QuestionData.AnswerDataObject.answers.Length )
+                {
+                    m_AnswerConfidenceBars[i].Answer = m_Question.QuestionData.AnswerDataObject.answers[i].answerText;
+                    m_AnswerConfidenceBars[i].Confidence = m_Question.QuestionData.AnswerDataObject.answers[i].confidence;
+                }
+                else
+                {
+                    m_AnswerConfidenceBars[i].Answer = string.Empty;
+                    m_AnswerConfidenceBars[i].Confidence = 0.0f;
+                }
             }
         }
     }
