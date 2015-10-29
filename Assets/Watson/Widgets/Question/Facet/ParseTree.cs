@@ -17,13 +17,9 @@
 */
 
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.UI;
-using IBM.Watson.Widgets.Question.Facet.FacetElement;
-using IBM.Watson.Logging;
 
-namespace IBM.Watson.Widgets.Question.Facet
+namespace IBM.Watson.Widgets.Question
 {
 	public class ParseTree : Base
 		{

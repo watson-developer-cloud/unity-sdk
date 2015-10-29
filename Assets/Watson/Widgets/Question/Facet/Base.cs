@@ -17,14 +17,8 @@
 */
 
 using UnityEngine;
-using System.Collections;
-using IBM.Watson.Widgets;
-using IBM.Watson.Widgets.Avatar;
-using IBM.Watson.Services.v1;
-using IBM.Watson.Data;
-using IBM.Watson.Logging;
 
-namespace IBM.Watson.Widgets.Question.Facet
+namespace IBM.Watson.Widgets.Question
 {
     public class Base : MonoBehaviour
     {

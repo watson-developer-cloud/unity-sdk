@@ -15976,7 +15976,7 @@ MonoBehaviour:
   m_QuestionPrefab: {fileID: 11426894, guid: efa0e38797098c04e9e61f5313d5b2ef, type: 2}
   m_AnswerPrefab: {fileID: 11445952, guid: 5459844d35e8f524e980e42273268dca, type: 2}
   m_HistoryCount: 50
-  m_ScrollRect: {fileID: 0}
+  m_ScrollRect: {fileID: 11459032}
 --- !u!114 &11426020
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -21538,7 +21538,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 6.10351562e-05}
+  m_AnchoredPosition: {x: 0, y: 299.999878}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!224 &22437190

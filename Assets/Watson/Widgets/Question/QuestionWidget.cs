@@ -17,8 +17,8 @@
 */
 
 using IBM.Watson.Logging;
-using IBM.Watson.Widgets.Question.Facet;
 using IBM.Watson.Data;
+using IBM.Watson.Widgets.Question;
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -34,7 +34,7 @@ namespace IBM.Watson.Widgets
         private CubeAnimationManager m_CubeAnimMgr = null;
 
 		private AnswersAndConfidence m_AnswersAndConfidence;
-		private Question.Facet.Evidence m_Evidence;
+		private Question.Evidence m_Evidence;
 		private Semantic m_Semantic;
 		private Features m_Features;
 		private Location m_Location;
@@ -126,7 +126,7 @@ namespace IBM.Watson.Widgets
         protected void Awake()
         {
 			m_AnswersAndConfidence = gameObject.GetComponent<AnswersAndConfidence>();
-			m_Evidence = gameObject.GetComponent<IBM.Watson.Widgets.Question.Facet.Evidence>();
+			m_Evidence = gameObject.GetComponent<Question.Evidence>();
 			m_Semantic = gameObject.GetComponent<Semantic>();
 			m_Features = gameObject.GetComponent<Features>();
 			m_Location = gameObject.GetComponent<Location>();

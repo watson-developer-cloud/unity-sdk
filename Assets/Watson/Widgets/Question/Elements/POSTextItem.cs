@@ -17,10 +17,9 @@
 */
 
 using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
 
-namespace IBM.Watson.Widgets.Question.Facet.FacetElement
+namespace IBM.Watson.Widgets.Question
 {
 	public class POSTextItem : MonoBehaviour
 		{

@@ -17,10 +17,8 @@
 */
 
 using UnityEngine;
-using System.Collections;
-using IBM.Watson.Widgets.Question.Facet.FacetElement;
 
-namespace IBM.Watson.Widgets.Question.Facet
+namespace IBM.Watson.Widgets.Question
 {
 	public class AnswersAndConfidence : Base 
 	{
