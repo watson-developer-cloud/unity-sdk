@@ -18,6 +18,7 @@
 
 using UnityEngine;
 using System.Collections.Generic;
+using IBM.Watson.Logging;
 
 namespace IBM.Watson.Widgets.Question
 {
@@ -55,33 +56,33 @@ namespace IBM.Watson.Widgets.Question
                 {
                     m_WordIndex = value;
                 }
+
                 UpdateHighlightedWord();
             }
         }
 
-        /// <summary>
-        /// Set hard coded positions.
-        /// </summary>
-        override protected void Start()
-        {
-            base.Start();
-            //	TODO parse tree from hierarchy
-            m_PositionList.Add(new Vector3(-583f, 188f, 0f));
-            m_PositionList.Add(new Vector3(-408f, 64f, 0f));
-            m_PositionList.Add(new Vector3(-184f, -49f, 0f));
-            m_PositionList.Add(new Vector3(27f, -168f, 0f));
-            m_PositionList.Add(new Vector3(259f, -301f, 0f));
-            m_PositionList.Add(new Vector3(469f, -424f, 0f));
-            m_PositionList.Add(new Vector3(-638f, -31f, 0f));
-            m_PositionList.Add(new Vector3(-417f, -144f, 0f));
-            m_PositionList.Add(new Vector3(-144f, -282f, 0f));
-            m_PositionList.Add(new Vector3(109f, -397f, 0f));
-            m_PositionList.Add(new Vector3(348f, -560f, 0f));
-            m_PositionList.Add(new Vector3(-643f, -268f, 0f));
-            m_PositionList.Add(new Vector3(-346f, -393f, 0f));
-            m_PositionList.Add(new Vector3(-115f, -514f, 0f));
-            m_PositionList.Add(new Vector3(91f, -641f, 0f));
-        }
+		/// <summary>
+		/// Set hard coded positions.
+		/// </summary>
+		void Awake()
+		{
+			//	TODO parse tree from hierarchy
+			m_PositionList.Add(new Vector3(-583f, 188f, 0f));
+			m_PositionList.Add(new Vector3(-408f, 64f, 0f));
+			m_PositionList.Add(new Vector3(-184f, -49f, 0f));
+			m_PositionList.Add(new Vector3(27f, -168f, 0f));
+			m_PositionList.Add(new Vector3(259f, -301f, 0f));
+			m_PositionList.Add(new Vector3(469f, -424f, 0f));
+			m_PositionList.Add(new Vector3(-638f, -31f, 0f));
+			m_PositionList.Add(new Vector3(-417f, -144f, 0f));
+			m_PositionList.Add(new Vector3(-144f, -282f, 0f));
+			m_PositionList.Add(new Vector3(109f, -397f, 0f));
+			m_PositionList.Add(new Vector3(348f, -560f, 0f));
+			m_PositionList.Add(new Vector3(-643f, -268f, 0f));
+			m_PositionList.Add(new Vector3(-346f, -393f, 0f));
+			m_PositionList.Add(new Vector3(-115f, -514f, 0f));
+			m_PositionList.Add(new Vector3(91f, -641f, 0f));
+		}
 
         /// <summary>
         /// Generates Parse tree on Initialization of data.
@@ -98,13 +99,14 @@ namespace IBM.Watson.Widgets.Question
         /// </summary>
         private void GenerateParseTree()
         {
-            // TODO: Need to destroy any previous tree!
-
             for (int i = 0; i < m_Question.QuestionData.ParseDataObject.Words.Length; i++)
             {
+				Log.Debug("Parse Tree", "i: " + i);
+				Log.Debug("Parse Tree", "m_PositionList.Count: " + m_PositionList.Count);
                 GameObject wordGameObject = Instantiate(m_ParseTreeTextItemPrefab) as GameObject;
                 RectTransform wordRectTransform = wordGameObject.GetComponent<RectTransform>();
                 wordRectTransform.SetParent(m_ParseCanvasRectTransform, false);
+
                 if (i < m_PositionList.Count)
                 {
                     wordRectTransform.localPosition = m_PositionList[i];
@@ -112,7 +114,7 @@ namespace IBM.Watson.Widgets.Question
                 else
                 {
                     //	TODO fix this
-                    wordRectTransform.localPosition = new Vector3(5000f, 5000, 5000f);
+                    wordRectTransform.localPosition = new Vector3(5000f, 5000, 0f);
                 }
                 ParseTreeTextItem word = wordGameObject.GetComponent<ParseTreeTextItem>();
                 word.ParseTreeWord = m_Question.QuestionData.ParseDataObject.Words[i].Word;
