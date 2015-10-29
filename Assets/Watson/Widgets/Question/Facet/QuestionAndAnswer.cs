@@ -75,7 +75,7 @@ namespace IBM.Watson.Widgets.Question
 			base.Init ();
 
             QuestionString = m_Question.QuestionData.QuestionDataObject.questions[0].question.questionText;
-			AnswerString = m_Question.QuestionData.AnswerDataObject.answers[0].answerText;
+			AnswerString = m_Question.QuestionData.AnswerDataObject.answers[0].answerText + Variants();
             Confidence = m_Question.QuestionData.AnswerDataObject.answers[0].confidence;
         }
 
@@ -103,5 +103,32 @@ namespace IBM.Watson.Widgets.Question
             float confidence = (float)Confidence * 100;
             m_ConfidenceText.text = confidence.ToString("f1");
         }
+
+		/// <summary>
+		/// Concantinates 
+		/// </summary>
+		private string Variants()
+		{
+			string variantsString = "; ";
+			int variantLength = m_Question.QuestionData.AnswerDataObject.answers [0].variants.Length;
+
+			if (variantLength == 0)
+				return ".";
+
+			for (int i = 0; i < variantLength; i++)
+			{
+				string variant = m_Question.QuestionData.AnswerDataObject.answers[0].variants[i].text;
+				variantsString += variant;
+
+				if(i < variantLength - 1)
+				{
+					variantsString += ", ";
+				} else {
+					variantsString += ".";
+				}
+			}
+
+			return variantsString;
+		}
     }
 }
