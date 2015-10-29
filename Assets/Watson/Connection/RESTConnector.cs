@@ -374,9 +374,14 @@ namespace IBM.Watson.Connection
                 else
                 {
 #if UNITY_EDITOR
-                    DeleteRequest deleteReq = new DeleteRequest( url, req.Headers );
+                    DeleteRequest deleteReq = new DeleteRequest();
+                    deleteReq.Send( url, req.Headers );
                     while(! deleteReq.IsComplete )
+                    {
+                        if ( Time.time > (startTime + Config.Instance.TimeOut) )
+                            break;
                         yield return null;
+                    }
 
                     resp.Success = deleteReq.Success;
 #else
@@ -406,8 +411,11 @@ namespace IBM.Watson.Connection
             public bool IsComplete { get; set; }
             public bool Success { get; set; }
 
-            public DeleteRequest( string url, Dictionary<string,string> headers )
+            public bool Send( string url, Dictionary<string,string> headers )
             {
+                if ( m_Thread != null && m_Thread.IsAlive )
+                    return false;
+
                 URL = url;
                 Headers = new Dictionary<string, string>();
                 foreach( var kp in headers )
@@ -415,12 +423,16 @@ namespace IBM.Watson.Connection
                 
                 m_Thread = new Thread( ProcessRequest );
                 m_Thread.Start();
+                return true;
             }
 
             private Thread m_Thread = null;
 
             private void ProcessRequest()
             {
+                // This fixes the exception thrown by self-signed certificates.
+                ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(delegate { return true; });
+
                 WebRequest deleteReq = WebRequest.Create( URL );
                 foreach( var kp in Headers )
                     deleteReq.Headers.Add( kp.Key, kp.Value );
