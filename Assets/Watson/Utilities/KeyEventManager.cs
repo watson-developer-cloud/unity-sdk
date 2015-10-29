@@ -38,14 +38,11 @@ namespace IBM.Watson.Utilities
     /// </summary>
     public class KeyEventManager : MonoBehaviour
     {
-        #region Public Types
-        /// <summary>
-        /// How many bits to shift modifier up/down when mapped into the dictionary. This may need to be adjusted
-        /// if KeyCOde
-        /// </summary>
+        /// How many bits to shift modifier up/down when mapped into the dictionary.
         private int MODIFIER_SHIFT_BITS = 10;
         private int KEYCODE_MASK = (1 << 10) - 1;
 
+        #region Public Types
         /// <summary>
         /// Key press delegate callback.
         /// </summary>

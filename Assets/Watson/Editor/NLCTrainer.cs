@@ -117,11 +117,11 @@ namespace IBM.Watson.Editor
                 for (int i = 0; i < m_Classifiers.classifiers.Length; ++i)
                 {
                     Classifier cl = m_Classifiers.classifiers[i];
-                    EditorGUI.BeginDisabledGroup(true);
+                    //EditorGUI.BeginDisabledGroup(true);
                     EditorGUILayout.TextField("Name", cl.name);
                     EditorGUILayout.TextField("ID", cl.classifier_id);
                     EditorGUILayout.TextField("Status", cl.status);
-                    EditorGUI.EndDisabledGroup();
+                    //EditorGUI.EndDisabledGroup();
 
                     if (GUILayout.Button("Delete"))
                     {
