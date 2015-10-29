@@ -20,12 +20,12 @@
 
 using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
-using IBM.Watson.Avatar;
 using IBM.Watson.Data;
 using IBM.Watson.Services.v1;
 using UnityEngine;
-using UnityEngine.UI;
 using System;
+using IBM.Watson.Debug;
+using IBM.Watson.Widgets.Question;
 
 #pragma warning disable 414
 
@@ -38,7 +38,7 @@ namespace IBM.Watson.Widgets.Avatar
     [RequireComponent(typeof(MicrophoneWidget))]
     [RequireComponent(typeof(SpeechToTextWidget))]
     [RequireComponent(typeof(TextToSpeechWidget))]
-    public class AvatarWidget : Widget
+    public class AvatarWidget : Widget, IQuestionData
     {
         #region Public Types
         /// <summary>
@@ -49,11 +49,11 @@ namespace IBM.Watson.Widgets.Avatar
             /// <summary>
             /// Connecting - initial state
             /// </summary>
-            CONNECTING, 
+            CONNECTING,
             /// <summary>
             /// Connected - Listening continuously to understand the input
             /// </summary>
-            LISTENING, 
+            LISTENING,
             /// <summary>
             /// Connected - After some input it is the time for thinking the understand the input
             /// </summary>
@@ -68,7 +68,7 @@ namespace IBM.Watson.Widgets.Avatar
             /// </summary>
             ERROR
         };
-        
+
         /// <summary>
         /// Avatar Mood which effects various things in the application like Animation speed, coloring etc.
         /// </summary>
@@ -77,7 +77,7 @@ namespace IBM.Watson.Widgets.Avatar
             /// <summary>
 			/// Connecting / Disconnected - Waiting to be waken-up ( initial state )
 			/// </summary>
-            SLEEPING = 0,          
+            SLEEPING = 0,
             /// <summary>
             /// Connected - After wake up - waits a mood change
             /// </summary>
@@ -97,7 +97,7 @@ namespace IBM.Watson.Widgets.Avatar
             /// <summary>
             /// Connected - After wake up - set shy mood
             /// </summary>
-            SHY                 
+            SHY
         }
 
         #endregion
@@ -109,21 +109,25 @@ namespace IBM.Watson.Widgets.Avatar
 
         private AvatarState m_State = AvatarState.CONNECTING;
         private ClassifyResult m_ClassifyResult = null;
-        
+
         private SpeechResultList m_SpeechResult = null;
         private string m_SpeechText = null;
         private Questions m_QuestionResult = null;
-        private GameObject m_FocusQuestion = null;
-                
+        private Answers m_AnswerResult = null;
+        private ParseData m_ParseData = null;
+        private QuestionWidget m_FocusQuestion = null;
+        private bool m_GettingAnswers = false;
+        private bool m_GettingParse = false;
+
         [SerializeField]
         private TextToSpeech.VoiceType m_VoiceType = TextToSpeech.VoiceType.en_US_Michael;
         [SerializeField]
         private string m_ClassifierId = "5E00F7x2-nlc-540";     // default to XRAY classifier
         [SerializeField]
         private float m_SoundVisualizerModifier = 20.0f;
-        [SerializeField,Tooltip("What is the minimum word confidence needed to send onto the NLC?")]
-        private double m_MinWordConfidence = 0.9; 
-        [SerializeField,Tooltip("Recognized speech below this confidence is just ignored.")]
+        [SerializeField, Tooltip("What is the minimum word confidence needed to send onto the NLC?")]
+        private double m_MinWordConfidence = 0.9;
+        [SerializeField, Tooltip("Recognized speech below this confidence is just ignored.")]
         private double m_IgnoreWordConfidence = 0.5;
         [SerializeField]
         private string m_Hello = "Hello";
@@ -139,41 +143,18 @@ namespace IBM.Watson.Widgets.Avatar
         private Input m_levelInput = new Input("Level", typeof(FloatData), "OnLevelInput");
         [SerializeField]
         private Output m_TextOutput = new Output(typeof(TextData));
-        [SerializeField, Tooltip("Recognized speech is put into this Text UI field.")]
-        private Text m_RecognizeText = null;
-        [SerializeField]
-        private Text m_QuestionText = null;
-        [SerializeField, Tooltip("The results of the NLC is placed in this text field.")]
-        private Text m_ClassifyText = null;
-        [SerializeField]
-        private Text m_AnswerText = null;
-        [SerializeField]
-        private Text m_StateText = null;
         [SerializeField]
         private GameObject m_QuestionPrefab = null;
         [SerializeField]
         private string m_DialogName = "xray";
-        private string m_DialogId = null;    
+        private string m_DialogId = null;
         private int m_DialogClientId = 0;
         private int m_DialogConversationId = 0;
-        [SerializeField,Tooltip("If disconnected, how many seconds until we try to restart the avatar.")]
+        [SerializeField, Tooltip("If disconnected, how many seconds until we try to restart the avatar.")]
         private float m_RestartInterval = 30.0f;
         #endregion
 
-        #region Public Types
-        public delegate void OnQuestion( string question );
-        public delegate void OnAnswer( string answer );
-        #endregion
-
         #region Public Properties
-        /// <summary>
-        /// This event is invoked each time a question is asked.
-        /// </summary>
-        public OnQuestion QuestionEvent { get; set; }
-        /// <summary>
-        /// This event is invoked each time a answer is given.
-        /// </summary>
-        public OnAnswer AnswerEvent { get; set; }
         /// <summary>
         /// Access the contained ITM service object.
         /// </summary>
@@ -190,18 +171,18 @@ namespace IBM.Watson.Widgets.Avatar
             get { return m_State; }
             private set
             {
-                if ( m_State != value )
+                if (m_State != value)
                 {
                     m_State = value;
-				    EventManager.Instance.SendEvent(Constants.Event.ON_CHANGE_AVATAR_STATE_FINISH, this, value);
+                    EventManager.Instance.SendEvent(Constants.Event.ON_CHANGE_AVATAR_STATE_FINISH, this, value);
 
                     // if we went into an error state, automatically try to reconnect after a timeout..
-                    if ( m_State == AvatarState.ERROR )
-                        Invoke( "StartAvatar", m_RestartInterval );
+                    if (m_State == AvatarState.ERROR)
+                        Invoke("StartAvatar", m_RestartInterval);
                 }
             }
         }
-        
+
 
         #endregion
 
@@ -245,38 +226,107 @@ namespace IBM.Watson.Widgets.Avatar
         {
             base.Start();
 
-			Mood = MoodType.SLEEPING;
-			State = AvatarState.CONNECTING;
+            Mood = MoodType.SLEEPING;
+            State = AvatarState.CONNECTING;
+
+            DebugConsole.Instance.RegisterDebugInfo("STATE", OnStateDebugInfo);
+            DebugConsole.Instance.RegisterDebugInfo("MOOD", OnMoodDebugInfo);
+            DebugConsole.Instance.RegisterDebugInfo("CLASS", OnClassifyDebugInfo);
+            DebugConsole.Instance.RegisterDebugInfo("Q", OnQuestionDebugInfo);
+            DebugConsole.Instance.RegisterDebugInfo("A", OnAnwserDebugInfo);
+
+            KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CHANGE_MOOD, OnNextMood);
+            EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_DEBUG_COMMAND, OnDebugCommand);
 
             StartAvatar();
         }
 
+        private void OnDebugCommand(object[] args)
+        {
+            if (args.Length > 0 && args[0] is string)
+            {
+                string text = args[0] as string;
+                if (!string.IsNullOrEmpty(text))
+                {
+                    State = AvatarState.THINKING;
+                    m_SpeechText = text;
+
+                    if (!m_NLC.Classify(m_ClassifierId, m_SpeechText, OnSpeechClassified))
+                        Log.Error("AvatarWidget", "Failed to send {0} to NLC.", m_SpeechText);
+                }
+            }
+        }
+
+        private string OnStateDebugInfo()
+        {
+            return State.ToString();
+        }
+        private string OnMoodDebugInfo()
+        {
+            return Mood.ToString();
+        }
+        private string OnClassifyDebugInfo()
+        {
+            if (m_ClassifyResult != null)
+            {
+                return string.Format("{0} ({1:0.00})",
+                    m_ClassifyResult.top_class,
+                    m_ClassifyResult.topConfidence);
+            }
+            return string.Empty;
+        }
+        private string OnQuestionDebugInfo()
+        {
+            if (m_QuestionResult != null && m_QuestionResult.HasQuestion())
+            {
+                return string.Format("{0} ({1:0.00})",
+                    m_QuestionResult.questions[0].question.questionText,
+                    m_QuestionResult.questions[0].topConfidence);
+            }
+            return string.Empty;
+        }
+        private string OnAnwserDebugInfo()
+        {
+            if (m_AnswerResult != null && m_AnswerResult.HasAnswer())
+            {
+                return string.Format("{0} ({1:0.00})",
+                    m_AnswerResult.answers[0].answerText,
+                    m_AnswerResult.answers[0].confidence);
+            }
+            return string.Empty;
+        }
+
+        private void OnNextMood()
+        {
+            Mood = (MoodType)((((int)Mood) + 1) % Enum.GetValues(typeof(MoodType)).Length);
+        }
+
         private void StartAvatar()
         {
-            Log.Status( "AvatarWidget", "Starting avatar." );
+            Log.Status("AvatarWidget", "Starting avatar.");
 
             State = AvatarState.CONNECTING;
             // login to ITM, then select the pipeline
             m_ITM.Login(OnItmLogin);
             // Find our dialog ID
-            if (! string.IsNullOrEmpty( m_DialogName ) )
-                m_Dialog.GetDialogs( OnFindDialog );
+            if (!string.IsNullOrEmpty(m_DialogName))
+                m_Dialog.GetDialogs(OnFindDialog);
         }
 
-        private void OnFindDialog( Dialogs dialogs )
+        private void OnFindDialog(Dialogs dialogs)
         {
-            if ( dialogs != null )
+            if (dialogs != null)
             {
-                foreach( var dialog in dialogs.dialogs )
+                foreach (var dialog in dialogs.dialogs)
                 {
-                    if ( dialog.name == m_DialogName )
+                    if (dialog.name == m_DialogName)
                         m_DialogId = dialog.dialog_id;
                 }
             }
 
-            if (string.IsNullOrEmpty( m_DialogId ) )
+            if (string.IsNullOrEmpty(m_DialogId))
             {
-                Log.Error( "AvatarWidget", "Failed to find dialog ID for {0}", m_DialogName );
+                Log.Error("AvatarWidget", "Failed to find dialog ID for {0}", m_DialogName);
                 State = AvatarState.ERROR;
             }
         }
@@ -289,13 +339,13 @@ namespace IBM.Watson.Widgets.Avatar
                 State = AvatarState.ERROR;
             }
             else
-                m_ITM.GetPipeline(m_Pipeline, true, OnPipeline );
+                m_ITM.GetPipeline(m_Pipeline, true, OnPipeline);
         }
-        private void OnPipeline( Pipeline pipeline )
+        private void OnPipeline(Pipeline pipeline)
         {
-            if ( pipeline == null )
+            if (pipeline == null)
             {
-                Log.Equals( "AvatarWidget", "Failed to select pipeline." );
+                Log.Equals("AvatarWidget", "Failed to select pipeline.");
                 State = AvatarState.ERROR;
             }
             else
@@ -316,29 +366,22 @@ namespace IBM.Watson.Widgets.Avatar
         private void OnRecognize(Data data)
         {
             SpeechResultList result = ((SpeechToTextData)data).Results;
-            if (State == AvatarState.LISTENING )
+            if (State == AvatarState.LISTENING)
             {
-                if (result != null && result.Results.Length > 0
-                    && result.Results[0].Final
-                    && result.Results[0].Alternatives.Length > 0 )
+                m_SpeechResult = result;
+
+                if (m_SpeechResult.HasFinalResult())
                 {
                     string text = result.Results[0].Alternatives[0].Transcript;
                     double textConfidence = result.Results[0].Alternatives[0].Confidence;
 
-                    if (m_RecognizeText != null)
-                    {
-                        m_RecognizeText.text = string.Format( "R: {0} ({1})", text, textConfidence );
-                        m_RecognizeText.color = textConfidence > m_MinWordConfidence ? Color.white : Color.red;
-                    }
+                    Log.Debug("AvatarWidget", "OnRecognize: {0} ({1:0.00})", text, textConfidence);
+                    EventManager.Instance.SendEvent(Constants.Event.ON_DEBUG_MESSAGE, string.Format("{0} ({1:0.00})", text, textConfidence));
 
-                    Log.Debug( "AvatarWidget", "OnRecognize: {0} ({1})", text, textConfidence );
-
-                    if ( textConfidence > m_MinWordConfidence )
+                    if (textConfidence > m_MinWordConfidence)
                     {
                         State = AvatarState.THINKING;
-                        m_SpeechResult = result;
                         m_SpeechText = text;
-
 
                         if (!m_NLC.Classify(m_ClassifierId, m_SpeechText, OnSpeechClassified))
                             Log.Error("AvatarWidget", "Failed to send {0} to NLC.", m_SpeechText);
@@ -346,8 +389,8 @@ namespace IBM.Watson.Widgets.Avatar
                     else
                     {
                         State = AvatarState.LISTENING;
-                        if ( textConfidence > m_IgnoreWordConfidence )
-                            m_TextOutput.SendData( new TextData(m_RecognizeFailure) );
+                        if (textConfidence > m_IgnoreWordConfidence && Mood != MoodType.SLEEPING)
+                            m_TextOutput.SendData(new TextData(m_RecognizeFailure));
                     }
                 }
             }
@@ -358,157 +401,163 @@ namespace IBM.Watson.Widgets.Avatar
             m_ClassifyResult = classify;
 
             Log.Debug("Avatar", "TopClass: {0}", m_ClassifyResult.top_class);
-            if (m_ClassifyText != null)
-                m_ClassifyText.text = "C: " + m_ClassifyResult.top_class;
-
-            if ( Mood == MoodType.SLEEPING )
+            if (Mood == MoodType.SLEEPING)
             {
-                if ( m_ClassifyResult.top_class == "wakeup" )
+                if (m_ClassifyResult.top_class == "wakeup")
                 {
                     Mood = MoodType.IDLE;
-                    if (m_FocusQuestion == null )
-                    {
-                        m_FocusQuestion = GameObject.Instantiate(m_QuestionPrefab);
-                        m_FocusQuestion.GetComponentInChildren<QuestionWidget>().Avatar = this;
-                    }
+
+                    if (m_FocusQuestion == null)
+                        InstatiateQuestionWidget();
                     else
-                        m_FocusQuestion.SetActive( true );
+                        m_FocusQuestion.gameObject.SetActive(true);
 
                     // start a conversation with the dialog..
-                    if (! string.IsNullOrEmpty( m_DialogId ) )
-                        m_Dialog.Converse( m_DialogId, m_SpeechText, OnDialog, 0, m_DialogClientId );                      
+                    if (!string.IsNullOrEmpty(m_DialogId))
+                        m_Dialog.Converse(m_DialogId, m_SpeechText, OnDialog, 0, m_DialogClientId);
                     else
-                        m_TextOutput.SendData( new TextData( m_Hello ) );
+                        m_TextOutput.SendData(new TextData(m_Hello));
                 }
                 State = AvatarState.LISTENING;
             }
             else
             {
-                if ( m_ClassifyResult.top_class == "dialog" )
+                if (m_ClassifyResult.top_class == "dialog")
                 {
-                    if (! string.IsNullOrEmpty( m_DialogId ) )
+                    if (!string.IsNullOrEmpty(m_DialogId))
                     {
-                        m_Dialog.Converse( m_DialogId, m_SpeechText, OnDialog, 
-                            m_DialogConversationId, m_DialogClientId );
+                        m_Dialog.Converse(m_DialogId, m_SpeechText, OnDialog,
+                            m_DialogConversationId, m_DialogClientId);
                     }
 
                     State = AvatarState.LISTENING;
                 }
-                else if ( m_ClassifyResult.top_class == "sleep" )
+                else if (m_ClassifyResult.top_class == "sleep")
                 {
-                    m_TextOutput.SendData( new TextData( m_Goodbye ) );
-                    if ( m_FocusQuestion != null )
-                        m_FocusQuestion.SetActive( false );
+                    m_TextOutput.SendData(new TextData(m_Goodbye));
+                    if (m_FocusQuestion != null)
+                        m_FocusQuestion.gameObject.SetActive(false);
 
                     Mood = MoodType.SLEEPING;
                     State = AvatarState.LISTENING;
                     m_DialogConversationId = 0;
                     m_DialogClientId = 0;
                 }
-                else if ( m_ClassifyResult.top_class == "question" || m_ClassifyResult.top_class == "watson-thunder" )
+                else if (m_ClassifyResult.top_class == "question" || m_ClassifyResult.top_class == "watson-thunder")
                 {
-
                     if (m_FocusQuestion != null)
-                        m_FocusQuestion.GetComponent<QuestionWidget>().OnFold(null);
+                        m_FocusQuestion.OnFold();
 
-                    if (!m_ITM.AskQuestion(m_SpeechResult.Results[0].Alternatives[0].Transcript, OnAskQuestion))
-                        Log.Error("AvatarWidget", "Failed to send question to ITM." );
+                    if (!m_ITM.AskQuestion(m_SpeechText, OnAskQuestion))
+                        Log.Error("AvatarWidget", "Failed to send question to ITM.");
                 }
                 else
                 {
                     State = AvatarState.LISTENING;
+
                     // send event to question then..
                     if (m_FocusQuestion != null)
-                        m_FocusQuestion.GetComponent<QuestionWidget>().EventManager.SendEvent(m_ClassifyResult.top_class);
+                        m_FocusQuestion.ExecuteAction(m_ClassifyResult.top_class);
                 }
             }
         }
 
-        private void OnDialog( ConverseResponse resp )
+        private void OnDialog(ConverseResponse resp)
         {
-            if ( resp != null )
+            if (resp != null)
             {
                 m_DialogClientId = resp.client_id;
                 m_DialogConversationId = resp.conversation_id;
 
-                if ( resp.response != null )
+                if (resp.response != null)
                 {
-                    foreach( var t in resp.response )
+                    foreach (var t in resp.response)
                     {
-                        if (! string.IsNullOrEmpty( t ) )
-                            m_TextOutput.SendData( new TextData( t ) );
+                        if (!string.IsNullOrEmpty(t))
+                            m_TextOutput.SendData(new TextData(t));
                     }
                 }
             }
         }
 
-		private void OnAskQuestion(Questions questions)
+        private void OnAskQuestion(Questions questions)
         {
             m_QuestionResult = questions;
 
-            bool bGettingAnswers = false;
-            if (m_QuestionResult != null && m_QuestionResult.questions != null)
+            if (m_QuestionResult != null && m_QuestionResult.HasQuestion())
             {
-                Watson.Data.Question topQuestion = m_QuestionResult.questions.Length > 0 ? m_QuestionResult.questions[0] : null;
-                if (topQuestion != null)
+                Watson.Data.Question topQuestion = m_QuestionResult.questions[0];
+                if (OnQuestion != null)
+                    OnQuestion(topQuestion.question.questionText);
+
+                m_AnswerResult = null;
+                m_ParseData = null;
+
+                if (!m_ITM.GetAnswers(topQuestion.transactionId, OnAnswerQuestion)
+                    || !ITM.GetParseData(topQuestion.transactionId, OnParseData))
                 {
-                    if (m_QuestionText != null)
-                        m_QuestionText.text = "Q: " + topQuestion.question.questionText;
-                    if ( QuestionEvent != null )
-                        QuestionEvent( topQuestion.question.questionText );
-
-                    bGettingAnswers = m_ITM.GetAnswers(topQuestion.transactionId, OnAnswerQuestion);
-				}
+                    Log.Error("AvatarWidget", "Failed to call GetAnswers()");
+                    State = AvatarState.ERROR;
+                }
             }
-
-            if (!bGettingAnswers)
+            else
             {
-                m_TextOutput.SendData(new TextData("Does not compute. beep."));
+                m_TextOutput.SendData(new TextData(m_RecognizeFailure));
                 State = AvatarState.LISTENING;
             }
         }
 
         private void OnAnswerQuestion(Answers answers)
         {
-            if (answers != null && answers.answers.Length > 0)
+            m_AnswerResult = answers;
+            UpdateQuestionWidget();
+
+            if (answers != null && answers.HasAnswer())
             {
                 foreach (var a in answers.answers)
                     Log.Debug("AvatarWidget", "A: {0} ({1})", a.answerText, a.confidence);
 
                 string answer = answers.answers[0].answerText;
-                if (m_AnswerText != null)
-                    m_AnswerText.text = "A: " + answer;
-                if ( AnswerEvent != null )
-                    AnswerEvent( answer );
+                EventManager.Instance.SendEvent(Constants.Event.ON_DEBUG_MESSAGE, answer);
+
+                if (OnAnswer != null)
+                    OnAnswer(answer);
+
                 m_TextOutput.SendData(new TextData(answer));
-
-                if (m_QuestionPrefab != null)
-                {
-                    if (m_FocusQuestion == null)
-                        m_FocusQuestion = GameObject.Instantiate(m_QuestionPrefab);
-
-                    //m_FocusQuestion.transform.SetParent(transform, false);
-
-                    QuestionWidget question = m_FocusQuestion.GetComponentInChildren<QuestionWidget>();
-                    if (question != null)
-                    {
-                        question.Avatar = this;
-						question.ClearFacets();
-                        question.Questions = m_QuestionResult;
-                        question.Answers = answers;
-						question.Init();
-
-                        // show the answer panel
-                        //question.EventManager.SendEvent( "answers" );
-
-						if (!ITM.GetParseData(question.Questions.questions[0].transactionId, question.OnParseData))
-							Log.Error("QuestionWidget", "Failed to request ParseData.");
-                    }
-                    else
-                        Log.Error("AvatarWidget", "Failed to find QuestionWidget in question prefab.");
-                }
             }
-            State = AvatarState.LISTENING;
+        }
+
+        private void OnParseData(ParseData data)
+        {
+            m_ParseData = data;
+            UpdateQuestionWidget();
+        }
+
+        private void UpdateQuestionWidget()
+        {
+            InstatiateQuestionWidget();
+
+            if (m_ParseData != null && m_AnswerResult != null)
+            {
+                if (m_FocusQuestion != null)
+                    m_FocusQuestion.UpdateFacets();
+                else
+                    Log.Error("AvatarWidget", "Failed to find QuestionWidget in question prefab.");
+                State = AvatarState.LISTENING;
+            }
+        }
+
+
+        private void InstatiateQuestionWidget()
+        {
+            if (m_FocusQuestion == null && m_QuestionPrefab != null)
+            {
+                GameObject questionObject = GameObject.Instantiate(m_QuestionPrefab);
+                m_FocusQuestion = questionObject.GetComponentInChildren<QuestionWidget>();
+                if (m_FocusQuestion == null)
+                    throw new WatsonException("Question prefab is missing QuestionWidget");
+                m_FocusQuestion.QuestionData = this;
+            }
         }
 
         #endregion
@@ -524,7 +573,7 @@ namespace IBM.Watson.Widgets.Avatar
         };
 
         [SerializeField]
-        private AvatarStateInfo [] m_StateInfo = new AvatarStateInfo[] 
+        private AvatarStateInfo[] m_StateInfo = new AvatarStateInfo[]
         {
             new AvatarStateInfo() { m_State = AvatarState.CONNECTING, m_Color = new Color(241 / 255.0f, 241 / 255.0f, 242 / 255.0f), m_Speed = 0.0f },
             new AvatarStateInfo() { m_State = AvatarState.LISTENING, m_Color = new Color(0 / 255.0f, 166 / 255.0f, 160 / 255.0f), m_Speed = 1.0f },
@@ -537,11 +586,11 @@ namespace IBM.Watson.Widgets.Avatar
         {
             get
             {
-                foreach( var c in m_StateInfo )
-                    if ( c.m_State == m_State )
+                foreach (var c in m_StateInfo)
+                    if (c.m_State == m_State)
                         return c.m_Color;
 
-                Log.Warning("AvatarWidget", "StateColor not defined for state {0}.", m_State.ToString() );
+                Log.Warning("AvatarWidget", "StateColor not defined for state {0}.", m_State.ToString());
                 return Color.white;
             }
         }
@@ -555,7 +604,7 @@ namespace IBM.Watson.Widgets.Avatar
             }
             set
             {
-                if ( m_currentMood != value )
+                if (m_currentMood != value)
                 {
                     m_currentMood = value;
                     EventManager.Instance.SendEvent(Constants.Event.ON_CHANGE_AVATAR_MOOD_FINISH, (int)value);
@@ -567,34 +616,34 @@ namespace IBM.Watson.Widgets.Avatar
         {
             get
             {
-                return Enum.GetValues( typeof(MoodType) ) as MoodType[];
+                return Enum.GetValues(typeof(MoodType)) as MoodType[];
             }
         }
 
-		public float BehaviorSpeedModifier
-		{
-			get
-			{
-                foreach( var info in m_StateInfo )
-                    if ( info.m_State == State )
+        public float BehaviorSpeedModifier
+        {
+            get
+            {
+                foreach (var info in m_StateInfo)
+                    if (info.m_State == State)
                         return info.m_Speed;
 
-                Log.Warning( "AvatarWidget", "StateInfo not defined for {0}.", State.ToString() );
+                Log.Warning("AvatarWidget", "StateInfo not defined for {0}.", State.ToString());
                 return 1.0f;
-			}
-		}
+            }
+        }
 
-		public float BehaviorTimeModifier
-		{
-			get
-			{
-				float value = BehaviorSpeedModifier;
-				if (value != 0.0f)
-					value = 1.0f / value;
+        public float BehaviorTimeModifier
+        {
+            get
+            {
+                float value = BehaviorSpeedModifier;
+                if (value != 0.0f)
+                    value = 1.0f / value;
 
-				return value;
-			}
-		}
+                return value;
+            }
+        }
 
         [Serializable]
         private class AvatarMoodInfo
@@ -605,7 +654,7 @@ namespace IBM.Watson.Widgets.Avatar
         };
 
         [SerializeField]
-        private AvatarMoodInfo [] m_MoodInfo = new AvatarMoodInfo[] 
+        private AvatarMoodInfo[] m_MoodInfo = new AvatarMoodInfo[]
         {
             new AvatarMoodInfo() { m_Mood = MoodType.SLEEPING, m_Color = new Color(255 / 255.0f, 255 / 255.0f, 255 / 255.0f), m_Speed = 0.0f },
             new AvatarMoodInfo() { m_Mood = MoodType.IDLE, m_Color = new Color(241 / 255.0f, 241 / 255.0f, 242 / 255.0f), m_Speed = 1.0f },
@@ -619,11 +668,11 @@ namespace IBM.Watson.Widgets.Avatar
         {
             get
             {
-                foreach( var c in m_MoodInfo )
-                    if ( c.m_Mood == Mood )
+                foreach (var c in m_MoodInfo)
+                    if (c.m_Mood == Mood)
                         return c.m_Color;
 
-                Log.Warning( "AvatarWidget", "Mood not defined for {0}.", Mood.ToString() );
+                Log.Warning("AvatarWidget", "Mood not defined for {0}.", Mood.ToString());
                 return Color.white;
             }
         }
@@ -632,11 +681,11 @@ namespace IBM.Watson.Widgets.Avatar
         {
             get
             {
-                foreach( var c in m_MoodInfo )
-                    if ( c.m_Mood == Mood )
+                foreach (var c in m_MoodInfo)
+                    if (c.m_Mood == Mood)
                         return c.m_Speed;
 
-                Log.Warning( "AvatarWidget", "Mood not defined for {0}.", Mood.ToString() );
+                Log.Warning("AvatarWidget", "Mood not defined for {0}.", Mood.ToString());
                 return 1.0f;
             }
         }
@@ -662,6 +711,60 @@ namespace IBM.Watson.Widgets.Avatar
             }
         }
         #endregion
-    }
 
+
+        #region IQuestionData implementation
+        /// <summary>
+        /// Gets the location.
+        /// </summary>
+        /// <value>The location.</value>
+        public string Location
+        {
+            get
+            {
+                return ITM.Location;
+            }
+        }
+
+        /// <summary>
+        /// Gets the question data object.
+        /// </summary>
+        /// <value>The question data object.</value>
+        public Questions QuestionDataObject
+        {
+            get
+            {
+                return m_QuestionResult;
+            }
+        }
+
+        /// <summary>
+        /// Gets the answer data object.
+        /// </summary>
+        /// <value>The answer data object.</value>
+        public Answers AnswerDataObject
+        {
+            get
+            {
+                return m_AnswerResult;
+            }
+        }
+
+        /// <summary>
+        /// Gets the parse data object.
+        /// </summary>
+        /// <value>The parse data object.</value>
+        public ParseData ParseDataObject
+        {
+            get
+            {
+                return m_ParseData;
+            }
+        }
+
+        public OnMessage OnQuestion { get; set; }
+        public OnMessage OnAnswer { get; set; }
+
+        #endregion
     }
+}

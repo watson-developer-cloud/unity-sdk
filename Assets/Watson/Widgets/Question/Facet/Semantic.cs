@@ -17,98 +17,106 @@
 */
 
 using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
 
-namespace IBM.Watson.Widgets.Question.Facet
+namespace IBM.Watson.Widgets.Question
 {
-	public class Semantic : Base
-		{
-		[SerializeField]
-		private Text m_LATText;
-		[SerializeField]
-		private Text m_SemanticText;
+    public class Semantic : Base
+    {
+        [SerializeField]
+        private Text m_LATText;
+        [SerializeField]
+        private Text m_SemanticText;
 
-		private string _m_LAT;
-		public string m_LAT
-		{
-			get { return _m_LAT; }
-			set
-			{
-				_m_LAT = value;
-				UpdateLAT();
-			}
-		}
+        private string m_LAT;
+        public string LAT
+        {
+            get { return m_LAT; }
+            set
+            {
+                m_LAT = value;
+                UpdateLAT();
+            }
+        }
 
-		private string _m_Semantic;
-		public string m_Semantic
-		{
-			get { return _m_Semantic; }
-			set
-			{
-				_m_Semantic = value;
-				UpdateSemantic();
-			}
-		}
+        private string m_SemanticString;
+        public string SemanticString
+        {
+            get { return m_SemanticString; }
+            set
+            {
+                m_SemanticString = value;
+                UpdateSemantic();
+            }
+        }
 
-		/// <summary>
-		/// Update the LAT view.
-		/// </summary>
-		private void UpdateLAT()
-		{
-			m_LATText.text = m_LAT;
-		}
+        /// <summary>
+        /// Update the LAT view.
+        /// </summary>
+        private void UpdateLAT()
+        {
+            m_LATText.text = LAT;
+        }
 
-		/// <summary>
-		/// Update the Semantic View.
-		/// </summary>
-		private void UpdateSemantic()
-		{
-			m_SemanticText.text = m_Semantic;
-		}
+        /// <summary>
+        /// Update the Semantic View.
+        /// </summary>
+        private void UpdateSemantic()
+        {
+            m_SemanticText.text = SemanticString;
+        }
 
-		/// <summary>
-		/// Fired when Parse Data is set. Iterates through the LAT's features and concantinates features into a string.
-		/// </summary>
-		override protected void OnParseData()
-		{
-			string semanticText = "";
+        override public void Init()
+        {
+            if (m_Question.QuestionData.QuestionDataObject.questions.Length > 0 && m_Question.QuestionData.QuestionDataObject.questions[0].question.lat.Length > 0)
+            {
+                LAT = m_Question.QuestionData.QuestionDataObject.questions[0].question.lat[0];
+            }
+            else
+            {
+                LAT = "n/a";
+            }
 
-			//	Find the LAT index in the Parse Words
-			int LATIndex = -1;
-			for(int i = 0 ; i < m_ParseData.Words.Length; i++) {
-				if(m_ParseData.Words[i].Word == m_LAT) {
-					LATIndex = i;
-				}
-			}
-			
-			semanticText = "";
+            SemanticString = GenerateSemanticString();
+        }
 
-			//	Iterate through the LAT's features and concantinate the strings together.
-			if (LATIndex != -1) {
-				for (int k = 0; k < m_ParseData.Words[LATIndex].Features.Length; k++) {
-					semanticText += m_ParseData.Words [LATIndex].Features [k];
-					if (k < m_ParseData.Words [LATIndex].Features.Length - 1) {
-						semanticText += ", ";
-					} else {
-						semanticText += ".";
-					}
-				}
-			}
-			
-			m_Semantic = semanticText;
-		}
+        /// <summary>
+        /// Fired when Parse Data is set. Iterates through the LAT's features and concantinates features into a string.
+        /// </summary>
+        private string GenerateSemanticString()
+        {
+            string semanticText = "";
 
-		/// <summary>
-		/// Fired when Question Data is set. Sets the value of the LAT.
-		/// </summary>
-		override protected void OnQuestionData()
-		{
-			if (m_Questions.questions.Length > 0 && m_Questions.questions [0].question.lat.Length > 0) {
-				m_LAT = m_Questions.questions [0].question.lat [0];
-			} else {
-				m_LAT = "n/a";
-			}
-		}
-	}
+            //	Find the LAT index in the Parse Words
+            int LATIndex = -1;
+            for (int i = 0; i < m_Question.QuestionData.ParseDataObject.Words.Length; i++)
+            {
+                if (m_Question.QuestionData.ParseDataObject.Words[i].Word == LAT)
+                {
+                    LATIndex = i;
+                }
+            }
+
+            semanticText = "";
+
+            //	Iterate through the LAT's features and concantinate the strings together.
+            if (LATIndex != -1)
+            {
+                for (int k = 0; k < m_Question.QuestionData.ParseDataObject.Words[LATIndex].Features.Length; k++)
+                {
+                    semanticText += m_Question.QuestionData.ParseDataObject.Words[LATIndex].Features[k];
+                    if (k < m_Question.QuestionData.ParseDataObject.Words[LATIndex].Features.Length - 1)
+                    {
+                        semanticText += ", ";
+                    }
+                    else
+                    {
+                        semanticText += ".";
+                    }
+                }
+            }
+
+            return semanticText;
+        }
+    }
 }

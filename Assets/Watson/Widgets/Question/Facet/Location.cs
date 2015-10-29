@@ -17,41 +17,38 @@
 */
 
 using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
 
-namespace IBM.Watson.Widgets.Question.Facet
+namespace IBM.Watson.Widgets.Question
 {
-	public class Location : Base
-	{
-		[SerializeField]
-		private Text m_LocationText;
+    public class Location : Base
+    {
+        [SerializeField]
+        private Text m_LocationText;
 
-		private string _m_Location;
-		public string m_Location
-		{
-			get { return _m_Location; }
-			set 
-			{
-				_m_Location = value;
-				UpdateLocation();
-			}
-		}
+        private string m_LocationString;
+        public string LocationString
+        {
+            get { return m_LocationString; }
+            set
+            {
+                m_LocationString = value;
+                UpdateLocation();
+            }
+        }
 
-		/// <summary>
-		/// Update the Location view.
-		/// </summary>
-		private void UpdateLocation()
-		{
-			m_LocationText.text = m_Location;
-		}
+        override public void Init()
+        {
+            LocationString = m_Question.QuestionData.Location;
+            UpdateLocation();
+        }
 
-		/// <summary>
-		/// Fired when Parse Data is set. Sets the value of Location from the Avatar Widget.
-		/// </summary>
-		override protected void OnParseData()
-		{
-			m_Location = m_Avatar.ITM.Location;
-		}
-	}
+        /// <summary>
+        /// Update the Location view.
+        /// </summary>
+        private void UpdateLocation()
+        {
+            m_LocationText.text = LocationString;
+        }
+    }
 }

@@ -171,6 +171,11 @@ namespace IBM.Watson.Data
         /// Array of questions returned by GetQuestions().
         /// </summary>
         public Question[] questions { get; set; }
+
+        public bool HasQuestion()
+        {
+            return questions != null && questions.Length > 0;
+        }
     };
 
     /// <summary>
@@ -337,6 +342,11 @@ namespace IBM.Watson.Data
         public double featureScoreMax { get; set; }
         public double featureScoreRange { get; set; }
         public Answer[] answers { get; set; }
+
+        public bool HasAnswer()
+        {
+            return answers != null && answers.Length > 0;
+        }
     };
     #endregion
 
@@ -649,6 +659,17 @@ namespace IBM.Watson.Data
         public SpeechResultList(SpeechResult[] results)
         {
             Results = results;
+        }
+
+        public bool HasResult()
+        {
+            return Results != null && Results.Length > 0 
+                && Results[0].Alternatives != null && Results[0].Alternatives.Length > 0;
+        }
+
+        public bool HasFinalResult()
+        {
+            return HasResult() && Results[0].Final;
         }
     };
     #endregion
