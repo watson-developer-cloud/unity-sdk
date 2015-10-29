@@ -130,10 +130,25 @@ namespace IBM.Watson.Data
     /// </summary>
     public class Pipelines
     {
+        /// <summary>
+        /// A array of pipelines.
+        /// </summary>
         public Pipeline[] pipelines { get; set; }
+        /// <summary>
+        /// True if this pipeline is through ITM.
+        /// </summary>
         public bool itm { get; set; }
+        /// <summary>
+        /// The name of the user.
+        /// </summary>
         public string user { get; set; }
+        /// <summary>
+        /// The location of the user.
+        /// </summary>
         public string location { get; set; }
+        /// <summary>
+        /// The session key for this login session.
+        /// </summary>
         public long sessionKey { get; set; }
     };
     /// <summary>
@@ -141,9 +156,21 @@ namespace IBM.Watson.Data
     /// </summary>
     public class QuestionText
     {
+        /// <summary>
+        /// A string array of focus elements in this question.
+        /// </summary>
         public string[] focus { get; set; }
+        /// <summary>
+        /// A string array of the lat for the question.
+        /// </summary>
         public string[] lat { get; set; }
+        /// <summary>
+        /// The question transcript.
+        /// </summary>
         public string questionText { get; set; }
+        /// <summary>
+        /// The question transcript with tagged elements.
+        /// </summary>
         public string taggedText { get; set; }
     };
     /// <summary>
@@ -151,9 +178,21 @@ namespace IBM.Watson.Data
     /// </summary>
     public class Question
     {
+        /// <summary>
+        /// A question ID.
+        /// </summary>
         public string _id { get; set; }
+        /// <summary>
+        /// A revision ID.
+        /// </summary>
         public string _rev { get; set; }
+        /// <summary>
+        /// The top confidence of all the answers to this question.
+        /// </summary>
         public double topConfidence { get; set; }
+        /// <summary>
+        /// The creation date for the question.
+        /// </summary>
         public string createDate { get; set; }
         public string createTime { get; set; }
         public string transactionHash { get; set; }

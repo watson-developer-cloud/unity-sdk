@@ -243,16 +243,19 @@ namespace IBM.Watson.Widgets.Avatar
 
         private void OnDebugCommand(object[] args)
         {
-            if (args.Length > 0 && args[0] is string)
+            if ( State != AvatarState.ERROR )
             {
-                string text = args[0] as string;
-                if (!string.IsNullOrEmpty(text))
+                if (args.Length > 0 && args[0] is string)
                 {
-                    State = AvatarState.THINKING;
-                    m_SpeechText = text;
+                    string text = args[0] as string;
+                    if (!string.IsNullOrEmpty(text))
+                    {
+                        State = AvatarState.THINKING;
+                        m_SpeechText = text;
 
-                    if (!m_NLC.Classify(m_ClassifierId, m_SpeechText, OnSpeechClassified))
-                        Log.Error("AvatarWidget", "Failed to send {0} to NLC.", m_SpeechText);
+                        if (!m_NLC.Classify(m_ClassifierId, m_SpeechText, OnSpeechClassified))
+                            Log.Error("AvatarWidget", "Failed to send {0} to NLC.", m_SpeechText);
+                    }
                 }
             }
         }

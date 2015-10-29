@@ -27,7 +27,7 @@ namespace IBM.Watson.Widgets
 {
 
     /// <summary>
-    /// This is the base class for all widgets. A Widget has any number of inputs & outputs that carry a specific type of data.
+    /// This is the base class for all widgets. A Widget has any number of inputs and outputs that carry a specific type of data.
     /// </summary>
     public abstract class Widget : MonoBehaviour
     {
@@ -37,6 +37,9 @@ namespace IBM.Watson.Widgets
         /// </summary>
         public abstract class Data
         {
+            /// <summary>
+            /// Name of this data type.
+            /// </summary>
             public string Name { get { return GetName(); } }
 
             /// <summary>
@@ -46,6 +49,10 @@ namespace IBM.Watson.Widgets
             public abstract string GetName();
         };
 
+        /// <summary>
+        /// The callback object used by Widget for receiving data from an input.
+        /// </summary>
+        /// <param name="data"></param>
         public delegate void OnReceiveData(Data data);
 
         /// <summary>
@@ -55,6 +62,13 @@ namespace IBM.Watson.Widgets
         public class Input
         {
             #region Construction
+            /// <summary>
+            /// Constructs an input object for a Widget.
+            /// </summary>
+            /// <param name="name">The name of the input.</param>
+            /// <param name="dataType">The type of data the input takes.</param>
+            /// <param name="receiverFunction">The name of the function to invoke with the input. The input function must match
+            /// the OnReceiveData callback.</param>
             public Input(string name, Type dataType, string receiverFunction)
             {
                 InputName = name;
@@ -64,13 +78,37 @@ namespace IBM.Watson.Widgets
             #endregion
 
             #region Public Properties
+            /// <summary>
+            /// A reference to the widget that contains this input, this is initialized when the Widget starts.
+            /// </summary>
             public Widget Owner { get; set; }
+            /// <summary>
+            /// The name of the owning widget.
+            /// </summary>
             public string OwnerName { get { return Owner.WidgetName; } }
+            /// <summary>
+            /// The name of this input.
+            /// </summary>
             public string InputName { get; set; }
+            /// <summary>
+            /// The fully qualified name of this input.
+            /// </summary>
             public string FullInputName { get { return OwnerName + "/" + InputName; } }
+            /// <summary>
+            /// The type of data this input accepts.
+            /// </summary>
             public Type DataType { get; set; }
+            /// <summary>
+            /// The name of the data type.
+            /// </summary>
             public string DataTypeName { get { return DataType.Name; } }
+            /// <summary>
+            /// The name of the receiver function.
+            /// </summary>
             public string ReceiverFunction { get; set; }
+            /// <summary>
+            /// The delegate to the receiver function, this is set when Start() is called on this input.
+            /// </summary>
             public OnReceiveData DataReceiver { get; set; }
             #endregion
 
@@ -118,6 +156,10 @@ namespace IBM.Watson.Widgets
         public class Output
         {
             #region Constructor
+            /// <summary>
+            /// The constructor for an widget output object.
+            /// </summary>
+            /// <param name="dataType">The type of data this widget outputs.</param>
             public Output(Type dataType)
             {
                 DataType = dataType;
@@ -125,12 +167,29 @@ namespace IBM.Watson.Widgets
             #endregion
 
             #region Public Properties
+            /// <summary>
+            /// Returns true if this output is connected to a input.
+            /// </summary>
             public bool IsConnected { get { return ResolveTargetInput(); } }
+            /// <summary>
+            /// Returns a reference to the Widget owner, this is set when the Widget initializes.
+            /// </summary>
             public Widget Owner { get; set; }
+            /// <summary>
+            /// The type of data this output sends.
+            /// </summary>
             public Type DataType { get; set; }
-
+            /// <summary>
+            /// This returns a reference to the target input object.
+            /// </summary>
             public Input TargetInput { get { return m_TargetInput; } set { m_TargetInput = value; m_TargetInputResolved = true; } }
+            /// <summary>
+            /// This returns a reference to the target object.
+            /// </summary>
             public GameObject TargetObject { get { return m_TargetObject; } set { m_TargetObject = value; m_TargetInputResolved = false; } }
+            /// <summary>
+            /// The name of the target connection on the target object.
+            /// </summary>
             public string TargetConnection { get { return m_TargetConnection; } set { m_TargetConnection = value; m_TargetInputResolved = false; } }
             #endregion
 
@@ -236,8 +295,17 @@ namespace IBM.Watson.Widgets
         #endregion
 
         #region Public Properties
+        /// <summary>
+        /// Returns the name of this widget.
+        /// </summary>
         public string WidgetName { get { return GetName(); } }
+        /// <summary>
+        /// This returns an array of all inputs on this widget.
+        /// </summary>
         public Input[] Inputs { get { if (! m_Initialized ) InitializeIO(); return m_Inputs; } }
+        /// <summary>
+        /// This returns an array of all outputs on this widget.
+        /// </summary>
         public Output[] Outputs { get { if (! m_Initialized ) InitializeIO(); return m_Outputs; } }
         #endregion
 
@@ -278,6 +346,7 @@ namespace IBM.Watson.Widgets
 
             return inputs.ToArray();
         }
+        /// <exclude />
         protected virtual void Start()
         {
             InitializeIO();
@@ -285,6 +354,10 @@ namespace IBM.Watson.Widgets
         #endregion
 
         #region Widget Interface
+        /// <summary>
+        /// Implemented to provide a friendly name for a widget object.
+        /// </summary>
+        /// <returns>A string name for this widget.</returns>
         protected abstract string GetName();
         #endregion
     }

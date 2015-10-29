@@ -22,6 +22,9 @@ using UnityEngine.UI;
 
 namespace IBM.Watson.Widgets.Question
 {
+	/// <summary>
+	/// Controls ParseTreeTextItem view. Attached to ParseTreeTextItem prefab.
+	/// </summary>
     public class ParseTreeTextItem : MonoBehaviour
     {
         [SerializeField]

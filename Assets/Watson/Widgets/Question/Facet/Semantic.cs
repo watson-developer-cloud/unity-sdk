@@ -21,6 +21,9 @@ using UnityEngine.UI;
 
 namespace IBM.Watson.Widgets.Question
 {
+	/// <summary>
+	/// Handles all Semantic Facet functionality.
+	/// </summary>
     public class Semantic : Base
     {
         [SerializeField]
@@ -68,6 +71,8 @@ namespace IBM.Watson.Widgets.Question
 
         override public void Init()
         {
+			base.Init ();
+
             if (m_Question.QuestionData.QuestionDataObject.questions.Length > 0 && m_Question.QuestionData.QuestionDataObject.questions[0].question.lat.Length > 0)
             {
                 LAT = m_Question.QuestionData.QuestionDataObject.questions[0].question.lat[0];

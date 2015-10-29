@@ -21,6 +21,9 @@ using System.Collections.Generic;
 
 namespace IBM.Watson.Widgets.Question
 {
+	/// <summary>
+	/// Handles all ParseTree Facet functionality.
+	/// </summary>
     public class ParseTree : Base
     {
         [SerializeField]
@@ -85,6 +88,8 @@ namespace IBM.Watson.Widgets.Question
         /// </summary>
         override public void Init()
         {
+			base.Init ();
+
             GenerateParseTree();
         }
 

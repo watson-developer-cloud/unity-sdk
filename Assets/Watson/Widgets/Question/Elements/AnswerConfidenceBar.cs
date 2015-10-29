@@ -21,6 +21,9 @@ using UnityEngine.UI;
 
 namespace IBM.Watson.Widgets.Question
 {
+	/// <summary>
+	/// Controls AnswerConfidenceBar views. Attached to two types of AnswerConfidenceBar prefabs.
+	/// </summary>
     public class AnswerConfidenceBar : MonoBehaviour
     {
         [SerializeField]
