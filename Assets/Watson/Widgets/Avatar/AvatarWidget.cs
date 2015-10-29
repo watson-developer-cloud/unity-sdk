@@ -20,13 +20,12 @@
 
 using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
-using IBM.Watson.Avatar;
 using IBM.Watson.Data;
 using IBM.Watson.Services.v1;
 using UnityEngine;
-using UnityEngine.UI;
 using System;
 using IBM.Watson.Debug;
+using IBM.Watson.Widgets.Question;
 
 #pragma warning disable 414
 

@@ -22,7 +22,7 @@ using IBM.Watson.Widgets.Question;
 using UnityEngine;
 using System.Collections.Generic;
 
-namespace IBM.Watson.Widgets
+namespace IBM.Watson.Widgets.Question
 {
     /// <summary>
     /// This class manages the answers, question, and other data related to a question asked of the AvatarWidget.
