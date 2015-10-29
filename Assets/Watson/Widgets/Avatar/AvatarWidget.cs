@@ -454,7 +454,7 @@ namespace IBM.Watson.Widgets.Avatar
                 {
                     m_TextOutput.SendData(new TextData(m_Goodbye));
                     if (m_FocusQuestion != null)
-                        m_FocusQuestion.gameObject.SetActive(false);
+                        m_FocusQuestion.OnLeaveTheSceneAndDestroy();
 
                     Mood = MoodType.SLEEPING;
                     State = AvatarState.LISTENING;
@@ -568,7 +568,7 @@ namespace IBM.Watson.Widgets.Avatar
 
         private void InstatiateQuestionWidget()
         {
-			if (m_FocusQuestion != null) {
+			if ( m_FocusQuestion != null ) {
 				m_FocusQuestion.Focused = false;	//lost focus and sent out the scene!
 			}
 
