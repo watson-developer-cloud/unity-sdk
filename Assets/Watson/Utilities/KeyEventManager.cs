@@ -49,15 +49,21 @@ namespace IBM.Watson.Utilities
             /// <summary>
             /// Additional keys that must be down to fire this event.
             /// </summary>
-            public KeyCode [] m_Modifiers;
+            public KeyCode[] m_Modifiers;
         };
         #endregion
 
         #region Private Data
+        private bool m_Active = true;
+        private bool m_UpdateActivate = true;
         private Dictionary<KeyCode, KeyEvent> m_KeyEvents = new Dictionary<KeyCode, KeyEvent>();
         #endregion
 
         #region Public Properties
+        /// <summary>
+        /// Set/Get the active state of this manager.
+        /// </summary>
+        public bool Active { get { return m_Active; } set { m_UpdateActivate = value; } }
         /// <summary>
         /// The current instance of the DebugConsole.
         /// </summary>
@@ -71,11 +77,11 @@ namespace IBM.Watson.Utilities
         /// <param name="key">The KeyCode of the key.</param>
         /// <param name="ke">The KeyEvent object.</param>
         /// <returns>True is returned on success.</returns>
-        public bool RegisterKeyEvent(KeyCode key, KeyEvent ke )
+        public bool RegisterKeyEvent(KeyCode key, KeyEvent ke)
         {
             if (m_KeyEvents.ContainsKey(key))
                 return false;
-            m_KeyEvents[ key ] = ke;
+            m_KeyEvents[key] = ke;
             return true;
         }
         /// <summary>
@@ -85,9 +91,9 @@ namespace IBM.Watson.Utilities
         /// <param name="callback">The delegate to invoke.</param>
         /// <param name="modifiers">Additional keys that must be down as well to fire the event.</param>
         /// <returns>True is returned on success.</returns>
-        public bool RegisterKeyEvent(KeyCode key, KeyEventDelegate callback, KeyCode [] modifiers = null )
+        public bool RegisterKeyEvent(KeyCode key, KeyEventDelegate callback, KeyCode[] modifiers = null)
         {
-            return RegisterKeyEvent( key, new KeyEvent() { m_Delegate = callback, m_Modifiers = modifiers } );
+            return RegisterKeyEvent(key, new KeyEvent() { m_Delegate = callback, m_Modifiers = modifiers });
         }
         /// <summary>
         /// Send a event when a key is released. 
@@ -96,9 +102,9 @@ namespace IBM.Watson.Utilities
         /// <param name="eventName">The event to send when the key is released.</param>
         /// <param name="modifiers">Additional keys that must be down as well to fire the event.</param>
         /// <returns>True is returned on success.</returns>
-        public bool RegisterKeyEvent(KeyCode key, string eventName, KeyCode [] modifiers = null)
+        public bool RegisterKeyEvent(KeyCode key, string eventName, KeyCode[] modifiers = null)
         {
-            return RegisterKeyEvent( key, new KeyEvent() { m_SendEvent = eventName, m_Modifiers = modifiers } );
+            return RegisterKeyEvent(key, new KeyEvent() { m_SendEvent = eventName, m_Modifiers = modifiers });
         }
         /// <summary>
         /// Unregister a key event.
@@ -113,35 +119,43 @@ namespace IBM.Watson.Utilities
 
         private void Update()
         {
-            foreach (var kp in m_KeyEvents)
+            if (m_Active)
             {
-                if (Input.GetKeyDown(kp.Key))
+                foreach (var kp in m_KeyEvents)
                 {
-                    bool bFireEvent = true;
-                    if ( kp.Value.m_Modifiers != null )
+                    if (Input.GetKeyDown(kp.Key))
                     {
-                        foreach( var mod in kp.Value.m_Modifiers )
-                            if (! Input.GetKey( mod ) )
-                            {
-                                bFireEvent = false;
-                                break;
-                            }
-                    }
+                        bool bFireEvent = true;
+                        if (kp.Value.m_Modifiers != null)
+                        {
+                            foreach (var mod in kp.Value.m_Modifiers)
+                                if (!Input.GetKey(mod))
+                                {
+                                    bFireEvent = false;
+                                    break;
+                                }
+                        }
 
-                    if ( bFireEvent )
-                    {
-                        if (! string.IsNullOrEmpty( kp.Value.m_SendEvent ) )
-                            EventManager.Instance.SendEvent(kp.Value.m_SendEvent);
-                        if ( kp.Value.m_Delegate != null )
-                            kp.Value.m_Delegate();
+                        if (bFireEvent)
+                        {
+                            if (!string.IsNullOrEmpty(kp.Value.m_SendEvent))
+                                EventManager.Instance.SendEvent(kp.Value.m_SendEvent);
+                            if (kp.Value.m_Delegate != null)
+                                kp.Value.m_Delegate();
+                        }
                     }
                 }
             }
+
+            // update our active flag AFTER we check the active flag, this prevents
+            // us from responding the key events during the same frame as we activate
+            // this manager.
+            m_Active = m_UpdateActivate;
         }
 
         private void OnApplicationQuit()
         {
-            Destroy( gameObject );
+            Destroy(gameObject);
         }
     }
 }

@@ -213,10 +213,16 @@ namespace IBM.Watson.Debug
 
         private void OnBeginEdit()
         {
+            if (! Active )
+                Active = true;
+
             if ( m_CommandInput != null )
             {
                 m_CommandInput.gameObject.SetActive( true );
                 m_CommandInput.ActivateInputField();
+
+                // turn off all key press events..
+                KeyEventManager.Instance.Active = false;
             }
         }
 
@@ -226,9 +232,11 @@ namespace IBM.Watson.Debug
             {
                 EventManager.Instance.SendEvent( Constants.Event.ON_DEBUG_COMMAND, m_CommandInput.text );
                 m_CommandInput.text = string.Empty;
-                m_CommandInput.DeactivateInputField();
-                m_CommandInput.gameObject.SetActive( false );   // hide the input            
+                m_CommandInput.gameObject.SetActive( false );   // hide the input     
+                
+                // restore the key manager state
+                KeyEventManager.Instance.Active = true;
             }
         }
-    }
+   }
 }
