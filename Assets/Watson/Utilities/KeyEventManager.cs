@@ -115,6 +115,21 @@ namespace IBM.Watson.Utilities
         {
             return m_KeyEvents.Remove(key);
         }
+
+		/// <summary>
+		/// Unregisters the key event.
+		/// </summary>
+		/// <returns><c>true</c>, if key event was unregistered, <c>false</c> otherwise.</returns>
+		/// <param name="key">The KeyCode to unregister.</param>
+		/// <param name="callback">The delegate to invoke.</param>
+		/// <param name="modifiers">Modifiers.</param>
+		public bool UnregisterKeyEvent(KeyCode key, KeyEventDelegate callback, KeyCode[] modifiers = null)
+		{
+			//TODO
+			return true;
+		}
+
+
         #endregion
 
         private void Update()
