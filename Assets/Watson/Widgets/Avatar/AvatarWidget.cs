@@ -563,10 +563,10 @@ namespace IBM.Watson.Widgets.Avatar
 
         private void UpdateQuestionWidget()
         {
-            InstatiateQuestionWidget();
-
             if (m_ParseData != null && m_AnswerResult != null)
             {
+				InstatiateQuestionWidget();
+
                 if (m_FocusQuestion != null)
                     m_FocusQuestion.UpdateFacets();
                 else

@@ -204,6 +204,8 @@ public class CubeAnimationManager : MonoBehaviour {
 
 		m_initialPosition = transform.position;
 		m_initialLocalScale = transform.localScale;
+
+
         m_initialPositionMainCamera = Camera.main.transform.position;
         m_initialLocalRotation = transform.localRotation;
 
@@ -233,7 +235,7 @@ public class CubeAnimationManager : MonoBehaviour {
 	}
 
 	void SetVisible(bool isVisible){
-		MeshRenderer[] meshRenderer = transform.GetComponentsInChildren<MeshRenderer> ();
+		MeshRenderer[] meshRenderer = transform.parent.GetComponentsInChildren<MeshRenderer> ();
 		foreach (MeshRenderer item in meshRenderer) {
 			item.enabled = isVisible;
 		}
@@ -523,8 +525,8 @@ public class CubeAnimationManager : MonoBehaviour {
             uiFaceOnSide[i].transform.localRotation = rotationFold[i];
         }
 
-        transform.position = m_initialPosition;
-        transform.localScale = m_initialLocalScale;
+		transform.position = new Vector3 (0, -40, 0); //m_initialPosition;
+		transform.localScale = Vector3.one; // m_initialLocalScale;
         transform.localRotation = m_initialLocalRotation;
 
     }
@@ -555,7 +557,7 @@ public class CubeAnimationManager : MonoBehaviour {
         //Avatar Object position change
         animationAvatarPosition = LeanTween.moveLocal(avatarGameobject, Vector3.zero, timeForFoldingUnfolding).setEase(easeForUnfolding);
 
-		LeanTween.scale (gameObject, gameObject.transform.localScale, timeForComingToScene).setFrom (Vector3.one).setEase (easeForComingToScene).setOnStart(()=>{
+		LeanTween.scale (gameObject, m_initialLocalScale, timeForComingToScene).setFrom (Vector3.one).setEase (easeForComingToScene).setOnStart(()=>{
 			SetVisible (true);
 		}).setOnComplete(()=>{
 			AnimationState = CubeAnimationState.IDLE_AS_FOLDED;
