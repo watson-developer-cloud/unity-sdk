@@ -579,7 +579,7 @@ public class CubeAnimationManager : MonoBehaviour {
 				Camera[] cameraList = transform.parent.GetComponentsInChildren<Camera>();
 				foreach (Camera itemCamera in cameraList) {
 					itemCamera.targetTexture = null;
-					Destroy(itemCamera);
+					itemCamera.enabled = false;
 				}
 			    Destroy(transform.parent.gameObject, 1.0f);
 			}
