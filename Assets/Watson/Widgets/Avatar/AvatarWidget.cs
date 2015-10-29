@@ -450,6 +450,16 @@ namespace IBM.Watson.Widgets.Avatar
 
                     State = AvatarState.LISTENING;
                 }
+                else if (m_ClassifyResult.top_class == "debug_on" )
+                {
+                    DebugConsole.Instance.Active = true;
+                    State = AvatarState.LISTENING;
+                }
+                else if ( m_ClassifyResult.top_class == "debug_off" )
+                {
+                    DebugConsole.Instance.Active = false;
+                    State = AvatarState.LISTENING;
+                }
                 else if (m_ClassifyResult.top_class == "sleep")
                 {
                     m_TextOutput.SendData(new TextData(m_Goodbye));
