@@ -398,6 +398,7 @@ namespace IBM.Watson.Connection
             yield break;
         }
 
+#if UNITY_EDITOR
         private class DeleteRequest
         {
             public string URL { get; set; }
@@ -430,7 +431,8 @@ namespace IBM.Watson.Connection
                 IsComplete = true;
             }
         };
+#endif
 
-        #endregion
+#endregion
     }
 }
