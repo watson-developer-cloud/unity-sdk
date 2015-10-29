@@ -17,38 +17,38 @@
 */
 
 using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
 
-namespace IBM.Watson.Widgets.Question.Facet
+namespace IBM.Watson.Widgets.Question
 {
-	public class Location : Base
-	{
-		[SerializeField]
-		private Text m_LocationText;
+    public class Location : Base
+    {
+        [SerializeField]
+        private Text m_LocationText;
 
-		private string _LocationString;
-		public string LocationString
-		{
-			get { return _LocationString; }
-			set 
-			{
-				_LocationString = value;
-				UpdateLocation();
-			}
-		}
+        private string m_LocationString;
+        public string LocationString
+        {
+            get { return m_LocationString; }
+            set
+            {
+                m_LocationString = value;
+                UpdateLocation();
+            }
+        }
 
-		override public void Init()
-		{
-			LocationString = m_Question.QuestionData.Location;
-		}
+        override public void Init()
+        {
+            LocationString = m_Question.QuestionData.Location;
+            UpdateLocation();
+        }
 
-		/// <summary>
-		/// Update the Location view.
-		/// </summary>
-		private void UpdateLocation()
-		{
-			m_LocationText.text = LocationString;
-		}
-	}
+        /// <summary>
+        /// Update the Location view.
+        /// </summary>
+        private void UpdateLocation()
+        {
+            m_LocationText.text = LocationString;
+        }
+    }
 }

@@ -17,14 +17,12 @@
 */
 
 using IBM.Watson.Logging;
-using IBM.Watson.Utilities;
-using IBM.Watson.Widgets.Avatar;
-using IBM.Watson.Widgets.Question.Facet;
 using IBM.Watson.Data;
+using IBM.Watson.Widgets.Question;
 using UnityEngine;
 using System.Collections.Generic;
 
-namespace IBM.Watson.Widgets
+namespace IBM.Watson.Widgets.Question
 {
     /// <summary>
     /// This class manages the answers, question, and other data related to a question asked of the AvatarWidget.
@@ -33,11 +31,10 @@ namespace IBM.Watson.Widgets
     public class QuestionWidget : Widget
     {
         #region Private Data
-        private EventManager m_EventManager = new EventManager();
         private CubeAnimationManager m_CubeAnimMgr = null;
 
 		private AnswersAndConfidence m_AnswersAndConfidence;
-		private IBM.Watson.Widgets.Question.Facet.Evidence m_Evidence;
+		private Question.Evidence m_Evidence;
 		private Semantic m_Semantic;
 		private Features m_Features;
 		private Location m_Location;
@@ -55,15 +52,10 @@ namespace IBM.Watson.Widgets
         #endregion
 
         #region Public Properties
-        public EventManager EventManager { get { return m_EventManager; } }
-        public AvatarWidget Avatar { get; set; }
         public CubeAnimationManager Cube {
             get {
                 if ( m_CubeAnimMgr == null )
-                {
                     m_CubeAnimMgr = GetComponentInChildren<CubeAnimationManager>();
-                    m_CubeAnimMgr.avatarGameobject = Avatar.gameObject;
-                }
                 return m_CubeAnimMgr;
             }
         }
@@ -72,55 +64,69 @@ namespace IBM.Watson.Widgets
 
         #endregion
 
-        public void OnDisplayAnswers(object[] args)
+        #region Cube Actions
+        public void OnDisplayAnswers()
         {
             Cube.FocusOnSide( CubeAnimationManager.CubeSideType.Answers );
         }
 
-        public void OnDisplayChat( object[] args )
+        public void OnDisplayChat()
         {
             Cube.FocusOnSide( CubeAnimationManager.CubeSideType.Chat );
         }
 
-        public void OnDisplayParse(object[] args)
+        public void OnDisplayParse()
         {
             Cube.FocusOnSide( CubeAnimationManager.CubeSideType.Parse );
         }
 
-        public void OnDisplayEvidence(object[] args)
+        public void OnDisplayEvidence()
         {
             Cube.FocusOnSide( CubeAnimationManager.CubeSideType.Evidence );
         }
 
-        public void OnDisplayLocation(object[] args)
+        public void OnDisplayLocation()
         {
             Cube.FocusOnSide( CubeAnimationManager.CubeSideType.Location );
         }
 
-        public void OnFold(object[] args)
+        public void OnFold()
         {
             Cube.Fold();
         }
-        public void OnUnfold(object[] args)
+        public void OnUnfold()
         {
             Cube.UnFold();
         }
 
-		/// <summary>
-		/// Register events, set facet references, add facets to a List.
-		/// </summary>
+        public void ExecuteAction( string action )
+        {
+            if ( action == "fold" )
+                OnFold();
+            else if ( action == "unfold" )
+                OnUnfold();
+            else if ( action == "evidence" )
+                OnDisplayEvidence();
+            else if ( action == "parse" )
+                OnDisplayParse();
+            else if ( action == "location" )
+                OnDisplayLocation();
+            else if ( action == "answers" )
+                OnDisplayAnswers();
+            else if ( action == "chat" )
+                OnDisplayChat();
+            else
+                Log.Warning( "QuestionWidget", "Unknown action {0}", action );
+        }
+        #endregion
+
+        /// <summary>
+        /// Register events, set facet references, add facets to a List.
+        /// </summary>
         protected void Awake()
         {
-            m_EventManager.RegisterEventReceiver("fold", OnFold);
-            m_EventManager.RegisterEventReceiver("unfold", OnUnfold);
-            m_EventManager.RegisterEventReceiver("evidence", OnDisplayEvidence);
-            m_EventManager.RegisterEventReceiver("parse", OnDisplayParse);
-            m_EventManager.RegisterEventReceiver("location", OnDisplayLocation);
-            m_EventManager.RegisterEventReceiver("answers", OnDisplayAnswers);
-            m_EventManager.RegisterEventReceiver("chat", OnDisplayChat );
-
 			m_AnswersAndConfidence = gameObject.GetComponent<AnswersAndConfidence>();
-			m_Evidence = gameObject.GetComponent<IBM.Watson.Widgets.Question.Facet.Evidence>();
+			m_Evidence = gameObject.GetComponent<Question.Evidence>();
 			m_Semantic = gameObject.GetComponent<Semantic>();
 			m_Features = gameObject.GetComponent<Features>();
 			m_Location = gameObject.GetComponent<Location>();
@@ -144,16 +150,14 @@ namespace IBM.Watson.Widgets
 		/// <summary>
 		/// Sets Question, Answer and Avatar for each facet. Init is called by the Avatar Widget.
 		/// </summary>
-		public void Init(IQuestionData data) 
-		{
-			QuestionData = data;
-
+        public void UpdateFacets()
+        {
 			foreach (Base facet in m_Facets)
-			{
 				facet.Init();
-			}
-		}
+        }
     }
+
+    public delegate void OnMessage( string msg );
 
 	public interface IQuestionData
 	{
@@ -161,5 +165,7 @@ namespace IBM.Watson.Widgets
 		Answers AnswerDataObject { get; }
 		ParseData ParseDataObject { get; }
 		string Location { get; }
+        OnMessage OnQuestion { get; set; }
+        OnMessage OnAnswer { get; set; }
 	}
 }

@@ -17,49 +17,47 @@
 */
 
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
-using IBM.Watson.Utilities;
-using IBM.Watson.Widgets.Question.Facet.FacetElement;
 
-namespace IBM.Watson.Widgets.Question.Facet
+namespace IBM.Watson.Widgets.Question
 {
-	public class Features : Base
-	{
-		[SerializeField]
-		private GameObject m_FeatureItemPrefab;
+    public class Features : Base
+    {
+        [SerializeField]
+        private GameObject m_FeatureItemPrefab;
 
-		[SerializeField]
-		private RectTransform m_FeaturesCanvasRectTransform;
+        [SerializeField]
+        private RectTransform m_FeaturesCanvasRectTransform;
 
-		private List<FeatureItem> m_FeatureItems = new List<FeatureItem>();
+        private List<FeatureItem> m_FeatureItems = new List<FeatureItem>();
 
-		/// <summary>
-		/// Dynamically creates Features Items based on data.
-		/// </summary>
-		override public void Init()
-		{
-			for(int i = 0; i < m_Question.QuestionData.AnswerDataObject.answers[0].features.Length; i++)
-			{
-				GameObject featureItemGameObject = Instantiate(m_FeatureItemPrefab, new Vector3(95f, -i*50f - 150f, 0f), Quaternion.identity) as GameObject;
-				RectTransform featureItemRectTransform = featureItemGameObject.GetComponent<RectTransform>();
-				featureItemRectTransform.SetParent(m_FeaturesCanvasRectTransform, false);
-				FeatureItem featureItem = featureItemGameObject.GetComponent<FeatureItem>();
-				m_FeatureItems.Add(featureItem);
-				featureItem.FeatureString = m_Question.QuestionData.AnswerDataObject.answers[0].features[i].displayLabel;
-				featureItem.FeatureIndex = m_Question.QuestionData.AnswerDataObject.answers[0].features[i].weightedScore;
-			}
-		}
+        /// <summary>
+        /// Dynamically creates Features Items based on data.
+        /// </summary>
+        override public void Init()
+        {
+            for (int i = 0; i < m_Question.QuestionData.AnswerDataObject.answers[0].features.Length; i++)
+            {
+                GameObject featureItemGameObject = Instantiate(m_FeatureItemPrefab, new Vector3(95f, -i * 50f - 150f, 0f), Quaternion.identity) as GameObject;
+                RectTransform featureItemRectTransform = featureItemGameObject.GetComponent<RectTransform>();
+                featureItemRectTransform.SetParent(m_FeaturesCanvasRectTransform, false);
+                FeatureItem featureItem = featureItemGameObject.GetComponent<FeatureItem>();
+                m_FeatureItems.Add(featureItem);
+                featureItem.FeatureString = m_Question.QuestionData.AnswerDataObject.answers[0].features[i].displayLabel;
+                featureItem.FeatureIndex = m_Question.QuestionData.AnswerDataObject.answers[0].features[i].weightedScore;
+            }
+        }
 
-		/// <summary>
-		/// Clears dynamically generated Facet Elements when a question is answered. Called from Question Widget.
-		/// </summary>
-		override protected void Clear()
-		{
-			while(m_FeatureItems.Count != 0) {
-				Destroy(m_FeatureItems[0].gameObject);
-				m_FeatureItems.Remove(m_FeatureItems[0]);
-			}
-		}
-	}
+        /// <summary>
+        /// Clears dynamically generated Facet Elements when a question is answered. Called from Question Widget.
+        /// </summary>
+        override protected void Clear()
+        {
+            while (m_FeatureItems.Count != 0)
+            {
+                Destroy(m_FeatureItems[0].gameObject);
+                m_FeatureItems.Remove(m_FeatureItems[0]);
+            }
+        }
+    }
 }

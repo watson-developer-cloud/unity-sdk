@@ -17,83 +17,83 @@
 */
 
 using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
 
-namespace IBM.Watson.Widgets.Question.Facet
+namespace IBM.Watson.Widgets.Question
 {
-	public class QuestionAndAnswer : Base
-		{
-		[SerializeField]
-		private Text m_QuestionText;
-		[SerializeField]
-		private Text m_AnswerText;
-		[SerializeField]
-		private Text m_ConfidenceText;
+    public class QuestionAndAnswer : Base
+    {
+        [SerializeField]
+        private Text m_QuestionText;
+        [SerializeField]
+        private Text m_AnswerText;
+        [SerializeField]
+        private Text m_ConfidenceText;
 
 
-		private string _AnswerString;
-		public string AnswerString
-		{
-			get { return _AnswerString; }
-			set 
-			{
-				_AnswerString = value;
-				UpdateAnswer();
-			}
-		}
+        private string m_Answer;
+        public string Answer
+        {
+            get { return m_Answer; }
+            set
+            {
+                m_Answer = value;
+                UpdateAnswer();
+            }
+        }
 
-		private string _QuestionString;
-		public string QuestionString
-		{
-			get { return _QuestionString; }
-			set 
-			{
-				_QuestionString = value;
-				UpdateQuestion();
-			}
-		}
+        private string m_QuestionString;
+        public string QuestionString
+        {
+            get { return m_QuestionString; }
+            set
+            {
+                m_QuestionString = value;
+                UpdateQuestion();
+            }
+        }
 
-		private double _m_Confidence;
-		public double m_Confidence 
-		{
-			get { return _m_Confidence; }
-			set {
-				_m_Confidence = value;
-				UpdateConfidence();
-			}
-		}
+        private double m_Confidence;
+        public double Confidence
+        {
+            get { return m_Confidence; }
+            set
+            {
+                m_Confidence = value;
+                UpdateConfidence();
+            }
+        }
 
-		override public void Init()
-		{
-			QuestionString = m_Question.QuestionData.QuestionDataObject.questions [0].question.questionText;
-			AnswerString = m_Question.QuestionData.AnswerDataObject.answers [0].answerText;
-			m_Confidence = m_Question.QuestionData.AnswerDataObject.answers [0].confidence;
-		}
+        override public void Init()
+        {
+            QuestionString = m_Question.QuestionData.QuestionDataObject.questions[0].question.questionText;
+            Answer = m_Question.QuestionData.AnswerDataObject.answers[0].answerText;
+            Confidence = m_Question.QuestionData.AnswerDataObject.answers[0].confidence;
+        }
 
-		/// <summary>
-		/// Update answer view.
-		/// </summary>
-		private void UpdateAnswer()
-		{
-			m_AnswerText.text = AnswerString;
-		}
+        /// <summary>
+        /// Update answer view.
+        /// </summary>
+        private void UpdateAnswer()
+        {
+            m_AnswerText.text = Answer;
+        }
 
-		/// <summary>
-		/// Update question view.
-		/// </summary>
-		private void UpdateQuestion()
-		{
-			m_QuestionText.text = QuestionString;
-		}
+        /// <summary>
+        /// Update question view.
+        /// </summary>
+        private void UpdateQuestion()
+        {
+            m_QuestionText.text = QuestionString;
+        }
 
-		/// <summary>
-		/// Update confidence view.
-		/// </summary>
-		private void UpdateConfidence()
-		{
-			float confidence = (float)m_Confidence * 100;
-			m_ConfidenceText.text = confidence.ToString ("f1");
-		}
-	}
+        /// <summary>
+        /// Update confidence view.
+        /// </summary>
+        private void UpdateConfidence()
+        {
+            float confidence = (float)Confidence * 100;
+            m_ConfidenceText.text = confidence.ToString("f1");
+        }
+    }
 }

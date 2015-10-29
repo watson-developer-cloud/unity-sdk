@@ -17,23 +17,22 @@
 */
 
 using UnityEngine;
-using System.Collections;
-using IBM.Watson.Widgets.Question.Facet.FacetElement;
 
-namespace IBM.Watson.Widgets.Question.Facet
+namespace IBM.Watson.Widgets.Question
 {
-	public class AnswersAndConfidence : Base 
-	{
-		[Header("UI Faces")]
-		[SerializeField]
-		private AnswerConfidenceBar[] m_AnswerConfidenceBars;
+    public class AnswersAndConfidence : Base
+    {
+        [Header("UI Faces")]
+        [SerializeField]
+        private AnswerConfidenceBar[] m_AnswerConfidenceBars;
 
-		override public void Init()
-		{
-			for(int i = 0; i < m_AnswerConfidenceBars.Length; i++) {
-				m_AnswerConfidenceBars[i].Answer = m_Question.QuestionData.AnswerDataObject.answers[i].answerText;
-				m_AnswerConfidenceBars[i].Confidence = m_Question.QuestionData.AnswerDataObject.answers[i].confidence;
-			}
-		}
-	}
+        override public void Init()
+        {
+            for (int i = 0; i < m_AnswerConfidenceBars.Length; i++)
+            {
+                m_AnswerConfidenceBars[i].Answer = m_Question.QuestionData.AnswerDataObject.answers[i].answerText;
+                m_AnswerConfidenceBars[i].Confidence = m_Question.QuestionData.AnswerDataObject.answers[i].confidence;
+            }
+        }
+    }
 }
