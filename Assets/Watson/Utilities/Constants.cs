@@ -19,6 +19,10 @@ namespace IBM.Watson.Utilities
             public const KeyCode CUBE_TO_UNFOLD = KeyCode.U;
             public const KeyCode CUBE_TO_FOCUS = KeyCode.Z;
             public const KeyCode CUBE_TO_UNFOCUS = KeyCode.X;
+			public const KeyCode CUBE_TO_ROTATE_OR_PAUSE = KeyCode.R;
+
+			//Application - General
+			public const KeyCode APPLICATION_PAUSE = KeyCode.Space;
         }
 
         /// <summary>

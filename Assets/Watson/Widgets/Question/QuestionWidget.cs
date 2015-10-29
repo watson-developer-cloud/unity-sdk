@@ -1,4 +1,4 @@
-﻿/**
+/**
 * Copyright 2015 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -67,27 +67,27 @@ namespace IBM.Watson.Widgets.Question
         #region Cube Actions
         public void OnDisplayAnswers()
         {
-            Cube.FocusOnSide( CubeAnimationManager.CubeSideType.Answers );
+            Cube.FocusOnSide( CubeAnimationManager.CubeSideType.ANSWERS );
         }
 
         public void OnDisplayChat()
         {
-            Cube.FocusOnSide( CubeAnimationManager.CubeSideType.Chat );
+            Cube.FocusOnSide( CubeAnimationManager.CubeSideType.CHAT );
         }
 
         public void OnDisplayParse()
         {
-            Cube.FocusOnSide( CubeAnimationManager.CubeSideType.Parse );
+            Cube.FocusOnSide( CubeAnimationManager.CubeSideType.PARSE );
         }
 
         public void OnDisplayEvidence()
         {
-            Cube.FocusOnSide( CubeAnimationManager.CubeSideType.Evidence );
+            Cube.FocusOnSide( CubeAnimationManager.CubeSideType.EVIDENCE );
         }
 
         public void OnDisplayLocation()
         {
-            Cube.FocusOnSide( CubeAnimationManager.CubeSideType.Location );
+            Cube.FocusOnSide( CubeAnimationManager.CubeSideType.LOCATION );
         }
 
         public void OnFold()
