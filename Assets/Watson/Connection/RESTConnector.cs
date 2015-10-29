@@ -369,6 +369,10 @@ namespace IBM.Watson.Connection
                             url, string.IsNullOrEmpty( www.error ) ? "Timeout" : www.error, www.text );
                     }
 
+                    resp.ElapsedTime = Time.time - startTime;
+                    if ( req.OnResponse != null )
+                        req.OnResponse( req, resp );
+
 				    www.Dispose();
                 }
                 else
@@ -386,15 +390,12 @@ namespace IBM.Watson.Connection
                     resp.Success = deleteReq.Success;
 #else
                     Log.Warning( "RESTConnector", "DELETE method is supported in the editor only." );
+                    resp.Success = false;
 #endif
+                    resp.ElapsedTime = Time.time - startTime;
+                    if ( req.OnResponse != null )
+                        req.OnResponse( req, resp );
                 }
-
-                // provide the time to took to get a response from the server..
-                resp.ElapsedTime = Time.time - startTime;
-
-                if ( req.OnResponse != null )
-                    req.OnResponse( req, resp );
-
             }
 
             // reduce the connection count before we exit..

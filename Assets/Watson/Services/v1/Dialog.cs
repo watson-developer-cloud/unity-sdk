@@ -181,7 +181,7 @@ namespace IBM.Watson.Services.v1
                 try
                 {
                     IDictionary json = Json.Deserialize( Encoding.UTF8.GetString( resp.Data ) ) as IDictionary;
-                    id = (string)json["id"];
+                    id = (string)json["dialog_id"];
                 }
                 catch (Exception e)
                 {

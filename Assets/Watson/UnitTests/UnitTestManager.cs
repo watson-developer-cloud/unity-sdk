@@ -159,13 +159,11 @@ namespace IBM.Watson.Editor
             if (OnTestCompleteCallback != null)
                 OnTestCompleteCallback();
 
-            if (QuitOnTestsComplete)
-            {
-                Log.Status("UnitTestManager", "Exiting, Tests Completed: {0}, Tests Failed: {1}", TestsComplete, TestsFailed);
+            Log.Status("UnitTestManager", "Tests Completed: {0}, Tests Failed: {1}", TestsComplete, TestsFailed);
 #if UNITY_EDITOR
+            if (QuitOnTestsComplete)
                 EditorApplication.Exit(TestsFailed > 0 ? 1 : 0);
 #endif
-            }
         }
 
         private void Start()
