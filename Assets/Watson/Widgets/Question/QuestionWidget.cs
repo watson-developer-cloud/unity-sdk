@@ -208,7 +208,7 @@ namespace IBM.Watson.Widgets.Question
         }
 
         /// <summary>
-        /// Sets Question, Answer and Avatar for each facet. Init is called by the Avatar Widget.
+        /// Sets Question, Answer and Avatar for each facet. This is called by the Avatar Widget.
         /// </summary>
         public void UpdateFacets()
         {
