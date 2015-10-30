@@ -60,8 +60,21 @@ public class AvatarTouchManager: MonoBehaviour
         TwoFingerMoveGesture.Transformed += twoFingerTransformHandler;
         OneFingerManipulationGesture.Transformed += oneFingerManipulationTransformedHandler;
         tapGesture.Tapped += TapGesture_Tapped;
+
         EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_CHANGE_STATE_QUESTIONCUBE_ANIMATION, CubeAnimationStateChanged);
     }
+
+	private void OnDisable()
+	{
+		Log.Status("AvatarTouchManager", "OnDisable");
+		
+		TwoFingerMoveGesture.Transformed -= twoFingerTransformHandler;
+		OneFingerManipulationGesture.Transformed -= oneFingerManipulationTransformedHandler;
+		tapGesture.Tapped -= TapGesture_Tapped;
+
+		EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_CHANGE_STATE_QUESTIONCUBE_ANIMATION, CubeAnimationStateChanged);
+	}
+
    
     private void FocusOnSide(Transform hitTransform)
     {
@@ -147,16 +160,7 @@ public class AvatarTouchManager: MonoBehaviour
        
     }
 
-    private void OnDisable()
-    {
-        Log.Status("AvatarTouchManager", "OnDisable");
-
-        TwoFingerMoveGesture.Transformed -= twoFingerTransformHandler;
-        OneFingerManipulationGesture.Transformed -= oneFingerManipulationTransformedHandler;
-        tapGesture.Tapped -= TapGesture_Tapped;
-        EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_CHANGE_STATE_QUESTIONCUBE_ANIMATION, CubeAnimationStateChanged);
-    }
-
+   
     private void oneFingerManipulationTransformedHandler(object sender, System.EventArgs e)
     {
         Log.Status("AvatarTouchManager", "oneFingerManipulationTransformedHandler: {0}" , OneFingerManipulationGesture.DeltaPosition);

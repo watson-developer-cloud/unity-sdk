@@ -1,4 +1,4 @@
-﻿/**
+/**
 * Copyright 2015 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,7 +25,7 @@ namespace IBM.Watson.Widgets.Avatar
     /// <summary>
     /// LightRingManager manages the Avatar 3d models' animated light rings according to mood / behavior change. 
     /// </summary>
-	public class LightRingManager : AvatarModelManager
+	public class LightRingManager : BaseRingManager
     {
 
         #region Private Variables
@@ -44,6 +44,7 @@ namespace IBM.Watson.Widgets.Avatar
 		Vector3[][] m_ListFlareBezierPathList;
 
 		Material m_SharedMaterialLightFlare;
+		Color m_TintColorSharedMaterialLightFlareInitial = Color.white;
 		Color m_ColorAnimationFlareLast = Color.white;
 
 		LTDescr m_ColorAnimationOnRing = null;
@@ -57,7 +58,9 @@ namespace IBM.Watson.Widgets.Avatar
         
 		void OnApplicationQuit()
 		{
-			//TODO: Go back to initial coloring
+			if (m_SharedMaterialLightFlare != null) {
+				m_SharedMaterialLightFlare.SetColor("_TintColor", m_TintColorSharedMaterialLightFlareInitial);
+			}
 		}
 
         protected override void Awake(){
@@ -100,6 +103,7 @@ namespace IBM.Watson.Widgets.Avatar
 					m_LightFlareChild[i] = m_LightFlarePivotParentList[i].GetComponentInChildren<MeshRenderer>().gameObject;
 				}
 				m_SharedMaterialLightFlare = m_LightFlareChild[0].transform.GetComponent<MeshRenderer>().sharedMaterial;
+				m_TintColorSharedMaterialLightFlareInitial = m_SharedMaterialLightFlare.GetColor("_TintColor");
 			}
 		}
 

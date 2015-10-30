@@ -478,8 +478,8 @@ namespace IBM.Watson.Widgets.Avatar
                     {
                         State = AvatarState.ANSWERING;
 
-                        if (m_FocusQuestion != null)
-                            m_FocusQuestion.OnFold();
+                        //if (m_FocusQuestion != null)
+                        //    m_FocusQuestion.OnFold();
 
                         if (!m_ITM.AskQuestion(m_SpeechText, OnAskQuestion))
                             Log.Error("AvatarWidget", "Failed to send question to ITM.");
@@ -593,6 +593,7 @@ namespace IBM.Watson.Widgets.Avatar
         {
 			if ( m_FocusQuestion != null ) {
 				m_FocusQuestion.Focused = false;	//lost focus and sent out the scene!
+				m_FocusQuestion.OnLeaveTheSceneAndDestroy();
 			}
 
 			if (m_QuestionPrefab != null)	//m_FocusQuestion == null && 
@@ -757,7 +758,6 @@ namespace IBM.Watson.Widgets.Avatar
             }
         }
         #endregion
-
 
         #region IQuestionData implementation
         /// <summary>

@@ -55,6 +55,14 @@ namespace IBM.Watson.Utilities
 
             //Question Widget State Change
             public const string ON_CHANGE_STATE_QUESTIONCUBE_ANIMATION = "ON_CHANGE_STATE_QUESTIONCUBE_ANIMATION";
+
+			//Animation Related ones
+			public const string ON_ANIMATION_STOP = "ON_ANIMATION_STOP";
+			public const string ON_ANIMATION_PAUSE = "ON_ANIMATION_PAUSE";
+			public const string ON_ANIMATION_RESUME = "ON_ANIMATION_RESUME";
+			public const string ON_ANIMATION_SPEED_UP = "ON_ANIMATION_SPEED_UP";
+			public const string ON_ANIMATION_SPEED_DOWN = "ON_ANIMATION_SPEED_DOWN";
+			public const string ON_ANIMATION_SPEED_DEFAULT = "ON_ANIMATION_SPEED_DEFAULT";
          
         }
 
