@@ -26,6 +26,8 @@ namespace IBM.Watson.UnitTests
 {
     public class TestDialog : UnitTest
     {
+        const string DIALOG_NAME = "ut_20151029_4";
+
         Dialog m_Dialog = new Dialog();
         bool m_GetDialogsTested = false;
         bool m_UploadTested = false;
@@ -42,20 +44,23 @@ namespace IBM.Watson.UnitTests
 
             if (! m_UploadTested )
             {
-                m_Dialog.UploadDialog( "xray", OnDialogUploaded, Application.streamingAssetsPath + "/pizza_sample.xml" );
+                m_Dialog.UploadDialog( DIALOG_NAME, OnDialogUploaded, Application.dataPath + "/../Docs/pizza_sample.xml" );
                 while(! m_UploadTested )
                     yield return null;
             }
 
-            m_Dialog.Converse( m_DialogID, "Hello", OnConverse );
-            while( !m_ConverseTested )
-                yield return null;
+            if (! string.IsNullOrEmpty( m_DialogID ) )
+            {
+                m_Dialog.Converse( m_DialogID, "Hello", OnConverse );
+                while( !m_ConverseTested )
+                    yield return null;
 
-            m_ConverseTested = false;
-            m_Dialog.Converse( m_DialogID, "What do you have?", OnConverse, 
-                m_ConversationID, m_ClientID );
-            while( !m_ConverseTested )
-                yield return null;
+                m_ConverseTested = false;
+                m_Dialog.Converse( m_DialogID, "What do you have?", OnConverse, 
+                    m_ConversationID, m_ClientID );
+                while( !m_ConverseTested )
+                    yield return null;
+            }
 
             yield break;
         }
@@ -76,8 +81,8 @@ namespace IBM.Watson.UnitTests
 
         private void OnDialogUploaded( string id )
         {
-            Test( id != null );
-            if ( id != null )
+            Test( !string.IsNullOrEmpty( id  ) );
+            if (! string.IsNullOrEmpty( id ) )
             {
                 Log.Debug( "TestDialog", "Dialog ID: {0}", id );
                 m_DialogID = id;
@@ -93,7 +98,7 @@ namespace IBM.Watson.UnitTests
                 foreach( var d in dialogs.dialogs )
                 {
                     Log.Debug( "TestDialog", "Name: {0}, ID: {1}", d.name, d.dialog_id );
-                    if ( d.name == "xray" )
+                    if ( d.name == DIALOG_NAME )
                     {
                         m_UploadTested = true;
                         m_DialogID = d.dialog_id;

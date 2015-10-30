@@ -41,23 +41,25 @@ namespace IBM.Watson.Widgets.Question
         [SerializeField]
         private ScrollRect m_ScrollRect = null;
 
+        private IQuestionData m_QuestionData = null;
+
         private void Start()
         {
             QuestionWidget question = GetComponentInParent<QuestionWidget>();
             if (question != null)
             {
-                question.QuestionData.OnAnswer += OnAnswer;
-                question.QuestionData.OnQuestion += OnQuestion;
+                m_QuestionData = question.QuestionData;
+                m_QuestionData.OnAnswer += OnAnswer;
+                m_QuestionData.OnQuestion += OnQuestion;
             }
         }
 
-        private void OnDestroy()
+        private void OnDisable()
         {
-            QuestionWidget question = GetComponentInParent<QuestionWidget>();
-            if (question != null)
+            if (m_QuestionData != null)
             {
-                question.QuestionData.OnAnswer -= OnAnswer;
-                question.QuestionData.OnQuestion -= OnQuestion;
+                m_QuestionData.OnAnswer -= OnAnswer;
+                m_QuestionData.OnQuestion -= OnQuestion;
             }
         }
 

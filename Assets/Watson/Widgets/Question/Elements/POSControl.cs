@@ -60,7 +60,7 @@ namespace IBM.Watson.Widgets.Question
         /// <summary>
         /// Start this instance.
         /// </summary>
-        void Start()
+        void Awake()
         {
             m_RectTransform = gameObject.GetComponent<RectTransform>();
         }

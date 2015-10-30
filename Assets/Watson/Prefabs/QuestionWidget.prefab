@@ -16092,7 +16092,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ae469cfa8dd5487d85fe0964e340659, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  avatarGameobject: {fileID: 108938, guid: 98d604b28f18d4d39b08f225836ab0d3, type: 2}
+  avatarGameobject: {fileID: 0}
   avatarPositionUnfold: {x: 0, y: -14, z: 0}
   positionCubeOffsetUnfold: {x: 0, y: 2.5, z: 0}
   statinoaryRotationSpeed: 10
@@ -23475,6 +23475,10 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_TagString
       value: QuestionOnFocus
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: avatarGameobject
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

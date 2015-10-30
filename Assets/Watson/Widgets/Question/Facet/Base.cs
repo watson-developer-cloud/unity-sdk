@@ -48,6 +48,8 @@ namespace IBM.Watson.Widgets.Question
         /// </summary>
         public virtual void Init() 
 		{ 
+            m_Question = GetComponentInParent<QuestionWidget>();
+
 			Clear ();
 		}
 

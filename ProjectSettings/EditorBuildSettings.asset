@@ -14,32 +14,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Watson/Scenes/TestTTS.unity
   - enabled: 1
-    path: Assets/Watson/Scenes/CubeTest.unity
-  - enabled: 1
     path: Assets/Watson/Scenes/TestNLC.unity
   - enabled: 1
-    path: Assets/Watson/Scenes/Experimental/XRay.unity
-  - enabled: 1
-    path: Assets/Watson/ThirdParty/TouchScript/Examples/Examples.unity
-  - enabled: 1
-    path: Assets/Watson/ThirdParty/TouchScript/Examples/General/Camera/Camera.unity
-  - enabled: 1
-    path: Assets/Watson/ThirdParty/TouchScript/Examples/General/Checkers/Checkers.unity
-  - enabled: 1
-    path: Assets/Watson/ThirdParty/TouchScript/Examples/General/Colors/Colors.unity
-  - enabled: 1
-    path: Assets/Watson/ThirdParty/TouchScript/Examples/General/Input/Input.unity
-  - enabled: 1
-    path: Assets/Watson/ThirdParty/TouchScript/Examples/General/Multiuser/Multiuser.unity
-  - enabled: 1
-    path: Assets/Watson/ThirdParty/TouchScript/Examples/General/Photos/Photos.unity
-  - enabled: 1
-    path: Assets/Watson/ThirdParty/TouchScript/Examples/General/Photos/Photos2D.unity
-  - enabled: 1
-    path: Assets/Watson/ThirdParty/TouchScript/Examples/General/Portal/Portal.unity
-  - enabled: 1
-    path: Assets/Watson/ThirdParty/TouchScript/Examples/General/Taps/Taps.unity
-  - enabled: 1
-    path: Assets/Watson/ThirdParty/TouchScript/Examples/General/UI/InputModule.unity
+    path: Assets/Watson/Scenes/XRay.unity
   - enabled: 1
     path: Assets/Watson/Scenes/TestMic.unity

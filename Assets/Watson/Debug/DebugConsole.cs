@@ -127,7 +127,7 @@ namespace IBM.Watson.Debug
         /// </summary>
         /// <param name="label"></param>
         /// <returns></returns>
-        public bool UnregisterDebugInfo( string label )
+		public bool UnregisterDebugInfo( string label, GetDebugInfo callback = null )
         {
             if ( string.IsNullOrEmpty( label ) )
                 throw new ArgumentNullException( "label" );

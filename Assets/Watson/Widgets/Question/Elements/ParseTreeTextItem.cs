@@ -84,7 +84,7 @@ namespace IBM.Watson.Widgets.Question
         /// <summary>
         /// Sets a reference of the RectTransform.
         /// </summary>
-        void Start()
+        void Awake()
         {
             m_RectTransform = m_ParseTreeTextField.gameObject.GetComponent<RectTransform>();
         }
