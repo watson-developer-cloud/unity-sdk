@@ -24,7 +24,7 @@ namespace IBM.Watson.Widgets.Avatar
     /// <summary>
     /// GlassRingManager manages the Avatar's 3D models' ring material color according to mood and behavior change.
     /// </summary>
-	public class GlassRingManager : AvatarModelManager
+	public class GlassRingManager : BaseRingManager
     {
 
         #region Private Variables
