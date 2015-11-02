@@ -18,6 +18,7 @@
 
 using UnityEngine;
 using UnityEngine.UI;
+using System.Text.RegularExpressions;
 
 namespace IBM.Watson.Widgets.Question
 {
@@ -49,7 +50,8 @@ namespace IBM.Watson.Widgets.Question
             if (EvidenceString != "")
             {
                 gameObject.SetActive(true);
-                m_EvidenceText.text = EvidenceString;
+				string StrippedEvidence = Regex.Replace(EvidenceString, "<[^>]*>", "");
+				m_EvidenceText.text = StrippedEvidence;
             }
             else
             {
