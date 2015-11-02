@@ -34,6 +34,9 @@ namespace IBM.Watson.Widgets.Question
         #region Private Data
         private CubeAnimationManager m_CubeAnimMgr = null;
 
+		[SerializeField]
+		private LayerMask m_layerForQuestionWidget;
+
         private AnswersAndConfidence m_AnswersAndConfidence;
         private Question.Evidence m_Evidence;
         private Semantic m_Semantic;
@@ -76,6 +79,10 @@ namespace IBM.Watson.Widgets.Question
                     KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CUBE_TO_ROTATE_OR_PAUSE, Constants.KeyCodes.MODIFIER_KEY, OnRotateOrPause);
                     KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CUBE_TO_UNFOCUS, Constants.KeyCodes.MODIFIER_KEY, OnUnFocus);
                     KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CUBE_TO_UNFOLD, Constants.KeyCodes.MODIFIER_KEY, OnUnfold);
+
+					TouchEventManager.Instance.RegisterTapEvent(gameObject, OnTapInside, isTapInside: true);
+					TouchEventManager.Instance.RegisterTapEvent(gameObject, OnTapOutside, isTapInside: false);
+
                 }
                 else
                 {
@@ -84,6 +91,9 @@ namespace IBM.Watson.Widgets.Question
                     KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_ROTATE_OR_PAUSE, Constants.KeyCodes.MODIFIER_KEY, OnRotateOrPause);
                     KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_UNFOCUS, Constants.KeyCodes.MODIFIER_KEY, OnUnFocus);
                     KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_UNFOLD, Constants.KeyCodes.MODIFIER_KEY, OnUnfold);
+
+					TouchEventManager.Instance.UnregisterTapEvent(gameObject, OnTapInside, isTapInside: true);
+					TouchEventManager.Instance.UnregisterTapEvent(gameObject, OnTapOutside, isTapInside: false);
                 }
             }
         }
@@ -107,6 +117,81 @@ namespace IBM.Watson.Widgets.Question
         #endregion
 
         #region Cube Actions
+
+		public void OnTapInside(TouchScript.Gestures.TapGesture tapGesture, Transform hitTransform){
+
+			Log.Status("Question Widget", "OnTapInside");
+			//Touch on side
+			switch (CubeAnimationManager.Instance.AnimationState)
+			{
+			case CubeAnimationManager.CubeAnimationState.NOT_PRESENT:
+				break;
+			case CubeAnimationManager.CubeAnimationState.COMING_TO_SCENE:
+				break;
+			case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOLDED:
+				Cube.UnFold();
+				break;
+			case CubeAnimationManager.CubeAnimationState.UNFOLDING:
+				FocusOnSide(hitTransform);
+				break;
+			case CubeAnimationManager.CubeAnimationState.IDLE_AS_UNFOLDED:
+				FocusOnSide(hitTransform);
+				break;
+			case CubeAnimationManager.CubeAnimationState.FOLDING:
+				Cube.UnFold();
+				break;
+			case CubeAnimationManager.CubeAnimationState.FOCUSING_TO_SIDE:
+				FocusOnSide(hitTransform);
+				break;
+			case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOCUSED:
+				FocusOnSide(hitTransform);
+				break;
+			case CubeAnimationManager.CubeAnimationState.GOING_FROM_SCENE:
+				break;
+			default:
+				break;
+			}
+		}
+
+		private void FocusOnSide(Transform hitTransform)
+		{
+			int touchedSide = 0;
+			int.TryParse(hitTransform.name.Substring(1, 1), out touchedSide);
+			Cube.FocusOnSide((CubeAnimationManager.CubeSideType)touchedSide);
+		}
+
+		public void OnTapOutside(TouchScript.Gestures.TapGesture tapGesture, Transform hitTransform){
+			Log.Status("Question Widget", "OnTapOutside");
+			//Touch out-side
+			switch (CubeAnimationManager.Instance.AnimationState)
+			{
+			case CubeAnimationManager.CubeAnimationState.NOT_PRESENT:
+				break;
+			case CubeAnimationManager.CubeAnimationState.COMING_TO_SCENE:
+				break;
+			case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOLDED:
+				break;
+			case CubeAnimationManager.CubeAnimationState.UNFOLDING:
+				Cube.Fold();
+				break;
+			case CubeAnimationManager.CubeAnimationState.IDLE_AS_UNFOLDED:
+				Cube.Fold();
+				break;
+			case CubeAnimationManager.CubeAnimationState.FOLDING:
+				break;
+			case CubeAnimationManager.CubeAnimationState.FOCUSING_TO_SIDE:
+				Cube.UnFocus();
+				break;
+			case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOCUSED:
+				Cube.UnFocus();
+				break;
+			case CubeAnimationManager.CubeAnimationState.GOING_FROM_SCENE:
+				break;
+			default:
+				break;
+			}
+		}
+
         public void OnDisplayAnswers()
         {
             Cube.FocusOnSide(CubeAnimationManager.CubeSideType.ANSWERS);

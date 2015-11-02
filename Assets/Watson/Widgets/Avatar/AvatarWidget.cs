@@ -212,6 +212,7 @@ namespace IBM.Watson.Widgets.Avatar
         #endregion
 
         #region Initialization
+
         void OnEnable()
         {
             EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_CHANGE_AVATAR_MOOD, OnChangeMood);
@@ -222,11 +223,8 @@ namespace IBM.Watson.Widgets.Avatar
 			DebugConsole.Instance.RegisterDebugInfo("CLASS", OnClassifyDebugInfo);
 			DebugConsole.Instance.RegisterDebugInfo("Q", OnQuestionDebugInfo);
 			DebugConsole.Instance.RegisterDebugInfo("A", OnAnwserDebugInfo);
-			
-			KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.QUESTION_WAKEUP, Constants.KeyCodes.MODIFIER_KEY, OnExampleQuestion );
-			KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CHANGE_MOOD, Constants.KeyCodes.MODIFIER_KEY, OnNextMood );
-
         }
+
         void OnDisable()
         {
 			
@@ -238,9 +236,6 @@ namespace IBM.Watson.Widgets.Avatar
 			DebugConsole.Instance.UnregisterDebugInfo("CLASS", OnClassifyDebugInfo);
 			DebugConsole.Instance.UnregisterDebugInfo("Q", OnQuestionDebugInfo);
 			DebugConsole.Instance.UnregisterDebugInfo("A", OnAnwserDebugInfo);
-
-			KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.QUESTION_WAKEUP, Constants.KeyCodes.MODIFIER_KEY, OnExampleQuestion );
-			KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CHANGE_MOOD, Constants.KeyCodes.MODIFIER_KEY, OnNextMood );
         }
 
         /// <exclude />
@@ -312,12 +307,12 @@ namespace IBM.Watson.Widgets.Avatar
             return string.Empty;
         }
 
-        private void OnNextMood()
+        public void OnNextMood()
         {
             Mood = (MoodType)((((int)Mood) + 1) % Enum.GetValues(typeof(MoodType)).Length);
         }
 
-		private void OnExampleQuestion(){
+		public void OnExampleQuestion(){
 			//TODO
 			InstatiateQuestionWidget ();
 		}

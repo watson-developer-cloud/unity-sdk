@@ -34,11 +34,11 @@ namespace IBM.Watson.Camera
 
         void Start()
         {
-            KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CHANGE_QUALITY, KeyModifiers.NONE, OnNextQualityLevel ); 
+           	//KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CHANGE_QUALITY, KeyModifiers.NONE, OnNextQualityLevel ); 
             DebugConsole.Instance.RegisterDebugInfo( "QUALITY", OnQualityDebugInfo );            
         }
         
-        private void OnNextQualityLevel()
+        public void OnNextQualityLevel()
         {
             QualitySettings.SetQualityLevel( (QualitySettings.GetQualityLevel() + 1) % QualitySettings.names.Length, true );
         }

@@ -30,7 +30,7 @@ public class AvatarTouchManager: MonoBehaviour
     
     public ScreenTransformGesture OneFingerManipulationGesture;
     public ScreenTransformGesture TwoFingerMoveGesture;
-    public TapGesture tapGesture;
+//    public TapGesture tapGesture;
 
     public LayerMask layerForQuestionWidget;
     public float PanSpeed = 100.0f;
@@ -59,7 +59,7 @@ public class AvatarTouchManager: MonoBehaviour
         
         TwoFingerMoveGesture.Transformed += twoFingerTransformHandler;
         OneFingerManipulationGesture.Transformed += oneFingerManipulationTransformedHandler;
-        tapGesture.Tapped += TapGesture_Tapped;
+//        tapGesture.Tapped += TapGesture_Tapped;
 
         EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_CHANGE_STATE_QUESTIONCUBE_ANIMATION, CubeAnimationStateChanged);
     }
@@ -70,7 +70,7 @@ public class AvatarTouchManager: MonoBehaviour
 		
 		TwoFingerMoveGesture.Transformed -= twoFingerTransformHandler;
 		OneFingerManipulationGesture.Transformed -= oneFingerManipulationTransformedHandler;
-		tapGesture.Tapped -= TapGesture_Tapped;
+//		tapGesture.Tapped -= TapGesture_Tapped;
 
 		EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_CHANGE_STATE_QUESTIONCUBE_ANIMATION, CubeAnimationStateChanged);
 	}
@@ -83,82 +83,82 @@ public class AvatarTouchManager: MonoBehaviour
         CubeAnimationManager.Instance.FocusOnSide((CubeAnimationManager.CubeSideType)touchedSide);
     }
 
-    private void TapGesture_Tapped(object sender, System.EventArgs e)
-    {
-        if (CubeAnimationManager.Instance == null)
-            return;
-
-       Log.Status("AvatarTouchManager", "TapGesture_Tapped: {0}", tapGesture.ScreenPosition);
-        Ray rayForTab = mainCamera.GetComponent<Camera>().ScreenPointToRay(tapGesture.ScreenPosition);
-
-        RaycastHit hit;
-        if (Physics.Raycast(rayForTab, out hit, Mathf.Infinity, layerForQuestionWidget))
-        {
-            //Touch on side
-            switch (CubeAnimationManager.Instance.AnimationState)
-            {
-                case CubeAnimationManager.CubeAnimationState.NOT_PRESENT:
-                    break;
-                case CubeAnimationManager.CubeAnimationState.COMING_TO_SCENE:
-                    break;
-                case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOLDED:
-                    CubeAnimationManager.Instance.UnFold();
-                    break;
-                case CubeAnimationManager.CubeAnimationState.UNFOLDING:
-                    FocusOnSide(hit.transform);
-                    break;
-                case CubeAnimationManager.CubeAnimationState.IDLE_AS_UNFOLDED:
-                    FocusOnSide(hit.transform);
-                    break;
-                case CubeAnimationManager.CubeAnimationState.FOLDING:
-                    CubeAnimationManager.Instance.UnFold();
-                    break;
-                case CubeAnimationManager.CubeAnimationState.FOCUSING_TO_SIDE:
-                    FocusOnSide(hit.transform);
-                    break;
-                case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOCUSED:
-                    FocusOnSide(hit.transform);
-                    break;
-                case CubeAnimationManager.CubeAnimationState.GOING_FROM_SCENE:
-                    break;
-                default:
-                    break;
-            }
-        }
-        else
-        {
-            Log.Status("AvatarTouchManager", "Touch-outside current state: " + CubeAnimationManager.Instance.AnimationState);
-            //Touch out-side
-            switch (CubeAnimationManager.Instance.AnimationState)
-            {
-                case CubeAnimationManager.CubeAnimationState.NOT_PRESENT:
-                    break;
-                case CubeAnimationManager.CubeAnimationState.COMING_TO_SCENE:
-                    break;
-                case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOLDED:
-                    break;
-                case CubeAnimationManager.CubeAnimationState.UNFOLDING:
-                    CubeAnimationManager.Instance.Fold();
-                    break;
-                case CubeAnimationManager.CubeAnimationState.IDLE_AS_UNFOLDED:
-                    CubeAnimationManager.Instance.Fold();
-                    break;
-                case CubeAnimationManager.CubeAnimationState.FOLDING:
-                    break;
-                case CubeAnimationManager.CubeAnimationState.FOCUSING_TO_SIDE:
-                    CubeAnimationManager.Instance.UnFocus();
-                    break;
-                case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOCUSED:
-                    CubeAnimationManager.Instance.UnFocus();
-                    break;
-                case CubeAnimationManager.CubeAnimationState.GOING_FROM_SCENE:
-                    break;
-                default:
-                    break;
-            }
-        }
-       
-    }
+//    private void TapGesture_Tapped(object sender, System.EventArgs e)
+//    {
+//        if (CubeAnimationManager.Instance == null)
+//            return;
+//
+//       Log.Status("AvatarTouchManager", "TapGesture_Tapped: {0}", tapGesture.ScreenPosition);
+//        Ray rayForTab = mainCamera.GetComponent<Camera>().ScreenPointToRay(tapGesture.ScreenPosition);
+//
+//        RaycastHit hit;
+//        if (Physics.Raycast(rayForTab, out hit, Mathf.Infinity, layerForQuestionWidget))
+//        {
+//            //Touch on side
+//            switch (CubeAnimationManager.Instance.AnimationState)
+//            {
+//                case CubeAnimationManager.CubeAnimationState.NOT_PRESENT:
+//                    break;
+//                case CubeAnimationManager.CubeAnimationState.COMING_TO_SCENE:
+//                    break;
+//                case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOLDED:
+//                    CubeAnimationManager.Instance.UnFold();
+//                    break;
+//                case CubeAnimationManager.CubeAnimationState.UNFOLDING:
+//                    FocusOnSide(hit.transform);
+//                    break;
+//                case CubeAnimationManager.CubeAnimationState.IDLE_AS_UNFOLDED:
+//                    FocusOnSide(hit.transform);
+//                    break;
+//                case CubeAnimationManager.CubeAnimationState.FOLDING:
+//                    CubeAnimationManager.Instance.UnFold();
+//                    break;
+//                case CubeAnimationManager.CubeAnimationState.FOCUSING_TO_SIDE:
+//                    FocusOnSide(hit.transform);
+//                    break;
+//                case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOCUSED:
+//                    FocusOnSide(hit.transform);
+//                    break;
+//                case CubeAnimationManager.CubeAnimationState.GOING_FROM_SCENE:
+//                    break;
+//                default:
+//                    break;
+//            }
+//        }
+//        else
+//        {
+//            Log.Status("AvatarTouchManager", "Touch-outside current state: " + CubeAnimationManager.Instance.AnimationState);
+//            //Touch out-side
+//            switch (CubeAnimationManager.Instance.AnimationState)
+//            {
+//                case CubeAnimationManager.CubeAnimationState.NOT_PRESENT:
+//                    break;
+//                case CubeAnimationManager.CubeAnimationState.COMING_TO_SCENE:
+//                    break;
+//                case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOLDED:
+//                    break;
+//                case CubeAnimationManager.CubeAnimationState.UNFOLDING:
+//                    CubeAnimationManager.Instance.Fold();
+//                    break;
+//                case CubeAnimationManager.CubeAnimationState.IDLE_AS_UNFOLDED:
+//                    CubeAnimationManager.Instance.Fold();
+//                    break;
+//                case CubeAnimationManager.CubeAnimationState.FOLDING:
+//                    break;
+//                case CubeAnimationManager.CubeAnimationState.FOCUSING_TO_SIDE:
+//                    CubeAnimationManager.Instance.UnFocus();
+//                    break;
+//                case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOCUSED:
+//                    CubeAnimationManager.Instance.UnFocus();
+//                    break;
+//                case CubeAnimationManager.CubeAnimationState.GOING_FROM_SCENE:
+//                    break;
+//                default:
+//                    break;
+//            }
+//        }
+//       
+//    }
 
    
     private void oneFingerManipulationTransformedHandler(object sender, System.EventArgs e)
@@ -218,7 +218,8 @@ public class AvatarTouchManager: MonoBehaviour
             {
                 //For Rotating the cube
                 targetCubeRotation = Quaternion.Lerp(targetCubeRotation, Quaternion.identity, Time.deltaTime * speedForCubeRotationAnimation);
-                cubeObject.transform.Rotate(targetCubeRotation.eulerAngles, Space.World);
+				if(cubeObject != null)
+                	cubeObject.transform.Rotate(targetCubeRotation.eulerAngles, Space.World);
             }
 
             //For Zooming

@@ -99,6 +99,7 @@ GameObject:
   - 114: {fileID: 81490304}
   - 114: {fileID: 81490303}
   - 114: {fileID: 81490308}
+  - 114: {fileID: 81490306}
   m_Layer: 0
   m_Name: TouchManager
   m_TagString: Untagged
@@ -210,6 +211,18 @@ MonoBehaviour:
   timeForCameraResetAnimation: 1
   speedForCameraAnimation: 2
   speedForCubeRotationAnimation: 5
+--- !u!114 &81490306
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 81490300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ce6f84be69c24efc9afd3dac982cdfd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_tapGesture: {fileID: 81490308}
 --- !u!114 &81490307
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -661,7 +674,7 @@ Transform:
 GameObject:
   m_PrefabParentObject: {fileID: 108938, guid: 98d604b28f18d4d39b08f225836ab0d3, type: 2}
   m_PrefabInternal: {fileID: 560352799}
---- !u!114 &1701933860
+--- !u!114 &1701933859
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -673,12 +686,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Mappings:
-  - m_Key: 0
+  - m_Key: 109
     m_Modifiers: 2
     m_Callback:
       m_Target: {fileID: 1701933858}
-      m_Component: 
-      m_Method: 
+      m_Component: AvatarWidget
+      m_Method: OnNextMood
+  - m_Key: 119
+    m_Modifiers: 2
+    m_Callback:
+      m_Target: {fileID: 1701933858}
+      m_Component: AvatarWidget
+      m_Method: OnExampleQuestion
 --- !u!1001 &2023788958
 Prefab:
   m_ObjectHideFlags: 0

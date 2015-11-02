@@ -5,17 +5,14 @@ namespace IBM.Watson.Utilities
 {
     public static class Constants
     {
+
         /// <summary>
         /// All Keycodes used via keyboard listed here.
         /// </summary>
         public static class KeyCodes
         {
 			//Debug Mode Key Pressed to use the keys given below
-			public const KeyModifiers MODIFIER_KEY = KeyModifiers.CONTROL;
-
-            //Debug Mode Keyboard keycodes
-            public const KeyCode CHANGE_QUALITY = KeyCode.Q;
-            public const KeyCode CHANGE_MOOD = KeyCode.M;
+			public const KeyModifiers MODIFIER_KEY = KeyModifiers.SHIFT;
 
             //Cube actions keycodes
             public const KeyCode CUBE_TO_FOLD = KeyCode.F;
@@ -24,10 +21,6 @@ namespace IBM.Watson.Utilities
             public const KeyCode CUBE_TO_UNFOCUS = KeyCode.X;
 			public const KeyCode CUBE_TO_ROTATE_OR_PAUSE = KeyCode.R;
 
-			//Application - General
-			public const KeyCode APPLICATION_PAUSE = KeyCode.Space;
-
-			public const KeyCode QUESTION_WAKEUP = KeyCode.W;
         }
 
         /// <summary>
