@@ -17,29 +17,52 @@
 */
 
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
-using IBM.Watson.Utilities;
-using IBM.Watson.Widgets.Question.Facet.FacetElement;
 
-namespace IBM.Watson.Widgets.Question.Facet
+namespace IBM.Watson.Widgets.Question
 {
-	public class Features : Base
-	{
-		[Header("Features")]
-		[SerializeField]
-		private FeatureItem[] m_FeatureItems;
+	/// <summary>
+	/// Handles all Features Facet functionality. 
+	/// </summary>
+    public class Features : Base
+    {
+        [SerializeField]
+        private GameObject m_FeatureItemPrefab;
 
-		/// <summary>
-		/// Fired when Answer Data is set. Sets the value of the Feature Item and index.
-		/// </summary>
-		override protected void OnAnswerData()
-		{
-			//	TODO Dynamically create feature items
-			for (int i = 0; i < m_FeatureItems.Length; i++) {
-				m_FeatureItems[i].m_Feature = m_Answers.answers[0].features[i].displayLabel;
-				m_FeatureItems[i].m_FeatureIndex = m_Answers.answers[0].features[i].weightedScore;
-			}
-		}
-	}
+        [SerializeField]
+        private RectTransform m_FeaturesCanvasRectTransform;
+
+        private List<FeatureItem> m_FeatureItems = new List<FeatureItem>();
+
+        /// <summary>
+        /// Dynamically creates Features Items based on data.
+        /// </summary>
+        override public void Init()
+        {
+			base.Init ();
+
+            for (int i = 0; i < m_Question.QuestionData.AnswerDataObject.answers[0].features.Length; i++)
+            {
+                GameObject featureItemGameObject = Instantiate(m_FeatureItemPrefab, new Vector3(95f, -i * 50f - 150f, 0f), Quaternion.identity) as GameObject;
+                RectTransform featureItemRectTransform = featureItemGameObject.GetComponent<RectTransform>();
+                featureItemRectTransform.SetParent(m_FeaturesCanvasRectTransform, false);
+                FeatureItem featureItem = featureItemGameObject.GetComponent<FeatureItem>();
+                m_FeatureItems.Add(featureItem);
+                featureItem.FeatureString = m_Question.QuestionData.AnswerDataObject.answers[0].features[i].displayLabel;
+                featureItem.FeatureIndex = m_Question.QuestionData.AnswerDataObject.answers[0].features[i].weightedScore;
+            }
+        }
+
+        /// <summary>
+        /// Clears dynamically generated Facet Elements when a question is answered. Called from Question Widget.
+        /// </summary>
+        override protected void Clear()
+        {
+            while (m_FeatureItems.Count != 0)
+            {
+                Destroy(m_FeatureItems[0].gameObject);
+                m_FeatureItems.Remove(m_FeatureItems[0]);
+            }
+        }
+    }
 }

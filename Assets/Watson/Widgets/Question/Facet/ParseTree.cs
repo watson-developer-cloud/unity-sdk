@@ -17,50 +17,58 @@
 */
 
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.UI;
-using IBM.Watson.Widgets.Question.Facet.FacetElement;
+using IBM.Watson.Logging;
 
-namespace IBM.Watson.Widgets.Question.Facet
+namespace IBM.Watson.Widgets.Question
 {
-	public class ParseTree : Base
-		{
-		[SerializeField]
-		private GameObject m_ParseTreeTextItem;
+	/// <summary>
+	/// Handles all ParseTree Facet functionality.
+	/// </summary>
+    public class ParseTree : Base
+    {
+        [SerializeField]
+        private GameObject m_ParseTreeTextItemPrefab;
 
-		[SerializeField]
-		private RectTransform m_ParseCanvasRectTransform;
+        [SerializeField]
+        private RectTransform m_ParseCanvasRectTransform;
 
-		[SerializeField]
-		private List<GameObject> m_POSList = new List<GameObject>();
-		private List<ParseTreeTextItem> m_WordList = new List<ParseTreeTextItem>();
-		private List<Vector3> m_PositionList = new List<Vector3> ();
-		
-		private int _m_WordIndex = 0;
-		public int m_WordIndex 
-		{
-			get { return _m_WordIndex; }
-			set {
-				if(value > m_WordList.Count - 1) {
-					_m_WordIndex = 0;
-				} else if(value < 0) {
-					_m_WordIndex = m_WordList.Count;
-				} else {
-					_m_WordIndex = value;
-				}
-				UpdateHighlightedWord();
-			}
-		}
+        [SerializeField]
+        private List<GameObject> m_POSList = new List<GameObject>();
+        private List<ParseTreeTextItem> m_WordList = new List<ParseTreeTextItem>();
+        private List<Vector3> m_PositionList = new List<Vector3>();
+
+        private int m_WordIndex = 0;
+        public int WordIndex
+        {
+            get { return m_WordIndex; }
+            set
+            {
+                if (value > m_WordList.Count - 1)
+                {
+                    m_WordIndex = 0;
+                }
+                else if (value < 0)
+                {
+                    m_WordIndex = m_WordList.Count;
+                }
+                else
+                {
+                    m_WordIndex = value;
+                }
+
+                UpdateHighlightedWord();
+            }
+        }
 
 		/// <summary>
 		/// Set hard coded positions.
 		/// </summary>
-		void Start () 
+		void Awake()
 		{
-			//	TODO parse tree from hiearchy
+			//	TODO parse tree from hierarchy
 			m_PositionList.Add(new Vector3(-583f, 188f, 0f));
-			m_PositionList.Add(new Vector3(-408f,	64f, 0f));
+			m_PositionList.Add(new Vector3(-408f, 64f, 0f));
 			m_PositionList.Add(new Vector3(-184f, -49f, 0f));
 			m_PositionList.Add(new Vector3(27f, -168f, 0f));
 			m_PositionList.Add(new Vector3(259f, -301f, 0f));
@@ -76,99 +84,118 @@ namespace IBM.Watson.Widgets.Question.Facet
 			m_PositionList.Add(new Vector3(91f, -641f, 0f));
 		}
 
-		/// <summary>
-		/// Generate parse tree from Parse Data.
-		/// </summary>
-		public void GenerateParseTree()
-		{
-			for (int i = 0; i < m_ParseData.Words.Length; i++) {
-				GameObject wordGO = Instantiate(m_ParseTreeTextItem) as GameObject;
-				RectTransform wordRectTransform = wordGO.GetComponent<RectTransform>();
-				wordRectTransform.SetParent(m_ParseCanvasRectTransform, false);
-				if(i < m_PositionList.Count) {
-					wordRectTransform.localPosition = m_PositionList[i];
-				} else {
-					//	TODO fix this
-					wordRectTransform.localPosition = new Vector3(5000f, 5000, 5000f);
-				}
-				ParseTreeTextItem word = wordGO.GetComponent<ParseTreeTextItem>();
-				word.m_ParseTreeWord = m_ParseData.Words[i].Word;
-				word.m_POS = m_ParseData.Words[i].Pos.ToString();
-				word.m_Slot = m_ParseData.Words[i].Slot;
+        /// <summary>
+        /// Generates Parse tree on Initialization of data.
+        /// </summary>
+        override public void Init()
+        {
+			base.Init ();
 
-				for(int j = 0; j < m_ParseData.Words[i].Features.Length; j++) {
-					word.m_Features.Add(m_ParseData.Words[i].Features[j]);
-				}
+            GenerateParseTree();
+        }
 
-				m_WordList.Add(word);
-			}
+        /// <summary>
+        /// Generate parse tree from Parse Data.
+        /// </summary>
+        private void GenerateParseTree()
+        {
+            for (int i = 0; i < m_Question.QuestionData.ParseDataObject.Words.Length; i++)
+            {
+				Log.Debug("Parse Tree", "i: " + i);
+				Log.Debug("Parse Tree", "m_PositionList.Count: " + m_PositionList.Count);
+                GameObject wordGameObject = Instantiate(m_ParseTreeTextItemPrefab) as GameObject;
+                RectTransform wordRectTransform = wordGameObject.GetComponent<RectTransform>();
+                wordRectTransform.SetParent(m_ParseCanvasRectTransform, false);
 
-			m_WordIndex = 0;
-			InvokeRepeating ("CycleWords", 2f, 2f);
-		}
+                if (i < m_PositionList.Count)
+                {
+                    wordRectTransform.localPosition = m_PositionList[i];
+                }
+                else
+                {
+                    //	TODO fix this
+                    wordRectTransform.localPosition = new Vector3(5000f, 5000, 0f);
+                }
+                ParseTreeTextItem word = wordGameObject.GetComponent<ParseTreeTextItem>();
+                word.ParseTreeWord = m_Question.QuestionData.ParseDataObject.Words[i].Word;
+                word.POS = m_Question.QuestionData.ParseDataObject.Words[i].Pos.ToString();
+                word.Slot = m_Question.QuestionData.ParseDataObject.Words[i].Slot;
 
-		/// <summary>
-		/// Delete parse list and parse GameObjects.
-		/// </summary>
-		public void ClearParseTree()
-		{
-			CancelInvoke ();
-			while(m_WordList.Count != 0) {
-				Destroy(m_WordList[0].gameObject);
-				m_WordList.Remove(m_WordList[0]);
-			}
-		}
+                for (int j = 0; j < m_Question.QuestionData.ParseDataObject.Words[i].Features.Length; j++)
+                {
+                    word.m_Features.Add(m_Question.QuestionData.ParseDataObject.Words[i].Features[j]);
+                }
 
-		/// <summary>
-		/// Highlight words, POS and Slots based on the Word Index.
-		/// </summary>
-		private void UpdateHighlightedWord()
-		{
-			for (int i = 0; i < m_WordList.Count; i++) {
-				m_WordList [i].m_IsHighlighted = false;
-			}
+                m_WordList.Add(word);
+            }
 
-			m_WordList [m_WordIndex].m_IsHighlighted = true;
+            WordIndex = 0;
+            InvokeRepeating("CycleWords", 2f, 2f);
+        }
 
-			for (int j = 0; j < m_POSList.Count; j++) {
-				POSControl posControl = m_POSList[j].GetComponent<POSControl>();
-				if(posControl.m_POS == m_WordList [m_WordIndex].m_POS.ToLower() || posControl.m_POS == m_WordList[m_WordIndex].m_Slot.ToLower()) {
-					posControl.m_IsHighlighted = true;
-				} else {
-					posControl.m_IsHighlighted = false;
-				}
-			}
+        /// <summary>
+        /// Clears dynamically generated Facet Elements when a question is answered. Called from Question Widget.
+        /// </summary>
+        override protected void Clear()
+        {
+            CancelInvoke();
+            while (m_WordList.Count != 0)
+            {
+                Destroy(m_WordList[0].gameObject);
+                m_WordList.Remove(m_WordList[0]);
+            }
+        }
 
-			if(m_Questions.questions [0].question.lat.Length == 0 && m_Questions.questions [0].question.focus.Length == 0) m_POSList[2].GetComponent<POSControl>().m_IsHighlighted = true;
-			if (m_Questions.questions [0].question.lat.Length > 0) {
-				if (m_WordList [m_WordIndex].m_ParseTreeWord.ToLower () == m_Questions.questions [0].question.lat [0].ToLower ()) {
-					m_POSList [1].GetComponent<POSControl> ().m_IsHighlighted = true;
-				}
-			}
+        /// <summary>
+        /// Highlight words, POS and Slots based on the Word Index.
+        /// </summary>
+        private void UpdateHighlightedWord()
+        {
+            for (int i = 0; i < m_WordList.Count; i++)
+            {
+                m_WordList[i].IsHighlighted = false;
+            }
+
+            m_WordList[WordIndex].IsHighlighted = true;
+
+            for (int j = 0; j < m_POSList.Count; j++)
+            {
+                POSControl posControl = m_POSList[j].GetComponent<POSControl>();
+                if (posControl.POS == m_WordList[WordIndex].POS.ToLower() || posControl.POS == m_WordList[WordIndex].Slot.ToLower())
+                {
+                    posControl.IsHighlighted = true;
+                }
+                else
+                {
+                    posControl.IsHighlighted = false;
+                }
+            }
+
+            if (m_Question.QuestionData.QuestionDataObject.questions[0].question.lat.Length == 0 && m_Question.QuestionData.QuestionDataObject.questions[0].question.focus.Length == 0) m_POSList[2].GetComponent<POSControl>().IsHighlighted = true;
+            if (m_Question.QuestionData.QuestionDataObject.questions[0].question.lat.Length > 0)
+            {
+                if (m_WordList[WordIndex].ParseTreeWord.ToLower() == m_Question.QuestionData.QuestionDataObject.questions[0].question.lat[0].ToLower())
+                {
+                    m_POSList[1].GetComponent<POSControl>().IsHighlighted = true;
+                }
+            }
 
 
-			if (m_Questions.questions [0].question.focus.Length > 0) {
-				if (m_WordList [m_WordIndex].m_ParseTreeWord.ToLower () == m_Questions.questions [0].question.focus [0].ToLower ()) {
-					m_POSList [0].GetComponent<POSControl> ().m_IsHighlighted = true;
-				}
-			}
-		}
+            if (m_Question.QuestionData.QuestionDataObject.questions[0].question.focus.Length > 0)
+            {
+                if (m_WordList[WordIndex].ParseTreeWord.ToLower() == m_Question.QuestionData.QuestionDataObject.questions[0].question.focus[0].ToLower())
+                {
+                    m_POSList[0].GetComponent<POSControl>().IsHighlighted = true;
+                }
+            }
+        }
 
-		/// <summary>
-		/// Cycles through words via WordIndex.
-		/// </summary>
-		private void CycleWords()
-		{
-			m_WordIndex ++;
-		}
-
-
-		/// <summary>
-		/// Fired when Parse Data is set. Initiates generation of the ParseTree.
-		/// </summary>
-		override protected void OnParseData()
-		{
-			GenerateParseTree ();
-		}
-	}
+        /// <summary>
+        /// Cycles through words via WordIndex.
+        /// </summary>
+        private void CycleWords()
+        {
+            WordIndex++;
+        }
+    }
 }

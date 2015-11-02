@@ -23,6 +23,7 @@ using IBM.Watson.Utilities;
 using IBM.Watson.Logging;
 using UnityEngine;
 using System.Text;
+using System.Threading;
 
 #if UNITY_EDITOR
 using System.Net;
@@ -31,7 +32,10 @@ using System.Net.Security;
 
 namespace IBM.Watson.Connection
 {
-    class RESTConnector
+    /// <summary>
+    /// REST connector class.
+    /// </summary>
+    public class RESTConnector
     {
         #region Public Types
         public delegate void ResponseEvent(Request req, Response resp);
@@ -350,7 +354,7 @@ namespace IBM.Watson.Connection
                     }
 
                     if (! string.IsNullOrEmpty( www.error ) )
-                        Log.Warning( "RESTConnector", "WWW.error: {0}", www.error );
+                        Log.Warning( "RESTConnector", "WWW.error: {0}, response: {1}", www.error, www.text );
 
                     // generate the Response object now..
                     if ( www.isDone && www.bytes != null )
@@ -365,31 +369,33 @@ namespace IBM.Watson.Connection
                             url, string.IsNullOrEmpty( www.error ) ? "Timeout" : www.error, www.text );
                     }
 
+                    resp.ElapsedTime = Time.time - startTime;
+                    if ( req.OnResponse != null )
+                        req.OnResponse( req, resp );
+
 				    www.Dispose();
                 }
                 else
                 {
 #if UNITY_EDITOR
-                    // This fixes the exception thrown by self-signed certificates.
-                    ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(delegate { return true; });
+                    DeleteRequest deleteReq = new DeleteRequest();
+                    deleteReq.Send( url, req.Headers );
+                    while(! deleteReq.IsComplete )
+                    {
+                        if ( Time.time > (startTime + Config.Instance.TimeOut) )
+                            break;
+                        yield return null;
+                    }
 
-                    WebRequest deleteReq = WebRequest.Create( url );
-                    foreach( var kp in req.Headers )
-                        deleteReq.Headers.Add( kp.Key, kp.Value );
-                    deleteReq.Method = "DELETE";
-                    HttpWebResponse deleteResp = deleteReq.GetResponse() as HttpWebResponse;
-                    resp.Success = deleteResp.StatusCode == HttpStatusCode.OK;
+                    resp.Success = deleteReq.Success;
 #else
                     Log.Warning( "RESTConnector", "DELETE method is supported in the editor only." );
+                    resp.Success = false;
 #endif
+                    resp.ElapsedTime = Time.time - startTime;
+                    if ( req.OnResponse != null )
+                        req.OnResponse( req, resp );
                 }
-
-                // provide the time to took to get a response from the server..
-                resp.ElapsedTime = Time.time - startTime;
-
-                if ( req.OnResponse != null )
-                    req.OnResponse( req, resp );
-
             }
 
             // reduce the connection count before we exit..
@@ -397,6 +403,49 @@ namespace IBM.Watson.Connection
             //Log.Debug( "RESTConnector", "ActiveConnections {0}", m_ActiveConnections );
             yield break;
         }
-        #endregion
+
+#if UNITY_EDITOR
+        private class DeleteRequest
+        {
+            public string URL { get; set; }
+            public Dictionary<string,string> Headers { get; set; }
+            public bool IsComplete { get; set; }
+            public bool Success { get; set; }
+
+            public bool Send( string url, Dictionary<string,string> headers )
+            {
+                if ( m_Thread != null && m_Thread.IsAlive )
+                    return false;
+
+                URL = url;
+                Headers = new Dictionary<string, string>();
+                foreach( var kp in headers )
+                    Headers[kp.Key] = kp.Value;           
+                
+                m_Thread = new Thread( ProcessRequest );
+                m_Thread.Start();
+                return true;
+            }
+
+            private Thread m_Thread = null;
+
+            private void ProcessRequest()
+            {
+                // This fixes the exception thrown by self-signed certificates.
+                ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(delegate { return true; });
+
+                WebRequest deleteReq = WebRequest.Create( URL );
+                foreach( var kp in Headers )
+                    deleteReq.Headers.Add( kp.Key, kp.Value );
+                deleteReq.Method = "DELETE";
+
+                HttpWebResponse deleteResp = deleteReq.GetResponse() as HttpWebResponse;
+                Success = deleteResp.StatusCode == HttpStatusCode.OK;
+                IsComplete = true;
+            }
+        };
+#endif
+
+#endregion
     }
 }

@@ -19,6 +19,7 @@
 using System.Collections;
 using IBM.Watson.Services.v1;
 using IBM.Watson.Logging;
+using IBM.Watson.Data;
 
 namespace IBM.Watson.UnitTests
 {
@@ -67,13 +68,13 @@ namespace IBM.Watson.UnitTests
             m_LoginTested = true;
         }
 
-        private void OnGetPipeline( ITM.Pipeline pipeline )
+        private void OnGetPipeline( Pipeline pipeline )
         {
             Test( pipeline != null );
             m_GetPipelineTested = true;
         }
 
-        private void OnAskQuestion( ITM.Questions questions )
+        private void OnAskQuestion( Questions questions )
         {
             Test( questions != null );
             if ( questions != null  )
@@ -95,7 +96,7 @@ namespace IBM.Watson.UnitTests
             m_AskQuestionTested = true;
         }
 
-        private void OnGetQuestion( ITM.Questions questions )
+        private void OnGetQuestion( Questions questions )
         {
             Test( questions != null );
             if ( questions != null && questions.questions != null && questions.questions.Length > 0 )
@@ -103,7 +104,7 @@ namespace IBM.Watson.UnitTests
             m_GetQuestionTested = true;
         }
 
-        private void OnGetQuestions( ITM.Questions questions )
+        private void OnGetQuestions( Questions questions )
         {
             Test( questions != null && questions.questions != null );
             if ( questions != null && questions.questions != null )
@@ -114,7 +115,7 @@ namespace IBM.Watson.UnitTests
             m_GetQuestionsTested = true;
         }
 
-        private void OnGetAnswers( ITM.Answers answers )
+        private void OnGetAnswers( Answers answers )
         {
             Test( answers != null );
             if ( answers != null )
@@ -126,7 +127,7 @@ namespace IBM.Watson.UnitTests
             m_GetAnswersTested = true;
         }
 
-        private void OnGetParseData( ITM.ParseData parse)
+        private void OnGetParseData( ParseData parse)
         {
             Test ( parse != null );
             m_ParseTested = true;

@@ -17,93 +17,91 @@
 */
 
 using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
 
-namespace IBM.Watson.Widgets.Question.Facet
+namespace IBM.Watson.Widgets.Question
 {
-	public class QuestionAndAnswer : Base
-		{
-		[SerializeField]
-		private Text m_QuestionText;
-		[SerializeField]
-		private Text m_AnswerText;
-		[SerializeField]
-		private Text m_ConfidenceText;
+	/// <summary>
+	/// Handles all QuestionAndAndswer Facet functionality.
+	/// </summary>
+    public class QuestionAndAnswer : Base
+    {
+        [SerializeField]
+        private Text m_QuestionText;
+        [SerializeField]
+        private Text m_AnswerText;
+        [SerializeField]
+        private Text m_ConfidenceText;
 
 
-		private string _m_Answer;
-		public string m_Answer
-		{
-			get { return _m_Answer; }
-			set 
-			{
-				_m_Answer = value;
-				UpdateAnswer();
-			}
-		}
+        private string m_AnswerString;
+        public string AnswerString
+        {
+			get { return m_AnswerString; }
+            set
+            {
+				m_AnswerString = value;
+                UpdateAnswer();
+            }
+        }
 
-		private string _m_Question;
-		public string m_Question
-		{
-			get { return _m_Question; }
-			set 
-			{
-				_m_Question = value;
-				UpdateQuestion();
-			}
-		}
+        private string m_QuestionString;
+        public string QuestionString
+        {
+            get { return m_QuestionString; }
+            set
+            {
+                m_QuestionString = value;
+                UpdateQuestion();
+            }
+        }
 
-		private double _m_Confidence;
-		public double m_Confidence 
-		{
-			get { return _m_Confidence; }
-			set {
-				_m_Confidence = value;
-				UpdateConfidence();
-			}
-		}
-
-		/// <summary>
-		/// Update answer view.
-		/// </summary>
-		private void UpdateAnswer()
-		{
-			m_AnswerText.text = m_Answer;
-		}
+        private double m_Confidence;
+        public double Confidence
+        {
+            get { return m_Confidence; }
+            set
+            {
+                m_Confidence = value;
+                UpdateConfidence();
+            }
+        }
 
 		/// <summary>
-		/// Update question view.
+		/// Set QuestionString, AnswerString and Confidence from data.
 		/// </summary>
-		private void UpdateQuestion()
-		{
-			m_QuestionText.text = m_Question;
-		}
+        override public void Init()
+        {
+			base.Init ();
 
-		/// <summary>
-		/// Update confidence view.
-		/// </summary>
-		private void UpdateConfidence()
-		{
-			float confidence = (float)m_Confidence * 100;
-			m_ConfidenceText.text = confidence.ToString ("f1");
-		}
+            QuestionString = m_Question.QuestionData.QuestionDataObject.questions[0].question.questionText;
+			AnswerString = m_Question.QuestionData.AnswerDataObject.answers[0].answerText;
+            Confidence = m_Question.QuestionData.AnswerDataObject.answers[0].confidence;
+        }
 
-		/// <summary>
-		/// Fired when Question Data is set. Sets the value of the Question.
-		/// </summary>
-		override protected void OnQuestionData()
-		{
-			m_Question = m_Questions.questions[0].question.questionText;
-		}
+        /// <summary>
+        /// Update answer view.
+        /// </summary>
+        private void UpdateAnswer()
+        {
+			m_AnswerText.text = AnswerString;
+        }
 
-		/// <summary>
-		/// Fired when Answer Data is set. Sets the value of the Answer.
-		/// </summary>
-		override protected void OnAnswerData()
-		{
-			m_Answer = m_Answers.answers [0].answerText;
-			m_Confidence = m_Answers.answers [0].confidence;
-		}
-	}
+        /// <summary>
+        /// Update question view.
+        /// </summary>
+        private void UpdateQuestion()
+        {
+            m_QuestionText.text = QuestionString;
+        }
+
+        /// <summary>
+        /// Update confidence view.
+        /// </summary>
+        private void UpdateConfidence()
+        {
+            float confidence = (float)Confidence * 100;
+            m_ConfidenceText.text = confidence.ToString("f1");
+        }
+    }
 }

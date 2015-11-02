@@ -19,12 +19,12 @@
 using IBM.Watson.Logging;
 using IBM.Watson.Connection;
 using IBM.Watson.Utilities;
+using IBM.Watson.Data;
 using MiniJSON;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using FullSerializer;
-using System.Net;
 using System.Collections;
 using System.IO;
 
@@ -32,35 +32,11 @@ namespace IBM.Watson.Services.v1
 {
     /// <summary>
     /// This class wraps the Watson Dialog service. 
-    /// </summary>
     /// <a href="http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/dialog.html">Dialog Service</a>
+    /// </summary>
     public class Dialog
     {
         #region Public Types
-        /// <summary>
-        /// This data class is contained by Dialogs, it represents a single dialog available.
-        /// </summary>
-        public class DialogEntry
-        {
-            /// <summary>
-            /// The dialog ID.
-            /// </summary>
-            public string dialog_id { get; set; }
-            /// <summary>
-            /// The user supplied name for the dialog.
-            /// </summary>
-            public string name { get; set; }
-        };
-        /// <summary>
-        /// The object returned by GetDialogs().
-        /// </summary>
-        public class Dialogs
-        {
-            /// <summary>
-            /// The array of Dialog's available.
-            /// </summary>
-            public DialogEntry [] dialogs { get; set; }
-        };
         /// <summary>
         /// This callback is passed into GetDialogs().
         /// </summary>
@@ -77,38 +53,11 @@ namespace IBM.Watson.Services.v1
         /// <param name="filename">The filename to load.</param>
         /// <returns>Should return a byte array of the file contents or null of failure.</returns>
         public delegate byte [] LoadFileDelegate( string filename );
-
-        /// <summary>
-        /// This data class holds the response to a call to Converse().
-        /// </summary>
-        public class Response
-        {
-            /// <summary>
-            /// An array of response strings.
-            /// </summary>
-            public string [] response { get; set; }
-            /// <summary>
-            /// The text input passed into Converse().
-            /// </summary>
-            public string input { get; set; }
-            /// <summary>
-            /// The conversation ID to use in future calls to Converse().
-            /// </summary>
-            public int conversation_id { get; set; }
-            /// <summary>
-            /// The confidence in this response.
-            /// </summary>
-            public double confidence { get; set; }
-            /// <summary>
-            /// The client ID of the user.
-            /// </summary>
-            public int client_id { get; set; }
-        };
         /// <summary>
         /// The callback delegate for the Converse() function.
         /// </summary>
         /// <param name="resp">The response object to a call to Converse().</param>
-        public delegate void OnConverse( Response resp );
+        public delegate void OnConverse( ConverseResponse resp );
         #endregion
 
         #region Public Properties
@@ -232,7 +181,7 @@ namespace IBM.Watson.Services.v1
                 try
                 {
                     IDictionary json = Json.Deserialize( Encoding.UTF8.GetString( resp.Data ) ) as IDictionary;
-                    id = (string)json["id"];
+                    id = (string)json["dialog_id"];
                 }
                 catch (Exception e)
                 {
@@ -289,7 +238,7 @@ namespace IBM.Watson.Services.v1
         };
         private void ConverseResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            Response response = new Response();
+            ConverseResponse response = new ConverseResponse();
             if (resp.Success)
             {
                 try

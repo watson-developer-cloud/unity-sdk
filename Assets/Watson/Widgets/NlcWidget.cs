@@ -21,6 +21,7 @@ using IBM.Watson.Logging;
 using UnityEngine;
 using UnityEngine.UI;
 using IBM.Watson.Utilities;
+using IBM.Watson.Data;
 
 #pragma warning disable 414
 
@@ -46,13 +47,24 @@ namespace IBM.Watson.Widgets
         private bool m_SendAsEvent = true;
         [SerializeField]
         private Text m_TopClassText = null;
-	    #endregion
+        #endregion
 
+        #region MonoBehaviour interface
+        /// <exclude />
         protected override void Start()
 	    {
             base.Start();
 	        Logger.InstallDefaultReactors();
 	    }
+        #endregion
+
+        #region Widget interface
+        /// <exclude />
+        protected override string GetName()
+        {
+            return "NlcWidget";
+        }
+        #endregion
 
         private void OnClasify( Data data )
         {
@@ -61,7 +73,7 @@ namespace IBM.Watson.Widgets
                 Log.Error( "NlcWidget", "Failed to request classify." );
         }
 
-	    private void OnClassified(NLC.ClassifyResult result)
+	    private void OnClassified(ClassifyResult result)
 	    {
             if ( m_TopClassOutput.IsConnected )
                 m_TopClassOutput.SendData( new TextData( result.top_class ) );
@@ -73,9 +85,5 @@ namespace IBM.Watson.Widgets
                 EventManager.Instance.SendEvent( result.top_class );
 	    }
 
-        protected override string GetName()
-        {
-            return "NlcWidget";
-        }
 	}
 }

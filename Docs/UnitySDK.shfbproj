@@ -70,7 +70,32 @@
 <Filter entryType="Namespace" fullName="FullSerializer" isExposed="False" />
 <Filter entryType="Namespace" fullName="FullSerializer.Internal" isExposed="False" />
 <Filter entryType="Namespace" fullName="FullSerializer.Internal.DirectConverters" isExposed="False" />
+<Filter entryType="Namespace" fullName="IBM.Watson.Data" isExposed="True">
+  <Filter entryType="Class" fullName="IBM.Watson.Data.SpeechResultList" filterName="SpeechResultList" isExposed="True">
+    <Filter entryType="Constructor" fullName="IBM.Watson.Data.SpeechResultList.#ctor" filterName=".ctor" isExposed="False" />
+  </Filter>
+</Filter>
+<Filter entryType="Namespace" fullName="IBM.Watson.Editor" isExposed="False" />
 <Filter entryType="Namespace" fullName="IBM.Watson.UnitTests" isExposed="False" />
+<Filter entryType="Namespace" fullName="IBM.Watson.Widgets" isExposed="True">
+  <Filter entryType="Class" fullName="IBM.Watson.Widgets.MicrophoneWidget" filterName="MicrophoneWidget" isExposed="True">
+    <Filter entryType="Method" fullName="IBM.Watson.Widgets.MicrophoneWidget.GetName" filterName="GetName" isExposed="False" />
+    <Filter entryType="Method" fullName="IBM.Watson.Widgets.MicrophoneWidget.Start" filterName="Start" isExposed="False" />
+  </Filter>
+  <Filter entryType="Class" fullName="IBM.Watson.Widgets.NlcWidget" filterName="NlcWidget" isExposed="True">
+    <Filter entryType="Method" fullName="IBM.Watson.Widgets.NlcWidget.GetName" filterName="GetName" isExposed="False" />
+    <Filter entryType="Method" fullName="IBM.Watson.Widgets.NlcWidget.Start" filterName="Start" isExposed="False" />
+  </Filter>
+  <Filter entryType="Class" fullName="IBM.Watson.Widgets.SpeechToTextWidget" filterName="SpeechToTextWidget" isExposed="True">
+    <Filter entryType="Method" fullName="IBM.Watson.Widgets.SpeechToTextWidget.GetName" filterName="GetName" isExposed="False" />
+    <Filter entryType="Method" fullName="IBM.Watson.Widgets.SpeechToTextWidget.Start" filterName="Start" isExposed="False" />
+  </Filter>
+</Filter>
+<Filter entryType="Namespace" fullName="IBM.Watson.Widgets.Avatar" isExposed="True">
+  <Filter entryType="Class" fullName="IBM.Watson.Widgets.Avatar.AvatarWidget" filterName="AvatarWidget" isExposed="True">
+    <Filter entryType="Method" fullName="IBM.Watson.Widgets.Avatar.AvatarWidget.Start" filterName="Start" isExposed="False" />
+  </Filter>
+</Filter>
 <Filter entryType="Namespace" fullName="MiniJSON" isExposed="False" />
 <Filter entryType="Namespace" fullName="TouchScript.Examples" isExposed="False" />
 <Filter entryType="Namespace" fullName="TouchScript.Examples.CameraControl" isExposed="False" />

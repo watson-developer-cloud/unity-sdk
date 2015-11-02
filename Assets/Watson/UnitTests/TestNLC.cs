@@ -19,6 +19,7 @@
 using System.Collections;
 using IBM.Watson.Services.v1;
 using IBM.Watson.Logging;
+using IBM.Watson.Data;
 
 namespace IBM.Watson.UnitTests
 {
@@ -55,7 +56,7 @@ namespace IBM.Watson.UnitTests
             yield break;
         }
 
-        private void OnFindClassifier( NLC.Classifier find )
+        private void OnFindClassifier( Classifier find )
         {
             if ( find != null )
             {
@@ -72,7 +73,7 @@ namespace IBM.Watson.UnitTests
             m_FindClassifierTested = true;         
         }
 
-        private void OnClassify( NLC.ClassifyResult result )
+        private void OnClassify( ClassifyResult result )
         {
             Test( result != null );
             if ( result != null )
@@ -83,7 +84,7 @@ namespace IBM.Watson.UnitTests
             m_ClassifyTested = true;
         }
 
-        private void OnTrainClassifier( NLC.Classifier classifier )
+        private void OnTrainClassifier( Classifier classifier )
         {
             Test( classifier != null );
             if ( classifier != null )
