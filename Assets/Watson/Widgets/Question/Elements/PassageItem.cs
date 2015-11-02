@@ -8,25 +8,30 @@ namespace IBM.Watson.Widgets.Question
 	/// Controls PassageItem view.
 	/// </summary>
 	public class PassageItem : MonoBehaviour {
+		private float m_MaxYPos = 480f;
+		private float m_MinYPos = -250f;
+		private float m_TabPosX = -160f;
+		private float m_TabPosY;
+
 		[SerializeField]
 		private Text m_PassageText;
 
 		[SerializeField]
 		private TabItem m_TabItem;
 
-		private string m_Passage;
-		public string Passage
+		private string m_PassageString;
+		public string PassageString
 		{
-			get { return m_Passage; }
+			get { return m_PassageString; }
 			set
 			{
-				m_Passage = value;
+				m_PassageString = value;
 				UpdatePassage();
 			}
 		}
 
 		private double m_Confidence = 0f;
-		public string Confidence
+		public double Confidence
 		{
 			get { return m_Confidence; }
 			set
@@ -64,15 +69,23 @@ namespace IBM.Watson.Widgets.Question
 		private void UpdatePassage()
 		{
 			//	TODO format passage
-			m_PassageText.text = Passage;
+			m_PassageText.text = PassageString;
 		}
 
 		/// <summary>
-		/// Update the confidence tab view.
+		/// Update the confidence tab view. Move Y position of TabItem according to normalized confidence.
 		/// </summary>
 		private void UpdateConfidence()
 		{
+			m_TabItem.Confidence = Confidence;
 
+			double NormalizedConfidence = Confidence - MinConfidence;
+			double ConfidenceRange = MaxConfidence - MinConfidence;
+			float ConfidencePercentage = (float)NormalizedConfidence/(float)ConfidenceRange;
+
+			m_TabPosY = ((m_MaxYPos - m_MinYPos) * ConfidencePercentage) + m_MinYPos;
+			RectTransform TabItemRectTransform = m_TabItem.GetComponent<RectTransform>();
+			TabItemRectTransform.anchoredPosition = new Vector2(m_TabPosX, m_TabPosY);
 		}
 	}
 }

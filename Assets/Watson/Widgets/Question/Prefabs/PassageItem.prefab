@@ -28,6 +28,7 @@ GameObject:
   - 23: {fileID: 2391854}
   - 114: {fileID: 11410906}
   - 33: {fileID: 3326806}
+  - 222: {fileID: 22265444}
   m_Layer: 15
   m_Name: PassageItem
   m_TagString: Untagged
@@ -229,7 +230,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de3478b2bc8f44c0da363e1fccdc4999, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_PassageText: {fileID: 0}
+  m_PassageText: {fileID: 11453774}
+  m_TabItem: {fileID: 11494782}
 --- !u!114 &11425320
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -656,7 +658,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3172258fe10a644599862d1b2a1d6688, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ConfidenceText: {fileID: 0}
+  m_ConfidenceText: {fileID: 11471218}
 --- !u!114 &11498780
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -708,6 +710,12 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 165048}
+--- !u!222 &22265444
+CanvasRenderer:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 115886}
 --- !u!222 &22275356
 CanvasRenderer:
   m_ObjectHideFlags: 1
