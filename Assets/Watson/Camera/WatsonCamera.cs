@@ -11,20 +11,20 @@ public class WatsonCamera : MonoBehaviour {
 	private bool m_isAnimationPaused = false;
 	void OnEnable(){
 		//TODO: Delete All these stuff! Add Keyboard widget
-		KeyEventManager.Instance.RegisterKeyEvent (KeyCode.S, AnimationSpeedUp);
-		KeyEventManager.Instance.RegisterKeyEvent (KeyCode.D, AnimationSpeedDown);
-		KeyEventManager.Instance.RegisterKeyEvent (KeyCode.R, AnimationSpeedDefault);
-		KeyEventManager.Instance.RegisterKeyEvent (KeyCode.O, AnimationResume);
-		KeyEventManager.Instance.RegisterKeyEvent (KeyCode.P, AnimationPause);
+		KeyEventManager.Instance.RegisterKeyEvent (KeyCode.S, KeyModifiers.NONE, AnimationSpeedUp);
+		KeyEventManager.Instance.RegisterKeyEvent (KeyCode.D, KeyModifiers.NONE, AnimationSpeedDown);
+		KeyEventManager.Instance.RegisterKeyEvent (KeyCode.R, KeyModifiers.NONE, AnimationSpeedDefault);
+		KeyEventManager.Instance.RegisterKeyEvent (KeyCode.O, KeyModifiers.NONE, AnimationResume);
+		KeyEventManager.Instance.RegisterKeyEvent (KeyCode.P, KeyModifiers.NONE, AnimationPause);
 	}
 
 	void OnDisable(){
 		//TODO: Delete All these stuff! Add Keyboard widget
-		KeyEventManager.Instance.UnregisterKeyEvent (KeyCode.S, AnimationSpeedUp);
-		KeyEventManager.Instance.UnregisterKeyEvent (KeyCode.D, AnimationSpeedDown);
-		KeyEventManager.Instance.UnregisterKeyEvent (KeyCode.R, AnimationSpeedDefault);
-		KeyEventManager.Instance.UnregisterKeyEvent (KeyCode.O, AnimationResume);
-		KeyEventManager.Instance.UnregisterKeyEvent (KeyCode.P, AnimationPause);
+		KeyEventManager.Instance.UnregisterKeyEvent (KeyCode.S, KeyModifiers.NONE, AnimationSpeedUp);
+		KeyEventManager.Instance.UnregisterKeyEvent (KeyCode.D, KeyModifiers.NONE, AnimationSpeedDown);
+		KeyEventManager.Instance.UnregisterKeyEvent (KeyCode.R, KeyModifiers.NONE, AnimationSpeedDefault);
+		KeyEventManager.Instance.UnregisterKeyEvent (KeyCode.O, KeyModifiers.NONE, AnimationResume);
+		KeyEventManager.Instance.UnregisterKeyEvent (KeyCode.P, KeyModifiers.NONE, AnimationPause);
 	}
 
 	// Use this for initialization

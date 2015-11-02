@@ -223,8 +223,8 @@ namespace IBM.Watson.Widgets.Avatar
 			DebugConsole.Instance.RegisterDebugInfo("Q", OnQuestionDebugInfo);
 			DebugConsole.Instance.RegisterDebugInfo("A", OnAnwserDebugInfo);
 			
-			KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.QUESTION_WAKEUP, OnExampleQuestion, Constants.KeyCodes.MODIFIER_KEY);
-			KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CHANGE_MOOD, OnNextMood, Constants.KeyCodes.MODIFIER_KEY);
+			KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.QUESTION_WAKEUP, Constants.KeyCodes.MODIFIER_KEY, OnExampleQuestion );
+			KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CHANGE_MOOD, Constants.KeyCodes.MODIFIER_KEY, OnNextMood );
 
         }
         void OnDisable()
@@ -239,8 +239,8 @@ namespace IBM.Watson.Widgets.Avatar
 			DebugConsole.Instance.UnregisterDebugInfo("Q", OnQuestionDebugInfo);
 			DebugConsole.Instance.UnregisterDebugInfo("A", OnAnwserDebugInfo);
 
-			KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.QUESTION_WAKEUP, OnExampleQuestion, Constants.KeyCodes.MODIFIER_KEY);
-			KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CHANGE_MOOD, OnNextMood, Constants.KeyCodes.MODIFIER_KEY);
+			KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.QUESTION_WAKEUP, Constants.KeyCodes.MODIFIER_KEY, OnExampleQuestion );
+			KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CHANGE_MOOD, Constants.KeyCodes.MODIFIER_KEY, OnNextMood );
         }
 
         /// <exclude />
