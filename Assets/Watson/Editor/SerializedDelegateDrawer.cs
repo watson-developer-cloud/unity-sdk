@@ -37,6 +37,8 @@ namespace IBM.Watson.Editor
         public override void OnGUI(Rect pos, SerializedProperty properties, GUIContent label)
         {
             SerializedDelegate target = DrawerHelper.GetParent( properties ) as SerializedDelegate;
+			if (target == null)
+				return;
 
             SerializedProperty targetProperty = properties.FindPropertyRelative("m_Target");
             SerializedProperty methodProperty = properties.FindPropertyRelative("m_Method");

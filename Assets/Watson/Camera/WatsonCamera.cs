@@ -8,6 +8,7 @@ using IBM.Watson.Utilities;
 /// </summary>
 public class WatsonCamera : MonoBehaviour {
 
+	private bool m_isAnimationPaused = false;
 	void OnEnable(){
 		//TODO: Delete All these stuff! Add Keyboard widget
 		KeyEventManager.Instance.RegisterKeyEvent (KeyCode.S, AnimationSpeedUp);
@@ -54,5 +55,14 @@ public class WatsonCamera : MonoBehaviour {
 
 	public void AnimationResume(){
 		EventManager.Instance.SendEvent (Constants.Event.ON_ANIMATION_RESUME);
+	}
+
+	public void AnimationPauseResume(){
+		m_isAnimationPaused = !m_isAnimationPaused;
+
+		if(m_isAnimationPaused)
+			AnimationPause();
+		else
+			AnimationResume();
 	}
 }
