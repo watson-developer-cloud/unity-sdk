@@ -8,34 +8,9 @@ using IBM.Watson.Utilities;
 /// </summary>
 public class WatsonCamera : MonoBehaviour {
 
+	#region Private Variables
 	private bool m_isAnimationPaused = false;
-	void OnEnable(){
-		//TODO: Delete All these stuff! Add Keyboard widget
-		KeyEventManager.Instance.RegisterKeyEvent (KeyCode.S, KeyModifiers.NONE, AnimationSpeedUp);
-		KeyEventManager.Instance.RegisterKeyEvent (KeyCode.D, KeyModifiers.NONE, AnimationSpeedDown);
-		KeyEventManager.Instance.RegisterKeyEvent (KeyCode.R, KeyModifiers.NONE, AnimationSpeedDefault);
-		KeyEventManager.Instance.RegisterKeyEvent (KeyCode.O, KeyModifiers.NONE, AnimationResume);
-		KeyEventManager.Instance.RegisterKeyEvent (KeyCode.P, KeyModifiers.NONE, AnimationPause);
-	}
-
-	void OnDisable(){
-		//TODO: Delete All these stuff! Add Keyboard widget
-		KeyEventManager.Instance.UnregisterKeyEvent (KeyCode.S, KeyModifiers.NONE, AnimationSpeedUp);
-		KeyEventManager.Instance.UnregisterKeyEvent (KeyCode.D, KeyModifiers.NONE, AnimationSpeedDown);
-		KeyEventManager.Instance.UnregisterKeyEvent (KeyCode.R, KeyModifiers.NONE, AnimationSpeedDefault);
-		KeyEventManager.Instance.UnregisterKeyEvent (KeyCode.O, KeyModifiers.NONE, AnimationResume);
-		KeyEventManager.Instance.UnregisterKeyEvent (KeyCode.P, KeyModifiers.NONE, AnimationPause);
-	}
-
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+	#endregion
 
 	public void AnimationSpeedUp(){
 		EventManager.Instance.SendEvent (Constants.Event.ON_ANIMATION_SPEED_UP);
