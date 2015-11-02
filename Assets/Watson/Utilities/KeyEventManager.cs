@@ -16,7 +16,7 @@
 * @author Richard Lyle (rolyle@us.ibm.com)
 */
 
-
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -25,6 +25,7 @@ namespace IBM.Watson.Utilities
     /// <summary>
     /// Key press modifiers
     /// </summary>
+    [Flags]
     public enum KeyModifiers
     {
         NONE = 0x0,

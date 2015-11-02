@@ -84,8 +84,6 @@ namespace IBM.Watson.Widgets.Question
 					KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_ROTATE_OR_PAUSE, OnRotateOrPause, Constants.KeyCodes.MODIFIER_KEY);
 					KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_UNFOCUS, OnUnFocus, Constants.KeyCodes.MODIFIER_KEY);
 					KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_UNFOLD, OnUnfold, Constants.KeyCodes.MODIFIER_KEY);
-
-					OnLeaveTheSceneAndDestroy();
                 }
             }
         }
@@ -96,6 +94,10 @@ namespace IBM.Watson.Widgets.Question
             {
                 if (m_CubeAnimMgr == null)
                     m_CubeAnimMgr = GetComponentInChildren<CubeAnimationManager>();
+
+				if(m_CubeAnimMgr == null)
+					Log.Error("QuestionWidget", "CubeAnimationManager is not found under Question widget");
+
                 return m_CubeAnimMgr;
             }
         }

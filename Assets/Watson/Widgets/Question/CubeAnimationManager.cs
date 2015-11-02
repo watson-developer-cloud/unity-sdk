@@ -101,6 +101,7 @@ public class CubeAnimationManager : MonoBehaviour {
 	private bool m_isRotating = true;
 
 	public float timeForComingToScene = 1.0f;
+	private float timeForLeavingTheScene = 5.0f;
 	public LeanTweenType easeForComingToScene = LeanTweenType.easeOutElastic;
 	public LeanTweenType easeForGoingFromScene = LeanTweenType.easeOutCirc;
 	public float timeForFoldingUnfolding = 1.0f;
@@ -215,6 +216,8 @@ public class CubeAnimationManager : MonoBehaviour {
 				avatarGameobject = Utility.FindObject(avatarWidget.gameObject, "Avatar_01");
 			}
 		}
+
+		SetInitialConditions();
 
 //		GameObject[] questionsCreated = GameObject.FindGameObjectsWithTag ("QuestionOnFocus");
 //		if (questionsCreated != null) {
@@ -516,7 +519,16 @@ public class CubeAnimationManager : MonoBehaviour {
         ShowCube();
     }
 
-    void SetInitialConditions()
+	void OnDisable()
+	{
+		StopAllCubeAnimations();
+		
+		//Avatar Object position change
+		if(avatarGameobject)
+			animationAvatarPosition = LeanTween.moveLocal(avatarGameobject, Vector3.zero, timeForFoldingUnfolding).setEase(easeForUnfolding);
+	}
+
+	void SetInitialConditions()
     {
         for (int i = 0; i < uiFaceOnSide.Length; i++)
         {
@@ -531,16 +543,7 @@ public class CubeAnimationManager : MonoBehaviour {
 
     }
 
-    void OnDisable()
-    {
-        StopAllCubeAnimations();
 
-        //Avatar Object position change
-		if(avatarGameobject)
-       		animationAvatarPosition = LeanTween.moveLocal(avatarGameobject, Vector3.zero, timeForFoldingUnfolding).setEase(easeForUnfolding);
-
-        //AnimateDestroyingCube(false);
-    }
     #endregion
 
     #region Focus
@@ -569,21 +572,16 @@ public class CubeAnimationManager : MonoBehaviour {
 		AnimateDestroyingCube (true);
 	}
 
-	public void DestroyCube(){
-		StopAllCubeAnimations ();
-		//AnimateDestroyingCube (true);
-	}
-
 	private void AnimateDestroyingCube(bool destroy){
 		AnimationState = CubeAnimationState.GOING_FROM_SCENE;
-		LeanTween.moveLocal (gameObject, new Vector3 (0, 240, 0), timeForComingToScene).setEase (easeForGoingFromScene).setOnComplete(()=>{
+		LeanTween.moveLocal (gameObject, new Vector3 (0, 240, 0), timeForLeavingTheScene).setEase (easeForGoingFromScene).setOnComplete(()=>{
             if(destroy){
 				Camera[] cameraList = transform.parent.GetComponentsInChildren<Camera>();
 				foreach (Camera itemCamera in cameraList) {
 					itemCamera.targetTexture = null;
 					itemCamera.enabled = false;
 				}
-			    Destroy(transform.parent.gameObject, 1.0f);
+			    Destroy(transform.parent.gameObject);
 			}
 		});
 
