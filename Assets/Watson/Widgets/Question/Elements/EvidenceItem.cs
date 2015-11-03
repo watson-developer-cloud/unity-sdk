@@ -110,7 +110,7 @@ namespace IBM.Watson.Widgets.Question
 				boundingBoxRectTransform.SetParent(tf.gameObject.transform, false);
 				
 				float rectWidth = (bottomRight.x - topLeft.x) + m_horizontalPadding * 2;
-				float rectHeight = (-bottomRight.y + topLeft.y) + m_verticalPadding * 2;
+				float rectHeight = (-bottomRight.y - topLeft.y) + m_verticalPadding * 2;
 				
 				boundingBoxRectTransform.sizeDelta = new Vector2(rectWidth, rectHeight);
 			}
