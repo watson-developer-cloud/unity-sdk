@@ -175,6 +175,12 @@ namespace IBM.Watson.Connection
         private static Dictionary<string,RESTConnector > sm_Connectors = new Dictionary<string, RESTConnector>();
         #endregion
 
+        /// <summary>
+        /// This function returns a RESTConnector object for the given service and function. 
+        /// </summary>
+        /// <param name="serviceID">The ID of the service.</param>
+        /// <param name="function">The name of the function.</param>
+        /// <returns>Returns a RESTConnector object or null on error.</returns>
         public static RESTConnector GetConnector( string serviceID, string function )
         {
             RESTConnector connector = null;
@@ -217,6 +223,9 @@ namespace IBM.Watson.Connection
             return connector;
         }
 
+        /// <summary>
+        /// Flush all connectors from the static pool.
+        /// </summary>
         public static void FlushConnectors()
         {
             sm_Connectors.Clear();

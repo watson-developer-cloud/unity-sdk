@@ -77,6 +77,11 @@ namespace IBM.Watson.Widgets
             }
             #endregion
 
+            public override string ToString()
+            {
+                return (Owner != null ? Owner.name : "null") + "." + InputName + " (" + DataType.Name + ")";
+            }
+
             #region Public Properties
             /// <summary>
             /// A reference to the widget that contains this input, this is initialized when the Widget starts.
@@ -166,6 +171,11 @@ namespace IBM.Watson.Widgets
             }
             #endregion
 
+            public override string ToString()
+            {
+                return (Owner != null ? Owner.name : "null") + " (" + DataType.Name + ")";
+            }
+
             #region Public Properties
             /// <summary>
             /// Returns true if this output is connected to a input.
@@ -182,7 +192,22 @@ namespace IBM.Watson.Widgets
             /// <summary>
             /// This returns a reference to the target input object.
             /// </summary>
-            public Input TargetInput { get { return m_TargetInput; } set { m_TargetInput = value; m_TargetInputResolved = true; } }
+            public Input TargetInput { get { return m_TargetInput; }
+                set {
+                    m_TargetInput = value;
+                    if ( m_TargetInput != null )
+                    {
+                        m_TargetObject = m_TargetInput.Owner.gameObject;
+                        m_TargetConnection = m_TargetInput.FullInputName;
+                    }
+                    else
+                    {
+                        m_TargetObject = null;
+                        m_TargetConnection = string.Empty;
+                    }
+                    m_TargetInputResolved = true;
+                }
+            }
             /// <summary>
             /// This returns a reference to the target object.
             /// </summary>
@@ -201,6 +226,9 @@ namespace IBM.Watson.Widgets
             public virtual void Start(Widget owner)
             {
                 Owner = owner;
+
+                m_TargetInputResolved = false;
+                m_TargetInput = null;
             }
             /// <summary>
             /// Sends a data object to the target of this output.
@@ -289,6 +317,8 @@ namespace IBM.Watson.Widgets
         #endregion
 
         #region Private Data
+        [SerializeField]
+        private bool m_AutoConnect = true;
         private bool m_Initialized = false;
         private Input[] m_Inputs = null;
         private Output[] m_Outputs = null;
@@ -309,18 +339,63 @@ namespace IBM.Watson.Widgets
         public Output[] Outputs { get { if (! m_Initialized ) InitializeIO(); return m_Outputs; } }
         #endregion
 
+        /// <summary>
+        /// Call this function to go ahead and resolve auto-connections to other widgets. Normally,
+        /// we would try to auto connect when the Awake() is called, this can be called to resolve
+        /// the auto connections ahead of time.
+        /// </summary>
+        public void ResolveConnections()
+        {
+            InitializeIO();
+            InitializeConnections();
+        }
+
         #region Private Functions
         private void InitializeIO()
         {
-            if (! m_Initialized )
+            m_Outputs = GetMembersByType<Output>();
+            foreach (var output in m_Outputs)
+                output.Start(this);
+            m_Inputs = GetMembersByType<Input>();
+            foreach (var input in m_Inputs)
+                input.Start(this);
+            m_Initialized = true;
+        }
+
+        private void InitializeConnections()
+        {
+            // we only auto-connect when running in the editor. Doing this run-time might be very dangerous.
+            if ( m_AutoConnect )
             {
-                m_Outputs = GetMembersByType<Output>();
-                foreach (var output in m_Outputs)
-                    output.Start(this);
-                m_Inputs = GetMembersByType<Input>();
-                foreach (var input in m_Inputs)
-                    input.Start(this);
-                m_Initialized = true;
+                // this boolean is serialized, so we only ever do this once. Set this at the start
+                // so we don't end up in a circular loop of widgets.
+                m_AutoConnect = false;
+
+                Widget [] widgets = FindObjectsOfType<Widget>();
+                foreach( var widget in widgets )
+                {
+                    if ( widget == null || widget == this )
+                        continue;       // we never connect to ourselves
+
+                    // make sure the input/output is initialized on this widget
+                    widget.InitializeIO();  
+
+                    foreach( var output in widget.Outputs )
+                    {
+                        if ( output.IsConnected )
+                            continue;     // this output is already connected, so skip..
+
+                        foreach( var input in m_Inputs )
+                        {
+                            if ( input.DataType == output.DataType )
+                            {
+                                Log.Status( "Widget", "Auto-Connecting {0} -> {1}", output.ToString(), input.ToString() ); 
+                                output.TargetInput = input;
+                                break;
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -346,10 +421,16 @@ namespace IBM.Watson.Widgets
 
             return inputs.ToArray();
         }
+
         /// <exclude />
         protected virtual void Start()
+        { }
+        
+        /// <exclude />
+        protected virtual void Awake()
         {
             InitializeIO();
+            InitializeConnections();
         }
         #endregion
 

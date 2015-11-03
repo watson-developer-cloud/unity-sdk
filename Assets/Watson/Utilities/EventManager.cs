@@ -17,6 +17,7 @@
 */
 
 using IBM.Watson.Logging;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -113,6 +114,9 @@ namespace IBM.Watson.Utilities
         /// <returns>Returns true if a event receiver was found for the event.</returns>
         public bool SendEvent(string eventName, params object[] args)
         {
+            if ( string.IsNullOrEmpty( eventName ) )
+                throw new ArgumentNullException( eventName );
+
             List<OnReceiveEvent> receivers = null;
             if (m_EventMap.TryGetValue(eventName, out receivers))
             {

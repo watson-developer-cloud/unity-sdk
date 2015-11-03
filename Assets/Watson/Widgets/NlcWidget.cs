@@ -44,7 +44,7 @@ namespace IBM.Watson.Widgets
         [SerializeField]
         private string m_ClassifierId = "5E00F7x2-nlc-540";     // default to XRAY classifier
         [SerializeField, Tooltip( "If true, then the top class is sent as a event.") ]
-        private bool m_SendAsEvent = true;
+        private bool m_SendAsEvent = false;
         [SerializeField]
         private Text m_TopClassText = null;
         #endregion
@@ -75,14 +75,18 @@ namespace IBM.Watson.Widgets
 
 	    private void OnClassified(ClassifyResult result)
 	    {
-            if ( m_TopClassOutput.IsConnected )
-                m_TopClassOutput.SendData( new TextData( result.top_class ) );
             if ( m_ClassifyOutput.IsConnected )
                 m_ClassifyOutput.SendData( new ClassifyResultData( result ) );
-            if ( m_TopClassText != null )
-                m_TopClassText.text = result.top_class; 
-            if ( m_SendAsEvent )
-                EventManager.Instance.SendEvent( result.top_class );
+
+            if ( result != null )
+            {
+                if ( m_TopClassOutput.IsConnected && !string.IsNullOrEmpty( result.top_class ) )
+                    m_TopClassOutput.SendData( new TextData( result.top_class ) );
+                if ( m_TopClassText != null )
+                    m_TopClassText.text = result.top_class; 
+                if ( m_SendAsEvent && !string.IsNullOrEmpty( result.top_class) )
+                    EventManager.Instance.SendEvent( result.top_class );
+            }
 	    }
 
 	}

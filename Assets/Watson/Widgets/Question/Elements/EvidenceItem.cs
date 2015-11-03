@@ -18,6 +18,9 @@
 
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using IBM.Watson.Utilities;
 
 namespace IBM.Watson.Widgets.Question
 {
@@ -28,6 +31,13 @@ namespace IBM.Watson.Widgets.Question
     {
         [SerializeField]
         private Text m_EvidenceText;
+
+		[SerializeField]
+		private GameObject m_BoundingBox;
+		
+		private float m_horizontalPadding = 15f;
+		private float m_verticalPadding = 15f;
+		private List<GameObject> boundingBoxes = new List<GameObject>();
 
         private string m_EvidenceString;
         public string EvidenceString
@@ -40,21 +50,92 @@ namespace IBM.Watson.Widgets.Question
             }
         }
 
+		private string m_Answer;
+		public string Answer
+		{ 
+			get { return m_Answer; }
+			set { m_Answer = value; }
+		}
+
         /// <summary>
         /// Update the evidence view.
         /// </summary>
         private void UpdateEvidence()
         {
-            //	TODO replace <answer> with the outline
+            //	TODO draw box around answer
             if (EvidenceString != "")
             {
                 gameObject.SetActive(true);
-                m_EvidenceText.text = EvidenceString;
+//				string StrippedEvidence = Regex.Replace(EvidenceString, "<[^>]*>", "");
+				m_EvidenceText.text = EvidenceString;
+				HighlightAnswer(m_EvidenceText, Answer);
             }
             else
             {
                 gameObject.SetActive(false);
             }
         }
+
+		/// <summary>
+		/// Highlights the answer in a TextField.
+		/// </summary>
+		/// <param name="tf">UIText component.</param>
+		/// <param name="answer">Answer string.</param>
+		private void HighlightAnswer(Text tf, string answer)
+		{
+			//	strip out tag
+			tf.text = Regex.Replace(tf.text, "<[^>]*>", "");
+			
+			//	populate textGen
+			TextGenerator textGen = tf.cachedTextGenerator;
+			textGen.Populate(tf.text, tf.GetGenerationSettings(tf.rectTransform.rect.size));
+			
+			//	get index of all occurences of answer
+			List<int> answerList = new List<int>();
+			answerList = GetAnswerIndexes(tf.text, answer);
+			
+			for(int i = 0; i < answerList.Count; i++)
+			{
+				Vector3 topLeft = textGen.verts[answerList[i] * 4].position;;
+				Vector3 bottomRight = textGen.verts[((answerList[i] + answer.Length) * 4) + 3].position;;
+				
+				//	create bounding box at answer location
+				GameObject boundingBox = Instantiate(m_BoundingBox, 
+				                                     new Vector2(topLeft.x - m_horizontalPadding, topLeft.y + m_verticalPadding), 
+				                                     Quaternion.identity) as GameObject;
+				
+				boundingBoxes.Add(boundingBox);
+				
+				RectTransform boundingBoxRectTransform = boundingBox.GetComponent<RectTransform>();
+				boundingBoxRectTransform.SetParent(tf.gameObject.transform, false);
+				
+				float rectWidth = (bottomRight.x - topLeft.x) + m_horizontalPadding * 2;
+				float rectHeight = (-bottomRight.y + topLeft.y) + m_verticalPadding * 2;
+				
+				boundingBoxRectTransform.sizeDelta = new Vector2(rectWidth, rectHeight);
+			}
+		}
+		
+		/// <summary>
+		/// Gets the answer indexes in supplied evidenceString.
+		/// </summary>
+		/// <returns>The answer indexes in a List.</returns>
+		/// <param name="evidenceString">Evidence string.</param>
+		/// <param name="answer">Answer string.</param>
+		public List<int> GetAnswerIndexes(string evidenceString, string answer)
+		{
+			if (string.IsNullOrEmpty(answer))
+				throw new WatsonException("need string");
+			
+			List<int> ind = new List<int>();
+			
+			for (int i = 0;; i += answer.Length)
+			{
+				i = evidenceString.IndexOf(answer, i);
+				if (i == -1)
+					return ind;
+				ind.Add(i);
+			}
+		}
     }
 }

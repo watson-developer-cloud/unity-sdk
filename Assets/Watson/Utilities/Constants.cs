@@ -113,7 +113,7 @@ namespace IBM.Watson.Utilities
         /// </summary>
         public static class Path
         {
-
+            public const string CONFIG_FILE = "/Config.json";
         }
 
         /// <summary>
@@ -121,6 +121,8 @@ namespace IBM.Watson.Utilities
         /// </summary>
         public static class Resources
         {
+            public const string WATSON_ICON = "WatsonSpriteIcon_32x32";
+            public const string WATSON_LOGO = "WatsonSpriteLogo_506x506";
 
         }
 
