@@ -39,14 +39,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ba780a4e1f9a824895da80178f4406c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_AutoConnect: 1
   m_StatusText: {fileID: 0}
   m_DetectSilence: 1
   m_SilenceThreshold: .0299999993
   m_WordConfidence: 0
   m_TimeStamps: 0
   m_MaxAlternatives: 1
-  m_EnableContinous: 0
-  m_EnableInterimResults: 0
+  m_EnableContinous: 1
+  m_EnableInterimResults: 1
   m_Transcript: {fileID: 0}
   m_TextOutput:
     m_TargetObject: {fileID: 0}
