@@ -152,6 +152,11 @@ namespace IBM.Watson.Connection
         };
         #endregion
 
+        /// <summary>
+        /// Helper function to convert a HTTP/HTTPS url into a WS/WSS URL.
+        /// </summary>
+        /// <param name="URL">The URL to fix up.</param>
+        /// <returns>The fixed up URL.</returns>
         public static string FixupURL( string URL )
         {
             if (URL.StartsWith("http://"))
@@ -162,6 +167,13 @@ namespace IBM.Watson.Connection
             return URL;
         }
 
+        /// <summary>
+        /// Create a WSConnector for the given service and function. 
+        /// </summary>
+        /// <param name="serviceID">The ID of the service.</param>
+        /// <param name="function">The name of the function to connect.</param>
+        /// <param name="args">Additional function arguments.</param>
+        /// <returns>The WSConnector object or null or error.</returns>
         public static WSConnector CreateConnector( string serviceID, string function, string args )
         {
             WSConnector connector = null;

@@ -247,7 +247,7 @@ namespace IBM.Watson.Utilities
                 return null;
             }
 
-            // lasty, update the form length..
+            // lastly, update the form length..
             form.form_length = (uint)(writer.BaseStream.Position - form_start);
             writer.Seek(0, SeekOrigin.Begin);
             WriteType(writer, form);
