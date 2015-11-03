@@ -24,6 +24,7 @@ using UnityEditor;
 using UnityEngine;
 using System.IO;
 using IBM.Watson.Data;
+using IBM.Watson.Logging;
 
 namespace IBM.Watson.Editor
 {
@@ -34,7 +35,7 @@ namespace IBM.Watson.Editor
 #if UNITY_5_2
             titleContent.text = "Watson NLC";
 #endif
-            m_WatsonIcon = (Texture2D)Resources.Load("WatsonIcon", typeof(Texture2D));
+            m_WatsonIcon = (Texture2D)Resources.Load(Constants.Resources.WATSON_ICON, typeof(Texture2D));
             EditorApplication.update += UpdateRunnable;
         }
 
@@ -82,7 +83,7 @@ namespace IBM.Watson.Editor
         private void OnDeleteClassifier( bool success )
         {
             if (! success )
-                EditorUtility.DisplayDialog( "Error", "Failed to delete classifier.", "OK" );
+                Log.Error( "NLCTrainer", "Failed to delete classifier." );
             else
                 OnRefresh();
         }
@@ -90,7 +91,7 @@ namespace IBM.Watson.Editor
         private void OnClassiferTrained( Classifier classifier )
         {
             if (classifier == null)
-                EditorUtility.DisplayDialog( "Error", "Failed to train new classifier.", "OK" );
+                Log.Error( "NLCTrainer", "Failed to train new classifier." );
             else
                 OnRefresh();
         }
@@ -98,7 +99,7 @@ namespace IBM.Watson.Editor
         private void OnRefresh()
         {
             if (!m_NLC.GetClassifiers(OnGetClassifiers))
-                EditorUtility.DisplayDialog("Error", "Failed to request classifiers, please make sure your NlcV1 service has credentials configured.", "OK");
+                Log.Error( "NLCTrainer", "Failed to request classifiers, please make sure your NlcV1 service has credentials configured." );
         }
 
         private void OnGUI()

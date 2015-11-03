@@ -54,8 +54,6 @@ namespace IBM.Watson.Widgets
 	    [SerializeField]
 	    private Text m_Transcript = null;
         [SerializeField]
-        private Input m_ActivateInput = new Input( "Activate", typeof(BooleanData), "OnActivate" );
-        [SerializeField]
         private Input m_AudioInput = new Input( "Audio", typeof(AudioData), "OnAudio" );
         [SerializeField]
         private Output m_TextOutput = new Output( typeof(TextData) );
@@ -126,11 +124,6 @@ namespace IBM.Watson.Widgets
 	            m_StatusText.text = "ERROR: " + error;
 	    }
         
-        private void OnActivate( Data data )
-        {
-            Active = ((BooleanData)data).Boolean;
-        }
-
         private void OnAudio( Data data )
         {
             if (! Active )

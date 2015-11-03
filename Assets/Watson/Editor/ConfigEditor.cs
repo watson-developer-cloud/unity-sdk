@@ -24,6 +24,7 @@ using IBM.Watson.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using UnityEditor;
 using UnityEngine;
@@ -35,12 +36,58 @@ namespace IBM.Watson.Editor
     /// </summary>
     class ConfigEditor : EditorWindow
     {
+        #region Constants
+        private const string BLUEMIX_REGISTRATION = "https://console.ng.bluemix.net/registration/";
+
+        private class ServiceSetup
+        {
+            public string ServiceName;
+            public string ServiceAPI;
+            public string URL;
+            public string ServiceID;
+        };
+
+        private ServiceSetup [] SERVICE_SETUP = new ServiceSetup[]
+        {
+            new ServiceSetup() { ServiceName = "Speech To Text", ServiceAPI = "speech-to-text/api",
+                URL ="https://console.ng.bluemix.net/catalog/speech-to-text/", ServiceID="SpeechToTextV1" },
+            new ServiceSetup() { ServiceName = "Text To Speech", ServiceAPI = "text-to-speech/api",
+                URL ="https://console.ng.bluemix.net/catalog/text-to-speech/", ServiceID="TextToSpeechV1" },
+            new ServiceSetup() { ServiceName = "Dialog", ServiceAPI = "dialog/api",
+                URL ="https://console.ng.bluemix.net/catalog/dialog/", ServiceID="DialogV1" },
+            new ServiceSetup() { ServiceName = "Translation", ServiceAPI = "language-translation/api",
+                URL ="https://console.ng.bluemix.net/catalog/language-translation/", ServiceID="TranslateV1" },
+            new ServiceSetup() { ServiceName = "Natural Language Classifier", ServiceAPI = "natural-language-classifier/api",
+                URL ="https://console.ng.bluemix.net/catalog/natural-language-classifier/", ServiceID="NlcV1" },
+        };
+
+        private const string TITLE = "Watson Unity SDK";
+        private const string RUN_WIZARD_MSG =  "Thanks for installing the Watson Unity SDK, would you like to configure your credentials?";
+        private const string YES = "Yes";
+        private const string NO = "No";
+        private const string OK = "Okay";
+        #endregion
+
+        [UnityEditor.Callbacks.DidReloadScripts]
+        private static void OnScriptsReloaded()
+        {
+            if ( !File.Exists( Application.streamingAssetsPath + Constants.Path.CONFIG_FILE ) )
+            {
+                if ( EditorUtility.DisplayDialog( TITLE, RUN_WIZARD_MSG, YES, NO ) )
+                {
+                    PlayerPrefs.SetInt("WizardMode", 1 );
+                    EditConfig();
+                }
+            }
+        }
+                                                        
         private void OnEnable()
         {
 #if UNITY_5_2
             titleContent.text = "Watson Config";
 #endif
-            m_WatsonIcon = (Texture2D)Resources.Load("WatsonIcon", typeof(Texture2D));
+            m_WatsonIcon = (Texture2D)Resources.Load(Constants.Resources.WATSON_ICON, typeof(Texture2D));
+            m_WizardMode = PlayerPrefs.GetInt( "WizardMode", 1 ) != 0;
         }
 
         private static void SaveConfig()
@@ -57,8 +104,13 @@ namespace IBM.Watson.Editor
             window.Show();
         }
 
+        private delegate void WizardStepDelegate( ConfigEditor editor );
+
+        private bool m_WizardMode = true;
         private Texture m_WatsonIcon = null;
         private Vector2 m_ScrollPos = Vector2.zero;
+        private string m_PastedCredentials = "\n\n\n\n\n\n\n";
+
 #if UNITY_EDITOR
         private string m_GatewayUser = "admin";
         private string m_GatewayPassword = "admin123";
@@ -74,101 +126,204 @@ namespace IBM.Watson.Editor
             GUILayout.Label(m_WatsonIcon);
 
             m_ScrollPos = EditorGUILayout.BeginScrollView(m_ScrollPos);
-            cfg.TimeOut = EditorGUILayout.FloatField("Timeout", cfg.TimeOut);
-            cfg.MaxRestConnections = EditorGUILayout.IntField("Max Connections", cfg.MaxRestConnections);
-
-            cfg.EnableGateway = EditorGUILayout.ToggleLeft("Enable Gateway", cfg.EnableGateway);
-            if (cfg.EnableGateway)
+            if ( m_WizardMode )
             {
-                EditorGUI.indentLevel += 1;
-                cfg.GatewayURL = EditorGUILayout.TextField("Gateway URL", cfg.GatewayURL);
-                m_GatewayUser = EditorGUILayout.TextField("Gateway User", m_GatewayUser);
-                m_GatewayPassword = EditorGUILayout.TextField("Gateway Password", m_GatewayPassword);
-
-                cfg.ProductKey = EditorGUILayout.TextField("Product Key", cfg.ProductKey);
-                if (GUILayout.Button("Create Product Key")
-                    && (string.IsNullOrEmpty(cfg.ProductKey) || EditorUtility.DisplayDialog("Confirm", "Please confirm you replacing your current key.", "Yes", "No")))
+                if ( GUILayout.Button( "Advanced Mode" ) )
                 {
-                    cfg.ProductKey = Guid.NewGuid().ToString();
+                    m_WizardMode = false;
+                    PlayerPrefs.SetInt( "WizardMode", 0 );
+                }
 
-                    Dictionary<string, object> addKeyReq = new Dictionary<string, object>();
-                    addKeyReq["robotKey"] = cfg.ProductKey;
-                    addKeyReq["groupName"] = Application.productName;
-                    addKeyReq["deviceLimit"] = "9999";
+                //GUILayout.Label( "Use this dialog to generate your configuration file for the Watson Unity SDK." );
+                //GUILayout.Label( "If you have never registered for Watson BlueMix services, click on the button below to begin registration." );
 
-                    Dictionary<string, string> headers = new Dictionary<string, string>();
-                    headers["Authorization"] = new Credentials(m_GatewayUser, m_GatewayPassword).CreateAuthorization();
-                    headers["Content-Type"] = "application/json";
+                if ( GUILayout.Button( "Register for Watson Services" ) )
+                    Application.OpenURL( BLUEMIX_REGISTRATION );
 
-                    byte[] data = Encoding.UTF8.GetBytes(MiniJSON.Json.Serialize(addKeyReq));
-                    WWW www = new WWW(cfg.GatewayURL + "/v1/admin/addKey", data, headers);
-                    while (!www.isDone) ;
+                foreach( var setup in SERVICE_SETUP )
+                {
+                    Config.CredentialInfo info = cfg.FindCredentials( setup.ServiceID );
 
-                    if (!string.IsNullOrEmpty(www.error))
-                        Log.Warning("ConfigEditor", "Register App Error: {0}", www.error);
+                    bool bValid = info != null 
+                        && !string.IsNullOrEmpty( info.m_URL )
+                        && !string.IsNullOrEmpty( info.m_User )
+                        && !string.IsNullOrEmpty( info.m_Password );
 
-                    bool bRegistered = false;
-                    if (!string.IsNullOrEmpty(www.text))
+                    GUILayout.BeginHorizontal();
+
+                    GUIStyle labelStyle = new GUIStyle(GUI.skin.label);
+                    labelStyle.normal.textColor = bValid ? Color.green : Color.red; 
+
+                    GUILayout.Label( string.Format( "Service {0} {1}...", setup.ServiceName, bValid ? "Configured" : "NOT CONFIGURED" ), labelStyle );
+
+                    if ( GUILayout.Button( "Configure", GUILayout.Width( 100 ) ) )
+                        Application.OpenURL( setup.URL );
+                    if ( bValid && GUILayout.Button( "Clear", GUILayout.Width( 100 ) ) )
+                        cfg.Credentials.Remove( info );
+
+                    GUILayout.EndHorizontal();
+                }
+
+                GUILayout.Label( "PASTE CREDENTIALS BELOW:" );
+                m_PastedCredentials = EditorGUILayout.TextArea( m_PastedCredentials );
+                    
+                GUI.SetNextControlName("Apply");
+                if ( GUILayout.Button( "Apply Credentials" ) )
+                {
+                    bool bParsed = false;
+
+                    Config.CredentialInfo newInfo = new Config.CredentialInfo();
+                    if ( newInfo.ParseJSON( m_PastedCredentials ) )
                     {
-                        IDictionary json = MiniJSON.Json.Deserialize(www.text) as IDictionary;
-                        if (json.Contains("status"))
-                            bRegistered = (long)json["status"] != 0;
+                        foreach (var setup in SERVICE_SETUP)
+                        {
+                            if (newInfo.m_URL.EndsWith(setup.ServiceAPI))
+                            {
+                                newInfo.m_ServiceID = setup.ServiceID;
+
+                                bool bAdd = true;
+                                // remove any previous credentials with the same service ID
+                                for( int i=0;i<cfg.Credentials.Count;++i)
+                                    if ( cfg.Credentials[i].m_ServiceID == newInfo.m_ServiceID )
+                                    {
+                                        bAdd = false;
+
+                                        if ( EditorUtility.DisplayDialog( "Confirm", 
+                                            string.Format("Replace existing service credentials for {0}?", setup.ServiceName),
+                                            YES, NO ) )
+                                        {
+                                            cfg.Credentials.RemoveAt(i);
+                                            bAdd = true;
+                                            break;
+                                        }
+                                    }
+
+                                if ( bAdd )
+                                    cfg.Credentials.Add( newInfo );
+                                bParsed = true;
+                            }
+                       }
                     }
 
-                    if (bRegistered)
+                    if ( bParsed )
                     {
-                        Dictionary<string, object> registerReq = new Dictionary<string, object>();
-                        registerReq["robotKey"] = cfg.ProductKey;
-                        registerReq["robotName"] = Application.productName;
-                        registerReq["macId"] = "UnitySDK";
+                        EditorUtility.DisplayDialog( "Complete", "Credentials applied.", OK );
+                        m_PastedCredentials = "\n\n\n\n\n\n\n";
+                        GUI.FocusControl("Apply");
 
-                        data = Encoding.UTF8.GetBytes(MiniJSON.Json.Serialize(registerReq));
-                        www = new WWW(cfg.GatewayURL + "/v1/admin/addRobot", data, headers);
+                        SaveConfig();
+                    }
+                    else
+                        EditorUtility.DisplayDialog( "Error", "Failed to parse credentials:\n" + m_PastedCredentials, OK );
+                }
+
+                if ( GUILayout.Button( "Save" ) )
+                    SaveConfig();
+            } 
+            else
+            {
+                if ( GUILayout.Button( "Basic Mode" ) )
+                {
+                    m_WizardMode = true;
+                    PlayerPrefs.SetInt( "WizardMode", 1 );
+                }
+
+                cfg.TimeOut = EditorGUILayout.FloatField("Timeout", cfg.TimeOut);
+                cfg.MaxRestConnections = EditorGUILayout.IntField("Max Connections", cfg.MaxRestConnections);
+
+                cfg.EnableGateway = EditorGUILayout.ToggleLeft("Enable Gateway", cfg.EnableGateway);
+                if (cfg.EnableGateway)
+                {
+                    EditorGUI.indentLevel += 1;
+                    cfg.GatewayURL = EditorGUILayout.TextField("Gateway URL", cfg.GatewayURL);
+                    m_GatewayUser = EditorGUILayout.TextField("Gateway User", m_GatewayUser);
+                    m_GatewayPassword = EditorGUILayout.PasswordField("Gateway Password", m_GatewayPassword);
+
+                    cfg.ProductKey = EditorGUILayout.TextField("Product Key", cfg.ProductKey);
+                    if (GUILayout.Button("Create Product Key")
+                        && (string.IsNullOrEmpty(cfg.ProductKey) || EditorUtility.DisplayDialog("Confirm", "Please confirm you replacing your current key.", "Yes", "No")))
+                    {
+                        cfg.ProductKey = Guid.NewGuid().ToString();
+
+                        Dictionary<string, object> addKeyReq = new Dictionary<string, object>();
+                        addKeyReq["robotKey"] = cfg.ProductKey;
+                        addKeyReq["groupName"] = Application.productName;
+                        addKeyReq["deviceLimit"] = "9999";
+
+                        Dictionary<string, string> headers = new Dictionary<string, string>();
+                        headers["Authorization"] = new Credentials(m_GatewayUser, m_GatewayPassword).CreateAuthorization();
+                        headers["Content-Type"] = "application/json";
+
+                        byte[] data = Encoding.UTF8.GetBytes(MiniJSON.Json.Serialize(addKeyReq));
+                        WWW www = new WWW(cfg.GatewayURL + "/v1/admin/addKey", data, headers);
                         while (!www.isDone) ;
 
                         if (!string.IsNullOrEmpty(www.error))
-                            Log.Warning("ConfigEditor", "Register Secret Error: {0}", www.error);
+                            Log.Warning("ConfigEditor", "Register App Error: {0}", www.error);
 
-                        bRegistered = false;
+                        bool bRegistered = false;
                         if (!string.IsNullOrEmpty(www.text))
                         {
                             IDictionary json = MiniJSON.Json.Deserialize(www.text) as IDictionary;
                             if (json.Contains("status"))
                                 bRegistered = (long)json["status"] != 0;
                         }
+
+                        if (bRegistered)
+                        {
+                            Dictionary<string, object> registerReq = new Dictionary<string, object>();
+                            registerReq["robotKey"] = cfg.ProductKey;
+                            registerReq["robotName"] = Application.productName;
+                            registerReq["macId"] = "UnitySDK";
+
+                            data = Encoding.UTF8.GetBytes(MiniJSON.Json.Serialize(registerReq));
+                            www = new WWW(cfg.GatewayURL + "/v1/admin/addRobot", data, headers);
+                            while (!www.isDone) ;
+
+                            if (!string.IsNullOrEmpty(www.error))
+                                Log.Warning("ConfigEditor", "Register Secret Error: {0}", www.error);
+
+                            bRegistered = false;
+                            if (!string.IsNullOrEmpty(www.text))
+                            {
+                                IDictionary json = MiniJSON.Json.Deserialize(www.text) as IDictionary;
+                                if (json.Contains("status"))
+                                    bRegistered = (long)json["status"] != 0;
+                            }
+                        }
+
+                        if (!bRegistered)
+                        {
+                            Config.Instance.ProductKey = string.Empty;
+                            EditorUtility.DisplayDialog("Error", "Failed to register product with gateway.", "OK");
+                        }
                     }
 
-                    if (!bRegistered)
-                    {
-                        Config.Instance.ProductKey = string.Empty;
-                        EditorUtility.DisplayDialog("Error", "Failed to register product with gateway.", "OK");
-                    }
+                    EditorGUI.indentLevel -= 1;
                 }
 
+                EditorGUILayout.LabelField("BlueMix Credentials");
+                EditorGUI.indentLevel += 1;
+                for (int i = 0; i < cfg.Credentials.Count; ++i)
+                {
+                    Config.CredentialInfo info = cfg.Credentials[i];
+
+                    info.m_ServiceID = EditorGUILayout.TextField("ServiceID", info.m_ServiceID);
+                    info.m_URL = EditorGUILayout.TextField("URL", info.m_URL);
+                    info.m_User = EditorGUILayout.TextField("User", info.m_User);
+                    info.m_Password = EditorGUILayout.TextField("Password", info.m_Password);
+
+                    if (GUILayout.Button("Delete"))
+                        cfg.Credentials.RemoveAt(i--);
+                }
+
+                if (GUILayout.Button("Add"))
+                    cfg.Credentials.Add(new Config.CredentialInfo());
                 EditorGUI.indentLevel -= 1;
+
+                if (GUILayout.Button("Save"))
+                    SaveConfig();
             }
-
-            EditorGUILayout.LabelField("BlueMix Credentials");
-            EditorGUI.indentLevel += 1;
-            for (int i = 0; i < cfg.Credentials.Count; ++i)
-            {
-                Config.CredentialInfo info = cfg.Credentials[i];
-
-                info.m_ServiceID = EditorGUILayout.TextField("ServiceID", info.m_ServiceID);
-                info.m_URL = EditorGUILayout.TextField("URL", info.m_URL);
-                info.m_User = EditorGUILayout.TextField("User", info.m_User);
-                info.m_Password = EditorGUILayout.TextField("Password", info.m_Password);
-
-                if (GUILayout.Button("Delete"))
-                    cfg.Credentials.RemoveAt(i--);
-            }
-
-            if (GUILayout.Button("Add"))
-                cfg.Credentials.Add(new Config.CredentialInfo());
-            EditorGUI.indentLevel -= 1;
-
-            if (GUILayout.Button("Save"))
-                SaveConfig();
 
             EditorGUILayout.EndScrollView();
         }

@@ -22,13 +22,13 @@ using IBM.Watson.Logging;
 using UnityEngine;
 using FullSerializer;
 using System.IO;
+using MiniJSON;
+using System;
 
 namespace IBM.Watson.Utilities
 {
     public class Config
     {
-        public static readonly string           CONFIG_FILE = "/Config.json";
-
         /// <summary>
         /// Serialized class for holding the user credentials for a service.
         /// </summary>
@@ -41,6 +41,35 @@ namespace IBM.Watson.Utilities
             public string m_URL;
             public string m_User;
             public string m_Password;
+
+            /// <summary>
+            /// Generate JSON credentials.
+            /// </summary>
+            /// <returns>Returns a string of the JSON.</returns>
+            /// {
+            public string MakeJSON()
+            {
+                return "{\n\t\"credentials\": {\n\t\t\"url\": \"" + m_URL + "\",\n\t\t\"username\": \"" + m_User + "\",\n\t\t\"password\": \"" + m_Password + "\"\n\t}\n}";
+            }
+
+            public bool ParseJSON( string json )
+            {
+                try {
+                    IDictionary iParse = Json.Deserialize( json ) as IDictionary;
+                    IDictionary iCredentials = iParse["credentials"] as IDictionary;
+                    m_URL = (string)iCredentials["url"];
+                    m_User = (string)iCredentials["username"];
+                    m_Password = (string)iCredentials["password"];
+
+                    return true;
+                }
+                catch( Exception e )
+                {
+                    Log.Error( "Config", "Caught Exception: {0}", e.ToString() );
+                }
+
+                return false;
+            }
         }
 
         #region Private Data
@@ -49,9 +78,9 @@ namespace IBM.Watson.Utilities
         [fsProperty]
         private int m_MaxRestConnections = 5;
         [fsProperty]
-        private bool m_EnableGateway = true;
+        private bool m_EnableGateway = false;
         [fsProperty]
-        private string m_GatewayURL = "https://9.53.162.55:9443/webApp";
+        private string m_GatewayURL = ""; //"https://9.53.162.55:9443/webApp";
         [fsProperty]
         private string m_ProductKey = null;
         [fsProperty]
@@ -128,7 +157,7 @@ namespace IBM.Watson.Utilities
             try {
                 if (! Directory.Exists( Application.streamingAssetsPath ) )
                     Directory.CreateDirectory( Application.streamingAssetsPath );
-				LoadConfig( System.IO.File.ReadAllText( Application.streamingAssetsPath + CONFIG_FILE ) );
+				LoadConfig( System.IO.File.ReadAllText( Application.streamingAssetsPath + Constants.Path.CONFIG_FILE ) );
             }
             catch( System.IO.FileNotFoundException )
             {}
@@ -186,7 +215,7 @@ namespace IBM.Watson.Utilities
         private IEnumerator LoadConfigCR()
         {
             // load the config using WWW, since this works on all platforms..
-            WWW request = new WWW(Application.streamingAssetsPath + CONFIG_FILE);
+            WWW request = new WWW(Application.streamingAssetsPath + Constants.Path.CONFIG_FILE);
             while (!request.isDone)
                 yield return null;
 
