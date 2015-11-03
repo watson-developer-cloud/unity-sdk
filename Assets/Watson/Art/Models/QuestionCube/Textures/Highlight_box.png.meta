@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 395f0fd6b37e84e5185f14262023bc74
-timeCreated: 1446505541
+timeCreated: 1446567818
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
@@ -54,13 +54,13 @@ TextureImporter:
     - name: Highlight_box_0
       rect:
         serializedVersion: 2
-        x: 8
-        y: 4
-        width: 488
-        height: 488
+        x: 1
+        y: 2
+        width: 112
+        height: 112
       alignment: 0
       pivot: {x: .5, y: .5}
-      border: {x: 70, y: 70, z: 70, w: 70}
+      border: {x: 20, y: 20, z: 20, w: 20}
   spritePackingTag: 
   userData: 
   assetBundleName: 
