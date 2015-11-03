@@ -178,15 +178,15 @@ public class AvatarTouchManager: MonoBehaviour
 
     private void twoFingerTransformHandler(object sender, System.EventArgs e)
     {
-        Log.Status("AvatarTouchManager", "twoFingerTransformHandler: {0} , DeltaScale: {1}, PanSpeed: {2}, ZoomSpeed:{3}", 
-            TwoFingerMoveGesture.DeltaPosition, 
-            TwoFingerMoveGesture.DeltaScale,
-            PanSpeed,
-            ZoomSpeed);
+        //Log.Status("AvatarTouchManager", "twoFingerTransformHandler: {0} , DeltaScale: {1}, PanSpeed: {2}, ZoomSpeed:{3}", 
+        //    TwoFingerMoveGesture.DeltaPosition, 
+        //    TwoFingerMoveGesture.DeltaScale,
+        //    PanSpeed,
+        //    ZoomSpeed);
         
-        targetCameraLocation += (TwoFingerMoveGesture.DeltaPosition * PanSpeed * -1.0f);
+       // targetCameraLocation += (TwoFingerMoveGesture.DeltaPosition * PanSpeed * -1.0f);
         
-        targetCameraLocation += mainCamera.transform.forward * (TwoFingerMoveGesture.DeltaScale - 1.0f) * ZoomSpeed;
+       // targetCameraLocation += mainCamera.transform.forward * (TwoFingerMoveGesture.DeltaScale - 1.0f) * ZoomSpeed;
     }
 
     private void CubeAnimationStateChanged(System.Object[] args)
@@ -195,10 +195,10 @@ public class AvatarTouchManager: MonoBehaviour
         targetCameraLocation = initialCameraLocation;
         targetCubeRotation = Quaternion.identity;
         //Reset all camera animation.
-        LeanTween.moveLocal(mainCamera.gameObject, initialCameraLocation, timeForCameraResetAnimation).setEase(easeCameraReset).setOnComplete(()=>
-        {
-            isActive = true;
-        });
+        //LeanTween.moveLocal(mainCamera.gameObject, initialCameraLocation, timeForCameraResetAnimation).setEase(easeCameraReset).setOnComplete(()=>
+        //{
+        //    isActive = true;
+        //});
     }
 
     void Update()
@@ -223,7 +223,7 @@ public class AvatarTouchManager: MonoBehaviour
             }
 
             //For Zooming
-            mainCamera.transform.localPosition = Vector3.Lerp(mainCamera.transform.localPosition, targetCameraLocation, Time.deltaTime * speedForCameraAnimation);
+            //mainCamera.transform.localPosition = Vector3.Lerp(mainCamera.transform.localPosition, targetCameraLocation, Time.deltaTime * speedForCameraAnimation);
         }
 
 

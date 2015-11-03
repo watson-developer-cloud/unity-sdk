@@ -123,6 +123,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74c0bab87d781b945b00b58d8eca8f76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_PanSpeed: .0700000003
+  m_ZoomSpeed: 20
+  m_SpeedForCameraAnimation: 2
 --- !u!114 &11430054
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -156,7 +156,7 @@ namespace IBM.Watson.Utilities
 
 		private void OneFingerManipulationTransformedHandler(object sender, System.EventArgs e)
 		{
-			Log.Status ("AvatarTouchManager", "oneFingerManipulationTransformedHandler: {0}", m_OneFingerManipulationGesture.DeltaPosition);
+			Log.Status ("TouchEventManager", "oneFingerManipulationTransformedHandler: {0}", m_OneFingerManipulationGesture.DeltaPosition);
 			if (m_Active) {
 				TouchEventData dragEventToFire = null;
 					
@@ -166,7 +166,7 @@ namespace IBM.Watson.Utilities
 						for (int i = 0; i < kp.Value.Count; ++i) {
 							TouchEventData dragEventData = kp.Value [i];
 								
-							if (dragEventData.TapCallback == null) {
+							if (dragEventData.DragCallback == null) {
 								Log.Warning ("TouchEventManager", "Removing invalid event receiver from OneFingerDrag");
 								kp.Value.RemoveAt (i--);
 								continue;
@@ -202,7 +202,7 @@ namespace IBM.Watson.Utilities
 
 		private void TwoFingerTransformedHandler(object sender, System.EventArgs e)
 		{
-			Log.Status ("AvatarTouchManager", "TwoFingerTransformedHandler: {0}", m_OneFingerManipulationGesture.DeltaPosition);
+			Log.Status ("TouchEventManager", "TwoFingerTransformedHandler: {0}", m_TwoFingerMoveGesture.DeltaPosition);
 			if (m_Active) {
 				TouchEventData dragEventToFire = null;
 				
@@ -212,8 +212,8 @@ namespace IBM.Watson.Utilities
 						for (int i = 0; i < kp.Value.Count; ++i) {
 							TouchEventData dragEventData = kp.Value [i];
 							
-							if (dragEventData.TapCallback == null) {
-								Log.Warning ("TouchEventManager", "Removing invalid event receiver from OneFingerDrag");
+							if (dragEventData.DragCallback == null) {
+								Log.Warning ("TouchEventManager", "Removing invalid event receiver from TwoFingerDrag");
 								kp.Value.RemoveAt (i--);
 								continue;
 							}
