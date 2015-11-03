@@ -980,6 +980,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 656687ed20c93924d9785528d655ff29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_AutoConnect: 1
   m_Mappings:
   - m_Key: 0
     m_Modifiers: 2
