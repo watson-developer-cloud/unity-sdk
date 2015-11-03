@@ -1,4 +1,22 @@
-﻿using UnityEngine;
+﻿/**
+* Copyright 2015 IBM Corp. All Rights Reserved.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*
+* @author Dogukan Erenel (derenel@us.ibm.com)
+*/
+
+using UnityEngine;
 using System.Collections;
 
 namespace IBM.Watson.Utilities
@@ -23,60 +41,72 @@ namespace IBM.Watson.Utilities
 
         }
 
+        /// <summary>
+        /// All constant event names used in SDK and Applications listed here. 
+        /// </summary>
         public enum Event
         {
+            /// <summary>
+            /// Event to open debug console
+            /// </summary>
             ON_DEBUG_COMMAND,
+            /// <summary>
+            /// Event to send debug message
+            /// </summary>
             ON_DEBUG_MESSAGE,
+            /// <summary>
+            /// Event to change Avatar mood
+            /// </summary>
             ON_CHANGE_AVATAR_MOOD,
+            /// <summary>
+            /// Event after Avatar mood change
+            /// </summary>
             ON_CHANGE_AVATAR_MOOD_FINISH,
+            /// <summary>
+            /// Event to change Avatar state
+            /// </summary>
             ON_CHANGE_AVATAR_STATE,
+            /// <summary>
+            /// Event after Avatar state change
+            /// </summary>
             ON_CHANGE_AVATAR_STATE_FINISH,
+            /// <summary>
+            /// Event to change quality settings
+            /// </summary>
             ON_CHANGE_QUALITY,
+            /// <summary>
+            /// Event after Quality Settings change
+            /// </summary>
             ON_CHANGE_QUALITY_FINISH,
+            /// <summary>
+            /// Event on Question Cube state change
+            /// </summary>
             ON_CHANGE_STATE_QUESTIONCUBE_ANIMATION,
+            /// <summary>
+            /// Event to Stop the all animations
+            /// </summary>
             ON_ANIMATION_STOP,
+            /// <summary>
+            /// Event to pause the all animations playing
+            /// </summary>
             ON_ANIMATION_PAUSE,
+            /// <summary>
+            /// Event to resume the paused animations
+            /// </summary>
             ON_ANIMATION_RESUME,
+            /// <summary>
+            /// Event to speed-up the animations
+            /// </summary>
             ON_ANIMATION_SPEED_UP,
+            /// <summary>
+            /// Event to speed-down the animations
+            /// </summary>
             ON_ANIMATION_SPEED_DOWN,
+            /// <summary>
+            /// Event to set the default speed on animations
+            /// </summary>
             ON_ANIMATION_SPEED_DEFAULT
         }
-
-   //     /// <summary>
-   //     /// All Event related constants listed here. Exp. Event names to call.
-   //     /// </summary>
-   //     public static class Event
-   //     {
-   //         /// <summary>
-   //         /// This is event is sent when the user enters a command in the debug console.
-   //         /// </summary>
-   //         public const string ON_DEBUG_COMMAND = "ON_DEBUG_COMMAND";
-   //         public const string ON_DEBUG_MESSAGE = "ON_DEBUG_MESSAGE";
-
-   //         //Avatar Mood Changes
-   //         public const string ON_CHANGE_AVATAR_MOOD = "ON_CHANGE_AVATAR_MOOD";
-   //         public const string ON_CHANGE_AVATAR_MOOD_FINISH = "ON_CHANGE_AVATAR_MOOD_FINISH";
-
-   //         //Avatar Mood Changes
-   //         public const string ON_CHANGE_AVATAR_STATE = "ON_CHANGE_AVATAR_STATE";
-   //         public const string ON_CHANGE_AVATAR_STATE_FINISH = "ON_CHANGE_AVATAR_STATE_FINISH";
-
-   //         //Quality Settings
-   //         public const string ON_CHANGE_QUALITY = "ON_CHANGE_QUALITY";
-   //         public const string ON_CHANGE_QUALITY_FINISH = "ON_CHANGE_QUALITY_FINISH";
-
-   //         //Question Widget State Change
-   //         public const string ON_CHANGE_STATE_QUESTIONCUBE_ANIMATION = "ON_CHANGE_STATE_QUESTIONCUBE_ANIMATION";
-
-			////Animation Related ones
-			//public const string ON_ANIMATION_STOP = "ON_ANIMATION_STOP";
-			//public const string ON_ANIMATION_PAUSE = "ON_ANIMATION_PAUSE";
-			//public const string ON_ANIMATION_RESUME = "ON_ANIMATION_RESUME";
-			//public const string ON_ANIMATION_SPEED_UP = "ON_ANIMATION_SPEED_UP";
-			//public const string ON_ANIMATION_SPEED_DOWN = "ON_ANIMATION_SPEED_DOWN";
-			//public const string ON_ANIMATION_SPEED_DEFAULT = "ON_ANIMATION_SPEED_DEFAULT";
-         
-   //     }
 
         /// <summary>
         /// All constant path variables liste here. Exp. Configuration file
