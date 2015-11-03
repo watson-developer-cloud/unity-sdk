@@ -4101,7 +4101,7 @@ GameObject:
   - 114: {fileID: 11488250}
   - 114: {fileID: 11426570}
   - 114: {fileID: 11445104}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: QuestionWidget
   m_TagString: QuestionOnFocus
   m_Icon: {fileID: 0}
@@ -16249,6 +16249,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77245c42da8d0d045bfaed8f04105f03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_layerForQuestionWidget:
+    serializedVersion: 2
+    m_Bits: 16384
 --- !u!114 &11430492
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -23162,6 +23165,14 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: avatarGameobject
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_layerForQuestionWidget.m_Bits
+      value: 16384
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
