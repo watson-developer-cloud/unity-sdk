@@ -57,6 +57,16 @@ namespace IBM.Watson.Utilities
         }
 
         /// <summary>
+        /// Register an event receiver with this EventManager.
+        /// </summary>
+        /// <param name="eventType">Event type defined in Constants</param>
+        /// <param name="callback">The event receiver function.</param>
+        public void RegisterEventReceiver(Constants.Event eventType, OnReceiveEvent callback)
+        {
+            RegisterEventReceiver(((int)eventType).ToString(), callback);
+        }
+
+        /// <summary>
         /// Unregisters all event receivers.
         /// </summary>
         public void UnregisterAllEventReceivers()
@@ -85,6 +95,17 @@ namespace IBM.Watson.Utilities
         }
 
         /// <summary>
+        /// Unregister a specific receiver.
+        /// </summary>
+        /// <param name="eventType">Event type defined in Constants</param>
+        /// <param name="callback">The event handler.</param>
+        public void UnregisterEventReceiver(Constants.Event eventType, OnReceiveEvent callback)
+        {
+            UnregisterEventReceiver(((int)eventType).ToString(), callback);
+        }
+
+
+        /// <summary>
         /// Send an event to all registered receivers.
         /// </summary>
         /// <param name="eventName">The name of the event to send.</param>
@@ -108,6 +129,17 @@ namespace IBM.Watson.Utilities
                 return true;
             }
             return false;
+        }
+
+        /// <summary>
+        /// Send an event to all registered receivers.
+        /// </summary>
+        /// <param name="eventType">Event type defined in Constants</param>
+        /// <param name="args">Arguments to send to the event receiver.</param>
+        /// <returns>Returns true if a event receiver was found for the event.</returns>
+        public bool SendEvent(Constants.Event eventType, params object[] args)
+        {
+            return SendEvent(((int)eventType).ToString(), args);
         }
 
         /// <summary>

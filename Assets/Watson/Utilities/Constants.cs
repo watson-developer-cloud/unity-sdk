@@ -23,41 +23,60 @@ namespace IBM.Watson.Utilities
 
         }
 
-        /// <summary>
-        /// All Event related constants listed here. Exp. Event names to call.
-        /// </summary>
-        public static class Event
+        public enum Event
         {
-            /// <summary>
-            /// This is event is sent when the user enters a command in the debug console.
-            /// </summary>
-            public const string ON_DEBUG_COMMAND = "ON_DEBUG_COMMAND";
-            public const string ON_DEBUG_MESSAGE = "ON_DEBUG_MESSAGE";
-
-            //Avatar Mood Changes
-            public const string ON_CHANGE_AVATAR_MOOD = "ON_CHANGE_AVATAR_MOOD";
-            public const string ON_CHANGE_AVATAR_MOOD_FINISH = "ON_CHANGE_AVATAR_MOOD_FINISH";
-
-            //Avatar Mood Changes
-            public const string ON_CHANGE_AVATAR_STATE = "ON_CHANGE_AVATAR_STATE";
-            public const string ON_CHANGE_AVATAR_STATE_FINISH = "ON_CHANGE_AVATAR_STATE_FINISH";
-
-            //Quality Settings
-            public const string ON_CHANGE_QUALITY = "ON_CHANGE_QUALITY";
-            public const string ON_CHANGE_QUALITY_FINISH = "ON_CHANGE_QUALITY_FINISH";
-
-            //Question Widget State Change
-            public const string ON_CHANGE_STATE_QUESTIONCUBE_ANIMATION = "ON_CHANGE_STATE_QUESTIONCUBE_ANIMATION";
-
-			//Animation Related ones
-			public const string ON_ANIMATION_STOP = "ON_ANIMATION_STOP";
-			public const string ON_ANIMATION_PAUSE = "ON_ANIMATION_PAUSE";
-			public const string ON_ANIMATION_RESUME = "ON_ANIMATION_RESUME";
-			public const string ON_ANIMATION_SPEED_UP = "ON_ANIMATION_SPEED_UP";
-			public const string ON_ANIMATION_SPEED_DOWN = "ON_ANIMATION_SPEED_DOWN";
-			public const string ON_ANIMATION_SPEED_DEFAULT = "ON_ANIMATION_SPEED_DEFAULT";
-         
+            ON_DEBUG_COMMAND,
+            ON_DEBUG_MESSAGE,
+            ON_CHANGE_AVATAR_MOOD,
+            ON_CHANGE_AVATAR_MOOD_FINISH,
+            ON_CHANGE_AVATAR_STATE,
+            ON_CHANGE_AVATAR_STATE_FINISH,
+            ON_CHANGE_QUALITY,
+            ON_CHANGE_QUALITY_FINISH,
+            ON_CHANGE_STATE_QUESTIONCUBE_ANIMATION,
+            ON_ANIMATION_STOP,
+            ON_ANIMATION_PAUSE,
+            ON_ANIMATION_RESUME,
+            ON_ANIMATION_SPEED_UP,
+            ON_ANIMATION_SPEED_DOWN,
+            ON_ANIMATION_SPEED_DEFAULT
         }
+
+   //     /// <summary>
+   //     /// All Event related constants listed here. Exp. Event names to call.
+   //     /// </summary>
+   //     public static class Event
+   //     {
+   //         /// <summary>
+   //         /// This is event is sent when the user enters a command in the debug console.
+   //         /// </summary>
+   //         public const string ON_DEBUG_COMMAND = "ON_DEBUG_COMMAND";
+   //         public const string ON_DEBUG_MESSAGE = "ON_DEBUG_MESSAGE";
+
+   //         //Avatar Mood Changes
+   //         public const string ON_CHANGE_AVATAR_MOOD = "ON_CHANGE_AVATAR_MOOD";
+   //         public const string ON_CHANGE_AVATAR_MOOD_FINISH = "ON_CHANGE_AVATAR_MOOD_FINISH";
+
+   //         //Avatar Mood Changes
+   //         public const string ON_CHANGE_AVATAR_STATE = "ON_CHANGE_AVATAR_STATE";
+   //         public const string ON_CHANGE_AVATAR_STATE_FINISH = "ON_CHANGE_AVATAR_STATE_FINISH";
+
+   //         //Quality Settings
+   //         public const string ON_CHANGE_QUALITY = "ON_CHANGE_QUALITY";
+   //         public const string ON_CHANGE_QUALITY_FINISH = "ON_CHANGE_QUALITY_FINISH";
+
+   //         //Question Widget State Change
+   //         public const string ON_CHANGE_STATE_QUESTIONCUBE_ANIMATION = "ON_CHANGE_STATE_QUESTIONCUBE_ANIMATION";
+
+			////Animation Related ones
+			//public const string ON_ANIMATION_STOP = "ON_ANIMATION_STOP";
+			//public const string ON_ANIMATION_PAUSE = "ON_ANIMATION_PAUSE";
+			//public const string ON_ANIMATION_RESUME = "ON_ANIMATION_RESUME";
+			//public const string ON_ANIMATION_SPEED_UP = "ON_ANIMATION_SPEED_UP";
+			//public const string ON_ANIMATION_SPEED_DOWN = "ON_ANIMATION_SPEED_DOWN";
+			//public const string ON_ANIMATION_SPEED_DEFAULT = "ON_ANIMATION_SPEED_DEFAULT";
+         
+   //     }
 
         /// <summary>
         /// All constant path variables liste here. Exp. Configuration file

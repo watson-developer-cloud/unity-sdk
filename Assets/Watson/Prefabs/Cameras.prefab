@@ -32,6 +32,8 @@ GameObject:
   - 114: {fileID: 11407234}
   - 114: {fileID: 11455830}
   - 114: {fileID: 11450530}
+  - 114: {fileID: 11467584}
+  - 114: {fileID: 11444306}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -155,6 +157,23 @@ MonoBehaviour:
   dx11BokehTexture: {fileID: 2800000, guid: a4cdca73d61814d33ac1587f6c163bca, type: 3}
   dx11BokehScale: 1.20000005
   dx11BokehIntensity: 2.5
+--- !u!114 &11444306
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 172636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e421b0b8c204bd344918bc3963c06ccc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Mappings:
+  - m_Event: 8
+    m_Callback:
+      m_Target: {fileID: 172636}
+      m_Component: WatsonCamera
+      m_Method: ResetCameraPosition
 --- !u!114 &11450530
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -214,6 +233,37 @@ MonoBehaviour:
       m_Target: {fileID: 172636}
       m_Component: WatsonCamera
       m_Method: ApplicationQuit
+  - m_Key: 57
+    m_Modifiers: 2
+    m_Callback:
+      m_Target: {fileID: 172636}
+      m_Component: WatsonCamera
+      m_Method: ZoomOut
+  - m_Key: 48
+    m_Modifiers: 2
+    m_Callback:
+      m_Target: {fileID: 172636}
+      m_Component: WatsonCamera
+      m_Method: ZoomIn
+--- !u!114 &11467584
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 172636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9d6f7b4cab98524a8956e9ad270ecda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TapMappings: []
+  m_FullScreenDragMappings:
+  - m_NumberOfFinger: 2
+    m_SortingLayer: 0
+    m_Callback:
+      m_Target: {fileID: 172636}
+      m_Component: WatsonCamera
+      m_Method: DragTwoFinger
 --- !u!114 &11489266
 MonoBehaviour:
   m_ObjectHideFlags: 1

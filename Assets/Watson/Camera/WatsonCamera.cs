@@ -18,9 +18,10 @@ public class WatsonCamera : MonoBehaviour {
 	private float m_ZoomSpeed = 20.0f;
 	[SerializeField]
 	private float m_SpeedForCameraAnimation = 2f;
-    [SerializeField]
-    private LeanTweenType m_EaseCameraReset = LeanTweenType.easeInOutCubic;
-  
+
+    //TODO: Add boundary limits
+    //private Vector3 targetCenter = Vector3.zero;    //Center of Avatar
+    //private Vector2 boundaryLimit = Vector2.zero;
     #endregion
 
     #region OnEnable / OnDisable to register some events
@@ -28,19 +29,28 @@ public class WatsonCamera : MonoBehaviour {
     void OnEnable(){
         m_CameraInitialLocation = transform.localPosition;
         m_TargetCameraLocation = m_CameraInitialLocation;
-        TouchEventManager.Instance.RegisterDragEvent (gameObject, DragTwoFinger, numberOfFinger: 2);
-        EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_CHANGE_STATE_QUESTIONCUBE_ANIMATION, ResetCameraPosition);
+       // TouchEventManager.Instance.RegisterDragEvent (gameObject, DragTwoFinger, numberOfFinger: 2);
+       // EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_CHANGE_STATE_QUESTIONCUBE_ANIMATION, ResetCameraPosition);
 	}
 
 	void OnDisable(){
-		TouchEventManager.Instance.UnregisterDragEvent (gameObject, DragTwoFinger, numberOfFinger: 2);
-        EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_CHANGE_STATE_QUESTIONCUBE_ANIMATION, ResetCameraPosition);
+		//TouchEventManager.Instance.UnregisterDragEvent (gameObject, DragTwoFinger, numberOfFinger: 2);
+        //EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_CHANGE_STATE_QUESTIONCUBE_ANIMATION, ResetCameraPosition);
     }
 
-	#endregion
+    #endregion
 
-	#region Touch Drag Actions
-	public void DragTwoFinger(TouchScript.Gestures.ScreenTransformGesture transformGesture){
+    #region OnUpdate - All Update animations on camera
+
+    void Update()
+    {
+        CameraPositionOnUpdate();
+    }
+
+    #endregion
+
+    #region Touch Drag Actions
+    public void DragTwoFinger(TouchScript.Gestures.ScreenTransformGesture transformGesture){
 
         Log.Status("WatsonCamera", "twoFingerTransformHandler: {0} , DeltaScale: {1}, PanSpeed: {2}, ZoomSpeed:{3}",
             transformGesture.DeltaPosition,
@@ -54,18 +64,51 @@ public class WatsonCamera : MonoBehaviour {
 		m_TargetCameraLocation += transform.forward * (transformGesture.DeltaScale - 1.0f) * m_ZoomSpeed;
 	}
 
-	void Update(){
-		//For Zooming and Panning
-		transform.localPosition = Vector3.Lerp(transform.localPosition, m_TargetCameraLocation, Time.deltaTime * m_SpeedForCameraAnimation);
-	}
+	
+
+    void CameraPositionOnUpdate()
+    {
+        //For Zooming and Panning
+        transform.localPosition = Vector3.Lerp(transform.localPosition, m_TargetCameraLocation, Time.deltaTime * m_SpeedForCameraAnimation);
+    }
 
     #endregion
 
-    #region Camera Events Received from Outside - Set default position 
-    void ResetCameraPosition(System.Object[] args)
+    #region Camera Events Received from Outside - Set default position / Move Left - Right - Up - Down / Zoom-in-out
+    public void ResetCameraPosition(System.Object[] args)
     {
         Log.Status("WatsonCamera", "Reset Camera Position");
         m_TargetCameraLocation = m_CameraInitialLocation;
+    }
+
+    public void MoveUp()
+    {
+        m_TargetCameraLocation += Vector3.up;
+    }
+
+    public void MoveDown()
+    {
+        m_TargetCameraLocation += Vector3.down;
+    }
+
+    public void MoveLeft()
+    {
+        m_TargetCameraLocation += Vector3.left;
+    }
+
+    public void MoveRight()
+    {
+        m_TargetCameraLocation += Vector3.right;
+    }
+
+    public void ZoomIn()
+    {
+        m_TargetCameraLocation += transform.forward * m_ZoomSpeed * 100.0f;
+    }
+
+    public void ZoomOut()
+    {
+        m_TargetCameraLocation += transform.forward * m_ZoomSpeed * -1.0f * 100.0f;
     }
 
     #endregion

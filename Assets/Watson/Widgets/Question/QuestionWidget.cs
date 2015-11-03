@@ -256,6 +256,7 @@ namespace IBM.Watson.Widgets.Question
         }
         public void OnLeaveTheSceneAndDestroy()
         {
+            Focused = false;
             Cube.LeaveTheSceneAndDestroy();
         }
 

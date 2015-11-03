@@ -587,7 +587,6 @@ namespace IBM.Watson.Widgets.Avatar
         private void InstatiateQuestionWidget()
         {
 			if ( m_FocusQuestion != null ) {
-				m_FocusQuestion.Focused = false;	//lost focus and sent out the scene!
 				m_FocusQuestion.OnLeaveTheSceneAndDestroy();
 			}
 
