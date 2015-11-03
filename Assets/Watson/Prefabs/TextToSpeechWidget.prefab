@@ -110,15 +110,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19bbf0e483a3ecb4b88d5144d66059e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AudioOut:
-    m_TargetObject: {fileID: 0}
-    m_TargetConnection: 
+  m_AutoConnect: 0
   m_Speaking:
     m_TargetObject: {fileID: 0}
-    m_TargetConnection: 
+    m_TargetConnection: Microphone/Disable
   m_LevelOut:
     m_TargetObject: {fileID: 0}
-    m_TargetConnection: 
+    m_TargetConnection: Avatar/Level
   m_LevelOutInterval: .0500000007
   m_TextToSpeechButton: {fileID: 0}
   m_Input: {fileID: 0}

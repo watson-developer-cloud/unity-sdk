@@ -58,8 +58,7 @@ namespace IBM.Watson.Utilities
             Component component = m_Target.GetComponent(m_Component);
             if ( component == null )
                 return null;
-            MethodInfo info = component.GetType().GetMethod(m_Method, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public |
-                BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.InvokeMethod);
+            MethodInfo info = component.GetType().GetMethod(m_Method, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.InvokeMethod);
             if ( info == null )
                 return null;
 

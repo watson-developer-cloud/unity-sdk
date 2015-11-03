@@ -70,22 +70,22 @@ namespace IBM.Watson.Widgets.Question
             {
                 m_Focused = value;
 
-                if (value)
-                {
-                    KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CUBE_TO_FOLD, Constants.KeyCodes.MODIFIER_KEY, OnFold);
-                    KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CUBE_TO_FOCUS, Constants.KeyCodes.MODIFIER_KEY, OnFocusNext);
-                    KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CUBE_TO_ROTATE_OR_PAUSE, Constants.KeyCodes.MODIFIER_KEY, OnRotateOrPause);
-                    KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CUBE_TO_UNFOCUS, Constants.KeyCodes.MODIFIER_KEY, OnUnFocus);
-                    KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CUBE_TO_UNFOLD, Constants.KeyCodes.MODIFIER_KEY, OnUnfold);
-                }
-                else
-                {
-                    KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_FOLD, Constants.KeyCodes.MODIFIER_KEY, OnFold);
-                    KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_FOCUS, Constants.KeyCodes.MODIFIER_KEY, OnFocusNext);
-                    KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_ROTATE_OR_PAUSE, Constants.KeyCodes.MODIFIER_KEY, OnRotateOrPause);
-                    KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_UNFOCUS, Constants.KeyCodes.MODIFIER_KEY, OnUnFocus);
-                    KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_UNFOLD, Constants.KeyCodes.MODIFIER_KEY, OnUnfold);
-                }
+                //if (value)
+                //{
+                //    KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CUBE_TO_FOLD, Constants.KeyCodes.MODIFIER_KEY, OnFold);
+                //    KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CUBE_TO_FOCUS, Constants.KeyCodes.MODIFIER_KEY, OnFocusNext);
+                //    KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CUBE_TO_ROTATE_OR_PAUSE, Constants.KeyCodes.MODIFIER_KEY, OnRotateOrPause);
+                //    KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CUBE_TO_UNFOCUS, Constants.KeyCodes.MODIFIER_KEY, OnUnFocus);
+                //    KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CUBE_TO_UNFOLD, Constants.KeyCodes.MODIFIER_KEY, OnUnfold);
+                //}
+                //else
+                //{
+                //    KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_FOLD, Constants.KeyCodes.MODIFIER_KEY, OnFold);
+                //    KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_FOCUS, Constants.KeyCodes.MODIFIER_KEY, OnFocusNext);
+                //    KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_ROTATE_OR_PAUSE, Constants.KeyCodes.MODIFIER_KEY, OnRotateOrPause);
+                //    KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_UNFOCUS, Constants.KeyCodes.MODIFIER_KEY, OnUnFocus);
+                //    KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_UNFOLD, Constants.KeyCodes.MODIFIER_KEY, OnUnfold);
+                //}
             }
         }
 
@@ -108,36 +108,36 @@ namespace IBM.Watson.Widgets.Question
         #endregion
 
         #region Cube Actions
-        public void OnDisplayAnswers()
+        public void OnDisplayAnswers(ClassifyResult result)
         {
             Cube.FocusOnSide(CubeAnimationManager.CubeSideType.ANSWERS);
         }
 
-        public void OnDisplayChat()
+        public void OnDisplayChat(ClassifyResult result)
         {
             Cube.FocusOnSide(CubeAnimationManager.CubeSideType.CHAT);
         }
 
-        public void OnDisplayParse()
+        public void OnDisplayParse(ClassifyResult result)
         {
             Cube.FocusOnSide(CubeAnimationManager.CubeSideType.PARSE);
         }
 
-        public void OnDisplayEvidence()
+        public void OnDisplayEvidence(ClassifyResult result)
         {
             Cube.FocusOnSide(CubeAnimationManager.CubeSideType.EVIDENCE);
         }
 
-        public void OnDisplayLocation()
+        public void OnDisplayLocation(ClassifyResult result)
         {
             Cube.FocusOnSide(CubeAnimationManager.CubeSideType.LOCATION);
         }
 
-        public void OnFold()
+        public void OnFold(ClassifyResult result)
         {
             Cube.Fold();
         }
-        public void OnUnfold()
+        public void OnUnfold(ClassifyResult result)
         {
             Cube.UnFold();
         }
@@ -161,27 +161,6 @@ namespace IBM.Watson.Widgets.Question
         public void OnLeaveTheSceneAndDestroy()
         {
             Cube.LeaveTheSceneAndDestroy();
-        }
-
-
-        public void ExecuteAction(string action)
-        {
-            if (action == "fold")
-                OnFold();
-            else if (action == "unfold")
-                OnUnfold();
-            else if (action == "evidence")
-                OnDisplayEvidence();
-            else if (action == "parse")
-                OnDisplayParse();
-            else if (action == "location")
-                OnDisplayLocation();
-            else if (action == "answers")
-                OnDisplayAnswers();
-            else if (action == "chat")
-                OnDisplayChat();
-            else
-                Log.Warning("QuestionWidget", "Unknown action {0}", action);
         }
         #endregion
 
@@ -234,7 +213,7 @@ namespace IBM.Watson.Widgets.Question
         Answers AnswerDataObject { get; }
         ParseData ParseDataObject { get; }
         string Location { get; }
-        OnMessage OnQuestion { get; set; }
-        OnMessage OnAnswer { get; set; }
+        OnMessage OnQuestionEvent { get; set; }
+        OnMessage OnAnswerEvent { get; set; }
     }
 }

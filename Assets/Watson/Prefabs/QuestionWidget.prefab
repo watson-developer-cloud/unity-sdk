@@ -3776,6 +3776,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &159480
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 487512}
+  - 114: {fileID: 11462160}
+  m_Layer: 0
+  m_Name: ClassifierWidget
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &159848
 GameObject:
   m_ObjectHideFlags: 1
@@ -7337,6 +7353,7 @@ Transform:
   m_Children:
   - {fileID: 445074}
   - {fileID: 415434}
+  - {fileID: 487512}
   m_Father: {fileID: 0}
   m_RootOrder: 0
 --- !u!4 &420338
@@ -9427,6 +9444,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 429708}
   m_RootOrder: 0
+--- !u!4 &487512
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 159480}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 420132}
+  m_RootOrder: 2
 --- !u!4 &487550
 Transform:
   m_ObjectHideFlags: 1
@@ -16635,6 +16664,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77245c42da8d0d045bfaed8f04105f03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_AutoConnect: 0
 --- !u!114 &11430492
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -18359,6 +18389,64 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
+--- !u!114 &11462160
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 159480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 632a64e2426c0fb48a6ca1df6ee58939, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AutoConnect: 0
+  m_Mappings:
+  - m_Class: fold
+    m_Callback:
+      m_Target: {fileID: 165892}
+      m_Component: QuestionWidget
+      m_Method: OnFold
+    m_Exclusive: 1
+  - m_Class: unfold
+    m_Callback:
+      m_Target: {fileID: 165892}
+      m_Component: QuestionWidget
+      m_Method: OnUnfold
+    m_Exclusive: 1
+  - m_Class: evidence
+    m_Callback:
+      m_Target: {fileID: 165892}
+      m_Component: QuestionWidget
+      m_Method: OnDisplayEvidence
+    m_Exclusive: 1
+  - m_Class: parse
+    m_Callback:
+      m_Target: {fileID: 165892}
+      m_Component: QuestionWidget
+      m_Method: OnDisplayParse
+    m_Exclusive: 1
+  - m_Class: location
+    m_Callback:
+      m_Target: {fileID: 165892}
+      m_Component: QuestionWidget
+      m_Method: OnDisplayLocation
+    m_Exclusive: 1
+  - m_Class: answers
+    m_Callback:
+      m_Target: {fileID: 165892}
+      m_Component: QuestionWidget
+      m_Method: OnDisplayAnswers
+    m_Exclusive: 1
+  - m_Class: chat
+    m_Callback:
+      m_Target: {fileID: 165892}
+      m_Component: QuestionWidget
+      m_Method: OnDisplayChat
+    m_Exclusive: 1
+  m_ClassifyOutput:
+    m_TargetObject: {fileID: 0}
+    m_TargetConnection: 
 --- !u!114 &11462340
 MonoBehaviour:
   m_ObjectHideFlags: 1

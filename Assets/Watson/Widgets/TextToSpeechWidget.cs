@@ -39,8 +39,6 @@ namespace IBM.Watson.Widgets
         [SerializeField]
         private Input m_TextInput = new Input( "Text", typeof(TextData), "OnTextInput" ); 
         [SerializeField]
-        private Output m_AudioOut = new Output( typeof(AudioData) );
-        [SerializeField]
         private Output m_Speaking = new Output( typeof(BooleanData) );
         [SerializeField]
         private Output m_LevelOut = new Output( typeof(FloatData) );
@@ -111,9 +109,6 @@ namespace IBM.Watson.Widgets
             if ( m_SpeechQueue.Count > 0 && m_Source != null && !m_Source.isPlaying )
 	        {
                 AudioClip clip = m_SpeechQueue.Dequeue();
-                if ( m_AudioOut.IsConnected )
-                    m_AudioOut.SendData( new AudioData( clip, -1.0f ) );
-
                 if ( m_EnableAudioSource )
                 {
                     if ( m_Speaking.IsConnected )
