@@ -101,8 +101,6 @@ namespace IBM.Watson.Widgets.Question
         {
             for (int i = 0; i < m_Question.QuestionData.ParseDataObject.Words.Length; i++)
             {
-				Log.Debug("Parse Tree", "i: " + i);
-				Log.Debug("Parse Tree", "m_PositionList.Count: " + m_PositionList.Count);
                 GameObject wordGameObject = Instantiate(m_ParseTreeTextItemPrefab) as GameObject;
                 RectTransform wordRectTransform = wordGameObject.GetComponent<RectTransform>();
                 wordRectTransform.SetParent(m_ParseCanvasRectTransform, false);

@@ -44,6 +44,7 @@ namespace IBM.Watson.Widgets.Question
         private Location m_Location;
         private ParseTree m_ParseTree;
         private QuestionAndAnswer m_QuestionAndAnswer;
+		private Passages m_Passages;
         private List<Base> m_Facets = new List<Base>();
 
         #endregion
@@ -296,6 +297,7 @@ namespace IBM.Watson.Widgets.Question
             m_Location = gameObject.GetComponent<Location>();
             m_ParseTree = gameObject.GetComponent<ParseTree>();
             m_QuestionAndAnswer = gameObject.GetComponent<QuestionAndAnswer>();
+			m_Passages = gameObject.GetComponent<Passages>();
 
             m_Facets.Add(m_AnswersAndConfidence);
             m_Facets.Add(m_Evidence);
@@ -304,6 +306,7 @@ namespace IBM.Watson.Widgets.Question
             m_Facets.Add(m_Location);
             m_Facets.Add(m_ParseTree);
             m_Facets.Add(m_QuestionAndAnswer);
+			m_Facets.Add(m_Passages);
         }
 
         protected override void Start()
@@ -312,7 +315,7 @@ namespace IBM.Watson.Widgets.Question
         }
 
         /// <summary>
-        /// Sets Question, Answer and Avatar for each facet. Init is called by the Avatar Widget.
+        /// Sets Question, Answer and Avatar for each facet. This is called by the Avatar Widget.
         /// </summary>
         public void UpdateFacets()
         {
