@@ -50,6 +50,7 @@ namespace IBM.Watson.Widgets.Question
                 evidenceItemRectTransform.SetParent(m_EvidenceCanvasRectTransform, false);
                 EvidenceItem evidenceItem = evidenceItemGameObject.GetComponent<EvidenceItem>();
                 m_EvidenceItems.Add(evidenceItem);
+				evidenceItem.Answer = m_Question.QuestionData.AnswerDataObject.answers[0].answerText;
                 evidenceItem.EvidenceString = m_Question.QuestionData.AnswerDataObject.answers[0].evidence[i].decoratedPassage;
             }
         }
