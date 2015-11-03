@@ -101,6 +101,9 @@ namespace IBM.Watson.Widgets.Question
             }
         }
 
+        /// <summary>
+        /// Cube Animation Manager under Question Widget
+        /// </summary>
         public CubeAnimationManager Cube
         {
             get
@@ -121,6 +124,11 @@ namespace IBM.Watson.Widgets.Question
 
         #region Cube Actions
 
+        /// <summary>
+        /// Method called on Tapping on Question Widget 
+        /// </summary>
+        /// <param name="tapGesture">Tap Gesture with all touch information</param>
+        /// <param name="hitTransform">Hit Tranform of tap</param>
 		public void OnTapInside(TouchScript.Gestures.TapGesture tapGesture, Transform hitTransform){
 
 			Log.Status("Question Widget", "OnTapInside");
@@ -163,6 +171,11 @@ namespace IBM.Watson.Widgets.Question
 			Cube.FocusOnSide((CubeAnimationManager.CubeSideType)touchedSide);
 		}
 
+        /// <summary>
+        /// Method called on Tapping outside of the Question Widget 
+        /// </summary>
+        /// <param name="tapGesture">Tap Gesture with all touch information</param>
+        /// <param name="hitTransform">Hit Tranform of tap</param>
 		public void OnTapOutside(TouchScript.Gestures.TapGesture tapGesture, Transform hitTransform){
 			Log.Status("Question Widget", "OnTapOutside");
 			//Touch out-side

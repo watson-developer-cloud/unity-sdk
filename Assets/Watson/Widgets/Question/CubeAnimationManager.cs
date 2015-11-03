@@ -113,8 +113,9 @@ public class CubeAnimationManager : MonoBehaviour {
 	public LeanTweenType easeForUnfolding = LeanTweenType.easeInOutCubic;
 	public float timeForFocusing = 1.0f;
 	public LeanTweenType easeForFocusing = LeanTweenType.easeInOutCubic;
+    public LeanTweenType easeForUnfocusing = LeanTweenType.easeInOutCubic;
 
-	[Header("UI Faces")]
+    [Header("UI Faces")]
 	[SerializeField]
 	private GameObject[] uiFaceOnSide;
 
@@ -286,7 +287,7 @@ public class CubeAnimationManager : MonoBehaviour {
 		}
 	}
 
-	private void AnimateFold(System.Object paramOnComplete = null){
+	private void AnimateFold(System.Object paramOnComplete){
 		AnimateFold (null, null);
 	}
 
@@ -325,7 +326,7 @@ public class CubeAnimationManager : MonoBehaviour {
 
 	}
 
-	private void AnimateUnFold(System.Object paramOnComplete = null){
+	private void AnimateUnFold(System.Object paramOnComplete){
 		AnimateUnFold (null, null);
 	}
 
@@ -437,7 +438,7 @@ public class CubeAnimationManager : MonoBehaviour {
 		AnimationState = CubeAnimationState.FOCUSING_TO_SIDE;	
 		for (int i = 0; i < uiFaceOnSide.Length; i++) {
 			if(i == uiFaceOnSide.Length - 1){
-				animationPositionOnSide [i] = LeanTween.moveLocal (presentationSide [i], Vector3.zero, timeForFocusing).setEase (easeForFocusing).setOnComplete(()=>{
+				animationPositionOnSide [i] = LeanTween.moveLocal (presentationSide [i], Vector3.zero, timeForFocusing).setEase (easeForUnfocusing).setOnComplete(()=>{
 					AnimationState = CubeAnimationState.IDLE_AS_UNFOLDED;
 
 					if(callBackOnComplete != null){
@@ -446,7 +447,7 @@ public class CubeAnimationManager : MonoBehaviour {
 				});
 			}
 			else{
-				animationPositionOnSide [i] = LeanTween.moveLocal (presentationSide [i], Vector3.zero, timeForFocusing).setEase (easeForFocusing);
+				animationPositionOnSide [i] = LeanTween.moveLocal (presentationSide [i], Vector3.zero, timeForFocusing).setEase (easeForUnfocusing);
 			}
 		}
 	}
@@ -574,11 +575,34 @@ public class CubeAnimationManager : MonoBehaviour {
 	}
 
 	public void LeaveTheSceneAndDestroy(){
-		StopAllCubeAnimations ();
-		AnimateDestroyingCube (true);
+        //StopAllCubeAnimations ();
+        timeForFoldingUnfolding = timeForFoldingUnfolding / 2.0f;
+        timeForFocusing = timeForFocusing / 2.0f;
+        easeForUnfocusing = LeanTweenType.easeInCubic;
+        easeForFolding = LeanTweenType.linear;
+        easeForUnfolding = LeanTweenType.linear;
+
+        if (AnimationState == CubeAnimationState.FOCUSING_TO_SIDE || AnimationState == CubeAnimationState.IDLE_AS_FOCUSED)
+        {
+            AnimateUnfocus(AnimateFold, null);
+        }
+        else if (AnimationState == CubeAnimationState.GOING_FROM_SCENE)
+        {
+            //do nothing - it is going from scene
+        }
+        else
+        {
+            AnimateFold(AnimateDestroyingCube, null);
+        }
+
+        //AnimateDestroyingCube (true);
 	}
 
-	private void AnimateDestroyingCube(bool destroy){
+    private void AnimateDestroyingCube(System.Object destroy)
+    {
+        AnimateDestroyingCube(true);
+    }
+    private void AnimateDestroyingCube(bool destroy){
 		AnimationState = CubeAnimationState.GOING_FROM_SCENE;
 		LeanTween.moveLocal (gameObject, new Vector3 (0, 240, 0), timeForLeavingTheScene).setEase (easeForGoingFromScene).setOnComplete(()=>{
             if(destroy){
