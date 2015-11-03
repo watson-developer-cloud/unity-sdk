@@ -163,14 +163,16 @@ public class AvatarTouchManager: MonoBehaviour
    
     private void oneFingerManipulationTransformedHandler(object sender, System.EventArgs e)
     {
-        Log.Status("AvatarTouchManager", "oneFingerManipulationTransformedHandler: {0}" , OneFingerManipulationGesture.DeltaPosition);
+        //Log.Status("AvatarTouchManager", "oneFingerManipulationTransformedHandler: {0}" , OneFingerManipulationGesture.DeltaPosition);
 
-        Quaternion rotation = Quaternion.Euler( OneFingerManipulationGesture.DeltaPosition.y / Screen.height * RotationSpeed,
-                                                -OneFingerManipulationGesture.DeltaPosition.x / Screen.width * RotationSpeed,
-                                                0.0f);
+        //Quaternion rotation = Quaternion.Euler( OneFingerManipulationGesture.DeltaPosition.y / Screen.height * RotationSpeed,
+        //                                        -OneFingerManipulationGesture.DeltaPosition.x / Screen.width * RotationSpeed,
+        //                                        0.0f);
 
-        targetCubeRotation *= rotation;
-        Log.Status("AvatarTouchManager", "Rotation: {0} , Target rotation : {1} ", rotation.eulerAngles, targetCubeRotation.eulerAngles);
+        //targetCubeRotation *= rotation;
+        //Log.Status("AvatarTouchManager", "Rotation: {0} , Target rotation : {1} ", rotation.eulerAngles, targetCubeRotation.eulerAngles);
+
+
        // cubeObject.transform.rotation *= rotation;
         //cam.LookAt (camTarget.transform.position);
 
@@ -214,13 +216,13 @@ public class AvatarTouchManager: MonoBehaviour
 
         if (isActive && CubeAnimationManager.Instance != null)
         {
-            if (CubeAnimationManager.Instance.AnimationState == CubeAnimationManager.CubeAnimationState.IDLE_AS_FOLDED)
-            {
-                //For Rotating the cube
-                targetCubeRotation = Quaternion.Lerp(targetCubeRotation, Quaternion.identity, Time.deltaTime * speedForCubeRotationAnimation);
-				if(cubeObject != null)
-                	cubeObject.transform.Rotate(targetCubeRotation.eulerAngles, Space.World);
-            }
+    //        if (CubeAnimationManager.Instance.AnimationState == CubeAnimationManager.CubeAnimationState.IDLE_AS_FOLDED)
+    //        {
+    //            //For Rotating the cube
+    //            targetCubeRotation = Quaternion.Lerp(targetCubeRotation, Quaternion.identity, Time.deltaTime * speedForCubeRotationAnimation);
+				//if(cubeObject != null)
+    //            	cubeObject.transform.Rotate(targetCubeRotation.eulerAngles, Space.World);
+    //        }
 
             //For Zooming
             //mainCamera.transform.localPosition = Vector3.Lerp(mainCamera.transform.localPosition, targetCameraLocation, Time.deltaTime * speedForCameraAnimation);

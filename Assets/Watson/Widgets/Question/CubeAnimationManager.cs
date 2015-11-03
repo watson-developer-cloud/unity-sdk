@@ -98,7 +98,11 @@ public class CubeAnimationManager : MonoBehaviour {
     private Quaternion m_initialLocalRotation;
     private Vector3 m_initialPositionMainCamera;
 
-	private bool m_isRotating = true;
+    private float m_OneFingerRotationModifier = 100.0f;
+    private float m_OneFingerRotationAnimationSpeed = 5.0f;
+    private Quaternion m_OneFingerCubeRotation;
+
+    private bool m_isRotating = true;
 
 	public float timeForComingToScene = 1.0f;
 	private float timeForLeavingTheScene = 5.0f;
@@ -247,13 +251,15 @@ public class CubeAnimationManager : MonoBehaviour {
 	void Update()
 	{
 		CubeStatinoaryAnimation ();
-	}
+        CubeOneFingerDragAnimationOnUpdate();
+    }
 
 	private void CubeStatinoaryAnimation(){
 		if (m_isRotating && (AnimationState == CubeAnimationState.IDLE_AS_FOLDED || AnimationState == CubeAnimationState.FOLDING)) {	//If it is fold already and rotation is true we are rotating.
 			transform.Rotate (statinoaryRotationVector * Time.deltaTime * statinoaryRotationSpeed, Space.World);
 		}
 	}
+
 
 	private void RotateCube(){
 		LeanTween.value (gameObject, 0.0f, 1.0f, 1.0f).setLoopType (LeanTweenType.linear).setOnUpdate ((float f) => {
@@ -602,9 +608,39 @@ public class CubeAnimationManager : MonoBehaviour {
 		LeanTween.scale (gameObject, transform.localScale * zoom, 1.0f * zoomDiff).setEase (LeanTweenType.linear);
 	}
 
-	#endregion
+    #endregion
 
-	void OnDestroy()
+    #region Dragging One Finger
+
+    public void DragOneFinger(TouchScript.Gestures.ScreenTransformGesture OneFingerManipulationGesture)
+    {
+        if (AnimationState == CubeAnimationState.IDLE_AS_FOLDED || AnimationState == CubeAnimationState.FOLDING)
+        {
+            Log.Status("CubeAnimationManager", "oneFingerManipulationTransformedHandler: {0}", OneFingerManipulationGesture.DeltaPosition);
+
+            Quaternion rotation = Quaternion.Euler(OneFingerManipulationGesture.DeltaPosition.y / Screen.height * m_OneFingerRotationModifier,
+                                                    -OneFingerManipulationGesture.DeltaPosition.x / Screen.width * m_OneFingerRotationModifier,
+                                                    0.0f);
+
+            m_OneFingerCubeRotation *= rotation;
+            Log.Status("CubeAnimationManager", "Rotation: {0} , Target rotation : {1} ", rotation.eulerAngles, m_OneFingerCubeRotation.eulerAngles);
+        }
+    }
+
+
+    private void CubeOneFingerDragAnimationOnUpdate()
+    {
+        if (AnimationState == CubeAnimationState.IDLE_AS_FOLDED || AnimationState == CubeAnimationState.FOLDING)
+        {
+            //For Rotating the cube by one finger 
+            m_OneFingerCubeRotation = Quaternion.Lerp(m_OneFingerCubeRotation, Quaternion.identity, Time.deltaTime * m_OneFingerRotationAnimationSpeed);
+            transform.Rotate(m_OneFingerCubeRotation.eulerAngles, Space.World);
+        }
+    }
+
+    #endregion
+
+    void OnDestroy()
 	{
 		for (int i = 0; i < renderTexSide.Length; i++) {
 			renderTexSide[i].Release();

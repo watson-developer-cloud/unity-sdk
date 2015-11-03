@@ -82,6 +82,7 @@ namespace IBM.Watson.Widgets.Question
 
 					TouchEventManager.Instance.RegisterTapEvent(gameObject, OnTapInside, isTapInside: true);
 					TouchEventManager.Instance.RegisterTapEvent(gameObject, OnTapOutside, isTapInside: false);
+                    TouchEventManager.Instance.RegisterDragEvent(gameObject, DragOneFinger, numberOfFinger: 1);
 
                 }
                 else
@@ -94,6 +95,7 @@ namespace IBM.Watson.Widgets.Question
 
 					TouchEventManager.Instance.UnregisterTapEvent(gameObject, OnTapInside, isTapInside: true);
 					TouchEventManager.Instance.UnregisterTapEvent(gameObject, OnTapOutside, isTapInside: false);
+                    TouchEventManager.Instance.UnregisterDragEvent(gameObject, DragOneFinger, numberOfFinger: 1);
                 }
             }
         }
@@ -191,6 +193,16 @@ namespace IBM.Watson.Widgets.Question
 				break;
 			}
 		}
+
+        private float m_RotationSpeed;
+
+        public void DragOneFinger(TouchScript.Gestures.ScreenTransformGesture OneFingerManipulationGesture)
+        {
+            if(Cube != null)
+            {
+                Cube.DragOneFinger(OneFingerManipulationGesture);
+            }
+        }
 
         public void OnDisplayAnswers()
         {
