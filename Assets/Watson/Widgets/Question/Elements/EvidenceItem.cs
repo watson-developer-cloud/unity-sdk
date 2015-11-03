@@ -18,6 +18,7 @@
 
 using UnityEngine;
 using UnityEngine.UI;
+using System.Text.RegularExpressions;
 
 namespace IBM.Watson.Widgets.Question
 {
@@ -28,6 +29,9 @@ namespace IBM.Watson.Widgets.Question
     {
         [SerializeField]
         private Text m_EvidenceText;
+
+		[SerializeField]
+		private Texture m_AnswerTexture;
 
         private string m_EvidenceString;
         public string EvidenceString
@@ -45,11 +49,12 @@ namespace IBM.Watson.Widgets.Question
         /// </summary>
         private void UpdateEvidence()
         {
-            //	TODO replace <answer> with the outline
+            //	TODO draw box around answer
             if (EvidenceString != "")
             {
                 gameObject.SetActive(true);
-                m_EvidenceText.text = EvidenceString;
+				string StrippedEvidence = Regex.Replace(EvidenceString, "<[^>]*>", "");
+				m_EvidenceText.text = StrippedEvidence;
             }
             else
             {

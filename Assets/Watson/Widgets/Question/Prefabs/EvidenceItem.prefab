@@ -76,6 +76,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_EvidenceText: {fileID: 11424658}
+  m_AnswerTexture: {fileID: 2800000, guid: 395f0fd6b37e84e5185f14262023bc74, type: 3}
 --- !u!222 &22256296
 CanvasRenderer:
   m_ObjectHideFlags: 1
