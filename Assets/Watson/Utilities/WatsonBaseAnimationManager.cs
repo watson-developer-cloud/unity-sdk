@@ -8,7 +8,7 @@ namespace IBM.Watson.Utilities
 	/// Base class of all animation managers. 
 	/// It handles all centeralized way to stop / pause / resume / speed up-down animations
 	/// </summary>
-	public class WatsonAnimationManager : MonoBehaviour {
+	public class WatsonBaseAnimationManager : MonoBehaviour {
 
 		private static float sm_speedModifier = 1.0f;
 		private static float sm_speedModifierConstant = 1.1f;

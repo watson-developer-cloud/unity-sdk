@@ -9,7 +9,7 @@ namespace IBM.Watson.Widgets.Avatar
 /// Avatar animation manager.
 /// All animations related with Avatar is listed here. 
 /// </summary>
-public class AvatarAnimationManager : WatsonAnimationManager {
+public class AvatarAnimationManager : WatsonBaseAnimationManager {
 
 	[SerializeField,FormerlySerializedAs("rotationVector")]
 	private Vector3 m_RotationVector = new Vector3( 0.0f, 1.0f, 0.0f );
