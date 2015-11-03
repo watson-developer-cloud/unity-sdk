@@ -61,6 +61,7 @@ GameObject:
   - 224: {fileID: 22458978}
   - 114: {fileID: 11443268}
   - 82: {fileID: 8256878}
+  - 114: {fileID: 11489260}
   m_Layer: 0
   m_Name: SpeechToTextWidget
   m_TagString: Untagged
@@ -345,9 +346,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_StatusText: {fileID: 11490530}
-  m_RecordButton: {fileID: 11434196}
+  m_DetectSilence: 1
   m_SilenceThreshold: .0299999993
+  m_WordConfidence: 0
+  m_TimeStamps: 0
+  m_MaxAlternatives: 1
+  m_EnableContinous: 0
+  m_EnableInterimResults: 0
   m_Transcript: {fileID: 11407908}
+  m_TextOutput:
+    m_TargetObject: {fileID: 0}
+    m_TargetConnection: 
+  m_ResultOutput:
+    m_TargetObject: {fileID: 0}
+    m_TargetConnection: 
 --- !u!114 &11458316
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -375,6 +387,33 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &11489260
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 123438}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 131721b15c8a68d438d5b7163a1c05df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ActivateOnStart: 1
+  m_AudioOutput:
+    m_TargetObject: {fileID: 123438}
+    m_TargetConnection: 
+  m_LevelOutput:
+    m_TargetObject: {fileID: 0}
+    m_TargetConnection: 
+  m_ActivateOutput:
+    m_TargetObject: {fileID: 0}
+    m_TargetConnection: 
+  m_RecordingBufferSize: 2
+  m_RecordingHZ: 22050
+  m_MicrophoneID: 
+  m_LevelOutputInterval: .0500000007
+  m_PlaybackRecording: 0
+  m_StatusText: {fileID: 0}
 --- !u!114 &11490530
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -579,7 +618,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 1050, y: 511}
+  m_AnchoredPosition: {x: 304, y: 278}
   m_SizeDelta: {x: 227, y: 394}
   m_Pivot: {x: .5, y: .5}
 --- !u!224 &22464972
