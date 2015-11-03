@@ -51,9 +51,8 @@ namespace IBM.Watson.Widgets
         {
             foreach (var mapping in m_Mappings)
             {
-                KeyEventManager.Instance.RegisterKeyEvent(mapping.m_Key,
-                   mapping.m_Callback.ResolveDelegate() as KeyEventManager.KeyEventDelegate,
-                   mapping.m_Modifiers);
+                KeyEventManager.Instance.RegisterKeyEvent(mapping.m_Key, mapping.m_Modifiers,
+                   mapping.m_Callback.ResolveDelegate() as KeyEventManager.KeyEventDelegate );
             }
         }
 
@@ -61,9 +60,8 @@ namespace IBM.Watson.Widgets
         {
             foreach (var mapping in m_Mappings)
             {
-                KeyEventManager.Instance.UnregisterKeyEvent(mapping.m_Key,
-                    mapping.m_Callback.ResolveDelegate() as KeyEventManager.KeyEventDelegate,
-                    mapping.m_Modifiers);
+                KeyEventManager.Instance.UnregisterKeyEvent(mapping.m_Key, mapping.m_Modifiers, 
+                    mapping.m_Callback.ResolveDelegate() as KeyEventManager.KeyEventDelegate );
             }
         }
     }

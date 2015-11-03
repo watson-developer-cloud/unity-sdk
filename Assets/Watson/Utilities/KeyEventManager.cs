@@ -48,27 +48,12 @@ namespace IBM.Watson.Utilities
         /// Key press delegate callback.
         /// </summary>
         public delegate void KeyEventDelegate();
-
-        /// <summary>
-        /// This data class holds the data for a registered key press event
-        /// </summary>
-        public class KeyEvent
-        {
-            /// <summary>
-            /// The name of the event to send to the EventManager singleton.
-            /// </summary>
-            public string m_SendEvent;
-            /// <summary>
-            /// Callback to invoke when the key is pressed.
-            /// </summary>
-            public KeyEventDelegate m_Delegate;
-        };
         #endregion
 
         #region Private Data
         private bool m_Active = true;
         private bool m_UpdateActivate = true;
-        private Dictionary<int, KeyEvent> m_KeyEvents = new Dictionary<int, KeyEvent>();
+        private Dictionary<int, List<KeyEventDelegate>> m_KeyEvents = new Dictionary<int, List<KeyEventDelegate>>();
         #endregion
 
         #region Public Properties
@@ -88,37 +73,16 @@ namespace IBM.Watson.Utilities
         /// </summary>
         /// <param name="key">The KeyCode of the key.</param>
         /// <param name="modifiers">KeyCode modifiers</param>
-        /// <param name="ke">The KeyEvent object.</param>
+        /// <param name="callback">The delegate to invoke.</param>
         /// <returns>True is returned on success.</returns>
-        public bool RegisterKeyEvent(KeyCode key, KeyModifiers modifiers, KeyEvent ke)
+        public bool RegisterKeyEvent(KeyCode key, KeyModifiers modifiers, KeyEventDelegate callback)
         {
             int code = ((int)key) | (((int)modifiers) << MODIFIER_SHIFT_BITS);
             if (m_KeyEvents.ContainsKey(code))
-                return false;
-            m_KeyEvents[code] = ke;
+                m_KeyEvents[code].Add( callback );
+            else
+                m_KeyEvents[code] = new List<KeyEventDelegate>() { callback };
             return true;
-        }
-        /// <summary>
-        /// Invoke a callback when a key is released.
-        /// </summary>
-        /// <param name="key">The KeyCode of the key.</param>
-        /// <param name="callback">The delegate to invoke.</param>
-        /// <param name="modifiers">Additional keys that must be down as well to fire the event.</param>
-        /// <returns>True is returned on success.</returns>
-        public bool RegisterKeyEvent(KeyCode key, KeyEventDelegate callback, KeyModifiers modifiers = KeyModifiers.NONE)
-        {
-            return RegisterKeyEvent(key, modifiers, new KeyEvent() { m_Delegate = callback });
-        }
-        /// <summary>
-        /// Send a event when a key is released. 
-        /// </summary>
-        /// <param name="key">The KeyCode of the key.</param>
-        /// <param name="eventName">The event to send when the key is released.</param>
-        /// <param name="modifiers">Additional keys that must be down as well to fire the event.</param>
-        /// <returns>True is returned on success.</returns>
-        public bool RegisterKeyEvent(KeyCode key, string eventName, KeyModifiers modifiers = KeyModifiers.NONE)
-        {
-            return RegisterKeyEvent(key, modifiers, new KeyEvent() { m_SendEvent = eventName });
         }
         /// <summary>
         /// Unregister a key event.
@@ -127,11 +91,11 @@ namespace IBM.Watson.Utilities
         /// <param name="modifiers">Additional keys that must be down as well to fire the event.</param>
         /// <param name="callback">If provided, then the key will be unregistered only the callback matches the existing registration.</param>
         /// <returns>True is returned on success.</returns>
-		public bool UnregisterKeyEvent(KeyCode key, KeyEventDelegate callback = null, KeyModifiers modifiers = KeyModifiers.NONE)
+		public bool UnregisterKeyEvent(KeyCode key, KeyModifiers modifiers = KeyModifiers.NONE, KeyEventDelegate callback = null )
         {
             int code = ((int)key) | (((int)modifiers) << MODIFIER_SHIFT_BITS);
-            if (callback != null && m_KeyEvents.ContainsKey(code) && m_KeyEvents[code].m_Delegate != callback)
-                return false;
+            if (callback != null && m_KeyEvents.ContainsKey(code) )
+                return m_KeyEvents[code].Remove( callback );
 
             return m_KeyEvents.Remove(code);
         }
@@ -142,7 +106,7 @@ namespace IBM.Watson.Utilities
         {
             if (m_Active)
             {
-                List<KeyEvent> fire = new List<KeyEvent>();
+                List<KeyEventDelegate> fire = new List<KeyEventDelegate>();
                 foreach (var kp in m_KeyEvents)
                 {
                     KeyCode key = (KeyCode)(kp.Key & KEYCODE_MASK);
@@ -172,17 +136,15 @@ namespace IBM.Watson.Utilities
                         }
 
                         if (bFireEvent)
-                            fire.Add(kp.Value);
+                            fire.AddRange(kp.Value);
                     }
                 }
 
                 // now fire the events outside of the dictionary loop so we don't throw an exception..
                 foreach (var ev in fire)
                 {
-                    if (!string.IsNullOrEmpty(ev.m_SendEvent))
-                        EventManager.Instance.SendEvent(ev.m_SendEvent);
-                    if (ev.m_Delegate != null)
-                        ev.m_Delegate();
+                    if (ev != null)
+                        ev();
                 }
             }
 

@@ -72,19 +72,19 @@ namespace IBM.Watson.Widgets.Question
 
                 if (value)
                 {
-					KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CUBE_TO_FOLD, OnFold, Constants.KeyCodes.MODIFIER_KEY);
-					KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CUBE_TO_FOCUS, OnFocusNext, Constants.KeyCodes.MODIFIER_KEY);
-					KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CUBE_TO_ROTATE_OR_PAUSE, OnRotateOrPause, Constants.KeyCodes.MODIFIER_KEY);
-					KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CUBE_TO_UNFOCUS, OnUnFocus, Constants.KeyCodes.MODIFIER_KEY);
-					KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CUBE_TO_UNFOLD, OnUnfold, Constants.KeyCodes.MODIFIER_KEY);
+                    KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CUBE_TO_FOLD, Constants.KeyCodes.MODIFIER_KEY, OnFold);
+                    KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CUBE_TO_FOCUS, Constants.KeyCodes.MODIFIER_KEY, OnFocusNext);
+                    KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CUBE_TO_ROTATE_OR_PAUSE, Constants.KeyCodes.MODIFIER_KEY, OnRotateOrPause);
+                    KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CUBE_TO_UNFOCUS, Constants.KeyCodes.MODIFIER_KEY, OnUnFocus);
+                    KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CUBE_TO_UNFOLD, Constants.KeyCodes.MODIFIER_KEY, OnUnfold);
                 }
                 else
                 {
-					KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_FOLD, OnFold, Constants.KeyCodes.MODIFIER_KEY);
-					KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_FOCUS, OnFocusNext, Constants.KeyCodes.MODIFIER_KEY);
-					KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_ROTATE_OR_PAUSE, OnRotateOrPause, Constants.KeyCodes.MODIFIER_KEY);
-					KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_UNFOCUS, OnUnFocus, Constants.KeyCodes.MODIFIER_KEY);
-					KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_UNFOLD, OnUnfold, Constants.KeyCodes.MODIFIER_KEY);
+                    KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_FOLD, Constants.KeyCodes.MODIFIER_KEY, OnFold);
+                    KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_FOCUS, Constants.KeyCodes.MODIFIER_KEY, OnFocusNext);
+                    KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_ROTATE_OR_PAUSE, Constants.KeyCodes.MODIFIER_KEY, OnRotateOrPause);
+                    KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_UNFOCUS, Constants.KeyCodes.MODIFIER_KEY, OnUnFocus);
+                    KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_UNFOLD, Constants.KeyCodes.MODIFIER_KEY, OnUnfold);
                 }
             }
         }
@@ -96,8 +96,8 @@ namespace IBM.Watson.Widgets.Question
                 if (m_CubeAnimMgr == null)
                     m_CubeAnimMgr = GetComponentInChildren<CubeAnimationManager>();
 
-				if(m_CubeAnimMgr == null)
-					Log.Error("QuestionWidget", "CubeAnimationManager is not found under Question widget");
+                if (m_CubeAnimMgr == null)
+                    Log.Error("QuestionWidget", "CubeAnimationManager is not found under Question widget");
 
                 return m_CubeAnimMgr;
             }
@@ -141,25 +141,27 @@ namespace IBM.Watson.Widgets.Question
         {
             Cube.UnFold();
         }
-		public void OnRotateOrPause(){
-			Cube.RotateOrPause();
-		}
+        public void OnRotateOrPause()
+        {
+            Cube.RotateOrPause();
+        }
 
-		public void OnFocus(CubeAnimationManager.CubeSideType sideType)
-		{
-			Cube.FocusOnSide (sideType);
-		}
-		public void OnFocusNext(){
-			Cube.FocusOnNextSide ();
-		}
-		public void OnUnFocus()
-		{
-			Cube.UnFocus();
-		}
-		public void OnLeaveTheSceneAndDestroy()
-		{
-			Cube.LeaveTheSceneAndDestroy ();
-		}
+        public void OnFocus(CubeAnimationManager.CubeSideType sideType)
+        {
+            Cube.FocusOnSide(sideType);
+        }
+        public void OnFocusNext()
+        {
+            Cube.FocusOnNextSide();
+        }
+        public void OnUnFocus()
+        {
+            Cube.UnFocus();
+        }
+        public void OnLeaveTheSceneAndDestroy()
+        {
+            Cube.LeaveTheSceneAndDestroy();
+        }
 
 
         public void ExecuteAction(string action)

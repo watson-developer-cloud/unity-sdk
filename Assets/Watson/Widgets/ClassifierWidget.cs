@@ -41,6 +41,12 @@ namespace IBM.Watson.Widgets
         }
         #endregion
 
+        #region Public Properties
+        public Output ClassifyOutput { get { return m_ClassifyOutput; } }
+        public Input ClassifyInput { get { return m_ClassifyInput; } }
+        #endregion
+
+        #region Private Data
         [Serializable]
         private class Mapping
         {
@@ -55,7 +61,9 @@ namespace IBM.Watson.Widgets
         private Input m_ClassifyInput = new Input( "Classified", typeof(ClassifyResultData), "OnClassifyInput" );
         [SerializeField]
         private Output m_ClassifyOutput = new Output( typeof(ClassifyResultData) );
+        #endregion
 
+        #region Input Handler
         private void OnClassifyInput( Data data )
         {
             ClassifyResultData input = (ClassifyResultData)data;
@@ -81,6 +89,7 @@ namespace IBM.Watson.Widgets
             if ( bPassthrough )
                 m_ClassifyOutput.SendData( data );
         }
+        #endregion
     }
 
 }

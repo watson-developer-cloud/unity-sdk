@@ -163,14 +163,14 @@ namespace IBM.Watson.Debug
         private void OnEnable()
         {
             EventManager.Instance.RegisterEventReceiver( Constants.Event.ON_DEBUG_MESSAGE, OnDebugMessage );
-            KeyEventManager.Instance.RegisterKeyEvent(KeyCode.BackQuote, OnToggleActive );
-            KeyEventManager.Instance.RegisterKeyEvent(KeyCode.Return, OnBeginEdit);
+            KeyEventManager.Instance.RegisterKeyEvent(KeyCode.BackQuote, KeyModifiers.NONE, OnToggleActive );
+            KeyEventManager.Instance.RegisterKeyEvent(KeyCode.Return, KeyModifiers.NONE, OnBeginEdit);
         }
 
         private void OnDisable()
         {
-            KeyEventManager.Instance.RegisterKeyEvent(KeyCode.BackQuote, OnToggleActive );
-            KeyEventManager.Instance.RegisterKeyEvent(KeyCode.Return, OnBeginEdit);
+            KeyEventManager.Instance.RegisterKeyEvent(KeyCode.BackQuote, KeyModifiers.NONE, OnToggleActive );
+            KeyEventManager.Instance.RegisterKeyEvent(KeyCode.Return, KeyModifiers.NONE, OnBeginEdit);
             EventManager.Instance.UnregisterEventReceiver( Constants.Event.ON_DEBUG_MESSAGE, OnDebugMessage );
         }
 
