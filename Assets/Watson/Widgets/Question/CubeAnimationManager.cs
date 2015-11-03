@@ -91,7 +91,9 @@ public class CubeAnimationManager : MonoBehaviour {
 	public Vector3 positionCubeOffsetUnfold = Vector3.zero;
 
 	public float statinoaryRotationSpeed = 10.0f;
-	public Vector3  statinoaryRotationVector;
+    private float m_InitialStationaryRotationSpeed;
+    private float m_StationaryRotationBackupSpeed = 5.0f;
+    public Vector3  statinoaryRotationVector;
 	public float distanceFromCameraInZAfterUnfolding = 100f;
 	public Vector3 m_initialPosition;
 	private Vector3 m_initialLocalScale;
@@ -210,7 +212,7 @@ public class CubeAnimationManager : MonoBehaviour {
 
 		m_initialPosition = transform.position;
 		m_initialLocalScale = transform.localScale;
-
+        m_InitialStationaryRotationSpeed = statinoaryRotationSpeed;
 
         m_initialPositionMainCamera = Camera.main.transform.position;
         m_initialLocalRotation = transform.localRotation;
@@ -251,13 +253,19 @@ public class CubeAnimationManager : MonoBehaviour {
 
 	void Update()
 	{
-		CubeStatinoaryAnimation ();
         CubeOneFingerDragAnimationOnUpdate();
+        CubeStatinoaryAnimation();
     }
 
 	private void CubeStatinoaryAnimation(){
-		if (m_isRotating && (AnimationState == CubeAnimationState.IDLE_AS_FOLDED || AnimationState == CubeAnimationState.FOLDING)) {	//If it is fold already and rotation is true we are rotating.
-			transform.Rotate (statinoaryRotationVector * Time.deltaTime * statinoaryRotationSpeed, Space.World);
+		if (m_isRotating && (AnimationState == CubeAnimationState.IDLE_AS_FOLDED || AnimationState == CubeAnimationState.FOLDING)) {    //If it is fold already and rotation is true we are rotating.
+
+            if((Time.frameCount - m_LastFrameOneFingerDrag) > 1)
+            {
+                statinoaryRotationSpeed = Mathf.Lerp(statinoaryRotationSpeed, m_InitialStationaryRotationSpeed, Time.deltaTime * m_StationaryRotationBackupSpeed);
+                transform.Rotate(statinoaryRotationVector * Time.deltaTime * statinoaryRotationSpeed, Space.World);
+            }
+                
 		}
 	}
 
@@ -433,7 +441,8 @@ public class CubeAnimationManager : MonoBehaviour {
 		}
 	}
 
-	private void AnimateUnfocus(System.Action<System.Object> callBackOnComplete = null, System.Object paramOnComplete = null){
+	private void AnimateUnfocus(System.Action<System.Action<System.Object>, System.Object> callBackOnComplete = null, System.Object paramOnComplete = null, System.Action<System.Object> callBackOnCompleteLoop = null)
+    {
 		
 		AnimationState = CubeAnimationState.FOCUSING_TO_SIDE;	
 		for (int i = 0; i < uiFaceOnSide.Length; i++) {
@@ -442,7 +451,7 @@ public class CubeAnimationManager : MonoBehaviour {
 					AnimationState = CubeAnimationState.IDLE_AS_UNFOLDED;
 
 					if(callBackOnComplete != null){
-						callBackOnComplete(paramOnComplete);
+						callBackOnComplete(callBackOnCompleteLoop, paramOnComplete);
 					}
 				});
 			}
@@ -576,15 +585,19 @@ public class CubeAnimationManager : MonoBehaviour {
 
 	public void LeaveTheSceneAndDestroy(){
         //StopAllCubeAnimations ();
-        timeForFoldingUnfolding = timeForFoldingUnfolding / 2.0f;
-        timeForFocusing = timeForFocusing / 2.0f;
+        //timeForFoldingUnfolding = timeForFoldingUnfolding / 2.0f;
+        //timeForFocusing = timeForFocusing / 2.0f;
         easeForUnfocusing = LeanTweenType.easeInCubic;
         easeForFolding = LeanTweenType.linear;
         easeForUnfolding = LeanTweenType.linear;
 
         if (AnimationState == CubeAnimationState.FOCUSING_TO_SIDE || AnimationState == CubeAnimationState.IDLE_AS_FOCUSED)
         {
-            AnimateUnfocus(AnimateFold, null);
+            AnimateUnfocus(AnimateFold, null, AnimateDestroyingCube);
+        }
+        else if(AnimationState == CubeAnimationState.UNFOLDING || AnimationState == CubeAnimationState.IDLE_AS_UNFOLDED || AnimationState == CubeAnimationState.FOLDING)
+        {
+            AnimateFold(AnimateDestroyingCube, null);
         }
         else if (AnimationState == CubeAnimationState.GOING_FROM_SCENE)
         {
@@ -592,7 +605,7 @@ public class CubeAnimationManager : MonoBehaviour {
         }
         else
         {
-            AnimateFold(AnimateDestroyingCube, null);
+            AnimateDestroyingCube(true);
         }
 
         //AnimateDestroyingCube (true);
@@ -636,6 +649,7 @@ public class CubeAnimationManager : MonoBehaviour {
 
     #region Dragging One Finger
 
+    private int frameCountOneFinger;
     public void DragOneFinger(TouchScript.Gestures.ScreenTransformGesture OneFingerManipulationGesture)
     {
         if (AnimationState == CubeAnimationState.IDLE_AS_FOLDED || AnimationState == CubeAnimationState.FOLDING)
@@ -647,11 +661,13 @@ public class CubeAnimationManager : MonoBehaviour {
                                                     0.0f);
 
             m_OneFingerCubeRotation *= rotation;
-            Log.Status("CubeAnimationManager", "Rotation: {0} , Target rotation : {1} ", rotation.eulerAngles, m_OneFingerCubeRotation.eulerAngles);
+            m_LastFrameOneFingerDrag = Time.frameCount;
+            statinoaryRotationSpeed = 0.0f; //stop the statinoary rotation
+            //Log.Status("CubeAnimationManager", "Rotation: {0} , Target rotation : {1} ", rotation.eulerAngles, m_OneFingerCubeRotation.eulerAngles);
         }
     }
 
-
+    private int m_LastFrameOneFingerDrag = 0;
     private void CubeOneFingerDragAnimationOnUpdate()
     {
         if (AnimationState == CubeAnimationState.IDLE_AS_FOLDED || AnimationState == CubeAnimationState.FOLDING)
