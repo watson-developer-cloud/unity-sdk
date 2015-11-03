@@ -187,8 +187,10 @@ namespace IBM.Watson.Widgets.Question
         /// <summary>
         /// Register events, set facet references, add facets to a List.
         /// </summary>
-        protected void Awake()
+        protected override void Awake()
         {
+            base.Awake();
+
             m_AnswersAndConfidence = gameObject.GetComponent<AnswersAndConfidence>();
             m_Evidence = gameObject.GetComponent<Question.Evidence>();
             m_Semantic = gameObject.GetComponent<Semantic>();

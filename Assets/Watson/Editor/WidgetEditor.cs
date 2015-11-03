@@ -26,6 +26,17 @@ using System.Reflection;
 
 namespace IBM.Watson.Editor
 {
+    public static class WidgetConnector
+    {
+        [MenuItem("Watson/Resolve Widget Connections")]
+        private static void AutoConnectWidgets()
+        {
+            Widget [] widgets = Object.FindObjectsOfType<Widget>();
+            foreach( var widget in widgets )
+                widget.ResolveConnections();
+        }
+    };
+
     [CustomPropertyDrawer(typeof(Widget.Input))]
     public class WidgetInputDrawer : PropertyDrawer
     {
