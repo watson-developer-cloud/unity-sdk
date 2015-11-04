@@ -54,7 +54,7 @@ MonoBehaviour:
   - m_Class: question
     m_Event: 401
   - m_Class: dialog
-    m_Event: 401
+    m_Event: 402
   - m_Class: debug_on
     m_Event: 405
   - m_Class: debug_off
@@ -84,6 +84,10 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_ClassifierId
       value: 98C19Ex4-nlc-407
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[3].m_Event
+      value: 402
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
