@@ -34,10 +34,6 @@ namespace IBM.Watson.Widgets.Avatar
     /// <summary>
     /// Avatar of Watson 
     /// </summary>
-    //[RequireComponent(typeof(AudioSource))]
-    //[RequireComponent(typeof(MicrophoneWidget))]
-    //[RequireComponent(typeof(SpeechToTextWidget))]
-    //[RequireComponent(typeof(TextToSpeechWidget))]
     public class AvatarWidget : Widget, IQuestionData
     {
         #region Public Types
@@ -219,6 +215,7 @@ namespace IBM.Watson.Widgets.Avatar
             DebugConsole.Instance.UnregisterDebugInfo("A", OnAnwserDebugInfo);
         }
 
+        /// <exclude />
         protected override void Awake()
         {
             base.Awake();
@@ -353,12 +350,20 @@ namespace IBM.Watson.Widgets.Avatar
             return null;
         }
 
+        /// <summary>
+        /// Event Handler for ON_CLASSIFY_FAILURE
+        /// </summary>
+        /// <param name="args"></param>
         public void OnClassifyFailure( object [] args )
         {
             m_TextOutput.SendData(new TextData(m_RecognizeFailure));
             State = AvatarState.LISTENING;
         }
 
+        /// <summary>
+        /// Event handler for ON_COMMAND_WAKEUP
+        /// </summary>
+        /// <param name="args"></param>
         public void OnWakeup( object [] args )
         {
             if (Mood == MoodType.SLEEPING)
@@ -377,6 +382,10 @@ namespace IBM.Watson.Widgets.Avatar
             }
         }
 
+        /// <summary>
+        /// Event handler for ON_COMMAND_SLEEP
+        /// </summary>
+        /// <param name="args"></param>
         public void OnSleep(object [] args)
         {
             if (Mood != MoodType.SLEEPING)
@@ -392,6 +401,10 @@ namespace IBM.Watson.Widgets.Avatar
             }
         }
 
+        /// <summary>
+        /// Event handler for ON_CLASSIFY_QUESTION
+        /// </summary>
+        /// <param name="args"></param>
         public void OnQuestion(object [] args)
         {
             ClassifyResult result = GetClassifyResult( args );
@@ -415,6 +428,10 @@ namespace IBM.Watson.Widgets.Avatar
             }
         }
 
+        /// <summary>
+        /// Event handler for ON_CLASSIFY_DIALOG
+        /// </summary>
+        /// <param name="args"></param>
         public void OnDialog(object [] args)
         {
             ClassifyResult result = GetClassifyResult( args );
@@ -437,12 +454,20 @@ namespace IBM.Watson.Widgets.Avatar
             }
         }
 
+        /// <summary>
+        /// Event handler for ON_COMMAND_DEBUGON
+        /// </summary>
+        /// <param name="args"></param>
         public void OnDebugOn(object [] args)
         {
             DebugConsole.Instance.Active = true;
             State = AvatarState.LISTENING;
         }
 
+        /// <summary>
+        /// Event handler for ON_COMMAND_DEBUGOFF
+        /// </summary>
+        /// <param name="args"></param>
         public void OnDebugOff(object [] args)
         {
             DebugConsole.Instance.Active = false;
