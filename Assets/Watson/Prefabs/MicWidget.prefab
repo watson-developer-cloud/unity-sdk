@@ -23,7 +23,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 121396}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: -.819152117, z: 0, w: .573576331}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -110,14 +110,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 131721b15c8a68d438d5b7163a1c05df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AutoConnect: 1
+  m_AutoConnect: 0
   m_ActivateOnStart: 1
   m_AudioOutput:
     m_TargetObject: {fileID: 0}
-    m_TargetConnection: 
+    m_TargetConnection: SpeechToText/Audio
   m_LevelOutput:
     m_TargetObject: {fileID: 0}
-    m_TargetConnection: 
+    m_TargetConnection: Avatar/Level
   m_ActivateOutput:
     m_TargetObject: {fileID: 0}
     m_TargetConnection: 

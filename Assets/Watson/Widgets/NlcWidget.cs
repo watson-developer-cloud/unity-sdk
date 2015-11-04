@@ -36,18 +36,34 @@ namespace IBM.Watson.Widgets
 	    private NLC m_NLC = new NLC();
 
         [SerializeField]
-        private Input m_ClassifyInput = new Input( "Classify", typeof(TextData), "OnClasify" );
+        private Input m_RecognizeInput = new Input( "Recognize", typeof(SpeechToTextData), "OnRecognize" );
         [SerializeField]
         private Output m_TopClassOutput = new Output( typeof(TextData) );
         [SerializeField]
         private Output m_ClassifyOutput = new Output( typeof(ClassifyResultData) );
         [SerializeField]
+        private Output m_RecognizeFailure = new Output( typeof(SpeechToTextData) );
+        [SerializeField]
         private string m_ClassifierId = "5E00F7x2-nlc-540";     // default to XRAY classifier
+        [SerializeField, Tooltip("What is the minimum word confidence needed to send onto the NLC?")]
+        private double m_MinWordConfidence = 0.4;
+        [SerializeField, Tooltip("Recognized speech below this confidence is just ignored.")]
+        private double m_IgnoreWordConfidence = 0.2;
         [SerializeField, Tooltip( "If true, then the top class is sent as a event.") ]
         private bool m_SendAsEvent = false;
         [SerializeField]
         private Text m_TopClassText = null;
         #endregion
+
+        #region Public Properties
+        public NLC NLC { get { return m_NLC; } }
+        #endregion
+
+        public void ClassifyText( string text )
+        {
+            if (!m_NLC.Classify(m_ClassifierId, text, OnClassified))
+                Log.Error("AvatarWidget", "Failed to send {0} to NLC.", text);
+        }
 
         #region MonoBehaviour interface
         /// <exclude />
@@ -62,15 +78,32 @@ namespace IBM.Watson.Widgets
         /// <exclude />
         protected override string GetName()
         {
-            return "NlcWidget";
+            return "NLC";
         }
         #endregion
 
-        private void OnClasify( Data data )
+        private void OnRecognize(Data data)
         {
-            Log.Debug( "NlcWidget", "OnClasify: {0}", ((TextData)data).Text );
-            if (! m_NLC.Classify( m_ClassifierId, ((TextData)data).Text, OnClassified ) )
-                Log.Error( "NlcWidget", "Failed to request classify." );
+            SpeechResultList result = ((SpeechToTextData)data).Results;
+            if (result.HasFinalResult())
+            {
+                string text = result.Results[0].Alternatives[0].Transcript;
+                double textConfidence = result.Results[0].Alternatives[0].Confidence;
+
+                Log.Debug("NlcWidget", "OnRecognize: {0} ({1:0.00})", text, textConfidence);
+                EventManager.Instance.SendEvent(Constants.Event.ON_DEBUG_MESSAGE, string.Format("{0} ({1:0.00})", text, textConfidence));
+
+                if (textConfidence > m_MinWordConfidence)
+                {
+                    if (!m_NLC.Classify(m_ClassifierId, text, OnClassified))
+                        Log.Error("AvatarWidget", "Failed to send {0} to NLC.", text);
+                }
+                else
+                {
+                    if (textConfidence > m_IgnoreWordConfidence )
+                        m_RecognizeFailure.SendData( data );
+                }
+            }
         }
 
 	    private void OnClassified(ClassifyResult result)
@@ -80,6 +113,8 @@ namespace IBM.Watson.Widgets
 
             if ( result != null )
             {
+                Log.Debug( "NlcWidget", "OnClassified: {0} ({1:0.00})", result.top_class, result.topConfidence );
+
                 if ( m_TopClassOutput.IsConnected && !string.IsNullOrEmpty( result.top_class ) )
                     m_TopClassOutput.SendData( new TextData( result.top_class ) );
                 if ( m_TopClassText != null )

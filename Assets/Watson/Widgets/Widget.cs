@@ -137,7 +137,7 @@ namespace IBM.Watson.Widgets
                             Log.Error("Widget", "CreateDelegate failed for function {0}", ReceiverFunction);
                     }
                     else
-                        Log.Error("Widget", "Failed to find receiver function {0}.", ReceiverFunction);
+                        Log.Error("Widget", "Failed to find receiver function {0} in object {1}.", ReceiverFunction, Owner.gameObject.name );
                 }
             }
 

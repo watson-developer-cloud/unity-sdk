@@ -34,9 +34,6 @@ namespace IBM.Watson.Widgets.Question
         #region Private Data
         private CubeAnimationManager m_CubeAnimMgr = null;
 
-		[SerializeField]
-		private LayerMask m_layerForQuestionWidget;
-
         private AnswersAndConfidence m_AnswersAndConfidence;
         private Question.Evidence m_Evidence;
         private Semantic m_Semantic;
@@ -73,37 +70,25 @@ namespace IBM.Watson.Widgets.Question
             {
                 m_Focused = value;
 
-                if (value)
-                {
-                    KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CUBE_TO_FOLD, Constants.KeyCodes.MODIFIER_KEY, OnFold);
-                    KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CUBE_TO_FOCUS, Constants.KeyCodes.MODIFIER_KEY, OnFocusNext);
-                    KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CUBE_TO_ROTATE_OR_PAUSE, Constants.KeyCodes.MODIFIER_KEY, OnRotateOrPause);
-                    KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CUBE_TO_UNFOCUS, Constants.KeyCodes.MODIFIER_KEY, OnUnFocus);
-                    KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CUBE_TO_UNFOLD, Constants.KeyCodes.MODIFIER_KEY, OnUnfold);
-
-					TouchEventManager.Instance.RegisterTapEvent(gameObject, OnTapInside, isTapInside: true);
-					TouchEventManager.Instance.RegisterTapEvent(gameObject, OnTapOutside, isTapInside: false);
-                    TouchEventManager.Instance.RegisterDragEvent(gameObject, DragOneFinger, numberOfFinger: 1);
-
-                }
-                else
-                {
-                    KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_FOLD, Constants.KeyCodes.MODIFIER_KEY, OnFold);
-                    KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_FOCUS, Constants.KeyCodes.MODIFIER_KEY, OnFocusNext);
-                    KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_ROTATE_OR_PAUSE, Constants.KeyCodes.MODIFIER_KEY, OnRotateOrPause);
-                    KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_UNFOCUS, Constants.KeyCodes.MODIFIER_KEY, OnUnFocus);
-                    KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_UNFOLD, Constants.KeyCodes.MODIFIER_KEY, OnUnfold);
-
-					TouchEventManager.Instance.UnregisterTapEvent(gameObject, OnTapInside, isTapInside: true);
-					TouchEventManager.Instance.UnregisterTapEvent(gameObject, OnTapOutside, isTapInside: false);
-                    TouchEventManager.Instance.UnregisterDragEvent(gameObject, DragOneFinger, numberOfFinger: 1);
-                }
+                //if (value)
+                //{
+                //    KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CUBE_TO_FOLD, Constants.KeyCodes.MODIFIER_KEY, OnFold);
+                //    KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CUBE_TO_FOCUS, Constants.KeyCodes.MODIFIER_KEY, OnFocusNext);
+                //    KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CUBE_TO_ROTATE_OR_PAUSE, Constants.KeyCodes.MODIFIER_KEY, OnRotateOrPause);
+                //    KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CUBE_TO_UNFOCUS, Constants.KeyCodes.MODIFIER_KEY, OnUnFocus);
+                //    KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CUBE_TO_UNFOLD, Constants.KeyCodes.MODIFIER_KEY, OnUnfold);
+                //}
+                //else
+                //{
+                //    KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_FOLD, Constants.KeyCodes.MODIFIER_KEY, OnFold);
+                //    KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_FOCUS, Constants.KeyCodes.MODIFIER_KEY, OnFocusNext);
+                //    KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_ROTATE_OR_PAUSE, Constants.KeyCodes.MODIFIER_KEY, OnRotateOrPause);
+                //    KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_UNFOCUS, Constants.KeyCodes.MODIFIER_KEY, OnUnFocus);
+                //    KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_UNFOLD, Constants.KeyCodes.MODIFIER_KEY, OnUnfold);
+                //}
             }
         }
 
-        /// <summary>
-        /// Cube Animation Manager under Question Widget
-        /// </summary>
         public CubeAnimationManager Cube
         {
             get
@@ -123,131 +108,36 @@ namespace IBM.Watson.Widgets.Question
         #endregion
 
         #region Cube Actions
-
-        /// <summary>
-        /// Method called on Tapping on Question Widget 
-        /// </summary>
-        /// <param name="tapGesture">Tap Gesture with all touch information</param>
-        /// <param name="hitTransform">Hit Tranform of tap</param>
-		public void OnTapInside(TouchScript.Gestures.TapGesture tapGesture, Transform hitTransform){
-
-			Log.Status("Question Widget", "OnTapInside");
-			//Touch on side
-			switch (CubeAnimationManager.Instance.AnimationState)
-			{
-			case CubeAnimationManager.CubeAnimationState.NOT_PRESENT:
-				break;
-			case CubeAnimationManager.CubeAnimationState.COMING_TO_SCENE:
-				break;
-			case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOLDED:
-				Cube.UnFold();
-				break;
-			case CubeAnimationManager.CubeAnimationState.UNFOLDING:
-				FocusOnSide(hitTransform);
-				break;
-			case CubeAnimationManager.CubeAnimationState.IDLE_AS_UNFOLDED:
-				FocusOnSide(hitTransform);
-				break;
-			case CubeAnimationManager.CubeAnimationState.FOLDING:
-				Cube.UnFold();
-				break;
-			case CubeAnimationManager.CubeAnimationState.FOCUSING_TO_SIDE:
-				FocusOnSide(hitTransform);
-				break;
-			case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOCUSED:
-				FocusOnSide(hitTransform);
-				break;
-			case CubeAnimationManager.CubeAnimationState.GOING_FROM_SCENE:
-				break;
-			default:
-				break;
-			}
-		}
-
-		private void FocusOnSide(Transform hitTransform)
-		{
-			int touchedSide = 0;
-			int.TryParse(hitTransform.name.Substring(1, 1), out touchedSide);
-			Cube.FocusOnSide((CubeAnimationManager.CubeSideType)touchedSide);
-		}
-
-        /// <summary>
-        /// Method called on Tapping outside of the Question Widget 
-        /// </summary>
-        /// <param name="tapGesture">Tap Gesture with all touch information</param>
-        /// <param name="hitTransform">Hit Tranform of tap</param>
-		public void OnTapOutside(TouchScript.Gestures.TapGesture tapGesture, Transform hitTransform){
-			Log.Status("Question Widget", "OnTapOutside");
-			//Touch out-side
-			switch (CubeAnimationManager.Instance.AnimationState)
-			{
-			case CubeAnimationManager.CubeAnimationState.NOT_PRESENT:
-				break;
-			case CubeAnimationManager.CubeAnimationState.COMING_TO_SCENE:
-				break;
-			case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOLDED:
-				break;
-			case CubeAnimationManager.CubeAnimationState.UNFOLDING:
-				Cube.Fold();
-				break;
-			case CubeAnimationManager.CubeAnimationState.IDLE_AS_UNFOLDED:
-				Cube.Fold();
-				break;
-			case CubeAnimationManager.CubeAnimationState.FOLDING:
-				break;
-			case CubeAnimationManager.CubeAnimationState.FOCUSING_TO_SIDE:
-				Cube.UnFocus();
-				break;
-			case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOCUSED:
-				Cube.UnFocus();
-				break;
-			case CubeAnimationManager.CubeAnimationState.GOING_FROM_SCENE:
-				break;
-			default:
-				break;
-			}
-		}
-
-        private float m_RotationSpeed;
-
-        public void DragOneFinger(TouchScript.Gestures.ScreenTransformGesture OneFingerManipulationGesture)
-        {
-            if(Cube != null)
-            {
-                Cube.DragOneFinger(OneFingerManipulationGesture);
-            }
-        }
-
-        public void OnDisplayAnswers()
+        public void OnDisplayAnswers(ClassifyResult result)
         {
             Cube.FocusOnSide(CubeAnimationManager.CubeSideType.ANSWERS);
         }
 
-        public void OnDisplayChat()
+        public void OnDisplayChat(ClassifyResult result)
         {
             Cube.FocusOnSide(CubeAnimationManager.CubeSideType.CHAT);
         }
 
-        public void OnDisplayParse()
+        public void OnDisplayParse(ClassifyResult result)
         {
             Cube.FocusOnSide(CubeAnimationManager.CubeSideType.PARSE);
         }
 
-        public void OnDisplayEvidence()
+        public void OnDisplayEvidence(ClassifyResult result)
         {
             Cube.FocusOnSide(CubeAnimationManager.CubeSideType.EVIDENCE);
         }
 
-        public void OnDisplayLocation()
+        public void OnDisplayLocation(ClassifyResult result)
         {
             Cube.FocusOnSide(CubeAnimationManager.CubeSideType.LOCATION);
         }
 
-        public void OnFold()
+        public void OnFold(ClassifyResult result)
         {
             Cube.Fold();
         }
-        public void OnUnfold()
+        public void OnUnfold(ClassifyResult result)
         {
             Cube.UnFold();
         }
@@ -270,29 +160,7 @@ namespace IBM.Watson.Widgets.Question
         }
         public void OnLeaveTheSceneAndDestroy()
         {
-            Focused = false;
             Cube.LeaveTheSceneAndDestroy();
-        }
-
-
-        public void ExecuteAction(string action)
-        {
-            if (action == "fold")
-                OnFold();
-            else if (action == "unfold")
-                OnUnfold();
-            else if (action == "evidence")
-                OnDisplayEvidence();
-            else if (action == "parse")
-                OnDisplayParse();
-            else if (action == "location")
-                OnDisplayLocation();
-            else if (action == "answers")
-                OnDisplayAnswers();
-            else if (action == "chat")
-                OnDisplayChat();
-            else
-                Log.Warning("QuestionWidget", "Unknown action {0}", action);
         }
         #endregion
 
@@ -345,7 +213,7 @@ namespace IBM.Watson.Widgets.Question
         Answers AnswerDataObject { get; }
         ParseData ParseDataObject { get; }
         string Location { get; }
-        OnMessage OnQuestion { get; set; }
-        OnMessage OnAnswer { get; set; }
+        OnMessage OnQuestionEvent { get; set; }
+        OnMessage OnAnswerEvent { get; set; }
     }
 }

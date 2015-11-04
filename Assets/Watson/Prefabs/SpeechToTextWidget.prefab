@@ -22,8 +22,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 175116}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 607, y: 418, z: 0}
+  m_LocalRotation: {x: 0, y: -.819152117, z: 0, w: .573576331}
+  m_LocalPosition: {x: -207.606384, y: 418, z: 570.393372}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -39,7 +39,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ba780a4e1f9a824895da80178f4406c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AutoConnect: 1
+  m_AutoConnect: 0
   m_StatusText: {fileID: 0}
   m_DetectSilence: 1
   m_SilenceThreshold: .0299999993
@@ -51,7 +51,7 @@ MonoBehaviour:
   m_Transcript: {fileID: 0}
   m_TextOutput:
     m_TargetObject: {fileID: 0}
-    m_TargetConnection: 
+    m_TargetConnection: Avatar/Recognize
   m_ResultOutput:
     m_TargetObject: {fileID: 0}
     m_TargetConnection: 
