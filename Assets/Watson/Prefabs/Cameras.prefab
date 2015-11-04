@@ -237,12 +237,10 @@ MonoBehaviour:
   m_AutoConnect: 1
   m_TapMappings: []
   m_FullScreenDragMappings:
-  - m_NumberOfFinger: 2
+  - m_DragObject: {fileID: 172636}
+    m_NumberOfFinger: 2
     m_SortingLayer: 0
-    m_Callback:
-      m_Target: {fileID: 172636}
-      m_Component: WatsonCamera
-      m_Method: DragTwoFinger
+    m_Callback: -1
 --- !u!114 &11489266
 MonoBehaviour:
   m_ObjectHideFlags: 1

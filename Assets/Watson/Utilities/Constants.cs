@@ -99,6 +99,18 @@ namespace IBM.Watson.Utilities
             /// Event on Question Cube state change
             /// </summary>
             ON_CHANGE_STATE_QUESTIONCUBE_ANIMATION = 200,
+			/// <summary>
+			/// Event on Question tap inside question cube
+			/// </summary>
+			ON_QUESTIONCUBE_TAP_INSIDE,
+			/// <summary>
+			/// Event on Question tap outside question cube
+			/// </summary>
+			ON_QUESTIONCUBE_TAP_OUTSIDE,
+			/// <summary>
+			/// Event on Questino drag 
+			/// </summary>
+			ON_QUESTIONCUBE_DRAG_ONE_FINGER,
             #endregion
 
             #region Animation

@@ -74,7 +74,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 109220}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -394.5, y: -222, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 438902}
@@ -214,7 +214,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_TapGesture: {fileID: 11464796}
-  m_OneFingerManipulationGesture: {fileID: 11471262}
+  m_OneFingerMoveGesture: {fileID: 11471262}
   m_TwoFingerMoveGesture: {fileID: 11410502}
 --- !u!114 &11459072
 MonoBehaviour:

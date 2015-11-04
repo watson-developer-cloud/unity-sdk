@@ -42,15 +42,16 @@ namespace IBM.Watson.Widgets
             public GameObject m_TapObject = null;
             public bool m_TapOnObject = true;
             public int m_SortingLayer = 0;
-            public SerializedDelegate m_Callback = new SerializedDelegate(typeof(TouchEventManager.TapEventDelegate));
+			public Constants.Event m_Callback = Constants.Event.NONE;
         };
 
         [Serializable]
         private class FullScreenDragEventMapping
         {
+			public GameObject m_DragObject = null;
             public int m_NumberOfFinger = 1;
             public int m_SortingLayer = 0;
-            public SerializedDelegate m_Callback = new SerializedDelegate(typeof(TouchEventManager.DragEventDelegate));
+			public Constants.Event m_Callback = Constants.Event.NONE;
         };
 
         [SerializeField]
@@ -63,12 +64,12 @@ namespace IBM.Watson.Widgets
         {
             foreach (var mapping in m_TapMappings)
             {
-                TouchEventManager.Instance.RegisterTapEvent(mapping.m_TapObject, mapping.m_Callback.ResolveDelegate() as TouchEventManager.TapEventDelegate, mapping.m_SortingLayer, mapping.m_TapOnObject);
+                TouchEventManager.Instance.RegisterTapEvent(mapping.m_TapObject, mapping.m_Callback, mapping.m_SortingLayer, mapping.m_TapOnObject);
             }
 
             foreach (var mapping in m_FullScreenDragMappings)
             {
-                TouchEventManager.Instance.RegisterDragEvent(mapping.m_Callback.TargetGameObject, mapping.m_Callback.ResolveDelegate() as TouchEventManager.DragEventDelegate, mapping.m_NumberOfFinger, mapping.m_SortingLayer);
+				TouchEventManager.Instance.RegisterDragEvent(mapping.m_DragObject, mapping.m_Callback, mapping.m_NumberOfFinger, mapping.m_SortingLayer);
             }
         }
 
@@ -76,12 +77,12 @@ namespace IBM.Watson.Widgets
         {
             foreach (var mapping in m_TapMappings)
             {
-                TouchEventManager.Instance.UnregisterTapEvent(mapping.m_TapObject, mapping.m_Callback.ResolveDelegate() as TouchEventManager.TapEventDelegate, mapping.m_SortingLayer, mapping.m_TapOnObject);
+                TouchEventManager.Instance.UnregisterTapEvent(mapping.m_TapObject, mapping.m_Callback, mapping.m_SortingLayer, mapping.m_TapOnObject);
             }
 
             foreach (var mapping in m_FullScreenDragMappings)
             {
-                TouchEventManager.Instance.UnregisterDragEvent(mapping.m_Callback.TargetGameObject, mapping.m_Callback.ResolveDelegate() as TouchEventManager.DragEventDelegate, mapping.m_NumberOfFinger, mapping.m_SortingLayer);
+				TouchEventManager.Instance.UnregisterDragEvent(mapping.m_DragObject, mapping.m_Callback, mapping.m_NumberOfFinger, mapping.m_SortingLayer);
             }
         }
     }
