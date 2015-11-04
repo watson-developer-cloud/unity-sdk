@@ -69,23 +69,7 @@ namespace IBM.Watson.Widgets.Question
             set
             {
                 m_Focused = value;
-
-                //if (value)
-                //{
-                //    KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CUBE_TO_FOLD, Constants.KeyCodes.MODIFIER_KEY, OnFold);
-                //    KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CUBE_TO_FOCUS, Constants.KeyCodes.MODIFIER_KEY, OnFocusNext);
-                //    KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CUBE_TO_ROTATE_OR_PAUSE, Constants.KeyCodes.MODIFIER_KEY, OnRotateOrPause);
-                //    KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CUBE_TO_UNFOCUS, Constants.KeyCodes.MODIFIER_KEY, OnUnFocus);
-                //    KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CUBE_TO_UNFOLD, Constants.KeyCodes.MODIFIER_KEY, OnUnfold);
-                //}
-                //else
-                //{
-                //    KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_FOLD, Constants.KeyCodes.MODIFIER_KEY, OnFold);
-                //    KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_FOCUS, Constants.KeyCodes.MODIFIER_KEY, OnFocusNext);
-                //    KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_ROTATE_OR_PAUSE, Constants.KeyCodes.MODIFIER_KEY, OnRotateOrPause);
-                //    KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_UNFOCUS, Constants.KeyCodes.MODIFIER_KEY, OnUnFocus);
-                //    KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_UNFOLD, Constants.KeyCodes.MODIFIER_KEY, OnUnfold);
-                //}
+				EnableInputWidget (value);
             }
         }
 
@@ -108,6 +92,99 @@ namespace IBM.Watson.Widgets.Question
         #endregion
 
         #region Cube Actions
+
+		/// <summary>
+		/// Method called on Tapping on Question Widget 
+		/// </summary>
+		/// <param name="tapGesture">Tap Gesture with all touch information</param>
+		/// <param name="hitTransform">Hit Tranform of tap</param>
+		public void OnTapInside(TouchScript.Gestures.TapGesture tapGesture, Transform hitTransform){
+			
+			Log.Status("Question Widget", "OnTapInside");
+			//Touch on side
+			switch (CubeAnimationManager.Instance.AnimationState)
+			{
+			case CubeAnimationManager.CubeAnimationState.NOT_PRESENT:
+				break;
+			case CubeAnimationManager.CubeAnimationState.COMING_TO_SCENE:
+				break;
+			case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOLDED:
+				Cube.UnFold();
+				break;
+			case CubeAnimationManager.CubeAnimationState.UNFOLDING:
+				FocusOnSide(hitTransform);
+				break;
+			case CubeAnimationManager.CubeAnimationState.IDLE_AS_UNFOLDED:
+				FocusOnSide(hitTransform);
+				break;
+			case CubeAnimationManager.CubeAnimationState.FOLDING:
+				Cube.UnFold();
+				break;
+			case CubeAnimationManager.CubeAnimationState.FOCUSING_TO_SIDE:
+				FocusOnSide(hitTransform);
+				break;
+			case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOCUSED:
+				FocusOnSide(hitTransform);
+				break;
+			case CubeAnimationManager.CubeAnimationState.GOING_FROM_SCENE:
+				break;
+			default:
+				break;
+			}
+		}
+		
+		private void FocusOnSide(Transform hitTransform)
+		{
+			int touchedSide = 0;
+			int.TryParse(hitTransform.name.Substring(1, 1), out touchedSide);
+			Cube.FocusOnSide((CubeAnimationManager.CubeSideType)touchedSide);
+		}
+		
+		/// <summary>
+		/// Method called on Tapping outside of the Question Widget 
+		/// </summary>
+		/// <param name="tapGesture">Tap Gesture with all touch information</param>
+		/// <param name="hitTransform">Hit Tranform of tap</param>
+		public void OnTapOutside(TouchScript.Gestures.TapGesture tapGesture, Transform hitTransform){
+			Log.Status("Question Widget", "OnTapOutside");
+			//Touch out-side
+			switch (CubeAnimationManager.Instance.AnimationState)
+			{
+			case CubeAnimationManager.CubeAnimationState.NOT_PRESENT:
+				break;
+			case CubeAnimationManager.CubeAnimationState.COMING_TO_SCENE:
+				break;
+			case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOLDED:
+				break;
+			case CubeAnimationManager.CubeAnimationState.UNFOLDING:
+				Cube.Fold();
+				break;
+			case CubeAnimationManager.CubeAnimationState.IDLE_AS_UNFOLDED:
+				Cube.Fold();
+				break;
+			case CubeAnimationManager.CubeAnimationState.FOLDING:
+				break;
+			case CubeAnimationManager.CubeAnimationState.FOCUSING_TO_SIDE:
+				Cube.UnFocus();
+				break;
+			case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOCUSED:
+				Cube.UnFocus();
+				break;
+			case CubeAnimationManager.CubeAnimationState.GOING_FROM_SCENE:
+				break;
+			default:
+				break;
+			}
+		}
+
+		public void DragOneFinger(TouchScript.Gestures.ScreenTransformGesture OneFingerManipulationGesture)
+		{
+			if(Cube != null)
+			{
+				Cube.DragOneFinger(OneFingerManipulationGesture);
+			}
+		}
+
         public void OnDisplayAnswers(ClassifyResult result)
         {
             Cube.FocusOnSide(CubeAnimationManager.CubeSideType.ANSWERS);
@@ -133,7 +210,7 @@ namespace IBM.Watson.Widgets.Question
             Cube.FocusOnSide(CubeAnimationManager.CubeSideType.LOCATION);
         }
 
-        public void OnFold(ClassifyResult result)
+		public void OnFold(ClassifyResult result = null)
         {
             Cube.Fold();
         }
@@ -170,6 +247,7 @@ namespace IBM.Watson.Widgets.Question
         protected override void Awake()
         {
             base.Awake();
+			EnableInputWidget (false);
 
             m_AnswersAndConfidence = gameObject.GetComponent<AnswersAndConfidence>();
             m_Evidence = gameObject.GetComponent<Question.Evidence>();
@@ -189,6 +267,17 @@ namespace IBM.Watson.Widgets.Question
             m_Facets.Add(m_QuestionAndAnswer);
 			m_Facets.Add(m_Passages);
         }
+
+		private void EnableInputWidget(bool enable)
+		{
+			InputWidgetBase[] inputWidgets = transform.GetComponentsInChildren<InputWidgetBase>(includeInactive: true);
+			if(inputWidgets != null){
+				foreach (InputWidgetBase itemInputWidget in inputWidgets) {
+					itemInputWidget.enabled = enable;
+				}
+				
+			}
+		}
 
         protected override void Start()
         {

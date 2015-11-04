@@ -27,7 +27,7 @@ namespace IBM.Watson.Widgets
     /// <summary>
     /// This Event Widget class maps key events to a SerializedDelegate.
     /// </summary>
-    public class EventWidget : Widget
+	public class EventWidget : InputWidgetBase
     {
         #region Widget interface
         protected override string GetName()

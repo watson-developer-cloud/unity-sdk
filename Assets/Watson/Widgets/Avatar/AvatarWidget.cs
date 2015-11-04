@@ -209,8 +209,8 @@ namespace IBM.Watson.Widgets.Avatar
             DebugConsole.Instance.RegisterDebugInfo("Q", OnQuestionDebugInfo);
             DebugConsole.Instance.RegisterDebugInfo("A", OnAnwserDebugInfo);
 
-            KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.QUESTION_WAKEUP, Constants.KeyCodes.MODIFIER_KEY, OnExampleQuestion);
-            KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CHANGE_MOOD, Constants.KeyCodes.MODIFIER_KEY, OnNextMood);
+            //KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.QUESTION_WAKEUP, Constants.KeyCodes.MODIFIER_KEY, OnExampleQuestion);
+            //KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CHANGE_MOOD, Constants.KeyCodes.MODIFIER_KEY, OnNextMood);
 
         }
         void OnDisable()
@@ -225,8 +225,8 @@ namespace IBM.Watson.Widgets.Avatar
             DebugConsole.Instance.UnregisterDebugInfo("Q", OnQuestionDebugInfo);
             DebugConsole.Instance.UnregisterDebugInfo("A", OnAnwserDebugInfo);
 
-            KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.QUESTION_WAKEUP, Constants.KeyCodes.MODIFIER_KEY, OnExampleQuestion);
-            KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CHANGE_MOOD, Constants.KeyCodes.MODIFIER_KEY, OnNextMood);
+            //KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.QUESTION_WAKEUP, Constants.KeyCodes.MODIFIER_KEY, OnExampleQuestion);
+            //KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CHANGE_MOOD, Constants.KeyCodes.MODIFIER_KEY, OnNextMood);
         }
 
         /// <exclude />
@@ -381,7 +381,7 @@ namespace IBM.Watson.Widgets.Avatar
 
                 // start a conversation with the dialog..
                 if (!string.IsNullOrEmpty(m_DialogId))
-                    m_Dialog.Converse(m_DialogId, result.text, OnDialog, 0, m_DialogClientId);
+                    m_Dialog.Converse(m_DialogId, result.text, OnDialogResponse, 0, m_DialogClientId);
                 else
                     m_TextOutput.SendData(new TextData(m_Hello));
             }

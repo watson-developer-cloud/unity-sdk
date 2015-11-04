@@ -27,7 +27,7 @@ namespace IBM.Watson.Widgets
     /// <summary>
     /// This widget class maps key events to a SerializedDelegate.
     /// </summary>
-    public class KeyboardWidget : Widget
+    public class KeyboardWidget : InputWidgetBase
     {
         #region Widget interface
         protected override string GetName()
