@@ -41,7 +41,7 @@ namespace IBM.Watson.Widgets.Question
         private Location m_Location;
         private ParseTree m_ParseTree;
         private QuestionAndAnswer m_QuestionAndAnswer;
-		private Passages m_Passages;
+        private Passages m_Passages;
         private List<Base> m_Facets = new List<Base>();
 
         #endregion
@@ -69,7 +69,7 @@ namespace IBM.Watson.Widgets.Question
             set
             {
                 m_Focused = value;
-				EnableInputWidget (value);
+                EnableEvents(value);
             }
         }
 
@@ -93,149 +93,153 @@ namespace IBM.Watson.Widgets.Question
 
         #region Cube Actions
 
-		/// <summary>
-		/// Method called on Tapping on Question Widget 
-		/// </summary>
-		/// <param name="tapGesture">Tap Gesture with all touch information</param>
-		/// <param name="hitTransform">Hit Tranform of tap</param>
-		public void OnTapInside(TouchScript.Gestures.TapGesture tapGesture, Transform hitTransform){
-			
-			Log.Status("Question Widget", "OnTapInside");
-			//Touch on side
-			switch (CubeAnimationManager.Instance.AnimationState)
-			{
-			case CubeAnimationManager.CubeAnimationState.NOT_PRESENT:
-				break;
-			case CubeAnimationManager.CubeAnimationState.COMING_TO_SCENE:
-				break;
-			case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOLDED:
-				Cube.UnFold();
-				break;
-			case CubeAnimationManager.CubeAnimationState.UNFOLDING:
-				FocusOnSide(hitTransform);
-				break;
-			case CubeAnimationManager.CubeAnimationState.IDLE_AS_UNFOLDED:
-				FocusOnSide(hitTransform);
-				break;
-			case CubeAnimationManager.CubeAnimationState.FOLDING:
-				Cube.UnFold();
-				break;
-			case CubeAnimationManager.CubeAnimationState.FOCUSING_TO_SIDE:
-				FocusOnSide(hitTransform);
-				break;
-			case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOCUSED:
-				FocusOnSide(hitTransform);
-				break;
-			case CubeAnimationManager.CubeAnimationState.GOING_FROM_SCENE:
-				break;
-			default:
-				break;
-			}
-		}
-		
-		private void FocusOnSide(Transform hitTransform)
-		{
-			int touchedSide = 0;
-			int.TryParse(hitTransform.name.Substring(1, 1), out touchedSide);
-			Cube.FocusOnSide((CubeAnimationManager.CubeSideType)touchedSide);
-		}
-		
-		/// <summary>
-		/// Method called on Tapping outside of the Question Widget 
-		/// </summary>
-		/// <param name="tapGesture">Tap Gesture with all touch information</param>
-		/// <param name="hitTransform">Hit Tranform of tap</param>
-		public void OnTapOutside(TouchScript.Gestures.TapGesture tapGesture, Transform hitTransform){
-			Log.Status("Question Widget", "OnTapOutside");
-			//Touch out-side
-			switch (CubeAnimationManager.Instance.AnimationState)
-			{
-			case CubeAnimationManager.CubeAnimationState.NOT_PRESENT:
-				break;
-			case CubeAnimationManager.CubeAnimationState.COMING_TO_SCENE:
-				break;
-			case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOLDED:
-				break;
-			case CubeAnimationManager.CubeAnimationState.UNFOLDING:
-				Cube.Fold();
-				break;
-			case CubeAnimationManager.CubeAnimationState.IDLE_AS_UNFOLDED:
-				Cube.Fold();
-				break;
-			case CubeAnimationManager.CubeAnimationState.FOLDING:
-				break;
-			case CubeAnimationManager.CubeAnimationState.FOCUSING_TO_SIDE:
-				Cube.UnFocus();
-				break;
-			case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOCUSED:
-				Cube.UnFocus();
-				break;
-			case CubeAnimationManager.CubeAnimationState.GOING_FROM_SCENE:
-				break;
-			default:
-				break;
-			}
-		}
+        /// <summary>
+        /// Method called on Tapping on Question Widget 
+        /// </summary>
+        /// <param name="tapGesture">Tap Gesture with all touch information</param>
+        /// <param name="hitTransform">Hit Tranform of tap</param>
+        public void OnTapInside(TouchScript.Gestures.TapGesture tapGesture, Transform hitTransform)
+        {
 
-		public void DragOneFinger(TouchScript.Gestures.ScreenTransformGesture OneFingerManipulationGesture)
-		{
-			if(Cube != null)
-			{
-				Cube.DragOneFinger(OneFingerManipulationGesture);
-			}
-		}
+            Log.Status("Question Widget", "OnTapInside");
+            //Touch on side
+            switch (CubeAnimationManager.Instance.AnimationState)
+            {
+                case CubeAnimationManager.CubeAnimationState.NOT_PRESENT:
+                    break;
+                case CubeAnimationManager.CubeAnimationState.COMING_TO_SCENE:
+                    break;
+                case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOLDED:
+                    Cube.UnFold();
+                    break;
+                case CubeAnimationManager.CubeAnimationState.UNFOLDING:
+                    FocusOnSide(hitTransform);
+                    break;
+                case CubeAnimationManager.CubeAnimationState.IDLE_AS_UNFOLDED:
+                    FocusOnSide(hitTransform);
+                    break;
+                case CubeAnimationManager.CubeAnimationState.FOLDING:
+                    Cube.UnFold();
+                    break;
+                case CubeAnimationManager.CubeAnimationState.FOCUSING_TO_SIDE:
+                    FocusOnSide(hitTransform);
+                    break;
+                case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOCUSED:
+                    FocusOnSide(hitTransform);
+                    break;
+                case CubeAnimationManager.CubeAnimationState.GOING_FROM_SCENE:
+                    break;
+                default:
+                    break;
+            }
+        }
 
-        public void OnDisplayAnswers(ClassifyResult result)
+        private void FocusOnSide(Transform hitTransform)
+        {
+            int touchedSide = 0;
+            int.TryParse(hitTransform.name.Substring(1, 1), out touchedSide);
+            Cube.FocusOnSide((CubeAnimationManager.CubeSideType)touchedSide);
+        }
+
+        /// <summary>
+        /// Method called on Tapping outside of the Question Widget 
+        /// </summary>
+        /// <param name="tapGesture">Tap Gesture with all touch information</param>
+        /// <param name="hitTransform">Hit Tranform of tap</param>
+        public void OnTapOutside(TouchScript.Gestures.TapGesture tapGesture, Transform hitTransform)
+        {
+            Log.Status("Question Widget", "OnTapOutside");
+            //Touch out-side
+            switch (CubeAnimationManager.Instance.AnimationState)
+            {
+                case CubeAnimationManager.CubeAnimationState.NOT_PRESENT:
+                    break;
+                case CubeAnimationManager.CubeAnimationState.COMING_TO_SCENE:
+                    break;
+                case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOLDED:
+                    break;
+                case CubeAnimationManager.CubeAnimationState.UNFOLDING:
+                    Cube.Fold();
+                    break;
+                case CubeAnimationManager.CubeAnimationState.IDLE_AS_UNFOLDED:
+                    Cube.Fold();
+                    break;
+                case CubeAnimationManager.CubeAnimationState.FOLDING:
+                    break;
+                case CubeAnimationManager.CubeAnimationState.FOCUSING_TO_SIDE:
+                    Cube.UnFocus();
+                    break;
+                case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOCUSED:
+                    Cube.UnFocus();
+                    break;
+                case CubeAnimationManager.CubeAnimationState.GOING_FROM_SCENE:
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public void DragOneFinger(TouchScript.Gestures.ScreenTransformGesture OneFingerManipulationGesture)
+        {
+            if (Cube != null)
+            {
+                Cube.DragOneFinger(OneFingerManipulationGesture);
+            }
+        }
+
+        public void OnDisplayAnswers(object [] args)
         {
             Cube.FocusOnSide(CubeAnimationManager.CubeSideType.ANSWERS);
         }
 
-        public void OnDisplayChat(ClassifyResult result)
+        public void OnDisplayChat(object [] args)
         {
             Cube.FocusOnSide(CubeAnimationManager.CubeSideType.CHAT);
         }
 
-        public void OnDisplayParse(ClassifyResult result)
+        public void OnDisplayParse(object [] args)
         {
             Cube.FocusOnSide(CubeAnimationManager.CubeSideType.PARSE);
         }
 
-        public void OnDisplayEvidence(ClassifyResult result)
+        public void OnDisplayEvidence(object [] args)
         {
             Cube.FocusOnSide(CubeAnimationManager.CubeSideType.EVIDENCE);
         }
 
-        public void OnDisplayLocation(ClassifyResult result)
+        public void OnDisplayLocation(object [] args)
         {
             Cube.FocusOnSide(CubeAnimationManager.CubeSideType.LOCATION);
         }
 
-		public void OnFold(ClassifyResult result = null)
+        public void OnFold(object [] args)
         {
             Cube.Fold();
         }
-        public void OnUnfold(ClassifyResult result)
+        public void OnUnfold(object [] args)
         {
             Cube.UnFold();
         }
-        public void OnRotateOrPause()
+
+        public void OnRotateOrPause(object [] args)
         {
             Cube.RotateOrPause();
         }
 
-        public void OnFocus(CubeAnimationManager.CubeSideType sideType)
+        public void OnFocus(object [] args)
         {
-            Cube.FocusOnSide(sideType);
+            if ( args != null && args.Length > 0 && args[0] is CubeAnimationManager.CubeSideType )
+                Cube.FocusOnSide( (CubeAnimationManager.CubeSideType)args[0] );
         }
-        public void OnFocusNext()
+        public void OnFocusNext(object [] args)
         {
             Cube.FocusOnNextSide();
         }
-        public void OnUnFocus()
+        public void OnUnFocus(object [] args)
         {
             Cube.UnFocus();
         }
-        public void OnLeaveTheSceneAndDestroy()
+        public void OnLeaveTheSceneAndDestroy(object [] args = null )
         {
             Cube.LeaveTheSceneAndDestroy();
         }
@@ -247,7 +251,7 @@ namespace IBM.Watson.Widgets.Question
         protected override void Awake()
         {
             base.Awake();
-			EnableInputWidget (false);
+            EnableEvents(false);
 
             m_AnswersAndConfidence = gameObject.GetComponent<AnswersAndConfidence>();
             m_Evidence = gameObject.GetComponent<Question.Evidence>();
@@ -256,7 +260,7 @@ namespace IBM.Watson.Widgets.Question
             m_Location = gameObject.GetComponent<Location>();
             m_ParseTree = gameObject.GetComponent<ParseTree>();
             m_QuestionAndAnswer = gameObject.GetComponent<QuestionAndAnswer>();
-			m_Passages = gameObject.GetComponent<Passages>();
+            m_Passages = gameObject.GetComponent<Passages>();
 
             m_Facets.Add(m_AnswersAndConfidence);
             m_Facets.Add(m_Evidence);
@@ -265,19 +269,15 @@ namespace IBM.Watson.Widgets.Question
             m_Facets.Add(m_Location);
             m_Facets.Add(m_ParseTree);
             m_Facets.Add(m_QuestionAndAnswer);
-			m_Facets.Add(m_Passages);
+            m_Facets.Add(m_Passages);
         }
 
-		private void EnableInputWidget(bool enable)
-		{
-			InputWidgetBase[] inputWidgets = transform.GetComponentsInChildren<InputWidgetBase>(includeInactive: true);
-			if(inputWidgets != null){
-				foreach (InputWidgetBase itemInputWidget in inputWidgets) {
-					itemInputWidget.enabled = enable;
-				}
-				
-			}
-		}
+        private void EnableEvents(bool enable)
+        {
+            EventWidget eventWidget = GetComponentInChildren<EventWidget>();
+            if ( eventWidget != null )
+                eventWidget.enabled = enable;
+        }
 
         protected override void Start()
         {

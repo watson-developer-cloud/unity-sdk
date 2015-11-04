@@ -65,6 +65,8 @@ GameObject:
   - 114: {fileID: 11411102}
   - 114: {fileID: 11477586}
   - 114: {fileID: 11440920}
+  - 114: {fileID: 11401500}
+  - 114: {fileID: 11491254}
   m_Layer: 5
   m_Name: DebugConsole
   m_TagString: Untagged
@@ -168,6 +170,34 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 
+--- !u!114 &11401500
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 138316}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e421b0b8c204bd344918bc3963c06ccc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AutoConnect: 1
+  m_Mappings:
+  - m_Event: 1
+    m_Callback:
+      m_Target: {fileID: 138316}
+      m_Component: DebugConsole
+      m_Method: OnToggleActive
+  - m_Event: 2
+    m_Callback:
+      m_Target: {fileID: 138316}
+      m_Component: DebugConsole
+      m_Method: OnBeginEdit
+  - m_Event: 3
+    m_Callback:
+      m_Target: {fileID: 138316}
+      m_Component: DebugConsole
+      m_Method: OnDebugMessage
 --- !u!114 &11411102
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -403,6 +433,25 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Enter text...
+--- !u!114 &11491254
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 138316}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 656687ed20c93924d9785528d655ff29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AutoConnect: 1
+  m_Mappings:
+  - m_Key: 13
+    m_Modifiers: 0
+    m_Event: 2
+  - m_Key: 96
+    m_Modifiers: 0
+    m_Event: 1
 --- !u!114 &11491956
 MonoBehaviour:
   m_ObjectHideFlags: 1

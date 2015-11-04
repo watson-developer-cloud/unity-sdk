@@ -27,7 +27,7 @@ namespace IBM.Watson.Widgets
     /// <summary>
     /// This widget class maps Touch events to a SerializedDelegate.
     /// </summary>
-	public class TouchWidget : InputWidgetBase
+	public class TouchWidget : Widget
     {
         #region Widget interface
         protected override string GetName()

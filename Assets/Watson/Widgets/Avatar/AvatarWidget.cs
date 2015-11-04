@@ -370,24 +370,39 @@ namespace IBM.Watson.Widgets.Avatar
         }
         #endregion
 
-        #region Classifier Callbacks
-        public void OnWakeup(ClassifyResult result)
+        #region Event Handlers
+        private ClassifyResult GetClassifyResult( object [] args )
+        {
+            if ( args != null && args.Length > 0 )
+                return args[0] as ClassifyResult;
+            return null;
+        }
+
+        public void OnClassifyFailure( object [] args )
+        {
+            m_TextOutput.SendData(new TextData(m_RecognizeFailure));
+            State = AvatarState.LISTENING;
+        }
+
+        public void OnWakeup( object [] args )
         {
             if (Mood == MoodType.SLEEPING)
             {
                 Mood = MoodType.IDLE;
+                State = AvatarState.LISTENING;
 
                 InstatiateQuestionWidget();
 
                 // start a conversation with the dialog..
-                if (!string.IsNullOrEmpty(m_DialogId))
+                ClassifyResult result = GetClassifyResult( args );
+                if ( result != null && !string.IsNullOrEmpty(m_DialogId))
                     m_Dialog.Converse(m_DialogId, result.text, OnDialogResponse, 0, m_DialogClientId);
                 else
                     m_TextOutput.SendData(new TextData(m_Hello));
             }
         }
 
-        public void OnSleep(ClassifyResult result)
+        public void OnSleep(object [] args)
         {
             if (Mood != MoodType.SLEEPING)
             {
@@ -402,12 +417,16 @@ namespace IBM.Watson.Widgets.Avatar
             }
         }
 
-        public void OnQuestion(ClassifyResult result)
+        public void OnQuestion(object [] args)
         {
+            ClassifyResult result = GetClassifyResult( args );
+            if ( result == null )
+                throw new WatsonException( "ClassifyResult expected." );
+
             if (Mood != MoodType.SLEEPING)
             {
                 m_ClassifyResult = result;
-                State = AvatarState.ANSWERING;
+                State = AvatarState.LISTENING;
 
                 if (m_ITM.AskQuestion(result.text, OnAskQuestion))
                 {
@@ -421,13 +440,17 @@ namespace IBM.Watson.Widgets.Avatar
             }
         }
 
-        public void OnDialog(ClassifyResult result)
+        public void OnDialog(object [] args)
         {
-            if (Mood != MoodType.SLEEPING)
+            ClassifyResult result = GetClassifyResult( args );
+            if ( result == null )
+                throw new WatsonException( "ClassifyResult expected." );
+
+            if ( Mood != MoodType.SLEEPING)
             {
                 m_ClassifyResult = result;
-                State = AvatarState.LISTENING;
 
+                State = AvatarState.LISTENING;
                 if (!string.IsNullOrEmpty(m_DialogId))
                 {
                     if (m_Dialog.Converse(m_DialogId, result.text, OnDialogResponse,
@@ -439,13 +462,13 @@ namespace IBM.Watson.Widgets.Avatar
             }
         }
 
-        public void OnDebugOn(ClassifyResult result)
+        public void OnDebugOn(object [] args)
         {
             DebugConsole.Instance.Active = true;
             State = AvatarState.LISTENING;
         }
 
-        public void OnDebugOff(ClassifyResult result)
+        public void OnDebugOff(object [] args)
         {
             DebugConsole.Instance.Active = false;
             State = AvatarState.LISTENING;
@@ -545,10 +568,7 @@ namespace IBM.Watson.Widgets.Avatar
         private void InstatiateQuestionWidget()
         {
             if (m_FocusQuestion != null)
-            {
-                m_FocusQuestion.Focused = false;    //lost focus and sent out the scene!
                 m_FocusQuestion.OnLeaveTheSceneAndDestroy();
-            }
 
             if (m_QuestionPrefab != null)	//m_FocusQuestion == null && 
             {
@@ -558,18 +578,6 @@ namespace IBM.Watson.Widgets.Avatar
                     throw new WatsonException("Question prefab is missing QuestionWidget");
                 m_FocusQuestion.QuestionData = this;
                 m_FocusQuestion.Focused = true;	//currently our focus object
-
-                ClassifierWidget myClassifier = GetComponentInChildren<ClassifierWidget>();
-                if (myClassifier != null)
-                {
-                    ClassifierWidget targetClassifier = m_FocusQuestion.GetComponentInChildren<ClassifierWidget>();
-                    if (targetClassifier != null)
-                        myClassifier.ClassifyOutput.TargetInput = targetClassifier.ClassifyInput;
-                    else
-                        Log.Error("AvatarWidget", "QuestionWidget is missing ClassifierWidget.");
-                }
-                else
-                    Log.Error("AvatarWidget", "AvatarWidget is missing ClassifierWidget.");
             }
         }
 

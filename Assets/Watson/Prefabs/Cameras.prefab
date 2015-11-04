@@ -168,8 +168,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e421b0b8c204bd344918bc3963c06ccc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_AutoConnect: 1
   m_Mappings:
-  - m_Event: 8
+  - m_Event: 200
     m_Callback:
       m_Target: {fileID: 172636}
       m_Component: WatsonCamera
@@ -196,55 +197,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 656687ed20c93924d9785528d655ff29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_AutoConnect: 1
   m_Mappings:
   - m_Key: 115
     m_Modifiers: 2
-    m_Callback:
-      m_Target: {fileID: 172636}
-      m_Component: WatsonCamera
-      m_Method: AnimationSpeedUp
+    m_Event: 0
   - m_Key: 102
     m_Modifiers: 2
-    m_Callback:
-      m_Target: {fileID: 172636}
-      m_Component: WatsonCamera
-      m_Method: AnimationSpeedDown
+    m_Event: 0
   - m_Key: 100
     m_Modifiers: 2
-    m_Callback:
-      m_Target: {fileID: 172636}
-      m_Component: WatsonCamera
-      m_Method: AnimationSpeedDefault
+    m_Event: 0
   - m_Key: 112
     m_Modifiers: 2
-    m_Callback:
-      m_Target: {fileID: 172636}
-      m_Component: WatsonCamera
-      m_Method: AnimationPauseResume
+    m_Event: 0
   - m_Key: 113
     m_Modifiers: 2
-    m_Callback:
-      m_Target: {fileID: 172636}
-      m_Component: QualityManager
-      m_Method: OnNextQualityLevel
+    m_Event: 0
   - m_Key: 27
     m_Modifiers: 0
-    m_Callback:
-      m_Target: {fileID: 172636}
-      m_Component: WatsonCamera
-      m_Method: ApplicationQuit
+    m_Event: 0
   - m_Key: 57
     m_Modifiers: 2
-    m_Callback:
-      m_Target: {fileID: 172636}
-      m_Component: WatsonCamera
-      m_Method: ZoomOut
+    m_Event: 0
   - m_Key: 48
     m_Modifiers: 2
-    m_Callback:
-      m_Target: {fileID: 172636}
-      m_Component: WatsonCamera
-      m_Method: ZoomIn
+    m_Event: 0
 --- !u!114 &11467584
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -256,6 +234,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9d6f7b4cab98524a8956e9ad270ecda, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_AutoConnect: 1
   m_TapMappings: []
   m_FullScreenDragMappings:
   - m_NumberOfFinger: 2

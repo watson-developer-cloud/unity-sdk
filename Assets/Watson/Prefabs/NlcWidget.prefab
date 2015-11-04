@@ -22,8 +22,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 150770}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 607, y: 418, z: 0}
+  m_LocalRotation: {x: 0, y: -.819152117, z: 0, w: .573576331}
+  m_LocalPosition: {x: -207.606384, y: 418, z: 570.393372}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -39,15 +39,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cef7f2b9e6b24041a94bde309b342ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AutoConnect: 1
-  m_TopClassOutput:
-    m_TargetObject: {fileID: 0}
-    m_TargetConnection: 
+  m_AutoConnect: 0
   m_ClassifyOutput:
     m_TargetObject: {fileID: 0}
-    m_TargetConnection: 
+    m_TargetConnection: Classifier/Classified
   m_ClassifierId: 98C19Ex4-nlc-407
-  m_SendAsEvent: 1
+  m_MinWordConfidence: .40000000000000002
+  m_IgnoreWordConfidence: .20000000000000001
+  m_ClassEventList:
+  - m_Class: wakeup
+    m_Event: 403
+  - m_Class: sleep
+    m_Event: 404
+  - m_Class: question
+    m_Event: 401
+  - m_Class: dialog
+    m_Event: 401
+  - m_Class: debug_on
+    m_Event: 405
+  - m_Class: debug_off
+    m_Event: 406
+  - m_Class: fold
+    m_Event: 407
+  - m_Class: unfold
+    m_Event: 408
+  - m_Class: answers
+    m_Event: 409
+  - m_Class: evidence
+    m_Event: 410
+  - m_Class: chat
+    m_Event: 411
+  - m_Class: parse
+    m_Event: 412
+  - m_Class: location
+    m_Event: 413
   m_TopClassText: {fileID: 0}
 --- !u!1001 &100100000
 Prefab:
