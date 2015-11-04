@@ -80,7 +80,7 @@ namespace IBM.Watson.Widgets
         /// </summary>
         public void OnToggleActive()
         {
-            Active = !Active;
+            Active = !Active;       
         }
         #endregion
 
