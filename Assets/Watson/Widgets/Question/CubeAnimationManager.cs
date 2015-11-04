@@ -107,7 +107,7 @@ public class CubeAnimationManager : MonoBehaviour {
     private bool m_isRotating = true;
 
 	public float timeForComingToScene = 1.0f;
-	private float timeForLeavingTheScene = 5.0f;
+	private float timeForLeavingTheScene = 1.0f;
 	public LeanTweenType easeForComingToScene = LeanTweenType.easeOutElastic;
 	public LeanTweenType easeForGoingFromScene = LeanTweenType.easeOutCirc;
 	public float timeForFoldingUnfolding = 1.0f;
@@ -584,31 +584,31 @@ public class CubeAnimationManager : MonoBehaviour {
 	}
 
 	public void LeaveTheSceneAndDestroy(){
-        //StopAllCubeAnimations ();
-        //timeForFoldingUnfolding = timeForFoldingUnfolding / 2.0f;
-        //timeForFocusing = timeForFocusing / 2.0f;
-        easeForUnfocusing = LeanTweenType.easeInCubic;
-        easeForFolding = LeanTweenType.linear;
-        easeForUnfolding = LeanTweenType.linear;
+        StopAllCubeAnimations ();
+        //timeForFoldingUnfolding = 0.4f;
+        //timeForFocusing = 0.4f;
+        //easeForUnfocusing = LeanTweenType.easeInCubic;
+        //easeForFolding = LeanTweenType.linear;
+        //easeForUnfolding = LeanTweenType.linear;
 
-        if (AnimationState == CubeAnimationState.FOCUSING_TO_SIDE || AnimationState == CubeAnimationState.IDLE_AS_FOCUSED)
-        {
-            AnimateUnfocus(AnimateFold, null, AnimateDestroyingCube);
-        }
-        else if(AnimationState == CubeAnimationState.UNFOLDING || AnimationState == CubeAnimationState.IDLE_AS_UNFOLDED || AnimationState == CubeAnimationState.FOLDING)
-        {
-            AnimateFold(AnimateDestroyingCube, null);
-        }
-        else if (AnimationState == CubeAnimationState.GOING_FROM_SCENE)
-        {
-            //do nothing - it is going from scene
-        }
-        else
-        {
-            AnimateDestroyingCube(true);
-        }
+        //if (AnimationState == CubeAnimationState.FOCUSING_TO_SIDE || AnimationState == CubeAnimationState.IDLE_AS_FOCUSED)
+        //{
+        //    AnimateUnfocus(AnimateFold, null, AnimateDestroyingCube);
+        //}
+        //else if(AnimationState == CubeAnimationState.UNFOLDING || AnimationState == CubeAnimationState.IDLE_AS_UNFOLDED || AnimationState == CubeAnimationState.FOLDING)
+        //{
+        //    AnimateFold(AnimateDestroyingCube, null);
+        //}
+        //else if (AnimationState == CubeAnimationState.GOING_FROM_SCENE)
+        //{
+        //    //do nothing - it is going from scene
+        //}
+        //else
+        //{
+        //    AnimateDestroyingCube(true);
+        //}
 
-        //AnimateDestroyingCube (true);
+        AnimateDestroyingCube (true);
 	}
 
     private void AnimateDestroyingCube(System.Object destroy)
