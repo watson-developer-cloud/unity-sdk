@@ -195,6 +195,26 @@ MonoBehaviour:
       m_Target: {fileID: 172636}
       m_Component: WatsonCamera
       m_Method: ApplicationQuit
+  - m_Event: 309
+    m_Callback:
+      m_Target: {fileID: 172636}
+      m_Component: WatsonCamera
+      m_Method: MoveLeft
+  - m_Event: 310
+    m_Callback:
+      m_Target: {fileID: 172636}
+      m_Component: WatsonCamera
+      m_Method: MoveRight
+  - m_Event: 311
+    m_Callback:
+      m_Target: {fileID: 172636}
+      m_Component: WatsonCamera
+      m_Method: MoveUp
+  - m_Event: 312
+    m_Callback:
+      m_Target: {fileID: 172636}
+      m_Component: WatsonCamera
+      m_Method: MoveDown
 --- !u!114 &11450530
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -243,6 +263,18 @@ MonoBehaviour:
   - m_Key: 48
     m_Modifiers: 2
     m_Event: 307
+  - m_Key: 276
+    m_Modifiers: 2
+    m_Event: 309
+  - m_Key: 275
+    m_Modifiers: 2
+    m_Event: 310
+  - m_Key: 273
+    m_Modifiers: 2
+    m_Event: 311
+  - m_Key: 274
+    m_Modifiers: 2
+    m_Event: 312
 --- !u!114 &11467584
 MonoBehaviour:
   m_ObjectHideFlags: 1
