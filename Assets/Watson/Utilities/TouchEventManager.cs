@@ -241,7 +241,7 @@ namespace IBM.Watson.Utilities
 						for (int i = 0; i < kp.Value.Count; ++i) {
 							TouchEventData dragEventData = kp.Value [i];
 								
-							if (dragEventData.DragCallback == null) {
+							if (dragEventData.DragCallback == Constants.Event.NONE) {
 								Log.Warning ("TouchEventManager", "Removing invalid event receiver from OneFingerDrag");
 								kp.Value.RemoveAt (i--);
 								continue;
@@ -263,7 +263,7 @@ namespace IBM.Watson.Utilities
 
 				}
 
-				if(dragEventToFire != null && dragEventToFire.DragCallback != null)
+				if(dragEventToFire != null && dragEventToFire.DragCallback != Constants.Event.NONE)
 					EventManager.Instance.SendEvent(dragEventToFire.DragCallback, m_OneFingerMoveGesture);
 					//dragEventToFire.DragCallback(m_OneFingerManipulationGesture);
 
@@ -283,7 +283,7 @@ namespace IBM.Watson.Utilities
 						for (int i = 0; i < kp.Value.Count; ++i) {
 							TouchEventData dragEventData = kp.Value [i];
 							
-							if (dragEventData.DragCallback == null) {
+							if (dragEventData.DragCallback == Constants.Event.NONE) {
 								Log.Warning ("TouchEventManager", "Removing invalid event receiver from TwoFingerDrag");
 								kp.Value.RemoveAt (i--);
 								continue;
@@ -305,7 +305,7 @@ namespace IBM.Watson.Utilities
 					
 				}
 				
-				if(dragEventToFire != null && dragEventToFire.DragCallback != null)
+				if(dragEventToFire != null && dragEventToFire.DragCallback != Constants.Event.NONE)
 					EventManager.Instance.SendEvent(dragEventToFire.DragCallback, m_TwoFingerMoveGesture);
 					//dragEventToFire.DragCallback(m_TwoFingerMoveGesture);
 				
@@ -390,7 +390,7 @@ namespace IBM.Watson.Utilities
 					{
 						TouchEventData tapEventData = kp.Value[i];
 
-						if (tapEventData.TapCallback == null)
+						if (tapEventData.TapCallback == Constants.Event.NONE)
 						{
 							Log.Warning("TouchEventManager", "Removing invalid event receiver from TapEventList");
 							kp.Value.RemoveAt(i--);
@@ -442,7 +442,7 @@ namespace IBM.Watson.Utilities
 
 				}
 
-				if(tapEventToFire != null && tapEventToFire.TapCallback != null)
+				if(tapEventToFire != null && tapEventToFire.TapCallback != Constants.Event.NONE)
 					EventManager.Instance.SendEvent(tapEventToFire.TapCallback, m_TapGesture, tapEventToFire.Collider.transform);
 					//tapEventToFire.TapCallback(m_TapGesture, tapEventToFire.Collider.transform);
 

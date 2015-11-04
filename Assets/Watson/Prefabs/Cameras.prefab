@@ -180,6 +180,21 @@ MonoBehaviour:
       m_Target: {fileID: 172636}
       m_Component: WatsonCamera
       m_Method: DragTwoFinger
+  - m_Event: 307
+    m_Callback:
+      m_Target: {fileID: 172636}
+      m_Component: WatsonCamera
+      m_Method: ZoomIn
+  - m_Event: 308
+    m_Callback:
+      m_Target: {fileID: 172636}
+      m_Component: WatsonCamera
+      m_Method: ZoomOut
+  - m_Event: 6
+    m_Callback:
+      m_Target: {fileID: 172636}
+      m_Component: WatsonCamera
+      m_Method: ApplicationQuit
 --- !u!114 &11450530
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -206,28 +221,28 @@ MonoBehaviour:
   m_Mappings:
   - m_Key: 115
     m_Modifiers: 2
-    m_Event: 0
+    m_Event: 304
   - m_Key: 102
     m_Modifiers: 2
-    m_Event: 0
+    m_Event: 303
   - m_Key: 100
     m_Modifiers: 2
-    m_Event: 0
+    m_Event: 305
   - m_Key: 112
     m_Modifiers: 2
-    m_Event: 0
+    m_Event: 301
   - m_Key: 113
     m_Modifiers: 2
-    m_Event: 0
+    m_Event: 4
   - m_Key: 27
     m_Modifiers: 0
-    m_Event: 0
+    m_Event: 6
   - m_Key: 57
     m_Modifiers: 2
-    m_Event: 0
+    m_Event: 308
   - m_Key: 48
     m_Modifiers: 2
-    m_Event: 0
+    m_Event: 307
 --- !u!114 &11467584
 MonoBehaviour:
   m_ObjectHideFlags: 1

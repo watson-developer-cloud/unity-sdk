@@ -153,7 +153,8 @@ public class WatsonCamera : MonoBehaviour {
 			AnimationResume();
 	}
 
-	public void ApplicationQuit(){
+	public void ApplicationQuit(System.Object[] args = null)
+    {
 		Application.Quit ();
 	}
 

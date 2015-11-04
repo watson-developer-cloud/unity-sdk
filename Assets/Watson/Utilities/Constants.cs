@@ -73,6 +73,10 @@ namespace IBM.Watson.Utilities
             /// Event after Quality Settings change
             /// </summary>
             ON_CHANGE_QUALITY_FINISH,
+            /// <summary>
+            /// Event to close the application
+            /// </summary>
+            ON_APPLICATION_QUIT,
             #endregion
 
             #region Avatar 
@@ -142,6 +146,31 @@ namespace IBM.Watson.Utilities
             /// Event to drag camera with two finger to zoom and pan
             /// </summary>
             ON_CAMERA_DRAG_TWO_FINGER,
+            /// <summary>
+            /// Event to zoom-in camera
+            /// </summary>
+            ON_CAMERA_ZOOM_IN,
+            /// <summary>
+            /// Event to zoom-out camera
+            /// </summary>
+            ON_CAMERA_ZOOM_OUT,
+            /// <summary>
+            /// Event to move the camera left
+            /// </summary>
+            ON_CAMERA_MOVE_LEFT,
+            /// <summary>
+            /// Event to move the camera right
+            /// </summary>
+            ON_CAMERA_MOVE_RIGHT,
+            /// <summary>
+            /// Event to move the camera up
+            /// </summary>
+            ON_CAMERA_MOVE_UP,
+            /// <summary>
+            /// Event to move the camera down
+            /// </summary>
+            ON_CAMERA_MOVE_DOWN,
+            
             #endregion
 
             #region NLC
@@ -204,6 +233,7 @@ namespace IBM.Watson.Utilities
             ON_COMMAND_LOCATION,
 
             #endregion
+            
         }
 
         /// <summary>
