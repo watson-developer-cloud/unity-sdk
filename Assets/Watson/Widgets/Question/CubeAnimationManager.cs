@@ -214,7 +214,7 @@ public class CubeAnimationManager : MonoBehaviour {
 		m_initialLocalScale = transform.localScale;
         m_InitialStationaryRotationSpeed = statinoaryRotationSpeed;
 
-        m_initialPositionMainCamera = Camera.main.transform.position;
+        m_initialPositionMainCamera = new Vector3(0, 17.5f, -135);
         m_initialLocalRotation = transform.localRotation;
 
         if (avatarGameobject == null) {
