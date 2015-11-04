@@ -175,6 +175,11 @@ MonoBehaviour:
       m_Target: {fileID: 172636}
       m_Component: WatsonCamera
       m_Method: ResetCameraPosition
+  - m_Event: 306
+    m_Callback:
+      m_Target: {fileID: 172636}
+      m_Component: WatsonCamera
+      m_Method: DragTwoFinger
 --- !u!114 &11450530
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -240,7 +245,7 @@ MonoBehaviour:
   - m_DragObject: {fileID: 172636}
     m_NumberOfFinger: 2
     m_SortingLayer: 0
-    m_Callback: -1
+    m_Callback: 306
 --- !u!114 &11489266
 MonoBehaviour:
   m_ObjectHideFlags: 1
