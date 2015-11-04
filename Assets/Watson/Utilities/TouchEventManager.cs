@@ -180,6 +180,17 @@ namespace IBM.Watson.Utilities
 			m_TwoFingerMoveGesture.Transformed += TwoFingerTransformedHandler;
 		}
 
+        public UnityEngine.Camera MainCamera
+        {
+            get
+            {
+                if(m_mainCamera == null)
+                    m_mainCamera = UnityEngine.Camera.main;
+
+                return m_mainCamera;
+            }
+        }
+
 
 		#endregion
 
@@ -381,7 +392,7 @@ namespace IBM.Watson.Utilities
 				foreach (var kp in m_TapEvents)
 				{
 				
-					Ray rayForTab = m_mainCamera.ScreenPointToRay(m_TapGesture.ScreenPosition);
+					Ray rayForTab = MainCamera.ScreenPointToRay(m_TapGesture.ScreenPosition);
 					RaycastHit hit;
 					bool isHitOnLayer = Physics.Raycast(rayForTab, out hit, Mathf.Infinity, 1 << kp.Key);
 
