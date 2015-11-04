@@ -4237,7 +4237,7 @@ GameObject:
   - 114: {fileID: 11433944}
   - 114: {fileID: 11496976}
   - 114: {fileID: 11498132}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: QuestionWidget
   m_TagString: QuestionOnFocus
   m_Icon: {fileID: 0}
@@ -20102,7 +20102,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 165892}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b9d6f7b4cab98524a8956e9ad270ecda, type: 3}
   m_Name: 
@@ -20112,18 +20112,16 @@ MonoBehaviour:
   - m_TapObject: {fileID: 165892}
     m_TapOnObject: 1
     m_SortingLayer: 0
-    m_Callback:
-      m_Target: {fileID: 165892}
-      m_Component: QuestionWidget
-      m_Method: OnTapInside
+    m_Callback: 201
   - m_TapObject: {fileID: 165892}
     m_TapOnObject: 0
     m_SortingLayer: 0
-    m_Callback:
-      m_Target: {fileID: 165892}
-      m_Component: QuestionWidget
-      m_Method: OnTapOutside
-  m_FullScreenDragMappings: []
+    m_Callback: 202
+  m_FullScreenDragMappings:
+  - m_DragObject: {fileID: 165892}
+    m_NumberOfFinger: 1
+    m_SortingLayer: 0
+    m_Callback: 203
 --- !u!114 &11497156
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -20220,7 +20218,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e421b0b8c204bd344918bc3963c06ccc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AutoConnect: 1
+  m_AutoConnect: 0
   m_Mappings:
   - m_Event: 407
     m_Callback:
@@ -20257,6 +20255,21 @@ MonoBehaviour:
       m_Target: {fileID: 165892}
       m_Component: QuestionWidget
       m_Method: OnDisplayLocation
+  - m_Event: 201
+    m_Callback:
+      m_Target: {fileID: 165892}
+      m_Component: QuestionWidget
+      m_Method: OnTapInside
+  - m_Event: 202
+    m_Callback:
+      m_Target: {fileID: 165892}
+      m_Component: QuestionWidget
+      m_Method: OnTapOutside
+  - m_Event: 203
+    m_Callback:
+      m_Target: {fileID: 165892}
+      m_Component: QuestionWidget
+      m_Method: DragOneFinger
 --- !u!114 &11498338
 MonoBehaviour:
   m_ObjectHideFlags: 1
