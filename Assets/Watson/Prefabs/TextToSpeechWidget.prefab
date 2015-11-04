@@ -116,7 +116,7 @@ MonoBehaviour:
     m_TargetConnection: Microphone/Disable
   m_LevelOut:
     m_TargetObject: {fileID: 0}
-    m_TargetConnection: Avatar/Level
+    m_TargetConnection: 
   m_LevelOutInterval: .0500000007
   m_TextToSpeechButton: {fileID: 0}
   m_Input: {fileID: 0}
@@ -134,6 +134,10 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_AutoConnect
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_LevelOut.m_TargetConnection
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

@@ -201,8 +201,7 @@ MonoBehaviour:
   useSendMessage: 0
   sendMessageEvents: 60
   sendMessageTarget: {fileID: 0}
-  layers:
-  - {fileID: 0}
+  layers: []
 --- !u!114 &11447296
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -290,7 +289,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 0}
       propertyPath: layers.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: layers.Array.data[0]

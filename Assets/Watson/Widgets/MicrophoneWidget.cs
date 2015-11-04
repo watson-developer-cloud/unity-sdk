@@ -108,8 +108,8 @@ namespace IBM.Watson.Widgets
 
         [SerializeField]
         private bool m_ActivateOnStart = true;
-        [SerializeField]
-        private Input m_ActivateInput = new Input("Activate", typeof(BooleanData), "OnActivateInput");
+        //[SerializeField]
+        //private Input m_ActivateInput = new Input("Activate", typeof(BooleanData), "OnActivateInput");
         [SerializeField]
         private Input m_DisableInput = new Input("Disable", typeof(BooleanData), "OnDisableInput");
         [SerializeField]

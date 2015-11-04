@@ -219,6 +219,10 @@ namespace IBM.Watson.Widgets.Avatar
             DebugConsole.Instance.UnregisterDebugInfo("A", OnAnwserDebugInfo);
         }
 
+        protected override void Awake()
+        {
+            base.Awake();
+        }
         /// <exclude />
         protected override void Start()
         {
