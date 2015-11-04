@@ -113,7 +113,7 @@ namespace IBM.Watson.Utilities
 			ON_QUESTIONCUBE_DRAG_ONE_FINGER,
             #endregion
 
-            #region Animation
+            #region Animation / Camera
             /// <summary>
             /// Event to Stop the all animations
             /// </summary>
@@ -138,6 +138,10 @@ namespace IBM.Watson.Utilities
             /// Event to set the default speed on animations
             /// </summary>
             ON_ANIMATION_SPEED_DEFAULT,
+            /// <summary>
+            /// Event to drag camera with two finger to zoom and pan
+            /// </summary>
+            ON_CAMERA_DRAG_TWO_FINGER,
             #endregion
 
             #region NLC
