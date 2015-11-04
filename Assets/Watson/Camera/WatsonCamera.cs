@@ -112,12 +112,12 @@ public class WatsonCamera : MonoBehaviour {
 
     public void ZoomIn(System.Object[] args)
     {
-        m_TargetCameraLocation += transform.forward * m_ZoomSpeed * 100.0f;
+        m_TargetCameraLocation += transform.forward * m_ZoomSpeed;
     }
 
     public void ZoomOut(System.Object[] args)
     {
-        m_TargetCameraLocation += transform.forward * m_ZoomSpeed * -1.0f * 100.0f;
+        m_TargetCameraLocation += transform.forward * m_ZoomSpeed * -1.0f;
     }
 
     #endregion
