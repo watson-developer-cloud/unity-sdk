@@ -201,32 +201,22 @@ namespace IBM.Watson.Widgets.Avatar
         void OnEnable()
         {
             EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_CHANGE_AVATAR_MOOD, OnChangeMood);
-            EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_DEBUG_COMMAND, OnDebugCommand);
 
             DebugConsole.Instance.RegisterDebugInfo("STATE", OnStateDebugInfo);
             DebugConsole.Instance.RegisterDebugInfo("MOOD", OnMoodDebugInfo);
             DebugConsole.Instance.RegisterDebugInfo("CLASS", OnClassifyDebugInfo);
             DebugConsole.Instance.RegisterDebugInfo("Q", OnQuestionDebugInfo);
             DebugConsole.Instance.RegisterDebugInfo("A", OnAnwserDebugInfo);
-
-            //KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.QUESTION_WAKEUP, Constants.KeyCodes.MODIFIER_KEY, OnExampleQuestion);
-            //KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CHANGE_MOOD, Constants.KeyCodes.MODIFIER_KEY, OnNextMood);
-
         }
         void OnDisable()
         {
-
             EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_CHANGE_AVATAR_MOOD, OnChangeMood);
-            EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_DEBUG_COMMAND, OnDebugCommand);
 
             DebugConsole.Instance.UnregisterDebugInfo("STATE", OnStateDebugInfo);
             DebugConsole.Instance.UnregisterDebugInfo("MOOD", OnMoodDebugInfo);
             DebugConsole.Instance.UnregisterDebugInfo("CLASS", OnClassifyDebugInfo);
             DebugConsole.Instance.UnregisterDebugInfo("Q", OnQuestionDebugInfo);
             DebugConsole.Instance.UnregisterDebugInfo("A", OnAnwserDebugInfo);
-
-            //KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.QUESTION_WAKEUP, Constants.KeyCodes.MODIFIER_KEY, OnExampleQuestion);
-            //KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CHANGE_MOOD, Constants.KeyCodes.MODIFIER_KEY, OnNextMood);
         }
 
         /// <exclude />
@@ -238,25 +228,6 @@ namespace IBM.Watson.Widgets.Avatar
             State = AvatarState.CONNECTING;
 
             StartAvatar();
-        }
-
-        private void OnDebugCommand(object[] args)
-        {
-            if (State != AvatarState.ERROR)
-            {
-                if (args.Length > 0 && args[0] is string)
-                {
-                    string text = args[0] as string;
-                    if (!string.IsNullOrEmpty(text))
-                    {
-                        State = AvatarState.THINKING;
-
-                        NlcWidget nlc = GetComponentInChildren<NlcWidget>();
-                        if (nlc != null)
-                            nlc.ClassifyText(text);
-                    }
-                }
-            }
         }
 
         private string OnStateDebugInfo()

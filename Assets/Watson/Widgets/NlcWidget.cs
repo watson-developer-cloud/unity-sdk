@@ -66,13 +66,7 @@ namespace IBM.Watson.Widgets
         public NLC NLC { get { return m_NLC; } }
         #endregion
 
-        public void ClassifyText( string text )
-        {
-            if (!m_NLC.Classify(m_ClassifierId, text, OnClassified))
-                Log.Error("AvatarWidget", "Failed to send {0} to NLC.", text);
-        }
-
-        #region MonoBehaviour interface
+         #region MonoBehaviour interface
         /// <exclude />
         protected override void Start()
 	    {
@@ -115,6 +109,9 @@ namespace IBM.Watson.Widgets
 
 	    private void OnClassified(ClassifyResult result)
 	    {
+            if ( m_ClassifyOutput.IsConnected )
+                m_ClassifyOutput.SendData( new ClassifyResultData( result ) );
+
             if ( result != null )
             {
                 Log.Debug( "NlcWidget", "OnClassified: {0} ({1:0.00})", result.top_class, result.topConfidence );
@@ -143,5 +140,15 @@ namespace IBM.Watson.Widgets
             }
 	    }
 
-	}
+        #region Event Handlers
+        public void OnDebugCommand( object [] args )
+        {
+            if ( args != null && args.Length > 0 && args[0] is string )
+            {
+                if (!m_NLC.Classify(m_ClassifierId, (string)args[0], OnClassified))
+                    Log.Error("AvatarWidget", "Failed to send {0} to NLC.", (string)args[0]);
+            }
+        }
+        #endregion
+    }
 }

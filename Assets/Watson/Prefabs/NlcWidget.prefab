@@ -9,6 +9,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 434176}
   - 114: {fileID: 11489316}
+  - 114: {fileID: 11416770}
   m_Layer: 0
   m_Name: NlcWidget
   m_TagString: Untagged
@@ -28,6 +29,24 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
+--- !u!114 &11416770
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 150770}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e421b0b8c204bd344918bc3963c06ccc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AutoConnect: 1
+  m_Mappings:
+  - m_Event: 0
+    m_Callback:
+      m_Target: {fileID: 150770}
+      m_Component: NlcWidget
+      m_Method: OnDebugCommand
 --- !u!114 &11489316
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -39,7 +58,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cef7f2b9e6b24041a94bde309b342ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AutoConnect: 0
+  m_AutoConnect: 1
   m_ClassifyOutput:
     m_TargetObject: {fileID: 0}
     m_TargetConnection: Classifier/Classified
@@ -88,6 +107,10 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[3].m_Event
       value: 402
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_AutoConnect
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
