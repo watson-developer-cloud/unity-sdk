@@ -1289,7 +1289,7 @@ public static void init(int maxSimultaneousTweens){
 		tweens = new LTDescr[maxTweens];
 		tweensFinished = new int[maxTweens];
 		_tweenEmpty = new GameObject();
-		_tweenEmpty.name = "~LeanTween";
+		_tweenEmpty.name = "_LeanTween";
 		_tweenEmpty.AddComponent(typeof(LeanTween));
 		_tweenEmpty.isStatic = true;
 		#if !UNITY_EDITOR
