@@ -265,8 +265,10 @@ namespace IBM.Watson.Editor
                         if (!string.IsNullOrEmpty(www.text))
                         {
                             IDictionary json = MiniJSON.Json.Deserialize(www.text) as IDictionary;
-                            if (json.Contains("status"))
+                            if ( json != null && json.Contains("status"))
                                 bRegistered = (long)json["status"] != 0;
+                            else
+                                Log.Error( "ConfigEditor", "Invalid response from gateway: {0}", www.text );
                         }
 
                         if (bRegistered)
