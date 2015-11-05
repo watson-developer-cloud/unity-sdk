@@ -30,6 +30,9 @@ namespace IBM.Watson.Widgets.Question
         [SerializeField]
         private Text m_LocationText;
 
+		[SerializeField]
+		private RectTransform m_MapDotRectTransform;
+
         private string m_LocationString;
         public string LocationString
         {
