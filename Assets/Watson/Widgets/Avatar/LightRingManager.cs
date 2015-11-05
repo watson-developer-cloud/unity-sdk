@@ -65,9 +65,12 @@ namespace IBM.Watson.Widgets.Avatar
         }
 
         /// <exclude />
-        protected override void Start()
+		protected override void Start()
         {
-            base.Start();
+			base.Start ();
+
+			if(m_AvatarWidgetAttached == null)
+				m_AvatarWidgetAttached = this.transform.GetComponentInParent<AvatarWidget>();
 
             m_ListFlareBezierPathList = new Vector3[3][];
 
@@ -113,6 +116,11 @@ namespace IBM.Watson.Widgets.Avatar
                 m_SharedMaterialLightFlare = m_LightFlareChild[0].transform.GetComponent<MeshRenderer>().sharedMaterial;
                 m_TintColorSharedMaterialLightFlareInitial = m_SharedMaterialLightFlare.GetColor("_TintColor");
             }
+
+			if (m_AvatarWidgetAttached != null) {
+				ChangedMood(m_AvatarWidgetAttached.MoodColor, m_AvatarWidgetAttached.MoodTimeModifier);
+				ChangedBehavior(m_AvatarWidgetAttached.BehaviourColor, m_AvatarWidgetAttached.BehaviorTimeModifier);
+			}
         }
 
         #endregion

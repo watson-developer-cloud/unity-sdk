@@ -18,6 +18,8 @@ public class AvatarAnimationManager : WatsonBaseAnimationManager {
 
 	[SerializeField]
 	private Vector3 m_AvatarMoveDown;
+	[SerializeField]
+	private LeanTweenType m_EaseOnAvatarMovement = LeanTweenType.easeInOutCubic;
 	
 	#region Private Members
 	private float m_AnimationSpeedModifier = 1.0f;
@@ -141,35 +143,47 @@ public class AvatarAnimationManager : WatsonBaseAnimationManager {
 	
 	#endregion
 
-	#region Avatar Movements Up / Down / Left / Right
+	#region Avatar Movements Up / Down / Left / Right - Event
 
-	void AnimateMoveDefault(){
+	public void AnimateMoveDefault(System.Object[] args = null){
 		if (m_AnimationMoveDefault != null) 
 		{
 			LeanTween.cancel(m_AnimationMoveDefault.uniqueId);
 		}
 		
-		m_AnimationMoveDefault =	LeanTween.moveLocalY (gameObject, 0.0f, m_AnimationTime);
+		float animationTime = m_AnimationTime;
+		if (args != null && args.Length == 1 && float.TryParse(args[0].ToString(), out animationTime)) {
+			//animation time come as argument
+			
+		}
+		
+		m_AnimationMoveDefault = LeanTween.moveLocalY (gameObject, 0.0f, animationTime).setEase(m_EaseOnAvatarMovement);
 		
 	}
 	
-	void StopAnimateMoveDefault(){
+	public void StopAnimateMoveDefault(System.Object[] args = null){
 		if (m_AnimationMoveDefault != null) 
 		{
 			LeanTween.cancel(m_AnimationMoveDefault.uniqueId);
 		}
 	}
 
-	void AnimateMoveDown(){
+	public void AnimateMoveDown(System.Object[] args = null){
 		if (m_AnimationMoveDown != null) 
 		{
 			LeanTween.cancel(m_AnimationMoveDown.uniqueId);
 		}
 		
-		m_AnimationMoveDown =	LeanTween.moveLocalY (gameObject, m_AvatarMoveDown.y, m_AnimationTime);
+		float animationTime = m_AnimationTime;
+			if (args != null && args.Length == 1 && float.TryParse(args[0].ToString(), out animationTime)) {
+			//animation time come as argument
+			
+		}
+
+		m_AnimationMoveDown =	LeanTween.moveLocalY (gameObject, m_AvatarMoveDown.y, animationTime).setEase(m_EaseOnAvatarMovement);
 	}
 	
-	void StopAnimateMoveDown(){
+	public void StopAnimateMoveDown(System.Object[] args = null){
 		if (m_AnimationMoveDown != null) 
 		{
 			LeanTween.cancel(m_AnimationMoveDown.uniqueId);

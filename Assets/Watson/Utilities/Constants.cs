@@ -96,6 +96,22 @@ namespace IBM.Watson.Utilities
             /// Event after Avatar state change
             /// </summary>
             ON_CHANGE_AVATAR_STATE_FINISH,
+			/// <summary>
+			/// Event to avatar move down
+			/// </summary>
+			ON_AVATAR_MOVE_DOWN,
+			/// <summary>
+			/// The event to move the avatar initial position
+			/// </summary>
+			ON_AVATAR_MOVE_DEFAULT,
+			/// <summary>
+			/// Event to stop avatar move down
+			/// </summary>
+			ON_AVATAR_STOP_MOVE_DOWN,
+			/// <summary>
+			/// The event to stop move the avatar initial position
+			/// </summary>
+			ON_AVATAR_STOP_MOVE_DEFAULT,
             #endregion
 
             #region Question
