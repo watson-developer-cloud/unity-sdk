@@ -28,20 +28,18 @@ namespace IBM.Watson.Widgets.Avatar
     {
 
         #region Private Variables
-		[SerializeField]
-		float m_AnimationTime = 1.0f;
-
-        Material m_GlassRingMaterial;
-        Color m_InitialColorOfGlassRingMaterial;
-
-		LTDescr m_ColorAnimationOnGlass = null;
-		LTDescr m_ColorAnimationOnGlassLoop = null;
-		Color m_LastColorUsedInAnimation = Color.white;
+        [SerializeField]
+        private float m_AnimationTime = 1.0f;
+        private Material m_GlassRingMaterial;
+        private Color m_InitialColorOfGlassRingMaterial;
+        private LTDescr m_ColorAnimationOnGlass = null;
+        private LTDescr m_ColorAnimationOnGlassLoop = null;
+        private Color m_LastColorUsedInAnimation = Color.white;
         #endregion
 
         #region OnEnable / OnDisable / OnApplicationQuit / Awake
 
-        void OnApplicationQuit()
+        private void OnApplicationQuit()
         {
             if (m_GlassRingMaterial != null)
             {
@@ -49,11 +47,14 @@ namespace IBM.Watson.Widgets.Avatar
             }
         }
 
-        protected override void Awake()
+        /// <exclude />
+		protected override void Start()
         {
-            base.Awake();
+			base.Start ();
 
-            m_AvatarWidgetAttached = this.transform.GetComponentInParent<AvatarWidget>();
+			if(m_AvatarWidgetAttached == null)
+           		m_AvatarWidgetAttached = this.transform.GetComponentInParent<AvatarWidget>();
+
             if (m_AvatarWidgetAttached != null)
             {
                 MeshRenderer childMeshRenderer = transform.GetComponentInChildren<MeshRenderer>();
@@ -74,40 +75,48 @@ namespace IBM.Watson.Widgets.Avatar
                 this.enabled = false;
             }
 
+			if (m_AvatarWidgetAttached != null) {
+				ChangedBehavior(m_AvatarWidgetAttached.BehaviourColor, m_AvatarWidgetAttached.BehaviorTimeModifier);
+			}
+
         }
 
         #endregion
 
         #region Changing Mood / Avatar State
 
+        /// <summary>
+        /// Event handler for ON_CHANGE_AVATAR_MOOD_FINISH
+        /// </summary>
+        /// <param name="color"></param>
+        /// <param name="timeModifier"></param>
         public override void ChangedBehavior(Color color, float timeModifier)
         {
             if (m_GlassRingMaterial != null)
             {
-				if(m_ColorAnimationOnGlass != null){
-					LeanTween.cancel(m_ColorAnimationOnGlass.uniqueId);
-				}
+                if (m_ColorAnimationOnGlass != null)
+                    LeanTween.cancel(m_ColorAnimationOnGlass.uniqueId);
 
                 if (m_ColorAnimationOnGlassLoop != null)
-                {
                     LeanTween.cancel(m_ColorAnimationOnGlassLoop.uniqueId);
-                }
 
-				m_ColorAnimationOnGlass = LeanTween.value(gameObject, m_LastColorUsedInAnimation, color, m_AnimationTime).setOnUpdateColor(
-					(Color colorToFadeIn)=>{
-						m_LastColorUsedInAnimation = colorToFadeIn;
-						m_GlassRingMaterial.SetColor("_SpecColor", colorToFadeIn);
-					}).setOnComplete(
-					()=>{
+                m_ColorAnimationOnGlass = LeanTween.value(gameObject, m_LastColorUsedInAnimation, color, m_AnimationTime).setOnUpdateColor(
+                    (Color colorToFadeIn) =>
+                    {
+                        m_LastColorUsedInAnimation = colorToFadeIn;
+                        m_GlassRingMaterial.SetColor("_SpecColor", colorToFadeIn);
+                    }).setOnComplete(
+                    () =>
+                    {
 
-					m_ColorAnimationOnGlassLoop = LeanTween.value(gameObject, color, Color.white, m_AnimationTime * timeModifier).setLoopPingPong().setOnUpdateColor(
-						(Color colorToLoop) =>
-						{
-							m_GlassRingMaterial.SetColor("_SpecColor", colorToLoop);
-							m_LastColorUsedInAnimation = colorToLoop;
-						});	
+                        m_ColorAnimationOnGlassLoop = LeanTween.value(gameObject, color, Color.white, m_AnimationTime * timeModifier).setLoopPingPong().setOnUpdateColor(
+                            (Color colorToLoop) =>
+                            {
+                                m_GlassRingMaterial.SetColor("_SpecColor", colorToLoop);
+                                m_LastColorUsedInAnimation = colorToLoop;
+                            });
 
-					});
+                    });
 
             }
         }

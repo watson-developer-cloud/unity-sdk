@@ -31,6 +31,9 @@ GameObject:
   - 114: {fileID: 11489266}
   - 114: {fileID: 11407234}
   - 114: {fileID: 11455830}
+  - 114: {fileID: 11450530}
+  - 114: {fileID: 11467584}
+  - 114: {fileID: 11444306}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -122,6 +125,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74c0bab87d781b945b00b58d8eca8f76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_PanSpeed: .0700000003
+  m_ZoomSpeed: 20
+  m_SpeedForCameraAnimation: 2
 --- !u!114 &11430054
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -151,6 +157,75 @@ MonoBehaviour:
   dx11BokehTexture: {fileID: 2800000, guid: a4cdca73d61814d33ac1587f6c163bca, type: 3}
   dx11BokehScale: 1.20000005
   dx11BokehIntensity: 2.5
+--- !u!114 &11444306
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 172636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e421b0b8c204bd344918bc3963c06ccc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AutoConnect: 1
+  m_Mappings:
+  - m_Event: 200
+    m_Callback:
+      m_Target: {fileID: 172636}
+      m_Component: WatsonCamera
+      m_Method: ResetCameraPosition
+  - m_Event: 306
+    m_Callback:
+      m_Target: {fileID: 172636}
+      m_Component: WatsonCamera
+      m_Method: DragTwoFinger
+  - m_Event: 307
+    m_Callback:
+      m_Target: {fileID: 172636}
+      m_Component: WatsonCamera
+      m_Method: ZoomIn
+  - m_Event: 308
+    m_Callback:
+      m_Target: {fileID: 172636}
+      m_Component: WatsonCamera
+      m_Method: ZoomOut
+  - m_Event: 6
+    m_Callback:
+      m_Target: {fileID: 172636}
+      m_Component: WatsonCamera
+      m_Method: ApplicationQuit
+  - m_Event: 309
+    m_Callback:
+      m_Target: {fileID: 172636}
+      m_Component: WatsonCamera
+      m_Method: MoveLeft
+  - m_Event: 310
+    m_Callback:
+      m_Target: {fileID: 172636}
+      m_Component: WatsonCamera
+      m_Method: MoveRight
+  - m_Event: 311
+    m_Callback:
+      m_Target: {fileID: 172636}
+      m_Component: WatsonCamera
+      m_Method: MoveUp
+  - m_Event: 312
+    m_Callback:
+      m_Target: {fileID: 172636}
+      m_Component: WatsonCamera
+      m_Method: MoveDown
+--- !u!114 &11450530
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 172636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2caaa605d8a57402baa0b494d548f244, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &11455830
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -162,31 +237,62 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 656687ed20c93924d9785528d655ff29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_AutoConnect: 1
   m_Mappings:
   - m_Key: 115
-    m_Modifiers: 4
-    m_Callback:
-      m_Target: {fileID: 172636}
-      m_Component: WatsonCamera
-      m_Method: AnimationSpeedUp
+    m_Modifiers: 2
+    m_Event: 304
   - m_Key: 102
-    m_Modifiers: 4
-    m_Callback:
-      m_Target: {fileID: 172636}
-      m_Component: WatsonCamera
-      m_Method: AnimationSpeedDown
+    m_Modifiers: 2
+    m_Event: 303
   - m_Key: 100
-    m_Modifiers: 4
-    m_Callback:
-      m_Target: {fileID: 172636}
-      m_Component: WatsonCamera
-      m_Method: AnimationSpeedDefault
+    m_Modifiers: 2
+    m_Event: 305
   - m_Key: 112
-    m_Modifiers: 4
-    m_Callback:
-      m_Target: {fileID: 172636}
-      m_Component: WatsonCamera
-      m_Method: AnimationPauseResume
+    m_Modifiers: 2
+    m_Event: 301
+  - m_Key: 113
+    m_Modifiers: 2
+    m_Event: 4
+  - m_Key: 27
+    m_Modifiers: 0
+    m_Event: 6
+  - m_Key: 57
+    m_Modifiers: 2
+    m_Event: 308
+  - m_Key: 48
+    m_Modifiers: 2
+    m_Event: 307
+  - m_Key: 276
+    m_Modifiers: 2
+    m_Event: 309
+  - m_Key: 275
+    m_Modifiers: 2
+    m_Event: 310
+  - m_Key: 273
+    m_Modifiers: 2
+    m_Event: 311
+  - m_Key: 274
+    m_Modifiers: 2
+    m_Event: 312
+--- !u!114 &11467584
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 172636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9d6f7b4cab98524a8956e9ad270ecda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AutoConnect: 1
+  m_TapMappings: []
+  m_FullScreenDragMappings:
+  - m_DragObject: {fileID: 172636}
+    m_NumberOfFinger: 2
+    m_SortingLayer: 0
+    m_Callback: 306
 --- !u!114 &11489266
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -110,12 +110,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19bbf0e483a3ecb4b88d5144d66059e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AudioOut:
-    m_TargetObject: {fileID: 0}
-    m_TargetConnection: 
+  m_AutoConnect: 1
   m_Speaking:
     m_TargetObject: {fileID: 0}
-    m_TargetConnection: 
+    m_TargetConnection: Microphone/Disable
   m_LevelOut:
     m_TargetObject: {fileID: 0}
     m_TargetConnection: 
@@ -132,7 +130,15 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: m_AutoConnect
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_LevelOut.m_TargetConnection
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 122206}

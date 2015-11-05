@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
 
 /// <summary>
@@ -10,9 +10,121 @@ public class WatsonCamera : MonoBehaviour {
 
 	#region Private Variables
 	private bool m_isAnimationPaused = false;
-	#endregion
+	private Vector3 m_TargetCameraLocation;
+    private Vector3 m_CameraInitialLocation;
+	[SerializeField]
+	private float m_PanSpeed = 0.07f;
+	[SerializeField]
+	private float m_ZoomSpeed = 20.0f;
+	[SerializeField]
+	private float m_SpeedForCameraAnimation = 2f;
 
-	public void AnimationSpeedUp(){
+    //TODO: Add boundary limits
+    //private Vector3 targetCenter = Vector3.zero;    //Center of Avatar
+    //private Vector2 boundaryLimit = Vector2.zero;
+    #endregion
+
+    #region OnEnable / OnDisable to register some events
+
+    void OnEnable(){
+        m_CameraInitialLocation = transform.localPosition;
+        m_TargetCameraLocation = m_CameraInitialLocation;
+       // TouchEventManager.Instance.RegisterDragEvent (gameObject, DragTwoFinger, numberOfFinger: 2);
+       // EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_CHANGE_STATE_QUESTIONCUBE_ANIMATION, ResetCameraPosition);
+	}
+
+	void OnDisable(){
+		//TouchEventManager.Instance.UnregisterDragEvent (gameObject, DragTwoFinger, numberOfFinger: 2);
+        //EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_CHANGE_STATE_QUESTIONCUBE_ANIMATION, ResetCameraPosition);
+    }
+
+    #endregion
+
+    #region OnUpdate - All Update animations on camera
+
+    void Update()
+    {
+        CameraPositionOnUpdate();
+    }
+
+    #endregion
+
+    #region Touch Drag Actions
+    public void DragTwoFinger(System.Object[] args)
+    {
+        if(args != null && args.Length == 1 && args[0] is TouchScript.Gestures.ScreenTransformGesture)
+        {
+            TouchScript.Gestures.ScreenTransformGesture transformGesture = args[0] as TouchScript.Gestures.ScreenTransformGesture;
+            
+            Log.Status("WatsonCamera", "twoFingerTransformHandler: {0} , DeltaScale: {1}, PanSpeed: {2}, ZoomSpeed:{3}",
+            transformGesture.DeltaPosition,
+            transformGesture.DeltaScale,
+            m_PanSpeed,
+            m_ZoomSpeed);
+
+            //Pannning with 2-finger
+            m_TargetCameraLocation += (transformGesture.DeltaPosition * m_PanSpeed * -1.0f);
+            //Zooming with 2-finger
+            m_TargetCameraLocation += transform.forward * (transformGesture.DeltaScale - 1.0f) * m_ZoomSpeed;
+        }
+        else
+        {
+            Log.Warning("WatsonCamera", "TwoFinger drag has invalid argument");
+        }
+	}
+
+	
+
+    void CameraPositionOnUpdate()
+    {
+        //For Zooming and Panning
+        transform.localPosition = Vector3.Lerp(transform.localPosition, m_TargetCameraLocation, Time.deltaTime * m_SpeedForCameraAnimation);
+    }
+
+    #endregion
+
+    #region Camera Events Received from Outside - Set default position / Move Left - Right - Up - Down / Zoom-in-out
+    public void ResetCameraPosition(System.Object[] args)
+    {
+        Log.Status("WatsonCamera", "Reset Camera Position");
+        m_TargetCameraLocation = m_CameraInitialLocation;
+    }
+
+    public void MoveUp(System.Object[] args)
+    {
+        m_TargetCameraLocation += Vector3.up;
+    }
+
+    public void MoveDown(System.Object[] args)
+    {
+        m_TargetCameraLocation += Vector3.down;
+    }
+
+    public void MoveLeft(System.Object[] args)
+    {
+        m_TargetCameraLocation += Vector3.left;
+    }
+
+    public void MoveRight(System.Object[] args)
+    {
+        m_TargetCameraLocation += Vector3.right;
+    }
+
+    public void ZoomIn(System.Object[] args)
+    {
+        m_TargetCameraLocation += transform.forward * m_ZoomSpeed;
+    }
+
+    public void ZoomOut(System.Object[] args)
+    {
+        m_TargetCameraLocation += transform.forward * m_ZoomSpeed * -1.0f;
+    }
+
+    #endregion
+
+    #region Application Related Actions - Methods to call 
+
+    public void AnimationSpeedUp(){
 		EventManager.Instance.SendEvent (Constants.Event.ON_ANIMATION_SPEED_UP);
 	}
 
@@ -40,4 +152,11 @@ public class WatsonCamera : MonoBehaviour {
 		else
 			AnimationResume();
 	}
+
+	public void ApplicationQuit(System.Object[] args = null)
+    {
+		Application.Quit ();
+	}
+
+	#endregion
 }

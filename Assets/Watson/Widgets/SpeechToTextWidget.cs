@@ -56,8 +56,6 @@ namespace IBM.Watson.Widgets
         [SerializeField]
         private Input m_AudioInput = new Input( "Audio", typeof(AudioData), "OnAudio" );
         [SerializeField]
-        private Output m_TextOutput = new Output( typeof(TextData) );
-        [SerializeField]
         private Output m_ResultOutput = new Output( typeof(SpeechToTextData) );
         #endregion
 
@@ -146,8 +144,6 @@ namespace IBM.Watson.Widgets
                     foreach( var alt in res.Alternatives )
                     {
                         string text = alt.Transcript;
-                        if ( res.Final )
-                            m_TextOutput.SendData( new TextData( text ) );
 
                         if ( m_Transcript != null )
                             m_Transcript.text += string.Format( "{0} ({1}, {2:0.00})\n",

@@ -14,14 +14,13 @@
 * limitations under the License.
 *
 * @author Richard Lyle (rolyle@us.ibm.com)
+* @author Dogukan Erenel (derenel@us.ibm.com)
 */
 
 using IBM.Watson.Logging;
 using IBM.Watson.Data;
-using IBM.Watson.Widgets.Question;
 using UnityEngine;
 using System.Collections.Generic;
-using IBM.Watson.Utilities;
 
 namespace IBM.Watson.Widgets.Question
 {
@@ -33,7 +32,7 @@ namespace IBM.Watson.Widgets.Question
     {
         #region Private Data
         private CubeAnimationManager m_CubeAnimMgr = null;
-
+		private bool m_Focused = false;
         private AnswersAndConfidence m_AnswersAndConfidence;
         private Question.Evidence m_Evidence;
         private Semantic m_Semantic;
@@ -41,7 +40,7 @@ namespace IBM.Watson.Widgets.Question
         private Location m_Location;
         private ParseTree m_ParseTree;
         private QuestionAndAnswer m_QuestionAndAnswer;
-		private Passages m_Passages;
+        private Passages m_Passages;
         private List<Base> m_Facets = new List<Base>();
 
         #endregion
@@ -53,9 +52,8 @@ namespace IBM.Watson.Widgets.Question
         }
         #endregion
 
-        #region Public Properties
+        #region Public Properties - Question widget Focus and attached CubeAnimationManager
 
-        private bool m_Focused = false;
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="IBM.Watson.Widgets.Question.QuestionWidget"/> is focused.
         /// </summary>
@@ -69,26 +67,14 @@ namespace IBM.Watson.Widgets.Question
             set
             {
                 m_Focused = value;
-
-                if (value)
-                {
-                    KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CUBE_TO_FOLD, Constants.KeyCodes.MODIFIER_KEY, OnFold);
-                    KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CUBE_TO_FOCUS, Constants.KeyCodes.MODIFIER_KEY, OnFocusNext);
-                    KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CUBE_TO_ROTATE_OR_PAUSE, Constants.KeyCodes.MODIFIER_KEY, OnRotateOrPause);
-                    KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CUBE_TO_UNFOCUS, Constants.KeyCodes.MODIFIER_KEY, OnUnFocus);
-                    KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CUBE_TO_UNFOLD, Constants.KeyCodes.MODIFIER_KEY, OnUnfold);
-                }
-                else
-                {
-                    KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_FOLD, Constants.KeyCodes.MODIFIER_KEY, OnFold);
-                    KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_FOCUS, Constants.KeyCodes.MODIFIER_KEY, OnFocusNext);
-                    KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_ROTATE_OR_PAUSE, Constants.KeyCodes.MODIFIER_KEY, OnRotateOrPause);
-                    KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_UNFOCUS, Constants.KeyCodes.MODIFIER_KEY, OnUnFocus);
-                    KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CUBE_TO_UNFOLD, Constants.KeyCodes.MODIFIER_KEY, OnUnfold);
-                }
+                EnableEvents(value);
+				Cube.enabled = value;	//we are not disabeling the animation from focused. 
             }
         }
-
+		/// <summary>
+		/// Gets the Cube Animation Manager attached with question widget. 
+		/// </summary>
+		/// <value>The cube.</value>
         public CubeAnimationManager Cube
         {
             get
@@ -107,83 +93,240 @@ namespace IBM.Watson.Widgets.Question
 
         #endregion
 
-        #region Cube Actions
-        public void OnDisplayAnswers()
+        #region Event Handlers of Question Widget
+
+        /// <summary>
+        /// Method called on Tapping on Question Widget 
+        /// </summary>
+        /// <param name="tapGesture">Tap Gesture with all touch information</param>
+        /// <param name="hitTransform">Hit Tranform of tap</param>
+		public void OnTapInside(object[] args)
+        {
+            if (args != null && args.Length == 2 && args[0] is TouchScript.Gestures.TapGesture && args[1] is Transform)
+            {
+                Log.Status("Question Widget", "OnTapInside");
+                //TouchScript.Gestures.TapGesture tapGesture = args [0] as TouchScript.Gestures.TapGesture; 
+                Transform hitTransform = args[1] as Transform;
+
+                //Touch on side
+                switch (Cube.AnimationState)
+                {
+                    case CubeAnimationManager.CubeAnimationState.NOT_PRESENT:
+                        break;
+                    case CubeAnimationManager.CubeAnimationState.COMING_TO_SCENE:
+                        break;
+                    case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOLDED:
+                        Cube.UnFold();
+                        break;
+                    case CubeAnimationManager.CubeAnimationState.UNFOLDING:
+                        FocusOnSide(hitTransform);
+                        break;
+                    case CubeAnimationManager.CubeAnimationState.IDLE_AS_UNFOLDED:
+                        FocusOnSide(hitTransform);
+                        break;
+                    case CubeAnimationManager.CubeAnimationState.FOLDING:
+                        Cube.UnFold();
+                        break;
+                    case CubeAnimationManager.CubeAnimationState.FOCUSING_TO_SIDE:
+                        FocusOnSide(hitTransform);
+                        break;
+                    case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOCUSED:
+                        FocusOnSide(hitTransform);
+                        break;
+                    case CubeAnimationManager.CubeAnimationState.GOING_FROM_SCENE:
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else
+            {
+                Log.Warning("Question Widget", "OnTapInside has invalid arguments!");
+            }
+
+        }
+
+        private void FocusOnSide(Transform hitTransform)
+        {
+            int touchedSide = 0;
+            int.TryParse(hitTransform.name.Substring(1, 1), out touchedSide);
+            Cube.FocusOnSide((CubeAnimationManager.CubeSideType)touchedSide);
+        }
+
+        /// <summary>
+        /// Method called on Tapping outside of the Question Widget 
+        /// </summary>
+        /// <param name="tapGesture">Tap Gesture with all touch information</param>
+        /// <param name="hitTransform">Hit Tranform of tap</param>
+		public void OnTapOutside(object[] args)
+        {
+            if (args != null && args.Length == 2 && args[0] is TouchScript.Gestures.TapGesture && args[1] is Transform)
+            {
+                Log.Status("Question Widget", "OnTapOutside");
+                //TouchScript.Gestures.TapGesture tapGesture = args [0] as TouchScript.Gestures.TapGesture; 
+                //Transform hitTransform = args [1] as Transform;
+
+                //Touch out-side
+				switch (Cube.AnimationState)
+                {
+                    case CubeAnimationManager.CubeAnimationState.NOT_PRESENT:
+                        break;
+                    case CubeAnimationManager.CubeAnimationState.COMING_TO_SCENE:
+                        break;
+                    case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOLDED:
+                        break;
+                    case CubeAnimationManager.CubeAnimationState.UNFOLDING:
+                        Cube.Fold();
+                        break;
+                    case CubeAnimationManager.CubeAnimationState.IDLE_AS_UNFOLDED:
+                        Cube.Fold();
+                        break;
+                    case CubeAnimationManager.CubeAnimationState.FOLDING:
+                        break;
+                    case CubeAnimationManager.CubeAnimationState.FOCUSING_TO_SIDE:
+                        Cube.UnFocus();
+                        break;
+                    case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOCUSED:
+                        Cube.UnFocus();
+                        break;
+                    case CubeAnimationManager.CubeAnimationState.GOING_FROM_SCENE:
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else
+            {
+                Log.Warning("Question Widget", "OnTapOutside has invalid arguments!");
+            }
+
+        }
+
+		/// <summary>
+		/// Event handler for dragging with one finger.
+		/// </summary>
+		/// <param name="args">Arguments of event. args[0] should be TouchScript.Gestures.ScreenTransformGesture</param>
+        public void DragOneFinger(object[] args)
+        {
+            if (args != null && args.Length == 1 && args[0] is TouchScript.Gestures.ScreenTransformGesture)
+            {
+                TouchScript.Gestures.ScreenTransformGesture OneFingerManipulationGesture = args[0] as TouchScript.Gestures.ScreenTransformGesture;
+
+                if (Cube != null)
+                {
+                    Cube.DragOneFinger(OneFingerManipulationGesture);
+                }
+            }
+
+        }
+
+		/// <summary>
+		/// Raises the display answers event to show Answer face of the question widget.
+		/// </summary>
+		/// <param name="args">Arguments.</param>
+        public void OnDisplayAnswers(object[] args)
         {
             Cube.FocusOnSide(CubeAnimationManager.CubeSideType.ANSWERS);
         }
-
-        public void OnDisplayChat()
+		/// <summary>
+		/// Raises the display chat event to show Dialog face of the question widget.
+		/// </summary>
+		/// <param name="args">Arguments.</param>
+        public void OnDisplayChat(object[] args)
         {
             Cube.FocusOnSide(CubeAnimationManager.CubeSideType.CHAT);
         }
-
-        public void OnDisplayParse()
+		/// <summary>
+		/// Raises the display parse event to show Parse face of the question widget.
+		/// </summary>
+		/// <param name="args">Arguments.</param>
+        public void OnDisplayParse(object[] args)
         {
             Cube.FocusOnSide(CubeAnimationManager.CubeSideType.PARSE);
         }
 
-        public void OnDisplayEvidence()
+		/// <summary>
+		/// Raises the display evidence event to show Evidence face of the question widget.
+		/// </summary>
+		/// <param name="args">Arguments.</param>
+        public void OnDisplayEvidence(object[] args)
         {
             Cube.FocusOnSide(CubeAnimationManager.CubeSideType.EVIDENCE);
         }
 
-        public void OnDisplayLocation()
+		/// <summary>
+		/// Raises the display location event to show Location face of the question widget.
+		/// </summary>
+		/// <param name="args">Arguments.</param>
+        public void OnDisplayLocation(object[] args)
         {
             Cube.FocusOnSide(CubeAnimationManager.CubeSideType.LOCATION);
         }
 
-        public void OnFold()
+		/// <summary>
+		/// Raises the fold event to fold the question widget
+		/// </summary>
+		/// <param name="args">Arguments.</param>
+        public void OnFold(object[] args)
         {
             Cube.Fold();
         }
-        public void OnUnfold()
+
+		/// <summary>
+		/// Raises the unfold event to unfold the question widget
+		/// </summary>
+		/// <param name="args">Arguments.</param>
+        public void OnUnfold(object[] args)
         {
             Cube.UnFold();
         }
-        public void OnRotateOrPause()
+
+		/// <summary>
+		/// Raises the rotate or pause event. 
+		/// </summary>
+		/// <param name="args">Arguments.</param>
+        public void OnRotateOrPause(object[] args)
         {
             Cube.RotateOrPause();
         }
 
-        public void OnFocus(CubeAnimationManager.CubeSideType sideType)
+		/// <summary>
+		/// Raises the focus event to show question widget's focused face
+		/// </summary>
+		/// <param name="args">Arguments. args[0] should have the CubeSideType</param>
+        public void OnFocus(object[] args)
         {
-            Cube.FocusOnSide(sideType);
-        }
-        public void OnFocusNext()
+			if (args != null && args.Length > 0 && args [0] is CubeAnimationManager.CubeSideType)
+				Cube.FocusOnSide ((CubeAnimationManager.CubeSideType)args [0]);
+		}
+		/// <summary>
+		/// Raises the focus next event to show the next possible face of the question widget. 
+		/// </summary>
+		/// <param name="args">Arguments.</param>
+        public void OnFocusNext(object[] args)
         {
             Cube.FocusOnNextSide();
         }
-        public void OnUnFocus()
+		/// <summary>
+		/// Raises the un-focus event to return the unfolded position of the question widget
+		/// </summary>
+		/// <param name="args">Arguments.</param>
+        public void OnUnFocus(object[] args)
         {
             Cube.UnFocus();
         }
-        public void OnLeaveTheSceneAndDestroy()
+		/// <summary>
+		/// Raises the leave the scene and destroy event.
+		/// </summary>
+		/// <param name="args">Arguments.</param>
+        public void OnLeaveTheSceneAndDestroy(object[] args = null)
         {
-            Cube.LeaveTheSceneAndDestroy();
-        }
-
-
-        public void ExecuteAction(string action)
-        {
-            if (action == "fold")
-                OnFold();
-            else if (action == "unfold")
-                OnUnfold();
-            else if (action == "evidence")
-                OnDisplayEvidence();
-            else if (action == "parse")
-                OnDisplayParse();
-            else if (action == "location")
-                OnDisplayLocation();
-            else if (action == "answers")
-                OnDisplayAnswers();
-            else if (action == "chat")
-                OnDisplayChat();
-            else
-                Log.Warning("QuestionWidget", "Unknown action {0}", action);
+			Focused = false;
+            //Cube.LeaveTheSceneAndDestroy();
         }
         #endregion
+
+		#region Awake / Start / EnableEvents
 
         /// <summary>
         /// Register events, set facet references, add facets to a List.
@@ -191,6 +334,8 @@ namespace IBM.Watson.Widgets.Question
         protected override void Awake()
         {
             base.Awake();
+            EnableEvents(false);
+			Cube.enabled = false;
 
             m_AnswersAndConfidence = gameObject.GetComponent<AnswersAndConfidence>();
             m_Evidence = gameObject.GetComponent<Question.Evidence>();
@@ -199,7 +344,7 @@ namespace IBM.Watson.Widgets.Question
             m_Location = gameObject.GetComponent<Location>();
             m_ParseTree = gameObject.GetComponent<ParseTree>();
             m_QuestionAndAnswer = gameObject.GetComponent<QuestionAndAnswer>();
-			m_Passages = gameObject.GetComponent<Passages>();
+            m_Passages = gameObject.GetComponent<Passages>();
 
             m_Facets.Add(m_AnswersAndConfidence);
             m_Facets.Add(m_Evidence);
@@ -208,7 +353,22 @@ namespace IBM.Watson.Widgets.Question
             m_Facets.Add(m_Location);
             m_Facets.Add(m_ParseTree);
             m_Facets.Add(m_QuestionAndAnswer);
-			m_Facets.Add(m_Passages);
+            m_Facets.Add(m_Passages);
+        }
+
+        private void EnableEvents(bool enable)
+        {
+            EventWidget eventWidget = GetComponentInChildren<EventWidget>();
+            if (eventWidget != null)
+                eventWidget.enabled = enable;
+
+            TouchWidget touchWidget = GetComponentInChildren<TouchWidget>();
+            if (touchWidget != null)
+                touchWidget.enabled = enable;
+
+            KeyboardWidget keyboardWidget = GetComponentInChildren<KeyboardWidget>();
+            if (keyboardWidget != null)
+                keyboardWidget.enabled = enable;
         }
 
         protected override void Start()
@@ -216,15 +376,22 @@ namespace IBM.Watson.Widgets.Question
             base.Start();
         }
 
-        /// <summary>
-        /// Sets Question, Answer and Avatar for each facet. This is called by the Avatar Widget.
-        /// </summary>
-        public void UpdateFacets()
-        {
-            foreach (Base facet in m_Facets)
-                facet.Init();
-        }
+		#endregion
+
+		#region Function invoked by Avatar
+		/// <summary>
+		/// Sets Question, Answer and Avatar for each facet. This is called by the Avatar Widget.
+		/// </summary>
+		public void UpdateFacets(Object[] args = null)
+		{
+			foreach (Base facet in m_Facets)
+				facet.Init();
+		}
+		#endregion
+
     }
+
+	#region Messaging Interface between Avatar and Focused Question
 
     public delegate void OnMessage(string msg);
 
@@ -234,7 +401,9 @@ namespace IBM.Watson.Widgets.Question
         Answers AnswerDataObject { get; }
         ParseData ParseDataObject { get; }
         string Location { get; }
-        OnMessage OnQuestion { get; set; }
-        OnMessage OnAnswer { get; set; }
+        OnMessage OnQuestionEvent { get; set; }
+        OnMessage OnAnswerEvent { get; set; }
     }
+
+	#endregion
 }

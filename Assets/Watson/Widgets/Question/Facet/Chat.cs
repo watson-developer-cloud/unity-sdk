@@ -49,8 +49,8 @@ namespace IBM.Watson.Widgets.Question
             if (question != null)
             {
                 m_QuestionData = question.QuestionData;
-                m_QuestionData.OnAnswer += OnAnswer;
-                m_QuestionData.OnQuestion += OnQuestion;
+                m_QuestionData.OnAnswerEvent += OnAnswer;
+                m_QuestionData.OnQuestionEvent += OnQuestion;
             }
         }
 
@@ -58,8 +58,8 @@ namespace IBM.Watson.Widgets.Question
         {
             if (m_QuestionData != null)
             {
-                m_QuestionData.OnAnswer -= OnAnswer;
-                m_QuestionData.OnQuestion -= OnQuestion;
+                m_QuestionData.OnAnswerEvent -= OnAnswer;
+                m_QuestionData.OnQuestionEvent -= OnQuestion;
             }
         }
 

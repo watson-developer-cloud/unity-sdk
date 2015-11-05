@@ -137,7 +137,7 @@ namespace IBM.Watson.Widgets
                             Log.Error("Widget", "CreateDelegate failed for function {0}", ReceiverFunction);
                     }
                     else
-                        Log.Error("Widget", "Failed to find receiver function {0}.", ReceiverFunction);
+                        Log.Error("Widget", "Failed to find receiver function {0} in object {1}.", ReceiverFunction, Owner.gameObject.name );
                 }
             }
 
@@ -377,9 +377,6 @@ namespace IBM.Watson.Widgets
                     if ( widget == null || widget == this )
                         continue;       // we never connect to ourselves
 
-                    // make sure the input/output is initialized on this widget
-                    widget.InitializeIO();  
-
                     foreach( var output in widget.Outputs )
                     {
                         if ( output.IsConnected )
@@ -424,13 +421,14 @@ namespace IBM.Watson.Widgets
 
         /// <exclude />
         protected virtual void Start()
-        { }
+        {
+            InitializeConnections();
+        }
         
         /// <exclude />
         protected virtual void Awake()
         {
             InitializeIO();
-            InitializeConnections();
         }
         #endregion
 

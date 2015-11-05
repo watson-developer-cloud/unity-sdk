@@ -702,7 +702,7 @@ namespace IBM.Watson.Data
 
         public bool HasResult()
         {
-            return Results != null && Results.Length > 0 
+            return Results != null && Results.Length > 0
                 && Results[0].Alternatives != null && Results[0].Alternatives.Length > 0;
         }
 
@@ -713,4 +713,139 @@ namespace IBM.Watson.Data
     };
     #endregion
 
+    #region QA Models
+    namespace QA
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        public class Service
+        {
+            /// <summary>
+            /// 
+            /// </summary>
+            public string id { get; set; }
+            /// <summary>
+            /// 
+            /// </summary>
+            public string name { get; set; }
+            /// <summary>
+            /// 
+            /// </summary>
+            public string description { get; set; }
+        };
+        /// <summary>
+        /// 
+        /// </summary>
+        public class Services
+        {
+            /// <summary>
+            /// 
+            /// </summary>
+            public Service[] services { get; set; }
+        };
+
+        public class Value
+        {
+            public string value { get; set; }
+        };
+
+        public class MetaDataMap
+        {
+            public string originalFile { get; set; }
+            public string title { get; set; }
+            public string corpusName { get; set; }
+            public string fileName { get; set; }
+            public string DOCNO { get; set; }
+            public string CorpusPlusDocno { get; set; }
+        };
+
+        public class Evidence
+        {
+            public string value { get; set; }
+            public string text { get; set; }
+            public string id { get; set; }
+            public string title { get; set; }
+            public string document { get; set; }
+            public string copyright { get; set; }
+            public string termsOfUse { get; set; }
+            public MetaDataMap metadataMap { get; set; }
+        };
+
+        public class Synonym
+        {
+            public bool isChosen { get; set; }
+            public string value { get; set; }
+            public double weight { get; set; }
+        };
+
+        public class SynSet
+        {
+            public string name { get; set; }
+            public Synonym[] synSet { get; set; }
+        };
+
+        public class SynonymList
+        {
+            public string partOfSpeech { get; set; }
+            public string value { get; set; }
+            public string lemma { get; set; }
+            public SynSet[] synSet { get; set; }
+        };
+
+        public class EvidenceRequest
+        {
+            public long items { get; set; }
+            public string profile { get; set; }
+        };
+
+        public class Answer
+        {
+            public long id { get; set; }
+            public string text { get; set; }
+            public string pipeline { get; set; }
+            public double confidence { get; set; }
+            public string[] entityTypes { get; set; }
+        };
+        public class Question
+        {
+            public Value[] qclasslist { get; set; }
+            public Value[] focuslist { get; set; }
+            public Value[] latlist { get; set; }
+            public Evidence[] evidencelist { get; set; }
+            public SynonymList[] synonymList { get; set; }
+            public string[] disambiguatedEntities { get; set; }
+            public string pipelineid { get; set; }
+            public bool formattedAnswer { get; set; }
+            public string category { get; set; }
+            public long items { get; set; }
+            public string status { get; set; }
+            public string id { get; set; }
+            public string questionText { get; set; }
+            public EvidenceRequest evidenceRequest { get; set; }
+            public Answer [] answers { get; set; }
+            public string [] errorNotifications { get; set; }
+            public string passthru { get; set; }
+        };
+        public class QuestionClass
+        {
+            public string out_of_domain { get; set; }
+            public string question { get; set; }
+            public string domain { get; set; }
+        };
+        /// <summary>
+        /// The response object for QA.AskQuestion().
+        /// </summary>
+        public class Response
+        {
+            public Question question { get; set; }
+            public QuestionClass [] questionClasses { get; set; }             
+        };
+
+        public class ResponseList
+        {
+            public Response [] responses { get; set; }
+        };
+    }
+    #endregion
 }

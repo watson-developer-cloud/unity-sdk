@@ -71,9 +71,9 @@ namespace IBM.Watson.Editor
                     input.Owner = parent as Widget;
 
                 // TODO: Make this read-only if possible.
-                EditorGUI.BeginDisabledGroup(true);
+                //EditorGUI.BeginDisabledGroup(true);
                 EditorGUI.TextField( position, input.FullInputName );
-                EditorGUI.EndDisabledGroup();
+                //EditorGUI.EndDisabledGroup();
             }
 
             // Set indent back to what it was

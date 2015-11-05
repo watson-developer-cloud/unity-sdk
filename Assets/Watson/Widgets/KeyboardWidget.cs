@@ -41,7 +41,7 @@ namespace IBM.Watson.Widgets
         {
             public KeyCode m_Key = (KeyCode)0;
             public KeyModifiers m_Modifiers = KeyModifiers.NONE;
-            public SerializedDelegate m_Callback = new SerializedDelegate(typeof(KeyEventManager.KeyEventDelegate));
+            public Constants.Event m_Event = Constants.Event.NONE;
         };
 
         [SerializeField]
@@ -51,8 +51,7 @@ namespace IBM.Watson.Widgets
         {
             foreach (var mapping in m_Mappings)
             {
-                KeyEventManager.Instance.RegisterKeyEvent(mapping.m_Key, mapping.m_Modifiers,
-                   mapping.m_Callback.ResolveDelegate() as KeyEventManager.KeyEventDelegate );
+                KeyEventManager.Instance.RegisterKeyEvent(mapping.m_Key, mapping.m_Modifiers, mapping.m_Event );
             }
         }
 
@@ -60,8 +59,7 @@ namespace IBM.Watson.Widgets
         {
             foreach (var mapping in m_Mappings)
             {
-                KeyEventManager.Instance.UnregisterKeyEvent(mapping.m_Key, mapping.m_Modifiers, 
-                    mapping.m_Callback.ResolveDelegate() as KeyEventManager.KeyEventDelegate );
+                KeyEventManager.Instance.UnregisterKeyEvent(mapping.m_Key, mapping.m_Modifiers, mapping.m_Event );
             }
         }
     }

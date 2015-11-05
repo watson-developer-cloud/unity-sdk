@@ -18,6 +18,7 @@
 
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 namespace IBM.Watson.Widgets.Question
 {
@@ -29,6 +30,9 @@ namespace IBM.Watson.Widgets.Question
         [SerializeField]
         private Text m_LocationText;
 
+		[SerializeField]
+		private RectTransform m_MapDotRectTransform;
+
         private string m_LocationString;
         public string LocationString
         {
@@ -39,6 +43,34 @@ namespace IBM.Watson.Widgets.Question
                 UpdateLocation();
             }
         }
+
+		/// <summary>
+		/// Location latitude. Updates the dot on map texture
+		/// </summary>
+		private float m_Latitude = 0f;
+		public float Latitude
+		{
+			get { return m_Latitude; }
+			set
+			{
+				m_Latitude = value;
+				UpdateMap ();
+			}
+		}
+
+		/// <summary>
+		/// Location longitude. Updates the dot on map texture
+		/// </summary>
+		private float m_Longitude = 0f;
+		public float Longitude
+		{
+			get { return m_Longitude; }
+			set
+			{
+				m_Longitude = value;
+				UpdateMap ();
+			}
+		}
 
 		/// <summary>
 		/// Set LocationString from data.
@@ -58,5 +90,13 @@ namespace IBM.Watson.Widgets.Question
         {
             m_LocationText.text = LocationString;
         }
+
+		/// <summary>
+		/// Updates the map based on Latitude and Longitude.
+		/// </summary>
+		private void UpdateMap()
+		{
+
+		}
     }
 }

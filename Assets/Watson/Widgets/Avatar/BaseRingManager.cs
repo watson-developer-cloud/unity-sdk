@@ -57,12 +57,12 @@ namespace IBM.Watson.Widgets.Avatar
         /// <summary>
         /// On Awake of the AvatarModelManager, the AvatarWidget is found and assigned to be used for future purposes. 
         /// </summary>
-        protected virtual void Awake()
+        protected virtual void Start()
         {
             m_AvatarWidgetAttached = this.transform.GetComponentInParent<AvatarWidget>();
             if (m_AvatarWidgetAttached == null)
             {
-                Log.Error("AvatarModelManager", "There is no Avatar Widget on any parent.");
+				Log.Error("BaseRingManager " + this.name, "There is no Avatar Widget on any parent.");
                 this.enabled = false;
             }
         }
@@ -74,12 +74,13 @@ namespace IBM.Watson.Widgets.Avatar
         /// <summary>
         /// On Mood Change of the avatar, this function gets called. 
         /// </summary>
-        /// <param name="args">If there 2 paremeteres we consider 1st paremeter is AvatarWidget object, otherwise we are using initial AvatarWidget object's values to call other functions</param>
-		protected void OnChangedMood(System.Object[] args)
+        /// <param name="args">If there 2 parameters we consider 1st parameter is AvatarWidget object, otherwise we are using initial AvatarWidget object's values to call other functions</param>
+		protected void OnChangedMood(object[] args)
         {
             if (args.Length == 0 || args.Length == 1)
             {
-				ChangedMood(m_AvatarWidgetAttached.MoodColor, m_AvatarWidgetAttached.MoodTimeModifier);
+                if ( m_AvatarWidgetAttached != null )
+				    ChangedMood(m_AvatarWidgetAttached.MoodColor, m_AvatarWidgetAttached.MoodTimeModifier);
             }
             else if (args.Length == 2)
             {
@@ -107,10 +108,10 @@ namespace IBM.Watson.Widgets.Avatar
         }
 
         /// <summary>
-        /// On Behavior Change of the avater, this function gets called
+        /// On Behavior Change of the avatar, this function gets called
         /// </summary>
-        /// <param name="args">If there 2 paremeteres we consider 1st paremeter is AvatarWidget object, otherwise we are using initial AvatarWidget object's values to call other functions</param>
-		protected void OnChangedBehavior(System.Object[] args)
+        /// <param name="args">If there 2 parameters we consider 1st parameter is AvatarWidget object, otherwise we are using initial AvatarWidget object's values to call other functions</param>
+		protected void OnChangedBehavior(object[] args)
         {
             if (args.Length == 0 || args.Length == 1)
             {

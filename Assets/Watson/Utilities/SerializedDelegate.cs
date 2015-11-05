@@ -48,6 +48,11 @@ namespace IBM.Watson.Utilities
         string m_Method = null;
 
         /// <summary>
+        /// Target Game Object to invoke the callback under selected component
+        /// </summary>
+        public GameObject TargetGameObject { get { return m_Target; } }
+
+        /// <summary>
         /// This resolves the actual delegate for invoke.
         /// </summary>
         /// <returns>Returns a delegate or null if the delegate can't be resolved.</returns>
@@ -58,8 +63,7 @@ namespace IBM.Watson.Utilities
             Component component = m_Target.GetComponent(m_Component);
             if ( component == null )
                 return null;
-            MethodInfo info = component.GetType().GetMethod(m_Method, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public |
-                BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.InvokeMethod);
+            MethodInfo info = component.GetType().GetMethod(m_Method, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.InvokeMethod);
             if ( info == null )
                 return null;
 
