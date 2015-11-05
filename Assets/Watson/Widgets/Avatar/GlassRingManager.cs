@@ -108,6 +108,8 @@ namespace IBM.Watson.Widgets.Avatar
                     }).setOnComplete(
                     () =>
                     {
+						LeanTween.cancel(m_ColorAnimationOnGlass.uniqueId);
+						m_ColorAnimationOnGlass = null;
 
                         m_ColorAnimationOnGlassLoop = LeanTween.value(gameObject, color, Color.white, m_AnimationTime * timeModifier).setLoopPingPong().setOnUpdateColor(
                             (Color colorToLoop) =>

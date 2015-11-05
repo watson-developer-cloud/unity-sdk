@@ -194,6 +194,8 @@ namespace IBM.Watson.Widgets.Avatar
                 }).setOnComplete(
                 () =>
                 {
+					LeanTween.cancel(m_ColorAnimationOnFlareInitial.uniqueId);
+					m_ColorAnimationOnFlareInitial = null;
 
                     m_ColorAnimationOnFlareLoop = LeanTween.value(gameObject, color, Color.white, animationTime).setLoopPingPong().setOnUpdateColor(
                         (Color colorToLoop) =>
