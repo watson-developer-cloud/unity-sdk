@@ -21,6 +21,7 @@
 using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
 using IBM.Watson.Data;
+using IBM.Watson.Data.ITM;
 using IBM.Watson.Services.v1;
 using UnityEngine;
 using System;
@@ -501,7 +502,7 @@ namespace IBM.Watson.Widgets.Avatar
 
             if (m_QuestionResult != null && m_QuestionResult.HasQuestion())
             {
-                Watson.Data.Question topQuestion = m_QuestionResult.questions[0];
+                Watson.Data.ITM.Question topQuestion = m_QuestionResult.questions[0];
                 if (OnQuestionEvent != null)
                     OnQuestionEvent(topQuestion.question.questionText);
 

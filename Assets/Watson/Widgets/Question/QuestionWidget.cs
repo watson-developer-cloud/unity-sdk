@@ -18,7 +18,7 @@
 */
 
 using IBM.Watson.Logging;
-using IBM.Watson.Data;
+using IBM.Watson.Data.ITM;
 using UnityEngine;
 using System.Collections.Generic;
 
