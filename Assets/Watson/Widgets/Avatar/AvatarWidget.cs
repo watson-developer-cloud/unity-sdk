@@ -158,11 +158,13 @@ namespace IBM.Watson.Widgets.Avatar
                 {
                     m_State = value;
                     EventManager.Instance.SendEvent(Constants.Event.ON_CHANGE_AVATAR_STATE_FINISH, this, value);
-
-                    // if we went into an error state, automatically try to reconnect after a timeout..
+					// if we went into an error state, automatically try to reconnect after a timeout..
                     if (m_State == AvatarState.ERROR)
                         Invoke("StartAvatar", m_RestartInterval);
                 }
+
+				if(m_State == AvatarState.CONNECTING || m_State == AvatarState.ERROR)
+					Mood = MoodType.SLEEPING;
             }
         }
 
@@ -225,10 +227,6 @@ namespace IBM.Watson.Widgets.Avatar
         protected override void Start()
         {
             base.Start();
-
-            Mood = MoodType.SLEEPING;
-            State = AvatarState.CONNECTING;
-
             StartAvatar();
         }
 

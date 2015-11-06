@@ -16621,22 +16621,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ae469cfa8dd5487d85fe0964e340659, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  avatarGameobject: {fileID: 0}
-  avatarPositionUnfold: {x: 0, y: -14, z: 0}
-  positionCubeOffsetUnfold: {x: 0, y: 2.5, z: 0}
-  statinoaryRotationSpeed: 10
-  statinoaryRotationVector: {x: 0, y: 1, z: 0}
-  distanceFromCameraInZAfterUnfolding: 120
-  m_initialPosition: {x: 0, y: 0, z: 0}
-  timeForComingToScene: 1
-  easeForComingToScene: 6
-  easeForGoingFromScene: 21
-  timeForFoldingUnfolding: 1
-  easeForFolding: 7
-  easeForUnfolding: 7
-  timeForFocusing: 1
-  easeForFocusing: 7
-  easeForUnfocusing: 7
   uiFaceOnSide:
   - {fileID: 176488}
   - {fileID: 173190}
@@ -16658,6 +16642,21 @@ MonoBehaviour:
   - {fileID: 8400000, guid: 0ecc6e0cd139f40f49ac8bc7f8b7043e, type: 2}
   - {fileID: 8400000, guid: 97937d4c48c3a4758a1d67d2af8ff321, type: 2}
   - {fileID: 8400000, guid: 6abe509fcab54478888289f427bb1db7, type: 2}
+  m_StatinoaryRotationSpeed: 10
+  m_StatinoaryRotationVector: {x: 0, y: 1, z: 0}
+  m_TimeForComingToScene: 1
+  m_EaseForComingToScene: 6
+  m_PositionBeforeComing: {x: 0, y: -40, z: 0}
+  m_PositionAfterComing: {x: 0, y: 40, z: 0}
+  m_TimeForFoldingUnfolding: 1
+  m_EaseForUnfolding: 7
+  m_PositionCubeOffsetUnfold: {x: 0, y: 2.5, z: 0}
+  m_DistanceFromCameraInZAfterUnfolding: 120
+  m_TimeForFocusingUnfocusing: 1
+  m_EaseForFocusing: 7
+  m_EaseForUnfocusing: 7
+  timeForLeavingTheScene: .600000024
+  easeForGoingFromScene: 20
 --- !u!114 &11426020
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -48,11 +48,13 @@ namespace IBM.Watson.Widgets.Avatar
         }
 
         /// <exclude />
-        protected override void Start()
+		protected override void Start()
         {
-            base.Start();
+			base.Start ();
 
-            m_AvatarWidgetAttached = this.transform.GetComponentInParent<AvatarWidget>();
+			if(m_AvatarWidgetAttached == null)
+           		m_AvatarWidgetAttached = this.transform.GetComponentInParent<AvatarWidget>();
+
             if (m_AvatarWidgetAttached != null)
             {
                 MeshRenderer childMeshRenderer = transform.GetComponentInChildren<MeshRenderer>();
@@ -72,6 +74,10 @@ namespace IBM.Watson.Widgets.Avatar
                 Log.Error("GlassRingManager", "There is no Avatar Widget on any parent.");
                 this.enabled = false;
             }
+
+			if (m_AvatarWidgetAttached != null) {
+				ChangedBehavior(m_AvatarWidgetAttached.BehaviourColor, m_AvatarWidgetAttached.BehaviorTimeModifier);
+			}
 
         }
 
@@ -102,6 +108,8 @@ namespace IBM.Watson.Widgets.Avatar
                     }).setOnComplete(
                     () =>
                     {
+						LeanTween.cancel(m_ColorAnimationOnGlass.uniqueId);
+						m_ColorAnimationOnGlass = null;
 
                         m_ColorAnimationOnGlassLoop = LeanTween.value(gameObject, color, Color.white, m_AnimationTime * timeModifier).setLoopPingPong().setOnUpdateColor(
                             (Color colorToLoop) =>

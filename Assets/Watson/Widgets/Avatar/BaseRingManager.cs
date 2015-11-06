@@ -62,7 +62,7 @@ namespace IBM.Watson.Widgets.Avatar
             m_AvatarWidgetAttached = this.transform.GetComponentInParent<AvatarWidget>();
             if (m_AvatarWidgetAttached == null)
             {
-                Log.Error("AvatarModelManager", "There is no Avatar Widget on any parent.");
+				Log.Error("BaseRingManager " + this.name, "There is no Avatar Widget on any parent.");
                 this.enabled = false;
             }
         }
