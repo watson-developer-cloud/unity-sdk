@@ -206,8 +206,9 @@ namespace IBM.Watson.Widgets.Question
 		/// Event handler for dragging with one finger.
 		/// </summary>
 		/// <param name="args">Arguments of event. args[0] should be TouchScript.Gestures.ScreenTransformGesture</param>
-        public void DragOneFinger(object[] args)
+        public void DragOneFingerFullScreen(object[] args)
         {
+			Log.Warning("QuestWidget", "DragOneFingerOnObject FULLSCREEN ");
             if (args != null && args.Length == 1 && args[0] is TouchScript.Gestures.ScreenTransformGesture)
             {
                 TouchScript.Gestures.ScreenTransformGesture OneFingerManipulationGesture = args[0] as TouchScript.Gestures.ScreenTransformGesture;
@@ -217,8 +218,25 @@ namespace IBM.Watson.Widgets.Question
                     Cube.DragOneFinger(OneFingerManipulationGesture);
                 }
             }
-
         }
+
+		/// <summary>
+		/// Drags the one finger on object.
+		/// </summary>
+		/// <param name="args">Arguments.</param>
+		public void DragOneFingerOnObject(object[] args)
+		{
+			Log.Warning("QuestWidget", "DragOneFingerOnObject - OBJECT");
+			if (args != null && args.Length == 1 && args[0] is TouchScript.Gestures.ScreenTransformGesture)
+			{
+				TouchScript.Gestures.ScreenTransformGesture OneFingerManipulationGesture = args[0] as TouchScript.Gestures.ScreenTransformGesture;
+				
+				if (Cube != null)
+				{
+					Cube.DragOneFinger(OneFingerManipulationGesture);
+				}
+			}
+		}
 
 		/// <summary>
 		/// Raises the display answers event to show Answer face of the question widget.

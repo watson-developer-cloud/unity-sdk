@@ -18,6 +18,7 @@
 
 using UnityEngine;
 using System.Collections;
+using UnityEngine.Serialization;
 
 namespace IBM.Watson.Utilities
 {
@@ -128,9 +129,13 @@ namespace IBM.Watson.Utilities
 			/// </summary>
 			ON_QUESTIONCUBE_TAP_OUTSIDE,
 			/// <summary>
-			/// Event on Questino drag 
+			/// Event on Question cube drag via fullscreen
 			/// </summary>
-			ON_QUESTIONCUBE_DRAG_ONE_FINGER,
+			ON_QUESTIONCUBE_DRAG_ONE_FINGER_FULLSCREEN,
+			/// <summary>
+			/// Event on Question cube drag via object dragging
+			/// </summary>
+			ON_QUESTIONCUBE_DRAG_ONE_FINGER_OBJECT,
             #endregion
 
             #region Animation / Camera
