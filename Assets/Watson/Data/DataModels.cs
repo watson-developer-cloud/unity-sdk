@@ -79,182 +79,184 @@ namespace IBM.Watson.Data
     #endregion
 
     #region ITM Models
-    /// <summary>
-    /// This data class holds the data for a given pipeline.
-    /// </summary>
-    public class Pipeline
+    namespace ITM
     {
         /// <summary>
-        /// The ID of the pipeline.
+        /// This data class holds the data for a given pipeline.
         /// </summary>
-        public string _id { get; set; }
-        /// <summary>
-        /// The revision number of the pipeline.
-        /// </summary>
-        public string _rev { get; set; }
-        /// <summary>
-        /// The users client ID.
-        /// </summary>
-        public string clientId { get; set; }
-        /// <summary>
-        /// Name of the pipeline.
-        /// </summary>
-        public string pipelineName { get; set; }
-        /// <summary>
-        /// Type of pipeline.
-        /// </summary>
-        public string pipelineType { get; set; }
-        /// <summary>
-        /// The pipeline label.
-        /// </summary>
-        public string pipelineLabel { get; set; }
-        /// <summary>
-        /// The URL of the pipeline.
-        /// </summary>
-        public string pipelineUrl { get; set; }
-        /// <summary>
-        /// Path to the CAS for the pipeline.
-        /// </summary>
-        public string pipelineCas { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public string pipelineAnswerKey { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public string pipelineModel { get; set; }
-    };
-    /// <summary>
-    /// This data class is returned by the GetPipelines() function.
-    /// </summary>
-    public class Pipelines
-    {
-        /// <summary>
-        /// A array of pipelines.
-        /// </summary>
-        public Pipeline[] pipelines { get; set; }
-        /// <summary>
-        /// True if this pipeline is through ITM.
-        /// </summary>
-        public bool itm { get; set; }
-        /// <summary>
-        /// The name of the user.
-        /// </summary>
-        public string user { get; set; }
-        /// <summary>
-        /// The location of the user.
-        /// </summary>
-        public string location { get; set; }
-        /// <summary>
-        /// The session key for this login session.
-        /// </summary>
-        public long sessionKey { get; set; }
-    };
-    /// <summary>
-    /// Data class for GetQuestions() method.
-    /// </summary>
-    public class QuestionText
-    {
-        /// <summary>
-        /// A string array of focus elements in this question.
-        /// </summary>
-        public string[] focus { get; set; }
-        /// <summary>
-        /// A string array of the lat for the question.
-        /// </summary>
-        public string[] lat { get; set; }
-        /// <summary>
-        /// The question transcript.
-        /// </summary>
-        public string questionText { get; set; }
-        /// <summary>
-        /// The question transcript with tagged elements.
-        /// </summary>
-        public string taggedText { get; set; }
-    };
-    /// <summary>
-    /// Data class for GetQuestions() method.
-    /// </summary>
-    public class Question
-    {
-        /// <summary>
-        /// A question ID.
-        /// </summary>
-        public string _id { get; set; }
-        /// <summary>
-        /// A revision ID.
-        /// </summary>
-        public string _rev { get; set; }
-        /// <summary>
-        /// The top confidence of all the answers to this question.
-        /// </summary>
-        public double topConfidence { get; set; }
-        /// <summary>
-        /// The creation date for the question.
-        /// </summary>
-        public string createDate { get; set; }
-        public string createTime { get; set; }
-        public string transactionHash { get; set; }
-        public long transactionId { get; set; }
-        public string pipelineId { get; set; }
-        public string authorizationKey { get; set; }
-        public QuestionText question { get; set; }
-    };
-    /// <summary>
-    /// Data class for GetQuestions() method.
-    /// </summary>
-    public class Questions
-    {
-        /// <summary>
-        /// Array of questions returned by GetQuestions().
-        /// </summary>
-        public Question[] questions { get; set; }
-
-        public bool HasQuestion()
+        public class Pipeline
         {
-            return questions != null && questions.Length > 0;
-        }
-    };
-
-    /// <summary>
-    /// The position of a word in the parse tree data.
-    /// </summary>
-    public enum WordPosition
-    {
-        INVALID = -1,
-        NOUN,
-        PRONOUN,
-        ADJECTIVE,
-        DETERMINIER,
-        VERB,
-        ADVERB,
-        PREPOSITION,
-        CONJUNCTION,
-        INTERJECTION
-    };
-    /// <summary>
-    /// This data class holds a single word of the ParseData.
-    /// </summary>
-    public class ParseWord
-    {
-        public string Word { get; set; }
-        public WordPosition Pos { get; set; }
-        public string Slot { get; set; }
-        public string[] Features { get; set; }
-
-        public string PosName
+            /// <summary>
+            /// The ID of the pipeline.
+            /// </summary>
+            public string _id { get; set; }
+            /// <summary>
+            /// The revision number of the pipeline.
+            /// </summary>
+            public string _rev { get; set; }
+            /// <summary>
+            /// The users client ID.
+            /// </summary>
+            public string clientId { get; set; }
+            /// <summary>
+            /// Name of the pipeline.
+            /// </summary>
+            public string pipelineName { get; set; }
+            /// <summary>
+            /// Type of pipeline.
+            /// </summary>
+            public string pipelineType { get; set; }
+            /// <summary>
+            /// The pipeline label.
+            /// </summary>
+            public string pipelineLabel { get; set; }
+            /// <summary>
+            /// The URL of the pipeline.
+            /// </summary>
+            public string pipelineUrl { get; set; }
+            /// <summary>
+            /// Path to the CAS for the pipeline.
+            /// </summary>
+            public string pipelineCas { get; set; }
+            /// <summary>
+            /// 
+            /// </summary>
+            public string pipelineAnswerKey { get; set; }
+            /// <summary>
+            /// 
+            /// </summary>
+            public string pipelineModel { get; set; }
+        };
+        /// <summary>
+        /// This data class is returned by the GetPipelines() function.
+        /// </summary>
+        public class Pipelines
         {
-            set
+            /// <summary>
+            /// A array of pipelines.
+            /// </summary>
+            public Pipeline[] pipelines { get; set; }
+            /// <summary>
+            /// True if this pipeline is through ITM.
+            /// </summary>
+            public bool itm { get; set; }
+            /// <summary>
+            /// The name of the user.
+            /// </summary>
+            public string user { get; set; }
+            /// <summary>
+            /// The location of the user.
+            /// </summary>
+            public string location { get; set; }
+            /// <summary>
+            /// The session key for this login session.
+            /// </summary>
+            public long sessionKey { get; set; }
+        };
+        /// <summary>
+        /// Data class for GetQuestions() method.
+        /// </summary>
+        public class QuestionText
+        {
+            /// <summary>
+            /// A string array of focus elements in this question.
+            /// </summary>
+            public string[] focus { get; set; }
+            /// <summary>
+            /// A string array of the lat for the question.
+            /// </summary>
+            public string[] lat { get; set; }
+            /// <summary>
+            /// The question transcript.
+            /// </summary>
+            public string questionText { get; set; }
+            /// <summary>
+            /// The question transcript with tagged elements.
+            /// </summary>
+            public string taggedText { get; set; }
+        };
+        /// <summary>
+        /// Data class for GetQuestions() method.
+        /// </summary>
+        public class Question
+        {
+            /// <summary>
+            /// A question ID.
+            /// </summary>
+            public string _id { get; set; }
+            /// <summary>
+            /// A revision ID.
+            /// </summary>
+            public string _rev { get; set; }
+            /// <summary>
+            /// The top confidence of all the answers to this question.
+            /// </summary>
+            public double topConfidence { get; set; }
+            /// <summary>
+            /// The creation date for the question.
+            /// </summary>
+            public string createDate { get; set; }
+            public string createTime { get; set; }
+            public string transactionHash { get; set; }
+            public long transactionId { get; set; }
+            public string pipelineId { get; set; }
+            public string authorizationKey { get; set; }
+            public QuestionText question { get; set; }
+        };
+        /// <summary>
+        /// Data class for GetQuestions() method.
+        /// </summary>
+        public class Questions
+        {
+            /// <summary>
+            /// Array of questions returned by GetQuestions().
+            /// </summary>
+            public Question[] questions { get; set; }
+
+            public bool HasQuestion()
             {
-                WordPosition pos = WordPosition.INVALID;
-                if (!sm_WordPositions.TryGetValue(value, out pos))
-                    Log.Error("ITM", "Failed to find position type for {0}, Word: {1}", value, Word);
-                Pos = pos;
+                return questions != null && questions.Length > 0;
             }
-        }
+        };
 
-        private static Dictionary<string, WordPosition> sm_WordPositions = new Dictionary<string, WordPosition>()
+        /// <summary>
+        /// The position of a word in the parse tree data.
+        /// </summary>
+        public enum WordPosition
+        {
+            INVALID = -1,
+            NOUN,
+            PRONOUN,
+            ADJECTIVE,
+            DETERMINIER,
+            VERB,
+            ADVERB,
+            PREPOSITION,
+            CONJUNCTION,
+            INTERJECTION
+        };
+        /// <summary>
+        /// This data class holds a single word of the ParseData.
+        /// </summary>
+        public class ParseWord
+        {
+            public string Word { get; set; }
+            public WordPosition Pos { get; set; }
+            public string Slot { get; set; }
+            public string[] Features { get; set; }
+
+            public string PosName
+            {
+                set
+                {
+                    WordPosition pos = WordPosition.INVALID;
+                    if (!sm_WordPositions.TryGetValue(value, out pos))
+                        Log.Error("ITM", "Failed to find position type for {0}, Word: {1}", value, Word);
+                    Pos = pos;
+                }
+            }
+
+            private static Dictionary<string, WordPosition> sm_WordPositions = new Dictionary<string, WordPosition>()
         {
             { "noun", WordPosition.NOUN },
             { "pronoun", WordPosition.PRONOUN },        // ?
@@ -266,127 +268,128 @@ namespace IBM.Watson.Data
             { "conj", WordPosition.CONJUNCTION },       // ?
             { "inter", WordPosition.INTERJECTION },     // ?
         };
-    };
-    /// <summary>
-    /// This data class is returned by the GetParseData() function.
-    /// </summary>
-    public class ParseData
-    {
-        public string Id { get; set; }
-        public string Rev { get; set; }
-        public long TransactionId { get; set; }
-        public ParseWord[] Words { get; set; }
-        public string[] Heirarchy { get; set; }
-        public string[] Flags { get; set; }
-
-        public bool ParseJson(IDictionary json)
+        };
+        /// <summary>
+        /// This data class is returned by the GetParseData() function.
+        /// </summary>
+        public class ParseData
         {
-            try
+            public string Id { get; set; }
+            public string Rev { get; set; }
+            public long TransactionId { get; set; }
+            public ParseWord[] Words { get; set; }
+            public string[] Heirarchy { get; set; }
+            public string[] Flags { get; set; }
+
+            public bool ParseJson(IDictionary json)
             {
-                Id = (string)json["_id"];
-                Rev = (string)json["_rev"];
-                TransactionId = (long)json["transactionId"];
-
-                IDictionary iparse = (IDictionary)json["parse"];
-                List<string> heirarchy = new List<string>();
-                IList iheirarchy = (IList)iparse["hierarchy"];
-                foreach (var h in iheirarchy)
-                    heirarchy.Add((string)h);
-                Heirarchy = heirarchy.ToArray();
-
-                List<string> flags = new List<string>();
-                IList iflags = (IList)iparse["flags"];
-                foreach (var f in iflags)
-                    flags.Add((string)f);
-                Flags = flags.ToArray();
-
-                List<ParseWord> words = new List<ParseWord>();
-
-                IList iWords = (IList)iparse["words"];
-                for (int i = 0; i < iWords.Count; ++i)
+                try
                 {
-                    ParseWord word = new ParseWord();
-                    word.Word = (string)iWords[i];
+                    Id = (string)json["_id"];
+                    Rev = (string)json["_rev"];
+                    TransactionId = (long)json["transactionId"];
 
-                    IList iPos = (IList)iparse["pos"];
-                    if (iPos.Count != iWords.Count)
-                        throw new WatsonException("ipos.Count != iwords.Count");
-                    word.PosName = (string)((IDictionary)iPos[i])["value"];
+                    IDictionary iparse = (IDictionary)json["parse"];
+                    List<string> heirarchy = new List<string>();
+                    IList iheirarchy = (IList)iparse["hierarchy"];
+                    foreach (var h in iheirarchy)
+                        heirarchy.Add((string)h);
+                    Heirarchy = heirarchy.ToArray();
 
-                    IList iSlots = (IList)iparse["slot"];
-                    if (iSlots.Count != iWords.Count)
-                        throw new WatsonException("islots.Count != iwords.Count");
-                    word.Slot = (string)((IDictionary)iSlots[i])["value"];
+                    List<string> flags = new List<string>();
+                    IList iflags = (IList)iparse["flags"];
+                    foreach (var f in iflags)
+                        flags.Add((string)f);
+                    Flags = flags.ToArray();
 
-                    IList iFeatures = (IList)iparse["features"];
-                    if (iFeatures.Count != iWords.Count)
-                        throw new WatsonException("ifeatures.Count != iwords.Count");
+                    List<ParseWord> words = new List<ParseWord>();
 
-                    List<string> features = new List<string>();
-                    IList iWordFeatures = (IList)((IDictionary)iFeatures[i])["value"];
-                    foreach (var k in iWordFeatures)
-                        features.Add((string)k);
-                    word.Features = features.ToArray();
+                    IList iWords = (IList)iparse["words"];
+                    for (int i = 0; i < iWords.Count; ++i)
+                    {
+                        ParseWord word = new ParseWord();
+                        word.Word = (string)iWords[i];
 
-                    words.Add(word);
+                        IList iPos = (IList)iparse["pos"];
+                        if (iPos.Count != iWords.Count)
+                            throw new WatsonException("ipos.Count != iwords.Count");
+                        word.PosName = (string)((IDictionary)iPos[i])["value"];
+
+                        IList iSlots = (IList)iparse["slot"];
+                        if (iSlots.Count != iWords.Count)
+                            throw new WatsonException("islots.Count != iwords.Count");
+                        word.Slot = (string)((IDictionary)iSlots[i])["value"];
+
+                        IList iFeatures = (IList)iparse["features"];
+                        if (iFeatures.Count != iWords.Count)
+                            throw new WatsonException("ifeatures.Count != iwords.Count");
+
+                        List<string> features = new List<string>();
+                        IList iWordFeatures = (IList)((IDictionary)iFeatures[i])["value"];
+                        foreach (var k in iWordFeatures)
+                            features.Add((string)k);
+                        word.Features = features.ToArray();
+
+                        words.Add(word);
+                    }
+
+                    Words = words.ToArray();
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    Log.Error("ITM", "Exception during parse: {0}", e.ToString());
                 }
 
-                Words = words.ToArray();
-                return true;
+                return false;
             }
-            catch (Exception e)
-            {
-                Log.Error("ITM", "Exception during parse: {0}", e.ToString());
-            }
+        };
 
-            return false;
-        }
-    };
-
-    public class Evidence
-    {
-        public string title { get; set; }
-        public string passage { get; set; }
-        public string decoratedPassage { get; set; }
-        public string corpus { get; set; }
-    };
-    public class Variant
-    {
-        public string text { get; set; }
-        public string relationship { get; set; }
-    };
-    public class Feature
-    {
-        public string featureId { get; set; }
-        public string label { get; set; }
-        public string displayLabel { get; set; }
-        public double unweightedScore { get; set; }
-        public double weightedScore { get; set; }
-    };
-    public class Answer
-    {
-        public string answerText { get; set; }
-        public double confidence { get; set; }
-        public bool correctAnswer { get; set; }
-        public Evidence[] evidence { get; set; }
-        public Variant[] variants { get; set; }
-        public Feature[] features { get; set; }
-    };
-    public class Answers
-    {
-        public string _id { get; set; }
-        public string _rev { get; set; }
-        public long transactionId { get; set; }
-        public double featureScoreMin { get; set; }
-        public double featureScoreMax { get; set; }
-        public double featureScoreRange { get; set; }
-        public Answer[] answers { get; set; }
-
-        public bool HasAnswer()
+        public class Evidence
         {
-            return answers != null && answers.Length > 0;
-        }
-    };
+            public string title { get; set; }
+            public string passage { get; set; }
+            public string decoratedPassage { get; set; }
+            public string corpus { get; set; }
+        };
+        public class Variant
+        {
+            public string text { get; set; }
+            public string relationship { get; set; }
+        };
+        public class Feature
+        {
+            public string featureId { get; set; }
+            public string label { get; set; }
+            public string displayLabel { get; set; }
+            public double unweightedScore { get; set; }
+            public double weightedScore { get; set; }
+        };
+        public class Answer
+        {
+            public string answerText { get; set; }
+            public double confidence { get; set; }
+            public bool correctAnswer { get; set; }
+            public Evidence[] evidence { get; set; }
+            public Variant[] variants { get; set; }
+            public Feature[] features { get; set; }
+        };
+        public class Answers
+        {
+            public string _id { get; set; }
+            public string _rev { get; set; }
+            public long transactionId { get; set; }
+            public double featureScoreMin { get; set; }
+            public double featureScoreMax { get; set; }
+            public double featureScoreRange { get; set; }
+            public Answer[] answers { get; set; }
+
+            public bool HasAnswer()
+            {
+                return answers != null && answers.Length > 0;
+            }
+        };
+    }
     #endregion
 
     #region Translation Models
@@ -823,8 +826,8 @@ namespace IBM.Watson.Data
             public string id { get; set; }
             public string questionText { get; set; }
             public EvidenceRequest evidenceRequest { get; set; }
-            public Answer [] answers { get; set; }
-            public string [] errorNotifications { get; set; }
+            public Answer[] answers { get; set; }
+            public string[] errorNotifications { get; set; }
             public string passthru { get; set; }
         };
         public class QuestionClass
@@ -839,12 +842,12 @@ namespace IBM.Watson.Data
         public class Response
         {
             public Question question { get; set; }
-            public QuestionClass [] questionClasses { get; set; }             
+            public QuestionClass[] questionClasses { get; set; }
         };
 
         public class ResponseList
         {
-            public Response [] responses { get; set; }
+            public Response[] responses { get; set; }
         };
     }
     #endregion
