@@ -778,8 +778,9 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
 			return;
 		}
 
-		if (AnimationState == CubeAnimationState.IDLE_AS_FOCUSED) {
-			TapInsideOnFocusedSide(tapGesture, SideOfTap(hitTransform));
+		CubeSideType sideTapped = SideOfTap (hitTransform);
+		if (AnimationState == CubeAnimationState.IDLE_AS_FOCUSED && sideTapped == SideFocused) {
+			TapInsideOnFocusedSide(tapGesture, sideTapped);
 		} else {
 			//Touch on side
 			switch (AnimationState)
@@ -792,19 +793,19 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
 				UnFold();
 				break;
 			case CubeAnimationManager.CubeAnimationState.UNFOLDING:
-				FocusOnSide(hitTransform);
+				FocusOnSide(sideTapped);
 				break;
 			case CubeAnimationManager.CubeAnimationState.IDLE_AS_UNFOLDED:
-				FocusOnSide(hitTransform);
+				FocusOnSide(sideTapped);
 				break;
 			case CubeAnimationManager.CubeAnimationState.FOLDING:
 				UnFold();
 				break;
 			case CubeAnimationManager.CubeAnimationState.FOCUSING_TO_SIDE:
-				FocusOnSide(hitTransform);
+				FocusOnSide(sideTapped);
 				break;
 			case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOCUSED:
-				FocusOnSide(hitTransform);
+				FocusOnSide(sideTapped);
 				break;
 			case CubeAnimationManager.CubeAnimationState.GOING_FROM_SCENE:
 				break;
@@ -837,8 +838,9 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
 			return;
 		}
 
-		if (AnimationState == CubeAnimationState.IDLE_AS_FOCUSED) {
-			TapOutsideOnFocusedSide(tapGesture, SideOfTap(hitTransform));
+		CubeSideType sideTapped = SideOfTap (hitTransform);
+		if (AnimationState == CubeAnimationState.IDLE_AS_FOCUSED && sideTapped == SideFocused) {
+			TapOutsideOnFocusedSide(tapGesture, sideTapped);
 		} else {
 			//Touch out-side
 			switch (AnimationState)
@@ -875,11 +877,13 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
 	private void TapInsideOnFocusedSide(TouchScript.Gestures.TapGesture tapGesture, CubeSideType sideTapped)
 	{
 		//TODO: Tap inside while cube is on focused!
+		Log.Status("CubeAnimationManager", "TapInsideOnFocusedSide " + tapGesture.ScreenPosition + " sideTapped: " + sideTapped);
 	}
 
 	private void TapOutsideOnFocusedSide(TouchScript.Gestures.TapGesture tapGesture, CubeSideType sideTapped)
 	{
 		//TODO: Tap outside while cube is on focused!
+		Log.Status("CubeAnimationManager", "TapOutsideOnFocusedSide " + tapGesture.ScreenPosition + " sideTapped: " + sideTapped);
 	}
 
 	#endregion
