@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &137070
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 452220}
+  - 114: {fileID: 11423638}
+  m_Layer: 0
+  m_Name: XRAY
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &452220
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 137070}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+--- !u!114 &11423638
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 137070}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d93da73dba5f4142a000ef6c7306aa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Prefabs:
+  - {fileID: 138316, guid: 89e4faba658e44f1e89230da4f7e3a29, type: 2}
+  - {fileID: 109220, guid: 18d6f509dac7d89419df972e1daa5d9b, type: 2}
+  - {fileID: 128814, guid: 18041b08a97af044b9ed873cee55931d, type: 2}
+  - {fileID: 102342, guid: ef765b1d78df64dc9a0eeb08f256f4c6, type: 2}
+  - {fileID: 107580, guid: d184dafb38dcd454fa71b0a822fd916a, type: 2}
+  - {fileID: 114318, guid: 5ede5fbf52db1b6449b7544ad5f20583, type: 2}
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: layers.Array.data[0]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Prefabs.Array.data[0]
+      value: 
+      objectReference: {fileID: 138316, guid: 89e4faba658e44f1e89230da4f7e3a29, type: 2}
+    - target: {fileID: 0}
+      propertyPath: m_Prefabs.Array.data[3]
+      value: 
+      objectReference: {fileID: 102342, guid: ef765b1d78df64dc9a0eeb08f256f4c6, type: 2}
+    - target: {fileID: 0}
+      propertyPath: m_Prefabs.Array.data[1]
+      value: 
+      objectReference: {fileID: 109220, guid: 18d6f509dac7d89419df972e1daa5d9b, type: 2}
+    - target: {fileID: 0}
+      propertyPath: m_Prefabs.Array.data[2]
+      value: 
+      objectReference: {fileID: 128814, guid: 18041b08a97af044b9ed873cee55931d, type: 2}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 137070}
+  m_IsPrefabParent: 1

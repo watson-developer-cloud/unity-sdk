@@ -59,6 +59,8 @@ namespace IBM.Watson.Editor
                 URL ="https://console.ng.bluemix.net/catalog/language-translation/", ServiceID="TranslateV1" },
             new ServiceSetup() { ServiceName = "Natural Language Classifier", ServiceAPI = "natural-language-classifier/api",
                 URL ="https://console.ng.bluemix.net/catalog/natural-language-classifier/", ServiceID="NlcV1" },
+            new ServiceSetup() { ServiceName = "Question and Answer", ServiceAPI = "question-and-answer-beta/api",
+                URL ="https://console.ng.bluemix.net/catalog/question-and-answer/", ServiceID="QuestionAnswerV1" },
         };
 
         private const string TITLE = "Watson Unity SDK";
@@ -265,8 +267,10 @@ namespace IBM.Watson.Editor
                         if (!string.IsNullOrEmpty(www.text))
                         {
                             IDictionary json = MiniJSON.Json.Deserialize(www.text) as IDictionary;
-                            if (json.Contains("status"))
+                            if ( json != null && json.Contains("status"))
                                 bRegistered = (long)json["status"] != 0;
+                            else
+                                Log.Error( "ConfigEditor", "Invalid response from gateway: {0}", www.text );
                         }
 
                         if (bRegistered)

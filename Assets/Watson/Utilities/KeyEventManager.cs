@@ -43,17 +43,10 @@ namespace IBM.Watson.Utilities
         private int MODIFIER_SHIFT_BITS = 10;
         private int KEYCODE_MASK = (1 << 10) - 1;
 
-        #region Public Types
-        /// <summary>
-        /// Key press delegate callback.
-        /// </summary>
-        public delegate void KeyEventDelegate();
-        #endregion
-
         #region Private Data
         private bool m_Active = true;
         private bool m_UpdateActivate = true;
-        private Dictionary<int, List<KeyEventDelegate>> m_KeyEvents = new Dictionary<int, List<KeyEventDelegate>>();
+        private Dictionary<int, Constants.Event> m_KeyEvents = new Dictionary<int, Constants.Event>();
         #endregion
 
         #region Public Properties
@@ -75,13 +68,10 @@ namespace IBM.Watson.Utilities
         /// <param name="modifiers">KeyCode modifiers</param>
         /// <param name="callback">The delegate to invoke.</param>
         /// <returns>True is returned on success.</returns>
-        public bool RegisterKeyEvent(KeyCode key, KeyModifiers modifiers, KeyEventDelegate callback)
+        public bool RegisterKeyEvent(KeyCode key, KeyModifiers modifiers, Constants.Event eventType)
         {
             int code = ((int)key) | (((int)modifiers) << MODIFIER_SHIFT_BITS);
-            if (m_KeyEvents.ContainsKey(code))
-                m_KeyEvents[code].Add( callback );
-            else
-                m_KeyEvents[code] = new List<KeyEventDelegate>() { callback };
+            m_KeyEvents[code] = eventType;
             return true;
         }
         /// <summary>
@@ -91,11 +81,11 @@ namespace IBM.Watson.Utilities
         /// <param name="modifiers">Additional keys that must be down as well to fire the event.</param>
         /// <param name="callback">If provided, then the key will be unregistered only the callback matches the existing registration.</param>
         /// <returns>True is returned on success.</returns>
-		public bool UnregisterKeyEvent(KeyCode key, KeyModifiers modifiers = KeyModifiers.NONE, KeyEventDelegate callback = null )
+		public bool UnregisterKeyEvent(KeyCode key, KeyModifiers modifiers = KeyModifiers.NONE, Constants.Event eventType = Constants.Event.NONE )
         {
             int code = ((int)key) | (((int)modifiers) << MODIFIER_SHIFT_BITS);
-            if (callback != null && m_KeyEvents.ContainsKey(code) )
-                return m_KeyEvents[code].Remove( callback );
+            if ( eventType != Constants.Event.NONE && m_KeyEvents.ContainsKey(code) && m_KeyEvents[code] == eventType )
+                return m_KeyEvents.Remove( code );
 
             return m_KeyEvents.Remove(code);
         }
@@ -106,7 +96,7 @@ namespace IBM.Watson.Utilities
         {
             if (m_Active)
             {
-                List<KeyEventDelegate> fire = new List<KeyEventDelegate>();
+                List<Constants.Event> fire = new List<Constants.Event>();
                 foreach (var kp in m_KeyEvents)
                 {
                     KeyCode key = (KeyCode)(kp.Key & KEYCODE_MASK);
@@ -136,16 +126,13 @@ namespace IBM.Watson.Utilities
                         }
 
                         if (bFireEvent)
-                            fire.AddRange(kp.Value);
+                            fire.Add(kp.Value);
                     }
                 }
 
                 // now fire the events outside of the dictionary loop so we don't throw an exception..
                 foreach (var ev in fire)
-                {
-                    if (ev != null)
-                        ev();
-                }
+                    EventManager.Instance.SendEvent( ev );
             }
 
             // update our active flag AFTER we check the active flag, this prevents

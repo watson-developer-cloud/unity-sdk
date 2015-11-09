@@ -18,6 +18,7 @@
 
 using UnityEngine;
 using System.Collections;
+using UnityEngine.Serialization;
 
 namespace IBM.Watson.Utilities
 {
@@ -46,18 +47,44 @@ namespace IBM.Watson.Utilities
         /// </summary>
         public enum Event
         {
+            NONE = -1,
+
+            #region Debug
             /// <summary>
-            /// Event to open debug console
+            /// Send a debug command.
             /// </summary>
-            ON_DEBUG_COMMAND,
+            ON_DEBUG_COMMAND = 0,
+            /// <summary>
+            /// TOggle the debug console on or off.
+            /// </summary>
+            ON_DEBUG_TOGGLE,
+            /// <summary>
+            /// BEgin editing a command in the debug console.
+            /// </summary>
+            ON_DEBUG_BEGIN_COMMAND,
             /// <summary>
             /// Event to send debug message
             /// </summary>
             ON_DEBUG_MESSAGE,
             /// <summary>
+            /// Event to change quality settings
+            /// </summary>
+            ON_CHANGE_QUALITY,
+            /// <summary>
+            /// Event after Quality Settings change
+            /// </summary>
+            ON_CHANGE_QUALITY_FINISH,
+            /// <summary>
+            /// Event to close the application
+            /// </summary>
+            ON_APPLICATION_QUIT,
+            #endregion
+
+            #region Avatar 
+            /// <summary>
             /// Event to change Avatar mood
             /// </summary>
-            ON_CHANGE_AVATAR_MOOD,
+            ON_CHANGE_AVATAR_MOOD = 100,
             /// <summary>
             /// Event after Avatar mood change
             /// </summary>
@@ -70,22 +97,52 @@ namespace IBM.Watson.Utilities
             /// Event after Avatar state change
             /// </summary>
             ON_CHANGE_AVATAR_STATE_FINISH,
-            /// <summary>
-            /// Event to change quality settings
-            /// </summary>
-            ON_CHANGE_QUALITY,
-            /// <summary>
-            /// Event after Quality Settings change
-            /// </summary>
-            ON_CHANGE_QUALITY_FINISH,
+			/// <summary>
+			/// Event to avatar move down
+			/// </summary>
+			ON_AVATAR_MOVE_DOWN,
+			/// <summary>
+			/// The event to move the avatar initial position
+			/// </summary>
+			ON_AVATAR_MOVE_DEFAULT,
+			/// <summary>
+			/// Event to stop avatar move down
+			/// </summary>
+			ON_AVATAR_STOP_MOVE_DOWN,
+			/// <summary>
+			/// The event to stop move the avatar initial position
+			/// </summary>
+			ON_AVATAR_STOP_MOVE_DEFAULT,
+            #endregion
+
+            #region Question
             /// <summary>
             /// Event on Question Cube state change
             /// </summary>
-            ON_CHANGE_STATE_QUESTIONCUBE_ANIMATION,
+            ON_CHANGE_STATE_QUESTIONCUBE_ANIMATION = 200,
+			/// <summary>
+			/// Event on Question tap inside question cube
+			/// </summary>
+			ON_QUESTIONCUBE_TAP_INSIDE,
+			/// <summary>
+			/// Event on Question tap outside question cube
+			/// </summary>
+			ON_QUESTIONCUBE_TAP_OUTSIDE,
+			/// <summary>
+			/// Event on Question cube drag via fullscreen
+			/// </summary>
+			ON_QUESTIONCUBE_DRAG_ONE_FINGER_FULLSCREEN,
+			/// <summary>
+			/// Event on Question cube drag via object dragging
+			/// </summary>
+			ON_QUESTIONCUBE_DRAG_ONE_FINGER_OBJECT,
+            #endregion
+
+            #region Animation / Camera
             /// <summary>
             /// Event to Stop the all animations
             /// </summary>
-            ON_ANIMATION_STOP,
+            ON_ANIMATION_STOP = 300,
             /// <summary>
             /// Event to pause the all animations playing
             /// </summary>
@@ -105,7 +162,99 @@ namespace IBM.Watson.Utilities
             /// <summary>
             /// Event to set the default speed on animations
             /// </summary>
-            ON_ANIMATION_SPEED_DEFAULT
+            ON_ANIMATION_SPEED_DEFAULT,
+            /// <summary>
+            /// Event to drag camera with two finger to zoom and pan
+            /// </summary>
+            ON_CAMERA_DRAG_TWO_FINGER,
+            /// <summary>
+            /// Event to zoom-in camera
+            /// </summary>
+            ON_CAMERA_ZOOM_IN,
+            /// <summary>
+            /// Event to zoom-out camera
+            /// </summary>
+            ON_CAMERA_ZOOM_OUT,
+            /// <summary>
+            /// Event to move the camera left
+            /// </summary>
+            ON_CAMERA_MOVE_LEFT,
+            /// <summary>
+            /// Event to move the camera right
+            /// </summary>
+            ON_CAMERA_MOVE_RIGHT,
+            /// <summary>
+            /// Event to move the camera up
+            /// </summary>
+            ON_CAMERA_MOVE_UP,
+            /// <summary>
+            /// Event to move the camera down
+            /// </summary>
+            ON_CAMERA_MOVE_DOWN,
+            
+            #endregion
+
+            #region NLC
+
+            /// <summary>
+            /// 
+            /// </summary>
+            ON_CLASSIFY_FAILURE = 400,
+            /// <summary>
+            /// 
+            /// </summary>
+            ON_CLASSIFY_QUESTION,
+            /// <summary>
+            /// 
+            /// </summary>
+            ON_CLASSIFY_DIALOG,
+            /// <summary>
+            /// 
+            /// </summary>
+            ON_COMMAND_WAKEUP,
+            /// <summary>
+            /// 
+            /// </summary>
+            ON_COMMAND_SLEEP,
+            /// <summary>
+            /// 
+            /// </summary>
+            ON_COMMAND_DEBUGON,
+            /// <summary>
+            /// 
+            /// </summary>
+            ON_COMMAND_DEBUGOFF,
+            /// <summary>
+            /// 
+            /// </summary>
+            ON_COMMAND_FOLD,
+            /// <summary>
+            /// 
+            /// </summary>
+            ON_COMMAND_UNFOLD,
+            /// <summary>
+            /// 
+            /// </summary>
+            ON_COMMAND_ANSWERS,
+            /// <summary>
+            /// 
+            /// </summary>
+            ON_COMMAND_EVIDENCE,
+            /// <summary>
+            /// 
+            /// </summary>
+            ON_COMMAND_CHAT,
+            /// <summary>
+            /// 
+            /// </summary>
+            ON_COMMAND_PARSE,
+            /// <summary>
+            /// 
+            /// </summary>
+            ON_COMMAND_LOCATION,
+
+            #endregion
+            
         }
 
         /// <summary>

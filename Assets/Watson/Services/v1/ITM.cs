@@ -19,7 +19,7 @@
 
 using FullSerializer;
 using IBM.Watson.Connection;
-using IBM.Watson.Data;
+using IBM.Watson.Data.ITM;
 using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
 using MiniJSON;

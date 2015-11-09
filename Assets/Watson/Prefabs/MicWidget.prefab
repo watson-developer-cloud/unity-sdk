@@ -110,14 +110,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 131721b15c8a68d438d5b7163a1c05df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AutoConnect: 0
+  m_AutoConnect: 1
   m_ActivateOnStart: 1
   m_AudioOutput:
     m_TargetObject: {fileID: 0}
-    m_TargetConnection: SpeechToText/Audio
+    m_TargetConnection: 
   m_LevelOutput:
     m_TargetObject: {fileID: 0}
-    m_TargetConnection: Avatar/Level
+    m_TargetConnection: 
   m_ActivateOutput:
     m_TargetObject: {fileID: 0}
     m_TargetConnection: 
@@ -125,7 +125,7 @@ MonoBehaviour:
   m_RecordingHZ: 22050
   m_MicrophoneID: 
   m_LevelOutputInterval: .0500000007
-  m_PlaybackRecording: 1
+  m_PlaybackRecording: 0
   m_StatusText: {fileID: 0}
 --- !u!1001 &100100000
 Prefab:
@@ -133,7 +133,23 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: m_AutoConnect
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_LevelOutput.m_TargetConnection
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_AudioOutput.m_TargetConnection
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_PlaybackRecording
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 121396}

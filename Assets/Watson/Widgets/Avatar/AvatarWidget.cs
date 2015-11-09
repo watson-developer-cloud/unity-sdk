@@ -21,6 +21,7 @@
 using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
 using IBM.Watson.Data;
+using IBM.Watson.Data.ITM;
 using IBM.Watson.Services.v1;
 using UnityEngine;
 using System;
@@ -34,10 +35,6 @@ namespace IBM.Watson.Widgets.Avatar
     /// <summary>
     /// Avatar of Watson 
     /// </summary>
-    //[RequireComponent(typeof(AudioSource))]
-    //[RequireComponent(typeof(MicrophoneWidget))]
-    //[RequireComponent(typeof(SpeechToTextWidget))]
-    //[RequireComponent(typeof(TextToSpeechWidget))]
     public class AvatarWidget : Widget, IQuestionData
     {
         #region Public Types
@@ -161,11 +158,13 @@ namespace IBM.Watson.Widgets.Avatar
                 {
                     m_State = value;
                     EventManager.Instance.SendEvent(Constants.Event.ON_CHANGE_AVATAR_STATE_FINISH, this, value);
-
-                    // if we went into an error state, automatically try to reconnect after a timeout..
+					// if we went into an error state, automatically try to reconnect after a timeout..
                     if (m_State == AvatarState.ERROR)
                         Invoke("StartAvatar", m_RestartInterval);
                 }
+
+				if(m_State == AvatarState.CONNECTING || m_State == AvatarState.ERROR)
+					Mood = MoodType.SLEEPING;
             }
         }
 
@@ -201,62 +200,34 @@ namespace IBM.Watson.Widgets.Avatar
         void OnEnable()
         {
             EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_CHANGE_AVATAR_MOOD, OnChangeMood);
-            EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_DEBUG_COMMAND, OnDebugCommand);
 
             DebugConsole.Instance.RegisterDebugInfo("STATE", OnStateDebugInfo);
             DebugConsole.Instance.RegisterDebugInfo("MOOD", OnMoodDebugInfo);
             DebugConsole.Instance.RegisterDebugInfo("CLASS", OnClassifyDebugInfo);
             DebugConsole.Instance.RegisterDebugInfo("Q", OnQuestionDebugInfo);
             DebugConsole.Instance.RegisterDebugInfo("A", OnAnwserDebugInfo);
-
-            //KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.QUESTION_WAKEUP, Constants.KeyCodes.MODIFIER_KEY, OnExampleQuestion);
-            //KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CHANGE_MOOD, Constants.KeyCodes.MODIFIER_KEY, OnNextMood);
-
         }
         void OnDisable()
         {
-
             EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_CHANGE_AVATAR_MOOD, OnChangeMood);
-            EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_DEBUG_COMMAND, OnDebugCommand);
 
             DebugConsole.Instance.UnregisterDebugInfo("STATE", OnStateDebugInfo);
             DebugConsole.Instance.UnregisterDebugInfo("MOOD", OnMoodDebugInfo);
             DebugConsole.Instance.UnregisterDebugInfo("CLASS", OnClassifyDebugInfo);
             DebugConsole.Instance.UnregisterDebugInfo("Q", OnQuestionDebugInfo);
             DebugConsole.Instance.UnregisterDebugInfo("A", OnAnwserDebugInfo);
-
-            //KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.QUESTION_WAKEUP, Constants.KeyCodes.MODIFIER_KEY, OnExampleQuestion);
-            //KeyEventManager.Instance.UnregisterKeyEvent(Constants.KeyCodes.CHANGE_MOOD, Constants.KeyCodes.MODIFIER_KEY, OnNextMood);
         }
 
+        /// <exclude />
+        protected override void Awake()
+        {
+            base.Awake();
+        }
         /// <exclude />
         protected override void Start()
         {
             base.Start();
-
-            Mood = MoodType.SLEEPING;
-            State = AvatarState.CONNECTING;
-
             StartAvatar();
-        }
-
-        private void OnDebugCommand(object[] args)
-        {
-            if (State != AvatarState.ERROR)
-            {
-                if (args.Length > 0 && args[0] is string)
-                {
-                    string text = args[0] as string;
-                    if (!string.IsNullOrEmpty(text))
-                    {
-                        State = AvatarState.THINKING;
-
-                        NlcWidget nlc = GetComponentInChildren<NlcWidget>();
-                        if (nlc != null)
-                            nlc.ClassifyText(text);
-                    }
-                }
-            }
         }
 
         private string OnStateDebugInfo()
@@ -370,24 +341,51 @@ namespace IBM.Watson.Widgets.Avatar
         }
         #endregion
 
-        #region Classifier Callbacks
-        public void OnWakeup(ClassifyResult result)
+        #region Event Handlers
+        private ClassifyResult GetClassifyResult( object [] args )
+        {
+            if ( args != null && args.Length > 0 )
+                return args[0] as ClassifyResult;
+            return null;
+        }
+
+        /// <summary>
+        /// Event Handler for ON_CLASSIFY_FAILURE
+        /// </summary>
+        /// <param name="args"></param>
+        public void OnClassifyFailure( object [] args )
+        {
+            m_TextOutput.SendData(new TextData(m_RecognizeFailure));
+            State = AvatarState.LISTENING;
+        }
+
+        /// <summary>
+        /// Event handler for ON_COMMAND_WAKEUP
+        /// </summary>
+        /// <param name="args"></param>
+        public void OnWakeup( object [] args )
         {
             if (Mood == MoodType.SLEEPING)
             {
                 Mood = MoodType.IDLE;
+                State = AvatarState.LISTENING;
 
                 InstatiateQuestionWidget();
 
                 // start a conversation with the dialog..
-                if (!string.IsNullOrEmpty(m_DialogId))
+                ClassifyResult result = GetClassifyResult( args );
+                if ( result != null && !string.IsNullOrEmpty(m_DialogId))
                     m_Dialog.Converse(m_DialogId, result.text, OnDialogResponse, 0, m_DialogClientId);
                 else
                     m_TextOutput.SendData(new TextData(m_Hello));
             }
         }
 
-        public void OnSleep(ClassifyResult result)
+        /// <summary>
+        /// Event handler for ON_COMMAND_SLEEP
+        /// </summary>
+        /// <param name="args"></param>
+        public void OnSleep(object [] args)
         {
             if (Mood != MoodType.SLEEPING)
             {
@@ -402,12 +400,20 @@ namespace IBM.Watson.Widgets.Avatar
             }
         }
 
-        public void OnQuestion(ClassifyResult result)
+        /// <summary>
+        /// Event handler for ON_CLASSIFY_QUESTION
+        /// </summary>
+        /// <param name="args"></param>
+        public void OnQuestion(object [] args)
         {
+            ClassifyResult result = GetClassifyResult( args );
+            if ( result == null )
+                throw new WatsonException( "ClassifyResult expected." );
+
             if (Mood != MoodType.SLEEPING)
             {
                 m_ClassifyResult = result;
-                State = AvatarState.ANSWERING;
+                State = AvatarState.LISTENING;
 
                 if (m_ITM.AskQuestion(result.text, OnAskQuestion))
                 {
@@ -421,13 +427,21 @@ namespace IBM.Watson.Widgets.Avatar
             }
         }
 
-        public void OnDialog(ClassifyResult result)
+        /// <summary>
+        /// Event handler for ON_CLASSIFY_DIALOG
+        /// </summary>
+        /// <param name="args"></param>
+        public void OnDialog(object [] args)
         {
-            if (Mood != MoodType.SLEEPING)
+            ClassifyResult result = GetClassifyResult( args );
+            if ( result == null )
+                throw new WatsonException( "ClassifyResult expected." );
+
+            if ( Mood != MoodType.SLEEPING)
             {
                 m_ClassifyResult = result;
-                State = AvatarState.LISTENING;
 
+                State = AvatarState.LISTENING;
                 if (!string.IsNullOrEmpty(m_DialogId))
                 {
                     if (m_Dialog.Converse(m_DialogId, result.text, OnDialogResponse,
@@ -439,13 +453,21 @@ namespace IBM.Watson.Widgets.Avatar
             }
         }
 
-        public void OnDebugOn(ClassifyResult result)
+        /// <summary>
+        /// Event handler for ON_COMMAND_DEBUGON
+        /// </summary>
+        /// <param name="args"></param>
+        public void OnDebugOn(object [] args)
         {
             DebugConsole.Instance.Active = true;
             State = AvatarState.LISTENING;
         }
 
-        public void OnDebugOff(ClassifyResult result)
+        /// <summary>
+        /// Event handler for ON_COMMAND_DEBUGOFF
+        /// </summary>
+        /// <param name="args"></param>
+        public void OnDebugOff(object [] args)
         {
             DebugConsole.Instance.Active = false;
             State = AvatarState.LISTENING;
@@ -480,7 +502,7 @@ namespace IBM.Watson.Widgets.Avatar
 
             if (m_QuestionResult != null && m_QuestionResult.HasQuestion())
             {
-                Watson.Data.Question topQuestion = m_QuestionResult.questions[0];
+                Watson.Data.ITM.Question topQuestion = m_QuestionResult.questions[0];
                 if (OnQuestionEvent != null)
                     OnQuestionEvent(topQuestion.question.questionText);
 
@@ -545,10 +567,7 @@ namespace IBM.Watson.Widgets.Avatar
         private void InstatiateQuestionWidget()
         {
             if (m_FocusQuestion != null)
-            {
-                m_FocusQuestion.Focused = false;    //lost focus and sent out the scene!
                 m_FocusQuestion.OnLeaveTheSceneAndDestroy();
-            }
 
             if (m_QuestionPrefab != null)	//m_FocusQuestion == null && 
             {
@@ -558,18 +577,6 @@ namespace IBM.Watson.Widgets.Avatar
                     throw new WatsonException("Question prefab is missing QuestionWidget");
                 m_FocusQuestion.QuestionData = this;
                 m_FocusQuestion.Focused = true;	//currently our focus object
-
-                ClassifierWidget myClassifier = GetComponentInChildren<ClassifierWidget>();
-                if (myClassifier != null)
-                {
-                    ClassifierWidget targetClassifier = m_FocusQuestion.GetComponentInChildren<ClassifierWidget>();
-                    if (targetClassifier != null)
-                        myClassifier.ClassifyOutput.TargetInput = targetClassifier.ClassifyInput;
-                    else
-                        Log.Error("AvatarWidget", "QuestionWidget is missing ClassifierWidget.");
-                }
-                else
-                    Log.Error("AvatarWidget", "AvatarWidget is missing ClassifierWidget.");
             }
         }
 

@@ -16,6 +16,7 @@
 * @author Richard Lyle (rolyle@us.ibm.com)
 */
 
+
 using IBM.Watson.Logging;
 using System;
 using System.Collections;
@@ -51,10 +52,10 @@ namespace IBM.Watson.Utilities
         /// <param name="callback">The event receiver function.</param>
         public void RegisterEventReceiver(string eventName, OnReceiveEvent callback)
         {
-			if (!m_EventMap.ContainsKey (eventName))
-				m_EventMap.Add (eventName, new List<OnReceiveEvent> (){callback});
-			else	
-            	m_EventMap[eventName].Add(callback);
+            if (!m_EventMap.ContainsKey(eventName))
+                m_EventMap.Add(eventName, new List<OnReceiveEvent>() { callback });
+            else
+                m_EventMap[eventName].Add(callback);
         }
 
         /// <summary>
@@ -64,7 +65,9 @@ namespace IBM.Watson.Utilities
         /// <param name="callback">The event receiver function.</param>
         public void RegisterEventReceiver(Constants.Event eventType, OnReceiveEvent callback)
         {
-            RegisterEventReceiver(((int)eventType).ToString(), callback);
+            if (m_EventTypeName.Count == 0)
+                InitializeEventTypeNames();
+            RegisterEventReceiver(m_EventTypeName[eventType], callback);
         }
 
         /// <summary>
@@ -102,7 +105,9 @@ namespace IBM.Watson.Utilities
         /// <param name="callback">The event handler.</param>
         public void UnregisterEventReceiver(Constants.Event eventType, OnReceiveEvent callback)
         {
-            UnregisterEventReceiver(((int)eventType).ToString(), callback);
+            if (m_EventTypeName.Count == 0)
+                InitializeEventTypeNames();
+            UnregisterEventReceiver(m_EventTypeName[eventType], callback);
         }
 
 
@@ -114,8 +119,8 @@ namespace IBM.Watson.Utilities
         /// <returns>Returns true if a event receiver was found for the event.</returns>
         public bool SendEvent(string eventName, params object[] args)
         {
-            if ( string.IsNullOrEmpty( eventName ) )
-                throw new ArgumentNullException( eventName );
+            if (string.IsNullOrEmpty(eventName))
+                throw new ArgumentNullException(eventName);
 
             List<OnReceiveEvent> receivers = null;
             if (m_EventMap.TryGetValue(eventName, out receivers))
@@ -143,7 +148,9 @@ namespace IBM.Watson.Utilities
         /// <returns>Returns true if a event receiver was found for the event.</returns>
         public bool SendEvent(Constants.Event eventType, params object[] args)
         {
-            return SendEvent(((int)eventType).ToString(), args);
+            if (m_EventTypeName.Count == 0)
+                InitializeEventTypeNames();
+            return SendEvent(m_EventTypeName[eventType], args);
         }
 
         /// <summary>
@@ -151,21 +158,22 @@ namespace IBM.Watson.Utilities
         /// </summary>
         /// <param name="eventName">The name of the event to send.</param>
         /// <param name="args">Arguments to send to the event receiver.</param>
-        public void SendEventAsync( string eventName, params object[] args )
+        public void SendEventAsync(string eventName, params object[] args)
         {
-            m_AsyncEvents.Enqueue( new AsyncEvent() { m_EventName = eventName, m_Args = args } );
-            if ( m_ProcesserCount == 0 )
-                Runnable.Run( ProcessAsyncEvents() );
+            m_AsyncEvents.Enqueue(new AsyncEvent() { m_EventName = eventName, m_Args = args });
+            if (m_ProcesserCount == 0)
+                Runnable.Run(ProcessAsyncEvents());
         }
         #endregion
 
         #region Private Data
+        private Dictionary<Constants.Event, string> m_EventTypeName = new Dictionary<Constants.Event, string>();
         private Dictionary<string, List<OnReceiveEvent>> m_EventMap = new Dictionary<string, List<OnReceiveEvent>>();
 
         private class AsyncEvent
         {
             public string m_EventName;
-            public object [] m_Args;
+            public object[] m_Args;
         }
         private Queue<AsyncEvent> m_AsyncEvents = new Queue<AsyncEvent>();
         private int m_ProcesserCount = 0;
@@ -175,16 +183,23 @@ namespace IBM.Watson.Utilities
             m_ProcesserCount += 1;
             yield return null;
 
-            while( m_AsyncEvents.Count > 0 )
+            while (m_AsyncEvents.Count > 0)
             {
                 AsyncEvent send = m_AsyncEvents.Dequeue();
-                SendEvent( send.m_EventName, send.m_Args ); 
+                SendEvent(send.m_EventName, send.m_Args);
             }
 
             m_ProcesserCount -= 1;
         }
         #endregion
-        
+
+        private void InitializeEventTypeNames()
+        {
+            foreach (var en in Enum.GetNames(typeof(Constants.Event)))
+                m_EventTypeName[(Constants.Event)Enum.Parse(typeof(Constants.Event), en)] = en;
+
+        }
+
     }
-	
+
 }

@@ -22,6 +22,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using IBM.Watson.Utilities;
 using IBM.Watson.Data;
+using System;
+using System.Collections.Generic;
 
 #pragma warning disable 414
 
@@ -38,19 +40,24 @@ namespace IBM.Watson.Widgets
         [SerializeField]
         private Input m_RecognizeInput = new Input( "Recognize", typeof(SpeechToTextData), "OnRecognize" );
         [SerializeField]
-        private Output m_TopClassOutput = new Output( typeof(TextData) );
-        [SerializeField]
         private Output m_ClassifyOutput = new Output( typeof(ClassifyResultData) );
-        [SerializeField]
-        private Output m_RecognizeFailure = new Output( typeof(SpeechToTextData) );
         [SerializeField]
         private string m_ClassifierId = "5E00F7x2-nlc-540";     // default to XRAY classifier
         [SerializeField, Tooltip("What is the minimum word confidence needed to send onto the NLC?")]
         private double m_MinWordConfidence = 0.4;
         [SerializeField, Tooltip("Recognized speech below this confidence is just ignored.")]
         private double m_IgnoreWordConfidence = 0.2;
-        [SerializeField, Tooltip( "If true, then the top class is sent as a event.") ]
-        private bool m_SendAsEvent = false;
+
+        [Serializable]
+        private class ClassEventMapping
+        {
+            public string m_Class = null;
+            public Constants.Event m_Event = (Constants.Event)0;
+        };
+        [SerializeField]
+        private List<ClassEventMapping> m_ClassEventList = new List<ClassEventMapping>();
+        private Dictionary<string,Constants.Event> m_ClassEventMap = new Dictionary<string,Constants.Event>();
+
         [SerializeField]
         private Text m_TopClassText = null;
         #endregion
@@ -59,13 +66,7 @@ namespace IBM.Watson.Widgets
         public NLC NLC { get { return m_NLC; } }
         #endregion
 
-        public void ClassifyText( string text )
-        {
-            if (!m_NLC.Classify(m_ClassifierId, text, OnClassified))
-                Log.Error("AvatarWidget", "Failed to send {0} to NLC.", text);
-        }
-
-        #region MonoBehaviour interface
+         #region MonoBehaviour interface
         /// <exclude />
         protected override void Start()
 	    {
@@ -101,7 +102,7 @@ namespace IBM.Watson.Widgets
                 else
                 {
                     if (textConfidence > m_IgnoreWordConfidence )
-                        m_RecognizeFailure.SendData( data );
+                        EventManager.Instance.SendEvent( Constants.Event.ON_CLASSIFY_FAILURE, result );
                 }
             }
         }
@@ -115,14 +116,39 @@ namespace IBM.Watson.Widgets
             {
                 Log.Debug( "NlcWidget", "OnClassified: {0} ({1:0.00})", result.top_class, result.topConfidence );
 
-                if ( m_TopClassOutput.IsConnected && !string.IsNullOrEmpty( result.top_class ) )
-                    m_TopClassOutput.SendData( new TextData( result.top_class ) );
                 if ( m_TopClassText != null )
                     m_TopClassText.text = result.top_class; 
-                if ( m_SendAsEvent && !string.IsNullOrEmpty( result.top_class) )
-                    EventManager.Instance.SendEvent( result.top_class );
+
+                if ( !string.IsNullOrEmpty( result.top_class) )
+                {
+                    if ( m_ClassEventList.Count > 0 && m_ClassEventMap.Count == 0 )
+                    {
+                        // initialize the map
+                        foreach( var ev in m_ClassEventList )
+                            m_ClassEventMap[ ev.m_Class ] = ev.m_Event;
+                    }
+
+                    Constants.Event sendEvent;
+                    if (! m_ClassEventMap.TryGetValue( result.top_class, out sendEvent ) )
+                    {
+                        Log.Warning( "EventManager", "No class mapping found for {0}", result.top_class );
+                        EventManager.Instance.SendEvent( result.top_class, result );
+                    }
+                    else
+                        EventManager.Instance.SendEvent( sendEvent, result );
+                }
             }
 	    }
 
-	}
+        #region Event Handlers
+        public void OnDebugCommand( object [] args )
+        {
+            if ( args != null && args.Length > 0 && args[0] is string )
+            {
+                if (!m_NLC.Classify(m_ClassifierId, (string)args[0], OnClassified))
+                    Log.Error("AvatarWidget", "Failed to send {0} to NLC.", (string)args[0]);
+            }
+        }
+        #endregion
+    }
 }

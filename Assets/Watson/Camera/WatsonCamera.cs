@@ -50,18 +50,27 @@ public class WatsonCamera : MonoBehaviour {
     #endregion
 
     #region Touch Drag Actions
-    public void DragTwoFinger(TouchScript.Gestures.ScreenTransformGesture transformGesture){
-
-        Log.Status("WatsonCamera", "twoFingerTransformHandler: {0} , DeltaScale: {1}, PanSpeed: {2}, ZoomSpeed:{3}",
+    public void DragTwoFinger(System.Object[] args)
+    {
+        if(args != null && args.Length == 1 && args[0] is TouchScript.Gestures.ScreenTransformGesture)
+        {
+            TouchScript.Gestures.ScreenTransformGesture transformGesture = args[0] as TouchScript.Gestures.ScreenTransformGesture;
+            
+            Log.Status("WatsonCamera", "twoFingerTransformHandler: {0} , DeltaScale: {1}, PanSpeed: {2}, ZoomSpeed:{3}",
             transformGesture.DeltaPosition,
             transformGesture.DeltaScale,
             m_PanSpeed,
             m_ZoomSpeed);
 
-        //Pannning with 2-finger
-        m_TargetCameraLocation += (transformGesture.DeltaPosition * m_PanSpeed * -1.0f);
-        //Zooming with 2-finger
-		m_TargetCameraLocation += transform.forward * (transformGesture.DeltaScale - 1.0f) * m_ZoomSpeed;
+            //Pannning with 2-finger
+            m_TargetCameraLocation += (transformGesture.DeltaPosition * m_PanSpeed * -1.0f);
+            //Zooming with 2-finger
+            m_TargetCameraLocation += transform.forward * (transformGesture.DeltaScale - 1.0f) * m_ZoomSpeed;
+        }
+        else
+        {
+            Log.Warning("WatsonCamera", "TwoFinger drag has invalid argument");
+        }
 	}
 
 	
@@ -81,34 +90,34 @@ public class WatsonCamera : MonoBehaviour {
         m_TargetCameraLocation = m_CameraInitialLocation;
     }
 
-    public void MoveUp()
+    public void MoveUp(System.Object[] args)
     {
         m_TargetCameraLocation += Vector3.up;
     }
 
-    public void MoveDown()
+    public void MoveDown(System.Object[] args)
     {
         m_TargetCameraLocation += Vector3.down;
     }
 
-    public void MoveLeft()
+    public void MoveLeft(System.Object[] args)
     {
         m_TargetCameraLocation += Vector3.left;
     }
 
-    public void MoveRight()
+    public void MoveRight(System.Object[] args)
     {
         m_TargetCameraLocation += Vector3.right;
     }
 
-    public void ZoomIn()
+    public void ZoomIn(System.Object[] args)
     {
-        m_TargetCameraLocation += transform.forward * m_ZoomSpeed * 100.0f;
+        m_TargetCameraLocation += transform.forward * m_ZoomSpeed;
     }
 
-    public void ZoomOut()
+    public void ZoomOut(System.Object[] args)
     {
-        m_TargetCameraLocation += transform.forward * m_ZoomSpeed * -1.0f * 100.0f;
+        m_TargetCameraLocation += transform.forward * m_ZoomSpeed * -1.0f;
     }
 
     #endregion
@@ -144,7 +153,8 @@ public class WatsonCamera : MonoBehaviour {
 			AnimationResume();
 	}
 
-	public void ApplicationQuit(){
+	public void ApplicationQuit(System.Object[] args = null)
+    {
 		Application.Quit ();
 	}
 

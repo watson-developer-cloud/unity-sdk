@@ -27,7 +27,7 @@ namespace IBM.Watson.Widgets
     /// <summary>
     /// This Event Widget class maps key events to a SerializedDelegate.
     /// </summary>
-	public class EventWidget : InputWidgetBase
+	public class EventWidget : Widget
     {
         #region Widget interface
         protected override string GetName()
@@ -39,7 +39,7 @@ namespace IBM.Watson.Widgets
         [Serializable]
         private class Mapping
         {
-            public Constants.Event m_Event = Constants.Event.ON_DEBUG_COMMAND;
+            public Constants.Event m_Event = Constants.Event.NONE;
             public SerializedDelegate m_Callback = new SerializedDelegate(typeof(EventManager.OnReceiveEvent));
         };
 

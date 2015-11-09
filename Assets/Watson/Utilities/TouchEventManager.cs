@@ -265,7 +265,7 @@ namespace IBM.Watson.Utilities
 
 		private void OneFingerTransformedHandler(object sender, System.EventArgs e)
 		{
-			//Log.Status ("TouchEventManager", "oneFingerManipulationTransformedHandler: {0}", m_OneFingerMoveGesture.DeltaPosition);
+			Log.Status ("TouchEventManager", "oneFingerManipulationTransformedHandler: {0}", m_OneFingerMoveGesture.DeltaPosition);
 			if (m_Active) {
 				TouchEventData dragEventToFire = null;
 					

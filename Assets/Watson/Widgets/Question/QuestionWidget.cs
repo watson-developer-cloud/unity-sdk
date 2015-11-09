@@ -208,14 +208,14 @@ namespace IBM.Watson.Widgets.Question
 		/// <param name="args">Arguments of event. args[0] should be TouchScript.Gestures.ScreenTransformGesture</param>
         public void DragOneFingerFullScreen(object[] args)
         {
-			//Log.Warning("QuestWidget", "DragOneFingerOnObject FULLSCREEN ");
+			Log.Warning("QuestWidget", "DragOneFingerOnObject FULLSCREEN ");
             if (args != null && args.Length == 1 && args[0] is TouchScript.Gestures.ScreenTransformGesture)
             {
                 TouchScript.Gestures.ScreenTransformGesture OneFingerManipulationGesture = args[0] as TouchScript.Gestures.ScreenTransformGesture;
 
                 if (Cube != null)
                 {
-                    Cube.DragOneFingerFullScreen(OneFingerManipulationGesture);
+                    Cube.DragOneFinger(OneFingerManipulationGesture);
                 }
             }
         }
@@ -226,15 +226,14 @@ namespace IBM.Watson.Widgets.Question
 		/// <param name="args">Arguments.</param>
 		public void DragOneFingerOnObject(object[] args)
 		{
-			//Log.Warning("QuestWidget", "DragOneFingerOnObject - OBJECT");
+			Log.Warning("QuestWidget", "DragOneFingerOnObject - OBJECT");
 			if (args != null && args.Length == 1 && args[0] is TouchScript.Gestures.ScreenTransformGesture)
 			{
 				TouchScript.Gestures.ScreenTransformGesture OneFingerManipulationGesture = args[0] as TouchScript.Gestures.ScreenTransformGesture;
 				
 				if (Cube != null)
 				{
-					Cube.DragOneFingerFullScreen(OneFingerManipulationGesture);
-					Cube.DragOneFingerOnSide(OneFingerManipulationGesture);
+					Cube.DragOneFinger(OneFingerManipulationGesture);
 				}
 			}
 		}
