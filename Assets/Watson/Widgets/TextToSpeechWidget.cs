@@ -54,8 +54,6 @@ namespace IBM.Watson.Widgets
 	    private TextToSpeech.VoiceType m_Voice = TextToSpeech.VoiceType.en_US_Michael;
 	    [SerializeField]
 	    private bool m_UsePost = false;
-        [SerializeField]
-        private bool m_EnableAudioSource = true;
 
         private AudioSource m_Source = null;
         private int m_LastPlayPos = 0;
@@ -109,22 +107,19 @@ namespace IBM.Watson.Widgets
             if ( m_SpeechQueue.Count > 0 && m_Source != null && !m_Source.isPlaying )
 	        {
                 AudioClip clip = m_SpeechQueue.Dequeue();
-                if ( m_EnableAudioSource )
+                if ( m_Speaking.IsConnected )
+                    m_Speaking.SendData( new BooleanData( true ) );
+
+	            m_Source.spatialBlend = 0.0f;     // 2D sound
+	            m_Source.loop = false;            // do not loop
+	            m_Source.clip = clip;             // clip
+	            m_Source.Play();
+
+                Invoke( "OnEndSpeech", ((float)clip.samples / (float)clip.frequency) + 0.1f );
+                if ( m_LevelOut.IsConnected )
                 {
-                    if ( m_Speaking.IsConnected )
-                        m_Speaking.SendData( new BooleanData( true ) );
-
-	                m_Source.spatialBlend = 0.0f;     // 2D sound
-	                m_Source.loop = false;            // do not loop
-	                m_Source.clip = clip;             // clip
-	                m_Source.Play();
-
-                    Invoke( "OnEndSpeech", (float)clip.samples / (float)clip.frequency );
-                    if ( m_LevelOut.IsConnected )
-                    {
-                        m_LastPlayPos = 0;
-                        InvokeRepeating( "OnLevelOut", m_LevelOutInterval, m_LevelOutInterval );
-                    }
+                    m_LastPlayPos = 0;
+                    InvokeRepeating( "OnLevelOut", m_LevelOutInterval, m_LevelOutInterval );
                 }
 	        }
 
@@ -154,6 +149,8 @@ namespace IBM.Watson.Widgets
         {
             if ( m_Speaking.IsConnected )
                 m_Speaking.SendData( new BooleanData( false ) );
+            if (m_Source.isPlaying)
+                m_Source.Stop();
         }
 
         protected override string GetName()
