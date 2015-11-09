@@ -33,3 +33,7 @@ ehthumbs.db
 /BuildScripts/Clients/Windows
 /Builds
 Output/
+Assets/Plugins/LeanTweenPath.cs
+Assets/Plugins/LeanTweenPath.cs.meta
+Assets/Plugins/LeanTweenPathControl.cs
+Assets/Plugins/LeanTweenPathControl.cs.meta

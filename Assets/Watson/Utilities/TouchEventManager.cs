@@ -13,10 +13,10 @@ namespace IBM.Watson.Utilities
 	[RequireComponent (typeof (TapGesture))]
 	public class TouchEventManager : MonoBehaviour {
 
-		#region Public Types
-		public delegate void TapEventDelegate(TapGesture tapGesture, Transform hitTransform);
-		public delegate void DragEventDelegate(ScreenTransformGesture transformGesture);
-		#endregion
+//		#region Public Types
+//		public delegate void TapEventDelegate(TapGesture tapGesture, Transform hitTransform);
+//		public delegate void DragEventDelegate(ScreenTransformGesture transformGesture);
+//		#endregion
 
         /// <summary>
         /// Touch Event Data holds all touch related event data for registering and unregistering events via Touch Event Manager.
@@ -26,8 +26,8 @@ namespace IBM.Watson.Utilities
 			private Collider m_Collider;
 			private Collider[] m_ColliderList;
 			private GameObject m_GameObject;
-			private TapEventDelegate m_tapEventCallback;
-			private DragEventDelegate m_dragEventCallback;
+			private Constants.Event m_tapEventCallback;
+			private Constants.Event m_dragEventCallback;
 			private bool m_isInside;
 			private int m_SortingLayer;
 
@@ -42,7 +42,7 @@ namespace IBM.Watson.Utilities
             /// <summary>
             /// If there is a drag event (or continues action) we are holding game object and all colliders inside that object
             /// </summary>
-            public Collider[] ColliderList { get { return m_ColliderList; } }
+			public Collider[] ColliderList { get {  if(m_ColliderList == null && m_Collider != null) m_ColliderList = new Collider[]{m_Collider}; return m_ColliderList; } }
             /// <summary>
             /// If the touch event has happened inside of that object (collider) we will fire that event. Otherwise, it is considered as outside
             /// </summary>
@@ -50,15 +50,20 @@ namespace IBM.Watson.Utilities
             /// <summary>
             /// Tap Delegate to call
             /// </summary>
-			public TapEventDelegate TapCallback{ get { return m_tapEventCallback; } }
+			public Constants.Event TapCallback{ get { return m_tapEventCallback; } }
             /// <summary>
             /// Drag Delegate to call
             /// </summary>
-			public DragEventDelegate DragCallback{ get { return m_dragEventCallback; } }
+			public Constants.Event DragCallback{ get { return m_dragEventCallback; } }
             /// <summary>
             /// Greater sorting layer is higher importance level. 
             /// </summary>
 			public int SortingLayer{ get { return m_SortingLayer; } }
+			/// <summary>
+			/// Gets a value indicating whether this instance can drag object.
+			/// </summary>
+			/// <value><c>true</c> if this instance can drag object; otherwise, <c>false</c>.</value>
+			public bool CanDragObject{ get { return GameObjectAttached != null && ColliderList != null && ColliderList.Length > 0; } }
 
             /// <summary>
             /// Touch event constructor for Tap Event registration. 
@@ -67,8 +72,9 @@ namespace IBM.Watson.Utilities
             /// <param name="callback">Callback for Tap Event. After tapped, callback will be invoked</param>
             /// <param name="sortingLayer">Sorting level in order to sort the event listeners</param>
             /// <param name="isInside">Whether the tap is inside the object or not</param>
-			public TouchEventData(Collider collider, TapEventDelegate callback, int sortingLayer, bool isInside){
+			public TouchEventData(Collider collider, Constants.Event callback, int sortingLayer, bool isInside){
 				m_Collider = collider;
+				m_ColliderList = null;
 				m_tapEventCallback = callback;
 				m_SortingLayer = sortingLayer;
 				m_isInside = isInside;
@@ -81,12 +87,29 @@ namespace IBM.Watson.Utilities
             /// <param name="callback">Callback for Drag event. After dragging started, callback will be invoked until drag will be finished</param>
             /// <param name="sortingLayer">Sorting level in order to sort the event listeners</param>
             /// <param name="isInside"></param>
-			public TouchEventData(GameObject gameObject, DragEventDelegate callback, int sortingLayer, bool isInside){
+			public TouchEventData(GameObject gameObject, Constants.Event callback, int sortingLayer, bool isInside){
 				m_GameObject = gameObject;
-				m_ColliderList = gameObject.GetComponentsInChildren<Collider>();
+				m_ColliderList = null;
+				if(gameObject != null)
+					m_ColliderList = gameObject.GetComponentsInChildren<Collider>();
 				m_dragEventCallback = callback;
 				m_SortingLayer = sortingLayer;
 				m_isInside = isInside;
+			}
+
+			public bool HasTouchedOn(Transform hitTransform){
+				bool hasTouchedOn = false;
+				if (ColliderList != null) 
+				{
+					foreach (Collider itemCollider in ColliderList) {
+						if(itemCollider.transform == hitTransform){
+							hasTouchedOn = true;
+							break;
+						}
+					}
+			
+				}
+				return hasTouchedOn;
 			}
 
             /// <summary>
@@ -139,7 +162,7 @@ namespace IBM.Watson.Utilities
 		[SerializeField]
 		private TapGesture m_TapGesture;
 		[SerializeField]
-		private ScreenTransformGesture m_OneFingerManipulationGesture;
+		private ScreenTransformGesture m_OneFingerMoveGesture;
 		[SerializeField]
 		private ScreenTransformGesture m_TwoFingerMoveGesture;
 		#endregion
@@ -168,7 +191,7 @@ namespace IBM.Watson.Utilities
 			m_mainCamera = UnityEngine.Camera.main;
 			m_TapGesture.Tapped += TapGesture_Tapped;
 
-			m_OneFingerManipulationGesture.Transformed += OneFingerManipulationTransformedHandler;
+			m_OneFingerMoveGesture.Transformed += OneFingerTransformedHandler;
 			m_TwoFingerMoveGesture.Transformed += TwoFingerTransformedHandler;
 		}
 		
@@ -176,9 +199,20 @@ namespace IBM.Watson.Utilities
 		{
 			m_TapGesture.Tapped += TapGesture_Tapped;
 
-			m_OneFingerManipulationGesture.Transformed += OneFingerManipulationTransformedHandler;
+			m_OneFingerMoveGesture.Transformed += OneFingerTransformedHandler;
 			m_TwoFingerMoveGesture.Transformed += TwoFingerTransformedHandler;
 		}
+
+        public UnityEngine.Camera MainCamera
+        {
+            get
+            {
+                if(m_mainCamera == null)
+                    m_mainCamera = UnityEngine.Camera.main;
+
+                return m_mainCamera;
+            }
+        }
 
 
 		#endregion
@@ -194,7 +228,7 @@ namespace IBM.Watson.Utilities
         /// <param name="SortingLayer">Sorting layer to determine the corresponding drag event listener</param>
         /// <param name="isDragInside">Not Applicable</param>
         /// <returns>Success result about registration</returns>
-		public bool RegisterDragEvent(GameObject gameObjectToDrag, DragEventDelegate callback, int numberOfFinger = 1, int SortingLayer = 0, bool isDragInside = true)
+		public bool RegisterDragEvent(GameObject gameObjectToDrag, Constants.Event callback, int numberOfFinger = 1, int SortingLayer = 0, bool isDragInside = true)
 		{
 			if (m_DragEvents.ContainsKey (numberOfFinger)) 
 			{
@@ -217,7 +251,7 @@ namespace IBM.Watson.Utilities
         /// <param name="SortingLayer">Sorting layer to determine the corresponding drag event listener</param>
         /// <param name="isDragInside">Not Applicable</param>
         /// <returns>Success result about unregistration</returns>
-        public bool UnregisterDragEvent(GameObject gameObjectToDrag, DragEventDelegate callback, int numberOfFinger = 1, int SortingLayer = 0, bool isDragInside = true)
+		public bool UnregisterDragEvent(GameObject gameObjectToDrag, Constants.Event callback, int numberOfFinger = 1, int SortingLayer = 0, bool isDragInside = true)
 		{
 			bool success = false;
 			
@@ -229,42 +263,67 @@ namespace IBM.Watson.Utilities
 			return success;
 		}
 
-		private void OneFingerManipulationTransformedHandler(object sender, System.EventArgs e)
+		private void OneFingerTransformedHandler(object sender, System.EventArgs e)
 		{
-			Log.Status ("TouchEventManager", "oneFingerManipulationTransformedHandler: {0}", m_OneFingerManipulationGesture.DeltaPosition);
+			//Log.Status ("TouchEventManager", "oneFingerManipulationTransformedHandler: {0}", m_OneFingerMoveGesture.DeltaPosition);
 			if (m_Active) {
 				TouchEventData dragEventToFire = null;
 					
+				Ray rayForDrag = MainCamera.ScreenPointToRay(m_OneFingerMoveGesture.ScreenPosition);
+				RaycastHit hit;
+
+
 				foreach (var kp in m_DragEvents) {
 					if (kp.Key == 1) {
 
 						for (int i = 0; i < kp.Value.Count; ++i) {
 							TouchEventData dragEventData = kp.Value [i];
 								
-							if (dragEventData.DragCallback == null) {
+							if (dragEventData.DragCallback == Constants.Event.NONE) {
 								Log.Warning ("TouchEventManager", "Removing invalid event receiver from OneFingerDrag");
 								kp.Value.RemoveAt (i--);
 								continue;
 							}
 
-							if (dragEventToFire == null) {
-								dragEventToFire = dragEventData;
-							} else {
-								if (dragEventData.SortingLayer > dragEventToFire.SortingLayer || 
-									(dragEventToFire.SortingLayer == dragEventData.SortingLayer && !dragEventToFire.IsInside)) {
+							bool hasDragOnObject = false;
+							//If we can drag the object, we should check that whether there is a raycast or not!
+							if(dragEventData.CanDragObject){
+								bool isHitOnLayer = Physics.Raycast(rayForDrag, out hit, Mathf.Infinity, 1 << dragEventData.GameObjectAttached.layer);
 
+								if(isHitOnLayer && dragEventData.HasTouchedOn(hit.transform)){
+									hasDragOnObject = true;
+								}
+								else{
+									//do nothing - we were checking that draggable object that we touched!
+								}
+
+							}
+
+							if( hasDragOnObject || !dragEventData.CanDragObject){
+								//They are all fullscreen drags!
+								if (dragEventToFire == null) 
+								{
 									dragEventToFire = dragEventData;
-								} else {
-									//do nothing
+								} 
+								else 
+								{
+									if (dragEventData.SortingLayer > dragEventToFire.SortingLayer || (dragEventToFire.SortingLayer == dragEventData.SortingLayer && !dragEventToFire.IsInside)) {
+										dragEventToFire = dragEventData;
+									} else {
+										//do nothing
+									}
 								}
 							}
+
+
 						}
 					}
 
 				}
 
-				if(dragEventToFire != null && dragEventToFire.DragCallback != null)
-					dragEventToFire.DragCallback(m_OneFingerManipulationGesture);
+				if(dragEventToFire != null && dragEventToFire.DragCallback != Constants.Event.NONE)
+					EventManager.Instance.SendEvent(dragEventToFire.DragCallback, m_OneFingerMoveGesture);
+					//dragEventToFire.DragCallback(m_OneFingerManipulationGesture);
 
 			}
 			
@@ -275,14 +334,14 @@ namespace IBM.Watson.Utilities
 			Log.Status ("TouchEventManager", "TwoFingerTransformedHandler: {0}", m_TwoFingerMoveGesture.DeltaPosition);
 			if (m_Active) {
 				TouchEventData dragEventToFire = null;
-				
+
 				foreach (var kp in m_DragEvents) {
 					if (kp.Key == 2) {
 						
 						for (int i = 0; i < kp.Value.Count; ++i) {
 							TouchEventData dragEventData = kp.Value [i];
 							
-							if (dragEventData.DragCallback == null) {
+							if (dragEventData.DragCallback == Constants.Event.NONE) {
 								Log.Warning ("TouchEventManager", "Removing invalid event receiver from TwoFingerDrag");
 								kp.Value.RemoveAt (i--);
 								continue;
@@ -304,8 +363,9 @@ namespace IBM.Watson.Utilities
 					
 				}
 				
-				if(dragEventToFire != null && dragEventToFire.DragCallback != null)
-					dragEventToFire.DragCallback(m_TwoFingerMoveGesture);
+				if(dragEventToFire != null && dragEventToFire.DragCallback != Constants.Event.NONE)
+					EventManager.Instance.SendEvent(dragEventToFire.DragCallback, m_TwoFingerMoveGesture);
+					//dragEventToFire.DragCallback(m_TwoFingerMoveGesture);
 				
 			}
 		}
@@ -323,7 +383,7 @@ namespace IBM.Watson.Utilities
         /// <param name="SortingLayer">Sorting layer to determine the corresponding tap object</param>
         /// <param name="isTapInside">Whether to tap on object or outside the object</param>
         /// <returns></returns>
-		public bool RegisterTapEvent(GameObject gameObjectToTouch, TapEventDelegate callback, int SortingLayer = 0, bool isTapInside = true)
+		public bool RegisterTapEvent(GameObject gameObjectToTouch, Constants.Event callback, int SortingLayer = 0, bool isTapInside = true)
 		{
 			Collider[] colliderList = gameObjectToTouch.GetComponentsInChildren<Collider>();
 
@@ -350,7 +410,7 @@ namespace IBM.Watson.Utilities
         /// <param name="SortingLayer">Sorting layer to determine the corresponding tap object</param>
         /// <param name="isTapInside">Whether to tap on object or outside the object</param>
         /// <returns></returns>
-		public bool UnregisterTapEvent(GameObject gameObjectToTouch, TapEventDelegate callback, int SortingLayer = 0, bool isTapInside = true)
+		public bool UnregisterTapEvent(GameObject gameObjectToTouch, Constants.Event callback, int SortingLayer = 0, bool isTapInside = true)
 		{
 			bool success = false;
 
@@ -379,7 +439,7 @@ namespace IBM.Watson.Utilities
 				foreach (var kp in m_TapEvents)
 				{
 				
-					Ray rayForTab = m_mainCamera.ScreenPointToRay(m_TapGesture.ScreenPosition);
+					Ray rayForTab = MainCamera.ScreenPointToRay(m_TapGesture.ScreenPosition);
 					RaycastHit hit;
 					bool isHitOnLayer = Physics.Raycast(rayForTab, out hit, Mathf.Infinity, 1 << kp.Key);
 
@@ -388,7 +448,7 @@ namespace IBM.Watson.Utilities
 					{
 						TouchEventData tapEventData = kp.Value[i];
 
-						if (tapEventData.TapCallback == null)
+						if (tapEventData.TapCallback == Constants.Event.NONE)
 						{
 							Log.Warning("TouchEventManager", "Removing invalid event receiver from TapEventList");
 							kp.Value.RemoveAt(i--);
@@ -440,8 +500,9 @@ namespace IBM.Watson.Utilities
 
 				}
 
-				if(tapEventToFire != null && tapEventToFire.TapCallback != null)
-					tapEventToFire.TapCallback(m_TapGesture, tapEventToFire.Collider.transform);
+				if(tapEventToFire != null && tapEventToFire.TapCallback != Constants.Event.NONE)
+					EventManager.Instance.SendEvent(tapEventToFire.TapCallback, m_TapGesture, tapEventToFire.Collider.transform);
+					//tapEventToFire.TapCallback(m_TapGesture, tapEventToFire.Collider.transform);
 
 			}
             

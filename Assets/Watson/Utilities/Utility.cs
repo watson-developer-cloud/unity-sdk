@@ -100,8 +100,47 @@ namespace IBM.Watson.Utilities
 					}
 				}
 			}
-
 			return childObject;
+		}
+
+		/// <summary>
+		/// Finds the objects in childeren of parent object by name of child
+		/// </summary>
+		/// <returns>The objects.</returns>
+		/// <param name="parent">Parent.</param>
+		/// <param name="nameChild">Name child.</param>
+		/// <param name="isContains">Check string.contains instead of equality. </param>
+		public static GameObject[] FindObjects(GameObject parent, string nameChild, bool isContains = false, bool sortByName = false){
+			GameObject[] childObjects = null;
+			List<GameObject> listGameObject = new List<GameObject>();
+
+			string[] childPath = nameChild.Split ('/');
+			
+			for (int i = 0; i < childPath.Length; i++) {
+				string childTransformName = childPath[i];
+				Transform[] childerenTransform = parent.GetComponentsInChildren<Transform> (includeInactive: true);
+				if (childerenTransform != null) {
+					foreach (Transform item in childerenTransform) {
+						if( (isContains && item.name.Contains(childTransformName)) || string.Equals(item.name, childTransformName) ){
+							if(i == childPath.Length - 1){
+								listGameObject.Add(item.gameObject);
+							}
+							else{
+								parent = item.gameObject;
+							}
+						}
+					}
+				}
+			}
+
+			if (listGameObject.Count > 0) {
+				if(sortByName){
+					listGameObject.Sort((x, y) => x.name.CompareTo(y.name));
+				}
+				childObjects = listGameObject.ToArray ();
+			}
+			
+			return childObjects;
 		}
     }
 

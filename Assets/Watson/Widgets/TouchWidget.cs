@@ -17,9 +17,11 @@
 */
 
 using IBM.Watson.Utilities;
+using IBM.Watson.Logging;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+
 
 namespace IBM.Watson.Widgets
 {
@@ -61,6 +63,12 @@ namespace IBM.Watson.Widgets
 
         private void OnEnable()
         {
+			if (TouchEventManager.Instance == null) 
+			{
+				Log.Error ("TouchWidget", "There should be TouchEventManager in the scene! No TouchEventManager found.");
+				return;
+			}
+
             foreach (var mapping in m_TapMappings)
             {
                 TouchEventManager.Instance.RegisterTapEvent(mapping.m_TapObject, mapping.m_Callback.ResolveDelegate() as TouchEventManager.TapEventDelegate, mapping.m_SortingLayer, mapping.m_TapOnObject);
@@ -74,6 +82,12 @@ namespace IBM.Watson.Widgets
 
         private void OnDisable()
         {
+			if (TouchEventManager.Instance == null) 
+			{
+				Log.Error ("TouchWidget", "There should be TouchEventManager in the scene! No TouchEventManager found.");
+				return;
+			}
+
             foreach (var mapping in m_TapMappings)
             {
                 TouchEventManager.Instance.UnregisterTapEvent(mapping.m_TapObject, mapping.m_Callback.ResolveDelegate() as TouchEventManager.TapEventDelegate, mapping.m_SortingLayer, mapping.m_TapOnObject);
