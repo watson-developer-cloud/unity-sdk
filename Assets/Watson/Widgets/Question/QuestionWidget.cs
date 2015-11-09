@@ -105,52 +105,17 @@ namespace IBM.Watson.Widgets.Question
             if (args != null && args.Length == 2 && args[0] is TouchScript.Gestures.TapGesture && args[1] is Transform)
             {
                 Log.Status("Question Widget", "OnTapInside");
-                //TouchScript.Gestures.TapGesture tapGesture = args [0] as TouchScript.Gestures.TapGesture; 
+                TouchScript.Gestures.TapGesture tapGesture = args [0] as TouchScript.Gestures.TapGesture; 
                 Transform hitTransform = args[1] as Transform;
 
-                //Touch on side
-                switch (Cube.AnimationState)
-                {
-                    case CubeAnimationManager.CubeAnimationState.NOT_PRESENT:
-                        break;
-                    case CubeAnimationManager.CubeAnimationState.COMING_TO_SCENE:
-                        break;
-                    case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOLDED:
-                        Cube.UnFold();
-                        break;
-                    case CubeAnimationManager.CubeAnimationState.UNFOLDING:
-                        FocusOnSide(hitTransform);
-                        break;
-                    case CubeAnimationManager.CubeAnimationState.IDLE_AS_UNFOLDED:
-                        FocusOnSide(hitTransform);
-                        break;
-                    case CubeAnimationManager.CubeAnimationState.FOLDING:
-                        Cube.UnFold();
-                        break;
-                    case CubeAnimationManager.CubeAnimationState.FOCUSING_TO_SIDE:
-                        FocusOnSide(hitTransform);
-                        break;
-                    case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOCUSED:
-                        FocusOnSide(hitTransform);
-                        break;
-                    case CubeAnimationManager.CubeAnimationState.GOING_FROM_SCENE:
-                        break;
-                    default:
-                        break;
-                }
+				Cube.OnTapInside(tapGesture, hitTransform);
+          
             }
             else
             {
                 Log.Warning("Question Widget", "OnTapInside has invalid arguments!");
             }
 
-        }
-
-        private void FocusOnSide(Transform hitTransform)
-        {
-            int touchedSide = 0;
-            int.TryParse(hitTransform.name.Substring(1, 1), out touchedSide);
-            Cube.FocusOnSide((CubeAnimationManager.CubeSideType)touchedSide);
         }
 
         /// <summary>
@@ -163,37 +128,10 @@ namespace IBM.Watson.Widgets.Question
             if (args != null && args.Length == 2 && args[0] is TouchScript.Gestures.TapGesture && args[1] is Transform)
             {
                 Log.Status("Question Widget", "OnTapOutside");
-                //TouchScript.Gestures.TapGesture tapGesture = args [0] as TouchScript.Gestures.TapGesture; 
-                //Transform hitTransform = args [1] as Transform;
+                TouchScript.Gestures.TapGesture tapGesture = args [0] as TouchScript.Gestures.TapGesture; 
+                Transform hitTransform = args [1] as Transform;
 
-                //Touch out-side
-				switch (Cube.AnimationState)
-                {
-                    case CubeAnimationManager.CubeAnimationState.NOT_PRESENT:
-                        break;
-                    case CubeAnimationManager.CubeAnimationState.COMING_TO_SCENE:
-                        break;
-                    case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOLDED:
-                        break;
-                    case CubeAnimationManager.CubeAnimationState.UNFOLDING:
-                        Cube.Fold();
-                        break;
-                    case CubeAnimationManager.CubeAnimationState.IDLE_AS_UNFOLDED:
-                        Cube.Fold();
-                        break;
-                    case CubeAnimationManager.CubeAnimationState.FOLDING:
-                        break;
-                    case CubeAnimationManager.CubeAnimationState.FOCUSING_TO_SIDE:
-                        Cube.UnFocus();
-                        break;
-                    case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOCUSED:
-                        Cube.UnFocus();
-                        break;
-                    case CubeAnimationManager.CubeAnimationState.GOING_FROM_SCENE:
-                        break;
-                    default:
-                        break;
-                }
+				Cube.OnTapOutside(tapGesture, hitTransform);
             }
             else
             {

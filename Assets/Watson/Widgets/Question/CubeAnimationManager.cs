@@ -183,6 +183,12 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
         }
     }
 
+	public CubeSideType SideFocused{
+		get{
+			return m_LastCubeSideFocused;
+		}
+	}
+
     #endregion
 
 	#region OnEnable / SetInitialConditions / OnDisable / Awake / Update / OnDestroy
@@ -758,38 +764,158 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
 
     #endregion
 
-    #region Dragging One Finger
+	#region Tap 
 
-    public void DragOneFingerFullScreen(TouchScript.Gestures.ScreenTransformGesture OneFingerManipulationGesture)
-    {
-        if (AnimationState == CubeAnimationState.IDLE_AS_FOLDED || AnimationState == CubeAnimationState.FOLDING)
-        {
-            Quaternion rotation = Quaternion.Euler(OneFingerManipulationGesture.DeltaPosition.y / Screen.height * m_OneFingerRotationModifier,
-                                                    -OneFingerManipulationGesture.DeltaPosition.x / Screen.width * m_OneFingerRotationModifier,
-                                                    0.0f);
+	/// <summary>
+	/// Method called on Tapping on Question Widget 
+	/// </summary>
+	/// <param name="tapGesture">Tap Gesture with all touch information</param>
+	/// <param name="hitTransform">Hit Tranform of tap</param>
+	public void OnTapInside(TouchScript.Gestures.TapGesture tapGesture, Transform hitTransform)
+	{
+		if (tapGesture == null || hitTransform == null) {
+			Log.Warning("CubeAnimationManager", "OnTapInside has invalid arguments!");
+			return;
+		}
 
-            m_OneFingerCubeRotation *= rotation;
-            m_LastFrameOneFingerDrag = Time.frameCount;
-            m_StatinoaryRotationSpeed = 0.0f; //stop the statinoary rotation
-        }
-    }
+		if (AnimationState == CubeAnimationState.IDLE_AS_FOCUSED) {
+			TapInsideOnFocusedSide(tapGesture, SideOfTap(hitTransform));
+		} else {
+			//Touch on side
+			switch (AnimationState)
+			{
+			case CubeAnimationManager.CubeAnimationState.NOT_PRESENT:
+				break;
+			case CubeAnimationManager.CubeAnimationState.COMING_TO_SCENE:
+				break;
+			case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOLDED:
+				UnFold();
+				break;
+			case CubeAnimationManager.CubeAnimationState.UNFOLDING:
+				FocusOnSide(hitTransform);
+				break;
+			case CubeAnimationManager.CubeAnimationState.IDLE_AS_UNFOLDED:
+				FocusOnSide(hitTransform);
+				break;
+			case CubeAnimationManager.CubeAnimationState.FOLDING:
+				UnFold();
+				break;
+			case CubeAnimationManager.CubeAnimationState.FOCUSING_TO_SIDE:
+				FocusOnSide(hitTransform);
+				break;
+			case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOCUSED:
+				FocusOnSide(hitTransform);
+				break;
+			case CubeAnimationManager.CubeAnimationState.GOING_FROM_SCENE:
+				break;
+			default:
+				break;
+			}
+		}
+	}
 
-    
-    private void CubeOneFingerDragAnimationOnUpdate()
-    {
-        if (AnimationState == CubeAnimationState.IDLE_AS_FOLDED || AnimationState == CubeAnimationState.FOLDING)
-        {
-            //For Rotating the cube by one finger 
-            m_OneFingerCubeRotation = Quaternion.Lerp(m_OneFingerCubeRotation, Quaternion.identity, Time.deltaTime * m_OneFingerRotationAnimationSpeed);
-            transform.Rotate(m_OneFingerCubeRotation.eulerAngles, Space.World);
-        }
-    }
+	private CubeSideType SideOfTap(Transform hitTransform){
+		int touchedSide = 0;
+		int.TryParse(hitTransform.name.Substring(1, 1), out touchedSide);
+		return (CubeAnimationManager.CubeSideType)touchedSide;
+	}
+	
+	private void FocusOnSide(Transform hitTransform)
+	{
+		FocusOnSide(SideOfTap(hitTransform));
+	}
+	
+	/// <summary>
+	/// Raises the tap outside event.
+	/// </summary>
+	/// <param name="tapGesture">Tap gesture.</param>
+	/// <param name="hitTransform">Hit transform.</param>
+	public void OnTapOutside(TouchScript.Gestures.TapGesture tapGesture, Transform hitTransform)
+	{
+		if (tapGesture == null || hitTransform == null) {
+			Log.Warning("CubeAnimationManager", "OnTapInside has invalid arguments!");
+			return;
+		}
 
+		if (AnimationState == CubeAnimationState.IDLE_AS_FOCUSED) {
+			TapOutsideOnFocusedSide(tapGesture, SideOfTap(hitTransform));
+		} else {
+			//Touch out-side
+			switch (AnimationState)
+			{
+			case CubeAnimationManager.CubeAnimationState.NOT_PRESENT:
+				break;
+			case CubeAnimationManager.CubeAnimationState.COMING_TO_SCENE:
+				break;
+			case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOLDED:
+				break;
+			case CubeAnimationManager.CubeAnimationState.UNFOLDING:
+				Fold();
+				break;
+			case CubeAnimationManager.CubeAnimationState.IDLE_AS_UNFOLDED:
+				Fold();
+				break;
+			case CubeAnimationManager.CubeAnimationState.FOLDING:
+				break;
+			case CubeAnimationManager.CubeAnimationState.FOCUSING_TO_SIDE:
+				UnFocus();
+				break;
+			case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOCUSED:
+				UnFocus();
+				break;
+			case CubeAnimationManager.CubeAnimationState.GOING_FROM_SCENE:
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
+
+	private void TapInsideOnFocusedSide(TouchScript.Gestures.TapGesture tapGesture, CubeSideType sideTapped)
+	{
+		//TODO: Tap inside while cube is on focused!
+	}
+
+	private void TapOutsideOnFocusedSide(TouchScript.Gestures.TapGesture tapGesture, CubeSideType sideTapped)
+	{
+		//TODO: Tap outside while cube is on focused!
+	}
+
+	#endregion
+	
+	#region Dragging One Finger
+	
+	public void DragOneFingerFullScreen(TouchScript.Gestures.ScreenTransformGesture OneFingerManipulationGesture)
+	{
+		if (AnimationState == CubeAnimationState.IDLE_AS_FOLDED || AnimationState == CubeAnimationState.FOLDING)
+		{
+			Quaternion rotation = Quaternion.Euler(OneFingerManipulationGesture.DeltaPosition.y / Screen.height * m_OneFingerRotationModifier,
+			                                       -OneFingerManipulationGesture.DeltaPosition.x / Screen.width * m_OneFingerRotationModifier,
+			                                       0.0f);
+			
+			m_OneFingerCubeRotation *= rotation;
+			m_LastFrameOneFingerDrag = Time.frameCount;
+			m_StatinoaryRotationSpeed = 0.0f; //stop the statinoary rotation
+		}
+	}
+	
+	
+	private void CubeOneFingerDragAnimationOnUpdate()
+	{
+		if (AnimationState == CubeAnimationState.IDLE_AS_FOLDED || AnimationState == CubeAnimationState.FOLDING)
+		{
+			//For Rotating the cube by one finger 
+			m_OneFingerCubeRotation = Quaternion.Lerp(m_OneFingerCubeRotation, Quaternion.identity, Time.deltaTime * m_OneFingerRotationAnimationSpeed);
+			transform.Rotate(m_OneFingerCubeRotation.eulerAngles, Space.World);
+		}
+	}
+	
 	public void DragOneFingerOnSide(TouchScript.Gestures.ScreenTransformGesture OneFingerManipulationGesture)
 	{
-		if (AnimationState == CubeAnimationState.IDLE_AS_FOCUSED && m_LastCubeSideFocused != CubeSideType.NONE)
+		if (AnimationState == CubeAnimationState.IDLE_AS_FOCUSED && SideFocused != CubeSideType.NONE)
 		{
-			GameObject currentSideObject = m_presentationSide[(int)m_LastCubeSideFocused];
+			GameObject currentSideObject = m_presentationSide[(int)SideFocused];
 
 			Ray rayForDrag = Camera.main.ScreenPointToRay(OneFingerManipulationGesture.ScreenPosition);
 			RaycastHit hit;
@@ -802,7 +928,7 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
 				CubeSideType cubeSideTouched = (CubeSideType)touchedSide;
 
 				Log.Status("CubeAnimationManager", "cubeSideTouched: {0}", cubeSideTouched);
-				if(cubeSideTouched == CubeSideType.TITLE)
+				if(cubeSideTouched == CubeSideType.TITLE && SideFocused == CubeSideType.TITLE)
 				{
 					DragOneFingerOnPassage(OneFingerManipulationGesture);
 				}
