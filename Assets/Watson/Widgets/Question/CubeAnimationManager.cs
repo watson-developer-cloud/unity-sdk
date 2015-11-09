@@ -771,16 +771,16 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
 	/// </summary>
 	/// <param name="tapGesture">Tap Gesture with all touch information</param>
 	/// <param name="hitTransform">Hit Tranform of tap</param>
-	public void OnTapInside(TouchScript.Gestures.TapGesture tapGesture, Transform hitTransform)
+	public void OnTapInside(TouchScript.Gestures.TapGesture tapGesture, RaycastHit raycastHit)
 	{
-		if (tapGesture == null || hitTransform == null) {
+		if (tapGesture == null || raycastHit.Equals(default(RaycastHit)) ) {
 			Log.Warning("CubeAnimationManager", "OnTapInside has invalid arguments!");
 			return;
 		}
 
-		CubeSideType sideTapped = SideOfTap (hitTransform);
+		CubeSideType sideTapped = SideOfTap (raycastHit.transform);
 		if (AnimationState == CubeAnimationState.IDLE_AS_FOCUSED && sideTapped == SideFocused) {
-			TapInsideOnFocusedSide(tapGesture, sideTapped);
+			TapInsideOnFocusedSide(tapGesture, raycastHit, sideTapped);
 		} else {
 			//Touch on side
 			switch (AnimationState)
@@ -816,7 +816,7 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
 	}
 
 	private CubeSideType SideOfTap(Transform hitTransform){
-		int touchedSide = 0;
+		int touchedSide = -1;
 		int.TryParse(hitTransform.name.Substring(1, 1), out touchedSide);
 		return (CubeAnimationManager.CubeSideType)touchedSide;
 	}
@@ -831,59 +831,128 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
 	/// </summary>
 	/// <param name="tapGesture">Tap gesture.</param>
 	/// <param name="hitTransform">Hit transform.</param>
-	public void OnTapOutside(TouchScript.Gestures.TapGesture tapGesture, Transform hitTransform)
+	public void OnTapOutside(TouchScript.Gestures.TapGesture tapGesture, RaycastHit raycastHit)
 	{
-		if (tapGesture == null || hitTransform == null) {
-			Log.Warning("CubeAnimationManager", "OnTapInside has invalid arguments!");
+		if (tapGesture == null || !raycastHit.Equals(default(RaycastHit)) ) {
+			Log.Warning("CubeAnimationManager", "OnTapOutside has invalid arguments!");
 			return;
 		}
 
-		CubeSideType sideTapped = SideOfTap (hitTransform);
-		if (AnimationState == CubeAnimationState.IDLE_AS_FOCUSED && sideTapped == SideFocused) {
-			TapOutsideOnFocusedSide(tapGesture, sideTapped);
-		} else {
-			//Touch out-side
-			switch (AnimationState)
-			{
-			case CubeAnimationManager.CubeAnimationState.NOT_PRESENT:
-				break;
-			case CubeAnimationManager.CubeAnimationState.COMING_TO_SCENE:
-				break;
-			case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOLDED:
-				break;
-			case CubeAnimationManager.CubeAnimationState.UNFOLDING:
-				Fold();
-				break;
-			case CubeAnimationManager.CubeAnimationState.IDLE_AS_UNFOLDED:
-				Fold();
-				break;
-			case CubeAnimationManager.CubeAnimationState.FOLDING:
-				break;
-			case CubeAnimationManager.CubeAnimationState.FOCUSING_TO_SIDE:
-				UnFocus();
-				break;
-			case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOCUSED:
-				UnFocus();
-				break;
-			case CubeAnimationManager.CubeAnimationState.GOING_FROM_SCENE:
-				break;
-			default:
-				break;
-			}
+		//Touch out-side
+		switch (AnimationState)
+		{
+		case CubeAnimationManager.CubeAnimationState.NOT_PRESENT:
+			break;
+		case CubeAnimationManager.CubeAnimationState.COMING_TO_SCENE:
+			break;
+		case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOLDED:
+			break;
+		case CubeAnimationManager.CubeAnimationState.UNFOLDING:
+			Fold();
+			break;
+		case CubeAnimationManager.CubeAnimationState.IDLE_AS_UNFOLDED:
+			Fold();
+			break;
+		case CubeAnimationManager.CubeAnimationState.FOLDING:
+			break;
+		case CubeAnimationManager.CubeAnimationState.FOCUSING_TO_SIDE:
+			UnFocus();
+			break;
+		case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOCUSED:
+			UnFocus();
+			break;
+		case CubeAnimationManager.CubeAnimationState.GOING_FROM_SCENE:
+			break;
+		default:
+			break;
 		}
 	}
 
 
-	private void TapInsideOnFocusedSide(TouchScript.Gestures.TapGesture tapGesture, CubeSideType sideTapped)
-	{
-		//TODO: Tap inside while cube is on focused!
-		Log.Status("CubeAnimationManager", "TapInsideOnFocusedSide " + tapGesture.ScreenPosition + " sideTapped: " + sideTapped);
+	private Vector2 getScreenPositionForCamera(Vector2 screenPositionOnMainCamera, Camera cameraOnProjection, Transform hexagonalPlane){
+		Vector2 normalizeScreenTouchRelativeToPlane = Vector2.zero;
+
+		if (hexagonalPlane.parent != null) {
+			MeshFilter meshFilter = hexagonalPlane.parent.GetComponent<MeshFilter> ();
+
+			if (meshFilter != null) {
+				Vector3 planePointMin = meshFilter.transform.TransformPoint (meshFilter.mesh.bounds.min);
+				Vector3 planePointMax = meshFilter.transform.TransformPoint (meshFilter.mesh.bounds.max);
+				
+				//Log.Status ("CubeAnimationManager", "0 - MIN) meshFilter.mesh.bounds.min: " + meshFilter.mesh.bounds.min + " Global : " + meshFilter.transform.TransformPoint (meshFilter.mesh.bounds.min) + " - Camera.main.WorldToScreenPoint: " + Camera.main.WorldToScreenPoint(meshFilter.transform.TransformPoint (meshFilter.mesh.bounds.min)));
+				//Log.Status ("CubeAnimationManager", "0 - MAX) meshFilter.mesh.bounds.max: " + meshFilter.mesh.bounds.max + " Global : " + meshFilter.transform.TransformPoint (meshFilter.mesh.bounds.max) + " - Camera.main.WorldToScreenPoint: " + Camera.main.WorldToScreenPoint(meshFilter.transform.TransformPoint (meshFilter.mesh.bounds.max)));
+				
+				Vector3 screenPlaneBottomLeft = Camera.main.WorldToScreenPoint(meshFilter.transform.TransformPoint (meshFilter.mesh.bounds.max));
+				Vector3 screenPlaneTopRight = Camera.main.WorldToScreenPoint(meshFilter.transform.TransformPoint (meshFilter.mesh.bounds.min));
+				Vector3 screenPlaneFromLeftToRight = screenPlaneTopRight - screenPlaneBottomLeft;
+				
+				Vector2 screenTouchRelativeToPlane = new Vector2 (screenPositionOnMainCamera.x - screenPlaneBottomLeft.x, screenPositionOnMainCamera.y - screenPlaneBottomLeft.y);
+				normalizeScreenTouchRelativeToPlane = new Vector2 (screenTouchRelativeToPlane.x / screenPlaneFromLeftToRight.x, screenTouchRelativeToPlane.y / screenPlaneFromLeftToRight.y);
+				
+				float onePixelOnProjectionScreenSize = Screen.height / (cameraOnProjection.orthographicSize * 2.0f);
+				
+				Vector2 targetTextureSize = Vector2.one * onePixelOnProjectionScreenSize; 
+				if (cameraOnProjection.targetTexture != null) {
+					targetTextureSize = new Vector2( cameraOnProjection.targetTexture.width, cameraOnProjection.targetTexture.height);
+				}
+				
+				normalizeScreenTouchRelativeToPlane.Scale (targetTextureSize);
+			} else {
+				Log.Error("CubeAnimationManager", "getScreenPositionForCamera - There is no mesh filter on parent object");
+			}
+		} else {
+			Log.Error("CubeAnimationManager", "getScreenPositionForCamera - There is no parent object");
+		}
+
+		return  normalizeScreenTouchRelativeToPlane;
 	}
 
-	private void TapOutsideOnFocusedSide(TouchScript.Gestures.TapGesture tapGesture, CubeSideType sideTapped)
+	private Camera[] m_ProjectionCameraList;
+	private Ray m_RayOnTapFocusedSide;
+
+	private void TapInsideOnFocusedSide(TouchScript.Gestures.TapGesture tapGesture, RaycastHit raycastHit, CubeSideType sideTapped)
+	{
+		Log.Status("CubeAnimationManager", "TapInsideOnFocusedSide " + tapGesture.ScreenPosition + " sideTapped: " + sideTapped + " Index: " + ((int)sideTapped).ToString());
+
+		if(m_ProjectionCameraList == null)
+			m_ProjectionCameraList = Utility.FindObjects<Camera> (transform.parent.gameObject, "cam", isContains: true, sortByName: true);
+
+		if (m_ProjectionCameraList.Length > (int)sideTapped && m_ProjectionCameraList [(int)sideTapped] != null) {
+			Camera cameraProjectionParse = m_ProjectionCameraList [(int)sideTapped];	
+			if (cameraProjectionParse != null) {
+				Vector2 screenPointOnCamera = getScreenPositionForCamera (tapGesture.ScreenPosition, cameraProjectionParse, raycastHit.transform);
+				m_RayOnTapFocusedSide = cameraProjectionParse.ScreenPointToRay (screenPointOnCamera);
+				//TODO: Tap inside while cube is on focused!
+				RaycastHit2D hit = default(RaycastHit2D);
+				int layerOfSide = LayerMask.NameToLayer("Side"+((int)sideTapped).ToString());
+				LayerMask layerMaskForSide = 1 << layerOfSide;
+				hit = Physics2D.Raycast(m_RayOnTapFocusedSide.origin, m_RayOnTapFocusedSide.direction, Mathf.Infinity, layerMaskForSide);
+				if(hit.collider != null){
+					Log.Status("CubeAnimationManager","isHitOnLayer : " + hit.collider.transform);
+				}
+				else{
+					Log.Status("CubeAnimationManager","NOT HIT ");
+				}
+			}
+		} else {
+			Log.Error("CubeAnimationManager", "TapInsideOnFocusedSide - Projection Camera couldn't find!");
+		}
+
+	}
+
+	private void TapOutsideOnFocusedSide(TouchScript.Gestures.TapGesture tapGesture, RaycastHit raycastHit, CubeSideType sideTapped)
 	{
 		//TODO: Tap outside while cube is on focused!
 		Log.Status("CubeAnimationManager", "TapOutsideOnFocusedSide " + tapGesture.ScreenPosition + " sideTapped: " + sideTapped);
+	}
+
+	void OnDrawGizmos() {
+		if(!m_RayOnTapFocusedSide.Equals(default(Ray))){
+			Gizmos.color = Color.yellow;
+			Gizmos.DrawRay(m_RayOnTapFocusedSide);
+			Gizmos.color = Color.red;
+			Gizmos.DrawLine(m_RayOnTapFocusedSide.origin, m_RayOnTapFocusedSide.origin + m_RayOnTapFocusedSide.direction * 1000);
+		}
 	}
 
 	#endregion
@@ -941,19 +1010,19 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
 		}
 	}
 
-	private GameObject[] m_PassageItems = null;
+	private Transform[] m_PassageItems = null;
 
 	//[SerializeField]
 	private float m_OneDragModifier = 0.01f;
 	private int m_SelectedPassageIndex = -1;
 	private float m_PercentCurrentPassage = 0.0f;
 
-	public Vector3 worldOnPath = Vector3.up;
+	private Vector3 worldOnPath = Vector3.up;
 
 	public void DragOneFingerOnPassage(TouchScript.Gestures.ScreenTransformGesture OneFingerManipulationGesture){
 
 		if (m_PassageItems == null) {
-			m_PassageItems = Utility.FindObjects (m_ProjectionSide [5], "PassageItem", isContains: true, sortByName: true);
+			m_PassageItems = Utility.FindObjects<Transform> (m_ProjectionSide [5], "PassageItem", isContains: true, sortByName: true);
 		}
 
 		if (m_PassageItems != null) {

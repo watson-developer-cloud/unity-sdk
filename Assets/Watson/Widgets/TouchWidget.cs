@@ -44,6 +44,7 @@ namespace IBM.Watson.Widgets
             public GameObject m_TapObject = null;
             public bool m_TapOnObject = true;
             public int m_SortingLayer = 0;
+			public LayerMask m_LayerMask = default(LayerMask);
 			public Constants.Event m_Callback = Constants.Event.NONE;
         };
 
@@ -73,7 +74,7 @@ namespace IBM.Watson.Widgets
 
             foreach (var mapping in m_TapMappings)
             {
-                TouchEventManager.Instance.RegisterTapEvent(mapping.m_TapObject, mapping.m_Callback, mapping.m_SortingLayer, mapping.m_TapOnObject);
+				TouchEventManager.Instance.RegisterTapEvent(mapping.m_TapObject, mapping.m_Callback, mapping.m_SortingLayer, mapping.m_TapOnObject, mapping.m_LayerMask);
             }
 
             foreach (var mapping in m_FullScreenDragMappings)
@@ -92,7 +93,7 @@ namespace IBM.Watson.Widgets
 
             foreach (var mapping in m_TapMappings)
             {
-                TouchEventManager.Instance.UnregisterTapEvent(mapping.m_TapObject, mapping.m_Callback, mapping.m_SortingLayer, mapping.m_TapOnObject);
+				TouchEventManager.Instance.UnregisterTapEvent(mapping.m_TapObject, mapping.m_Callback, mapping.m_SortingLayer, mapping.m_TapOnObject, mapping.m_LayerMask);
             }
 
             foreach (var mapping in m_FullScreenDragMappings)

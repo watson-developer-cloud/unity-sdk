@@ -383,19 +383,21 @@ namespace IBM.Watson.Utilities
         /// <param name="SortingLayer">Sorting layer to determine the corresponding tap object</param>
         /// <param name="isTapInside">Whether to tap on object or outside the object</param>
         /// <returns></returns>
-		public bool RegisterTapEvent(GameObject gameObjectToTouch, Constants.Event callback, int SortingLayer = 0, bool isTapInside = true)
+		public bool RegisterTapEvent(GameObject gameObjectToTouch, Constants.Event callback, int SortingLayer = 0, bool isTapInside = true, LayerMask layerMask = default(LayerMask))
 		{
 			Collider[] colliderList = gameObjectToTouch.GetComponentsInChildren<Collider>();
 
 			foreach (Collider itemCollider in colliderList) 
 			{
-				if (m_TapEvents.ContainsKey (gameObjectToTouch.layer)) 
+				int layerMaskAsKey = (layerMask != default(LayerMask))? layerMask.value : (1 << gameObjectToTouch.layer);
+
+				if (m_TapEvents.ContainsKey (layerMaskAsKey)) 
 				{
-					m_TapEvents[gameObjectToTouch.layer].Add( new TouchEventData(itemCollider, callback, SortingLayer, isTapInside));
+					m_TapEvents[layerMaskAsKey].Add( new TouchEventData(itemCollider, callback, SortingLayer, isTapInside));
 				} 
 				else 
 				{
-					m_TapEvents[gameObjectToTouch.layer] = new List<TouchEventData>() {  new TouchEventData(itemCollider, callback, SortingLayer, isTapInside) };
+					m_TapEvents[layerMaskAsKey] = new List<TouchEventData>() {  new TouchEventData(itemCollider, callback, SortingLayer, isTapInside) };
 				}
 			}
 
@@ -410,17 +412,19 @@ namespace IBM.Watson.Utilities
         /// <param name="SortingLayer">Sorting layer to determine the corresponding tap object</param>
         /// <param name="isTapInside">Whether to tap on object or outside the object</param>
         /// <returns></returns>
-		public bool UnregisterTapEvent(GameObject gameObjectToTouch, Constants.Event callback, int SortingLayer = 0, bool isTapInside = true)
+		public bool UnregisterTapEvent(GameObject gameObjectToTouch, Constants.Event callback, int SortingLayer = 0, bool isTapInside = true, LayerMask layerMask = default(LayerMask))
 		{
 			bool success = false;
 
-			if (m_TapEvents.ContainsKey (gameObjectToTouch.layer)) 
+			int layerMaskAsKey = (layerMask != default(LayerMask))? layerMask.value : (1 << gameObjectToTouch.layer);
+
+			if (m_TapEvents.ContainsKey (layerMaskAsKey)) 
 			{
 				success = true;
 				Collider[] colliderList = gameObjectToTouch.GetComponentsInChildren<Collider>();
 				foreach (Collider itemCollider in colliderList) 
 				{
-					success &= m_TapEvents[gameObjectToTouch.layer].Remove( new TouchEventData(itemCollider, callback, SortingLayer, isTapInside) );
+					success &= m_TapEvents[layerMaskAsKey].Remove( new TouchEventData(itemCollider, callback, SortingLayer, isTapInside) );
 				}
 			} 
 
@@ -435,14 +439,14 @@ namespace IBM.Watson.Utilities
                 Log.Status("TouchEventManager", "TapGesture_Tapped: {0} ", m_TapGesture.ScreenPosition);
 
                 TouchEventData tapEventToFire = null;
+				RaycastHit hit = default(RaycastHit);
 
 				foreach (var kp in m_TapEvents)
 				{
 				
 					Ray rayForTab = MainCamera.ScreenPointToRay(m_TapGesture.ScreenPosition);
-					RaycastHit hit;
-					bool isHitOnLayer = Physics.Raycast(rayForTab, out hit, Mathf.Infinity, 1 << kp.Key);
 
+					bool isHitOnLayer = Physics.Raycast(rayForTab, out hit, Mathf.Infinity, kp.Key);
 
 					for (int i = 0; i < kp.Value.Count; ++i)
 					{
@@ -501,7 +505,7 @@ namespace IBM.Watson.Utilities
 				}
 
 				if(tapEventToFire != null && tapEventToFire.TapCallback != Constants.Event.NONE)
-					EventManager.Instance.SendEvent(tapEventToFire.TapCallback, m_TapGesture, tapEventToFire.Collider.transform);
+					EventManager.Instance.SendEvent(tapEventToFire.TapCallback, m_TapGesture, hit);
 					//tapEventToFire.TapCallback(m_TapGesture, tapEventToFire.Collider.transform);
 
 			}

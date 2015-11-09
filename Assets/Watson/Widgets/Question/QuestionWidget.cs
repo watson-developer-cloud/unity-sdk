@@ -102,13 +102,13 @@ namespace IBM.Watson.Widgets.Question
         /// <param name="hitTransform">Hit Tranform of tap</param>
 		public void OnTapInside(object[] args)
         {
-            if (args != null && args.Length == 2 && args[0] is TouchScript.Gestures.TapGesture && args[1] is Transform)
+            if (args != null && args.Length == 2 && args[0] is TouchScript.Gestures.TapGesture && args[1] is RaycastHit)
             {
                 Log.Status("Question Widget", "OnTapInside");
                 TouchScript.Gestures.TapGesture tapGesture = args [0] as TouchScript.Gestures.TapGesture; 
-                Transform hitTransform = args[1] as Transform;
+				RaycastHit raycastHit = (RaycastHit) args[1];
 
-				Cube.OnTapInside(tapGesture, hitTransform);
+				Cube.OnTapInside(tapGesture, raycastHit);
           
             }
             else
@@ -125,13 +125,13 @@ namespace IBM.Watson.Widgets.Question
         /// <param name="hitTransform">Hit Tranform of tap</param>
 		public void OnTapOutside(object[] args)
         {
-            if (args != null && args.Length == 2 && args[0] is TouchScript.Gestures.TapGesture && args[1] is Transform)
+			if (args != null && args.Length == 2 && args[0] is TouchScript.Gestures.TapGesture && args[1] is RaycastHit)
             {
                 Log.Status("Question Widget", "OnTapOutside");
                 TouchScript.Gestures.TapGesture tapGesture = args [0] as TouchScript.Gestures.TapGesture; 
-                Transform hitTransform = args [1] as Transform;
+				RaycastHit raycastHit = (RaycastHit) args [1];
 
-				Cube.OnTapOutside(tapGesture, hitTransform);
+				Cube.OnTapOutside(tapGesture, raycastHit);
             }
             else
             {
