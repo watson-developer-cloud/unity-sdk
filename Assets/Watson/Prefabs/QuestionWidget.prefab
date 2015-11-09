@@ -16621,21 +16621,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ae469cfa8dd5487d85fe0964e340659, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiFaceOnSide:
+  m_uiFaceOnSide:
   - {fileID: 176488}
   - {fileID: 173190}
   - {fileID: 112784}
   - {fileID: 104190}
   - {fileID: 175640}
   - {fileID: 187408}
-  presentationSide:
+  m_presentationSide:
   - {fileID: 127036}
   - {fileID: 144244}
   - {fileID: 133564}
   - {fileID: 191902}
   - {fileID: 179838}
   - {fileID: 113326}
-  renderTexSide:
+  m_ProjectionSide:
+  - {fileID: 184874}
+  - {fileID: 106058}
+  - {fileID: 109752}
+  - {fileID: 153478}
+  - {fileID: 170266}
+  - {fileID: 183880}
+  m_renderTexSide:
   - {fileID: 8400000, guid: afcbb068b8c90401babc29866368f207, type: 2}
   - {fileID: 8400000, guid: d225ad6d2882840a8a98e82d67268a0d, type: 2}
   - {fileID: 8400000, guid: 7e3f4cd72fe354335be72e02f5d51a4a, type: 2}
@@ -16657,6 +16664,7 @@ MonoBehaviour:
   m_EaseForUnfocusing: 7
   timeForLeavingTheScene: .600000024
   easeForGoingFromScene: 20
+  worldOnPath: {x: 0, y: 1, z: 0}
 --- !u!114 &11426020
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -22588,7 +22596,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 299.999878}
+  m_AnchoredPosition: {x: 0, y: 6.10351562e-05}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!224 &22437190
