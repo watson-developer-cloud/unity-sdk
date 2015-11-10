@@ -200,6 +200,12 @@ namespace IBM.Watson.Widgets
             m_Recording = Microphone.Start(m_MicrophoneID, true, m_RecordingBufferSize, m_RecordingHZ);
             yield return null;      // let m_RecordingRoutine get set..
 
+			if (m_Recording == null) 
+			{
+				Log.Error( "MicrophoneWidget", "Failed to start recording." );
+				yield break;
+			}
+
             bool bFirstBlock = true;
             int midPoint = m_Recording.samples / 2;
 
