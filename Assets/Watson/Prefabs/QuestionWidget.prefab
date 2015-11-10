@@ -5303,7 +5303,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &178900
 GameObject:
   m_ObjectHideFlags: 1
@@ -20437,10 +20437,14 @@ MonoBehaviour:
     m_SortingLayer: 0
     m_Callback: 202
   m_FullScreenDragMappings:
-  - m_DragObject: {fileID: 165892}
+  - m_DragLayerObject: {fileID: 0}
     m_NumberOfFinger: 1
     m_SortingLayer: 0
     m_Callback: 203
+  - m_DragLayerObject: {fileID: 165892}
+    m_NumberOfFinger: 1
+    m_SortingLayer: 1
+    m_Callback: 204
 --- !u!114 &11497156
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -20588,7 +20592,12 @@ MonoBehaviour:
     m_Callback:
       m_Target: {fileID: 165892}
       m_Component: QuestionWidget
-      m_Method: DragOneFinger
+      m_Method: DragOneFingerFullScreen
+  - m_Event: 204
+    m_Callback:
+      m_Target: {fileID: 165892}
+      m_Component: QuestionWidget
+      m_Method: DragOneFingerOnObject
 --- !u!114 &11498338
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -21762,7 +21771,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 198668}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -1}
+  m_LocalPosition: {x: 0, y: 0, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 22476636}
@@ -22113,7 +22122,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 104440}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -1}
+  m_LocalPosition: {x: 0, y: 0, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 22439040}
@@ -22555,7 +22564,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 186218}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -1}
+  m_LocalPosition: {x: 0, y: 0, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 22476556}
@@ -22579,7 +22588,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 6.10351562e-05}
+  m_AnchoredPosition: {x: 0, y: 299.999878}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!224 &22437190
@@ -23622,7 +23631,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 148116}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -1}
+  m_LocalPosition: {x: 0, y: 0, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 22441174}
@@ -23709,7 +23718,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 121686}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -1}
+  m_LocalPosition: {x: 0, y: 0, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 22431714}
@@ -23982,7 +23991,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 186322}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -1}
+  m_LocalPosition: {x: 0, y: 0, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 22421578}
@@ -24306,12 +24315,52 @@ Prefab:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 0}
+      propertyPath: m_Mappings.Array.size
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_FullScreenDragMappings.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
       propertyPath: m_TagString
       value: QuestionOnFocus
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: avatarGameobject
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_FullScreenDragMappings.Array.data[0].m_DragObject
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_FullScreenDragMappings.Array.data[0].m_DragLayerObject
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_FullScreenDragMappings.Array.data[1].m_DragLayerObject
+      value: 
+      objectReference: {fileID: 165892}
+    - target: {fileID: 0}
+      propertyPath: m_FullScreenDragMappings.Array.data[1].m_Callback
+      value: 204
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Mappings.Array.data[10].m_Event
+      value: 204
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Mappings.Array.data[9].m_Callback.m_Method
+      value: DragOneFingerFullScreen
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Mappings.Array.data[10].m_Callback.m_Method
+      value: DragOneFingerOnObject
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_FullScreenDragMappings.Array.data[1].m_SortingLayer
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

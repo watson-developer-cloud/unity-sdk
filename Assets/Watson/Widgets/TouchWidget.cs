@@ -48,7 +48,8 @@ namespace IBM.Watson.Widgets
         [Serializable]
         private class FullScreenDragEventMapping
         {
-			public GameObject m_DragObject = null;
+			[Tooltip("If there is no drag layer object set, it uses FullScreen")]
+			public GameObject m_DragLayerObject = null;
             public int m_NumberOfFinger = 1;
             public int m_SortingLayer = 0;
 			public Constants.Event m_Callback = Constants.Event.NONE;
@@ -69,7 +70,7 @@ namespace IBM.Watson.Widgets
 
             foreach (var mapping in m_FullScreenDragMappings)
             {
-				TouchEventManager.Instance.RegisterDragEvent(mapping.m_DragObject, mapping.m_Callback, mapping.m_NumberOfFinger, mapping.m_SortingLayer);
+				TouchEventManager.Instance.RegisterDragEvent(mapping.m_DragLayerObject, mapping.m_Callback, mapping.m_NumberOfFinger, mapping.m_SortingLayer);
             }
         }
 
@@ -82,7 +83,7 @@ namespace IBM.Watson.Widgets
 
             foreach (var mapping in m_FullScreenDragMappings)
             {
-				TouchEventManager.Instance.UnregisterDragEvent(mapping.m_DragObject, mapping.m_Callback, mapping.m_NumberOfFinger, mapping.m_SortingLayer);
+				TouchEventManager.Instance.UnregisterDragEvent(mapping.m_DragLayerObject, mapping.m_Callback, mapping.m_NumberOfFinger, mapping.m_SortingLayer);
             }
         }
     }

@@ -42,7 +42,7 @@ namespace IBM.Watson.Utilities
             /// <summary>
             /// If there is a drag event (or continues action) we are holding game object and all colliders inside that object
             /// </summary>
-            public Collider[] ColliderList { get { return m_ColliderList; } }
+			public Collider[] ColliderList { get {  if(m_ColliderList == null && m_Collider != null) m_ColliderList = new Collider[]{m_Collider}; return m_ColliderList; } }
             /// <summary>
             /// If the touch event has happened inside of that object (collider) we will fire that event. Otherwise, it is considered as outside
             /// </summary>
@@ -59,6 +59,11 @@ namespace IBM.Watson.Utilities
             /// Greater sorting layer is higher importance level. 
             /// </summary>
 			public int SortingLayer{ get { return m_SortingLayer; } }
+			/// <summary>
+			/// Gets a value indicating whether this instance can drag object.
+			/// </summary>
+			/// <value><c>true</c> if this instance can drag object; otherwise, <c>false</c>.</value>
+			public bool CanDragObject{ get { return GameObjectAttached != null && ColliderList != null && ColliderList.Length > 0; } }
 
             /// <summary>
             /// Touch event constructor for Tap Event registration. 
@@ -69,6 +74,7 @@ namespace IBM.Watson.Utilities
             /// <param name="isInside">Whether the tap is inside the object or not</param>
 			public TouchEventData(Collider collider, Constants.Event callback, int sortingLayer, bool isInside){
 				m_Collider = collider;
+				m_ColliderList = null;
 				m_tapEventCallback = callback;
 				m_SortingLayer = sortingLayer;
 				m_isInside = isInside;
@@ -83,10 +89,27 @@ namespace IBM.Watson.Utilities
             /// <param name="isInside"></param>
 			public TouchEventData(GameObject gameObject, Constants.Event callback, int sortingLayer, bool isInside){
 				m_GameObject = gameObject;
-				m_ColliderList = gameObject.GetComponentsInChildren<Collider>();
+				m_ColliderList = null;
+				if(gameObject != null)
+					m_ColliderList = gameObject.GetComponentsInChildren<Collider>();
 				m_dragEventCallback = callback;
 				m_SortingLayer = sortingLayer;
 				m_isInside = isInside;
+			}
+
+			public bool HasTouchedOn(Transform hitTransform){
+				bool hasTouchedOn = false;
+				if (ColliderList != null) 
+				{
+					foreach (Collider itemCollider in ColliderList) {
+						if(itemCollider.transform == hitTransform){
+							hasTouchedOn = true;
+							break;
+						}
+					}
+			
+				}
+				return hasTouchedOn;
 			}
 
             /// <summary>
@@ -246,6 +269,10 @@ namespace IBM.Watson.Utilities
 			if (m_Active) {
 				TouchEventData dragEventToFire = null;
 					
+				Ray rayForDrag = MainCamera.ScreenPointToRay(m_OneFingerMoveGesture.ScreenPosition);
+				RaycastHit hit;
+
+
 				foreach (var kp in m_DragEvents) {
 					if (kp.Key == 1) {
 
@@ -258,17 +285,37 @@ namespace IBM.Watson.Utilities
 								continue;
 							}
 
-							if (dragEventToFire == null) {
-								dragEventToFire = dragEventData;
-							} else {
-								if (dragEventData.SortingLayer > dragEventToFire.SortingLayer || 
-									(dragEventToFire.SortingLayer == dragEventData.SortingLayer && !dragEventToFire.IsInside)) {
+							bool hasDragOnObject = false;
+							//If we can drag the object, we should check that whether there is a raycast or not!
+							if(dragEventData.CanDragObject){
+								bool isHitOnLayer = Physics.Raycast(rayForDrag, out hit, Mathf.Infinity, 1 << dragEventData.GameObjectAttached.layer);
 
+								if(isHitOnLayer && dragEventData.HasTouchedOn(hit.transform)){
+									hasDragOnObject = true;
+								}
+								else{
+									//do nothing - we were checking that draggable object that we touched!
+								}
+
+							}
+
+							if( hasDragOnObject || !dragEventData.CanDragObject){
+								//They are all fullscreen drags!
+								if (dragEventToFire == null) 
+								{
 									dragEventToFire = dragEventData;
-								} else {
-									//do nothing
+								} 
+								else 
+								{
+									if (dragEventData.SortingLayer > dragEventToFire.SortingLayer || (dragEventToFire.SortingLayer == dragEventData.SortingLayer && !dragEventToFire.IsInside)) {
+										dragEventToFire = dragEventData;
+									} else {
+										//do nothing
+									}
 								}
 							}
+
+
 						}
 					}
 
@@ -287,7 +334,7 @@ namespace IBM.Watson.Utilities
 			Log.Status ("TouchEventManager", "TwoFingerTransformedHandler: {0}", m_TwoFingerMoveGesture.DeltaPosition);
 			if (m_Active) {
 				TouchEventData dragEventToFire = null;
-				
+
 				foreach (var kp in m_DragEvents) {
 					if (kp.Key == 2) {
 						
