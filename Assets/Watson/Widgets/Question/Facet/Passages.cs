@@ -26,8 +26,8 @@ namespace IBM.Watson.Widgets.Question
 	/// Handles all Passages Facet functionality. 
 	/// </summary>
 	public class Passages : Base {
-		private float m_RectTransformPosX = 9f;
-		private float m_RectTransformPosY = -77f;
+		private float m_RectTransformPosX = -555f;
+		private float m_RectTransformPosY = -640.2f;
 		private float m_RectTransformPosZ = 375f;
 		private float m_RectTransformZSpacing = -50f;
 
@@ -48,9 +48,11 @@ namespace IBM.Watson.Widgets.Question
 
 			for(int i = 0; i < m_Question.QuestionData.AnswerDataObject.answers.Length ; i++) {
 				GameObject PassageItemGameObject = Instantiate(m_PassageItemPrefab, new Vector3(m_RectTransformPosX, m_RectTransformPosY, m_RectTransformPosZ + m_RectTransformZSpacing * (m_Question.QuestionData.AnswerDataObject.answers.Length - i)), Quaternion.identity) as GameObject;
+				PassageItemGameObject.name = "PassageItem_" + i.ToString("00");
 				RectTransform PassageItemRectTransform = PassageItemGameObject.GetComponent<RectTransform>();
 				PassageItemRectTransform.SetParent(m_PassageCanvasRectTransform, false);
 				PassageItem PassageItem = PassageItemGameObject.GetComponent<PassageItem>();
+				PassageItemRectTransform.pivot = Vector2.zero; 	//setting pivot as bottom left
 				PassageItemRectTransform.SetAsFirstSibling();
 				m_PassageItems.Add(PassageItem);
 //				PassageItem.PassageString = m_Question.QuestionData.AnswerDataObject.answers[0].evidence[i].passage;
