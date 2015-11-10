@@ -143,6 +143,11 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
 	[SerializeField]
 	private LeanTweenType easeForGoingFromScene = LeanTweenType.easeOutCirc;
 
+	//Passage One Finger Animation
+	LTBezierPath m_BezierPathToCenter;
+	LTBezierPath m_BezierPathOrientationToCenter;
+	LTBezierPath m_BezierPathToStack;
+	LTBezierPath m_BezierPathOrientationToStack;
 
 	//All animation Descriptions
 	private LTDescr m_animationMoveForComingScene;
@@ -266,6 +271,30 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
 			new Vector3 (17.5f, -5f,    11.5f),	//Bottom close to hero
 			new Vector3 (17.5f, -5f,    20.5f) 	//Bottom close to logo
 		};
+
+		m_BezierPathToCenter = new LTBezierPath ( new Vector3[]{ 
+			new Vector3(-555,-640.2f,-125),
+			new Vector3(-555,-640.2f,-125), 
+			new Vector3(-888, -406, -125), 
+			new Vector3(-888, -406, -125)});
+
+		m_BezierPathOrientationToCenter = new LTBezierPath (new Vector3[]{ 
+			new Vector3(0,0,0),
+			new Vector3(0,45,0), 
+			new Vector3(0,45,0), 
+			new Vector3(45,45,0)});
+		
+		m_BezierPathToStack =  new LTBezierPath ( new Vector3[]{ 
+				new Vector3(-888,	-406.2f,		-125),
+				new Vector3(600,	-680.1f,		-200), 
+				new Vector3(600, 	-680.1f, 	-300), 
+				new Vector3(600, 	-680.1f, 	-400)});
+
+		m_BezierPathOrientationToStack =   new LTBezierPath (new Vector3[]{ 
+				new Vector3(45,45,0),
+				new Vector3(0,45,0), 
+				new Vector3(0,35,0), 
+				new Vector3(0,0,0)});
 
 
         if (m_uiFaceOnSide.Length != m_renderTexSide.Length
@@ -982,6 +1011,10 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
 			m_OneFingerCubeRotation = Quaternion.Lerp(m_OneFingerCubeRotation, Quaternion.identity, Time.deltaTime * m_OneFingerRotationAnimationSpeed);
 			transform.Rotate(m_OneFingerCubeRotation.eulerAngles, Space.World);
 		}
+		else if (AnimationState == CubeAnimationState.IDLE_AS_FOCUSED && SideFocused == CubeSideType.TITLE) {
+			//Passage animation
+			DragOneFingerOnPassageOnUpdate();
+		}
 	}
 	
 	public void DragOneFingerOnSide(TouchScript.Gestures.ScreenTransformGesture OneFingerManipulationGesture)
@@ -1003,6 +1036,7 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
 				Log.Status("CubeAnimationManager", "cubeSideTouched: {0}", cubeSideTouched);
 				if(cubeSideTouched == CubeSideType.TITLE && SideFocused == CubeSideType.TITLE)
 				{
+					m_LastFrameOneFingerDrag = Time.frameCount;
 					DragOneFingerOnPassage(OneFingerManipulationGesture);
 				}
 			}
@@ -1032,7 +1066,6 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
 //				Log.Status("CubeAnimationManager", "Passages: {0} - List[{1}] = {2}", m_PassageItems.Length, i, m_PassageItems[i].name);
 //			}
 
-
 			if(m_SelectedPassageIndex != -1){
 
 			}
@@ -1040,12 +1073,11 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
 
 				m_PercentCurrentPassage = Mathf.Clamp01(m_PercentCurrentPassage + movingInX);
 
-				LTBezierPath path = new LTBezierPath( new Vector3[]{new Vector3(9,-77,-125),new Vector3(9,-77,-125), new Vector3(-125, 0, -125), new Vector3(-125, 0, -125), new Vector3(-125, 0, -125), new Vector3(-125, 0, -125), new Vector3(-125, 0, -125), new Vector3(1100,-77,-500)});
-				LTBezierPath pathOrientation = new LTBezierPath( new Vector3[]{Vector3.zero, Vector3.zero,Vector3.zero, new Vector3(45.0f,45.0f,0), new Vector3(45.0f,45.0f,0), new Vector3(45.0f,45.0f,0), Vector3.zero, Vector3.zero});
+
 				//new Vector3[]{ new Vector3(0f,0f,0f), new Vector3(1f,1f,1f), new Vector3(2f,2f,2f), new Vector3(3f,3f,3f), new Vector3(3f,3f,3f), new Vector3(4f,4f,4f), new Vector3(5f,5f,5f), new Vector3(6f,6f,6f) }
 				//LTSpline pathSplineOrientation = new LTSpline( Vector3.zero, new Vector3(45.0f,45.0f,0), new Vector3(45.0f,45.0f,0), Vector3.zero );
-				path.orientToPath = true;
-				path.placeLocal(m_PassageItems[0].transform, m_PercentCurrentPassage, worldOnPath);
+				//path.orientToPath = true;
+				//path.placeLocal(m_PassageItems[0].transform, m_PercentCurrentPassage, worldOnPath);
 				//m_PassageItems[0].transform.GetComponent<RectTransform>().anchoredPosition3D = path.point(m_PercentCurrentPassage);
 				//m_PassageItems[0].transform.GetComponent<RectTransform>().localEulerAngles = pathOrientation.point(m_PercentCurrentPassage);
 
@@ -1054,6 +1086,45 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
 
 		} else {
 			Log.Status("CubeAnimationManager", "NO PASSAGE - DragOneFingerOnPassage: {0}", OneFingerManipulationGesture.DeltaPosition);
+		}
+	}
+
+	//[SerializeField]
+	private float sleepPassageSmooth = 4.0f;
+
+	private void DragOneFingerOnPassageOnUpdate(){
+
+		if (m_PassageItems != null && m_PassageItems[0] != null) {
+
+			if((Time.frameCount - m_LastFrameOneFingerDrag) > 2 ){
+				if(m_PercentCurrentPassage >0.25f && m_PercentCurrentPassage < 0.75f){
+					m_PercentCurrentPassage = 0.5f;
+				}
+				else if(m_PercentCurrentPassage < 0.25f){
+					m_PercentCurrentPassage = 0.0f;
+				}
+				else{
+					m_PercentCurrentPassage = 1.0f;
+				}
+			}
+				
+
+
+			LTBezierPath m_BezierPathCurrent;
+			LTBezierPath m_BezierPathOrientationCurrent;
+			float m_RatioBezierPathPassage = 0.0f;
+			if (m_PercentCurrentPassage <= 0.5f) {
+				m_RatioBezierPathPassage = m_PercentCurrentPassage * 2.0f;
+				m_BezierPathCurrent = m_BezierPathToCenter;
+				m_BezierPathOrientationCurrent = m_BezierPathOrientationToCenter;
+			} else {
+				m_RatioBezierPathPassage = (m_PercentCurrentPassage - 0.5f) * 2.0f;
+				m_BezierPathCurrent = m_BezierPathToStack;
+				m_BezierPathOrientationCurrent = m_BezierPathOrientationToStack;
+			}
+			
+			m_PassageItems[0].transform.localPosition = Vector3.Lerp(m_PassageItems[0].transform.localPosition, m_BezierPathCurrent.point (m_RatioBezierPathPassage), Time.deltaTime * sleepPassageSmooth);
+			m_PassageItems[0].transform.localRotation = Quaternion.Lerp(m_PassageItems[0].transform.localRotation, Quaternion.Euler( m_BezierPathOrientationCurrent.point (m_RatioBezierPathPassage)), Time.deltaTime * sleepPassageSmooth);
 		}
 	}
 	
