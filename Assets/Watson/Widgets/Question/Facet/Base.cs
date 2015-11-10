@@ -29,7 +29,7 @@ namespace IBM.Watson.Widgets.Question
         /// Holds a reference to the Question Widget.
         /// </summary>
         /// <value>The m_ question.</value>
-        protected QuestionWidget m_Question { get; set; }
+		protected QuestionWidget m_Question { get; set; }
 
         protected virtual void Show() { }
         protected virtual void Hide() { }
@@ -39,8 +39,8 @@ namespace IBM.Watson.Widgets.Question
         /// </summary>
         protected virtual void Start()
         {
-            //	set reference to Avatar and Question Widget
-            m_Question = GetComponentInParent<QuestionWidget>();
+            //	set reference to Question Widget
+//            m_Question = GetComponentInParent<QuestionWidget>();
         }
 
         /// <summary>
@@ -49,7 +49,6 @@ namespace IBM.Watson.Widgets.Question
         public virtual void Init() 
 		{ 
             m_Question = GetComponentInParent<QuestionWidget>();
-
 			Clear ();
 		}
 

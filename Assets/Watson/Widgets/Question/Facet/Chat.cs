@@ -49,8 +49,13 @@ namespace IBM.Watson.Widgets.Question
             if (question != null)
             {
                 m_QuestionData = question.QuestionData;
-                m_QuestionData.OnAnswerEvent += OnAnswer;
-                m_QuestionData.OnQuestionEvent += OnQuestion;
+				if(m_QuestionData != null){
+                	m_QuestionData.OnAnswerEvent += OnAnswer;
+                	m_QuestionData.OnQuestionEvent += OnQuestion;
+				}
+				else{
+					Log.Error("Question - Chat", "There is not question data found.");
+				}
             }
         }
 
