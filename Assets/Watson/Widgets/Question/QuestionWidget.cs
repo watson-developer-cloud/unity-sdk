@@ -158,11 +158,24 @@ namespace IBM.Watson.Widgets.Question
             }
         }
 
-		/// <summary>
-		/// Drags the one finger on object.
-		/// </summary>
-		/// <param name="args">Arguments.</param>
-		public void DragOneFingerOnObject(object[] args)
+        public void ReleasedFinger(object[] args)
+        {
+            if (args != null && args.Length == 1 && args[0] is TouchScript.Gestures.ReleaseGesture)
+            {
+                TouchScript.Gestures.ReleaseGesture releaseGesture = args[0] as TouchScript.Gestures.ReleaseGesture;
+
+                if (Cube != null)
+                {
+                    Cube.ReleasedFinger(releaseGesture);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Drags the one finger on object.
+        /// </summary>
+        /// <param name="args">Arguments.</param>
+        public void DragOneFingerOnObject(object[] args)
 		{
 			//Log.Warning("QuestWidget", "DragOneFingerOnObject - OBJECT");
 			if (args != null && args.Length == 1 && args[0] is TouchScript.Gestures.ScreenTransformGesture)

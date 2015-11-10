@@ -14,6 +14,8 @@ GameObject:
   - 114: {fileID: 11471262}
   - 114: {fileID: 11410502}
   - 114: {fileID: 11464796}
+  - 114: {fileID: 11444476}
+  - 114: {fileID: 11411050}
   m_Layer: 0
   m_Name: TouchManager
   m_TagString: Untagged
@@ -155,6 +157,28 @@ MonoBehaviour:
   type: 7
   minScreenPointsDistance: .5
   screenTransformThreshold: .200000003
+--- !u!114 &11411050
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 109220}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 438491968, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  advancedProps: 0
+  minTouches: 0
+  maxTouches: 0
+  combineTouches: 0
+  combineTouchesInterval: .300000012
+  useSendMessage: 0
+  sendStateChangeMessages: 0
+  sendMessageTarget: {fileID: 0}
+  requireGestureToFail: {fileID: 0}
+  friendlyGestures: []
+  ignoreChildren: 0
 --- !u!114 &11412284
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -202,6 +226,28 @@ MonoBehaviour:
   sendMessageEvents: 60
   sendMessageTarget: {fileID: 0}
   layers: []
+--- !u!114 &11444476
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 109220}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1088824302, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  advancedProps: 0
+  minTouches: 0
+  maxTouches: 0
+  combineTouches: 0
+  combineTouchesInterval: .300000012
+  useSendMessage: 0
+  sendStateChangeMessages: 0
+  sendMessageTarget: {fileID: 0}
+  requireGestureToFail: {fileID: 0}
+  friendlyGestures: []
+  ignoreChildren: 0
 --- !u!114 &11447296
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -216,6 +262,8 @@ MonoBehaviour:
   m_TapGesture: {fileID: 11464796}
   m_OneFingerMoveGesture: {fileID: 11471262}
   m_TwoFingerMoveGesture: {fileID: 11410502}
+  m_PressGesture: {fileID: 11444476}
+  m_ReleaseGesture: {fileID: 11411050}
 --- !u!114 &11459072
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -299,6 +347,14 @@ Prefab:
       propertyPath: maxTouches
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_PressGesture
+      value: 
+      objectReference: {fileID: 11444476}
+    - target: {fileID: 0}
+      propertyPath: m_ReleaseGesture
+      value: 
+      objectReference: {fileID: 11411050}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 109220}

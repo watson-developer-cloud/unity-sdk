@@ -254,7 +254,18 @@ namespace IBM.Watson.Utilities
             ON_COMMAND_LOCATION,
 
             #endregion
-            
+
+            #region Input - Touch
+            /// <summary>
+            /// Event if there is touch on fullscreen pressed - It is called for each touch
+            /// </summary>
+            ON_TOUCH_PRESSED_FULLSCREEN = 500,
+            /// <summary>
+            /// Event if 
+            /// </summary>
+            ON_TOUCH_RELEASED_FULLSCREEN,
+
+            #endregion
         }
 
         /// <summary>
