@@ -231,6 +231,7 @@ GameObject:
   - 224: {fileID: 22452546}
   - 222: {fileID: 22239370}
   - 114: {fileID: 11434510}
+  - 61: {fileID: 6152862}
   m_Layer: 10
   m_Name: Question
   m_TagString: Untagged
@@ -2366,6 +2367,7 @@ GameObject:
   - 224: {fileID: 22465952}
   - 222: {fileID: 22212970}
   - 114: {fileID: 11482862}
+  - 61: {fileID: 6129194}
   m_Layer: 10
   m_Name: text_q&a
   m_TagString: Untagged
@@ -5332,6 +5334,7 @@ GameObject:
   - 222: {fileID: 22252574}
   - 114: {fileID: 11427662}
   - 114: {fileID: 11496680}
+  - 61: {fileID: 6117386}
   m_Layer: 10
   m_Name: TF_Answer
   m_TagString: Untagged
@@ -15324,6 +15327,45 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 134098}
   m_Mesh: {fileID: 4300038, guid: 379921b9732e94b4788959c3223e5122, type: 3}
+--- !u!61 &6117386
+BoxCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 178902}
+  m_Enabled: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_Offset: {x: -43, y: -25}
+  serializedVersion: 2
+  m_Size: {x: 50, y: 50}
+--- !u!61 &6129194
+BoxCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 134574}
+  m_Enabled: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Size: {x: 200, y: 100}
+--- !u!61 &6152862
+BoxCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 103588}
+  m_Enabled: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_Offset: {x: 25, y: -25}
+  serializedVersion: 2
+  m_Size: {x: 50, y: 50}
 --- !u!64 &6402690
 MeshCollider:
   m_ObjectHideFlags: 1
@@ -16621,21 +16663,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ae469cfa8dd5487d85fe0964e340659, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiFaceOnSide:
+  m_uiFaceOnSide:
   - {fileID: 176488}
   - {fileID: 173190}
   - {fileID: 112784}
   - {fileID: 104190}
   - {fileID: 175640}
   - {fileID: 187408}
-  presentationSide:
+  m_presentationSide:
   - {fileID: 127036}
   - {fileID: 144244}
   - {fileID: 133564}
   - {fileID: 191902}
   - {fileID: 179838}
   - {fileID: 113326}
-  renderTexSide:
+  m_ProjectionSide:
+  - {fileID: 184874}
+  - {fileID: 106058}
+  - {fileID: 109752}
+  - {fileID: 153478}
+  - {fileID: 170266}
+  - {fileID: 183880}
+  m_renderTexSide:
   - {fileID: 8400000, guid: afcbb068b8c90401babc29866368f207, type: 2}
   - {fileID: 8400000, guid: d225ad6d2882840a8a98e82d67268a0d, type: 2}
   - {fileID: 8400000, guid: 7e3f4cd72fe354335be72e02f5d51a4a, type: 2}
@@ -16657,6 +16706,12 @@ MonoBehaviour:
   m_EaseForUnfocusing: 7
   timeForLeavingTheScene: .600000024
   easeForGoingFromScene: 20
+  sizeOfHexagonalPlane: {x: 1, y: 1}
+  planePoint: {x: 0, y: 0, z: 0}
+  planePointMin: {x: 0, y: 0, z: 0}
+  planePointMax: {x: 0, y: 0, z: 0}
+  screenPointGizmo: {x: 0, y: 0, z: 0}
+  cameraIndex: 0
 --- !u!114 &11426020
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -20431,10 +20486,16 @@ MonoBehaviour:
   - m_TapObject: {fileID: 165892}
     m_TapOnObject: 1
     m_SortingLayer: 0
+    m_LayerMask:
+      serializedVersion: 2
+      m_Bits: 16384
     m_Callback: 201
   - m_TapObject: {fileID: 165892}
     m_TapOnObject: 0
     m_SortingLayer: 0
+    m_LayerMask:
+      serializedVersion: 2
+      m_Bits: 16384
     m_Callback: 202
   m_FullScreenDragMappings:
   - m_DragLayerObject: {fileID: 0}
@@ -22588,7 +22649,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 299.999878}
+  m_AnchoredPosition: {x: 0, y: 6.10351562e-05}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!224 &22437190
@@ -24360,6 +24421,10 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_FullScreenDragMappings.Array.data[1].m_SortingLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []

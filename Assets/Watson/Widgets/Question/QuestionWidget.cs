@@ -102,55 +102,20 @@ namespace IBM.Watson.Widgets.Question
         /// <param name="hitTransform">Hit Tranform of tap</param>
 		public void OnTapInside(object[] args)
         {
-            if (args != null && args.Length == 2 && args[0] is TouchScript.Gestures.TapGesture && args[1] is Transform)
+            if (args != null && args.Length == 2 && args[0] is TouchScript.Gestures.TapGesture && args[1] is RaycastHit)
             {
                 Log.Status("Question Widget", "OnTapInside");
-                //TouchScript.Gestures.TapGesture tapGesture = args [0] as TouchScript.Gestures.TapGesture; 
-                Transform hitTransform = args[1] as Transform;
+                TouchScript.Gestures.TapGesture tapGesture = args [0] as TouchScript.Gestures.TapGesture; 
+				RaycastHit raycastHit = (RaycastHit) args[1];
 
-                //Touch on side
-                switch (Cube.AnimationState)
-                {
-                    case CubeAnimationManager.CubeAnimationState.NOT_PRESENT:
-                        break;
-                    case CubeAnimationManager.CubeAnimationState.COMING_TO_SCENE:
-                        break;
-                    case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOLDED:
-                        Cube.UnFold();
-                        break;
-                    case CubeAnimationManager.CubeAnimationState.UNFOLDING:
-                        FocusOnSide(hitTransform);
-                        break;
-                    case CubeAnimationManager.CubeAnimationState.IDLE_AS_UNFOLDED:
-                        FocusOnSide(hitTransform);
-                        break;
-                    case CubeAnimationManager.CubeAnimationState.FOLDING:
-                        Cube.UnFold();
-                        break;
-                    case CubeAnimationManager.CubeAnimationState.FOCUSING_TO_SIDE:
-                        FocusOnSide(hitTransform);
-                        break;
-                    case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOCUSED:
-                        FocusOnSide(hitTransform);
-                        break;
-                    case CubeAnimationManager.CubeAnimationState.GOING_FROM_SCENE:
-                        break;
-                    default:
-                        break;
-                }
+				Cube.OnTapInside(tapGesture, raycastHit);
+          
             }
             else
             {
                 Log.Warning("Question Widget", "OnTapInside has invalid arguments!");
             }
 
-        }
-
-        private void FocusOnSide(Transform hitTransform)
-        {
-            int touchedSide = 0;
-            int.TryParse(hitTransform.name.Substring(1, 1), out touchedSide);
-            Cube.FocusOnSide((CubeAnimationManager.CubeSideType)touchedSide);
         }
 
         /// <summary>
@@ -160,40 +125,13 @@ namespace IBM.Watson.Widgets.Question
         /// <param name="hitTransform">Hit Tranform of tap</param>
 		public void OnTapOutside(object[] args)
         {
-            if (args != null && args.Length == 2 && args[0] is TouchScript.Gestures.TapGesture && args[1] is Transform)
+			if (args != null && args.Length == 2 && args[0] is TouchScript.Gestures.TapGesture && args[1] is RaycastHit)
             {
                 Log.Status("Question Widget", "OnTapOutside");
-                //TouchScript.Gestures.TapGesture tapGesture = args [0] as TouchScript.Gestures.TapGesture; 
-                //Transform hitTransform = args [1] as Transform;
+                TouchScript.Gestures.TapGesture tapGesture = args [0] as TouchScript.Gestures.TapGesture; 
+				RaycastHit raycastHit = (RaycastHit) args [1];
 
-                //Touch out-side
-				switch (Cube.AnimationState)
-                {
-                    case CubeAnimationManager.CubeAnimationState.NOT_PRESENT:
-                        break;
-                    case CubeAnimationManager.CubeAnimationState.COMING_TO_SCENE:
-                        break;
-                    case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOLDED:
-                        break;
-                    case CubeAnimationManager.CubeAnimationState.UNFOLDING:
-                        Cube.Fold();
-                        break;
-                    case CubeAnimationManager.CubeAnimationState.IDLE_AS_UNFOLDED:
-                        Cube.Fold();
-                        break;
-                    case CubeAnimationManager.CubeAnimationState.FOLDING:
-                        break;
-                    case CubeAnimationManager.CubeAnimationState.FOCUSING_TO_SIDE:
-                        Cube.UnFocus();
-                        break;
-                    case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOCUSED:
-                        Cube.UnFocus();
-                        break;
-                    case CubeAnimationManager.CubeAnimationState.GOING_FROM_SCENE:
-                        break;
-                    default:
-                        break;
-                }
+				Cube.OnTapOutside(tapGesture, raycastHit);
             }
             else
             {
@@ -208,14 +146,14 @@ namespace IBM.Watson.Widgets.Question
 		/// <param name="args">Arguments of event. args[0] should be TouchScript.Gestures.ScreenTransformGesture</param>
         public void DragOneFingerFullScreen(object[] args)
         {
-			Log.Warning("QuestWidget", "DragOneFingerOnObject FULLSCREEN ");
+			//Log.Warning("QuestWidget", "DragOneFingerOnObject FULLSCREEN ");
             if (args != null && args.Length == 1 && args[0] is TouchScript.Gestures.ScreenTransformGesture)
             {
                 TouchScript.Gestures.ScreenTransformGesture OneFingerManipulationGesture = args[0] as TouchScript.Gestures.ScreenTransformGesture;
 
                 if (Cube != null)
                 {
-                    Cube.DragOneFinger(OneFingerManipulationGesture);
+                    Cube.DragOneFingerFullScreen(OneFingerManipulationGesture);
                 }
             }
         }
@@ -226,14 +164,15 @@ namespace IBM.Watson.Widgets.Question
 		/// <param name="args">Arguments.</param>
 		public void DragOneFingerOnObject(object[] args)
 		{
-			Log.Warning("QuestWidget", "DragOneFingerOnObject - OBJECT");
+			//Log.Warning("QuestWidget", "DragOneFingerOnObject - OBJECT");
 			if (args != null && args.Length == 1 && args[0] is TouchScript.Gestures.ScreenTransformGesture)
 			{
 				TouchScript.Gestures.ScreenTransformGesture OneFingerManipulationGesture = args[0] as TouchScript.Gestures.ScreenTransformGesture;
 				
 				if (Cube != null)
 				{
-					Cube.DragOneFinger(OneFingerManipulationGesture);
+					Cube.DragOneFingerFullScreen(OneFingerManipulationGesture);
+					Cube.DragOneFingerOnSide(OneFingerManipulationGesture);
 				}
 			}
 		}

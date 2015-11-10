@@ -77,15 +77,19 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
 	//All UI Elements - Faces 
 	[Header("UI Faces")]
 	[SerializeField]
-	private GameObject[] uiFaceOnSide;
+	private GameObject[] m_uiFaceOnSide;
 	
 	[Header("UI Faces for Zoom")]
 	[SerializeField]
-	private GameObject[] presentationSide;
+	private GameObject[] m_presentationSide;
+
+	[Header("Projection of Faces")]
+	[SerializeField]
+	private GameObject[] m_ProjectionSide;
 	
 	[Header("Render Textures")]
 	[SerializeField]
-	private RenderTexture[] renderTexSide;
+	private RenderTexture[] m_renderTexSide;
 
 	//Stationary Rotation Related values - Folded Idle
 	[SerializeField]
@@ -98,6 +102,7 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
 	private float m_OneFingerRotationModifier = 100.0f;
 	private float m_OneFingerRotationAnimationSpeed = 5.0f;
 	private Quaternion m_OneFingerCubeRotation;
+	private int m_LastFrameOneFingerDrag = 0;
 	private LeanTweenType m_EaseForFolding = LeanTweenType.easeInOutCubic;
 
 	
@@ -138,6 +143,11 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
 	[SerializeField]
 	private LeanTweenType easeForGoingFromScene = LeanTweenType.easeOutCirc;
 
+	//Passage One Finger Animation
+	LTBezierPath m_BezierPathToCenter;
+	LTBezierPath m_BezierPathOrientationToCenter;
+	LTBezierPath m_BezierPathToStack;
+	LTBezierPath m_BezierPathOrientationToStack;
 
 	//All animation Descriptions
 	private LTDescr m_animationMoveForComingScene;
@@ -178,6 +188,12 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
         }
     }
 
+	public CubeSideType SideFocused{
+		get{
+			return m_LastCubeSideFocused;
+		}
+	}
+
     #endregion
 
 	#region OnEnable / SetInitialConditions / OnDisable / Awake / Update / OnDestroy
@@ -198,11 +214,11 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
 	
 	void SetInitialConditions()
 	{
-		for (int i = 0; i < uiFaceOnSide.Length; i++)
+		for (int i = 0; i < m_uiFaceOnSide.Length; i++)
 		{
-			presentationSide[i].transform.localPosition = Vector3.zero;
-			uiFaceOnSide[i].transform.localPosition = m_positionFold[i];
-			uiFaceOnSide[i].transform.localRotation = m_rotationFold[i];
+			m_presentationSide[i].transform.localPosition = Vector3.zero;
+			m_uiFaceOnSide[i].transform.localPosition = m_positionFold[i];
+			m_uiFaceOnSide[i].transform.localRotation = m_rotationFold[i];
 		}
 		
 		transform.position = m_PositionBeforeComing; //m_initialPosition;
@@ -256,21 +272,45 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
 			new Vector3 (17.5f, -5f,    20.5f) 	//Bottom close to logo
 		};
 
+		m_BezierPathToCenter = new LTBezierPath ( new Vector3[]{ 
+			new Vector3(-555,-640.2f,-125),
+			new Vector3(-555,-640.2f,-125), 
+			new Vector3(-888, -406, -125), 
+			new Vector3(-888, -406, -125)});
 
-        if (uiFaceOnSide.Length != renderTexSide.Length
-            || uiFaceOnSide.Length != m_positionUnfold.Length
-            || uiFaceOnSide.Length != m_rotationUnfold.Length
-            || uiFaceOnSide.Length != m_positionFold.Length
-            || uiFaceOnSide.Length != m_rotationFold.Length)
+		m_BezierPathOrientationToCenter = new LTBezierPath (new Vector3[]{ 
+			new Vector3(0,0,0),
+			new Vector3(0,45,0), 
+			new Vector3(0,45,0), 
+			new Vector3(45,45,0)});
+		
+		m_BezierPathToStack =  new LTBezierPath ( new Vector3[]{ 
+				new Vector3(-888,	-406.2f,		-125),
+				new Vector3(600,	-680.1f,		-200), 
+				new Vector3(600, 	-680.1f, 	-300), 
+				new Vector3(600, 	-680.1f, 	-400)});
+
+		m_BezierPathOrientationToStack =   new LTBezierPath (new Vector3[]{ 
+				new Vector3(45,45,0),
+				new Vector3(0,45,0), 
+				new Vector3(0,35,0), 
+				new Vector3(0,0,0)});
+
+
+        if (m_uiFaceOnSide.Length != m_renderTexSide.Length
+            || m_uiFaceOnSide.Length != m_positionUnfold.Length
+            || m_uiFaceOnSide.Length != m_rotationUnfold.Length
+            || m_uiFaceOnSide.Length != m_positionFold.Length
+            || m_uiFaceOnSide.Length != m_rotationFold.Length)
         {
 
             Log.Error("CubeAnimationManager", "Cube Animation has some missing variables!");
         }
 
-        for (int i = 0; i < renderTexSide.Length; i++)
+        for (int i = 0; i < m_renderTexSide.Length; i++)
         {
-            if (!renderTexSide[i].useMipMap)
-                renderTexSide[i].useMipMap = true;
+            if (!m_renderTexSide[i].useMipMap)
+                m_renderTexSide[i].useMipMap = true;
         }
 
         m_initialPosition = transform.position;
@@ -296,9 +336,9 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
 
 	void OnDestroy()
 	{
-		for (int i = 0; i < renderTexSide.Length; i++)
+		for (int i = 0; i < m_renderTexSide.Length; i++)
 		{
-			renderTexSide[i].Release();
+			m_renderTexSide[i].Release();
 		}
 	}
 
@@ -381,11 +421,11 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
     private void AnimateFold(System.Action<System.Object> callBackOnComplete = null, System.Object paramOnComplete = null)
     {
         AnimationState = CubeAnimationState.FOLDING;
-        for (int i = 0; i < uiFaceOnSide.Length; i++)
+        for (int i = 0; i < m_uiFaceOnSide.Length; i++)
         {
-            m_animationPositionOnSide[i] = LeanTween.moveLocal(uiFaceOnSide[i], m_positionFold[i], m_TimeForFoldingUnfolding).setEase(m_EaseForFolding);
-            if (i == uiFaceOnSide.Length - 1)
-                m_animationRotationOnSide[i] = LeanTween.rotateLocal(uiFaceOnSide[i], m_rotationFold[i].eulerAngles, m_TimeForFoldingUnfolding).setEase(m_EaseForFolding).setOnComplete(
+            m_animationPositionOnSide[i] = LeanTween.moveLocal(m_uiFaceOnSide[i], m_positionFold[i], m_TimeForFoldingUnfolding).setEase(m_EaseForFolding);
+            if (i == m_uiFaceOnSide.Length - 1)
+                m_animationRotationOnSide[i] = LeanTween.rotateLocal(m_uiFaceOnSide[i], m_rotationFold[i].eulerAngles, m_TimeForFoldingUnfolding).setEase(m_EaseForFolding).setOnComplete(
                     () =>
                     {
                         AnimationState = CubeAnimationState.IDLE_AS_FOLDED; //Folding finish
@@ -394,7 +434,7 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
                             callBackOnComplete(paramOnComplete);
                     });
             else
-                m_animationRotationOnSide[i] = LeanTween.rotateLocal(uiFaceOnSide[i], m_rotationFold[i].eulerAngles, m_TimeForFoldingUnfolding).setEase(m_EaseForFolding);
+                m_animationRotationOnSide[i] = LeanTween.rotateLocal(m_uiFaceOnSide[i], m_rotationFold[i].eulerAngles, m_TimeForFoldingUnfolding).setEase(m_EaseForFolding);
         }
 
         //Move object cloase to camera
@@ -431,10 +471,10 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
     private void AnimateUnFold(System.Action<System.Object> callBackOnComplete = null, System.Object paramOnComplete = null)
     {
         AnimationState = CubeAnimationState.UNFOLDING;
-        for (int i = 0; i < uiFaceOnSide.Length; i++)
+        for (int i = 0; i < m_uiFaceOnSide.Length; i++)
         {
-            m_animationPositionOnSide[i] = LeanTween.moveLocal(uiFaceOnSide[i], m_positionUnfold[i], m_TimeForFoldingUnfolding).setEase(m_EaseForUnfolding);
-            m_animationRotationOnSide[i] = LeanTween.rotateLocal(uiFaceOnSide[i], m_rotationUnfold[i].eulerAngles, m_TimeForFoldingUnfolding).setEase(m_EaseForUnfolding);
+            m_animationPositionOnSide[i] = LeanTween.moveLocal(m_uiFaceOnSide[i], m_positionUnfold[i], m_TimeForFoldingUnfolding).setEase(m_EaseForUnfolding);
+            m_animationRotationOnSide[i] = LeanTween.rotateLocal(m_uiFaceOnSide[i], m_rotationUnfold[i].eulerAngles, m_TimeForFoldingUnfolding).setEase(m_EaseForUnfolding);
         }
 
         //Rotate to camera 
@@ -465,7 +505,7 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
     public void FocusOnSide(CubeSideType sideType)
     {
         m_LastCubeSideFocused = sideType;
-        if (presentationSide.Length < (int)sideType)
+        if (m_presentationSide.Length < (int)sideType)
         {
             Log.Error("CubeAnimationManager", "CubeAnimationManager - FocusOnSide {0} has wrong number as side. ", (int)sideType);
             return;
@@ -492,7 +532,7 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
     /// </summary>
     public void FocusOnNextSide()
     {
-        m_LastCubeSideFocused = (CubeSideType)(((int)m_LastCubeSideFocused + 1) % uiFaceOnSide.Length);
+        m_LastCubeSideFocused = (CubeSideType)(((int)m_LastCubeSideFocused + 1) % m_uiFaceOnSide.Length);
         FocusOnSide(m_LastCubeSideFocused);
     }
 
@@ -505,17 +545,17 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
     {
         AnimationState = CubeAnimationState.FOCUSING_TO_SIDE;
 
-        for (int i = 0; i < presentationSide.Length; i++)
+        for (int i = 0; i < m_presentationSide.Length; i++)
         {
-            Vector3 offsetPosition = presentationSide[i].transform.parent.localPosition + presentationSide[i].transform.parent.parent.localPosition;
+            Vector3 offsetPosition = m_presentationSide[i].transform.parent.localPosition + m_presentationSide[i].transform.parent.parent.localPosition;
             if (i == 0)
             {
-                offsetPosition += presentationSide[i].transform.parent.parent.parent.localPosition;
+                offsetPosition += m_presentationSide[i].transform.parent.parent.parent.localPosition;
             }
 
             if (i == (int)sideType)
             {   //Our hero object!
-                m_animationPositionOnSidePresentation[i] = LeanTween.moveLocal(presentationSide[i], m_positionFocus[0] - offsetPosition, m_TimeForFocusingUnfocusing).setEase(m_EaseForFocusing).setOnComplete(() =>
+                m_animationPositionOnSidePresentation[i] = LeanTween.moveLocal(m_presentationSide[i], m_positionFocus[0] - offsetPosition, m_TimeForFocusingUnfocusing).setEase(m_EaseForFocusing).setOnComplete(() =>
                 {
                     AnimationState = CubeAnimationState.IDLE_AS_FOCUSED;
                 });
@@ -523,19 +563,19 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
             else if (i < (int)sideType)
             {
                 //				Vector3[] splineVec = new Vector3[]{ presentationSide[i].transform.localPosition,presentationSide[i].transform.localPosition - Vector3.right * (i  * 2) * (i % 2 == 0 ? 1.0f : -1.0f), positionZoom[ ((i + 1) % uiFaceOnSide.Length) ] - offsetPosition  - Vector3.right * (i  * 2) * (i % 2 == 0 ? 1.0f : -1.0f),positionZoom[ ((i + 1) % uiFaceOnSide.Length) ] - offsetPosition};
-                m_animationPositionOnSidePresentation[i] = LeanTween.moveLocal(presentationSide[i], m_positionFocus[((i + 1) % uiFaceOnSide.Length)] - offsetPosition, m_TimeForFocusingUnfocusing).setEase(m_EaseForFocusing);
+                m_animationPositionOnSidePresentation[i] = LeanTween.moveLocal(m_presentationSide[i], m_positionFocus[((i + 1) % m_uiFaceOnSide.Length)] - offsetPosition, m_TimeForFocusingUnfocusing).setEase(m_EaseForFocusing);
             }
             else
             {
                 //				Vector3[] splineVec = new Vector3[]{presentationSide[i].transform.localPosition, presentationSide[i].transform.localPosition - Vector3.right * (i * 2) * (i % 2 == 0 ? 1.0f : -1.0f), positionZoom[i] - offsetPosition  - Vector3.right * (i * 2) * (i % 2 == 0 ? 1.0f : -1.0f),positionZoom[i] - offsetPosition};
-                m_animationPositionOnSidePresentation[i] = LeanTween.moveLocal(presentationSide[i], m_positionFocus[i] - offsetPosition, m_TimeForFocusingUnfocusing).setEase(m_EaseForFocusing);
+                m_animationPositionOnSidePresentation[i] = LeanTween.moveLocal(m_presentationSide[i], m_positionFocus[i] - offsetPosition, m_TimeForFocusingUnfocusing).setEase(m_EaseForFocusing);
             }
         }
 
         //Make sure that our sides are in right rotation
-        for (int i = 0; i < uiFaceOnSide.Length; i++)
+        for (int i = 0; i < m_uiFaceOnSide.Length; i++)
         {
-            m_animationRotationOnSide[i] = LeanTween.rotateLocal(uiFaceOnSide[i], m_rotationUnfold[i].eulerAngles, m_TimeForFocusingUnfocusing).setEase(m_EaseForFocusing);
+            m_animationRotationOnSide[i] = LeanTween.rotateLocal(m_uiFaceOnSide[i], m_rotationUnfold[i].eulerAngles, m_TimeForFocusingUnfocusing).setEase(m_EaseForFocusing);
         }
 
     }
@@ -556,11 +596,11 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
     {
 
         AnimationState = CubeAnimationState.FOCUSING_TO_SIDE;
-        for (int i = 0; i < uiFaceOnSide.Length; i++)
+        for (int i = 0; i < m_uiFaceOnSide.Length; i++)
         {
-            if (i == uiFaceOnSide.Length - 1)
+            if (i == m_uiFaceOnSide.Length - 1)
             {
-                m_animationPositionOnSide[i] = LeanTween.moveLocal(presentationSide[i], Vector3.zero, m_TimeForFocusingUnfocusing).setEase(m_EaseForUnfocusing).setOnComplete(() =>
+                m_animationPositionOnSide[i] = LeanTween.moveLocal(m_presentationSide[i], Vector3.zero, m_TimeForFocusingUnfocusing).setEase(m_EaseForUnfocusing).setOnComplete(() =>
                 {
                     AnimationState = CubeAnimationState.IDLE_AS_UNFOLDED;
 
@@ -572,7 +612,7 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
             }
             else
             {
-                m_animationPositionOnSide[i] = LeanTween.moveLocal(presentationSide[i], Vector3.zero, m_TimeForFocusingUnfocusing).setEase(m_EaseForUnfocusing);
+                m_animationPositionOnSide[i] = LeanTween.moveLocal(m_presentationSide[i], Vector3.zero, m_TimeForFocusingUnfocusing).setEase(m_EaseForUnfocusing);
             }
         }
     }
@@ -616,7 +656,7 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
     {
         if (m_animationPositionOnSide == null)
         {
-            m_animationPositionOnSide = new LTDescr[uiFaceOnSide.Length];
+            m_animationPositionOnSide = new LTDescr[m_uiFaceOnSide.Length];
         }
         else
         {
@@ -629,7 +669,7 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
 
         if (m_animationRotationOnSide == null)
         {
-            m_animationRotationOnSide = new LTDescr[uiFaceOnSide.Length];
+            m_animationRotationOnSide = new LTDescr[m_uiFaceOnSide.Length];
         }
         else
         {
@@ -645,7 +685,7 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
     {
         if (m_animationPositionOnSidePresentation == null)
         {
-            m_animationPositionOnSidePresentation = new LTDescr[uiFaceOnSide.Length];
+            m_animationPositionOnSidePresentation = new LTDescr[m_uiFaceOnSide.Length];
         }
         else
         {
@@ -753,38 +793,342 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
 
     #endregion
 
-    #region Dragging One Finger
+	#region Tap 
 
-    private int frameCountOneFinger;
-    public void DragOneFinger(TouchScript.Gestures.ScreenTransformGesture OneFingerManipulationGesture)
-    {
-        if (AnimationState == CubeAnimationState.IDLE_AS_FOLDED || AnimationState == CubeAnimationState.FOLDING)
-        {
-            Log.Status("CubeAnimationManager", "oneFingerManipulationTransformedHandler: {0}", OneFingerManipulationGesture.DeltaPosition);
+	/// <summary>
+	/// Method called on Tapping on Question Widget 
+	/// </summary>
+	/// <param name="tapGesture">Tap Gesture with all touch information</param>
+	/// <param name="hitTransform">Hit Tranform of tap</param>
+	public void OnTapInside(TouchScript.Gestures.TapGesture tapGesture, RaycastHit raycastHit)
+	{
+		if (tapGesture == null || raycastHit.Equals(default(RaycastHit)) ) {
+			Log.Warning("CubeAnimationManager", "OnTapInside has invalid arguments!");
+			return;
+		}
 
-            Quaternion rotation = Quaternion.Euler(OneFingerManipulationGesture.DeltaPosition.y / Screen.height * m_OneFingerRotationModifier,
-                                                    -OneFingerManipulationGesture.DeltaPosition.x / Screen.width * m_OneFingerRotationModifier,
-                                                    0.0f);
+		CubeSideType sideTapped = SideOfTap (raycastHit.transform);
+		if (AnimationState == CubeAnimationState.IDLE_AS_FOCUSED && sideTapped == SideFocused) {
+			TapInsideOnFocusedSide(tapGesture, raycastHit, sideTapped);
+		} else {
+			//Touch on side
+			switch (AnimationState)
+			{
+			case CubeAnimationManager.CubeAnimationState.NOT_PRESENT:
+				break;
+			case CubeAnimationManager.CubeAnimationState.COMING_TO_SCENE:
+				break;
+			case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOLDED:
+				UnFold();
+				break;
+			case CubeAnimationManager.CubeAnimationState.UNFOLDING:
+				FocusOnSide(sideTapped);
+				break;
+			case CubeAnimationManager.CubeAnimationState.IDLE_AS_UNFOLDED:
+				FocusOnSide(sideTapped);
+				break;
+			case CubeAnimationManager.CubeAnimationState.FOLDING:
+				UnFold();
+				break;
+			case CubeAnimationManager.CubeAnimationState.FOCUSING_TO_SIDE:
+				FocusOnSide(sideTapped);
+				break;
+			case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOCUSED:
+				FocusOnSide(sideTapped);
+				break;
+			case CubeAnimationManager.CubeAnimationState.GOING_FROM_SCENE:
+				break;
+			default:
+				break;
+			}
+		}
+	}
 
-            m_OneFingerCubeRotation *= rotation;
-            m_LastFrameOneFingerDrag = Time.frameCount;
-            m_StatinoaryRotationSpeed = 0.0f; //stop the statinoary rotation
-            //Log.Status("CubeAnimationManager", "Rotation: {0} , Target rotation : {1} ", rotation.eulerAngles, m_OneFingerCubeRotation.eulerAngles);
-        }
-    }
+	private CubeSideType SideOfTap(Transform hitTransform){
+		int touchedSide = -1;
+		int.TryParse(hitTransform.name.Substring(1, 1), out touchedSide);
+		return (CubeAnimationManager.CubeSideType)touchedSide;
+	}
+	
+	private void FocusOnSide(Transform hitTransform)
+	{
+		FocusOnSide(SideOfTap(hitTransform));
+	}
+	
+	/// <summary>
+	/// Raises the tap outside event.
+	/// </summary>
+	/// <param name="tapGesture">Tap gesture.</param>
+	/// <param name="hitTransform">Hit transform.</param>
+	public void OnTapOutside(TouchScript.Gestures.TapGesture tapGesture, RaycastHit raycastHit)
+	{
+		if (tapGesture == null || !raycastHit.Equals(default(RaycastHit)) ) {
+			Log.Warning("CubeAnimationManager", "OnTapOutside has invalid arguments!");
+			return;
+		}
 
-    private int m_LastFrameOneFingerDrag = 0;
-    private void CubeOneFingerDragAnimationOnUpdate()
-    {
-        if (AnimationState == CubeAnimationState.IDLE_AS_FOLDED || AnimationState == CubeAnimationState.FOLDING)
-        {
-            //For Rotating the cube by one finger 
-            m_OneFingerCubeRotation = Quaternion.Lerp(m_OneFingerCubeRotation, Quaternion.identity, Time.deltaTime * m_OneFingerRotationAnimationSpeed);
-            transform.Rotate(m_OneFingerCubeRotation.eulerAngles, Space.World);
-        }
-    }
+		//Touch out-side
+		switch (AnimationState)
+		{
+		case CubeAnimationManager.CubeAnimationState.NOT_PRESENT:
+			break;
+		case CubeAnimationManager.CubeAnimationState.COMING_TO_SCENE:
+			break;
+		case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOLDED:
+			break;
+		case CubeAnimationManager.CubeAnimationState.UNFOLDING:
+			Fold();
+			break;
+		case CubeAnimationManager.CubeAnimationState.IDLE_AS_UNFOLDED:
+			Fold();
+			break;
+		case CubeAnimationManager.CubeAnimationState.FOLDING:
+			break;
+		case CubeAnimationManager.CubeAnimationState.FOCUSING_TO_SIDE:
+			UnFocus();
+			break;
+		case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOCUSED:
+			UnFocus();
+			break;
+		case CubeAnimationManager.CubeAnimationState.GOING_FROM_SCENE:
+			break;
+		default:
+			break;
+		}
+	}
 
-    #endregion
 
-    
+	private Vector2 getScreenPositionForCamera(Vector2 screenPositionOnMainCamera, Camera cameraOnProjection, Transform hexagonalPlane){
+		Vector2 normalizeScreenTouchRelativeToPlane = Vector2.zero;
+
+		if (hexagonalPlane.parent != null) {
+			MeshFilter meshFilter = hexagonalPlane.parent.GetComponent<MeshFilter> ();
+
+			if (meshFilter != null) {
+				Vector3 planePointMin = meshFilter.transform.TransformPoint (meshFilter.mesh.bounds.min);
+				Vector3 planePointMax = meshFilter.transform.TransformPoint (meshFilter.mesh.bounds.max);
+				
+				//Log.Status ("CubeAnimationManager", "0 - MIN) meshFilter.mesh.bounds.min: " + meshFilter.mesh.bounds.min + " Global : " + meshFilter.transform.TransformPoint (meshFilter.mesh.bounds.min) + " - Camera.main.WorldToScreenPoint: " + Camera.main.WorldToScreenPoint(meshFilter.transform.TransformPoint (meshFilter.mesh.bounds.min)));
+				//Log.Status ("CubeAnimationManager", "0 - MAX) meshFilter.mesh.bounds.max: " + meshFilter.mesh.bounds.max + " Global : " + meshFilter.transform.TransformPoint (meshFilter.mesh.bounds.max) + " - Camera.main.WorldToScreenPoint: " + Camera.main.WorldToScreenPoint(meshFilter.transform.TransformPoint (meshFilter.mesh.bounds.max)));
+				
+				Vector3 screenPlaneBottomLeft = Camera.main.WorldToScreenPoint(meshFilter.transform.TransformPoint (meshFilter.mesh.bounds.max));
+				Vector3 screenPlaneTopRight = Camera.main.WorldToScreenPoint(meshFilter.transform.TransformPoint (meshFilter.mesh.bounds.min));
+				Vector3 screenPlaneFromLeftToRight = screenPlaneTopRight - screenPlaneBottomLeft;
+				
+				Vector2 screenTouchRelativeToPlane = new Vector2 (screenPositionOnMainCamera.x - screenPlaneBottomLeft.x, screenPositionOnMainCamera.y - screenPlaneBottomLeft.y);
+				normalizeScreenTouchRelativeToPlane = new Vector2 (screenTouchRelativeToPlane.x / screenPlaneFromLeftToRight.x, screenTouchRelativeToPlane.y / screenPlaneFromLeftToRight.y);
+				
+				float onePixelOnProjectionScreenSize = Screen.height / (cameraOnProjection.orthographicSize * 2.0f);
+				
+				Vector2 targetTextureSize = Vector2.one * onePixelOnProjectionScreenSize; 
+				if (cameraOnProjection.targetTexture != null) {
+					targetTextureSize = new Vector2( cameraOnProjection.targetTexture.width, cameraOnProjection.targetTexture.height);
+				}
+				
+				normalizeScreenTouchRelativeToPlane.Scale (targetTextureSize);
+			} else {
+				Log.Error("CubeAnimationManager", "getScreenPositionForCamera - There is no mesh filter on parent object");
+			}
+		} else {
+			Log.Error("CubeAnimationManager", "getScreenPositionForCamera - There is no parent object");
+		}
+
+		return  normalizeScreenTouchRelativeToPlane;
+	}
+
+	private Camera[] m_ProjectionCameraList;
+	private Ray m_RayOnTapFocusedSide;
+
+	private void TapInsideOnFocusedSide(TouchScript.Gestures.TapGesture tapGesture, RaycastHit raycastHit, CubeSideType sideTapped)
+	{
+		Log.Status("CubeAnimationManager", "TapInsideOnFocusedSide " + tapGesture.ScreenPosition + " sideTapped: " + sideTapped + " Index: " + ((int)sideTapped).ToString());
+
+		if(m_ProjectionCameraList == null)
+			m_ProjectionCameraList = Utility.FindObjects<Camera> (transform.parent.gameObject, "cam", isContains: true, sortByName: true);
+
+		if (m_ProjectionCameraList.Length > (int)sideTapped && m_ProjectionCameraList [(int)sideTapped] != null) {
+			Camera cameraProjectionParse = m_ProjectionCameraList [(int)sideTapped];	
+			if (cameraProjectionParse != null) {
+				Vector2 screenPointOnCamera = getScreenPositionForCamera (tapGesture.ScreenPosition, cameraProjectionParse, raycastHit.transform);
+				m_RayOnTapFocusedSide = cameraProjectionParse.ScreenPointToRay (screenPointOnCamera);
+				//TODO: Tap inside while cube is on focused!
+				RaycastHit2D hit = default(RaycastHit2D);
+				int layerOfSide = LayerMask.NameToLayer("Side"+((int)sideTapped).ToString());
+				LayerMask layerMaskForSide = 1 << layerOfSide;
+				hit = Physics2D.Raycast(m_RayOnTapFocusedSide.origin, m_RayOnTapFocusedSide.direction, Mathf.Infinity, layerMaskForSide);
+				if(hit.collider != null){
+					Log.Status("CubeAnimationManager","isHitOnLayer : " + hit.collider.transform);
+				}
+				else{
+					Log.Status("CubeAnimationManager","NOT HIT ");
+				}
+			}
+		} else {
+			Log.Error("CubeAnimationManager", "TapInsideOnFocusedSide - Projection Camera couldn't find!");
+		}
+
+	}
+
+	private void TapOutsideOnFocusedSide(TouchScript.Gestures.TapGesture tapGesture, RaycastHit raycastHit, CubeSideType sideTapped)
+	{
+		//TODO: Tap outside while cube is on focused!
+		Log.Status("CubeAnimationManager", "TapOutsideOnFocusedSide " + tapGesture.ScreenPosition + " sideTapped: " + sideTapped);
+	}
+
+	void OnDrawGizmos() {
+		if(!m_RayOnTapFocusedSide.Equals(default(Ray))){
+			Gizmos.color = Color.yellow;
+			Gizmos.DrawRay(m_RayOnTapFocusedSide);
+			Gizmos.color = Color.red;
+			Gizmos.DrawLine(m_RayOnTapFocusedSide.origin, m_RayOnTapFocusedSide.origin + m_RayOnTapFocusedSide.direction * 1000);
+		}
+	}
+
+	#endregion
+	
+	#region Dragging One Finger
+	
+	public void DragOneFingerFullScreen(TouchScript.Gestures.ScreenTransformGesture OneFingerManipulationGesture)
+	{
+		if (AnimationState == CubeAnimationState.IDLE_AS_FOLDED || AnimationState == CubeAnimationState.FOLDING)
+		{
+			Quaternion rotation = Quaternion.Euler(OneFingerManipulationGesture.DeltaPosition.y / Screen.height * m_OneFingerRotationModifier,
+			                                       -OneFingerManipulationGesture.DeltaPosition.x / Screen.width * m_OneFingerRotationModifier,
+			                                       0.0f);
+			
+			m_OneFingerCubeRotation *= rotation;
+			m_LastFrameOneFingerDrag = Time.frameCount;
+			m_StatinoaryRotationSpeed = 0.0f; //stop the statinoary rotation
+		}
+	}
+	
+	
+	private void CubeOneFingerDragAnimationOnUpdate()
+	{
+		if (AnimationState == CubeAnimationState.IDLE_AS_FOLDED || AnimationState == CubeAnimationState.FOLDING)
+		{
+			//For Rotating the cube by one finger 
+			m_OneFingerCubeRotation = Quaternion.Lerp(m_OneFingerCubeRotation, Quaternion.identity, Time.deltaTime * m_OneFingerRotationAnimationSpeed);
+			transform.Rotate(m_OneFingerCubeRotation.eulerAngles, Space.World);
+		}
+		else if (AnimationState == CubeAnimationState.IDLE_AS_FOCUSED && SideFocused == CubeSideType.TITLE) {
+			//Passage animation
+			DragOneFingerOnPassageOnUpdate();
+		}
+	}
+	
+	public void DragOneFingerOnSide(TouchScript.Gestures.ScreenTransformGesture OneFingerManipulationGesture)
+	{
+		if (AnimationState == CubeAnimationState.IDLE_AS_FOCUSED && SideFocused != CubeSideType.NONE)
+		{
+			GameObject currentSideObject = m_presentationSide[(int)SideFocused];
+
+			Ray rayForDrag = Camera.main.ScreenPointToRay(OneFingerManipulationGesture.ScreenPosition);
+			RaycastHit hit;
+			bool isHitOnFocusedSide = Physics.Raycast(rayForDrag, out hit, Mathf.Infinity, 1 << currentSideObject.layer);
+
+			if(isHitOnFocusedSide){
+
+				int touchedSide = -1;
+				int.TryParse(hit.transform.name.Substring(1, 1), out touchedSide);
+				CubeSideType cubeSideTouched = (CubeSideType)touchedSide;
+
+				Log.Status("CubeAnimationManager", "cubeSideTouched: {0}", cubeSideTouched);
+				if(cubeSideTouched == CubeSideType.TITLE && SideFocused == CubeSideType.TITLE)
+				{
+					m_LastFrameOneFingerDrag = Time.frameCount;
+					DragOneFingerOnPassage(OneFingerManipulationGesture);
+				}
+			}
+
+		}
+	}
+
+	private Transform[] m_PassageItems = null;
+
+	//[SerializeField]
+	private float m_OneDragModifier = 0.01f;
+	private int m_SelectedPassageIndex = -1;
+	private float m_PercentCurrentPassage = 0.0f;
+
+	private Vector3 worldOnPath = Vector3.up;
+
+	public void DragOneFingerOnPassage(TouchScript.Gestures.ScreenTransformGesture OneFingerManipulationGesture){
+
+		if (m_PassageItems == null) {
+			m_PassageItems = Utility.FindObjects<Transform> (m_ProjectionSide [5], "PassageItem", isContains: true, sortByName: true);
+		}
+
+		if (m_PassageItems != null) {
+			float movingInX = OneFingerManipulationGesture.DeltaPosition.x * m_OneDragModifier;
+			//Log.Status("CubeAnimationManager", "Passages: {0} - DragOneFingerOnPassage: {1}", m_PassageItems.Length, OneFingerManipulationGesture.DeltaPosition);
+//			for (int i = 0; i < m_PassageItems.Length; i++) {
+//				Log.Status("CubeAnimationManager", "Passages: {0} - List[{1}] = {2}", m_PassageItems.Length, i, m_PassageItems[i].name);
+//			}
+
+			if(m_SelectedPassageIndex != -1){
+
+			}
+			else{
+
+				m_PercentCurrentPassage = Mathf.Clamp01(m_PercentCurrentPassage + movingInX);
+
+
+				//new Vector3[]{ new Vector3(0f,0f,0f), new Vector3(1f,1f,1f), new Vector3(2f,2f,2f), new Vector3(3f,3f,3f), new Vector3(3f,3f,3f), new Vector3(4f,4f,4f), new Vector3(5f,5f,5f), new Vector3(6f,6f,6f) }
+				//LTSpline pathSplineOrientation = new LTSpline( Vector3.zero, new Vector3(45.0f,45.0f,0), new Vector3(45.0f,45.0f,0), Vector3.zero );
+				//path.orientToPath = true;
+				//path.placeLocal(m_PassageItems[0].transform, m_PercentCurrentPassage, worldOnPath);
+				//m_PassageItems[0].transform.GetComponent<RectTransform>().anchoredPosition3D = path.point(m_PercentCurrentPassage);
+				//m_PassageItems[0].transform.GetComponent<RectTransform>().localEulerAngles = pathOrientation.point(m_PercentCurrentPassage);
+
+			}
+
+
+		} else {
+			Log.Status("CubeAnimationManager", "NO PASSAGE - DragOneFingerOnPassage: {0}", OneFingerManipulationGesture.DeltaPosition);
+		}
+	}
+
+	//[SerializeField]
+	private float sleepPassageSmooth = 4.0f;
+
+	private void DragOneFingerOnPassageOnUpdate(){
+
+		if (m_PassageItems != null && m_PassageItems[0] != null) {
+
+			if((Time.frameCount - m_LastFrameOneFingerDrag) > 2 ){
+				if(m_PercentCurrentPassage >0.25f && m_PercentCurrentPassage < 0.75f){
+					m_PercentCurrentPassage = 0.5f;
+				}
+				else if(m_PercentCurrentPassage < 0.25f){
+					m_PercentCurrentPassage = 0.0f;
+				}
+				else{
+					m_PercentCurrentPassage = 1.0f;
+				}
+			}
+				
+
+
+			LTBezierPath m_BezierPathCurrent;
+			LTBezierPath m_BezierPathOrientationCurrent;
+			float m_RatioBezierPathPassage = 0.0f;
+			if (m_PercentCurrentPassage <= 0.5f) {
+				m_RatioBezierPathPassage = m_PercentCurrentPassage * 2.0f;
+				m_BezierPathCurrent = m_BezierPathToCenter;
+				m_BezierPathOrientationCurrent = m_BezierPathOrientationToCenter;
+			} else {
+				m_RatioBezierPathPassage = (m_PercentCurrentPassage - 0.5f) * 2.0f;
+				m_BezierPathCurrent = m_BezierPathToStack;
+				m_BezierPathOrientationCurrent = m_BezierPathOrientationToStack;
+			}
+			
+			m_PassageItems[0].transform.localPosition = Vector3.Lerp(m_PassageItems[0].transform.localPosition, m_BezierPathCurrent.point (m_RatioBezierPathPassage), Time.deltaTime * sleepPassageSmooth);
+			m_PassageItems[0].transform.localRotation = Quaternion.Lerp(m_PassageItems[0].transform.localRotation, Quaternion.Euler( m_BezierPathOrientationCurrent.point (m_RatioBezierPathPassage)), Time.deltaTime * sleepPassageSmooth);
+		}
+	}
+	
+	#endregion
+	
+	
 }
