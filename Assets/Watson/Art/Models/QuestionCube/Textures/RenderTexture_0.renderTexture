@@ -5,7 +5,7 @@ RenderTexture:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: RenderTexture_6_passage
+  m_Name: RenderTexture_0
   m_ImageContentsHash:
     serializedVersion: 2
     Hash: 00000000000000000000000000000000
