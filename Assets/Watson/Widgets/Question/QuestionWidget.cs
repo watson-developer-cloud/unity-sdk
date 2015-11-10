@@ -294,14 +294,14 @@ namespace IBM.Watson.Widgets.Question
             EnableEvents(false);
 			Cube.enabled = false;
 
-            m_AnswersAndConfidence = gameObject.GetComponent<AnswersAndConfidence>();
-            m_Evidence = gameObject.GetComponent<Question.Evidence>();
-            m_Semantic = gameObject.GetComponent<Semantic>();
-            m_Features = gameObject.GetComponent<Features>();
-            m_Location = gameObject.GetComponent<Location>();
-            m_ParseTree = gameObject.GetComponent<ParseTree>();
-            m_QuestionAndAnswer = gameObject.GetComponent<QuestionAndAnswer>();
-            m_Passages = gameObject.GetComponent<Passages>();
+            m_AnswersAndConfidence = gameObject.transform.GetComponentInChildren<AnswersAndConfidence>();
+			m_Evidence = gameObject.transform.GetComponentInChildren<Question.Evidence>();
+			m_Semantic = gameObject.transform.GetComponentInChildren<Semantic>();
+			m_Features = gameObject.transform.GetComponentInChildren<Features>();
+			m_Location = gameObject.transform.GetComponentInChildren<Location>();
+			m_ParseTree = gameObject.transform.GetComponentInChildren<ParseTree>();
+			m_QuestionAndAnswer = gameObject.transform.GetComponentInChildren<QuestionAndAnswer>();
+			m_Passages = gameObject.transform.GetComponentInChildren<Passages>();
 
             m_Facets.Add(m_AnswersAndConfidence);
             m_Facets.Add(m_Evidence);
