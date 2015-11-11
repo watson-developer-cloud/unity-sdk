@@ -17,6 +17,7 @@
 */
 
 #define EXPORT_QUESTIONS
+//#define USE_CACHE
 
 using System.Collections;
 using IBM.Watson.Services.v1;
@@ -38,7 +39,11 @@ namespace IBM.Watson.UnitTests
         /// <exclude />
         public override IEnumerator RunTest()
         {
+#if USE_CACHE
             Test( m_QA.AskQuestion( "Why was a gravel packed lower completion chosen in the Sculptor field?", OnAskQuestion ) );
+#else
+            Test( m_QA.AskQuestion( "Why was a gravel packed lower completion chosen in the Sculptor field?", OnAskQuestion, 1, false ) );
+#endif
             while(! m_AskQuestionTested )
                 yield return null;
 

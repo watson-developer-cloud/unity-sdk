@@ -136,6 +136,22 @@ namespace IBM.Watson.Utilities
 			/// Event on Question cube drag via object dragging
 			/// </summary>
 			ON_QUESTIONCUBE_DRAG_ONE_FINGER_OBJECT,
+            /// <summary>
+            /// Event sent when a question is asked from a given location.
+            /// </summary>
+            ON_QUESTION_LOCATION,
+            /// <summary>
+            /// Event sent when a question is being answered, this is sent after the QuestionCube has been instanced
+            /// </summary>
+            ON_QUESTION,
+            /// <summary>
+            /// Event sent continaing the answer results.
+            /// </summary>
+            ON_QUESTION_ANSWERS,
+            /// <summary>
+            /// Event sent continaing the parse results.
+            /// </summary>
+            ON_QUESTION_PARSE,
             #endregion
 
             #region Animation / Camera

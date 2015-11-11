@@ -23,10 +23,10 @@ using IBM.Watson.Data.XRAY;
 
 namespace IBM.Watson.UnitTests
 {
-    public class TestITM : UnitTest
+    public class TestXRAY : UnitTest
     {
-        XRAY m_ITM = new XRAY();
-        bool m_LoginTested = false;
+        XRAY m_XRAY = new XRAY();
+        bool m_InitTested = false;
         bool m_GetPipelineTested = false;
         bool m_AskQuestionTested = false;
         bool m_GetQuestionsTested = false;
@@ -36,19 +36,15 @@ namespace IBM.Watson.UnitTests
 
         public override IEnumerator RunTest()
         {
-            m_ITM.Login( OnLogin );
-            while(! m_LoginTested )
+            m_XRAY.Initialize( OnInit );
+            while(! m_InitTested )
                 yield return null;
 
-            m_ITM.GetPipeline( "thunderstone", true, OnGetPipeline );
-            while(! m_GetPipelineTested )
-                yield return null;
-
-            m_ITM.GetQuestions(OnGetQuestions);
+            m_XRAY.GetQuestions( "thunderstone", OnGetQuestions);
             while (!m_GetQuestionsTested)
                 yield return null;
 
-            m_ITM.AskQuestion( "What is the capital of Texas", OnAskQuestion );
+            m_XRAY.AskQuestion( "thunderstone", "What is the capital of Texas", OnAskQuestion );
             while(! m_AskQuestionTested )
                 yield return null;
 
@@ -62,10 +58,10 @@ namespace IBM.Watson.UnitTests
             yield break;
         }
 
-        private void OnLogin( bool success )
+        private void OnInit( bool success )
         {
             Test( success );
-            m_LoginTested = true;
+            m_InitTested = true;
         }
 
         private void OnGetPipeline( Pipeline pipeline )
@@ -81,10 +77,10 @@ namespace IBM.Watson.UnitTests
             {
                 foreach( var question in questions.questions )
                 {
-                    Log.Status( "TestITM", "OnAskQuestion: {0} ({1})", question.question.questionText, question.topConfidence );
-                    m_ITM.GetAnswers( question.transactionId, OnGetAnswers );
-                    m_ITM.GetParseData( question.transactionId, OnGetParseData );
-                    m_ITM.GetQuestion( question.transactionId, OnGetQuestion );
+                    Log.Status( "TestXRAY", "OnAskQuestion: {0} ({1})", question.question.questionText, question.topConfidence );
+                    m_XRAY.GetAnswers( "thunderstone", question.transactionId, OnGetAnswers );
+                    m_XRAY.GetParseData( "thunderstone", question.transactionId, OnGetParseData );
+                    m_XRAY.GetQuestion( "thunderstone", question.transactionId, OnGetQuestion );
                 }
             }
             else
@@ -100,7 +96,7 @@ namespace IBM.Watson.UnitTests
         {
             Test( questions != null );
             if ( questions != null && questions.questions != null && questions.questions.Length > 0 )
-                Log.Status( "TestITM", "OnGetQuestion: {0}",  questions.questions[0].question.questionText );
+                Log.Status( "TestXRAY", "OnGetQuestion: {0}",  questions.questions[0].question.questionText );
             m_GetQuestionTested = true;
         }
 
@@ -110,7 +106,7 @@ namespace IBM.Watson.UnitTests
             if ( questions != null && questions.questions != null )
             {
                 for(int i=0;i<questions.questions.Length;++i)
-                    Log.Status( "TestITM", "OnGetQuestions: {0}", questions.questions[i].question.questionText );
+                    Log.Status( "TestXRAY", "OnGetQuestions: {0}", questions.questions[i].question.questionText );
             }
             m_GetQuestionsTested = true;
         }
@@ -121,7 +117,7 @@ namespace IBM.Watson.UnitTests
             if ( answers != null )
             {
                 for(int i=0;i<answers.answers.Length;++i)
-                    Log.Status( "TestITM", "OnGetAnswers: {0}, Confidence: {1}",
+                    Log.Status( "TestXRAY", "OnGetAnswers: {0}, Confidence: {1}",
                         answers.answers[i].answerText, answers.answers[i].confidence.ToString() );
             }
             m_GetAnswersTested = true;

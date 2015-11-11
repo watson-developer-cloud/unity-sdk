@@ -352,14 +352,13 @@ namespace IBM.Watson.Widgets.Question
 
     public delegate void OnMessage(string msg);
 
+    // TODO: Remove after we've switched over to using events.
     public interface IQuestionData
     {
         Questions QuestionDataObject { get; }
         Answers AnswerDataObject { get; }
         ParseData ParseDataObject { get; }
         string Location { get; }
-        OnMessage OnQuestionEvent { get; set; }
-        OnMessage OnAnswerEvent { get; set; }
     }
 
 	#endregion
