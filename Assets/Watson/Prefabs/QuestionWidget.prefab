@@ -2630,8 +2630,8 @@ GameObject:
   - 4: {fileID: 420132}
   - 82: {fileID: 8228092}
   - 114: {fileID: 11429846}
-  - 114: {fileID: 11496976}
-  - 114: {fileID: 11498132}
+  - 114: {fileID: 11490106}
+  - 114: {fileID: 11425846}
   m_Layer: 14
   m_Name: QuestionWidget
   m_TagString: QuestionOnFocus
@@ -12373,6 +12373,42 @@ MonoBehaviour:
   m_EaseForUnfocusing: 7
   timeForLeavingTheScene: 1
   easeForGoingFromScene: 21
+--- !u!114 &11425846
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 165892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9d6f7b4cab98524a8956e9ad270ecda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AutoConnect: 0
+  m_TapMappings:
+  - m_TapObject: {fileID: 165892}
+    m_TapOnObject: 1
+    m_SortingLayer: 0
+    m_LayerMask:
+      serializedVersion: 2
+      m_Bits: 16384
+    m_Callback: 201
+  - m_TapObject: {fileID: 165892}
+    m_TapOnObject: 0
+    m_SortingLayer: 0
+    m_LayerMask:
+      serializedVersion: 2
+      m_Bits: 16384
+    m_Callback: 202
+  m_FullScreenDragMappings:
+  - m_DragLayerObject: {fileID: 165892}
+    m_NumberOfFinger: 1
+    m_SortingLayer: 0
+    m_Callback: 203
+  - m_DragLayerObject: {fileID: 165892}
+    m_NumberOfFinger: 1
+    m_SortingLayer: 1
+    m_Callback: 204
 --- !u!114 &11428634
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -12678,6 +12714,79 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &11490106
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 165892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e421b0b8c204bd344918bc3963c06ccc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AutoConnect: 0
+  m_Mappings:
+  - m_Event: 407
+    m_Callback:
+      m_Target: {fileID: 0}
+      m_Component: QuestionWidget
+      m_Method: OnFold
+  - m_Event: 408
+    m_Callback:
+      m_Target: {fileID: 0}
+      m_Component: QuestionWidget
+      m_Method: OnUnfold
+  - m_Event: 409
+    m_Callback:
+      m_Target: {fileID: 0}
+      m_Component: QuestionWidget
+      m_Method: OnDisplayAnswers
+  - m_Event: 410
+    m_Callback:
+      m_Target: {fileID: 0}
+      m_Component: QuestionWidget
+      m_Method: OnDisplayEvidence
+  - m_Event: 411
+    m_Callback:
+      m_Target: {fileID: 0}
+      m_Component: QuestionWidget
+      m_Method: OnDisplayChat
+  - m_Event: 412
+    m_Callback:
+      m_Target: {fileID: 0}
+      m_Component: QuestionWidget
+      m_Method: OnDisplayParse
+  - m_Event: 413
+    m_Callback:
+      m_Target: {fileID: 0}
+      m_Component: QuestionWidget
+      m_Method: OnDisplayLocation
+  - m_Event: 201
+    m_Callback:
+      m_Target: {fileID: 0}
+      m_Component: QuestionWidget
+      m_Method: OnTapInside
+  - m_Event: 202
+    m_Callback:
+      m_Target: {fileID: 0}
+      m_Component: QuestionWidget
+      m_Method: OnTapOutside
+  - m_Event: 203
+    m_Callback:
+      m_Target: {fileID: 0}
+      m_Component: QuestionWidget
+      m_Method: DragOneFingerFullScreen
+  - m_Event: 204
+    m_Callback:
+      m_Target: {fileID: 0}
+      m_Component: QuestionWidget
+      m_Method: DragOneFingerOnObject
+  - m_Event: 206
+    m_Callback:
+      m_Target: {fileID: 165892}
+      m_Component: QuestionWidget
+      m_Method: OnQuestion
 --- !u!114 &11490470
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -12699,33 +12808,6 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
---- !u!114 &11496976
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 165892}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9d6f7b4cab98524a8956e9ad270ecda, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_AutoConnect: 1
-  m_TapMappings: []
-  m_FullScreenDragMappings: []
---- !u!114 &11498132
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 165892}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e421b0b8c204bd344918bc3963c06ccc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_AutoConnect: 1
-  m_Mappings: []
 --- !u!114 &11498338
 MonoBehaviour:
   m_ObjectHideFlags: 1

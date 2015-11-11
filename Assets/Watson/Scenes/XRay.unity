@@ -126,84 +126,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 165892, guid: 3ef744c88ba744c2fbae1ce7de5150ce, type: 2}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 11498132, guid: 3ef744c88ba744c2fbae1ce7de5150ce, type: 2}
+    m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3ef744c88ba744c2fbae1ce7de5150ce, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &1105123222 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 165892, guid: 3ef744c88ba744c2fbae1ce7de5150ce, type: 2}
-  m_PrefabInternal: {fileID: 1105123221}
---- !u!114 &1105123223
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1105123222}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e421b0b8c204bd344918bc3963c06ccc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_AutoConnect: 0
-  m_Mappings:
-  - m_Event: 407
-    m_Callback:
-      m_Target: {fileID: 0}
-      m_Component: QuestionWidget
-      m_Method: OnFold
-  - m_Event: 408
-    m_Callback:
-      m_Target: {fileID: 0}
-      m_Component: QuestionWidget
-      m_Method: OnUnfold
-  - m_Event: 409
-    m_Callback:
-      m_Target: {fileID: 0}
-      m_Component: QuestionWidget
-      m_Method: OnDisplayAnswers
-  - m_Event: 410
-    m_Callback:
-      m_Target: {fileID: 0}
-      m_Component: QuestionWidget
-      m_Method: OnDisplayEvidence
-  - m_Event: 411
-    m_Callback:
-      m_Target: {fileID: 0}
-      m_Component: QuestionWidget
-      m_Method: OnDisplayChat
-  - m_Event: 412
-    m_Callback:
-      m_Target: {fileID: 0}
-      m_Component: QuestionWidget
-      m_Method: OnDisplayParse
-  - m_Event: 413
-    m_Callback:
-      m_Target: {fileID: 0}
-      m_Component: QuestionWidget
-      m_Method: OnDisplayLocation
-  - m_Event: 201
-    m_Callback:
-      m_Target: {fileID: 0}
-      m_Component: QuestionWidget
-      m_Method: OnTapInside
-  - m_Event: 202
-    m_Callback:
-      m_Target: {fileID: 0}
-      m_Component: QuestionWidget
-      m_Method: OnTapOutside
-  - m_Event: 203
-    m_Callback:
-      m_Target: {fileID: 0}
-      m_Component: QuestionWidget
-      m_Method: DragOneFingerFullScreen
-  - m_Event: 204
-    m_Callback:
-      m_Target: {fileID: 0}
-      m_Component: QuestionWidget
-      m_Method: DragOneFingerOnObject
 --- !u!1001 &1798063823
 Prefab:
   m_ObjectHideFlags: 0

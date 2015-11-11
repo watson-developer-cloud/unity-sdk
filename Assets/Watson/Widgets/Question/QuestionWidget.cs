@@ -19,6 +19,7 @@
 
 using IBM.Watson.Logging;
 using IBM.Watson.Data.XRAY;
+using IBM.Watson.Data.QA;
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -300,6 +301,33 @@ namespace IBM.Watson.Widgets.Question
 			Focused = false;
             //Cube.LeaveTheSceneAndDestroy();
         }
+
+		/// <summary>
+		/// On question event.
+		/// </summary>
+		/// <param name="args">Arguments.</param>
+		public void OnQuestion(object[] args)
+		{
+			if (args != null && args.Length > 0 && args [0] is Questions)
+			{
+				ClearSides();
+
+				switch((args[0] as Questions).questions[0].pipelineId)
+				{
+				case "thunderstone":
+					m_Facets = m_ThunderstoneFacets;
+					break;
+				case "woodside":
+					m_Facets = m_WoodsideFacets; 
+					break;
+				default:
+					m_Facets = m_DefaultFacets;
+					break;
+				}
+
+				GenerateSides();
+			}
+		}
         #endregion
 
 		#region Awake / Start / EnableEvents
@@ -340,6 +368,8 @@ namespace IBM.Watson.Widgets.Question
 
 		public void GenerateSides()
 		{
+			ClearSides();
+
 			for(int i = 0; i < m_Facets.Count; i++)
 			{
 				GameObject facetGameObject = Instantiate(m_Facets[i], Vector3.zero, Quaternion.Euler(new Vector3(0f, 90f, 0f))) as GameObject;
@@ -351,7 +381,16 @@ namespace IBM.Watson.Widgets.Question
 			}
 		}
 
-        private void EnableEvents(bool enable)
+		private void ClearSides()
+		{
+			while (m_GeneratedSides.Count != 0)
+			{
+				Destroy(m_GeneratedSides[0].gameObject);
+				m_GeneratedSides.Remove(m_GeneratedSides[0]);
+			}
+		}
+		
+		private void EnableEvents(bool enable)
         {
             EventWidget eventWidget = GetComponentInChildren<EventWidget>();
             if (eventWidget != null)
