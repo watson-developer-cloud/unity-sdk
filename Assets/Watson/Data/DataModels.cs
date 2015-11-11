@@ -78,8 +78,8 @@ namespace IBM.Watson.Data
     };
     #endregion
 
-    #region ITM Models
-    namespace ITM
+    #region XRAY Models
+    namespace XRAY
     {
         /// <summary>
         /// This data class holds the data for a given pipeline.
@@ -137,7 +137,7 @@ namespace IBM.Watson.Data
             /// </summary>
             public Pipeline[] pipelines { get; set; }
             /// <summary>
-            /// True if this pipeline is through ITM.
+            /// True if this pipeline is through XRAY.
             /// </summary>
             public bool itm { get; set; }
             /// <summary>
@@ -251,7 +251,7 @@ namespace IBM.Watson.Data
                 {
                     WordPosition pos = WordPosition.INVALID;
                     if (!sm_WordPositions.TryGetValue(value, out pos))
-                        Log.Error("ITM", "Failed to find position type for {0}, Word: {1}", value, Word);
+                        Log.Error("XRAY", "Failed to find position type for {0}, Word: {1}", value, Word);
                     Pos = pos;
                 }
             }
@@ -338,7 +338,7 @@ namespace IBM.Watson.Data
                 }
                 catch (Exception e)
                 {
-                    Log.Error("ITM", "Exception during parse: {0}", e.ToString());
+                    Log.Error("XRAY", "Exception during parse: {0}", e.ToString());
                 }
 
                 return false;

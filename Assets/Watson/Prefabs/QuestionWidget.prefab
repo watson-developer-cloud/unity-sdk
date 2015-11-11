@@ -2630,8 +2630,8 @@ GameObject:
   - 4: {fileID: 420132}
   - 82: {fileID: 8228092}
   - 114: {fileID: 11429846}
-  - 114: {fileID: 11496976}
-  - 114: {fileID: 11498132}
+  - 114: {fileID: 11490106}
+  - 114: {fileID: 11416412}
   m_Layer: 14
   m_Name: QuestionWidget
   m_TagString: QuestionOnFocus
@@ -12328,6 +12328,42 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
+--- !u!114 &11416412
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 165892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9d6f7b4cab98524a8956e9ad270ecda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AutoConnect: 0
+  m_TapMappings:
+  - m_TapObject: {fileID: 165892}
+    m_TapOnObject: 1
+    m_SortingLayer: 0
+    m_LayerMask:
+      serializedVersion: 2
+      m_Bits: 16384
+    m_Callback: 201
+  - m_TapObject: {fileID: 165892}
+    m_TapOnObject: 0
+    m_SortingLayer: 0
+    m_LayerMask:
+      serializedVersion: 2
+      m_Bits: 16384
+    m_Callback: 202
+  m_FullScreenDragMappings:
+  - m_DragLayerObject: {fileID: 0}
+    m_NumberOfFinger: 1
+    m_SortingLayer: 0
+    m_Callback: 203
+  - m_DragLayerObject: {fileID: 165892}
+    m_NumberOfFinger: 1
+    m_SortingLayer: 1
+    m_Callback: 204
 --- !u!114 &11420172
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -12350,7 +12386,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 161818}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9ae469cfa8dd5487d85fe0964e340659, type: 3}
   m_Name: 
@@ -12369,13 +12405,7 @@ MonoBehaviour:
   - {fileID: 191902}
   - {fileID: 179838}
   - {fileID: 113326}
-  m_ProjectionSide:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  m_ProjectionSide: []
   m_StatinoaryRotationSpeed: 10
   m_StatinoaryRotationVector: {x: 0, y: 1, z: 0}
   m_TimeForComingToScene: 1
@@ -12418,14 +12448,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77245c42da8d0d045bfaed8f04105f03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AutoConnect: 0
+  m_AutoConnect: 1
+  m_FacetTitle: {fileID: 128632, guid: cb108f2840e864ab4b312866e6379511, type: 2}
+  m_FacetAnswers: {fileID: 186678, guid: 8234198b234af494da07bbe3cdb3d329, type: 2}
+  m_FacetQuestion: {fileID: 139860, guid: 8db16251c22654c2b8aa394c482a73bf, type: 2}
+  m_FacetEvidence: {fileID: 165186, guid: 6b4a0a51fec154f5584a70c273e140f4, type: 2}
+  m_FacetLocation: {fileID: 192646, guid: a98651fa8d2584de3b19a39254d61f4f, type: 2}
+  m_FacetChat: {fileID: 188782, guid: 29b95c38888d549849edc8d70041b2f5, type: 2}
+  m_FacetPassage: {fileID: 152706, guid: df0664559a4234f0bbc4a1905cbe2b1c, type: 2}
   m_Facets:
-  - {fileID: 152706, guid: df0664559a4234f0bbc4a1905cbe2b1c, type: 2}
-  - {fileID: 186678, guid: 8234198b234af494da07bbe3cdb3d329, type: 2}
-  - {fileID: 139860, guid: 8db16251c22654c2b8aa394c482a73bf, type: 2}
-  - {fileID: 165186, guid: 6b4a0a51fec154f5584a70c273e140f4, type: 2}
-  - {fileID: 192646, guid: a98651fa8d2584de3b19a39254d61f4f, type: 2}
-  - {fileID: 188782, guid: 29b95c38888d549849edc8d70041b2f5, type: 2}
+  - {fileID: 128632, guid: cb108f2840e864ab4b312866e6379511, type: 2}
+  - {fileID: 128632, guid: cb108f2840e864ab4b312866e6379511, type: 2}
+  - {fileID: 128632, guid: cb108f2840e864ab4b312866e6379511, type: 2}
+  - {fileID: 128632, guid: cb108f2840e864ab4b312866e6379511, type: 2}
+  - {fileID: 128632, guid: cb108f2840e864ab4b312866e6379511, type: 2}
+  - {fileID: 128632, guid: cb108f2840e864ab4b312866e6379511, type: 2}
   m_SidePresentations:
   - {fileID: 465016}
   - {fileID: 455220}
@@ -12689,66 +12726,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &11490470
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 151286}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1980459831, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
-  m_ReferencePixelsPerUnit: 100
-  m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
-  m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
-  m_PhysicalUnit: 3
-  m_FallbackScreenDPI: 96
-  m_DefaultSpriteDPI: 96
-  m_DynamicPixelsPerUnit: 1
---- !u!114 &11496976
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 165892}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9d6f7b4cab98524a8956e9ad270ecda, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_AutoConnect: 0
-  m_TapMappings:
-  - m_TapObject: {fileID: 165892}
-    m_TapOnObject: 1
-    m_SortingLayer: 0
-    m_LayerMask:
-      serializedVersion: 2
-      m_Bits: 16384
-    m_Callback: 201
-  - m_TapObject: {fileID: 165892}
-    m_TapOnObject: 0
-    m_SortingLayer: 0
-    m_LayerMask:
-      serializedVersion: 2
-      m_Bits: 16384
-    m_Callback: 202
-  m_FullScreenDragMappings:
-  - m_DragLayerObject: {fileID: 0}
-    m_NumberOfFinger: 1
-    m_SortingLayer: 0
-    m_IsDragInside: 1
-    m_Callback: 203
-  - m_DragLayerObject: {fileID: 165892}
-    m_NumberOfFinger: 1
-    m_SortingLayer: 1
-    m_IsDragInside: 1
-    m_Callback: 204
---- !u!114 &11498132
+--- !u!114 &11490106
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -12816,6 +12794,32 @@ MonoBehaviour:
       m_Target: {fileID: 165892}
       m_Component: QuestionWidget
       m_Method: DragOneFingerOnObject
+  - m_Event: 206
+    m_Callback:
+      m_Target: {fileID: 165892}
+      m_Component: QuestionWidget
+      m_Method: OnQuestion
+--- !u!114 &11490470
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 151286}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1980459831, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UiScaleMode: 0
+  m_ReferencePixelsPerUnit: 100
+  m_ScaleFactor: 1
+  m_ReferenceResolution: {x: 800, y: 600}
+  m_ScreenMatchMode: 0
+  m_MatchWidthOrHeight: 0
+  m_PhysicalUnit: 3
+  m_FallbackScreenDPI: 96
+  m_DefaultSpriteDPI: 96
+  m_DynamicPixelsPerUnit: 1
 --- !u!114 &11498338
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -13250,6 +13254,50 @@ Prefab:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Mappings.Array.data[0].m_Callback.m_Target
+      value: 
+      objectReference: {fileID: 165892}
+    - target: {fileID: 0}
+      propertyPath: m_Mappings.Array.data[1].m_Callback.m_Target
+      value: 
+      objectReference: {fileID: 165892}
+    - target: {fileID: 0}
+      propertyPath: m_Mappings.Array.data[2].m_Callback.m_Target
+      value: 
+      objectReference: {fileID: 165892}
+    - target: {fileID: 0}
+      propertyPath: m_Mappings.Array.data[3].m_Callback.m_Target
+      value: 
+      objectReference: {fileID: 165892}
+    - target: {fileID: 0}
+      propertyPath: m_Mappings.Array.data[4].m_Callback.m_Target
+      value: 
+      objectReference: {fileID: 165892}
+    - target: {fileID: 0}
+      propertyPath: m_Mappings.Array.data[5].m_Callback.m_Target
+      value: 
+      objectReference: {fileID: 165892}
+    - target: {fileID: 0}
+      propertyPath: m_Mappings.Array.data[6].m_Callback.m_Target
+      value: 
+      objectReference: {fileID: 165892}
+    - target: {fileID: 0}
+      propertyPath: m_Mappings.Array.data[7].m_Callback.m_Target
+      value: 
+      objectReference: {fileID: 165892}
+    - target: {fileID: 0}
+      propertyPath: m_Mappings.Array.data[8].m_Callback.m_Target
+      value: 
+      objectReference: {fileID: 165892}
+    - target: {fileID: 0}
+      propertyPath: m_Mappings.Array.data[9].m_Callback.m_Target
+      value: 
+      objectReference: {fileID: 165892}
+    - target: {fileID: 0}
+      propertyPath: m_Mappings.Array.data[10].m_Callback.m_Target
+      value: 
+      objectReference: {fileID: 165892}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 165892}

@@ -17,9 +17,10 @@
 */
 
 
-using IBM.Watson.Logging;
+using IBM.Watson.Data.XRAY;
 using IBM.Watson.Utilities;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -41,41 +42,70 @@ namespace IBM.Watson.Widgets.Question
         [SerializeField]
         private ScrollRect m_ScrollRect = null;
 
-        private IQuestionData m_QuestionData = null;
+        private static List<object> sm_History = new List<object>();
 
-        private void Start()
+        private void Awake()
         {
-            QuestionWidget question = GetComponentInParent<QuestionWidget>();
-            if (question != null)
+            foreach( var obj in sm_History )
             {
-                m_QuestionData = question.QuestionData;
-				if(m_QuestionData != null){
-                	m_QuestionData.OnAnswerEvent += OnAnswer;
-                	m_QuestionData.OnQuestionEvent += OnQuestion;
-				}
-				else{
-					Log.Error("Question - Chat", "There is not question data found.");
-				}
+                if (obj is Questions)
+                {
+                    Questions questions = obj as Questions;
+                    AddChat( questions.questions[0].question.questionText, m_QuestionPrefab.gameObject );
+                }
+                else if (obj is Answers)
+                {
+                    Answers answers = obj as Answers;
+                    AddChat( answers.answers[0].answerText, m_AnswerPrefab.gameObject );
+                }
             }
+
+            EventManager.Instance.RegisterEventReceiver( Constants.Event.ON_QUESTION, OnQuestion );
+            EventManager.Instance.RegisterEventReceiver( Constants.Event.ON_QUESTION_ANSWERS, OnAnswer );
         }
 
         private void OnDisable()
         {
-            if (m_QuestionData != null)
+            EventManager.Instance.UnregisterEventReceiver( Constants.Event.ON_QUESTION, OnQuestion );
+            EventManager.Instance.UnregisterEventReceiver( Constants.Event.ON_QUESTION_ANSWERS, OnAnswer );
+        }
+
+        private void OnQuestion(object [] args)
+        {
+            if ( args != null && args.Length > 0 )
             {
-                m_QuestionData.OnAnswerEvent -= OnAnswer;
-                m_QuestionData.OnQuestionEvent -= OnQuestion;
+                Questions questions = args[0] as Questions;
+                if ( questions != null && questions.HasQuestion() )
+                {
+                    if (! sm_History.Contains( questions ) )
+                    {
+                        sm_History.Add( questions );
+                        while( sm_History.Count > m_HistoryCount )
+                            sm_History.RemoveAt( 0 );
+                    }
+
+                    AddChat( questions.questions[0].question.questionText, m_QuestionPrefab.gameObject );
+                }
             }
         }
 
-        private void OnQuestion(string add)
+        private void OnAnswer( object [] args)
         {
-            AddChat(add, m_QuestionPrefab.gameObject);
-        }
+            if ( args != null && args.Length > 0 )
+            {
+                Answers answers = args[0] as Answers;
+                if ( answers != null && answers.HasAnswer() )
+                {
+                    if (! sm_History.Contains( answers ) )
+                    {
+                        sm_History.Add( answers );
+                        while( sm_History.Count > m_HistoryCount )
+                            sm_History.RemoveAt( 0 );
+                    }
 
-        private void OnAnswer(string add)
-        {
-            AddChat(add, m_AnswerPrefab.gameObject);
+                    AddChat( answers.answers[0].answerText, m_AnswerPrefab.gameObject );
+                }
+            }
         }
 
         private void AddChat(string add, GameObject prefab)

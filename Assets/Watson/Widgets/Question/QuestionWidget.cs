@@ -19,7 +19,8 @@
 
 using IBM.Watson.Widgets.Avatar;
 using IBM.Watson.Logging;
-using IBM.Watson.Data.ITM;
+using IBM.Watson.Data.XRAY;
+using IBM.Watson.Data.QA;
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -35,22 +36,34 @@ namespace IBM.Watson.Widgets.Question
         #region Private Data
         private CubeAnimationManager m_CubeAnimMgr = null;
 		private bool m_Focused = false;
-//        private AnswersAndConfidence m_AnswersAndConfidence;
-//        private Question.Evidence m_Evidence;
-//        private Semantic m_Semantic;
-//        private Features m_Features;
-//        private Location m_Location;
-//        private ParseTree m_ParseTree;
-//        private QuestionAndAnswer m_QuestionAndAnswer;
-//        private Passages m_Passages;
-//        private List<Base> m_SubFacets = new List<Base>();
+
+		[Header("Available Facets")]
+		[SerializeField]
+		private GameObject m_FacetTitle;
+		[SerializeField]
+		private GameObject m_FacetAnswers;
+		[SerializeField]
+		private GameObject m_FacetQuestion;
+		[SerializeField]
+		private GameObject m_FacetEvidence;
+		[SerializeField]
+		private GameObject m_FacetLocation;
+		[SerializeField]
+		private GameObject m_FacetChat;
+		[SerializeField]
+		private GameObject m_FacetPassage;
 
 		[SerializeField]
 		private List<GameObject> m_Facets = new List<GameObject>();
 
+		private List<GameObject> m_DefaultFacets = new List<GameObject>();
+		private List<GameObject> m_ThunderstoneFacets = new List<GameObject>();
+		private List<GameObject> m_WoodsideFacets = new List<GameObject>();
+
 		[SerializeField]
 		private List<Transform> m_SidePresentations = new List<Transform>();
-		List<GameObject> m_GeneratedSides = new List<GameObject>();
+
+		private List<GameObject> m_GeneratedSides = new List<GameObject>();
 
         #endregion
 
@@ -96,9 +109,7 @@ namespace IBM.Watson.Widgets.Question
 
                 return m_CubeAnimMgr;
             }
-        }
-
-        public IQuestionData QuestionData { get; set; }
+		}
 
         #endregion
 
@@ -344,6 +355,33 @@ namespace IBM.Watson.Widgets.Question
 			Focused = false;
             //Cube.LeaveTheSceneAndDestroy();
         }
+
+		/// <summary>
+		/// On question event.
+		/// </summary>
+		/// <param name="args">Arguments.</param>
+		public void OnQuestion(object[] args)
+		{
+			if (args != null && args.Length > 0 && args [0] is Questions)
+			{
+				ClearSides();
+
+				switch((args[0] as Questions).questions[0].pipelineId)
+				{
+				case "thunderstone":
+					m_Facets = m_ThunderstoneFacets;
+					break;
+				case "woodside":
+					m_Facets = m_WoodsideFacets; 
+					break;
+				default:
+					m_Facets = m_DefaultFacets;
+					break;
+				}
+
+				GenerateSides();
+			}
+		}
         #endregion
 
 		#region Awake / Start / EnableEvents
@@ -357,11 +395,35 @@ namespace IBM.Watson.Widgets.Question
             EnableEvents(false);
 			Cube.enabled = false;
 
+			//	populate facets
+			m_DefaultFacets.Add(m_FacetTitle);
+			m_DefaultFacets.Add(m_FacetTitle);
+			m_DefaultFacets.Add(m_FacetTitle);
+			m_DefaultFacets.Add(m_FacetTitle);
+			m_DefaultFacets.Add(m_FacetTitle);
+			m_DefaultFacets.Add(m_FacetTitle);
+			
+			m_ThunderstoneFacets.Add(m_FacetTitle);
+			m_ThunderstoneFacets.Add(m_FacetAnswers);
+			m_ThunderstoneFacets.Add(m_FacetQuestion);
+			m_ThunderstoneFacets.Add(m_FacetEvidence);
+			m_ThunderstoneFacets.Add(m_FacetLocation);
+			m_ThunderstoneFacets.Add(m_FacetChat);
+
+			m_WoodsideFacets.Add(m_FacetTitle);
+			m_WoodsideFacets.Add(m_FacetPassage);
+			m_WoodsideFacets.Add(m_FacetQuestion);
+			m_WoodsideFacets.Add(m_FacetEvidence);
+			m_WoodsideFacets.Add(m_FacetLocation);
+			m_WoodsideFacets.Add(m_FacetChat);
+
 			GenerateSides();
         }
 
 		public void GenerateSides()
 		{
+			ClearSides();
+
 			for(int i = 0; i < m_Facets.Count; i++)
 			{
 				GameObject facetGameObject = Instantiate(m_Facets[i], Vector3.zero, Quaternion.Euler(new Vector3(0f, 90f, 0f))) as GameObject;
@@ -373,7 +435,16 @@ namespace IBM.Watson.Widgets.Question
 			}
 		}
 
-        private void EnableEvents(bool enable)
+		private void ClearSides()
+		{
+			while (m_GeneratedSides.Count != 0)
+			{
+				Destroy(m_GeneratedSides[0].gameObject);
+				m_GeneratedSides.Remove(m_GeneratedSides[0]);
+			}
+		}
+		
+		private void EnableEvents(bool enable)
         {
             EventWidget eventWidget = GetComponentInChildren<EventWidget>();
             if (eventWidget != null)
@@ -394,39 +465,5 @@ namespace IBM.Watson.Widgets.Question
         }
 
 		#endregion
-
-		#region Function invoked by Avatar
-		/// <summary>
-		/// Sets Question, Answer and Avatar for each facet. This is called by the Avatar Widget.
-		/// </summary>
-		public void UpdateFacets(Object[] args = null)
-		{
-			foreach(GameObject facet in m_GeneratedSides)
-			{
-				Base[] SubFacets = facet.transform.GetComponents<Base>();
-				foreach(Base SubFacet in SubFacets)
-				{
-					SubFacet.Question = gameObject.GetComponent<QuestionWidget>();
-					SubFacet.Init();
-				}
-			}
-		}
-		#endregion
     }
-
-	#region Messaging Interface between Avatar and Focused Question
-
-    public delegate void OnMessage(string msg);
-
-    public interface IQuestionData
-    {
-        Questions QuestionDataObject { get; }
-        Answers AnswerDataObject { get; }
-        ParseData ParseDataObject { get; }
-        string Location { get; }
-        OnMessage OnQuestionEvent { get; set; }
-        OnMessage OnAnswerEvent { get; set; }
-    }
-
-	#endregion
 }

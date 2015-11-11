@@ -19,6 +19,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using IBM.Watson.Logging;
+using IBM.Watson.Utilities;
 
 namespace IBM.Watson.Widgets.Question
 {
@@ -37,6 +38,9 @@ namespace IBM.Watson.Widgets.Question
         private List<GameObject> m_POSList = new List<GameObject>();
         private List<ParseTreeTextItem> m_WordList = new List<ParseTreeTextItem>();
         private List<Vector3> m_PositionList = new List<Vector3>();
+
+        private Data.XRAY.ParseData m_ParseData = null;
+        private Data.XRAY.Questions m_QuestionData = null;
 
         private int m_WordIndex = 0;
         public int WordIndex
@@ -84,14 +88,34 @@ namespace IBM.Watson.Widgets.Question
 			m_PositionList.Add(new Vector3(91f, -641f, 0f));
 		}
 
-        /// <summary>
-        /// Generates Parse tree on Initialization of data.
-        /// </summary>
-		override public void Init()
+        private void OnEnable()
         {
-			base.Init ();
+            EventManager.Instance.RegisterEventReceiver( Constants.Event.ON_QUESTION_PARSE, OnParseData );
+            EventManager.Instance.RegisterEventReceiver( Constants.Event.ON_QUESTION, OnQuestionData );
+        }
 
+        private void OnDisable()
+        {
+            EventManager.Instance.UnregisterEventReceiver( Constants.Event.ON_QUESTION_PARSE, OnParseData );
+            EventManager.Instance.UnregisterEventReceiver( Constants.Event.ON_QUESTION, OnQuestionData );
+        }
+
+		/// <summary>
+		/// Callback for Parse data event.
+		/// </summary>
+        private void OnParseData( object [] args )
+        {
+            m_ParseData = args != null && args.Length > 0 ? args[0] as Data.XRAY.ParseData : null;
             GenerateParseTree();
+        }
+
+		/// <summary>
+		/// Callback for Question data event.
+		/// </summary>
+		/// <param name="args">Arguments.</param>
+        private void OnQuestionData( object [] args )
+        {
+            m_QuestionData = args != null && args.Length > 0 ? args[0] as Data.XRAY.Questions : null;
         }
 
         /// <summary>
@@ -99,36 +123,46 @@ namespace IBM.Watson.Widgets.Question
         /// </summary>
         private void GenerateParseTree()
         {
-            for (int i = 0; i < Question.QuestionData.ParseDataObject.Words.Length; i++)
+            CancelInvoke();
+            while (m_WordList.Count > 0)
             {
-                GameObject wordGameObject = Instantiate(m_ParseTreeTextItemPrefab) as GameObject;
-                RectTransform wordRectTransform = wordGameObject.GetComponent<RectTransform>();
-                wordRectTransform.SetParent(m_ParseCanvasRectTransform, false);
-
-                if (i < m_PositionList.Count)
-                {
-                    wordRectTransform.localPosition = m_PositionList[i];
-                }
-                else
-                {
-                    //	TODO fix this
-                    wordRectTransform.localPosition = new Vector3(5000f, 5000, 0f);
-                }
-                ParseTreeTextItem word = wordGameObject.GetComponent<ParseTreeTextItem>();
-                word.ParseTreeWord = Question.QuestionData.ParseDataObject.Words[i].Word;
-                word.POS = Question.QuestionData.ParseDataObject.Words[i].Pos.ToString();
-                word.Slot = Question.QuestionData.ParseDataObject.Words[i].Slot;
-
-                for (int j = 0; j < Question.QuestionData.ParseDataObject.Words[i].Features.Length; j++)
-                {
-                    word.m_Features.Add(Question.QuestionData.ParseDataObject.Words[i].Features[j]);
-                }
-
-                m_WordList.Add(word);
+                Destroy(m_WordList[0].gameObject);
+                m_WordList.RemoveAt( 0 );
             }
 
-            WordIndex = 0;
-            InvokeRepeating("CycleWords", 2f, 2f);
+            if ( m_ParseData != null )
+            {
+                for (int i = 0; i < m_ParseData.Words.Length; i++)
+                {
+                    GameObject wordGameObject = Instantiate(m_ParseTreeTextItemPrefab) as GameObject;
+                    RectTransform wordRectTransform = wordGameObject.GetComponent<RectTransform>();
+                    wordRectTransform.SetParent(m_ParseCanvasRectTransform, false);
+
+                    if (i < m_PositionList.Count)
+                    {
+                        wordRectTransform.localPosition = m_PositionList[i];
+                    }
+                    else
+                    {
+                        //	TODO fix this
+                        wordRectTransform.localPosition = new Vector3(5000f, 5000, 0f);
+                    }
+                    ParseTreeTextItem word = wordGameObject.GetComponent<ParseTreeTextItem>();
+                    word.ParseTreeWord = m_ParseData.Words[i].Word;
+                    word.POS = m_ParseData.Words[i].Pos.ToString();
+                    word.Slot = m_ParseData.Words[i].Slot;
+
+                    for (int j = 0; j < m_ParseData.Words[i].Features.Length; j++)
+                    {
+                        word.m_Features.Add(m_ParseData.Words[i].Features[j]);
+                    }
+
+                    m_WordList.Add(word);
+                }
+
+                WordIndex = 0;
+                InvokeRepeating("CycleWords", 2f, 2f);
+            }
         }
 
         /// <summary>
@@ -136,12 +170,6 @@ namespace IBM.Watson.Widgets.Question
         /// </summary>
         override public void Clear()
         {
-            CancelInvoke();
-            while (m_WordList.Count != 0)
-            {
-                Destroy(m_WordList[0].gameObject);
-                m_WordList.Remove(m_WordList[0]);
-            }
         }
 
         /// <summary>
@@ -169,21 +197,28 @@ namespace IBM.Watson.Widgets.Question
                 }
             }
 
-            if (Question.QuestionData.QuestionDataObject.questions[0].question.lat.Length == 0 && Question.QuestionData.QuestionDataObject.questions[0].question.focus.Length == 0) m_POSList[2].GetComponent<POSControl>().IsHighlighted = true;
-            if (Question.QuestionData.QuestionDataObject.questions[0].question.lat.Length > 0)
+            if ( m_QuestionData != null && m_QuestionData.HasQuestion() )
             {
-                if (m_WordList[WordIndex].ParseTreeWord.ToLower() == Question.QuestionData.QuestionDataObject.questions[0].question.lat[0].ToLower())
+                if (m_QuestionData.questions[0].question.lat.Length == 0 
+                    && m_QuestionData.questions[0].question.focus.Length == 0)
                 {
-                    m_POSList[1].GetComponent<POSControl>().IsHighlighted = true;
+                    m_POSList[2].GetComponent<POSControl>().IsHighlighted = true;
                 }
-            }
-
-
-            if (Question.QuestionData.QuestionDataObject.questions[0].question.focus.Length > 0)
-            {
-                if (m_WordList[WordIndex].ParseTreeWord.ToLower() == Question.QuestionData.QuestionDataObject.questions[0].question.focus[0].ToLower())
+                if (m_QuestionData.questions[0].question.lat.Length > 0)
                 {
-                    m_POSList[0].GetComponent<POSControl>().IsHighlighted = true;
+                    if (m_WordList[WordIndex].ParseTreeWord.ToLower() == m_QuestionData.questions[0].question.lat[0].ToLower())
+                    {
+                        m_POSList[1].GetComponent<POSControl>().IsHighlighted = true;
+                    }
+                }
+
+
+                if (m_QuestionData.questions[0].question.focus.Length > 0)
+                {
+                    if (m_WordList[WordIndex].ParseTreeWord.ToLower() == m_QuestionData.questions[0].question.focus[0].ToLower())
+                    {
+                        m_POSList[0].GetComponent<POSControl>().IsHighlighted = true;
+                    }
                 }
             }
         }

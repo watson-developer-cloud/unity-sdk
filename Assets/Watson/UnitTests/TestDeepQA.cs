@@ -16,6 +16,9 @@
 * @author Richard Lyle (rolyle@us.ibm.com)
 */
 
+#define EXPORT_QUESTIONS
+//#define USE_CACHE
+
 using System.Collections;
 using IBM.Watson.Services.v1;
 using IBM.Watson.Logging;
@@ -36,13 +39,20 @@ namespace IBM.Watson.UnitTests
         /// <exclude />
         public override IEnumerator RunTest()
         {
+#if USE_CACHE
             Test( m_QA.AskQuestion( "Why was a gravel packed lower completion chosen in the Sculptor field?", OnAskQuestion ) );
+#else
+            Test( m_QA.AskQuestion( "Why was a gravel packed lower completion chosen in the Sculptor field?", OnAskQuestion, 1, false ) );
+#endif
             while(! m_AskQuestionTested )
                 yield return null;
 
             byte [] question_data = File.ReadAllBytes( Application.dataPath + "/../Docs/WoodsideQuestions.xml" );
             var xml = new XmlDocument();
             xml.LoadXml( Encoding.UTF8.GetString( question_data ) );
+
+#if EXPORT_QUESTIONS
+            StringBuilder WoodsideCSV = new StringBuilder();
 
             XmlElement answerKey = xml["answerkey"] as XmlElement;
             foreach( var node in answerKey.ChildNodes )
@@ -54,8 +64,15 @@ namespace IBM.Watson.UnitTests
                 string text = question.GetAttribute("text" );
                 Log.Status( "TestDeepQA", "Question: {0}", text );
 
-                Test( m_QA.AskQuestion( text, OnAskQuestion ) );
+                //Test( m_QA.AskQuestion( text, OnAskQuestion ) );
+
+                if ( text.Contains( "," ) )
+                    text = "\"" + text + "\"";
+                WoodsideCSV.Append( text + ",question-woodside\r\n" );
             }
+
+            File.WriteAllText( Application.dataPath + "/../Docs/WoodsideQuestions.csv", WoodsideCSV.ToString() );
+#endif
 
             yield break;
         }

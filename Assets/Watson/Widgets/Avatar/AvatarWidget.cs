@@ -21,7 +21,7 @@
 using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
 using IBM.Watson.Data;
-using IBM.Watson.Data.ITM;
+using IBM.Watson.Data.XRAY;
 using IBM.Watson.Services.v1;
 using UnityEngine;
 using System;
@@ -35,7 +35,7 @@ namespace IBM.Watson.Widgets.Avatar
     /// <summary>
     /// Avatar of Watson 
     /// </summary>
-    public class AvatarWidget : Widget, IQuestionData
+    public class AvatarWidget : Widget
     {
         #region Public Types
         /// <summary>
@@ -100,7 +100,7 @@ namespace IBM.Watson.Widgets.Avatar
         #endregion
 
         #region Private Data
-        private ITM m_ITM = new ITM();                      // ITM service
+        private XRAY m_XRAY = new XRAY();                      // XRAY service
         private Dialog m_Dialog = new Dialog();             // Dialog service
 
         private AvatarState m_State = AvatarState.CONNECTING;
@@ -114,8 +114,6 @@ namespace IBM.Watson.Widgets.Avatar
         private bool m_GettingAnswers = false;
         private bool m_GettingParse = false;
 
-        [SerializeField]
-        private string m_ClassifierId = "5E00F7x2-nlc-540";     // default to XRAY classifier
         [SerializeField]
         private float m_SoundVisualizerModifier = 20.0f;
         [SerializeField]
@@ -143,9 +141,9 @@ namespace IBM.Watson.Widgets.Avatar
 
         #region Public Properties
         /// <summary>
-        /// Access the contained ITM service object.
+        /// Access the contained XRAY service object.
         /// </summary>
-        public ITM ITM { get { return m_ITM; } }
+        public XRAY XRAY { get { return m_XRAY; } }
         /// <summary>
         /// What is the current state of this avatar.
         /// </summary>
@@ -285,8 +283,8 @@ namespace IBM.Watson.Widgets.Avatar
             Log.Status("AvatarWidget", "Starting avatar.");
 
             State = AvatarState.CONNECTING;
-            // login to ITM, then select the pipeline
-            m_ITM.Login(OnItmLogin);
+            // login to XRAY, then select the pipeline
+            m_XRAY.Initialize(OnInitialize);
             // Find our dialog ID
             if (!string.IsNullOrEmpty(m_DialogName))
                 m_Dialog.GetDialogs(OnFindDialog);
@@ -310,21 +308,11 @@ namespace IBM.Watson.Widgets.Avatar
             }
         }
 
-        private void OnItmLogin(bool success)
+        private void OnInitialize(bool success)
         {
             if (!success)
             {
-                Log.Error("AvtarWidget", "Failed to login to ITM.");
-                State = AvatarState.ERROR;
-            }
-            else
-                m_ITM.GetPipeline(m_Pipeline, true, OnPipeline);
-        }
-        private void OnPipeline(Pipeline pipeline)
-        {
-            if (pipeline == null)
-            {
-                Log.Equals("AvatarWidget", "Failed to select pipeline.");
+                Log.Error("AvtarWidget", "Failed to initialize XRAY.");
                 State = AvatarState.ERROR;
             }
             else
@@ -414,18 +402,19 @@ namespace IBM.Watson.Widgets.Avatar
             if ( result == null )
                 throw new WatsonException( "ClassifyResult expected." );
 
-            if (Mood != MoodType.SLEEPING)
+            if (State == AvatarState.LISTENING && Mood != MoodType.SLEEPING)
             {
                 m_ClassifyResult = result;
-                State = AvatarState.LISTENING;
+                if ( result.top_class.Contains( "-" ) )
+                    m_Pipeline = result.top_class.Substring( result.top_class.IndexOf('-') + 1 );
 
-                if (m_ITM.AskQuestion(result.text, OnAskQuestion))
+                if (m_XRAY.AskQuestion(m_Pipeline, result.text, OnAskQuestion))
                 {
                     State = AvatarState.ANSWERING;
                 }
                 else
                 {
-                    Log.Error("AvatarWidget", "Failed to send question to ITM.");
+                    Log.Error("AvatarWidget", "Failed to send question to XRAY.");
                     State = AvatarState.ERROR;
                 }
             }
@@ -441,11 +430,10 @@ namespace IBM.Watson.Widgets.Avatar
             if ( result == null )
                 throw new WatsonException( "ClassifyResult expected." );
 
-            if ( Mood != MoodType.SLEEPING)
+            if ( State == AvatarState.LISTENING && Mood != MoodType.SLEEPING)
             {
                 m_ClassifyResult = result;
 
-                State = AvatarState.LISTENING;
                 if (!string.IsNullOrEmpty(m_DialogId))
                 {
                     if (m_Dialog.Converse(m_DialogId, result.text, OnDialogResponse,
@@ -506,15 +494,18 @@ namespace IBM.Watson.Widgets.Avatar
 
             if (m_QuestionResult != null && m_QuestionResult.HasQuestion())
             {
-                Watson.Data.ITM.Question topQuestion = m_QuestionResult.questions[0];
-                if (OnQuestionEvent != null)
-                    OnQuestionEvent(topQuestion.question.questionText);
+                Watson.Data.XRAY.Question topQuestion = m_QuestionResult.questions[0];
+
+                InstatiateQuestionWidget();
+
+                EventManager.Instance.SendEvent( Constants.Event.ON_QUESTION, m_QuestionResult );
+                EventManager.Instance.SendEvent( Constants.Event.ON_QUESTION_LOCATION, XRAY.Location );
 
                 m_AnswerResult = null;
                 m_ParseData = null;
 
-                if (!m_ITM.GetAnswers(topQuestion.transactionId, OnAnswerQuestion)
-                    || !ITM.GetParseData(topQuestion.transactionId, OnParseData))
+                if (!m_XRAY.GetAnswers(m_Pipeline, topQuestion.transactionId, OnAnswerQuestion)
+                    || !XRAY.GetParseData(m_Pipeline, topQuestion.transactionId, OnParseData))
                 {
                     Log.Error("AvatarWidget", "Failed to call GetAnswers()");
                     State = AvatarState.ERROR;
@@ -530,7 +521,7 @@ namespace IBM.Watson.Widgets.Avatar
         private void OnAnswerQuestion(Answers answers)
         {
             m_AnswerResult = answers;
-            UpdateQuestionWidget();
+            EventManager.Instance.SendEvent( Constants.Event.ON_QUESTION_ANSWERS, m_AnswerResult );
 
             if (answers != null && answers.HasAnswer())
             {
@@ -540,16 +531,17 @@ namespace IBM.Watson.Widgets.Avatar
                 string answer = answers.answers[0].answerText;
                 EventManager.Instance.SendEvent(Constants.Event.ON_DEBUG_MESSAGE, answer);
 
-                if (OnAnswerEvent != null)
-                    OnAnswerEvent(answer);
-
                 m_TextOutput.SendData(new TextData(answer));
             }
+
+            UpdateQuestionWidget();
         }
 
         private void OnParseData(ParseData data)
         {
             m_ParseData = data;
+            EventManager.Instance.SendEvent( Constants.Event.ON_QUESTION_PARSE, m_ParseData );
+
             UpdateQuestionWidget();
         }
 
@@ -557,12 +549,13 @@ namespace IBM.Watson.Widgets.Avatar
         {
             if (m_ParseData != null && m_AnswerResult != null)
             {
-                InstatiateQuestionWidget();
+                // send all data up to the question widget facets..
 
-                if (m_FocusQuestion != null)
-                    m_FocusQuestion.UpdateFacets();
-                else
-                    Log.Error("AvatarWidget", "Failed to find QuestionWidget in question prefab.");
+                // TODO: Remove the UpdateFacets() once they've all been converted to using the event.
+//                if (m_FocusQuestion != null)
+//                    m_FocusQuestion.UpdateFacets();
+//                else
+//                    Log.Error("AvatarWidget", "Failed to find QuestionWidget in question prefab.");
                 State = AvatarState.LISTENING;
             }
         }
@@ -583,7 +576,6 @@ namespace IBM.Watson.Widgets.Avatar
                 m_FocusQuestion = questionObject.GetComponentInChildren<QuestionWidget>();
                 if (m_FocusQuestion == null)
                     throw new WatsonException("Question prefab is missing QuestionWidget");
-                m_FocusQuestion.QuestionData = this;
                 m_FocusQuestion.Focused = true;	//currently our focus object
             }
         }
@@ -738,60 +730,6 @@ namespace IBM.Watson.Widgets.Avatar
                 Mood = (MoodType)args[0];
             }
         }
-        #endregion
-
-        #region IQuestionData implementation
-        /// <summary>
-        /// Gets the location.
-        /// </summary>
-        /// <value>The location.</value>
-        public string Location
-        {
-            get
-            {
-                return ITM.Location;
-            }
-        }
-
-        /// <summary>
-        /// Gets the question data object.
-        /// </summary>
-        /// <value>The question data object.</value>
-        public Questions QuestionDataObject
-        {
-            get
-            {
-                return m_QuestionResult;
-            }
-        }
-
-        /// <summary>
-        /// Gets the answer data object.
-        /// </summary>
-        /// <value>The answer data object.</value>
-        public Answers AnswerDataObject
-        {
-            get
-            {
-                return m_AnswerResult;
-            }
-        }
-
-        /// <summary>
-        /// Gets the parse data object.
-        /// </summary>
-        /// <value>The parse data object.</value>
-        public ParseData ParseDataObject
-        {
-            get
-            {
-                return m_ParseData;
-            }
-        }
-
-        public OnMessage OnQuestionEvent { get; set; }
-        public OnMessage OnAnswerEvent { get; set; }
-
         #endregion
     }
 }

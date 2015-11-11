@@ -18,6 +18,9 @@
 
 using UnityEngine;
 using System.Collections.Generic;
+using IBM.Watson.Logging;
+using IBM.Watson.Utilities;
+using IBM.Watson.Data;
 
 namespace IBM.Watson.Widgets.Question
 {
@@ -34,6 +37,18 @@ namespace IBM.Watson.Widgets.Question
 
         private List<EvidenceItem> m_EvidenceItems = new List<EvidenceItem>();
 
+		private Data.XRAY.Answers m_AnswerData = null;
+		
+		private void OnEnable()
+		{
+			EventManager.Instance.RegisterEventReceiver( Constants.Event.ON_QUESTION_ANSWERS, OnAnswerData );
+		}
+		
+		private void OnDisable()
+		{
+			EventManager.Instance.UnregisterEventReceiver( Constants.Event.ON_QUESTION_ANSWERS, OnAnswerData );
+		}
+
         /// <summary>
         /// Dynamically creates up to three Evidence Items based on returned data.
         /// </summary>
@@ -41,7 +56,7 @@ namespace IBM.Watson.Widgets.Question
         {
 			base.Init ();
 
-            for (int i = 0; i < Question.QuestionData.AnswerDataObject.answers[0].evidence.Length; i++)
+			for (int i = 0; i < m_AnswerData.answers[0].evidence.Length; i++)
             {
                 if (i >= 3) return;
 
@@ -50,8 +65,8 @@ namespace IBM.Watson.Widgets.Question
                 evidenceItemRectTransform.SetParent(m_EvidenceCanvasRectTransform, false);
                 EvidenceItem evidenceItem = evidenceItemGameObject.GetComponent<EvidenceItem>();
                 m_EvidenceItems.Add(evidenceItem);
-				evidenceItem.Answer = Question.QuestionData.AnswerDataObject.answers[0].answerText;
-                evidenceItem.EvidenceString = Question.QuestionData.AnswerDataObject.answers[0].evidence[i].decoratedPassage;
+				evidenceItem.Answer = m_AnswerData.answers[0].answerText;
+				evidenceItem.EvidenceString = m_AnswerData.answers[0].evidence[i].decoratedPassage;
             }
         }
 
@@ -66,5 +81,15 @@ namespace IBM.Watson.Widgets.Question
                 m_EvidenceItems.Remove(m_EvidenceItems[0]);
             }
         }
+
+		/// <summary>
+		/// Caallback for Answer data event.
+		/// </summary>
+		/// <param name="args">Arguments.</param>
+		private void OnAnswerData( object [] args )
+		{
+			m_AnswerData = args != null && args.Length > 0 ? args[0] as Data.XRAY.Answers : null;
+			Init ();
+		}
     }
 }

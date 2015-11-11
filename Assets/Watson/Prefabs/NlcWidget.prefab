@@ -62,9 +62,10 @@ MonoBehaviour:
   m_ClassifyOutput:
     m_TargetObject: {fileID: 0}
     m_TargetConnection: Classifier/Classified
-  m_ClassifierId: 98C19Ex4-nlc-407
+  m_ClassifierId: F7F576x8-nlc-62
   m_MinWordConfidence: .40000000000000002
   m_IgnoreWordConfidence: .20000000000000001
+  m_MinClassEventConfidence: .5
   m_ClassEventList:
   - m_Class: wakeup
     m_Event: 403
@@ -77,7 +78,7 @@ MonoBehaviour:
   - m_Class: debug_on
     m_Event: 405
   - m_Class: debug_off
-    m_Event: 405
+    m_Event: 406
   - m_Class: fold
     m_Event: 407
   - m_Class: unfold
@@ -92,6 +93,10 @@ MonoBehaviour:
     m_Event: 412
   - m_Class: location
     m_Event: 413
+  - m_Class: question-thunderstone
+    m_Event: 401
+  - m_Class: question-woodside
+    m_Event: 401
   m_TopClassText: {fileID: 0}
 --- !u!1001 &100100000
 Prefab:
@@ -101,8 +106,12 @@ Prefab:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.size
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
       propertyPath: m_ClassifierId
-      value: 98C19Ex4-nlc-407
+      value: F7F576x8-nlc-62
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[3].m_Event
@@ -118,7 +127,23 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[5].m_Event
-      value: 405
+      value: 406
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[13].m_Class
+      value: question-thunderstone
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[13].m_Event
+      value: 401
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[14].m_Class
+      value: question-woodside
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[14].m_Event
+      value: 401
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

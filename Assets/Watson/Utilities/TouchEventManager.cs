@@ -403,19 +403,25 @@ namespace IBM.Watson.Utilities
 		{
 			Collider[] colliderList = gameObjectToTouch.GetComponentsInChildren<Collider>();
 
-			foreach (Collider itemCollider in colliderList) 
-			{
-				int layerMaskAsKey = (layerMask != default(LayerMask))? layerMask.value : (1 << gameObjectToTouch.layer);
-
-				if (m_TapEvents.ContainsKey (layerMaskAsKey)) 
+			if(colliderList != null){
+				foreach (Collider itemCollider in colliderList) 
 				{
-					m_TapEvents[layerMaskAsKey].Add( new TouchEventData(itemCollider, callback, SortingLayer, isTapInside));
-				} 
-				else 
-				{
-					m_TapEvents[layerMaskAsKey] = new List<TouchEventData>() {  new TouchEventData(itemCollider, callback, SortingLayer, isTapInside) };
+					int layerMaskAsKey = (layerMask != default(LayerMask))? layerMask.value : (1 << gameObjectToTouch.layer);
+					
+					if (m_TapEvents.ContainsKey (layerMaskAsKey)) 
+					{
+						m_TapEvents[layerMaskAsKey].Add( new TouchEventData(itemCollider, callback, SortingLayer, isTapInside));
+					} 
+					else 
+					{
+						m_TapEvents[layerMaskAsKey] = new List<TouchEventData>() {  new TouchEventData(itemCollider, callback, SortingLayer, isTapInside) };
+					}
 				}
 			}
+			else{
+				Log.Warning("TouchEventManager","There is no collider of given gameobjectToTouch");
+			}
+
 
 			return true;
 		}
