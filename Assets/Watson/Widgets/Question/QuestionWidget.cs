@@ -35,23 +35,22 @@ namespace IBM.Watson.Widgets.Question
         #region Private Data
         private CubeAnimationManager m_CubeAnimMgr = null;
 		private bool m_Focused = false;
-        private AnswersAndConfidence m_AnswersAndConfidence;
-        private Question.Evidence m_Evidence;
-        private Semantic m_Semantic;
-        private Features m_Features;
-        private Location m_Location;
-        private ParseTree m_ParseTree;
-        private QuestionAndAnswer m_QuestionAndAnswer;
-        private Passages m_Passages;
-        private List<Base> m_SubFacets = new List<Base>();
+//        private AnswersAndConfidence m_AnswersAndConfidence;
+//        private Question.Evidence m_Evidence;
+//        private Semantic m_Semantic;
+//        private Features m_Features;
+//        private Location m_Location;
+//        private ParseTree m_ParseTree;
+//        private QuestionAndAnswer m_QuestionAndAnswer;
+//        private Passages m_Passages;
+//        private List<Base> m_SubFacets = new List<Base>();
 
 		[SerializeField]
 		private List<GameObject> m_Facets = new List<GameObject>();
 
 		[SerializeField]
 		private List<Transform> m_SidePresentations = new List<Transform>();
-
-		private List<GameObject> m_FacetsList = new List<GameObject>();
+		List<GameObject> m_GeneratedSides = new List<GameObject>();
 
         #endregion
 
@@ -163,7 +162,7 @@ namespace IBM.Watson.Widgets.Question
           
             }
             else
-            {
+			{
                 Log.Warning("Question Widget", "OnTapInside has invalid arguments!");
             }
 
@@ -359,24 +358,6 @@ namespace IBM.Watson.Widgets.Question
 			Cube.enabled = false;
 
 			GenerateSides();
-
-            m_AnswersAndConfidence = gameObject.transform.GetComponentInChildren<AnswersAndConfidence>();
-			m_Evidence = gameObject.transform.GetComponentInChildren<Question.Evidence>();
-			m_Semantic = gameObject.transform.GetComponentInChildren<Semantic>();
-			m_Features = gameObject.transform.GetComponentInChildren<Features>();
-			m_Location = gameObject.transform.GetComponentInChildren<Location>();
-			m_ParseTree = gameObject.transform.GetComponentInChildren<ParseTree>();
-			m_QuestionAndAnswer = gameObject.transform.GetComponentInChildren<QuestionAndAnswer>();
-			m_Passages = gameObject.transform.GetComponentInChildren<Passages>();
-
-            m_SubFacets.Add(m_AnswersAndConfidence);
-			m_SubFacets.Add(m_Evidence);
-			m_SubFacets.Add(m_Semantic);
-			m_SubFacets.Add(m_Features);
-			m_SubFacets.Add(m_Location);
-			m_SubFacets.Add(m_ParseTree);
-			m_SubFacets.Add(m_QuestionAndAnswer);
-			m_SubFacets.Add(m_Passages);
         }
 
 		public void GenerateSides()
@@ -384,6 +365,7 @@ namespace IBM.Watson.Widgets.Question
 			for(int i = 0; i < m_Facets.Count; i++)
 			{
 				GameObject facetGameObject = Instantiate(m_Facets[i], Vector3.zero, Quaternion.Euler(new Vector3(0f, 90f, 0f))) as GameObject;
+				m_GeneratedSides.Add(facetGameObject);
 				Transform facetTransform = facetGameObject.GetComponent<Transform>();
 				RectTransform facetCanvasRectTransform = facetTransform.GetComponentInChildren<RectTransform>();
 				facetCanvasRectTransform.localScale = new Vector3(0.004885f, 0.004885f, 0f);
@@ -419,8 +401,15 @@ namespace IBM.Watson.Widgets.Question
 		/// </summary>
 		public void UpdateFacets(Object[] args = null)
 		{
-			foreach (Base subFacet in m_SubFacets)
-				subFacet.Init();
+			foreach(GameObject facet in m_GeneratedSides)
+			{
+				Base[] SubFacets = facet.transform.GetComponents<Base>();
+				foreach(Base SubFacet in SubFacets)
+				{
+					SubFacet.Question = gameObject.GetComponent<QuestionWidget>();
+					SubFacet.Init();
+				}
+			}
 		}
 		#endregion
     }

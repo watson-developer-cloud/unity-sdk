@@ -75,11 +75,11 @@ namespace IBM.Watson.Widgets.Question
 		/// <summary>
 		/// Set LocationString from data.
 		/// </summary>
-        override public void Init()
+		override public void Init()
         {
 			base.Init ();
 
-            LocationString = m_Question.QuestionData.Location;
+            LocationString = Question.QuestionData.Location;
             UpdateLocation();
         }
 
