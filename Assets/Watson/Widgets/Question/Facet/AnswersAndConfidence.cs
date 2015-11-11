@@ -33,16 +33,16 @@ namespace IBM.Watson.Widgets.Question
 		/// Iterate through Answer and Confidence bars and set the Answer and ConfidenceIndex
 		/// </summary>
 		//	TODO dynamically create bars?
-        override public void Init()
+		override public void Init()
         {
 			base.Init ();
 
             for (int i = 0; i < m_AnswerConfidenceBars.Length; i++)
             {
-                if ( i < m_Question.QuestionData.AnswerDataObject.answers.Length )
+                if ( i < Question.QuestionData.AnswerDataObject.answers.Length )
                 {
-                    m_AnswerConfidenceBars[i].Answer = m_Question.QuestionData.AnswerDataObject.answers[i].answerText;
-                    m_AnswerConfidenceBars[i].Confidence = m_Question.QuestionData.AnswerDataObject.answers[i].confidence;
+                    m_AnswerConfidenceBars[i].Answer = Question.QuestionData.AnswerDataObject.answers[i].answerText;
+                    m_AnswerConfidenceBars[i].Confidence = Question.QuestionData.AnswerDataObject.answers[i].confidence;
                 }
                 else
                 {

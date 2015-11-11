@@ -87,7 +87,7 @@ namespace IBM.Watson.Widgets.Question
         /// <summary>
         /// Generates Parse tree on Initialization of data.
         /// </summary>
-        override public void Init()
+		override public void Init()
         {
 			base.Init ();
 
@@ -99,7 +99,7 @@ namespace IBM.Watson.Widgets.Question
         /// </summary>
         private void GenerateParseTree()
         {
-            for (int i = 0; i < m_Question.QuestionData.ParseDataObject.Words.Length; i++)
+            for (int i = 0; i < Question.QuestionData.ParseDataObject.Words.Length; i++)
             {
                 GameObject wordGameObject = Instantiate(m_ParseTreeTextItemPrefab) as GameObject;
                 RectTransform wordRectTransform = wordGameObject.GetComponent<RectTransform>();
@@ -115,13 +115,13 @@ namespace IBM.Watson.Widgets.Question
                     wordRectTransform.localPosition = new Vector3(5000f, 5000, 0f);
                 }
                 ParseTreeTextItem word = wordGameObject.GetComponent<ParseTreeTextItem>();
-                word.ParseTreeWord = m_Question.QuestionData.ParseDataObject.Words[i].Word;
-                word.POS = m_Question.QuestionData.ParseDataObject.Words[i].Pos.ToString();
-                word.Slot = m_Question.QuestionData.ParseDataObject.Words[i].Slot;
+                word.ParseTreeWord = Question.QuestionData.ParseDataObject.Words[i].Word;
+                word.POS = Question.QuestionData.ParseDataObject.Words[i].Pos.ToString();
+                word.Slot = Question.QuestionData.ParseDataObject.Words[i].Slot;
 
-                for (int j = 0; j < m_Question.QuestionData.ParseDataObject.Words[i].Features.Length; j++)
+                for (int j = 0; j < Question.QuestionData.ParseDataObject.Words[i].Features.Length; j++)
                 {
-                    word.m_Features.Add(m_Question.QuestionData.ParseDataObject.Words[i].Features[j]);
+                    word.m_Features.Add(Question.QuestionData.ParseDataObject.Words[i].Features[j]);
                 }
 
                 m_WordList.Add(word);
@@ -134,7 +134,7 @@ namespace IBM.Watson.Widgets.Question
         /// <summary>
         /// Clears dynamically generated Facet Elements when a question is answered. Called from Question Widget.
         /// </summary>
-        override protected void Clear()
+        override public void Clear()
         {
             CancelInvoke();
             while (m_WordList.Count != 0)
@@ -169,19 +169,19 @@ namespace IBM.Watson.Widgets.Question
                 }
             }
 
-            if (m_Question.QuestionData.QuestionDataObject.questions[0].question.lat.Length == 0 && m_Question.QuestionData.QuestionDataObject.questions[0].question.focus.Length == 0) m_POSList[2].GetComponent<POSControl>().IsHighlighted = true;
-            if (m_Question.QuestionData.QuestionDataObject.questions[0].question.lat.Length > 0)
+            if (Question.QuestionData.QuestionDataObject.questions[0].question.lat.Length == 0 && Question.QuestionData.QuestionDataObject.questions[0].question.focus.Length == 0) m_POSList[2].GetComponent<POSControl>().IsHighlighted = true;
+            if (Question.QuestionData.QuestionDataObject.questions[0].question.lat.Length > 0)
             {
-                if (m_WordList[WordIndex].ParseTreeWord.ToLower() == m_Question.QuestionData.QuestionDataObject.questions[0].question.lat[0].ToLower())
+                if (m_WordList[WordIndex].ParseTreeWord.ToLower() == Question.QuestionData.QuestionDataObject.questions[0].question.lat[0].ToLower())
                 {
                     m_POSList[1].GetComponent<POSControl>().IsHighlighted = true;
                 }
             }
 
 
-            if (m_Question.QuestionData.QuestionDataObject.questions[0].question.focus.Length > 0)
+            if (Question.QuestionData.QuestionDataObject.questions[0].question.focus.Length > 0)
             {
-                if (m_WordList[WordIndex].ParseTreeWord.ToLower() == m_Question.QuestionData.QuestionDataObject.questions[0].question.focus[0].ToLower())
+                if (m_WordList[WordIndex].ParseTreeWord.ToLower() == Question.QuestionData.QuestionDataObject.questions[0].question.focus[0].ToLower())
                 {
                     m_POSList[0].GetComponent<POSControl>().IsHighlighted = true;
                 }

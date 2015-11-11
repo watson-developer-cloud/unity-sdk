@@ -70,13 +70,13 @@ namespace IBM.Watson.Widgets.Question
 		/// <summary>
 		/// Set QuestionString, AnswerString and Confidence from data.
 		/// </summary>
-        override public void Init()
+		override public void Init()
         {
 			base.Init ();
 
-            QuestionString = m_Question.QuestionData.QuestionDataObject.questions[0].question.questionText;
-			AnswerString = m_Question.QuestionData.AnswerDataObject.answers[0].answerText + Variants();
-            Confidence = m_Question.QuestionData.AnswerDataObject.answers[0].confidence;
+            QuestionString = Question.QuestionData.QuestionDataObject.questions[0].question.questionText;
+			AnswerString = Question.QuestionData.AnswerDataObject.answers[0].answerText + Variants();
+            Confidence = Question.QuestionData.AnswerDataObject.answers[0].confidence;
         }
 
         /// <summary>
@@ -110,14 +110,14 @@ namespace IBM.Watson.Widgets.Question
 		private string Variants()
 		{
 			string variantsString = "; ";
-			int variantLength = m_Question.QuestionData.AnswerDataObject.answers [0].variants.Length;
+			int variantLength = Question.QuestionData.AnswerDataObject.answers [0].variants.Length;
 
 			if (variantLength == 0)
 				return ".";
 
 			for (int i = 0; i < variantLength; i++)
 			{
-				string variant = m_Question.QuestionData.AnswerDataObject.answers[0].variants[i].text;
+				string variant = Question.QuestionData.AnswerDataObject.answers[0].variants[i].text;
 				variantsString += variant;
 
 				if(i < variantLength - 1)

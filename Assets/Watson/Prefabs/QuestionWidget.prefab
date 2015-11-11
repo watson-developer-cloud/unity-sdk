@@ -7864,7 +7864,7 @@ MeshRenderer:
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_Materials:
-  - {fileID: 2100000, guid: 6c8ff8b4adcee45da9ad0c8bc8942349, type: 2}
+  - {fileID: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -7888,7 +7888,7 @@ MeshRenderer:
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_Materials:
-  - {fileID: 2100000, guid: 358082cb4399446898180d2268c3603b, type: 2}
+  - {fileID: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -8800,7 +8800,7 @@ MeshRenderer:
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_Materials:
-  - {fileID: 2100000, guid: cac8e3e35d1c54d848e25895ea82e2bf, type: 2}
+  - {fileID: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -9952,7 +9952,7 @@ MeshRenderer:
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_Materials:
-  - {fileID: 2100000, guid: e6397b3a376cf40aebdb109444ea50fb, type: 2}
+  - {fileID: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -10024,7 +10024,7 @@ MeshRenderer:
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_Materials:
-  - {fileID: 2100000, guid: 90b9bc8dc1b8b4ddaa9818a5e6108114, type: 2}
+  - {fileID: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -10072,7 +10072,7 @@ MeshRenderer:
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_Materials:
-  - {fileID: 2100000, guid: 71d654d6f13804b19a4929e2916b7ea0, type: 2}
+  - {fileID: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -12376,13 +12376,6 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  m_renderTexSide:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   m_StatinoaryRotationSpeed: 10
   m_StatinoaryRotationVector: {x: 0, y: 1, z: 0}
   m_TimeForComingToScene: 1
@@ -12427,7 +12420,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AutoConnect: 0
   m_Facets:
-  - {fileID: 152706, guid: df0664559a4234f0bbc4a1905cbe2b1c, type: 2}
+  - {fileID: 128632, guid: cb108f2840e864ab4b312866e6379511, type: 2}
   - {fileID: 186678, guid: 8234198b234af494da07bbe3cdb3d329, type: 2}
   - {fileID: 139860, guid: 8db16251c22654c2b8aa394c482a73bf, type: 2}
   - {fileID: 165186, guid: 6b4a0a51fec154f5584a70c273e140f4, type: 2}

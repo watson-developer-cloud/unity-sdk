@@ -69,13 +69,13 @@ namespace IBM.Watson.Widgets.Question
             m_SemanticText.text = SemanticString;
         }
 
-        override public void Init()
+		override public void Init()
         {
 			base.Init ();
 
-            if (m_Question.QuestionData.QuestionDataObject.questions.Length > 0 && m_Question.QuestionData.QuestionDataObject.questions[0].question.lat.Length > 0)
+            if (Question.QuestionData.QuestionDataObject.questions.Length > 0 && Question.QuestionData.QuestionDataObject.questions[0].question.lat.Length > 0)
             {
-                LAT = m_Question.QuestionData.QuestionDataObject.questions[0].question.lat[0];
+                LAT = Question.QuestionData.QuestionDataObject.questions[0].question.lat[0];
             }
             else
             {
@@ -94,9 +94,9 @@ namespace IBM.Watson.Widgets.Question
 
             //	Find the LAT index in the Parse Words
             int LATIndex = -1;
-            for (int i = 0; i < m_Question.QuestionData.ParseDataObject.Words.Length; i++)
+            for (int i = 0; i < Question.QuestionData.ParseDataObject.Words.Length; i++)
             {
-                if (m_Question.QuestionData.ParseDataObject.Words[i].Word == LAT)
+                if (Question.QuestionData.ParseDataObject.Words[i].Word == LAT)
                 {
                     LATIndex = i;
                 }
@@ -107,10 +107,10 @@ namespace IBM.Watson.Widgets.Question
             //	Iterate through the LAT's features and concantinate the strings together.
             if (LATIndex != -1)
             {
-                for (int k = 0; k < m_Question.QuestionData.ParseDataObject.Words[LATIndex].Features.Length; k++)
+                for (int k = 0; k < Question.QuestionData.ParseDataObject.Words[LATIndex].Features.Length; k++)
                 {
-                    semanticText += m_Question.QuestionData.ParseDataObject.Words[LATIndex].Features[k];
-                    if (k < m_Question.QuestionData.ParseDataObject.Words[LATIndex].Features.Length - 1)
+                    semanticText += Question.QuestionData.ParseDataObject.Words[LATIndex].Features[k];
+                    if (k < Question.QuestionData.ParseDataObject.Words[LATIndex].Features.Length - 1)
                     {
                         semanticText += ", ";
                     }

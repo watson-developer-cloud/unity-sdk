@@ -19,6 +19,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using IBM.Watson.Logging;
 
 namespace IBM.Watson.Widgets.Question
 {
@@ -44,10 +45,12 @@ namespace IBM.Watson.Widgets.Question
 		/// </summary>
 		override public void Init()
 		{
+			Log.Debug("Passages", "m_PassageItems.count: " + m_PassageItems.Count);
 			base.Init ();
 
-			for(int i = 0; i < m_Question.QuestionData.AnswerDataObject.answers.Length ; i++) {
-				GameObject PassageItemGameObject = Instantiate(m_PassageItemPrefab, new Vector3(m_RectTransformPosX, m_RectTransformPosY, m_RectTransformPosZ + m_RectTransformZSpacing * (m_Question.QuestionData.AnswerDataObject.answers.Length - i)), Quaternion.identity) as GameObject;
+			for(int i = 0; i < Question.QuestionData.AnswerDataObject.answers.Length ; i++) {
+				Log.Debug("Passages", "adding passage " + i);
+				GameObject PassageItemGameObject = Instantiate(m_PassageItemPrefab, new Vector3(m_RectTransformPosX, m_RectTransformPosY, m_RectTransformPosZ + m_RectTransformZSpacing * (Question.QuestionData.AnswerDataObject.answers.Length - i)), Quaternion.identity) as GameObject;
 				PassageItemGameObject.name = "PassageItem_" + i.ToString("00");
 				RectTransform PassageItemRectTransform = PassageItemGameObject.GetComponent<RectTransform>();
 				PassageItemRectTransform.SetParent(m_PassageCanvasRectTransform, false);
@@ -56,17 +59,17 @@ namespace IBM.Watson.Widgets.Question
 				PassageItemRectTransform.SetAsFirstSibling();
 				m_PassageItems.Add(PassageItem);
 //				PassageItem.PassageString = m_Question.QuestionData.AnswerDataObject.answers[0].evidence[i].passage;
-				PassageItem.PassageString = m_Question.QuestionData.AnswerDataObject.answers[i].answerText;
-				PassageItem.MaxConfidence = m_Question.QuestionData.AnswerDataObject.answers[0].confidence;
-				PassageItem.MinConfidence = m_Question.QuestionData.AnswerDataObject.answers[m_Question.QuestionData.AnswerDataObject.answers.Length - 1].confidence;
-				PassageItem.Confidence = m_Question.QuestionData.AnswerDataObject.answers[i].confidence;
+				PassageItem.PassageString = Question.QuestionData.AnswerDataObject.answers[i].answerText;
+				PassageItem.MaxConfidence = Question.QuestionData.AnswerDataObject.answers[0].confidence;
+				PassageItem.MinConfidence = Question.QuestionData.AnswerDataObject.answers[Question.QuestionData.AnswerDataObject.answers.Length - 1].confidence;
+				PassageItem.Confidence = Question.QuestionData.AnswerDataObject.answers[i].confidence;
 			}
 		}
 		
 		/// <summary>
 		/// Clears dynamically generated Facet Elements when a question is answered. Called from Question Widget.
 		/// </summary>
-		override protected void Clear()
+		override public void Clear()
 		{
 			while (m_PassageItems.Count != 0)
 			{
