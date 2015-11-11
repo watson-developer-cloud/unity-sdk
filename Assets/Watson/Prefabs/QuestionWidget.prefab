@@ -12729,57 +12729,57 @@ MonoBehaviour:
   m_Mappings:
   - m_Event: 407
     m_Callback:
-      m_Target: {fileID: 0}
+      m_Target: {fileID: 165892}
       m_Component: QuestionWidget
       m_Method: OnFold
   - m_Event: 408
     m_Callback:
-      m_Target: {fileID: 0}
+      m_Target: {fileID: 165892}
       m_Component: QuestionWidget
       m_Method: OnUnfold
   - m_Event: 409
     m_Callback:
-      m_Target: {fileID: 0}
+      m_Target: {fileID: 165892}
       m_Component: QuestionWidget
       m_Method: OnDisplayAnswers
   - m_Event: 410
     m_Callback:
-      m_Target: {fileID: 0}
+      m_Target: {fileID: 165892}
       m_Component: QuestionWidget
       m_Method: OnDisplayEvidence
   - m_Event: 411
     m_Callback:
-      m_Target: {fileID: 0}
+      m_Target: {fileID: 165892}
       m_Component: QuestionWidget
       m_Method: OnDisplayChat
   - m_Event: 412
     m_Callback:
-      m_Target: {fileID: 0}
+      m_Target: {fileID: 165892}
       m_Component: QuestionWidget
       m_Method: OnDisplayParse
   - m_Event: 413
     m_Callback:
-      m_Target: {fileID: 0}
+      m_Target: {fileID: 165892}
       m_Component: QuestionWidget
       m_Method: OnDisplayLocation
   - m_Event: 201
     m_Callback:
-      m_Target: {fileID: 0}
+      m_Target: {fileID: 165892}
       m_Component: QuestionWidget
       m_Method: OnTapInside
   - m_Event: 202
     m_Callback:
-      m_Target: {fileID: 0}
+      m_Target: {fileID: 165892}
       m_Component: QuestionWidget
       m_Method: OnTapOutside
   - m_Event: 203
     m_Callback:
-      m_Target: {fileID: 0}
+      m_Target: {fileID: 165892}
       m_Component: QuestionWidget
       m_Method: DragOneFingerFullScreen
   - m_Event: 204
     m_Callback:
-      m_Target: {fileID: 0}
+      m_Target: {fileID: 165892}
       m_Component: QuestionWidget
       m_Method: DragOneFingerOnObject
   - m_Event: 206
@@ -13242,6 +13242,50 @@ Prefab:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Mappings.Array.data[0].m_Callback.m_Target
+      value: 
+      objectReference: {fileID: 165892}
+    - target: {fileID: 0}
+      propertyPath: m_Mappings.Array.data[1].m_Callback.m_Target
+      value: 
+      objectReference: {fileID: 165892}
+    - target: {fileID: 0}
+      propertyPath: m_Mappings.Array.data[2].m_Callback.m_Target
+      value: 
+      objectReference: {fileID: 165892}
+    - target: {fileID: 0}
+      propertyPath: m_Mappings.Array.data[3].m_Callback.m_Target
+      value: 
+      objectReference: {fileID: 165892}
+    - target: {fileID: 0}
+      propertyPath: m_Mappings.Array.data[4].m_Callback.m_Target
+      value: 
+      objectReference: {fileID: 165892}
+    - target: {fileID: 0}
+      propertyPath: m_Mappings.Array.data[5].m_Callback.m_Target
+      value: 
+      objectReference: {fileID: 165892}
+    - target: {fileID: 0}
+      propertyPath: m_Mappings.Array.data[6].m_Callback.m_Target
+      value: 
+      objectReference: {fileID: 165892}
+    - target: {fileID: 0}
+      propertyPath: m_Mappings.Array.data[7].m_Callback.m_Target
+      value: 
+      objectReference: {fileID: 165892}
+    - target: {fileID: 0}
+      propertyPath: m_Mappings.Array.data[8].m_Callback.m_Target
+      value: 
+      objectReference: {fileID: 165892}
+    - target: {fileID: 0}
+      propertyPath: m_Mappings.Array.data[9].m_Callback.m_Target
+      value: 
+      objectReference: {fileID: 165892}
+    - target: {fileID: 0}
+      propertyPath: m_Mappings.Array.data[10].m_Callback.m_Target
+      value: 
+      objectReference: {fileID: 165892}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 165892}
