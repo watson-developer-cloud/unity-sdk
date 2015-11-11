@@ -12420,7 +12420,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AutoConnect: 0
   m_Facets:
-  - {fileID: 128632, guid: cb108f2840e864ab4b312866e6379511, type: 2}
+  - {fileID: 152706, guid: df0664559a4234f0bbc4a1905cbe2b1c, type: 2}
   - {fileID: 186678, guid: 8234198b234af494da07bbe3cdb3d329, type: 2}
   - {fileID: 139860, guid: 8db16251c22654c2b8aa394c482a73bf, type: 2}
   - {fileID: 165186, guid: 6b4a0a51fec154f5584a70c273e140f4, type: 2}
@@ -12741,10 +12741,12 @@ MonoBehaviour:
   - m_DragLayerObject: {fileID: 0}
     m_NumberOfFinger: 1
     m_SortingLayer: 0
+    m_IsDragInside: 1
     m_Callback: 203
   - m_DragLayerObject: {fileID: 165892}
     m_NumberOfFinger: 1
     m_SortingLayer: 1
+    m_IsDragInside: 1
     m_Callback: 204
 --- !u!114 &11498132
 MonoBehaviour:

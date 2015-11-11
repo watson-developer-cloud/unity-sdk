@@ -7,22 +7,42 @@ namespace IBM.Watson.Widgets.Question
 {
     public class PassageAnimationManager : WatsonBaseAnimationManager
     {
-        
-        //Passage One Finger Animation
+
+        #region Private Members
+
+        private CubeAnimationManager m_CubeAnimMgr = null;
+        private QuestionWidget m_QuestionWidget = null;
+        private Transform[] m_PassageItems = null;
+        private int m_LastFrameOneFingerDrag = 0;   //Used to identify the release finger
+
+        //Holds all animations current Ratio value
+        float[] m_AnimationLocationRatio;
+        float[] m_AnimationRotationRatio;
+
+        //Passage One Finger Animation for first item path in Vector3
         Vector3[] m_PathToCenterForFirstItem;
         Vector3[] m_PathOrientationToCenterForFirstItem;
         Vector3[] m_PathToStackForFirstItem;
         Vector3[] m_PathOrientationToStackForFirstItem;
-
+        
+        //Passage one finger animation paths for each passage
         LTBezierPath[] m_BezierPathToCenter;
         LTBezierPath[] m_BezierPathOrientationToCenter;
         LTBezierPath[] m_BezierPathToStack;
         LTBezierPath[] m_BezierPathOrientationToStack;
-        
-        private int m_LastFrameOneFingerDrag = 0;
+        //For speedy movements we are using from Initial to Stack animation
+        LTBezierPath[] m_BezierPathFromInitialToStack;
+        LTBezierPath[] m_BezierPathOrientationFromInitialToStack;
 
-        private CubeAnimationManager m_CubeAnimMgr = null;
-        private QuestionWidget m_QuestionWidget = null;
+        //Offset between passages
+        Vector3 m_OffsetPathToCenter;
+        Vector3 m_OffsetPathOrientationToCenter;
+        Vector3 m_OffsetPathToStack;
+        Vector3 m_OffsetPathOrientationToStack;
+
+        #endregion
+
+        #region Public Members
         /// <summary>
         /// Gets the Cube Animation Manager attached with question widget. 
         /// </summary>
@@ -41,6 +61,9 @@ namespace IBM.Watson.Widgets.Question
             }
         }
 
+        /// <summary>
+        /// Gets the Question Widget attached 
+        /// </summary>
         public QuestionWidget Question
         {
             get
@@ -55,108 +78,217 @@ namespace IBM.Watson.Widgets.Question
             }
         }
 
+        public Transform[] PassageList
+        {
+            get
+            {
+                if (m_PassageItems == null)
+                {
+                    UpdatePassages();
+                    if (m_PassageItems == null)
+                    {
+                        Log.Error("PassageAnimationManager", "PassageList couldn't find inside gameobject");
+                    } 
+                }
+
+                return m_PassageItems;
+            }
+        }
+
+        public int NumberOfPassages
+        {
+            get
+            {
+                int numberOfPassage = 0;
+                if (PassageList != null && PassageList.Length > 0)
+                    numberOfPassage = PassageList.Length;
+                return numberOfPassage;
+            }
+        }
+        #endregion
+
+        #region Awake / Update
+    
         // Use this for initialization
         void Awake()
         {
-            Vector3[] m_PathToCenterForFirstItem = new Vector3[]{
+            m_PathToCenterForFirstItem = new Vector3[]{
             new Vector3(-555,   -77,    -125),
             new Vector3(-600,   0,      -125),
             new Vector3(-800,   300,    -125),
             new Vector3(-907,   355,    -125)};
 
-            Vector3[] m_PathOrientationToCenterForFirstItem = new Vector3[]{
+            m_PathOrientationToCenterForFirstItem = new Vector3[]{
             new Vector3(0,0,0),
             new Vector3(10,10,0),
             new Vector3(35,35,0),
             new Vector3(45,45,0)};
 
-            Vector3[] m_PathToStackForFirstItem = new Vector3[]{
+            m_PathToStackForFirstItem = new Vector3[]{
                 new Vector3(-907,   355f,       -125),
                 new Vector3(-800,   300f,       -200),
                 new Vector3(450,    -100f,      -350),
                 new Vector3(575,    -120,       -407)};
 
-            Vector3[] m_PathOrientationToStackForFirstItem = new Vector3[]{
+            m_PathOrientationToStackForFirstItem = new Vector3[]{
                 new Vector3(45,45,0),
                 new Vector3(35,35,0),
                 new Vector3(10,10,0),
                 new Vector3(0,0,0)};
+
+            m_OffsetPathToCenter = new Vector3(0, 0, 50);
+            m_OffsetPathOrientationToCenter = new Vector3(0, 0, 0);
+            m_OffsetPathToStack = new Vector3(0, 0, 50);
+            m_OffsetPathOrientationToStack = new Vector3(0, 0, 0);
+
+            UpdatePassages();
         }
 
-        void UpdateBezierPathForPassages()
-        {
-            int numberOfPassages = 10;
-
-            Vector3 offsetPathToCenter = new Vector3(0,0,0);
-            Vector3 offsetPathOrientationToCenter = new Vector3(0, 0, 0);
-            Vector3 offsetPathToStack = new Vector3(0, 0, 0);
-            Vector3 offsetPathOrientationToStack = new Vector3(0, 0, 0);
-
-            m_BezierPathToCenter = new LTBezierPath[numberOfPassages];
-            m_BezierPathOrientationToCenter = new LTBezierPath[numberOfPassages];
-            m_BezierPathToStack = new LTBezierPath[numberOfPassages];
-            m_BezierPathOrientationToStack = new LTBezierPath[numberOfPassages];
-
-            for (int i = 0; i < numberOfPassages; i++)
-            {
-                m_BezierPathToCenter[i] = new LTBezierPath(new Vector3[]{
-                    m_PathToCenterForFirstItem[0] + (offsetPathToCenter * i),
-                    m_PathToCenterForFirstItem[1] + (offsetPathToCenter * i),
-                    m_PathToCenterForFirstItem[2] + (offsetPathToCenter * i),
-                    m_PathToCenterForFirstItem[3] + (offsetPathToCenter * i)});
-
-                m_BezierPathOrientationToCenter[i] = new LTBezierPath(new Vector3[]{
-                    m_PathOrientationToCenterForFirstItem[0] + (offsetPathOrientationToCenter * i),
-                    m_PathOrientationToCenterForFirstItem[1] + (offsetPathOrientationToCenter * i),
-                    m_PathOrientationToCenterForFirstItem[2] + (offsetPathOrientationToCenter * i),
-                    m_PathOrientationToCenterForFirstItem[3] + (offsetPathOrientationToCenter * i)});
-                
-                m_BezierPathToStack[i] = new LTBezierPath(new Vector3[]{
-                    m_PathToStackForFirstItem[0] + (offsetPathToStack * i),
-                    m_PathToStackForFirstItem[1] + (offsetPathToStack * i),
-                    m_PathToStackForFirstItem[2] + (offsetPathToStack * i),
-                    m_PathToStackForFirstItem[3] + (offsetPathToStack * i)});
-
-                m_BezierPathOrientationToStack[i] = new LTBezierPath(new Vector3[]{
-                    m_PathOrientationToStackForFirstItem[0] + (offsetPathOrientationToStack * i),
-                    m_PathOrientationToStackForFirstItem[1] + (offsetPathOrientationToStack * i),
-                    m_PathOrientationToStackForFirstItem[2] + (offsetPathOrientationToStack * i),
-                    m_PathOrientationToStackForFirstItem[3] + (offsetPathOrientationToStack * i)});
-            }
-        
-        }
 
         // Update is called once per frame
         void Update()
         {
-            DragOneFingerOnPassageOnUpdate();
+            //DragOneFingerOnPassageOnUpdate();
+            if (Input.GetKeyDown(KeyCode.Alpha0))
+            {
+                ShowPassage(0);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                ShowPassage(1);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                ShowPassage(2);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                ShowPassage(3);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha4))
+            {
+                ShowPassage(4);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha5))
+            {
+                ShowPassage(5);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha6))
+            {
+                ShowPassage(6);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha7))
+            {
+                ShowPassage(7);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha8))
+            {
+                ShowPassage(8);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha9))
+            {
+                ShowPassage(9);
+            }
         }
 
-
+        #endregion
 
 
         #region Events on Passage
 
         public void ReleasedFinger(System.Object[] args)
         {
-            TouchScript.Gestures.ReleaseGesture releaseGesture = null;
+            Log.Status("PassageAnimationManager", "ReleasedFinger");
             m_LastFrameOneFingerDrag = -1;
         }
 
 
         public void OneFingerDragOnCube(System.Object[] args)
         {
-
+            Log.Status("PassageAnimationManager", "OneFingerDragOnCube");
         }
 
         public void TapOnCubeSide(System.Object[] args)
         {
-           // Cube.SideFocused
+            // Cube.SideFocused
+            Log.Status("PassageAnimationManager", "TapOnCubeSide");
         }
-        
+
         #endregion
 
-        private Transform[] m_PassageItems = null;
+        #region Passage Path Update
+        
+        void UpdatePassages()
+        {
+            m_PassageItems = Utility.FindObjects<Transform>(this.gameObject, "PassageItem", isContains: true, sortByName: true);
+            UpdateBezierPathForPassages();
+            m_AnimationLocationRatio = new float[NumberOfPassages];
+            m_AnimationRotationRatio = new float[NumberOfPassages];
+            for (int i = 0; i < NumberOfPassages; i++)
+            {
+                m_AnimationLocationRatio[i] = 0.0f;
+                m_AnimationRotationRatio[i] = 0.0f;
+            }
+
+           
+
+        }
+
+        void UpdateBezierPathForPassages()
+        {
+            if(NumberOfPassages > 0)
+            {
+                m_BezierPathToCenter = new LTBezierPath[NumberOfPassages];
+                m_BezierPathOrientationToCenter = new LTBezierPath[NumberOfPassages];
+                m_BezierPathToStack = new LTBezierPath[NumberOfPassages];
+                m_BezierPathOrientationToStack = new LTBezierPath[NumberOfPassages];
+                m_BezierPathFromInitialToStack = new LTBezierPath[NumberOfPassages];
+                m_BezierPathOrientationFromInitialToStack = new LTBezierPath[NumberOfPassages];
+
+                for (int i = 0; i < NumberOfPassages; i++)
+                {
+                    m_BezierPathToCenter[i] = new LTBezierPath(new Vector3[]{
+                        m_PathToCenterForFirstItem[0] + (m_OffsetPathToCenter * i),
+                        m_PathToCenterForFirstItem[1] + (m_OffsetPathToCenter * i),
+                        m_PathToCenterForFirstItem[2] ,
+                        m_PathToCenterForFirstItem[3] });
+
+                    m_BezierPathOrientationToCenter[i] = new LTBezierPath(new Vector3[]{
+                        m_PathOrientationToCenterForFirstItem[0] + (m_OffsetPathOrientationToCenter * i),
+                        m_PathOrientationToCenterForFirstItem[1] + (m_OffsetPathOrientationToCenter * i),
+                        m_PathOrientationToCenterForFirstItem[2],
+                        m_PathOrientationToCenterForFirstItem[3]});
+
+                    m_BezierPathToStack[i] = new LTBezierPath(new Vector3[]{
+                        m_PathToStackForFirstItem[0] ,
+                        m_PathToStackForFirstItem[1] ,
+                        m_PathToStackForFirstItem[2] + (m_OffsetPathToStack * i),
+                        m_PathToStackForFirstItem[3] + (m_OffsetPathToStack * i)});
+
+                    m_BezierPathOrientationToStack[i] = new LTBezierPath(new Vector3[]{
+                        m_PathOrientationToStackForFirstItem[0],
+                        m_PathOrientationToStackForFirstItem[1],
+                        m_PathOrientationToStackForFirstItem[2] + (m_OffsetPathOrientationToStack * i),
+                        m_PathOrientationToStackForFirstItem[3] + (m_OffsetPathOrientationToStack * i)});
+
+                    m_BezierPathFromInitialToStack[i] = new LTBezierPath(new Vector3[]{
+                        m_PathToCenterForFirstItem[0]  + (m_OffsetPathToCenter * i),
+                        m_PathToCenterForFirstItem[1]  + (m_OffsetPathToCenter * i),
+                        m_PathToStackForFirstItem[2] + (m_OffsetPathToStack * i),
+                        m_PathToStackForFirstItem[3] + (m_OffsetPathToStack * i)});
+
+                    m_BezierPathOrientationFromInitialToStack[i] = new LTBezierPath(new Vector3[]{
+                        m_PathOrientationToCenterForFirstItem[0] + (m_OffsetPathOrientationToCenter * i),
+                        m_PathOrientationToCenterForFirstItem[1] + (m_OffsetPathOrientationToCenter * i),
+                        m_PathOrientationToStackForFirstItem[2] + (m_OffsetPathOrientationToStack * i),
+                        m_PathOrientationToStackForFirstItem[3] + (m_OffsetPathOrientationToStack * i)});
+                }
+            }
+            
+        }
+        #endregion
+
+        
 
         //[SerializeField]
         private float m_OneDragModifier = 0.002f;
@@ -260,31 +392,174 @@ namespace IBM.Watson.Widgets.Question
             }
         }
 
+        private LTBezierPath getBezierPathFromInitialValue(Vector3[] currentPath, Vector3 initialValue, float percent = 0.2f)
+        {
+
+            return new LTBezierPath(new Vector3[] {
+                    initialValue,
+                    Vector3.Lerp(initialValue, currentPath[3], percent),
+                    Vector3.Lerp(initialValue, currentPath[3], 1.0f - percent),
+                    currentPath[3]
+            });
+        }
+
         private LTDescr[] m_AnimationToShowPositionPassage;
         private LTDescr[] m_AnimationToShowRotationPassage;
+        private int m_PreviousPassageIndex = 0;
         private void ShowPassage(int passageIndexToShow)
         {
+           // UnityEngine.Debug.Break();
+            Log.Status("PassageAnimationManager", "ShowPassage : {0}, PreviousOne: {1}", passageIndexToShow, m_PreviousPassageIndex);
+
             StopAnimations();
 
             if (m_AnimationToShowPositionPassage == null)
-                m_AnimationToShowPositionPassage = new LTDescr[m_PassageItems.Length];
+                m_AnimationToShowPositionPassage = new LTDescr[NumberOfPassages];
 
             if (m_AnimationToShowRotationPassage == null)
-                m_AnimationToShowRotationPassage = new LTDescr[m_PassageItems.Length];
+                m_AnimationToShowRotationPassage = new LTDescr[NumberOfPassages];
 
+            float animationTime = 1.0f;
+            float delayOnPassage = 0.1f;
+            LeanTweenType leanType = LeanTweenType.easeOutCirc;
 
-            for (int i = 0; i < m_PassageItems.Length; i++)
+            for (int i = 0; i < NumberOfPassages; i++)
             {
-                m_AnimationToShowPositionPassage[i] = LeanTween.moveLocal(m_PassageItems[i].gameObject, m_BezierPathToCenter[i], 1.0f).setDelay(i * 0.1f).setOnComplete(() => 
+
+                //Going to initial position if they are in different position
+                if (i > passageIndexToShow)
                 {
-                    m_AnimationToShowPositionPassage[i] = null;
-                //    m_AnimationToShowPositionPassage[i] = 
-                });
+                    //LTBezierPath pathFromCurrentPosition = getBezierPathFromInitialValue(m_BezierPathFromInitialToStack[i].pts, PassageList[i].localPosition);
+                    //LTBezierPath pathFromCurrentRotation = getBezierPathFromInitialValue(m_BezierPathOrientationFromInitialToStack[i].pts, PassageList[i].localEulerAngles);
+
+                    AnimatePassageToGivenRatio(animationTime, delayOnPassage * Mathf.Abs(m_PreviousPassageIndex - i), leanType, i, m_AnimationLocationRatio[i], 0.0f, m_BezierPathFromInitialToStack[i], m_BezierPathOrientationFromInitialToStack[i]);
+                    //PassageList[i].SetAsFirstSibling();
+                    PassageList[i].SetSiblingIndex(NumberOfPassages - 1 - i);
+                }
+                else if (i < passageIndexToShow)
+                {
+                    //LTBezierPath pathFromCurrentPosition = getBezierPathFromInitialValue(m_BezierPathFromInitialToStack[i].pts, PassageList[i].localPosition);
+                    //LTBezierPath pathFromCurrentRotation = getBezierPathFromInitialValue(m_BezierPathOrientationFromInitialToStack[i].pts, PassageList[i].localEulerAngles);
+
+                    AnimatePassageToGivenRatio(animationTime, delayOnPassage * Mathf.Abs(m_PreviousPassageIndex - i), leanType, i, m_AnimationLocationRatio[i], 1.0f, m_BezierPathFromInitialToStack[i], m_BezierPathOrientationFromInitialToStack[i]);
+                    // PassageList[i].SetAsFirstSibling();
+                    PassageList[i].SetSiblingIndex(NumberOfPassages - 1 - i);
+                }
+                else
+                {
+                    if(m_PreviousPassageIndex > passageIndexToShow)
+                        PassageList[i].SetSiblingIndex(NumberOfPassages - 1 - i);
+                    //PassageList[i].SetSiblingIndex(NumberOfPassages);
+
+                    LTBezierPath pathToMove = m_AnimationLocationRatio[i] <= 0.5f ? m_BezierPathToCenter[i] : m_BezierPathToStack[i];
+                    LTBezierPath pathToRotate = m_AnimationRotationRatio[i] <= 0.5f ? m_BezierPathOrientationToCenter[i] : m_BezierPathOrientationToStack[i];
+                    float targetRatio = m_AnimationLocationRatio[i] <= 0.5f ? 1.0f : 0.0f;
+                    float currentRatio = m_AnimationLocationRatio[i] <= 0.5f ? (m_AnimationLocationRatio[i] * 2.0f) : ((m_AnimationLocationRatio[i] - 0.5f) * 2.0f);
+
+                    //pathToMove = getBezierPathFromInitialValue(pathToMove.pts, PassageList[i].localPosition);
+                    //pathToRotate = getBezierPathFromInitialValue(pathToRotate.pts, PassageList[i].localEulerAngles);
+                    
+                    //PassageList[i].SetAsLastSibling();
+                    AnimatePassageToGivenRatio(animationTime, delayOnPassage * Mathf.Abs(m_PreviousPassageIndex - i), leanType, i, currentRatio, targetRatio, pathToMove, pathToRotate, isUsingTwoAnimations: true);
+                }
                 //m_AnimationToShowRotationPassage[i] =
 
                 //m_PassageItems[i].transform.localPosition = Vector3.Lerp(m_PassageItems[i].transform.localPosition, m_BezierPathToCenter[i].point(0.0f), Time.deltaTime * m_SpeedPassageAnimation);
                 //m_PassageItems[i].transform.localRotation = Quaternion.Lerp(m_PassageItems[i].transform.localRotation, Quaternion.Euler(m_BezierPathOrientationToCenter[i].point(0.0f)), Time.deltaTime * m_SpeedPassageAnimation);
 
+            }
+            m_PreviousPassageIndex = passageIndexToShow;
+        }
+
+
+        
+        private void AnimatePassageToGivenRatio(float animationTime, float delayOnPassage, LeanTweenType leanType, int passageIndex, float currentRatio, float targetRatio, LTBezierPath bezierPathToMove, LTBezierPath bezierPathToRotate, bool isUsingTwoAnimations = false)
+        {
+
+            float timeModifier = Mathf.Abs(targetRatio - currentRatio);
+
+            if (m_AnimationLocationRatio[passageIndex] != targetRatio)
+            {
+
+                bool hasChangeSiblingIndex = false;
+                m_AnimationToShowPositionPassage[passageIndex] = LeanTween.value(PassageList[passageIndex].gameObject, currentRatio, targetRatio, animationTime * timeModifier).setDelay(delayOnPassage).setEase(leanType).setOnUpdate(
+                (float f) =>
+                {
+                    PassageList[passageIndex].localPosition = bezierPathToMove.pointNotNAN(f);
+                    if (isUsingTwoAnimations)
+                    {
+                        if (targetRatio == 1.0f)    //this is when passage goes from initial to center
+                        {
+                            m_AnimationLocationRatio[passageIndex] = f / 2.0f;
+                        }
+                        else if( targetRatio == 0.0f)
+                        {
+                            m_AnimationLocationRatio[passageIndex] = f / 2.0f + 0.5f;
+                        }
+                        else
+                        {
+                            Log.Warning("PassageAnimationMaanger", "Unknown Target ratio to animate Passages");
+                        }
+                    }
+                    else
+                    {
+                        m_AnimationLocationRatio[passageIndex] = f;
+                    }
+
+                    if( Mathf.Abs(f - targetRatio) < 0.05f && !hasChangeSiblingIndex)
+                    {
+                        hasChangeSiblingIndex = true;
+                        if (isUsingTwoAnimations)
+                            PassageList[passageIndex].SetSiblingIndex(NumberOfPassages);
+                        else
+                            PassageList[passageIndex].SetSiblingIndex(NumberOfPassages - 1 - passageIndex);
+                    }
+                    
+                }).setOnComplete(()=> {
+                    //if (isUsingTwoAnimations)
+                    //    PassageList[passageIndex].SetSiblingIndex(NumberOfPassages);
+                    //else
+                    //    PassageList[passageIndex].SetSiblingIndex(NumberOfPassages - 1 - passageIndex);
+                });
+                
+            }
+            else
+            {
+                //no ned to create movement animation - passage is already in initial position.
+            }
+
+            if (m_AnimationRotationRatio[passageIndex] != targetRatio)
+            {
+                m_AnimationToShowRotationPassage[passageIndex] = LeanTween.value(PassageList[passageIndex].gameObject, currentRatio, targetRatio, animationTime * timeModifier).setDelay(delayOnPassage).setEase(leanType).setOnUpdate(
+                    (float f) =>
+                    {
+                        //Log.Status("PassageAnimationManager", "Rotation : {0} at {1}  - pts: {2}-{3}-{4}-{5} ", bezierPathToRotate.pointNotNAN(f), f, bezierPathToRotate.pts[0], bezierPathToRotate.pts[1], bezierPathToRotate.pts[2], bezierPathToRotate.pts[3]);
+                        PassageList[passageIndex].localEulerAngles = bezierPathToRotate.pointNotNAN(f);
+                        if (isUsingTwoAnimations)
+                        {
+                            if (targetRatio == 1.0f)    //this is when passage goes from initial to center
+                            {
+                                m_AnimationRotationRatio[passageIndex] = f / 2.0f;
+                            }
+                            else if (targetRatio == 0.0f)
+                            {
+                                m_AnimationRotationRatio[passageIndex] = f / 2.0f + 0.5f;
+                            }
+                            else
+                            {
+                                Log.Warning("PassageAnimationMaanger", "Unknown Target ratio to animate Passages");
+                            }
+                        }
+                        else
+                        {
+                            m_AnimationRotationRatio[passageIndex] = f;
+                        }
+                        
+                    });
+            }
+            else
+            {
+                //No need to create rotation animation - passage is already in initial rotation.
             }
         }
 
@@ -295,7 +570,10 @@ namespace IBM.Watson.Widgets.Question
                 for (int i = 0; i < m_AnimationToShowPositionPassage.Length; i++)
                 {
                     if (m_AnimationToShowPositionPassage[i] != null)
+                    {
+                        m_AnimationToShowRotationPassage[i].hasUpdateCallback = false;
                         LeanTween.cancel(m_AnimationToShowPositionPassage[i].uniqueId);
+                    }
                     else
                         Log.Warning("PassageAnimationManager", "There is no animation defined for animation: {0} ", i);
                 }
@@ -306,7 +584,10 @@ namespace IBM.Watson.Widgets.Question
                 for (int i = 0; i < m_AnimationToShowRotationPassage.Length; i++)
                 {
                     if (m_AnimationToShowRotationPassage[i] != null)
+                    {
+                        m_AnimationToShowRotationPassage[i].hasUpdateCallback = false;
                         LeanTween.cancel(m_AnimationToShowRotationPassage[i].uniqueId);
+                    }
                     else
                         Log.Warning("PassageAnimationManager", "There is no animation defined for animation: {0} ", i);
                 }

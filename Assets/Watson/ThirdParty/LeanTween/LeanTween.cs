@@ -4506,6 +4506,12 @@ public class LTBezierPath {
 		return beziers[lengthRatio.Length-1].point( 1.0f );
 	}
 
+    public Vector3 pointNotNAN(float ratio)
+    {
+        Vector3 pointValue = point(ratio);
+        return new Vector3((float.IsNaN( pointValue.x) ? 0.0f: pointValue.x), (float.IsNaN(pointValue.y) ? 0.0f : pointValue.y), (float.IsNaN(pointValue.z) ? 0.0f : pointValue.z));
+    }
+
 	public void place2d( Transform transform, float ratio ){
 		transform.position = point( ratio );
 		ratio += 0.001f;
