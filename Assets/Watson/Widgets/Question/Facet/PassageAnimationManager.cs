@@ -297,7 +297,6 @@ namespace IBM.Watson.Widgets.Question
         //[SerializeField]
         private float m_OneDragModifier = 0.002f;
         private int m_SelectedPassageIndex = -1;
-        private float m_PercentCurrentPassage = 0.0f;
 
         private Vector3 worldOnPath = Vector3.up;
 
@@ -319,7 +318,7 @@ namespace IBM.Watson.Widgets.Question
                 }
                 else
                 {
-                    m_PercentCurrentPassage = Mathf.Clamp01(m_PercentCurrentPassage + movingInX);
+                    m_AnimationLocationRatio[m_SelectedPassageIndex] = Mathf.Clamp01(m_AnimationLocationRatio[m_SelectedPassageIndex] + movingInX);
                 }
 
 
@@ -342,17 +341,17 @@ namespace IBM.Watson.Widgets.Question
 
                 if (m_LastFrameOneFingerDrag < 0)
                 {
-                    if (m_PercentCurrentPassage > m_PercentToGoInitialPosition && m_PercentCurrentPassage < m_PercentToGoStackPosition)
+                    if (m_AnimationLocationRatio[m_SelectedPassageIndex] < m_PercentToGoInitialPosition)
                     {
-                        m_PercentCurrentPassage = 0.5f;
+                        m_AnimationLocationRatio[m_SelectedPassageIndex] = 0.0f;
                     }
-                    else if (m_PercentCurrentPassage < m_PercentToGoInitialPosition)
+                    else if (m_AnimationLocationRatio[m_SelectedPassageIndex] > m_PercentToGoStackPosition)
                     {
-                        m_PercentCurrentPassage = 0.0f;
+                        m_AnimationLocationRatio[m_SelectedPassageIndex] = 1.0f;
                     }
                     else
                     {
-                        m_PercentCurrentPassage = 1.0f;
+                        m_AnimationLocationRatio[m_SelectedPassageIndex] = 0.5f;
                     }
                 }
 
@@ -380,15 +379,15 @@ namespace IBM.Watson.Widgets.Question
                         LTBezierPath m_BezierPathCurrent;
                         LTBezierPath m_BezierPathOrientationCurrent;
                         float m_RatioBezierPathPassage = 0.0f;
-                        if (m_PercentCurrentPassage <= 0.5f)
+                        if (m_AnimationLocationRatio[m_SelectedPassageIndex] <= 0.5f)
                         {
-                            m_RatioBezierPathPassage = m_PercentCurrentPassage * 2.0f;
+                            m_RatioBezierPathPassage = m_AnimationLocationRatio[m_SelectedPassageIndex] * 2.0f;
                             m_BezierPathCurrent = m_BezierPathToCenter[i];
                             m_BezierPathOrientationCurrent = m_BezierPathOrientationToCenter[i];
                         }
                         else
                         {
-                            m_RatioBezierPathPassage = (m_PercentCurrentPassage - 0.5f) * 2.0f;
+                            m_RatioBezierPathPassage = (m_AnimationLocationRatio[m_SelectedPassageIndex] - 0.5f) * 2.0f;
                             m_BezierPathCurrent = m_BezierPathToStack[i];
                             m_BezierPathOrientationCurrent = m_BezierPathOrientationToStack[i];
                         }
