@@ -114,6 +114,10 @@ namespace IBM.Watson.Widgets.Question
 
 		}
 
+		/// <summary>
+		/// Callback for Location data.
+		/// </summary>
+		/// <param name="args">Arguments.</param>
 		private void OnLocationData( object [] args )
 		{
 			m_LocationData = args != null && args.Length > 0 ? args[0] as string : null;

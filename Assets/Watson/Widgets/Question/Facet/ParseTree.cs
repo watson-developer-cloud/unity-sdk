@@ -100,12 +100,19 @@ namespace IBM.Watson.Widgets.Question
             EventManager.Instance.UnregisterEventReceiver( Constants.Event.ON_QUESTION, OnQuestionData );
         }
 
+		/// <summary>
+		/// Callback for Parse data event.
+		/// </summary>
         private void OnParseData( object [] args )
         {
             m_ParseData = args != null && args.Length > 0 ? args[0] as Data.XRAY.ParseData : null;
             GenerateParseTree();
         }
 
+		/// <summary>
+		/// Callback for Question data event.
+		/// </summary>
+		/// <param name="args">Arguments.</param>
         private void OnQuestionData( object [] args )
         {
             m_QuestionData = args != null && args.Length > 0 ? args[0] as Data.XRAY.Questions : null;

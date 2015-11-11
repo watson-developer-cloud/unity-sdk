@@ -137,24 +137,38 @@ namespace IBM.Watson.Widgets.Question
 			return variantsString;
 		}
 
+		/// <summary>
+		/// Callback for Answer data event.
+		/// </summary>
+		/// <param name="args">Arguments.</param>
 		private void OnAnswerData( object [] args )
 		{
 			m_AnswerData = args != null && args.Length > 0 ? args[0] as Data.XRAY.Answers : null;
 			InitAnswers ();
 		}
 
+		/// <summary>
+		/// Callback for Question data event.
+		/// </summary>
+		/// <param name="args">Arguments.</param>
 		private void OnQuestionData( object [] args )
 		{
 			m_QuestionData = args != null && args.Length > 0 ? args[0] as Data.XRAY.Questions : null;
 			InitQuestions ();
 		}
 
+		/// <summary>
+		/// Initialize SubFacet with Answer data.
+		/// </summary>
 		private void InitAnswers()
 		{
 			AnswerString = m_AnswerData.answers[0].answerText + Variants();
 			Confidence = m_AnswerData.answers[0].confidence;
 		}
 
+		/// <summary>
+		/// Initialize SubFacet with Question data.
+		/// </summary>
 		private void InitQuestions()
 		{
 			QuestionString = m_QuestionData.questions[0].question.questionText;
