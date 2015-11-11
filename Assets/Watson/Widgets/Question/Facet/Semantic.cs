@@ -18,6 +18,9 @@
 
 using UnityEngine;
 using UnityEngine.UI;
+using IBM.Watson.Logging;
+using IBM.Watson.Utilities;
+using IBM.Watson.Data;
 
 namespace IBM.Watson.Widgets.Question
 {
@@ -53,6 +56,21 @@ namespace IBM.Watson.Widgets.Question
             }
         }
 
+		private Data.XRAY.Questions m_QuestionData = null;
+		private Data.XRAY.ParseData m_ParseData = null;
+		
+		private void OnEnable()
+		{
+			EventManager.Instance.RegisterEventReceiver( Constants.Event.ON_QUESTION, OnQuestionData );
+			EventManager.Instance.RegisterEventReceiver( Constants.Event.ON_QUESTION_PARSE, OnParseData );
+		}
+		
+		private void OnDisable()
+		{
+			EventManager.Instance.UnregisterEventReceiver( Constants.Event.ON_QUESTION, OnQuestionData );
+			EventManager.Instance.UnregisterEventReceiver( Constants.Event.ON_QUESTION_PARSE, OnParseData );
+		}
+
         /// <summary>
         /// Update the LAT view.
         /// </summary>
@@ -69,21 +87,14 @@ namespace IBM.Watson.Widgets.Question
             m_SemanticText.text = SemanticString;
         }
 
-		override public void Init()
-        {
-			base.Init ();
-
-            if (Question.QuestionData.QuestionDataObject.questions.Length > 0 && Question.QuestionData.QuestionDataObject.questions[0].question.lat.Length > 0)
-            {
-                LAT = Question.QuestionData.QuestionDataObject.questions[0].question.lat[0];
-            }
-            else
-            {
-                LAT = "n/a";
-            }
-
-            SemanticString = GenerateSemanticString();
-        }
+//		override public void Init()
+//        {
+//			base.Init ();
+//
+//
+//
+//           
+//        }
 
         /// <summary>
         /// Fired when Parse Data is set. Iterates through the LAT's features and concantinates features into a string.
@@ -94,9 +105,9 @@ namespace IBM.Watson.Widgets.Question
 
             //	Find the LAT index in the Parse Words
             int LATIndex = -1;
-            for (int i = 0; i < Question.QuestionData.ParseDataObject.Words.Length; i++)
+			for (int i = 0; i < m_ParseData.Words.Length; i++)
             {
-                if (Question.QuestionData.ParseDataObject.Words[i].Word == LAT)
+				if (m_ParseData.Words[i].Word == LAT)
                 {
                     LATIndex = i;
                 }
@@ -107,10 +118,10 @@ namespace IBM.Watson.Widgets.Question
             //	Iterate through the LAT's features and concantinate the strings together.
             if (LATIndex != -1)
             {
-                for (int k = 0; k < Question.QuestionData.ParseDataObject.Words[LATIndex].Features.Length; k++)
+				for (int k = 0; k < m_ParseData.Words[LATIndex].Features.Length; k++)
                 {
-                    semanticText += Question.QuestionData.ParseDataObject.Words[LATIndex].Features[k];
-                    if (k < Question.QuestionData.ParseDataObject.Words[LATIndex].Features.Length - 1)
+					semanticText += m_ParseData.Words[LATIndex].Features[k];
+					if (k < m_ParseData.Words[LATIndex].Features.Length - 1)
                     {
                         semanticText += ", ";
                     }
@@ -123,5 +134,34 @@ namespace IBM.Watson.Widgets.Question
 
             return semanticText;
         }
+
+		private void OnQuestionData( object [] args )
+		{
+			m_QuestionData = args != null && args.Length > 0 ? args[0] as Data.XRAY.Questions : null;
+			InitQuestion ();
+		}
+
+		private void OnParseData( object [] args )
+		{
+			m_ParseData = args != null && args.Length > 0 ? args[0] as Data.XRAY.ParseData : null;
+			InitParse ();
+		}
+
+		private void InitQuestion()
+		{
+			if (m_QuestionData.questions[0].question.lat.Length > 0)
+			{
+				LAT = m_QuestionData.questions[0].question.lat[0];
+			}
+			else
+			{
+				LAT = "n/a";
+			}
+		}
+
+		private void InitParse()
+		{
+			SemanticString = GenerateSemanticString();
+		}
     }
 }

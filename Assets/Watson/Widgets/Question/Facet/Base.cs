@@ -30,7 +30,7 @@ namespace IBM.Watson.Widgets.Question
         /// Holds a reference to the Question Widget.
         /// </summary>
         /// <value>The m_ question.</value>
-		public QuestionWidget Question { get; set; }
+//		public QuestionWidget Question { get; set; }
 
         protected virtual void Show() { }
         protected virtual void Hide() { }

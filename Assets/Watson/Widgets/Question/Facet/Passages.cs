@@ -20,6 +20,8 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using IBM.Watson.Logging;
+using IBM.Watson.Utilities;
+using IBM.Watson.Data;
 
 namespace IBM.Watson.Widgets.Question
 {
@@ -39,6 +41,18 @@ namespace IBM.Watson.Widgets.Question
 		private RectTransform m_PassageCanvasRectTransform;
 
 		private List<PassageItem> m_PassageItems = new List<PassageItem>();
+
+		private Data.XRAY.Answers m_AnswerData = null;
+		
+		private void OnEnable()
+		{
+			EventManager.Instance.RegisterEventReceiver( Constants.Event.ON_QUESTION_ANSWERS, OnAnswerData );
+		}
+		
+		private void OnDisable()
+		{
+			EventManager.Instance.UnregisterEventReceiver( Constants.Event.ON_QUESTION_ANSWERS, OnAnswerData );
+		}
 		
 		/// <summary>
 		/// Dynamically creates Passage Items based on data.
@@ -48,9 +62,9 @@ namespace IBM.Watson.Widgets.Question
 			Log.Debug("Passages", "m_PassageItems.count: " + m_PassageItems.Count);
 			base.Init ();
 
-			for(int i = 0; i < Question.QuestionData.AnswerDataObject.answers.Length ; i++) {
+			for(int i = 0; i < m_AnswerData.answers.Length ; i++) {
 				Log.Debug("Passages", "adding passage " + i);
-				GameObject PassageItemGameObject = Instantiate(m_PassageItemPrefab, new Vector3(m_RectTransformPosX, m_RectTransformPosY, m_RectTransformPosZ + m_RectTransformZSpacing * (Question.QuestionData.AnswerDataObject.answers.Length - i)), Quaternion.identity) as GameObject;
+				GameObject PassageItemGameObject = Instantiate(m_PassageItemPrefab, new Vector3(m_RectTransformPosX, m_RectTransformPosY, m_RectTransformPosZ + m_RectTransformZSpacing * (m_AnswerData.answers.Length - i)), Quaternion.identity) as GameObject;
 				PassageItemGameObject.name = "PassageItem_" + i.ToString("00");
 				RectTransform PassageItemRectTransform = PassageItemGameObject.GetComponent<RectTransform>();
 				PassageItemRectTransform.SetParent(m_PassageCanvasRectTransform, false);
@@ -59,10 +73,10 @@ namespace IBM.Watson.Widgets.Question
 				PassageItemRectTransform.SetAsFirstSibling();
 				m_PassageItems.Add(PassageItem);
 //				PassageItem.PassageString = m_Question.QuestionData.AnswerDataObject.answers[0].evidence[i].passage;
-				PassageItem.PassageString = Question.QuestionData.AnswerDataObject.answers[i].answerText;
-				PassageItem.MaxConfidence = Question.QuestionData.AnswerDataObject.answers[0].confidence;
-				PassageItem.MinConfidence = Question.QuestionData.AnswerDataObject.answers[Question.QuestionData.AnswerDataObject.answers.Length - 1].confidence;
-				PassageItem.Confidence = Question.QuestionData.AnswerDataObject.answers[i].confidence;
+				PassageItem.PassageString = m_AnswerData.answers[i].answerText;
+				PassageItem.MaxConfidence = m_AnswerData.answers[0].confidence;
+				PassageItem.MinConfidence = m_AnswerData.answers[m_AnswerData.answers.Length - 1].confidence;
+				PassageItem.Confidence = m_AnswerData.answers[i].confidence;
 			}
 		}
 		
@@ -76,6 +90,12 @@ namespace IBM.Watson.Widgets.Question
 				Destroy(m_PassageItems[0].gameObject);
 				m_PassageItems.Remove(m_PassageItems[0]);
 			}
+		}
+
+		private void OnAnswerData( object [] args )
+		{
+			m_AnswerData = args != null && args.Length > 0 ? args[0] as Data.XRAY.Answers : null;
+			Init ();
 		}
 	}
 }

@@ -19,6 +19,9 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using IBM.Watson.Logging;
+using IBM.Watson.Utilities;
+using IBM.Watson.Data;
 
 namespace IBM.Watson.Widgets.Question
 {
@@ -72,6 +75,18 @@ namespace IBM.Watson.Widgets.Question
 			}
 		}
 
+		private string m_LocationData = null;
+		
+		private void OnEnable()
+		{
+			EventManager.Instance.RegisterEventReceiver( Constants.Event.ON_QUESTION_LOCATION, OnLocationData );
+		}
+		
+		private void OnDisable()
+		{
+			EventManager.Instance.UnregisterEventReceiver( Constants.Event.ON_QUESTION_LOCATION, OnLocationData );
+		}
+
 		/// <summary>
 		/// Set LocationString from data.
 		/// </summary>
@@ -79,7 +94,7 @@ namespace IBM.Watson.Widgets.Question
         {
 			base.Init ();
 
-            LocationString = Question.QuestionData.Location;
+			LocationString = m_LocationData;
             UpdateLocation();
         }
 
@@ -97,6 +112,12 @@ namespace IBM.Watson.Widgets.Question
 		private void UpdateMap()
 		{
 
+		}
+
+		private void OnLocationData( object [] args )
+		{
+			m_LocationData = args != null && args.Length > 0 ? args[0] as string : null;
+			Init ();
 		}
     }
 }

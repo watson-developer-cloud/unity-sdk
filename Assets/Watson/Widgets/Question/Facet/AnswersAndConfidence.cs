@@ -17,6 +17,9 @@
 */
 
 using UnityEngine;
+using IBM.Watson.Logging;
+using IBM.Watson.Utilities;
+using IBM.Watson.Data;
 
 namespace IBM.Watson.Widgets.Question
 {
@@ -29,6 +32,18 @@ namespace IBM.Watson.Widgets.Question
         [SerializeField]
         private AnswerConfidenceBar[] m_AnswerConfidenceBars;
 
+		private Data.XRAY.Answers m_AnswerData = null;
+
+		private void OnEnable()
+		{
+			EventManager.Instance.RegisterEventReceiver( Constants.Event.ON_QUESTION_ANSWERS, OnAnswerData );
+		}
+		
+		private void OnDisable()
+		{
+			EventManager.Instance.UnregisterEventReceiver( Constants.Event.ON_QUESTION_ANSWERS, OnAnswerData );
+		}
+
 		/// <summary>
 		/// Iterate through Answer and Confidence bars and set the Answer and ConfidenceIndex
 		/// </summary>
@@ -39,10 +54,10 @@ namespace IBM.Watson.Widgets.Question
 
             for (int i = 0; i < m_AnswerConfidenceBars.Length; i++)
             {
-                if ( i < Question.QuestionData.AnswerDataObject.answers.Length )
+				if ( i < m_AnswerData.answers.Length )
                 {
-                    m_AnswerConfidenceBars[i].Answer = Question.QuestionData.AnswerDataObject.answers[i].answerText;
-                    m_AnswerConfidenceBars[i].Confidence = Question.QuestionData.AnswerDataObject.answers[i].confidence;
+					m_AnswerConfidenceBars[i].Answer = m_AnswerData.answers[i].answerText;
+					m_AnswerConfidenceBars[i].Confidence = m_AnswerData.answers[i].confidence;
                 }
                 else
                 {
@@ -51,5 +66,11 @@ namespace IBM.Watson.Widgets.Question
                 }
             }
         }
+
+		private void OnAnswerData( object [] args )
+		{
+			m_AnswerData = args != null && args.Length > 0 ? args[0] as Data.XRAY.Answers : null;
+			Init ();
+		}
     }
 }
