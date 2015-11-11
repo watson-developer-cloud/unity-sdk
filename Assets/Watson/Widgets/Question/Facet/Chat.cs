@@ -41,41 +41,36 @@ namespace IBM.Watson.Widgets.Question
         [SerializeField]
         private ScrollRect m_ScrollRect = null;
 
-        private IQuestionData m_QuestionData = null;
-
-        private void Start()
+        private void OnEnable()
         {
-            QuestionWidget question = GetComponentInParent<QuestionWidget>();
-            if (question != null)
-            {
-                m_QuestionData = question.QuestionData;
-				if(m_QuestionData != null){
-                	m_QuestionData.OnAnswerEvent += OnAnswer;
-                	m_QuestionData.OnQuestionEvent += OnQuestion;
-				}
-				else{
-					Log.Error("Question - Chat", "There is not question data found.");
-				}
-            }
+            EventManager.Instance.RegisterEventReceiver( Constants.Event.ON_QUESTION, OnQuestion );
+            EventManager.Instance.RegisterEventReceiver( Constants.Event.ON_QUESTION_ANSWERS, OnAnswer );
         }
 
         private void OnDisable()
         {
-            if (m_QuestionData != null)
+            EventManager.Instance.UnregisterEventReceiver( Constants.Event.ON_QUESTION, OnQuestion );
+            EventManager.Instance.UnregisterEventReceiver( Constants.Event.ON_QUESTION_ANSWERS, OnAnswer );
+        }
+
+        private void OnQuestion(object [] args)
+        {
+            if ( args != null && args.Length > 0 )
             {
-                m_QuestionData.OnAnswerEvent -= OnAnswer;
-                m_QuestionData.OnQuestionEvent -= OnQuestion;
+                Data.XRAY.Questions questions = args[0] as Data.XRAY.Questions;
+                if ( questions != null && questions.HasQuestion() )
+                    AddChat( questions.questions[0].question.questionText, m_QuestionPrefab.gameObject );
             }
         }
 
-        private void OnQuestion(string add)
+        private void OnAnswer( object [] args)
         {
-            AddChat(add, m_QuestionPrefab.gameObject);
-        }
-
-        private void OnAnswer(string add)
-        {
-            AddChat(add, m_AnswerPrefab.gameObject);
+            if ( args != null && args.Length > 0 )
+            {
+                Data.XRAY.Answers answers = args[0] as Data.XRAY.Answers;
+                if ( answers != null && answers.HasAnswer() )
+                    AddChat( answers.answers[0].answerText, m_AnswerPrefab.gameObject );
+            }
         }
 
         private void AddChat(string add, GameObject prefab)

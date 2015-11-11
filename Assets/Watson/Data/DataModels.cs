@@ -338,7 +338,7 @@ namespace IBM.Watson.Data
                 }
                 catch (Exception e)
                 {
-                    Log.Error("ITM", "Exception during parse: {0}", e.ToString());
+                    Log.Error("XRAY", "Exception during parse: {0}", e.ToString());
                 }
 
                 return false;

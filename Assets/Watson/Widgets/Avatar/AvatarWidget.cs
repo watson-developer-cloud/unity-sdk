@@ -115,8 +115,6 @@ namespace IBM.Watson.Widgets.Avatar
         private bool m_GettingParse = false;
 
         [SerializeField]
-        private string m_ClassifierId = "5E00F7x2-nlc-540";     // default to XRAY classifier
-        [SerializeField]
         private float m_SoundVisualizerModifier = 20.0f;
         [SerializeField]
         private string m_Hello = "Hello";
@@ -286,7 +284,7 @@ namespace IBM.Watson.Widgets.Avatar
 
             State = AvatarState.CONNECTING;
             // login to XRAY, then select the pipeline
-            m_XRAY.Login(OnLogin);
+            m_XRAY.Initialize(OnInitialize);
             // Find our dialog ID
             if (!string.IsNullOrEmpty(m_DialogName))
                 m_Dialog.GetDialogs(OnFindDialog);
@@ -310,21 +308,11 @@ namespace IBM.Watson.Widgets.Avatar
             }
         }
 
-        private void OnLogin(bool success)
+        private void OnInitialize(bool success)
         {
             if (!success)
             {
-                Log.Error("AvtarWidget", "Failed to login to XRAY.");
-                State = AvatarState.ERROR;
-            }
-            else
-                m_XRAY.GetPipeline(m_Pipeline, true, OnPipeline);
-        }
-        private void OnPipeline(Pipeline pipeline)
-        {
-            if (pipeline == null)
-            {
-                Log.Equals("AvatarWidget", "Failed to select pipeline.");
+                Log.Error("AvtarWidget", "Failed to initialize XRAY.");
                 State = AvatarState.ERROR;
             }
             else
@@ -411,12 +399,13 @@ namespace IBM.Watson.Widgets.Avatar
             if ( result == null )
                 throw new WatsonException( "ClassifyResult expected." );
 
-            if (Mood != MoodType.SLEEPING)
+            if (State == AvatarState.LISTENING && Mood != MoodType.SLEEPING)
             {
                 m_ClassifyResult = result;
-                State = AvatarState.LISTENING;
+                if ( result.top_class.Contains( "-" ) )
+                    m_Pipeline = result.top_class.Substring( result.top_class.IndexOf('-') + 1 );
 
-                if (m_XRAY.AskQuestion(result.text, OnAskQuestion))
+                if (m_XRAY.AskQuestion(m_Pipeline, result.text, OnAskQuestion))
                 {
                     State = AvatarState.ANSWERING;
                 }
@@ -438,11 +427,10 @@ namespace IBM.Watson.Widgets.Avatar
             if ( result == null )
                 throw new WatsonException( "ClassifyResult expected." );
 
-            if ( Mood != MoodType.SLEEPING)
+            if ( State == AvatarState.LISTENING && Mood != MoodType.SLEEPING)
             {
                 m_ClassifyResult = result;
 
-                State = AvatarState.LISTENING;
                 if (!string.IsNullOrEmpty(m_DialogId))
                 {
                     if (m_Dialog.Converse(m_DialogId, result.text, OnDialogResponse,
@@ -504,14 +492,17 @@ namespace IBM.Watson.Widgets.Avatar
             if (m_QuestionResult != null && m_QuestionResult.HasQuestion())
             {
                 Watson.Data.XRAY.Question topQuestion = m_QuestionResult.questions[0];
-                if (OnQuestionEvent != null)
-                    OnQuestionEvent(topQuestion.question.questionText);
+
+                InstatiateQuestionWidget();
+
+                EventManager.Instance.SendEvent( Constants.Event.ON_QUESTION, m_QuestionResult );
+                EventManager.Instance.SendEvent( Constants.Event.ON_QUESTION_LOCATION, XRAY.Location );
 
                 m_AnswerResult = null;
                 m_ParseData = null;
 
-                if (!m_XRAY.GetAnswers(topQuestion.transactionId, OnAnswerQuestion)
-                    || !XRAY.GetParseData(topQuestion.transactionId, OnParseData))
+                if (!m_XRAY.GetAnswers(m_Pipeline, topQuestion.transactionId, OnAnswerQuestion)
+                    || !XRAY.GetParseData(m_Pipeline, topQuestion.transactionId, OnParseData))
                 {
                     Log.Error("AvatarWidget", "Failed to call GetAnswers()");
                     State = AvatarState.ERROR;
@@ -527,7 +518,7 @@ namespace IBM.Watson.Widgets.Avatar
         private void OnAnswerQuestion(Answers answers)
         {
             m_AnswerResult = answers;
-            UpdateQuestionWidget();
+            EventManager.Instance.SendEvent( Constants.Event.ON_QUESTION_ANSWERS, m_AnswerResult );
 
             if (answers != null && answers.HasAnswer())
             {
@@ -537,16 +528,17 @@ namespace IBM.Watson.Widgets.Avatar
                 string answer = answers.answers[0].answerText;
                 EventManager.Instance.SendEvent(Constants.Event.ON_DEBUG_MESSAGE, answer);
 
-                if (OnAnswerEvent != null)
-                    OnAnswerEvent(answer);
-
                 m_TextOutput.SendData(new TextData(answer));
             }
+
+            UpdateQuestionWidget();
         }
 
         private void OnParseData(ParseData data)
         {
             m_ParseData = data;
+            EventManager.Instance.SendEvent( Constants.Event.ON_QUESTION_PARSE, m_ParseData );
+
             UpdateQuestionWidget();
         }
 
@@ -554,8 +546,9 @@ namespace IBM.Watson.Widgets.Avatar
         {
             if (m_ParseData != null && m_AnswerResult != null)
             {
-                InstatiateQuestionWidget();
+                // send all data up to the question widget facets..
 
+                // TODO: Remove the UpdateFacets() once they've all been converted to using the event.
                 if (m_FocusQuestion != null)
                     m_FocusQuestion.UpdateFacets();
                 else
@@ -576,7 +569,7 @@ namespace IBM.Watson.Widgets.Avatar
                 m_FocusQuestion = questionObject.GetComponentInChildren<QuestionWidget>();
                 if (m_FocusQuestion == null)
                     throw new WatsonException("Question prefab is missing QuestionWidget");
-                m_FocusQuestion.QuestionData = this;
+                m_FocusQuestion.QuestionData = this;   // TODO: Remove after switching to events.
                 m_FocusQuestion.Focused = true;	//currently our focus object
             }
         }
@@ -733,6 +726,7 @@ namespace IBM.Watson.Widgets.Avatar
         }
         #endregion
 
+        // TODO: Remove after switching over to using events.
         #region IQuestionData implementation
         /// <summary>
         /// Gets the location.
@@ -781,10 +775,6 @@ namespace IBM.Watson.Widgets.Avatar
                 return m_ParseData;
             }
         }
-
-        public OnMessage OnQuestionEvent { get; set; }
-        public OnMessage OnAnswerEvent { get; set; }
-
         #endregion
     }
 }
