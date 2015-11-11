@@ -143,9 +143,10 @@ namespace IBM.Watson.Widgets
         #region Event Handlers
         public void OnDebugCommand( object [] args )
         {
-            if ( args != null && args.Length > 0 && args[0] is string )
+            string text = args != null && args.Length > 0 ? args[0] as string : string.Empty;
+            if (! string.IsNullOrEmpty( text ) )
             {
-                if (!m_NLC.Classify(m_ClassifierId, (string)args[0], OnClassified))
+                if (!m_NLC.Classify(m_ClassifierId, text, OnClassified))
                     Log.Error("AvatarWidget", "Failed to send {0} to NLC.", (string)args[0]);
             }
         }
