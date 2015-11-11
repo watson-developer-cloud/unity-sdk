@@ -53,8 +53,9 @@ namespace IBM.Watson.Widgets.Question
 		[SerializeField]
 		private List<GameObject> m_Facets = new List<GameObject>();
 
-		private List<GameObject> ThunderstoneFacets = new List<GameObject>();
-		private List<GameObject> WoodsideFacets = new List<GameObject>();
+		private List<GameObject> m_DefaultFacets = new List<GameObject>();
+		private List<GameObject> m_ThunderstoneFacets = new List<GameObject>();
+		private List<GameObject> m_WoodsideFacets = new List<GameObject>();
 
 		[SerializeField]
 		private List<Transform> m_SidePresentations = new List<Transform>();
@@ -313,19 +314,26 @@ namespace IBM.Watson.Widgets.Question
 			Cube.enabled = false;
 
 			//	populate facets
-			ThunderstoneFacets.Add(m_FacetTitle);
-			ThunderstoneFacets.Add(m_FacetAnswers);
-			ThunderstoneFacets.Add(m_FacetQuestion);
-			ThunderstoneFacets.Add(m_FacetEvidence);
-			ThunderstoneFacets.Add(m_FacetLocation);
-			ThunderstoneFacets.Add(m_FacetChat);
+			m_DefaultFacets.Add(m_FacetTitle);
+			m_DefaultFacets.Add(m_FacetTitle);
+			m_DefaultFacets.Add(m_FacetTitle);
+			m_DefaultFacets.Add(m_FacetTitle);
+			m_DefaultFacets.Add(m_FacetTitle);
+			m_DefaultFacets.Add(m_FacetTitle);
+			
+			m_ThunderstoneFacets.Add(m_FacetTitle);
+			m_ThunderstoneFacets.Add(m_FacetAnswers);
+			m_ThunderstoneFacets.Add(m_FacetQuestion);
+			m_ThunderstoneFacets.Add(m_FacetEvidence);
+			m_ThunderstoneFacets.Add(m_FacetLocation);
+			m_ThunderstoneFacets.Add(m_FacetChat);
 
-			WoodsideFacets.Add(m_FacetTitle);
-			WoodsideFacets.Add(m_FacetPassage);
-			WoodsideFacets.Add(m_FacetQuestion);
-			WoodsideFacets.Add(m_FacetEvidence);
-			WoodsideFacets.Add(m_FacetLocation);
-			WoodsideFacets.Add(m_FacetChat);
+			m_WoodsideFacets.Add(m_FacetTitle);
+			m_WoodsideFacets.Add(m_FacetPassage);
+			m_WoodsideFacets.Add(m_FacetQuestion);
+			m_WoodsideFacets.Add(m_FacetEvidence);
+			m_WoodsideFacets.Add(m_FacetLocation);
+			m_WoodsideFacets.Add(m_FacetChat);
 
 			GenerateSides();
         }
