@@ -81,6 +81,10 @@ namespace IBM.Watson.Widgets.Question
             }
         }
 
+		/// <summary>
+		/// Callback for Answer Data event.
+		/// </summary>
+		/// <param name="args">Arguments.</param>
 		private void OnAnswerData( object [] args )
 		{
 			m_AnswerData = args != null && args.Length > 0 ? args[0] as Data.XRAY.Answers : null;

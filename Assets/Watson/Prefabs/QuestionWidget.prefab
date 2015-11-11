@@ -2631,7 +2631,7 @@ GameObject:
   - 82: {fileID: 8228092}
   - 114: {fileID: 11429846}
   - 114: {fileID: 11490106}
-  - 114: {fileID: 11425846}
+  - 114: {fileID: 11416412}
   m_Layer: 14
   m_Name: QuestionWidget
   m_TagString: QuestionOnFocus
@@ -12328,52 +12328,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
---- !u!114 &11420172
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 151286}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1301386320, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
---- !u!114 &11424070
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 161818}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ae469cfa8dd5487d85fe0964e340659, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_uiFaceOnSide: []
-  m_presentationSide: []
-  m_ProjectionSide: []
-  m_StatinoaryRotationSpeed: 10
-  m_StatinoaryRotationVector: {x: 0, y: 1, z: 0}
-  m_TimeForComingToScene: 1
-  m_EaseForComingToScene: 30
-  m_PositionBeforeComing: {x: 0, y: 0, z: 0}
-  m_PositionAfterComing: {x: 0, y: 0, z: 0}
-  m_TimeForFoldingUnfolding: 1
-  m_EaseForUnfolding: 7
-  m_PositionCubeOffsetUnfold: {x: 0, y: 0, z: 0}
-  m_DistanceFromCameraInZAfterUnfolding: 100
-  m_TimeForFocusingUnfocusing: 1
-  m_EaseForFocusing: 7
-  m_EaseForUnfocusing: 7
-  timeForLeavingTheScene: 1
-  easeForGoingFromScene: 21
---- !u!114 &11425846
+--- !u!114 &11416412
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -12401,7 +12356,7 @@ MonoBehaviour:
       m_Bits: 16384
     m_Callback: 202
   m_FullScreenDragMappings:
-  - m_DragLayerObject: {fileID: 165892}
+  - m_DragLayerObject: {fileID: 0}
     m_NumberOfFinger: 1
     m_SortingLayer: 0
     m_Callback: 203
@@ -12409,6 +12364,63 @@ MonoBehaviour:
     m_NumberOfFinger: 1
     m_SortingLayer: 1
     m_Callback: 204
+--- !u!114 &11420172
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 151286}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1301386320, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+--- !u!114 &11424070
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 161818}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ae469cfa8dd5487d85fe0964e340659, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_uiFaceOnSide:
+  - {fileID: 176488}
+  - {fileID: 173190}
+  - {fileID: 112784}
+  - {fileID: 104190}
+  - {fileID: 175640}
+  - {fileID: 187408}
+  m_presentationSide:
+  - {fileID: 127036}
+  - {fileID: 144244}
+  - {fileID: 133564}
+  - {fileID: 191902}
+  - {fileID: 179838}
+  - {fileID: 113326}
+  m_ProjectionSide: []
+  m_StatinoaryRotationSpeed: 10
+  m_StatinoaryRotationVector: {x: 0, y: 1, z: 0}
+  m_TimeForComingToScene: 1
+  m_EaseForComingToScene: 6
+  m_PositionBeforeComing: {x: 0, y: -40, z: 0}
+  m_PositionAfterComing: {x: 0, y: 40, z: 0}
+  m_TimeForFoldingUnfolding: 1
+  m_EaseForUnfolding: 7
+  m_PositionCubeOffsetUnfold: {x: 0, y: 2.5, z: 0}
+  m_DistanceFromCameraInZAfterUnfolding: 120
+  m_TimeForFocusingUnfocusing: 1
+  m_EaseForFocusing: 7
+  m_EaseForUnfocusing: 7
+  timeForLeavingTheScene: .600000024
+  easeForGoingFromScene: 20
 --- !u!114 &11428634
 MonoBehaviour:
   m_ObjectHideFlags: 1

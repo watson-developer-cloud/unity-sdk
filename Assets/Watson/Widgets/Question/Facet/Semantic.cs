@@ -126,18 +126,29 @@ namespace IBM.Watson.Widgets.Question
             return semanticText;
         }
 
+		/// <summary>
+		/// Callback for Question Data event.
+		/// </summary>
+		/// <param name="args">Arguments.</param>
 		private void OnQuestionData( object [] args )
 		{
 			m_QuestionData = args != null && args.Length > 0 ? args[0] as Data.XRAY.Questions : null;
 			InitQuestion ();
 		}
 
+		/// <summary>
+		/// Callback for Parse Data event.
+		/// </summary>
+		/// <param name="args">Arguments.</param>
 		private void OnParseData( object [] args )
 		{
 			m_ParseData = args != null && args.Length > 0 ? args[0] as Data.XRAY.ParseData : null;
 			InitParse ();
 		}
 
+		/// <summary>
+		/// Initialize SubFacet with Question data.
+		/// </summary>
 		private void InitQuestion()
 		{
 			if (m_QuestionData.questions[0].question.lat.Length > 0)
@@ -150,6 +161,9 @@ namespace IBM.Watson.Widgets.Question
 			}
 		}
 
+		/// <summary>
+		/// Initialize SubFacet with Parse Data.
+		/// </summary>
 		private void InitParse()
 		{
 			SemanticString = GenerateSemanticString();
