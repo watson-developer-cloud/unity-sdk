@@ -16,6 +16,8 @@
 * @author Richard Lyle (rolyle@us.ibm.com)
 */
 
+#define EXPORT_QUESTIONS
+
 using System.Collections;
 using IBM.Watson.Services.v1;
 using IBM.Watson.Logging;
@@ -44,6 +46,9 @@ namespace IBM.Watson.UnitTests
             var xml = new XmlDocument();
             xml.LoadXml( Encoding.UTF8.GetString( question_data ) );
 
+#if EXPORT_QUESTIONS
+            StringBuilder WoodsideCSV = new StringBuilder();
+
             XmlElement answerKey = xml["answerkey"] as XmlElement;
             foreach( var node in answerKey.ChildNodes )
             {
@@ -54,8 +59,15 @@ namespace IBM.Watson.UnitTests
                 string text = question.GetAttribute("text" );
                 Log.Status( "TestDeepQA", "Question: {0}", text );
 
-                Test( m_QA.AskQuestion( text, OnAskQuestion ) );
+                //Test( m_QA.AskQuestion( text, OnAskQuestion ) );
+
+                if ( text.Contains( "," ) )
+                    text = "\"" + text + "\"";
+                WoodsideCSV.Append( text + ",question-woodside\r\n" );
             }
+
+            File.WriteAllText( Application.dataPath + "/../Docs/WoodsideQuestions.csv", WoodsideCSV.ToString() );
+#endif
 
             yield break;
         }
