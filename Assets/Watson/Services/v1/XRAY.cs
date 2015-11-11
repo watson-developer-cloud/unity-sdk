@@ -19,7 +19,7 @@
 
 using FullSerializer;
 using IBM.Watson.Connection;
-using IBM.Watson.Data.ITM;
+using IBM.Watson.Data.XRAY;
 using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
 using MiniJSON;
@@ -31,10 +31,10 @@ using UnityEngine;
 namespace IBM.Watson.Services.v1
 {
     /// <summary>
-    /// This class wraps the ITM back-end service.
+    /// This class wraps the XRAY back-end service.
     /// </summary>
     /// <remarks>This is an experimental service.</remarks>
-    public class ITM
+    public class XRAY
     {
         #region Public Types
         /// <summary>
@@ -82,7 +82,16 @@ namespace IBM.Watson.Services.v1
         #region Private Data
         private static fsSerializer sm_Serializer = new fsSerializer();
         private Pipeline m_SelectedPipeline = null;
-        private const string SERVICE_ID = "ItmV1";
+        private const string SERVICE_ID = "XrayV1";
+        private const string XRAY_SUBSYSTEM = "XRAY";
+
+        private const string LOGIN = "/ITM/en/user/";
+        private const string GET_PIPELINES = "/ITM/en/user/ibm";
+        private const string GET_QUESTIONS = "/ITM/en/stream";
+        private const string GET_QUESTION = "/ITM/en/transaction";
+        private const string GET_ANSWERS = "/ITM/en/answers";
+        private const string GET_PARSE = "/ITM/en/parse";
+        private const string ASK_QUESTION = "/ITM/en/ask/";
         #endregion
 
         #region Login
@@ -93,7 +102,7 @@ namespace IBM.Watson.Services.v1
         public delegate void OnLogin(bool success);
 
         /// <summary>
-        /// Login into ITM.
+        /// Login into XRAY.
         /// </summary>
         /// <param name="callback">The callback to invoke on success or failure.</param>
         /// <returns>Returns true if the request is submitted.</returns>
@@ -102,7 +111,7 @@ namespace IBM.Watson.Services.v1
             if (callback == null)
                 throw new ArgumentNullException("callback");
 
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/ITM/en/user/");
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, LOGIN );
             if (connector == null)
                 return false;
 
@@ -136,7 +145,7 @@ namespace IBM.Watson.Services.v1
                 }
                 catch( Exception e )
                 {
-                    Log.Error( "ITM", "Login exception: {0}", e.ToString() );
+                    Log.Error( XRAY_SUBSYSTEM, "Login exception: {0}", e.ToString() );
                     resp.Success = false;
                 }
             }
@@ -169,9 +178,9 @@ namespace IBM.Watson.Services.v1
             private string m_Name = null;
             private bool m_Select = false;
             private OnGetPipeline m_Callback = null;
-            private ITM m_Service = null;
+            private XRAY m_Service = null;
 
-            public GetPipelineReq(string name, bool select, OnGetPipeline callback, ITM service)
+            public GetPipelineReq(string name, bool select, OnGetPipeline callback, XRAY service)
             {
                 m_Name = name;
                 m_Select = select;
@@ -202,13 +211,13 @@ namespace IBM.Watson.Services.v1
                     if (m_Callback != null)
                         m_Callback(null);
                     if (m_Select)
-                        Log.Error("ITM", "Failed to select pipeline {0}", m_Name);
+                        Log.Error(XRAY_SUBSYSTEM, "Failed to select pipeline {0}", m_Name);
                 }
             }
         };
 
         /// <summary>
-        /// Get all pipelines from the ITM service. This invokes the callback with an array of all available pipelines.
+        /// Get all pipelines from the XRAY service. This invokes the callback with an array of all available pipelines.
         /// </summary>
         /// <param name="callback">The callback to invoke.</param>
         /// <returns>Returns true if request was sent, if a failure occurs the callback will be invoked with null.</returns>
@@ -217,7 +226,7 @@ namespace IBM.Watson.Services.v1
             if (callback == null)
                 throw new ArgumentNullException("callback");
 
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/ITM/en/user/ibm");
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, GET_PIPELINES );
             if (connector == null)
                 return false;
 
@@ -252,7 +261,7 @@ namespace IBM.Watson.Services.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("ITM", "GetPipelines Exception: {0}", e.ToString());
+                    Log.Error(XRAY_SUBSYSTEM, "GetPipelines Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -277,7 +286,7 @@ namespace IBM.Watson.Services.v1
             if (SelectedPipeline == null)
                 throw new WatsonException("You must select a pipeline before calling GetQuestions()");
 
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/ITM/en/stream");
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, GET_QUESTIONS );
             if (connector == null)
                 return false;
 
@@ -316,7 +325,7 @@ namespace IBM.Watson.Services.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("ITM", "GetQuestions Exception: {0}", e.ToString());
+                    Log.Error(XRAY_SUBSYSTEM, "GetQuestions Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -338,7 +347,7 @@ namespace IBM.Watson.Services.v1
             if (callback == null)
                 throw new ArgumentNullException("callback");
 
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/ITM/en/transaction");
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, GET_QUESTION );
             if (connector == null)
                 return false;
 
@@ -364,7 +373,7 @@ namespace IBM.Watson.Services.v1
             if (callback == null)
                 throw new ArgumentNullException("callback");
 
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/ITM/en/answers");
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, GET_ANSWERS );
             if (connector == null)
                 return false;
 
@@ -399,7 +408,7 @@ namespace IBM.Watson.Services.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("ITM", "GetAnswers Exception: {0}", e.ToString());
+                    Log.Error(XRAY_SUBSYSTEM, "GetAnswers Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -426,7 +435,7 @@ namespace IBM.Watson.Services.v1
             if (SelectedPipeline == null)
                 throw new WatsonException("You must select a pipeline before calling GetParseData()");
 
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/ITM/en/parse");
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, GET_PARSE );
             if (connector == null)
                 return false;
 
@@ -453,7 +462,7 @@ namespace IBM.Watson.Services.v1
             }
             catch (Exception e)
             {
-                Log.Error("ITM", "Exception during parse: {0}", e.ToString());
+                Log.Error(XRAY_SUBSYSTEM, "Exception during parse: {0}", e.ToString());
                 resp.Success = false;
             }
 
@@ -488,7 +497,7 @@ namespace IBM.Watson.Services.v1
             question = question.Replace("+", "%20");
             question = question.Replace("%0a", "");
 
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/ITM/en/ask/" + SelectedPipeline.clientId + "/" + SelectedPipeline.pipelineName);
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, ASK_QUESTION + SelectedPipeline.clientId + "/" + SelectedPipeline.pipelineName);
             if (connector == null)
                 return false;
 
@@ -525,7 +534,7 @@ namespace IBM.Watson.Services.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("ITM", "GetAnswers Exception: {0}", e.ToString());
+                    Log.Error(XRAY_SUBSYSTEM, "GetAnswers Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
