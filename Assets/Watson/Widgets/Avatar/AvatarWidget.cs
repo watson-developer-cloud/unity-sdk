@@ -355,7 +355,8 @@ namespace IBM.Watson.Widgets.Avatar
         /// <param name="args"></param>
         public void OnClassifyFailure( object [] args )
         {
-            m_TextOutput.SendData(new TextData(m_RecognizeFailure));
+            if ( Mood != MoodType.SLEEPING )
+                m_TextOutput.SendData(new TextData(m_RecognizeFailure));
             State = AvatarState.LISTENING;
         }
 

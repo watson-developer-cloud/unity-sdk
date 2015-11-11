@@ -28,6 +28,7 @@ using IBM.Watson.Logging;
 
 namespace IBM.Watson.Editor
 {
+
     class NLCTrainer : EditorWindow
     {
         private void OnEnable()
@@ -91,7 +92,7 @@ namespace IBM.Watson.Editor
         private void OnClassiferTrained( Classifier classifier )
         {
             if (classifier == null)
-                Log.Error( "NLCTrainer", "Failed to train new classifier." );
+                EditorUtility.DisplayDialog( "ERROR", "Failed to train classifier.", "OK" );
             else
                 OnRefresh();
         }
@@ -149,9 +150,7 @@ namespace IBM.Watson.Editor
                     string trainingData = File.ReadAllText( path );
                     if (! string.IsNullOrEmpty( trainingData ) )
                     {
-                        if ( m_NLC.TrainClassifier( m_NewClassifierName, m_NewClassifierLang, trainingData, OnClassiferTrained ) )
-                            EditorUtility.DisplayDialog( "Success", "New classifier created.", "OK" );
-                        else
+                        if (! m_NLC.TrainClassifier( m_NewClassifierName, m_NewClassifierLang, trainingData, OnClassiferTrained ) )
                             EditorUtility.DisplayDialog( "Error", "Failed to train classifier.", "OK" );
                     }
                     else
