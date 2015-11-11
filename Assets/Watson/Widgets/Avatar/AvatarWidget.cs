@@ -328,7 +328,10 @@ namespace IBM.Watson.Widgets.Avatar
                 State = AvatarState.ERROR;
             }
             else
+            {
                 State = AvatarState.LISTENING;
+            }
+                
         }
         #endregion
 
@@ -568,7 +571,11 @@ namespace IBM.Watson.Widgets.Avatar
         private void InstatiateQuestionWidget()
         {
             if (m_FocusQuestion != null)
+            {
                 m_FocusQuestion.OnLeaveTheSceneAndDestroy();
+                m_FocusQuestion = null;
+            }
+                
 
             if (m_QuestionPrefab != null)	//m_FocusQuestion == null && 
             {

@@ -9256,7 +9256,7 @@ GameObject:
   - 114: {fileID: 11419056}
   - 114: {fileID: 11409642}
   m_Layer: 14
-  m_Name: QuestionWidget(Clone)
+  m_Name: QuestionWidget_TODELETE 1
   m_TagString: QuestionOnFocus
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -20618,10 +20618,12 @@ MonoBehaviour:
   - m_DragLayerObject: {fileID: 0}
     m_NumberOfFinger: 1
     m_SortingLayer: 0
+    m_IsDragInside: 1
     m_Callback: -1
   - m_DragLayerObject: {fileID: 0}
     m_NumberOfFinger: 1
     m_SortingLayer: 1
+    m_IsDragInside: 1
     m_Callback: -1
 --- !u!114 &11420254
 MonoBehaviour:
@@ -22226,6 +22228,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AutoConnect: 0
+  m_Facets: []
+  m_SidePresentations: []
 --- !u!114 &11435604
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -24246,13 +24250,6 @@ MonoBehaviour:
   - {fileID: 184198}
   - {fileID: 190242}
   - {fileID: 146010}
-  m_renderTexSide:
-  - {fileID: 8400000, guid: afcbb068b8c90401babc29866368f207, type: 2}
-  - {fileID: 8400000, guid: d225ad6d2882840a8a98e82d67268a0d, type: 2}
-  - {fileID: 8400000, guid: 7e3f4cd72fe354335be72e02f5d51a4a, type: 2}
-  - {fileID: 8400000, guid: 0ecc6e0cd139f40f49ac8bc7f8b7043e, type: 2}
-  - {fileID: 8400000, guid: 97937d4c48c3a4758a1d67d2af8ff321, type: 2}
-  - {fileID: 8400000, guid: 6abe509fcab54478888289f427bb1db7, type: 2}
   m_StatinoaryRotationSpeed: 10
   m_StatinoaryRotationVector: {x: 0, y: 1, z: 0}
   m_TimeForComingToScene: 1

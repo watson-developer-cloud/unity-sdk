@@ -275,7 +275,7 @@ namespace IBM.Watson.Widgets.Question
 
             for (int i = 0; i < m_PassageItems.Length; i++)
             {
-                m_AnimationToShowPositionPassage[i] = LeanTween.moveLocal(m_PassageItems[i].gameObject, m_BezierPathToCenter[i], 1.0f).setOnComplete(() => 
+                m_AnimationToShowPositionPassage[i] = LeanTween.moveLocal(m_PassageItems[i].gameObject, m_BezierPathToCenter[i], 1.0f).setDelay(i * 0.1f).setOnComplete(() => 
                 {
                     m_AnimationToShowPositionPassage[i] = null;
                 //    m_AnimationToShowPositionPassage[i] = 

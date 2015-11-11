@@ -17,10 +17,12 @@
 * @author Dogukan Erenel (derenel@us.ibm.com)
 */
 
+using IBM.Watson.Widgets.Avatar;
 using IBM.Watson.Logging;
 using IBM.Watson.Data.ITM;
 using UnityEngine;
 using System.Collections.Generic;
+
 
 namespace IBM.Watson.Widgets.Question
 {
@@ -102,6 +104,47 @@ namespace IBM.Watson.Widgets.Question
         #endregion
 
         #region Event Handlers of Question Widget
+
+        /// <summary>
+        /// On Behavior Change of the avatar, this function gets called
+        /// </summary>
+        /// <param name="args">If there 2 parameters we consider 1st parameter is AvatarWidget object, otherwise we are using initial AvatarWidget object's values to call other functions</param>
+        public void OnChangedAvatarState(object[] args)
+        {
+            if (args.Length == 2 && args[0] is AvatarWidget  && args[1] != null)
+            {
+                AvatarWidget avatarWidget = args[0] as AvatarWidget;
+                AvatarWidget.AvatarState avatarState = (AvatarWidget.AvatarState)args[1];
+
+                if (avatarWidget != null)
+                {
+                    switch (avatarState)
+                    {
+                        case AvatarWidget.AvatarState.CONNECTING:
+                            break;
+                        case AvatarWidget.AvatarState.LISTENING:
+                            break;
+                        case AvatarWidget.AvatarState.THINKING:
+                            break;
+                        case AvatarWidget.AvatarState.ANSWERING:
+                            Cube.Fold();
+                            break;
+                        case AvatarWidget.AvatarState.ERROR:
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                else
+                {
+                    Log.Error("AvatarModelManager", "OnChangedAvatarState the argument is not AvatarWidget object");
+                }
+            }
+            else
+            {
+                Log.Error("QuestionWidget", "OnChangedAvatarState the argument length is undefined {0}", args.Length);
+            }
+        }
 
         /// <summary>
         /// Method called on Tapping on Question Widget 
