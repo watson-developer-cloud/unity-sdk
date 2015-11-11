@@ -47,6 +47,8 @@ namespace IBM.Watson.Widgets
         private double m_MinWordConfidence = 0.4;
         [SerializeField, Tooltip("Recognized speech below this confidence is just ignored.")]
         private double m_IgnoreWordConfidence = 0.2;
+        [SerializeField, Tooltip("What is the minimum confidence for a classification event to be fired.")]
+        private double m_MinClassEventConfidence = 0.5;
 
         [Serializable]
         private class ClassEventMapping
@@ -119,7 +121,8 @@ namespace IBM.Watson.Widgets
                 if ( m_TopClassText != null )
                     m_TopClassText.text = result.top_class; 
 
-                if ( !string.IsNullOrEmpty( result.top_class) )
+                if ( !string.IsNullOrEmpty( result.top_class) 
+                        && result.topConfidence >= m_MinClassEventConfidence )
                 {
                     if ( m_ClassEventList.Count > 0 && m_ClassEventMap.Count == 0 )
                     {
