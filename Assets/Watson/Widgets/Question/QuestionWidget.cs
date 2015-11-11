@@ -18,7 +18,7 @@
 */
 
 using IBM.Watson.Logging;
-using IBM.Watson.Data.ITM;
+using IBM.Watson.Data.XRAY;
 using UnityEngine;
 using System.Collections.Generic;
 

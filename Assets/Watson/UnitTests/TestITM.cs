@@ -19,13 +19,13 @@
 using System.Collections;
 using IBM.Watson.Services.v1;
 using IBM.Watson.Logging;
-using IBM.Watson.Data.ITM;
+using IBM.Watson.Data.XRAY;
 
 namespace IBM.Watson.UnitTests
 {
     public class TestITM : UnitTest
     {
-        ITM m_ITM = new ITM();
+        XRAY m_ITM = new XRAY();
         bool m_LoginTested = false;
         bool m_GetPipelineTested = false;
         bool m_AskQuestionTested = false;

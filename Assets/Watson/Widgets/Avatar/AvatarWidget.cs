@@ -21,7 +21,7 @@
 using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
 using IBM.Watson.Data;
-using IBM.Watson.Data.ITM;
+using IBM.Watson.Data.XRAY;
 using IBM.Watson.Services.v1;
 using UnityEngine;
 using System;
@@ -100,7 +100,7 @@ namespace IBM.Watson.Widgets.Avatar
         #endregion
 
         #region Private Data
-        private ITM m_ITM = new ITM();                      // ITM service
+        private XRAY m_XRAY = new XRAY();                      // XRAY service
         private Dialog m_Dialog = new Dialog();             // Dialog service
 
         private AvatarState m_State = AvatarState.CONNECTING;
@@ -143,9 +143,9 @@ namespace IBM.Watson.Widgets.Avatar
 
         #region Public Properties
         /// <summary>
-        /// Access the contained ITM service object.
+        /// Access the contained XRAY service object.
         /// </summary>
-        public ITM ITM { get { return m_ITM; } }
+        public XRAY XRAY { get { return m_XRAY; } }
         /// <summary>
         /// What is the current state of this avatar.
         /// </summary>
@@ -285,8 +285,8 @@ namespace IBM.Watson.Widgets.Avatar
             Log.Status("AvatarWidget", "Starting avatar.");
 
             State = AvatarState.CONNECTING;
-            // login to ITM, then select the pipeline
-            m_ITM.Login(OnItmLogin);
+            // login to XRAY, then select the pipeline
+            m_XRAY.Login(OnLogin);
             // Find our dialog ID
             if (!string.IsNullOrEmpty(m_DialogName))
                 m_Dialog.GetDialogs(OnFindDialog);
@@ -310,15 +310,15 @@ namespace IBM.Watson.Widgets.Avatar
             }
         }
 
-        private void OnItmLogin(bool success)
+        private void OnLogin(bool success)
         {
             if (!success)
             {
-                Log.Error("AvtarWidget", "Failed to login to ITM.");
+                Log.Error("AvtarWidget", "Failed to login to XRAY.");
                 State = AvatarState.ERROR;
             }
             else
-                m_ITM.GetPipeline(m_Pipeline, true, OnPipeline);
+                m_XRAY.GetPipeline(m_Pipeline, true, OnPipeline);
         }
         private void OnPipeline(Pipeline pipeline)
         {
@@ -416,13 +416,13 @@ namespace IBM.Watson.Widgets.Avatar
                 m_ClassifyResult = result;
                 State = AvatarState.LISTENING;
 
-                if (m_ITM.AskQuestion(result.text, OnAskQuestion))
+                if (m_XRAY.AskQuestion(result.text, OnAskQuestion))
                 {
                     State = AvatarState.ANSWERING;
                 }
                 else
                 {
-                    Log.Error("AvatarWidget", "Failed to send question to ITM.");
+                    Log.Error("AvatarWidget", "Failed to send question to XRAY.");
                     State = AvatarState.ERROR;
                 }
             }
@@ -503,15 +503,15 @@ namespace IBM.Watson.Widgets.Avatar
 
             if (m_QuestionResult != null && m_QuestionResult.HasQuestion())
             {
-                Watson.Data.ITM.Question topQuestion = m_QuestionResult.questions[0];
+                Watson.Data.XRAY.Question topQuestion = m_QuestionResult.questions[0];
                 if (OnQuestionEvent != null)
                     OnQuestionEvent(topQuestion.question.questionText);
 
                 m_AnswerResult = null;
                 m_ParseData = null;
 
-                if (!m_ITM.GetAnswers(topQuestion.transactionId, OnAnswerQuestion)
-                    || !ITM.GetParseData(topQuestion.transactionId, OnParseData))
+                if (!m_XRAY.GetAnswers(topQuestion.transactionId, OnAnswerQuestion)
+                    || !XRAY.GetParseData(topQuestion.transactionId, OnParseData))
                 {
                     Log.Error("AvatarWidget", "Failed to call GetAnswers()");
                     State = AvatarState.ERROR;
@@ -742,7 +742,7 @@ namespace IBM.Watson.Widgets.Avatar
         {
             get
             {
-                return ITM.Location;
+                return XRAY.Location;
             }
         }
 
