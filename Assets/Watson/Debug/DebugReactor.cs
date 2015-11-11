@@ -56,8 +56,6 @@ namespace IBM.Watson.Logging
 				else{
 					UnityEngine.Debug.Log(logString);
 				}
-						
-              
             }
         }
         #endregion

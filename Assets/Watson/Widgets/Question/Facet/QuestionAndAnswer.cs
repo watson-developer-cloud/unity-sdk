@@ -18,6 +18,9 @@
 
 using UnityEngine;
 using UnityEngine.UI;
+using IBM.Watson.Logging;
+using IBM.Watson.Utilities;
+using IBM.Watson.Data;
 
 namespace IBM.Watson.Widgets.Question
 {
@@ -67,17 +70,20 @@ namespace IBM.Watson.Widgets.Question
             }
         }
 
-		/// <summary>
-		/// Set QuestionString, AnswerString and Confidence from data.
-		/// </summary>
-        override public void Init()
-        {
-			base.Init ();
-
-            QuestionString = m_Question.QuestionData.QuestionDataObject.questions[0].question.questionText;
-			AnswerString = m_Question.QuestionData.AnswerDataObject.answers[0].answerText + Variants();
-            Confidence = m_Question.QuestionData.AnswerDataObject.answers[0].confidence;
-        }
+		private Data.XRAY.Answers m_AnswerData = null;
+		private Data.XRAY.Questions m_QuestionData = null;
+		
+		private void OnEnable()
+		{
+			EventManager.Instance.RegisterEventReceiver( Constants.Event.ON_QUESTION_ANSWERS, OnAnswerData );
+			EventManager.Instance.RegisterEventReceiver( Constants.Event.ON_QUESTION, OnQuestionData );
+		}
+		
+		private void OnDisable()
+		{
+			EventManager.Instance.UnregisterEventReceiver( Constants.Event.ON_QUESTION_ANSWERS, OnAnswerData );
+			EventManager.Instance.UnregisterEventReceiver( Constants.Event.ON_QUESTION, OnQuestionData );
+		}
 
         /// <summary>
         /// Update answer view.
@@ -110,14 +116,14 @@ namespace IBM.Watson.Widgets.Question
 		private string Variants()
 		{
 			string variantsString = "; ";
-			int variantLength = m_Question.QuestionData.AnswerDataObject.answers [0].variants.Length;
+			int variantLength = m_AnswerData.answers [0].variants.Length;
 
 			if (variantLength == 0)
 				return ".";
 
 			for (int i = 0; i < variantLength; i++)
 			{
-				string variant = m_Question.QuestionData.AnswerDataObject.answers[0].variants[i].text;
+				string variant = m_AnswerData.answers[0].variants[i].text;
 				variantsString += variant;
 
 				if(i < variantLength - 1)
@@ -129,6 +135,29 @@ namespace IBM.Watson.Widgets.Question
 			}
 
 			return variantsString;
+		}
+
+		private void OnAnswerData( object [] args )
+		{
+			m_AnswerData = args != null && args.Length > 0 ? args[0] as Data.XRAY.Answers : null;
+			InitAnswers ();
+		}
+
+		private void OnQuestionData( object [] args )
+		{
+			m_QuestionData = args != null && args.Length > 0 ? args[0] as Data.XRAY.Questions : null;
+			InitQuestions ();
+		}
+
+		private void InitAnswers()
+		{
+			AnswerString = m_AnswerData.answers[0].answerText + Variants();
+			Confidence = m_AnswerData.answers[0].confidence;
+		}
+
+		private void InitQuestions()
+		{
+			QuestionString = m_QuestionData.questions[0].question.questionText;
 		}
     }
 }

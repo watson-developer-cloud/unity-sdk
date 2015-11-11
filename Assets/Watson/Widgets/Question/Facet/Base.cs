@@ -17,6 +17,7 @@
 */
 
 using UnityEngine;
+using IBM.Watson.Logging;
 
 namespace IBM.Watson.Widgets.Question
 {
@@ -25,11 +26,6 @@ namespace IBM.Watson.Widgets.Question
 	/// </summary>
     public class Base : MonoBehaviour
     {
-        /// <summary>
-        /// Holds a reference to the Question Widget.
-        /// </summary>
-        /// <value>The m_ question.</value>
-		protected QuestionWidget m_Question { get; set; }
 
         protected virtual void Show() { }
         protected virtual void Hide() { }
@@ -38,23 +34,19 @@ namespace IBM.Watson.Widgets.Question
         /// Sets reference to Avatar and Question Widgets
         /// </summary>
         protected virtual void Start()
-        {
-            //	set reference to Question Widget
-//            m_Question = GetComponentInParent<QuestionWidget>();
-        }
+        {}
 
         /// <summary>
         /// Initialization function
         /// </summary>
         public virtual void Init() 
-		{ 
-            m_Question = GetComponentInParent<QuestionWidget>();
+		{
 			Clear ();
 		}
 
         /// <summary>
         /// Clears dynamically generated Facet Elements when a question is answered. Called from answer event handler.
         /// </summary>
-        protected virtual void Clear() { }
+        public virtual void Clear() { }
     }
 }
