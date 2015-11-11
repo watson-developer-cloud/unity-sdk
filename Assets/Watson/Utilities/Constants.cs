@@ -254,6 +254,25 @@ namespace IBM.Watson.Utilities
             ON_COMMAND_LOCATION,
 
             #endregion
+
+			#region Data
+			/// <summary>
+			/// Question data received
+			/// </summary>
+			ON_DATA_QUESTION,
+			/// <summary>
+			/// Answer data received
+			/// </summary>
+			ON_DATA_ANSWER,
+			/// <summary>
+			/// Parse data received
+			/// </summary>
+			ON_DATA_PARSE,
+			/// <summary>
+			/// Location data received
+			/// </summary>
+			ON_DATA_LOCATION
+			#endregion
             
         }
 

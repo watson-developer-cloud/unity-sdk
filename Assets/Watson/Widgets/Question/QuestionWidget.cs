@@ -33,15 +33,9 @@ namespace IBM.Watson.Widgets.Question
         #region Private Data
         private CubeAnimationManager m_CubeAnimMgr = null;
 		private bool m_Focused = false;
-//        private AnswersAndConfidence m_AnswersAndConfidence;
-//        private Question.Evidence m_Evidence;
-//        private Semantic m_Semantic;
-//        private Features m_Features;
-//        private Location m_Location;
-//        private ParseTree m_ParseTree;
-//        private QuestionAndAnswer m_QuestionAndAnswer;
-//        private Passages m_Passages;
-//        private List<Base> m_SubFacets = new List<Base>();
+
+		[SerializeField]
+		private List<GameObject> m_AvailableFacetPrefabs = new List<GameObject>();
 
 		[SerializeField]
 		private List<GameObject> m_Facets = new List<GameObject>();
@@ -345,15 +339,16 @@ namespace IBM.Watson.Widgets.Question
 		/// </summary>
 		public void UpdateFacets(Object[] args = null)
 		{
-			foreach(GameObject facet in m_GeneratedSides)
-			{
-				Base[] SubFacets = facet.transform.GetComponents<Base>();
-				foreach(Base SubFacet in SubFacets)
-				{
-					SubFacet.Question = gameObject.GetComponent<QuestionWidget>();
-					SubFacet.Init();
-				}
-			}
+			//	TODO remove once facets are registered for events
+//			foreach(GameObject facet in m_GeneratedSides)
+//			{
+//				Base[] SubFacets = facet.transform.GetComponents<Base>();
+//				foreach(Base SubFacet in SubFacets)
+//				{
+//					SubFacet.Question = gameObject.GetComponent<QuestionWidget>();
+//					SubFacet.Init();
+//				}
+//			}
 		}
 		#endregion
     }
