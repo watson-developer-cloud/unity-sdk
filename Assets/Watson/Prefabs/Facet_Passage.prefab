@@ -99,31 +99,8 @@ GameObject:
   m_Component:
   - 4: {fileID: 466872}
   - 114: {fileID: 11457380}
-  - 114: {fileID: 11438910}
-  - 114: {fileID: 11499656}
-  - 114: {fileID: 11417220}
   m_Layer: 15
   m_Name: Facet_Passage
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!1 &153910
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 414242}
-  - 20: {fileID: 2003868}
-  - 124: {fileID: 12458146}
-  - 92: {fileID: 9231706}
-  - 81: {fileID: 8193658}
-  - 114: {fileID: 11494750}
-  m_Layer: 15
-  m_Name: OrthographicCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -308,18 +285,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &414242
-Transform:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 153910}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 466872}
-  m_RootOrder: 0
 --- !u!4 &445492
 Transform:
   m_ObjectHideFlags: 1
@@ -355,7 +320,6 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 414242}
   - {fileID: 22421142}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -398,40 +362,6 @@ Transform:
   - {fileID: 473936}
   m_Father: {fileID: 463764}
   m_RootOrder: 0
---- !u!20 &2003868
-Camera:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 153910}
-  m_Enabled: 1
-  serializedVersion: 2
-  m_ClearFlags: 2
-  m_BackGroundColor: {r: 1, g: 1, b: 1, a: .0196078438}
-  m_NormalizedViewPortRect:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
-  near clip plane: 0
-  far clip plane: 10
-  field of view: 60
-  orthographic: 1
-  orthographic size: 5
-  m_Depth: 0
-  m_CullingMask:
-    serializedVersion: 2
-    m_Bits: 32768
-  m_RenderingPath: -1
-  m_TargetTexture: {fileID: 8400000, guid: afcbb068b8c90401babc29866368f207, type: 2}
-  m_TargetDisplay: 0
-  m_TargetEye: 3
-  m_HDR: 0
-  m_OcclusionCulling: 1
-  m_StereoConvergence: 10
-  m_StereoSeparation: .0219999999
-  m_StereoMirrorMode: 0
 --- !u!23 &2362262
 MeshRenderer:
   m_ObjectHideFlags: 1
@@ -494,20 +424,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 159918}
   m_Mesh: {fileID: 4300002, guid: 5626d94b6f3394cf0a41ae7364dbe3cd, type: 3}
---- !u!81 &8193658
-AudioListener:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 153910}
-  m_Enabled: 0
---- !u!92 &9231706
-Behaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 153910}
-  m_Enabled: 1
 --- !u!114 &11402526
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -551,36 +467,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &11417220
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 152706}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e421b0b8c204bd344918bc3963c06ccc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_AutoConnect: 1
-  m_Mappings:
-  - m_Event: 501
-    m_Callback:
-      m_Target: {fileID: 152706}
-      m_Component: PassageAnimationManager
-      m_Method: ReleasedFinger
---- !u!114 &11438910
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 152706}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7912ff379c0324091abc289e26a4e859, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_RenderTexture: {fileID: 8400000, guid: afcbb068b8c90401babc29866368f207, type: 2}
 --- !u!114 &11448552
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -686,50 +572,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &11494750
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 153910}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 646b5bc27a658f447b1d929fd5ffbd70, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mode: 5
-  showGeneratedNormals: 0
-  offsetScale: .200000003
-  blurRadius: 18
-  edgeThresholdMin: .0500000007
-  edgeThreshold: .200000003
-  edgeSharpness: 4
-  dlaaSharp: 1
-  ssaaShader: {fileID: 4800000, guid: b3728d1488b02490cbd196c7941bf1f8, type: 3}
-  dlaaShader: {fileID: 4800000, guid: 017ca72b9e8a749058d13ebd527e98fa, type: 3}
-  nfaaShader: {fileID: 4800000, guid: ce0cb2621f6d84e21a87414e471a3cce, type: 3}
-  shaderFXAAPreset2: {fileID: 4800000, guid: 6f1418cffd12146f2a83be795f6fa5a7, type: 3}
-  shaderFXAAPreset3: {fileID: 4800000, guid: c182fa94a5a0a4c02870641efcd38cd5, type: 3}
-  shaderFXAAII: {fileID: 4800000, guid: cd5b323dcc592457790ff18b528f5e67, type: 3}
-  shaderFXAAIII: {fileID: 4800000, guid: c547503fff0e8482ea5793727057041c, type: 3}
---- !u!114 &11499656
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 152706}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b1ed8af9c51c644488ec80fa023d5ee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!124 &12458146
-Behaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 153910}
-  m_Enabled: 1
 --- !u!222 &22222518
 CanvasRenderer:
   m_ObjectHideFlags: 1
@@ -756,8 +598,8 @@ Canvas:
   m_GameObject: {fileID: 189496}
   m_Enabled: 1
   serializedVersion: 2
-  m_RenderMode: 1
-  m_Camera: {fileID: 2003868}
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
   m_PlaneDistance: 5
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -843,19 +685,19 @@ RectTransform:
   m_GameObject: {fileID: 189496}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 22405462}
   - {fileID: 463764}
   - {fileID: 22430874}
   - {fileID: 22470512}
   m_Father: {fileID: 466872}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0, y: 0}
+  m_SizeDelta: {x: 2048, y: 2048}
+  m_Pivot: {x: .5, y: .5}
 --- !u!224 &22424962
 RectTransform:
   m_ObjectHideFlags: 1
@@ -987,39 +829,7 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 0}
-      propertyPath: m_Mappings.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: m_FullScreenDragMappings.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: m_FullScreenDragMappings.Array.data[0].m_DragLayerObject
-      value: 
-      objectReference: {fileID: 152706}
-    - target: {fileID: 0}
-      propertyPath: m_FullScreenDragMappings.Array.data[0].m_Callback
-      value: 501
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: m_Mappings.Array.data[0].m_Event
-      value: 501
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: m_Mappings.Array.data[0].m_Callback.m_Target
-      value: 
-      objectReference: {fileID: 152706}
-    - target: {fileID: 0}
-      propertyPath: m_Mappings.Array.data[0].m_Callback.m_Component
-      value: PassageAnimationManager
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: m_Mappings.Array.data[0].m_Callback.m_Method
-      value: ReleasedFinger
-      objectReference: {fileID: 0}
+    m_Modifications: []
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 152706}

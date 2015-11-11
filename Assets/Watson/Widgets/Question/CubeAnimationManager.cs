@@ -90,9 +90,9 @@ namespace IBM.Watson.Widgets.Question
 	[SerializeField]
 	private GameObject[] m_ProjectionSide;
 	
-	[Header("Render Textures")]
-	[SerializeField]
-	private RenderTexture[] m_renderTexSide;
+//	[Header("Render Textures")]
+//	[SerializeField]
+//	private RenderTexture[] m_renderTexSide;
 
 	//Stationary Rotation Related values - Folded Idle
 	[SerializeField]
@@ -268,21 +268,15 @@ namespace IBM.Watson.Widgets.Question
 			new Vector3 (17.5f, -5f,    11.5f),	//Bottom close to hero
 			new Vector3 (17.5f, -5f,    20.5f) 	//Bottom close to logo
 		};
-        
-        if (m_uiFaceOnSide.Length != m_renderTexSide.Length
-            || m_uiFaceOnSide.Length != m_positionUnfold.Length
+
+
+        if (m_uiFaceOnSide.Length != m_positionUnfold.Length
             || m_uiFaceOnSide.Length != m_rotationUnfold.Length
             || m_uiFaceOnSide.Length != m_positionFold.Length
             || m_uiFaceOnSide.Length != m_rotationFold.Length)
         {
 
             Log.Error("CubeAnimationManager", "Cube Animation has some missing variables!");
-        }
-
-        for (int i = 0; i < m_renderTexSide.Length; i++)
-        {
-            if (!m_renderTexSide[i].useMipMap)
-                m_renderTexSide[i].useMipMap = true;
         }
 
         m_initialPosition = transform.position;
@@ -306,13 +300,6 @@ namespace IBM.Watson.Widgets.Question
         CubeStatinoaryAnimation();
     }
 
-	void OnDestroy()
-	{
-		for (int i = 0; i < m_renderTexSide.Length; i++)
-		{
-			m_renderTexSide[i].Release();
-		}
-	}
 
 	#endregion
 
