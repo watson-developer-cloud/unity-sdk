@@ -87,15 +87,6 @@ namespace IBM.Watson.Widgets.Question
             m_SemanticText.text = SemanticString;
         }
 
-//		override public void Init()
-//        {
-//			base.Init ();
-//
-//
-//
-//           
-//        }
-
         /// <summary>
         /// Fired when Parse Data is set. Iterates through the LAT's features and concantinates features into a string.
         /// </summary>

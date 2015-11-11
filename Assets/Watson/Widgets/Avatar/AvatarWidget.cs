@@ -35,7 +35,7 @@ namespace IBM.Watson.Widgets.Avatar
     /// <summary>
     /// Avatar of Watson 
     /// </summary>
-    public class AvatarWidget : Widget, IQuestionData
+    public class AvatarWidget : Widget
     {
         #region Public Types
         /// <summary>
@@ -549,10 +549,10 @@ namespace IBM.Watson.Widgets.Avatar
                 // send all data up to the question widget facets..
 
                 // TODO: Remove the UpdateFacets() once they've all been converted to using the event.
-                if (m_FocusQuestion != null)
-                    m_FocusQuestion.UpdateFacets();
-                else
-                    Log.Error("AvatarWidget", "Failed to find QuestionWidget in question prefab.");
+//                if (m_FocusQuestion != null)
+//                    m_FocusQuestion.UpdateFacets();
+//                else
+//                    Log.Error("AvatarWidget", "Failed to find QuestionWidget in question prefab.");
                 State = AvatarState.LISTENING;
             }
         }
@@ -569,7 +569,6 @@ namespace IBM.Watson.Widgets.Avatar
                 m_FocusQuestion = questionObject.GetComponentInChildren<QuestionWidget>();
                 if (m_FocusQuestion == null)
                     throw new WatsonException("Question prefab is missing QuestionWidget");
-                m_FocusQuestion.QuestionData = this;   // TODO: Remove after switching to events.
                 m_FocusQuestion.Focused = true;	//currently our focus object
             }
         }
@@ -722,57 +721,6 @@ namespace IBM.Watson.Widgets.Avatar
             if (args.Length == 1)
             {
                 Mood = (MoodType)args[0];
-            }
-        }
-        #endregion
-
-        // TODO: Remove after switching over to using events.
-        #region IQuestionData implementation
-        /// <summary>
-        /// Gets the location.
-        /// </summary>
-        /// <value>The location.</value>
-        public string Location
-        {
-            get
-            {
-                return XRAY.Location;
-            }
-        }
-
-        /// <summary>
-        /// Gets the question data object.
-        /// </summary>
-        /// <value>The question data object.</value>
-        public Questions QuestionDataObject
-        {
-            get
-            {
-                return m_QuestionResult;
-            }
-        }
-
-        /// <summary>
-        /// Gets the answer data object.
-        /// </summary>
-        /// <value>The answer data object.</value>
-        public Answers AnswerDataObject
-        {
-            get
-            {
-                return m_AnswerResult;
-            }
-        }
-
-        /// <summary>
-        /// Gets the parse data object.
-        /// </summary>
-        /// <value>The parse data object.</value>
-        public ParseData ParseDataObject
-        {
-            get
-            {
-                return m_ParseData;
             }
         }
         #endregion

@@ -107,9 +107,7 @@ namespace IBM.Watson.Widgets.Question
 
                 return m_CubeAnimMgr;
             }
-        }
-
-        public IQuestionData QuestionData { get; set; }
+		}
 
         #endregion
 
@@ -411,39 +409,5 @@ namespace IBM.Watson.Widgets.Question
         }
 
 		#endregion
-
-		#region Function invoked by Avatar
-		/// <summary>
-		/// Sets Question, Answer and Avatar for each facet. This is called by the Avatar Widget.
-		/// </summary>
-		public void UpdateFacets(Object[] args = null)
-		{
-			//	TODO remove once facets are registered for events
-//			foreach(GameObject facet in m_GeneratedSides)
-//			{
-//				Base[] SubFacets = facet.transform.GetComponents<Base>();
-//				foreach(Base SubFacet in SubFacets)
-//				{
-//					SubFacet.Question = gameObject.GetComponent<QuestionWidget>();
-//					SubFacet.Init();
-//				}
-//			}
-		}
-		#endregion
     }
-
-	#region Messaging Interface between Avatar and Focused Question
-
-    public delegate void OnMessage(string msg);
-
-    // TODO: Remove after we've switched over to using events.
-    public interface IQuestionData
-    {
-        Questions QuestionDataObject { get; }
-        Answers AnswerDataObject { get; }
-        ParseData ParseDataObject { get; }
-        string Location { get; }
-    }
-
-	#endregion
 }

@@ -85,17 +85,6 @@ namespace IBM.Watson.Widgets.Question
 			EventManager.Instance.UnregisterEventReceiver( Constants.Event.ON_QUESTION, OnQuestionData );
 		}
 
-		/// <summary>
-		/// Set QuestionString, AnswerString and Confidence from data.
-		/// </summary>
-//		override public void Init()
-//        {
-//			base.Init ();
-//
-//
-//
-//        }
-
         /// <summary>
         /// Update answer view.
         /// </summary>
