@@ -41,7 +41,15 @@ namespace IBM.Watson.Widgets.Question
         private ParseTree m_ParseTree;
         private QuestionAndAnswer m_QuestionAndAnswer;
         private Passages m_Passages;
-        private List<Base> m_Facets = new List<Base>();
+        private List<Base> m_SubFacets = new List<Base>();
+
+		[SerializeField]
+		private List<GameObject> m_Facets = new List<GameObject>();
+
+		[SerializeField]
+		private List<Transform> m_SidePresentations = new List<Transform>();
+
+		private List<GameObject> m_FacetsList = new List<GameObject>();
 
         #endregion
 
@@ -294,6 +302,8 @@ namespace IBM.Watson.Widgets.Question
             EnableEvents(false);
 			Cube.enabled = false;
 
+			GenerateSides();
+
             m_AnswersAndConfidence = gameObject.transform.GetComponentInChildren<AnswersAndConfidence>();
 			m_Evidence = gameObject.transform.GetComponentInChildren<Question.Evidence>();
 			m_Semantic = gameObject.transform.GetComponentInChildren<Semantic>();
@@ -303,15 +313,27 @@ namespace IBM.Watson.Widgets.Question
 			m_QuestionAndAnswer = gameObject.transform.GetComponentInChildren<QuestionAndAnswer>();
 			m_Passages = gameObject.transform.GetComponentInChildren<Passages>();
 
-            m_Facets.Add(m_AnswersAndConfidence);
-            m_Facets.Add(m_Evidence);
-            m_Facets.Add(m_Semantic);
-            m_Facets.Add(m_Features);
-            m_Facets.Add(m_Location);
-            m_Facets.Add(m_ParseTree);
-            m_Facets.Add(m_QuestionAndAnswer);
-            m_Facets.Add(m_Passages);
+            m_SubFacets.Add(m_AnswersAndConfidence);
+			m_SubFacets.Add(m_Evidence);
+			m_SubFacets.Add(m_Semantic);
+			m_SubFacets.Add(m_Features);
+			m_SubFacets.Add(m_Location);
+			m_SubFacets.Add(m_ParseTree);
+			m_SubFacets.Add(m_QuestionAndAnswer);
+			m_SubFacets.Add(m_Passages);
         }
+
+		public void GenerateSides()
+		{
+			for(int i = 0; i < m_Facets.Count; i++)
+			{
+				GameObject facetGameObject = Instantiate(m_Facets[i], Vector3.zero, Quaternion.Euler(new Vector3(0f, 90f, 0f))) as GameObject;
+				Transform facetTransform = facetGameObject.GetComponent<Transform>();
+				RectTransform facetCanvasRectTransform = facetTransform.GetComponentInChildren<RectTransform>();
+				facetCanvasRectTransform.localScale = new Vector3(0.004885f, 0.004885f, 0f);
+				facetTransform.SetParent(m_SidePresentations[i], false);
+			}
+		}
 
         private void EnableEvents(bool enable)
         {
@@ -341,11 +363,10 @@ namespace IBM.Watson.Widgets.Question
 		/// </summary>
 		public void UpdateFacets(Object[] args = null)
 		{
-			foreach (Base facet in m_Facets)
-				facet.Init();
+			foreach (Base subFacet in m_SubFacets)
+				subFacet.Init();
 		}
 		#endregion
-
     }
 
 	#region Messaging Interface between Avatar and Focused Question
