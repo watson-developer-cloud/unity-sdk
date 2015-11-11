@@ -40,6 +40,10 @@ namespace IBM.Watson.Widgets.Question
         Vector3 m_OffsetPathToStack;
         Vector3 m_OffsetPathOrientationToStack;
 
+        //Target Locations / Orientations
+        Vector3[] m_TargetLocation;
+        Vector3[] m_TargetRotation;
+
         #endregion
 
         #region Public Members
@@ -333,7 +337,7 @@ namespace IBM.Watson.Widgets.Question
         private void DragOneFingerOnPassageOnUpdate()
         {
 
-            if (m_PassageItems != null && m_PassageItems[0] != null)
+            if (m_PassageItems != null)
             {
 
                 if (m_LastFrameOneFingerDrag < 0)
@@ -357,13 +361,19 @@ namespace IBM.Watson.Widgets.Question
                 {
                     if (i < m_SelectedPassageIndex)
                     {
-                        m_PassageItems[i].transform.localPosition = Vector3.Lerp(m_PassageItems[i].transform.localPosition, m_BezierPathToCenter[i].point(0.0f), Time.deltaTime * m_SpeedPassageAnimation);
-                        m_PassageItems[i].transform.localRotation = Quaternion.Lerp(m_PassageItems[i].transform.localRotation, Quaternion.Euler(m_BezierPathOrientationToCenter[i].point(0.0f)), Time.deltaTime * m_SpeedPassageAnimation);
+                        m_PassageItems[i].transform.localPosition = Vector3.Lerp(m_PassageItems[i].transform.localPosition, m_TargetLocation[i], Time.deltaTime * m_SpeedPassageAnimation);
+                        m_PassageItems[i].transform.localRotation = Quaternion.Lerp(m_PassageItems[i].transform.localRotation, Quaternion.Euler(m_TargetRotation[i]), Time.deltaTime * m_SpeedPassageAnimation);
+                        
+                        //m_PassageItems[i].transform.localPosition = Vector3.Lerp(m_PassageItems[i].transform.localPosition, m_BezierPathToCenter[i].point(0.0f), Time.deltaTime * m_SpeedPassageAnimation);
+                        //m_PassageItems[i].transform.localRotation = Quaternion.Lerp(m_PassageItems[i].transform.localRotation, Quaternion.Euler(m_BezierPathOrientationToCenter[i].point(0.0f)), Time.deltaTime * m_SpeedPassageAnimation);
                     }
                     else if (i > m_SelectedPassageIndex)
                     {
-                        m_PassageItems[i].transform.localPosition = Vector3.Lerp(m_PassageItems[i].transform.localPosition, m_BezierPathToStack[i].point(1.0f), Time.deltaTime * m_SpeedPassageAnimation);
-                        m_PassageItems[i].transform.localRotation = Quaternion.Lerp(m_PassageItems[i].transform.localRotation, Quaternion.Euler(m_BezierPathOrientationToStack[i].point(1.0f)), Time.deltaTime * m_SpeedPassageAnimation);
+                        m_PassageItems[i].transform.localPosition = Vector3.Lerp(m_PassageItems[i].transform.localPosition, m_TargetLocation[i], Time.deltaTime * m_SpeedPassageAnimation);
+                        m_PassageItems[i].transform.localRotation = Quaternion.Lerp(m_PassageItems[i].transform.localRotation, Quaternion.Euler(m_TargetRotation[i]), Time.deltaTime * m_SpeedPassageAnimation);
+
+                        //m_PassageItems[i].transform.localPosition = Vector3.Lerp(m_PassageItems[i].transform.localPosition, m_BezierPathToStack[i].point(1.0f), Time.deltaTime * m_SpeedPassageAnimation);
+                        //m_PassageItems[i].transform.localRotation = Quaternion.Lerp(m_PassageItems[i].transform.localRotation, Quaternion.Euler(m_BezierPathOrientationToStack[i].point(1.0f)), Time.deltaTime * m_SpeedPassageAnimation);
                     }
                     else
                     {
@@ -382,9 +392,12 @@ namespace IBM.Watson.Widgets.Question
                             m_BezierPathCurrent = m_BezierPathToStack[i];
                             m_BezierPathOrientationCurrent = m_BezierPathOrientationToStack[i];
                         }
-                        
-                        m_PassageItems[i].transform.localPosition = Vector3.Lerp(m_PassageItems[i].transform.localPosition, m_BezierPathCurrent.point(m_RatioBezierPathPassage), Time.deltaTime * m_SpeedPassageAnimation);
-                        m_PassageItems[i].transform.localRotation = Quaternion.Lerp(m_PassageItems[i].transform.localRotation, Quaternion.Euler(m_BezierPathOrientationCurrent.point(m_RatioBezierPathPassage)), Time.deltaTime * m_SpeedPassageAnimation);
+
+                        m_TargetLocation[i] = m_BezierPathCurrent.point(m_RatioBezierPathPassage);
+                        m_TargetRotation[i] = m_BezierPathOrientationCurrent.point(m_RatioBezierPathPassage);
+
+                        m_PassageItems[i].transform.localPosition = Vector3.Lerp(m_PassageItems[i].transform.localPosition, m_TargetLocation[i], Time.deltaTime * m_SpeedPassageAnimation);
+                        m_PassageItems[i].transform.localRotation = Quaternion.Lerp(m_PassageItems[i].transform.localRotation, Quaternion.Euler(m_TargetRotation[i]), Time.deltaTime * m_SpeedPassageAnimation);
 
                     }
                 }
@@ -485,7 +498,8 @@ namespace IBM.Watson.Widgets.Question
                 m_AnimationToShowPositionPassage[passageIndex] = LeanTween.value(PassageList[passageIndex].gameObject, currentRatio, targetRatio, animationTime * timeModifier).setDelay(delayOnPassage).setEase(leanType).setOnUpdate(
                 (float f) =>
                 {
-                    PassageList[passageIndex].localPosition = bezierPathToMove.pointNotNAN(f);
+                    //PassageList[passageIndex].localPosition = bezierPathToMove.pointNotNAN(f);
+                    m_TargetLocation[passageIndex] = bezierPathToMove.pointNotNAN(f);
                     if (isUsingTwoAnimations)
                     {
                         if (targetRatio == 1.0f)    //this is when passage goes from initial to center
@@ -534,7 +548,9 @@ namespace IBM.Watson.Widgets.Question
                     (float f) =>
                     {
                         //Log.Status("PassageAnimationManager", "Rotation : {0} at {1}  - pts: {2}-{3}-{4}-{5} ", bezierPathToRotate.pointNotNAN(f), f, bezierPathToRotate.pts[0], bezierPathToRotate.pts[1], bezierPathToRotate.pts[2], bezierPathToRotate.pts[3]);
-                        PassageList[passageIndex].localEulerAngles = bezierPathToRotate.pointNotNAN(f);
+                        //PassageList[passageIndex].localEulerAngles = bezierPathToRotate.pointNotNAN(f);
+                        m_TargetRotation[passageIndex] = bezierPathToRotate.pointNotNAN(f);
+
                         if (isUsingTwoAnimations)
                         {
                             if (targetRatio == 1.0f)    //this is when passage goes from initial to center
