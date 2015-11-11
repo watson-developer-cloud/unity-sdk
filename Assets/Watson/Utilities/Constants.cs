@@ -270,7 +270,6 @@ namespace IBM.Watson.Utilities
             ON_COMMAND_LOCATION,
 
             #endregion
-            
         }
 
         /// <summary>
