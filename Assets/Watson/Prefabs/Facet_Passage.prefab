@@ -100,6 +100,8 @@ GameObject:
   - 4: {fileID: 466872}
   - 114: {fileID: 11457380}
   - 114: {fileID: 11438910}
+  - 114: {fileID: 11499656}
+  - 114: {fileID: 11417220}
   m_Layer: 15
   m_Name: Facet_Passage
   m_TagString: Untagged
@@ -549,6 +551,24 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &11417220
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 152706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e421b0b8c204bd344918bc3963c06ccc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AutoConnect: 1
+  m_Mappings:
+  - m_Event: 501
+    m_Callback:
+      m_Target: {fileID: 152706}
+      m_Component: PassageAnimationManager
+      m_Method: ReleasedFinger
 --- !u!114 &11438910
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -692,6 +712,17 @@ MonoBehaviour:
   shaderFXAAPreset3: {fileID: 4800000, guid: c182fa94a5a0a4c02870641efcd38cd5, type: 3}
   shaderFXAAII: {fileID: 4800000, guid: cd5b323dcc592457790ff18b528f5e67, type: 3}
   shaderFXAAIII: {fileID: 4800000, guid: c547503fff0e8482ea5793727057041c, type: 3}
+--- !u!114 &11499656
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 152706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b1ed8af9c51c644488ec80fa023d5ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!124 &12458146
 Behaviour:
   m_ObjectHideFlags: 1
@@ -956,7 +987,39 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: m_Mappings.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_FullScreenDragMappings.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_FullScreenDragMappings.Array.data[0].m_DragLayerObject
+      value: 
+      objectReference: {fileID: 152706}
+    - target: {fileID: 0}
+      propertyPath: m_FullScreenDragMappings.Array.data[0].m_Callback
+      value: 501
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Mappings.Array.data[0].m_Event
+      value: 501
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Mappings.Array.data[0].m_Callback.m_Target
+      value: 
+      objectReference: {fileID: 152706}
+    - target: {fileID: 0}
+      propertyPath: m_Mappings.Array.data[0].m_Callback.m_Component
+      value: PassageAnimationManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Mappings.Array.data[0].m_Callback.m_Method
+      value: ReleasedFinger
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 152706}
