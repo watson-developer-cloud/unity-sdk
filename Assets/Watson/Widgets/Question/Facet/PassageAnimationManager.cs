@@ -152,7 +152,8 @@ namespace IBM.Watson.Widgets.Question
         // Update is called once per frame
         void Update()
         {
-            //DragOneFingerOnPassageOnUpdate();
+            DragOneFingerOnPassageOnUpdate();
+
             if (Input.GetKeyDown(KeyCode.Alpha0))
             {
                 ShowPassage(0);
@@ -228,14 +229,16 @@ namespace IBM.Watson.Widgets.Question
             UpdateBezierPathForPassages();
             m_AnimationLocationRatio = new float[NumberOfPassages];
             m_AnimationRotationRatio = new float[NumberOfPassages];
+            m_TargetLocation = new Vector3[NumberOfPassages];
+            m_TargetRotation = new Vector3[NumberOfPassages];
             for (int i = 0; i < NumberOfPassages; i++)
             {
                 m_AnimationLocationRatio[i] = 0.0f;
                 m_AnimationRotationRatio[i] = 0.0f;
+                m_TargetLocation[i] = Vector3.zero;
+                m_TargetRotation[i] = Vector3.zero;
             }
-
-           
-
+            
         }
 
         void UpdateBezierPathForPassages()
@@ -300,7 +303,7 @@ namespace IBM.Watson.Widgets.Question
 
         private Vector3 worldOnPath = Vector3.up;
 
-        public void DragOneFingerOnPassage(TouchScript.Gestures.ScreenTransformGesture OneFingerManipulationGesture)
+        public void DragOneFingerOnFocusedSide(TouchScript.Gestures.ScreenTransformGesture OneFingerManipulationGesture)
         {
 
             if (m_PassageItems == null)
@@ -318,6 +321,24 @@ namespace IBM.Watson.Widgets.Question
                 }
                 else
                 {
+                    Ray rayForDrag = UnityEngine.Camera.main.ScreenPointToRay(OneFingerManipulationGesture.ScreenPosition);
+                    RaycastHit hit;
+                    bool isHitOnFocusedSide = Physics.Raycast(rayForDrag, out hit, Mathf.Infinity, 1 << this.transform.parent.gameObject.layer);
+
+                    //if (isHitOnFocusedSide)
+                    //{
+                    //    int touchedSide = -1;
+                    //    int.TryParse(hit.transform.name.Substring(1, 1), out touchedSide);
+                    //    CubeSideType cubeSideTouched = (CubeSideType)touchedSide;
+
+                    //    Log.Status("CubeAnimationManager", "cubeSideTouched: {0}", cubeSideTouched);
+                    //    if (cubeSideTouched == CubeSideType.TITLE && SideFocused == CubeSideType.TITLE)
+                    //    {
+                    //        m_LastFrameOneFingerDrag = Time.frameCount;
+                    //        //DragOneFingerOnPassage(OneFingerManipulationGesture);
+                    //    }
+                    //}
+
                     m_AnimationLocationRatio[m_SelectedPassageIndex] = Mathf.Clamp01(m_AnimationLocationRatio[m_SelectedPassageIndex] + movingInX);
                 }
 
@@ -339,7 +360,7 @@ namespace IBM.Watson.Widgets.Question
             if (m_PassageItems != null)
             {
 
-                if (m_LastFrameOneFingerDrag < 0)
+                if (m_LastFrameOneFingerDrag < 0 && m_SelectedPassageIndex >= 0)
                 {
                     if (m_AnimationLocationRatio[m_SelectedPassageIndex] < m_PercentToGoInitialPosition)
                     {
