@@ -319,7 +319,7 @@ namespace IBM.Watson.Widgets.Question
 
         public void OneFingerDragOnCube(System.Object[] args)
         {
-            Log.Status("PassageAnimationManager", "OneFingerDragOnCube");
+           // Log.Status("PassageAnimationManager", "OneFingerDragOnCube");
             if (args != null && args.Length == 1 && args[0] is TouchScript.Gestures.ScreenTransformGesture)
             {
                 TouchScript.Gestures.ScreenTransformGesture OneFingerManipulationGesture = args[0] as TouchScript.Gestures.ScreenTransformGesture;
@@ -454,6 +454,10 @@ namespace IBM.Watson.Widgets.Question
                 {
                     m_SelectedPassageIndex = 0;
                 }
+                else if(m_SelectedPassageIndex == NumberOfPassages)
+                {
+                    m_SelectedPassageIndex = NumberOfPassages - 1;
+                }
                 //else
                 //{
                     //Ray rayForDrag = UnityEngine.Camera.main.ScreenPointToRay(OneFingerManipulationGesture.ScreenPosition);
@@ -477,6 +481,7 @@ namespace IBM.Watson.Widgets.Question
                     
 
                     m_AnimationLocationRatio[m_SelectedPassageIndex] = Mathf.Clamp01(m_AnimationLocationRatio[m_SelectedPassageIndex] + movingInX);
+                    m_AnimationRotationRatio[m_SelectedPassageIndex] = Mathf.Clamp01(m_AnimationRotationRatio[m_SelectedPassageIndex] + movingInX);
 
                     SetTargetLocationAndRotationOfSelectedPassage();
 
@@ -492,6 +497,9 @@ namespace IBM.Watson.Widgets.Question
 
         private void SetTargetLocationAndRotationOfSelectedPassage()
         {
+            if (m_SelectedPassageIndex < 0 || m_SelectedPassageIndex >= NumberOfPassages)
+                return;
+
             LTBezierPath m_BezierPathCurrent;
             LTBezierPath m_BezierPathOrientationCurrent;
 
@@ -520,17 +528,24 @@ namespace IBM.Watson.Widgets.Question
             {
                 if (m_AnimationLocationRatio[m_SelectedPassageIndex] < m_PercentToGoInitialPosition)
                 {
-                    m_AnimationLocationRatio[m_SelectedPassageIndex] = 0.0f;
+                    ShowPassage(m_SelectedPassageIndex - 1);
+                    //m_AnimationLocationRatio[m_SelectedPassageIndex] = 0.0f;
                 }
                 else if (m_AnimationLocationRatio[m_SelectedPassageIndex] > m_PercentToGoStackPosition)
                 {
-                    m_AnimationLocationRatio[m_SelectedPassageIndex] = 1.0f;
+                    ShowPassage(m_SelectedPassageIndex + 1);
+                    //m_AnimationLocationRatio[m_SelectedPassageIndex] = 1.0f;
                 }
                 else
                 {
+                    //ShowPassage(m_SelectedPassageIndex);
+                    //m_AnimationLocationRatio[m_SelectedPassageIndex] = 0.5f;
                     m_AnimationLocationRatio[m_SelectedPassageIndex] = 0.5f;
+                    m_AnimationRotationRatio[m_SelectedPassageIndex] = 0.5f;
+                    SetTargetLocationAndRotationOfSelectedPassage();
+                    // SetTargetLocationAndRotationOfSelectedPassage();
                 }
-                SetTargetLocationAndRotationOfSelectedPassage();
+                
                 //m_SelectedPassageIndex = -1;
             }
         }
@@ -544,7 +559,7 @@ namespace IBM.Watson.Widgets.Question
 
             if (m_PassageItems != null)
             {
-                
+
                 for (int i = 0; i < m_PassageItems.Length; i++)
                 {
                     if (i != m_SelectedPassageIndex)
@@ -568,7 +583,7 @@ namespace IBM.Watson.Widgets.Question
                         
 
                         m_PassageItems[i].transform.localPosition = Vector3.Lerp(m_PassageItems[i].transform.localPosition, m_TargetLocation[i], Time.deltaTime * m_SpeedPassageAnimation);
-                        m_PassageItems[i].transform.localRotation = Quaternion.Lerp(m_PassageItems[i].transform.localRotation, Quaternion.Euler(m_TargetRotation[i]), Time.deltaTime * m_SpeedPassageAnimation);
+                        m_PassageItems[i].transform.localRotation = Quaternion.Slerp(m_PassageItems[i].transform.localRotation, Quaternion.Euler(m_TargetRotation[i]), Time.deltaTime * m_SpeedPassageAnimation);
 
                     }
                 }
@@ -584,6 +599,17 @@ namespace IBM.Watson.Widgets.Question
                     Vector3.Lerp(initialValue, currentPath[3], percent),
                     Vector3.Lerp(initialValue, currentPath[3], 1.0f - percent),
                     currentPath[3]
+            });
+        }
+
+        private LTBezierPath getBezierPathToLastValue(Vector3[] currentPath, Vector3 lastValue, float percent = 0.2f)
+        {
+
+            return new LTBezierPath(new Vector3[] {
+                    currentPath[0],
+                    Vector3.Lerp(currentPath[0], lastValue, percent),
+                    Vector3.Lerp(currentPath[0], lastValue, 1.0f - percent),
+                    lastValue
             });
         }
 
@@ -617,20 +643,21 @@ namespace IBM.Watson.Widgets.Question
                 //Going to initial position if they are in different position
                 if (i > passageIndexToShow)
                 {
-                    //LTBezierPath pathFromCurrentPosition = getBezierPathFromInitialValue(m_BezierPathFromInitialToStack[i].pts, PassageList[i].localPosition);
-                    //LTBezierPath pathFromCurrentRotation = getBezierPathFromInitialValue(m_BezierPathOrientationFromInitialToStack[i].pts, PassageList[i].localEulerAngles);
+                    LTBezierPath pathFromCurrentPosition = getBezierPathToLastValue(m_BezierPathFromInitialToStack[i].pts, PassageList[i].localPosition);
+                    //LTBezierPath pathFromCurrentRotation = getBezierPathToLastValue(m_BezierPathOrientationFromInitialToStack[i].pts, PassageList[i].localEulerAngles);
+                    //AnimatePassageToGivenRatio(animationTime, delayOnPassage * Mathf.Abs(m_PreviousPassageIndex - i), leanType, i, m_AnimationLocationRatio[i], 0.0f, pathFromCurrentPosition, pathFromCurrentRotation);
 
-                    AnimatePassageToGivenRatio(animationTime, delayOnPassage * Mathf.Abs(m_PreviousPassageIndex - i), leanType, i, m_AnimationLocationRatio[i], 0.0f, m_BezierPathFromInitialToStack[i], m_BezierPathOrientationFromInitialToStack[i]);
-                    //PassageList[i].SetAsFirstSibling();
+                    AnimatePassageToGivenRatio(animationTime, delayOnPassage * Mathf.Abs(m_PreviousPassageIndex - i), leanType, i, m_AnimationLocationRatio[i], 0.0f, pathFromCurrentPosition, m_BezierPathOrientationFromInitialToStack[i]);
+                   
                     PassageList[i].SetSiblingIndex(NumberOfPassages - 1 - i);
                 }
                 else if (i < passageIndexToShow)
                 {
-                    //LTBezierPath pathFromCurrentPosition = getBezierPathFromInitialValue(m_BezierPathFromInitialToStack[i].pts, PassageList[i].localPosition);
+                    LTBezierPath pathFromCurrentPosition = getBezierPathFromInitialValue(m_BezierPathFromInitialToStack[i].pts, PassageList[i].localPosition);
                     //LTBezierPath pathFromCurrentRotation = getBezierPathFromInitialValue(m_BezierPathOrientationFromInitialToStack[i].pts, PassageList[i].localEulerAngles);
 
-                    AnimatePassageToGivenRatio(animationTime, delayOnPassage * Mathf.Abs(m_PreviousPassageIndex - i), leanType, i, m_AnimationLocationRatio[i], 1.0f, m_BezierPathFromInitialToStack[i], m_BezierPathOrientationFromInitialToStack[i]);
-                    // PassageList[i].SetAsFirstSibling();
+                    AnimatePassageToGivenRatio(animationTime, delayOnPassage * Mathf.Abs(m_PreviousPassageIndex - i), leanType, i, m_AnimationLocationRatio[i], 1.0f, pathFromCurrentPosition, m_BezierPathOrientationFromInitialToStack[i]);
+                    
                     PassageList[i].SetSiblingIndex(NumberOfPassages - 1 - i);
                 }
                 else
@@ -642,10 +669,17 @@ namespace IBM.Watson.Widgets.Question
                     LTBezierPath pathToMove = m_AnimationLocationRatio[i] <= 0.5f ? m_BezierPathToCenter[i] : m_BezierPathToStack[i];
                     LTBezierPath pathToRotate = m_AnimationRotationRatio[i] <= 0.5f ? m_BezierPathOrientationToCenter[i] : m_BezierPathOrientationToStack[i];
                     float targetRatio = m_AnimationLocationRatio[i] <= 0.5f ? 1.0f : 0.0f;
-                    float currentRatio = m_AnimationLocationRatio[i] <= 0.5f ? (m_AnimationLocationRatio[i] * 2.0f) : ((m_AnimationLocationRatio[i] - 0.5f) * 2.0f);
+                    float currentRatio = m_AnimationLocationRatio[i] <= 0.5f ? 0.0f : 1.0f; ; // m_AnimationLocationRatio[i] <= 0.5f ? (m_AnimationLocationRatio[i] * 2.0f) : ((m_AnimationLocationRatio[i] - 0.5f) * 2.0f);
 
-                    //pathToMove = getBezierPathFromInitialValue(pathToMove.pts, PassageList[i].localPosition);
-                    //pathToRotate = getBezierPathFromInitialValue(pathToRotate.pts, PassageList[i].localEulerAngles);
+                    if(targetRatio == 1.0f)
+                    {
+                        pathToMove = getBezierPathFromInitialValue(pathToMove.pts, PassageList[i].localPosition);
+                        pathToRotate = getBezierPathFromInitialValue(pathToRotate.pts,  new Vector3( PassageList[i].localEulerAngles.x, PassageList[i].localEulerAngles.y, 0.0f));
+                    }
+                    else{
+                        pathToMove = getBezierPathToLastValue(pathToMove.pts, PassageList[i].localPosition);
+                        pathToRotate = getBezierPathToLastValue(pathToRotate.pts, new Vector3(PassageList[i].localEulerAngles.x, PassageList[i].localEulerAngles.y, 0.0f));
+                    }
                     
                     //PassageList[i].SetAsLastSibling();
                     AnimatePassageToGivenRatio(animationTime, (delayOnPassage * Mathf.Abs(m_PreviousPassageIndex - i)) + delayExtraOnMainPassage, leanType, i, currentRatio, targetRatio, pathToMove, pathToRotate, isUsingTwoAnimations: true);
@@ -666,7 +700,7 @@ namespace IBM.Watson.Widgets.Question
 
             float timeModifier = Mathf.Abs(targetRatio - currentRatio);
 
-            if (m_AnimationLocationRatio[passageIndex] != targetRatio)
+            if (m_AnimationLocationRatio[passageIndex] != targetRatio || m_AnimationRotationRatio[passageIndex] != targetRatio)
             {
 
                 bool hasChangeSiblingIndex = false;
@@ -695,7 +729,7 @@ namespace IBM.Watson.Widgets.Question
                         m_AnimationLocationRatio[passageIndex] = f;
                     }
 
-                    if( Mathf.Abs(f - targetRatio) < 0.05f && !hasChangeSiblingIndex)
+                    if (Mathf.Abs(f - targetRatio) < 0.05f && !hasChangeSiblingIndex)
                     {
                         hasChangeSiblingIndex = true;
                         if (isUsingTwoAnimations)
@@ -703,7 +737,7 @@ namespace IBM.Watson.Widgets.Question
                         else
                             PassageList[passageIndex].SetSiblingIndex(NumberOfPassages - 1 - passageIndex);
                     }
-                    
+
                 }).setOnComplete(()=> {
                     //if (isUsingTwoAnimations)
                     //    PassageList[passageIndex].SetSiblingIndex(NumberOfPassages);
@@ -717,7 +751,7 @@ namespace IBM.Watson.Widgets.Question
                 //no ned to create movement animation - passage is already in initial position.
             }
 
-            if (m_AnimationRotationRatio[passageIndex] != targetRatio)
+            if (m_AnimationLocationRatio[passageIndex] != targetRatio || m_AnimationRotationRatio[passageIndex] != targetRatio)
             {
                 m_AnimationToShowRotationPassage[passageIndex] = LeanTween.value(PassageList[passageIndex].gameObject, currentRatio, targetRatio, animationTime * timeModifier).setDelay(delayOnPassage).setEase(leanType).setOnUpdate(
                     (float f) =>
@@ -762,11 +796,11 @@ namespace IBM.Watson.Widgets.Question
                 {
                     if (m_AnimationToShowPositionPassage[i] != null)
                     {
-                        m_AnimationToShowRotationPassage[i].hasUpdateCallback = false;
+                        m_AnimationToShowPositionPassage[i].hasUpdateCallback = false;
                         LeanTween.cancel(m_AnimationToShowPositionPassage[i].uniqueId);
                     }
                     else
-                        Log.Warning("PassageAnimationManager", "There is no animation defined for animation: {0} ", i);
+                        Log.Warning("PassageAnimationManager", "There is no m_AnimationToShowPositionPassage defined for animation: {0} ", i);
                 }
             }
 
@@ -780,7 +814,7 @@ namespace IBM.Watson.Widgets.Question
                         LeanTween.cancel(m_AnimationToShowRotationPassage[i].uniqueId);
                     }
                     else
-                        Log.Warning("PassageAnimationManager", "There is no animation defined for animation: {0} ", i);
+                        Log.Warning("PassageAnimationManager", "There is no m_AnimationToShowRotationPassage defined for animation: {0} ", i);
                 }
             }
         }
