@@ -643,7 +643,7 @@ namespace IBM.Watson.Widgets.Question
                 //Going to initial position if they are in different position
                 if (i > passageIndexToShow)
                 {
-                    LTBezierPath pathFromCurrentPosition = getBezierPathToLastValue(m_BezierPathFromInitialToStack[i].pts, PassageList[i].localPosition);
+                    LTBezierPath pathFromCurrentPosition = getBezierPathToLastValue(m_BezierPathFromInitialToStack[i].pts, m_TargetLocation[i]);
                     //LTBezierPath pathFromCurrentRotation = getBezierPathToLastValue(m_BezierPathOrientationFromInitialToStack[i].pts, PassageList[i].localEulerAngles);
                     //AnimatePassageToGivenRatio(animationTime, delayOnPassage * Mathf.Abs(m_PreviousPassageIndex - i), leanType, i, m_AnimationLocationRatio[i], 0.0f, pathFromCurrentPosition, pathFromCurrentRotation);
 
@@ -653,7 +653,7 @@ namespace IBM.Watson.Widgets.Question
                 }
                 else if (i < passageIndexToShow)
                 {
-                    LTBezierPath pathFromCurrentPosition = getBezierPathFromInitialValue(m_BezierPathFromInitialToStack[i].pts, PassageList[i].localPosition);
+                    LTBezierPath pathFromCurrentPosition = getBezierPathFromInitialValue(m_BezierPathFromInitialToStack[i].pts, m_TargetLocation[i]);
                     //LTBezierPath pathFromCurrentRotation = getBezierPathFromInitialValue(m_BezierPathOrientationFromInitialToStack[i].pts, PassageList[i].localEulerAngles);
 
                     AnimatePassageToGivenRatio(animationTime, delayOnPassage * Mathf.Abs(m_PreviousPassageIndex - i), leanType, i, m_AnimationLocationRatio[i], 1.0f, pathFromCurrentPosition, m_BezierPathOrientationFromInitialToStack[i]);
