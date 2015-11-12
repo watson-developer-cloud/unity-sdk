@@ -91,7 +91,7 @@ namespace IBM.Watson.Widgets.Question
             {
                 if (m_PassageItems == null)
                 {
-                    UpdatePassages();
+                    //UpdatePassages();
                     if (m_PassageItems == null)
                     {
                         Log.Error("PassageAnimationManager", "PassageList couldn't find inside gameobject");
@@ -218,7 +218,7 @@ namespace IBM.Watson.Widgets.Question
         
         public void ReleasedFinger(System.Object[] args)
         {
-            Log.Status("PassageAnimationManager", "ReleasedFinger");
+            //Log.Status("PassageAnimationManager", "ReleasedFinger");
             if (m_IsTouchOnDragging)
             {
                 m_IsTouchOnDragging = false;
@@ -354,7 +354,7 @@ namespace IBM.Watson.Widgets.Question
 
         public void OneFingerDragFullScreen(System.Object[] args)
         {
-            Log.Status("PassageAnimationManager", "OneFingerDragFullScreen");
+            //Log.Status("PassageAnimationManager", "OneFingerDragFullScreen");
             if (m_IsTouchOnDragging)
             {
                 m_IsTouchOnDragging = false;
@@ -369,9 +369,11 @@ namespace IBM.Watson.Widgets.Question
 
         #region Passage Path Update
         
-        void UpdatePassages()
+        public void UpdatePassages()
         {
             m_PassageItems = Utility.FindObjects<Transform>(this.gameObject, "PassageItem", isContains: true, sortByName: true);
+            Log.Status("PassageAnimationManager", "Updated Passages with number of {0} passages", NumberOfPassages);
+
             UpdateBezierPathForPassages();
             m_AnimationLocationRatio = new float[NumberOfPassages];
             m_AnimationRotationRatio = new float[NumberOfPassages];
@@ -616,10 +618,10 @@ namespace IBM.Watson.Widgets.Question
 
             StopAnimations();
 
-            if (m_AnimationToShowPositionPassage == null)
+            if (m_AnimationToShowPositionPassage == null || m_AnimationToShowPositionPassage.Length != NumberOfPassages)
                 m_AnimationToShowPositionPassage = new LTDescr[NumberOfPassages];
 
-            if (m_AnimationToShowRotationPassage == null)
+            if (m_AnimationToShowRotationPassage == null || m_AnimationToShowRotationPassage.Length != NumberOfPassages)
                 m_AnimationToShowRotationPassage = new LTDescr[NumberOfPassages];
 
             float animationTime = 1.0f;
@@ -701,10 +703,13 @@ namespace IBM.Watson.Widgets.Question
             if (m_AnimationLocationRatio[passageIndex] != targetRatio || m_AnimationRotationRatio[passageIndex] != targetRatio)
             {
 
+                //Log.Status("PassageAnimationManager", "AnimatePassageToGivenRatio -passageIndex: {0}, PassageList.Length:{1}", passageIndex, PassageList.Length);
+
                 bool hasChangeSiblingIndex = false;
                 m_AnimationToShowPositionPassage[passageIndex] = LeanTween.value(PassageList[passageIndex].gameObject, currentRatio, targetRatio, animationTime * timeModifier).setDelay(delayOnPassage).setEase(leanType).setOnUpdate(
                 (float f) =>
                 {
+                    //Log.Status("PassageAnimationManager", "m_TargetLocation.length: {0} , passageIndex: {1}, m_AnimationLocationRatio.Length:{2}", m_TargetLocation.Length, passageIndex, m_AnimationLocationRatio.Length);
                     //PassageList[passageIndex].localPosition = bezierPathToMove.pointNotNAN(f);
                     m_TargetLocation[passageIndex] = bezierPathToMove.pointNotNAN(f);
                     if (isUsingTwoAnimations)
@@ -796,7 +801,7 @@ namespace IBM.Watson.Widgets.Question
                     {
                         m_AnimationToShowPositionPassage[i].hasUpdateCallback = false;
                         LeanTween.cancel(m_AnimationToShowPositionPassage[i].uniqueId);
-                        m_AnimationToShowPositionPassage[i] = null;
+                        //m_AnimationToShowPositionPassage[i] = null;
                     }
                     else
                     {
@@ -814,7 +819,7 @@ namespace IBM.Watson.Widgets.Question
                     {
                         m_AnimationToShowRotationPassage[i].hasUpdateCallback = false;
                         LeanTween.cancel(m_AnimationToShowRotationPassage[i].uniqueId);
-                        m_AnimationToShowRotationPassage[i] = null;
+                       // m_AnimationToShowRotationPassage[i] = null;
                     }
                     else
                     {
