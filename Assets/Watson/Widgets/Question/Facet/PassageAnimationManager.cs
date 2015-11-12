@@ -3,6 +3,9 @@ using UnityEngine;
 using System.Collections;
 using IBM.Watson.Logging;
 
+using UnityEngine.EventSystems;
+using System.Collections.Generic;
+
 namespace IBM.Watson.Widgets.Question
 {
     public class PassageAnimationManager : WatsonBaseAnimationManager
@@ -13,7 +16,7 @@ namespace IBM.Watson.Widgets.Question
         private CubeAnimationManager m_CubeAnimMgr = null;
         private QuestionWidget m_QuestionWidget = null;
         private Transform[] m_PassageItems = null;
-        private int m_LastFrameOneFingerDrag = 0;   //Used to identify the release finger
+        private bool m_IsTouchOnDragging = false;   //Used to identify the release finger
 
         //Holds all animations current Ratio value
         float[] m_AnimationLocationRatio;
@@ -204,20 +207,151 @@ namespace IBM.Watson.Widgets.Question
         public void ReleasedFinger(System.Object[] args)
         {
             Log.Status("PassageAnimationManager", "ReleasedFinger");
-            m_LastFrameOneFingerDrag = -1;
-        }
-
-
-        public void OneFingerDragOnCube(System.Object[] args)
-        {
-            Log.Status("PassageAnimationManager", "OneFingerDragOnCube");
+            if (m_IsTouchOnDragging)
+            {
+                m_IsTouchOnDragging = false;
+                FingerReleasedAfterDragging();
+            }
+           
         }
 
         public void TapOnCubeSide(System.Object[] args)
         {
-            // Cube.SideFocused
-            Log.Status("PassageAnimationManager", "TapOnCubeSide");
+            if (args != null && args.Length == 2 && args[0] is TouchScript.Gestures.TapGesture && args[1] is RaycastHit)
+            {
+                if (Cube.AnimationState == CubeAnimationManager.CubeAnimationState.IDLE_AS_FOCUSED || true) //TODO: Delete these true condition - it is for test purpose
+                {
+                    
+                    TouchScript.Gestures.TapGesture tapGesture = args[0] as TouchScript.Gestures.TapGesture;
+
+                    /*
+                    Ray rayForDrag = UnityEngine.Camera.main.ScreenPointToRay(tapGesture.ScreenPosition);
+                    RaycastHit2D hit;
+                    hit = Physics2D.Raycast(rayForDrag.origin, rayForDrag.direction, Mathf.Infinity, 1 << this.gameObject.layer);
+
+                    startPoint = rayForDrag.origin;
+                    endPoint = rayForDrag.origin + 200 * rayForDrag.direction;
+                    if (hit.collider != null)
+                    {
+                        Log.Status("PassageAnimationManager", "TapOnCubeSide - HIT: " + hit.transform.name + " - Parent: " + hit.transform.parent.name);
+                    }
+                    else
+                    {
+                        Log.Status("PassageAnimationManager", "TapOnCubeSide - Not Hit");
+                        //do not hit any passage
+                    }
+                    */
+                    if(EventSystem.current != null)
+                    {
+                        // get pointer event data, then set current mouse position
+                        PointerEventData ped = new PointerEventData(EventSystem.current);
+                        ped.position = tapGesture.ScreenPosition;
+                        List<RaycastResult> hits = new List<RaycastResult>();
+                        EventSystem.current.RaycastAll(ped, hits);
+
+                        RaycastResult hitResult = default(RaycastResult);
+                        bool hitOnPanel = false;
+                        int panelIndexToShow = -1;
+
+                        string namePanel = "Panel";
+                        string nameTabItem = "TabItem";
+                        string nameTabImage = "Tab";
+                        string namePrefixPassageItem = "PassageItem_";
+
+                        foreach (RaycastResult r in hits)       
+                        {
+                            if (r.gameObject.layer == this.gameObject.layer && (string.Equals(r.gameObject.name, namePanel) || string.Equals(r.gameObject.name, nameTabItem) || string.Equals(r.gameObject.name, nameTabImage)))
+                            {
+                                Log.Status("PassageAnimationManager", "RaycastResult - r: " + r.gameObject.name + " PArent: " + r.gameObject.transform.parent.name);
+                                hitOnPanel = true;
+                                hitResult = r;
+
+                                if (string.Equals(r.gameObject.name, nameTabImage))
+                                    int.TryParse(hitResult.gameObject.transform.parent.parent.name.Substring(namePrefixPassageItem.Length, 2), out panelIndexToShow);
+                                else
+                                    int.TryParse(hitResult.gameObject.transform.parent.name.Substring(namePrefixPassageItem.Length, 2), out panelIndexToShow);
+                                
+                                break;
+                            }
+                            
+                        }
+
+                        if (hitOnPanel && panelIndexToShow >=0)
+                        {
+                            Log.Status("PassageAnimationManager", "TapOnCubeSide - HIT: " + hitResult.gameObject.name + " - Parent: " + hitResult.gameObject.transform.parent.name);
+                            ShowPassage(panelIndexToShow);
+
+                        }
+                        else
+                        {
+                            Log.Status("PassageAnimationManager", "TapOnCubeSide - Not Hit");
+                        }
+                    }
+                    else
+                    {
+                        Log.Warning("PassageAnimationManager", "EventSystem couldn't find in the current scene");
+                    }
+                    
+
+                    //RaycastHit raycastHit = (RaycastHit)args[1];
+
+                    //Cube.OnTapInside(tapGesture, raycastHit);
+                }
+                else
+                {
+                    //do nothing - we are not instersted the taps in other states
+                }
+            }
+            else
+            {
+                Log.Warning("PassageAnimationManager", "TapOnCubeSide has invalid arguments!");
+            }
         }
+
+        Vector3 startPoint;
+        Vector3 endPoint;
+        void OnDrawGizmos()
+        {
+
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawLine(startPoint, endPoint);
+        }
+
+        public void OneFingerDragOnCube(System.Object[] args)
+        {
+            Log.Status("PassageAnimationManager", "OneFingerDragOnCube");
+            if (args != null && args.Length == 1 && args[0] is TouchScript.Gestures.ScreenTransformGesture)
+            {
+                TouchScript.Gestures.ScreenTransformGesture OneFingerManipulationGesture = args[0] as TouchScript.Gestures.ScreenTransformGesture;
+
+                if (Cube.AnimationState == CubeAnimationManager.CubeAnimationState.IDLE_AS_FOCUSED || true) //TODO: Delete this true condition! it is for test purposes!
+                {
+                    DragOneFingerOnFocusedSide(OneFingerManipulationGesture);
+                }
+                else
+                {
+                    //do nothing because cube is not in Focused state!
+                }
+            }
+            else
+            {
+                Log.Warning("QuestWidget", "OneFingerDragOnCube has invalid arguments");
+            }
+            
+        }
+
+        public void OneFingerDragFullScreen(System.Object[] args)
+        {
+            Log.Status("PassageAnimationManager", "OneFingerDragFullScreen");
+            if (m_IsTouchOnDragging)
+            {
+                m_IsTouchOnDragging = false;
+                FingerReleasedAfterDragging();
+            }
+           
+        }
+
+       
 
         #endregion
 
@@ -235,8 +369,8 @@ namespace IBM.Watson.Widgets.Question
             {
                 m_AnimationLocationRatio[i] = 0.0f;
                 m_AnimationRotationRatio[i] = 0.0f;
-                m_TargetLocation[i] = Vector3.zero;
-                m_TargetRotation[i] = Vector3.zero;
+                m_TargetLocation[i] = PassageList[i].localPosition;
+                m_TargetRotation[i] = PassageList[i].localEulerAngles;
             }
             
         }
@@ -300,8 +434,7 @@ namespace IBM.Watson.Widgets.Question
         //[SerializeField]
         private float m_OneDragModifier = 0.002f;
         private int m_SelectedPassageIndex = -1;
-
-        private Vector3 worldOnPath = Vector3.up;
+        
 
         public void DragOneFingerOnFocusedSide(TouchScript.Gestures.ScreenTransformGesture OneFingerManipulationGesture)
         {
@@ -315,15 +448,17 @@ namespace IBM.Watson.Widgets.Question
             {
                 float movingInX = OneFingerManipulationGesture.DeltaPosition.x * m_OneDragModifier;
 
-                if (m_SelectedPassageIndex != -1)
-                {
+                m_IsTouchOnDragging = true;
 
-                }
-                else
+                if (m_SelectedPassageIndex == -1)
                 {
-                    Ray rayForDrag = UnityEngine.Camera.main.ScreenPointToRay(OneFingerManipulationGesture.ScreenPosition);
-                    RaycastHit hit;
-                    bool isHitOnFocusedSide = Physics.Raycast(rayForDrag, out hit, Mathf.Infinity, 1 << this.transform.parent.gameObject.layer);
+                    m_SelectedPassageIndex = 0;
+                }
+                //else
+                //{
+                    //Ray rayForDrag = UnityEngine.Camera.main.ScreenPointToRay(OneFingerManipulationGesture.ScreenPosition);
+                    //RaycastHit hit;
+                    //bool isHitOnFocusedSide = Physics.Raycast(rayForDrag, out hit, Mathf.Infinity, 1 << this.transform.parent.gameObject.layer);
 
                     //if (isHitOnFocusedSide)
                     //{
@@ -338,15 +473,65 @@ namespace IBM.Watson.Widgets.Question
                     //        //DragOneFingerOnPassage(OneFingerManipulationGesture);
                     //    }
                     //}
+                    
+                    
 
                     m_AnimationLocationRatio[m_SelectedPassageIndex] = Mathf.Clamp01(m_AnimationLocationRatio[m_SelectedPassageIndex] + movingInX);
-                }
+
+                    SetTargetLocationAndRotationOfSelectedPassage();
+
+                //}
 
 
             }
             else
             {
                 Log.Status("CubeAnimationManager", "NO PASSAGE - DragOneFingerOnPassage: {0}", OneFingerManipulationGesture.DeltaPosition);
+            }
+        }
+
+        private void SetTargetLocationAndRotationOfSelectedPassage()
+        {
+            LTBezierPath m_BezierPathCurrent;
+            LTBezierPath m_BezierPathOrientationCurrent;
+
+            float m_RatioBezierPathPassage = 0.0f;
+            if (m_AnimationLocationRatio[m_SelectedPassageIndex] <= 0.5f)
+            {
+                m_RatioBezierPathPassage = m_AnimationLocationRatio[m_SelectedPassageIndex] * 2.0f;
+                m_BezierPathCurrent = m_BezierPathToCenter[m_SelectedPassageIndex];
+                m_BezierPathOrientationCurrent = m_BezierPathOrientationToCenter[m_SelectedPassageIndex];
+            }
+            else
+            {
+                m_RatioBezierPathPassage = (m_AnimationLocationRatio[m_SelectedPassageIndex] - 0.5f) * 2.0f;
+                m_BezierPathCurrent = m_BezierPathToStack[m_SelectedPassageIndex];
+                m_BezierPathOrientationCurrent = m_BezierPathOrientationToStack[m_SelectedPassageIndex];
+            }
+
+            m_TargetLocation[m_SelectedPassageIndex] = m_BezierPathCurrent.point(m_RatioBezierPathPassage);
+            m_TargetRotation[m_SelectedPassageIndex] = m_BezierPathOrientationCurrent.point(m_RatioBezierPathPassage);
+
+        }
+
+        private void FingerReleasedAfterDragging()
+        {
+            if (!m_IsTouchOnDragging && m_SelectedPassageIndex >= 0)
+            {
+                if (m_AnimationLocationRatio[m_SelectedPassageIndex] < m_PercentToGoInitialPosition)
+                {
+                    m_AnimationLocationRatio[m_SelectedPassageIndex] = 0.0f;
+                }
+                else if (m_AnimationLocationRatio[m_SelectedPassageIndex] > m_PercentToGoStackPosition)
+                {
+                    m_AnimationLocationRatio[m_SelectedPassageIndex] = 1.0f;
+                }
+                else
+                {
+                    m_AnimationLocationRatio[m_SelectedPassageIndex] = 0.5f;
+                }
+                SetTargetLocationAndRotationOfSelectedPassage();
+                //m_SelectedPassageIndex = -1;
             }
         }
 
@@ -359,62 +544,28 @@ namespace IBM.Watson.Widgets.Question
 
             if (m_PassageItems != null)
             {
-
-                if (m_LastFrameOneFingerDrag < 0 && m_SelectedPassageIndex >= 0)
-                {
-                    if (m_AnimationLocationRatio[m_SelectedPassageIndex] < m_PercentToGoInitialPosition)
-                    {
-                        m_AnimationLocationRatio[m_SelectedPassageIndex] = 0.0f;
-                    }
-                    else if (m_AnimationLocationRatio[m_SelectedPassageIndex] > m_PercentToGoStackPosition)
-                    {
-                        m_AnimationLocationRatio[m_SelectedPassageIndex] = 1.0f;
-                    }
-                    else
-                    {
-                        m_AnimationLocationRatio[m_SelectedPassageIndex] = 0.5f;
-                    }
-                }
-
-               
+                
                 for (int i = 0; i < m_PassageItems.Length; i++)
                 {
-                    if (i < m_SelectedPassageIndex)
+                    if (i != m_SelectedPassageIndex)
                     {
                         m_PassageItems[i].transform.localPosition = Vector3.Lerp(m_PassageItems[i].transform.localPosition, m_TargetLocation[i], Time.deltaTime * m_SpeedPassageAnimation);
                         m_PassageItems[i].transform.localRotation = Quaternion.Lerp(m_PassageItems[i].transform.localRotation, Quaternion.Euler(m_TargetRotation[i]), Time.deltaTime * m_SpeedPassageAnimation);
                         
                         //m_PassageItems[i].transform.localPosition = Vector3.Lerp(m_PassageItems[i].transform.localPosition, m_BezierPathToCenter[i].point(0.0f), Time.deltaTime * m_SpeedPassageAnimation);
                         //m_PassageItems[i].transform.localRotation = Quaternion.Lerp(m_PassageItems[i].transform.localRotation, Quaternion.Euler(m_BezierPathOrientationToCenter[i].point(0.0f)), Time.deltaTime * m_SpeedPassageAnimation);
-                    }
-                    else if (i > m_SelectedPassageIndex)
-                    {
-                        m_PassageItems[i].transform.localPosition = Vector3.Lerp(m_PassageItems[i].transform.localPosition, m_TargetLocation[i], Time.deltaTime * m_SpeedPassageAnimation);
-                        m_PassageItems[i].transform.localRotation = Quaternion.Lerp(m_PassageItems[i].transform.localRotation, Quaternion.Euler(m_TargetRotation[i]), Time.deltaTime * m_SpeedPassageAnimation);
+                    //}
+                    //else if (i > m_SelectedPassageIndex)
+                    //{
+                    //    m_PassageItems[i].transform.localPosition = Vector3.Lerp(m_PassageItems[i].transform.localPosition, m_TargetLocation[i], Time.deltaTime * m_SpeedPassageAnimation);
+                    //    m_PassageItems[i].transform.localRotation = Quaternion.Lerp(m_PassageItems[i].transform.localRotation, Quaternion.Euler(m_TargetRotation[i]), Time.deltaTime * m_SpeedPassageAnimation);
 
-                        //m_PassageItems[i].transform.localPosition = Vector3.Lerp(m_PassageItems[i].transform.localPosition, m_BezierPathToStack[i].point(1.0f), Time.deltaTime * m_SpeedPassageAnimation);
-                        //m_PassageItems[i].transform.localRotation = Quaternion.Lerp(m_PassageItems[i].transform.localRotation, Quaternion.Euler(m_BezierPathOrientationToStack[i].point(1.0f)), Time.deltaTime * m_SpeedPassageAnimation);
+                    //    //m_PassageItems[i].transform.localPosition = Vector3.Lerp(m_PassageItems[i].transform.localPosition, m_BezierPathToStack[i].point(1.0f), Time.deltaTime * m_SpeedPassageAnimation);
+                    //    //m_PassageItems[i].transform.localRotation = Quaternion.Lerp(m_PassageItems[i].transform.localRotation, Quaternion.Euler(m_BezierPathOrientationToStack[i].point(1.0f)), Time.deltaTime * m_SpeedPassageAnimation);
                     }
                     else
                     {
-                        LTBezierPath m_BezierPathCurrent;
-                        LTBezierPath m_BezierPathOrientationCurrent;
-                        float m_RatioBezierPathPassage = 0.0f;
-                        if (m_AnimationLocationRatio[m_SelectedPassageIndex] <= 0.5f)
-                        {
-                            m_RatioBezierPathPassage = m_AnimationLocationRatio[m_SelectedPassageIndex] * 2.0f;
-                            m_BezierPathCurrent = m_BezierPathToCenter[i];
-                            m_BezierPathOrientationCurrent = m_BezierPathOrientationToCenter[i];
-                        }
-                        else
-                        {
-                            m_RatioBezierPathPassage = (m_AnimationLocationRatio[m_SelectedPassageIndex] - 0.5f) * 2.0f;
-                            m_BezierPathCurrent = m_BezierPathToStack[i];
-                            m_BezierPathOrientationCurrent = m_BezierPathOrientationToStack[i];
-                        }
-
-                        m_TargetLocation[i] = m_BezierPathCurrent.point(m_RatioBezierPathPassage);
-                        m_TargetRotation[i] = m_BezierPathOrientationCurrent.point(m_RatioBezierPathPassage);
+                        
 
                         m_PassageItems[i].transform.localPosition = Vector3.Lerp(m_PassageItems[i].transform.localPosition, m_TargetLocation[i], Time.deltaTime * m_SpeedPassageAnimation);
                         m_PassageItems[i].transform.localRotation = Quaternion.Lerp(m_PassageItems[i].transform.localRotation, Quaternion.Euler(m_TargetRotation[i]), Time.deltaTime * m_SpeedPassageAnimation);
@@ -441,7 +592,10 @@ namespace IBM.Watson.Widgets.Question
         private int m_PreviousPassageIndex = 0;
         private void ShowPassage(int passageIndexToShow)
         {
-           // UnityEngine.Debug.Break();
+
+            m_PreviousPassageIndex = m_SelectedPassageIndex;
+            m_SelectedPassageIndex = passageIndexToShow;
+            // UnityEngine.Debug.Break();
             Log.Status("PassageAnimationManager", "ShowPassage : {0}, PreviousOne: {1}", passageIndexToShow, m_PreviousPassageIndex);
 
             StopAnimations();
@@ -453,7 +607,8 @@ namespace IBM.Watson.Widgets.Question
                 m_AnimationToShowRotationPassage = new LTDescr[NumberOfPassages];
 
             float animationTime = 1.0f;
-            float delayOnPassage = 0.1f;
+            float delayOnPassage = 0.07f;
+            float delayExtraOnMainPassage = 0.07f;
             LeanTweenType leanType = LeanTweenType.easeOutCirc;
 
             for (int i = 0; i < NumberOfPassages; i++)
@@ -493,7 +648,7 @@ namespace IBM.Watson.Widgets.Question
                     //pathToRotate = getBezierPathFromInitialValue(pathToRotate.pts, PassageList[i].localEulerAngles);
                     
                     //PassageList[i].SetAsLastSibling();
-                    AnimatePassageToGivenRatio(animationTime, delayOnPassage * Mathf.Abs(m_PreviousPassageIndex - i), leanType, i, currentRatio, targetRatio, pathToMove, pathToRotate, isUsingTwoAnimations: true);
+                    AnimatePassageToGivenRatio(animationTime, (delayOnPassage * Mathf.Abs(m_PreviousPassageIndex - i)) + delayExtraOnMainPassage, leanType, i, currentRatio, targetRatio, pathToMove, pathToRotate, isUsingTwoAnimations: true);
                 }
                 //m_AnimationToShowRotationPassage[i] =
 
@@ -501,7 +656,7 @@ namespace IBM.Watson.Widgets.Question
                 //m_PassageItems[i].transform.localRotation = Quaternion.Lerp(m_PassageItems[i].transform.localRotation, Quaternion.Euler(m_BezierPathOrientationToCenter[i].point(0.0f)), Time.deltaTime * m_SpeedPassageAnimation);
 
             }
-            m_PreviousPassageIndex = passageIndexToShow;
+            
         }
 
 

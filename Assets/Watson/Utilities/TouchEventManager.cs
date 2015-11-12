@@ -276,7 +276,7 @@ namespace IBM.Watson.Utilities
 
 		private void OneFingerTransformedHandler(object sender, System.EventArgs e)
 		{
-			Log.Status ("TouchEventManager", "oneFingerManipulationTransformedHandler: {0}", m_OneFingerMoveGesture.DeltaPosition);
+			//Log.Status ("TouchEventManager", "oneFingerManipulationTransformedHandler: {0}", m_OneFingerMoveGesture.DeltaPosition);
 			if (m_Active) {
 				TouchEventData dragEventToFire = null;
 					
@@ -347,7 +347,7 @@ namespace IBM.Watson.Utilities
 
 		private void TwoFingerTransformedHandler(object sender, System.EventArgs e)
 		{
-			Log.Status ("TouchEventManager", "TwoFingerTransformedHandler: {0}", m_TwoFingerMoveGesture.DeltaPosition);
+			//Log.Status ("TouchEventManager", "TwoFingerTransformedHandler: {0}", m_TwoFingerMoveGesture.DeltaPosition);
 			if (m_Active) {
 				TouchEventData dragEventToFire = null;
 
@@ -458,7 +458,7 @@ namespace IBM.Watson.Utilities
 		{   
             if (m_Active)
 			{
-                Log.Status("TouchEventManager", "TapGesture_Tapped: {0} ", m_TapGesture.ScreenPosition);
+                //Log.Status("TouchEventManager", "TapGesture_Tapped: {0} ", m_TapGesture.ScreenPosition);
 
                 TouchEventData tapEventToFire = null;
 				RaycastHit hit = default(RaycastHit);

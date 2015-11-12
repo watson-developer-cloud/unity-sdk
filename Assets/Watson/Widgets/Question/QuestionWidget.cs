@@ -249,6 +249,10 @@ namespace IBM.Watson.Widgets.Question
 					Cube.DragOneFingerOnSide(OneFingerManipulationGesture);
 				}
 			}
+            else
+            {
+                Log.Warning("QuestWidget", "DragOneFingerOnObject has invalid arguments");
+            }
 		}
 
 		/// <summary>
@@ -392,7 +396,7 @@ namespace IBM.Watson.Widgets.Question
         protected override void Awake()
         {
             base.Awake();
-            EnableEvents(false);
+            //EnableEvents(false);  //TODO: Uncomment - commented for test purposes!
 			Cube.enabled = false;
 
 			//	populate facets
