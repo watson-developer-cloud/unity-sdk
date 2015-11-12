@@ -174,6 +174,35 @@ namespace IBM.Watson.Data
             /// The question transcript with tagged elements.
             /// </summary>
             public string taggedText { get; set; }
+
+            public QuestionText()
+            { }
+
+            public QuestionText( QA.Question q )
+            {
+                if ( q.focuslist != null )
+                {
+                    List<string> focusList = new List<string>();
+                    foreach( var f in q.focuslist )
+                        focusList.Add( f.value );
+                    focus = focusList.ToArray();
+                }
+                if ( q.latlist != null )
+                {
+                    List<string> latList = new List<string>();
+                    foreach( var l in q.latlist )
+                        latList.Add( l.value );
+                    lat = latList.ToArray();
+                }
+                questionText = q.questionText;
+
+                taggedText = questionText;
+                foreach( var f in focus )
+                    taggedText = taggedText.Replace( f, "<Focus>" + f + "</Focus>" );
+                foreach( var l in lat )
+                    taggedText = taggedText.Replace( l, "<Lat>" + l + "</Lat>" );
+            }
+ 
         };
         /// <summary>
         /// Data class for GetQuestions() method.
@@ -202,6 +231,28 @@ namespace IBM.Watson.Data
             public string pipelineId { get; set; }
             public string authorizationKey { get; set; }
             public QuestionText question { get; set; }
+
+            /// <summary>
+            /// THe default constructor.
+            /// </summary>
+            public Question()
+            { }
+
+            /// <summary>
+            /// Construct from a QA.Question object.
+            /// </summary>
+            /// <param name="question"></param>
+            public Question( QA.Question q )
+            {
+                _id = q.id;
+                if ( q.answers != null )
+                {
+                    foreach( var answer in q.answers )
+                        topConfidence = Math.Max( topConfidence, answer.confidence );
+                }
+
+                question = new QuestionText( q );
+            }
         };
         /// <summary>
         /// Data class for GetQuestions() method.
@@ -216,6 +267,44 @@ namespace IBM.Watson.Data
             public bool HasQuestion()
             {
                 return questions != null && questions.Length > 0;
+            }
+
+            /// <summary>
+            /// Default constructor.
+            /// </summary>
+            public Questions()
+            { }
+
+            /// <summary>
+            /// Construct this object from a QA.ResponseList object.
+            /// </summary>
+            /// <param name="response"></param>
+            public Questions( QA.ResponseList response )
+            {
+                if (response != null && response.responses != null )
+                {
+                    List<Question> questionList = new List<Question>();
+                    foreach( var resp in response.responses )
+                    {
+                        if ( resp.question != null )
+                            questionList.Add( new Question( resp.question ) );
+                    }
+                    questions = questionList.ToArray();
+                }
+                else
+                    questions = null;
+            }
+
+            public Questions( QA.Response response )
+            {
+                if ( response != null && response.question != null )
+                    questions = new Question[] { new Question( response.question ) };
+            }
+
+            public Questions( QA.Question q )
+            {
+                if ( q != null )
+                    questions = new Question[] { new Question( q ) };
             }
         };
 
@@ -256,18 +345,17 @@ namespace IBM.Watson.Data
                 }
             }
 
-            private static Dictionary<string, WordPosition> sm_WordPositions = new Dictionary<string, WordPosition>()
-        {
-            { "noun", WordPosition.NOUN },
-            { "pronoun", WordPosition.PRONOUN },        // ?
-            { "adj", WordPosition.ADJECTIVE },
-            { "det", WordPosition.DETERMINIER },
-            { "verb", WordPosition.VERB },
-            { "adverb", WordPosition.ADVERB },          // ?
-            { "prep", WordPosition.PREPOSITION },
-            { "conj", WordPosition.CONJUNCTION },       // ?
-            { "inter", WordPosition.INTERJECTION },     // ?
-        };
+            private static Dictionary<string, WordPosition> sm_WordPositions = new Dictionary<string, WordPosition>() {
+                { "noun", WordPosition.NOUN },
+                { "pronoun", WordPosition.PRONOUN },        // ?
+                { "adj", WordPosition.ADJECTIVE },
+                { "det", WordPosition.DETERMINIER },
+                { "verb", WordPosition.VERB },
+                { "adverb", WordPosition.ADVERB },          // ?
+                { "prep", WordPosition.PREPOSITION },
+                { "conj", WordPosition.CONJUNCTION },       // ?
+                { "inter", WordPosition.INTERJECTION },     // ?
+            };
         };
         /// <summary>
         /// This data class is returned by the GetParseData() function.
@@ -280,6 +368,77 @@ namespace IBM.Watson.Data
             public ParseWord[] Words { get; set; }
             public string[] Heirarchy { get; set; }
             public string[] Flags { get; set; }
+
+            public ParseData()
+            { }
+
+            /// <summary>
+            /// Marshal a QA.Question object into this ParseData object.
+            /// </summary>
+            /// <param name="question"></param>
+            public ParseData( QA.Question question )
+            {
+                Id = question.id;
+
+                if ( question.xsgtopparses != null && question.xsgtopparses.Length > 0 )
+                {
+                    Queue<QA.Word> tree = new Queue<QA.Word>();
+                    tree.Enqueue( question.xsgtopparses[0] );
+
+                    List<ParseWord> words = new List<ParseWord>();
+                    while( tree.Count > 0 )
+                    {
+                        QA.Word word = tree.Dequeue();
+                        if (word.lmods != null )
+                        {
+                            foreach( var child in word.lmods )
+                                tree.Enqueue( child );
+                        }
+                        if ( word.rmods != null )
+                        {
+                            foreach( var child in word.rmods )
+                                tree.Enqueue( child );
+                        }
+
+                        ParseWord parseWord = new ParseWord();
+                        parseWord.Slot = word.slotname;
+                        parseWord.Word = word.wordtext;
+                        parseWord.Features = word.features.Split( ' ' );
+                        parseWord.PosName = parseWord.Features[0];
+
+                        int index = int.Parse( word.seqno ) - 1;
+                        while(words.Count <= index )
+                            words.Add( null );
+                        words[ index ] = parseWord;
+                    }
+
+                    Words = words.ToArray();
+                }
+                else
+                {
+                    Log.Warning( "ParseData", "XSG parse tree not available." );
+
+                    List<ParseWord> words = new List<ParseWord>();
+                    foreach( var word in question.questionText.Split( ' ' ) )
+                    {
+                        ParseWord parseWord = new ParseWord();
+                        parseWord.Word = word;
+
+                        // look for the part of speech in the synonymList..
+                        if ( question.synonymList != null )
+                        {
+                            foreach( var syn in question.synonymList )
+                            {
+                                if ( syn.value == word )
+                                    parseWord.PosName = syn.partOfSpeech;
+                            }
+                        }
+                        words.Add( parseWord );
+                    }
+
+                    Words = words.ToArray();
+                }
+            }
 
             public bool ParseJson(IDictionary json)
             {
@@ -351,6 +510,18 @@ namespace IBM.Watson.Data
             public string passage { get; set; }
             public string decoratedPassage { get; set; }
             public string corpus { get; set; }
+
+            public Evidence()
+            { }
+            public Evidence( QA.Evidence e )
+            {
+                title = e.title;
+                passage = e.text;
+                decoratedPassage = passage;
+
+                if ( e.metadataMap != null )
+                    corpus = e.metadataMap.corpusName;
+            }
         };
         public class Variant
         {
@@ -373,6 +544,21 @@ namespace IBM.Watson.Data
             public Evidence[] evidence { get; set; }
             public Variant[] variants { get; set; }
             public Feature[] features { get; set; }
+
+            public Answer()
+            { }
+            public Answer( QA.Answer a )
+            {
+                answerText = a.text;
+                confidence = a.confidence;
+
+                if ( a.evidence != null )
+                {
+                    evidence = new Evidence[ a.evidence.Length ];
+                    for(int i=0;i<evidence.Length;++i)
+                        evidence[i] = new Evidence( a.evidence[i] );
+                }
+            }
         };
         public class Answers
         {
@@ -387,6 +573,50 @@ namespace IBM.Watson.Data
             public bool HasAnswer()
             {
                 return answers != null && answers.Length > 0;
+            }
+
+            public Answers()
+            { }
+            public Answers( QA.Question q )
+            {
+                _id = q.id;
+                if ( q.answers != null )
+                {
+                    Answer bestAnswer = null;
+
+                    answers = new Answer[ q.answers.Length ];
+                    for(int i=0;i<answers.Length;++i)
+                    {
+                        QA.Answer a = q.answers[i];
+
+                        // WEA answers have their evidence in the evidenceList of the question, if we have no
+                        // evidence in the answer, then copy the evidence over into the answer.
+                        if ( a.evidence == null && q.evidencelist != null && a.text.Contains( "-" ) )
+                        {
+                            // extract the evidence ID from the answer text in a WEA
+                            // "text": "142B100455C66F896BBE4FD60C849E08 - PM #8214942 v3C NWS GWF 2 Sculptor and Rankin Completions Sand Control Selection : 5. Sand Analysis : 5.3 PSD Analysis",
+                            string evidenceId = a.text.Substring( 0, a.text.IndexOf( '-' ) ).Trim();
+
+                            List<QA.Evidence> evidenceList = new List<QA.Evidence>();
+                            foreach( var e in q.evidencelist )
+                            {
+                                if ( e.id.EndsWith( evidenceId ) )
+                                    evidenceList.Add( e );
+                            }
+
+                            a.evidence = evidenceList.ToArray();
+                        }
+
+                        answers[i] = new Answer( a );
+
+                        if ( bestAnswer == null || bestAnswer.confidence < answers[i].confidence )
+                            bestAnswer = answers[i];
+                    }
+
+                    // mark the most correct answer..
+                    if ( bestAnswer != null )
+                        bestAnswer.correctAnswer = true;
+                }
             }
         };
     }
@@ -719,35 +949,6 @@ namespace IBM.Watson.Data
     #region QA Models
     namespace QA
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        public class Service
-        {
-            /// <summary>
-            /// 
-            /// </summary>
-            public string id { get; set; }
-            /// <summary>
-            /// 
-            /// </summary>
-            public string name { get; set; }
-            /// <summary>
-            /// 
-            /// </summary>
-            public string description { get; set; }
-        };
-        /// <summary>
-        /// 
-        /// </summary>
-        public class Services
-        {
-            /// <summary>
-            /// 
-            /// </summary>
-            public Service[] services { get; set; }
-        };
-
         public class Value
         {
             public string value { get; set; }
@@ -808,8 +1009,38 @@ namespace IBM.Watson.Data
             public string text { get; set; }
             public string pipeline { get; set; }
             public double confidence { get; set; }
+            public Evidence [] evidence { get; set; }
             public string[] entityTypes { get; set; }
         };
+        public class Slots
+        {
+            public string pred { get; set; }
+            public string subj { get; set; }
+            public string objprep { get; set; }
+            public string psubj { get; set; }
+        };
+        public class Word
+        {
+            public Slots compSlotParseNodes { get; set; }
+            public string slotname { get; set; }
+            public string wordtext { get; set; }
+            public string slotnameoptions { get; set; }
+            public string wordsense { get; set; }
+            public string numericsense { get; set; }
+            public string seqno { get; set; }
+            public string wordbegin { get; set; }
+            public string framebegin { get; set; }
+            public string frameend { get; set; }
+            public string wordend { get; set; }
+            public string features { get; set; }
+            public Word[] lmods { get; set; }
+            public Word[] rmods { get; set; }
+        };
+        public class ParseTree : Word
+        {
+            public string parseScore { get; set; }
+        };
+
         public class Question
         {
             public Value[] qclasslist { get; set; }
@@ -818,8 +1049,11 @@ namespace IBM.Watson.Data
             public Evidence[] evidencelist { get; set; }
             public SynonymList[] synonymList { get; set; }
             public string[] disambiguatedEntities { get; set; }
+            public ParseTree[] xsgtopparses { get; set; }
+            public string casXml { get; set; }
             public string pipelineid { get; set; }
             public bool formattedAnswer { get; set; }
+            public string selectedProcessingComponents { get; set; }
             public string category { get; set; }
             public long items { get; set; }
             public string status { get; set; }
@@ -845,6 +1079,9 @@ namespace IBM.Watson.Data
             public QuestionClass[] questionClasses { get; set; }
         };
 
+        /// <summary>
+        /// A list of responses.
+        /// </summary>
         public class ResponseList
         {
             public Response[] responses { get; set; }

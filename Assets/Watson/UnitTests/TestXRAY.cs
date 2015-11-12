@@ -27,7 +27,6 @@ namespace IBM.Watson.UnitTests
     {
         XRAY m_XRAY = new XRAY();
         bool m_InitTested = false;
-        bool m_GetPipelineTested = false;
         bool m_AskQuestionTested = false;
         bool m_GetQuestionsTested = false;
         bool m_GetQuestionTested = false;
@@ -62,12 +61,6 @@ namespace IBM.Watson.UnitTests
         {
             Test( success );
             m_InitTested = true;
-        }
-
-        private void OnGetPipeline( Pipeline pipeline )
-        {
-            Test( pipeline != null );
-            m_GetPipelineTested = true;
         }
 
         private void OnAskQuestion( Questions questions )
