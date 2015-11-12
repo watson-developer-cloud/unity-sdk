@@ -115,6 +115,10 @@ namespace IBM.Watson.Widgets.Question
             if (prefab == null)
                 throw new ArgumentNullException("prefab");
 
+            int newLine = add.IndexOf( '\n' );
+            if ( newLine > 0 )
+                add = add.Substring( 0, newLine );
+
             GameObject textObject = Instantiate(prefab) as GameObject;
             textObject.GetComponent<Text>().text = add;
             textObject.transform.SetParent(m_ChatLayout.transform, false);
