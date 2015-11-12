@@ -284,6 +284,10 @@ namespace IBM.Watson.Utilities
             /// Event if 
             /// </summary>
             ON_TOUCH_RELEASED_FULLSCREEN,
+            /// <summary>
+            /// Five finger tap event
+            /// </summary>
+            ON_TOUCH_FIVE_FINGER,
 
             #endregion
         }
