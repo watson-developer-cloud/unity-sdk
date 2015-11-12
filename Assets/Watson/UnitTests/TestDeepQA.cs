@@ -16,42 +16,48 @@
 * @author Richard Lyle (rolyle@us.ibm.com)
 */
 
-#define EXPORT_QUESTIONS
-//#define USE_CACHE
+#define TEST_WEA
+//#define EXPORT_QUESTIONS
 
 using System.Collections;
 using IBM.Watson.Services.v1;
 using IBM.Watson.Logging;
 using IBM.Watson.Data.QA;
-using UnityEngine;
-using System.IO;
-using System.Xml;
-using System.Text;
 
 namespace IBM.Watson.UnitTests
 {
     /// <exclude />
     public class TestDeepQA : UnitTest
     {
-        DeepQA m_QA = new DeepQA("Woodside");
+#if TEST_WEA
+        const string SERVICE_ID = "woodside";
+        const string TEST_QUESTION = "Why was a gravel packed lower completion chosen in the Sculptor field?";
+#else
+        const string SERVICE_ID = "thunderstone";
+        const string TEST_QUESTION = "What is the capitol of Texas?";
+#endif
+        DeepQA m_QA = new DeepQA(SERVICE_ID);
         bool m_AskQuestionTested = false;
+        bool m_ParseQuestionTested = false;
 
         /// <exclude />
         public override IEnumerator RunTest()
         {
-#if USE_CACHE
-            Test( m_QA.AskQuestion( "Why was a gravel packed lower completion chosen in the Sculptor field?", OnAskQuestion ) );
-#else
-            Test( m_QA.AskQuestion( "Why was a gravel packed lower completion chosen in the Sculptor field?", OnAskQuestion, 1, false ) );
-#endif
+            m_QA.DisableCache = false;
+            Test( m_QA.AskQuestion( TEST_QUESTION, OnAskQuestion ) );
             while(! m_AskQuestionTested )
                 yield return null;
 
+            //m_QA.DisableCache = true;
+            Test( m_QA.ParseQuestion( TEST_QUESTION, OnParseQuestion ) );
+            while(! m_ParseQuestionTested )
+                yield return null;
+
+#if EXPORT_QUESTIONS
             byte [] question_data = File.ReadAllBytes( Application.dataPath + "/../Docs/WoodsideQuestions.xml" );
             var xml = new XmlDocument();
             xml.LoadXml( Encoding.UTF8.GetString( question_data ) );
 
-#if EXPORT_QUESTIONS
             StringBuilder WoodsideCSV = new StringBuilder();
 
             XmlElement answerKey = xml["answerkey"] as XmlElement;
@@ -77,18 +83,26 @@ namespace IBM.Watson.UnitTests
             yield break;
         }
 
-        private void OnAskQuestion( Response response )
+        private void OnAskQuestion( Question response )
         {
             Test( response != null );
             if ( response != null )
             {
-                Log.Status( "TestQA", "Question: {0}", response.question.questionText );
-                foreach( var answer in response.question.answers )
+                Log.Status( "TestQA", "Question: {0}", response.questionText );
+                foreach( var answer in response.answers )
                 {
                     Log.Status( "TestQA", "Answer: {0}", answer.text );
                 }
             }
             m_AskQuestionTested = true;
+        }
+
+        private void OnParseQuestion( Question response )
+        {
+            Data.XRAY.ParseData parseData = new Data.XRAY.ParseData( response );
+            foreach( var word in parseData.Words )
+                Log.Status( "TestDeepQA", "Word: {0}, Pos: {1}", word.Word, word.Pos.ToString() );
+            m_ParseQuestionTested = true;
         }
     }
 }
