@@ -260,9 +260,12 @@ namespace IBM.Watson.Widgets.Avatar
         {
             if (m_AnswerResult != null && m_AnswerResult.HasAnswer())
             {
-                return string.Format("{0} ({1:0.00})",
-                    m_AnswerResult.answers[0].answerText,
-                    m_AnswerResult.answers[0].confidence);
+                string answer = m_AnswerResult.answers[0].answerText;
+                int newLine = answer.IndexOf( '\n' );
+                if ( newLine > 0 )
+                    answer = answer.Substring( 0, newLine );
+
+                return string.Format("{0} ({1:0.00})", answer, m_AnswerResult.answers[0].confidence);
             }
             return string.Empty;
         }
@@ -515,6 +518,10 @@ namespace IBM.Watson.Widgets.Avatar
                     Log.Debug("AvatarWidget", "A: {0} ({1})", a.answerText, a.confidence);
 
                 string answer = answers.answers[0].answerText;
+                int newLine = answer.IndexOf( '\n' );
+                if ( newLine > 0 )
+                    answer = answer.Substring( 0, newLine );
+
                 EventManager.Instance.SendEvent(Constants.Event.ON_DEBUG_MESSAGE, answer);
 
                 // TODO: We probably don't want to do this with a WEA..

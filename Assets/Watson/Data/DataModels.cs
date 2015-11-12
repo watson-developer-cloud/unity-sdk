@@ -285,6 +285,7 @@ namespace IBM.Watson.Data
                 { "det", WordPosition.DETERMINIER },
                 { "verb", WordPosition.VERB },
                 { "adverb", WordPosition.ADVERB },          // ?
+                { "adv", WordPosition.ADVERB },          // ?
                 { "prep", WordPosition.PREPOSITION },
                 { "conj", WordPosition.CONJUNCTION },       // ?
                 { "inter", WordPosition.INTERJECTION },     // ?
