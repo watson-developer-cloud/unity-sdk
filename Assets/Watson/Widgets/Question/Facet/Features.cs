@@ -57,15 +57,19 @@ namespace IBM.Watson.Widgets.Question
         {
 			base.Init ();
 
-			for (int i = 0; i < m_AnswerData.answers[0].features.Length; i++)
+            if ( m_AnswerData != null && m_AnswerData.HasAnswer() 
+                && m_AnswerData.answers[0].features != null )
             {
-                GameObject featureItemGameObject = Instantiate(m_FeatureItemPrefab, new Vector3(95f, -i * 50f - 150f, 0f), Quaternion.identity) as GameObject;
-                RectTransform featureItemRectTransform = featureItemGameObject.GetComponent<RectTransform>();
-                featureItemRectTransform.SetParent(m_FeaturesCanvasRectTransform, false);
-                FeatureItem featureItem = featureItemGameObject.GetComponent<FeatureItem>();
-                m_FeatureItems.Add(featureItem);
-				featureItem.FeatureString = m_AnswerData.answers[0].features[i].displayLabel;
-				featureItem.FeatureIndex = m_AnswerData.answers[0].features[i].weightedScore;
+			    for (int i = 0; i < m_AnswerData.answers[0].features.Length; i++)
+                {
+                    GameObject featureItemGameObject = Instantiate(m_FeatureItemPrefab, new Vector3(95f, -i * 50f - 150f, 0f), Quaternion.identity) as GameObject;
+                    RectTransform featureItemRectTransform = featureItemGameObject.GetComponent<RectTransform>();
+                    featureItemRectTransform.SetParent(m_FeaturesCanvasRectTransform, false);
+                    FeatureItem featureItem = featureItemGameObject.GetComponent<FeatureItem>();
+                    m_FeatureItems.Add(featureItem);
+				    featureItem.FeatureString = m_AnswerData.answers[0].features[i].displayLabel;
+				    featureItem.FeatureIndex = m_AnswerData.answers[0].features[i].weightedScore;
+                }
             }
         }
 

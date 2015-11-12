@@ -145,13 +145,17 @@ namespace IBM.Watson.Utilities
             /// </summary>
             ON_QUESTION,
             /// <summary>
-            /// Event sent continaing the answer results.
+            /// Event sent containing the answer results.
             /// </summary>
             ON_QUESTION_ANSWERS,
             /// <summary>
-            /// Event sent continaing the parse results.
+            /// Event sent containing the parse results.
             /// </summary>
             ON_QUESTION_PARSE,
+            /// <summary>
+            /// Event sent with the pipeline after question has been asked.
+            /// </summary>
+            ON_QUESTION_PIPELINE,
             #endregion
 
             #region Animation / Camera

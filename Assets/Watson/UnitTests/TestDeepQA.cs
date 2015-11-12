@@ -17,12 +17,20 @@
 */
 
 #define TEST_WEA
+#define CACHE_QUESTIONS
 //#define EXPORT_QUESTIONS
 
 using System.Collections;
 using IBM.Watson.Services.v1;
 using IBM.Watson.Logging;
 using IBM.Watson.Data.QA;
+
+#if EXPORT_QUESTIONS || CACHE_QUESTIONS
+using UnityEngine;
+using System.Xml;
+using System.Text;
+using System.IO;
+#endif
 
 namespace IBM.Watson.UnitTests
 {
@@ -43,7 +51,7 @@ namespace IBM.Watson.UnitTests
         /// <exclude />
         public override IEnumerator RunTest()
         {
-            m_QA.DisableCache = false;
+            m_QA.DisableCache = true;
             Test( m_QA.AskQuestion( TEST_QUESTION, OnAskQuestion ) );
             while(! m_AskQuestionTested )
                 yield return null;
@@ -53,12 +61,14 @@ namespace IBM.Watson.UnitTests
             while(! m_ParseQuestionTested )
                 yield return null;
 
-#if EXPORT_QUESTIONS
+#if EXPORT_QUESTIONS || CACHE_QUESTIONS
             byte [] question_data = File.ReadAllBytes( Application.dataPath + "/../Docs/WoodsideQuestions.xml" );
             var xml = new XmlDocument();
             xml.LoadXml( Encoding.UTF8.GetString( question_data ) );
 
+#if EXPORT_QUESTIONS
             StringBuilder WoodsideCSV = new StringBuilder();
+#endif
 
             XmlElement answerKey = xml["answerkey"] as XmlElement;
             foreach( var node in answerKey.ChildNodes )
@@ -70,14 +80,20 @@ namespace IBM.Watson.UnitTests
                 string text = question.GetAttribute("text" );
                 Log.Status( "TestDeepQA", "Question: {0}", text );
 
-                //Test( m_QA.AskQuestion( text, OnAskQuestion ) );
+#if CACHE_QUESTIONS
+                Test( m_QA.AskQuestion( text, OnAskQuestion ) );
+#endif
 
+#if EXPORT_QUESTIONS
                 if ( text.Contains( "," ) )
                     text = "\"" + text + "\"";
                 WoodsideCSV.Append( text + ",question-woodside\r\n" );
+#endif
             }
 
+#if EXPORT_QUESTIONS
             File.WriteAllText( Application.dataPath + "/../Docs/WoodsideQuestions.csv", WoodsideCSV.ToString() );
+#endif
 #endif
 
             yield break;

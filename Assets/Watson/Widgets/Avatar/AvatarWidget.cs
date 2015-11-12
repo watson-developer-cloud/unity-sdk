@@ -282,9 +282,7 @@ namespace IBM.Watson.Widgets.Avatar
         {
             Log.Status("AvatarWidget", "Starting avatar.");
 
-            State = AvatarState.CONNECTING;
-            // login to XRAY, then select the pipeline
-            m_XRAY.Initialize(OnInitialize);
+            State = AvatarState.LISTENING;
             // Find our dialog ID
             if (!string.IsNullOrEmpty(m_DialogName))
                 m_Dialog.GetDialogs(OnFindDialog);
@@ -308,16 +306,6 @@ namespace IBM.Watson.Widgets.Avatar
             }
         }
 
-        private void OnInitialize(bool success)
-        {
-            if (!success)
-            {
-                Log.Error("AvtarWidget", "Failed to initialize XRAY.");
-                State = AvatarState.ERROR;
-            }
-            else
-                State = AvatarState.LISTENING;
-        }
         #endregion
 
         #region Level Input
@@ -487,31 +475,31 @@ namespace IBM.Watson.Widgets.Avatar
 
         private void OnAskQuestion(Questions questions)
         {
-            m_QuestionResult = questions;
-
-            if (m_QuestionResult != null && m_QuestionResult.HasQuestion())
+            if ( questions != null && questions.HasQuestion() )
             {
-                Watson.Data.XRAY.Question topQuestion = m_QuestionResult.questions[0];
+                m_QuestionResult = questions;
 
-                InstatiateQuestionWidget();
-
-                EventManager.Instance.SendEvent( Constants.Event.ON_QUESTION, m_QuestionResult );
-                EventManager.Instance.SendEvent( Constants.Event.ON_QUESTION_LOCATION, XRAY.Location );
-
-                m_AnswerResult = null;
-                m_ParseData = null;
-
-                if (!m_XRAY.GetAnswers(m_Pipeline, topQuestion.transactionId, OnAnswerQuestion)
-                    || !XRAY.GetParseData(m_Pipeline, topQuestion.transactionId, OnParseData))
+                if (m_QuestionResult != null && m_QuestionResult.HasQuestion())
                 {
-                    Log.Error("AvatarWidget", "Failed to call GetAnswers()");
-                    State = AvatarState.ERROR;
+                    Watson.Data.XRAY.Question topQuestion = m_QuestionResult.questions[0];
+
+                    InstatiateQuestionWidget();
+
+                    EventManager.Instance.SendEvent( Constants.Event.ON_QUESTION_PIPELINE, m_Pipeline );
+                    EventManager.Instance.SendEvent( Constants.Event.ON_QUESTION, m_QuestionResult );
+                    EventManager.Instance.SendEvent( Constants.Event.ON_QUESTION_LOCATION, XRAY.Location );
+
+                    OnAnswerQuestion( m_XRAY.GetAnswers( m_Pipeline, topQuestion.questionId ) );
+                    OnParseData( m_XRAY.GetParseData( m_Pipeline, topQuestion.questionId ) );
                 }
+                else
+                    m_TextOutput.SendData(new TextData(m_RecognizeFailure));
+
+                State = AvatarState.LISTENING;
             }
             else
             {
-                m_TextOutput.SendData(new TextData(m_RecognizeFailure));
-                State = AvatarState.LISTENING;
+                State = AvatarState.ERROR;
             }
         }
 
@@ -528,35 +516,16 @@ namespace IBM.Watson.Widgets.Avatar
                 string answer = answers.answers[0].answerText;
                 EventManager.Instance.SendEvent(Constants.Event.ON_DEBUG_MESSAGE, answer);
 
+                // TODO: We probably don't want to do this with a WEA..
                 m_TextOutput.SendData(new TextData(answer));
             }
-
-            UpdateQuestionWidget();
         }
 
         private void OnParseData(ParseData data)
         {
             m_ParseData = data;
             EventManager.Instance.SendEvent( Constants.Event.ON_QUESTION_PARSE, m_ParseData );
-
-            UpdateQuestionWidget();
         }
-
-        private void UpdateQuestionWidget()
-        {
-            if (m_ParseData != null && m_AnswerResult != null)
-            {
-                // send all data up to the question widget facets..
-
-                // TODO: Remove the UpdateFacets() once they've all been converted to using the event.
-//                if (m_FocusQuestion != null)
-//                    m_FocusQuestion.UpdateFacets();
-//                else
-//                    Log.Error("AvatarWidget", "Failed to find QuestionWidget in question prefab.");
-                State = AvatarState.LISTENING;
-            }
-        }
-
 
         private void InstatiateQuestionWidget()
         {

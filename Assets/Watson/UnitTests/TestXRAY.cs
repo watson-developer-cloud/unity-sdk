@@ -25,25 +25,18 @@ namespace IBM.Watson.UnitTests
 {
     public class TestXRAY : UnitTest
     {
+        const string TEST_QUESTION = "What is the capital of Texas";
+        const string TEST_PIPELINE = "thunderstone";
+
         XRAY m_XRAY = new XRAY();
-        bool m_InitTested = false;
         bool m_AskQuestionTested = false;
-        bool m_GetQuestionsTested = false;
         bool m_GetQuestionTested = false;
         bool m_GetAnswersTested = false;
         bool m_ParseTested = false;
 
         public override IEnumerator RunTest()
         {
-            m_XRAY.Initialize( OnInit );
-            while(! m_InitTested )
-                yield return null;
-
-            m_XRAY.GetQuestions( "thunderstone", OnGetQuestions);
-            while (!m_GetQuestionsTested)
-                yield return null;
-
-            m_XRAY.AskQuestion( "thunderstone", "What is the capital of Texas", OnAskQuestion );
+            m_XRAY.AskQuestion( TEST_PIPELINE, TEST_QUESTION, OnAskQuestion );
             while(! m_AskQuestionTested )
                 yield return null;
 
@@ -57,12 +50,6 @@ namespace IBM.Watson.UnitTests
             yield break;
         }
 
-        private void OnInit( bool success )
-        {
-            Test( success );
-            m_InitTested = true;
-        }
-
         private void OnAskQuestion( Questions questions )
         {
             Test( questions != null );
@@ -71,9 +58,9 @@ namespace IBM.Watson.UnitTests
                 foreach( var question in questions.questions )
                 {
                     Log.Status( "TestXRAY", "OnAskQuestion: {0} ({1})", question.question.questionText, question.topConfidence );
-                    m_XRAY.GetAnswers( "thunderstone", question.transactionId, OnGetAnswers );
-                    m_XRAY.GetParseData( "thunderstone", question.transactionId, OnGetParseData );
-                    m_XRAY.GetQuestion( "thunderstone", question.transactionId, OnGetQuestion );
+                    OnGetAnswers( m_XRAY.GetAnswers( TEST_PIPELINE, question.questionId ) );
+                    OnGetParseData( m_XRAY.GetParseData( TEST_PIPELINE, question.questionId ) );
+                    OnGetQuestion( m_XRAY.GetQuestion( TEST_PIPELINE, question.questionId ) );
                 }
             }
             else
@@ -91,17 +78,6 @@ namespace IBM.Watson.UnitTests
             if ( questions != null && questions.questions != null && questions.questions.Length > 0 )
                 Log.Status( "TestXRAY", "OnGetQuestion: {0}",  questions.questions[0].question.questionText );
             m_GetQuestionTested = true;
-        }
-
-        private void OnGetQuestions( Questions questions )
-        {
-            Test( questions != null && questions.questions != null );
-            if ( questions != null && questions.questions != null )
-            {
-                for(int i=0;i<questions.questions.Length;++i)
-                    Log.Status( "TestXRAY", "OnGetQuestions: {0}", questions.questions[i].question.questionText );
-            }
-            m_GetQuestionsTested = true;
         }
 
         private void OnGetAnswers( Answers answers )
