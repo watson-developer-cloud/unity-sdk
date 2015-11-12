@@ -27,7 +27,7 @@ namespace IBM.Watson.Widgets.Question
         Vector3[] m_PathOrientationToCenterForFirstItem;
         Vector3[] m_PathToStackForFirstItem;
         Vector3[] m_PathOrientationToStackForFirstItem;
-        
+
         //Passage one finger animation paths for each passage
         LTBezierPath[] m_BezierPathToCenter;
         LTBezierPath[] m_BezierPathOrientationToCenter;
@@ -95,7 +95,7 @@ namespace IBM.Watson.Widgets.Question
                     if (m_PassageItems == null)
                     {
                         Log.Error("PassageAnimationManager", "PassageList couldn't find inside gameobject");
-                    } 
+                    }
                 }
 
                 return m_PassageItems;
@@ -115,7 +115,7 @@ namespace IBM.Watson.Widgets.Question
         #endregion
 
         #region Awake / Update
-    
+
         // Use this for initialization
         void Awake()
         {
@@ -148,7 +148,7 @@ namespace IBM.Watson.Widgets.Question
             m_OffsetPathToStack = new Vector3(0, 0, 50);
             m_OffsetPathOrientationToStack = new Vector3(0, 0, 0);
 
-            
+
         }
 
         void Start()
@@ -208,6 +208,14 @@ namespace IBM.Watson.Widgets.Question
 
         #region Events on Passage
 
+        public void CubeAnimationStateChanged(System.Object[] args)
+        {
+            if(Cube.AnimationState == CubeAnimationManager.CubeAnimationState.FOLDING || Cube.AnimationState == CubeAnimationManager.CubeAnimationState.IDLE_AS_FOLDED)
+            {
+                ShowPassage(-1);
+            }
+        }
+        
         public void ReleasedFinger(System.Object[] args)
         {
             Log.Status("PassageAnimationManager", "ReleasedFinger");
@@ -393,8 +401,8 @@ namespace IBM.Watson.Widgets.Question
                 for (int i = 0; i < NumberOfPassages; i++)
                 {
                     m_BezierPathToCenter[i] = new LTBezierPath(new Vector3[]{
-                        m_PathToCenterForFirstItem[0] + (m_OffsetPathToCenter * i),
-                        m_PathToCenterForFirstItem[1] + (m_OffsetPathToCenter * i),
+                        m_PathToCenterForFirstItem[0] + (m_OffsetPathToCenter * i) + (m_OffsetPathToCenter * (10 - NumberOfPassages)),
+                        m_PathToCenterForFirstItem[1] + (m_OffsetPathToCenter * i) + (m_OffsetPathToCenter * (10 - NumberOfPassages)),
                         m_PathToCenterForFirstItem[2] ,
                         m_PathToCenterForFirstItem[3] });
 
@@ -417,16 +425,16 @@ namespace IBM.Watson.Widgets.Question
                         m_PathOrientationToStackForFirstItem[3] + (m_OffsetPathOrientationToStack * i)});
 
                     m_BezierPathFromInitialToStack[i] = new LTBezierPath(new Vector3[]{
-                        m_PathToCenterForFirstItem[0]  + (m_OffsetPathToCenter * i),
-                        m_PathToCenterForFirstItem[1]  + (m_OffsetPathToCenter * i),
-                        m_PathToStackForFirstItem[2] + (m_OffsetPathToStack * i),
-                        m_PathToStackForFirstItem[3] + (m_OffsetPathToStack * i)});
+                        m_BezierPathToCenter[i].pts[0],
+                        m_BezierPathToCenter[i].pts[1],
+                        m_BezierPathToStack[i].pts[2],
+                        m_BezierPathToStack[i].pts[3]});
 
                     m_BezierPathOrientationFromInitialToStack[i] = new LTBezierPath(new Vector3[]{
-                        m_PathOrientationToCenterForFirstItem[0] + (m_OffsetPathOrientationToCenter * i),
-                        m_PathOrientationToCenterForFirstItem[1] + (m_OffsetPathOrientationToCenter * i),
-                        m_PathOrientationToStackForFirstItem[2] + (m_OffsetPathOrientationToStack * i),
-                        m_PathOrientationToStackForFirstItem[3] + (m_OffsetPathOrientationToStack * i)});
+                        m_BezierPathOrientationToCenter[i].pts[0],
+                        m_BezierPathOrientationToCenter[i].pts[1],
+                        m_BezierPathOrientationToStack[i].pts[2],
+                        m_BezierPathOrientationToStack[i].pts[3]});
                 }
             }
             
@@ -556,8 +564,8 @@ namespace IBM.Watson.Widgets.Question
 
         //[SerializeField]
         private float m_SpeedPassageAnimation = 4.0f;
-        private float m_PercentToGoInitialPosition = 0.25f;
-        private float m_PercentToGoStackPosition = 0.75f;
+        private float m_PercentToGoInitialPosition = 0.26f;
+        private float m_PercentToGoStackPosition = 0.65f;
         private void DragOneFingerOnPassageOnUpdate()
         {
 
@@ -566,30 +574,9 @@ namespace IBM.Watson.Widgets.Question
 
                 for (int i = 0; i < m_PassageItems.Length; i++)
                 {
-                    if (i != m_SelectedPassageIndex)
-                    {
-                        m_PassageItems[i].transform.localPosition = Vector3.Lerp(m_PassageItems[i].transform.localPosition, m_TargetLocation[i], Time.deltaTime * m_SpeedPassageAnimation);
-                        m_PassageItems[i].transform.localRotation = Quaternion.Lerp(m_PassageItems[i].transform.localRotation, Quaternion.Euler(m_TargetRotation[i]), Time.deltaTime * m_SpeedPassageAnimation);
-                        
-                        //m_PassageItems[i].transform.localPosition = Vector3.Lerp(m_PassageItems[i].transform.localPosition, m_BezierPathToCenter[i].point(0.0f), Time.deltaTime * m_SpeedPassageAnimation);
-                        //m_PassageItems[i].transform.localRotation = Quaternion.Lerp(m_PassageItems[i].transform.localRotation, Quaternion.Euler(m_BezierPathOrientationToCenter[i].point(0.0f)), Time.deltaTime * m_SpeedPassageAnimation);
-                    //}
-                    //else if (i > m_SelectedPassageIndex)
-                    //{
-                    //    m_PassageItems[i].transform.localPosition = Vector3.Lerp(m_PassageItems[i].transform.localPosition, m_TargetLocation[i], Time.deltaTime * m_SpeedPassageAnimation);
-                    //    m_PassageItems[i].transform.localRotation = Quaternion.Lerp(m_PassageItems[i].transform.localRotation, Quaternion.Euler(m_TargetRotation[i]), Time.deltaTime * m_SpeedPassageAnimation);
-
-                    //    //m_PassageItems[i].transform.localPosition = Vector3.Lerp(m_PassageItems[i].transform.localPosition, m_BezierPathToStack[i].point(1.0f), Time.deltaTime * m_SpeedPassageAnimation);
-                    //    //m_PassageItems[i].transform.localRotation = Quaternion.Lerp(m_PassageItems[i].transform.localRotation, Quaternion.Euler(m_BezierPathOrientationToStack[i].point(1.0f)), Time.deltaTime * m_SpeedPassageAnimation);
-                    }
-                    else
-                    {
-                        
-
-                        m_PassageItems[i].transform.localPosition = Vector3.Lerp(m_PassageItems[i].transform.localPosition, m_TargetLocation[i], Time.deltaTime * m_SpeedPassageAnimation);
-                        m_PassageItems[i].transform.localRotation = Quaternion.Slerp(m_PassageItems[i].transform.localRotation, Quaternion.Euler(m_TargetRotation[i]), Time.deltaTime * m_SpeedPassageAnimation);
-
-                    }
+                    m_PassageItems[i].transform.localPosition = Vector3.Lerp(m_PassageItems[i].transform.localPosition, m_TargetLocation[i], Time.deltaTime * m_SpeedPassageAnimation);
+                    m_PassageItems[i].transform.localRotation = Quaternion.Lerp(m_PassageItems[i].transform.localRotation, Quaternion.Euler(m_TargetRotation[i]), Time.deltaTime * m_SpeedPassageAnimation);
+                    
                 }
 
             }
