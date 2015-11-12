@@ -120,6 +120,18 @@ public class WatsonCamera : MonoBehaviour {
         m_TargetCameraLocation += transform.forward * m_ZoomSpeed * -1.0f;
     }
 
+    public void ShowVirtualKeyboard(System.Object[] args)
+    {
+        try
+        {
+            System.Diagnostics.Process.Start("TabTip.exe");
+        }
+        catch (System.Exception e)
+        {
+            Log.Error("WatsonCamera", "ShowVirtualKeyboard has exception: {0}", e.Message);
+        }
+
+    }
     #endregion
 
     #region Application Related Actions - Methods to call 

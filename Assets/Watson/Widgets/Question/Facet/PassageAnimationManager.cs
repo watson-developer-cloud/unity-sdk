@@ -568,17 +568,16 @@ namespace IBM.Watson.Widgets.Question
         private float m_PercentToGoStackPosition = 0.65f;
         private void DragOneFingerOnPassageOnUpdate()
         {
-
             if (m_PassageItems != null)
             {
-
                 for (int i = 0; i < m_PassageItems.Length; i++)
                 {
-                    m_PassageItems[i].transform.localPosition = Vector3.Lerp(m_PassageItems[i].transform.localPosition, m_TargetLocation[i], Time.deltaTime * m_SpeedPassageAnimation);
-                    m_PassageItems[i].transform.localRotation = Quaternion.Lerp(m_PassageItems[i].transform.localRotation, Quaternion.Euler(m_TargetRotation[i]), Time.deltaTime * m_SpeedPassageAnimation);
-                    
+                    if(m_PassageItems[i] != null && m_PassageItems[i].transform != null)
+                    {
+                        m_PassageItems[i].transform.localPosition = Vector3.Lerp(m_PassageItems[i].transform.localPosition, m_TargetLocation[i], Time.deltaTime * m_SpeedPassageAnimation);
+                        m_PassageItems[i].transform.localRotation = Quaternion.Lerp(m_PassageItems[i].transform.localRotation, Quaternion.Euler(m_TargetRotation[i]), Time.deltaTime * m_SpeedPassageAnimation);
+                    }
                 }
-
             }
         }
 

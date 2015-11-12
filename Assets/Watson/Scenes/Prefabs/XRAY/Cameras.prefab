@@ -215,6 +215,11 @@ MonoBehaviour:
       m_Target: {fileID: 172636}
       m_Component: WatsonCamera
       m_Method: MoveDown
+  - m_Event: 502
+    m_Callback:
+      m_Target: {fileID: 172636}
+      m_Component: WatsonCamera
+      m_Method: ShowVirtualKeyboard
 --- !u!114 &11450530
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -275,6 +280,9 @@ MonoBehaviour:
   - m_Key: 274
     m_Modifiers: 2
     m_Event: 312
+  - m_Key: 53
+    m_Modifiers: 2
+    m_Event: 502
 --- !u!114 &11467584
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -289,9 +297,10 @@ MonoBehaviour:
   m_AutoConnect: 1
   m_TapMappings: []
   m_FullScreenDragMappings:
-  - m_DragObject: {fileID: 172636}
+  - m_DragLayerObject: {fileID: 0}
     m_NumberOfFinger: 2
     m_SortingLayer: 0
+    m_IsDragInside: 1
     m_Callback: 306
 --- !u!114 &11489266
 MonoBehaviour:
@@ -332,7 +341,27 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: m_Mappings.Array.size
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Mappings.Array.data[9].m_Event
+      value: 502
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Mappings.Array.data[9].m_Callback.m_Method
+      value: ShowVirtualKeyboard
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Mappings.Array.data[12].m_Event
+      value: 502
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Mappings.Array.data[12].m_Key
+      value: 53
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 102342}
