@@ -148,9 +148,13 @@ namespace IBM.Watson.Widgets.Question
             m_OffsetPathToStack = new Vector3(0, 0, 50);
             m_OffsetPathOrientationToStack = new Vector3(0, 0, 0);
 
-            UpdatePassages();
+            
         }
 
+        void Start()
+        {
+            UpdatePassages();
+        }
 
         // Update is called once per frame
         void Update()
@@ -219,7 +223,7 @@ namespace IBM.Watson.Widgets.Question
         {
             if (args != null && args.Length == 2 && args[0] is TouchScript.Gestures.TapGesture && args[1] is RaycastHit)
             {
-                if (Cube.AnimationState == CubeAnimationManager.CubeAnimationState.IDLE_AS_FOCUSED || true) //TODO: Delete these true condition - it is for test purpose
+                if (Cube.AnimationState == CubeAnimationManager.CubeAnimationState.IDLE_AS_FOCUSED) //TODO: Delete these true condition - it is for test purpose
                 {
                     
                     TouchScript.Gestures.TapGesture tapGesture = args[0] as TouchScript.Gestures.TapGesture;
@@ -324,7 +328,7 @@ namespace IBM.Watson.Widgets.Question
             {
                 TouchScript.Gestures.ScreenTransformGesture OneFingerManipulationGesture = args[0] as TouchScript.Gestures.ScreenTransformGesture;
 
-                if (Cube.AnimationState == CubeAnimationManager.CubeAnimationState.IDLE_AS_FOCUSED || true) //TODO: Delete this true condition! it is for test purposes!
+                if (Cube.AnimationState == CubeAnimationManager.CubeAnimationState.IDLE_AS_FOCUSED) //TODO: Delete this true condition! it is for test purposes!
                 {
                     DragOneFingerOnFocusedSide(OneFingerManipulationGesture);
                 }
@@ -377,7 +381,7 @@ namespace IBM.Watson.Widgets.Question
 
         void UpdateBezierPathForPassages()
         {
-            if(NumberOfPassages > 0)
+            if(m_PassageItems != null && m_PassageItems.Length > 0)
             {
                 m_BezierPathToCenter = new LTBezierPath[NumberOfPassages];
                 m_BezierPathOrientationToCenter = new LTBezierPath[NumberOfPassages];
@@ -450,11 +454,11 @@ namespace IBM.Watson.Widgets.Question
 
                 m_IsTouchOnDragging = true;
 
-                if (m_SelectedPassageIndex == -1)
+                if (m_SelectedPassageIndex < 0)
                 {
                     m_SelectedPassageIndex = 0;
                 }
-                else if(m_SelectedPassageIndex == NumberOfPassages)
+                else if(m_SelectedPassageIndex >= NumberOfPassages)
                 {
                     m_SelectedPassageIndex = NumberOfPassages - 1;
                 }

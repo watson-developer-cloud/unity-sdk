@@ -99,6 +99,8 @@ GameObject:
   m_Component:
   - 4: {fileID: 466872}
   - 114: {fileID: 11457380}
+  - 114: {fileID: 11499366}
+  - 114: {fileID: 11420428}
   m_Layer: 15
   m_Name: Facet_Passage
   m_TagString: Untagged
@@ -467,6 +469,39 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &11420428
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 152706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e421b0b8c204bd344918bc3963c06ccc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AutoConnect: 1
+  m_Mappings:
+  - m_Event: 501
+    m_Callback:
+      m_Target: {fileID: 152706}
+      m_Component: PassageAnimationManager
+      m_Method: ReleasedFinger
+  - m_Event: 204
+    m_Callback:
+      m_Target: {fileID: 152706}
+      m_Component: PassageAnimationManager
+      m_Method: OneFingerDragOnCube
+  - m_Event: 201
+    m_Callback:
+      m_Target: {fileID: 152706}
+      m_Component: PassageAnimationManager
+      m_Method: TapOnCubeSide
+  - m_Event: 203
+    m_Callback:
+      m_Target: {fileID: 152706}
+      m_Component: PassageAnimationManager
+      m_Method: OneFingerDragFullScreen
 --- !u!114 &11448552
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -572,6 +607,17 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &11499366
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 152706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b1ed8af9c51c644488ec80fa023d5ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!222 &22222518
 CanvasRenderer:
   m_ObjectHideFlags: 1
@@ -606,7 +652,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
 --- !u!224 &22405462
 RectTransform:
   m_ObjectHideFlags: 1

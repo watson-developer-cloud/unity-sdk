@@ -393,7 +393,7 @@ namespace IBM.Watson.Widgets.Question
         protected override void Awake()
         {
             base.Awake();
-            //EnableEvents(false);  //TODO: Uncomment - commented for test purposes!
+            EnableEvents(false);  //TODO: Uncomment - commented for test purposes!
 			Cube.enabled = false;
 
 			//	populate facets
