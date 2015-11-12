@@ -289,6 +289,7 @@ namespace IBM.Watson.Data
                 { "prep", WordPosition.PREPOSITION },
                 { "conj", WordPosition.CONJUNCTION },       // ?
                 { "inter", WordPosition.INTERJECTION },     // ?
+                { "incomplete", WordPosition.INVALID },
             };
         };
         /// <summary>
