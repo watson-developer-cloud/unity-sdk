@@ -63,6 +63,7 @@ namespace IBM.Watson.Widgets.Question
 			base.Init ();
 
 			for(int i = 0; i < m_AnswerData.answers.Length ; i++) {
+				if(m_AnswerData.answers[i].answerText == "") return;
 				Log.Debug("Passages", "adding passage " + i);
 				GameObject PassageItemGameObject = Instantiate(m_PassageItemPrefab, new Vector3(m_RectTransformPosX, m_RectTransformPosY, m_RectTransformPosZ + m_RectTransformZSpacing * (m_AnswerData.answers.Length - i)), Quaternion.identity) as GameObject;
 				PassageItemGameObject.name = "PassageItem_" + i.ToString("00");
