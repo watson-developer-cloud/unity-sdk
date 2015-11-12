@@ -82,78 +82,6 @@ namespace IBM.Watson.Data
     namespace XRAY
     {
         /// <summary>
-        /// This data class holds the data for a given pipeline.
-        /// </summary>
-        public class Pipeline
-        {
-            /// <summary>
-            /// The ID of the pipeline.
-            /// </summary>
-            public string _id { get; set; }
-            /// <summary>
-            /// The revision number of the pipeline.
-            /// </summary>
-            public string _rev { get; set; }
-            /// <summary>
-            /// The users client ID.
-            /// </summary>
-            public string clientId { get; set; }
-            /// <summary>
-            /// Name of the pipeline.
-            /// </summary>
-            public string pipelineName { get; set; }
-            /// <summary>
-            /// Type of pipeline.
-            /// </summary>
-            public string pipelineType { get; set; }
-            /// <summary>
-            /// The pipeline label.
-            /// </summary>
-            public string pipelineLabel { get; set; }
-            /// <summary>
-            /// The URL of the pipeline.
-            /// </summary>
-            public string pipelineUrl { get; set; }
-            /// <summary>
-            /// Path to the CAS for the pipeline.
-            /// </summary>
-            public string pipelineCas { get; set; }
-            /// <summary>
-            /// 
-            /// </summary>
-            public string pipelineAnswerKey { get; set; }
-            /// <summary>
-            /// 
-            /// </summary>
-            public string pipelineModel { get; set; }
-        };
-        /// <summary>
-        /// This data class is returned by the GetPipelines() function.
-        /// </summary>
-        public class Pipelines
-        {
-            /// <summary>
-            /// A array of pipelines.
-            /// </summary>
-            public Pipeline[] pipelines { get; set; }
-            /// <summary>
-            /// True if this pipeline is through XRAY.
-            /// </summary>
-            public bool itm { get; set; }
-            /// <summary>
-            /// The name of the user.
-            /// </summary>
-            public string user { get; set; }
-            /// <summary>
-            /// The location of the user.
-            /// </summary>
-            public string location { get; set; }
-            /// <summary>
-            /// The session key for this login session.
-            /// </summary>
-            public long sessionKey { get; set; }
-        };
-        /// <summary>
         /// Data class for GetQuestions() method.
         /// </summary>
         public class QuestionText
@@ -225,10 +153,6 @@ namespace IBM.Watson.Data
             /// A question ID.
             /// </summary>
             public string _id { get; set; }
-            /// <summary>
-            /// A revision ID.
-            /// </summary>
-            public string _rev { get; set; }
             /// <summary>
             /// The top confidence of all the answers to this question.
             /// </summary>
@@ -523,11 +447,13 @@ namespace IBM.Watson.Data
 
             public Evidence()
             { }
-            public Evidence( QA.Evidence e )
+            public Evidence( QA.Evidence e, string answer = null )
             {
                 title = e.title;
                 passage = e.text;
                 decoratedPassage = passage;
+                if ( answer != null )
+                    decoratedPassage = decoratedPassage.Replace( answer, "<answer>" + answer + "</answer>" );
 
                 if ( e.metadataMap != null )
                     corpus = e.metadataMap.corpusName;
@@ -566,7 +492,7 @@ namespace IBM.Watson.Data
                 {
                     evidence = new Evidence[ a.evidence.Length ];
                     for(int i=0;i<evidence.Length;++i)
-                        evidence[i] = new Evidence( a.evidence[i] );
+                        evidence[i] = new Evidence( a.evidence[i], answerText );
                 }
             }
         };
@@ -606,6 +532,8 @@ namespace IBM.Watson.Data
                             // extract the evidence ID from the answer text in a WEA
                             // "text": "142B100455C66F896BBE4FD60C849E08 - PM #8214942 v3C NWS GWF 2 Sculptor and Rankin Completions Sand Control Selection : 5. Sand Analysis : 5.3 PSD Analysis",
                             string evidenceId = a.text.Substring( 0, a.text.IndexOf( '-' ) ).Trim();
+                            // strip the ID from the answer text..
+                            a.text = a.text.Substring( a.text.IndexOf( '-' ) + 1 );
 
                             List<QA.Evidence> evidenceList = new List<QA.Evidence>();
                             foreach( var e in q.evidencelist )

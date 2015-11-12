@@ -915,7 +915,7 @@ namespace IBM.Watson.Widgets.Question
 				int.TryParse(hit.transform.name.Substring(1, 1), out touchedSide);
 				CubeSideType cubeSideTouched = (CubeSideType)touchedSide;
 
-				Log.Status("CubeAnimationManager", "cubeSideTouched: {0}", cubeSideTouched);
+				//Log.Status("CubeAnimationManager", "cubeSideTouched: {0}", cubeSideTouched);
 				if(cubeSideTouched == CubeSideType.TITLE && SideFocused == CubeSideType.TITLE)
 				{
 					m_LastFrameOneFingerDrag = Time.frameCount;
