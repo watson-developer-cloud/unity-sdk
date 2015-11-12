@@ -165,7 +165,7 @@ namespace IBM.Watson.Widgets.Question
         {
             if (args != null && args.Length == 2 && args[0] is TouchScript.Gestures.TapGesture && args[1] is RaycastHit)
             {
-                Log.Status("Question Widget", "OnTapInside");
+                //Log.Status("Question Widget", "OnTapInside");
                 TouchScript.Gestures.TapGesture tapGesture = args [0] as TouchScript.Gestures.TapGesture; 
 				RaycastHit raycastHit = (RaycastHit) args[1];
 
@@ -188,7 +188,7 @@ namespace IBM.Watson.Widgets.Question
         {
 			if (args != null && args.Length == 2 && args[0] is TouchScript.Gestures.TapGesture && args[1] is RaycastHit)
             {
-                Log.Status("Question Widget", "OnTapOutside");
+                //Log.Status("Question Widget", "OnTapOutside");
                 TouchScript.Gestures.TapGesture tapGesture = args [0] as TouchScript.Gestures.TapGesture; 
 				RaycastHit raycastHit = (RaycastHit) args [1];
 
