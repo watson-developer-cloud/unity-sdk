@@ -50,7 +50,7 @@ namespace IBM.Watson.UnitTests
             yield break;
         }
 
-        private void OnAskQuestion( Questions questions )
+        private void OnAskQuestion( ParseData parse, Questions questions )
         {
             Test( questions != null );
             if ( questions != null  )
@@ -59,7 +59,7 @@ namespace IBM.Watson.UnitTests
                 {
                     Log.Status( "TestXRAY", "OnAskQuestion: {0} ({1})", question.question.questionText, question.topConfidence );
                     OnGetAnswers( m_XRAY.GetAnswers( TEST_PIPELINE, question.questionId ) );
-                    OnGetParseData( m_XRAY.GetParseData( TEST_PIPELINE, question.questionId ) );
+                    OnGetParseData( parse );
                     OnGetQuestion( m_XRAY.GetQuestion( TEST_PIPELINE, question.questionId ) );
                 }
             }

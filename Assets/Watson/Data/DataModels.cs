@@ -22,6 +22,7 @@ using IBM.Watson.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 
 namespace IBM.Watson.Data
 {
@@ -298,7 +299,7 @@ namespace IBM.Watson.Data
             public string Rev { get; set; }
             public long TransactionId { get; set; }
             public ParseWord[] Words { get; set; }
-            public string[] Heirarchy { get; set; }
+            public Dictionary<string,string> Heirarchy { get; set; }
             public string[] Flags { get; set; }
 
             public ParseData()
@@ -379,15 +380,16 @@ namespace IBM.Watson.Data
                 try
                 {
                     Id = (string)json["_id"];
-                    Rev = (string)json["_rev"];
-                    TransactionId = (long)json["transactionId"];
+                    //Rev = (string)json["_rev"];
+                    //TransactionId = (long)json["transactionId"];
 
                     IDictionary iparse = (IDictionary)json["parse"];
-                    List<string> heirarchy = new List<string>();
+
+                    Dictionary<string,string> heirarchy = new Dictionary<string, string>();
                     IList iheirarchy = (IList)iparse["hierarchy"];
                     foreach (var h in iheirarchy)
-                        heirarchy.Add((string)h);
-                    Heirarchy = heirarchy.ToArray();
+                        heirarchy[ ((IDictionary)h)["text"] as string ] = ((IDictionary)h)["value"] as string;
+                    Heirarchy = heirarchy;
 
                     List<string> flags = new List<string>();
                     IList iflags = (IList)iparse["flags"];
@@ -532,16 +534,22 @@ namespace IBM.Watson.Data
                             // extract the evidence ID from the answer text in a WEA
                             // "text": "142B100455C66F896BBE4FD60C849E08 - PM #8214942 v3C NWS GWF 2 Sculptor and Rankin Completions Sand Control Selection : 5. Sand Analysis : 5.3 PSD Analysis",
                             string evidenceId = a.text.Substring( 0, a.text.IndexOf( '-' ) ).Trim();
-                            // strip the ID from the answer text..
-                            a.text = a.text.Substring( a.text.IndexOf( '-' ) + 1 );
+
+                            StringBuilder weaAnswer = new StringBuilder();
 
                             List<QA.Evidence> evidenceList = new List<QA.Evidence>();
                             foreach( var e in q.evidencelist )
                             {
                                 if ( e.id.EndsWith( evidenceId ) )
+                                {
                                     evidenceList.Add( e );
+
+                                    weaAnswer.Append( "<title>" + e.title + "<title>\n\n" );
+                                    weaAnswer.Append( e.text + "\n\n" );
+                                }
                             }
 
+                            a.text = weaAnswer.ToString();
                             a.evidence = evidenceList.ToArray();
                         }
 
