@@ -629,56 +629,64 @@ namespace IBM.Watson.Widgets.Question
 
             for (int i = 0; i < NumberOfPassages; i++)
             {
-
-                //Going to initial position if they are in different position
-                if (i > passageIndexToShow)
+                if (PassageList[i] == null || PassageList[i].transform == null)
                 {
-                    LTBezierPath pathFromCurrentPosition = getBezierPathToLastValue(m_BezierPathFromInitialToStack[i].pts, m_TargetLocation[i]);
-                    //LTBezierPath pathFromCurrentRotation = getBezierPathToLastValue(m_BezierPathOrientationFromInitialToStack[i].pts, PassageList[i].localEulerAngles);
-                    //AnimatePassageToGivenRatio(animationTime, delayOnPassage * Mathf.Abs(m_PreviousPassageIndex - i), leanType, i, m_AnimationLocationRatio[i], 0.0f, pathFromCurrentPosition, pathFromCurrentRotation);
-
-                    AnimatePassageToGivenRatio(animationTime, delayOnPassage * Mathf.Abs(m_PreviousPassageIndex - i), leanType, i, m_AnimationLocationRatio[i], 0.0f, pathFromCurrentPosition, m_BezierPathOrientationFromInitialToStack[i]);
-                   
-                    PassageList[i].SetSiblingIndex(NumberOfPassages - 1 - i);
-                }
-                else if (i < passageIndexToShow)
-                {
-                    LTBezierPath pathFromCurrentPosition = getBezierPathFromInitialValue(m_BezierPathFromInitialToStack[i].pts, m_TargetLocation[i]);
-                    //LTBezierPath pathFromCurrentRotation = getBezierPathFromInitialValue(m_BezierPathOrientationFromInitialToStack[i].pts, PassageList[i].localEulerAngles);
-
-                    AnimatePassageToGivenRatio(animationTime, delayOnPassage * Mathf.Abs(m_PreviousPassageIndex - i), leanType, i, m_AnimationLocationRatio[i], 1.0f, pathFromCurrentPosition, m_BezierPathOrientationFromInitialToStack[i]);
-                    
-                    PassageList[i].SetSiblingIndex(NumberOfPassages - 1 - i);
+                    Log.Warning("PassageAnimationManager", "PassageList doesn't have the element index: {0}", i);
+                    continue;
                 }
                 else
                 {
-                    if(m_PreviousPassageIndex > passageIndexToShow)
-                        PassageList[i].SetSiblingIndex(NumberOfPassages - 1 - i);
-                    //PassageList[i].SetSiblingIndex(NumberOfPassages);
-
-                    LTBezierPath pathToMove = m_AnimationLocationRatio[i] <= 0.5f ? m_BezierPathToCenter[i] : m_BezierPathToStack[i];
-                    LTBezierPath pathToRotate = m_AnimationRotationRatio[i] <= 0.5f ? m_BezierPathOrientationToCenter[i] : m_BezierPathOrientationToStack[i];
-                    float targetRatio = m_AnimationLocationRatio[i] <= 0.5f ? 1.0f : 0.0f;
-                    float currentRatio = m_AnimationLocationRatio[i] <= 0.5f ? 0.0f : 1.0f; ; // m_AnimationLocationRatio[i] <= 0.5f ? (m_AnimationLocationRatio[i] * 2.0f) : ((m_AnimationLocationRatio[i] - 0.5f) * 2.0f);
-
-                    if(targetRatio == 1.0f)
+                    //Going to initial position if they are in different position
+                    if (i > passageIndexToShow)
                     {
-                        pathToMove = getBezierPathFromInitialValue(pathToMove.pts, PassageList[i].localPosition);
-                        pathToRotate = getBezierPathFromInitialValue(pathToRotate.pts,  new Vector3( PassageList[i].localEulerAngles.x, PassageList[i].localEulerAngles.y, 0.0f));
+                        LTBezierPath pathFromCurrentPosition = getBezierPathToLastValue(m_BezierPathFromInitialToStack[i].pts, m_TargetLocation[i]);
+                        //LTBezierPath pathFromCurrentRotation = getBezierPathToLastValue(m_BezierPathOrientationFromInitialToStack[i].pts, PassageList[i].localEulerAngles);
+                        //AnimatePassageToGivenRatio(animationTime, delayOnPassage * Mathf.Abs(m_PreviousPassageIndex - i), leanType, i, m_AnimationLocationRatio[i], 0.0f, pathFromCurrentPosition, pathFromCurrentRotation);
+
+                        AnimatePassageToGivenRatio(animationTime, delayOnPassage * Mathf.Abs(m_PreviousPassageIndex - i), leanType, i, m_AnimationLocationRatio[i], 0.0f, pathFromCurrentPosition, m_BezierPathOrientationFromInitialToStack[i]);
+
+                        PassageList[i].SetSiblingIndex(NumberOfPassages - 1 - i);
                     }
-                    else{
-                        pathToMove = getBezierPathToLastValue(pathToMove.pts, PassageList[i].localPosition);
-                        pathToRotate = getBezierPathToLastValue(pathToRotate.pts, new Vector3(PassageList[i].localEulerAngles.x, PassageList[i].localEulerAngles.y, 0.0f));
+                    else if (i < passageIndexToShow)
+                    {
+                        LTBezierPath pathFromCurrentPosition = getBezierPathFromInitialValue(m_BezierPathFromInitialToStack[i].pts, m_TargetLocation[i]);
+                        //LTBezierPath pathFromCurrentRotation = getBezierPathFromInitialValue(m_BezierPathOrientationFromInitialToStack[i].pts, PassageList[i].localEulerAngles);
+
+                        AnimatePassageToGivenRatio(animationTime, delayOnPassage * Mathf.Abs(m_PreviousPassageIndex - i), leanType, i, m_AnimationLocationRatio[i], 1.0f, pathFromCurrentPosition, m_BezierPathOrientationFromInitialToStack[i]);
+
+                        PassageList[i].SetSiblingIndex(NumberOfPassages - 1 - i);
                     }
-                    
-                    //PassageList[i].SetAsLastSibling();
-                    AnimatePassageToGivenRatio(animationTime, (delayOnPassage * Mathf.Abs(m_PreviousPassageIndex - i)) + delayExtraOnMainPassage, leanType, i, currentRatio, targetRatio, pathToMove, pathToRotate, isUsingTwoAnimations: true);
+                    else
+                    {
+                        if (m_PreviousPassageIndex > passageIndexToShow)
+                            PassageList[i].SetSiblingIndex(NumberOfPassages - 1 - i);
+                        //PassageList[i].SetSiblingIndex(NumberOfPassages);
+
+                        LTBezierPath pathToMove = m_AnimationLocationRatio[i] <= 0.5f ? m_BezierPathToCenter[i] : m_BezierPathToStack[i];
+                        LTBezierPath pathToRotate = m_AnimationRotationRatio[i] <= 0.5f ? m_BezierPathOrientationToCenter[i] : m_BezierPathOrientationToStack[i];
+                        float targetRatio = m_AnimationLocationRatio[i] <= 0.5f ? 1.0f : 0.0f;
+                        float currentRatio = m_AnimationLocationRatio[i] <= 0.5f ? 0.0f : 1.0f; ; // m_AnimationLocationRatio[i] <= 0.5f ? (m_AnimationLocationRatio[i] * 2.0f) : ((m_AnimationLocationRatio[i] - 0.5f) * 2.0f);
+
+                        if (targetRatio == 1.0f)
+                        {
+                            pathToMove = getBezierPathFromInitialValue(pathToMove.pts, PassageList[i].localPosition);
+                            pathToRotate = getBezierPathFromInitialValue(pathToRotate.pts, new Vector3(PassageList[i].localEulerAngles.x, PassageList[i].localEulerAngles.y, 0.0f));
+                        }
+                        else
+                        {
+                            pathToMove = getBezierPathToLastValue(pathToMove.pts, PassageList[i].localPosition);
+                            pathToRotate = getBezierPathToLastValue(pathToRotate.pts, new Vector3(PassageList[i].localEulerAngles.x, PassageList[i].localEulerAngles.y, 0.0f));
+                        }
+
+                        //PassageList[i].SetAsLastSibling();
+                        AnimatePassageToGivenRatio(animationTime, (delayOnPassage * Mathf.Abs(m_PreviousPassageIndex - i)) + delayExtraOnMainPassage, leanType, i, currentRatio, targetRatio, pathToMove, pathToRotate, isUsingTwoAnimations: true);
+                    }
+                    //m_AnimationToShowRotationPassage[i] =
+
+                    //m_PassageItems[i].transform.localPosition = Vector3.Lerp(m_PassageItems[i].transform.localPosition, m_BezierPathToCenter[i].point(0.0f), Time.deltaTime * m_SpeedPassageAnimation);
+                    //m_PassageItems[i].transform.localRotation = Quaternion.Lerp(m_PassageItems[i].transform.localRotation, Quaternion.Euler(m_BezierPathOrientationToCenter[i].point(0.0f)), Time.deltaTime * m_SpeedPassageAnimation);
+
                 }
-                //m_AnimationToShowRotationPassage[i] =
-
-                //m_PassageItems[i].transform.localPosition = Vector3.Lerp(m_PassageItems[i].transform.localPosition, m_BezierPathToCenter[i].point(0.0f), Time.deltaTime * m_SpeedPassageAnimation);
-                //m_PassageItems[i].transform.localRotation = Quaternion.Lerp(m_PassageItems[i].transform.localRotation, Quaternion.Euler(m_BezierPathOrientationToCenter[i].point(0.0f)), Time.deltaTime * m_SpeedPassageAnimation);
-
             }
             
         }
@@ -788,9 +796,13 @@ namespace IBM.Watson.Widgets.Question
                     {
                         m_AnimationToShowPositionPassage[i].hasUpdateCallback = false;
                         LeanTween.cancel(m_AnimationToShowPositionPassage[i].uniqueId);
+                        m_AnimationToShowPositionPassage[i] = null;
                     }
                     else
-                        Log.Warning("PassageAnimationManager", "There is no m_AnimationToShowPositionPassage defined for animation: {0} ", i);
+                    {
+                        // Log.Warning("PassageAnimationManager", "There is no m_AnimationToShowPositionPassage defined for animation: {0} ", i);
+                    }
+
                 }
             }
 
@@ -802,9 +814,13 @@ namespace IBM.Watson.Widgets.Question
                     {
                         m_AnimationToShowRotationPassage[i].hasUpdateCallback = false;
                         LeanTween.cancel(m_AnimationToShowRotationPassage[i].uniqueId);
+                        m_AnimationToShowRotationPassage[i] = null;
                     }
                     else
-                        Log.Warning("PassageAnimationManager", "There is no m_AnimationToShowRotationPassage defined for animation: {0} ", i);
+                    {
+                        //  Log.Warning("PassageAnimationManager", "There is no m_AnimationToShowRotationPassage defined for animation: {0} ", i);
+                    }
+
                 }
             }
         }
