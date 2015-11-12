@@ -17,7 +17,7 @@
 */
 
 #define TEST_WEA
-#define CACHE_QUESTIONS
+//#define CACHE_QUESTIONS
 //#define EXPORT_QUESTIONS
 
 using System.Collections;
@@ -65,6 +65,10 @@ namespace IBM.Watson.UnitTests
             byte [] question_data = File.ReadAllBytes( Application.dataPath + "/../Docs/WoodsideQuestions.xml" );
             var xml = new XmlDocument();
             xml.LoadXml( Encoding.UTF8.GetString( question_data ) );
+
+#if CACHE_QUESTIONS
+            m_QA.DisableCache = false;
+#endif
 
 #if EXPORT_QUESTIONS
             StringBuilder WoodsideCSV = new StringBuilder();
