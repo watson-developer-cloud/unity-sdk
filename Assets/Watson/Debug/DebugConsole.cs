@@ -201,7 +201,7 @@ namespace IBM.Watson.Debug
                 if ( args[0] is string )
                 {
                     GameObject messageObject = Instantiate( m_MessagePrefab.gameObject ) as GameObject;
-                    messageObject.GetComponent<Text>().text = (string)args[0];
+                    messageObject.GetComponent<Text>().text = Utility.RemoveTags( (string)args[0] );
                     messageObject.transform.SetParent( m_MessageLayout.transform, false );
                 }
             }

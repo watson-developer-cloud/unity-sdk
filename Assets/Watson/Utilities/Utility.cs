@@ -164,7 +164,33 @@ namespace IBM.Watson.Utilities
                 output.Append( b.ToString( "x2" ) );
 
             return output.ToString();
+        }
 
+        /// <summary>
+        /// Removes any tags from a string. (e.g. <title></title>)
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static string RemoveTags( string s )
+        {
+            if (! string.IsNullOrEmpty( s ) )
+            {
+                int tagStart = s.IndexOf( '<' );
+                while( tagStart >= 0 )
+                {
+                    int tagEnd = s.IndexOf( '>', tagStart );
+                    if ( tagEnd < 0 )
+                        break;
+
+                    string pre = tagStart > 0 ? s.Substring( 0, tagStart ) : string.Empty;
+                    string post = tagEnd < s.Length ? s.Substring( tagEnd + 1 ) : string.Empty;
+                    s = pre + post;
+
+                    tagStart = s.IndexOf( '<' );
+                }
+            }
+
+            return s;
         }
 
     }

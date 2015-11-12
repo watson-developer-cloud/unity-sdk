@@ -264,6 +264,7 @@ namespace IBM.Watson.Widgets.Avatar
                 int newLine = answer.IndexOf( '\n' );
                 if ( newLine > 0 )
                     answer = answer.Substring( 0, newLine );
+                answer = Utility.RemoveTags( answer );
 
                 return string.Format("{0} ({1:0.00})", answer, m_AnswerResult.answers[0].confidence);
             }

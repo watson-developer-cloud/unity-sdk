@@ -120,7 +120,7 @@ namespace IBM.Watson.Widgets.Question
                 add = add.Substring( 0, newLine );
 
             GameObject textObject = Instantiate(prefab) as GameObject;
-            textObject.GetComponent<Text>().text = add;
+            textObject.GetComponent<Text>().text = Utility.RemoveTags( add );
             textObject.transform.SetParent(m_ChatLayout.transform, false);
 
             // remove old children..
