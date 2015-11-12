@@ -381,8 +381,8 @@ namespace IBM.Watson.Widgets.Question
             {
                 m_AnimationLocationRatio[i] = 0.0f;
                 m_AnimationRotationRatio[i] = 0.0f;
-                m_TargetLocation[i] = PassageList[i].localPosition;
-                m_TargetRotation[i] = PassageList[i].localEulerAngles;
+                m_TargetLocation[i] = m_BezierPathToCenter[i].pts[0];   // PassageList[i].localPosition;
+                m_TargetRotation[i] = m_BezierPathOrientationToCenter[i].pts[0];   //PassageList[i].localEulerAngles;
             }
             
         }
