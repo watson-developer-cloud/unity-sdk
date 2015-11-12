@@ -24,7 +24,6 @@ using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using System.Text;
 
 namespace IBM.Watson.Services.v1
@@ -45,12 +44,10 @@ namespace IBM.Watson.Services.v1
 
         #region Private Data
         private string m_ServiceID = null;
-        private DataCache m_ParseCache = null;
         private DataCache m_QuestionCache = null;
 
         private static fsSerializer sm_Serializer = new fsSerializer();
         private const string ASK_QUESTION = "/v1/question";
-        private const string PARSE_QUESTION = "/v1/question/preprocess";
         #endregion
 
         /// <summary>
@@ -111,7 +108,7 @@ namespace IBM.Watson.Services.v1
             if ( callback == null )
                 throw new ArgumentNullException("callback");
 
-            string questionId = GetMD5( question );
+            string questionId = Utility.GetMD5( question );
             if ( !DisableCache )
             {
                 Question q = FindQuestion( questionId );
@@ -199,159 +196,5 @@ namespace IBM.Watson.Services.v1
         }
 
         #endregion
-
-        #region ParseQuestion
-        /// <summary>
-        /// This function flushes all data from the answer cache.
-        /// </summary>
-        public void FlushParseCache()
-        {
-            if ( m_QuestionCache == null )
-                m_QuestionCache  = new DataCache(m_ServiceID );
-
-            m_QuestionCache.Flush();
-        }
-
-        /// <summary>
-        /// Find the parsed question in the local cache.
-        /// </summary>
-        /// <param name="questionId"></param>
-        /// <returns></returns>
-        public Question FindParseQuestion( string questionId )
-        {
-            if ( m_ParseCache == null )
-                m_ParseCache = new DataCache( m_ServiceID + "_parse" );
-
-            byte[] cached = m_ParseCache.Find(questionId);
-            if (cached != null)
-            {
-                Response response = ProcessParseResp( cached );
-                if ( response != null )
-                {
-                    response.question.questionId = questionId;
-                    return response.question;
-                }
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Ask a question using the given pipeline.
-        /// </summary>
-        /// <param name="question">The text of the question.</param>
-        /// <param name="callback">The callback to receive the response.</param>
-        /// <returns>Returns true if the request was submitted.</returns>
-        public bool ParseQuestion( string question, OnQuestion callback )
-        {
-            if ( string.IsNullOrEmpty( question ) )
-                throw new ArgumentNullException("question");
-            if ( callback == null )
-                throw new ArgumentNullException("callback");
-
-            string questionId = GetMD5( question );
-            if ( !DisableCache )
-            {
-                Question q = FindParseQuestion( questionId );
-                if ( q != null )
-                {
-                    callback( q );
-                    return true;
-                }
-            }
-
-            RESTConnector connector = RESTConnector.GetConnector(m_ServiceID, PARSE_QUESTION );
-            if (connector == null)
-                return false;
-
-            Dictionary<string,object> questionJson = new Dictionary<string, object>();
-            questionJson["question"] = new Dictionary<string,object>() {
-                { "questionText", question },
-                { "evidenceRequest", new Dictionary<string,object>() {
-                    { "items", 1 },
-                    { "profile", "NO" }
-                } }
-            };
-            string json = MiniJSON.Json.Serialize( questionJson );
-
-            ParseQuestionReq req = new ParseQuestionReq();
-            req.QuestionID = questionId;
-            req.Callback = callback;
-            req.Headers["Content-Type"] = "application/json";
-            req.Headers["X-Synctimeout"] = "-1";
-            req.Send = Encoding.UTF8.GetBytes( json );
-            req.OnResponse = OnParseQuestionResp;
-
-            return connector.Send(req);
-        }
-        private class ParseQuestionReq : RESTConnector.Request
-        {
-            public string QuestionID { get; set; }
-            public OnQuestion Callback { get; set; }
-        };
-        private void OnParseQuestionResp(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            Response response = null;
-            if (resp.Success)
-            {
-                try
-                {
-                    response = ProcessParseResp( resp.Data );
-                    if ( m_ParseCache != null && response != null )
-                        m_ParseCache.Save( ((ParseQuestionReq)req).QuestionID, resp.Data );
-                }
-                catch (Exception e)
-                {
-                    Log.Error("NLC", "GetClassifiers Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
-            if (((ParseQuestionReq)req).Callback != null)
-            {
-                if (resp.Success && response != null)
-                {
-                    response.question.questionId = ((ParseQuestionReq)req).QuestionID;
-                    ((ParseQuestionReq)req).Callback(response.question);
-                }
-                else
-                    ((ParseQuestionReq)req).Callback(null);
-            }
-        }
-
-        private Response ProcessParseResp(byte[] json_data)
-        {
-            Response response = new Response();
-
-            fsData data = null;
-            fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(json_data), out data);
-            if (!r.Succeeded)
-                throw new WatsonException(r.FormattedMessages);
-
-            object obj = response;
-            r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
-            if (!r.Succeeded)
-                throw new WatsonException(r.FormattedMessages);
-
-            return response;
-        }
-        #endregion
-
-        private string GetMD5(string s)
-        {
-            if ( string.IsNullOrEmpty( s ) )
-                return string.Empty;
-
-            MD5 md5 = new MD5CryptoServiceProvider();
-            byte [] data = Encoding.Default.GetBytes( s );
-            byte [] result = md5.ComputeHash( data );
-
-            StringBuilder output = new StringBuilder();
-            foreach( var b in result )
-                output.Append( b.ToString( "x2" ) );
-
-            return output.ToString();
-        }
-
     }
 }

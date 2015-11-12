@@ -37,7 +37,7 @@ namespace IBM.Watson.Services.v1
         /// The callback delegate for AskQuestion().
         /// </summary>
         /// <param name="questions">The </param>
-        public delegate void OnAskQuestion(Questions questions);
+        public delegate void OnAskQuestion(ParseData parse, Questions questions);
         #endregion
 
         #region Public Properties
@@ -49,6 +49,7 @@ namespace IBM.Watson.Services.v1
 
         #region Private Data
         private string m_Location = "Austin, TX";
+        private Parse m_Parse = new Parse();
         private Dictionary<string,DeepQA> m_Pipelines = new Dictionary<string, DeepQA>();
         private static fsSerializer sm_Serializer = new fsSerializer();
         private const string SERVICE_ID = "XrayV1";
@@ -128,33 +129,6 @@ namespace IBM.Watson.Services.v1
         }
         #endregion
 
-        #region GetParseData
-        /// <summary>
-        /// This returns the parse data for specific transaction ID.
-        /// </summary>
-        /// <param name="pipeline">The pipeline name.</param>
-        /// <param name="questionId">The Question ID.</param>
-        /// <param name="callback"></param>
-        /// <returns></returns>
-        public ParseData GetParseData( string pipeline, string questionId )
-        {
-            if ( string.IsNullOrEmpty( pipeline ) )
-                throw new ArgumentNullException("pipeline");
-            if ( string.IsNullOrEmpty( questionId ) )
-                throw new ArgumentNullException( "questionId" );
-
-            DeepQA pipe = GetPipeline( pipeline );
-            if ( pipe == null )
-                return null;
-
-            Data.QA.Question data = pipe.FindParseQuestion( questionId );
-            if ( data == null )
-                return null;
-
-            return new ParseData( data );
-        }
-        #endregion
-
         #region AskQuestion
         /// <summary>
         /// Ask a question.
@@ -172,7 +146,7 @@ namespace IBM.Watson.Services.v1
                 return false;
 
             var request = new AskQuestionReq( callback );
-            if (! pipe.ParseQuestion( question, request.OnParseQuestion ) )
+            if (! m_Parse.ParseQuestion( question, request.OnParseQuestion ) )
                 return false;
             if (! pipe.AskQuestion( question, request.OnAskQuestion, evidenceItems ) )
                 return false;
@@ -183,11 +157,11 @@ namespace IBM.Watson.Services.v1
         private class AskQuestionReq
         {
             private OnAskQuestion m_Callback = null;
+            private ParseData m_Parse = null;
             private Data.QA.Question m_Result = null;
-            private bool m_QuestionParsed = false;
             private bool m_Failure = false;
 
-            public AskQuestionReq(  OnAskQuestion callback )
+            public AskQuestionReq( OnAskQuestion callback )
             {
                 m_Callback = callback;
             }
@@ -197,30 +171,30 @@ namespace IBM.Watson.Services.v1
                 if ( q != null )
                 {
                     m_Result = q;
-                    if ( m_QuestionParsed && m_Callback != null )
-                        m_Callback( new Questions( m_Result ) );
+                    if ( m_Parse != null && m_Callback != null )
+                        m_Callback( m_Parse, new Questions( m_Result ) );
                 }
                 else if (! m_Failure )
                 {
                     m_Failure = true;
                     if ( m_Callback != null )
-                        m_Callback( null );
+                        m_Callback( m_Parse, null );
                 }
             }
 
-            public void OnParseQuestion( Data.QA.Question q )
+            public void OnParseQuestion(ParseData p )
             {
-                if ( q != null )
-                {
-                    m_QuestionParsed = true;
+                if ( p != null )
+                { 
+                    m_Parse = p;
                     if ( m_Result != null && m_Callback != null )
-                        m_Callback( new Questions( m_Result ) );
+                        m_Callback( m_Parse, new Questions( m_Result ) );
                 } 
                 else if (! m_Failure )
                 {
                     m_Failure = true;
                     if ( m_Callback != null )
-                        m_Callback( null );
+                        m_Callback( null, null );
                 }
             }
         };

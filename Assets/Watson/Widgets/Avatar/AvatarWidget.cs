@@ -473,11 +473,12 @@ namespace IBM.Watson.Widgets.Avatar
             State = AvatarState.LISTENING;
         }
 
-        private void OnAskQuestion(Questions questions)
+        private void OnAskQuestion( ParseData parse, Questions questions)
         {
             if ( questions != null && questions.HasQuestion() )
             {
                 m_QuestionResult = questions;
+                m_ParseData = parse;
 
                 if (m_QuestionResult != null && m_QuestionResult.HasQuestion())
                 {
@@ -487,10 +488,10 @@ namespace IBM.Watson.Widgets.Avatar
 
                     EventManager.Instance.SendEvent( Constants.Event.ON_QUESTION_PIPELINE, m_Pipeline );
                     EventManager.Instance.SendEvent( Constants.Event.ON_QUESTION, m_QuestionResult );
+                    EventManager.Instance.SendEvent( Constants.Event.ON_QUESTION_PARSE, m_ParseData );
                     EventManager.Instance.SendEvent( Constants.Event.ON_QUESTION_LOCATION, XRAY.Location );
 
                     OnAnswerQuestion( m_XRAY.GetAnswers( m_Pipeline, topQuestion.questionId ) );
-                    OnParseData( m_XRAY.GetParseData( m_Pipeline, topQuestion.questionId ) );
                 }
                 else
                     m_TextOutput.SendData(new TextData(m_RecognizeFailure));
@@ -519,12 +520,6 @@ namespace IBM.Watson.Widgets.Avatar
                 // TODO: We probably don't want to do this with a WEA..
                 m_TextOutput.SendData(new TextData(answer));
             }
-        }
-
-        private void OnParseData(ParseData data)
-        {
-            m_ParseData = data;
-            EventManager.Instance.SendEvent( Constants.Event.ON_QUESTION_PARSE, m_ParseData );
         }
 
         private void InstatiateQuestionWidget()

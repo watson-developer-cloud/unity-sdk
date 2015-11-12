@@ -18,6 +18,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
+using System.Text;
 using UnityEngine;
 
 namespace IBM.Watson.Utilities
@@ -142,6 +144,29 @@ namespace IBM.Watson.Utilities
 			
 			return childObjects;
 		}
+
+        /// <summary>
+        /// Get the MD5 hash of a string.
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static string GetMD5( string s )
+        {
+            if ( string.IsNullOrEmpty( s ) )
+                return string.Empty;
+
+            MD5 md5 = new MD5CryptoServiceProvider();
+            byte [] data = Encoding.Default.GetBytes( s );
+            byte [] result = md5.ComputeHash( data );
+
+            StringBuilder output = new StringBuilder();
+            foreach( var b in result )
+                output.Append( b.ToString( "x2" ) );
+
+            return output.ToString();
+
+        }
+
     }
 
 

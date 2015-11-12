@@ -56,11 +56,6 @@ namespace IBM.Watson.UnitTests
             while(! m_AskQuestionTested )
                 yield return null;
 
-            //m_QA.DisableCache = true;
-            Test( m_QA.ParseQuestion( TEST_QUESTION, OnParseQuestion ) );
-            while(! m_ParseQuestionTested )
-                yield return null;
-
 #if EXPORT_QUESTIONS || CACHE_QUESTIONS
             byte [] question_data = File.ReadAllBytes( Application.dataPath + "/../Docs/WoodsideQuestions.xml" );
             var xml = new XmlDocument();
