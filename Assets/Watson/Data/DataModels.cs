@@ -546,7 +546,7 @@ namespace IBM.Watson.Data
                                 {
                                     evidenceList.Add( e );
 
-                                    weaAnswer.Append( "<title>" + e.title + "<title>\n\n" );
+                                    weaAnswer.Append("<b><size=27>" + e.title + "</size></b>\n\n" );
                                     weaAnswer.Append( e.text + "\n\n" );
                                 }
                             }
