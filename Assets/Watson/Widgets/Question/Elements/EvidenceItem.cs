@@ -93,6 +93,8 @@ namespace IBM.Watson.Widgets.Question
 			//	get index of all occurences of answer
 			List<int> answerList = new List<int>();
 			answerList = GetAnswerIndexes(tf.text, answer);
+
+			if(answerList.Count == 0) return;
 			
 			for(int i = 0; i < answerList.Count; i++)
 			{
