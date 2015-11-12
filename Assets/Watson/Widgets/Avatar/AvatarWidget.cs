@@ -529,9 +529,10 @@ namespace IBM.Watson.Widgets.Avatar
 
         private void InstatiateQuestionWidget()
         {
-            if (m_FocusQuestion != null)
+            if (m_FocusQuestion != null) {
                 m_FocusQuestion.OnLeaveTheSceneAndDestroy();
-
+            }
+            
             if (m_QuestionPrefab != null)	//m_FocusQuestion == null && 
             {
                 GameObject questionObject = GameObject.Instantiate(m_QuestionPrefab);
@@ -577,7 +578,7 @@ namespace IBM.Watson.Widgets.Avatar
             }
         }
 
-        private MoodType m_currentMood = MoodType.IDLE;
+        private MoodType m_currentMood = MoodType.SLEEPING;
         public MoodType Mood
         {
             get

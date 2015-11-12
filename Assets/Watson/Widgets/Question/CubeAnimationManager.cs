@@ -22,10 +22,12 @@ using IBM.Watson.Utilities;
 using IBM.Watson.Logging;
 using IBM.Watson.Widgets.Avatar;
 
-/// <summary>
-/// Cube animation manager. All animations related with Cube located here.
-/// </summary>
-public class CubeAnimationManager : WatsonBaseAnimationManager
+namespace IBM.Watson.Widgets.Question
+{
+    /// <summary>
+    /// Cube animation manager. All animations related with Cube located here.
+    /// </summary>
+    public class CubeAnimationManager : WatsonBaseAnimationManager
 {
 
     #region Enumerations Related with Animation and Cube Sides
@@ -38,7 +40,8 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
         PARSE,
         EVIDENCE,
         LOCATION,
-        CHAT
+        CHAT,
+        PASSAGE
     }
 
     public enum CubeAnimationState
@@ -142,13 +145,7 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
 	private float timeForLeavingTheScene = 1.0f;
 	[SerializeField]
 	private LeanTweenType easeForGoingFromScene = LeanTweenType.easeOutCirc;
-
-	//Passage One Finger Animation
-	LTBezierPath m_BezierPathToCenter;
-	LTBezierPath m_BezierPathOrientationToCenter;
-	LTBezierPath m_BezierPathToStack;
-	LTBezierPath m_BezierPathOrientationToStack;
-
+    
 	//All animation Descriptions
 	private LTDescr m_animationMoveForComingScene;
 	private LTDescr m_animationScaleForComingScene;
@@ -271,30 +268,6 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
 			new Vector3 (17.5f, -5f,    11.5f),	//Bottom close to hero
 			new Vector3 (17.5f, -5f,    20.5f) 	//Bottom close to logo
 		};
-
-		m_BezierPathToCenter = new LTBezierPath ( new Vector3[]{ 
-			new Vector3(-555,-640.2f,-125),
-			new Vector3(-555,-640.2f,-125), 
-			new Vector3(-888, -406, -125), 
-			new Vector3(-888, -406, -125)});
-
-		m_BezierPathOrientationToCenter = new LTBezierPath (new Vector3[]{ 
-			new Vector3(0,0,0),
-			new Vector3(0,45,0), 
-			new Vector3(0,45,0), 
-			new Vector3(45,45,0)});
-		
-		m_BezierPathToStack =  new LTBezierPath ( new Vector3[]{ 
-				new Vector3(-888,	-406.2f,		-125),
-				new Vector3(600,	-680.1f,		-200), 
-				new Vector3(600, 	-680.1f, 	-300), 
-				new Vector3(600, 	-680.1f, 	-400)});
-
-		m_BezierPathOrientationToStack =   new LTBezierPath (new Vector3[]{ 
-				new Vector3(45,45,0),
-				new Vector3(0,45,0), 
-				new Vector3(0,35,0), 
-				new Vector3(0,0,0)});
 
 
         if (m_uiFaceOnSide.Length != m_positionUnfold.Length
@@ -464,7 +437,7 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
         }
 
         //Rotate to camera 
-        m_animationRotationCube = LeanTween.rotateLocal(gameObject, Camera.main.transform.rotation.eulerAngles - new Vector3(0.0f, 90.0f, 0.0f), m_TimeForFoldingUnfolding).setEase(m_EaseForUnfolding).setOnComplete(
+        m_animationRotationCube = LeanTween.rotateLocal(gameObject, UnityEngine.Camera.main.transform.rotation.eulerAngles - new Vector3(0.0f, 90.0f, 0.0f), m_TimeForFoldingUnfolding).setEase(m_EaseForUnfolding).setOnComplete(
             () =>
             {
                 AnimationState = CubeAnimationState.IDLE_AS_UNFOLDED;   //unfolding finish
@@ -474,7 +447,7 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
             });
 
         //Move object cloase to camera
-        m_animationPositionCube = LeanTween.move(gameObject, m_initialPositionMainCamera + m_DistanceFromCameraInZAfterUnfolding * Camera.main.transform.forward + m_PositionCubeOffsetUnfold, m_TimeForFoldingUnfolding).setEase(m_EaseForUnfolding);
+        m_animationPositionCube = LeanTween.move(gameObject, m_initialPositionMainCamera + m_DistanceFromCameraInZAfterUnfolding * UnityEngine.Camera.main.transform.forward + m_PositionCubeOffsetUnfold, m_TimeForFoldingUnfolding).setEase(m_EaseForUnfolding);
 
         //Avatar Object position change
 		EventManager.Instance.SendEvent (Constants.Event.ON_AVATAR_MOVE_DOWN, m_TimeForFoldingUnfolding);
@@ -491,10 +464,13 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
     public void FocusOnSide(CubeSideType sideType)
     {
         m_LastCubeSideFocused = sideType;
-        if (m_presentationSide.Length < (int)sideType)
+        if (m_presentationSide.Length <= (int)sideType)
         {
             Log.Error("CubeAnimationManager", "CubeAnimationManager - FocusOnSide {0} has wrong number as side. ", (int)sideType);
-            return;
+
+            sideType = (CubeSideType)((int)sideType % m_presentationSide.Length);
+            m_LastCubeSideFocused = sideType;
+            //;
         }
 
         StopAllCubeAnimations();
@@ -751,12 +727,6 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
         {
             if (destroy)
             {
-                Camera[] cameraList = transform.parent.GetComponentsInChildren<Camera>();
-                foreach (Camera itemCamera in cameraList)
-                {
-                    itemCamera.targetTexture = null;
-                    itemCamera.enabled = false;
-                }
                 Destroy(transform.parent.gameObject);
             }
         });
@@ -794,8 +764,8 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
 		}
 
 		CubeSideType sideTapped = SideOfTap (raycastHit.transform);
-		if (AnimationState == CubeAnimationState.IDLE_AS_FOCUSED && sideTapped == SideFocused) {
-			TapInsideOnFocusedSide(tapGesture, raycastHit, sideTapped);
+		if (AnimationState == CubeAnimationState.IDLE_AS_FOCUSED && ((int)sideTapped % m_presentationSide.Length) == ((int)SideFocused  % m_presentationSide.Length) ) {
+			//TapInsideOnFocusedSide(tapGesture, raycastHit, sideTapped);
 		} else {
 			//Touch on side
 			switch (AnimationState)
@@ -833,7 +803,9 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
 	private CubeSideType SideOfTap(Transform hitTransform){
 		int touchedSide = -1;
 		int.TryParse(hitTransform.name.Substring(1, 1), out touchedSide);
-		return (CubeAnimationManager.CubeSideType)touchedSide;
+        if (touchedSide == 0)
+            touchedSide = 6;//TODO: Delete touched side hacky action!
+        return (CubeAnimationManager.CubeSideType)touchedSide;
 	}
 	
 	private void FocusOnSide(Transform hitTransform)
@@ -884,92 +856,12 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
 	}
 
 
-	private Vector2 getScreenPositionForCamera(Vector2 screenPositionOnMainCamera, Camera cameraOnProjection, Transform hexagonalPlane){
-		Vector2 normalizeScreenTouchRelativeToPlane = Vector2.zero;
-
-		if (hexagonalPlane.parent != null) {
-			MeshFilter meshFilter = hexagonalPlane.parent.GetComponent<MeshFilter> ();
-
-			if (meshFilter != null) {
-				Vector3 planePointMin = meshFilter.transform.TransformPoint (meshFilter.mesh.bounds.min);
-				Vector3 planePointMax = meshFilter.transform.TransformPoint (meshFilter.mesh.bounds.max);
-				
-				//Log.Status ("CubeAnimationManager", "0 - MIN) meshFilter.mesh.bounds.min: " + meshFilter.mesh.bounds.min + " Global : " + meshFilter.transform.TransformPoint (meshFilter.mesh.bounds.min) + " - Camera.main.WorldToScreenPoint: " + Camera.main.WorldToScreenPoint(meshFilter.transform.TransformPoint (meshFilter.mesh.bounds.min)));
-				//Log.Status ("CubeAnimationManager", "0 - MAX) meshFilter.mesh.bounds.max: " + meshFilter.mesh.bounds.max + " Global : " + meshFilter.transform.TransformPoint (meshFilter.mesh.bounds.max) + " - Camera.main.WorldToScreenPoint: " + Camera.main.WorldToScreenPoint(meshFilter.transform.TransformPoint (meshFilter.mesh.bounds.max)));
-				
-				Vector3 screenPlaneBottomLeft = Camera.main.WorldToScreenPoint(meshFilter.transform.TransformPoint (meshFilter.mesh.bounds.max));
-				Vector3 screenPlaneTopRight = Camera.main.WorldToScreenPoint(meshFilter.transform.TransformPoint (meshFilter.mesh.bounds.min));
-				Vector3 screenPlaneFromLeftToRight = screenPlaneTopRight - screenPlaneBottomLeft;
-				
-				Vector2 screenTouchRelativeToPlane = new Vector2 (screenPositionOnMainCamera.x - screenPlaneBottomLeft.x, screenPositionOnMainCamera.y - screenPlaneBottomLeft.y);
-				normalizeScreenTouchRelativeToPlane = new Vector2 (screenTouchRelativeToPlane.x / screenPlaneFromLeftToRight.x, screenTouchRelativeToPlane.y / screenPlaneFromLeftToRight.y);
-				
-				float onePixelOnProjectionScreenSize = Screen.height / (cameraOnProjection.orthographicSize * 2.0f);
-				
-				Vector2 targetTextureSize = Vector2.one * onePixelOnProjectionScreenSize; 
-				if (cameraOnProjection.targetTexture != null) {
-					targetTextureSize = new Vector2( cameraOnProjection.targetTexture.width, cameraOnProjection.targetTexture.height);
-				}
-				
-				normalizeScreenTouchRelativeToPlane.Scale (targetTextureSize);
-			} else {
-				Log.Error("CubeAnimationManager", "getScreenPositionForCamera - There is no mesh filter on parent object");
-			}
-		} else {
-			Log.Error("CubeAnimationManager", "getScreenPositionForCamera - There is no parent object");
-		}
-
-		return  normalizeScreenTouchRelativeToPlane;
-	}
-
-	private Camera[] m_ProjectionCameraList;
-	private Ray m_RayOnTapFocusedSide;
-
-	private void TapInsideOnFocusedSide(TouchScript.Gestures.TapGesture tapGesture, RaycastHit raycastHit, CubeSideType sideTapped)
-	{
-		Log.Status("CubeAnimationManager", "TapInsideOnFocusedSide " + tapGesture.ScreenPosition + " sideTapped: " + sideTapped + " Index: " + ((int)sideTapped).ToString());
-
-		if(m_ProjectionCameraList == null)
-			m_ProjectionCameraList = Utility.FindObjects<Camera> (transform.parent.gameObject, "cam", isContains: true, sortByName: true);
-
-		if (m_ProjectionCameraList.Length > (int)sideTapped && m_ProjectionCameraList [(int)sideTapped] != null) {
-			Camera cameraProjectionParse = m_ProjectionCameraList [(int)sideTapped];	
-			if (cameraProjectionParse != null) {
-				Vector2 screenPointOnCamera = getScreenPositionForCamera (tapGesture.ScreenPosition, cameraProjectionParse, raycastHit.transform);
-				m_RayOnTapFocusedSide = cameraProjectionParse.ScreenPointToRay (screenPointOnCamera);
-				//TODO: Tap inside while cube is on focused!
-				RaycastHit2D hit = default(RaycastHit2D);
-				int layerOfSide = LayerMask.NameToLayer("Side"+((int)sideTapped).ToString());
-				LayerMask layerMaskForSide = 1 << layerOfSide;
-				hit = Physics2D.Raycast(m_RayOnTapFocusedSide.origin, m_RayOnTapFocusedSide.direction, Mathf.Infinity, layerMaskForSide);
-				if(hit.collider != null){
-					Log.Status("CubeAnimationManager","isHitOnLayer : " + hit.collider.transform);
-				}
-				else{
-					Log.Status("CubeAnimationManager","NOT HIT ");
-				}
-			}
-		} else {
-			Log.Error("CubeAnimationManager", "TapInsideOnFocusedSide - Projection Camera couldn't find!");
-		}
-
-	}
-
 	private void TapOutsideOnFocusedSide(TouchScript.Gestures.TapGesture tapGesture, RaycastHit raycastHit, CubeSideType sideTapped)
 	{
 		//TODO: Tap outside while cube is on focused!
 		Log.Status("CubeAnimationManager", "TapOutsideOnFocusedSide " + tapGesture.ScreenPosition + " sideTapped: " + sideTapped);
 	}
-
-	void OnDrawGizmos() {
-		if(!m_RayOnTapFocusedSide.Equals(default(Ray))){
-			Gizmos.color = Color.yellow;
-			Gizmos.DrawRay(m_RayOnTapFocusedSide);
-			Gizmos.color = Color.red;
-			Gizmos.DrawLine(m_RayOnTapFocusedSide.origin, m_RayOnTapFocusedSide.origin + m_RayOnTapFocusedSide.direction * 1000);
-		}
-	}
-
+        
 	#endregion
 	
 	#region Dragging One Finger
@@ -986,6 +878,10 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
 			m_LastFrameOneFingerDrag = Time.frameCount;
 			m_StatinoaryRotationSpeed = 0.0f; //stop the statinoary rotation
 		}
+        else
+        {
+            m_LastFrameOneFingerDrag = -1;
+        }
 	}
 	
 	
@@ -999,7 +895,7 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
 		}
 		else if (AnimationState == CubeAnimationState.IDLE_AS_FOCUSED && SideFocused == CubeSideType.TITLE) {
 			//Passage animation
-			DragOneFingerOnPassageOnUpdate();
+			//DragOneFingerOnPassageOnUpdate();
 		}
 	}
 	
@@ -1009,7 +905,7 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
 		{
 			GameObject currentSideObject = m_presentationSide[(int)SideFocused];
 
-			Ray rayForDrag = Camera.main.ScreenPointToRay(OneFingerManipulationGesture.ScreenPosition);
+			Ray rayForDrag = UnityEngine.Camera.main.ScreenPointToRay(OneFingerManipulationGesture.ScreenPosition);
 			RaycastHit hit;
 			bool isHitOnFocusedSide = Physics.Raycast(rayForDrag, out hit, Mathf.Infinity, 1 << currentSideObject.layer);
 
@@ -1023,95 +919,21 @@ public class CubeAnimationManager : WatsonBaseAnimationManager
 				if(cubeSideTouched == CubeSideType.TITLE && SideFocused == CubeSideType.TITLE)
 				{
 					m_LastFrameOneFingerDrag = Time.frameCount;
-					DragOneFingerOnPassage(OneFingerManipulationGesture);
+					//DragOneFingerOnPassage(OneFingerManipulationGesture);
 				}
 			}
 
 		}
 	}
 
-	private Transform[] m_PassageItems = null;
+	
 
-	//[SerializeField]
-	private float m_OneDragModifier = 0.01f;
-	private int m_SelectedPassageIndex = -1;
-	private float m_PercentCurrentPassage = 0.0f;
+    public void ReleasedFinger(TouchScript.Gestures.ReleaseGesture releaseGesture)
+    {
+        m_LastFrameOneFingerDrag = -1;
+    }
 
-	private Vector3 worldOnPath = Vector3.up;
-
-	public void DragOneFingerOnPassage(TouchScript.Gestures.ScreenTransformGesture OneFingerManipulationGesture){
-
-		if (m_PassageItems == null) {
-			m_PassageItems = Utility.FindObjects<Transform> (m_ProjectionSide [5], "PassageItem", isContains: true, sortByName: true);
-		}
-
-		if (m_PassageItems != null) {
-			float movingInX = OneFingerManipulationGesture.DeltaPosition.x * m_OneDragModifier;
-			//Log.Status("CubeAnimationManager", "Passages: {0} - DragOneFingerOnPassage: {1}", m_PassageItems.Length, OneFingerManipulationGesture.DeltaPosition);
-//			for (int i = 0; i < m_PassageItems.Length; i++) {
-//				Log.Status("CubeAnimationManager", "Passages: {0} - List[{1}] = {2}", m_PassageItems.Length, i, m_PassageItems[i].name);
-//			}
-
-			if(m_SelectedPassageIndex != -1){
-
-			}
-			else{
-
-				m_PercentCurrentPassage = Mathf.Clamp01(m_PercentCurrentPassage + movingInX);
-
-
-				//new Vector3[]{ new Vector3(0f,0f,0f), new Vector3(1f,1f,1f), new Vector3(2f,2f,2f), new Vector3(3f,3f,3f), new Vector3(3f,3f,3f), new Vector3(4f,4f,4f), new Vector3(5f,5f,5f), new Vector3(6f,6f,6f) }
-				//LTSpline pathSplineOrientation = new LTSpline( Vector3.zero, new Vector3(45.0f,45.0f,0), new Vector3(45.0f,45.0f,0), Vector3.zero );
-				//path.orientToPath = true;
-				//path.placeLocal(m_PassageItems[0].transform, m_PercentCurrentPassage, worldOnPath);
-				//m_PassageItems[0].transform.GetComponent<RectTransform>().anchoredPosition3D = path.point(m_PercentCurrentPassage);
-				//m_PassageItems[0].transform.GetComponent<RectTransform>().localEulerAngles = pathOrientation.point(m_PercentCurrentPassage);
-
-			}
-
-
-		} else {
-			Log.Status("CubeAnimationManager", "NO PASSAGE - DragOneFingerOnPassage: {0}", OneFingerManipulationGesture.DeltaPosition);
-		}
-	}
-
-	//[SerializeField]
-	private float sleepPassageSmooth = 4.0f;
-
-	private void DragOneFingerOnPassageOnUpdate(){
-
-		if (m_PassageItems != null && m_PassageItems[0] != null) {
-
-			if((Time.frameCount - m_LastFrameOneFingerDrag) > 2 ){
-				if(m_PercentCurrentPassage >0.25f && m_PercentCurrentPassage < 0.75f){
-					m_PercentCurrentPassage = 0.5f;
-				}
-				else if(m_PercentCurrentPassage < 0.25f){
-					m_PercentCurrentPassage = 0.0f;
-				}
-				else{
-					m_PercentCurrentPassage = 1.0f;
-				}
-			}
-				
-
-
-			LTBezierPath m_BezierPathCurrent;
-			LTBezierPath m_BezierPathOrientationCurrent;
-			float m_RatioBezierPathPassage = 0.0f;
-			if (m_PercentCurrentPassage <= 0.5f) {
-				m_RatioBezierPathPassage = m_PercentCurrentPassage * 2.0f;
-				m_BezierPathCurrent = m_BezierPathToCenter;
-				m_BezierPathOrientationCurrent = m_BezierPathOrientationToCenter;
-			} else {
-				m_RatioBezierPathPassage = (m_PercentCurrentPassage - 0.5f) * 2.0f;
-				m_BezierPathCurrent = m_BezierPathToStack;
-				m_BezierPathOrientationCurrent = m_BezierPathOrientationToStack;
-			}
-			
-			m_PassageItems[0].transform.localPosition = Vector3.Lerp(m_PassageItems[0].transform.localPosition, m_BezierPathCurrent.point (m_RatioBezierPathPassage), Time.deltaTime * sleepPassageSmooth);
-			m_PassageItems[0].transform.localRotation = Quaternion.Lerp(m_PassageItems[0].transform.localRotation, Quaternion.Euler( m_BezierPathOrientationCurrent.point (m_RatioBezierPathPassage)), Time.deltaTime * sleepPassageSmooth);
-		}
+    
 	}
 	
 	#endregion

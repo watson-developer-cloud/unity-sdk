@@ -86,7 +86,7 @@ public class WatsonCamera : MonoBehaviour {
     #region Camera Events Received from Outside - Set default position / Move Left - Right - Up - Down / Zoom-in-out
     public void ResetCameraPosition(System.Object[] args)
     {
-        Log.Status("WatsonCamera", "Reset Camera Position");
+        //Log.Status("WatsonCamera", "Reset Camera Position");
         m_TargetCameraLocation = m_CameraInitialLocation;
     }
 

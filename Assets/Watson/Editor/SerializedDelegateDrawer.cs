@@ -90,8 +90,20 @@ namespace IBM.Watson.Editor
                 return null;
 
             List<string> components = new List<string>();
-            foreach( var c in target.GetComponents( typeof(Component) ) )
-                components.Add( c.GetType().Name );
+
+            foreach( var c in target.GetComponents( typeof(Component) ))
+            {
+                try
+                {
+                    components.Add(c.GetType().Name);
+                }
+                catch (Exception)
+                {
+                 
+                }
+                
+            }
+               
 
             return components;
         }

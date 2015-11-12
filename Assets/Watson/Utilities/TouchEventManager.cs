@@ -165,13 +165,18 @@ namespace IBM.Watson.Utilities
 		private ScreenTransformGesture m_OneFingerMoveGesture;
 		[SerializeField]
 		private ScreenTransformGesture m_TwoFingerMoveGesture;
-		#endregion
+        [SerializeField]
+        private PressGesture m_PressGesture;
+        [SerializeField]
+        private ReleaseGesture m_ReleaseGesture;
 
-		#region Public Properties
-		/// <summary>
-		/// Set/Get the active state of this manager.
-		/// </summary>
-		public bool Active { get { return m_Active; } set { m_Active = value; } }
+        #endregion
+
+        #region Public Properties
+        /// <summary>
+        /// Set/Get the active state of this manager.
+        /// </summary>
+        public bool Active { get { return m_Active; } set { m_Active = value; } }
 
 		private static TouchEventManager sm_Instance = null;
 		/// <summary>
@@ -193,15 +198,21 @@ namespace IBM.Watson.Utilities
 
 			m_OneFingerMoveGesture.Transformed += OneFingerTransformedHandler;
 			m_TwoFingerMoveGesture.Transformed += TwoFingerTransformedHandler;
-		}
-		
-		private void OnDisable()
+
+            m_PressGesture.Pressed += PressGesturePressed;
+            m_ReleaseGesture.Released += ReleaseGestureReleased;
+        }
+
+        private void OnDisable()
 		{
 			m_TapGesture.Tapped += TapGesture_Tapped;
 
-			m_OneFingerMoveGesture.Transformed += OneFingerTransformedHandler;
-			m_TwoFingerMoveGesture.Transformed += TwoFingerTransformedHandler;
-		}
+			m_OneFingerMoveGesture.Transformed -= OneFingerTransformedHandler;
+			m_TwoFingerMoveGesture.Transformed -= TwoFingerTransformedHandler;
+
+            m_PressGesture.Pressed -= PressGesturePressed;
+            m_ReleaseGesture.Released -= ReleaseGestureReleased;
+        }
 
         public UnityEngine.Camera MainCamera
         {
@@ -290,10 +301,15 @@ namespace IBM.Watson.Utilities
 							if(dragEventData.CanDragObject){
 								bool isHitOnLayer = Physics.Raycast(rayForDrag, out hit, Mathf.Infinity, 1 << dragEventData.GameObjectAttached.layer);
 
-								if(isHitOnLayer && dragEventData.HasTouchedOn(hit.transform)){
+								if(isHitOnLayer && dragEventData.HasTouchedOn(hit.transform) && dragEventData.IsInside){
 									hasDragOnObject = true;
 								}
-								else{
+                                else if (!isHitOnLayer && !dragEventData.IsInside)
+                                {
+                                    hasDragOnObject = true;
+                                }
+                                else
+                                {
 									//do nothing - we were checking that draggable object that we touched!
 								}
 
@@ -331,7 +347,7 @@ namespace IBM.Watson.Utilities
 
 		private void TwoFingerTransformedHandler(object sender, System.EventArgs e)
 		{
-			Log.Status ("TouchEventManager", "TwoFingerTransformedHandler: {0}", m_TwoFingerMoveGesture.DeltaPosition);
+			//Log.Status ("TouchEventManager", "TwoFingerTransformedHandler: {0}", m_TwoFingerMoveGesture.DeltaPosition);
 			if (m_Active) {
 				TouchEventData dragEventToFire = null;
 
@@ -442,7 +458,7 @@ namespace IBM.Watson.Utilities
 		{   
             if (m_Active)
 			{
-                Log.Status("TouchEventManager", "TapGesture_Tapped: {0} ", m_TapGesture.ScreenPosition);
+                //Log.Status("TouchEventManager", "TapGesture_Tapped: {0} ", m_TapGesture.ScreenPosition);
 
                 TouchEventData tapEventToFire = null;
 				RaycastHit hit = default(RaycastHit);
@@ -518,8 +534,27 @@ namespace IBM.Watson.Utilities
             
 		}
 
-		#endregion
-			
-	}
+        #endregion
+
+        #region PressGesture Events -  Call - There is no registration is sends automatically the press event
+        
+        private void PressGesturePressed(object sender, System.EventArgs e)
+        {
+            EventManager.Instance.SendEvent(Constants.Event.ON_TOUCH_PRESSED_FULLSCREEN, m_PressGesture);
+        }
+        
+        #endregion
+
+        #region ReleaseGesture Events - Call - There is no registration is sends automatically the release event
+        
+        private void ReleaseGestureReleased(object sender, System.EventArgs e)
+        {
+            EventManager.Instance.SendEvent(Constants.Event.ON_TOUCH_RELEASED_FULLSCREEN, m_ReleaseGesture);
+        }
+        
+
+
+        #endregion
+    }
 
 }

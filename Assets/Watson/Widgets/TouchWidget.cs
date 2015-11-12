@@ -55,6 +55,7 @@ namespace IBM.Watson.Widgets
 			public GameObject m_DragLayerObject = null;
             public int m_NumberOfFinger = 1;
             public int m_SortingLayer = 0;
+            public bool m_IsDragInside = true;
 			public Constants.Event m_Callback = Constants.Event.NONE;
         };
 
@@ -79,7 +80,7 @@ namespace IBM.Watson.Widgets
 
             foreach (var mapping in m_FullScreenDragMappings)
             {
-				TouchEventManager.Instance.RegisterDragEvent(mapping.m_DragLayerObject, mapping.m_Callback, mapping.m_NumberOfFinger, mapping.m_SortingLayer);
+				TouchEventManager.Instance.RegisterDragEvent(mapping.m_DragLayerObject, mapping.m_Callback, mapping.m_NumberOfFinger, mapping.m_SortingLayer, isDragInside: mapping.m_IsDragInside);
             }
         }
 
@@ -98,7 +99,7 @@ namespace IBM.Watson.Widgets
 
             foreach (var mapping in m_FullScreenDragMappings)
             {
-				TouchEventManager.Instance.UnregisterDragEvent(mapping.m_DragLayerObject, mapping.m_Callback, mapping.m_NumberOfFinger, mapping.m_SortingLayer);
+				TouchEventManager.Instance.UnregisterDragEvent(mapping.m_DragLayerObject, mapping.m_Callback, mapping.m_NumberOfFinger, mapping.m_SortingLayer, isDragInside: mapping.m_IsDragInside);
             }
         }
     }

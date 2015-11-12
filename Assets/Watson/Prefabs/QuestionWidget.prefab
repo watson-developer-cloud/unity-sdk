@@ -12359,10 +12359,12 @@ MonoBehaviour:
   - m_DragLayerObject: {fileID: 0}
     m_NumberOfFinger: 1
     m_SortingLayer: 0
+    m_IsDragInside: 1
     m_Callback: 203
   - m_DragLayerObject: {fileID: 165892}
     m_NumberOfFinger: 1
     m_SortingLayer: 1
+    m_IsDragInside: 1
     m_Callback: 204
 --- !u!114 &11420172
 MonoBehaviour:
@@ -12799,6 +12801,11 @@ MonoBehaviour:
       m_Target: {fileID: 165892}
       m_Component: QuestionWidget
       m_Method: OnQuestionPipeline
+  - m_Event: 501
+    m_Callback:
+      m_Target: {fileID: 165892}
+      m_Component: QuestionWidget
+      m_Method: ReleasedFinger
 --- !u!114 &11490470
 MonoBehaviour:
   m_ObjectHideFlags: 1

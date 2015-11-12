@@ -17,11 +17,13 @@
 * @author Dogukan Erenel (derenel@us.ibm.com)
 */
 
+using IBM.Watson.Widgets.Avatar;
 using IBM.Watson.Logging;
 using IBM.Watson.Data.XRAY;
 using IBM.Watson.Data.QA;
 using UnityEngine;
 using System.Collections.Generic;
+
 
 namespace IBM.Watson.Widgets.Question
 {
@@ -114,6 +116,47 @@ namespace IBM.Watson.Widgets.Question
         #region Event Handlers of Question Widget
 
         /// <summary>
+        /// On Behavior Change of the avatar, this function gets called
+        /// </summary>
+        /// <param name="args">If there 2 parameters we consider 1st parameter is AvatarWidget object, otherwise we are using initial AvatarWidget object's values to call other functions</param>
+        public void OnChangedAvatarState(object[] args)
+        {
+            if (args.Length == 2 && args[0] is AvatarWidget  && args[1] != null)
+            {
+                AvatarWidget avatarWidget = args[0] as AvatarWidget;
+                AvatarWidget.AvatarState avatarState = (AvatarWidget.AvatarState)args[1];
+
+                if (avatarWidget != null)
+                {
+                    switch (avatarState)
+                    {
+                        case AvatarWidget.AvatarState.CONNECTING:
+                            break;
+                        case AvatarWidget.AvatarState.LISTENING:
+                            break;
+                        case AvatarWidget.AvatarState.THINKING:
+                            break;
+                        case AvatarWidget.AvatarState.ANSWERING:
+                            Cube.Fold();
+                            break;
+                        case AvatarWidget.AvatarState.ERROR:
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                else
+                {
+                    Log.Error("AvatarModelManager", "OnChangedAvatarState the argument is not AvatarWidget object");
+                }
+            }
+            else
+            {
+                Log.Error("QuestionWidget", "OnChangedAvatarState the argument length is undefined {0}", args.Length);
+            }
+        }
+
+        /// <summary>
         /// Method called on Tapping on Question Widget 
         /// </summary>
         /// <param name="tapGesture">Tap Gesture with all touch information</param>
@@ -176,11 +219,24 @@ namespace IBM.Watson.Widgets.Question
             }
         }
 
-		/// <summary>
-		/// Drags the one finger on object.
-		/// </summary>
-		/// <param name="args">Arguments.</param>
-		public void DragOneFingerOnObject(object[] args)
+        public void ReleasedFinger(object[] args)
+        {
+            if (args != null && args.Length == 1 && args[0] is TouchScript.Gestures.ReleaseGesture)
+            {
+                TouchScript.Gestures.ReleaseGesture releaseGesture = args[0] as TouchScript.Gestures.ReleaseGesture;
+
+                if (Cube != null)
+                {
+                    Cube.ReleasedFinger(releaseGesture);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Drags the one finger on object.
+        /// </summary>
+        /// <param name="args">Arguments.</param>
+        public void DragOneFingerOnObject(object[] args)
 		{
 			//Log.Warning("QuestWidget", "DragOneFingerOnObject - OBJECT");
 			if (args != null && args.Length == 1 && args[0] is TouchScript.Gestures.ScreenTransformGesture)
@@ -193,6 +249,10 @@ namespace IBM.Watson.Widgets.Question
 					Cube.DragOneFingerOnSide(OneFingerManipulationGesture);
 				}
 			}
+            else
+            {
+                Log.Warning("QuestWidget", "DragOneFingerOnObject has invalid arguments");
+            }
 		}
 
 		/// <summary>
@@ -333,7 +393,7 @@ namespace IBM.Watson.Widgets.Question
         protected override void Awake()
         {
             base.Awake();
-            EnableEvents(false);
+            EnableEvents(false);  //TODO: Uncomment - commented for test purposes!
 			Cube.enabled = false;
 
 			//	populate facets
