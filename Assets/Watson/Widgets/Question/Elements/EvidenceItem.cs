@@ -68,7 +68,7 @@ namespace IBM.Watson.Widgets.Question
                 gameObject.SetActive(true);
 //				string StrippedEvidence = Regex.Replace(EvidenceString, "<[^>]*>", "");
 				m_EvidenceText.text = EvidenceString;
-				HighlightAnswer(m_EvidenceText, Answer);
+//				HighlightAnswer(m_EvidenceText, Answer);
             }
             else
             {
