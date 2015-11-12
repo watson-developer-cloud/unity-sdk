@@ -187,6 +187,9 @@ namespace IBM.Watson.Data
                         focusList.Add( f.value );
                     focus = focusList.ToArray();
                 }
+                else
+                    focus = new string[0];
+
                 if ( q.latlist != null )
                 {
                     List<string> latList = new List<string>();
@@ -194,13 +197,22 @@ namespace IBM.Watson.Data
                         latList.Add( l.value );
                     lat = latList.ToArray();
                 }
-                questionText = q.questionText;
+                else
+                    lat = new string[0];
 
+                questionText = q.questionText;
                 taggedText = questionText;
-                foreach( var f in focus )
-                    taggedText = taggedText.Replace( f, "<Focus>" + f + "</Focus>" );
-                foreach( var l in lat )
-                    taggedText = taggedText.Replace( l, "<Lat>" + l + "</Lat>" );
+
+                if ( focus != null )
+                {
+                    foreach( var f in focus )
+                        taggedText = taggedText.Replace( f, "<Focus>" + f + "</Focus>" );
+                }
+                if ( lat != null )
+                {
+                    foreach( var l in lat )
+                        taggedText = taggedText.Replace( l, "<Lat>" + l + "</Lat>" );
+                }
             }
  
         };
@@ -224,12 +236,7 @@ namespace IBM.Watson.Data
             /// <summary>
             /// The creation date for the question.
             /// </summary>
-            public string createDate { get; set; }
-            public string createTime { get; set; }
-            public string transactionHash { get; set; }
-            public long transactionId { get; set; }
-            public string pipelineId { get; set; }
-            public string authorizationKey { get; set; }
+            public string questionId { get; set; }
             public QuestionText question { get; set; }
 
             /// <summary>
@@ -251,6 +258,7 @@ namespace IBM.Watson.Data
                         topConfidence = Math.Max( topConfidence, answer.confidence );
                 }
 
+                questionId = q.questionId;
                 question = new QuestionText( q );
             }
         };
@@ -422,7 +430,9 @@ namespace IBM.Watson.Data
                     foreach( var word in question.questionText.Split( ' ' ) )
                     {
                         ParseWord parseWord = new ParseWord();
+                        parseWord.Slot = string.Empty;
                         parseWord.Word = word;
+                        parseWord.Features = new string[0];
 
                         // look for the part of speech in the synonymList..
                         if ( question.synonymList != null )
@@ -1063,6 +1073,8 @@ namespace IBM.Watson.Data
             public Answer[] answers { get; set; }
             public string[] errorNotifications { get; set; }
             public string passthru { get; set; }
+
+            public string questionId { get; set; }      // local cache ID
         };
         public class QuestionClass
         {

@@ -12794,11 +12794,11 @@ MonoBehaviour:
       m_Target: {fileID: 165892}
       m_Component: QuestionWidget
       m_Method: DragOneFingerOnObject
-  - m_Event: 206
+  - m_Event: 209
     m_Callback:
       m_Target: {fileID: 165892}
       m_Component: QuestionWidget
-      m_Method: OnQuestion
+      m_Method: OnQuestionPipeline
 --- !u!114 &11490470
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -13298,6 +13298,14 @@ Prefab:
       propertyPath: m_Mappings.Array.data[10].m_Callback.m_Target
       value: 
       objectReference: {fileID: 165892}
+    - target: {fileID: 0}
+      propertyPath: m_Mappings.Array.data[11].m_Event
+      value: 209
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Mappings.Array.data[11].m_Callback.m_Method
+      value: OnQuestionPipeline
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 165892}

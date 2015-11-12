@@ -24,6 +24,7 @@ using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace IBM.Watson.Services.v1
@@ -74,6 +75,30 @@ namespace IBM.Watson.Services.v1
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="questionId"></param>
+        /// <returns></returns>
+        public Question FindQuestion( string questionId )
+        {
+            if ( m_QuestionCache == null )
+                m_QuestionCache = new DataCache(m_ServiceID);
+
+            byte[] cachedQuestion = m_QuestionCache.Find(questionId);
+            if (cachedQuestion != null)
+            {
+                Response response = ProcessAskResp( cachedQuestion );
+                if ( response != null )
+                {
+                    response.question.questionId = questionId;
+                    return response.question;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Ask a question using the given pipeline.
         /// </summary>
         /// <param name="question">The text of the question.</param>
@@ -86,20 +111,14 @@ namespace IBM.Watson.Services.v1
             if ( callback == null )
                 throw new ArgumentNullException("callback");
 
+            string questionId = GetMD5( question );
             if ( !DisableCache )
             {
-                if ( m_QuestionCache == null )
-                    m_QuestionCache = new DataCache(m_ServiceID);
-
-                byte[] cachedQuestion = m_QuestionCache.Find(question.GetHashCode().ToString());
-                if (cachedQuestion != null)
+                Question q = FindQuestion( questionId );
+                if ( q != null )
                 {
-                    Response response = ProcessAskResp( cachedQuestion );
-                    if ( response != null )
-                    {
-                        callback( response.question );
-                        return true;
-                    }
+                    callback( q );
+                    return true;
                 }
             }
 
@@ -118,7 +137,7 @@ namespace IBM.Watson.Services.v1
             string json = MiniJSON.Json.Serialize( questionJson );
 
             AskQuestionReq req = new AskQuestionReq();
-            req.QuestionID = question.GetHashCode().ToString();
+            req.QuestionID = questionId;
             req.Callback = callback;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["X-Synctimeout"] = "-1";
@@ -153,7 +172,10 @@ namespace IBM.Watson.Services.v1
             if (((AskQuestionReq)req).Callback != null)
             {
                 if (resp.Success && response != null)
+                {
+                    response.question.questionId = ((AskQuestionReq)req).QuestionID;
                     ((AskQuestionReq)req).Callback(response.question);
+                }
                 else
                     ((AskQuestionReq)req).Callback(null);
             }
@@ -191,6 +213,30 @@ namespace IBM.Watson.Services.v1
         }
 
         /// <summary>
+        /// Find the parsed question in the local cache.
+        /// </summary>
+        /// <param name="questionId"></param>
+        /// <returns></returns>
+        public Question FindParseQuestion( string questionId )
+        {
+            if ( m_ParseCache == null )
+                m_ParseCache = new DataCache( m_ServiceID + "_parse" );
+
+            byte[] cached = m_ParseCache.Find(questionId);
+            if (cached != null)
+            {
+                Response response = ProcessParseResp( cached );
+                if ( response != null )
+                {
+                    response.question.questionId = questionId;
+                    return response.question;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Ask a question using the given pipeline.
         /// </summary>
         /// <param name="question">The text of the question.</param>
@@ -203,21 +249,14 @@ namespace IBM.Watson.Services.v1
             if ( callback == null )
                 throw new ArgumentNullException("callback");
 
-            string questionId = question.GetHashCode().ToString();
+            string questionId = GetMD5( question );
             if ( !DisableCache )
             {
-                if ( m_ParseCache == null )
-                    m_ParseCache = new DataCache(m_ServiceID + "_parse" );
-
-                byte[] cached = m_ParseCache.Find(questionId);
-                if (cached != null)
+                Question q = FindParseQuestion( questionId );
+                if ( q != null )
                 {
-                    Response response = ProcessParseResp( cached );
-                    if ( response != null )
-                    {
-                        callback( response.question );
-                        return true;
-                    }
+                    callback( q );
+                    return true;
                 }
             }
 
@@ -271,7 +310,10 @@ namespace IBM.Watson.Services.v1
             if (((ParseQuestionReq)req).Callback != null)
             {
                 if (resp.Success && response != null)
+                {
+                    response.question.questionId = ((ParseQuestionReq)req).QuestionID;
                     ((ParseQuestionReq)req).Callback(response.question);
+                }
                 else
                     ((ParseQuestionReq)req).Callback(null);
             }
@@ -294,5 +336,22 @@ namespace IBM.Watson.Services.v1
             return response;
         }
         #endregion
+
+        private string GetMD5(string s)
+        {
+            if ( string.IsNullOrEmpty( s ) )
+                return string.Empty;
+
+            MD5 md5 = new MD5CryptoServiceProvider();
+            byte [] data = Encoding.Default.GetBytes( s );
+            byte [] result = md5.ComputeHash( data );
+
+            StringBuilder output = new StringBuilder();
+            foreach( var b in result )
+                output.Append( b.ToString( "x2" ) );
+
+            return output.ToString();
+        }
+
     }
 }

@@ -151,7 +151,9 @@ namespace IBM.Watson.Widgets.Question
 		/// </summary>
 		private void InitQuestion()
 		{
-			if (m_QuestionData.questions[0].question.lat.Length > 0)
+			if ( m_QuestionData != null && m_QuestionData.HasQuestion() 
+                && m_QuestionData.questions[0].question.lat != null 
+                && m_QuestionData.questions[0].question.lat.Length > 0)
 			{
 				LAT = m_QuestionData.questions[0].question.lat[0];
 			}

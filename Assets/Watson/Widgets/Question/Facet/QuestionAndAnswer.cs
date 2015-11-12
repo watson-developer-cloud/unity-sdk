@@ -115,6 +115,9 @@ namespace IBM.Watson.Widgets.Question
 		/// </summary>
 		private string Variants()
 		{
+            if ( m_AnswerData == null || !m_AnswerData.HasAnswer() || m_AnswerData.answers[0].variants == null )
+                return ".";
+
 			string variantsString = "; ";
 			int variantLength = m_AnswerData.answers [0].variants.Length;
 

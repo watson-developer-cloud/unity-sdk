@@ -90,7 +90,7 @@ namespace IBM.Watson.Widgets.Question
             {
                 m_Focused = value;
                 EnableEvents(value);
-				Cube.enabled = value;	//we are not disabeling the animation from focused. 
+				Cube.enabled = value;	//we are not disabling the animation from focused. 
             }
         }
 		/// <summary>
@@ -360,17 +360,14 @@ namespace IBM.Watson.Widgets.Question
             //Cube.LeaveTheSceneAndDestroy();
         }
 
-		/// <summary>
-		/// On question event.
-		/// </summary>
-		/// <param name="args">Arguments.</param>
-		public void OnQuestion(object[] args)
-		{
-			if (args != null && args.Length > 0 && args [0] is Questions)
-			{
+        public void OnQuestionPipeline( object[] args)
+        {
+            string pipeline = (args != null && args.Length > 0) ? args[0] as string : null;
+            if (! string.IsNullOrEmpty( pipeline ) )
+            {
 				ClearSides();
 
-				switch((args[0] as Questions).questions[0].pipelineId)
+				switch(pipeline)
 				{
 				case "thunderstone":
 					m_Facets = m_ThunderstoneFacets;
@@ -384,8 +381,8 @@ namespace IBM.Watson.Widgets.Question
 				}
 
 				GenerateSides();
-			}
-		}
+            }
+        }
         #endregion
 
 		#region Awake / Start / EnableEvents
