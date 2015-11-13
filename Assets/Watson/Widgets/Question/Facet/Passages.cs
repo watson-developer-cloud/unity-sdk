@@ -79,6 +79,12 @@ namespace IBM.Watson.Widgets.Question
 				PassageItem.MinConfidence = m_AnswerData.answers[m_AnswerData.answers.Length - 1].confidence;
 				PassageItem.Confidence = m_AnswerData.answers[i].confidence;
 			}
+
+            //PassageAnimationManager animationManager = this.transform.GetComponentInChildren<PassageAnimationManager>();
+            //if(animationManager != null)
+            //{
+            //    animationManager.UpdatePassages();
+            //}
 		}
 		
 		/// <summary>

@@ -123,6 +123,8 @@ namespace IBM.Watson.Widgets.Avatar
         [SerializeField]
         private string m_RecognizeFailure = "I'm sorry, but I didn't understand your question.";
         [SerializeField]
+        private string m_Error = "Oh bugger, something has gone wrong.";
+        [SerializeField]
         private string m_Pipeline = "thunderstone";
         [SerializeField]
         private Input m_levelInput = new Input("Level", typeof(FloatData), "OnLevelInput");
@@ -158,7 +160,13 @@ namespace IBM.Watson.Widgets.Avatar
                     EventManager.Instance.SendEvent(Constants.Event.ON_CHANGE_AVATAR_STATE_FINISH, this, value);
 					// if we went into an error state, automatically try to reconnect after a timeout..
                     if (m_State == AvatarState.ERROR)
+                    {
+                        if ( m_FocusQuestion != null )
+                            m_FocusQuestion.OnLeaveTheSceneAndDestroy();
+
                         Invoke("StartAvatar", m_RestartInterval);
+                        m_TextOutput.SendData( new TextData( m_Error ) );
+                    }
                 }
 
 				if(m_State == AvatarState.CONNECTING || m_State == AvatarState.ERROR)
