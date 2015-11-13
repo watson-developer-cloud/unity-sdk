@@ -114,7 +114,14 @@ namespace IBM.Watson.Widgets.Question
 			}
 		}
 
-		
+		/// <summary>
+		/// Delayed outline because of rect size.
+		/// </summary>
+		/// <returns>The text gen.</returns>
+		/// <param name="tf">Tf.</param>
+		/// <param name="textGen">Text gen.</param>
+		/// <param name="answer">Answer.</param>
+		/// <param name="delayTime">Delay time.</param>
 		private IEnumerator PopulateTextGen(Text tf, TextGenerator textGen, string answer, float delayTime)
 		{
 			yield return new WaitForSeconds(delayTime);
@@ -134,13 +141,6 @@ namespace IBM.Watson.Widgets.Question
 				Vector3 topLeft = textGen.verts[answerList[i] * 4].position;
 				Vector3 bottomRight = textGen.verts[((answerList[i] + answer.Length - 1) * 4) + 2].position;
 
-//				GameObject bb1= Instantiate(m_BoundingBox, topLeft, Quaternion.identity) as GameObject;
-//				GameObject bb2= Instantiate(m_BoundingBox, bottomRight, Quaternion.identity) as GameObject;
-//				RectTransform bb1RectTransform = bb1.GetComponent<RectTransform>();
-//				RectTransform bb2RectTransform = bb2.GetComponent<RectTransform>();
-//				bb1RectTransform.SetParent(tf.gameObject.transform, false);
-//				bb2RectTransform.SetParent(tf.gameObject.transform, false);
-				
 				
 				//	create bounding box at answer location
 				GameObject boundingBox = Instantiate(m_BoundingBox, 
