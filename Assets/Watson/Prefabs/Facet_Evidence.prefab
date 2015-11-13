@@ -550,7 +550,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac2f95dfea246442eb31c23fac9502a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_EvidenceItemPrefab: {fileID: 170596, guid: dd64b7995575b4c8fb6c22589adda246, type: 2}
+  m_EvidenceItemPrefab: {fileID: 173084, guid: 05daab512f7074b0d97d56cccf24d998, type: 2}
   m_EvidenceCanvasRectTransform: {fileID: 22491246}
 --- !u!114 &11499436
 MonoBehaviour:
