@@ -18,9 +18,11 @@
 
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using IBM.Watson.Utilities;
+using IBM.Watson.Logging;
 
 namespace IBM.Watson.Widgets.Question
 {
@@ -68,7 +70,7 @@ namespace IBM.Watson.Widgets.Question
                 gameObject.SetActive(true);
 //				string StrippedEvidence = Regex.Replace(EvidenceString, "<[^>]*>", "");
 				m_EvidenceText.text = EvidenceString;
-//				HighlightAnswer(m_EvidenceText, Answer);
+				HighlightAnswer(m_EvidenceText, Answer);
             }
             else
             {
@@ -84,38 +86,10 @@ namespace IBM.Watson.Widgets.Question
 		private void HighlightAnswer(Text tf, string answer)
 		{
 			//	strip out tag
-			tf.text = Regex.Replace(tf.text, "<[^>]*>", "");
-			
-			//	populate textGen
+//			tf.text = Regex.Replace(tf.text, "<[^>]*>", "");
+			tf.text = Utilities.Utility.RemoveTags(tf.text);
 			TextGenerator textGen = tf.cachedTextGenerator;
-			textGen.Populate(tf.text, tf.GetGenerationSettings(tf.rectTransform.rect.size));
-			
-			//	get index of all occurences of answer
-			List<int> answerList = new List<int>();
-			answerList = GetAnswerIndexes(tf.text, answer);
-
-			if(answerList.Count == 0) return;
-			
-			for(int i = 0; i < answerList.Count; i++)
-			{
-				Vector3 topLeft = textGen.verts[answerList[i] * 4].position;;
-				Vector3 bottomRight = textGen.verts[((answerList[i] + answer.Length) * 4) + 3].position;;
-				
-				//	create bounding box at answer location
-				GameObject boundingBox = Instantiate(m_BoundingBox, 
-				                                     new Vector2(topLeft.x - m_horizontalPadding, topLeft.y + m_verticalPadding), 
-				                                     Quaternion.identity) as GameObject;
-				
-				boundingBoxes.Add(boundingBox);
-				
-				RectTransform boundingBoxRectTransform = boundingBox.GetComponent<RectTransform>();
-				boundingBoxRectTransform.SetParent(tf.gameObject.transform, false);
-				
-				float rectWidth = (bottomRight.x - topLeft.x) + m_horizontalPadding * 2;
-				float rectHeight = (-bottomRight.y - topLeft.y) + m_verticalPadding * 2;
-				
-				boundingBoxRectTransform.sizeDelta = new Vector2(rectWidth, rectHeight);
-			}
+			StartCoroutine(PopulateTextGen(tf, textGen, answer, 1f));
 		}
 		
 		/// <summary>
@@ -133,10 +107,55 @@ namespace IBM.Watson.Widgets.Question
 			
 			for (int i = 0;; i += answer.Length)
 			{
-				i = evidenceString.IndexOf(answer, i);
+				i = evidenceString.ToLower().IndexOf(answer.ToLower(), i);
 				if (i == -1)
 					return ind;
 				ind.Add(i);
+			}
+		}
+
+		/// <summary>
+		/// Delayed outline because of rect size.
+		/// </summary>
+		/// <returns>The text gen.</returns>
+		/// <param name="tf">Tf.</param>
+		/// <param name="textGen">Text gen.</param>
+		/// <param name="answer">Answer.</param>
+		/// <param name="delayTime">Delay time.</param>
+		private IEnumerator PopulateTextGen(Text tf, TextGenerator textGen, string answer, float delayTime)
+		{
+			yield return new WaitForSeconds(delayTime);
+			//	populate textGen
+
+			textGen.Populate(tf.text, tf.GetGenerationSettings(tf.GetComponent<RectTransform>().rect.size));
+//			Log.Debug("EvidenceItem","rect size: " + tf.GetComponent<RectTransform>().rect.size);
+
+			//	get index of all occurences of answer
+			List<int> answerList = new List<int>();
+			answerList = GetAnswerIndexes(tf.text, answer);
+			
+			if(answerList.Count == 0) yield return null;
+			
+			for(int i = 0; i < answerList.Count; i++)
+			{
+				Vector3 topLeft = textGen.verts[answerList[i] * 4].position;
+				Vector3 bottomRight = textGen.verts[((answerList[i] + answer.Length - 1) * 4) + 2].position;
+
+				
+				//	create bounding box at answer location
+				GameObject boundingBox = Instantiate(m_BoundingBox, 
+				                                     new Vector2(topLeft.x - m_horizontalPadding, topLeft.y + m_verticalPadding), 
+				                                     Quaternion.identity) as GameObject;
+				
+				boundingBoxes.Add(boundingBox);
+				
+				RectTransform boundingBoxRectTransform = boundingBox.GetComponent<RectTransform>();
+				boundingBoxRectTransform.SetParent(tf.gameObject.transform, false);
+				
+				float rectWidth = (bottomRight.x - topLeft.x) + m_horizontalPadding * 2;
+				float rectHeight = (-bottomRight.y + topLeft.y) + m_verticalPadding * 2;
+			
+				boundingBoxRectTransform.sizeDelta = new Vector2(rectWidth, rectHeight);
 			}
 		}
     }
