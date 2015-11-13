@@ -20,7 +20,7 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using IBM.Watson.Logging;
 using System;
-
+ 
 namespace IBM.Watson.Widgets.Avatar
 {
     /// <exclude />
