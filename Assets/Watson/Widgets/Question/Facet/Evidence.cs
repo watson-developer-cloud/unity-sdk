@@ -56,7 +56,7 @@ namespace IBM.Watson.Widgets.Question
         {
 			base.Init ();
 
-			if(m_AnswerData.answers.Length == 0) return;
+			if(m_AnswerData.answers[0].evidence.Length == 0) return;
 
 			for (int i = 0; i < m_AnswerData.answers[0].evidence.Length; i++)
             {
