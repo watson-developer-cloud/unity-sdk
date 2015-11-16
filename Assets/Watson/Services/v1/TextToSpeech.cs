@@ -23,6 +23,7 @@ using IBM.Watson.Utilities;
 using IBM.Watson.Logging;
 using System.Text;
 using MiniJSON;
+using System;
 
 namespace IBM.Watson.Services.v1
 {
@@ -142,6 +143,11 @@ namespace IBM.Watson.Services.v1
         /// <returns>Returns true if the request is sent.</returns>
         public bool ToSpeech(string text, ToSpeechCallback callback, bool usePost = false )
         {
+            if ( string.IsNullOrEmpty( text ) )
+                throw new ArgumentNullException( "text" );
+            if ( callback == null )
+                throw new ArgumentNullException( "callback" );
+
             if ( !m_AudioFormats.ContainsKey(m_AudioFormat) )
             {
                 Log.Error( "TextToSpeech", "Unsupported audio format: {0}", m_AudioFormat.ToString() );
@@ -152,6 +158,8 @@ namespace IBM.Watson.Services.v1
                 Log.Error( "TextToSpeech", "Unsupported voice: {0}", m_Voice.ToString() );
                 return false;
             }
+
+            text = Utility.RemoveTags( text );
 
             string textId = Utility.GetMD5( text );
             if (! DisableCache )
