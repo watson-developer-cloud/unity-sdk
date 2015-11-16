@@ -73,6 +73,11 @@ namespace IBM.Watson.Widgets.Avatar
             }
         }
 
+		public static float Hermite(float start, float end, float value)
+		{
+			return Mathf.Lerp(start, end, value * value * (3.0f - 2.0f * value));
+		}
+
         /// <summary>
         /// 
         /// </summary>
@@ -108,17 +113,44 @@ namespace IBM.Watson.Widgets.Avatar
                                         m_PebbleRowList[i - 1].pebbleList[j].transform.localPosition.y, 
                                         m_PebbleRowList[i].pebbleList[j].transform.localPosition.z),
                                     smoothnessBetweenRows);
+
+								/*m_PebbleRowList[i].pebbleList[j].transform.localPosition = new Vector3(
+									m_PebbleRowList[i].pebbleList[j].transform.localPosition.x,
+									Mathf.Clamp(m_PebbleRowList[i].pebbleList[j].transform.localPosition.y, 0.0f, m_PebbleRowList[i - 1].pebbleList[j].transform.localPosition.y) ,
+									m_PebbleRowList[i].pebbleList[j].transform.localPosition.z);
+									*/
                             }
                             else
                             {
+								int pebbleInOneThird = (j % 120);
+								float distanceFromCenterNormalized = Mathf.Abs(pebbleInOneThird - 60) / 60.0f; //center is 1, boundaries are 0
+								float distanceFromBoundariesNormalized = (1.0f - distanceFromCenterNormalized); //center is 0, boundaries are 1
+
+								float valueToSet = centerHitNormalized;
+//								if(pebbleInOneThird < 60){
+//									valueToSet = Mathf.Lerp(m_PebbleRowList[i].pebbleList[j].transform.localPosition.y, m_PebbleRowList[i].pebbleList[j + 1].transform.localPosition.y, distanceFromCenterNormalized);
+//								}
+//								else if(pebbleInOneThird > 60){
+//									valueToSet = Mathf.Lerp(m_PebbleRowList[i].pebbleList[j].transform.localPosition.y, m_PebbleRowList[i].pebbleList[j - 1].transform.localPosition.y, distanceFromCenterNormalized);
+//								}
+//								else{
+//									valueToSet = centerHitNormalized;
+//								}
+								//distanceFromCenterNormalized = Hermite(0.0f, 1.0f, distanceFromCenterNormalized);
+								distanceFromCenterNormalized = LeanTween.easeInOutSine(0.1f, 0.99f, distanceFromCenterNormalized);
+								valueToSet = Mathf.Lerp(m_PebbleRowList[i].pebbleList[j].transform.localPosition.y, centerHitNormalized, distanceFromCenterNormalized);
+
+								//valueToSet = LeanTween.easeInOutCubic(m_PebbleRowList[i].pebbleList[j].transform.localPosition.y, centerHitNormalized, distanceFromCenterNormalized);
+
+
                                 //Debug.Log("centerHitNormalized: " + centerHitNormalized);
                                 m_PebbleRowList[i].pebbleList[j].transform.localPosition = Vector3.Lerp(
                                     m_PebbleRowList[i].pebbleList[j].transform.localPosition,
                                     new Vector3(
                                         m_PebbleRowList[i].pebbleList[j].transform.localPosition.x, 
-                                        centerHitNormalized, 
+									valueToSet, 
                                         m_PebbleRowList[i].pebbleList[j].transform.localPosition.z),
-                                    1.0f);
+                                    0.8f);
                             }
                         }
                         else

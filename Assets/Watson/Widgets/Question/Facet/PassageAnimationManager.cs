@@ -146,8 +146,8 @@ namespace IBM.Watson.Widgets.Question
             get
             {
                 int numberOfPassage = 0;
-                if (PassageList != null && PassageList.Length > 0)
-                    numberOfPassage = PassageList.Length;
+				if (m_PassageItems != null && m_PassageItems.Length > 0)
+                    numberOfPassage = m_PassageItems.Length;
                 return numberOfPassage;
             }
         }
