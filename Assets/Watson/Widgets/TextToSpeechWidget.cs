@@ -22,6 +22,7 @@ using IBM.Watson.Services.v1;
 using IBM.Watson.Logging;
 using IBM.Watson.Data;
 using System.Collections.Generic;
+using IBM.Watson.Utilities;
 
 #pragma warning disable 414
 
@@ -77,9 +78,16 @@ namespace IBM.Watson.Widgets
         #region Private Functions
         private void OnTextInput( Data data )
         {
-	        if ( m_TTS.Voice != m_Voice )
-	            m_TTS.Voice = m_Voice;
-            m_TTS.ToSpeech( ((TextData)data).Text, OnSpeech, m_UsePost );
+            TextData text = data as TextData;
+            if ( text == null )
+                throw new WatsonException( "Wrong data type received." );
+
+            if (! string.IsNullOrEmpty( text.Text ) )
+            {
+	            if ( m_TTS.Voice != m_Voice )
+	                m_TTS.Voice = m_Voice;
+                m_TTS.ToSpeech( text.Text, OnSpeech, m_UsePost );
+            }
         }
 
 	    private void OnEnable()
