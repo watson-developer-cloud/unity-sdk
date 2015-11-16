@@ -85,7 +85,7 @@ NavMeshSettings:
     cellSize: .166666672
     manualCellSize: 0
   m_NavMeshData: {fileID: 0}
---- !u!1001 &14498954
+--- !u!1001 &327959491
 Prefab:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -124,10 +124,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 4
       objectReference: {fileID: 0}
-    - target: {fileID: 2373666, guid: 174c6a98d2363454f905351bd8e90e42, type: 2}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 174c6a98d2363454f905351bd8e90e42, type: 2}
   m_IsPrefabParent: 0
@@ -204,7 +200,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
 --- !u!1001 &528695085
 Prefab:
   m_ObjectHideFlags: 0
@@ -252,6 +248,18 @@ Prefab:
       propertyPath: layers.Array.data[0]
       value: 
       objectReference: {fileID: 558320547}
+    - target: {fileID: 11406678, guid: 18d6f509dac7d89419df972e1daa5d9b, type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11412284, guid: 18d6f509dac7d89419df972e1daa5d9b, type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11459072, guid: 18d6f509dac7d89419df972e1daa5d9b, type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 18d6f509dac7d89419df972e1daa5d9b, type: 2}
   m_IsPrefabParent: 0

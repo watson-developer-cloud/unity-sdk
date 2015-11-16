@@ -44,6 +44,7 @@ public class PebbleGenerator : MonoBehaviour
     public UnityEngine.Rendering.ShadowCastingMode shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
     public bool receiveShadows = false;
     public PrimitiveType primitiveType = PrimitiveType.Sphere;
+	public Mesh meshToUseAsPebble;
     public Material material;
 
     public bool isUsingSharedMesh = false;
@@ -168,6 +169,11 @@ public class PebbleGenerator : MonoBehaviour
                     meshRenderer.receiveShadows = receiveShadows;
                     //meshRenderer.material = material;
                     meshRenderer.sharedMaterial = material;
+
+					if(meshToUseAsPebble != null){
+						MeshFilter meshFilter = spehereList[indexOfSpheresInRow + indexOfRow * numberOfSpheresInRow].GetComponent<MeshFilter>();
+						meshFilter.sharedMesh = meshToUseAsPebble;
+					}
 
                     SphereCollider sphereCollider = spehereList[indexOfSpheresInRow + indexOfRow * numberOfSpheresInRow].GetComponent<SphereCollider>();
                     if (sphereCollider != null)

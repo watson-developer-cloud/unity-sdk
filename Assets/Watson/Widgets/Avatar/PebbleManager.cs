@@ -57,8 +57,10 @@ namespace IBM.Watson.Widgets.Avatar
         private Vector2 m_SmoothnessLimitBetweenRows; //Smothness MIN, MAX
 
         private bool m_SetDataOnFrame = false;
+		private bool m_IsWatsonIsTalking = false;
         private float m_LatestValueReceived = 0.0f;
 
+		public float m_SpeedFadingOut = 5.0f;
         // Update is called once per frame
         void Update()
         {
@@ -68,8 +70,8 @@ namespace IBM.Watson.Widgets.Avatar
             }
             else
             {
-                m_LatestValueReceived = Mathf.Lerp(m_LatestValueReceived, 0.0f, 0.1f);
-                SetAudioData(m_LatestValueReceived, setDataOnFrame: false);
+				m_LatestValueReceived = Mathf.Lerp(m_LatestValueReceived, 0.0f, Time.deltaTime * m_SpeedFadingOut);
+				SetAudioData(m_LatestValueReceived, isWatsonTalking: m_IsWatsonIsTalking, setDataOnFrame: false);
             }
         }
 
@@ -78,20 +80,32 @@ namespace IBM.Watson.Widgets.Avatar
 			return Mathf.Lerp(start, end, value * value * (3.0f - 2.0f * value));
 		}
 
+		public bool isTestingClamp = false;
+		public float smoothness = 1.0f;
+		public float minValue = 0.9f;
+		public float midValue = 0.5f;
+		public float maxValue = 1.0f;
         /// <summary>
         /// 
         /// </summary>
         /// <param name="centerHitNormalized"></param>
         /// <param name="setDataOnFrame"></param>
-        public void SetAudioData(float centerHitNormalized, bool setDataOnFrame = true)
+		public void SetAudioData(float centerHitNormalized, bool isWatsonTalking = false, bool setDataOnFrame = true)
         {
             this.m_SetDataOnFrame = setDataOnFrame;
+			this.m_IsWatsonIsTalking = isWatsonTalking;
+
             if (centerHitNormalized == float.NaN)
             {
                 Log.Error("PebbleManager", "Value for SetAudioData is NAN");
                 centerHitNormalized = 0.0f;
             }
             m_LatestValueReceived = centerHitNormalized;
+
+			int numberOfWaves = 3;
+			int numberOfPebbleInOneWave = m_PebbleRowList[0].pebbleList.Length / numberOfWaves; //120
+			int numberOfPebbleInHalfWave = (int)(numberOfPebbleInOneWave / 2.0f);   //60
+
 
             for (int i = m_PebbleRowList.Length - 1; i >= 0; i--)
             {
@@ -114,52 +128,86 @@ namespace IBM.Watson.Widgets.Avatar
                                         m_PebbleRowList[i].pebbleList[j].transform.localPosition.z),
                                     smoothnessBetweenRows);
 
-								/*m_PebbleRowList[i].pebbleList[j].transform.localPosition = new Vector3(
+								if(isWatsonTalking){
+									m_PebbleRowList[i].pebbleList[j].transform.localPosition = new Vector3(
 									m_PebbleRowList[i].pebbleList[j].transform.localPosition.x,
 									Mathf.Clamp(m_PebbleRowList[i].pebbleList[j].transform.localPosition.y, 0.0f, m_PebbleRowList[i - 1].pebbleList[j].transform.localPosition.y) ,
 									m_PebbleRowList[i].pebbleList[j].transform.localPosition.z);
-									*/
+
+								}
                             }
                             else
                             {
-								int pebbleInOneThird = (j % 120);
-								float distanceFromCenterNormalized = Mathf.Abs(pebbleInOneThird - 60) / 60.0f; //center is 1, boundaries are 0
-								float distanceFromBoundariesNormalized = (1.0f - distanceFromCenterNormalized); //center is 0, boundaries are 1
+								if(isWatsonTalking){
 
-								float valueToSet = centerHitNormalized;
-//								if(pebbleInOneThird < 60){
-//									valueToSet = Mathf.Lerp(m_PebbleRowList[i].pebbleList[j].transform.localPosition.y, m_PebbleRowList[i].pebbleList[j + 1].transform.localPosition.y, distanceFromCenterNormalized);
-//								}
-//								else if(pebbleInOneThird > 60){
-//									valueToSet = Mathf.Lerp(m_PebbleRowList[i].pebbleList[j].transform.localPosition.y, m_PebbleRowList[i].pebbleList[j - 1].transform.localPosition.y, distanceFromCenterNormalized);
-//								}
-//								else{
-//									valueToSet = centerHitNormalized;
-//								}
-								//distanceFromCenterNormalized = Hermite(0.0f, 1.0f, distanceFromCenterNormalized);
-								distanceFromCenterNormalized = LeanTween.easeInOutSine(0.1f, 0.99f, distanceFromCenterNormalized);
-								valueToSet = Mathf.Lerp(m_PebbleRowList[i].pebbleList[j].transform.localPosition.y, centerHitNormalized, distanceFromCenterNormalized);
+									int waveIndex = (j / numberOfPebbleInOneWave);
+									
 
-								//valueToSet = LeanTween.easeInOutCubic(m_PebbleRowList[i].pebbleList[j].transform.localPosition.y, centerHitNormalized, distanceFromCenterNormalized);
+									int pebbleIndexInWaveForWaveAnimation = ( (j + numberOfPebbleInHalfWave)  % numberOfPebbleInOneWave);
+									
+									// it works like 60,61,62, ....., 119,59,58,.....0,180,181,...,239,179,178,....120,300,301,....359,299,298,....240
+									if(pebbleIndexInWaveForWaveAnimation < numberOfPebbleInHalfWave){ //lower end part
+										pebbleIndexInWaveForWaveAnimation = (numberOfPebbleInHalfWave - pebbleIndexInWaveForWaveAnimation) - 1;
+									}
+									
+									int pebbleIndex = pebbleIndexInWaveForWaveAnimation + (waveIndex * numberOfPebbleInOneWave);
+									int pebbleIndexInWave = (pebbleIndex  % numberOfPebbleInOneWave);
+
+									float distanceFromCenterNormalized = Mathf.Abs( ((pebbleIndexInWave == numberOfPebbleInOneWave -1)?pebbleIndexInWave-1:pebbleIndexInWave) + 1 - numberOfPebbleInHalfWave) / (float)numberOfPebbleInHalfWave; //center is 0, boundaries are 1
+									float distanceFromBoundariesNormalized = (1.0f - distanceFromCenterNormalized); //center is 1, boundaries are 0
+
+									float valueToSet = centerHitNormalized;
 
 
-                                //Debug.Log("centerHitNormalized: " + centerHitNormalized);
-                                m_PebbleRowList[i].pebbleList[j].transform.localPosition = Vector3.Lerp(
-                                    m_PebbleRowList[i].pebbleList[j].transform.localPosition,
-                                    new Vector3(
-                                        m_PebbleRowList[i].pebbleList[j].transform.localPosition.x, 
-									valueToSet, 
-                                        m_PebbleRowList[i].pebbleList[j].transform.localPosition.z),
-                                    0.8f);
-                            }
-                        }
-                        else
-                        {
-                            Log.Error("PebbleManager", "pebbleRowList[{0}].pebbleList[{1}].pebbleList is null", i, j);
-                        }
-                    }
-                }
-                else
+									//float speedByPebbleLocation = minValue + (maxValue - minValue) * distanceFromCenterNormalized;
+									float speedByPebbleLocation = 0.0f;
+									if(distanceFromBoundariesNormalized < 0.5f){
+										speedByPebbleLocation = LeanTween.easeInOutSine( Mathf.Max(minValue, midValue) , Mathf.Min(minValue, midValue), distanceFromBoundariesNormalized);
+									}
+									else{
+										speedByPebbleLocation = LeanTween.easeInOutSine(midValue, maxValue, distanceFromBoundariesNormalized);
+									}
+
+
+									if(pebbleIndexInWave < numberOfPebbleInHalfWave){ //lower end part
+										valueToSet = Mathf.Lerp(m_PebbleRowList[i].pebbleList[pebbleIndex].transform.localPosition.y, m_PebbleRowList[i].pebbleList[pebbleIndex + 1].transform.localPosition.y, speedByPebbleLocation);
+									}
+									else if(pebbleIndexInWave > numberOfPebbleInHalfWave){ //higher end after center point!
+										valueToSet = Mathf.Lerp(m_PebbleRowList[i].pebbleList[pebbleIndex].transform.localPosition.y, m_PebbleRowList[i].pebbleList[pebbleIndex - 1].transform.localPosition.y, speedByPebbleLocation);
+									}
+									else{
+										valueToSet = centerHitNormalized;
+									}
+
+	                                //Debug.Log("centerHitNormalized: " + centerHitNormalized);
+									m_PebbleRowList[i].pebbleList[pebbleIndex].transform.localPosition = Vector3.Lerp(
+										m_PebbleRowList[i].pebbleList[pebbleIndex].transform.localPosition,
+	                                    new Vector3(
+										m_PebbleRowList[i].pebbleList[pebbleIndex].transform.localPosition.x, 
+										valueToSet, 
+										m_PebbleRowList[i].pebbleList[pebbleIndex].transform.localPosition.z),
+										smoothness);
+
+								}
+								else{
+									m_PebbleRowList[i].pebbleList[j].transform.localPosition = Vector3.Lerp(
+										m_PebbleRowList[i].pebbleList[j].transform.localPosition,
+										new Vector3(
+										m_PebbleRowList[i].pebbleList[j].transform.localPosition.x, 
+										centerHitNormalized, 
+										m_PebbleRowList[i].pebbleList[j].transform.localPosition.z),
+										smoothness);
+
+								}
+							}
+						}
+						else
+						{
+							Log.Error("PebbleManager", "pebbleRowList[{0}].pebbleList[{1}].pebbleList is null", i, j);
+						}
+					}
+				}
+				else
                 {
                     Log.Error("PebbleManager", "pebbleRowList[{0}].pebbleList is null", i);
                 }

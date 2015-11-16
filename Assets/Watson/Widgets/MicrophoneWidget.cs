@@ -116,7 +116,7 @@ namespace IBM.Watson.Widgets
         private Output m_AudioOutput = new Output(typeof(AudioData));
         [SerializeField]
         private Output m_LevelOutput = new Output(typeof(FloatData));
-        [SerializeField]
+		[SerializeField]
         private Output m_ActivateOutput = new Output(typeof(BooleanData));
         [SerializeField, Tooltip("Size of recording buffer in seconds.")]
         private int m_RecordingBufferSize = 2;
@@ -126,7 +126,9 @@ namespace IBM.Watson.Widgets
         private string m_MicrophoneID = null;               // what microphone to use for recording.
         [SerializeField, Tooltip("How often to sample for level output.")]
         private float m_LevelOutputInterval = 0.05f;
-        [SerializeField, Tooltip("If true, microphone will playback recorded audio on stop.")]
+		[SerializeField]
+		private float m_LevelOutputModifier = 1.0f;
+		[SerializeField, Tooltip("If true, microphone will playback recorded audio on stop.")]
         private bool m_PlaybackRecording = false;
         [SerializeField]
         private Text m_StatusText = null;
@@ -277,7 +279,7 @@ namespace IBM.Watson.Widgets
                         lastReadPos = writePos;
                     }
 
-                    m_LevelOutput.SendData(new FloatData(fLevel));
+					m_LevelOutput.SendData(new MicrophoneData(fLevel * m_LevelOutputModifier));
                 }
             }
 

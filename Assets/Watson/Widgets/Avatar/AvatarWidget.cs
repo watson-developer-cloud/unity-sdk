@@ -115,8 +115,6 @@ namespace IBM.Watson.Widgets.Avatar
         private bool m_GettingParse = false;
 
         [SerializeField]
-        private float m_SoundVisualizerModifier = 20.0f;
-        [SerializeField]
         private string m_Hello = "Hello";
         [SerializeField]
         private string m_Goodbye = "Goodbye";
@@ -323,13 +321,28 @@ namespace IBM.Watson.Widgets.Avatar
         #region Level Input
         private void OnLevelInput(Data data)
         {
-            FloatData levelInput = (FloatData)data;
-            if (pebbleManager != null)
-                pebbleManager.SetAudioData(levelInput.Float * m_SoundVisualizerModifier);
-        }
-        #endregion
-
-        #region Event Handlers
+			float levelInputValue = 0.0f;
+			bool isWatsonTalking = false;
+			if (data is MicrophoneData) {
+				MicrophoneData levelInput = (MicrophoneData)data;
+				levelInputValue = levelInput.Float;
+			} else if (data is TextToSpeechData) {
+				TextToSpeechData levelInput = (TextToSpeechData)data;
+				isWatsonTalking = true;
+				levelInputValue = levelInput.Float;
+			} else if (data is FloatData) {
+				FloatData levelInput = (FloatData)data;
+				levelInputValue = levelInput.Float;
+			} else {
+				Log.Warning("AvatarWidget", "Unknown level input data ");
+			}
+            
+			if (pebbleManager != null)
+				pebbleManager.SetAudioData(levelInputValue, isWatsonTalking:isWatsonTalking);
+		}
+		#endregion
+		
+		#region Event Handlers
         private ClassifyResult GetClassifyResult( object [] args )
         {
             if ( args != null && args.Length > 0 )
