@@ -125,6 +125,7 @@ MonoBehaviour:
   m_RecordingHZ: 22050
   m_MicrophoneID: 
   m_LevelOutputInterval: .0500000007
+  m_LevelOutputModifier: 6
   m_PlaybackRecording: 0
   m_StatusText: {fileID: 0}
 --- !u!1001 &100100000
@@ -149,6 +150,10 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_PlaybackRecording
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_LevelOutputModifier
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
