@@ -420,7 +420,7 @@ namespace IBM.Watson.Widgets.Avatar
                 if ( result.top_class.Contains( "-" ) )
                     m_Pipeline = result.top_class.Substring( result.top_class.IndexOf('-') + 1 );
 
-                State = AvatarState.ANSWERING;
+                State = AvatarState.THINKING;
                 if (!m_XRAY.AskQuestion(m_Pipeline, result.text, OnAskQuestion))
                 {
                     Log.Error("AvatarWidget", "Failed to send question to XRAY.");
