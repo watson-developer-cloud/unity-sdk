@@ -127,6 +127,8 @@ namespace IBM.Watson.Widgets.Avatar
         [SerializeField]
         private Input m_levelInput = new Input("Level", typeof(FloatData), "OnLevelInput");
         [SerializeField]
+        private Input m_SpeakingInput = new Input( "Speaking", typeof(BooleanData), "OnSpeaking" );
+        [SerializeField]
         private Output m_TextOutput = new Output(typeof(TextData));
         [SerializeField]
         private GameObject m_QuestionPrefab = null;
@@ -321,30 +323,26 @@ namespace IBM.Watson.Widgets.Avatar
         #region Level Input
         private void OnLevelInput(Data data)
         {
-			float levelInputValue = 0.0f;
-			bool isWatsonTalking = false;
-			if (data is MicrophoneData) {
-				MicrophoneData levelInput = (MicrophoneData)data;
-				levelInputValue = levelInput.Float;
-				State = AvatarState.LISTENING;
-			} else if (data is TextToSpeechData) {
-				TextToSpeechData levelInput = (TextToSpeechData)data;
-				isWatsonTalking = true;
-				State = AvatarState.ANSWERING;
-				levelInputValue = levelInput.Float;
-			} else if (data is FloatData) {
-				FloatData levelInput = (FloatData)data;
-				levelInputValue = levelInput.Float;
-			} else {
-				Log.Warning("AvatarWidget", "Unknown level input data ");
-			}
-            
 			if (pebbleManager != null)
-				pebbleManager.SetAudioData(levelInputValue, isWatsonTalking:isWatsonTalking);
+				pebbleManager.SetAudioData( ((FloatData)data).Float, State == AvatarState.ANSWERING);
 		}
-		#endregion
-		
-		#region Event Handlers
+        #endregion
+
+        #region Speaking Input
+        private void OnSpeaking(Data data )
+        {
+            BooleanData bdata = data as BooleanData;
+            if ( bdata == null )
+                throw new WatsonException( "Unexpected data type." );
+
+            if ( bdata.Boolean )
+                State = AvatarState.ANSWERING;
+            else
+                State = AvatarState.LISTENING;
+        }
+        #endregion
+
+        #region Event Handlers
         private ClassifyResult GetClassifyResult( object [] args )
         {
             if ( args != null && args.Length > 0 )

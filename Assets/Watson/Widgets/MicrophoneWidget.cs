@@ -279,7 +279,7 @@ namespace IBM.Watson.Widgets
                         lastReadPos = writePos;
                     }
 
-					m_LevelOutput.SendData(new MicrophoneData(fLevel * m_LevelOutputModifier));
+					m_LevelOutput.SendData(new FloatData(fLevel * m_LevelOutputModifier));
                 }
             }
 

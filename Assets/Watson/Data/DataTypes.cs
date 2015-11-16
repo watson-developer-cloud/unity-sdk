@@ -103,45 +103,6 @@ namespace IBM.Watson.Data
         public float Float { get; set; }
     };
 
-	/// <summary>
-	/// This class if for Microphone data (sound data in delta time) to differenciate from TextToSpeech sound data
-	/// </summary>
-	public class MicrophoneData : Widget.Data
-	{
-		public MicrophoneData()
-		{ }
-		public MicrophoneData( float f )
-		{
-			Float = f;
-		}
-		public override string GetName()
-		{
-			return "MicrophoneData";
-		}
-		
-		public float Float { get; set; }
-	};
-
-	/// <summary>
-	/// This class if for TextToSpeech data (sound data in delta time) to differenciate from Microphone sound data
-	/// </summary>
-	public class TextToSpeechData : Widget.Data
-	{
-		public TextToSpeechData()
-		{ }
-		public TextToSpeechData( float f )
-		{
-			Float = f;
-		}
-		public override string GetName()
-		{
-			return "TextToSpeechData";
-		}
-		
-		public float Float { get; set; }
-	};
-
-
     /// <summary>
     /// This class is for SpeechToText results.
     /// </summary>
