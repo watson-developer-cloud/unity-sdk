@@ -153,7 +153,7 @@ namespace IBM.Watson.Utilities
         /// </summary>
         public void LoadConfig()
         {
-#if !UNITY_ANDROID
+#if !UNITY_ANDROID || UNITY_EDITOR
             try {
                 if (! Directory.Exists( Application.streamingAssetsPath ) )
                     Directory.CreateDirectory( Application.streamingAssetsPath );

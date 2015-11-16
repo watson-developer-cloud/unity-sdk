@@ -326,9 +326,11 @@ namespace IBM.Watson.Widgets.Avatar
 			if (data is MicrophoneData) {
 				MicrophoneData levelInput = (MicrophoneData)data;
 				levelInputValue = levelInput.Float;
+				State = AvatarState.LISTENING;
 			} else if (data is TextToSpeechData) {
 				TextToSpeechData levelInput = (TextToSpeechData)data;
 				isWatsonTalking = true;
+				State = AvatarState.ANSWERING;
 				levelInputValue = levelInput.Float;
 			} else if (data is FloatData) {
 				FloatData levelInput = (FloatData)data;
@@ -446,7 +448,7 @@ namespace IBM.Watson.Widgets.Avatar
                     if (m_Dialog.Converse(m_DialogId, result.text, OnDialogResponse,
                         m_DialogConversationId, m_DialogClientId))
                     {
-                        State = AvatarState.ANSWERING;
+						State = AvatarState.THINKING;
                     }
                 }
             }
