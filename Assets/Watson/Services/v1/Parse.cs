@@ -114,19 +114,23 @@ namespace IBM.Watson.Services.v1
 
         private void OnParseQuestionResp( RESTConnector.Request req, RESTConnector.Response resp )
         {
-            ParseData parse = new ParseData();
-            try
+            ParseData parse = null;
+            if ( resp.Success )
             {
-                if (!parse.ParseJson((IDictionary)Json.Deserialize(Encoding.UTF8.GetString(resp.Data))))
-                    resp.Success = false;
+                try
+                {
+                    parse = new ParseData();
+                    if (!parse.ParseJson((IDictionary)Json.Deserialize(Encoding.UTF8.GetString(resp.Data))))
+                        resp.Success = false;
 
-                if ( resp.Success && m_ParseCache != null )
-                    m_ParseCache.Save( ((ParseQuestionReq)req).ParseId, resp.Data );
-            }
-            catch (Exception e)
-            {
-                Log.Error(PARSE_SUBSYSTEM, "Exception during parse: {0}", e.ToString());
-                resp.Success = false;
+                    if ( resp.Success && m_ParseCache != null )
+                        m_ParseCache.Save( ((ParseQuestionReq)req).ParseId, resp.Data );
+                }
+                catch (Exception e)
+                {
+                    Log.Error(PARSE_SUBSYSTEM, "Exception during parse: {0}", e.ToString());
+                    resp.Success = false;
+                }
             }
 
             if (((ParseQuestionReq)req).Callback != null)

@@ -35,7 +35,7 @@ namespace IBM.Watson.Camera
         void Start()
         {
            	//KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CHANGE_QUALITY, KeyModifiers.NONE, OnNextQualityLevel ); 
-            DebugConsole.Instance.RegisterDebugInfo( "QUALITY", OnQualityDebugInfo );            
+            DebugConsole.Instance.RegisterDebugInfo( "QUALITY", OnQualityDebugInfo );           
         }
         
         public void OnNextQualityLevel()

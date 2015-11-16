@@ -366,7 +366,7 @@ namespace IBM.Watson.Connection
                         Log.Warning( "RESTConnector", "WWW.error: {0}, response: {1}", www.error, www.text );
 
                     // generate the Response object now..
-                    if ( www.isDone && www.bytes != null )
+                    if ( www.isDone && www.bytes != null && www.bytes.Length > 0 )
                     {
                         resp.Success = true;
                         resp.Data = www.bytes;
