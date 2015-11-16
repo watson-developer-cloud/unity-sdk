@@ -44,6 +44,8 @@ namespace IBM.Watson.Widgets
         private Output m_LevelOut = new Output( typeof(FloatData) );
         [SerializeField, Tooltip( "How often to send level out data in seconds.") ] 
         private float m_LevelOutInterval = 0.05f;
+		[SerializeField]
+		private float m_LevelOutputModifier = 1.0f;
 	    [SerializeField]
 	    private Button m_TextToSpeechButton = null;
 	    [SerializeField]
@@ -138,7 +140,7 @@ namespace IBM.Watson.Widgets
                 {
                     float [] samples = new float[ currentPos - m_LastPlayPos ];
                     m_Source.clip.GetData( samples, m_LastPlayPos );
-                    m_LevelOut.SendData( new FloatData( Mathf.Max( samples ) ) );
+					m_LevelOut.SendData( new TextToSpeechData( Mathf.Max( samples ) * m_LevelOutputModifier) );
                     m_LastPlayPos = currentPos;
                 }
             }

@@ -194,6 +194,7 @@ namespace IBM.Watson.Widgets.Avatar
                 }).setOnComplete(
                 () =>
                 {
+					m_ColorAnimationOnFlareInitial.onComplete = null;
 					LeanTween.cancel(m_ColorAnimationOnFlareInitial.uniqueId);
 					m_ColorAnimationOnFlareInitial = null;
 
