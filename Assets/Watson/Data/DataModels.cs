@@ -467,6 +467,14 @@ namespace IBM.Watson.Data
             public double unweightedScore { get; set; }
             public double weightedScore { get; set; }
         };
+        public class Row {
+            public string [] Columns { get; set; }
+        };
+
+        public class Table {
+            public Row [] Rows { get; set; }
+        };
+
         public class Answer
         {
             public string answerText { get; set; }
@@ -475,6 +483,8 @@ namespace IBM.Watson.Data
             public Evidence[] evidence { get; set; }
             public Variant[] variants { get; set; }
             public Feature[] features { get; set; }
+
+            public Table [] Tables { get; set; }
 
             public Answer()
             { }
@@ -488,6 +498,30 @@ namespace IBM.Watson.Data
                     evidence = new Evidence[ a.evidence.Length ];
                     for(int i=0;i<evidence.Length;++i)
                         evidence[i] = new Evidence( a.evidence[i], answerText );
+                }
+
+                if (! string.IsNullOrEmpty( a.formattedText ) )
+                {
+                    HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
+                    doc.LoadHtml( a.formattedText );
+
+                    List<Table> tables = new List<Table>();
+                    foreach( var table in doc.DocumentNode.SelectNodes( "//table" ) )
+                    {
+                        List<Row> rows = new List<Row>();
+                        foreach( var row in table.SelectNodes( "tr" ) )
+                        {
+                            List<string> cells = new List<string>();
+                            foreach( var cell in row.SelectNodes( "th|td" ) )
+                                cells.Add( cell.InnerText );
+
+                            rows.Add( new Row() { Columns = cells.ToArray() } );
+                        }
+
+                        tables.Add( new Table() { Rows = rows.ToArray() } );
+                    }
+                        
+                    Tables = tables.ToArray();
                 }
             }
         };
@@ -947,6 +981,7 @@ namespace IBM.Watson.Data
             public long id { get; set; }
             public string text { get; set; }
             public string pipeline { get; set; }
+            public string formattedText { get; set; }
             public double confidence { get; set; }
             public Evidence [] evidence { get; set; }
             public string[] entityTypes { get; set; }
@@ -1028,5 +1063,6 @@ namespace IBM.Watson.Data
             public Response[] responses { get; set; }
         };
     }
+
     #endregion
 }

@@ -122,8 +122,7 @@ MonoBehaviour:
   m_Input: {fileID: 0}
   m_StatusText: {fileID: 0}
   m_Voice: 3
-  m_UsePost: 0
-  m_EnableAudioSource: 1
+  m_UsePost: 1
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -138,6 +137,10 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_LevelOut.m_TargetConnection
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_UsePost
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
