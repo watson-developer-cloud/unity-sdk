@@ -12,21 +12,30 @@ namespace IBM.Watson.Utilities
         private string m_CachePath = null;
         private Dictionary<string, byte[]> m_Cache = new Dictionary<string, byte[]>();
 
-        public DataCache()
-        {}
-        public DataCache(string cacheName)
+        /// <summary>
+        /// DataCache constructor.
+        /// </summary>
+        /// <param name="cacheName">The name of the cache.</param>
+        /// <param name="useStreamingPath">If true, then cache files are stored in the streaming asset path.</param>
+        public DataCache(string cacheName, bool useStreamingPath = false)
         {
-            Initialize(cacheName);
+            Initialize(cacheName,useStreamingPath);
         }
 
-        public void Initialize(string cacheName)
+        /// <summary>
+        /// Initializes this DataCache object.
+        /// </summary>
+        /// <param name="cacheName">The name of the cache.</param>
+        /// <param name="useStreamingPath">If true, then cache files are stored in the streaming asset path.</param>
+        public void Initialize(string cacheName, bool useStreamingPath = false )
         {
             if (string.IsNullOrEmpty(cacheName))
                 throw new ArgumentNullException("cacheName");
             if (cacheName.Contains('/'))
                 throw new ArgumentException("cacheName");
 
-            m_CachePath = Application.streamingAssetsPath + "/" + cacheName + "/";
+
+            m_CachePath = (useStreamingPath ? Application.streamingAssetsPath : Application.persistentDataPath) + "/" + cacheName + "/";
             if (!Directory.Exists(m_CachePath))
                 Directory.CreateDirectory(m_CachePath);
 
@@ -37,6 +46,11 @@ namespace IBM.Watson.Utilities
             }
         }
 
+        /// <summary>
+        /// Find a data object by ID.
+        /// </summary>
+        /// <param name="id">The ID to find.</param>
+        /// <returns>The cached data, or null if not found.</returns>
         public byte[] Find(string id)
         {
             byte[] data = null;
@@ -46,6 +60,11 @@ namespace IBM.Watson.Utilities
             return null;
         }
 
+        /// <summary>
+        /// Save data into the cache by ID.
+        /// </summary>
+        /// <param name="id">The ID to save.</param>
+        /// <param name="data"></param>
         public void Save(string id, byte[] data)
         {
             id = id.Replace('/', '_');
@@ -54,6 +73,9 @@ namespace IBM.Watson.Utilities
             File.WriteAllBytes(m_CachePath + id + ".bytes", data);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void Flush()
         {
             m_Cache.Clear();

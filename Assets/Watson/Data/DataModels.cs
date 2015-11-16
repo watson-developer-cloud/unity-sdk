@@ -297,9 +297,6 @@ namespace IBM.Watson.Data
         /// </summary>
         public class ParseData
         {
-            public string Id { get; set; }
-            public string Rev { get; set; }
-            public long TransactionId { get; set; }
             public ParseWord[] Words { get; set; }
             public Dictionary<string,string> Heirarchy { get; set; }
             public string[] Flags { get; set; }
@@ -313,8 +310,6 @@ namespace IBM.Watson.Data
             /// <param name="question"></param>
             public ParseData( QA.Question question )
             {
-                Id = question.id;
-
                 if ( question.xsgtopparses != null && question.xsgtopparses.Length > 0 )
                 {
                     Queue<QA.Word> tree = new Queue<QA.Word>();
@@ -381,10 +376,6 @@ namespace IBM.Watson.Data
             {
                 try
                 {
-                    Id = (string)json["_id"];
-                    //Rev = (string)json["_rev"];
-                    //TransactionId = (long)json["transactionId"];
-
                     IDictionary iparse = (IDictionary)json["parse"];
 
                     Dictionary<string,string> heirarchy = new Dictionary<string, string>();

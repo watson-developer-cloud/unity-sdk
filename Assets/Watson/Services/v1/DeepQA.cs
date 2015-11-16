@@ -39,6 +39,9 @@ namespace IBM.Watson.Services.v1
         #endregion
 
         #region Public Properties
+        /// <summary>
+        /// True to disable the question cache.
+        /// </summary>
         public bool DisableCache { get; set; }
         #endregion
 
@@ -66,7 +69,7 @@ namespace IBM.Watson.Services.v1
         public void FlushAnswerCache()
         {
             if ( m_QuestionCache == null )
-                m_QuestionCache  = new DataCache(m_ServiceID );
+                m_QuestionCache  = new DataCache(m_ServiceID, true);
 
             m_QuestionCache.Flush();
         }
@@ -79,7 +82,7 @@ namespace IBM.Watson.Services.v1
         public Question FindQuestion( string questionId )
         {
             if ( m_QuestionCache == null )
-                m_QuestionCache = new DataCache(m_ServiceID);
+                m_QuestionCache = new DataCache(m_ServiceID, true );
 
             byte[] cachedQuestion = m_QuestionCache.Find(questionId);
             if (cachedQuestion != null)
