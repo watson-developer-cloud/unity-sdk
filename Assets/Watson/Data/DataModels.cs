@@ -292,6 +292,48 @@ namespace IBM.Watson.Data
                 { "incomplete", WordPosition.INVALID },
             };
         };
+
+        public class ParseTree
+        {
+            public long position { get; set; }
+            public string text { get; set; }
+            public string partOfSpeech { get; set; }
+            public ParseTree [] rightChild { get; set; }
+            public ParseTree [] leftChild { get; set; }
+
+            public ParseTree( IDictionary json )
+            {
+                ParseJson( json );
+            }
+
+            public void ParseJson( IDictionary json )
+            {
+                if ( json == null )
+                    throw new ArgumentNullException( "json" );
+
+                position = (long)json["position"];
+                text = (string)json["text"];
+                partOfSpeech = (string)json["partOfSpeech"];
+
+                if ( json.Contains( "rightChild" ) )
+                {
+                    List<ParseTree> children = new List<ParseTree>();
+                    IList iChildren = json["rightChild"] as IList;
+                    foreach( var iChild in iChildren )
+                        children.Add( new ParseTree( iChild as IDictionary ) );
+                    rightChild = children.ToArray();
+                }
+                if ( json.Contains( "leftChild" ) )
+                {
+                    List<ParseTree> children = new List<ParseTree>();
+                    IList iChildren = json["leftChild"] as IList;
+                    foreach( var iChild in iChildren )
+                        children.Add( new ParseTree( iChild as IDictionary ) );
+                    leftChild = children.ToArray();
+                }
+            }
+        };
+
         /// <summary>
         /// This data class is returned by the GetParseData() function.
         /// </summary>
@@ -300,6 +342,7 @@ namespace IBM.Watson.Data
             public ParseWord[] Words { get; set; }
             public Dictionary<string,string> Heirarchy { get; set; }
             public string[] Flags { get; set; }
+            public ParseTree parseTree { get; set; }
 
             public ParseData()
             { }
@@ -374,6 +417,9 @@ namespace IBM.Watson.Data
 
             public bool ParseJson(IDictionary json)
             {
+                if ( json == null )
+                    throw new ArgumentNullException("json");
+
                 try
                 {
                     IDictionary iparse = (IDictionary)json["parse"];
@@ -389,6 +435,9 @@ namespace IBM.Watson.Data
                     foreach (var f in iflags)
                         flags.Add((string)f);
                     Flags = flags.ToArray();
+
+                    if ( json.Contains( "parseTree" ) )
+                        parseTree = new ParseTree( json["parseTree"] as IDictionary );
 
                     List<ParseWord> words = new List<ParseWord>();
 
