@@ -116,7 +116,7 @@ namespace IBM.Watson.Widgets.Avatar
         private Dialog m_Dialog = new Dialog();             // Dialog service
 
         private AvatarState m_State = AvatarState.NONE;
-        private AvatarState m_PreviousState = AvatarState.NONE;
+        private AvatarState m_PreviousListeningMode = AvatarState.SLEEPING_LISTENING;
         private ClassifyResult m_ClassifyResult = null;
 
         private SpeechResultList m_SpeechResult = null;
@@ -167,7 +167,9 @@ namespace IBM.Watson.Widgets.Avatar
             get { return m_State; }
             private set
             {
-                m_PreviousState = m_State;
+                if(m_State == AvatarState.LISTENING || m_State == AvatarState.SLEEPING_LISTENING)
+                    m_PreviousListeningMode = m_State;
+
                 if (m_State != value)
                 {
                     m_State = value;
@@ -352,7 +354,7 @@ namespace IBM.Watson.Widgets.Avatar
             if ( bdata.Boolean )
                 State = AvatarState.ANSWERING;
             else
-                State = m_PreviousState;
+                State = m_PreviousListeningMode;
         }
         #endregion
 
@@ -388,9 +390,7 @@ namespace IBM.Watson.Widgets.Avatar
             {
                 Mood = MoodType.IDLE;
                 State = AvatarState.LISTENING;
-
-                InstatiateQuestionWidget();
-
+                
                 // start a conversation with the dialog..
                 ClassifyResult result = GetClassifyResult( args );
                 if ( result != null && !string.IsNullOrEmpty(m_DialogId))

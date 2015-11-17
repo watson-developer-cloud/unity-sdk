@@ -135,7 +135,7 @@ namespace IBM.Watson.Widgets.Question
                         case AvatarWidget.AvatarState.LISTENING:
                             break;
                         case AvatarWidget.AvatarState.THINKING:
-							Cube.Fold();
+							//Cube.Fold();
                             break;
                         case AvatarWidget.AvatarState.ANSWERING:
 							if(Cube.AnimationState != CubeAnimationManager.CubeAnimationState.FOLDING && Cube.AnimationState != CubeAnimationManager.CubeAnimationState.IDLE_AS_FOLDED) 
