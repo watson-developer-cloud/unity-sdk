@@ -9,7 +9,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 431142}
   - 114: {fileID: 11465164}
-  - 114: {fileID: 11464002}
+  - 114: {fileID: 11408888}
   - 114: {fileID: 11407446}
   m_Layer: 0
   m_Name: EventSystem
@@ -42,7 +42,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ForceModuleActive: 0
---- !u!114 &11464002
+--- !u!114 &11408888
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -50,16 +50,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 107580}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1077351063, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Script: {fileID: -839872303, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_HorizontalAxis: Horizontal
-  m_VerticalAxis: Vertical
-  m_SubmitButton: Submit
-  m_CancelButton: Cancel
-  m_InputActionsPerSecond: 10
-  m_RepeatDelay: .5
-  m_ForceModuleActive: 0
+  horizontalAxis: Horizontal
+  verticalAxis: Vertical
+  submitButton: Submit
+  cancelButton: Cancel
+  inputActionsPerSecond: 10
+  repeatDelay: .5
 --- !u!114 &11465164
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -80,7 +79,15 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ForceModuleActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 107580}
