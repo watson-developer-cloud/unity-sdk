@@ -44,9 +44,17 @@ namespace IBM.Watson.Widgets.Avatar
         public enum AvatarState
         {
             /// <summary>
+            /// The initial mode (before app start) - not used for anything
+            /// </summary>
+            NONE = -1,
+            /// <summary>
             /// Connecting - initial state
             /// </summary>
             CONNECTING,
+            /// <summary>
+            /// Connected - Sleeping but continuously listening to wake up
+            /// </summary>
+            SLEEPING_LISTENING,
             /// <summary>
             /// Connected - Listening continuously to understand the input
             /// </summary>
