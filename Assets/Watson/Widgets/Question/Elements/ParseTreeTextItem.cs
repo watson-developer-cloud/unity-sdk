@@ -54,6 +54,16 @@ namespace IBM.Watson.Widgets.Question
             }
         }
 
+		private long m_Position;
+		public long Position
+		{
+			get { return m_Position; }
+			set
+			{
+				m_Position = value;
+			}
+		}
+
         [SerializeField]
         private string m_POS;
         public string POS
