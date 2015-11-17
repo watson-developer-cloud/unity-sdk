@@ -468,11 +468,11 @@ namespace IBM.Watson.Data
             public double weightedScore { get; set; }
         };
         public class Row {
-            public string [] Columns { get; set; }
+            public string [] columns { get; set; }
         };
 
         public class Table {
-            public Row [] Rows { get; set; }
+            public Row [] rows { get; set; }
         };
 
         public class Answer
@@ -483,8 +483,7 @@ namespace IBM.Watson.Data
             public Evidence[] evidence { get; set; }
             public Variant[] variants { get; set; }
             public Feature[] features { get; set; }
-
-            public Table [] Tables { get; set; }
+            public Table [] tables { get; set; }
 
             public Answer()
             { }
@@ -515,13 +514,13 @@ namespace IBM.Watson.Data
                             foreach( var cell in row.SelectNodes( "th|td" ) )
                                 cells.Add( cell.InnerText );
 
-                            rows.Add( new Row() { Columns = cells.ToArray() } );
+                            rows.Add( new Row() { columns = cells.ToArray() } );
                         }
 
-                        tables.Add( new Table() { Rows = rows.ToArray() } );
+                        tables.Add( new Table() { rows = rows.ToArray() } );
                     }
                         
-                    Tables = tables.ToArray();
+                    this.tables = tables.ToArray();
                 }
             }
         };
