@@ -292,14 +292,54 @@ namespace IBM.Watson.Data
                 { "incomplete", WordPosition.INVALID },
             };
         };
+
+        public class ParseTree
+        {
+            public long position { get; set; }
+            public string text { get; set; }
+            public ParseTree [] rightChild { get; set; }
+            public ParseTree [] leftChild { get; set; }
+
+            public ParseTree( IDictionary json )
+            {
+                ParseJson( json );
+            }
+
+            public void ParseJson( IDictionary json )
+            {
+                if ( json == null )
+                    throw new ArgumentNullException( "json" );
+
+                position = (long)json["position"];
+                text = (string)json["text"];
+
+                if ( json.Contains( "rightChildren" ) )
+                {
+                    List<ParseTree> children = new List<ParseTree>();
+                    IList iChildren = json["rightChildren"] as IList;
+                    foreach( var iChild in iChildren )
+                        children.Add( new ParseTree( iChild as IDictionary ) );
+                    rightChild = children.ToArray();
+                }
+                if ( json.Contains( "leftChildren" ) )
+                {
+                    List<ParseTree> children = new List<ParseTree>();
+                    IList iChildren = json["leftChildren"] as IList;
+                    foreach( var iChild in iChildren )
+                        children.Add( new ParseTree( iChild as IDictionary ) );
+                    leftChild = children.ToArray();
+                }
+            }
+        };
+
         /// <summary>
         /// This data class is returned by the GetParseData() function.
         /// </summary>
         public class ParseData
         {
             public ParseWord[] Words { get; set; }
-            public Dictionary<string,string> Heirarchy { get; set; }
             public string[] Flags { get; set; }
+            public ParseTree parseTree { get; set; }
 
             public ParseData()
             { }
@@ -374,21 +414,21 @@ namespace IBM.Watson.Data
 
             public bool ParseJson(IDictionary json)
             {
+                if ( json == null )
+                    throw new ArgumentNullException("json");
+
                 try
                 {
                     IDictionary iparse = (IDictionary)json["parse"];
-
-                    Dictionary<string,string> heirarchy = new Dictionary<string, string>();
-                    IList iheirarchy = (IList)iparse["hierarchy"];
-                    foreach (var h in iheirarchy)
-                        heirarchy[ ((IDictionary)h)["text"] as string ] = ((IDictionary)h)["value"] as string;
-                    Heirarchy = heirarchy;
 
                     List<string> flags = new List<string>();
                     IList iflags = (IList)iparse["flags"];
                     foreach (var f in iflags)
                         flags.Add((string)f);
                     Flags = flags.ToArray();
+
+                    if ( json.Contains( "parseTree" ) )
+                        parseTree = new ParseTree( json["parseTree"] as IDictionary );
 
                     List<ParseWord> words = new List<ParseWord>();
 
@@ -468,11 +508,11 @@ namespace IBM.Watson.Data
             public double weightedScore { get; set; }
         };
         public class Row {
-            public string [] Columns { get; set; }
+            public string [] columns { get; set; }
         };
 
         public class Table {
-            public Row [] Rows { get; set; }
+            public Row [] rows { get; set; }
         };
 
         public class Answer
@@ -483,8 +523,7 @@ namespace IBM.Watson.Data
             public Evidence[] evidence { get; set; }
             public Variant[] variants { get; set; }
             public Feature[] features { get; set; }
-
-            public Table [] Tables { get; set; }
+            public Table [] tables { get; set; }
 
             public Answer()
             { }
@@ -515,13 +554,13 @@ namespace IBM.Watson.Data
                             foreach( var cell in row.SelectNodes( "th|td" ) )
                                 cells.Add( cell.InnerText );
 
-                            rows.Add( new Row() { Columns = cells.ToArray() } );
+                            rows.Add( new Row() { columns = cells.ToArray() } );
                         }
 
-                        tables.Add( new Table() { Rows = rows.ToArray() } );
+                        tables.Add( new Table() { rows = rows.ToArray() } );
                     }
                         
-                    Tables = tables.ToArray();
+                    this.tables = tables.ToArray();
                 }
             }
         };
