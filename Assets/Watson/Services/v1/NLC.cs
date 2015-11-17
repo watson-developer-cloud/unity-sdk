@@ -69,9 +69,17 @@ namespace IBM.Watson.Services.v1
         public delegate void OnDeleteClassifier( bool success );
         #endregion
 
+        #region Public Properties
+        /// <summary>
+        /// Disable the classify cache.
+        /// </summary>
+        public bool DisableCache { get; set; }
+        #endregion
+
         #region Private Data
         private const string SERVICE_ID = "NlcV1";
         private static fsSerializer sm_Serializer = new fsSerializer();
+        private Dictionary<string,DataCache> m_ClassifyCache = new Dictionary<string, DataCache>();
         #endregion
 
         #region FindClassifier
@@ -349,6 +357,25 @@ namespace IBM.Watson.Services.v1
 
         #region Classify
         /// <summary>
+        /// Flush all classifier caches or a specific cache.
+        /// </summary>
+        /// <param name="classifierId">If not null or empty, then the specific cache will be flushed.</param>
+        public void FlushClassifyCache(string classifierId = null )
+        {
+            if (! string.IsNullOrEmpty( classifierId ) )
+            {
+                DataCache cache = null;
+                if ( m_ClassifyCache.TryGetValue( classifierId, out cache ) )
+                    cache.Flush();
+            }
+            else
+            {
+                foreach( var kp in m_ClassifyCache )
+                    kp.Value.Flush();
+            }
+        }
+
+        /// <summary>
         /// Classifies the given text, invokes the callback with the results.
         /// </summary>
         /// <param name="classifierId">The ID of the classifier to use.</param>
@@ -364,11 +391,35 @@ namespace IBM.Watson.Services.v1
             if (callback == null)
                 throw new ArgumentNullException("callback");
 
+            string textId = Utility.GetMD5( text );
+            if (! DisableCache )
+            {
+                DataCache cache = null;
+                if (! m_ClassifyCache.TryGetValue( classifierId, out cache ) )
+                {
+                    cache = new DataCache( "NLC_" + classifierId );
+                    m_ClassifyCache[ classifierId ] = cache;
+                }
+
+                byte [] cached = cache.Find( textId );
+                if ( cached != null )
+                {
+                    ClassifyResult res = ProcessClassifyResult( cached );
+                    if ( res != null )
+                    {
+                        callback( res );
+                        return true;
+                    }
+                }
+            }
+
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/v1/classifiers");
             if (connector == null)
                 return false;
 
             ClassifyReq req = new ClassifyReq();
+            req.TextId = textId;
+            req.ClassiferId = classifierId;
             req.Callback = callback;
             req.OnResponse = OnClassifyResp;
             req.Function = "/" + classifierId + "/classify";
@@ -382,35 +433,54 @@ namespace IBM.Watson.Services.v1
         }
         private class ClassifyReq : RESTConnector.Request
         {
+            public string TextId { get; set; }
+            public string ClassiferId { get; set; }
             public OnClassify Callback { get; set; }
         };
+
         private void OnClassifyResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            ClassifyResult classify = new ClassifyResult();
+            ClassifyResult classify = null;
             if (resp.Success)
             {
-                try
+                classify = ProcessClassifyResult( resp.Data );
+                if ( classify != null )
                 {
-                    fsData data = null;
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = classify;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("NLC", "GetClassifiers Exception: {0}", e.ToString());
-                    resp.Success = false;
+                    DataCache cache = null;
+                    if ( m_ClassifyCache.TryGetValue( ((ClassifyReq)req).ClassiferId, out cache ) )
+                        cache.Save( ((ClassifyReq)req).TextId, resp.Data );
                 }
             }
 
             if (((ClassifyReq)req).Callback != null)
-                ((ClassifyReq)req).Callback(resp.Success ? classify : null);
+                ((ClassifyReq)req).Callback(classify);
         }
+
+        private ClassifyResult ProcessClassifyResult( byte [] json_data )
+        {
+            ClassifyResult classify = null;
+            try
+            {
+                fsData data = null;
+                fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(json_data), out data);
+                if (!r.Succeeded)
+                    throw new WatsonException(r.FormattedMessages);
+
+                classify = new ClassifyResult();
+
+                object obj = classify;
+                r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                if (!r.Succeeded)
+                    throw new WatsonException(r.FormattedMessages);
+            }
+            catch (Exception e)
+            {
+                Log.Error("NLC", "GetClassifiers Exception: {0}", e.ToString());
+            }
+
+            return classify;
+        }
+
         #endregion
     }
 }

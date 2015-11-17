@@ -79,7 +79,7 @@ namespace IBM.Watson.Services.v1
             if (! DisableCache )
             {
                 if ( m_ParseCache == null )
-                    m_ParseCache = new DataCache( "parse" );
+                    m_ParseCache = new DataCache( "ITM_parse" );
 
                 byte [] cached = m_ParseCache.Find( parseId );
                 if ( cached != null )
