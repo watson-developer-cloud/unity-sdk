@@ -108,10 +108,8 @@ namespace IBM.Watson.Widgets
 
         [SerializeField]
         private bool m_ActivateOnStart = true;
-        //[SerializeField]
-        //private Input m_ActivateInput = new Input("Activate", typeof(BooleanData), "OnActivateInput");
         [SerializeField]
-        private Input m_DisableInput = new Input("Disable", typeof(BooleanData), "OnDisableInput");
+        private Input m_DisableInput = new Input("Disable", typeof(DisableMicData), "OnDisableInput");
         [SerializeField]
         private Output m_AudioOutput = new Output(typeof(AudioData));
         [SerializeField]
@@ -140,13 +138,9 @@ namespace IBM.Watson.Widgets
         #endregion
 
         #region Private Functions
-        private void OnActivateInput(Data data)
-        {
-            Active = ((BooleanData)data).Boolean;
-        }
         private void OnDisableInput(Data data)
         {
-            Disable = ((BooleanData)data).Boolean;
+            Disable = ((DisableMicData)data).Boolean;
         }
 
         private void StartRecording()

@@ -84,6 +84,36 @@ namespace IBM.Watson.Data
         public bool Boolean { get; set; }
     };
 
+    public class SpeakingStateData : Widget.Data
+    {
+        public SpeakingStateData()
+        { }
+        public SpeakingStateData( bool b ) 
+        {
+            Boolean = b;
+        }
+        public override string GetName()
+        {
+            return "Speaking";
+        }
+        public bool Boolean { get; set; }
+    }
+
+    public class DisableMicData : Widget.Data
+    {
+        public DisableMicData()
+        { }
+        public DisableMicData( bool b ) 
+        {
+            Boolean = b;
+        }
+        public override string GetName()
+        {
+            return "DisableMic";
+        }
+        public bool Boolean { get; set; }
+    }
+
     /// <summary>
     /// This class is for float data.
     /// </summary>
