@@ -297,7 +297,6 @@ namespace IBM.Watson.Data
         {
             public long position { get; set; }
             public string text { get; set; }
-            public string partOfSpeech { get; set; }
             public ParseTree [] rightChild { get; set; }
             public ParseTree [] leftChild { get; set; }
 
@@ -313,20 +312,19 @@ namespace IBM.Watson.Data
 
                 position = (long)json["position"];
                 text = (string)json["text"];
-                partOfSpeech = (string)json["partOfSpeech"];
 
-                if ( json.Contains( "rightChild" ) )
+                if ( json.Contains( "rightChildren" ) )
                 {
                     List<ParseTree> children = new List<ParseTree>();
-                    IList iChildren = json["rightChild"] as IList;
+                    IList iChildren = json["rightChildren"] as IList;
                     foreach( var iChild in iChildren )
                         children.Add( new ParseTree( iChild as IDictionary ) );
                     rightChild = children.ToArray();
                 }
-                if ( json.Contains( "leftChild" ) )
+                if ( json.Contains( "leftChildren" ) )
                 {
                     List<ParseTree> children = new List<ParseTree>();
-                    IList iChildren = json["leftChild"] as IList;
+                    IList iChildren = json["leftChildren"] as IList;
                     foreach( var iChild in iChildren )
                         children.Add( new ParseTree( iChild as IDictionary ) );
                     leftChild = children.ToArray();
@@ -340,7 +338,6 @@ namespace IBM.Watson.Data
         public class ParseData
         {
             public ParseWord[] Words { get; set; }
-            public Dictionary<string,string> Heirarchy { get; set; }
             public string[] Flags { get; set; }
             public ParseTree parseTree { get; set; }
 
@@ -423,12 +420,6 @@ namespace IBM.Watson.Data
                 try
                 {
                     IDictionary iparse = (IDictionary)json["parse"];
-
-                    Dictionary<string,string> heirarchy = new Dictionary<string, string>();
-                    IList iheirarchy = (IList)iparse["hierarchy"];
-                    foreach (var h in iheirarchy)
-                        heirarchy[ ((IDictionary)h)["text"] as string ] = ((IDictionary)h)["value"] as string;
-                    Heirarchy = heirarchy;
 
                     List<string> flags = new List<string>();
                     IList iflags = (IList)iparse["flags"];
