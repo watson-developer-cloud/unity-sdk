@@ -244,10 +244,11 @@ MonoBehaviour:
   m_ClassifyOutput:
     m_TargetObject: {fileID: 0}
     m_TargetConnection: 
-  m_ClassifierId: 5E00F7x2-nlc-561
+  m_ClassifierId: 
   m_MinWordConfidence: .40000000000000002
   m_IgnoreWordConfidence: .20000000000000001
   m_MinClassEventConfidence: .5
+  m_Language: en
   m_ClassEventList: []
   m_TopClassText: {fileID: 0}
 --- !u!114 &11456050

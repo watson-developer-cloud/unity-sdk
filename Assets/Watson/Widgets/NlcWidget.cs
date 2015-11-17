@@ -36,19 +36,22 @@ namespace IBM.Watson.Widgets
 	{
 	    #region Private Data
 	    private NLC m_NLC = new NLC();
+        private Classifier m_Selected = null;
 
         [SerializeField]
         private Input m_RecognizeInput = new Input( "Recognize", typeof(SpeechToTextData), "OnRecognize" );
         [SerializeField]
         private Output m_ClassifyOutput = new Output( typeof(ClassifyResultData) );
         [SerializeField]
-        private string m_ClassifierId = "5E00F7x2-nlc-540";     // default to XRAY classifier
+        private string m_ClassifierId = string.Empty;
         [SerializeField, Tooltip("What is the minimum word confidence needed to send onto the NLC?")]
         private double m_MinWordConfidence = 0.4;
         [SerializeField, Tooltip("Recognized speech below this confidence is just ignored.")]
         private double m_IgnoreWordConfidence = 0.2;
         [SerializeField, Tooltip("What is the minimum confidence for a classification event to be fired.")]
         private double m_MinClassEventConfidence = 0.5;
+        [SerializeField]
+        private string m_Language = "en";
 
         [Serializable]
         private class ClassEventMapping
@@ -73,7 +76,21 @@ namespace IBM.Watson.Widgets
         protected override void Start()
 	    {
             base.Start();
+
+            // start the default log reactors if needed..
 	        Logger.InstallDefaultReactors();
+
+            if (string.IsNullOrEmpty(m_ClassifierId))
+            {
+                Log.Status( "NlcWidget", "Auto selecting a classifier." );
+                if (! m_NLC.GetClassifiers( OnGetClassifiers ) )
+                    Log.Error( "NlcWidget", "Failed to request all classifiers." );
+            }
+            else
+            {
+                if (! m_NLC.GetClassifier( m_ClassifierId, OnGetClassifier ) )
+                    Log.Equals( "NlcWidget", "Failed to request classifier." );
+            }
 	    }
         #endregion
 
@@ -84,6 +101,35 @@ namespace IBM.Watson.Widgets
             return "NLC";
         }
         #endregion
+
+        private void OnGetClassifiers( Classifiers classifiers )
+        {
+            if ( classifiers != null )
+            {
+                foreach( var classifier in classifiers.classifiers )
+                {
+                    if ( classifier.language != m_Language )
+                        continue;
+
+                    m_NLC.GetClassifier( classifier.classifier_id, OnGetClassifier );
+                }
+            }
+        }
+
+        private void OnGetClassifier( Classifier classifier )
+        {
+            if ( classifier != null && classifier.status == "Available" )
+            {
+                if ( m_Selected == null || m_Selected.created.CompareTo( classifier.created ) < 0 )
+                {
+                    m_Selected = classifier;
+                    m_ClassifierId = m_Selected.classifier_id;
+
+                    Log.Status( "NlcWidget", "Selected classifier {0}, Created: {1}, Name: {2}", 
+                        m_Selected.classifier_id, m_Selected.created, m_Selected.name );
+                }
+            }
+        }
 
         private void OnRecognize(Data data)
         {
@@ -98,8 +144,13 @@ namespace IBM.Watson.Widgets
 
                 if (textConfidence > m_MinWordConfidence)
                 {
-                    if (!m_NLC.Classify(m_ClassifierId, text, OnClassified))
-                        Log.Error("AvatarWidget", "Failed to send {0} to NLC.", text);
+                    if (! string.IsNullOrEmpty( m_ClassifierId ) )
+                    {
+                        if (!m_NLC.Classify(m_ClassifierId, text, OnClassified))
+                            Log.Error("NlcWidget", "Failed to send {0} to NLC.", text);
+                    }
+                    else
+                        Log.Equals( "NlcWidget", "No valid classifier found by the NlcWidget." );
                 }
                 else
                 {
@@ -134,7 +185,7 @@ namespace IBM.Watson.Widgets
                     Constants.Event sendEvent;
                     if (! m_ClassEventMap.TryGetValue( result.top_class, out sendEvent ) )
                     {
-                        Log.Warning( "EventManager", "No class mapping found for {0}", result.top_class );
+                        Log.Warning( "NlcWidget", "No class mapping found for {0}", result.top_class );
                         EventManager.Instance.SendEvent( result.top_class, result );
                     }
                     else
@@ -150,7 +201,7 @@ namespace IBM.Watson.Widgets
             if (! string.IsNullOrEmpty( text ) )
             {
                 if (!m_NLC.Classify(m_ClassifierId, text, OnClassified))
-                    Log.Error("AvatarWidget", "Failed to send {0} to NLC.", (string)args[0]);
+                    Log.Error("NlcWidget", "Failed to send {0} to NLC.", (string)args[0]);
             }
         }
         #endregion

@@ -62,10 +62,11 @@ MonoBehaviour:
   m_ClassifyOutput:
     m_TargetObject: {fileID: 0}
     m_TargetConnection: Classifier/Classified
-  m_ClassifierId: F7F576x8-nlc-62
+  m_ClassifierId: 
   m_MinWordConfidence: .40000000000000002
   m_IgnoreWordConfidence: .20000000000000001
   m_MinClassEventConfidence: .5
+  m_Language: en
   m_ClassEventList:
   - m_Class: wakeup
     m_Event: 403
@@ -97,6 +98,8 @@ MonoBehaviour:
     m_Event: 401
   - m_Class: question-woodside
     m_Event: 401
+  - m_Class: question-numerati_woodside
+    m_Event: 401
   m_TopClassText: {fileID: 0}
 --- !u!1001 &100100000
 Prefab:
@@ -107,11 +110,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.size
-      value: 15
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassifierId
-      value: F7F576x8-nlc-62
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[3].m_Event
@@ -144,6 +147,10 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[14].m_Event
       value: 401
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[15].m_Class
+      value: question-numerati_woodside
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
