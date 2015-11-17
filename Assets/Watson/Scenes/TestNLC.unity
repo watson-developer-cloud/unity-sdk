@@ -164,34 +164,6 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 22458758, guid: df29f10b1d0988f43909a2a59bea318b, type: 2}
-      propertyPath: m_AnchoredPosition.y
-      value: 274
-      objectReference: {fileID: 0}
-    - target: {fileID: 22458758, guid: df29f10b1d0988f43909a2a59bea318b, type: 2}
-      propertyPath: m_AnchoredPosition.x
-      value: -557.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 450176, guid: df29f10b1d0988f43909a2a59bea318b, type: 2}
-      propertyPath: m_RootOrder
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 485720, guid: df29f10b1d0988f43909a2a59bea318b, type: 2}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 426500, guid: df29f10b1d0988f43909a2a59bea318b, type: 2}
-      propertyPath: m_RootOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 22458758, guid: df29f10b1d0988f43909a2a59bea318b, type: 2}
-      propertyPath: m_RootOrder
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 22402678, guid: df29f10b1d0988f43909a2a59bea318b, type: 2}
-      propertyPath: m_RootOrder
-      value: 3
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: df29f10b1d0988f43909a2a59bea318b, type: 2}
   m_IsPrefabParent: 0
@@ -268,7 +240,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
 --- !u!1 &1925691767
 GameObject:
   m_ObjectHideFlags: 0

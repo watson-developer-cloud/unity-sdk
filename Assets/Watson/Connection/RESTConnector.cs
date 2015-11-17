@@ -362,11 +362,33 @@ namespace IBM.Watson.Connection
                         yield return null;
                     }
 
+                    bool bError = false;
                     if (! string.IsNullOrEmpty( www.error ) )
-                        Log.Warning( "RESTConnector", "WWW.error: {0}, response: {1}", www.error, www.text );
+                    {
+                        int nErrorCode = -1;
+                        int nSeperator = www.error.IndexOf(' ');
+                        if ( nSeperator > 0 && int.TryParse( www.error.Substring( 0, nSeperator ).Trim() , out nErrorCode ) )
+                            bError = nErrorCode != 200;
+
+                        if ( bError )
+                            Log.Error( "RESTConnector", "ErrorCode: {0}, Error: {1}, response: {2}", nErrorCode, www.error, www.text );
+                        else
+                            Log.Warning( "RESTConnector", "ErrorCode: {0}, Error: {1}, response: {2}", nErrorCode, www.error, www.text );
+                    }
+                    if (! www.isDone)
+                    {
+                        Log.Error( "RESTConnector", "Request timed out for URL: {0}", url );
+                        bError = true;
+                    }
+                    if ( !bError && (www.bytes == null || www.bytes.Length == 0) )
+                    {
+                        Log.Warning( "RESTConnector", "No data recevied for URL: {0}", url );
+                        bError = true;
+                    }
+
 
                     // generate the Response object now..
-                    if ( www.isDone && www.bytes != null && www.bytes.Length > 0 )
+                    if ( !bError )
                     {
                         resp.Success = true;
                         resp.Data = www.bytes;

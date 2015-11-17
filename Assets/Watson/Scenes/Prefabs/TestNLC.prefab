@@ -130,7 +130,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 22497212}
-  m_RootOrder: 1
+  m_RootOrder: 0
 --- !u!4 &450176
 Transform:
   m_ObjectHideFlags: 1
@@ -142,7 +142,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 22497212}
-  m_RootOrder: 3
+  m_RootOrder: 2
 --- !u!4 &485720
 Transform:
   m_ObjectHideFlags: 1
@@ -154,7 +154,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 22497212}
-  m_RootOrder: 2
+  m_RootOrder: 1
 --- !u!114 &11418106
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -166,7 +166,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5aac7ee12bf0cba4cbb0a79077a20224, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AutoConnect: 0
+  m_AutoConnect: 1
   m_ClassDisplay: {fileID: 11424276}
 --- !u!114 &11424276
 MonoBehaviour:
@@ -211,7 +211,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 131721b15c8a68d438d5b7163a1c05df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AutoConnect: 0
+  m_AutoConnect: 1
   m_ActivateOnStart: 1
   m_AudioOutput:
     m_TargetObject: {fileID: 130276}
@@ -226,6 +226,7 @@ MonoBehaviour:
   m_RecordingHZ: 22050
   m_MicrophoneID: 
   m_LevelOutputInterval: .0500000007
+  m_LevelOutputModifier: 1
   m_PlaybackRecording: 0
   m_StatusText: {fileID: 0}
 --- !u!114 &11451768
@@ -239,15 +240,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cef7f2b9e6b24041a94bde309b342ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AutoConnect: 0
-  m_TopClassOutput:
+  m_AutoConnect: 1
+  m_ClassifyOutput:
     m_TargetObject: {fileID: 0}
     m_TargetConnection: 
-  m_ClassifyOutput:
-    m_TargetObject: {fileID: 121988}
-    m_TargetConnection: ClassDisplay/ClassInput
-  m_ClassifierId: 98C19Ex4-nlc-407
-  m_SendAsEvent: 1
+  m_ClassifierId: 5E00F7x2-nlc-561
+  m_MinWordConfidence: .40000000000000002
+  m_IgnoreWordConfidence: .20000000000000001
+  m_MinClassEventConfidence: .5
+  m_ClassEventList: []
   m_TopClassText: {fileID: 0}
 --- !u!114 &11456050
 MonoBehaviour:
@@ -276,10 +277,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4165488f5e7ebeb498a09a163f8be77c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AutoConnect: 0
+  m_AutoConnect: 1
   m_ActivateOutput:
-    m_TargetObject: {fileID: 153640}
-    m_TargetConnection: Microphone/Activate
+    m_TargetObject: {fileID: 0}
+    m_TargetConnection: 
   m_SendValue: 1
 --- !u!114 &11482748
 MonoBehaviour:
@@ -292,7 +293,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ba780a4e1f9a824895da80178f4406c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AutoConnect: 0
+  m_AutoConnect: 1
   m_StatusText: {fileID: 0}
   m_DetectSilence: 1
   m_SilenceThreshold: .0299999993
@@ -302,9 +303,6 @@ MonoBehaviour:
   m_EnableContinous: 0
   m_EnableInterimResults: 0
   m_Transcript: {fileID: 0}
-  m_TextOutput:
-    m_TargetObject: {fileID: 164560}
-    m_TargetConnection: NlcWidget/Classify
   m_ResultOutput:
     m_TargetObject: {fileID: 0}
     m_TargetConnection: 
@@ -461,10 +459,10 @@ RectTransform:
   m_Children:
   - {fileID: 22478426}
   m_Father: {fileID: 22497212}
-  m_RootOrder: 4
-  m_AnchorMin: {x: .5, y: .5}
-  m_AnchorMax: {x: .5, y: .5}
-  m_AnchoredPosition: {x: -400, y: 204.5}
+  m_RootOrder: 3
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 207, y: -117.5}
   m_SizeDelta: {x: 414, y: 235}
   m_Pivot: {x: .5, y: .5}
 --- !u!224 &22458758
@@ -478,10 +476,10 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 22497212}
-  m_RootOrder: 0
-  m_AnchorMin: {x: .5, y: .5}
-  m_AnchorMax: {x: .5, y: .5}
-  m_AnchoredPosition: {x: -400, y: 370}
+  m_RootOrder: 4
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 49.5, y: -48}
   m_SizeDelta: {x: 99, y: 96}
   m_Pivot: {x: .5, y: .5}
 --- !u!224 &22478426
@@ -511,11 +509,11 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
-  - {fileID: 22458758}
   - {fileID: 426500}
   - {fileID: 485720}
   - {fileID: 450176}
   - {fileID: 22402678}
+  - {fileID: 22458758}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 0}
