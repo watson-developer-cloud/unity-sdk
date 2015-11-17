@@ -80,9 +80,13 @@ namespace IBM.Watson.Widgets.Avatar
         public enum MoodType
         {
             /// <summary>
+            /// The initial mode (before app start) 
+            /// </summary>
+            NONE = -1,
+            /// <summary>
 			/// Connecting / Disconnected - Waiting to be waken-up ( initial state )
 			/// </summary>
-            SLEEPING = 0,
+            SLEEPING,
             /// <summary>
             /// Connected - After wake up - waits a mood change
             /// </summary>
@@ -111,7 +115,8 @@ namespace IBM.Watson.Widgets.Avatar
         private XRAY m_XRAY = new XRAY();                      // XRAY service
         private Dialog m_Dialog = new Dialog();             // Dialog service
 
-        private AvatarState m_State = AvatarState.CONNECTING;
+        private AvatarState m_State = AvatarState.NONE;
+        private AvatarState m_PreviousState = AvatarState.NONE;
         private ClassifyResult m_ClassifyResult = null;
 
         private SpeechResultList m_SpeechResult = null;
@@ -162,6 +167,7 @@ namespace IBM.Watson.Widgets.Avatar
             get { return m_State; }
             private set
             {
+                m_PreviousState = m_State;
                 if (m_State != value)
                 {
                     m_State = value;
@@ -177,7 +183,7 @@ namespace IBM.Watson.Widgets.Avatar
                     }
                 }
 
-				if(m_State == AvatarState.CONNECTING || m_State == AvatarState.ERROR)
+				if(m_State == AvatarState.CONNECTING || m_State == AvatarState.ERROR || m_State == AvatarState.SLEEPING_LISTENING)
 					Mood = MoodType.SLEEPING;
             }
         }
@@ -302,7 +308,7 @@ namespace IBM.Watson.Widgets.Avatar
         {
             Log.Status("AvatarWidget", "Starting avatar.");
 
-            State = AvatarState.LISTENING;
+            State = AvatarState.SLEEPING_LISTENING;
             // Find our dialog ID
             if (!string.IsNullOrEmpty(m_DialogName))
                 m_Dialog.GetDialogs(OnFindDialog);
@@ -346,7 +352,7 @@ namespace IBM.Watson.Widgets.Avatar
             if ( bdata.Boolean )
                 State = AvatarState.ANSWERING;
             else
-                State = AvatarState.LISTENING;
+                State = m_PreviousState;
         }
         #endregion
 
@@ -364,9 +370,12 @@ namespace IBM.Watson.Widgets.Avatar
         /// <param name="args"></param>
         public void OnClassifyFailure( object [] args )
         {
-            if ( Mood != MoodType.SLEEPING )
+            if (State != AvatarState.SLEEPING_LISTENING)
+            {
                 m_TextOutput.SendData(new TextData(m_RecognizeFailure));
-            State = AvatarState.LISTENING;
+            }
+               
+            //State = AvatarState.LISTENING;
         }
 
         /// <summary>
@@ -375,7 +384,7 @@ namespace IBM.Watson.Widgets.Avatar
         /// <param name="args"></param>
         public void OnWakeup( object [] args )
         {
-            if (Mood == MoodType.SLEEPING)
+            if (State == AvatarState.SLEEPING_LISTENING)
             {
                 Mood = MoodType.IDLE;
                 State = AvatarState.LISTENING;
@@ -397,14 +406,16 @@ namespace IBM.Watson.Widgets.Avatar
         /// <param name="args"></param>
         public void OnSleep(object [] args)
         {
-            if (Mood != MoodType.SLEEPING)
+            if (State != AvatarState.SLEEPING_LISTENING)
             {
+                Mood = MoodType.SLEEPING;
+                State = AvatarState.SLEEPING_LISTENING;
+
                 m_TextOutput.SendData(new TextData(m_Goodbye));
                 if (m_FocusQuestion != null)
                     m_FocusQuestion.OnLeaveTheSceneAndDestroy();
 
-                Mood = MoodType.SLEEPING;
-                State = AvatarState.LISTENING;
+                
                 m_DialogConversationId = 0;
                 m_DialogClientId = 0;
             }
@@ -420,7 +431,7 @@ namespace IBM.Watson.Widgets.Avatar
             if ( result == null )
                 throw new WatsonException( "ClassifyResult expected." );
 
-            if (State == AvatarState.LISTENING && Mood != MoodType.SLEEPING)
+            if (State == AvatarState.LISTENING)
             {
                 m_ClassifyResult = result;
                 if ( result.top_class.Contains( "-" ) )
@@ -445,7 +456,7 @@ namespace IBM.Watson.Widgets.Avatar
             if ( result == null )
                 throw new WatsonException( "ClassifyResult expected." );
 
-            if ( State == AvatarState.LISTENING && Mood != MoodType.SLEEPING)
+            if ( State == AvatarState.LISTENING)
             {
                 m_ClassifyResult = result;
 
@@ -588,9 +599,10 @@ namespace IBM.Watson.Widgets.Avatar
         private AvatarStateInfo[] m_StateInfo = new AvatarStateInfo[]
         {
             new AvatarStateInfo() { m_State = AvatarState.CONNECTING, m_Color = new Color(241 / 255.0f, 241 / 255.0f, 242 / 255.0f), m_Speed = 0.0f },
+            new AvatarStateInfo() { m_State = AvatarState.SLEEPING_LISTENING, m_Color = new Color(241 / 255.0f, 241 / 255.0f, 242 / 255.0f), m_Speed = 0.0f },
             new AvatarStateInfo() { m_State = AvatarState.LISTENING, m_Color = new Color(0 / 255.0f, 166 / 255.0f, 160 / 255.0f), m_Speed = 1.0f },
             new AvatarStateInfo() { m_State = AvatarState.THINKING, m_Color = new Color(238 / 255.0f, 62 / 255.0f, 150 / 255.0f), m_Speed = 1.0f },
-            new AvatarStateInfo() { m_State = AvatarState.CONNECTING, m_Color = new Color(140 / 255.0f, 198 / 255.0f, 63 / 255.0f), m_Speed = 1.0f },
+            new AvatarStateInfo() { m_State = AvatarState.ANSWERING, m_Color = new Color(140 / 255.0f, 198 / 255.0f, 63 / 255.0f), m_Speed = 1.0f },
             new AvatarStateInfo() { m_State = AvatarState.ERROR, m_Color = new Color(255 / 255.0f, 0 / 255.0f, 0 / 255.0f), m_Speed = 0.0f },
         };
 
@@ -607,7 +619,7 @@ namespace IBM.Watson.Widgets.Avatar
             }
         }
 
-        private MoodType m_currentMood = MoodType.SLEEPING;
+        private MoodType m_currentMood = MoodType.NONE;
         public MoodType Mood
         {
             get
