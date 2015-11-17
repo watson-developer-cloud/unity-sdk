@@ -118,7 +118,7 @@ MonoBehaviour:
     m_TargetObject: {fileID: 0}
     m_TargetConnection: 
   m_LevelOutInterval: .0500000007
-  m_LevelOutputModifier: 7
+  m_LevelOutputModifier: 12
   m_TextToSpeechButton: {fileID: 0}
   m_Input: {fileID: 0}
   m_StatusText: {fileID: 0}
@@ -141,7 +141,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_LevelOutputModifier
-      value: 7
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
