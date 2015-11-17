@@ -41,7 +41,8 @@ namespace IBM.Watson.Widgets.Question
         [SerializeField]
         private List<GameObject> m_POSList = new List<GameObject>();
         private List<ParseTreeTextItem> m_WordList = new List<ParseTreeTextItem>();
-        private List<Vector3> m_PositionList = new List<Vector3>();
+		private List<GameObject> m_ArrowList = new List<GameObject>();
+//        private List<Vector3> m_PositionList = new List<Vector3>();
 
         private Data.XRAY.ParseData m_ParseData = null;
         private Data.XRAY.Questions m_QuestionData = null;
@@ -68,29 +69,6 @@ namespace IBM.Watson.Widgets.Question
 //                UpdateHighlightedWord();
 //            }
 //        }
-
-		/// <summary>
-		/// Set hard coded positions.
-		/// </summary>
-		void Awake()
-		{
-			//	TODO parse tree from hierarchy
-//			m_PositionList.Add(new Vector3(-583f, 188f, 0f));
-//			m_PositionList.Add(new Vector3(-408f, 64f, 0f));
-//			m_PositionList.Add(new Vector3(-184f, -49f, 0f));
-//			m_PositionList.Add(new Vector3(27f, -168f, 0f));
-//			m_PositionList.Add(new Vector3(259f, -301f, 0f));
-//			m_PositionList.Add(new Vector3(469f, -424f, 0f));
-//			m_PositionList.Add(new Vector3(-638f, -31f, 0f));
-//			m_PositionList.Add(new Vector3(-417f, -144f, 0f));
-//			m_PositionList.Add(new Vector3(-144f, -282f, 0f));
-//			m_PositionList.Add(new Vector3(109f, -397f, 0f));
-//			m_PositionList.Add(new Vector3(348f, -560f, 0f));
-//			m_PositionList.Add(new Vector3(-643f, -268f, 0f));
-//			m_PositionList.Add(new Vector3(-346f, -393f, 0f));
-//			m_PositionList.Add(new Vector3(-115f, -514f, 0f));
-//			m_PositionList.Add(new Vector3(91f, -641f, 0f));
-		}
 
         private void OnEnable()
         {
@@ -173,16 +151,32 @@ namespace IBM.Watson.Widgets.Question
 
 		private void CreateParseWord(ParseTree parseTree, RectTransform parentRectTransfrom)
 		{
-			GameObject wordGameObject = Instantiate(m_ParseTreeTextItemPrefab) as GameObject;
+			float wordX = Mathf.Cos(30f + 90f) * 200f;
+			float wordY = -Mathf.Sin(30f + 90f) * 200f;
+			Vector3 textItemPosition = parentRectTransfrom == m_ParseCanvasRectTransform ? Vector3.zero : new Vector3(wordX, wordY, 0f);
+			GameObject wordGameObject = Instantiate(m_ParseTreeTextItemPrefab, textItemPosition, Quaternion.identity) as GameObject;
             RectTransform wordRectTransform = wordGameObject.GetComponent<RectTransform>();
 			wordRectTransform.SetParent(parentRectTransfrom, false);
 
+			long wordPosition = parseTree.position;
 			ParseTreeTextItem word = wordGameObject.GetComponent<ParseTreeTextItem>();
 			word.ParseTreeWord = parseTree.text;
-			long wordPosition = parseTree.position;
 			word.Position = wordPosition;
 			word.POS = GetPOS(wordPosition);
 			word.Slot = GetSlot(wordPosition);
+			word.m_Features = GetFeatures(wordPosition);
+
+			m_WordList.Add(word);
+
+			for(int i = 0; i < parseTree.leftChild.Length; i++)
+			{
+				CreateParseWord(parseTree.leftChild[i], wordRectTransform);
+			}
+
+			for(int k = 0; k < parseTree.rightChild.Length; k++)
+			{
+				CreateParseWord(parseTree.rightChild[k], wordRectTransform);
+			}
 		}
 
 		private string GetPOS(long position)
@@ -193,6 +187,18 @@ namespace IBM.Watson.Widgets.Question
 		private string GetSlot(long position)
 		{
 			return m_ParseData.Words[position].Slot;
+		}
+
+		private List<string> GetFeatures(long position)
+		{
+			List<string> features = new List<string>();
+
+			for (int i = 0; i < m_ParseData.Words[position].Features.Length; i++)
+            {
+                features.Add(m_ParseData.Words[position].Features[i]);
+            }
+
+			return features;
 		}
         /// <summary>
         /// Clears dynamically generated Facet Elements when a question is answered. Called from Question Widget.

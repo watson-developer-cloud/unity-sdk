@@ -84,6 +84,8 @@ namespace IBM.Watson.Widgets.Question
         }
 
         public List<string> m_Features = new List<string>();
+//		public List<GameObject> m_LeftChild = new List<GameObject>();
+//		public List<GameObject> m_RightChild = new List<GameObject>();
         private RectTransform m_RectTransform;
         private Color m_ColorLight = new Color(0.8f, 0.8f, 0.8f);
         private Color m_ColorDark = new Color(0.3f, 0.3f, 0.3f);
