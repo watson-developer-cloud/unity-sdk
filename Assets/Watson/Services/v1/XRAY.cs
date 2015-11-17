@@ -49,7 +49,7 @@ namespace IBM.Watson.Services.v1
 
         #region Private Data
         private string m_Location = "Austin, TX";
-        private Parse m_Parse = new Parse();
+        private ITM m_ITM = new ITM();
         private Dictionary<string,DeepQA> m_Pipelines = new Dictionary<string, DeepQA>();
         private static fsSerializer sm_Serializer = new fsSerializer();
         private const string SERVICE_ID = "XrayV1";
@@ -146,7 +146,7 @@ namespace IBM.Watson.Services.v1
                 return false;
 
             var request = new AskQuestionReq( callback );
-            if (! m_Parse.ParseQuestion( question, request.OnParseQuestion ) )
+            if (! m_ITM.ParseQuestion( question, request.OnParseQuestion ) )
                 return false;
             if (! pipe.AskQuestion( question, request.OnAskQuestion, evidenceItems ) )
                 return false;

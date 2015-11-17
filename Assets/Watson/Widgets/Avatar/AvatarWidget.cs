@@ -135,7 +135,7 @@ namespace IBM.Watson.Widgets.Avatar
         [SerializeField]
         private Input m_levelInput = new Input("Level", typeof(FloatData), "OnLevelInput");
         [SerializeField]
-        private Input m_SpeakingInput = new Input( "Speaking", typeof(BooleanData), "OnSpeaking" );
+        private Input m_SpeakingInput = new Input( "Speaking", typeof(SpeakingStateData), "OnSpeaking" );
         [SerializeField]
         private Output m_TextOutput = new Output(typeof(TextData));
         [SerializeField]
@@ -339,7 +339,7 @@ namespace IBM.Watson.Widgets.Avatar
         #region Speaking Input
         private void OnSpeaking(Data data )
         {
-            BooleanData bdata = data as BooleanData;
+            SpeakingStateData bdata = data as SpeakingStateData;
             if ( bdata == null )
                 throw new WatsonException( "Unexpected data type." );
 

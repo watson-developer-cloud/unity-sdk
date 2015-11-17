@@ -35,7 +35,7 @@ namespace IBM.Watson.Services.v1
     {
         #region Public Types
         /// <exclude />
-        public delegate void OnQuestion( Question response );
+        public delegate void OnQuestion(Question response);
         #endregion
 
         #region Public Properties
@@ -68,8 +68,8 @@ namespace IBM.Watson.Services.v1
         /// </summary>
         public void FlushAnswerCache()
         {
-            if ( m_QuestionCache == null )
-                m_QuestionCache  = new DataCache(m_ServiceID, true);
+            if (m_QuestionCache == null)
+                m_QuestionCache = new DataCache(m_ServiceID);
 
             m_QuestionCache.Flush();
         }
@@ -79,16 +79,16 @@ namespace IBM.Watson.Services.v1
         /// </summary>
         /// <param name="questionId"></param>
         /// <returns></returns>
-        public Question FindQuestion( string questionId )
+        public Question FindQuestion(string questionId)
         {
-            if ( m_QuestionCache == null )
-                m_QuestionCache = new DataCache(m_ServiceID, true );
+            if (m_QuestionCache == null)
+                m_QuestionCache = new DataCache(m_ServiceID);
 
             byte[] cachedQuestion = m_QuestionCache.Find(questionId);
             if (cachedQuestion != null)
             {
-                Response response = ProcessAskResp( cachedQuestion );
-                if ( response != null )
+                Response response = ProcessAskResp(cachedQuestion);
+                if (response != null)
                 {
                     response.question.questionId = questionId;
                     return response.question;
@@ -104,44 +104,44 @@ namespace IBM.Watson.Services.v1
         /// <param name="question">The text of the question.</param>
         /// <param name="callback">The callback to receive the response.</param>
         /// <returns>Returns true if the request was submitted.</returns>
-        public bool AskQuestion( string question, OnQuestion callback, int evidenceItems = 1 )
+        public bool AskQuestion(string question, OnQuestion callback, int evidenceItems = 1)
         {
-            if ( string.IsNullOrEmpty( question ) )
+            if (string.IsNullOrEmpty(question))
                 throw new ArgumentNullException("question");
-            if ( callback == null )
+            if (callback == null)
                 throw new ArgumentNullException("callback");
 
-            string questionId = Utility.GetMD5( question );
-            if ( !DisableCache )
+            string questionId = Utility.GetMD5(question);
+            if (!DisableCache)
             {
-                Question q = FindQuestion( questionId );
-                if ( q != null )
+                Question q = FindQuestion(questionId);
+                if (q != null)
                 {
-                    callback( q );
+                    callback(q);
                     return true;
                 }
             }
 
-            RESTConnector connector = RESTConnector.GetConnector(m_ServiceID, ASK_QUESTION );
+            RESTConnector connector = RESTConnector.GetConnector(m_ServiceID, ASK_QUESTION);
             if (connector == null)
                 return false;
 
-            Dictionary<string,object> questionJson = new Dictionary<string, object>();
-            questionJson["question"] = new Dictionary<string,object>() {
+            Dictionary<string, object> questionJson = new Dictionary<string, object>();
+            questionJson["question"] = new Dictionary<string, object>() {
                 { "questionText", question },
                 { "evidenceRequest", new Dictionary<string,object>() {
                     { "items", evidenceItems },
                     { "profile", "NO" }
                 } }
             };
-            string json = MiniJSON.Json.Serialize( questionJson );
+            string json = MiniJSON.Json.Serialize(questionJson);
 
             AskQuestionReq req = new AskQuestionReq();
             req.QuestionID = questionId;
             req.Callback = callback;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["X-Synctimeout"] = "-1";
-            req.Send = Encoding.UTF8.GetBytes( json );
+            req.Send = Encoding.UTF8.GetBytes(json);
             req.OnResponse = OnAskQuestionResp;
 
             return connector.Send(req);
@@ -158,9 +158,9 @@ namespace IBM.Watson.Services.v1
             {
                 try
                 {
-                    response = ProcessAskResp( resp.Data );
-                    if ( m_QuestionCache != null && response != null )
-                        m_QuestionCache.Save( ((AskQuestionReq)req).QuestionID, resp.Data );
+                    response = ProcessAskResp(resp.Data);
+                    if (m_QuestionCache != null && response != null)
+                        m_QuestionCache.Save(((AskQuestionReq)req).QuestionID, resp.Data);
                 }
                 catch (Exception e)
                 {
