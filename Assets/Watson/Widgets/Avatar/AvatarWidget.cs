@@ -339,7 +339,15 @@ namespace IBM.Watson.Widgets.Avatar
         #region Level Input
         private void OnLevelInput(Data data)
         {
-            EventManager.Instance.SendEvent(Constants.Event.ON_AVATAR_SPEAKING, ((FloatData)data).Float);
+            if(State== AvatarState.ANSWERING)
+            {
+                EventManager.Instance.SendEvent(Constants.Event.ON_AVATAR_SPEAKING, ((FloatData)data).Float);
+            }
+            else
+            {
+                EventManager.Instance.SendEvent(Constants.Event.ON_USER_SPEAKING, ((FloatData)data).Float);
+            }
+           
 		}
         #endregion
 

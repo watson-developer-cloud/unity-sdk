@@ -124,6 +124,18 @@ namespace IBM.Watson.Widgets.Avatar
             }
         }
 
+        public void UserSpeaking(System.Object[] args)
+        {
+            if (AvatarAttached != null && AvatarAttached.State != AvatarWidget.AvatarState.ANSWERING)
+            {
+                if (args != null && args.Length == 1 && args[0] is float)
+                {
+                    float audioLevelOutput = (float)args[0];
+                    SetAudioData(audioLevelOutput, isWatsonTalking: false);
+                }
+            }
+        }
+
         /// <summary>
         /// Sets the audio data as Audio Data in delta time
         /// </summary>
