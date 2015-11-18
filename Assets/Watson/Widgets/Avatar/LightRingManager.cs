@@ -178,12 +178,16 @@ namespace IBM.Watson.Widgets.Avatar
 
             if (m_ColorAnimationOnFlareLoop != null)
             {
+                m_ColorAnimationOnFlareLoop.onComplete = null;
                 LeanTween.cancel(m_ColorAnimationOnFlareLoop.uniqueId);
+                m_ColorAnimationOnFlareLoop = null;
             }
 
             if (m_ColorAnimationOnFlareInitial != null)
             {
+                m_ColorAnimationOnFlareInitial.onComplete = null;
                 LeanTween.cancel(m_ColorAnimationOnFlareInitial.uniqueId);
+                m_ColorAnimationOnFlareInitial = null;
             }
 
             m_ColorAnimationOnFlareInitial = LeanTween.value(gameObject, m_ColorAnimationFlareLast, color, animationTime).setOnUpdateColor(
@@ -194,10 +198,13 @@ namespace IBM.Watson.Widgets.Avatar
                 }).setOnComplete(
                 () =>
                 {
-					m_ColorAnimationOnFlareInitial.onComplete = null;
-					LeanTween.cancel(m_ColorAnimationOnFlareInitial.uniqueId);
-					m_ColorAnimationOnFlareInitial = null;
-
+                    if(m_ColorAnimationOnFlareInitial != null)
+                    {
+                        m_ColorAnimationOnFlareInitial.onComplete = null;
+                        LeanTween.cancel(m_ColorAnimationOnFlareInitial.uniqueId);
+                        m_ColorAnimationOnFlareInitial = null;
+                    }
+					
                     m_ColorAnimationOnFlareLoop = LeanTween.value(gameObject, color, Color.white, animationTime).setLoopPingPong().setOnUpdateColor(
                         (Color colorToLoop) =>
                         {

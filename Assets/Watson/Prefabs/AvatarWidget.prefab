@@ -59,11 +59,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AutoConnect: 1
-  m_ClassifierId: 98C19Ex4-nlc-407
-  m_SoundVisualizerModifier: 20
   m_Hello: Hello
   m_Goodbye: Goodbye
   m_RecognizeFailure: I'm sorry, but I didn't understand your question.
+  m_Error: Oh bugger, something has gone wrong.
   m_Pipeline: thunderstone
   m_TextOutput:
     m_TargetObject: {fileID: 0}
@@ -72,23 +71,26 @@ MonoBehaviour:
   m_DialogName: lab_ga2
   m_RestartInterval: 30
   m_StateInfo:
-  - m_State: 0
+  - m_State: -1
     m_Color: {r: .945098042, g: .945098042, b: .949019611, a: 1}
     m_Speed: 0
   - m_State: 1
-    m_Color: {r: 0, g: .650980413, b: .627451003, a: 1}
+    m_Color: {r: .945098042, g: .945098042, b: .949019611, a: 1}
     m_Speed: 1
   - m_State: 2
-    m_Color: {r: .933333337, g: .243137255, b: .588235319, a: 1}
+    m_Color: {r: 0, g: .650980413, b: .627451003, a: 1}
     m_Speed: 1
   - m_State: 0
-    m_Color: {r: .549019635, g: .776470602, b: .247058824, a: 1}
+    m_Color: {r: .59493947, g: .887036085, b: .963235319, a: 1}
     m_Speed: 1
   - m_State: 4
-    m_Color: {r: 1, g: 0, b: 0, a: 1}
+    m_Color: {r: .116379313, g: .992647052, b: 0, a: 1}
     m_Speed: 1
   - m_State: 3
-    m_Color: {r: .116379313, g: .992647052, b: 0, a: 1}
+    m_Color: {r: .933333337, g: .243137255, b: .588235319, a: 1}
+    m_Speed: 1
+  - m_State: 5
+    m_Color: {r: .992647052, g: 0, b: 0, a: 1}
     m_Speed: 1
   m_MoodInfo:
   - m_Mood: 0
@@ -169,6 +171,10 @@ Prefab:
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 0}
+      propertyPath: m_StateInfo.Array.size
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
       propertyPath: m_AutoConnect
       value: 1
       objectReference: {fileID: 0}
@@ -180,6 +186,82 @@ Prefab:
       propertyPath: m_Prefabs.Array.data[4]
       value: 
       objectReference: {fileID: 108938, guid: c66bfe61a112240958d0988cf86caa87, type: 2}
+    - target: {fileID: 0}
+      propertyPath: m_StateInfo.Array.data[1].m_Color.r
+      value: .945098042
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_StateInfo.Array.data[1].m_Color.g
+      value: .945098042
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_StateInfo.Array.data[1].m_Color.b
+      value: .949019611
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_StateInfo.Array.data[0].m_State
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_StateInfo.Array.data[6].m_State
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_StateInfo.Array.data[3].m_Color.r
+      value: .59493947
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_StateInfo.Array.data[3].m_Color.g
+      value: .887036085
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_StateInfo.Array.data[3].m_Color.b
+      value: .963235319
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_StateInfo.Array.data[2].m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_StateInfo.Array.data[2].m_Color.g
+      value: .650980413
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_StateInfo.Array.data[2].m_Color.b
+      value: .627451003
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_StateInfo.Array.data[5].m_Color.r
+      value: .933333337
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_StateInfo.Array.data[5].m_Color.g
+      value: .243137255
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_StateInfo.Array.data[5].m_Color.b
+      value: .588235319
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_StateInfo.Array.data[4].m_Color.r
+      value: .116379313
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_StateInfo.Array.data[4].m_Color.g
+      value: .992647052
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_StateInfo.Array.data[6].m_Color.r
+      value: .992647052
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_StateInfo.Array.data[6].m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_StateInfo.Array.data[6].m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 128814}

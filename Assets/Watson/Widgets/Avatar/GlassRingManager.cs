@@ -95,10 +95,20 @@ namespace IBM.Watson.Widgets.Avatar
             if (m_GlassRingMaterial != null)
             {
                 if (m_ColorAnimationOnGlass != null)
+                {
+                    m_ColorAnimationOnGlass.onComplete = null;
                     LeanTween.cancel(m_ColorAnimationOnGlass.uniqueId);
+                    m_ColorAnimationOnGlass = null;
+                }
+                   
 
                 if (m_ColorAnimationOnGlassLoop != null)
+                {
+                    m_ColorAnimationOnGlassLoop.onComplete = null;
                     LeanTween.cancel(m_ColorAnimationOnGlassLoop.uniqueId);
+                    m_ColorAnimationOnGlassLoop = null;
+                }
+                   
 
                 m_ColorAnimationOnGlass = LeanTween.value(gameObject, m_LastColorUsedInAnimation, color, m_AnimationTime).setOnUpdateColor(
                     (Color colorToFadeIn) =>
@@ -108,9 +118,13 @@ namespace IBM.Watson.Widgets.Avatar
                     }).setOnComplete(
                     () =>
                     {
-						LeanTween.cancel(m_ColorAnimationOnGlass.uniqueId);
-						m_ColorAnimationOnGlass = null;
-
+                        if(m_ColorAnimationOnGlass != null)
+                        {
+                            m_ColorAnimationOnGlass.onComplete = null;
+                            LeanTween.cancel(m_ColorAnimationOnGlass.uniqueId);
+                            m_ColorAnimationOnGlass = null;
+                        }
+						
                         m_ColorAnimationOnGlassLoop = LeanTween.value(gameObject, color, Color.white, m_AnimationTime * timeModifier).setLoopPingPong().setOnUpdateColor(
                             (Color colorToLoop) =>
                             {

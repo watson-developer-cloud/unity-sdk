@@ -30,16 +30,16 @@ using IBM.Watson.Utilities;
 namespace IBM.Watson.Services.v1
 {
     /// <summary>
-    /// Parse a question and returns the parse structure.
+    /// In The Moment service abstraction.
     /// </summary>
-    public class Parse
+    public class ITM
     {
         #region Constants
         /// <summary>
         /// This ID is used to match up a configuration record with this service.
         /// </summary>
-        private const string SERVICE_ID = "ParseV1";
-        private const string PARSE_SUBSYSTEM = "Parse";
+        private const string SERVICE_ID = "ItmV1";
+        private const string ITM_SUBSYSTEM = "ITM";
         #endregion
 
         #region Public Types
@@ -79,7 +79,7 @@ namespace IBM.Watson.Services.v1
             if (! DisableCache )
             {
                 if ( m_ParseCache == null )
-                    m_ParseCache = new DataCache( "parse" );
+                    m_ParseCache = new DataCache( "ITM_parse" );
 
                 byte [] cached = m_ParseCache.Find( parseId );
                 if ( cached != null )
@@ -128,7 +128,7 @@ namespace IBM.Watson.Services.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error(PARSE_SUBSYSTEM, "Exception during parse: {0}", e.ToString());
+                    Log.Error(ITM_SUBSYSTEM, "Exception during parse: {0}", e.ToString());
                     resp.Success = false;
                 }
             }

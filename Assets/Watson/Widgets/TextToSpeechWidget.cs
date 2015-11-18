@@ -40,7 +40,9 @@ namespace IBM.Watson.Widgets
         [SerializeField]
         private Input m_TextInput = new Input( "Text", typeof(TextData), "OnTextInput" ); 
         [SerializeField]
-        private Output m_Speaking = new Output( typeof(BooleanData) );
+        private Output m_Speaking = new Output( typeof(SpeakingStateData) );
+        [SerializeField]
+        private Output m_DisableMic = new Output( typeof(DisableMicData) );
         [SerializeField]
         private Output m_LevelOut = new Output( typeof(FloatData) );
         [SerializeField, Tooltip( "How often to send level out data in seconds.") ] 
@@ -118,7 +120,9 @@ namespace IBM.Watson.Widgets
 	        {
                 AudioClip clip = m_SpeechQueue.Dequeue();
                 if ( m_Speaking.IsConnected )
-                    m_Speaking.SendData( new BooleanData( true ) );
+                    m_Speaking.SendData( new SpeakingStateData( true ) );
+                if ( m_DisableMic.IsConnected )
+                    m_DisableMic.SendData( new DisableMicData( true ) );
 
 	            m_Source.spatialBlend = 0.0f;     // 2D sound
 	            m_Source.loop = false;            // do not loop
@@ -158,7 +162,9 @@ namespace IBM.Watson.Widgets
         private void OnEndSpeech()
         {
             if ( m_Speaking.IsConnected )
-                m_Speaking.SendData( new BooleanData( false ) );
+                m_Speaking.SendData( new SpeakingStateData( false ) );
+            if ( m_DisableMic.IsConnected )
+                m_DisableMic.SendData( new DisableMicData( false ) );
             if (m_Source.isPlaying)
                 m_Source.Stop();
         }

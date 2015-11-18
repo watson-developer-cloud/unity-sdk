@@ -47,7 +47,9 @@ namespace IBM.Watson.Widgets.Avatar
 
 		[SerializeField]
 		private float m_SpeedFadingOut = 4.0f;
-		[SerializeField]
+        [SerializeField]
+        private float m_SpeedAudioLevel = 50.0f;
+        [SerializeField]
 		private float m_SmoothnessPebbleMovementInTheFirstRow = 1.0f;
 		[SerializeField]
 		private float m_SmoothnessForBottom = 0.95f;
@@ -57,8 +59,9 @@ namespace IBM.Watson.Widgets.Avatar
 		private float m_SmoothnessForPeak = 0.99f;
 		[SerializeField]
 		private int m_NumberOfWaves = 3;
+       
 
-		[SerializeField,FormerlySerializedAs("smoothnessLimitBetweenRows")]
+        [SerializeField,FormerlySerializedAs("smoothnessLimitBetweenRows")]
 		private Vector2 m_SmoothnessLimitBetweenRows; //Smothness MIN, MAX
 	
 		#endregion
@@ -186,9 +189,9 @@ namespace IBM.Watson.Widgets.Avatar
 									else if(pebbleIndexInWave > numberOfPebbleInHalfWave){ //higher end after center point!
 										valueToSet = Mathf.Lerp(m_PebbleRowList[i].pebbleList[pebbleIndex].transform.localPosition.y, m_PebbleRowList[i].pebbleList[pebbleIndex - 1].transform.localPosition.y, speedByPebbleLocation);
 									}
-									else{
-										valueToSet = audioLevelData;
-									}
+									else{   //Our center main data
+										valueToSet = Mathf.Lerp(m_PebbleRowList[i].pebbleList[pebbleIndex].transform.localPosition.y, audioLevelData, Time.deltaTime * m_SpeedAudioLevel);
+                                    }
 
 	                                //Debug.Log("centerHitNormalized: " + centerHitNormalized);
 									m_PebbleRowList[i].pebbleList[pebbleIndex].transform.localPosition = Vector3.Lerp(

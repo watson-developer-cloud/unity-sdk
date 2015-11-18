@@ -255,7 +255,8 @@ namespace IBM.Watson.Data
             ADVERB,
             PREPOSITION,
             CONJUNCTION,
-            INTERJECTION
+            INTERJECTION,
+            SPECIAL
         };
         /// <summary>
         /// This data class holds a single word of the ParseData.
@@ -273,7 +274,7 @@ namespace IBM.Watson.Data
                 {
                     WordPosition pos = WordPosition.INVALID;
                     if (!sm_WordPositions.TryGetValue(value, out pos))
-                        Log.Error("XRAY", "Failed to find position type for {0}, Word: {1}", value, Word);
+                        Log.Error("XRAY", "Failed to find PosName: {0}, Word: {1}", value, Word);
                     Pos = pos;
                 }
             }
@@ -285,11 +286,12 @@ namespace IBM.Watson.Data
                 { "det", WordPosition.DETERMINIER },
                 { "verb", WordPosition.VERB },
                 { "adverb", WordPosition.ADVERB },          // ?
-                { "adv", WordPosition.ADVERB },          // ?
+                { "adv", WordPosition.ADVERB },             // ?
                 { "prep", WordPosition.PREPOSITION },
                 { "conj", WordPosition.CONJUNCTION },       // ?
                 { "inter", WordPosition.INTERJECTION },     // ?
                 { "incomplete", WordPosition.INVALID },
+                { "special", WordPosition.SPECIAL },
             };
         };
 
