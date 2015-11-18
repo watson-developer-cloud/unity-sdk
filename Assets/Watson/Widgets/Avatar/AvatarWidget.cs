@@ -128,13 +128,13 @@ namespace IBM.Watson.Widgets.Avatar
         private bool m_GettingParse = false;
 
         [SerializeField]
-        private string m_Hello = "Hello";
+        private string [] m_HelloPhrases = new string[] { "Hello", "Yo", "Whats up", "Hey you", "Hows it hanging" };
         [SerializeField]
-        private string m_Goodbye = "Goodbye";
+        private string [] m_GoodbyePhrases = new string[] { "Goodbye", "Laters", "Later Taters", "See ya", "Bye Bye", "Take Care", "Peace Out" };
         [SerializeField]
-        private string m_RecognizeFailure = "I'm sorry, but I didn't understand your question.";
+        private string [] m_FailurePhrases = new string[] {  "I'm sorry, but I didn't understand your question.", "Huh", "I didn't catch that", "What did you say again?", "Come again", "What was that", "pardon" };
         [SerializeField]
-        private string m_Error = "Oh bugger, something has gone wrong.";
+        private string [] m_ErrorPhrases = new string[] {  "Oh bugger, something has gone wrong.", "Oh Shoot", "Oh no", "Oh Fudge",  };
         [SerializeField]
         private string m_Pipeline = "thunderstone";
         [SerializeField]
@@ -181,7 +181,7 @@ namespace IBM.Watson.Widgets.Avatar
                             m_FocusQuestion.OnLeaveTheSceneAndDestroy();
 
                         Invoke("StartAvatar", m_RestartInterval);
-                        m_TextOutput.SendData( new TextData( m_Error ) );
+                        m_TextOutput.SendData( new TextData( PickRandomString( m_ErrorPhrases ) ) );
                     }
                 }
 
@@ -366,6 +366,11 @@ namespace IBM.Watson.Widgets.Avatar
             return null;
         }
 
+        private static string PickRandomString( string [] strings )
+        {
+            return strings[ UnityEngine.Random.Range( 0, strings.Length ) ];
+        }
+
         /// <summary>
         /// Event Handler for ON_CLASSIFY_FAILURE
         /// </summary>
@@ -374,7 +379,7 @@ namespace IBM.Watson.Widgets.Avatar
         {
             if (State != AvatarState.SLEEPING_LISTENING)
             {
-                m_TextOutput.SendData(new TextData(m_RecognizeFailure));
+                m_TextOutput.SendData(new TextData( PickRandomString( m_FailurePhrases ) ));
             }
                
             //State = AvatarState.LISTENING;
@@ -396,7 +401,7 @@ namespace IBM.Watson.Widgets.Avatar
                 if ( result != null && !string.IsNullOrEmpty(m_DialogId))
                     m_Dialog.Converse(m_DialogId, result.text, OnDialogResponse, 0, m_DialogClientId);
                 else
-                    m_TextOutput.SendData(new TextData(m_Hello));
+                    m_TextOutput.SendData(new TextData(PickRandomString( m_HelloPhrases ) ));
             }
         }
 
@@ -411,7 +416,7 @@ namespace IBM.Watson.Widgets.Avatar
                 Mood = MoodType.SLEEPING;
                 State = AvatarState.SLEEPING_LISTENING;
 
-                m_TextOutput.SendData(new TextData(m_Goodbye));
+                m_TextOutput.SendData(new TextData( PickRandomString( m_GoodbyePhrases ) ));
                 if (m_FocusQuestion != null)
                     m_FocusQuestion.OnLeaveTheSceneAndDestroy();
 
@@ -535,7 +540,7 @@ namespace IBM.Watson.Widgets.Avatar
                     OnAnswerQuestion( m_XRAY.GetAnswers( m_Pipeline, topQuestion.questionId ) );
                 }
                 else
-                    m_TextOutput.SendData(new TextData(m_RecognizeFailure));
+                    m_TextOutput.SendData(new TextData( PickRandomString( m_FailurePhrases) ));
 
                 State = AvatarState.LISTENING;
             }
