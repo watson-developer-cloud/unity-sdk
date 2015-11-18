@@ -519,6 +519,9 @@ namespace IBM.Watson.Widgets.Avatar
             State = AvatarState.LISTENING;
         }
 
+        [SerializeField]
+        private string m_AnswerFormatWEA = "Here is what I found in the {0} corpus.";
+
         private void OnAskQuestion( ParseData parse, Questions questions)
         {
             if ( questions != null && questions.HasQuestion() )
@@ -526,49 +529,47 @@ namespace IBM.Watson.Widgets.Avatar
                 m_QuestionResult = questions;
                 m_ParseData = parse;
 
-                if (m_QuestionResult != null && m_QuestionResult.HasQuestion())
+                Watson.Data.XRAY.Question topQuestion = questions.questions[0];
+                m_AnswerResult = m_XRAY.GetAnswers( m_Pipeline, topQuestion.questionId );
+
+                InstatiateQuestionWidget();
+
+                EventManager.Instance.SendEvent( Constants.Event.ON_QUESTION_PIPELINE, m_Pipeline );
+                EventManager.Instance.SendEvent( Constants.Event.ON_QUESTION, m_QuestionResult );
+                EventManager.Instance.SendEvent( Constants.Event.ON_QUESTION_PARSE, m_ParseData );
+                EventManager.Instance.SendEvent( Constants.Event.ON_QUESTION_ANSWERS, m_AnswerResult );
+                EventManager.Instance.SendEvent( Constants.Event.ON_QUESTION_LOCATION, XRAY.Location );
+
+                if ( m_AnswerResult != null && m_AnswerResult.HasAnswer() )
                 {
-                    Watson.Data.XRAY.Question topQuestion = m_QuestionResult.questions[0];
+                    foreach (var a in m_AnswerResult.answers)
+                        Log.Debug("AvatarWidget", "A: {0} ({1})", a.answerText, a.confidence);
 
-                    InstatiateQuestionWidget();
+                    string answer = m_AnswerResult.answers[0].answerText;
+                    int newLine = answer.IndexOf( '\n' );
+                    if ( newLine > 0 )
+                        answer = answer.Substring( 0, newLine );
 
-                    EventManager.Instance.SendEvent( Constants.Event.ON_QUESTION_PIPELINE, m_Pipeline );
-                    EventManager.Instance.SendEvent( Constants.Event.ON_QUESTION, m_QuestionResult );
-                    EventManager.Instance.SendEvent( Constants.Event.ON_QUESTION_PARSE, m_ParseData );
-                    EventManager.Instance.SendEvent( Constants.Event.ON_QUESTION_LOCATION, XRAY.Location );
+                    EventManager.Instance.SendEvent(Constants.Event.ON_DEBUG_MESSAGE, answer);
 
-                    OnAnswerQuestion( m_XRAY.GetAnswers( m_Pipeline, topQuestion.questionId ) );
+                    // HACK: until we know if the answer is WDA or WEA, just look at the pipeline name for now.
+                    if ( m_Pipeline == "woodside" )
+                    {
+                        m_TextOutput.SendData( new TextData( string.Format( m_AnswerFormatWEA, m_Pipeline ) ) );
+                        EventManager.Instance.SendEvent( Constants.Event.ON_COMMAND_ANSWERS );
+                    }
+                    else
+                    {
+                        // TODO: We probably don't want to do this with a WEA..
+                        m_TextOutput.SendData(new TextData(answer));
+                    }
                 }
-                else
-                    m_TextOutput.SendData(new TextData( PickRandomString( m_FailurePhrases) ));
 
                 State = AvatarState.LISTENING;
             }
             else
             {
                 State = AvatarState.ERROR;
-            }
-        }
-
-        private void OnAnswerQuestion(Answers answers)
-        {
-            m_AnswerResult = answers;
-            EventManager.Instance.SendEvent( Constants.Event.ON_QUESTION_ANSWERS, m_AnswerResult );
-
-            if (answers != null && answers.HasAnswer())
-            {
-                foreach (var a in answers.answers)
-                    Log.Debug("AvatarWidget", "A: {0} ({1})", a.answerText, a.confidence);
-
-                string answer = answers.answers[0].answerText;
-                int newLine = answer.IndexOf( '\n' );
-                if ( newLine > 0 )
-                    answer = answer.Substring( 0, newLine );
-
-                EventManager.Instance.SendEvent(Constants.Event.ON_DEBUG_MESSAGE, answer);
-
-                // TODO: We probably don't want to do this with a WEA..
-                m_TextOutput.SendData(new TextData(answer));
             }
         }
 
