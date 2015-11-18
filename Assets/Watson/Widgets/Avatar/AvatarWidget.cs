@@ -339,8 +339,7 @@ namespace IBM.Watson.Widgets.Avatar
         #region Level Input
         private void OnLevelInput(Data data)
         {
-			if (pebbleManager != null)
-				pebbleManager.SetAudioData( ((FloatData)data).Float, State == AvatarState.ANSWERING);
+            EventManager.Instance.SendEvent(Constants.Event.ON_AVATAR_SPEAKING, ((FloatData)data).Float);
 		}
         #endregion
 

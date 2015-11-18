@@ -1983,7 +1983,8 @@ public static void update() {
 						tween.delay = 0.0f;
 					}
 				}
-			}
+                    tween.lastVal = val;
+           }
 		}
 
 		// Debug.Log("maxTweenReached:"+maxTweenReached);
