@@ -43,12 +43,11 @@ namespace IBM.Watson.Widgets.Question
         private List<GameObject> m_POSList = new List<GameObject>();
         private List<ParseTreeTextItem> m_WordList = new List<ParseTreeTextItem>();
 		private List<GameObject> m_ArrowList = new List<GameObject>();
-//        private List<Vector3> m_PositionList = new List<Vector3>();
 
         private Data.XRAY.ParseData m_ParseData = null;
         private Data.XRAY.Questions m_QuestionData = null;
 
-		private float horizontalWordSpacing = 20f;
+		private float horizontalWordSpacing = 10f;
 		private float verticalWordSpacing = 160f;
 
 //        private int m_WordIndex = 0;
@@ -125,6 +124,12 @@ namespace IBM.Watson.Widgets.Question
 			CreateParseWord(m_ParseData.parseTree, m_ParseCanvasRectTransform, m_ParseCanvasRectTransform);
         }
 
+		/// <summary>
+		/// Creates the parse word.
+		/// </summary>
+		/// <param name="parseWord">Parse word.</param>
+		/// <param name="parentRectTransfrom">Parent rect transfrom.</param>
+		/// <param name="parentWordRectTransform">Parent word rect transform.</param>
 		private void CreateParseWord(ParseTree parseWord, RectTransform parentRectTransfrom, RectTransform parentWordRectTransform)
 		{
 			//	instantiate word
@@ -187,16 +192,31 @@ namespace IBM.Watson.Widgets.Question
 				//StartCoroutine(CreateArrow(parentWordRectTransform, wordRectTransform));
 		}
 
+		/// <summary>
+		/// Gets the PO.
+		/// </summary>
+		/// <returns>The PO.</returns>
+		/// <param name="position">Position.</param>
 		private string GetPOS(long position)
 		{
 			return m_ParseData.Words[position].Pos.ToString();
 		}
 
+		/// <summary>
+		/// Gets the slot.
+		/// </summary>
+		/// <returns>The slot.</returns>
+		/// <param name="position">Position.</param>
 		private string GetSlot(long position)
 		{
 			return m_ParseData.Words[position].Slot;
 		}
 
+		/// <summary>
+		/// Gets the features.
+		/// </summary>
+		/// <returns>The features.</returns>
+		/// <param name="position">Position.</param>
 		private List<string> GetFeatures(long position)
 		{
 			List<string> features = new List<string>();
@@ -209,6 +229,11 @@ namespace IBM.Watson.Widgets.Question
 			return features;
 		}
 
+		/// <summary>
+		/// Creates the arrow.
+		/// </summary>
+		/// <param name="parentRectTransform">Parent rect transform.</param>
+		/// <param name="childRectTransform">Child rect transform.</param>
 		private void CreateArrow(RectTransform parentRectTransform, RectTransform childRectTransform)
 		{
 			//	find two points
@@ -227,25 +252,6 @@ namespace IBM.Watson.Widgets.Question
 			arrowRectTransform.sizeDelta = tempSizedelta;
 			arrowRectTransform.SetParent(parentRectTransform, false);
 		}
-
-//		private void CreateArrow(GameObject parentGameObject, GameObject childGameObject)
-//		{
-//			Vector3 direction = parentGameObject.transform.position - childGameObject.transform.position;
-//			direction = parentGameObject.transform.InverseTransformDirection(direction);
-//			float angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
-//
-//			GameObject arrowGameObject = Instantiate(m_ParseTreeArrow, parentGameObject.transform.position, Quaternion.Euler(new Vector3(0f, 0f, angle))) as GameObject;
-//			RectTransform arrowRectTransform = arrowGameObject.GetComponent<RectTransform>();
-//
-//			arrowRectTransform.SetParent(parentGameObject.GetComponent<RectTransform>(), false);
-//		}
-
-        /// <summary>
-        /// Clears dynamically generated Facet Elements when a question is answered. Called from Question Widget.
-        /// </summary>
-//        override public void Clear()
-//        {
-//        }
 
         /// <summary>
         /// Highlight words, POS and Slots based on the Word Index.

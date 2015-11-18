@@ -43,7 +43,7 @@ namespace IBM.Watson.Widgets.Question
 			get { return m_AnswerString; }
             set
             {
-				m_AnswerString = value;
+				m_AnswerString = Utilities.Utility.RemoveTags(value);
                 UpdateAnswer();
             }
         }
