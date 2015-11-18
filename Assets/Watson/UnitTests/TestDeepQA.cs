@@ -16,7 +16,8 @@
 * @author Richard Lyle (rolyle@us.ibm.com)
 */
 
-#define TEST_WEA
+#define TEST_WOODSIDE
+#define TEST_NUMERATI
 //#define CACHE_QUESTIONS
 //#define EXPORT_QUESTIONS
 
@@ -37,16 +38,21 @@ namespace IBM.Watson.UnitTests
     /// <exclude />
     public class TestDeepQA : UnitTest
     {
-#if TEST_WEA
+#if TEST_WOODSIDE
+#if TEST_NUMERATI
+        const string SERVICE_ID = "numerati_woodside";
+        //const string TEST_QUESTION = "What was the NWS Oil Production for Q1 2015?";
+        const string TEST_QUESTION = "What was the total well depth of the Steel Dragon well in 2014 quarter four?";
+#else
         const string SERVICE_ID = "woodside";
         const string TEST_QUESTION = "Why was a gravel packed lower completion chosen in the Sculptor field?";
+#endif
 #else
         const string SERVICE_ID = "thunderstone";
         const string TEST_QUESTION = "What is the capitol of Texas?";
 #endif
         DeepQA m_QA = new DeepQA(SERVICE_ID);
         bool m_AskQuestionTested = false;
-        bool m_ParseQuestionTested = false;
 
         /// <exclude />
         public override IEnumerator RunTest()
@@ -108,17 +114,18 @@ namespace IBM.Watson.UnitTests
                 {
                     Log.Status( "TestQA", "Answer: {0}", answer.text );
                 }
+
+#if TEST_NUMERATI
+                Test( response.answers != null );
+                Test( response.answers.Length > 0 );
+
+                Data.XRAY.Table [] tables = response.answers[0].ExtractTables( response.answers[0].text );
+                Test( tables != null );
+#endif
             }
             m_AskQuestionTested = true;
         }
 
-        private void OnParseQuestion( Question response )
-        {
-            Data.XRAY.ParseData parseData = new Data.XRAY.ParseData( response );
-            foreach( var word in parseData.Words )
-                Log.Status( "TestDeepQA", "Word: {0}, Pos: {1}", word.Word, word.Pos.ToString() );
-            m_ParseQuestionTested = true;
-        }
     }
 }
 

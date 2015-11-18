@@ -25,88 +25,75 @@ using IBM.Watson.Data;
 
 namespace IBM.Watson.Widgets.Question
 {
-	/// <summary>
-	/// Handles all Passages Facet functionality. 
-	/// </summary>
-	public class Passages : Base {
-		private float m_RectTransformPosX = -555f;
-		private float m_RectTransformPosY = -77;
-		private float m_RectTransformPosZ = 375f;
-		private float m_RectTransformZSpacing = -50f;
+    /// <summary>
+    /// Handles all Passages Facet functionality. 
+    /// </summary>
+    public class Passages : Base
+    {
+        private float m_RectTransformPosX = -555f;
+        private float m_RectTransformPosY = -77;
+        private float m_RectTransformPosZ = 375f;
+        private float m_RectTransformZSpacing = -50f;
 
-		[SerializeField]
-		private GameObject m_PassageItemPrefab;
+        [SerializeField]
+        private GameObject m_PassageItemPrefab;
+        [SerializeField]
+        private RectTransform m_PassageCanvasRectTransform;
 
-		[SerializeField]
-		private RectTransform m_PassageCanvasRectTransform;
+        private List<PassageItem> m_PassageItems = new List<PassageItem>();
 
-		private List<PassageItem> m_PassageItems = new List<PassageItem>();
+        private Data.XRAY.Answers m_AnswerData = null;
 
-		private Data.XRAY.Answers m_AnswerData = null;
-		
-		private void OnEnable()
-		{
-			EventManager.Instance.RegisterEventReceiver( Constants.Event.ON_QUESTION_ANSWERS, OnAnswerData );
-		}
-		
-		private void OnDisable()
-		{
-			EventManager.Instance.UnregisterEventReceiver( Constants.Event.ON_QUESTION_ANSWERS, OnAnswerData );
-		}
-		
-		/// <summary>
-		/// Dynamically creates Passage Items based on data.
-		/// </summary>
-		override public void Init()
-		{
-			Log.Debug("Passages", "m_PassageItems.count: " + m_PassageItems.Count);
-			base.Init ();
+        private void OnEnable()
+        {
+            EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_QUESTION_ANSWERS, OnAnswerData);
+        }
 
-			for(int i = 0; i < m_AnswerData.answers.Length ; i++) {
-				if(m_AnswerData.answers[i].answerText == "") return;
-				Log.Debug("Passages", "adding passage " + i);
-				GameObject PassageItemGameObject = Instantiate(m_PassageItemPrefab, new Vector3(m_RectTransformPosX, m_RectTransformPosY, m_RectTransformPosZ + m_RectTransformZSpacing * (m_AnswerData.answers.Length - i)), Quaternion.identity) as GameObject;
-				PassageItemGameObject.name = "PassageItem_" + i.ToString("00");
-				RectTransform PassageItemRectTransform = PassageItemGameObject.GetComponent<RectTransform>();
-				PassageItemRectTransform.SetParent(m_PassageCanvasRectTransform, false);
-				PassageItem PassageItem = PassageItemGameObject.GetComponent<PassageItem>();
-				PassageItemRectTransform.pivot = new Vector2(0.0f, 0.5f); 	//setting pivot as left middle
-				PassageItemRectTransform.SetAsFirstSibling();
-				m_PassageItems.Add(PassageItem);
-//				PassageItem.PassageString = m_Question.QuestionData.AnswerDataObject.answers[0].evidence[i].passage;
-				PassageItem.PassageString = m_AnswerData.answers[i].answerText;
-				PassageItem.MaxConfidence = m_AnswerData.answers[0].confidence;
-				PassageItem.MinConfidence = m_AnswerData.answers[m_AnswerData.answers.Length - 1].confidence;
-				PassageItem.Confidence = m_AnswerData.answers[i].confidence;
-			}
+        private void OnDisable()
+        {
+            EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_QUESTION_ANSWERS, OnAnswerData);
+        }
 
-            //PassageAnimationManager animationManager = this.transform.GetComponentInChildren<PassageAnimationManager>();
-            //if(animationManager != null)
-            //{
-            //    animationManager.UpdatePassages();
-            //}
-		}
-		
-		/// <summary>
-		/// Clears dynamically generated Facet Elements when a question is answered. Called from Question Widget.
-		/// </summary>
-		override public void Clear()
-		{
-			while (m_PassageItems.Count != 0)
-			{
-				Destroy(m_PassageItems[0].gameObject);
-				m_PassageItems.Remove(m_PassageItems[0]);
-			}
-		}
+        private void OnAnswerData(object[] args)
+        {
+            if ( m_PassageItemPrefab == null )
+                throw new WatsonException( "m_PassageItemPrefab is null." );
+            if ( m_PassageCanvasRectTransform == null )
+                throw new WatsonException( "m_PassageCanvasRectTransform is null." );
 
-		/// <summary>
-		/// Callback for Answer Data
-		/// </summary>
-		/// <param name="args">Arguments.</param>
-		private void OnAnswerData( object [] args )
-		{
-			m_AnswerData = args != null && args.Length > 0 ? args[0] as Data.XRAY.Answers : null;
-			Init ();
-		}
-	}
+            m_AnswerData = args != null && args.Length > 0 ? args[0] as Data.XRAY.Answers : null;
+            while (m_PassageItems.Count > 0)
+            {
+                Destroy(m_PassageItems[0].gameObject);
+                m_PassageItems.RemoveAt( 0 );
+            }
+
+            if ( m_AnswerData != null )
+            {
+                for (int i = 0; i < m_AnswerData.answers.Length; i++)
+                {
+                    if ( string.IsNullOrEmpty( m_AnswerData.answers[i].answerText ))
+                        break;
+
+                    Log.Debug("Passages", "adding passage " + i);
+                    GameObject PassageItemGameObject = Instantiate(m_PassageItemPrefab, 
+                        new Vector3(m_RectTransformPosX, m_RectTransformPosY, m_RectTransformPosZ + m_RectTransformZSpacing * (m_AnswerData.answers.Length - i)), Quaternion.identity) as GameObject;
+                    PassageItemGameObject.name = "PassageItem_" + i.ToString("00");
+                    RectTransform PassageItemRectTransform = PassageItemGameObject.GetComponent<RectTransform>();
+                    PassageItemRectTransform.SetParent(m_PassageCanvasRectTransform, false);
+                    PassageItem PassageItem = PassageItemGameObject.GetComponent<PassageItem>();
+                    PassageItemRectTransform.pivot = new Vector2(0.0f, 0.5f);   //setting pivot as left middle
+                    PassageItemRectTransform.SetAsFirstSibling();
+                    PassageItem.PassageString = m_AnswerData.answers[i].answerText;
+                    PassageItem.MaxConfidence = m_AnswerData.answers[0].confidence;
+                    PassageItem.MinConfidence = m_AnswerData.answers[m_AnswerData.answers.Length - 1].confidence;
+                    PassageItem.Confidence = m_AnswerData.answers[i].confidence;
+
+                    m_PassageItems.Add(PassageItem);
+                }
+            }
+
+            Log.Debug("Passages", "m_PassageItems.count: " + m_PassageItems.Count);
+        }
+    }
 }

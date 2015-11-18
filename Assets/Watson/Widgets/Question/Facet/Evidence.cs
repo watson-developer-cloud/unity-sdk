@@ -24,74 +24,61 @@ using IBM.Watson.Data;
 
 namespace IBM.Watson.Widgets.Question
 {
-	/// <summary>
-	/// Handles all Evidence Facet functionality. 
-	/// </summary>
+    /// <summary>
+    /// Handles all Evidence Facet functionality. 
+    /// </summary>
     public class Evidence : Base
     {
         [SerializeField]
         private GameObject m_EvidenceItemPrefab;
-
         [SerializeField]
         private RectTransform m_EvidenceCanvasRectTransform;
+        [SerializeField]
+        private int m_MaxEvidence = 3;
 
         private List<EvidenceItem> m_EvidenceItems = new List<EvidenceItem>();
+        private Data.XRAY.Answers m_AnswerData = null;
 
-		private Data.XRAY.Answers m_AnswerData = null;
-		
-		private void OnEnable()
-		{
-			EventManager.Instance.RegisterEventReceiver( Constants.Event.ON_QUESTION_ANSWERS, OnAnswerData );
-		}
-		
-		private void OnDisable()
-		{
-			EventManager.Instance.UnregisterEventReceiver( Constants.Event.ON_QUESTION_ANSWERS, OnAnswerData );
-		}
-
-        /// <summary>
-        /// Dynamically creates up to three Evidence Items based on returned data.
-        /// </summary>
-		override public void Init()
+        private void OnEnable()
         {
-			base.Init ();
-
-			if(m_AnswerData.answers[0].evidence.Length == 0) return;
-
-			for (int i = 0; i < m_AnswerData.answers[0].evidence.Length; i++)
-            {
-                if (i >= 3) return;
-
-                GameObject evidenceItemGameObject = Instantiate(m_EvidenceItemPrefab, new Vector3(0f, -i * 60f, 0f), Quaternion.identity) as GameObject;
-                RectTransform evidenceItemRectTransform = evidenceItemGameObject.GetComponent<RectTransform>();
-                evidenceItemRectTransform.SetParent(m_EvidenceCanvasRectTransform, false);
-                EvidenceItem evidenceItem = evidenceItemGameObject.GetComponent<EvidenceItem>();
-                m_EvidenceItems.Add(evidenceItem);
-				evidenceItem.Answer = m_AnswerData.answers[0].answerText;
-				evidenceItem.EvidenceString = m_AnswerData.answers[0].evidence[i].decoratedPassage;
-            }
+            EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_QUESTION_ANSWERS, OnAnswerData);
         }
 
-        /// <summary>
-        /// Clears dynamically generated Facet Elements when a question is answered. Called from Question Widget.
-        /// </summary>
-        override public void Clear()
+        private void OnDisable()
         {
+            EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_QUESTION_ANSWERS, OnAnswerData);
+        }
+
+        private void OnAnswerData(object[] args)
+        {
+            m_AnswerData = args != null && args.Length > 0 ? args[0] as Data.XRAY.Answers : null;
+
             while (m_EvidenceItems.Count != 0)
             {
                 Destroy(m_EvidenceItems[0].gameObject);
-                m_EvidenceItems.Remove(m_EvidenceItems[0]);
+                m_EvidenceItems.RemoveAt(0);
+            }
+
+            if (m_AnswerData != null && m_AnswerData.HasAnswer()
+                && m_AnswerData.answers[0].evidence != null)
+            {
+                Data.XRAY.Answer answer = m_AnswerData.answers[0];
+
+                for (int i = 0; i < answer.evidence.Length; i++)
+                {
+                    if (i >= m_MaxEvidence)
+                        break;
+
+                    GameObject evidenceItemGameObject = Instantiate(m_EvidenceItemPrefab, new Vector3(0f, -i * 60f, 0f), Quaternion.identity) as GameObject;
+                    RectTransform evidenceItemRectTransform = evidenceItemGameObject.GetComponent<RectTransform>();
+                    evidenceItemRectTransform.SetParent(m_EvidenceCanvasRectTransform, false);
+                    EvidenceItem evidenceItem = evidenceItemGameObject.GetComponent<EvidenceItem>();
+                    evidenceItem.Answer = m_AnswerData.answers[0].answerText;
+                    evidenceItem.EvidenceString = m_AnswerData.answers[0].evidence[i].decoratedPassage;
+
+                    m_EvidenceItems.Add(evidenceItem);
+                }
             }
         }
-
-		/// <summary>
-		/// Caallback for Answer data event.
-		/// </summary>
-		/// <param name="args">Arguments.</param>
-		private void OnAnswerData( object [] args )
-		{
-			m_AnswerData = args != null && args.Length > 0 ? args[0] as Data.XRAY.Answers : null;
-			Init ();
-		}
     }
 }

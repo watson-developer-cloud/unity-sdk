@@ -51,7 +51,7 @@ namespace IBM.Watson.Services.v1
         private string m_Location = "Austin, TX";
         private ITM m_ITM = new ITM();
         private Dictionary<string,DeepQA> m_Pipelines = new Dictionary<string, DeepQA>();
-        private static fsSerializer sm_Serializer = new fsSerializer();
+        //private static fsSerializer sm_Serializer = new fsSerializer();
         private const string SERVICE_ID = "XrayV1";
         private const string XRAY_SUBSYSTEM = "XRAY";
         #endregion
