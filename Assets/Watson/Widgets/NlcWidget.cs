@@ -150,7 +150,7 @@ namespace IBM.Watson.Widgets
                             Log.Error("NlcWidget", "Failed to send {0} to NLC.", text);
                     }
                     else
-                        Log.Equals( "NlcWidget", "No valid classifier found by the NlcWidget." );
+                        Log.Equals( "NlcWidget", "No valid classifier set." );
                 }
                 else
                 {
@@ -198,7 +198,7 @@ namespace IBM.Watson.Widgets
         public void OnDebugCommand( object [] args )
         {
             string text = args != null && args.Length > 0 ? args[0] as string : string.Empty;
-            if (! string.IsNullOrEmpty( text ) )
+            if (! string.IsNullOrEmpty( text ) && !string.IsNullOrEmpty(m_ClassifierId) )
             {
                 if (!m_NLC.Classify(m_ClassifierId, text, OnClassified))
                     Log.Error("NlcWidget", "Failed to send {0} to NLC.", (string)args[0]);
