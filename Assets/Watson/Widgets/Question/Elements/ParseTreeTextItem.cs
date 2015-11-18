@@ -54,6 +54,16 @@ namespace IBM.Watson.Widgets.Question
             }
         }
 
+		private long m_Position;
+		public long Position
+		{
+			get { return m_Position; }
+			set
+			{
+				m_Position = value;
+			}
+		}
+
         [SerializeField]
         private string m_POS;
         public string POS
@@ -73,10 +83,15 @@ namespace IBM.Watson.Widgets.Question
             set { m_Slot = value; }
         }
 
+//		public int m_ChildWordIndex { get; set; }
+		public RectTransform m_ParentWordRectTransform { get; set; }
+
         public List<string> m_Features = new List<string>();
+//		public List<GameObject> m_LeftChild = new List<GameObject>();
+//		public List<GameObject> m_RightChild = new List<GameObject>();
         private RectTransform m_RectTransform;
         private Color m_ColorLight = new Color(0.8f, 0.8f, 0.8f);
-        private Color m_ColorDark = new Color(0.3f, 0.3f, 0.3f);
+        private Color m_ColorDark = new Color(0.8f, 0.8f, 0.8f);
         private Vector3 m_ScaleUpSize = new Vector3(1.25f, 1.25f, 1.25f);
         private Vector3 m_ScaleDownSize = new Vector3(1f, 1f, 1f);
         private float m_TransitionTime = 0.5f;

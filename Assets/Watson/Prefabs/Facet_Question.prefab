@@ -207,7 +207,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 443718}
   - 114: {fileID: 11403426}
-  - 114: {fileID: 11428924}
+  - 114: {fileID: 11430584}
   m_Layer: 10
   m_Name: Facet_Question
   m_TagString: Untagged
@@ -374,6 +374,21 @@ GameObject:
   - 114: {fileID: 11404460}
   m_Layer: 10
   m_Name: text_parseTree
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &171684
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 224: {fileID: 22444970}
+  m_Layer: 10
+  m_Name: ParseTree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1099,38 +1114,6 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: ADV
---- !u!114 &11428924
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 139860}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4b07868a323143b6b5ba0287d5074af, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_ParseTreeTextItemPrefab: {fileID: 177304, guid: 84846fcf5d62d42479eab869bd345ece,
-    type: 2}
-  m_ParseCanvasRectTransform: {fileID: 22443750}
-  m_POSList:
-  - {fileID: 194772}
-  - {fileID: 164458}
-  - {fileID: 192840}
-  - {fileID: 137906}
-  - {fileID: 186706}
-  - {fileID: 107684}
-  - {fileID: 139522}
-  - {fileID: 174788}
-  - {fileID: 110488}
-  - {fileID: 143072}
-  - {fileID: 181916}
-  - {fileID: 190320}
-  - {fileID: 162326}
-  - {fileID: 102754}
-  - {fileID: 147772}
-  - {fileID: 164682}
-  - {fileID: 102398}
 --- !u!114 &11429892
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1163,6 +1146,39 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1.21000004
   m_Text: 
+--- !u!114 &11430584
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 139860}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fe12e16cca6e4f35b7373484746b1b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ParseTreeTextItemPrefab: {fileID: 177304, guid: 84846fcf5d62d42479eab869bd345ece,
+    type: 2}
+  m_ParseCanvasRectTransform: {fileID: 22444970}
+  m_ParseTreeArrow: {fileID: 145180, guid: 3ffd18e4a2db94239881dae66d2f4890, type: 2}
+  m_POSList:
+  - {fileID: 194772}
+  - {fileID: 164458}
+  - {fileID: 192840}
+  - {fileID: 137906}
+  - {fileID: 186706}
+  - {fileID: 107684}
+  - {fileID: 139522}
+  - {fileID: 174788}
+  - {fileID: 110488}
+  - {fileID: 143072}
+  - {fileID: 181916}
+  - {fileID: 190320}
+  - {fileID: 162326}
+  - {fileID: 102754}
+  - {fileID: 147772}
+  - {fileID: 164682}
+  - {fileID: 102398}
 --- !u!114 &11431486
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2332,6 +2348,7 @@ RectTransform:
   - {fileID: 22438796}
   - {fileID: 22428490}
   - {fileID: 22489576}
+  - {fileID: 22444970}
   m_Father: {fileID: 22443750}
   m_RootOrder: 2
   m_AnchorMin: {x: .5, y: .5}
@@ -2409,6 +2426,23 @@ RectTransform:
   m_AnchorMax: {x: .5, y: .5}
   m_AnchoredPosition: {x: 636, y: -140.300003}
   m_SizeDelta: {x: 79, y: 26}
+  m_Pivot: {x: .5, y: .5}
+--- !u!224 &22444970
+RectTransform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 171684}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 22432020}
+  m_RootOrder: 3
+  m_AnchorMin: {x: .5, y: .5}
+  m_AnchorMax: {x: .5, y: .5}
+  m_AnchoredPosition: {x: -450, y: 100}
+  m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: .5, y: .5}
 --- !u!224 &22449694
 RectTransform:
@@ -2623,7 +2657,19 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: m_ParseTreeArrow
+      value: 
+      objectReference: {fileID: 100404, guid: dd813120d86ff4a97921687fc2dd6d4e, type: 2}
+    - target: {fileID: 0}
+      propertyPath: m_ParseTreeTextItemPrefab
+      value: 
+      objectReference: {fileID: 177304, guid: 84846fcf5d62d42479eab869bd345ece, type: 2}
+    - target: {fileID: 0}
+      propertyPath: m_ParseCanvasRectTransform
+      value: 
+      objectReference: {fileID: 22443750}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 139860}
