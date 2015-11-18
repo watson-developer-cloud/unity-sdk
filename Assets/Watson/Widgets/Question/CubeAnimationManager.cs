@@ -483,6 +483,20 @@ namespace IBM.Watson.Widgets.Question
         {
             //do nothing - it is going from scene
         }
+        else if (AnimationState == CubeAnimationState.COMING_TO_SCENE )
+        {
+                if(m_animationScaleForComingScene != null)
+                {
+                    m_animationScaleForComingScene.setOnComplete(() => {
+                        AnimationState = CubeAnimationState.IDLE_AS_FOLDED;
+                        AnimateUnFold(AnimateFocusOnSide, (System.Object)sideType);
+                    });
+                }
+                else
+                {
+                    Log.Warning("CubeAnimationManager", "Cube animation is invalid state!");
+                }
+        }
         else
         {
             AnimateUnFold(AnimateFocusOnSide, (System.Object)sideType);
