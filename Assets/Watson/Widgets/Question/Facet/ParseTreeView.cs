@@ -168,6 +168,8 @@ namespace IBM.Watson.Widgets.Question
 
 			m_WordList.Add(word);
 
+			CreateArrow(parentRectTransfrom.gameObject, wordGameObject);
+
 			for(int i = 0; i < parseTree.leftChild.Length; i++)
 			{
 				CreateParseWord(parseTree.leftChild[i], wordRectTransform);
@@ -200,6 +202,15 @@ namespace IBM.Watson.Widgets.Question
 
 			return features;
 		}
+
+		private void CreateArrow(GameObject parentGameObject, GameObject childGameObject)
+		{
+			GameObject arrowGameObject = Instantiate(m_ParseTreeArrow, parentGameObject.transform.position, Quaternion.identity) as GameObject;
+			RectTransform arrowRectTransform = arrowGameObject.GetComponent<RectTransform>();
+			arrowRectTransform
+			arrowRectTransform.SetParent(parentGameObject.GetComponent<RectTransform>(), false);
+		}
+
         /// <summary>
         /// Clears dynamically generated Facet Elements when a question is answered. Called from Question Widget.
         /// </summary>
