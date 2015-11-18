@@ -50,28 +50,28 @@ namespace IBM.Watson.Widgets.Question
 		private float horizontalWordSpacing = 10f;
 		private float verticalWordSpacing = 160f;
 
-//        private int m_WordIndex = 0;
-//        public int WordIndex
-//        {
-//            get { return m_WordIndex; }
-//            set
-//            {
-//                if (value > m_WordList.Count - 1)
-//                {
-//                    m_WordIndex = 0;
-//                }
-//                else if (value < 0)
-//                {
-//                    m_WordIndex = m_WordList.Count;
-//                }
-//                else
-//                {
-//                    m_WordIndex = value;
-//                }
-//
-//                UpdateHighlightedWord();
-//            }
-//        }
+        private int m_WordIndex = 0;
+        public int WordIndex
+        {
+            get { return m_WordIndex; }
+            set
+            {
+                if (value > m_WordList.Count - 1)
+                {
+                    m_WordIndex = 0;
+                }
+                else if (value < 0)
+                {
+                    m_WordIndex = m_WordList.Count;
+                }
+                else
+                {
+                    m_WordIndex = value;
+                }
+
+                UpdateHighlightedWord();
+            }
+        }
 
         private void OnEnable()
         {
@@ -108,7 +108,7 @@ namespace IBM.Watson.Widgets.Question
         /// </summary>
         private void GenerateParseTree()
         {
-//            CancelInvoke();
+            CancelInvoke();
             while (m_WordList.Count > 0)
             {
                 Destroy(m_WordList[0].gameObject);
@@ -122,6 +122,9 @@ namespace IBM.Watson.Widgets.Question
 			}
 
 			CreateParseWord(m_ParseData.parseTree, m_ParseCanvasRectTransform, m_ParseCanvasRectTransform);
+
+			WordIndex = 0;
+			InvokeRepeating("CycleWords", 2f, 2f);
         }
 
 		/// <summary>
@@ -256,60 +259,60 @@ namespace IBM.Watson.Widgets.Question
         /// <summary>
         /// Highlight words, POS and Slots based on the Word Index.
         /// </summary>
-//        private void UpdateHighlightedWord()
-//        {
-//            for (int i = 0; i < m_WordList.Count; i++)
-//            {
-//                m_WordList[i].IsHighlighted = false;
-//            }
-//
-//            m_WordList[WordIndex].IsHighlighted = true;
-//
-//            for (int j = 0; j < m_POSList.Count; j++)
-//            {
-//                POSControl posControl = m_POSList[j].GetComponent<POSControl>();
-//                if (posControl.POS == m_WordList[WordIndex].POS.ToLower() || posControl.POS == m_WordList[WordIndex].Slot.ToLower())
-//                {
-//                    posControl.IsHighlighted = true;
-//                }
-//                else
-//                {
-//                    posControl.IsHighlighted = false;
-//                }
-//            }
-//
-//            if ( m_QuestionData != null && m_QuestionData.HasQuestion() )
-//            {
-//                if (m_QuestionData.questions[0].question.lat.Length == 0 
-//                    && m_QuestionData.questions[0].question.focus.Length == 0)
-//                {
-//                    m_POSList[2].GetComponent<POSControl>().IsHighlighted = true;
-//                }
-//                if (m_QuestionData.questions[0].question.lat.Length > 0)
-//                {
-//                    if (m_WordList[WordIndex].ParseTreeWord.ToLower() == m_QuestionData.questions[0].question.lat[0].ToLower())
-//                    {
-//                        m_POSList[1].GetComponent<POSControl>().IsHighlighted = true;
-//                    }
-//                }
-//
-//
-//                if (m_QuestionData.questions[0].question.focus.Length > 0)
-//                {
-//                    if (m_WordList[WordIndex].ParseTreeWord.ToLower() == m_QuestionData.questions[0].question.focus[0].ToLower())
-//                    {
-//                        m_POSList[0].GetComponent<POSControl>().IsHighlighted = true;
-//                    }
-//                }
-//            }
-//        }
+        private void UpdateHighlightedWord()
+        {
+            for (int i = 0; i < m_WordList.Count; i++)
+            {
+                m_WordList[i].IsHighlighted = false;
+            }
+
+            m_WordList[WordIndex].IsHighlighted = true;
+
+            for (int j = 0; j < m_POSList.Count; j++)
+            {
+                POSControl posControl = m_POSList[j].GetComponent<POSControl>();
+                if (posControl.POS == m_WordList[WordIndex].POS.ToLower() || posControl.POS == m_WordList[WordIndex].Slot.ToLower())
+                {
+                    posControl.IsHighlighted = true;
+                }
+                else
+                {
+                    posControl.IsHighlighted = false;
+                }
+            }
+
+            if ( m_QuestionData != null && m_QuestionData.HasQuestion() )
+            {
+                if (m_QuestionData.questions[0].question.lat.Length == 0 
+                    && m_QuestionData.questions[0].question.focus.Length == 0)
+                {
+                    m_POSList[2].GetComponent<POSControl>().IsHighlighted = true;
+                }
+                if (m_QuestionData.questions[0].question.lat.Length > 0)
+                {
+                    if (m_WordList[WordIndex].ParseTreeWord.ToLower() == m_QuestionData.questions[0].question.lat[0].ToLower())
+                    {
+                        m_POSList[1].GetComponent<POSControl>().IsHighlighted = true;
+                    }
+                }
+
+
+                if (m_QuestionData.questions[0].question.focus.Length > 0)
+                {
+                    if (m_WordList[WordIndex].ParseTreeWord.ToLower() == m_QuestionData.questions[0].question.focus[0].ToLower())
+                    {
+                        m_POSList[0].GetComponent<POSControl>().IsHighlighted = true;
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// Cycles through words via WordIndex.
         /// </summary>
-//        private void CycleWords()
-//        {
-//            WordIndex++;
-//        }
+        private void CycleWords()
+        {
+            WordIndex++;
+        }
     }
 }

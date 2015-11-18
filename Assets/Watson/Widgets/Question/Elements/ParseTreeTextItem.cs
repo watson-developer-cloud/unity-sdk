@@ -91,7 +91,7 @@ namespace IBM.Watson.Widgets.Question
 //		public List<GameObject> m_RightChild = new List<GameObject>();
         private RectTransform m_RectTransform;
         private Color m_ColorLight = new Color(0.8f, 0.8f, 0.8f);
-        private Color m_ColorDark = new Color(0.3f, 0.3f, 0.3f);
+        private Color m_ColorDark = new Color(0.8f, 0.8f, 0.8f);
         private Vector3 m_ScaleUpSize = new Vector3(1.25f, 1.25f, 1.25f);
         private Vector3 m_ScaleDownSize = new Vector3(1f, 1f, 1f);
         private float m_TransitionTime = 0.5f;
