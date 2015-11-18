@@ -190,7 +190,7 @@ namespace IBM.Watson.Widgets.Avatar
 										valueToSet = Mathf.Lerp(m_PebbleRowList[i].pebbleList[pebbleIndex].transform.localPosition.y, m_PebbleRowList[i].pebbleList[pebbleIndex - 1].transform.localPosition.y, speedByPebbleLocation);
 									}
 									else{   //Our center main data
-										valueToSet = Mathf.Lerp(valueToSet, audioLevelData, Time.deltaTime * m_SpeedAudioLevel);
+										valueToSet = Mathf.Lerp(m_PebbleRowList[i].pebbleList[pebbleIndex].transform.localPosition.y, audioLevelData, Time.deltaTime * m_SpeedAudioLevel);
                                     }
 
 	                                //Debug.Log("centerHitNormalized: " + centerHitNormalized);
