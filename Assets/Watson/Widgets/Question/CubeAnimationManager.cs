@@ -485,9 +485,10 @@ namespace IBM.Watson.Widgets.Question
         }
         else if (AnimationState == CubeAnimationState.COMING_TO_SCENE )
         {
-            //TODO: Fix the coming to scene , add to queue 
-            //AnimateUnfocus(AnimateFold, null, AnimateDestroyingCube);
-            //AnimateUnFold(AnimateFocusOnSide, (System.Object)sideType);
+                m_animationScaleForComingScene.setOnComplete(() => {
+                    AnimationState = CubeAnimationState.IDLE_AS_FOLDED;
+                    AnimateUnFold(AnimateFocusOnSide, (System.Object)sideType);
+                });
         }
         else
         {
