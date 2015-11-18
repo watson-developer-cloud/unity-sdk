@@ -1030,14 +1030,28 @@ namespace IBM.Watson.Data
                     HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
                     doc.LoadHtml( formattedText );
 
+                    if ( doc.DocumentNode == null )
+                        return null;
+                    var table_nodes = doc.DocumentNode.SelectNodes( "//table" );
+                    if ( table_nodes == null )
+                        return null;
+
                     List<XRAY.Table> tables = new List<XRAY.Table>();
-                    foreach( var table in doc.DocumentNode.SelectNodes( "//table" ) )
+                    foreach( var table in table_nodes )
                     {
+                        var row_nodes = table.SelectNodes( "*/tr" );
+                        if ( row_nodes == null )
+                            continue;
+
                         List<XRAY.Row> rows = new List<XRAY.Row>();
-                        foreach( var row in table.SelectNodes( "*/tr" ) )
+                        foreach( var row in row_nodes )
                         {
+                            var cell_nodes = row.SelectNodes( "*/th|td" );
+                            if ( cell_nodes == null )
+                                continue;
+
                             List<XRAY.Cell> cells = new List<XRAY.Cell>();
-                            foreach( var cell in row.SelectNodes( "*/th|td" ) )
+                            foreach( var cell in cell_nodes )
                             {
                                 string text = CleanInnerText( cell.InnerText );
 
