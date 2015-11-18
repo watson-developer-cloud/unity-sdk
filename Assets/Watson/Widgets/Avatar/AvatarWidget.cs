@@ -522,15 +522,13 @@ namespace IBM.Watson.Widgets.Avatar
         [SerializeField]
         private string m_AnswerFormatWEA = "Here is what I found in the {0} corpus.";
 
-        private void OnAskQuestion( ParseData parse, Questions questions)
+        private void OnAskQuestion( AskResponse response )
         {
-            if ( questions != null && questions.HasQuestion() )
+            if ( response != null && response.questions.HasQuestion() )
             {
-                m_QuestionResult = questions;
-                m_ParseData = parse;
-
-                Watson.Data.XRAY.Question topQuestion = questions.questions[0];
-                m_AnswerResult = m_XRAY.GetAnswers( m_Pipeline, topQuestion.questionId );
+                m_QuestionResult = response.questions;
+                m_ParseData = response.parseData;
+                m_AnswerResult = response.answers;
 
                 InstatiateQuestionWidget();
 

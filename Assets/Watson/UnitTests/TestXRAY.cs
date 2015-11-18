@@ -50,23 +50,19 @@ namespace IBM.Watson.UnitTests
             yield break;
         }
 
-        private void OnAskQuestion( ParseData parse, Questions questions )
+        private void OnAskQuestion( AskResponse response )
         {
-            Test( questions != null );
-            if ( questions != null  )
+            Test( response != null );
+            if ( response != null  )
             {
-                foreach( var question in questions.questions )
-                {
-                    Log.Status( "TestXRAY", "OnAskQuestion: {0} ({1})", question.question.questionText, question.topConfidence );
-                    OnGetAnswers( m_XRAY.GetAnswers( TEST_PIPELINE, question.questionId ) );
-                    OnGetParseData( parse );
-                    OnGetQuestion( m_XRAY.GetQuestion( TEST_PIPELINE, question.questionId ) );
-                }
+                OnGetQuestion( response.questions );
+                OnGetAnswers( response.answers );
+                OnGetParseData( response.parseData );
             }
             else
             {
                 // don't hang the unit test
-                m_GetAnswersTested = m_ParseTested = true;
+                m_GetQuestionTested = m_GetAnswersTested = m_ParseTested = true;
             }
 
             m_AskQuestionTested = true;
