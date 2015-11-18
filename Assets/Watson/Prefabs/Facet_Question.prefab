@@ -1160,7 +1160,7 @@ MonoBehaviour:
   m_ParseTreeTextItemPrefab: {fileID: 177304, guid: 84846fcf5d62d42479eab869bd345ece,
     type: 2}
   m_ParseCanvasRectTransform: {fileID: 22444970}
-  m_ParseTreeArrow: {fileID: 100404, guid: dd813120d86ff4a97921687fc2dd6d4e, type: 2}
+  m_ParseTreeArrow: {fileID: 145180, guid: 3ffd18e4a2db94239881dae66d2f4890, type: 2}
   m_POSList:
   - {fileID: 194772}
   - {fileID: 164458}
