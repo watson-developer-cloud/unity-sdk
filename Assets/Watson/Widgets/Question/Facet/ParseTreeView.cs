@@ -47,6 +47,9 @@ namespace IBM.Watson.Widgets.Question
         private Data.XRAY.ParseData m_ParseData = null;
         private Data.XRAY.Questions m_QuestionData = null;
 
+		private float horizontalWordSpacing = 20f;
+		private float verticalWordSpacing = 150f;
+
 //        private int m_WordIndex = 0;
 //        public int WordIndex
 //        {
@@ -106,12 +109,18 @@ namespace IBM.Watson.Widgets.Question
         private void GenerateParseTree()
         {
 //            CancelInvoke();
-//            while (m_WordList.Count > 0)
-//            {
-//                Destroy(m_WordList[0].gameObject);
-//                m_WordList.RemoveAt( 0 );
-//            }
-//
+            while (m_WordList.Count > 0)
+            {
+                Destroy(m_WordList[0].gameObject);
+                m_WordList.RemoveAt( 0 );
+            }
+
+			while (m_ArrowList.Count > 0)
+			{
+				Destroy(m_ArrowList[0].gameObject);
+				m_ArrowList.RemoveAt( 0 );
+			}
+
 //            if ( m_ParseData != null )
 //            {
 //                for (int i = 0; i < m_ParseData.Words.Length; i++)
@@ -146,39 +155,110 @@ namespace IBM.Watson.Widgets.Question
 //                InvokeRepeating("CycleWords", 2f, 2f);
 //            }
 
-			CreateParseWord(m_ParseData.parseTree, m_ParseCanvasRectTransform);
+			CreateParseWord(m_ParseData.parseTree, m_ParseCanvasRectTransform, 0);
         }
 
-		private void CreateParseWord(ParseTree parseTree, RectTransform parentRectTransfrom)
+		private void CreateParseWord(ParseTree parseWord, RectTransform parentRectTransfrom, int childWordIndex)
 		{
-			float wordX = Mathf.Cos(30f + 90f) * 200f;
-			float wordY = -Mathf.Sin(30f + 90f) * 200f;
-			Vector3 textItemPosition = parentRectTransfrom == m_ParseCanvasRectTransform ? Vector3.zero : new Vector3(wordX, wordY, 0f);
-			GameObject wordGameObject = Instantiate(m_ParseTreeTextItemPrefab, textItemPosition, Quaternion.identity) as GameObject;
+//			float wordX = Mathf.Cos(30f + 90f) * 200f + 100f * childWordIndex;// 200 is length of arrow
+//			float wordY = -Mathf.Sin(30f + 90f) * 200f;
+//			RectTransform parentTextItemRectTransform = parentRectTransfrom.gameObject.GetComponentInParent<RectTransform>();
+
+			//	set text position based on parent and child index
+//			Vector3 textItemPosition = parentRectTransfrom == m_ParseCanvasRectTransform ? Vector3.zero : new Vector3(0f, 0f, 0f);
+
+			//	instantiate word
+			int siblingCount = parentRectTransfrom.childCount;
+			RectTransform lastSibling = siblingCount > 0 ? parentRectTransfrom.GetChild(siblingCount - 1).gameObject.GetComponent<RectTransform>() : null;
+
+			float wordX = siblingCount > 0 ? lastSibling.sizeDelta.x + lastSibling.rect.width + horizontalWordSpacing : 0f;
+			GameObject wordGameObject = Instantiate(m_ParseTreeTextItemPrefab, new Vector3(wordX, 0f, 0f), Quaternion.identity) as GameObject;
+
+			//	set parent to parent transform
             RectTransform wordRectTransform = wordGameObject.GetComponent<RectTransform>();
 			wordRectTransform.SetParent(parentRectTransfrom, false);
 
-			long wordPosition = parseTree.position;
+			//	set properties
+			long wordPosition = parseWord.position;
 			ParseTreeTextItem word = wordGameObject.GetComponent<ParseTreeTextItem>();
-			word.ParseTreeWord = parseTree.text;
+			word.ParseTreeWord = parseWord.text;
 			word.Position = wordPosition;
 			word.POS = GetPOS(wordPosition);
 			word.Slot = GetSlot(wordPosition);
 			word.m_Features = GetFeatures(wordPosition);
+			word.m_ChildWordIndex = childWordIndex;
 
+//			wordRectTransform.position = new Vector3(horizontalWordSpacing * childWordIndex, 0f, 0f);
+
+			//	add to word list
 			m_WordList.Add(word);
 
-			CreateArrow(parentRectTransfrom.gameObject, wordGameObject);
 
-			for(int i = 0; i < parseTree.leftChild.Length; i++)
+
+			/*
+			//	create gameobject to hold child words
+			GameObject childrenGameObject = new GameObject("Children");
+
+			//	add UI Components
+			childrenGameObject.AddComponent<RectTransform>();
+			childrenGameObject.AddComponent<CanvasRenderer>();
+
+			RectTransform childrenGameObjectRectTransform = childrenGameObject.GetComponent<RectTransform>();
+			//	set position
+			childrenGameObjectRectTransform.position = new Vector3(0f, -verticalWordSpacing, 0f);
+			//	set parent to word
+			childrenGameObjectRectTransform.SetParent(wordRectTransform, false);
+
+
+			//	set child node index
+			int childNodeIndex = 0;
+
+			//	iterate through left and right children and create parse words
+			for(int i = 0; i < parseWord.leftChild.Length; i++)
 			{
-				CreateParseWord(parseTree.leftChild[i], wordRectTransform);
+				CreateParseWord(parseWord.leftChild[i], childrenGameObjectRectTransform, childNodeIndex);
+				childNodeIndex ++;
 			}
 
-			for(int k = 0; k < parseTree.rightChild.Length; k++)
+			for(int k = 0; k < parseWord.rightChild.Length; k++)
 			{
-				CreateParseWord(parseTree.rightChild[k], wordRectTransform);
+				CreateParseWord(parseWord.rightChild[k], childrenGameObjectRectTransform, childNodeIndex);
+				childNodeIndex ++;
 			}
+			*/
+
+//			if(parentRectTransfrom != m_ParseCanvasRectTransform)
+//				CreateArrow(parentRectTransfrom.gameObject, wordGameObject);
+
+			GameObject leftChild = new GameObject("Left Child");
+			leftChild.AddComponent<RectTransform>();
+			leftChild.AddComponent<CanvasRenderer>();
+			RectTransform leftChildRectTransform = leftChild.GetComponent<RectTransform>();
+			leftChildRectTransform.position = new Vector3(-200f, -verticalWordSpacing, 0f);
+			leftChildRectTransform.SetParent(wordRectTransform, false);
+			int leftChildWordIndex = 0;
+
+			for(int i = 0; i < parseWord.leftChild.Length; i++)
+			{
+				CreateParseWord(parseWord.leftChild[i], leftChildRectTransform, leftChildWordIndex);
+				leftChildWordIndex ++;
+			}
+
+			GameObject rightChild = new GameObject("Right Child");
+			rightChild.AddComponent<RectTransform>();
+			rightChild.AddComponent<CanvasRenderer>();
+			RectTransform rightChildRectTransform = rightChild.GetComponent<RectTransform>();
+			rightChildRectTransform.position = new Vector3(200f, -verticalWordSpacing, 0f);
+			rightChildRectTransform.SetParent(wordRectTransform, false);
+			int rightChildWordIndex = 0;
+			
+			for(int k = 0; k < parseWord.rightChild.Length; k++)
+			{
+				CreateParseWord(parseWord.rightChild[k], rightChildRectTransform, rightChildWordIndex);
+				rightChildWordIndex ++;
+			}
+
+
 		}
 
 		private string GetPOS(long position)
@@ -205,9 +285,14 @@ namespace IBM.Watson.Widgets.Question
 
 		private void CreateArrow(GameObject parentGameObject, GameObject childGameObject)
 		{
-			GameObject arrowGameObject = Instantiate(m_ParseTreeArrow, parentGameObject.transform.position, Quaternion.identity) as GameObject;
+			Vector3 direction = parentGameObject.transform.position - childGameObject.transform.position;
+			direction = parentGameObject.transform.InverseTransformDirection(direction);
+			float angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
+
+			GameObject arrowGameObject = Instantiate(m_ParseTreeArrow, parentGameObject.transform.position, Quaternion.Euler(new Vector3(0f, 0f, angle))) as GameObject;
 			RectTransform arrowRectTransform = arrowGameObject.GetComponent<RectTransform>();
-			arrowRectTransform
+
+//			arrowRectTransform
 			arrowRectTransform.SetParent(parentGameObject.GetComponent<RectTransform>(), false);
 		}
 
