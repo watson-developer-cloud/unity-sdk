@@ -292,6 +292,10 @@ namespace IBM.Watson.Utilities
             /// Five finger tap event
             /// </summary>
             ON_TOUCH_FIVE_FINGER,
+            /// <summary>
+            /// Event while user is speaking
+            /// </summary>
+            ON_USER_SPEAKING,
 
             #endregion
         }

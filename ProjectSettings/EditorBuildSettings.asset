@@ -6,8 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Watson/Scenes/XRay.unity
-  - enabled: 1
     path: Assets/Watson/Scenes/Main.unity
   - enabled: 1
     path: Assets/Watson/Scenes/TestSTT.unity
@@ -17,5 +15,7 @@ EditorBuildSettings:
     path: Assets/Watson/Scenes/TestTTS.unity
   - enabled: 1
     path: Assets/Watson/Scenes/TestNLC.unity
+  - enabled: 1
+    path: Assets/Watson/Scenes/XRay.unity
   - enabled: 1
     path: Assets/Watson/Scenes/TestMic.unity
