@@ -118,6 +118,8 @@ namespace IBM.Watson.Widgets
         {
             if ( m_SpeechQueue.Count > 0 && m_Source != null && !m_Source.isPlaying )
 	        {
+                CancelInvoke( "OnEndSpeech" );
+
                 AudioClip clip = m_SpeechQueue.Dequeue();
                 if ( m_Speaking.IsConnected )
                     m_Speaking.SendData( new SpeakingStateData( true ) );

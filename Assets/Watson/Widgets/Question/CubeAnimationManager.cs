@@ -483,6 +483,12 @@ namespace IBM.Watson.Widgets.Question
         {
             //do nothing - it is going from scene
         }
+        else if (AnimationState == CubeAnimationState.COMING_TO_SCENE )
+        {
+            //TODO: Fix the coming to scene , add to queue 
+            //AnimateUnfocus(AnimateFold, null, AnimateDestroyingCube);
+            //AnimateUnFold(AnimateFocusOnSide, (System.Object)sideType);
+        }
         else
         {
             AnimateUnFold(AnimateFocusOnSide, (System.Object)sideType);

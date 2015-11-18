@@ -59,10 +59,38 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AutoConnect: 1
-  m_Hello: Hello
-  m_Goodbye: Goodbye
-  m_RecognizeFailure: I'm sorry, but I didn't understand your question.
-  m_Error: Oh bugger, something has gone wrong.
+  m_HelloPhrases:
+  - Hello
+  - Yo
+  - Whats up
+  - Hey you
+  - Hows it hanging
+  m_GoodbyePhrases:
+  - Goodbye
+  - Laters
+  - Later Taters
+  - See ya
+  - Bye Bye
+  - Take Care
+  - Peace Out
+  - Cheers
+  - Carry On
+  - Cheerio
+  - Hooroo
+  - Goodday Mate
+  m_FailurePhrases:
+  - I'm sorry, but I didn't understand your question.
+  - Huh
+  - I didn't catch that
+  - What did you say again?
+  - Come again
+  - What was that
+  - pardon
+  m_ErrorPhrases:
+  - Oh bugger, something has gone wrong.
+  - Oh Shoot
+  - Oh no
+  - Oh Fudge
   m_Pipeline: thunderstone
   m_TextOutput:
     m_TargetObject: {fileID: 0}
@@ -175,6 +203,10 @@ Prefab:
       value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 0}
+      propertyPath: m_GoodbyePhrases.Array.size
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
       propertyPath: m_AutoConnect
       value: 1
       objectReference: {fileID: 0}
@@ -261,6 +293,30 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_StateInfo.Array.data[6].m_Color.b
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_GoodbyePhrases.Array.data[2]
+      value: Later Taters
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_GoodbyePhrases.Array.data[7]
+      value: Cheers
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_GoodbyePhrases.Array.data[8]
+      value: Carry On
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_GoodbyePhrases.Array.data[9]
+      value: Cheerio
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_GoodbyePhrases.Array.data[10]
+      value: Hooroo
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_GoodbyePhrases.Array.data[11]
+      value: Goodday Mate
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

@@ -129,6 +129,7 @@ namespace IBM.Watson.Services.v1
             Dictionary<string, object> questionJson = new Dictionary<string, object>();
             questionJson["question"] = new Dictionary<string, object>() {
                 { "questionText", question },
+                { "formattedAnswer", "true" },
                 { "evidenceRequest", new Dictionary<string,object>() {
                     { "items", evidenceItems },
                     { "profile", "NO" }

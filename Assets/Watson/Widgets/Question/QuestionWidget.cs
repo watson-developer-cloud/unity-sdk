@@ -371,6 +371,7 @@ namespace IBM.Watson.Widgets.Question
 
 				switch(pipeline)
 				{
+				case "numerati_woodside":
 				case "thunderstone":
 					m_Facets = m_ThunderstoneFacets;
 					break;
