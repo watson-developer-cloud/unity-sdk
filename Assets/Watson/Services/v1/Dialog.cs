@@ -48,11 +48,22 @@ namespace IBM.Watson.Services.v1
         /// <param name="dialog_id"></param>
         public delegate void OnUploadDialog( string dialog_id );
         /// <summary>
+        /// The callback for DeleteDialog().
+        /// </summary>
+        /// <param name="success"></param>
+        public delegate void OnDialogCallback( bool success );
+        /// <summary>
         /// The delegate for loading a file, used by UploadDialog().
         /// </summary>
         /// <param name="filename">The filename to load.</param>
         /// <returns>Should return a byte array of the file contents or null of failure.</returns>
         public delegate byte [] LoadFileDelegate( string filename );
+        /// <summary>
+        /// The delegate for saving a file, used by DownloadDialog().
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <param name="data"></param>
+        public delegate void SaveFileDelegate( string filename, byte [] data );
         /// <summary>
         /// The callback delegate for the Converse() function.
         /// </summary>
@@ -65,6 +76,7 @@ namespace IBM.Watson.Services.v1
         /// Set this property to overload the internal file loading of this class.
         /// </summary>
         public LoadFileDelegate LoadFile { get; set; }
+        public SaveFileDelegate SaveFile { get; set; }
         #endregion
 
         #region Private Data
@@ -126,6 +138,72 @@ namespace IBM.Watson.Services.v1
         }
         #endregion
 
+        #region Download Dialog
+        public enum DialogFormat
+        {
+            XML,
+            JSON,
+            BINARY
+        };
+        public bool DownloadDialog( string dialogId, string dialogFileName, OnDialogCallback callback, DialogFormat format = DialogFormat.XML )
+        {
+            if (string.IsNullOrEmpty(dialogId))
+                throw new ArgumentNullException("dialogId");
+            if (string.IsNullOrEmpty(dialogFileName))
+                throw new ArgumentNullException("dialogFileName");
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/v1/dialogs/" + dialogId );
+            if (connector == null)
+                return false;
+
+            DownloadDialogReq req = new DownloadDialogReq();
+            req.DialogFileName = dialogFileName;
+            req.Callback = callback;
+            req.OnResponse = OnDownloadDialogResp;
+            if ( format == DialogFormat.XML )
+                req.Headers["Accept"] = "application/wds+xml";
+            else if ( format == DialogFormat.JSON )
+                req.Headers["Accept"] = "application/wds+json";
+            else 
+                req.Headers["Accept"] = "application/octet-stream";
+
+            return connector.Send(req);
+        }
+
+        private class DownloadDialogReq : RESTConnector.Request
+        {
+            public string DialogFileName { get; set; }
+            public OnDialogCallback Callback { get; set; }
+        };
+
+        private void OnDownloadDialogResp(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DownloadDialogReq downloadReq = req as DownloadDialogReq;
+            if ( downloadReq == null )
+                throw new WatsonException( "Unexpected type." );
+
+            if (resp.Success)
+            {
+                try {
+                    if ( SaveFile != null )
+                        SaveFile( downloadReq.DialogFileName, resp.Data );
+                    else
+                        File.WriteAllBytes( downloadReq.DialogFileName, resp.Data );
+                }
+                catch( Exception e )
+                {
+                    Log.Error( "Dialog", "Caught exception: {0}", e.ToString() );
+                    resp.Success = false;
+                }
+            }
+
+            if (((DownloadDialogReq)req).Callback != null)
+                ((DownloadDialogReq)req).Callback( resp.Success );
+        }
+        #endregion
+
         #region UploadDialog
         /// <summary>
         /// This creates a new dialog from a local dialog file.
@@ -134,26 +212,25 @@ namespace IBM.Watson.Services.v1
         /// <param name="callback">The callback to receive the dialog ID.</param>
         /// <param name="dialogFileName">The filename of the dialog file to upload.</param>
         /// <returns>Returns true if the upload was submitted.</returns>
-        public bool UploadDialog( string dialogName, OnUploadDialog callback, string dialogFileName = null )
+        public bool UploadDialog( string dialogName, OnUploadDialog callback, string dialogFileName )
         {
             if (string.IsNullOrEmpty(dialogName))
                 throw new ArgumentNullException("dialogName");
+            if (string.IsNullOrEmpty(dialogFileName))
+                throw new ArgumentNullException("dialogFileName");
             if (callback == null)
                 throw new ArgumentNullException("callback");
 
             byte [] dialogData = null;
-            if ( dialogFileName != null )
-            {
-                if ( LoadFile != null )
-                    dialogData = LoadFile( dialogFileName );
-                else
-                    dialogData = System.IO.File.ReadAllBytes( dialogFileName );
+            if ( LoadFile != null )
+                dialogData = LoadFile( dialogFileName );
+            else
+                dialogData = File.ReadAllBytes( dialogFileName );
 
-                if ( dialogData == null )
-                {
-                    Log.Error( "Dialog", "Failed to load dialog file data {0}", dialogFileName );
-                    return false;
-                }
+            if ( dialogData == null )
+            {
+                Log.Error( "Dialog", "Failed to load dialog file data {0}", dialogFileName );
+                return false;
             }
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/v1/dialogs");
@@ -192,6 +269,38 @@ namespace IBM.Watson.Services.v1
 
             if (((UploadDialogReq)req).Callback != null)
                 ((UploadDialogReq)req).Callback( id );
+        }
+        #endregion
+
+        #region Delete Dialog
+        public bool DeleteDialog( string dialogId, OnDialogCallback callback )
+        {
+            if (string.IsNullOrEmpty(dialogId))
+                throw new ArgumentNullException("dialogId");
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/v1/dialogs/" + dialogId );
+            if (connector == null)
+                return false;
+
+            DeleteDialogReq req = new DeleteDialogReq();
+            req.Callback = callback;
+            req.OnResponse = OnDeleteDialogResp;
+            req.Delete = true;
+
+            return connector.Send(req);
+        }
+
+        private class DeleteDialogReq : RESTConnector.Request
+        {
+            public OnDialogCallback Callback { get; set; }
+        };
+
+        private void OnDeleteDialogResp(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            if (((DeleteDialogReq)req).Callback != null)
+                ((DeleteDialogReq)req).Callback( resp.Success );
         }
         #endregion
 
