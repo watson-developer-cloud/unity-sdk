@@ -432,7 +432,7 @@ namespace IBM.Watson.Widgets.Question
                 if(m_PassageScrollRect[i] != null)
                 {
                     m_PassageScrollRect[i].velocity = Vector2.zero;
-                    m_PassageScrollRect[i].vertical = false;
+                    m_PassageScrollRect[i].vertical = true;
                 }
             }
 
@@ -511,18 +511,18 @@ namespace IBM.Watson.Widgets.Question
                     m_SelectedPassageIndex = NumberOfPassages - 1;
                 }
 
-                if (m_PassageScrollRect != null && m_PassageScrollRect.Length > m_SelectedPassageIndex && m_PassageScrollRect[m_SelectedPassageIndex] != null && m_PassageScrollRect[m_SelectedPassageIndex].enabled && m_PassageScrollRect[m_SelectedPassageIndex].velocity != Vector2.zero && GetPassageIndexTouch(OneFingerManipulationGesture.ScreenPosition) == m_SelectedPassageIndex)
-                {
-                    //do nothing - can't drag because passage is now in scroll mode
-                }
-                else
-                {
+                //if (m_PassageScrollRect != null && m_PassageScrollRect.Length > m_SelectedPassageIndex && m_PassageScrollRect[m_SelectedPassageIndex] != null && m_PassageScrollRect[m_SelectedPassageIndex].enabled && m_PassageScrollRect[m_SelectedPassageIndex].velocity != Vector2.zero && GetPassageIndexTouch(OneFingerManipulationGesture.ScreenPosition) == m_SelectedPassageIndex)
+                //{
+                //    //do nothing - can't drag because passage is now in scroll mode
+                //}
+                //else
+                //{
                     //While finger is dragging on passage , we are changing the percent according to X location change
                     m_AnimationLocationRatio[m_SelectedPassageIndex] = Mathf.Clamp01(m_AnimationLocationRatio[m_SelectedPassageIndex] + movingInX);
                     m_AnimationRotationRatio[m_SelectedPassageIndex] = Mathf.Clamp01(m_AnimationRotationRatio[m_SelectedPassageIndex] + movingInX);
 
                     SetTargetLocationAndRotationOfSelectedPassage();
-                }
+                //}
                
             }
             else
@@ -568,7 +568,7 @@ namespace IBM.Watson.Widgets.Question
         {
             if (!m_IsTouchOnDragging && m_SelectedPassageIndex >= 0)
             {
-                bool canScroll = false;
+                bool canScroll = true;
                 int prevSelectedPassageIndex = m_SelectedPassageIndex;
 
                 if (m_AnimationLocationRatio[m_SelectedPassageIndex] < m_PercentToGoInitialPosition)
@@ -584,7 +584,7 @@ namespace IBM.Watson.Widgets.Question
                     m_AnimationLocationRatio[m_SelectedPassageIndex] = 0.5f;
                     m_AnimationRotationRatio[m_SelectedPassageIndex] = 0.5f;
                     SetTargetLocationAndRotationOfSelectedPassage();
-                    canScroll = true;
+                    //canScroll = true;
                 }
 
                 if (m_PassageScrollRect != null && m_PassageScrollRect.Length > prevSelectedPassageIndex && m_PassageScrollRect[prevSelectedPassageIndex] != null)
@@ -638,7 +638,7 @@ namespace IBM.Watson.Widgets.Question
 
             for (int i = 0; i < NumberOfPassages; i++)
             {
-                bool canScroll = false;
+                bool canScroll = true;
                 if (PassageList[i] == null || PassageList[i].transform == null)
                 {
                     Log.Warning("PassageAnimationManager", "PassageList doesn't have the element index: {0}", i);
@@ -682,7 +682,7 @@ namespace IBM.Watson.Widgets.Question
                         }
 
                         AnimatePassageToGivenRatio(m_AnimationTimeForEachPassageToGoTheirLocation, (m_DelayBetweenPassages * Mathf.Abs(m_PreviousPassageIndex - i)) + m_DelayExtraOnSelectedPassage, m_LeanTypeForPassageMovement, i, currentRatio, targetRatio, pathToMove, pathToRotate, isUsingTwoAnimations: true);
-                        canScroll = true;
+                        //canScroll = true;
                     }
                 }
 
