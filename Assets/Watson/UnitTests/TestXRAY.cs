@@ -17,11 +17,20 @@
 */
 
 #define TEST_WOODSIDE
+#define CACHE_QUESTIONS
+//#define EXPORT_QUESTIONS
 
 using System.Collections;
 using IBM.Watson.Services.v1;
 using IBM.Watson.Logging;
 using IBM.Watson.Data.XRAY;
+
+#if EXPORT_QUESTIONS || CACHE_QUESTIONS
+using UnityEngine;
+using System.Xml;
+using System.Text;
+using System.IO;
+#endif
 
 namespace IBM.Watson.UnitTests
 {
@@ -55,6 +64,44 @@ namespace IBM.Watson.UnitTests
             while (!m_ParseTested)
                 yield return null;
 
+#if EXPORT_QUESTIONS || CACHE_QUESTIONS
+            byte [] question_data = File.ReadAllBytes( Application.dataPath + "/../Docs/WoodsideQuestions.xml" );
+            var xml = new XmlDocument();
+            xml.LoadXml( Encoding.UTF8.GetString( question_data ) );
+
+#if CACHE_QUESTIONS
+            m_XRAY.DisableCache = false;
+#endif
+
+#if EXPORT_QUESTIONS
+            StringBuilder WoodsideCSV = new StringBuilder();
+#endif
+
+            XmlElement answerKey = xml["answerkey"] as XmlElement;
+            foreach( var node in answerKey.ChildNodes )
+            {
+                XmlElement question = node as XmlElement;
+                if (question == null )
+                    continue;
+
+                string text = question.GetAttribute("text" );
+                Log.Status( "TestDeepQA", "Question: {0}", text );
+
+#if CACHE_QUESTIONS
+                Test( m_XRAY.AskQuestion( TEST_PIPELINE, text, OnAskQuestion ) );
+#endif
+
+#if EXPORT_QUESTIONS
+                if ( text.Contains( "," ) )
+                    text = "\"" + text + "\"";
+                WoodsideCSV.Append( text + ",question-woodside\r\n" );
+#endif
+            }
+
+#if EXPORT_QUESTIONS
+            File.WriteAllText( Application.dataPath + "/../Docs/WoodsideQuestions.csv", WoodsideCSV.ToString() );
+#endif
+#endif
             yield break;
         }
 

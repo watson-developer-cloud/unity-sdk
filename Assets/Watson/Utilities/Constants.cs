@@ -160,6 +160,10 @@ namespace IBM.Watson.Utilities
             /// Event sent with the pipeline after question has been asked.
             /// </summary>
             ON_QUESTION_PIPELINE,
+            /// <summary>
+            /// Event sent to cancel the current question.
+            /// </summary>
+            ON_QUESTION_CANCEL,
             #endregion
 
             #region Animation / Camera

@@ -42,8 +42,9 @@ namespace IBM.Watson.Editor
 
         private void OnDisable()
         {
-            EditorApplication.update += UpdateRunnable;
+            EditorApplication.update -= UpdateRunnable;
         }
+
         static void UpdateRunnable()
         {
             Runnable.Instance.UpdateRoutines();
@@ -63,16 +64,22 @@ namespace IBM.Watson.Editor
         private Classifiers m_Classifiers = null;
         private string m_NewClassifierName = null;
         private string m_NewClassifierLang = "en";
+        private int m_PendingRequests = 0;
 
         private void OnGetClassifiers(Classifiers classifiers)
         {
+            m_PendingRequests -= 1;
             m_Classifiers = classifiers;
             foreach (var c in m_Classifiers.classifiers)
-                m_NLC.GetClassifier(c.classifier_id, OnGetClassifier);
+            {
+                if ( m_NLC.GetClassifier(c.classifier_id, OnGetClassifier) )
+                    m_PendingRequests += 1;
+            }
         }
 
         private void OnGetClassifier(Classifier details)
         {
+            m_PendingRequests -= 1;
             foreach (var c in m_Classifiers.classifiers)
                 if (c.classifier_id == details.classifier_id)
                 {
@@ -99,8 +106,13 @@ namespace IBM.Watson.Editor
 
         private void OnRefresh()
         {
-            if (!m_NLC.GetClassifiers(OnGetClassifiers))
-                Log.Error( "NLCTrainer", "Failed to request classifiers, please make sure your NlcV1 service has credentials configured." );
+            if ( m_PendingRequests == 0 )
+            {
+                if (!m_NLC.GetClassifiers(OnGetClassifiers))
+                    Log.Error( "NLCTrainer", "Failed to request classifiers, please make sure your NlcV1 service has credentials configured." );
+                else
+                    m_PendingRequests += 1;
+            }
         }
 
         private void OnGUI()
