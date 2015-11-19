@@ -226,6 +226,7 @@ namespace IBM.Watson.Widgets.Avatar
         void OnEnable()
         {
             EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_CHANGE_AVATAR_MOOD, OnChangeMood);
+            EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_CLASSIFY_RESULT, OnClassifyResult );
 
             DebugConsole.Instance.RegisterDebugInfo("STATE", OnStateDebugInfo);
             DebugConsole.Instance.RegisterDebugInfo("MOOD", OnMoodDebugInfo);
@@ -236,6 +237,7 @@ namespace IBM.Watson.Widgets.Avatar
         void OnDisable()
         {
             EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_CHANGE_AVATAR_MOOD, OnChangeMood);
+            EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_CLASSIFY_RESULT, OnClassifyResult );
 
             DebugConsole.Instance.UnregisterDebugInfo("STATE", OnStateDebugInfo);
             DebugConsole.Instance.UnregisterDebugInfo("MOOD", OnMoodDebugInfo);
@@ -430,6 +432,11 @@ namespace IBM.Watson.Widgets.Avatar
             }
         }
 
+        public void OnClassifyResult( object [] args )
+        {
+            m_ClassifyResult = args[0] as ClassifyResult;
+        }
+
         /// <summary>
         /// Event handler for ON_CLASSIFY_QUESTION
         /// </summary>
@@ -442,7 +449,6 @@ namespace IBM.Watson.Widgets.Avatar
 
             if (State == AvatarState.LISTENING)
             {
-                m_ClassifyResult = result;
                 if ( result.top_class.Contains( "-" ) )
                     m_Pipeline = result.top_class.Substring( result.top_class.IndexOf('-') + 1 );
 

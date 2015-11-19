@@ -32,75 +32,90 @@ namespace IBM.Watson.Widgets
     /// TextToSpeech widget class wraps the TextToSpeech serivce.
     /// </summary>
 	[RequireComponent(typeof(AudioSource))]
-	public class TextToSpeechWidget : Widget
-	{
-	    #region Private Data
-	    TextToSpeech m_TTS = new TextToSpeech();
+    public class TextToSpeechWidget : Widget
+    {
+        #region Private Data
+        TextToSpeech m_TTS = new TextToSpeech();
 
         [SerializeField]
-        private Input m_TextInput = new Input( "Text", typeof(TextData), "OnTextInput" ); 
+        private Input m_TextInput = new Input("Text", typeof(TextData), "OnTextInput");
         [SerializeField]
-        private Output m_Speaking = new Output( typeof(SpeakingStateData) );
+        private Output m_Speaking = new Output(typeof(SpeakingStateData));
         [SerializeField]
-        private Output m_DisableMic = new Output( typeof(DisableMicData) );
+        private Output m_DisableMic = new Output(typeof(DisableMicData));
         [SerializeField]
-        private Output m_LevelOut = new Output( typeof(FloatData) );
-        [SerializeField, Tooltip( "How often to send level out data in seconds.") ] 
+        private Output m_LevelOut = new Output(typeof(FloatData));
+        [SerializeField, Tooltip("How often to send level out data in seconds.")]
         private float m_LevelOutInterval = 0.05f;
-		[SerializeField]
-		private float m_LevelOutputModifier = 1.0f;
-	    [SerializeField]
-	    private Button m_TextToSpeechButton = null;
-	    [SerializeField]
-	    private InputField m_Input = null;
-	    [SerializeField]
-	    private Text m_StatusText = null;
-	    [SerializeField]
-	    private TextToSpeech.VoiceType m_Voice = TextToSpeech.VoiceType.en_US_Michael;
-	    [SerializeField]
-	    private bool m_UsePost = false;
+        [SerializeField]
+        private float m_LevelOutputModifier = 1.0f;
+        [SerializeField]
+        private Button m_TextToSpeechButton = null;
+        [SerializeField]
+        private InputField m_Input = null;
+        [SerializeField]
+        private Text m_StatusText = null;
+        [SerializeField]
+        private TextToSpeech.VoiceType m_Voice = TextToSpeech.VoiceType.en_US_Michael;
+        [SerializeField]
+        private bool m_UsePost = false;
 
         private AudioSource m_Source = null;
         private int m_LastPlayPos = 0;
-        private Queue<AudioClip> m_SpeechQueue = new Queue<AudioClip>();
-	    #endregion
 
-	    public void OnTextToSpeech()
-	    {
-	        if ( m_TTS.Voice != m_Voice )
-	            m_TTS.Voice = m_Voice;
-            if ( m_Input != null )
-	            m_TTS.ToSpeech( m_Input.text, OnSpeech, m_UsePost );
-	        if ( m_StatusText != null )
-	            m_StatusText.text = "THINKING";
-	        if ( m_TextToSpeechButton != null )
-	            m_TextToSpeechButton.interactable = false;
-	    }
+        private class Speech
+        {
+            public AudioClip Clip { get; set; }
+
+            public Speech(TextToSpeech tts, string text, bool usePost)
+            {
+                tts.ToSpeech(text, OnAudioClip, usePost);
+            }
+
+            private void OnAudioClip(AudioClip clip)
+            {
+                Clip = clip;
+            }
+        };
+
+        private Queue<Speech> m_SpeechQueue = new Queue<Speech>();
+        #endregion
+
+        public void OnTextToSpeech()
+        {
+            if (m_Input != null)
+                m_SpeechQueue.Enqueue(new Speech(m_TTS, m_Input.text, m_UsePost));
+            if (m_StatusText != null)
+                m_StatusText.text = "THINKING";
+            if (m_TextToSpeechButton != null)
+                m_TextToSpeechButton.interactable = false;
+        }
 
         #region Private Functions
-        private void OnTextInput( Data data )
+        private void OnTextInput(Data data)
         {
             TextData text = data as TextData;
-            if ( text == null )
-                throw new WatsonException( "Wrong data type received." );
+            if (text == null)
+                throw new WatsonException("Wrong data type received.");
 
-            if (! string.IsNullOrEmpty( text.Text ) )
+            if (!string.IsNullOrEmpty(text.Text))
             {
-	            if ( m_TTS.Voice != m_Voice )
-	                m_TTS.Voice = m_Voice;
-                m_TTS.ToSpeech( text.Text, OnSpeech, m_UsePost );
+                if (m_TTS.Voice != m_Voice)
+                    m_TTS.Voice = m_Voice;
+
+                m_SpeechQueue.Enqueue(new Speech(m_TTS, text.Text, m_UsePost));
             }
         }
 
-	    private void OnEnable()
-	    {
-	        Logger.InstallDefaultReactors();
+        private void OnEnable()
+        {
+            Logger.InstallDefaultReactors();
 
-	        if ( m_StatusText != null )
-	            m_StatusText.text = "READY";
-	        if ( m_Input != null )
-	            m_Input.text = "No problem with opening the pod bay doors.";
-	    }
+            if (m_StatusText != null)
+                m_StatusText.text = "READY";
+            if (m_Input != null)
+                m_Input.text = "No problem with opening the pod bay doors.";
+        }
 
         protected override void Start()
         {
@@ -108,65 +123,61 @@ namespace IBM.Watson.Widgets
             m_Source = GetComponent<AudioSource>();
         }
 
-	    private void OnSpeech( AudioClip clip )
-	    {
-	        if ( clip != null )
-                m_SpeechQueue.Enqueue( clip );
-        }
-
         private void Update()
         {
-            if ( m_SpeechQueue.Count > 0 && m_Source != null && !m_Source.isPlaying )
-	        {
-                CancelInvoke( "OnEndSpeech" );
+            if (m_Source != null && !m_Source.isPlaying
+                && m_SpeechQueue.Count > 0
+                && m_SpeechQueue.Peek().Clip != null)
+            {
+                CancelInvoke("OnEndSpeech");
 
-                AudioClip clip = m_SpeechQueue.Dequeue();
-                if ( m_Speaking.IsConnected )
-                    m_Speaking.SendData( new SpeakingStateData( true ) );
-                if ( m_DisableMic.IsConnected )
-                    m_DisableMic.SendData( new DisableMicData( true ) );
+                Speech speech = m_SpeechQueue.Dequeue();
+                if (m_Speaking.IsConnected)
+                    m_Speaking.SendData(new SpeakingStateData(true));
+                if (m_DisableMic.IsConnected)
+                    m_DisableMic.SendData(new DisableMicData(true));
 
-	            m_Source.spatialBlend = 0.0f;     // 2D sound
-	            m_Source.loop = false;            // do not loop
-	            m_Source.clip = clip;             // clip
-	            m_Source.Play();
+                m_Source.spatialBlend = 0.0f;     // 2D sound
+                m_Source.loop = false;            // do not loop
+                m_Source.clip = speech.Clip;             // clip
+                m_Source.Play();
 
-                Invoke( "OnEndSpeech", ((float)clip.samples / (float)clip.frequency) + 0.1f );
-                if ( m_LevelOut.IsConnected )
+                Invoke("OnEndSpeech", ((float)speech.Clip.samples / (float)speech.Clip.frequency) + 0.1f);
+                if (m_LevelOut.IsConnected)
                 {
                     m_LastPlayPos = 0;
-                    InvokeRepeating( "OnLevelOut", m_LevelOutInterval, m_LevelOutInterval );
+                    InvokeRepeating("OnLevelOut", m_LevelOutInterval, m_LevelOutInterval);
                 }
-	        }
+            }
 
-	        if ( m_TextToSpeechButton != null )
-	            m_TextToSpeechButton.interactable = true;
-	        if ( m_StatusText != null )
-	            m_StatusText.text = "READY";
-	    }
+            if (m_TextToSpeechButton != null)
+                m_TextToSpeechButton.interactable = true;
+            if (m_StatusText != null)
+                m_StatusText.text = "READY";
+        }
 
         private void OnLevelOut()
         {
-            if ( m_Source != null && m_Source.isPlaying )
+            if (m_Source != null && m_Source.isPlaying)
             {
                 int currentPos = m_Source.timeSamples;
-                if ( currentPos > m_LastPlayPos )
+                if (currentPos > m_LastPlayPos)
                 {
-                    float [] samples = new float[ currentPos - m_LastPlayPos ];
-                    m_Source.clip.GetData( samples, m_LastPlayPos );
-					m_LevelOut.SendData( new FloatData( Mathf.Max( samples ) * m_LevelOutputModifier) );
+                    float[] samples = new float[currentPos - m_LastPlayPos];
+                    m_Source.clip.GetData(samples, m_LastPlayPos);
+                    m_LevelOut.SendData(new FloatData(Mathf.Max(samples) * m_LevelOutputModifier));
                     m_LastPlayPos = currentPos;
                 }
             }
             else
-                CancelInvoke( "OnLevelOut" );
+                CancelInvoke("OnLevelOut");
         }
         private void OnEndSpeech()
         {
-            if ( m_Speaking.IsConnected )
-                m_Speaking.SendData( new SpeakingStateData( false ) );
-            if ( m_DisableMic.IsConnected )
-                m_DisableMic.SendData( new DisableMicData( false ) );
+            if (m_Speaking.IsConnected)
+                m_Speaking.SendData(new SpeakingStateData(false));
+            if (m_DisableMic.IsConnected)
+                m_DisableMic.SendData(new DisableMicData(false));
             if (m_Source.isPlaying)
                 m_Source.Stop();
         }

@@ -341,14 +341,18 @@ namespace IBM.Watson.Data
 
                 List<ParseWord> words = new List<ParseWord>();
 
-                for (int i = 0; i < parseData.parse.words.Length; ++i)
+                if ( parseData.parse != null 
+                    && parseData.parse.words != null )
                 {
-                    ParseWord word = new ParseWord();
-                    word.Word = parseData.parse.words[i];
-                    word.PosName = parseData.parse.pos[i].value;
-                    word.Slot = parseData.parse.slot[i].value;
-                    word.Features = parseData.parse.features[i].value;
-                    words.Add(word);
+                    for (int i = 0; i < parseData.parse.words.Length; ++i)
+                    {
+                        ParseWord word = new ParseWord();
+                        word.Word = parseData.parse.words[i];
+                        word.PosName = parseData.parse.pos[i].value;
+                        word.Slot = parseData.parse.slot[i].value;
+                        word.Features = parseData.parse.features[i].value;
+                        words.Add(word);
+                    }
                 }
 
                 parseData.Words = words.ToArray();

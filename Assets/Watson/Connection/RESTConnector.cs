@@ -354,6 +354,8 @@ namespace IBM.Watson.Connection
                     else 
                         www = new WWW( url, req.Send, req.Headers );
 
+                    Log.Status( "RESTCOnnector", "URL: {0}", url );
+
                     // wait for the request to complete.
                     while(! www.isDone )
                     {
@@ -371,9 +373,11 @@ namespace IBM.Watson.Connection
                             bError = nErrorCode != 200;
 
                         if ( bError )
-                            Log.Error( "RESTConnector", "ErrorCode: {0}, Error: {1}, response: {2}", nErrorCode, www.error, www.text );
+                            Log.Error( "RESTConnector", "URL: {0}, ErrorCode: {1}, Error: {2}, Response: {3}", url, nErrorCode, www.error, 
+                                string.IsNullOrEmpty( www.text ) ? "" : www.text );
                         else
-                            Log.Warning( "RESTConnector", "ErrorCode: {0}, Error: {1}, response: {2}", nErrorCode, www.error, www.text );
+                            Log.Warning( "RESTConnector", "URL: {0}, ErrorCode: {1}, Error: {2}, Response: {3}", url, nErrorCode, www.error, 
+                                string.IsNullOrEmpty( www.text ) ? "" : www.text );
                     }
                     if (! www.isDone)
                     {

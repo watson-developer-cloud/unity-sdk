@@ -81,6 +81,8 @@ namespace IBM.Watson.Services.v1
             if ( callback == null )
                 throw new ArgumentNullException("callback" );
 
+            question = question.Trim();
+
             string questionId = Utility.GetMD5( question );
             if (! DisableCache )
             {

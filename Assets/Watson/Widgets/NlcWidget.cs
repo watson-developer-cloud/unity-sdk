@@ -162,6 +162,8 @@ namespace IBM.Watson.Widgets
 
 	    private void OnClassified(ClassifyResult result)
 	    {
+            EventManager.Instance.SendEvent( Constants.Event.ON_CLASSIFY_RESULT, result );
+
             if ( m_ClassifyOutput.IsConnected )
                 m_ClassifyOutput.SendData( new ClassifyResultData( result ) );
 
