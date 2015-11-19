@@ -28,7 +28,7 @@ namespace IBM.Watson.Widgets.Question
     /// <summary>
     /// Handles all Features Facet functionality. 
     /// </summary>
-    public class Features : Base
+	public class Features : MonoBehaviour
     {
         [SerializeField]
         private GameObject m_FeatureItemPrefab;

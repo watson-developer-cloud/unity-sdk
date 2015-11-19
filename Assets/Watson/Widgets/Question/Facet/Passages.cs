@@ -28,7 +28,7 @@ namespace IBM.Watson.Widgets.Question
     /// <summary>
     /// Handles all Passages Facet functionality. 
     /// </summary>
-    public class Passages : Base
+	public class Passages : MonoBehaviour
     {
         private float m_RectTransformPosX = -555f;
         private float m_RectTransformPosY = -77;

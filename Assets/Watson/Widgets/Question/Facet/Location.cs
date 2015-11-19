@@ -28,7 +28,7 @@ namespace IBM.Watson.Widgets.Question
 	/// <summary>
 	/// Handles all Location Facet functionality.
 	/// </summary>
-    public class Location : Base
+	public class Location : MonoBehaviour
     {
         [SerializeField]
         private Text m_LocationText;
@@ -90,10 +90,8 @@ namespace IBM.Watson.Widgets.Question
 		/// <summary>
 		/// Set LocationString from data.
 		/// </summary>
-		override public void Init()
+		public void Init()
         {
-			base.Init ();
-
 			LocationString = m_LocationData;
             UpdateLocation();
         }

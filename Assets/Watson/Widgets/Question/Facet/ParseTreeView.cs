@@ -28,7 +28,7 @@ namespace IBM.Watson.Widgets.Question
 	/// <summary>
 	/// Handles all ParseTree Facet functionality.
 	/// </summary>
-    public class ParseTreeView : Base
+	public class ParseTreeView : MonoBehaviour
     {
         [SerializeField]
         private GameObject m_ParseTreeTextItemPrefab;

@@ -27,7 +27,7 @@ namespace IBM.Watson.Widgets.Question
 	/// <summary>
 	/// Handles all QuestionAndAndswer Facet functionality.
 	/// </summary>
-    public class QuestionAndAnswer : Base
+	public class QuestionAndAnswer : MonoBehaviour
     {
         [SerializeField]
         private Text m_QuestionText;

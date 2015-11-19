@@ -26,7 +26,7 @@ namespace IBM.Watson.Widgets.Question
 	/// <summary>
 	/// Handles all AnswersAndConfidence Facet functionality.
 	/// </summary>
-    public class AnswersAndConfidence : Base
+	public class AnswersAndConfidence : MonoBehaviour
     {
         [Header("UI Faces")]
         [SerializeField]
@@ -48,10 +48,8 @@ namespace IBM.Watson.Widgets.Question
 		/// Iterate through Answer and Confidence bars and set the Answer and ConfidenceIndex
 		/// </summary>
 		//	TODO dynamically create bars?
-		override public void Init()
+		public void Init()
         {
-			base.Init ();
-
             for (int i = 0; i < m_AnswerConfidenceBars.Length; i++)
             {
 				if ( i < m_AnswerData.answers.Length )
