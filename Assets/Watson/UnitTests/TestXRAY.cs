@@ -16,6 +16,8 @@
 * @author Richard Lyle (rolyle@us.ibm.com)
 */
 
+#define TEST_WOODSIDE
+
 using System.Collections;
 using IBM.Watson.Services.v1;
 using IBM.Watson.Logging;
@@ -25,8 +27,13 @@ namespace IBM.Watson.UnitTests
 {
     public class TestXRAY : UnitTest
     {
+#if TEST_WOODSIDE
+        const string TEST_QUESTION = "When were Angel high rate trials conducted?";
+        const string TEST_PIPELINE = "woodside";
+#else
         const string TEST_QUESTION = "What is the capital of Texas";
         const string TEST_PIPELINE = "thunderstone";
+#endif
 
         XRAY m_XRAY = new XRAY();
         bool m_AskQuestionTested = false;
@@ -36,6 +43,7 @@ namespace IBM.Watson.UnitTests
 
         public override IEnumerator RunTest()
         {
+            m_XRAY.DisableCache = true;
             m_XRAY.AskQuestion( TEST_PIPELINE, TEST_QUESTION, OnAskQuestion );
             while(! m_AskQuestionTested )
                 yield return null;

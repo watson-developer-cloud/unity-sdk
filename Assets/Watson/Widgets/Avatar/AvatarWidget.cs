@@ -122,6 +122,9 @@ namespace IBM.Watson.Widgets.Avatar
         private SpeechResultList m_SpeechResult = null;
         private Questions m_QuestionResult = null;
         private Answers m_AnswerResult = null;
+        [SerializeField]
+        private int m_MaxAnswerLength = 255;
+        private string m_LastAnswer = string.Empty;
         private ParseData m_ParseData = null;
         private QuestionWidget m_FocusQuestion = null;
         private bool m_GettingAnswers = false;
@@ -174,6 +177,7 @@ namespace IBM.Watson.Widgets.Avatar
                 {
                     m_State = value;
                     EventManager.Instance.SendEvent(Constants.Event.ON_CHANGE_AVATAR_STATE_FINISH, this, value);
+
 					// if we went into an error state, automatically try to reconnect after a timeout..
                     if (m_State == AvatarState.ERROR)
                     {
@@ -282,17 +286,7 @@ namespace IBM.Watson.Widgets.Avatar
         }
         private string OnAnwserDebugInfo()
         {
-            if (m_AnswerResult != null && m_AnswerResult.HasAnswer())
-            {
-                string answer = m_AnswerResult.answers[0].answerText;
-                int newLine = answer.IndexOf( '\n' );
-                if ( newLine > 0 )
-                    answer = answer.Substring( 0, newLine );
-                answer = Utility.RemoveTags( answer );
-
-                return string.Format("{0} ({1:0.00})", answer, m_AnswerResult.answers[0].confidence);
-            }
-            return string.Empty;
+            return m_LastAnswer;
         }
 
         private void OnNextMood()
@@ -358,10 +352,13 @@ namespace IBM.Watson.Widgets.Avatar
             if ( bdata == null )
                 throw new WatsonException( "Unexpected data type." );
 
-            if ( bdata.Boolean )
-                State = AvatarState.ANSWERING;
-            else
-                State = m_PreviousListeningMode;
+            if ( State != AvatarState.ERROR )
+            {
+                if ( bdata.Boolean )
+                    State = AvatarState.ANSWERING;
+                else
+                    State = m_PreviousListeningMode;
+            }
         }
         #endregion
 
@@ -551,10 +548,11 @@ namespace IBM.Watson.Widgets.Avatar
                         Log.Debug("AvatarWidget", "A: {0} ({1})", a.answerText, a.confidence);
 
                     string answer = m_AnswerResult.answers[0].answerText;
-                    int newLine = answer.IndexOf( '\n' );
-                    if ( newLine > 0 )
-                        answer = answer.Substring( 0, newLine );
+                    if ( answer.Length > m_MaxAnswerLength )
+                        answer = answer.Substring( 0, m_MaxAnswerLength );
+                    answer = Utility.RemoveTags( answer );
 
+                    m_LastAnswer = answer;
                     EventManager.Instance.SendEvent(Constants.Event.ON_DEBUG_MESSAGE, answer);
 
                     // HACK: until we know if the answer is WDA or WEA, just look at the pipeline name for now.
@@ -565,7 +563,6 @@ namespace IBM.Watson.Widgets.Avatar
                     }
                     else
                     {
-                        // TODO: We probably don't want to do this with a WEA..
                         m_TextOutput.SendData(new TextData(answer));
                     }
                 }

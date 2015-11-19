@@ -396,8 +396,8 @@ namespace IBM.Watson.Connection
                     else
                     {
                         resp.Success = false;
-                        resp.Error = string.Format( "Request Error.\nURL: {0}\nError: {1}\nResponse: {2}",
-                            url, string.IsNullOrEmpty( www.error ) ? "Timeout" : www.error, www.text );
+                        resp.Error = string.Format( "Request Error.\nURL: {0}\nError: {1}",
+                            url, string.IsNullOrEmpty( www.error ) ? "Timeout" : www.error );
                     }
 
                     resp.ElapsedTime = Time.time - startTime;

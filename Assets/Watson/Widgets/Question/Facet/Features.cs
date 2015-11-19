@@ -25,74 +25,60 @@ using IBM.Watson.Data;
 
 namespace IBM.Watson.Widgets.Question
 {
-	/// <summary>
-	/// Handles all Features Facet functionality. 
-	/// </summary>
+    /// <summary>
+    /// Handles all Features Facet functionality. 
+    /// </summary>
     public class Features : Base
     {
         [SerializeField]
         private GameObject m_FeatureItemPrefab;
-
         [SerializeField]
         private RectTransform m_FeaturesCanvasRectTransform;
+        [SerializeField]
+        private int m_MaxFeatures = 8;
 
         private List<FeatureItem> m_FeatureItems = new List<FeatureItem>();
 
-		private Data.XRAY.Answers m_AnswerData = null;
-		
-		private void OnEnable()
-		{
-			EventManager.Instance.RegisterEventReceiver( Constants.Event.ON_QUESTION_ANSWERS, OnAnswerData );
-		}
-		
-		private void OnDisable()
-		{
-			EventManager.Instance.UnregisterEventReceiver( Constants.Event.ON_QUESTION_ANSWERS, OnAnswerData );
-		}
+        private Data.XRAY.Answers m_AnswerData = null;
 
-        /// <summary>
-        /// Dynamically creates Features Items based on data.
-        /// </summary>
-		override public void Init()
+        private void OnEnable()
         {
-			base.Init ();
+            EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_QUESTION_ANSWERS, OnAnswerData);
+        }
 
-            if ( m_AnswerData != null && m_AnswerData.HasAnswer() 
-                && m_AnswerData.answers[0].features != null )
+        private void OnDisable()
+        {
+            EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_QUESTION_ANSWERS, OnAnswerData);
+        }
+
+        private void OnAnswerData(object[] args)
+        {
+            m_AnswerData = args != null && args.Length > 0 ? args[0] as Data.XRAY.Answers : null;
+
+            while (m_FeatureItems.Count > 0)
             {
-			    for (int i = 0; i < m_AnswerData.answers[0].features.Length; i++)
+                Destroy(m_FeatureItems[0].gameObject);
+                m_FeatureItems.RemoveAt(0);
+            }
+
+            if (m_AnswerData != null && m_AnswerData.HasAnswer()
+                && m_AnswerData.answers[0].features != null)
+            {
+                for (int i = 0; i < m_AnswerData.answers[0].features.Length; i++)
                 {
+                    if (i >= m_MaxFeatures)
+                        break;
+
                     GameObject featureItemGameObject = Instantiate(m_FeatureItemPrefab, new Vector3(95f, -i * 50f - 150f, 0f), Quaternion.identity) as GameObject;
                     RectTransform featureItemRectTransform = featureItemGameObject.GetComponent<RectTransform>();
                     featureItemRectTransform.SetParent(m_FeaturesCanvasRectTransform, false);
                     FeatureItem featureItem = featureItemGameObject.GetComponent<FeatureItem>();
+                    featureItem.FeatureString = m_AnswerData.answers[0].features[i].displayLabel;
+                    featureItem.FeatureIndex = m_AnswerData.answers[0].features[i].weightedScore;
+
                     m_FeatureItems.Add(featureItem);
-				    featureItem.FeatureString = m_AnswerData.answers[0].features[i].displayLabel;
-				    featureItem.FeatureIndex = m_AnswerData.answers[0].features[i].weightedScore;
                 }
             }
         }
-
-        /// <summary>
-        /// Clears dynamically generated Facet Elements when a question is answered. Called from Question Widget.
-        /// </summary>
-        override public void Clear()
-        {
-            while (m_FeatureItems.Count != 0)
-            {
-                Destroy(m_FeatureItems[0].gameObject);
-                m_FeatureItems.Remove(m_FeatureItems[0]);
-            }
-        }
-
-		/// <summary>
-		/// Callback for Answer Data event.
-		/// </summary>
-		/// <param name="args">Arguments.</param>
-		private void OnAnswerData( object [] args )
-		{
-			m_AnswerData = args != null && args.Length > 0 ? args[0] as Data.XRAY.Answers : null;
-			Init ();
-		}
     }
 }

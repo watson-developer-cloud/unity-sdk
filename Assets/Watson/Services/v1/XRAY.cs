@@ -59,6 +59,7 @@ namespace IBM.Watson.Services.v1
         private static fsSerializer sm_Serializer = new fsSerializer();
         private const string SERVICE_ID = "XrayV1";
         private const string XRAY_SUBSYSTEM = "XRAY";
+        private const string ASK_QUESTION = "/ITM/en/askXRAY";
         private Dictionary<string,DataCache> m_QuestionCache = new Dictionary<string, DataCache>();
         #endregion
 
@@ -102,7 +103,7 @@ namespace IBM.Watson.Services.v1
                 }
             }
 
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/ITM/en/askXRAY");
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, ASK_QUESTION );
             if (connector == null)
                 return false;
 
