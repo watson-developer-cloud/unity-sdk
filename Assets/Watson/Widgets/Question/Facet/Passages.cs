@@ -84,7 +84,7 @@ namespace IBM.Watson.Widgets.Question
                     PassageItem PassageItem = PassageItemGameObject.GetComponent<PassageItem>();
                     PassageItemRectTransform.pivot = new Vector2(0.0f, 0.5f);   //setting pivot as left middle
                     PassageItemRectTransform.SetAsFirstSibling();
-					PassageItem.PassageString = "<b><size=27>" + m_AnswerData.answers[i].evidence[0].title + "</size></b>\n\n" + m_AnswerData.answers[i].answerText + "\n\n";
+					PassageItem.PassageString = m_AnswerData.answers[i].evidence.Length > 0 ? "<b><size=27>" + m_AnswerData.answers[i].evidence[0].title + "</size></b>\n\n" + m_AnswerData.answers[i].answerText + "\n\n" : m_AnswerData.answers[i].answerText;
                     PassageItem.MaxConfidence = m_AnswerData.answers[0].confidence;
                     PassageItem.MinConfidence = m_AnswerData.answers[m_AnswerData.answers.Length - 1].confidence;
                     PassageItem.Confidence = m_AnswerData.answers[i].confidence;
