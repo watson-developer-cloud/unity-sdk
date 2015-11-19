@@ -21,6 +21,7 @@ using IBM.Watson.Logging;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 
 namespace IBM.Watson.Widgets.Question
@@ -33,6 +34,7 @@ namespace IBM.Watson.Widgets.Question
         private CubeAnimationManager m_CubeAnimMgr = null;
         private QuestionWidget m_QuestionWidget = null;
         private Transform[] m_PassageItems = null;
+        private ScrollRect[] m_PassageScrollRect = null;
         private bool m_IsTouchOnDragging = false;   //Used to identify the release finger
         private int m_SelectedPassageIndex = -1;
         private int m_PreviousPassageIndex = 0;
@@ -289,6 +291,33 @@ namespace IBM.Watson.Widgets.Question
 
         }
 
+
+        public int GetPassageIndexTouch(Vector2 screenPosition)
+        {
+            int panelIndexToShow = -1;
+
+            PointerEventData ped = new PointerEventData(EventSystem.current);
+            ped.position = screenPosition;
+            List<RaycastResult> hits = new List<RaycastResult>();
+            EventSystem.current.RaycastAll(ped, hits);
+            
+            
+            foreach (RaycastResult hitResult in hits)
+            {
+                if (hitResult.gameObject.layer == this.gameObject.layer && (string.Equals(hitResult.gameObject.name, m_NameElementPanel) || string.Equals(hitResult.gameObject.name, m_NameElementTabItem) || string.Equals(hitResult.gameObject.name, m_NameElementTabImage)))
+                {
+                    if (string.Equals(hitResult.gameObject.name, m_NameElementTabImage))
+                        int.TryParse(hitResult.gameObject.transform.parent.parent.name.Substring(m_NameElementPassageItem.Length, 2), out panelIndexToShow);
+                    else
+                        int.TryParse(hitResult.gameObject.transform.parent.name.Substring(m_NameElementPassageItem.Length, 2), out panelIndexToShow);
+
+                    break;
+                }
+            }
+
+            return panelIndexToShow;
+
+        }
         /// <summary>
         /// If there is a tap on cube side, we are checking the location of the tap to show the corresponding passage
         /// </summary>
@@ -304,34 +333,10 @@ namespace IBM.Watson.Widgets.Question
 
                     if (EventSystem.current != null) //Without the eveny system we can't raycast properly!
                     {
-                        // get pointer event data, then set current mouse position
-                        PointerEventData ped = new PointerEventData(EventSystem.current);
-                        ped.position = tapGesture.ScreenPosition;
-                        List<RaycastResult> hits = new List<RaycastResult>();
-                        EventSystem.current.RaycastAll(ped, hits);
 
-                        RaycastResult hitResult = default(RaycastResult);
-                        bool hitOnPanel = false;
-                        int panelIndexToShow = -1;
-
-                        foreach (RaycastResult r in hits)
-                        {
-                            if (r.gameObject.layer == this.gameObject.layer && (string.Equals(r.gameObject.name, m_NameElementPanel) || string.Equals(r.gameObject.name, m_NameElementTabItem) || string.Equals(r.gameObject.name, m_NameElementTabImage)))
-                            {
-                                hitOnPanel = true;
-                                hitResult = r;
-
-                                if (string.Equals(r.gameObject.name, m_NameElementTabImage))
-                                    int.TryParse(hitResult.gameObject.transform.parent.parent.name.Substring(m_NameElementPassageItem.Length, 2), out panelIndexToShow);
-                                else
-                                    int.TryParse(hitResult.gameObject.transform.parent.name.Substring(m_NameElementPassageItem.Length, 2), out panelIndexToShow);
-
-                                break;
-                            }
-
-                        }
-
-                        if (hitOnPanel && panelIndexToShow >= 0)
+                        int panelIndexToShow = GetPassageIndexTouch(tapGesture.ScreenPosition);
+                        
+                        if (panelIndexToShow >= 0)
                         {
                             ShowPassage(panelIndexToShow);
                         }
@@ -405,6 +410,8 @@ namespace IBM.Watson.Widgets.Question
         {
 
             m_PassageItems = Utility.FindObjects<Transform>(this.gameObject, "PassageItem", isContains: true, sortByName: true);
+            m_PassageScrollRect = new ScrollRect[NumberOfPassages];
+
             //Log.Status("PassageAnimationManager", "Updated Passages with number of {0} passages", NumberOfPassages);
 
             UpdateBezierPathForPassages();
@@ -421,6 +428,12 @@ namespace IBM.Watson.Widgets.Question
                 m_AnimationRotationRatio[i] = 0.0f;
                 m_TargetLocation[i] = m_BezierPathToCenter[i].pts[0];   // PassageList[i].localPosition;
                 m_TargetRotation[i] = m_BezierPathOrientationToCenter[i].pts[0];   //PassageList[i].localEulerAngles;
+                m_PassageScrollRect[i] = PassageList[i].GetComponentInChildren<ScrollRect>();
+                if(m_PassageScrollRect[i] != null)
+                {
+                    m_PassageScrollRect[i].velocity = Vector2.zero;
+                    m_PassageScrollRect[i].vertical = false;
+                }
             }
 
         }
@@ -498,11 +511,19 @@ namespace IBM.Watson.Widgets.Question
                     m_SelectedPassageIndex = NumberOfPassages - 1;
                 }
 
-                //While finger is dragging on passage , we are changing the percent according to X location change
-                m_AnimationLocationRatio[m_SelectedPassageIndex] = Mathf.Clamp01(m_AnimationLocationRatio[m_SelectedPassageIndex] + movingInX);
-                m_AnimationRotationRatio[m_SelectedPassageIndex] = Mathf.Clamp01(m_AnimationRotationRatio[m_SelectedPassageIndex] + movingInX);
+                if (m_PassageScrollRect != null && m_PassageScrollRect.Length > m_SelectedPassageIndex && m_PassageScrollRect[m_SelectedPassageIndex] != null && m_PassageScrollRect[m_SelectedPassageIndex].enabled && m_PassageScrollRect[m_SelectedPassageIndex].velocity != Vector2.zero && GetPassageIndexTouch(OneFingerManipulationGesture.ScreenPosition) == m_SelectedPassageIndex)
+                {
+                    //do nothing - can't drag because passage is now in scroll mode
+                }
+                else
+                {
+                    //While finger is dragging on passage , we are changing the percent according to X location change
+                    m_AnimationLocationRatio[m_SelectedPassageIndex] = Mathf.Clamp01(m_AnimationLocationRatio[m_SelectedPassageIndex] + movingInX);
+                    m_AnimationRotationRatio[m_SelectedPassageIndex] = Mathf.Clamp01(m_AnimationRotationRatio[m_SelectedPassageIndex] + movingInX);
 
-                SetTargetLocationAndRotationOfSelectedPassage();
+                    SetTargetLocationAndRotationOfSelectedPassage();
+                }
+               
             }
             else
             {
@@ -547,6 +568,9 @@ namespace IBM.Watson.Widgets.Question
         {
             if (!m_IsTouchOnDragging && m_SelectedPassageIndex >= 0)
             {
+                bool canScroll = false;
+                int prevSelectedPassageIndex = m_SelectedPassageIndex;
+
                 if (m_AnimationLocationRatio[m_SelectedPassageIndex] < m_PercentToGoInitialPosition)
                 {
                     ShowPassage(m_SelectedPassageIndex - 1);
@@ -560,6 +584,13 @@ namespace IBM.Watson.Widgets.Question
                     m_AnimationLocationRatio[m_SelectedPassageIndex] = 0.5f;
                     m_AnimationRotationRatio[m_SelectedPassageIndex] = 0.5f;
                     SetTargetLocationAndRotationOfSelectedPassage();
+                    canScroll = true;
+                }
+
+                if (m_PassageScrollRect != null && m_PassageScrollRect.Length > prevSelectedPassageIndex && m_PassageScrollRect[prevSelectedPassageIndex] != null)
+                {
+                    m_PassageScrollRect[prevSelectedPassageIndex].velocity = Vector2.zero;
+                    m_PassageScrollRect[prevSelectedPassageIndex].vertical = canScroll;
                 }
             }
         }
@@ -607,6 +638,7 @@ namespace IBM.Watson.Widgets.Question
 
             for (int i = 0; i < NumberOfPassages; i++)
             {
+                bool canScroll = false;
                 if (PassageList[i] == null || PassageList[i].transform == null)
                 {
                     Log.Warning("PassageAnimationManager", "PassageList doesn't have the element index: {0}", i);
@@ -650,7 +682,14 @@ namespace IBM.Watson.Widgets.Question
                         }
 
                         AnimatePassageToGivenRatio(m_AnimationTimeForEachPassageToGoTheirLocation, (m_DelayBetweenPassages * Mathf.Abs(m_PreviousPassageIndex - i)) + m_DelayExtraOnSelectedPassage, m_LeanTypeForPassageMovement, i, currentRatio, targetRatio, pathToMove, pathToRotate, isUsingTwoAnimations: true);
+                        canScroll = true;
                     }
+                }
+
+                if (m_PassageScrollRect != null && m_PassageScrollRect.Length > i && m_PassageScrollRect[i] != null)
+                {
+                    m_PassageScrollRect[i].velocity = Vector2.zero;
+                    m_PassageScrollRect[i].vertical = canScroll;
                 }
             }
 
