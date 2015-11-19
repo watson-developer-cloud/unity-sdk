@@ -275,6 +275,12 @@ namespace IBM.Watson.Widgets.Question
             {
                 ShowPassage(-1);
             }
+            else if (Cube != null && (Cube.AnimationState == CubeAnimationManager.CubeAnimationState.IDLE_AS_FOCUSED))
+            {
+                if(m_SelectedPassageIndex < 0 || m_SelectedPassageIndex >= NumberOfPassages)
+                    ShowPassage(0);
+
+            }
         }
 
         /// <summary>
