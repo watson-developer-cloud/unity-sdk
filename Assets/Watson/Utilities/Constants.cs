@@ -113,6 +113,10 @@ namespace IBM.Watson.Utilities
 			/// The event to stop move the avatar initial position
 			/// </summary>
 			ON_AVATAR_STOP_MOVE_DEFAULT,
+            /// <summary>
+            /// Event when avatar is speking. 
+            /// </summary>
+            ON_AVATAR_SPEAKING,
             #endregion
 
             #region Question
@@ -288,6 +292,10 @@ namespace IBM.Watson.Utilities
             /// Five finger tap event
             /// </summary>
             ON_TOUCH_FIVE_FINGER,
+            /// <summary>
+            /// Event while user is speaking
+            /// </summary>
+            ON_USER_SPEAKING,
 
             #endregion
         }

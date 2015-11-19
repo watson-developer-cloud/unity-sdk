@@ -99,16 +99,50 @@ namespace IBM.Watson.Widgets.Avatar
 				SetAudioData(m_LatestValueReceived, isWatsonTalking: m_IsWatsonIsTalking, setDataOnFrame: false);
             }
         }
-		#endregion
+        #endregion
 
+        private AvatarWidget m_AvatarWidgetAttached = null;
+        public AvatarWidget AvatarAttached
+        {
+            get
+            {
+                if(m_AvatarWidgetAttached == null)
+                    m_AvatarWidgetAttached = this.transform.GetComponentInParent<AvatarWidget>();
+                return m_AvatarWidgetAttached;
+            }
+        }
 
-		/// <summary>
-		/// Sets the audio data as Audio Data in delta time
-		/// </summary>
-		/// <param name="audioLevelData">Audio Level value.</param>
-		/// <param name="isWatsonTalking">If set to <c>true</c> is watson talking.</param>
-		/// <param name="setDataOnFrame">If set to <c>true</c> set data on frame.</param>
-		public void SetAudioData(float audioLevelData, bool isWatsonTalking = false, bool setDataOnFrame = true)
+        public void AvatarSpeaking(System.Object[] args)
+        {
+            if (AvatarAttached != null && AvatarAttached.State == AvatarWidget.AvatarState.ANSWERING)
+            {
+                if (args != null && args.Length == 1 && args[0] is float)
+                {
+                    float audioLevelOutput = (float)args[0];
+                    SetAudioData(audioLevelOutput, isWatsonTalking: true);
+                }
+            }
+        }
+
+        public void UserSpeaking(System.Object[] args)
+        {
+            if (AvatarAttached != null && AvatarAttached.State != AvatarWidget.AvatarState.ANSWERING)
+            {
+                if (args != null && args.Length == 1 && args[0] is float)
+                {
+                    float audioLevelOutput = (float)args[0];
+                    SetAudioData(audioLevelOutput, isWatsonTalking: false);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Sets the audio data as Audio Data in delta time
+        /// </summary>
+        /// <param name="audioLevelData">Audio Level value.</param>
+        /// <param name="isWatsonTalking">If set to <c>true</c> is watson talking.</param>
+        /// <param name="setDataOnFrame">If set to <c>true</c> set data on frame.</param>
+        public void SetAudioData(float audioLevelData, bool isWatsonTalking = false, bool setDataOnFrame = true)
         {
             this.m_SetDataOnFrame = setDataOnFrame;
 			this.m_IsWatsonIsTalking = isWatsonTalking;

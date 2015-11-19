@@ -30,6 +30,9 @@ namespace IBM.Watson.Widgets.Question
         [SerializeField]
         private Text m_ParseTreeTextField;
 
+		[SerializeField]
+		private RectTransform m_BoundingBox;
+
         private bool m_IsHighlighted = false;
         public bool IsHighlighted
         {
@@ -40,6 +43,7 @@ namespace IBM.Watson.Widgets.Question
                 m_RectTransform = m_ParseTreeTextField.gameObject.GetComponent<RectTransform>();
                 LeanTween.textColor(m_RectTransform, m_IsHighlighted ? m_ColorLight : m_ColorDark, m_TransitionTime);
                 LeanTween.scale(m_RectTransform, m_IsHighlighted ? m_ScaleUpSize : m_ScaleDownSize, m_TransitionTime);
+				LeanTween.alpha(m_BoundingBox, IsHighlighted ? 1.0f : 0.0f, m_TransitionTime);
             }
         }
 
@@ -53,6 +57,16 @@ namespace IBM.Watson.Widgets.Question
                 UpdateParseTreeTextField();
             }
         }
+
+		private long m_Position;
+		public long Position
+		{
+			get { return m_Position; }
+			set
+			{
+				m_Position = value;
+			}
+		}
 
         [SerializeField]
         private string m_POS;
@@ -73,10 +87,15 @@ namespace IBM.Watson.Widgets.Question
             set { m_Slot = value; }
         }
 
+//		public int m_ChildWordIndex { get; set; }
+		public RectTransform m_ParentWordRectTransform { get; set; }
+
         public List<string> m_Features = new List<string>();
+//		public List<GameObject> m_LeftChild = new List<GameObject>();
+//		public List<GameObject> m_RightChild = new List<GameObject>();
         private RectTransform m_RectTransform;
         private Color m_ColorLight = new Color(0.8f, 0.8f, 0.8f);
-        private Color m_ColorDark = new Color(0.3f, 0.3f, 0.3f);
+        private Color m_ColorDark = new Color(0.8f, 0.8f, 0.8f);
         private Vector3 m_ScaleUpSize = new Vector3(1.25f, 1.25f, 1.25f);
         private Vector3 m_ScaleDownSize = new Vector3(1f, 1f, 1f);
         private float m_TransitionTime = 0.5f;
@@ -95,6 +114,20 @@ namespace IBM.Watson.Widgets.Question
         private void UpdateParseTreeTextField()
         {
             m_ParseTreeTextField.text = ParseTreeWord;
+			Invoke("UpdateBoundingBox", 1f);
         }
+
+		private void UpdateBoundingBox()
+		{
+			RectTransform textRectTransform = m_ParseTreeTextField.gameObject.GetComponent<RectTransform>();
+			m_BoundingBox.pivot = new Vector2(0.5f, 0.5f);
+			float boxWidth = textRectTransform.rect.width + 40f;
+			float boxHeight = textRectTransform.rect.height + 30f;
+			float boxX = textRectTransform.rect.x + textRectTransform.rect.width;// + 20f;
+			float boxY = textRectTransform.rect.y;// - 15f;
+
+			m_BoundingBox.sizeDelta = new Vector2(boxWidth, boxHeight);
+			m_BoundingBox.anchoredPosition = new Vector2(boxX, boxY);
+		}
     }
 }

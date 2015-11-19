@@ -25,9 +25,12 @@ namespace IBM.Watson.Widgets.Question
 	/// </summary>
     public class POSControl : MonoBehaviour
     {
+		[SerializeField]
+		private GameObject m_TextBox;
+
         private RectTransform m_RectTransform;
         private Color m_ColorLight = new Color(0.8f, 0.8f, 0.8f);
-        private Color m_ColorDark = new Color(0.3f, 0.3f, 0.3f);
+        private Color m_ColorDark = new Color(0.7f, 0.7f, 0.7f);
         private Vector3 m_ScaleUpSize = new Vector3(1.25f, 1.25f, 1.25f);
         private Vector3 m_ScaleDownSize = new Vector3(1f, 1f, 1f);
         private float m_TransitionTime = 0.5f;
@@ -41,6 +44,7 @@ namespace IBM.Watson.Widgets.Question
                 m_IsHighlighted = value;
                 LeanTween.textColor(m_RectTransform, IsHighlighted ? m_ColorLight : m_ColorDark, m_TransitionTime);
                 LeanTween.scale(m_RectTransform, IsHighlighted ? m_ScaleUpSize : m_ScaleDownSize, m_TransitionTime);
+				LeanTween.alpha(m_TextBox.GetComponent<RectTransform>(), IsHighlighted ? 1.0f : 0.0f, m_TransitionTime);
             }
         }
 
