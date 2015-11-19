@@ -275,6 +275,12 @@ namespace IBM.Watson.Widgets.Question
             {
                 ShowPassage(-1);
             }
+            else if (Cube != null && (Cube.AnimationState == CubeAnimationManager.CubeAnimationState.IDLE_AS_FOCUSED))
+            {
+                if(m_SelectedPassageIndex < 0 || m_SelectedPassageIndex >= NumberOfPassages)
+                    ShowPassage(0);
+
+            }
         }
 
         /// <summary>
@@ -429,11 +435,7 @@ namespace IBM.Watson.Widgets.Question
                 m_TargetLocation[i] = m_BezierPathToCenter[i].pts[0];   // PassageList[i].localPosition;
                 m_TargetRotation[i] = m_BezierPathOrientationToCenter[i].pts[0];   //PassageList[i].localEulerAngles;
                 m_PassageScrollRect[i] = PassageList[i].GetComponentInChildren<ScrollRect>();
-                if(m_PassageScrollRect[i] != null)
-                {
-                    m_PassageScrollRect[i].velocity = Vector2.zero;
-                    m_PassageScrollRect[i].vertical = true;
-                }
+                SetScrollingEnable(i, false);
             }
 
         }
@@ -494,6 +496,15 @@ namespace IBM.Watson.Widgets.Question
 
         #region Finger Dragging / Release related actions
 
+        void SetScrollingEnable(int passageIndex, bool enable)
+        {
+            if (m_PassageScrollRect != null && m_PassageScrollRect.Length > passageIndex && m_PassageScrollRect[passageIndex] != null)
+            {
+                //m_PassageScrollRect[passageIndex].velocity = Vector2.zero;
+                m_PassageScrollRect[passageIndex].vertical = enable;
+            }
+        }
+
         void DragOneFingerOnFocusedSide(TouchScript.Gestures.ScreenTransformGesture OneFingerManipulationGesture)
         {
             if (NumberOfPassages > 0)
@@ -511,19 +522,26 @@ namespace IBM.Watson.Widgets.Question
                     m_SelectedPassageIndex = NumberOfPassages - 1;
                 }
 
-                //if (m_PassageScrollRect != null && m_PassageScrollRect.Length > m_SelectedPassageIndex && m_PassageScrollRect[m_SelectedPassageIndex] != null && m_PassageScrollRect[m_SelectedPassageIndex].enabled && m_PassageScrollRect[m_SelectedPassageIndex].velocity != Vector2.zero && GetPassageIndexTouch(OneFingerManipulationGesture.ScreenPosition) == m_SelectedPassageIndex)
-                //{
-                //    //do nothing - can't drag because passage is now in scroll mode
-                //}
+                if (GetPassageIndexTouch(OneFingerManipulationGesture.ScreenPosition) == m_SelectedPassageIndex)
+                {
+                    SetScrollingEnable(m_SelectedPassageIndex, true); 
+                    //do nothing - can't drag because passage is now in scroll mode
+                }
+                else
+                {
+                    SetScrollingEnable(m_SelectedPassageIndex, false);
+                }
                 //else
                 //{
-                    //While finger is dragging on passage , we are changing the percent according to X location change
-                    m_AnimationLocationRatio[m_SelectedPassageIndex] = Mathf.Clamp01(m_AnimationLocationRatio[m_SelectedPassageIndex] + movingInX);
-                    m_AnimationRotationRatio[m_SelectedPassageIndex] = Mathf.Clamp01(m_AnimationRotationRatio[m_SelectedPassageIndex] + movingInX);
+                //While finger is dragging on passage , we are changing the percent according to X location change
+                m_AnimationLocationRatio[m_SelectedPassageIndex] = Mathf.Clamp01(m_AnimationLocationRatio[m_SelectedPassageIndex] + movingInX);
+                m_AnimationRotationRatio[m_SelectedPassageIndex] = Mathf.Clamp01(m_AnimationRotationRatio[m_SelectedPassageIndex] + movingInX);
 
-                    SetTargetLocationAndRotationOfSelectedPassage();
+                SetTargetLocationAndRotationOfSelectedPassage();
+
+                
                 //}
-               
+
             }
             else
             {
@@ -568,7 +586,7 @@ namespace IBM.Watson.Widgets.Question
         {
             if (!m_IsTouchOnDragging && m_SelectedPassageIndex >= 0)
             {
-                bool canScroll = true;
+                bool canScroll = false;
                 int prevSelectedPassageIndex = m_SelectedPassageIndex;
 
                 if (m_AnimationLocationRatio[m_SelectedPassageIndex] < m_PercentToGoInitialPosition)
@@ -584,14 +602,14 @@ namespace IBM.Watson.Widgets.Question
                     m_AnimationLocationRatio[m_SelectedPassageIndex] = 0.5f;
                     m_AnimationRotationRatio[m_SelectedPassageIndex] = 0.5f;
                     SetTargetLocationAndRotationOfSelectedPassage();
-                    //canScroll = true;
+                    canScroll = true;
                 }
 
-                if (m_PassageScrollRect != null && m_PassageScrollRect.Length > prevSelectedPassageIndex && m_PassageScrollRect[prevSelectedPassageIndex] != null)
-                {
-                    m_PassageScrollRect[prevSelectedPassageIndex].velocity = Vector2.zero;
-                    m_PassageScrollRect[prevSelectedPassageIndex].vertical = canScroll;
-                }
+                //if (m_PassageScrollRect != null && m_PassageScrollRect.Length > prevSelectedPassageIndex && m_PassageScrollRect[prevSelectedPassageIndex] != null)
+                //{
+                //    m_PassageScrollRect[prevSelectedPassageIndex].velocity = Vector2.zero;
+                //    m_PassageScrollRect[prevSelectedPassageIndex].vertical = canScroll;
+                //}
             }
         }
 
@@ -638,7 +656,7 @@ namespace IBM.Watson.Widgets.Question
 
             for (int i = 0; i < NumberOfPassages; i++)
             {
-                bool canScroll = true;
+                bool canScroll = false;
                 if (PassageList[i] == null || PassageList[i].transform == null)
                 {
                     Log.Warning("PassageAnimationManager", "PassageList doesn't have the element index: {0}", i);
@@ -686,11 +704,11 @@ namespace IBM.Watson.Widgets.Question
                     }
                 }
 
-                if (m_PassageScrollRect != null && m_PassageScrollRect.Length > i && m_PassageScrollRect[i] != null)
-                {
-                    m_PassageScrollRect[i].velocity = Vector2.zero;
-                    m_PassageScrollRect[i].vertical = canScroll;
-                }
+                //if (m_PassageScrollRect != null && m_PassageScrollRect.Length > i && m_PassageScrollRect[i] != null)
+                //{
+                //    m_PassageScrollRect[i].velocity = Vector2.zero;
+                //    m_PassageScrollRect[i].vertical = canScroll;
+                //}
             }
 
         }
@@ -733,11 +751,23 @@ namespace IBM.Watson.Widgets.Question
                     {
                         hasChangeSiblingIndex = true;
                         if (isUsingTwoAnimations)
+                        {
                             PassageList[passageIndex].SetSiblingIndex(NumberOfPassages);
+                        }
                         else
+                        {
                             PassageList[passageIndex].SetSiblingIndex(NumberOfPassages - 1 - passageIndex);
+                        }
+                           
                     }
 
+                }).setOnComplete(()=>
+                {
+                    //if (m_PassageScrollRect != null && m_PassageScrollRect.Length > passageIndex && m_PassageScrollRect[passageIndex] != null)
+                    //{
+                    //    m_PassageScrollRect[passageIndex].velocity = Vector2.zero;
+                    //    m_PassageScrollRect[passageIndex].vertical = true;
+                    //}
                 });
 
             }

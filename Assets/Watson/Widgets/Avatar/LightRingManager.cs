@@ -301,6 +301,13 @@ namespace IBM.Watson.Widgets.Avatar
             }
         }
 
+        private void AnimateLightFlreForUnderstandingCase()
+        {
+
+            StopLightFlareAnimation();
+            //TODO: Finish the understanding part
+        }
+
         private void AnimateLightFlareForListening()
         {
             
