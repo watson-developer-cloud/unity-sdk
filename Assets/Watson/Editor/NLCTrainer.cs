@@ -54,8 +54,7 @@ namespace IBM.Watson.Editor
         [MenuItem("Watson/NLC Trainer")]
         private static void EditConfig()
         {
-            NLCTrainer window = (NLCTrainer)EditorWindow.GetWindow(typeof(NLCTrainer));
-            window.Show();
+            GetWindow<NLCTrainer>().Show();
         }
 
         private Texture m_WatsonIcon = null;
