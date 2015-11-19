@@ -227,6 +227,7 @@ namespace IBM.Watson.Widgets.Avatar
         {
             EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_CHANGE_AVATAR_MOOD, OnChangeMood);
             EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_CLASSIFY_RESULT, OnClassifyResult );
+            EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_QUESTION_CANCEL, OnCancelQuestion );
 
             DebugConsole.Instance.RegisterDebugInfo("STATE", OnStateDebugInfo);
             DebugConsole.Instance.RegisterDebugInfo("MOOD", OnMoodDebugInfo);
@@ -238,6 +239,7 @@ namespace IBM.Watson.Widgets.Avatar
         {
             EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_CHANGE_AVATAR_MOOD, OnChangeMood);
             EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_CLASSIFY_RESULT, OnClassifyResult );
+            EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_QUESTION_CANCEL, OnCancelQuestion );
 
             DebugConsole.Instance.UnregisterDebugInfo("STATE", OnStateDebugInfo);
             DebugConsole.Instance.UnregisterDebugInfo("MOOD", OnMoodDebugInfo);
@@ -461,6 +463,12 @@ namespace IBM.Watson.Widgets.Avatar
             }
         }
 
+        public void OnCancelQuestion( object [] args )
+        {
+            if ( State == AvatarState.THINKING )
+                State = AvatarState.LISTENING;
+        }
+
         /// <summary>
         /// Event handler for ON_CLASSIFY_DIALOG
         /// </summary>
@@ -534,50 +542,53 @@ namespace IBM.Watson.Widgets.Avatar
 
         private void OnAskQuestion( AskResponse response )
         {
-            if ( response != null && response.questions.HasQuestion() )
+            if ( State == AvatarState.THINKING )
             {
-                m_QuestionResult = response.questions;
-                m_ParseData = response.parseData;
-                m_AnswerResult = response.answers;
-
-                InstatiateQuestionWidget();
-
-                EventManager.Instance.SendEvent( Constants.Event.ON_QUESTION_PIPELINE, m_Pipeline );
-                EventManager.Instance.SendEvent( Constants.Event.ON_QUESTION, m_QuestionResult );
-                EventManager.Instance.SendEvent( Constants.Event.ON_QUESTION_PARSE, m_ParseData );
-                EventManager.Instance.SendEvent( Constants.Event.ON_QUESTION_ANSWERS, m_AnswerResult );
-                EventManager.Instance.SendEvent( Constants.Event.ON_QUESTION_LOCATION, XRAY.Location );
-
-                if ( m_AnswerResult != null && m_AnswerResult.HasAnswer() )
+                if ( response != null && response.questions.HasQuestion() )
                 {
-                    foreach (var a in m_AnswerResult.answers)
-                        Log.Debug("AvatarWidget", "A: {0} ({1})", a.answerText, a.confidence);
+                    m_QuestionResult = response.questions;
+                    m_ParseData = response.parseData;
+                    m_AnswerResult = response.answers;
 
-                    string answer = m_AnswerResult.answers[0].answerText;
-                    if ( answer.Length > m_MaxAnswerLength )
-                        answer = answer.Substring( 0, m_MaxAnswerLength );
-                    answer = Utility.RemoveTags( answer );
+                    InstatiateQuestionWidget();
 
-                    m_LastAnswer = answer;
-                    EventManager.Instance.SendEvent(Constants.Event.ON_DEBUG_MESSAGE, answer);
+                    EventManager.Instance.SendEvent( Constants.Event.ON_QUESTION_PIPELINE, m_Pipeline );
+                    EventManager.Instance.SendEvent( Constants.Event.ON_QUESTION, m_QuestionResult );
+                    EventManager.Instance.SendEvent( Constants.Event.ON_QUESTION_PARSE, m_ParseData );
+                    EventManager.Instance.SendEvent( Constants.Event.ON_QUESTION_ANSWERS, m_AnswerResult );
+                    EventManager.Instance.SendEvent( Constants.Event.ON_QUESTION_LOCATION, XRAY.Location );
 
-                    // HACK: until we know if the answer is WDA or WEA, just look at the pipeline name for now.
-                    if ( m_Pipeline == "woodside" )
+                    if ( m_AnswerResult != null && m_AnswerResult.HasAnswer() )
                     {
-                        m_TextOutput.SendData( new TextData( string.Format( m_AnswerFormatWEA, m_Pipeline ) ) );
-                        EventManager.Instance.SendEvent( Constants.Event.ON_COMMAND_ANSWERS );
+                        foreach (var a in m_AnswerResult.answers)
+                            Log.Debug("AvatarWidget", "A: {0} ({1})", a.answerText, a.confidence);
+
+                        string answer = m_AnswerResult.answers[0].answerText;
+                        if ( answer.Length > m_MaxAnswerLength )
+                            answer = answer.Substring( 0, m_MaxAnswerLength );
+                        answer = Utility.RemoveTags( answer );
+
+                        m_LastAnswer = answer;
+                        EventManager.Instance.SendEvent(Constants.Event.ON_DEBUG_MESSAGE, answer);
+
+                        // HACK: until we know if the answer is WDA or WEA, just look at the pipeline name for now.
+                        if ( m_Pipeline == "woodside" )
+                        {
+                            m_TextOutput.SendData( new TextData( string.Format( m_AnswerFormatWEA, m_Pipeline ) ) );
+                            EventManager.Instance.SendEvent( Constants.Event.ON_COMMAND_ANSWERS );
+                        }
+                        else
+                        {
+                            m_TextOutput.SendData(new TextData(answer));
+                        }
                     }
-                    else
-                    {
-                        m_TextOutput.SendData(new TextData(answer));
-                    }
+
+                    State = AvatarState.LISTENING;
                 }
-
-                State = AvatarState.LISTENING;
-            }
-            else
-            {
-                State = AvatarState.ERROR;
+                else
+                {
+                    State = AvatarState.ERROR;
+                }
             }
         }
 

@@ -72,8 +72,8 @@ MonoBehaviour:
     m_Event: 403
   - m_Class: sleep
     m_Event: 404
-  - m_Class: question
-    m_Event: 401
+  - m_Class: cancel
+    m_Event: 210
   - m_Class: dialog
     m_Event: 402
   - m_Class: debug_on
@@ -151,6 +151,14 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[15].m_Class
       value: question-numerati_woodside
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[2].m_Class
+      value: cancel
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[2].m_Event
+      value: 210
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
