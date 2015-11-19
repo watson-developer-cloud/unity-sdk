@@ -30,6 +30,9 @@ namespace IBM.Watson.Widgets.Question
         [SerializeField]
         private Text m_ParseTreeTextField;
 
+		[SerializeField]
+		private RectTransform m_BoundingBox;
+
         private bool m_IsHighlighted = false;
         public bool IsHighlighted
         {
@@ -40,6 +43,7 @@ namespace IBM.Watson.Widgets.Question
                 m_RectTransform = m_ParseTreeTextField.gameObject.GetComponent<RectTransform>();
                 LeanTween.textColor(m_RectTransform, m_IsHighlighted ? m_ColorLight : m_ColorDark, m_TransitionTime);
                 LeanTween.scale(m_RectTransform, m_IsHighlighted ? m_ScaleUpSize : m_ScaleDownSize, m_TransitionTime);
+				LeanTween.alpha(m_BoundingBox, IsHighlighted ? 1.0f : 0.0f, m_TransitionTime);
             }
         }
 
@@ -110,6 +114,20 @@ namespace IBM.Watson.Widgets.Question
         private void UpdateParseTreeTextField()
         {
             m_ParseTreeTextField.text = ParseTreeWord;
+			Invoke("UpdateBoundingBox", 1f);
         }
+
+		private void UpdateBoundingBox()
+		{
+			RectTransform textRectTransform = m_ParseTreeTextField.gameObject.GetComponent<RectTransform>();
+			m_BoundingBox.pivot = new Vector2(0.5f, 0.5f);
+			float boxWidth = textRectTransform.rect.width + 40f;
+			float boxHeight = textRectTransform.rect.height + 30f;
+			float boxX = textRectTransform.rect.x + textRectTransform.rect.width;// + 20f;
+			float boxY = textRectTransform.rect.y;// - 15f;
+
+			m_BoundingBox.sizeDelta = new Vector2(boxWidth, boxHeight);
+			m_BoundingBox.anchoredPosition = new Vector2(boxX, boxY);
+		}
     }
 }
