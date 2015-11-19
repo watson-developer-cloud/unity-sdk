@@ -158,7 +158,7 @@ namespace IBM.Watson.Widgets.Question
 			//	add to word list
 			m_WordList.Add(word);
 
-			if(parseWord.leftChild.Length > 0)
+			if(parseWord.leftChildren.Length > 0)
 			{
 				//	create and populate left children
 				GameObject leftChild = new GameObject("Left Child");
@@ -168,13 +168,13 @@ namespace IBM.Watson.Widgets.Question
 				leftChildRectTransform.position = new Vector3(-200f, -verticalWordSpacing, 0f);
 				leftChildRectTransform.SetParent(wordRectTransform, false);
 
-				for(int i = 0; i < parseWord.leftChild.Length; i++)
+				for(int i = 0; i < parseWord.leftChildren.Length; i++)
 				{
-					CreateParseWord(parseWord.leftChild[i], leftChildRectTransform, wordRectTransform);
+					CreateParseWord(parseWord.leftChildren[i], leftChildRectTransform, wordRectTransform);
 				}
 			}
 
-			if(parseWord.rightChild.Length > 0)
+			if(parseWord.rightChildren.Length > 0)
 			{
 				//	create and populate right children
 				GameObject rightChild = new GameObject("Right Child");
@@ -184,9 +184,9 @@ namespace IBM.Watson.Widgets.Question
 				rightChildRectTransform.position = new Vector3(200f, -verticalWordSpacing, 0f);
 				rightChildRectTransform.SetParent(wordRectTransform, false);
 				
-				for(int k = 0; k < parseWord.rightChild.Length; k++)
+				for(int k = 0; k < parseWord.rightChildren.Length; k++)
 				{
-					CreateParseWord(parseWord.rightChild[k], rightChildRectTransform, wordRectTransform);
+					CreateParseWord(parseWord.rightChildren[k], rightChildRectTransform, wordRectTransform);
 				}
 			}
 

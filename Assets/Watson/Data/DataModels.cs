@@ -1,4 +1,8 @@
-﻿/**
+﻿
+
+
+using FullSerializer;
+/**
 * Copyright 2015 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,8 +19,6 @@
 *
 * @author Richard Lyle (rolyle@us.ibm.com)
 */
-
-
 using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
 using System;
@@ -299,180 +301,73 @@ namespace IBM.Watson.Data
         {
             public long position { get; set; }
             public string text { get; set; }
-            public ParseTree [] rightChild { get; set; }
-            public ParseTree [] leftChild { get; set; }
+            public ParseTree [] rightChildren { get; set; }
+            public ParseTree [] leftChildren { get; set; }
+        };
 
-            public ParseTree( IDictionary json )
+        public class Value
+        {
+            public string text { get; set; }
+            public string value { get; set; }
+        };
+        public class ArrayValue
+        {
+            public string text { get; set; }
+            public string [] value { get; set; }
+        };
+        public class Parse
+        {
+            public string [] flags { get; set; }
+            public string [] words { get; set; }
+            public Value [] pos { get; set; }
+            public Value [] slot { get; set; }
+            public ArrayValue [] features { get; set; }
+        };
+
+        public class ParseDataProcessor : fsObjectProcessor
+        {
+            public override bool CanProcess(Type type)
             {
-                ParseJson( json );
+                return typeof(ParseData).IsAssignableFrom(type);
             }
 
-            public void ParseJson( IDictionary json )
+            public override void OnAfterDeserialize(Type storageType, object instance)
             {
-                if ( json == null )
-                    throw new ArgumentNullException( "json" );
+                ParseData parseData = instance as ParseData;
+                if ( parseData == null )
+                    throw new WatsonException( "Unexpected type." );
 
-                position = (long)json["position"];
-                text = (string)json["text"];
+                base.OnAfterDeserialize(storageType, instance);
 
-                if ( json.Contains( "rightChildren" ) )
+                List<ParseWord> words = new List<ParseWord>();
+
+                if ( parseData.parse != null 
+                    && parseData.parse.words != null )
                 {
-                    List<ParseTree> children = new List<ParseTree>();
-                    IList iChildren = json["rightChildren"] as IList;
-                    foreach( var iChild in iChildren )
-                        children.Add( new ParseTree( iChild as IDictionary ) );
-                    rightChild = children.ToArray();
+                    for (int i = 0; i < parseData.parse.words.Length; ++i)
+                    {
+                        ParseWord word = new ParseWord();
+                        word.Word = parseData.parse.words[i];
+                        word.PosName = parseData.parse.pos[i].value;
+                        word.Slot = parseData.parse.slot[i].value;
+                        word.Features = parseData.parse.features[i].value;
+                        words.Add(word);
+                    }
                 }
-                if ( json.Contains( "leftChildren" ) )
-                {
-                    List<ParseTree> children = new List<ParseTree>();
-                    IList iChildren = json["leftChildren"] as IList;
-                    foreach( var iChild in iChildren )
-                        children.Add( new ParseTree( iChild as IDictionary ) );
-                    leftChild = children.ToArray();
-                }
+
+                parseData.Words = words.ToArray();
             }
         };
 
         /// <summary>
         /// This data class is returned by the GetParseData() function.
         /// </summary>
+        [fsObject(Processor = typeof(ParseDataProcessor))]
         public class ParseData
         {
             public ParseWord[] Words { get; set; }
-            public string[] Flags { get; set; }
+            public Parse parse { get; set; }
             public ParseTree parseTree { get; set; }
-
-            public ParseData()
-            { }
-
-            /// <summary>
-            /// Marshal a QA.Question object into this ParseData object.
-            /// </summary>
-            /// <param name="question"></param>
-            public ParseData( QA.Question question )
-            {
-                if ( question.xsgtopparses != null && question.xsgtopparses.Length > 0 )
-                {
-                    Queue<QA.Word> tree = new Queue<QA.Word>();
-                    tree.Enqueue( question.xsgtopparses[0] );
-
-                    List<ParseWord> words = new List<ParseWord>();
-                    while( tree.Count > 0 )
-                    {
-                        QA.Word word = tree.Dequeue();
-                        if (word.lmods != null )
-                        {
-                            foreach( var child in word.lmods )
-                                tree.Enqueue( child );
-                        }
-                        if ( word.rmods != null )
-                        {
-                            foreach( var child in word.rmods )
-                                tree.Enqueue( child );
-                        }
-
-                        ParseWord parseWord = new ParseWord();
-                        parseWord.Slot = word.slotname;
-                        parseWord.Word = word.wordtext;
-                        parseWord.Features = word.features.Split( ' ' );
-                        parseWord.PosName = parseWord.Features[0];
-
-                        int index = int.Parse( word.seqno ) - 1;
-                        while(words.Count <= index )
-                            words.Add( null );
-                        words[ index ] = parseWord;
-                    }
-
-                    Words = words.ToArray();
-                }
-                else
-                {
-                    Log.Warning( "ParseData", "XSG parse tree not available." );
-
-                    List<ParseWord> words = new List<ParseWord>();
-                    foreach( var word in question.questionText.Split( ' ' ) )
-                    {
-                        ParseWord parseWord = new ParseWord();
-                        parseWord.Slot = string.Empty;
-                        parseWord.Word = word;
-                        parseWord.Features = new string[0];
-
-                        // look for the part of speech in the synonymList..
-                        if ( question.synonymList != null )
-                        {
-                            foreach( var syn in question.synonymList )
-                            {
-                                if ( syn.value == word )
-                                    parseWord.PosName = syn.partOfSpeech;
-                            }
-                        }
-                        words.Add( parseWord );
-                    }
-
-                    Words = words.ToArray();
-                }
-            }
-
-            public bool ParseJson(IDictionary json)
-            {
-                if ( json == null )
-                    throw new ArgumentNullException("json");
-
-                try
-                {
-                    IDictionary iparse = (IDictionary)json["parse"];
-
-                    List<string> flags = new List<string>();
-                    IList iflags = (IList)iparse["flags"];
-                    foreach (var f in iflags)
-                        flags.Add((string)f);
-                    Flags = flags.ToArray();
-
-                    if ( json.Contains( "parseTree" ) )
-                        parseTree = new ParseTree( json["parseTree"] as IDictionary );
-
-                    List<ParseWord> words = new List<ParseWord>();
-
-                    IList iWords = (IList)iparse["words"];
-                    for (int i = 0; i < iWords.Count; ++i)
-                    {
-                        ParseWord word = new ParseWord();
-                        word.Word = (string)iWords[i];
-
-                        IList iPos = (IList)iparse["pos"];
-                        if (iPos.Count != iWords.Count)
-                            throw new WatsonException("ipos.Count != iwords.Count");
-                        word.PosName = (string)((IDictionary)iPos[i])["value"];
-
-                        IList iSlots = (IList)iparse["slot"];
-                        if (iSlots.Count != iWords.Count)
-                            throw new WatsonException("islots.Count != iwords.Count");
-                        word.Slot = (string)((IDictionary)iSlots[i])["value"];
-
-                        IList iFeatures = (IList)iparse["features"];
-                        if (iFeatures.Count != iWords.Count)
-                            throw new WatsonException("ifeatures.Count != iwords.Count");
-
-                        List<string> features = new List<string>();
-                        IList iWordFeatures = (IList)((IDictionary)iFeatures[i])["value"];
-                        foreach (var k in iWordFeatures)
-                            features.Add((string)k);
-                        word.Features = features.ToArray();
-
-                        words.Add(word);
-                    }
-
-                    Words = words.ToArray();
-                    return true;
-                }
-                catch (Exception e)
-                {
-                    Log.Error("XRAY", "Exception during parse: {0}", e.ToString());
-                }
-
-                return false;
-            }
         };
 
         public class Evidence
@@ -615,6 +510,13 @@ namespace IBM.Watson.Data
                         bestAnswer.correctAnswer = true;
                 }
             }
+        };
+
+        public class AskResponse
+        {
+            public Questions questions { get; set; }
+            public Answers answers { get; set; }
+            public ParseData parseData { get; set; }
         };
     }
     #endregion

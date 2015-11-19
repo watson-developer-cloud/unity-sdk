@@ -313,6 +313,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_FeatureItemPrefab: {fileID: 107732, guid: 171a2fc86dcb641da948eb213a4b1b3c, type: 2}
   m_FeaturesCanvasRectTransform: {fileID: 22481310}
+  m_MaxFeatures: 8
 --- !u!114 &11444746
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -552,6 +553,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_EvidenceItemPrefab: {fileID: 173084, guid: 05daab512f7074b0d97d56cccf24d998, type: 2}
   m_EvidenceCanvasRectTransform: {fileID: 22491246}
+  m_MaxEvidence: 3
 --- !u!114 &11499436
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -845,7 +847,11 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: m_MaxFeatures
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 165186}

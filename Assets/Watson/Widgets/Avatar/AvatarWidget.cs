@@ -122,6 +122,9 @@ namespace IBM.Watson.Widgets.Avatar
         private SpeechResultList m_SpeechResult = null;
         private Questions m_QuestionResult = null;
         private Answers m_AnswerResult = null;
+        [SerializeField]
+        private int m_MaxAnswerLength = 255;
+        private string m_LastAnswer = string.Empty;
         private ParseData m_ParseData = null;
         private QuestionWidget m_FocusQuestion = null;
         private bool m_GettingAnswers = false;
@@ -174,6 +177,7 @@ namespace IBM.Watson.Widgets.Avatar
                 {
                     m_State = value;
                     EventManager.Instance.SendEvent(Constants.Event.ON_CHANGE_AVATAR_STATE_FINISH, this, value);
+
 					// if we went into an error state, automatically try to reconnect after a timeout..
                     if (m_State == AvatarState.ERROR)
                     {
@@ -222,6 +226,7 @@ namespace IBM.Watson.Widgets.Avatar
         void OnEnable()
         {
             EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_CHANGE_AVATAR_MOOD, OnChangeMood);
+            EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_CLASSIFY_RESULT, OnClassifyResult );
 
             DebugConsole.Instance.RegisterDebugInfo("STATE", OnStateDebugInfo);
             DebugConsole.Instance.RegisterDebugInfo("MOOD", OnMoodDebugInfo);
@@ -232,6 +237,7 @@ namespace IBM.Watson.Widgets.Avatar
         void OnDisable()
         {
             EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_CHANGE_AVATAR_MOOD, OnChangeMood);
+            EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_CLASSIFY_RESULT, OnClassifyResult );
 
             DebugConsole.Instance.UnregisterDebugInfo("STATE", OnStateDebugInfo);
             DebugConsole.Instance.UnregisterDebugInfo("MOOD", OnMoodDebugInfo);
@@ -282,17 +288,7 @@ namespace IBM.Watson.Widgets.Avatar
         }
         private string OnAnwserDebugInfo()
         {
-            if (m_AnswerResult != null && m_AnswerResult.HasAnswer())
-            {
-                string answer = m_AnswerResult.answers[0].answerText;
-                int newLine = answer.IndexOf( '\n' );
-                if ( newLine > 0 )
-                    answer = answer.Substring( 0, newLine );
-                answer = Utility.RemoveTags( answer );
-
-                return string.Format("{0} ({1:0.00})", answer, m_AnswerResult.answers[0].confidence);
-            }
-            return string.Empty;
+            return m_LastAnswer;
         }
 
         private void OnNextMood()
@@ -358,10 +354,13 @@ namespace IBM.Watson.Widgets.Avatar
             if ( bdata == null )
                 throw new WatsonException( "Unexpected data type." );
 
-            if ( bdata.Boolean )
-                State = AvatarState.ANSWERING;
-            else
-                State = m_PreviousListeningMode;
+            if ( State != AvatarState.ERROR )
+            {
+                if ( bdata.Boolean )
+                    State = AvatarState.ANSWERING;
+                else
+                    State = m_PreviousListeningMode;
+            }
         }
         #endregion
 
@@ -433,6 +432,11 @@ namespace IBM.Watson.Widgets.Avatar
             }
         }
 
+        public void OnClassifyResult( object [] args )
+        {
+            m_ClassifyResult = args[0] as ClassifyResult;
+        }
+
         /// <summary>
         /// Event handler for ON_CLASSIFY_QUESTION
         /// </summary>
@@ -445,7 +449,6 @@ namespace IBM.Watson.Widgets.Avatar
 
             if (State == AvatarState.LISTENING)
             {
-                m_ClassifyResult = result;
                 if ( result.top_class.Contains( "-" ) )
                     m_Pipeline = result.top_class.Substring( result.top_class.IndexOf('-') + 1 );
 
@@ -529,15 +532,13 @@ namespace IBM.Watson.Widgets.Avatar
         [SerializeField]
         private string m_AnswerFormatWEA = "Here is what I found in the {0} corpus.";
 
-        private void OnAskQuestion( ParseData parse, Questions questions)
+        private void OnAskQuestion( AskResponse response )
         {
-            if ( questions != null && questions.HasQuestion() )
+            if ( response != null && response.questions.HasQuestion() )
             {
-                m_QuestionResult = questions;
-                m_ParseData = parse;
-
-                Watson.Data.XRAY.Question topQuestion = questions.questions[0];
-                m_AnswerResult = m_XRAY.GetAnswers( m_Pipeline, topQuestion.questionId );
+                m_QuestionResult = response.questions;
+                m_ParseData = response.parseData;
+                m_AnswerResult = response.answers;
 
                 InstatiateQuestionWidget();
 
@@ -553,10 +554,11 @@ namespace IBM.Watson.Widgets.Avatar
                         Log.Debug("AvatarWidget", "A: {0} ({1})", a.answerText, a.confidence);
 
                     string answer = m_AnswerResult.answers[0].answerText;
-                    int newLine = answer.IndexOf( '\n' );
-                    if ( newLine > 0 )
-                        answer = answer.Substring( 0, newLine );
+                    if ( answer.Length > m_MaxAnswerLength )
+                        answer = answer.Substring( 0, m_MaxAnswerLength );
+                    answer = Utility.RemoveTags( answer );
 
+                    m_LastAnswer = answer;
                     EventManager.Instance.SendEvent(Constants.Event.ON_DEBUG_MESSAGE, answer);
 
                     // HACK: until we know if the answer is WDA or WEA, just look at the pipeline name for now.
@@ -567,7 +569,6 @@ namespace IBM.Watson.Widgets.Avatar
                     }
                     else
                     {
-                        // TODO: We probably don't want to do this with a WEA..
                         m_TextOutput.SendData(new TextData(answer));
                     }
                 }

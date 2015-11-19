@@ -114,7 +114,7 @@ namespace IBM.Watson.Utilities
 			/// </summary>
 			ON_AVATAR_STOP_MOVE_DEFAULT,
             /// <summary>
-            /// Event when avatar is speking. 
+            /// Event when avatar is speaking. 
             /// </summary>
             ON_AVATAR_SPEAKING,
             #endregion
@@ -276,6 +276,10 @@ namespace IBM.Watson.Utilities
             /// 
             /// </summary>
             ON_COMMAND_LOCATION,
+            /// <summary>
+            /// Sent when any classify result is made.
+            /// </summary>
+            ON_CLASSIFY_RESULT,
 
             #endregion
 

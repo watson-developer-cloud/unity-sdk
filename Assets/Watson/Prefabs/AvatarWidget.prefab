@@ -59,6 +59,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AutoConnect: 1
+  m_MaxAnswerLength: 255
   m_HelloPhrases:
   - Hello
   - Yo
@@ -97,7 +98,8 @@ MonoBehaviour:
     m_TargetConnection: TextToSpeech/Text
   m_QuestionPrefab: {fileID: 165892, guid: 3ef744c88ba744c2fbae1ce7de5150ce, type: 2}
   m_DialogName: lab_ga2
-  m_RestartInterval: 30
+  m_RestartInterval: 5
+  m_AnswerFormatWEA: Here is what I found in the {0} corpus.
   m_StateInfo:
   - m_State: -1
     m_Color: {r: .945098042, g: .945098042, b: .949019611, a: 1}
@@ -317,6 +319,10 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_GoodbyePhrases.Array.data[11]
       value: Goodday Mate
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_RestartInterval
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

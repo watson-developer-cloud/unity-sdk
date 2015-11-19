@@ -16,6 +16,8 @@
 * @author Richard Lyle (rolyle@us.ibm.com)
 */
 
+#define TEST_WOODSIDE
+
 using System.Collections;
 using IBM.Watson.Services.v1;
 using IBM.Watson.Logging;
@@ -25,8 +27,13 @@ namespace IBM.Watson.UnitTests
 {
     public class TestXRAY : UnitTest
     {
+#if TEST_WOODSIDE
+        const string TEST_QUESTION = "When were Angel high rate trials conducted?";
+        const string TEST_PIPELINE = "woodside";
+#else
         const string TEST_QUESTION = "What is the capital of Texas";
         const string TEST_PIPELINE = "thunderstone";
+#endif
 
         XRAY m_XRAY = new XRAY();
         bool m_AskQuestionTested = false;
@@ -36,6 +43,7 @@ namespace IBM.Watson.UnitTests
 
         public override IEnumerator RunTest()
         {
+            m_XRAY.DisableCache = true;
             m_XRAY.AskQuestion( TEST_PIPELINE, TEST_QUESTION, OnAskQuestion );
             while(! m_AskQuestionTested )
                 yield return null;
@@ -50,23 +58,19 @@ namespace IBM.Watson.UnitTests
             yield break;
         }
 
-        private void OnAskQuestion( ParseData parse, Questions questions )
+        private void OnAskQuestion( AskResponse response )
         {
-            Test( questions != null );
-            if ( questions != null  )
+            Test( response != null );
+            if ( response != null  )
             {
-                foreach( var question in questions.questions )
-                {
-                    Log.Status( "TestXRAY", "OnAskQuestion: {0} ({1})", question.question.questionText, question.topConfidence );
-                    OnGetAnswers( m_XRAY.GetAnswers( TEST_PIPELINE, question.questionId ) );
-                    OnGetParseData( parse );
-                    OnGetQuestion( m_XRAY.GetQuestion( TEST_PIPELINE, question.questionId ) );
-                }
+                OnGetQuestion( response.questions );
+                OnGetAnswers( response.answers );
+                OnGetParseData( response.parseData );
             }
             else
             {
                 // don't hang the unit test
-                m_GetAnswersTested = m_ParseTested = true;
+                m_GetQuestionTested = m_GetAnswersTested = m_ParseTested = true;
             }
 
             m_AskQuestionTested = true;
