@@ -174,24 +174,31 @@ namespace IBM.Watson.Widgets
                 if ( m_TopClassText != null )
                     m_TopClassText.text = result.top_class; 
 
-                if ( !string.IsNullOrEmpty( result.top_class) 
-                        && result.topConfidence >= m_MinClassEventConfidence )
+                if ( !string.IsNullOrEmpty( result.top_class) )
                 {
-                    if ( m_ClassEventList.Count > 0 && m_ClassEventMap.Count == 0 )
+                    if ( result.topConfidence >= m_MinClassEventConfidence )
                     {
-                        // initialize the map
-                        foreach( var ev in m_ClassEventList )
-                            m_ClassEventMap[ ev.m_Class ] = ev.m_Event;
-                    }
+                        if ( m_ClassEventList.Count > 0 && m_ClassEventMap.Count == 0 )
+                        {
+                            // initialize the map
+                            foreach( var ev in m_ClassEventList )
+                                m_ClassEventMap[ ev.m_Class ] = ev.m_Event;
+                        }
 
-                    Constants.Event sendEvent;
-                    if (! m_ClassEventMap.TryGetValue( result.top_class, out sendEvent ) )
-                    {
-                        Log.Warning( "NlcWidget", "No class mapping found for {0}", result.top_class );
-                        EventManager.Instance.SendEvent( result.top_class, result );
+                        Constants.Event sendEvent;
+                        if (! m_ClassEventMap.TryGetValue( result.top_class, out sendEvent ) )
+                        {
+                            Log.Warning( "NlcWidget", "No class mapping found for {0}", result.top_class );
+                            EventManager.Instance.SendEvent( result.top_class, result );
+                        }
+                        else
+                            EventManager.Instance.SendEvent( sendEvent, result );
                     }
                     else
-                        EventManager.Instance.SendEvent( sendEvent, result );
+                    {
+                        if ( result.topConfidence > m_IgnoreWordConfidence )
+                            EventManager.Instance.SendEvent( Constants.Event.ON_CLASSIFY_FAILURE, result );
+                    }
                 }
             }
 	    }
