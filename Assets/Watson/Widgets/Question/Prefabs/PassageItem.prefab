@@ -312,8 +312,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_PassageText: {fileID: 11453774}
   m_TabItem: {fileID: 11494782}
-  m_TablePrefab: {fileID: 0}
-  m_CellPrefab: {fileID: 0}
 --- !u!114 &11429982
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -410,8 +408,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 11498932}
   m_HandleRect: {fileID: 22474260}
   m_Direction: 2
-  m_Value: 0
-  m_Size: .250977635
+  m_Value: .5
+  m_Size: .268396735
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -984,7 +982,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: .5, y: .5}
   m_AnchorMax: {x: .5, y: .5}
-  m_AnchoredPosition: {x: 0, y: 1078}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 764, y: 0}
   m_Pivot: {x: .5, y: .5}
 --- !u!224 &22457824
