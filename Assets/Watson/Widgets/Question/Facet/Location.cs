@@ -44,7 +44,7 @@ namespace IBM.Watson.Widgets.Question
             {
                 m_LocationString = value;
                 if (m_LocationText != null )
-                    m_LocationText.text = LocationString;
+					UpdateLocation();
             }
         }
 
@@ -86,6 +86,26 @@ namespace IBM.Watson.Widgets.Question
 			EventManager.Instance.UnregisterEventReceiver( Constants.Event.ON_QUESTION_LOCATION, OnLocationData );
 		}
 
+        /// <summary>
+        /// Update the Location view.
+        /// </summary>
+        private void UpdateLocation()
+        {
+            m_LocationText.text = LocationString;
+        }
+
+		/// <summary>
+		/// Updates the map based on Latitude and Longitude.
+		/// </summary>
+		private void UpdateMap()
+		{
+
+		}
+
+		/// <summary>
+		/// Callback for Location data.
+		/// </summary>
+		/// <param name="args">Arguments.</param>
 		private void OnLocationData( object [] args )
 		{
             if ( Focused )
