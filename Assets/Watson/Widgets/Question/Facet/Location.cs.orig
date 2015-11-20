@@ -28,7 +28,11 @@ namespace IBM.Watson.Widgets.Question
 	/// <summary>
 	/// Handles all Location Facet functionality.
 	/// </summary>
+<<<<<<< HEAD
+	public class Location : MonoBehaviour
+=======
     public class Location : Facet
+>>>>>>> develop
     {
         [SerializeField]
         private Text m_LocationText;
@@ -86,13 +90,12 @@ namespace IBM.Watson.Widgets.Question
 			EventManager.Instance.UnregisterEventReceiver( Constants.Event.ON_QUESTION_LOCATION, OnLocationData );
 		}
 
+<<<<<<< HEAD
 		/// <summary>
 		/// Set LocationString from data.
 		/// </summary>
-		override public void Init()
+		public void Init()
         {
-			base.Init ();
-
 			LocationString = m_LocationData;
             UpdateLocation();
         }
@@ -117,6 +120,8 @@ namespace IBM.Watson.Widgets.Question
 		/// Callback for Location data.
 		/// </summary>
 		/// <param name="args">Arguments.</param>
+=======
+>>>>>>> develop
 		private void OnLocationData( object [] args )
 		{
             if ( Focused )

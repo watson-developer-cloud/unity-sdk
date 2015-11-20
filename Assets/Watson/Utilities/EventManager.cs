@@ -150,7 +150,11 @@ namespace IBM.Watson.Utilities
         {
             if (m_EventTypeName.Count == 0)
                 InitializeEventTypeNames();
-            return SendEvent(m_EventTypeName[eventType], args);
+
+            if (eventType != Constants.Event.NONE)
+                return SendEvent(m_EventTypeName[eventType], args);
+            else
+                return false;
         }
 
         /// <summary>

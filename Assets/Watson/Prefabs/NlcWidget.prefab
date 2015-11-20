@@ -100,6 +100,36 @@ MonoBehaviour:
     m_Event: 401
   - m_Class: question-numerati_woodside
     m_Event: 401
+  - m_Class: pan_left
+    m_Event: -1
+  - m_Class: pan_right
+    m_Event: -1
+  - m_Class: pan_up
+    m_Event: -1
+  - m_Class: pan_down
+    m_Event: -1
+  - m_Class: zoom_in
+    m_Event: -1
+  - m_Class: zoom_out
+    m_Event: -1
+  - m_Class: show_next_passage
+    m_Event: 415
+  - m_Class: show_next_answer
+    m_Event: 415
+  - m_Class: show_next
+    m_Event: 415
+  - m_Class: show_previous_passage
+    m_Event: 416
+  - m_Class: show_previous_answer
+    m_Event: 416
+  - m_Class: show_previous
+    m_Event: 416
+  - m_Class: scroll_up
+    m_Event: 417
+  - m_Class: scroll_down
+    m_Event: 418
+  - m_Class: repeat_last_action
+    m_Event: 419
   m_TopClassText: {fileID: 0}
 --- !u!1001 &100100000
 Prefab:
@@ -110,7 +140,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.size
-      value: 16
+      value: 31
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassifierId
@@ -159,6 +189,126 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[2].m_Event
       value: 210
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[16].m_Class
+      value: pan_left
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[16].m_Event
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[17].m_Class
+      value: pan_right
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[17].m_Event
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[18].m_Class
+      value: pan_up
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[19].m_Class
+      value: pan_down
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[18].m_Event
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[19].m_Event
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[20].m_Class
+      value: zoom_in
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[21].m_Class
+      value: zoom_out
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[20].m_Event
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[21].m_Event
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[22].m_Class
+      value: show_next_passage
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[23].m_Class
+      value: show_next_answer
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[24].m_Class
+      value: show_next
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[25].m_Class
+      value: show_previous_passage
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[26].m_Class
+      value: show_previous_answer
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[27].m_Class
+      value: show_previous
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[28].m_Class
+      value: scroll_up
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[29].m_Class
+      value: scroll_down
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[30].m_Class
+      value: repeat_last_action
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[30].m_Event
+      value: 419
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[29].m_Event
+      value: 418
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[28].m_Event
+      value: 417
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[27].m_Event
+      value: 416
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[22].m_Event
+      value: 415
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[23].m_Event
+      value: 415
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[24].m_Event
+      value: 415
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[25].m_Event
+      value: 416
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[26].m_Event
+      value: 416
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

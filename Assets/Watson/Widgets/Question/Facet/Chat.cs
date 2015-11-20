@@ -29,7 +29,7 @@ namespace IBM.Watson.Widgets.Question
     /// <summary>
     /// This class handles displaying the avatar chat.
     /// </summary>
-    public class Chat : MonoBehaviour
+    public class Chat : Facet
     {
         [SerializeField]
         private VerticalLayoutGroup m_ChatLayout = null;
@@ -72,38 +72,44 @@ namespace IBM.Watson.Widgets.Question
 
         private void OnQuestion(object [] args)
         {
-            if ( args != null && args.Length > 0 )
+            if ( Focused )
             {
-                Questions questions = args[0] as Questions;
-                if ( questions != null && questions.HasQuestion() )
+                if ( args != null && args.Length > 0 )
                 {
-                    if (! sm_History.Contains( questions ) )
+                    Questions questions = args[0] as Questions;
+                    if ( questions != null && questions.HasQuestion() )
                     {
-                        sm_History.Add( questions );
-                        while( sm_History.Count > m_HistoryCount )
-                            sm_History.RemoveAt( 0 );
-                    }
+                        if (! sm_History.Contains( questions ) )
+                        {
+                            sm_History.Add( questions );
+                            while( sm_History.Count > m_HistoryCount )
+                                sm_History.RemoveAt( 0 );
+                        }
 
-                    AddChat( questions.questions[0].question.questionText, m_QuestionPrefab.gameObject );
+                        AddChat( questions.questions[0].question.questionText, m_QuestionPrefab.gameObject );
+                    }
                 }
             }
         }
 
         private void OnAnswer( object [] args)
         {
-            if ( args != null && args.Length > 0 )
+            if ( Focused )
             {
-                Answers answers = args[0] as Answers;
-                if ( answers != null && answers.HasAnswer() )
+                if ( args != null && args.Length > 0 )
                 {
-                    if (! sm_History.Contains( answers ) )
+                    Answers answers = args[0] as Answers;
+                    if ( answers != null && answers.HasAnswer() )
                     {
-                        sm_History.Add( answers );
-                        while( sm_History.Count > m_HistoryCount )
-                            sm_History.RemoveAt( 0 );
-                    }
+                        if (! sm_History.Contains( answers ) )
+                        {
+                            sm_History.Add( answers );
+                            while( sm_History.Count > m_HistoryCount )
+                                sm_History.RemoveAt( 0 );
+                        }
 
-                    AddChat( answers.answers[0].answerText, m_AnswerPrefab.gameObject );
+                        AddChat( answers.answers[0].answerText, m_AnswerPrefab.gameObject );
+                    }
                 }
             }
         }

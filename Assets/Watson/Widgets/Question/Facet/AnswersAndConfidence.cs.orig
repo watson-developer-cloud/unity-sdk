@@ -26,7 +26,11 @@ namespace IBM.Watson.Widgets.Question
 	/// <summary>
 	/// Handles all AnswersAndConfidence Facet functionality.
 	/// </summary>
+<<<<<<< HEAD
+	public class AnswersAndConfidence : MonoBehaviour
+=======
     public class AnswersAndConfidence : Facet
+>>>>>>> develop
     {
         [Header("UI Faces")]
         [SerializeField]
@@ -44,9 +48,19 @@ namespace IBM.Watson.Widgets.Question
 			EventManager.Instance.UnregisterEventReceiver( Constants.Event.ON_QUESTION_ANSWERS, OnAnswerData );
 		}
 
+<<<<<<< HEAD
+		/// <summary>
+		/// Iterate through Answer and Confidence bars and set the Answer and ConfidenceIndex
+		/// </summary>
+		//	TODO dynamically create bars?
+		public void Init()
+        {
+            for (int i = 0; i < m_AnswerConfidenceBars.Length; i++)
+=======
 		private void OnAnswerData( object [] args )
 		{
             if ( Focused )
+>>>>>>> develop
             {
 			    m_AnswerData = args != null && args.Length > 0 ? args[0] as Data.XRAY.Answers : null;
                 for (int i = 0; i < m_AnswerConfidenceBars.Length; i++)

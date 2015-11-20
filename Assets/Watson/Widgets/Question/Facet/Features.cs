@@ -28,7 +28,7 @@ namespace IBM.Watson.Widgets.Question
     /// <summary>
     /// Handles all Features Facet functionality. 
     /// </summary>
-	public class Features : MonoBehaviour
+    public class Features : Facet
     {
         [SerializeField]
         private GameObject m_FeatureItemPrefab;
@@ -38,7 +38,6 @@ namespace IBM.Watson.Widgets.Question
         private int m_MaxFeatures = 8;
 
         private List<FeatureItem> m_FeatureItems = new List<FeatureItem>();
-
         private Data.XRAY.Answers m_AnswerData = null;
 
         private void OnEnable()
@@ -53,30 +52,33 @@ namespace IBM.Watson.Widgets.Question
 
         private void OnAnswerData(object[] args)
         {
-            m_AnswerData = args != null && args.Length > 0 ? args[0] as Data.XRAY.Answers : null;
-
-            while (m_FeatureItems.Count > 0)
+            if ( Focused )
             {
-                Destroy(m_FeatureItems[0].gameObject);
-                m_FeatureItems.RemoveAt(0);
-            }
+                m_AnswerData = args != null && args.Length > 0 ? args[0] as Data.XRAY.Answers : null;
 
-            if (m_AnswerData != null && m_AnswerData.HasAnswer()
-                && m_AnswerData.answers[0].features != null)
-            {
-                for (int i = 0; i < m_AnswerData.answers[0].features.Length; i++)
+                while (m_FeatureItems.Count > 0)
                 {
-                    if (i >= m_MaxFeatures)
-                        break;
+                    Destroy(m_FeatureItems[0].gameObject);
+                    m_FeatureItems.RemoveAt(0);
+                }
 
-                    GameObject featureItemGameObject = Instantiate(m_FeatureItemPrefab, new Vector3(95f, -i * 50f - 150f, 0f), Quaternion.identity) as GameObject;
-                    RectTransform featureItemRectTransform = featureItemGameObject.GetComponent<RectTransform>();
-                    featureItemRectTransform.SetParent(m_FeaturesCanvasRectTransform, false);
-                    FeatureItem featureItem = featureItemGameObject.GetComponent<FeatureItem>();
-                    featureItem.FeatureString = m_AnswerData.answers[0].features[i].displayLabel;
-                    featureItem.FeatureIndex = m_AnswerData.answers[0].features[i].weightedScore;
+                if (m_AnswerData != null && m_AnswerData.HasAnswer()
+                    && m_AnswerData.answers[0].features != null)
+                {
+                    for (int i = 0; i < m_AnswerData.answers[0].features.Length; i++)
+                    {
+                        if (i >= m_MaxFeatures)
+                            break;
 
-                    m_FeatureItems.Add(featureItem);
+                        GameObject featureItemGameObject = Instantiate(m_FeatureItemPrefab, new Vector3(95f, -i * 50f - 150f, 0f), Quaternion.identity) as GameObject;
+                        RectTransform featureItemRectTransform = featureItemGameObject.GetComponent<RectTransform>();
+                        featureItemRectTransform.SetParent(m_FeaturesCanvasRectTransform, false);
+                        FeatureItem featureItem = featureItemGameObject.GetComponent<FeatureItem>();
+                        featureItem.FeatureString = m_AnswerData.answers[0].features[i].displayLabel;
+                        featureItem.FeatureIndex = m_AnswerData.answers[0].features[i].weightedScore;
+
+                        m_FeatureItems.Add(featureItem);
+                    }
                 }
             }
         }

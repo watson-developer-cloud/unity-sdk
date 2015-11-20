@@ -27,7 +27,11 @@ namespace IBM.Watson.Widgets.Question
     /// <summary>
     /// Handles all Evidence Facet functionality. 
     /// </summary>
+<<<<<<< HEAD
+	public class Evidence : MonoBehaviour
+=======
     public class Evidence : Facet
+>>>>>>> develop
     {
         [SerializeField]
         private GameObject m_EvidenceItemPrefab;

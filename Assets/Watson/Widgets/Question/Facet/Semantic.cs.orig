@@ -27,7 +27,11 @@ namespace IBM.Watson.Widgets.Question
 	/// <summary>
 	/// Handles all Semantic Facet functionality.
 	/// </summary>
+<<<<<<< HEAD
+	public class Semantic : MonoBehaviour
+=======
     public class Semantic : Facet
+>>>>>>> develop
     {
         [SerializeField]
         private Text m_LATText;

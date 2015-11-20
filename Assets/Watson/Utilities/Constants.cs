@@ -284,7 +284,26 @@ namespace IBM.Watson.Utilities
             /// Sent when any classify result is made.
             /// </summary>
             ON_CLASSIFY_RESULT,
-
+            /// <summary>
+            /// Show next item , it depends on context
+            /// </summary>
+            ON_COMMAND_NEXT,
+            /// <summary>
+            /// Show previous item - it depends on context
+            /// </summary>
+            ON_COMMAND_PREVIOUS,
+            /// <summary>
+            /// To scroll up
+            /// </summary>
+            ON_COMMAND_SCROLL_UP,
+            /// <summary>
+            /// To scroll down
+            /// </summary>
+            ON_COMMAND_SCROLL_DOWN,
+            /// <summary>
+            /// To repeat last action (ex. more zoom-in)
+            /// </summary>
+            ON_COMMAND_REPEAT_LAST_ACTION,
             #endregion
 
             #region Input - Touch
