@@ -16,6 +16,8 @@
 * @author Richard Lyle (rolyle@us.ibm.com)
 */
 
+//#define TEST_DELETE
+
 using System.Collections;
 using IBM.Watson.Services.v1;
 using IBM.Watson.Logging;
@@ -54,12 +56,14 @@ namespace IBM.Watson.UnitTests
                     yield return null;
             }
 
+#if TEST_DELETE
             if ( !string.IsNullOrEmpty( m_ClassifierId ) )
             {
                 Test( m_NLC.DeleteClassifer( m_ClassifierId, OnDeleteClassifier ) );
                 while(! m_DeleteTested ) 
                     yield return null;
             }
+#endif
 
             yield break;
         }
