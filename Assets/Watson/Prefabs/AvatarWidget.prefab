@@ -97,7 +97,7 @@ MonoBehaviour:
     m_TargetObject: {fileID: 0}
     m_TargetConnection: TextToSpeech/Text
   m_QuestionPrefab: {fileID: 165892, guid: 3ef744c88ba744c2fbae1ce7de5150ce, type: 2}
-  m_DialogName: lab_ga2
+  m_DialogName: xray_dialog
   m_RestartInterval: 5
   m_AnswerFormatWEA: Here is what I found in the {0} corpus.
   m_StateInfo:
@@ -323,6 +323,10 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_RestartInterval
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_DialogName
+      value: xray_dialog
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

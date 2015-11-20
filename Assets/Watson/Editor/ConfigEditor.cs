@@ -100,8 +100,7 @@ namespace IBM.Watson.Editor
         [MenuItem("Watson/Edit Config")]
         private static void EditConfig()
         {
-            ConfigEditor window = (ConfigEditor)EditorWindow.GetWindow(typeof(ConfigEditor));
-            window.Show();
+            GetWindow<ConfigEditor>().Show();
         }
 
         private delegate void WizardStepDelegate( ConfigEditor editor );
