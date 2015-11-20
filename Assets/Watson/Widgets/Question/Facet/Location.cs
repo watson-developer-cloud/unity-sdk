@@ -43,8 +43,7 @@ namespace IBM.Watson.Widgets.Question
             set
             {
                 m_LocationString = value;
-                if (m_LocationText != null )
-					UpdateLocation();
+				UpdateLocation();
             }
         }
 
@@ -91,7 +90,8 @@ namespace IBM.Watson.Widgets.Question
         /// </summary>
         private void UpdateLocation()
         {
-            m_LocationText.text = LocationString;
+            if (m_LocationText != null )
+                m_LocationText.text = LocationString;
         }
 
 		/// <summary>
