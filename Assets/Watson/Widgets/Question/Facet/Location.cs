@@ -18,10 +18,7 @@
 
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections.Generic;
-using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
-using IBM.Watson.Data;
 
 namespace IBM.Watson.Widgets.Question
 {
