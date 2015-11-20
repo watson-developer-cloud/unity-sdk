@@ -200,25 +200,7 @@ namespace IBM.Watson.Widgets.Question
         void Update()
         {
             DragOneFingerOnPassageOnUpdate();
-
-
-            if (Input.GetKeyDown(KeyCode.Alpha0))
-            {
-                ShowNextPassage(null);
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                ShowPreviousPassage(null);
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                ScrollUp(null);
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha3))
-            {
-                ScrollDown(null);
-            }
-
+           
         }
 
         /// <summary>
