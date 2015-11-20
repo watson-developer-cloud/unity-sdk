@@ -13,7 +13,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *
-* @author Taj Santiago
+* @author Taj Santiago (asantiago@us.ibm.com)
 */
 
 using UnityEngine;
@@ -43,6 +43,7 @@ namespace IBM.Watson.Widgets.Question
                 UpdateAnswer();
             }
         }
+
 
         private double m_Confidence;
         public double Confidence
