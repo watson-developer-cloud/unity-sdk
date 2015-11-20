@@ -25,6 +25,7 @@ using UnityEngine;
 using System.IO;
 using IBM.Watson.Data;
 using IBM.Watson.Logging;
+using System;
 
 namespace IBM.Watson.Editor
 {
@@ -63,22 +64,20 @@ namespace IBM.Watson.Editor
         private Classifiers m_Classifiers = null;
         private string m_NewClassifierName = null;
         private string m_NewClassifierLang = "en";
-        private int m_PendingRequests = 0;
+        private bool m_Refreshing = false;
 
         private void OnGetClassifiers(Classifiers classifiers)
         {
-            m_PendingRequests -= 1;
+            m_Refreshing = false;
             m_Classifiers = classifiers;
             foreach (var c in m_Classifiers.classifiers)
             {
-                if ( m_NLC.GetClassifier(c.classifier_id, OnGetClassifier) )
-                    m_PendingRequests += 1;
+                m_NLC.GetClassifier(c.classifier_id, OnGetClassifier);
             }
         }
 
         private void OnGetClassifier(Classifier details)
         {
-            m_PendingRequests -= 1;
             foreach (var c in m_Classifiers.classifiers)
                 if (c.classifier_id == details.classifier_id)
                 {
@@ -105,12 +104,12 @@ namespace IBM.Watson.Editor
 
         private void OnRefresh()
         {
-            if ( m_PendingRequests == 0 )
+            if (! m_Refreshing )
             {
                 if (!m_NLC.GetClassifiers(OnGetClassifiers))
                     Log.Error( "NLCTrainer", "Failed to request classifiers, please make sure your NlcV1 service has credentials configured." );
                 else
-                    m_PendingRequests += 1;
+                    m_Refreshing = true;
             }
         }
 
@@ -131,9 +130,10 @@ namespace IBM.Watson.Editor
                 {
                     Classifier cl = m_Classifiers.classifiers[i];
                     //EditorGUI.BeginDisabledGroup(true);
-                    EditorGUILayout.TextField("Name", cl.name);
-                    EditorGUILayout.TextField("ID", cl.classifier_id);
-                    EditorGUILayout.TextField("Status", cl.status);
+                    EditorGUILayout.LabelField("Name: " + cl.name );
+                    EditorGUILayout.LabelField("ID: " + cl.classifier_id );
+                    EditorGUILayout.LabelField("Created: " + cl.created.ToString() );
+                    EditorGUILayout.LabelField("Status: " + cl.status );
                     //EditorGUI.EndDisabledGroup();
 
                     if (GUILayout.Button("Delete"))
@@ -153,7 +153,7 @@ namespace IBM.Watson.Editor
 
             m_NewClassifierName = EditorGUILayout.TextField("Name", m_NewClassifierName );    
             m_NewClassifierLang = EditorGUILayout.TextField("Language", m_NewClassifierLang );        
-            if (! string.IsNullOrEmpty( m_NewClassifierName ) && GUILayout.Button( "Train" ) )
+            if ( GUILayout.Button( "Train" ) )
             {
                 var path = EditorUtility.OpenFilePanel( "Select Training File", "", "csv" );
                 if (! string.IsNullOrEmpty( path ) )
@@ -161,7 +161,11 @@ namespace IBM.Watson.Editor
                     string trainingData = File.ReadAllText( path );
                     if (! string.IsNullOrEmpty( trainingData ) )
                     {
-                        if (! m_NLC.TrainClassifier( m_NewClassifierName, m_NewClassifierLang, trainingData, OnClassiferTrained ) )
+                        string name = m_NewClassifierName;
+                        if ( string.IsNullOrEmpty( name ) )
+                            name = DateTime.Now.ToString();
+
+                        if (! m_NLC.TrainClassifier( name, m_NewClassifierLang, trainingData, OnClassiferTrained ) )
                             EditorUtility.DisplayDialog( "Error", "Failed to train classifier.", "OK" );
                     }
                     else

@@ -29,6 +29,7 @@ namespace IBM.Watson.UnitTests
         bool m_FindClassifierTested = false;
         bool m_TrainClasifierTested = false;
         bool m_TrainClassifier = false;
+        bool m_DeleteTested = false;
         string m_ClassifierId = null;
         bool m_ClassifyTested = false;
 
@@ -42,18 +43,31 @@ namespace IBM.Watson.UnitTests
 
             if ( m_TrainClassifier )
             {
-                m_NLC.TrainClassifier( "TestNLC", "en", TRAINING_DATA, OnTrainClassifier );
+                Test( m_NLC.TrainClassifier( "TestNLC", "en", TRAINING_DATA, OnTrainClassifier ) );
                 while( !m_TrainClasifierTested )
                     yield return null;
             }
             else if ( !string.IsNullOrEmpty( m_ClassifierId ) )
             {
-                m_NLC.Classify( m_ClassifierId, "Is it hot outside", OnClassify );
+                Test( m_NLC.Classify( m_ClassifierId, "Is it hot outside", OnClassify ) );
                 while(! m_ClassifyTested )
                     yield return null;
             }
 
+            if ( !string.IsNullOrEmpty( m_ClassifierId ) )
+            {
+                Test( m_NLC.DeleteClassifer( m_ClassifierId, OnDeleteClassifier ) );
+                while(! m_DeleteTested ) 
+                    yield return null;
+            }
+
             yield break;
+        }
+
+        private void OnDeleteClassifier( bool success )
+        {
+            Test( success );
+            m_DeleteTested = true;
         }
 
         private void OnFindClassifier( Classifier find )
