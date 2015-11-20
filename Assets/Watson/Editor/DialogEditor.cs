@@ -56,7 +56,6 @@ namespace IBM.Watson.Editor
         {
             DialogEditor window = GetWindow<DialogEditor>();
             window.Show( true );
-            window.position = new Rect( 0, 0, 100, 100 );
         }
 
         private bool m_Visible = false;

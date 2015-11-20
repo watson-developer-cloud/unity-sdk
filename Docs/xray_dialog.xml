@@ -8,11 +8,10 @@
                     <item>Greetings, welcome to Watson Labs.</item>
                     <item>Hello, how are you?</item>
                     <item>Whats up?</item>
-                    <item>Hey.</item>
-                    <item>Good morning.</item>
-                    <item>Goodday mate.</item>
-					<item>Yo</item>
-					<item>Hey you.</item>
+                    <item>Hey Hey Haey</item>
+                    <item>Good morning</item>
+                    <item>Hello mate</item>
+					<item>Hey you</item>
 					<item>Hows it hanging.</item>
                 </prompt>
                 <goto ref="getUserInput_2449614"/>
@@ -31,6 +30,8 @@
 								<item>come again</item>
 								<item>what was that</item>
 								<item>pardon me, I didn't hear you.</item>
+								<item>are you talking to me?</item>
+								<item>Sorry, I didn't catch that.</item>
                             </prompt>
                         </output>
                     </default>
@@ -55,6 +56,9 @@
                 <input>
                     <grammar>
                         <item>how are you</item>
+                        <item>* how are you</item>
+						<item>how are you doing</item>
+						<item>* how are you doing</item>
                         <item>whats up</item>
                         <item>hows it going</item>
                     </grammar>
