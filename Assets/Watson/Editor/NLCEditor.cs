@@ -30,12 +30,12 @@ using System;
 namespace IBM.Watson.Editor
 {
 
-    class NLCTrainer : EditorWindow
+    class NLCEditor : EditorWindow
     {
         private void OnEnable()
         {
 #if UNITY_5_2
-            titleContent.text = "Watson NLC";
+            titleContent.text = "NLC Editor";
 #endif
             m_WatsonIcon = (Texture2D)Resources.Load(Constants.Resources.WATSON_ICON, typeof(Texture2D));
             EditorApplication.update += UpdateRunnable;
@@ -52,10 +52,10 @@ namespace IBM.Watson.Editor
         }
 
 
-        [MenuItem("Watson/NLC Trainer")]
+        [MenuItem("Watson/NLC Editor")]
         private static void EditConfig()
         {
-            GetWindow<NLCTrainer>().Show();
+            GetWindow<NLCEditor>().Show();
         }
 
         private Texture m_WatsonIcon = null;
