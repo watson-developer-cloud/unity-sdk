@@ -44,7 +44,7 @@ namespace IBM.Watson.Widgets.Question
             {
                 m_LocationString = value;
                 if (m_LocationText != null )
-                    m_LocationText.text = LocationString;
+					UpdateLocation();
             }
         }
 
@@ -85,17 +85,6 @@ namespace IBM.Watson.Widgets.Question
 		{
 			EventManager.Instance.UnregisterEventReceiver( Constants.Event.ON_QUESTION_LOCATION, OnLocationData );
 		}
-
-		/// <summary>
-		/// Set LocationString from data.
-		/// </summary>
-		override public void Init()
-        {
-			base.Init ();
-
-			LocationString = m_LocationData;
-            UpdateLocation();
-        }
 
         /// <summary>
         /// Update the Location view.
