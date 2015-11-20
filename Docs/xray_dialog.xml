@@ -55,6 +55,16 @@
                 </input>
                 <input>
                     <grammar>
+                        <item>* bad ass</item>
+                    </grammar>
+                    <output>
+                        <prompt selectionType="RANDOM">
+                            <item>Ray, is that you?</item>
+                        </prompt>
+                    </output>
+                </input>
+                <input>
+                    <grammar>
                         <item>how are you</item>
                         <item>* how are you</item>
 						<item>how are you doing</item>

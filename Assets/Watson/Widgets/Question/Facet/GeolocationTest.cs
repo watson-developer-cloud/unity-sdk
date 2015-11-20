@@ -17,7 +17,6 @@
 */
 
 using UnityEngine;
-using System.Collections;
 using IBM.Watson.Services;
 
 public class GeolocationTest : MonoBehaviour {

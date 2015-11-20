@@ -17,7 +17,6 @@
 */
 
 using UnityEngine;
-using IBM.Watson.Logging;
 
 namespace IBM.Watson.Widgets.Question
 {
