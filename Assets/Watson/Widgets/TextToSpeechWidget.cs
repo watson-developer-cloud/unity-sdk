@@ -83,6 +83,8 @@ namespace IBM.Watson.Widgets
 
         public void OnTextToSpeech()
         {
+            if (m_TTS.Voice != m_Voice)
+                m_TTS.Voice = m_Voice;
             if (m_Input != null)
                 m_SpeechQueue.Enqueue(new Speech(m_TTS, m_Input.text, m_UsePost));
             if (m_StatusText != null)
