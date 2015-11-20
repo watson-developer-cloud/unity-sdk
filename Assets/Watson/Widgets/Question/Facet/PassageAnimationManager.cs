@@ -156,7 +156,7 @@ namespace IBM.Watson.Widgets.Question
         #endregion
 
         #region Awake / Update
-
+       
         // Use this for initialization
         void Awake()
         {
@@ -201,48 +201,23 @@ namespace IBM.Watson.Widgets.Question
         {
             DragOneFingerOnPassageOnUpdate();
 
-#if UNITY_EDITOR
+
             if (Input.GetKeyDown(KeyCode.Alpha0))
             {
-                ShowPassage(0);
+                ShowNextPassage(null);
             }
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
-                ShowPassage(1);
+                ShowPreviousPassage(null);
             }
             if (Input.GetKeyDown(KeyCode.Alpha2))
             {
-                ShowPassage(2);
+                ScrollUp(null);
             }
             if (Input.GetKeyDown(KeyCode.Alpha3))
             {
-                ShowPassage(3);
+                ScrollDown(null);
             }
-            if (Input.GetKeyDown(KeyCode.Alpha4))
-            {
-                ShowPassage(4);
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha5))
-            {
-                ShowPassage(5);
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha6))
-            {
-                ShowPassage(6);
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha7))
-            {
-                ShowPassage(7);
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha8))
-            {
-                ShowPassage(8);
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha9))
-            {
-                ShowPassage(9);
-            }
-#endif
 
         }
 
@@ -297,6 +272,38 @@ namespace IBM.Watson.Widgets.Question
 
         }
 
+        public void ShowNextPassage(System.Object[] args)
+        {
+            if(Cube != null && (Cube.AnimationState == CubeAnimationManager.CubeAnimationState.IDLE_AS_FOCUSED))
+                ShowPassage((m_SelectedPassageIndex + 1) % NumberOfPassages);
+        }
+
+        public void ShowPreviousPassage(System.Object[] args)
+        {
+            if(Cube != null && (Cube.AnimationState == CubeAnimationManager.CubeAnimationState.IDLE_AS_FOCUSED))
+                ShowPassage((m_SelectedPassageIndex - 1) < 0 ? (NumberOfPassages - 1): (m_SelectedPassageIndex - 1));
+        }
+
+        private float m_SpeedAutoScrollOnY = 1000.0f;
+        public void ScrollDown(System.Object[] args)
+        {
+            if(Cube != null && (Cube.AnimationState == CubeAnimationManager.CubeAnimationState.IDLE_AS_FOCUSED) && m_SelectedPassageIndex >= 0 && m_SelectedPassageIndex < NumberOfPassages && m_PassageScrollRect != null && m_PassageScrollRect.Length > m_SelectedPassageIndex)
+            {
+                SetScrollingEnable(m_SelectedPassageIndex, true);
+                m_PassageScrollRect[m_SelectedPassageIndex].velocity = new Vector2(0f, m_SpeedAutoScrollOnY);
+            }
+               
+        }
+
+        public void ScrollUp(System.Object[] args)
+        {
+            if (Cube != null && (Cube.AnimationState == CubeAnimationManager.CubeAnimationState.IDLE_AS_FOCUSED) && m_SelectedPassageIndex >= 0 && m_SelectedPassageIndex < NumberOfPassages && m_PassageScrollRect != null && m_PassageScrollRect.Length > m_SelectedPassageIndex)
+            {
+                SetScrollingEnable(m_SelectedPassageIndex, true);
+                m_PassageScrollRect[m_SelectedPassageIndex].velocity = new Vector2(0f, -m_SpeedAutoScrollOnY);
+            }
+               
+        }
 
         public int GetPassageIndexTouch(Vector2 screenPosition)
         {

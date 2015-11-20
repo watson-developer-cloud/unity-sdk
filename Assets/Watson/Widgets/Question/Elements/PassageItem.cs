@@ -87,7 +87,8 @@ namespace IBM.Watson.Widgets.Question
             //	TODO format passage
             m_PassageText.text = PassageString;
             // wait for the frame to update before we update the scroll position
-            Invoke( "ScrollToTop", 0.5f );
+            //Invoke( "ScrollToTop", 0.5f );
+            ScrollToTop();
         }
 
         private void ScrollToTop()
@@ -97,6 +98,8 @@ namespace IBM.Watson.Widgets.Question
                 scrollRect.verticalNormalizedPosition = 1.0f;
             else
                 Log.Warning( "PassageItem", "Unable to find ScrollRect." );
+
+            //Canvas.ForceUpdateCanvases();
         }
 
         /// <summary>
