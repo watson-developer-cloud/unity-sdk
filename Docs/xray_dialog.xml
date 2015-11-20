@@ -12,7 +12,8 @@
                     <item>Good morning</item>
                     <item>Hello mate</item>
 					<item>Hey you</item>
-					<item>Hows it hanging.</item>
+                    <item>Hows it hanging.</item>
+					<item>Aloha!</item>
                 </prompt>
                 <goto ref="getUserInput_2449614"/>
             </output>
