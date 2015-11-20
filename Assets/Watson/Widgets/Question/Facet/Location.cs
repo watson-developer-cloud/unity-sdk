@@ -28,7 +28,7 @@ namespace IBM.Watson.Widgets.Question
 	/// <summary>
 	/// Handles all Location Facet functionality.
 	/// </summary>
-    public class Location : Base
+    public class Location : Facet
     {
         [SerializeField]
         private Text m_LocationText;
@@ -43,7 +43,8 @@ namespace IBM.Watson.Widgets.Question
             set
             {
                 m_LocationString = value;
-                UpdateLocation();
+                if (m_LocationText != null )
+                    m_LocationText.text = LocationString;
             }
         }
 
@@ -57,7 +58,6 @@ namespace IBM.Watson.Widgets.Question
 			set
 			{
 				m_Latitude = value;
-				UpdateMap ();
 			}
 		}
 
@@ -71,7 +71,6 @@ namespace IBM.Watson.Widgets.Question
 			set
 			{
 				m_Longitude = value;
-				UpdateMap ();
 			}
 		}
 
@@ -87,41 +86,13 @@ namespace IBM.Watson.Widgets.Question
 			EventManager.Instance.UnregisterEventReceiver( Constants.Event.ON_QUESTION_LOCATION, OnLocationData );
 		}
 
-		/// <summary>
-		/// Set LocationString from data.
-		/// </summary>
-		override public void Init()
-        {
-			base.Init ();
-
-			LocationString = m_LocationData;
-            UpdateLocation();
-        }
-
-        /// <summary>
-        /// Update the Location view.
-        /// </summary>
-        private void UpdateLocation()
-        {
-            m_LocationText.text = LocationString;
-        }
-
-		/// <summary>
-		/// Updates the map based on Latitude and Longitude.
-		/// </summary>
-		private void UpdateMap()
-		{
-
-		}
-
-		/// <summary>
-		/// Callback for Location data.
-		/// </summary>
-		/// <param name="args">Arguments.</param>
 		private void OnLocationData( object [] args )
 		{
-			m_LocationData = args != null && args.Length > 0 ? args[0] as string : null;
-			Init ();
-		}
+            if ( Focused )
+            {
+			    m_LocationData = args != null && args.Length > 0 ? args[0] as string : null;
+			    LocationString = m_LocationData;
+		    }
+        }
     }
 }

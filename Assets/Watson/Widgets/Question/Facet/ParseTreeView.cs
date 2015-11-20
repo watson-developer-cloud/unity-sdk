@@ -28,7 +28,7 @@ namespace IBM.Watson.Widgets.Question
 	/// <summary>
 	/// Handles all ParseTree Facet functionality.
 	/// </summary>
-    public class ParseTreeView : Base
+    public class ParseTreeView : Facet
     {
         [SerializeField]
         private GameObject m_ParseTreeTextItemPrefab;
@@ -44,8 +44,8 @@ namespace IBM.Watson.Widgets.Question
         private List<ParseTreeTextItem> m_WordList = new List<ParseTreeTextItem>();
 		private List<GameObject> m_ArrowList = new List<GameObject>();
 
-        private Data.XRAY.ParseData m_ParseData = null;
-        private Data.XRAY.Questions m_QuestionData = null;
+        private ParseData m_ParseData = null;
+        private Questions m_QuestionData = null;
 
 		private float horizontalWordSpacing = 10f;
 		private float verticalWordSpacing = 160f;
@@ -90,8 +90,11 @@ namespace IBM.Watson.Widgets.Question
 		/// </summary>
         private void OnParseData( object [] args )
         {
-            m_ParseData = args != null && args.Length > 0 ? args[0] as Data.XRAY.ParseData : null;
-            GenerateParseTree();
+            if (Focused )
+            {
+                m_ParseData = args != null && args.Length > 0 ? args[0] as Data.XRAY.ParseData : null;
+                GenerateParseTree();
+            }
         }
 
 		/// <summary>
@@ -100,7 +103,8 @@ namespace IBM.Watson.Widgets.Question
 		/// <param name="args">Arguments.</param>
         private void OnQuestionData( object [] args )
         {
-            m_QuestionData = args != null && args.Length > 0 ? args[0] as Data.XRAY.Questions : null;
+            if (Focused )
+                m_QuestionData = args != null && args.Length > 0 ? args[0] as Data.XRAY.Questions : null;
         }
 
         /// <summary>

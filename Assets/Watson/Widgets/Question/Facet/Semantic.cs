@@ -27,7 +27,7 @@ namespace IBM.Watson.Widgets.Question
 	/// <summary>
 	/// Handles all Semantic Facet functionality.
 	/// </summary>
-    public class Semantic : Base
+    public class Semantic : Facet
     {
         [SerializeField]
         private Text m_LATText;
@@ -132,8 +132,11 @@ namespace IBM.Watson.Widgets.Question
 		/// <param name="args">Arguments.</param>
 		private void OnQuestionData( object [] args )
 		{
-			m_QuestionData = args != null && args.Length > 0 ? args[0] as Data.XRAY.Questions : null;
-			InitQuestion ();
+            if (Focused )
+            {
+			    m_QuestionData = args != null && args.Length > 0 ? args[0] as Data.XRAY.Questions : null;
+			    InitQuestion ();
+            }
 		}
 
 		/// <summary>
@@ -142,8 +145,11 @@ namespace IBM.Watson.Widgets.Question
 		/// <param name="args">Arguments.</param>
 		private void OnParseData( object [] args )
 		{
-			m_ParseData = args != null && args.Length > 0 ? args[0] as Data.XRAY.ParseData : null;
-			InitParse ();
+            if (Focused )
+            {
+			    m_ParseData = args != null && args.Length > 0 ? args[0] as Data.XRAY.ParseData : null;
+			    InitParse ();
+            }
 		}
 
 		/// <summary>

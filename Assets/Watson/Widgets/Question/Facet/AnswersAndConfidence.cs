@@ -26,7 +26,7 @@ namespace IBM.Watson.Widgets.Question
 	/// <summary>
 	/// Handles all AnswersAndConfidence Facet functionality.
 	/// </summary>
-    public class AnswersAndConfidence : Base
+    public class AnswersAndConfidence : Facet
     {
         [Header("UI Faces")]
         [SerializeField]
@@ -44,37 +44,25 @@ namespace IBM.Watson.Widgets.Question
 			EventManager.Instance.UnregisterEventReceiver( Constants.Event.ON_QUESTION_ANSWERS, OnAnswerData );
 		}
 
-		/// <summary>
-		/// Iterate through Answer and Confidence bars and set the Answer and ConfidenceIndex
-		/// </summary>
-		//	TODO dynamically create bars?
-		override public void Init()
-        {
-			base.Init ();
-
-            for (int i = 0; i < m_AnswerConfidenceBars.Length; i++)
-            {
-				if ( i < m_AnswerData.answers.Length )
-                {
-					m_AnswerConfidenceBars[i].Answer = m_AnswerData.answers[i].answerText;
-					m_AnswerConfidenceBars[i].Confidence = m_AnswerData.answers[i].confidence;
-                }
-                else
-                {
-                    m_AnswerConfidenceBars[i].Answer = string.Empty;
-                    m_AnswerConfidenceBars[i].Confidence = 0.0f;
-                }
-            }
-        }
-
-		/// <summary>
-		/// Callback for Answer data event.
-		/// </summary>
-		/// <param name="args">Arguments.</param>
 		private void OnAnswerData( object [] args )
 		{
-			m_AnswerData = args != null && args.Length > 0 ? args[0] as Data.XRAY.Answers : null;
-			Init ();
+            if ( Focused )
+            {
+			    m_AnswerData = args != null && args.Length > 0 ? args[0] as Data.XRAY.Answers : null;
+                for (int i = 0; i < m_AnswerConfidenceBars.Length; i++)
+                {
+				    if ( i < m_AnswerData.answers.Length )
+                    {
+					    m_AnswerConfidenceBars[i].Answer = m_AnswerData.answers[i].answerText;
+					    m_AnswerConfidenceBars[i].Confidence = m_AnswerData.answers[i].confidence;
+                    }
+                    else
+                    {
+                        m_AnswerConfidenceBars[i].Answer = string.Empty;
+                        m_AnswerConfidenceBars[i].Confidence = 0.0f;
+                    }
+                }
+            }
 		}
     }
 }

@@ -27,7 +27,7 @@ namespace IBM.Watson.Widgets.Question
 	/// <summary>
 	/// Handles all QuestionAndAndswer Facet functionality.
 	/// </summary>
-    public class QuestionAndAnswer : Base
+    public class QuestionAndAnswer : Facet
     {
         [SerializeField]
         private Text m_QuestionText;
@@ -146,8 +146,11 @@ namespace IBM.Watson.Widgets.Question
 		/// <param name="args">Arguments.</param>
 		private void OnAnswerData( object [] args )
 		{
-			m_AnswerData = args != null && args.Length > 0 ? args[0] as Data.XRAY.Answers : null;
-			InitAnswers ();
+            if (Focused )
+            {
+			    m_AnswerData = args != null && args.Length > 0 ? args[0] as Data.XRAY.Answers : null;
+			    InitAnswers ();
+            }
 		}
 
 		/// <summary>
@@ -156,8 +159,11 @@ namespace IBM.Watson.Widgets.Question
 		/// <param name="args">Arguments.</param>
 		private void OnQuestionData( object [] args )
 		{
-			m_QuestionData = args != null && args.Length > 0 ? args[0] as Data.XRAY.Questions : null;
-			InitQuestions ();
+            if (Focused )
+            {
+			    m_QuestionData = args != null && args.Length > 0 ? args[0] as Data.XRAY.Questions : null;
+			    InitQuestions ();
+            }
 		}
 
 		/// <summary>

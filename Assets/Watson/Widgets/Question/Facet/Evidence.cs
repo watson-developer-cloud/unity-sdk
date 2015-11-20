@@ -27,7 +27,7 @@ namespace IBM.Watson.Widgets.Question
     /// <summary>
     /// Handles all Evidence Facet functionality. 
     /// </summary>
-    public class Evidence : Base
+    public class Evidence : Facet
     {
         [SerializeField]
         private GameObject m_EvidenceItemPrefab;
@@ -51,32 +51,35 @@ namespace IBM.Watson.Widgets.Question
 
         private void OnAnswerData(object[] args)
         {
-            m_AnswerData = args != null && args.Length > 0 ? args[0] as Data.XRAY.Answers : null;
-
-            while (m_EvidenceItems.Count != 0)
+            if ( Focused )
             {
-                Destroy(m_EvidenceItems[0].gameObject);
-                m_EvidenceItems.RemoveAt(0);
-            }
+                m_AnswerData = args != null && args.Length > 0 ? args[0] as Data.XRAY.Answers : null;
 
-            if (m_AnswerData != null && m_AnswerData.HasAnswer()
-                && m_AnswerData.answers[0].evidence != null)
-            {
-                Data.XRAY.Answer answer = m_AnswerData.answers[0];
-
-                for (int i = 0; i < answer.evidence.Length; i++)
+                while (m_EvidenceItems.Count != 0)
                 {
-                    if (i >= m_MaxEvidence)
-                        break;
+                    Destroy(m_EvidenceItems[0].gameObject);
+                    m_EvidenceItems.RemoveAt(0);
+                }
 
-                    GameObject evidenceItemGameObject = Instantiate(m_EvidenceItemPrefab, new Vector3(0f, -i * 60f, 0f), Quaternion.identity) as GameObject;
-                    RectTransform evidenceItemRectTransform = evidenceItemGameObject.GetComponent<RectTransform>();
-                    evidenceItemRectTransform.SetParent(m_EvidenceCanvasRectTransform, false);
-                    EvidenceItem evidenceItem = evidenceItemGameObject.GetComponent<EvidenceItem>();
-                    evidenceItem.Answer = m_AnswerData.answers[0].answerText;
-                    evidenceItem.EvidenceString = m_AnswerData.answers[0].evidence[i].decoratedPassage;
+                if (m_AnswerData != null && m_AnswerData.HasAnswer()
+                    && m_AnswerData.answers[0].evidence != null)
+                {
+                    Data.XRAY.Answer answer = m_AnswerData.answers[0];
 
-                    m_EvidenceItems.Add(evidenceItem);
+                    for (int i = 0; i < answer.evidence.Length; i++)
+                    {
+                        if (i >= m_MaxEvidence)
+                            break;
+
+                        GameObject evidenceItemGameObject = Instantiate(m_EvidenceItemPrefab, new Vector3(0f, -i * 60f, 0f), Quaternion.identity) as GameObject;
+                        RectTransform evidenceItemRectTransform = evidenceItemGameObject.GetComponent<RectTransform>();
+                        evidenceItemRectTransform.SetParent(m_EvidenceCanvasRectTransform, false);
+                        EvidenceItem evidenceItem = evidenceItemGameObject.GetComponent<EvidenceItem>();
+                        evidenceItem.Answer = m_AnswerData.answers[0].answerText;
+                        evidenceItem.EvidenceString = m_AnswerData.answers[0].evidence[i].decoratedPassage;
+
+                        m_EvidenceItems.Add(evidenceItem);
+                    }
                 }
             }
         }

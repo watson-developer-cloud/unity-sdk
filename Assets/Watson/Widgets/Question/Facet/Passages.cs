@@ -28,7 +28,7 @@ namespace IBM.Watson.Widgets.Question
     /// <summary>
     /// Handles all Passages Facet functionality. 
     /// </summary>
-    public class Passages : Base
+    public class Passages : Facet
     {
         private float m_RectTransformPosX = -555f;
         private float m_RectTransformPosY = -77;
@@ -56,44 +56,47 @@ namespace IBM.Watson.Widgets.Question
 
         private void OnAnswerData(object[] args)
         {
-            if ( m_PassageItemPrefab == null )
-                throw new WatsonException( "m_PassageItemPrefab is null." );
-            if ( m_PassageCanvasRectTransform == null )
-                throw new WatsonException( "m_PassageCanvasRectTransform is null." );
-
-            m_AnswerData = args != null && args.Length > 0 ? args[0] as Data.XRAY.Answers : null;
-            while (m_PassageItems.Count > 0)
+            if (Focused )
             {
-                Destroy(m_PassageItems[0].gameObject);
-                m_PassageItems.RemoveAt( 0 );
-            }
+                if ( m_PassageItemPrefab == null )
+                    throw new WatsonException( "m_PassageItemPrefab is null." );
+                if ( m_PassageCanvasRectTransform == null )
+                    throw new WatsonException( "m_PassageCanvasRectTransform is null." );
 
-            if ( m_AnswerData != null )
-            {
-                for (int i = 0; i < m_AnswerData.answers.Length; i++)
+                m_AnswerData = args != null && args.Length > 0 ? args[0] as Data.XRAY.Answers : null;
+                while (m_PassageItems.Count > 0)
                 {
-                    if ( string.IsNullOrEmpty( m_AnswerData.answers[i].answerText ))
-                        break;
-
-                    Log.Debug("Passages", "adding passage " + i);
-                    GameObject PassageItemGameObject = Instantiate(m_PassageItemPrefab, 
-                        new Vector3(m_RectTransformPosX, m_RectTransformPosY, m_RectTransformPosZ + m_RectTransformZSpacing * (m_AnswerData.answers.Length - i)), Quaternion.identity) as GameObject;
-                    PassageItemGameObject.name = "PassageItem_" + i.ToString("00");
-                    RectTransform PassageItemRectTransform = PassageItemGameObject.GetComponent<RectTransform>();
-                    PassageItemRectTransform.SetParent(m_PassageCanvasRectTransform, false);
-                    PassageItem PassageItem = PassageItemGameObject.GetComponent<PassageItem>();
-                    PassageItemRectTransform.pivot = new Vector2(0.0f, 0.5f);   //setting pivot as left middle
-                    PassageItemRectTransform.SetAsFirstSibling();
-					PassageItem.PassageString = m_AnswerData.answers[i].evidence.Length > 0 ? "<b><size=27>" + m_AnswerData.answers[i].evidence[0].title + "</size></b>\n\n" + m_AnswerData.answers[i].answerText + "\n\n" : m_AnswerData.answers[i].answerText;
-                    PassageItem.MaxConfidence = m_AnswerData.answers[0].confidence;
-                    PassageItem.MinConfidence = m_AnswerData.answers[m_AnswerData.answers.Length - 1].confidence;
-                    PassageItem.Confidence = m_AnswerData.answers[i].confidence;
-
-                    m_PassageItems.Add(PassageItem);
+                    Destroy(m_PassageItems[0].gameObject);
+                    m_PassageItems.RemoveAt( 0 );
                 }
-            }
 
-            Log.Debug("Passages", "m_PassageItems.count: " + m_PassageItems.Count);
+                if ( m_AnswerData != null )
+                {
+                    for (int i = 0; i < m_AnswerData.answers.Length; i++)
+                    {
+                        if ( string.IsNullOrEmpty( m_AnswerData.answers[i].answerText ))
+                            break;
+
+                        Log.Debug("Passages", "adding passage " + i);
+                        GameObject PassageItemGameObject = Instantiate(m_PassageItemPrefab, 
+                            new Vector3(m_RectTransformPosX, m_RectTransformPosY, m_RectTransformPosZ + m_RectTransformZSpacing * (m_AnswerData.answers.Length - i)), Quaternion.identity) as GameObject;
+                        PassageItemGameObject.name = "PassageItem_" + i.ToString("00");
+                        RectTransform PassageItemRectTransform = PassageItemGameObject.GetComponent<RectTransform>();
+                        PassageItemRectTransform.SetParent(m_PassageCanvasRectTransform, false);
+                        PassageItem PassageItem = PassageItemGameObject.GetComponent<PassageItem>();
+                        PassageItemRectTransform.pivot = new Vector2(0.0f, 0.5f);   //setting pivot as left middle
+                        PassageItemRectTransform.SetAsFirstSibling();
+					    PassageItem.PassageString = m_AnswerData.answers[i].evidence.Length > 0 ? "<b><size=27>" + m_AnswerData.answers[i].evidence[0].title + "</size></b>\n\n" + m_AnswerData.answers[i].answerText + "\n\n" : m_AnswerData.answers[i].answerText;
+                        PassageItem.MaxConfidence = m_AnswerData.answers[0].confidence;
+                        PassageItem.MinConfidence = m_AnswerData.answers[m_AnswerData.answers.Length - 1].confidence;
+                        PassageItem.Confidence = m_AnswerData.answers[i].confidence;
+
+                        m_PassageItems.Add(PassageItem);
+                    }
+                }
+
+                Log.Debug("Passages", "m_PassageItems.count: " + m_PassageItems.Count);
+            }
         }
     }
 }

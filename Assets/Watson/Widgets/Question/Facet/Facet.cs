@@ -22,31 +22,10 @@ using IBM.Watson.Logging;
 namespace IBM.Watson.Widgets.Question
 {
 	/// <summary>
-	/// Base class for all QuestionWidget Facets except for Chat.
+	/// Base class for all QuestionWidget Facets.
 	/// </summary>
-    public class Base : MonoBehaviour
+    public class Facet : MonoBehaviour
     {
-
-        protected virtual void Show() { }
-        protected virtual void Hide() { }
-
-        /// <summary>
-        /// Sets reference to Avatar and Question Widgets
-        /// </summary>
-        protected virtual void Start()
-        {}
-
-        /// <summary>
-        /// Initialization function
-        /// </summary>
-        public virtual void Init() 
-		{
-			Clear ();
-		}
-
-        /// <summary>
-        /// Clears dynamically generated Facet Elements when a question is answered. Called from answer event handler.
-        /// </summary>
-        public virtual void Clear() { }
+        public bool Focused { get; set; }
     }
 }

@@ -396,7 +396,6 @@ namespace IBM.Watson.Widgets.Question
         protected override void Awake()
         {
             base.Awake();
-            EnableEvents(false);  //TODO: Uncomment - commented for test purposes!
 			Cube.enabled = false;
 
 			//	populate facets
@@ -436,6 +435,10 @@ namespace IBM.Watson.Widgets.Question
 				RectTransform facetCanvasRectTransform = facetTransform.GetComponentInChildren<RectTransform>();
 				facetCanvasRectTransform.localScale = new Vector3(0.004885f, 0.004885f, 0f);
 				facetTransform.SetParent(m_SidePresentations[i], false);
+
+                Facet [] facets = facetGameObject.GetComponentsInChildren<Facet>();
+                foreach( var facet in facets )
+                    facet.Focused = Focused;
 			}
 		}
 
@@ -450,6 +453,10 @@ namespace IBM.Watson.Widgets.Question
 		
 		private void EnableEvents(bool enable)
         {
+            Facet [] facets = GetComponentsInChildren<Facet>();
+            foreach( var facet in facets )
+                facet.Focused = enable;
+
             EventWidget eventWidget = GetComponentInChildren<EventWidget>();
             if (eventWidget != null)
                 eventWidget.enabled = enable;
