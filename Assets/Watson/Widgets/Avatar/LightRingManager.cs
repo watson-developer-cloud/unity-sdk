@@ -47,10 +47,10 @@ namespace IBM.Watson.Widgets.Avatar
         private Color m_TintColorSharedMaterialLightFlareInitial = Color.white;
         private Color m_ColorAnimationFlareLast = Color.white;
 
-        private LTDescr m_ColorAnimationOnRing = null;
-        private LTDescr m_ColorAnimationOnFlareInitial = null;
-        private LTDescr m_ColorAnimationOnFlareLoop = null;
-        private LTDescr[] m_MoveAnimationOnFlare = null;
+        private int m_ColorAnimationOnRing = -1;
+        private int m_ColorAnimationOnFlareInitial = -1;
+        private int m_ColorAnimationOnFlareLoop = -1;
+        private int[] m_MoveAnimationOnFlare = null;
         private float[] m_MoveAnimationLastRatioOnFlare = null;
 
         private bool m_LightFlareIsUnderMouth = false;
@@ -209,29 +209,29 @@ namespace IBM.Watson.Widgets.Avatar
 
         private void AnimateLightRingColor(Color color, float animationTime)
         {
-            if (m_ColorAnimationOnRing != null)
+			if (LeanTween.descr(m_ColorAnimationOnRing) != null)
             {
-                LeanTween.cancel(m_ColorAnimationOnRing.uniqueId);
+                LeanTween.cancel(m_ColorAnimationOnRing);
+				m_ColorAnimationOnRing = -1;
             }
 
-            m_ColorAnimationOnRing = LeanTween.color(gameObject, color, animationTime); //.setFromColor (Color.white).setLoopPingPong ();
+            m_ColorAnimationOnRing = LeanTween.color(gameObject, color, animationTime).id; //.setFromColor (Color.white).setLoopPingPong ();
         }
 
         private void StopAnimateLightFlareColor()
         {
 
-            if (m_ColorAnimationOnFlareLoop != null)
+            if (LeanTween.descr (m_ColorAnimationOnFlareLoop) != null)
             {
-                m_ColorAnimationOnFlareLoop.onComplete = null;
-                LeanTween.cancel(m_ColorAnimationOnFlareLoop.uniqueId);
-                m_ColorAnimationOnFlareLoop = null;
+				LeanTween.cancel(m_ColorAnimationOnFlareLoop);
+                m_ColorAnimationOnFlareLoop = -1;
             }
 
-            if (m_ColorAnimationOnFlareInitial != null)
+			if (LeanTween.descr (m_ColorAnimationOnFlareInitial) != null)
             {
-                m_ColorAnimationOnFlareInitial.onComplete = null;
-                LeanTween.cancel(m_ColorAnimationOnFlareInitial.uniqueId);
-                m_ColorAnimationOnFlareInitial = null;
+				LeanTween.descr(m_ColorAnimationOnFlareInitial).onComplete = null;
+                LeanTween.cancel(m_ColorAnimationOnFlareInitial);
+                m_ColorAnimationOnFlareInitial = -1;
             }
         }
 
@@ -253,21 +253,16 @@ namespace IBM.Watson.Widgets.Avatar
                 }).setOnComplete(
                 () =>
                 {
-                    if(m_ColorAnimationOnFlareInitial != null)
-                    {
-                        m_ColorAnimationOnFlareInitial.onComplete = null;
-                        LeanTween.cancel(m_ColorAnimationOnFlareInitial.uniqueId);
-                        m_ColorAnimationOnFlareInitial = null;
-                    }
+					m_ColorAnimationOnFlareInitial = -1;
 					
                     m_ColorAnimationOnFlareLoop = LeanTween.value(gameObject, color, Color.white, animationTime).setLoopPingPong().setOnUpdateColor(
                         (Color colorToLoop) =>
                         {
                             m_SharedMaterialLightFlare.SetColor("_TintColor", colorToLoop);
                             m_ColorAnimationFlareLast = colorToLoop;
-                        });
+                        }).id;
 
-                });
+                }).id;
         }
 
         public float[] LastValueAnimationFlare
@@ -289,13 +284,13 @@ namespace IBM.Watson.Widgets.Avatar
             {
                 for (int i = 0; i < m_MoveAnimationOnFlare.Length; i++)
                 {
-                    if (m_MoveAnimationOnFlare[i] != null)
+					if (LeanTween.descr (m_MoveAnimationOnFlare[i]) != null)
                     {
-                        m_MoveAnimationOnFlare[i].setLoopOnce();
-                        LastValueAnimationFlare[i] = m_MoveAnimationOnFlare[i].lastVal;
+						LeanTween.descr (m_MoveAnimationOnFlare[i]).setLoopOnce();
+						LastValueAnimationFlare[i] = LeanTween.descr (m_MoveAnimationOnFlare[i]).lastVal;
                         //Log.Warning("LightRingManager", "m_MoveAnimationOnFlare[i].lastVal : {0}", m_MoveAnimationOnFlare[i].lastVal); 
-                        LeanTween.cancel(m_MoveAnimationOnFlare[i].uniqueId);
-                        m_MoveAnimationOnFlare[i] = null;
+                        LeanTween.cancel(m_MoveAnimationOnFlare[i]);
+                        m_MoveAnimationOnFlare[i] = 0;
                     }
                 }
             }
@@ -318,11 +313,11 @@ namespace IBM.Watson.Widgets.Avatar
             if (m_LightFlarePivotParentList.Length == m_ListFlareBezierPathList.Length && animationTime > 0.0f)
             {
                 if(m_MoveAnimationOnFlare == null)
-                    m_MoveAnimationOnFlare = new LTDescr[m_LightFlarePivotParentList.Length];
+                    m_MoveAnimationOnFlare = new int[m_LightFlarePivotParentList.Length];
 
                 for (int i = 0; i < m_LightFlarePivotParentList.Length; i++)
                 {
-                    m_MoveAnimationOnFlare[i] = LeanTween.moveLocal(m_LightFlarePivotParentList[i], m_ListFlareBezierPathList[i], animationTime).setOrientToPath(true).setAxis(Vector3.forward).setEase(m_LightFlareEase).setLoopPingPong();
+                    m_MoveAnimationOnFlare[i] = LeanTween.moveLocal(m_LightFlarePivotParentList[i], m_ListFlareBezierPathList[i], animationTime).setOrientToPath(true).setAxis(Vector3.forward).setEase(m_LightFlareEase).setLoopPingPong().id;
                 }
             }
             
@@ -337,7 +332,7 @@ namespace IBM.Watson.Widgets.Avatar
             if (m_LightFlarePivotParentList.Length == m_ListFlareBezierPathList.Length && animationTime > 0.0f)
             {
                 if (m_MoveAnimationOnFlare == null)
-                    m_MoveAnimationOnFlare = new LTDescr[m_LightFlarePivotParentList.Length];
+                    m_MoveAnimationOnFlare = new int[m_LightFlarePivotParentList.Length];
 
                 for (int i = 0; i < m_LightFlarePivotParentList.Length; i++)
                 {
@@ -352,7 +347,7 @@ namespace IBM.Watson.Widgets.Avatar
                         {
                             Log.Warning("LightRingManager", "AnimateLightFlareForThinking has invalid parameter : {0}", o.ToString());
                         }
-                    }, i).setLoopClamp();
+                    }, i).setLoopClamp().id;
                 }
             }
         }
@@ -409,7 +404,7 @@ namespace IBM.Watson.Widgets.Avatar
             float ratioPositionForMouth = 0.0f;
             float timeToGoMouthPosition = 0.9f;
             LeanTweenType easeForMoveToMouthPosition = LeanTweenType.easeInOutCirc;
-            m_MoveAnimationOnFlare = new LTDescr[m_LightFlarePivotParentList.Length];
+            m_MoveAnimationOnFlare = new int[m_LightFlarePivotParentList.Length];
 
             //Log.Status("LightRingManager", "AnimateLightFlareForAnswering: {0}", m_LightFlarePivotParentList.Length);
 
@@ -441,7 +436,13 @@ namespace IBM.Watson.Widgets.Avatar
                     }
                     
                     
-                }, i).setOnComplete(()=> {
+                }, i).setOnComplete( (System.Object o)=> {
+					if(o is int)
+					{
+						int indexPivot = (int)o;
+						m_MoveAnimationOnFlare[indexPivot] = -1;
+					}
+
                     m_LightFlareIsUnderMouth = true;
                     StopAnimateLightFlareColor();
                     //for (int indexAnimation = 0; indexAnimation < m_MoveAnimationOnFlare.Length; indexAnimation++)
@@ -450,7 +451,7 @@ namespace IBM.Watson.Widgets.Avatar
                     //}
                     
 
-                });
+                }, i).id;
             }
 
         }
@@ -512,11 +513,11 @@ namespace IBM.Watson.Widgets.Avatar
             {
                 for (int i = 0; i < m_MoveAnimationOnFlare.Length; i++)
                 {
-                    if (m_MoveAnimationOnFlare[i] != null)
+                    if (LeanTween.descr( m_MoveAnimationOnFlare[i]) != null)
                     {
-                        m_MoveAnimationOnFlare[i].setTime(animationTime);
+						LeanTween.descr(m_MoveAnimationOnFlare[i]).setTime(animationTime);
                         
-                        Log.Warning("LightRingManager", "1) SetTimeOnLightFlareMovementAnimation[i].lastVal : {0}", m_MoveAnimationOnFlare[i].lastVal);
+						Log.Warning("LightRingManager", "1) SetTimeOnLightFlareMovementAnimation[i].lastVal : {0}", LeanTween.descr(m_MoveAnimationOnFlare[i]).lastVal);
                     }
                 }
             }
@@ -524,7 +525,7 @@ namespace IBM.Watson.Widgets.Avatar
             {
                 //if (m_LightFlarePivotParentList.Length == m_ListFlareBezierPathList.Length && animationTime > 0.0f)
                 //{
-                //    m_MoveAnimationOnFlare = new LTDescr[m_LightFlarePivotParentList.Length];
+                //    m_MoveAnimationOnFlare = new int[m_LightFlarePivotParentList.Length];
                 //    for (int i = 0; i < m_LightFlarePivotParentList.Length; i++)
                 //    {
                 //        m_MoveAnimationOnFlare[i] = LeanTween.moveLocal(m_LightFlarePivotParentList[i], m_ListFlareBezierPathList[i], animationTime).setOrientToPath(true).setAxis(Vector3.forward).setEase(m_LightFlareEase).setLoopPingPong();

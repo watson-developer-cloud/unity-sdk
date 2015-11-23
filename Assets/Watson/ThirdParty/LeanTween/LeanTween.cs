@@ -2248,7 +2248,7 @@ public static LTDescr descr( int uniqueId ){
 	int backId = uniqueId & 0xFFFF;
 	int backCounter = uniqueId >> 16;
 
-	if(tweens[backId]!=null && tweens[backId].uniqueId == uniqueId && tweens[backId].counter==backCounter)
+	if(tweens != null && tweens.Length>backId && backId >= 0 && tweens[backId]!=null && tweens[backId].uniqueId == uniqueId && tweens[backId].counter==backCounter)
 		return tweens[backId];
 	for(int i = 0; i <= tweenMaxSearch; i++){
 		if(tweens[i].uniqueId == uniqueId && tweens[i].counter==backCounter)

@@ -53,6 +53,7 @@ namespace IBM.Watson.Widgets.Question
         IDLE_AS_UNFOLDED,
         FOLDING,
         FOCUSING_TO_SIDE,
+		UNFOCUSING,
         IDLE_AS_FOCUSED,
         GOING_FROM_SCENE        //Animating just before destroying
     }
@@ -147,14 +148,13 @@ namespace IBM.Watson.Widgets.Question
 	private LeanTweenType easeForGoingFromScene = LeanTweenType.easeOutCirc;
     
 	//All animation Descriptions
-	private LTDescr m_animationMoveForComingScene;
-	private LTDescr m_animationScaleForComingScene;
-	private LTDescr[] m_animationPositionOnSide;
-	private LTDescr[] m_animationRotationOnSide;
-	private LTDescr m_animationRotationCube;
-	private LTDescr m_animationPositionCube;
-	private LTDescr[] m_animationPositionOnSidePresentation;
-	private LTDescr m_animationAvatarPosition;
+	private int m_animationMoveForComingScene = -1;
+	private int m_animationScaleForComingScene = -1;
+	private int[] m_animationPositionOnSide;
+	private int[] m_animationRotationOnSide;
+	private int m_animationRotationCube = -1;
+	private int m_animationPositionCube = -1;
+	private int[] m_animationPositionOnSidePresentation;
 
 	#endregion
 	
@@ -320,10 +320,11 @@ namespace IBM.Watson.Widgets.Question
 		
 		m_animationScaleForComingScene = LeanTween.scale(gameObject, m_initialLocalScale, m_TimeForComingToScene).setFrom(Vector3.one).setEase(m_EaseForComingToScene).setDelay(sm_DelayShowCube).setOnComplete(() =>
 		{
+			m_animationScaleForComingScene = -1;
 			AnimationState = CubeAnimationState.IDLE_AS_FOLDED;
-		});
+		}).id;
 
-		m_animationMoveForComingScene = LeanTween.moveLocal(gameObject, m_PositionAfterComing, m_TimeForComingToScene).setEase(m_EaseForComingToScene).setDelay(sm_DelayShowCube);
+		m_animationMoveForComingScene = LeanTween.moveLocal(gameObject, m_PositionAfterComing, m_TimeForComingToScene).setEase(m_EaseForComingToScene).setDelay(sm_DelayShowCube).id;
 
 	}
 
@@ -356,18 +357,19 @@ namespace IBM.Watson.Widgets.Question
 
     public void Fold()
     {
-        StopAllCubeAnimations();
 
-        if (AnimationState == CubeAnimationState.FOCUSING_TO_SIDE || AnimationState == CubeAnimationState.IDLE_AS_FOCUSED)
+		if (AnimationState == CubeAnimationState.FOCUSING_TO_SIDE || AnimationState == CubeAnimationState.IDLE_AS_FOCUSED)
         {
+			StopAllCubeAnimations();
             AnimateUnfocus(AnimateFold, null);
         }
-        else if (AnimationState == CubeAnimationState.GOING_FROM_SCENE)
+		else if (AnimationState == CubeAnimationState.GOING_FROM_SCENE || AnimationState == CubeAnimationState.IDLE_AS_FOLDED  || AnimationState == CubeAnimationState.FOLDING  || AnimationState == CubeAnimationState.UNFOCUSING)
         {
-            //do nothing - it is going from scene
+            //do nothing - it is going from scene or folding
         }
         else
         {
+			StopAllCubeAnimations();
             AnimateFold(null, null);
         }
     }
@@ -382,7 +384,7 @@ namespace IBM.Watson.Widgets.Question
         AnimationState = CubeAnimationState.FOLDING;
         for (int i = 0; i < m_uiFaceOnSide.Length; i++)
         {
-            m_animationPositionOnSide[i] = LeanTween.moveLocal(m_uiFaceOnSide[i], m_positionFold[i], m_TimeForFoldingUnfolding).setEase(m_EaseForFolding);
+            m_animationPositionOnSide[i] = LeanTween.moveLocal(m_uiFaceOnSide[i], m_positionFold[i], m_TimeForFoldingUnfolding).setEase(m_EaseForFolding).id;
             if (i == m_uiFaceOnSide.Length - 1)
                 m_animationRotationOnSide[i] = LeanTween.rotateLocal(m_uiFaceOnSide[i], m_rotationFold[i].eulerAngles, m_TimeForFoldingUnfolding).setEase(m_EaseForFolding).setOnComplete(
                     () =>
@@ -391,13 +393,13 @@ namespace IBM.Watson.Widgets.Question
 
                         if (callBackOnComplete != null)
                             callBackOnComplete(paramOnComplete);
-                    });
+                    }).id;
             else
-                m_animationRotationOnSide[i] = LeanTween.rotateLocal(m_uiFaceOnSide[i], m_rotationFold[i].eulerAngles, m_TimeForFoldingUnfolding).setEase(m_EaseForFolding);
+                m_animationRotationOnSide[i] = LeanTween.rotateLocal(m_uiFaceOnSide[i], m_rotationFold[i].eulerAngles, m_TimeForFoldingUnfolding).setEase(m_EaseForFolding).id;
         }
 
         //Move object cloase to camera
-        m_animationPositionCube = LeanTween.move(gameObject, m_initialPosition, m_TimeForFoldingUnfolding).setEase(m_EaseForFolding);
+        m_animationPositionCube = LeanTween.move(gameObject, m_initialPosition, m_TimeForFoldingUnfolding).setEase(m_EaseForFolding).id;
 
 		//Avatar Object position change
 		EventManager.Instance.SendEvent (Constants.Event.ON_AVATAR_MOVE_DEFAULT, m_TimeForFoldingUnfolding);
@@ -406,17 +408,19 @@ namespace IBM.Watson.Widgets.Question
 
     public void UnFold()
     {
-        StopAllCubeAnimations();
+        
         if (AnimationState == CubeAnimationState.FOCUSING_TO_SIDE || AnimationState == CubeAnimationState.IDLE_AS_FOCUSED)
         {
+			StopAllCubeAnimations();
             AnimateUnfocus(AnimateUnFold, null);
         }
-        else if (AnimationState == CubeAnimationState.GOING_FROM_SCENE)
+		else if (AnimationState == CubeAnimationState.GOING_FROM_SCENE || AnimationState == CubeAnimationState.IDLE_AS_UNFOLDED  || AnimationState == CubeAnimationState.UNFOLDING)
         {
-            //do nothing - it is going from scene
+            //do nothing - it is going from scene or unfolding or unfolded already
         }
         else
         {
+			StopAllCubeAnimations();
             AnimateUnFold(null, null);
         }
 
@@ -432,8 +436,8 @@ namespace IBM.Watson.Widgets.Question
         AnimationState = CubeAnimationState.UNFOLDING;
         for (int i = 0; i < m_uiFaceOnSide.Length; i++)
         {
-            m_animationPositionOnSide[i] = LeanTween.moveLocal(m_uiFaceOnSide[i], m_positionUnfold[i], m_TimeForFoldingUnfolding).setEase(m_EaseForUnfolding);
-            m_animationRotationOnSide[i] = LeanTween.rotateLocal(m_uiFaceOnSide[i], m_rotationUnfold[i].eulerAngles, m_TimeForFoldingUnfolding).setEase(m_EaseForUnfolding);
+            m_animationPositionOnSide[i] = LeanTween.moveLocal(m_uiFaceOnSide[i], m_positionUnfold[i], m_TimeForFoldingUnfolding).setEase(m_EaseForUnfolding).id;
+            m_animationRotationOnSide[i] = LeanTween.rotateLocal(m_uiFaceOnSide[i], m_rotationUnfold[i].eulerAngles, m_TimeForFoldingUnfolding).setEase(m_EaseForUnfolding).id;
         }
 
         //Rotate to camera 
@@ -444,10 +448,10 @@ namespace IBM.Watson.Widgets.Question
 
                 if (callBackOnComplete != null)
                     callBackOnComplete(paramOnComplete);
-            });
+            }).id;
 
         //Move object cloase to camera
-        m_animationPositionCube = LeanTween.move(gameObject, m_initialPositionMainCamera + m_DistanceFromCameraInZAfterUnfolding * UnityEngine.Camera.main.transform.forward + m_PositionCubeOffsetUnfold, m_TimeForFoldingUnfolding).setEase(m_EaseForUnfolding);
+        m_animationPositionCube = LeanTween.move(gameObject, m_initialPositionMainCamera + m_DistanceFromCameraInZAfterUnfolding * UnityEngine.Camera.main.transform.forward + m_PositionCubeOffsetUnfold, m_TimeForFoldingUnfolding).setEase(m_EaseForUnfolding).id;
 
         //Avatar Object position change
 		EventManager.Instance.SendEvent (Constants.Event.ON_AVATAR_MOVE_DOWN, m_TimeForFoldingUnfolding);
@@ -463,31 +467,31 @@ namespace IBM.Watson.Widgets.Question
     /// <param name="sideType">Side type.</param>
     public void FocusOnSide(CubeSideType sideType)
     {
-        m_LastCubeSideFocused = sideType;
+       
         if (m_presentationSide.Length <= (int)sideType)
         {
             Log.Error("CubeAnimationManager", "CubeAnimationManager - FocusOnSide {0} has wrong number as side. ", (int)sideType);
 
             sideType = (CubeSideType)((int)sideType % m_presentationSide.Length);
-            m_LastCubeSideFocused = sideType;
             //;
         }
 
-        StopAllCubeAnimations();
+        
 
-        if (AnimationState == CubeAnimationState.IDLE_AS_UNFOLDED || AnimationState == CubeAnimationState.IDLE_AS_FOCUSED || AnimationState == CubeAnimationState.FOCUSING_TO_SIDE)
+		if (AnimationState == CubeAnimationState.IDLE_AS_UNFOLDED || (m_LastCubeSideFocused != sideType && (AnimationState == CubeAnimationState.IDLE_AS_FOCUSED || AnimationState == CubeAnimationState.FOCUSING_TO_SIDE)) )
         {
+			StopAllCubeAnimations();
             AnimateFocusOnSide(sideType);
         }
-        else if (AnimationState == CubeAnimationState.GOING_FROM_SCENE)
+		else if (AnimationState == CubeAnimationState.GOING_FROM_SCENE  || (m_LastCubeSideFocused == sideType && (AnimationState == CubeAnimationState.IDLE_AS_FOCUSED || AnimationState == CubeAnimationState.FOCUSING_TO_SIDE)) )
         {
-            //do nothing - it is going from scene
+            //do nothing - it is going from scene or it is already focused or focusing same
         }
         else if (AnimationState == CubeAnimationState.COMING_TO_SCENE )
         {
-                if(m_animationScaleForComingScene != null)
+				if(LeanTween.descr(m_animationScaleForComingScene) != null)
                 {
-                    m_animationScaleForComingScene.setOnComplete(() => {
+					LeanTween.descr(m_animationScaleForComingScene).setOnComplete(() => {
                         AnimationState = CubeAnimationState.IDLE_AS_FOLDED;
                         AnimateUnFold(AnimateFocusOnSide, (System.Object)sideType);
                     });
@@ -499,6 +503,7 @@ namespace IBM.Watson.Widgets.Question
         }
         else
         {
+			StopAllCubeAnimations();
             AnimateUnFold(AnimateFocusOnSide, (System.Object)sideType);
         }
     }
@@ -508,8 +513,7 @@ namespace IBM.Watson.Widgets.Question
     /// </summary>
     public void FocusOnNextSide()
     {
-        m_LastCubeSideFocused = (CubeSideType)(((int)m_LastCubeSideFocused + 1) % m_uiFaceOnSide.Length);
-        FocusOnSide(m_LastCubeSideFocused);
+       FocusOnSide((CubeSideType)(((int)m_LastCubeSideFocused + 1) % m_uiFaceOnSide.Length));
     }
 
     private void AnimateFocusOnSide(System.Object sideType)
@@ -519,6 +523,7 @@ namespace IBM.Watson.Widgets.Question
 
     private void AnimateFocusOnSide(CubeSideType sideType)
     {
+		m_LastCubeSideFocused = sideType;
         AnimationState = CubeAnimationState.FOCUSING_TO_SIDE;
 
         for (int i = 0; i < m_presentationSide.Length; i++)
@@ -534,24 +539,24 @@ namespace IBM.Watson.Widgets.Question
                 m_animationPositionOnSidePresentation[i] = LeanTween.moveLocal(m_presentationSide[i], m_positionFocus[0] - offsetPosition, m_TimeForFocusingUnfocusing).setEase(m_EaseForFocusing).setOnComplete(() =>
                 {
                     AnimationState = CubeAnimationState.IDLE_AS_FOCUSED;
-                });
+                }).id;
             }
             else if (i < (int)sideType)
             {
                 //				Vector3[] splineVec = new Vector3[]{ presentationSide[i].transform.localPosition,presentationSide[i].transform.localPosition - Vector3.right * (i  * 2) * (i % 2 == 0 ? 1.0f : -1.0f), positionZoom[ ((i + 1) % uiFaceOnSide.Length) ] - offsetPosition  - Vector3.right * (i  * 2) * (i % 2 == 0 ? 1.0f : -1.0f),positionZoom[ ((i + 1) % uiFaceOnSide.Length) ] - offsetPosition};
-                m_animationPositionOnSidePresentation[i] = LeanTween.moveLocal(m_presentationSide[i], m_positionFocus[((i + 1) % m_uiFaceOnSide.Length)] - offsetPosition, m_TimeForFocusingUnfocusing).setEase(m_EaseForFocusing);
+                m_animationPositionOnSidePresentation[i] = LeanTween.moveLocal(m_presentationSide[i], m_positionFocus[((i + 1) % m_uiFaceOnSide.Length)] - offsetPosition, m_TimeForFocusingUnfocusing).setEase(m_EaseForFocusing).id;
             }
             else
             {
                 //				Vector3[] splineVec = new Vector3[]{presentationSide[i].transform.localPosition, presentationSide[i].transform.localPosition - Vector3.right * (i * 2) * (i % 2 == 0 ? 1.0f : -1.0f), positionZoom[i] - offsetPosition  - Vector3.right * (i * 2) * (i % 2 == 0 ? 1.0f : -1.0f),positionZoom[i] - offsetPosition};
-                m_animationPositionOnSidePresentation[i] = LeanTween.moveLocal(m_presentationSide[i], m_positionFocus[i] - offsetPosition, m_TimeForFocusingUnfocusing).setEase(m_EaseForFocusing);
+                m_animationPositionOnSidePresentation[i] = LeanTween.moveLocal(m_presentationSide[i], m_positionFocus[i] - offsetPosition, m_TimeForFocusingUnfocusing).setEase(m_EaseForFocusing).id;
             }
         }
 
         //Make sure that our sides are in right rotation
         for (int i = 0; i < m_uiFaceOnSide.Length; i++)
         {
-            m_animationRotationOnSide[i] = LeanTween.rotateLocal(m_uiFaceOnSide[i], m_rotationUnfold[i].eulerAngles, m_TimeForFocusingUnfocusing).setEase(m_EaseForFocusing);
+            m_animationRotationOnSide[i] = LeanTween.rotateLocal(m_uiFaceOnSide[i], m_rotationUnfold[i].eulerAngles, m_TimeForFocusingUnfocusing).setEase(m_EaseForFocusing).id;
         }
 
     }
@@ -571,7 +576,7 @@ namespace IBM.Watson.Widgets.Question
     private void AnimateUnfocus(System.Action<System.Action<System.Object>, System.Object> callBackOnComplete = null, System.Object paramOnComplete = null, System.Action<System.Object> callBackOnCompleteLoop = null)
     {
 
-        AnimationState = CubeAnimationState.FOCUSING_TO_SIDE;
+        AnimationState = CubeAnimationState.UNFOCUSING;	//it is unfolding from focused view
         for (int i = 0; i < m_uiFaceOnSide.Length; i++)
         {
             if (i == m_uiFaceOnSide.Length - 1)
@@ -584,11 +589,11 @@ namespace IBM.Watson.Widgets.Question
                     {
                         callBackOnComplete(callBackOnCompleteLoop, paramOnComplete);
                     }
-                });
+                }).id;
             }
             else
             {
-                m_animationPositionOnSide[i] = LeanTween.moveLocal(m_presentationSide[i], Vector3.zero, m_TimeForFocusingUnfocusing).setEase(m_EaseForUnfocusing);
+                m_animationPositionOnSide[i] = LeanTween.moveLocal(m_presentationSide[i], Vector3.zero, m_TimeForFocusingUnfocusing).setEase(m_EaseForUnfocusing).id;
             }
         }
     }
@@ -613,13 +618,13 @@ namespace IBM.Watson.Widgets.Question
     }
 
 	private void StopComingSceneAnimation(){
-		if (m_animationMoveForComingScene != null) {
-
+		if (LeanTween.descr(m_animationMoveForComingScene) != null) {
+			LeanTween.descr( m_animationMoveForComingScene).onComplete = null;
+			LeanTween.cancel(m_animationMoveForComingScene);
+			m_animationMoveForComingScene = -1;
 		}
-
-		if (m_animationScaleForComingScene != null) {
-
-		}
+		
+		//do nothing about scaling animation (m_animationScaleForComingScene) - we need to scale to right size
 
 	}
     private void StopAvatarAnimation()
@@ -632,27 +637,39 @@ namespace IBM.Watson.Widgets.Question
     {
         if (m_animationPositionOnSide == null)
         {
-            m_animationPositionOnSide = new LTDescr[m_uiFaceOnSide.Length];
+            m_animationPositionOnSide = new int[m_uiFaceOnSide.Length];
+			for (int i = 0; i < m_animationPositionOnSide.Length; i++) {
+					m_animationPositionOnSide[i] = -1;
+			}
         }
         else
         {
             for (int i = 0; i < m_animationPositionOnSide.Length; i++)
             {
-                if (m_animationPositionOnSide[i] != null)
-                    LeanTween.cancel(m_animationPositionOnSide[i].uniqueId);
+                if (LeanTween.descr( m_animationPositionOnSide[i]) != null){
+					LeanTween.descr( m_animationPositionOnSide[i]).onComplete = null;
+                    LeanTween.cancel(m_animationPositionOnSide[i]);
+					m_animationPositionOnSide[i] = -1;
+				}
             }
         }
 
         if (m_animationRotationOnSide == null)
         {
-            m_animationRotationOnSide = new LTDescr[m_uiFaceOnSide.Length];
+            m_animationRotationOnSide = new int[m_uiFaceOnSide.Length];
+			for (int i = 0; i < m_animationRotationOnSide.Length; i++) {
+				m_animationRotationOnSide[i] = -1;
+			}
         }
         else
         {
             for (int i = 0; i < m_animationRotationOnSide.Length; i++)
             {
-                if (m_animationRotationOnSide[i] != null)
-                    LeanTween.cancel(m_animationRotationOnSide[i].uniqueId);
+				if (LeanTween.descr(m_animationRotationOnSide[i]) != null){
+					LeanTween.descr(m_animationRotationOnSide[i]).onComplete = null;
+                    LeanTween.cancel(m_animationRotationOnSide[i]);
+					m_animationRotationOnSide[i] = -1;
+				}
             }
         }
     }
@@ -661,14 +678,20 @@ namespace IBM.Watson.Widgets.Question
     {
         if (m_animationPositionOnSidePresentation == null)
         {
-            m_animationPositionOnSidePresentation = new LTDescr[m_uiFaceOnSide.Length];
+            m_animationPositionOnSidePresentation = new int[m_uiFaceOnSide.Length];
+			for (int i = 0; i < m_animationPositionOnSidePresentation.Length; i++) {
+				m_animationPositionOnSidePresentation[i] = -1;
+			}
         }
         else
         {
             for (int i = 0; i < m_animationPositionOnSide.Length; i++)
             {
-                if (m_animationPositionOnSidePresentation[i] != null)
-                    LeanTween.cancel(m_animationPositionOnSidePresentation[i].uniqueId);
+				if (LeanTween.descr(m_animationPositionOnSidePresentation[i]) != null){
+					LeanTween.descr( m_animationPositionOnSidePresentation[i] ).onComplete = null;
+                    LeanTween.cancel(m_animationPositionOnSidePresentation[i]);
+					m_animationPositionOnSidePresentation[i] = -1;
+				}
             }
         }
     }
@@ -676,14 +699,18 @@ namespace IBM.Watson.Widgets.Question
 
     private void StopCubeCameraFacingRotationAnimation()
     {
-        if (m_animationRotationCube != null)
+		if (LeanTween.descr( m_animationRotationCube )!= null)
         {
-            LeanTween.cancel(m_animationRotationCube.uniqueId);
+			LeanTween.descr( m_animationRotationCube ).onComplete = null;
+            LeanTween.cancel(m_animationRotationCube);
+			m_animationRotationCube = -1;
         }
 
-        if (m_animationPositionCube != null)
+		if (LeanTween.descr(m_animationPositionCube) != null)
         {
-            LeanTween.cancel(m_animationPositionCube.uniqueId);
+			LeanTween.descr( m_animationPositionCube ).onComplete = null;
+            LeanTween.cancel(m_animationPositionCube);
+			m_animationPositionCube = -1;
         }
     }
 
@@ -803,6 +830,9 @@ namespace IBM.Watson.Widgets.Question
 			case CubeAnimationManager.CubeAnimationState.FOCUSING_TO_SIDE:
 				FocusOnSide(sideTapped);
 				break;
+			case CubeAnimationManager.CubeAnimationState.UNFOCUSING:
+				FocusOnSide(sideTapped);
+				break;
 			case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOCUSED:
 				FocusOnSide(sideTapped);
 				break;
@@ -858,6 +888,9 @@ namespace IBM.Watson.Widgets.Question
 			break;
 		case CubeAnimationManager.CubeAnimationState.FOCUSING_TO_SIDE:
 			UnFocus();
+			break;
+		case CubeAnimationManager.CubeAnimationState.UNFOCUSING:
+			Fold();
 			break;
 		case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOCUSED:
 			UnFocus();
