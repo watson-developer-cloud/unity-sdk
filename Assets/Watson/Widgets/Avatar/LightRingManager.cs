@@ -53,11 +53,27 @@ namespace IBM.Watson.Widgets.Avatar
         private int[] m_MoveAnimationOnFlare = null;
         private float[] m_MoveAnimationLastRatioOnFlare = null;
 
+		private float m_AudioLevelOutput = 0.0f;
+		private float m_AudioScaleModifier = 5.0f;
         private bool m_LightFlareIsUnderMouth = false;
 
         #endregion
 
-        #region OnEnable / OnDisable / OnApplicationQuit / Awake
+		#region OnEnable / OnDisable For Event Registration
+		
+		protected override void OnEnable(){
+			base.OnEnable ();
+			EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_AVATAR_SPEAKING, AvatarSpeaking);
+		}
+		
+		protected override void OnDisable(){
+			base.OnDisable ();
+			EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_AVATAR_SPEAKING, AvatarSpeaking);
+		}
+		
+		#endregion
+
+        #region ApplicationQuit / Awake
 
         private void OnApplicationQuit()
         {
@@ -456,8 +472,7 @@ namespace IBM.Watson.Widgets.Avatar
 
         }
 
-        private float m_AudioLevelOutput = 0.0f;
-        private float m_AudioScaleModifier = 5.0f;
+        
         public void AvatarSpeaking(System.Object[] args)
         {
             if (args != null && args.Length == 1 && args[0] is float)

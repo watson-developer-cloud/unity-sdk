@@ -106,13 +106,13 @@ namespace IBM.Watson.Utilities
 			/// </summary>
 			ON_AVATAR_MOVE_DEFAULT,
 			/// <summary>
-			/// Event to stop avatar move down
+			/// Event to stop avatar move up / down
 			/// </summary>
-			ON_AVATAR_STOP_MOVE_DOWN,
+			ON_AVATAR_STOP_MOVE,
 			/// <summary>
-			/// The event to stop move the avatar initial position
+			/// The event to stop avatar rotation
 			/// </summary>
-			ON_AVATAR_STOP_MOVE_DEFAULT,
+			ON_AVATAR_STOP_ROTATIOM,
             /// <summary>
             /// Event when avatar is speaking. 
             /// </summary>

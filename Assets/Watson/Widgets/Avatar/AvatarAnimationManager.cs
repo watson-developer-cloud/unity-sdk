@@ -52,7 +52,24 @@ public class AvatarAnimationManager : WatsonBaseAnimationManager {
 	private int m_AnimationMoveDown = -1;
 	#endregion
 	
+	#region OnEnable / OnDisable For Event Registration
+	
+	void OnEnable(){
+		EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_AVATAR_MOVE_DEFAULT, AnimateMoveDefault);
+		EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_AVATAR_MOVE_DOWN, AnimateMoveDown);
+		EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_AVATAR_STOP_MOVE, StopAnimationMove);
+	}
 
+	void OnDisable(){
+		EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_AVATAR_MOVE_DEFAULT, AnimateMoveDefault);
+		EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_AVATAR_MOVE_DOWN, AnimateMoveDown);
+		EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_AVATAR_STOP_MOVE, StopAnimationMove);
+	}
+
+	#endregion
+
+	#region Awake / Start
+	
 	void Awake()
 	{
 		m_AnimationInitialTime = m_AnimationTime;
@@ -64,6 +81,9 @@ public class AvatarAnimationManager : WatsonBaseAnimationManager {
 		AnimateRotation ();
 		//AnimateMoveDown ();
 	}
+
+	#endregion
+
 	
 
 	#region Overriden function on WatsonAnimationManager
@@ -165,12 +185,14 @@ public class AvatarAnimationManager : WatsonBaseAnimationManager {
 
 	#region Avatar Movements Up / Down / Left / Right - Event
 
+	private void StopAnimationMove(System.Object[] args = null){
+		StopAnimateMoveDefault ();
+		StopAnimateMoveDown ();
+	}
+
+
 	public void AnimateMoveDefault(System.Object[] args = null){
-		if (LeanTween.descr(m_AnimationMoveDefault)!= null) 
-		{
-			LeanTween.cancel(m_AnimationMoveDefault);
-			m_AnimationMoveDefault = 0;
-		}
+		StopAnimationMove ();
 		
 		float animationTime = m_AnimationTime;
 		if (args != null && args.Length == 1 && float.TryParse(args[0].ToString(), out animationTime)) {
@@ -191,11 +213,7 @@ public class AvatarAnimationManager : WatsonBaseAnimationManager {
 	}
 
 	public void AnimateMoveDown(System.Object[] args = null){
-		if (LeanTween.descr(m_AnimationMoveDown) != null) 
-		{
-			LeanTween.cancel(m_AnimationMoveDown);
-			m_AnimationMoveDown = -1;
-		}
+		StopAnimationMove ();
 		
 		float animationTime = m_AnimationTime;
 			if (args != null && args.Length == 1 && float.TryParse(args[0].ToString(), out animationTime)) {

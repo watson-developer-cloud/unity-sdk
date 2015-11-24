@@ -1,4 +1,4 @@
-﻿/**
+/**
 * Copyright 2015 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -629,8 +629,7 @@ namespace IBM.Watson.Widgets.Question
 	}
     private void StopAvatarAnimation()
     {
-		EventManager.Instance.SendEvent (Constants.Event.ON_AVATAR_STOP_MOVE_DEFAULT);
-		EventManager.Instance.SendEvent (Constants.Event.ON_AVATAR_STOP_MOVE_DOWN);
+		EventManager.Instance.SendEvent (Constants.Event.ON_AVATAR_STOP_MOVE);
     }
 
     private void StopFoldingAnimation()

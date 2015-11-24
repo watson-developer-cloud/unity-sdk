@@ -2225,7 +2225,7 @@ public static void cancel( int uniqueId, bool callOnComplete ){
 		int backId = uniqueId & 0xFFFF;
 		int backCounter = uniqueId >> 16;
 		// Debug.Log("uniqueId:"+uniqueId+ " id:"+backId +" action:"+(TweenAction)backType + " tweens[id].type:"+tweens[backId].type);
-		if(tweens[backId].hasInitiliazed && tweens[backId].counter==backCounter){
+		if(tweens[backId].counter==backCounter){	//DELETED initialize condition check! tweens[backId].hasInitiliazed &&
 			if(callOnComplete && tweens[backId].onComplete != null)
                 tweens[backId].onComplete();
 			removeTween((int)backId);
