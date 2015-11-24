@@ -381,7 +381,7 @@ namespace IBM.Watson.Widgets.Question
 
     private void AnimateFold(System.Action<System.Object> callBackOnComplete = null, System.Object paramOnComplete = null)
     {
-        AnimationState = CubeAnimationState.FOLDING;
+		AnimationState = CubeAnimationState.FOLDING;
         for (int i = 0; i < m_uiFaceOnSide.Length; i++)
         {
             m_animationPositionOnSide[i] = LeanTween.moveLocal(m_uiFaceOnSide[i], m_positionFold[i], m_TimeForFoldingUnfolding).setEase(m_EaseForFolding).id;
@@ -409,7 +409,7 @@ namespace IBM.Watson.Widgets.Question
     public void UnFold()
     {
         
-        if (AnimationState == CubeAnimationState.FOCUSING_TO_SIDE || AnimationState == CubeAnimationState.IDLE_AS_FOCUSED)
+		if (AnimationState == CubeAnimationState.FOCUSING_TO_SIDE || AnimationState == CubeAnimationState.IDLE_AS_FOCUSED || AnimationState == CubeAnimationState.UNFOCUSING)
         {
 			StopAllCubeAnimations();
             AnimateUnfocus(AnimateUnFold, null);
@@ -433,7 +433,7 @@ namespace IBM.Watson.Widgets.Question
 
     private void AnimateUnFold(System.Action<System.Object> callBackOnComplete = null, System.Object paramOnComplete = null)
     {
-        AnimationState = CubeAnimationState.UNFOLDING;
+		AnimationState = CubeAnimationState.UNFOLDING;
         for (int i = 0; i < m_uiFaceOnSide.Length; i++)
         {
             m_animationPositionOnSide[i] = LeanTween.moveLocal(m_uiFaceOnSide[i], m_positionUnfold[i], m_TimeForFoldingUnfolding).setEase(m_EaseForUnfolding).id;
@@ -478,14 +478,14 @@ namespace IBM.Watson.Widgets.Question
 
         
 
-		if (AnimationState == CubeAnimationState.IDLE_AS_UNFOLDED || (m_LastCubeSideFocused != sideType && (AnimationState == CubeAnimationState.IDLE_AS_FOCUSED || AnimationState == CubeAnimationState.FOCUSING_TO_SIDE)) )
+		if (AnimationState == CubeAnimationState.IDLE_AS_UNFOLDED || AnimationState == CubeAnimationState.UNFOCUSING || (m_LastCubeSideFocused != sideType && (AnimationState == CubeAnimationState.IDLE_AS_FOCUSED || AnimationState == CubeAnimationState.FOCUSING_TO_SIDE)) )
         {
 			StopAllCubeAnimations();
             AnimateFocusOnSide(sideType);
         }
-		else if (AnimationState == CubeAnimationState.GOING_FROM_SCENE  || (m_LastCubeSideFocused == sideType && (AnimationState == CubeAnimationState.IDLE_AS_FOCUSED || AnimationState == CubeAnimationState.FOCUSING_TO_SIDE)) )
+		else if (AnimationState == CubeAnimationState.GOING_FROM_SCENE || AnimationState == CubeAnimationState.UNFOLDING  || (m_LastCubeSideFocused == sideType && (AnimationState == CubeAnimationState.IDLE_AS_FOCUSED || AnimationState == CubeAnimationState.FOCUSING_TO_SIDE)) )
         {
-            //do nothing - it is going from scene or it is already focused or focusing same
+			//do nothing - it is going from scene or it is already focused or focusing same
         }
         else if (AnimationState == CubeAnimationState.COMING_TO_SCENE )
         {
@@ -575,8 +575,7 @@ namespace IBM.Watson.Widgets.Question
 
     private void AnimateUnfocus(System.Action<System.Action<System.Object>, System.Object> callBackOnComplete = null, System.Object paramOnComplete = null, System.Action<System.Object> callBackOnCompleteLoop = null)
     {
-
-        AnimationState = CubeAnimationState.UNFOCUSING;	//it is unfolding from focused view
+		AnimationState = CubeAnimationState.UNFOCUSING;	//it is unfolding from focused view
         for (int i = 0; i < m_uiFaceOnSide.Length; i++)
         {
             if (i == m_uiFaceOnSide.Length - 1)
@@ -758,8 +757,7 @@ namespace IBM.Watson.Widgets.Question
     }
     private void AnimateDestroyingCube(bool destroy)
     {
-        AnimationState = CubeAnimationState.GOING_FROM_SCENE;
-
+		AnimationState = CubeAnimationState.GOING_FROM_SCENE;
 
 		Vector3[] vectorList = new Vector3[]{transform.localPosition, new Vector3(transform.localPosition.x, transform.localPosition.y, 0), m_PositionAfterLeaving,  m_PositionAfterLeaving};
 
@@ -804,6 +802,7 @@ namespace IBM.Watson.Widgets.Question
 		}
 
 		CubeSideType sideTapped = SideOfTap (raycastHit.transform);
+
 		if (AnimationState == CubeAnimationState.IDLE_AS_FOCUSED && ((int)sideTapped % m_presentationSide.Length) == ((int)SideFocused  % m_presentationSide.Length) ) {
 			//TapInsideOnFocusedSide(tapGesture, raycastHit, sideTapped);
 		} else {
@@ -867,7 +866,7 @@ namespace IBM.Watson.Widgets.Question
 			Log.Warning("CubeAnimationManager", "OnTapOutside has invalid arguments!");
 			return;
 		}
-
+		
 		//Touch out-side
 		switch (AnimationState)
 		{
@@ -889,7 +888,6 @@ namespace IBM.Watson.Widgets.Question
 			UnFocus();
 			break;
 		case CubeAnimationManager.CubeAnimationState.UNFOCUSING:
-			Fold();
 			break;
 		case CubeAnimationManager.CubeAnimationState.IDLE_AS_FOCUSED:
 			UnFocus();
