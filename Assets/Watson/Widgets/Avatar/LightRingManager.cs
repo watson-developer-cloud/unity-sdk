@@ -415,21 +415,11 @@ namespace IBM.Watson.Widgets.Avatar
 						m_MoveAnimationOnFlare[i] = -1;
 					}
 				}
-
-//				for (int i = 0; i < LeanTween.tweens.Length; i++) {
-//					int j = 0;
-//					if(LeanTween.tweens[i].trans == m_LightFlarePivotParentList[0].transform){
-//						j ++;
-//						UnityEngine.Debug.LogWarning("" + j + ") [" + i + "] " + LeanTween.tweens[i].ToString());
-//					}
-//				}
-
 				return m_MoveAnimationOnFlare;
 			}
 		}
         private void StopLightFlareAnimation()
         {
-            Log.Warning("LightRingManager", "StopLightFlareAnimation");
             m_LightFlareIsUnderMouth = false;
             //Stop the movement animation
             if (MoveAnimationOnFlare != null && MoveAnimationOnFlare.Length > 0)
@@ -479,18 +469,8 @@ namespace IBM.Watson.Widgets.Avatar
 						targetRatioInital += 1.0f;
 					}
 
-					if(BezierPathAllInOne.pts.Length != 128){
-						UnityEngine.Debug.LogWarning("m_BezierPathAllInOne has CHANGED!");
-					}
-
-
 					MoveAnimationOnFlare[i] = LeanTween.moveLocal(m_LightFlarePivotParentList[i], BezierPathAllInOne, 1.0f).setOrientToPath(true).setAxis(Vector3.forward).setFrom(Vector3.one * lastValue).setTo(Vector3.one * targetRatioEnd).setEase(m_LightFlareEase).setOnComplete((System.Object o)=>{
 						if (o is int){
-							if(BezierPathAllInOne.pts.Length != 128){
-								UnityEngine.Debug.LogWarning("m_BezierPathAllInOne has CHANGED!");
-							}
-
-
 							int indexPivot = (int)o;
 							MoveAnimationOnFlare[indexPivot] = LeanTween.moveLocal(m_LightFlarePivotParentList[indexPivot], BezierPathAllInOne, animationTime).setOrientToPath(true).setAxis(Vector3.forward).setFrom(Vector3.one * ((1.0f/ m_NumberOfLightFlare) * (indexPivot + 1))).setTo(Vector3.one *  ((1.0f/ m_NumberOfLightFlare) * (indexPivot))).setEase(m_LightFlareEase).setLoopPingPong().id;
 						}
@@ -543,41 +523,9 @@ namespace IBM.Watson.Widgets.Avatar
 					}, i).id;
 
 
-
-//                    MoveAnimationOnFlare[i] = LeanTween.value(gameObject, 0.0f, 1.0f, animationTime).setOnUpdate((float f, System.Object o) => {
-//                        if (o is int)
-//                        {
-//                            int indexPivot = (int)o;
-//                            BezierPathAllInOne.placeLocal(m_LightFlarePivotParentList[indexPivot].transform, Mathf.Clamp(f, 0.0f, 0.999f));
-//                        }
-//                        else
-//                        {
-//                            Log.Warning("LightRingManager", "AnimateLightFlareForThinking has invalid parameter : {0}", o.ToString());
-//                        }
-//                    }, i).setLoopClamp().id;
                 }
             }
         }
-
-		/*
-        private LTBezierPath[] m_BezierPathList;
-        LTBezierPath[] BezierPathList
-        {
-            get
-            {
-                if (m_BezierPathList == null)
-                {
-                    m_BezierPathList = new LTBezierPath[m_LightFlarePivotParentList.Length];
-                    for (int i = 0; i < m_LightFlarePivotParentList.Length; i++)
-                    {
-                        m_BezierPathList[i] = new LTBezierPath(m_ListFlareBezierPathList[i]);
-                    }
-                   
-                }
-                return m_BezierPathList;
-            }
-        }
-*/
 
         private LTBezierPath m_BezierPathAllInOne;
         LTBezierPath BezierPathAllInOne
@@ -588,6 +536,10 @@ namespace IBM.Watson.Widgets.Avatar
                 {
 					m_BezierPathAllInOne = new LTBezierPath(m_FullCircleBezierPathPoints);
                 }
+
+				if(m_BezierPathAllInOne.pts.Length != 128){
+					UnityEngine.Debug.LogWarning("m_BezierPathAllInOne has CHANGED!");
+				}
 
                 return m_BezierPathAllInOne;
             }
@@ -620,26 +572,16 @@ namespace IBM.Watson.Widgets.Avatar
 
                 //Log.Status("LightRingManager", "animationTime: {0} - LastValueAnimationFlare[i] {1} to ratioPositionForMouth: {2}", animationTime, LastValueAnimationFlare[i], ratioPositionForMouth);
                 
-				if(BezierPathAllInOne.pts.Length != 128){
-					UnityEngine.Debug.LogWarning("m_BezierPathAllInOne has CHANGED!");
-				}
-
 				while(LastValueAnimationFlare[i] > ratioPositionForMouth){
 					ratioPositionForMouth += 1.0f;
 				}
 
 				MoveAnimationOnFlare[i] = LeanTween.moveLocal(m_LightFlarePivotParentList[i], BezierPathAllInOne, animationTime).setOrientToPath(true).setAxis(Vector3.forward).setFrom(Vector3.one * LastValueAnimationFlare[i]).setTo(Vector3.one * ratioPositionForMouth).setEase(easeForMoveToMouthPosition).setOnComplete((System.Object o)=>{
 					if (o is int){
-						if(BezierPathAllInOne.pts.Length != 128){
-							UnityEngine.Debug.LogWarning("m_BezierPathAllInOne has CHANGED!");
-						}
-
-
 						int indexPivot = (int)o;
 
 						LastValueAnimationFlare[indexPivot] = (1.0f / m_LightFlarePivotParentList.Length) * indexPivot;
 						MoveAnimationOnFlare[indexPivot] = -1;
-
 
 						if(indexPivot == 0){
 							m_LightFlareIsUnderMouth = true;
@@ -650,47 +592,6 @@ namespace IBM.Watson.Widgets.Avatar
 						Log.Warning("LightRingManager", "AnimateLightFlareForThinking has invalid parameter : {0}", o.ToString());
 					}
 				}, i).id;
-
-				/*
-                MoveAnimationOnFlare[i] = LeanTween.value(m_LightFlarePivotParentList[i], LastValueAnimationFlare[i], ratioPositionForMouth, animationTime).setEase(easeForMoveToMouthPosition).setOnUpdate((float f, System.Object o) => {
-                    
-                    if(o is int)
-                    {
-                        int indexPivot = (int)o;
-                        if (BezierPathList != null && BezierPathList.Length > indexPivot)
-                        {
-                            GameObject tweeningObject = m_LightFlarePivotParentList[indexPivot];
-                            BezierPathList[indexPivot].placeLocal(tweeningObject.transform, f);
-                            //Log.Status("LightRingManager", "{0} ) bezierPath ratio: {1} - Position : {2}", indexPivot, f, tweeningObject.transform.localPosition);
-                        }
-                        else
-                        {
-                            Log.Warning("LightRingManager", "AnimateLightFlare has invalid BezierPathList. Index: {0}", indexPivot);
-                        }
-                    }
-                    else
-                    {
-                        Log.Warning("LightRingManager", "AnimateLightFlare has invalid parameter : {0}", o.ToString());
-                    }
-                    
-                    
-                }, i).setOnComplete( (System.Object o)=> {
-					if(o is int)
-					{
-						int indexPivot = (int)o;
-						MoveAnimationOnFlare[indexPivot] = -1;
-					}
-
-                    m_LightFlareIsUnderMouth = true;
-                   
-                    //for (int indexAnimation = 0; indexAnimation < MoveAnimationOnFlare.Length; indexAnimation++)
-                    //{
-                    //    LeanTween.scaleZ(m_LightFlarePivotParentList[indexAnimation],2, 1.0f).setLoopPingPong();
-                    //}
-                    
-
-                }, i).id;
-                */
             }
 
         }
@@ -761,15 +662,7 @@ namespace IBM.Watson.Widgets.Avatar
             }
             else
             {
-                //if (m_LightFlarePivotParentList.Length == m_ListFlareBezierPathList.Length && animationTime > 0.0f)
-                //{
-                //    MoveAnimationOnFlare = new int[m_LightFlarePivotParentList.Length];
-                //    for (int i = 0; i < m_LightFlarePivotParentList.Length; i++)
-                //    {
-                //        MoveAnimationOnFlare[i] = LeanTween.moveLocal(m_LightFlarePivotParentList[i], m_ListFlareBezierPathList[i], animationTime).setOrientToPath(true).setAxis(Vector3.forward).setEase(m_LightFlareEase).setLoopPingPong();
-                //        Log.Warning("LightRingManager", "2) SetTimeOnLightFlareMovementAnimation[i].lastVal : {0}", MoveAnimationOnFlare[i].lastVal);
-                //    }
-                //}
+				//do nothing
             }
         }
 
