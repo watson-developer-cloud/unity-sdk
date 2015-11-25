@@ -376,7 +376,8 @@ public class LTDescr {
 		this.onCompleteObject = null;
 		this.onCompleteParam = null;
 		this.onStart = null;
-		
+
+		this.path = null;
 		#if !UNITY_3_5 && !UNITY_4_0 && !UNITY_4_0_1 && !UNITY_4_1 && !UNITY_4_2 && !UNITY_4_3 && !UNITY_4_5
 		this.rectTransform = null;
 	    this.uiText = null;
@@ -743,6 +744,7 @@ public class LTDescr {
 		if(this.trans)
 			this.init();
 		this.from = from;
+		this.lastVal = from.x;	//Last value is set as initial value
 		// this.hasInitiliazed = true; // this is set, so that the "from" value isn't overwritten later on when the tween starts
 		this.diff = this.to - this.from;
 		return this;
@@ -1233,7 +1235,7 @@ public class LeanTween : MonoBehaviour {
 public static bool throwErrors = true;
 public static float tau = Mathf.PI*2.0f; 
 
-private static LTDescr[] tweens;
+public static LTDescr[] tweens;
 private static int[] tweensFinished;
 private static LTDescr tween;
 private static int tweenMaxSearch = -1;
@@ -4589,10 +4591,21 @@ public class LTBezierPath {
 	* ltPath.placeLocal( transform, 0.6f, Vector3.left );
 	*/
 	public void placeLocal( Transform transform, float ratio, Vector3 worldUp ){
+		ratio = getRationInOneRange (ratio);
 		transform.localPosition = point( ratio );
-		ratio += 0.001f;
+		ratio = getRationInOneRange (ratio + 0.001f);
 		if(ratio<=1.0f)
 			transform.LookAt( transform.parent.TransformPoint( point( ratio ) ), worldUp );
+	}
+
+	public float getRationInOneRange(float ratio){
+		if (ratio >= 0.0f && ratio <= 1.0f) {
+			return ratio;
+		} else if (ratio < 0.0f) {
+			return Mathf.Ceil(ratio) - ratio;	//if -1.4 => it returns 0.4
+		} else {
+			return ratio - Mathf.Floor(ratio);	//if 1.4 => it return 0.4
+		}
 	}
 
 	public void gizmoDraw(float t = -1.0f)
