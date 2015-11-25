@@ -42,6 +42,7 @@ namespace IBM.Watson.Widgets.Avatar
         private GameObject[] m_LightFlarePivotParentList;
         private GameObject[] m_LightFlareChild;
         private Vector3[][] m_ListFlareBezierPathList;
+		private Vector3[] m_FullCircleBezierPathPoints;
 
         private Material m_SharedMaterialLightFlare;
         private Color m_TintColorSharedMaterialLightFlareInitial = Color.white;
@@ -137,7 +138,140 @@ namespace IBM.Watson.Widgets.Avatar
                 new Vector3 (0.007372856f, -6.060182f, 32.75727f)
             };
 
-           
+			m_FullCircleBezierPathPoints = new Vector3[] {
+				new Vector3 (27.75156f, 0.0005040757f, -17.34112f),
+				new Vector3 (25.43105f, 0.0005034769f, -20.74109f),
+				new Vector3 (26.53236f, 0.0005166732f, -19.31231f),
+				new Vector3 (23.83523f, 0.0004974342f, -22.42198f),
+				new Vector3 (23.83523f, 0.0004974342f, -22.42198f),
+				new Vector3 (20.89601f, 0.0004844714f, -25.3039f),
+				new Vector3 (22.2549f, 0.0004917146f, -24.11743f),
+				new Vector3 (19.00293f, 0.0004716767f, -26.64117f),
+				new Vector3 (19.00293f, 0.0004716767f, -26.64117f),
+				new Vector3 (15.55795f, 0.0004468478f, -28.89431f),
+				new Vector3 (17.1222f, 0.0004591883f, -27.99574f),
+				new Vector3 (13.44036f, 0.0004277928f, -29.83656f),
+				new Vector3 (13.44036f, 0.0004277928f, -29.83656f),
+				new Vector3 (9.622017f, 0.0003920521f, -31.37432f),
+				new Vector3 (11.3315f, 0.0004090156f, -30.79818f),
+				new Vector3 (7.361289f, 0.0003674691f, -31.88534f),
+				new Vector3 (7.361289f, 0.0003674691f, -31.88534f),
+				new Vector3 (3.316306f, 0.0003221901f, -32.64863f),
+				new Vector3 (5.105343f, 0.0003431247f, -32.41707f),
+				new Vector3 (0.9993219f, 0.0002930238f, -32.70879f),
+				new Vector3 (0.9993219f, 0.0002930238f, -32.70879f),
+				new Vector3 (-3.116846f, 0.0002399465f, -32.66827f),
+				new Vector3 (-1.317015f, 0.0002640477f, -32.79019f),
+				new Vector3 (-5.401047f, 0.0002073177f, -32.27525f),
+				new Vector3 (-5.401047f, 0.0002073177f, -32.27525f),
+				new Vector3 (-9.430225f, 0.0001484818f, -31.43249f),
+				new Vector3 (-7.688756f, 0.0001748235f, -31.9032f),
+				new Vector3 (-11.59386f, 0.0001136445f, -30.6014f),
+				new Vector3 (-11.59386f, 0.0001136445f, -30.6014f),
+				new Vector3 (-15.3812f, 5.131117E-05f, -28.98878f),
+				new Vector3 (-13.76502f, 7.888097E-05f, -29.79018f),
+				new Vector3 (-17.34113f, 1.560402E-05f, -27.75156f),
+				new Vector3 (-17.34113f, 1.560402E-05f, -27.75156f),
+				new Vector3 (-20.74109f, -4.783142E-05f, -25.43105f),
+				new Vector3 (-19.31231f, -2.009299E-05f, -26.53235f),
+				new Vector3 (-22.42198f, -8.30361E-05f, -23.83523f),
+				new Vector3 (-22.42198f, -8.30361E-05f, -23.83523f),
+				new Vector3 (-25.30391f, -0.0001451358f, -20.89601f),
+				new Vector3 (-24.11743f, -0.0001182947f, -22.25489f),
+				new Vector3 (-26.64117f, -0.0001784852f, -19.00293f),
+				new Vector3 (-26.64117f, -0.0001784852f, -19.00293f),
+				new Vector3 (-28.89431f, -0.0002368628f, -15.55795f),
+				new Vector3 (-27.99574f, -0.0002119505f, -17.12219f),
+				new Vector3 (-29.83656f, -0.0002670753f, -13.44036f),
+				new Vector3 (-29.83656f, -0.0002670753f, -13.44036f),
+				new Vector3 (-31.37432f, -0.0003194871f, -9.622015f),
+				new Vector3 (-30.79818f, -0.0002974611f, -11.3315f),
+				new Vector3 (-31.88534f, -0.0003454017f, -7.361287f),
+				new Vector3 (-31.88534f, -0.0003454017f, -7.361287f),
+				new Vector3 (-32.64863f, -0.0003898339f, -3.316301f),
+				new Vector3 (-32.41707f, -0.0003715405f, -5.105342f),
+				new Vector3 (-32.70879f, -0.0004104546f, -0.99932f),
+				new Vector3 (-32.70879f, -0.0004104546f, -0.99932f),
+				new Vector3 (-32.66827f, -0.0004451995f, 3.116853f),
+				new Vector3 (-32.79019f, -0.0004313418f, 1.317016f),
+				new Vector3 (-32.27526f, -0.0004597339f, 5.401053f),
+				new Vector3 (-32.27526f, -0.0004597339f, 5.401053f),
+				new Vector3 (-31.4325f, -0.0004834563f, 9.430223f),
+				new Vector3 (-31.9032f, -0.0004745668f, 7.688761f),
+				new Vector3 (-30.6014f, -0.0004913458f, 11.59386f),
+				new Vector3 (-30.6014f, -0.0004913458f, 11.59386f),
+				new Vector3 (-28.98879f, -0.0005031343f, 15.3812f),
+				new Vector3 (-29.79019f, -0.0004995545f, 13.76502f),
+				new Vector3 (-27.75156f, -0.0005040757f, 17.34113f),
+				new Vector3 (-27.75156f, -0.0005040757f, 17.34113f),
+				new Vector3 (-25.43105f, -0.0005034769f, 20.74109f),
+				new Vector3 (-26.53236f, -0.0005053447f, 19.31231f),
+				new Vector3 (-23.83523f, -0.0004974342f, 22.42198f),
+				new Vector3 (-23.83523f, -0.0004974342f, 22.42198f),
+				new Vector3 (-20.89602f, -0.0004844714f, 25.3039f),
+				new Vector3 (-22.25489f, -0.0004917146f, 24.11744f),
+				new Vector3 (-19.00293f, -0.0004716767f, 26.64117f),
+				new Vector3 (-19.00293f, -0.0004716767f, 26.64117f),
+				new Vector3 (-15.55795f, -0.0004468478f, 28.89431f),
+				new Vector3 (-17.12219f, -0.0004591883f, 27.99574f),
+				new Vector3 (-13.44036f, -0.0004277928f, 29.83656f),
+				new Vector3 (-13.44036f, -0.0004277928f, 29.83656f),
+				new Vector3 (-9.622013f, -0.0003920521f, 31.37432f),
+				new Vector3 (-11.3315f, -0.0004090156f, 30.79818f),
+				new Vector3 (-7.361283f, -0.000367469f, 31.88534f),
+				new Vector3 (-7.361283f, -0.000367469f, 31.88534f),
+				new Vector3 (-3.316298f, -0.00032219f, 32.64863f),
+				new Vector3 (-5.105337f, -0.0003431247f, 32.41707f),
+				new Vector3 (-0.9993143f, -0.0002930237f, 32.70879f),
+				new Vector3 (-0.9993143f, -0.0002930237f, 32.70879f),
+				new Vector3 (3.116858f, -0.0002399464f, 32.66827f),
+				new Vector3 (1.317023f, -0.0002640476f, 32.79019f),
+				new Vector3 (5.401059f, -0.0002073175f, 32.27525f),
+				new Vector3 (5.401059f, -0.0002073175f, 32.27525f),
+				new Vector3 (9.430223f, -0.0001484819f, 31.4325f),
+				new Vector3 (7.688766f, -0.0001748234f, 31.90319f),
+				new Vector3 (11.59385f, -0.0001136445f, 30.6014f),
+				new Vector3 (11.59385f, -0.0001136445f, 30.6014f),
+				new Vector3 (15.3812f, -5.131118E-05f, 28.98878f),
+				new Vector3 (13.76502f, -7.888099E-05f, 29.79019f),
+				new Vector3 (17.34113f, -1.560404E-05f, 27.75156f),
+				new Vector3 (17.34113f, -1.560404E-05f, 27.75156f),
+				new Vector3 (20.74109f, 4.783141E-05f, 25.43105f),
+				new Vector3 (19.31231f, 2.009297E-05f, 26.53236f),
+				new Vector3 (22.42198f, 8.303614E-05f, 23.83523f),
+				new Vector3 (22.42198f, 8.303614E-05f, 23.83523f),
+				new Vector3 (25.30391f, 0.0001451359f, 20.89601f),
+				new Vector3 (24.11744f, 0.0001182948f, 22.25489f),
+				new Vector3 (26.64117f, 0.0001784853f, 19.00293f),
+				new Vector3 (26.64117f, 0.0001784853f, 19.00293f),
+				new Vector3 (28.89431f, 0.0002368628f, 15.55795f),
+				new Vector3 (27.99574f, 0.0002119506f, 17.12219f),
+				new Vector3 (29.83656f, 0.0002670753f, 13.44036f),
+				new Vector3 (29.83656f, 0.0002670753f, 13.44036f),
+				new Vector3 (31.37432f, 0.0003194872f, 9.622005f),
+				new Vector3 (30.79819f, 0.0002974612f, 11.33149f),
+				new Vector3 (31.88534f, 0.0003454018f, 7.361278f),
+				new Vector3 (31.88534f, 0.0003454018f, 7.361278f),
+				new Vector3 (32.64864f, 0.000389834f, 3.316292f),
+				new Vector3 (32.41708f, 0.0003715406f, 5.105331f),
+				new Vector3 (32.70879f, 0.0004104545f, 0.9993248f),
+				new Vector3 (32.70879f, 0.0004104545f, 0.9993248f),
+				new Vector3 (32.66828f, 0.0004451995f, -3.116849f),
+				new Vector3 (32.79019f, 0.0004313417f, -1.317011f),
+				new Vector3 (32.27526f, 0.0004597339f, -5.401049f),
+				new Vector3 (32.27526f, 0.0004597339f, -5.401049f),
+				new Vector3 (31.4325f, 0.0004834563f, -9.430225f),
+				new Vector3 (31.9032f, 0.0004745668f, -7.688756f),
+				new Vector3 (30.6014f, 0.0004913459f, -11.59386f),
+				new Vector3 (30.6014f, 0.0004913459f, -11.59386f),
+				new Vector3 (28.98878f, 0.0005031343f, -15.3812f),
+				new Vector3 (29.79018f, 0.0004995545f, -13.76503f),
+				new Vector3 (27.75155f, 0.0005040758f, -17.34113f)
+			};
+
+			for (int i = 0; i < m_FullCircleBezierPathPoints.Length; i++) {
+				m_FullCircleBezierPathPoints[i] = new Vector3(m_FullCircleBezierPathPoints[i].x,  -6.06f, m_FullCircleBezierPathPoints[i].z);
+			}
 
 
             if (m_LightFlarePivotParentList == null || m_LightFlarePivotParentList.Length == 0 || m_LightFlarePivotParentList[0] == null)
@@ -393,20 +527,21 @@ namespace IBM.Watson.Widgets.Avatar
             {
                 if(m_BezierPathAllInOne == null)
                 {
-                    System.Collections.Generic.List<Vector3> list = new System.Collections.Generic.List<Vector3>();
-                    for (int i = 0; i < m_LightFlarePivotParentList.Length; i++)
-                    {
-                        list.AddRange(m_ListFlareBezierPathList[i]);
-                    }
-
-                    if (list.Count > 0)
-                    {
-                        list[3] = list[4];
-                        list[7] = list[8];
-                        list[11] = list[0];
-                    }
-                    
-                    m_BezierPathAllInOne = new LTBezierPath(list.ToArray());
+//                    System.Collections.Generic.List<Vector3> list = new System.Collections.Generic.List<Vector3>();
+//                    for (int i = 0; i < m_LightFlarePivotParentList.Length; i++)
+//                    {
+//                        list.AddRange(m_ListFlareBezierPathList[i]);
+//                    }
+//
+//                    if (list.Count > 0)
+//                    {
+//                        list[3] = list[4];
+//                        list[7] = list[8];
+//                        list[11] = list[0];
+//                    }
+//                    
+//                    m_BezierPathAllInOne = new LTBezierPath(list.ToArray());
+					m_BezierPathAllInOne = new LTBezierPath(m_FullCircleBezierPathPoints);
                     
                 }
                 return m_BezierPathAllInOne;
