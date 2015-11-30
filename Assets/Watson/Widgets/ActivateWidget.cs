@@ -17,7 +17,7 @@
 * @author Richard Lyle (rolyle@us.ibm.com)
 */
 
-using IBM.Watson.Data;
+using IBM.Watson.DataTypes;
 using UnityEngine;
 
 namespace IBM.Watson.Widgets

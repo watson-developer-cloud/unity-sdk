@@ -23,7 +23,7 @@ using IBM.Watson.Services.v1;
 using UnityEditor;
 using UnityEngine;
 using System.IO;
-using IBM.Watson.Data;
+using IBM.Watson.DataModels;
 using IBM.Watson.Logging;
 
 namespace IBM.Watson.Editor

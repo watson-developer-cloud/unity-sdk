@@ -17,7 +17,7 @@
 */
 
 
-using IBM.Watson.Data;
+using IBM.Watson.DataModels;
 using IBM.Watson.Logging;
 using IBM.Watson.Services.v1;
 using System.Collections;

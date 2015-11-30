@@ -20,7 +20,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using IBM.Watson.Services.v1;
 using IBM.Watson.Logging;
-using IBM.Watson.Data;
+using IBM.Watson.DataTypes;
 using System.Collections.Generic;
 using IBM.Watson.Utilities;
 

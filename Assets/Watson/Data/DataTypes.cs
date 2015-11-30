@@ -16,14 +16,15 @@
 * @author Richard Lyle (rolyle@us.ibm.com)
 */
 
-using IBM.Watson.Services.v1;
+
+using IBM.Watson.DataModels;
 using IBM.Watson.Widgets;
 using UnityEngine;
 
 /// <summary>
 /// Data classes for holding data for services and widgets.
 /// </summary>
-namespace IBM.Watson.Data
+namespace IBM.Watson.DataTypes
 {
     /// <summary>
     /// This data class is for text data.

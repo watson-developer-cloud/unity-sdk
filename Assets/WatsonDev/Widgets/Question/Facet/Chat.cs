@@ -17,7 +17,7 @@
 */
 
 
-using IBM.Watson.Data.XRAY;
+using IBM.Watson.DataModels.XRAY;
 using IBM.Watson.Utilities;
 using System;
 using System.Collections.Generic;

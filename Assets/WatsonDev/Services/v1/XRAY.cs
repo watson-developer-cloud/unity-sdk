@@ -19,7 +19,7 @@
 
 using FullSerializer;
 using IBM.Watson.Connection;
-using IBM.Watson.Data.XRAY;
+using IBM.Watson.DataModels.XRAY;
 using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
 using System;

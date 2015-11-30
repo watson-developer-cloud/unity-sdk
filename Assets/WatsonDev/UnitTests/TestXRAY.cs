@@ -23,7 +23,7 @@
 using System.Collections;
 using IBM.Watson.Services.v1;
 using IBM.Watson.Logging;
-using IBM.Watson.Data.XRAY;
+using IBM.Watson.DataModels.XRAY;
 
 #if EXPORT_QUESTIONS || CACHE_QUESTIONS
 using UnityEngine;

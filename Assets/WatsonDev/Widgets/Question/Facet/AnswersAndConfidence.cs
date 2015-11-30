@@ -19,7 +19,7 @@
 using UnityEngine;
 using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
-using IBM.Watson.Data;
+using IBM.Watson.DataModels;
 
 namespace IBM.Watson.Widgets.Question
 {
@@ -32,7 +32,7 @@ namespace IBM.Watson.Widgets.Question
         [SerializeField]
         private AnswerConfidenceBar[] m_AnswerConfidenceBars;
 
-		private Data.XRAY.Answers m_AnswerData = null;
+		private DataModels.XRAY.Answers m_AnswerData = null;
 
 		private void OnEnable()
 		{
@@ -48,7 +48,7 @@ namespace IBM.Watson.Widgets.Question
 		{
             if ( Focused )
             {
-			    m_AnswerData = args != null && args.Length > 0 ? args[0] as Data.XRAY.Answers : null;
+			    m_AnswerData = args != null && args.Length > 0 ? args[0] as DataModels.XRAY.Answers : null;
                 for (int i = 0; i < m_AnswerConfidenceBars.Length; i++)
                 {
 				    if ( i < m_AnswerData.answers.Length )

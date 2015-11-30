@@ -20,8 +20,9 @@
 
 using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
-using IBM.Watson.Data;
-using IBM.Watson.Data.XRAY;
+using IBM.Watson.DataModels;
+using IBM.Watson.DataModels.XRAY;
+using IBM.Watson.DataTypes;
 using IBM.Watson.Services.v1;
 using UnityEngine;
 using System;
