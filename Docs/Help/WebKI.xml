@@ -20,7 +20,6 @@
   <HelpKINode Title="Add method" Url="html/86f692e9-5ee8-f2f5-376b-72dd5f096403.htm" />
   <HelpKINode Title="Added event" Url="html/3f7c8c80-f189-b1f6-0fec-52536fe9889d.htm" />
   <HelpKINode Title="AddRange method" Url="html/c3507ebf-ab8a-2af4-14b7-ae61ff6578b5.htm" />
-  <HelpKINode Title="Addr_Type property" Url="html/29c0179f-2f6a-3446-0c16-b4609829d31a.htm" />
   <HelpKINode Title="ALL enumeration member">
     <HelpKINode Title="LogLevel Enumeration" Url="html/453d36d6-98b0-5450-8e0f-5a20e5f9c556.htm" />
     <HelpKINode Title="Translate.TypeFilter Enumeration" Url="html/95f3ef9c-b95e-a341-5a2d-4fd54d903843.htm" />
@@ -53,10 +52,6 @@
   <HelpKINode Title="AnswersAndConfidence.AnswersAndConfidence constructor" Url="html/2573601b-a326-5033-7bb6-78be59815049.htm" />
   <HelpKINode Title="AnswerString property" Url="html/bb9a3585-b76c-2dbf-e6e1-f68e9291e323.htm" />
   <HelpKINode Title="Approximately method" Url="html/20c58f9b-5cb0-a7c1-6869-615c93a67bba.htm" />
-  <HelpKINode Title="attributes class">
-    <HelpKINode Title="properties" Url="html/aa739dfd-b6be-6707-13b3-c1625b6ed9c8.htm" />
-  </HelpKINode>
-  <HelpKINode Title="attributes property" Url="html/a6391c77-0c55-15cc-c8d6-7d560d89d7b4.htm" />
   <HelpKINode Title="AudioClipUtil class">
     <HelpKINode Title="AudioClipUtil Class" Url="html/2c3d344a-e9f9-ba80-2779-74d19269e753.htm" />
     <HelpKINode Title="about AudioClipUtil class" Url="html/2c3d344a-e9f9-ba80-2779-74d19269e753.htm" />
@@ -302,10 +297,6 @@
   <HelpKINode Title="ColliderList property" Url="html/2530cc81-e73a-49f4-1827-14d6fbbde442.htm" />
   <HelpKINode Title="Combine method" Url="html/e76abe8f-2606-989e-b9e2-4d0e1109dfbb.htm" />
   <HelpKINode Title="COMING_TO_SCENE enumeration member" Url="html/143ace6c-f5d6-cc84-2080-8e2509a43a8e.htm" />
-  <HelpKINode Title="confidence property">
-    <HelpKINode Title="Class.confidence Property " Url="html/23713f6a-5102-ad87-cc63-eed333e17794.htm" />
-    <HelpKINode Title="ConverseResponse.confidence Property " Url="html/a40ec553-efbe-c8e8-86e4-f143fefef087.htm" />
-  </HelpKINode>
   <HelpKINode Title="Confidence property">
     <HelpKINode Title="AnswerConfidenceBar.Confidence Property " Url="html/eee04db6-e9fa-cf75-6fe8-cb4a1b61652d.htm" />
     <HelpKINode Title="PassageItem.Confidence Property " Url="html/086417ce-2da2-f3dd-8c77-de9fe16a9f9a.htm" />
@@ -313,6 +304,10 @@
     <HelpKINode Title="SpeechAlt.Confidence Property " Url="html/70cefaa9-27cc-76b3-f03e-90032b1ea5ad.htm" />
     <HelpKINode Title="TabItem.Confidence Property " Url="html/0feada56-9056-fbfb-2b65-23e1d3c04b31.htm" />
     <HelpKINode Title="WordConfidence.Confidence Property " Url="html/5344c076-5b52-a7f8-5385-690396462c20.htm" />
+  </HelpKINode>
+  <HelpKINode Title="confidence property">
+    <HelpKINode Title="Class.confidence Property " Url="html/23713f6a-5102-ad87-cc63-eed333e17794.htm" />
+    <HelpKINode Title="ConverseResponse.confidence Property " Url="html/a40ec553-efbe-c8e8-86e4-f143fefef087.htm" />
   </HelpKINode>
   <HelpKINode Title="Config class">
     <HelpKINode Title="Config Class" Url="html/3c641cbf-3352-3929-5c9c-179b62a37a59.htm" />
@@ -662,10 +657,6 @@
   <HelpKINode Title="EvidenceItem.EvidenceString property" Url="html/c5faafe0-4057-f228-dcc1-f5ec76e20dba.htm" />
   <HelpKINode Title="EvidenceItem.GetAnswerIndexes method" Url="html/b48535dc-6bfb-edb9-983b-9dfbc36efa03.htm" />
   <HelpKINode Title="EvidenceString property" Url="html/c5faafe0-4057-f228-dcc1-f5ec76e20dba.htm" />
-  <HelpKINode Title="extent class">
-    <HelpKINode Title="properties" Url="html/c2193709-4867-696c-9c9e-7b5bd620a4b2.htm" />
-  </HelpKINode>
-  <HelpKINode Title="extent property" Url="html/1dd895ac-3464-0039-a6b6-8827da2e4b3b.htm" />
   <HelpKINode Title="Facet class">
     <HelpKINode Title="Facet Class" Url="html/c6b98890-d02a-f6d7-af8b-d53fba240679.htm" />
     <HelpKINode Title="about Facet class" Url="html/c6b98890-d02a-f6d7-af8b-d53fba240679.htm" />
@@ -674,10 +665,6 @@
   </HelpKINode>
   <HelpKINode Title="Facet.Facet constructor" Url="html/bba50a1a-aa74-c68a-3a68-95dffe83574d.htm" />
   <HelpKINode Title="Facet.Focused property" Url="html/2f8294ab-9794-b8bb-9724-7ff84120bedc.htm" />
-  <HelpKINode Title="feature class">
-    <HelpKINode Title="properties" Url="html/4e350a5c-488a-74cd-3e56-98cc8f0814d3.htm" />
-  </HelpKINode>
-  <HelpKINode Title="feature property" Url="html/d4ae3b37-4b19-ec51-ba87-77432fae9c0c.htm" />
   <HelpKINode Title="FeatureIndex property" Url="html/faf0951d-bfbc-7fa7-ebca-79ba7bbcaa03.htm" />
   <HelpKINode Title="FeatureItem class">
     <HelpKINode Title="FeatureItem Class" Url="html/c1392cff-7720-306d-2c6a-e5af85fae1f3.htm" />
@@ -752,81 +739,6 @@
   <HelpKINode Title="GameObjectAttached property" Url="html/8d8dc6d3-6934-e5d6-3f28-605df4c690ce.htm" />
   <HelpKINode Title="GatewayURL property" Url="html/8af01b81-ee18-691a-3a3e-e56b6a71eece.htm" />
   <HelpKINode Title="GenerateSides method" Url="html/43212c3a-e5d2-92f2-d7d1-9fe5851f27cb.htm" />
-  <HelpKINode Title="Geolocation class">
-    <HelpKINode Title="Geolocation Class" Url="html/cf5b5f5d-18e1-32ae-651a-7847e054d472.htm" />
-    <HelpKINode Title="about Geolocation class" Url="html/cf5b5f5d-18e1-32ae-651a-7847e054d472.htm" />
-    <HelpKINode Title="constructor" Url="html/b477a3a5-6cb4-d2d4-bb90-f2199206d70b.htm" />
-    <HelpKINode Title="methods" Url="html/6851e678-f1cf-f8b2-1b5d-9c8374034b3e.htm" />
-  </HelpKINode>
-  <HelpKINode Title="Geolocation.attributes class">
-    <HelpKINode Title="Geolocation.attributes Class" Url="html/8c260e86-680c-1663-5ae9-01c82ea7fd02.htm" />
-    <HelpKINode Title="about Geolocation.attributes class" Url="html/8c260e86-680c-1663-5ae9-01c82ea7fd02.htm" />
-    <HelpKINode Title="constructor" Url="html/26be5377-5e51-1ea4-66a6-a2759126b2b0.htm" />
-  </HelpKINode>
-  <HelpKINode Title="Geolocation.attributes.Addr_Type property" Url="html/29c0179f-2f6a-3446-0c16-b4609829d31a.htm" />
-  <HelpKINode Title="Geolocation.attributes.attributes constructor" Url="html/26be5377-5e51-1ea4-66a6-a2759126b2b0.htm" />
-  <HelpKINode Title="Geolocation.attributes.Score property" Url="html/be2b8cb2-4e6b-7aeb-5c37-c64cdfb42439.htm" />
-  <HelpKINode Title="Geolocation.extent class">
-    <HelpKINode Title="Geolocation.extent Class" Url="html/b4b7d5f0-ec8c-3f29-ac99-3f335d9eb52c.htm" />
-    <HelpKINode Title="about Geolocation.extent class" Url="html/b4b7d5f0-ec8c-3f29-ac99-3f335d9eb52c.htm" />
-    <HelpKINode Title="constructor" Url="html/ef5eb033-6538-2b4e-2c27-5a99065776fc.htm" />
-  </HelpKINode>
-  <HelpKINode Title="Geolocation.extent.extent constructor" Url="html/ef5eb033-6538-2b4e-2c27-5a99065776fc.htm" />
-  <HelpKINode Title="Geolocation.extent.xmax property" Url="html/e5ae9518-3e10-7471-7e07-940ca81d13d1.htm" />
-  <HelpKINode Title="Geolocation.extent.xmin property" Url="html/bb0c8fa5-b575-944d-38a5-6a14798e7691.htm" />
-  <HelpKINode Title="Geolocation.extent.ymax property" Url="html/56112dab-ba79-b23e-b46f-efab2b426551.htm" />
-  <HelpKINode Title="Geolocation.extent.ymin property" Url="html/0674846d-b844-97c5-ea03-b9543491643d.htm" />
-  <HelpKINode Title="Geolocation.feature class">
-    <HelpKINode Title="Geolocation.feature Class" Url="html/169cc931-73fc-5dfa-8185-ca8f34c9983d.htm" />
-    <HelpKINode Title="about Geolocation.feature class" Url="html/169cc931-73fc-5dfa-8185-ca8f34c9983d.htm" />
-    <HelpKINode Title="constructor" Url="html/4a7f5abd-45b1-cabf-af59-385cdb21124e.htm" />
-  </HelpKINode>
-  <HelpKINode Title="Geolocation.feature.attributes property" Url="html/a6391c77-0c55-15cc-c8d6-7d560d89d7b4.htm" />
-  <HelpKINode Title="Geolocation.feature.feature constructor" Url="html/4a7f5abd-45b1-cabf-af59-385cdb21124e.htm" />
-  <HelpKINode Title="Geolocation.feature.geometry property" Url="html/125cf579-1a83-62df-948f-27f1ad35fbb4.htm" />
-  <HelpKINode Title="Geolocation.Geolocation constructor" Url="html/b477a3a5-6cb4-d2d4-bb90-f2199206d70b.htm" />
-  <HelpKINode Title="Geolocation.GeolocationData class">
-    <HelpKINode Title="Geolocation.GeolocationData Class" Url="html/93dce2dd-5704-669f-c105-7e4012bbf377.htm" />
-    <HelpKINode Title="about Geolocation.GeolocationData class" Url="html/93dce2dd-5704-669f-c105-7e4012bbf377.htm" />
-    <HelpKINode Title="constructor" Url="html/2b51b14e-fb1d-894d-d2ac-b7a3e74bffe4.htm" />
-  </HelpKINode>
-  <HelpKINode Title="Geolocation.GeolocationData.GeolocationData constructor" Url="html/2b51b14e-fb1d-894d-d2ac-b7a3e74bffe4.htm" />
-  <HelpKINode Title="Geolocation.GeolocationData.locations property" Url="html/f64b7344-4542-23d7-41fe-b531de177491.htm" />
-  <HelpKINode Title="Geolocation.GeolocationData.spatialReference property" Url="html/0a5be910-1a31-6049-3f45-def70678b17c.htm" />
-  <HelpKINode Title="Geolocation.geometry class">
-    <HelpKINode Title="Geolocation.geometry Class" Url="html/3c315de6-9aee-3283-648a-bd995a5e1e92.htm" />
-    <HelpKINode Title="about Geolocation.geometry class" Url="html/3c315de6-9aee-3283-648a-bd995a5e1e92.htm" />
-    <HelpKINode Title="constructor" Url="html/a1e62e75-4409-fcf5-2dfd-cc2a568e811d.htm" />
-  </HelpKINode>
-  <HelpKINode Title="Geolocation.geometry.geometry constructor" Url="html/a1e62e75-4409-fcf5-2dfd-cc2a568e811d.htm" />
-  <HelpKINode Title="Geolocation.geometry.x property" Url="html/99f18948-11ad-d0af-8b94-e4ef46141737.htm" />
-  <HelpKINode Title="Geolocation.geometry.y property" Url="html/541e9953-1362-65d6-ea42-f66924e1d7bb.htm" />
-  <HelpKINode Title="Geolocation.getLocation method" Url="html/c8866710-a35a-bde8-db0f-f843e2569d58.htm" />
-  <HelpKINode Title="Geolocation.locations class">
-    <HelpKINode Title="Geolocation.locations Class" Url="html/06e2c69d-2ccb-b014-7ac0-9d081b64019c.htm" />
-    <HelpKINode Title="about Geolocation.locations class" Url="html/06e2c69d-2ccb-b014-7ac0-9d081b64019c.htm" />
-    <HelpKINode Title="constructor" Url="html/32752fa0-acf3-f13a-d721-c792e0092674.htm" />
-  </HelpKINode>
-  <HelpKINode Title="Geolocation.locations.extent property" Url="html/1dd895ac-3464-0039-a6b6-8827da2e4b3b.htm" />
-  <HelpKINode Title="Geolocation.locations.feature property" Url="html/d4ae3b37-4b19-ec51-ba87-77432fae9c0c.htm" />
-  <HelpKINode Title="Geolocation.locations.locations constructor" Url="html/32752fa0-acf3-f13a-d721-c792e0092674.htm" />
-  <HelpKINode Title="Geolocation.locations.name property" Url="html/5943cb62-d491-282e-4a7f-021e5c0b3812.htm" />
-  <HelpKINode Title="Geolocation.OnGetLocation delegate" Url="html/82081b6a-d3d3-be3a-ea7b-711bafe95492.htm" />
-  <HelpKINode Title="Geolocation.spatialReference class">
-    <HelpKINode Title="Geolocation.spatialReference Class" Url="html/63f29ea6-c4c4-d9d9-4338-b37d69341006.htm" />
-    <HelpKINode Title="about Geolocation.spatialReference class" Url="html/63f29ea6-c4c4-d9d9-4338-b37d69341006.htm" />
-    <HelpKINode Title="constructor" Url="html/58f256ec-a0f6-70f2-ce60-b0ae20e18f49.htm" />
-  </HelpKINode>
-  <HelpKINode Title="Geolocation.spatialReference.latestWkid property" Url="html/9b7648c9-f2a7-124f-7074-c237d4e6a03e.htm" />
-  <HelpKINode Title="Geolocation.spatialReference.spatialReference constructor" Url="html/58f256ec-a0f6-70f2-ce60-b0ae20e18f49.htm" />
-  <HelpKINode Title="Geolocation.spatialReference.wkid property" Url="html/d6ba333a-3066-a7de-ad26-19e583d9213a.htm" />
-  <HelpKINode Title="GeolocationData class">
-    <HelpKINode Title="properties" Url="html/ca008284-2c5d-70e7-9d6c-c64e1b35fb55.htm" />
-  </HelpKINode>
-  <HelpKINode Title="geometry class">
-    <HelpKINode Title="properties" Url="html/faf9c983-06cc-7365-e883-ba44add838ed.htm" />
-  </HelpKINode>
-  <HelpKINode Title="geometry property" Url="html/125cf579-1a83-62df-948f-27f1ad35fbb4.htm" />
   <HelpKINode Title="GetAnswerIndexes method" Url="html/b48535dc-6bfb-edb9-983b-9dfbc36efa03.htm" />
   <HelpKINode Title="GetClassifier method" Url="html/c58cf215-66eb-c6c3-ffd5-50f36cfaae87.htm" />
   <HelpKINode Title="GetClassifiers method" Url="html/07387281-f2b2-0b6f-bdce-560a70005424.htm" />
@@ -835,7 +747,6 @@
   <HelpKINode Title="GetHashCode method" Url="html/e875d345-9795-bf31-eb29-4d9412aa87ca.htm" />
   <HelpKINode Title="GetL16 method" Url="html/6cb521b1-2193-b537-0598-a74f52918ef6.htm" />
   <HelpKINode Title="GetLanguages method" Url="html/aa691cb3-fe60-5cba-baf9-b1ca0b674336.htm" />
-  <HelpKINode Title="getLocation method" Url="html/c8866710-a35a-bde8-db0f-f843e2569d58.htm" />
   <HelpKINode Title="GetMD5 method" Url="html/0ee517c0-91d3-cd43-6a01-ac9699f014c0.htm" />
   <HelpKINode Title="GetModel method" Url="html/22e27d44-35f5-706c-32f1-e1d73e55e273.htm" />
   <HelpKINode Title="GetModels method">
@@ -875,6 +786,7 @@
   </HelpKINode>
   <HelpKINode Title="GlassRingManager.ChangedBehavior method" Url="html/2cb2f919-cccd-5dc5-205a-0868f1b77ce7.htm" />
   <HelpKINode Title="GlassRingManager.GlassRingManager constructor" Url="html/6487b5e4-5475-5f50-d15d-1063de78c96f.htm" />
+  <HelpKINode Title="GlassRingManager.OnDisable method" Url="html/6700ccce-f129-054e-44a7-2200b57b9326.htm" />
   <HelpKINode Title="GOING_FROM_SCENE enumeration member" Url="html/143ace6c-f5d6-cc84-2080-8e2509a43a8e.htm" />
   <HelpKINode Title="HasFinalResult method" Url="html/dd948bf3-280f-9900-1770-5fc85280f86b.htm" />
   <HelpKINode Title="HasResult method" Url="html/41a0069a-5c66-2f2a-9716-02b1298575f1.htm" />
@@ -938,16 +850,6 @@
   <HelpKINode Title="IBM.Watson.Logging.Logger class" Url="html/73b8d79e-f5de-37e9-e5e2-35a6f3d9fdb2.htm" />
   <HelpKINode Title="IBM.Watson.Logging.LogLevel enumeration" Url="html/453d36d6-98b0-5450-8e0f-5a20e5f9c556.htm" />
   <HelpKINode Title="IBM.Watson.Logging.LogRecord class" Url="html/559f7d1a-c5de-65eb-c349-83015115648a.htm" />
-  <HelpKINode Title="IBM.Watson.Services namespace" Url="html/f6a6e2f6-e80c-2113-cf68-640371cda4de.htm" />
-  <HelpKINode Title="IBM.Watson.Services.Geolocation class" Url="html/cf5b5f5d-18e1-32ae-651a-7847e054d472.htm" />
-  <HelpKINode Title="IBM.Watson.Services.Geolocation.attributes class" Url="html/8c260e86-680c-1663-5ae9-01c82ea7fd02.htm" />
-  <HelpKINode Title="IBM.Watson.Services.Geolocation.extent class" Url="html/b4b7d5f0-ec8c-3f29-ac99-3f335d9eb52c.htm" />
-  <HelpKINode Title="IBM.Watson.Services.Geolocation.feature class" Url="html/169cc931-73fc-5dfa-8185-ca8f34c9983d.htm" />
-  <HelpKINode Title="IBM.Watson.Services.Geolocation.GeolocationData class" Url="html/93dce2dd-5704-669f-c105-7e4012bbf377.htm" />
-  <HelpKINode Title="IBM.Watson.Services.Geolocation.geometry class" Url="html/3c315de6-9aee-3283-648a-bd995a5e1e92.htm" />
-  <HelpKINode Title="IBM.Watson.Services.Geolocation.locations class" Url="html/06e2c69d-2ccb-b014-7ac0-9d081b64019c.htm" />
-  <HelpKINode Title="IBM.Watson.Services.Geolocation.OnGetLocation delegate" Url="html/82081b6a-d3d3-be3a-ea7b-711bafe95492.htm" />
-  <HelpKINode Title="IBM.Watson.Services.Geolocation.spatialReference class" Url="html/63f29ea6-c4c4-d9d9-4338-b37d69341006.htm" />
   <HelpKINode Title="IBM.Watson.Services.v1 namespace" Url="html/71a82bee-892b-8616-3170-133b75fe3579.htm" />
   <HelpKINode Title="IBM.Watson.Services.v1..OnAskQuestion delegate" Url="html/449710de-b07b-212a-22d8-cfd14d8fa323.htm" />
   <HelpKINode Title="IBM.Watson.Services.v1.Dialog class" Url="html/b566f201-4ef5-c2bb-d19e-555aec4d4abd.htm" />
@@ -1138,11 +1040,11 @@
     <HelpKINode Title="constructor" Url="html/57903380-e760-3128-08ab-3f036c05a00f.htm" />
     <HelpKINode Title="properties" Url="html/af447f04-ccce-a38a-9a47-3f2d1b2ee050.htm" />
   </HelpKINode>
-  <HelpKINode Title="Language property" Url="html/b181573a-e08f-19f6-63f3-ec07840f67fa.htm" />
   <HelpKINode Title="language property">
-    <HelpKINode Title="Language.language Property " Url="html/8049d80c-9c66-21c9-65d2-0b1c81e98afc.htm" />
     <HelpKINode Title="Classifier.language Property " Url="html/3851c1bf-5766-eeef-8029-e77a014ef636.htm" />
+    <HelpKINode Title="Language.language Property " Url="html/8049d80c-9c66-21c9-65d2-0b1c81e98afc.htm" />
   </HelpKINode>
+  <HelpKINode Title="Language property" Url="html/b181573a-e08f-19f6-63f3-ec07840f67fa.htm" />
   <HelpKINode Title="Language.Language constructor" Url="html/57903380-e760-3128-08ab-3f036c05a00f.htm" />
   <HelpKINode Title="Language.language property" Url="html/8049d80c-9c66-21c9-65d2-0b1c81e98afc.htm" />
   <HelpKINode Title="Language.name property" Url="html/9e0b0370-8c1f-a2ab-2479-b95c8da3c9e5.htm" />
@@ -1157,7 +1059,6 @@
   <HelpKINode Title="Languages.languages property" Url="html/a76395f0-faed-db6a-a7a9-34d0c4e14f0d.htm" />
   <HelpKINode Title="LastValueAnimationFlare property" Url="html/8a7e01c9-27b6-4ce3-5edf-07758fc8d46e.htm" />
   <HelpKINode Title="LAT property" Url="html/c04a58bd-0df6-c7c7-508d-e554c9b310c8.htm" />
-  <HelpKINode Title="latestWkid property" Url="html/9b7648c9-f2a7-124f-7074-c237d4e6a03e.htm" />
   <HelpKINode Title="Latitude property" Url="html/299eef3d-8dcd-3d7b-8494-11d6a988b7b7.htm" />
   <HelpKINode Title="LeaveTheSceneAndDestroy method" Url="html/636d9a93-88a7-c059-1284-13eefcdcc657.htm" />
   <HelpKINode Title="Level property">
@@ -1194,10 +1095,6 @@
   <HelpKINode Title="Location.Location constructor" Url="html/a5408c88-6085-20d7-ccb5-3738d70e0def.htm" />
   <HelpKINode Title="Location.LocationString property" Url="html/f3d1cf0f-908b-6c70-cb7f-39b6153314b9.htm" />
   <HelpKINode Title="Location.Longitude property" Url="html/4a3bd884-3555-22b5-8c79-1f84bc9d0fd3.htm" />
-  <HelpKINode Title="locations class">
-    <HelpKINode Title="properties" Url="html/f3edade5-ee8b-7201-909d-e671d93a23ed.htm" />
-  </HelpKINode>
-  <HelpKINode Title="locations property" Url="html/f64b7344-4542-23d7-41fe-b531de177491.htm" />
   <HelpKINode Title="LocationString property" Url="html/f3d1cf0f-908b-6c70-cb7f-39b6153314b9.htm" />
   <HelpKINode Title="Log class">
     <HelpKINode Title="Log Class" Url="html/6e5ede2e-2deb-d1b9-90f1-84f4fadcb217.htm" />
@@ -1279,15 +1176,14 @@
   <HelpKINode Title="m_URL field" Url="html/c61d87e0-8d6f-86e0-34ef-f99297f350c5.htm" />
   <HelpKINode Title="m_User field" Url="html/128cd657-86bb-d9da-b360-1f6d073bccf5.htm" />
   <HelpKINode Title="name property">
-    <HelpKINode Title="Classifier.name Property " Url="html/3a5bb503-7d16-d642-6fce-32903a4f486c.htm" />
-    <HelpKINode Title="DialogEntry.name Property " Url="html/e3ef2e16-19e8-20c7-feef-f4544278b7cb.htm" />
-    <HelpKINode Title="Geolocation.locations.name Property " Url="html/5943cb62-d491-282e-4a7f-021e5c0b3812.htm" />
-    <HelpKINode Title="Language.name Property " Url="html/9e0b0370-8c1f-a2ab-2479-b95c8da3c9e5.htm" />
     <HelpKINode Title="TranslationModel.name Property " Url="html/6c7b3e7f-3a30-7865-9f48-dea5a875636f.htm" />
+    <HelpKINode Title="DialogEntry.name Property " Url="html/e3ef2e16-19e8-20c7-feef-f4544278b7cb.htm" />
+    <HelpKINode Title="Classifier.name Property " Url="html/3a5bb503-7d16-d642-6fce-32903a4f486c.htm" />
+    <HelpKINode Title="Language.name Property " Url="html/9e0b0370-8c1f-a2ab-2479-b95c8da3c9e5.htm" />
   </HelpKINode>
   <HelpKINode Title="Name property">
-    <HelpKINode Title="Widget.Data.Name Property " Url="html/8262455a-8f86-aeae-6758-112cc91bf602.htm" />
     <HelpKINode Title="SpeechModel.Name Property " Url="html/ac4f3d6e-513b-f537-2c51-0a3e88016607.htm" />
+    <HelpKINode Title="Widget.Data.Name Property " Url="html/8262455a-8f86-aeae-6758-112cc91bf602.htm" />
   </HelpKINode>
   <HelpKINode Title="NLC class">
     <HelpKINode Title="NLC Class" Url="html/f1d1b7ad-dd1c-e3ae-980b-7961349ba710.htm" />
@@ -1411,6 +1307,7 @@
   <HelpKINode Title="OnDisable method">
     <HelpKINode Title="BaseRingManager.OnDisable Method " Url="html/fb6687b9-a8c5-f020-8efc-88921f1e67e5.htm" />
     <HelpKINode Title="CubeAnimationManager.OnDisable Method " Url="html/d3c48d5f-d399-7940-5bc4-357f241858d3.htm" />
+    <HelpKINode Title="GlassRingManager.OnDisable Method " Url="html/6700ccce-f129-054e-44a7-2200b57b9326.htm" />
     <HelpKINode Title="LightRingManager.OnDisable Method " Url="html/2e52f744-0a7a-225f-3887-b014d8877625.htm" />
     <HelpKINode Title="WatsonBaseAnimationManager.OnDisable Method " Url="html/ce050449-be1a-fbe1-4696-a24dd7bf57c0.htm" />
   </HelpKINode>
@@ -1527,11 +1424,11 @@
     <HelpKINode Title="properties" Url="html/f25707e3-b344-5d60-eaff-1eff3a16b1a0.htm" />
   </HelpKINode>
   <HelpKINode Title="Outputs property" Url="html/71079fb2-619f-99e1-53a7-aacb17e88e59.htm" />
-  <HelpKINode Title="owner property" Url="html/74ca2bb7-8f98-0624-6092-8e1150696643.htm" />
   <HelpKINode Title="Owner property">
     <HelpKINode Title="Widget.Input.Owner Property " Url="html/88e05c79-c8a8-79cc-85fa-3d465a33cfc6.htm" />
     <HelpKINode Title="Widget.Output.Owner Property " Url="html/173b30a3-f2b4-1f99-91c7-cb4888253375.htm" />
   </HelpKINode>
+  <HelpKINode Title="owner property" Url="html/74ca2bb7-8f98-0624-6092-8e1150696643.htm" />
   <HelpKINode Title="OwnerName property" Url="html/1a9c1b63-4ba0-0f53-b1ca-6a800fa99807.htm" />
   <HelpKINode Title="Parameters property" Url="html/bab6d514-ca31-d957-6b17-83f31de3978b.htm" />
   <HelpKINode Title="PARSE enumeration member" Url="html/b5856f0c-38dc-87b2-7505-f4dd34ba5758.htm" />
@@ -1814,7 +1711,6 @@
   <HelpKINode Title="Save method" Url="html/5f09eec4-4563-95af-27ea-78f1aa7f1467.htm" />
   <HelpKINode Title="SaveConfig method" Url="html/9305adfd-c5f0-b731-1ea2-30f2290a558e.htm" />
   <HelpKINode Title="SaveFile property" Url="html/ba807ed4-a1c5-5f80-71be-91e061c4109c.htm" />
-  <HelpKINode Title="Score property" Url="html/be2b8cb2-4e6b-7aeb-5c37-c64cdfb42439.htm" />
   <HelpKINode Title="ScrollDown method" Url="html/2de07495-5eb6-2e37-5b33-446eea46b480.htm" />
   <HelpKINode Title="ScrollUp method" Url="html/982bcd24-8657-1d09-0843-4803264ab802.htm" />
   <HelpKINode Title="Semantic class">
@@ -1876,10 +1772,6 @@
   <HelpKINode Title="sm_DelayShowCube field" Url="html/418d8a12-35e5-7572-b494-1400770f20c1.htm" />
   <HelpKINode Title="SortingLayer property" Url="html/4e641c10-1c00-25f3-ff37-ac512df2673a.htm" />
   <HelpKINode Title="source property" Url="html/dc3d893c-24b4-f469-8706-0d64fd2e42b6.htm" />
-  <HelpKINode Title="spatialReference class">
-    <HelpKINode Title="properties" Url="html/33e9f82b-afdc-0d7e-9bce-1016ef5dc85e.htm" />
-  </HelpKINode>
-  <HelpKINode Title="spatialReference property" Url="html/0a5be910-1a31-6049-3f45-def70678b17c.htm" />
   <HelpKINode Title="SpeakingStateData class">
     <HelpKINode Title="SpeakingStateData Class" Url="html/afdf9927-63fc-8b8d-9cae-33a0584af395.htm" />
     <HelpKINode Title="about SpeakingStateData class" Url="html/afdf9927-63fc-8b8d-9cae-33a0584af395.htm" />
@@ -2030,11 +1922,11 @@
   <HelpKINode Title="TargetGameObject property" Url="html/fab6e42e-fcec-a7e1-5c79-b64167eecc90.htm" />
   <HelpKINode Title="TargetInput property" Url="html/114a503f-bcc7-bd15-f644-e68d2b2b610e.htm" />
   <HelpKINode Title="TargetObject property" Url="html/d1dd517e-b772-018d-3b49-4f2c4481db56.htm" />
-  <HelpKINode Title="text property" Url="html/957766b6-0cd0-6e01-eb82-5d05e2f27b82.htm" />
   <HelpKINode Title="Text property">
-    <HelpKINode Title="TextData.Text Property " Url="html/10533e7f-cbf8-c5fc-6c67-b56c22677c9f.htm" />
     <HelpKINode Title="WSConnector.TextMessage.Text Property " Url="html/87ed4827-7aed-5686-bdc0-ee48e46acbec.htm" />
+    <HelpKINode Title="TextData.Text Property " Url="html/10533e7f-cbf8-c5fc-6c67-b56c22677c9f.htm" />
   </HelpKINode>
+  <HelpKINode Title="text property" Url="html/957766b6-0cd0-6e01-eb82-5d05e2f27b82.htm" />
   <HelpKINode Title="TextData class">
     <HelpKINode Title="TextData Class" Url="html/1d76155a-d0e7-ec76-799e-41478c9332c0.htm" />
     <HelpKINode Title="about TextData class" Url="html/1d76155a-d0e7-ec76-799e-41478c9332c0.htm" />
@@ -2226,14 +2118,14 @@
   <HelpKINode Title="UploadDialog method" Url="html/94788d7f-9054-d893-f9eb-fb4a08bd7d85.htm" />
   <HelpKINode Title="UPSET enumeration member" Url="html/70db8858-ee35-a8c3-643c-59e7717f68e9.htm" />
   <HelpKINode Title="URGENT enumeration member" Url="html/70db8858-ee35-a8c3-643c-59e7717f68e9.htm" />
-  <HelpKINode Title="URL property">
-    <HelpKINode Title="SpeechModel.URL Property " Url="html/fa0c2faa-4332-87f5-ebbb-bd95d9cd8831.htm" />
-    <HelpKINode Title="RESTConnector.URL Property " Url="html/0019bff3-0def-4b33-cbb1-e7c45ec056b7.htm" />
-    <HelpKINode Title="WSConnector.URL Property " Url="html/f2399da2-f234-5dd2-43f7-919686952f43.htm" />
-  </HelpKINode>
   <HelpKINode Title="url property">
     <HelpKINode Title="Classifier.url Property " Url="html/54bb79d2-1887-00b2-ffe4-8c0feb800957.htm" />
     <HelpKINode Title="ClassifyResult.url Property " Url="html/31b830e0-8848-132d-7770-d50b6f63a7e7.htm" />
+  </HelpKINode>
+  <HelpKINode Title="URL property">
+    <HelpKINode Title="RESTConnector.URL Property " Url="html/0019bff3-0def-4b33-cbb1-e7c45ec056b7.htm" />
+    <HelpKINode Title="SpeechModel.URL Property " Url="html/fa0c2faa-4332-87f5-ebbb-bd95d9cd8831.htm" />
+    <HelpKINode Title="WSConnector.URL Property " Url="html/f2399da2-f234-5dd2-43f7-919686952f43.htm" />
   </HelpKINode>
   <HelpKINode Title="User property" Url="html/6c15d7b6-68f7-789e-443a-8709fd054679.htm" />
   <HelpKINode Title="UserSpeaking method" Url="html/7fc17e80-64b7-78c3-ec8a-a1d491bc73c0.htm" />
@@ -2335,7 +2227,6 @@
   <HelpKINode Title="Widget.Widget constructor" Url="html/585799c2-aec5-3b56-1cb4-e92e8fb403bb.htm" />
   <HelpKINode Title="Widget.WidgetName property" Url="html/ee90e804-20a9-1ff1-ac1f-b066e3b5fdeb.htm" />
   <HelpKINode Title="WidgetName property" Url="html/ee90e804-20a9-1ff1-ac1f-b066e3b5fdeb.htm" />
-  <HelpKINode Title="wkid property" Url="html/d6ba333a-3066-a7de-ad26-19e583d9213a.htm" />
   <HelpKINode Title="Word property">
     <HelpKINode Title="TimeStamp.Word Property " Url="html/be3c7e1f-bed5-3c2b-4e57-5050324354c2.htm" />
     <HelpKINode Title="WordConfidence.Word Property " Url="html/b06fb8f1-504e-2256-cef6-46ccc6cbc78a.htm" />
@@ -2394,12 +2285,6 @@
   <HelpKINode Title="WSConnector.URL property" Url="html/f2399da2-f234-5dd2-43f7-919686952f43.htm" />
   <HelpKINode Title="WSConnector.UsingGateway property" Url="html/0677471f-7978-1721-32be-8aac783d7933.htm" />
   <HelpKINode Title="WSConnector.WSConnector constructor" Url="html/90e3dee5-db07-67ce-8e75-a447e4db3f1f.htm" />
-  <HelpKINode Title="x property" Url="html/99f18948-11ad-d0af-8b94-e4ef46141737.htm" />
-  <HelpKINode Title="xmax property" Url="html/e5ae9518-3e10-7471-7e07-940ca81d13d1.htm" />
-  <HelpKINode Title="xmin property" Url="html/bb0c8fa5-b575-944d-38a5-6a14798e7691.htm" />
   <HelpKINode Title="XML enumeration member" Url="html/9c5ced61-2e3e-94c2-dea2-197267738725.htm" />
   <HelpKINode Title="XRAY property" Url="html/79a6219a-dc3e-8e23-cbce-5b9c8472a535.htm" />
-  <HelpKINode Title="y property" Url="html/541e9953-1362-65d6-ea42-f66924e1d7bb.htm" />
-  <HelpKINode Title="ymax property" Url="html/56112dab-ba79-b23e-b46f-efab2b426551.htm" />
-  <HelpKINode Title="ymin property" Url="html/0674846d-b844-97c5-ea03-b9543491643d.htm" />
 </HelpKI>
