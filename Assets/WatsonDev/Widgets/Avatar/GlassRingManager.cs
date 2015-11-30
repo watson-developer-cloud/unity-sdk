@@ -37,15 +37,16 @@ namespace IBM.Watson.Widgets.Avatar
         private Color m_LastColorUsedInAnimation = Color.white;
         #endregion
 
-        #region OnEnable / OnDisable / OnApplicationQuit / Awake
+        #region OnDisable / Awake
 
-        private void OnApplicationQuit()
-        {
-            if (m_GlassRingMaterial != null)
-            {
-                m_GlassRingMaterial.SetColor("_SpecColor", m_InitialColorOfGlassRingMaterial);
-            }
-        }
+		protected override void OnDisable(){
+			base.OnDisable ();
+
+			if (m_GlassRingMaterial != null)
+			{
+				m_GlassRingMaterial.SetColor("_SpecColor", m_InitialColorOfGlassRingMaterial);
+			}
+		}
 
         /// <exclude />
 		protected override void Start()

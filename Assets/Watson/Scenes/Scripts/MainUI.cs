@@ -54,6 +54,7 @@ public class MainUI : MonoBehaviour
 
             scenes.Add(name);
         }
+        scenes.Sort();
         context.m_SceneNames = scenes.ToArray();
     }
 #endif

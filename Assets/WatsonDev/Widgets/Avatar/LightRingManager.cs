@@ -199,20 +199,18 @@ namespace IBM.Watson.Widgets.Avatar
 		protected override void OnDisable(){
 			base.OnDisable ();
 			EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_AVATAR_SPEAKING, AvatarSpeaking);
+
+			if (m_SharedMaterialLightFlare != null)
+			{
+				m_SharedMaterialLightFlare.SetColor("_TintColor", m_TintColorSharedMaterialLightFlareInitial);
+			}
 		}
 		
 		#endregion
 
         #region ApplicationQuit / Awake
 
-        private void OnApplicationQuit()
-        {
-            if (m_SharedMaterialLightFlare != null)
-            {
-                m_SharedMaterialLightFlare.SetColor("_TintColor", m_TintColorSharedMaterialLightFlareInitial);
-            }
-        }
-
+   
         /// <exclude />
 		protected override void Start()
         {
