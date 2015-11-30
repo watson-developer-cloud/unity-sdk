@@ -26,12 +26,13 @@ namespace IBM.Watson.UnitTests
 {
     public class TestDialog : UnitTest
     {
-        const string DIALOG_NAME = "ut_20151029_4";
+        const string DIALOG_NAME = "ut_20151029_5";
 
         Dialog m_Dialog = new Dialog();
         bool m_GetDialogsTested = false;
         bool m_UploadTested = false;
         bool m_ConverseTested = false;
+        bool m_DeleteTested = false;
         string m_DialogID = null;
         int m_ClientID = 0;
         int m_ConversationID = 0;
@@ -62,7 +63,18 @@ namespace IBM.Watson.UnitTests
                     yield return null;
             }
 
+
+            m_Dialog.DeleteDialog( m_DialogID, OnDialogDeleted );
+            while(! m_DeleteTested )
+                yield return null;
+
             yield break;
+        }
+
+        private void OnDialogDeleted( bool success )
+        {
+            Test( success );
+            m_DeleteTested = true;
         }
 
         private void OnConverse( ConverseResponse resp )

@@ -32,8 +32,8 @@ namespace IBM.Watson.Widgets.Avatar
         private float m_AnimationTime = 1.0f;
         private Material m_GlassRingMaterial;
         private Color m_InitialColorOfGlassRingMaterial;
-        private LTDescr m_ColorAnimationOnGlass = null;
-        private LTDescr m_ColorAnimationOnGlassLoop = null;
+        private int m_ColorAnimationOnGlass = -1;
+		private int m_ColorAnimationOnGlassLoop = -1;
         private Color m_LastColorUsedInAnimation = Color.white;
         #endregion
 
@@ -94,21 +94,8 @@ namespace IBM.Watson.Widgets.Avatar
         {
             if (m_GlassRingMaterial != null)
             {
-                if (m_ColorAnimationOnGlass != null)
-                {
-                    m_ColorAnimationOnGlass.onComplete = null;
-                    LeanTween.cancel(m_ColorAnimationOnGlass.uniqueId);
-                    m_ColorAnimationOnGlass = null;
-                }
-                   
 
-                if (m_ColorAnimationOnGlassLoop != null)
-                {
-                    m_ColorAnimationOnGlassLoop.onComplete = null;
-                    LeanTween.cancel(m_ColorAnimationOnGlassLoop.uniqueId);
-                    m_ColorAnimationOnGlassLoop = null;
-                }
-                   
+				StopAnimationGlassRingColor();
 
                 m_ColorAnimationOnGlass = LeanTween.value(gameObject, m_LastColorUsedInAnimation, color, m_AnimationTime).setOnUpdateColor(
                     (Color colorToFadeIn) =>
@@ -116,26 +103,44 @@ namespace IBM.Watson.Widgets.Avatar
                         m_LastColorUsedInAnimation = colorToFadeIn;
                         m_GlassRingMaterial.SetColor("_SpecColor", colorToFadeIn);
                     }).setOnComplete(
-                    () =>
+                    (System.Object o) =>
                     {
-                        if(m_ColorAnimationOnGlass != null)
-                        {
-                            m_ColorAnimationOnGlass.onComplete = null;
-                            LeanTween.cancel(m_ColorAnimationOnGlass.uniqueId);
-                            m_ColorAnimationOnGlass = null;
-                        }
 						
-                        m_ColorAnimationOnGlassLoop = LeanTween.value(gameObject, color, Color.white, m_AnimationTime * timeModifier).setLoopPingPong().setOnUpdateColor(
-                            (Color colorToLoop) =>
-                            {
-                                m_GlassRingMaterial.SetColor("_SpecColor", colorToLoop);
-                                m_LastColorUsedInAnimation = colorToLoop;
-                            });
+						m_ColorAnimationOnGlass = -1;
+						
+						if(o is Color){
+							Color colorToBe = (Color) o;
+							m_ColorAnimationOnGlassLoop = LeanTween.value(gameObject, colorToBe, Color.white, m_AnimationTime * timeModifier).setLoopPingPong().setOnUpdateColor(
+								(Color colorToLoop) =>
+								{
+									m_GlassRingMaterial.SetColor("_SpecColor", colorToLoop);
+									m_LastColorUsedInAnimation = colorToLoop;
+								}).id;
+						}
+                       
 
-                    });
+                    }, color).id;
 
             }
         }
+
+		private void StopAnimationGlassRingColor(){
+			if (LeanTween.descr(m_ColorAnimationOnGlass) != null)
+			{
+				LeanTween.descr(m_ColorAnimationOnGlass).onComplete = null;
+				LeanTween.cancel(m_ColorAnimationOnGlass);
+				m_ColorAnimationOnGlass = -1;
+			}
+			
+			
+			if (LeanTween.descr(m_ColorAnimationOnGlassLoop) != null)
+			{
+				LeanTween.descr(m_ColorAnimationOnGlassLoop).setLoopOnce();
+				LeanTween.descr(m_ColorAnimationOnGlassLoop).onUpdateColor = null;
+				LeanTween.cancel(m_ColorAnimationOnGlassLoop);
+				m_ColorAnimationOnGlassLoop = -1;
+			}
+		}
 
         #endregion
     }

@@ -47,12 +47,29 @@ public class AvatarAnimationManager : WatsonBaseAnimationManager {
 	private float m_AnimationTime = 1.0f;
 	private float m_AnimationInitialTime;
 
-	private LTDescr m_AnimationRotation = null;
-	private LTDescr m_AnimationMoveDefault = null;
-	private LTDescr m_AnimationMoveDown = null;
+	private int m_AnimationRotation = -1;
+	private int m_AnimationMoveDefault = -1;
+	private int m_AnimationMoveDown = -1;
 	#endregion
 	
+	#region OnEnable / OnDisable For Event Registration
+	
+	void OnEnable(){
+		EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_AVATAR_MOVE_DEFAULT, AnimateMoveDefault);
+		EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_AVATAR_MOVE_DOWN, AnimateMoveDown);
+		EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_AVATAR_STOP_MOVE, StopAnimationMove);
+	}
 
+	void OnDisable(){
+		EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_AVATAR_MOVE_DEFAULT, AnimateMoveDefault);
+		EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_AVATAR_MOVE_DOWN, AnimateMoveDown);
+		EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_AVATAR_STOP_MOVE, StopAnimationMove);
+	}
+
+	#endregion
+
+	#region Awake / Start
+	
 	void Awake()
 	{
 		m_AnimationInitialTime = m_AnimationTime;
@@ -64,6 +81,9 @@ public class AvatarAnimationManager : WatsonBaseAnimationManager {
 		AnimateRotation ();
 		//AnimateMoveDown ();
 	}
+
+	#endregion
+
 	
 
 	#region Overriden function on WatsonAnimationManager
@@ -75,33 +95,33 @@ public class AvatarAnimationManager : WatsonBaseAnimationManager {
 	
 	protected override void OnAnimationPause ()
 	{
-		if (m_AnimationRotation != null) 
+		if (LeanTween.descr(m_AnimationRotation) != null) 
 		{
-			m_AnimationRotation.pause();
+			LeanTween.descr(m_AnimationRotation).pause();
 		}
-		if (m_AnimationMoveDefault != null) 
+		if (LeanTween.descr(m_AnimationMoveDefault) != null) 
 		{
-			m_AnimationMoveDefault.pause();
+			LeanTween.descr(m_AnimationMoveDefault).pause();
 		}
-		if (m_AnimationMoveDown != null) 
+		if (LeanTween.descr(m_AnimationMoveDown) != null) 
 		{
-			m_AnimationMoveDown.pause();
+			LeanTween.descr(m_AnimationMoveDown).pause();
 		}
 	}
 
 	protected override void OnAnimationResume ()
 	{
-		if (m_AnimationRotation != null) 
+		if (LeanTween.descr(m_AnimationRotation) != null) 
 		{
-			m_AnimationRotation.resume();
+			LeanTween.descr(m_AnimationRotation).resume();
 		}
-		if (m_AnimationMoveDefault != null) 
+		if (LeanTween.descr(m_AnimationMoveDefault) != null) 
 		{
-			m_AnimationMoveDefault.resume();
+			LeanTween.descr(m_AnimationMoveDefault).resume();
 		}
-		if (m_AnimationMoveDown != null) 
+		if (LeanTween.descr(m_AnimationMoveDown) != null) 
 		{
-			m_AnimationMoveDown.resume();
+			LeanTween.descr(m_AnimationMoveDown).resume();
 		}
 	}
 
@@ -110,14 +130,14 @@ public class AvatarAnimationManager : WatsonBaseAnimationManager {
 		m_AnimationSpeedModifier = speedModifier;
 		m_AnimationTime = m_AnimationInitialTime * (1.0f / speedModifier);
 		
-		if (m_AnimationMoveDefault != null) 
+		if (LeanTween.descr(m_AnimationMoveDefault) != null) 
 		{
-			m_AnimationMoveDefault.setTime(m_AnimationTime);
+			LeanTween.descr(m_AnimationMoveDefault).setTime(m_AnimationTime);
 		}
 
-		if (m_AnimationMoveDown != null) 
+		if (LeanTween.descr(m_AnimationMoveDown) != null) 
 		{
-			m_AnimationMoveDown.setTime(m_AnimationTime);
+			LeanTween.descr(m_AnimationMoveDown).setTime(m_AnimationTime);
 		}
 	}
 
@@ -140,11 +160,11 @@ public class AvatarAnimationManager : WatsonBaseAnimationManager {
 	#region Avatar Rotation Animation
 	
 	void AnimateRotation(){
-		if (m_AnimationRotation == null) 
+		if (LeanTween.descr(m_AnimationRotation) == null) 
 		{
 			m_AnimationRotation = LeanTween.value (gameObject, 0.0f, 10.0f, 10.0f).setLoopType (LeanTweenType.linear).setOnUpdate ((float f) => {
 				transform.Rotate(m_RotationVector * Time.deltaTime * m_RotationSpeed * m_AnimationSpeedModifier);
-			});
+			}).id;
 		} 
 		else 
 		{
@@ -153,9 +173,10 @@ public class AvatarAnimationManager : WatsonBaseAnimationManager {
 	}
 	
 	void StopAnimateRotation(){
-		if (m_AnimationRotation != null) 
+		if (LeanTween.descr(m_AnimationRotation) != null) 
 		{
-			LeanTween.cancel(m_AnimationRotation.uniqueId);
+			LeanTween.cancel(m_AnimationRotation);
+			m_AnimationRotation = 0;
 		}
 	}
 
@@ -164,11 +185,14 @@ public class AvatarAnimationManager : WatsonBaseAnimationManager {
 
 	#region Avatar Movements Up / Down / Left / Right - Event
 
+	private void StopAnimationMove(System.Object[] args = null){
+		StopAnimateMoveDefault ();
+		StopAnimateMoveDown ();
+	}
+
+
 	public void AnimateMoveDefault(System.Object[] args = null){
-		if (m_AnimationMoveDefault != null) 
-		{
-			LeanTween.cancel(m_AnimationMoveDefault.uniqueId);
-		}
+		StopAnimationMove ();
 		
 		float animationTime = m_AnimationTime;
 		if (args != null && args.Length == 1 && float.TryParse(args[0].ToString(), out animationTime)) {
@@ -176,22 +200,20 @@ public class AvatarAnimationManager : WatsonBaseAnimationManager {
 			
 		}
 		
-		m_AnimationMoveDefault = LeanTween.moveLocalY (gameObject, 0.0f, animationTime).setEase(m_EaseOnAvatarMovement);
+		m_AnimationMoveDefault = LeanTween.moveLocalY (gameObject, 0.0f, animationTime).setEase(m_EaseOnAvatarMovement).id;
 		
 	}
 	
 	public void StopAnimateMoveDefault(System.Object[] args = null){
-		if (m_AnimationMoveDefault != null) 
+		if (LeanTween.descr(m_AnimationMoveDefault) != null) 
 		{
-			LeanTween.cancel(m_AnimationMoveDefault.uniqueId);
+			LeanTween.cancel(m_AnimationMoveDefault);
+			m_AnimationMoveDefault = -1;
 		}
 	}
 
 	public void AnimateMoveDown(System.Object[] args = null){
-		if (m_AnimationMoveDown != null) 
-		{
-			LeanTween.cancel(m_AnimationMoveDown.uniqueId);
-		}
+		StopAnimationMove ();
 		
 		float animationTime = m_AnimationTime;
 			if (args != null && args.Length == 1 && float.TryParse(args[0].ToString(), out animationTime)) {
@@ -199,13 +221,14 @@ public class AvatarAnimationManager : WatsonBaseAnimationManager {
 			
 		}
 
-		m_AnimationMoveDown =	LeanTween.moveLocalY (gameObject, m_AvatarMoveDown.y, animationTime).setEase(m_EaseOnAvatarMovement);
+		m_AnimationMoveDown =	LeanTween.moveLocalY (gameObject, m_AvatarMoveDown.y, animationTime).setEase(m_EaseOnAvatarMovement).id;
 	}
 	
 	public void StopAnimateMoveDown(System.Object[] args = null){
-		if (m_AnimationMoveDown != null) 
+		if (LeanTween.descr(m_AnimationMoveDown) != null) 
 		{
-			LeanTween.cancel(m_AnimationMoveDown.uniqueId);
+			LeanTween.cancel(m_AnimationMoveDown);
+			m_AnimationMoveDown = -1;
 		}
 	}
 

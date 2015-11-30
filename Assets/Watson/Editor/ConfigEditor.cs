@@ -84,7 +84,7 @@ namespace IBM.Watson.Editor
         private void OnEnable()
         {
 #if UNITY_5_2
-            titleContent.text = "Watson Config";
+            titleContent.text = "Config Editor";
 #endif
             m_WatsonIcon = (Texture2D)Resources.Load(Constants.Resources.WATSON_ICON, typeof(Texture2D));
             m_WizardMode = PlayerPrefs.GetInt( "WizardMode", 1 ) != 0;
@@ -97,7 +97,7 @@ namespace IBM.Watson.Editor
             System.IO.File.WriteAllText(Application.streamingAssetsPath + "/Config.json", Config.Instance.SaveConfig());
         }
 
-        [MenuItem("Watson/Edit Config")]
+        [MenuItem("Watson/Configuration Editor")]
         private static void EditConfig()
         {
             GetWindow<ConfigEditor>().Show();

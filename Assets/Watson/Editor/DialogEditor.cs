@@ -34,7 +34,7 @@ namespace IBM.Watson.Editor
         private void OnEnable()
         {
 #if UNITY_5_2
-            titleContent.text = "Watson Dialog";
+            titleContent.text = "Dialog Editor";
 #endif
             m_WatsonIcon = (Texture2D)Resources.Load(Constants.Resources.WATSON_ICON, typeof(Texture2D));
             EditorApplication.update += UpdateRunnable;

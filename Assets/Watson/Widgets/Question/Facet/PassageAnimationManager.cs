@@ -44,8 +44,8 @@ namespace IBM.Watson.Widgets.Question
         private float m_SpeedPassageAnimation = 4.0f;
         private float m_PercentToGoInitialPosition = 0.26f;
         private float m_PercentToGoStackPosition = 0.65f;
-        private LTDescr[] m_AnimationToShowPositionPassage;
-        private LTDescr[] m_AnimationToShowRotationPassage;
+        private int[] m_AnimationToShowPositionPassage;
+		private int[] m_AnimationToShowRotationPassage;
         private float m_AnimationTimeForEachPassageToGoTheirLocation = 1.0f;
         private float m_DelayBetweenPassages = 0.07f;
         private float m_DelayExtraOnSelectedPassage = 0.07f;
@@ -414,8 +414,8 @@ namespace IBM.Watson.Widgets.Question
             m_AnimationRotationRatio = new float[NumberOfPassages];
             m_TargetLocation = new Vector3[NumberOfPassages];
             m_TargetRotation = new Vector3[NumberOfPassages];
-            m_AnimationToShowPositionPassage = new LTDescr[NumberOfPassages];
-            m_AnimationToShowRotationPassage = new LTDescr[NumberOfPassages];
+			m_AnimationToShowPositionPassage = new int[NumberOfPassages];
+			m_AnimationToShowRotationPassage = new int[NumberOfPassages];
 
             for (int i = 0; i < NumberOfPassages; i++)
             {
@@ -425,6 +425,8 @@ namespace IBM.Watson.Widgets.Question
                 m_TargetRotation[i] = m_BezierPathOrientationToCenter[i].pts[0];   //PassageList[i].localEulerAngles;
                 m_PassageScrollRect[i] = PassageList[i].GetComponentInChildren<ScrollRect>();
                 SetScrollingEnable(i, false);
+				m_AnimationToShowPositionPassage[i] = -1;
+				m_AnimationToShowRotationPassage[i] = -1;
             }
 
         }
@@ -575,9 +577,6 @@ namespace IBM.Watson.Widgets.Question
         {
             if (!m_IsTouchOnDragging && m_SelectedPassageIndex >= 0)
             {
-                bool canScroll = false;
-                int prevSelectedPassageIndex = m_SelectedPassageIndex;
-
                 if (m_AnimationLocationRatio[m_SelectedPassageIndex] < m_PercentToGoInitialPosition)
                 {
                     ShowPassage(m_SelectedPassageIndex - 1);
@@ -591,7 +590,6 @@ namespace IBM.Watson.Widgets.Question
                     m_AnimationLocationRatio[m_SelectedPassageIndex] = 0.5f;
                     m_AnimationRotationRatio[m_SelectedPassageIndex] = 0.5f;
                     SetTargetLocationAndRotationOfSelectedPassage();
-                    canScroll = true;
                 }
 
                 //if (m_PassageScrollRect != null && m_PassageScrollRect.Length > prevSelectedPassageIndex && m_PassageScrollRect[prevSelectedPassageIndex] != null)
@@ -637,15 +635,14 @@ namespace IBM.Watson.Widgets.Question
             m_SelectedPassageIndex = passageIndexToShow;
 
             if (m_AnimationToShowPositionPassage == null || m_AnimationToShowPositionPassage.Length != NumberOfPassages)
-                m_AnimationToShowPositionPassage = new LTDescr[NumberOfPassages];
+				m_AnimationToShowPositionPassage = new int[NumberOfPassages];
 
             if (m_AnimationToShowRotationPassage == null || m_AnimationToShowRotationPassage.Length != NumberOfPassages)
-                m_AnimationToShowRotationPassage = new LTDescr[NumberOfPassages];
+				m_AnimationToShowRotationPassage = new int[NumberOfPassages];
 
 
             for (int i = 0; i < NumberOfPassages; i++)
             {
-                bool canScroll = false;
                 if (PassageList[i] == null || PassageList[i].transform == null)
                 {
                     Log.Warning("PassageAnimationManager", "PassageList doesn't have the element index: {0}", i);
@@ -757,7 +754,7 @@ namespace IBM.Watson.Widgets.Question
                     //    m_PassageScrollRect[passageIndex].velocity = Vector2.zero;
                     //    m_PassageScrollRect[passageIndex].vertical = true;
                     //}
-                });
+                }).id;
 
             }
             else
@@ -792,7 +789,7 @@ namespace IBM.Watson.Widgets.Question
                             m_AnimationRotationRatio[passageIndex] = f;
                         }
 
-                    });
+                    }).id;
             }
             else
             {
@@ -810,10 +807,11 @@ namespace IBM.Watson.Widgets.Question
             {
                 for (int i = 0; i < m_AnimationToShowPositionPassage.Length; i++)
                 {
-                    if (m_AnimationToShowPositionPassage[i] != null)
+                    if (LeanTween.descr( m_AnimationToShowPositionPassage[i] ) != null)
                     {
-                        m_AnimationToShowPositionPassage[i].hasUpdateCallback = false;
-                        LeanTween.cancel(m_AnimationToShowPositionPassage[i].uniqueId);
+						LeanTween.descr(m_AnimationToShowPositionPassage[i]).hasUpdateCallback = false;
+                        LeanTween.cancel(m_AnimationToShowPositionPassage[i]);
+						m_AnimationToShowPositionPassage[i] = -1;
                         //m_AnimationToShowPositionPassage[i] = null;
                     }
                     else
@@ -828,11 +826,11 @@ namespace IBM.Watson.Widgets.Question
             {
                 for (int i = 0; i < m_AnimationToShowRotationPassage.Length; i++)
                 {
-                    if (m_AnimationToShowRotationPassage[i] != null)
+					if (LeanTween.descr(m_AnimationToShowRotationPassage[i]) != null)
                     {
-                        m_AnimationToShowRotationPassage[i].hasUpdateCallback = false;
-                        LeanTween.cancel(m_AnimationToShowRotationPassage[i].uniqueId);
-                        // m_AnimationToShowRotationPassage[i] = null;
+						LeanTween.descr(m_AnimationToShowRotationPassage[i]).hasUpdateCallback = false;
+                        LeanTween.cancel(m_AnimationToShowRotationPassage[i]);
+                        m_AnimationToShowRotationPassage[i] = -1;
                     }
                     else
                     {

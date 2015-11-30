@@ -19,6 +19,7 @@
 using UnityEngine;
 using UnityEngine.Serialization;
 using IBM.Watson.Logging;
+using IBM.Watson.Utilities;
 using System;
  
 namespace IBM.Watson.Widgets.Avatar
@@ -70,6 +71,19 @@ namespace IBM.Watson.Widgets.Avatar
         public PebbleRow [] PebbleRowList { get { return m_PebbleRowList; } set { m_PebbleRowList = value; } }
 		#endregion
        
+		#region OnEnable / OnDisable For Event Registration
+		
+		void OnEnable(){
+			EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_AVATAR_SPEAKING, AvatarSpeaking);
+			EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_USER_SPEAKING, UserSpeaking);
+		}
+		
+		void OnDisable(){
+			EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_AVATAR_SPEAKING, AvatarSpeaking);
+			EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_USER_SPEAKING, UserSpeaking);
+		}
+		
+		#endregion
        
 		#region Awake / Start / Update
 		void Awake(){
