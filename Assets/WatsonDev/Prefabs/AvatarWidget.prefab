@@ -121,7 +121,10 @@ MonoBehaviour:
     m_Speed: 1
   - m_State: 5
     m_Color: {r: .992647052, g: 0, b: 0, a: 1}
-    m_Speed: 1
+    m_Speed: 5
+  - m_State: 6
+    m_Color: {r: .992647052, g: 0, b: 0, a: 1}
+    m_Speed: 0
   m_MoodInfo:
   - m_Mood: 0
     m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -202,7 +205,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_StateInfo.Array.size
-      value: 7
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_GoodbyePhrases.Array.size
@@ -327,6 +330,18 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_DialogName
       value: xray_dialog
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_StateInfo.Array.data[7].m_State
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_StateInfo.Array.data[7].m_Speed
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_StateInfo.Array.data[6].m_Speed
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

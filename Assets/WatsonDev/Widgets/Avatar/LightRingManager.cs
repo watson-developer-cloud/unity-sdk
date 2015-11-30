@@ -28,6 +28,40 @@ namespace IBM.Watson.Widgets.Avatar
 	public class LightRingManager : BaseRingManager
     {
 
+		#region Enumerations Related with Animation
+
+		public enum LightIndicatorAnimationState
+		{
+			NAN = -1,
+			NOT_PRESENT = 0,    //Light indicator is not created OR not visible on the scene
+			LISTENING,
+			THINKING,
+			ANSWERING,
+			NOT_UNDERSTAND
+		}
+
+		#endregion
+
+		#region Public Member
+
+		public LightIndicatorAnimationState AnimationState{
+			get{
+				return m_AnimationState;
+			}
+			set{
+				m_AnimationStatePrevious = m_AnimationState;
+				m_AnimationState = value;
+			}
+		}
+
+		public LightIndicatorAnimationState AnimationStatePrevious{
+			get{
+				return m_AnimationStatePrevious;
+			}
+		}
+
+		#endregion
+
         #region Private Variables
 
         [SerializeField]
@@ -37,6 +71,9 @@ namespace IBM.Watson.Widgets.Avatar
         private float m_AnimationTime = 1.0f;
 
         private int m_NumberOfLightFlare = 3;
+		private LightIndicatorAnimationState m_AnimationState = LightIndicatorAnimationState.NOT_PRESENT;
+		private LightIndicatorAnimationState m_AnimationStatePrevious = LightIndicatorAnimationState.NAN;
+		private float m_AnimationDirection = 1.0f; //1.0f is normal direction = clock-wise rotation on Avatar. -1 = counter clock-wise rotation
 
         [SerializeField]
         private GameObject[] m_LightFlarePivotParentList;
@@ -182,6 +219,7 @@ namespace IBM.Watson.Widgets.Avatar
         private int m_ColorAnimationOnFlareLoop = -1;
 		private int[] m_MoveAnimationOnFlare = null;
         private float[] m_MoveAnimationLastRatioOnFlare = null;
+		private float[] m_MoveAnimationDirectionOnFlare = null;
 
 		private float m_AudioLevelOutput = 0.0f;
 		private float m_AudioScaleModifier = 5.0f;
@@ -218,31 +256,6 @@ namespace IBM.Watson.Widgets.Avatar
 
 			if(m_AvatarWidgetAttached == null)
 				m_AvatarWidgetAttached = this.transform.GetComponentInParent<AvatarWidget>();
-
-/*            m_ListFlareBezierPathList = new Vector3[3][];
-
-            m_ListFlareBezierPathList[0] = new Vector3[] {
-                new Vector3 (0.062f, -6.06f, 32.764f),
-                new Vector3 (41.7f, -6.06f, 8.4f),
-                new Vector3 (22.58f, -6.06f, 32.78f),
-                new Vector3 (28.365f, -6.06f, -16.385f)
-            };
-
-            m_ListFlareBezierPathList[1] = new Vector3[] {
-                new Vector3 (28.34345f, -6.06f, -16.4357f),
-                new Vector3 (-13.57539f, -6.06f, -40.31325f),
-                new Vector3 (17.0983f, -6.06f, -35.94485f),
-                new Vector3 (-28.37233f, -6.06f, -16.3723f)
-            };
-
-            m_ListFlareBezierPathList[2] = new Vector3[] {
-                new Vector3 (-28.40545f, -6.06f, -16.32832f),
-                new Vector3 (-28.12456f, -6.060268f, 31.91325f),
-                new Vector3 (-39.67829f, -6.060145f, 3.164852f),
-                new Vector3 (0.007372856f, -6.060182f, 32.75727f)
-            };
-*/
-
 
 			for (int i = 0; i < m_FullCircleBezierPathPoints.Length; i++) {
 				m_FullCircleBezierPathPoints[i] = new Vector3(m_FullCircleBezierPathPoints[i].x,  -6.06f, m_FullCircleBezierPathPoints[i].z);
@@ -290,6 +303,9 @@ namespace IBM.Watson.Widgets.Avatar
         /// <param name="timeModifier">Time modifier.</param>
         public override void ChangedMood(Color colorToChange, float timeModifier)
         {
+			if (AnimationState == LightIndicatorAnimationState.NOT_UNDERSTAND)
+				return;
+
             //We are changing movement in flare in mood change! (not color, color change depends on behavior)
             SetTimeOnLightFlareMovementAnimation(m_AnimationTime * timeModifier);
         }
@@ -306,6 +322,9 @@ namespace IBM.Watson.Widgets.Avatar
         {
             //Log.Warning("LightRingManager", "ChangedBehavior {0}", m_AvatarWidgetAttached.State);
 
+			if (AnimationState == LightIndicatorAnimationState.NOT_UNDERSTAND)
+				return;
+
             if (m_AvatarWidgetAttached.State == AvatarWidget.AvatarState.SLEEPING_LISTENING || m_AvatarWidgetAttached.State == AvatarWidget.AvatarState.LISTENING)
             {
                 AnimateLightFlareForListening();
@@ -319,13 +338,18 @@ namespace IBM.Watson.Widgets.Avatar
             {
                 AnimateLightFlareForAnswering();
             }
-            else
-            {
+			else if (m_AvatarWidgetAttached.State == AvatarWidget.AvatarState.DONT_UNDERSTAND)
+			{
+				AnimateLightFlareForNotUnderstanding();
+			}
+			else
+			{
+				
+			}
 
-            }
+			AnimateLightRingColor(color, m_AnimationTime * timeModifier);
+			AnimateLightFlareColor(color, m_AnimationTime * timeModifier);
 
-            AnimateLightRingColor(color, m_AnimationTime * timeModifier);
-            AnimateLightFlareColor(color, m_AnimationTime * timeModifier);
         }
 
         #endregion
@@ -390,20 +414,43 @@ namespace IBM.Watson.Widgets.Avatar
                 }).id;
         }
 
+		private void ResetLastValueAnimationFlare(){
+			for (int i = 0; m_MoveAnimationLastRatioOnFlare != null && i < m_MoveAnimationLastRatioOnFlare.Length; i++) {
+				m_MoveAnimationLastRatioOnFlare[i] = (1.0f / m_MoveAnimationLastRatioOnFlare.Length) * i;
+			}
+		}
+
         public float[] LastValueAnimationFlare
         {
             get
             {
                 if (m_MoveAnimationLastRatioOnFlare == null && MoveAnimationOnFlare != null){
                     m_MoveAnimationLastRatioOnFlare = new float[MoveAnimationOnFlare.Length];
-					for (int i = 0; i < m_MoveAnimationLastRatioOnFlare.Length; i++) {
-						m_MoveAnimationLastRatioOnFlare[i] = (1.0f / m_MoveAnimationLastRatioOnFlare.Length) * i;
-					}
+					ResetLastValueAnimationFlare();
 				} 
 
                 return m_MoveAnimationLastRatioOnFlare;
             }
         }
+
+		private void ResetLastDirectionAnimationFlare(){
+			for (int i = 0; m_MoveAnimationDirectionOnFlare != null && i < m_MoveAnimationDirectionOnFlare.Length; i++) {
+				m_MoveAnimationDirectionOnFlare[i] = 1.0f;
+			}
+		}
+
+		public float[] DirectionAnimationFlare
+		{
+			get
+			{
+				if (m_MoveAnimationDirectionOnFlare == null && MoveAnimationOnFlare != null){
+					m_MoveAnimationDirectionOnFlare = new float[MoveAnimationOnFlare.Length];
+					ResetLastDirectionAnimationFlare();
+				} 
+				
+				return m_MoveAnimationDirectionOnFlare;
+			}
+		}
 
 		public int[] MoveAnimationOnFlare{
 			get{
@@ -428,6 +475,7 @@ namespace IBM.Watson.Widgets.Avatar
                     {
 						LeanTween.descr (MoveAnimationOnFlare[i]).setLoopOnce();
 						LastValueAnimationFlare[i] = getRationInOneRange( LeanTween.descr (MoveAnimationOnFlare[i]).lastVal );
+						DirectionAnimationFlare[i] = LeanTween.descr (MoveAnimationOnFlare[i]).direction;
 						//Log.Warning("LightRingManager", "MoveAnimationOnFlare[i].lastVal : {0}", LastValueAnimationFlare[i]); 
                         LeanTween.cancel(MoveAnimationOnFlare[i]);
                         MoveAnimationOnFlare[i] = -1;
@@ -436,17 +484,45 @@ namespace IBM.Watson.Widgets.Avatar
             }
         }
 
-        private void AnimateLightFlreForUnderstandingCase()
+		private float distanceForNotUnderstanding = 0.05f;
+		//private float timeForNotUnderstanding = 0.1f;
+		public bool stopOnStartAnimation = true;
+        private void AnimateLightFlareForNotUnderstanding()
         {
 
             StopLightFlareAnimation();
+			AnimationState = LightIndicatorAnimationState.NOT_UNDERSTAND;
+			UnityEngine.Debug.LogWarning("Animation Started - Didn't understand");
+
             //TODO: Finish the understanding part
+			for (int i = 0; i < m_LightFlarePivotParentList.Length; i++) {
+
+				float lastValue = getRationInOneRange(LastValueAnimationFlare[i]);
+				float targetRatioEnd = getRationInOneRange( LastValueAnimationFlare[i] + distanceForNotUnderstanding * Mathf.Sign(LastValueAnimationFlare[i]) );
+
+				MoveAnimationOnFlare[i] = LeanTween.moveLocal(m_LightFlarePivotParentList[i], BezierPathAllInOne, m_AnimationTime * m_AvatarWidgetAttached.MoodTimeModifier).setOrientToPath(true).setAxis(Vector3.forward).setFrom(Vector3.one * lastValue).setTo(Vector3.one * targetRatioEnd).setEase(LeanTweenType.linear).setLoopPingPong(3).setOnComplete((System.Object o)=>{
+					if (o is int){
+						int indexPivot = (int)o;
+						if(indexPivot == m_LightFlarePivotParentList.Length - 1){
+							UnityEngine.Debug.LogWarning("Animation Finished - Didn't understand");
+							AnimationState = LightIndicatorAnimationState.NAN;
+							OnChangedBehavior(null);
+						}
+					}
+					else{
+						Log.Warning("LightRingManager", "AnimateLightFlareForThinking has invalid parameter : {0}", o.ToString());
+					}
+					
+				}, i).id;
+			}
+
         }
 
         private void AnimateLightFlareForListening()
         {
             
             StopLightFlareAnimation();
+			AnimationState = LightIndicatorAnimationState.LISTENING;
 
             float animationTime = m_AnimationTime * m_AvatarWidgetAttached.MoodTimeModifier;
 
@@ -486,6 +562,7 @@ namespace IBM.Watson.Widgets.Avatar
         private void AnimateLightFlareForThinking()
         {
             StopLightFlareAnimation();
+			AnimationState = LightIndicatorAnimationState.THINKING;
 
 			float animationTime = 0.5f * m_AvatarWidgetAttached.MoodTimeModifier; // m_AnimationTime * m_AvatarWidgetAttached.MoodTimeModifier;
 
@@ -556,7 +633,7 @@ namespace IBM.Watson.Widgets.Avatar
         private void AnimateLightFlareForAnswering()
         {
             StopLightFlareAnimation();
-            
+			AnimationState = LightIndicatorAnimationState.ANSWERING;
            
             float timeToGoMouthPosition = 0.9f;
             LeanTweenType easeForMoveToMouthPosition = LeanTweenType.easeInOutCirc;
@@ -566,19 +643,20 @@ namespace IBM.Watson.Widgets.Avatar
 
             for (int i = 0; i < m_LightFlarePivotParentList.Length; i++)
             {
-				float ratioPositionForMouth = (1.0f / m_LightFlarePivotParentList.Length) * i;
+				float ratioPositionForMouth = ((1.0f / m_LightFlarePivotParentList.Length) * i) + (1.0f / (2 * m_LightFlarePivotParentList.Length));
 
                 //Log.Status("LightRingManager", "animationTime: {0} - LastValueAnimationFlare[i] {1} to ratioPositionForMouth: {2}", animationTime, LastValueAnimationFlare[i], ratioPositionForMouth);
-                
-//				while(LastValueAnimationFlare[i] > ratioPositionForMouth){
-//					ratioPositionForMouth += 1.0f;
-//				}
+				if(AnimationStatePrevious == LightIndicatorAnimationState.THINKING){
+					while(LastValueAnimationFlare[i] > ratioPositionForMouth){
+						ratioPositionForMouth += 1.0f;
+					}
+				}
 
 				MoveAnimationOnFlare[i] = LeanTween.moveLocal(m_LightFlarePivotParentList[i], BezierPathAllInOne, animationTime).setOrientToPath(true).setAxis(Vector3.forward).setFrom(Vector3.one * LastValueAnimationFlare[i]).setTo(Vector3.one * ratioPositionForMouth).setEase(easeForMoveToMouthPosition).setOnComplete((System.Object o)=>{
 					if (o is int){
 						int indexPivot = (int)o;
 
-						LastValueAnimationFlare[indexPivot] = (1.0f / m_LightFlarePivotParentList.Length) * indexPivot;
+						LastValueAnimationFlare[indexPivot] = (1.0f / m_LightFlarePivotParentList.Length) * indexPivot + (1.0f / (2 * m_LightFlarePivotParentList.Length));
 						MoveAnimationOnFlare[indexPivot] = -1;
 
 						if(indexPivot == 0){
@@ -646,6 +724,12 @@ namespace IBM.Watson.Widgets.Avatar
 				MeshRenderer flareRenderer = m_LightFlarePivotParentList[i].GetComponentInChildren<MeshRenderer>();
 				if(flareRenderer != null)
 					flareRenderer.enabled = (animationTime > 0.0f);
+				
+				if(animationTime == 0.0f){
+					ResetLastValueAnimationFlare();	//reset the position of light flare
+					ResetLastDirectionAnimationFlare();
+					AnimationState = LightIndicatorAnimationState.NOT_PRESENT;
+				}
             }
 
             if (MoveAnimationOnFlare != null)

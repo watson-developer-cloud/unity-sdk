@@ -68,6 +68,10 @@ namespace IBM.Watson.Widgets.Avatar
             /// If Watson didn't understand the input, then it goes to listening mode while giving some response about not understood input.
             /// </summary>
             ANSWERING,
+			/// <summary>
+			/// Didn't understand - This happens in one frame to show that that dialog didn't understand by avatar
+			/// </summary>
+			DONT_UNDERSTAND,
             /// <summary>
             /// Some type of error occured that is keeping the avatar from working.
             /// </summary>
@@ -387,6 +391,7 @@ namespace IBM.Watson.Widgets.Avatar
         {
             if (State != AvatarState.SLEEPING_LISTENING)
             {
+				State = AvatarState.DONT_UNDERSTAND;
                 m_TextOutput.SendData(new TextData( PickRandomString( m_FailurePhrases ) ));
             }
                
@@ -533,8 +538,6 @@ namespace IBM.Watson.Widgets.Avatar
                     }
                 }
             }
-
-            State = AvatarState.LISTENING;
         }
 
         [SerializeField]
