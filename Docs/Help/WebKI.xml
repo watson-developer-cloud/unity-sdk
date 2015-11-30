@@ -128,11 +128,8 @@
     <HelpKINode Title="about ClassifierWidget class" Url="html/bd55941c-79e8-2b5e-c69d-5501f118aef5.htm" />
     <HelpKINode Title="constructor" Url="html/e4b5a2c7-e9ea-5ca7-54f2-91426b446536.htm" />
     <HelpKINode Title="methods" Url="html/3ec3e8c7-d0b5-72ad-c417-41bafa1676b9.htm" />
-    <HelpKINode Title="properties" Url="html/aef753b5-0a00-fe03-6bde-d09d5b5e3667.htm" />
   </HelpKINode>
   <HelpKINode Title="ClassifierWidget.ClassifierWidget constructor" Url="html/e4b5a2c7-e9ea-5ca7-54f2-91426b446536.htm" />
-  <HelpKINode Title="ClassifierWidget.ClassifyInput property" Url="html/c098ea9b-78c3-9c28-99dc-90b3aa62dc2e.htm" />
-  <HelpKINode Title="ClassifierWidget.ClassifyOutput property" Url="html/54199824-58a4-3a34-d287-79d57bfb7dda.htm" />
   <HelpKINode Title="ClassifierWidget.GetName method" Url="html/7067b64a-1244-0968-cd72-e4b774c37da9.htm" />
   <HelpKINode Title="ClassifierWidget.OnClassifierResult delegate" Url="html/9ca3bec7-86ac-fe11-116f-64d38cf0e3de.htm" />
   <HelpKINode Title="classifier_id property">
@@ -140,8 +137,6 @@
     <HelpKINode Title="ClassifyResult.classifier_id Property " Url="html/5b400110-9592-a5eb-c750-af4d0199c0c0.htm" />
   </HelpKINode>
   <HelpKINode Title="Classify method" Url="html/7a5f0265-90cd-bc6b-6134-536313509101.htm" />
-  <HelpKINode Title="ClassifyInput property" Url="html/c098ea9b-78c3-9c28-99dc-90b3aa62dc2e.htm" />
-  <HelpKINode Title="ClassifyOutput property" Url="html/54199824-58a4-3a34-d287-79d57bfb7dda.htm" />
   <HelpKINode Title="ClassifyResult class">
     <HelpKINode Title="ClassifyResult Class" Url="html/3d212e17-0fdc-e103-e1ca-e78a07b1a96f.htm" />
     <HelpKINode Title="about ClassifyResult class" Url="html/3d212e17-0fdc-e103-e1ca-e78a07b1a96f.htm" />
@@ -175,8 +170,8 @@
   <HelpKINode Title="ColliderList property" Url="html/2530cc81-e73a-49f4-1827-14d6fbbde442.htm" />
   <HelpKINode Title="Combine method" Url="html/e76abe8f-2606-989e-b9e2-4d0e1109dfbb.htm" />
   <HelpKINode Title="confidence property">
-    <HelpKINode Title="Class.confidence Property " Url="html/de769fb9-ac78-fed8-e530-0a56938f56a8.htm" />
     <HelpKINode Title="ConverseResponse.confidence Property " Url="html/dc16a058-0969-7f45-4d45-8582b8f5bc8c.htm" />
+    <HelpKINode Title="Class.confidence Property " Url="html/de769fb9-ac78-fed8-e530-0a56938f56a8.htm" />
   </HelpKINode>
   <HelpKINode Title="Confidence property">
     <HelpKINode Title="SpeechAlt.Confidence Property " Url="html/13dffcae-236c-0ec9-4124-e010a8680703.htm" />
@@ -743,11 +738,11 @@
     <HelpKINode Title="constructor" Url="html/9525f192-12a4-b5c0-8c9e-f218f8ba93b6.htm" />
     <HelpKINode Title="properties" Url="html/97ca993d-b167-9ebf-7d82-53ef0fa1eff1.htm" />
   </HelpKINode>
+  <HelpKINode Title="Language property" Url="html/f455ddaf-bcce-9c3a-7ce0-61f478936200.htm" />
   <HelpKINode Title="language property">
     <HelpKINode Title="Classifier.language Property " Url="html/0742ae77-173b-c753-e1bf-3e12f20aeaf0.htm" />
     <HelpKINode Title="Language.language Property " Url="html/0463e3fa-08a0-8a5c-389b-9673747b2b15.htm" />
   </HelpKINode>
-  <HelpKINode Title="Language property" Url="html/f455ddaf-bcce-9c3a-7ce0-61f478936200.htm" />
   <HelpKINode Title="Language.Language constructor" Url="html/9525f192-12a4-b5c0-8c9e-f218f8ba93b6.htm" />
   <HelpKINode Title="Language.language property" Url="html/0463e3fa-08a0-8a5c-389b-9673747b2b15.htm" />
   <HelpKINode Title="Language.name property" Url="html/52c10716-53f9-6dc5-0ef2-a8e35e168b5a.htm" />
@@ -847,10 +842,10 @@
   <HelpKINode Title="m_URL field" Url="html/c61d87e0-8d6f-86e0-34ef-f99297f350c5.htm" />
   <HelpKINode Title="m_User field" Url="html/128cd657-86bb-d9da-b360-1f6d073bccf5.htm" />
   <HelpKINode Title="name property">
-    <HelpKINode Title="Classifier.name Property " Url="html/120c318a-9ad6-2d9b-668d-c69d9c4e4bcf.htm" />
     <HelpKINode Title="DialogEntry.name Property " Url="html/701bc8a1-9355-fe41-b607-f3d95653da66.htm" />
-    <HelpKINode Title="Language.name Property " Url="html/52c10716-53f9-6dc5-0ef2-a8e35e168b5a.htm" />
     <HelpKINode Title="TranslationModel.name Property " Url="html/49ef94ca-0362-e618-6c62-05be958f0eee.htm" />
+    <HelpKINode Title="Classifier.name Property " Url="html/120c318a-9ad6-2d9b-668d-c69d9c4e4bcf.htm" />
+    <HelpKINode Title="Language.name Property " Url="html/52c10716-53f9-6dc5-0ef2-a8e35e168b5a.htm" />
   </HelpKINode>
   <HelpKINode Title="Name property">
     <HelpKINode Title="SpeechModel.Name Property " Url="html/70a0efe8-9eea-c811-bc90-333224fe0365.htm" />
@@ -1329,11 +1324,11 @@
   <HelpKINode Title="TargetGameObject property" Url="html/fab6e42e-fcec-a7e1-5c79-b64167eecc90.htm" />
   <HelpKINode Title="TargetInput property" Url="html/114a503f-bcc7-bd15-f644-e68d2b2b610e.htm" />
   <HelpKINode Title="TargetObject property" Url="html/d1dd517e-b772-018d-3b49-4f2c4481db56.htm" />
-  <HelpKINode Title="text property" Url="html/0a7ebfe9-b1e0-b2ad-4309-96a168ed04eb.htm" />
   <HelpKINode Title="Text property">
     <HelpKINode Title="TextToSpeechData.Text Property " Url="html/524d6062-8352-fc59-dab4-042b847f78e0.htm" />
     <HelpKINode Title="WSConnector.TextMessage.Text Property " Url="html/87ed4827-7aed-5686-bdc0-ee48e46acbec.htm" />
   </HelpKINode>
+  <HelpKINode Title="text property" Url="html/0a7ebfe9-b1e0-b2ad-4309-96a168ed04eb.htm" />
   <HelpKINode Title="TextMessage class">
     <HelpKINode Title="properties" Url="html/f103af64-ea1f-1a6e-4e74-b90f1d4ac81b.htm" />
   </HelpKINode>
@@ -1516,14 +1511,14 @@
   <HelpKINode Title="Updated event" Url="html/15f3f982-ad73-fba0-b656-3269fa5ae2b6.htm" />
   <HelpKINode Title="UpdateRoutines method" Url="html/e76d1482-d6a0-99e7-f7e1-e1b0d79e7ea5.htm" />
   <HelpKINode Title="UploadDialog method" Url="html/94788d7f-9054-d893-f9eb-fb4a08bd7d85.htm" />
-  <HelpKINode Title="url property">
-    <HelpKINode Title="Classifier.url Property " Url="html/3a98f860-1917-cae8-fc24-c3c6fd7f06ca.htm" />
-    <HelpKINode Title="ClassifyResult.url Property " Url="html/e902bc2b-23e5-8b71-c736-19f08b9415e7.htm" />
-  </HelpKINode>
   <HelpKINode Title="URL property">
     <HelpKINode Title="RESTConnector.URL Property " Url="html/0019bff3-0def-4b33-cbb1-e7c45ec056b7.htm" />
     <HelpKINode Title="SpeechModel.URL Property " Url="html/cd3a3c4c-fa06-36c5-57df-895c999263c1.htm" />
     <HelpKINode Title="WSConnector.URL Property " Url="html/f2399da2-f234-5dd2-43f7-919686952f43.htm" />
+  </HelpKINode>
+  <HelpKINode Title="url property">
+    <HelpKINode Title="Classifier.url Property " Url="html/3a98f860-1917-cae8-fc24-c3c6fd7f06ca.htm" />
+    <HelpKINode Title="ClassifyResult.url Property " Url="html/e902bc2b-23e5-8b71-c736-19f08b9415e7.htm" />
   </HelpKINode>
   <HelpKINode Title="User property" Url="html/6c15d7b6-68f7-789e-443a-8709fd054679.htm" />
   <HelpKINode Title="UsingGateway property">

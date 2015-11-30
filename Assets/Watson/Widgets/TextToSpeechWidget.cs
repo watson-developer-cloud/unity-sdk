@@ -80,6 +80,9 @@ namespace IBM.Watson.Widgets
         private Queue<Speech> m_SpeechQueue = new Queue<Speech>();
         #endregion
 
+        /// <summary>
+        /// Button event handler.
+        /// </summary>
         public void OnTextToSpeech()
         {
             if (m_TTS.Voice != m_Voice)

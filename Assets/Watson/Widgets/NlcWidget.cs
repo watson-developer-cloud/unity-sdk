@@ -68,6 +68,9 @@ namespace IBM.Watson.Widgets
         #endregion
 
         #region Public Properties
+        /// <summary>
+        /// Returns the NLC service object.
+        /// </summary>
         public NLC NLC { get { return m_NLC; } }
         #endregion
 
@@ -91,7 +94,16 @@ namespace IBM.Watson.Widgets
                 if (! m_NLC.GetClassifier( m_ClassifierId, OnGetClassifier ) )
                     Log.Equals( "NlcWidget", "Failed to request classifier." );
             }
+        }
+
+        private void OnEnable()
+        {
+            EventManager.Instance.RegisterEventReceiver( Constants.Event.ON_DEBUG_COMMAND, OnDebugCommand );
 	    }
+        private void OnDisable()
+        {
+            EventManager.Instance.UnregisterEventReceiver( Constants.Event.ON_DEBUG_COMMAND, OnDebugCommand );
+        }
         #endregion
 
         #region Widget interface
@@ -204,7 +216,7 @@ namespace IBM.Watson.Widgets
 	    }
 
         #region Event Handlers
-        public void OnDebugCommand( object [] args )
+        private void OnDebugCommand( object [] args )
         {
             string text = args != null && args.Length > 0 ? args[0] as string : string.Empty;
             if (! string.IsNullOrEmpty( text ) && !string.IsNullOrEmpty(m_ClassifierId) )
