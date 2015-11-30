@@ -13,7 +13,6 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *
-* @author Richard Lyle (rolyle@us.ibm.com)
 */
 
 #define TEST_WOODSIDE
@@ -23,7 +22,7 @@
 using System.Collections;
 using IBM.Watson.Services.v1;
 using IBM.Watson.Logging;
-using IBM.Watson.Data.XRAY;
+using IBM.Watson.DataModels.XRAY;
 
 #if EXPORT_QUESTIONS || CACHE_QUESTIONS
 using UnityEngine;

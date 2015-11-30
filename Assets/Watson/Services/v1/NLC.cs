@@ -13,13 +13,12 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *
-* @author Richard Lyle (rolyle@us.ibm.com)
 */
 
 using IBM.Watson.Logging;
 using IBM.Watson.Connection;
 using IBM.Watson.Utilities;
-using IBM.Watson.Data;
+using IBM.Watson.DataModels;
 using MiniJSON;
 using System;
 using System.Collections.Generic;
@@ -30,8 +29,8 @@ namespace IBM.Watson.Services.v1
 {
     /// <summary>
     /// This class wraps the Natural Language Classifier service.
-    /// </summary>
     /// <a href="http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/nl-classifier.html">NLC Service</a>
+    /// </summary>
     public class NLC
     {
         #region Public Types

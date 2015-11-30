@@ -13,14 +13,11 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *
-* @author Dogukan Erenel (derenel@us.ibm.com)
 */
 
 using UnityEngine;
-using System.Collections;
 using IBM.Watson.Utilities;
 using IBM.Watson.Logging;
-using IBM.Watson.Widgets.Avatar;
 
 namespace IBM.Watson.Widgets.Question
 {

@@ -13,14 +13,13 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *
-* @author Richard Lyle (rolyle@us.ibm.com)
 */
 
 using UnityEngine;
 using UnityEngine.UI;
 using IBM.Watson.Services.v1;
 using IBM.Watson.Logging;
-using IBM.Watson.Data;
+using IBM.Watson.DataTypes;
 using System.Collections.Generic;
 using IBM.Watson.Utilities;
 
@@ -38,13 +37,13 @@ namespace IBM.Watson.Widgets
         TextToSpeech m_TTS = new TextToSpeech();
 
         [SerializeField]
-        private Input m_TextInput = new Input("Text", typeof(TextData), "OnTextInput");
+        private Input m_TextInput = new Input("Text", typeof(TextToSpeechData), "OnTextInput");
         [SerializeField]
         private Output m_Speaking = new Output(typeof(SpeakingStateData));
         [SerializeField]
         private Output m_DisableMic = new Output(typeof(DisableMicData));
         [SerializeField]
-        private Output m_LevelOut = new Output(typeof(FloatData));
+        private Output m_LevelOut = new Output(typeof(LevelData));
         [SerializeField, Tooltip("How often to send level out data in seconds.")]
         private float m_LevelOutInterval = 0.05f;
         [SerializeField]
@@ -96,7 +95,7 @@ namespace IBM.Watson.Widgets
         #region Private Functions
         private void OnTextInput(Data data)
         {
-            TextData text = data as TextData;
+            TextToSpeechData text = data as TextToSpeechData;
             if (text == null)
                 throw new WatsonException("Wrong data type received.");
 
@@ -167,7 +166,7 @@ namespace IBM.Watson.Widgets
                 {
                     float[] samples = new float[currentPos - m_LastPlayPos];
                     m_Source.clip.GetData(samples, m_LastPlayPos);
-                    m_LevelOut.SendData(new FloatData(Mathf.Max(samples) * m_LevelOutputModifier));
+                    m_LevelOut.SendData(new LevelData(Mathf.Max(samples) * m_LevelOutputModifier));
                     m_LastPlayPos = currentPos;
                 }
             }

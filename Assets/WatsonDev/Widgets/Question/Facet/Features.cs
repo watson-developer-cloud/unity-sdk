@@ -13,14 +13,13 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *
-* @author Taj Santiago (asantiago@us.ibm.com)
 */
 
 using UnityEngine;
 using System.Collections.Generic;
 using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
-using IBM.Watson.Data;
+using IBM.Watson.DataModels;
 
 
 namespace IBM.Watson.Widgets.Question
@@ -38,7 +37,7 @@ namespace IBM.Watson.Widgets.Question
         private int m_MaxFeatures = 8;
 
         private List<FeatureItem> m_FeatureItems = new List<FeatureItem>();
-        private Data.XRAY.Answers m_AnswerData = null;
+        private DataModels.XRAY.Answers m_AnswerData = null;
 
         private void OnEnable()
         {
@@ -54,7 +53,7 @@ namespace IBM.Watson.Widgets.Question
         {
             if ( Focused )
             {
-                m_AnswerData = args != null && args.Length > 0 ? args[0] as Data.XRAY.Answers : null;
+                m_AnswerData = args != null && args.Length > 0 ? args[0] as DataModels.XRAY.Answers : null;
 
                 while (m_FeatureItems.Count > 0)
                 {

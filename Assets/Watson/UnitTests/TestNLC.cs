@@ -13,7 +13,6 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *
-* @author Richard Lyle (rolyle@us.ibm.com)
 */
 
 //#define TEST_DELETE
@@ -21,7 +20,7 @@
 using System.Collections;
 using IBM.Watson.Services.v1;
 using IBM.Watson.Logging;
-using IBM.Watson.Data;
+using IBM.Watson.DataModels;
 
 namespace IBM.Watson.UnitTests
 {

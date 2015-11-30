@@ -13,13 +13,12 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *
-* @author Richard Lyle (rolyle@us.ibm.com)
 */
 
 using IBM.Watson.Logging;
 using IBM.Watson.Connection;
 using IBM.Watson.Utilities;
-using IBM.Watson.Data;
+using IBM.Watson.DataModels;
 using MiniJSON;
 using System;
 using System.Collections.Generic;
@@ -61,8 +60,8 @@ namespace IBM.Watson.Services.v1
         /// <summary>
         /// The delegate for saving a file, used by DownloadDialog().
         /// </summary>
-        /// <param name="filename"></param>
-        /// <param name="data"></param>
+        /// <param name="filename">The filename to save.</param>
+        /// <param name="data">The data to save into the file.</param>
         public delegate void SaveFileDelegate( string filename, byte [] data );
         /// <summary>
         /// The callback delegate for the Converse() function.
@@ -76,6 +75,9 @@ namespace IBM.Watson.Services.v1
         /// Set this property to overload the internal file loading of this class.
         /// </summary>
         public LoadFileDelegate LoadFile { get; set; }
+        /// <summary>
+        /// Set this property to overload the internal file saving for this class.
+        /// </summary>
         public SaveFileDelegate SaveFile { get; set; }
         #endregion
 
@@ -139,12 +141,33 @@ namespace IBM.Watson.Services.v1
         #endregion
 
         #region Download Dialog
+        /// <summary>
+        /// Format enumeration used by DownloadDialog.
+        /// </summary>
         public enum DialogFormat
         {
+            /// <summary>
+            /// XML format.
+            /// </summary>
             XML,
+            /// <summary>
+            /// JSON format.
+            /// </summary>
             JSON,
+            /// <summary>
+            /// BINARY format.
+            /// </summary>
             BINARY
         };
+
+        /// <summary>
+        /// Downloads the dialog by the dialog ID into the provided filename.
+        /// </summary>
+        /// <param name="dialogId">The ID of the dialog to download.</param>
+        /// <param name="dialogFileName">The filename to download the dialog into.</param>
+        /// <param name="callback">The callback to invoke on failure or success.</param>
+        /// <param name="format">The format to download.</param>
+        /// <returns>Returns true if request is sent.</returns>
         public bool DownloadDialog( string dialogId, string dialogFileName, OnDialogCallback callback, DialogFormat format = DialogFormat.XML )
         {
             if (string.IsNullOrEmpty(dialogId))
@@ -273,6 +296,12 @@ namespace IBM.Watson.Services.v1
         #endregion
 
         #region Delete Dialog
+        /// <summary>
+        /// Deletes a dialog by ID.
+        /// </summary>
+        /// <param name="dialogId">The ID of the dialog to delete.</param>
+        /// <param name="callback">The callback to invoke on success or failure.</param>
+        /// <returns>Returns true if request is sent.</returns>
         public bool DeleteDialog( string dialogId, OnDialogCallback callback )
         {
             if (string.IsNullOrEmpty(dialogId))

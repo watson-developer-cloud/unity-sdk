@@ -13,14 +13,13 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *
-* @author Taj Santiago (asantiago@us.ibm.com)
 */
 
 using UnityEngine;
 using UnityEngine.UI;
 using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
-using IBM.Watson.Data;
+using IBM.Watson.DataModels;
 
 namespace IBM.Watson.Widgets.Question
 {
@@ -70,8 +69,8 @@ namespace IBM.Watson.Widgets.Question
             }
         }
 
-		private Data.XRAY.Answers m_AnswerData = null;
-		private Data.XRAY.Questions m_QuestionData = null;
+		private DataModels.XRAY.Answers m_AnswerData = null;
+		private DataModels.XRAY.Questions m_QuestionData = null;
 		
 		private void OnEnable()
 		{
@@ -148,7 +147,7 @@ namespace IBM.Watson.Widgets.Question
 		{
             if (Focused )
             {
-			    m_AnswerData = args != null && args.Length > 0 ? args[0] as Data.XRAY.Answers : null;
+			    m_AnswerData = args != null && args.Length > 0 ? args[0] as DataModels.XRAY.Answers : null;
 			    InitAnswers ();
             }
 		}
@@ -161,7 +160,7 @@ namespace IBM.Watson.Widgets.Question
 		{
             if (Focused )
             {
-			    m_QuestionData = args != null && args.Length > 0 ? args[0] as Data.XRAY.Questions : null;
+			    m_QuestionData = args != null && args.Length > 0 ? args[0] as DataModels.XRAY.Questions : null;
 			    InitQuestions ();
             }
 		}

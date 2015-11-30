@@ -13,11 +13,10 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *
-* @author Richard Lyle (rolyle@us.ibm.com)
 */
 
 
-using IBM.Watson.Data;
+using IBM.Watson.DataTypes;
 using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
 using System.Collections;
@@ -113,7 +112,7 @@ namespace IBM.Watson.Widgets
         [SerializeField]
         private Output m_AudioOutput = new Output(typeof(AudioData));
         [SerializeField]
-        private Output m_LevelOutput = new Output(typeof(FloatData));
+        private Output m_LevelOutput = new Output(typeof(LevelData));
 		[SerializeField]
         private Output m_ActivateOutput = new Output(typeof(BooleanData));
         [SerializeField, Tooltip("Size of recording buffer in seconds.")]
@@ -273,7 +272,7 @@ namespace IBM.Watson.Widgets
                         lastReadPos = writePos;
                     }
 
-					m_LevelOutput.SendData(new FloatData(fLevel * m_LevelOutputModifier));
+					m_LevelOutput.SendData(new LevelData(fLevel * m_LevelOutputModifier));
                 }
             }
 

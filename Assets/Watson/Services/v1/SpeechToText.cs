@@ -13,12 +13,12 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *
-* @author Richard Lyle (rolyle@us.ibm.com)
 */
 
 #define ENABLE_DEBUGGING
 
-using IBM.Watson.Data;
+using IBM.Watson.DataTypes;
+using IBM.Watson.DataModels;
 using IBM.Watson.Logging;
 using IBM.Watson.Connection;
 using IBM.Watson.Utilities;

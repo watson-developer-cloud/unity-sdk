@@ -13,8 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @author Richard Lyle (rolyle@us.ibm.com)
-*/
+ */
 
 using UnityEngine;
 #if UNITY_EDITOR

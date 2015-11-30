@@ -13,15 +13,14 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *
-* @author Dogukan Erenel (derenel@us.ibm.com)
-* @author Richard Lyle (rolyle@us.ibm.com)
 */
 
 
 using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
-using IBM.Watson.Data;
-using IBM.Watson.Data.XRAY;
+using IBM.Watson.DataModels;
+using IBM.Watson.DataModels.XRAY;
+using IBM.Watson.DataTypes;
 using IBM.Watson.Services.v1;
 using UnityEngine;
 using System;
@@ -145,11 +144,11 @@ namespace IBM.Watson.Widgets.Avatar
         [SerializeField]
         private string m_Pipeline = "thunderstone";
         [SerializeField]
-        private Input m_levelInput = new Input("Level", typeof(FloatData), "OnLevelInput");
+        private Input m_levelInput = new Input("Level", typeof(LevelData), "OnLevelInput");
         [SerializeField]
         private Input m_SpeakingInput = new Input( "Speaking", typeof(SpeakingStateData), "OnSpeaking" );
         [SerializeField]
-        private Output m_TextOutput = new Output(typeof(TextData));
+        private Output m_TextOutput = new Output(typeof(TextToSpeechData));
         [SerializeField]
         private GameObject m_QuestionPrefab = null;
         [SerializeField]
@@ -189,7 +188,7 @@ namespace IBM.Watson.Widgets.Avatar
                             m_FocusQuestion.OnLeaveTheSceneAndDestroy();
 
                         Invoke("StartAvatar", m_RestartInterval);
-                        m_TextOutput.SendData( new TextData( PickRandomString( m_ErrorPhrases ) ) );
+                        m_TextOutput.SendData( new TextToSpeechData( PickRandomString( m_ErrorPhrases ) ) );
                     }
                 }
 
@@ -343,11 +342,11 @@ namespace IBM.Watson.Widgets.Avatar
         {
             if(State== AvatarState.ANSWERING)
             {
-                EventManager.Instance.SendEvent(Constants.Event.ON_AVATAR_SPEAKING, ((FloatData)data).Float);
+                EventManager.Instance.SendEvent(Constants.Event.ON_AVATAR_SPEAKING, ((LevelData)data).Float);
             }
             else
             {
-                EventManager.Instance.SendEvent(Constants.Event.ON_USER_SPEAKING, ((FloatData)data).Float);
+                EventManager.Instance.SendEvent(Constants.Event.ON_USER_SPEAKING, ((LevelData)data).Float);
             }
            
 		}
@@ -392,7 +391,7 @@ namespace IBM.Watson.Widgets.Avatar
             if (State != AvatarState.SLEEPING_LISTENING)
             {
 				State = AvatarState.DONT_UNDERSTAND;
-                m_TextOutput.SendData(new TextData( PickRandomString( m_FailurePhrases ) ));
+				m_TextOutput.SendData(new TextToSpeechData( PickRandomString( m_FailurePhrases ) ));
             }
                
             //State = AvatarState.LISTENING;
@@ -414,7 +413,7 @@ namespace IBM.Watson.Widgets.Avatar
                 if ( result != null && !string.IsNullOrEmpty(m_DialogId))
                     m_Dialog.Converse(m_DialogId, result.text, OnDialogResponse, 0, m_DialogClientId);
                 else
-                    m_TextOutput.SendData(new TextData(PickRandomString( m_HelloPhrases ) ));
+                    m_TextOutput.SendData(new TextToSpeechData(PickRandomString( m_HelloPhrases ) ));
             }
         }
 
@@ -429,7 +428,7 @@ namespace IBM.Watson.Widgets.Avatar
                 Mood = MoodType.SLEEPING;
                 State = AvatarState.SLEEPING_LISTENING;
 
-                m_TextOutput.SendData(new TextData( PickRandomString( m_GoodbyePhrases ) ));
+                m_TextOutput.SendData(new TextToSpeechData( PickRandomString( m_GoodbyePhrases ) ));
                 if (m_FocusQuestion != null)
                     m_FocusQuestion.OnLeaveTheSceneAndDestroy();
 
@@ -534,7 +533,7 @@ namespace IBM.Watson.Widgets.Avatar
                     foreach (var t in resp.response)
                     {
                         if (!string.IsNullOrEmpty(t))
-                            m_TextOutput.SendData(new TextData(t));
+                            m_TextOutput.SendData(new TextToSpeechData(t));
                     }
                 }
             }
@@ -577,12 +576,12 @@ namespace IBM.Watson.Widgets.Avatar
                         // HACK: until we know if the answer is WDA or WEA, just look at the pipeline name for now.
                         if ( m_Pipeline == "woodside" )
                         {
-                            m_TextOutput.SendData( new TextData( string.Format( m_AnswerFormatWEA, m_Pipeline ) ) );
+                            m_TextOutput.SendData( new TextToSpeechData( string.Format( m_AnswerFormatWEA, m_Pipeline ) ) );
                             EventManager.Instance.SendEvent( Constants.Event.ON_COMMAND_ANSWERS );
                         }
                         else
                         {
-                            m_TextOutput.SendData(new TextData(answer));
+                            m_TextOutput.SendData(new TextToSpeechData(answer));
                         }
                     }
 

@@ -14,10 +14,9 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *
-* @author Richard Lyle (rolyle@us.ibm.com)
 */
 
-using IBM.Watson.Data;
+using IBM.Watson.DataTypes;
 using UnityEngine;
 
 namespace IBM.Watson.Widgets

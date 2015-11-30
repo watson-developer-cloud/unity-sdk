@@ -13,14 +13,10 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *
-* @author Richard Lyle (rolyle@us.ibm.com)
-* @author Dogukan Erenel (derenel@us.ibm.com)
 */
 
 using IBM.Watson.Widgets.Avatar;
 using IBM.Watson.Logging;
-using IBM.Watson.Data.XRAY;
-using IBM.Watson.Data.QA;
 using UnityEngine;
 using System.Collections.Generic;
 

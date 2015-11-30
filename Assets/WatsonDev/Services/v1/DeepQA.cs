@@ -13,13 +13,12 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *
-* @author Richard Lyle (rolyle@us.ibm.com)
 */
 
 
 using FullSerializer;
 using IBM.Watson.Connection;
-using IBM.Watson.Data.QA;
+using IBM.Watson.DataModels.QA;
 using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
 using System;
