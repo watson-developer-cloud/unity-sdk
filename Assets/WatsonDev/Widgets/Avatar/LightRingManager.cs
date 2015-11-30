@@ -645,7 +645,9 @@ namespace IBM.Watson.Widgets.Avatar
 
             for (int i = 0; i < m_LightFlarePivotParentList.Length; i++)
             {
-                m_LightFlarePivotParentList[i].gameObject.SetActive((animationTime > 0.0f));
+				MeshRenderer flareRenderer = m_LightFlarePivotParentList[i].GetComponentInChildren<MeshRenderer>();
+				if(flareRenderer != null)
+					flareRenderer.enabled = (animationTime > 0.0f);
             }
 
             if (MoveAnimationOnFlare != null)
