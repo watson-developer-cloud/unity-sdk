@@ -17,145 +17,154 @@
 */
 
 
-using UnityEngine;
-using System.Collections;
 using IBM.Watson.Utilities;
+using System.Collections;
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using System.Collections.Generic;
+using System.IO;
+using IBM.Watson.Logging;
 
-public class MainUI : MonoBehaviour {
+public class MainUI : MonoBehaviour
+{
+    [SerializeField]
+    private LayoutGroup m_ButtonLayout = null;
+    [SerializeField]
+    private Button m_ButtonPrefab = null;
+    [SerializeField]
+    private string [] m_SceneNames = null;
 
-    public IEnumerator Start()
+    private const string MAIN_SCENE = "Main";
+
+#if UNITY_EDITOR
+    [UnityEditor.MenuItem("CONTEXT/MainUI/Update Scene Names")]
+     private static void UpdateNames(UnityEditor.MenuCommand command)
+     {
+        MainUI context = (MainUI)command.context;
+        List<string> scenes = new List<string>();
+        foreach (UnityEditor.EditorBuildSettingsScene scene in UnityEditor.EditorBuildSettings.scenes)
+        {
+            if ( scene == null || !scene.enabled )
+                continue;
+
+            string name = Path.GetFileNameWithoutExtension(scene.path);
+            if ( name == MAIN_SCENE )
+                continue;
+
+            scenes.Add(name);
+        }
+        context.m_SceneNames = scenes.ToArray();
+    }
+#endif
+
+    private IEnumerator Start()
     {
-        while(! Config.Instance.ConfigLoaded )
+        if ( m_ButtonLayout == null )
+            throw new WatsonException( "m_ButtonLayout is null." );
+        if ( m_ButtonPrefab == null )
+            throw new WatsonException( "m_ButtonLayout is null." );
+
+        // wait for the configuration to be loaded first..
+        while (!Config.Instance.ConfigLoaded)
             yield return null;
+
+        // create the buttons..
+        UpdateButtons();
     }
 
-    public void OnUnitTests()
+    private void OnLevelWasLoaded(int level )
     {
-        Application.LoadLevel( "UnitTests" );
+        UpdateButtons();
     }
 
-    public void OnTestSTT()
+    private void UpdateButtons()
     {
-        Application.LoadLevel( "TestSTT" );
+        while( m_ButtonLayout.transform.childCount > 0 )
+            DestroyImmediate( m_ButtonLayout.transform.GetChild(0).gameObject );
+
+        Log.Debug( "MainUI", "UpdateBottons, level = {0}", Application.loadedLevelName );
+        if ( Application.loadedLevelName == MAIN_SCENE )
+        {
+            foreach( var scene in m_SceneNames )
+            {
+                if ( string.IsNullOrEmpty( scene ) )
+                    continue;
+
+                GameObject buttonObj = GameObject.Instantiate( m_ButtonPrefab.gameObject );
+                buttonObj.transform.SetParent( m_ButtonLayout.transform, false );
+
+                Text buttonText = buttonObj.GetComponentInChildren<Text>();
+                if ( buttonText != null )
+                    buttonText.text = scene;
+                Button button = buttonObj.GetComponentInChildren<Button>();
+
+                string captured = scene;
+                button.onClick.AddListener( () => OnLoadLevel(captured) );
+            }
+        }
     }
 
-    public void OnTestTTS()
+    private void OnLoadLevel( string name )
     {
-        Application.LoadLevel( "TestTTS" );
+        Log.Debug( "MainUI", "OnLoadLevel, name = {0}", name );
+        Application.LoadLevel( name );
     }
 
-    public void OnTestNLC()
+    public void OnBack()
     {
-        Application.LoadLevel( "TestNLC" );
+        Log.Debug( "MainUI", "OnBack invoked" );
+        if (Application.loadedLevelName != MAIN_SCENE)
+            Application.LoadLevel( MAIN_SCENE );
+        else
+            Application.Quit();
     }
 
-    public void OnXRAY()
+    private static MainUI _instance = null;
+    void Awake()
     {
-        Application.LoadLevel( "XRay" );
+        if (!_instance)
+        {  
+            //first-time opening
+            _instance = this;
+        }
+        else if (_instance != this)
+        {
+            Destroy(_instance.gameObject);
+            _instance = this;
+
+            MakeActiveEventSystem(false);
+            StartCoroutine(MakeActiveEventSystemWithDelay(true));
+        }
+        else
+        {
+            //do nothing - the other instance will destroy the current instance.
+        }
+
+        DontDestroyOnLoad(transform.gameObject);
+
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
     }
 
-    public void OnCubeTest()
+    IEnumerator MakeActiveEventSystemWithDelay(bool active)
     {
-        Application.LoadLevel( "CubeTest" );
+        yield return new WaitForEndOfFrame();
+        MakeActiveEventSystem(active);
     }
 
-    public void OnTestMic()
+    void MakeActiveEventSystem(bool active)
     {
-        Application.LoadLevel( "TestMic" );
+        Log.Debug( "MainUI", "MakeActiveEventSystem, active = {0}", active );
+        object [] systems = Resources.FindObjectsOfTypeAll( typeof(EventSystem) );
+        foreach( var system in systems )
+            ((EventSystem)system).gameObject.SetActive( active );
     }
 
-    public void OnMain()
+    void Update()
     {
-        Application.LoadLevel( "Main" );
+        if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.Escape))
+        {
+            OnBack();
+        }
     }
-
-	public void OnTouchTestCamera()
-	{
-		Application.LoadLevel( "Camera" );
-	}
-	public void OnTouchTestCheckers()
-	{
-		Application.LoadLevel( "Checkers" );
-	}
-	public void OnTouchTestColors()
-	{
-		Application.LoadLevel( "Colors" );
-	}
-	public void OnTouchTestInput()
-	{
-		Application.LoadLevel( "Input" );
-	}
-	public void OnTouchTestMultiUser()
-	{
-		Application.LoadLevel( "Multiuser" );
-	}
-	public void OnTouchTestPhotos()
-	{
-		Application.LoadLevel( "Photos" );
-	}
-	public void OnTouchTestPhotos2D()
-	{
-		Application.LoadLevel( "Photos2D" );
-	}
-	public void OnTouchTestPortal()
-	{
-		Application.LoadLevel( "Portal" );
-	}
-	public void OnTouchTestTaps()
-	{
-		Application.LoadLevel( "Taps" );
-	}
-	public void OnTouchTestUI()
-	{
-		Application.LoadLevel( "InputModule" );
-	}
-
-	public void OnBack()
-	{
-		if (Application.loadedLevelName != "Main") {
-			OnMain ();
-		} else {
-			Application.Quit();
-		}
-	}
-
-	private static MainUI _instance = null;
-	void Awake() {
-		if (!_instance) {	//first-time opening
-			_instance = this;
-		} else if (_instance != this) {
-			Destroy (_instance.gameObject);
-			_instance = this;
-			MakeActiveEventSystem(false);
-			StartCoroutine(MakeActiveEventSystemWithDelay(true));
-
-		}
-		else {
-			//do nothing - the other instance will destroy the current instance.
-		}
-
-		DontDestroyOnLoad(transform.gameObject);
-
-		Screen.sleepTimeout = SleepTimeout.NeverSleep;
-	}
-
-	IEnumerator MakeActiveEventSystemWithDelay(bool active){
-		yield return new WaitForEndOfFrame ();
-		MakeActiveEventSystem (active);
-	}
-	void MakeActiveEventSystem(bool active){
-		Transform[] transformList = gameObject.GetComponentsInChildren<Transform>(true);
-		for (int i = 0; i < transformList.Length; i++) {
-			if(transformList[i].name == "EventSystem"){
-				transformList[i].gameObject.SetActive(active);
-				break;
-			}
-		}
-	}
-
-	void Update(){
-		if (Input.GetKeyDown (KeyCode.LeftArrow) ||	Input.GetKeyDown (KeyCode.Escape)) {
-			OnBack();
-		} 
-	}
 }
