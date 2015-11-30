@@ -174,13 +174,13 @@
   <HelpKINode Title="Collider property" Url="html/cb227a1b-c7f6-52be-e5f3-0474a40b5590.htm" />
   <HelpKINode Title="ColliderList property" Url="html/2530cc81-e73a-49f4-1827-14d6fbbde442.htm" />
   <HelpKINode Title="Combine method" Url="html/e76abe8f-2606-989e-b9e2-4d0e1109dfbb.htm" />
+  <HelpKINode Title="Confidence property">
+    <HelpKINode Title="SpeechAlt.Confidence Property " Url="html/13dffcae-236c-0ec9-4124-e010a8680703.htm" />
+    <HelpKINode Title="WordConfidence.Confidence Property " Url="html/77423d6c-930f-d0e1-a3be-c067a24969e2.htm" />
+  </HelpKINode>
   <HelpKINode Title="confidence property">
     <HelpKINode Title="Class.confidence Property " Url="html/de769fb9-ac78-fed8-e530-0a56938f56a8.htm" />
     <HelpKINode Title="ConverseResponse.confidence Property " Url="html/dc16a058-0969-7f45-4d45-8582b8f5bc8c.htm" />
-  </HelpKINode>
-  <HelpKINode Title="Confidence property">
-    <HelpKINode Title="WordConfidence.Confidence Property " Url="html/77423d6c-930f-d0e1-a3be-c067a24969e2.htm" />
-    <HelpKINode Title="SpeechAlt.Confidence Property " Url="html/13dffcae-236c-0ec9-4124-e010a8680703.htm" />
   </HelpKINode>
   <HelpKINode Title="Config class">
     <HelpKINode Title="Config Class" Url="html/3c641cbf-3352-3929-5c9c-179b62a37a59.htm" />
@@ -486,17 +486,7 @@
   <HelpKINode Title="FindObjects&lt;T&gt; method" Url="html/db99a282-40c0-a3ad-d71a-c91e08986bdc.htm" />
   <HelpKINode Title="FixupURL method" Url="html/273ee608-2e66-561b-e309-b9b77206dd6e.htm" />
   <HelpKINode Title="FLAC enumeration member" Url="html/f45a04e5-051c-6256-648a-2406ff5b3dfe.htm" />
-  <HelpKINode Title="Float property" Url="html/dec2fd98-9eec-ccf4-28bc-a5859ce38cef.htm" />
-  <HelpKINode Title="FloatData class">
-    <HelpKINode Title="FloatData Class" Url="html/df9d54c2-3833-0575-3a86-9378e882d248.htm" />
-    <HelpKINode Title="about FloatData class" Url="html/df9d54c2-3833-0575-3a86-9378e882d248.htm" />
-    <HelpKINode Title="constructor" Url="html/4902b9b4-67b8-12ff-f030-7f37bb37b0bd.htm" />
-    <HelpKINode Title="methods" Url="html/02a4187f-e06d-31b2-35be-1696f2210fa3.htm" />
-    <HelpKINode Title="properties" Url="html/541aa01c-7d03-6367-ae2d-fdb14af5f539.htm" />
-  </HelpKINode>
-  <HelpKINode Title="FloatData.Float property" Url="html/dec2fd98-9eec-ccf4-28bc-a5859ce38cef.htm" />
-  <HelpKINode Title="FloatData.FloatData constructor" Url="html/4902b9b4-67b8-12ff-f030-7f37bb37b0bd.htm" />
-  <HelpKINode Title="FloatData.GetName method" Url="html/6f909571-9008-f58a-d598-b373dab38221.htm" />
+  <HelpKINode Title="Float property" Url="html/b26d7699-c7d5-754c-7c7c-a0a405e37e41.htm" />
   <HelpKINode Title="Flush method" Url="html/9b46024c-1811-a9b7-7aee-d3ea763b6071.htm" />
   <HelpKINode Title="FlushAged method" Url="html/2ff40a40-5af3-ae1a-f495-d17bd452daef.htm" />
   <HelpKINode Title="FlushClassifyCache method" Url="html/d371fefb-e622-b518-127f-ef7085f5c597.htm" />
@@ -533,12 +523,12 @@
     <HelpKINode Title="ClassifyResultData.GetName Method " Url="html/be28d945-d78a-5333-5232-19b5ab0b7516.htm" />
     <HelpKINode Title="DisableMicData.GetName Method " Url="html/b39a740b-61ce-0c18-69b5-eaf10706f9c3.htm" />
     <HelpKINode Title="EventWidget.GetName Method " Url="html/7640fae6-e2c5-da64-cada-9c1178408cf2.htm" />
-    <HelpKINode Title="FloatData.GetName Method " Url="html/6f909571-9008-f58a-d598-b373dab38221.htm" />
     <HelpKINode Title="KeyboardWidget.GetName Method " Url="html/581adcfc-4b63-99cb-56c5-d5c8facafbc4.htm" />
+    <HelpKINode Title="LevelData.GetName Method " Url="html/9974a3d0-c4c5-6d86-1b52-afc73cbef4c9.htm" />
     <HelpKINode Title="SpeakingStateData.GetName Method " Url="html/499b518f-1149-c9a9-5cb3-742a78bb3b24.htm" />
     <HelpKINode Title="SpeechDisplayWidget.GetName Method " Url="html/786c9389-5a7e-4694-69fb-fa37a9bf5a68.htm" />
     <HelpKINode Title="SpeechToTextData.GetName Method " Url="html/0f2188ec-1ed1-0ab1-cfe2-e096d6c90261.htm" />
-    <HelpKINode Title="TextData.GetName Method " Url="html/801fc600-b8fc-9624-4c2a-15d2725fa170.htm" />
+    <HelpKINode Title="TextToSpeechData.GetName Method " Url="html/1ac096f5-41b8-e619-449c-073b0ba22ca6.htm" />
     <HelpKINode Title="TextToSpeechWidget.GetName Method " Url="html/7f34ebdf-3cf1-bc8e-bd9b-d2a75b36ca89.htm" />
     <HelpKINode Title="TouchWidget.GetName Method " Url="html/860074d6-765b-c0da-dd8b-4b50d76aac04.htm" />
     <HelpKINode Title="Widget.Data.GetName Method " Url="html/a2a1a9ed-d39f-71d2-bf2e-311dd9c7c021.htm" />
@@ -594,10 +584,10 @@
   <HelpKINode Title="IBM.Watson.DataTypes.BooleanData class" Url="html/5092c844-cf8d-723b-1a1e-7e9bb529f1be.htm" />
   <HelpKINode Title="IBM.Watson.DataTypes.ClassifyResultData class" Url="html/f5ababae-1517-8985-b62e-464d5849b011.htm" />
   <HelpKINode Title="IBM.Watson.DataTypes.DisableMicData class" Url="html/8aba80d9-822b-7213-72fe-9b5d18091ced.htm" />
-  <HelpKINode Title="IBM.Watson.DataTypes.FloatData class" Url="html/df9d54c2-3833-0575-3a86-9378e882d248.htm" />
+  <HelpKINode Title="IBM.Watson.DataTypes.LevelData class" Url="html/a4d8aa4d-35bd-fae0-4b4a-2ef0d891b470.htm" />
   <HelpKINode Title="IBM.Watson.DataTypes.SpeakingStateData class" Url="html/62aafd0d-b382-abe7-4c08-3257c8def597.htm" />
   <HelpKINode Title="IBM.Watson.DataTypes.SpeechToTextData class" Url="html/84549c40-7ed8-91d8-1ff7-c57e61cee9b6.htm" />
-  <HelpKINode Title="IBM.Watson.DataTypes.TextData class" Url="html/743acf02-8ad6-7522-bfc8-1d3447fd8f22.htm" />
+  <HelpKINode Title="IBM.Watson.DataTypes.TextToSpeechData class" Url="html/29573304-e448-82a5-bca5-644449e0812c.htm" />
   <HelpKINode Title="IBM.Watson.Debug namespace" Url="html/ab0cc62f-23a9-d5b2-655a-34aa3ae3c872.htm" />
   <HelpKINode Title="IBM.Watson.Debug.DebugConsole class" Url="html/66af2857-e038-1f72-d376-386efed36023.htm" />
   <HelpKINode Title="IBM.Watson.Debug.DebugConsole.GetDebugInfo delegate" Url="html/dedcc312-5ae4-4916-d35f-ccb776c319e4.htm" />
@@ -774,6 +764,16 @@
     <HelpKINode Title="DebugReactor.Level Property " Url="html/76108b5f-edf2-a81d-aa7f-6c695c180bc7.htm" />
     <HelpKINode Title="FileReactor.Level Property " Url="html/2f5913e4-1743-bc2e-2008-8e3705f716c8.htm" />
   </HelpKINode>
+  <HelpKINode Title="LevelData class">
+    <HelpKINode Title="LevelData Class" Url="html/a4d8aa4d-35bd-fae0-4b4a-2ef0d891b470.htm" />
+    <HelpKINode Title="about LevelData class" Url="html/a4d8aa4d-35bd-fae0-4b4a-2ef0d891b470.htm" />
+    <HelpKINode Title="constructor" Url="html/84e1a08a-2668-82f6-f36e-f514342acde8.htm" />
+    <HelpKINode Title="methods" Url="html/02678e3d-fb36-1f9e-5f7f-4419bdf2da76.htm" />
+    <HelpKINode Title="properties" Url="html/e92ecc21-0f57-69fe-050c-907186ad51d6.htm" />
+  </HelpKINode>
+  <HelpKINode Title="LevelData.Float property" Url="html/b26d7699-c7d5-754c-7c7c-a0a405e37e41.htm" />
+  <HelpKINode Title="LevelData.GetName method" Url="html/9974a3d0-c4c5-6d86-1b52-afc73cbef4c9.htm" />
+  <HelpKINode Title="LevelData.LevelData constructor" Url="html/84e1a08a-2668-82f6-f36e-f514342acde8.htm" />
   <HelpKINode Title="LoadConfig method" Url="html/66392ea1-1658-c4f9-4211-69cc311f9e56.htm" />
   <HelpKINode Title="LoadFile property" Url="html/9b461262-9a8d-61b6-9aae-4b0e277d9506.htm" />
   <HelpKINode Title="Log class">
@@ -846,15 +846,15 @@
   <HelpKINode Title="m_TimeStamp field" Url="html/c3083946-ae9d-4f7b-deb1-14408b337ab2.htm" />
   <HelpKINode Title="m_URL field" Url="html/c61d87e0-8d6f-86e0-34ef-f99297f350c5.htm" />
   <HelpKINode Title="m_User field" Url="html/128cd657-86bb-d9da-b360-1f6d073bccf5.htm" />
+  <HelpKINode Title="name property">
+    <HelpKINode Title="Classifier.name Property " Url="html/120c318a-9ad6-2d9b-668d-c69d9c4e4bcf.htm" />
+    <HelpKINode Title="DialogEntry.name Property " Url="html/701bc8a1-9355-fe41-b607-f3d95653da66.htm" />
+    <HelpKINode Title="Language.name Property " Url="html/52c10716-53f9-6dc5-0ef2-a8e35e168b5a.htm" />
+    <HelpKINode Title="TranslationModel.name Property " Url="html/49ef94ca-0362-e618-6c62-05be958f0eee.htm" />
+  </HelpKINode>
   <HelpKINode Title="Name property">
     <HelpKINode Title="SpeechModel.Name Property " Url="html/70a0efe8-9eea-c811-bc90-333224fe0365.htm" />
     <HelpKINode Title="Widget.Data.Name Property " Url="html/8262455a-8f86-aeae-6758-112cc91bf602.htm" />
-  </HelpKINode>
-  <HelpKINode Title="name property">
-    <HelpKINode Title="TranslationModel.name Property " Url="html/49ef94ca-0362-e618-6c62-05be958f0eee.htm" />
-    <HelpKINode Title="Language.name Property " Url="html/52c10716-53f9-6dc5-0ef2-a8e35e168b5a.htm" />
-    <HelpKINode Title="DialogEntry.name Property " Url="html/701bc8a1-9355-fe41-b607-f3d95653da66.htm" />
-    <HelpKINode Title="Classifier.name Property " Url="html/120c318a-9ad6-2d9b-668d-c69d9c4e4bcf.htm" />
   </HelpKINode>
   <HelpKINode Title="NLC class">
     <HelpKINode Title="NLC Class" Url="html/f1d1b7ad-dd1c-e3ae-980b-7961349ba710.htm" />
@@ -1027,8 +1027,8 @@
   </HelpKINode>
   <HelpKINode Title="Outputs property" Url="html/71079fb2-619f-99e1-53a7-aacb17e88e59.htm" />
   <HelpKINode Title="Owner property">
-    <HelpKINode Title="Widget.Output.Owner Property " Url="html/173b30a3-f2b4-1f99-91c7-cb4888253375.htm" />
     <HelpKINode Title="Widget.Input.Owner Property " Url="html/88e05c79-c8a8-79cc-85fa-3d465a33cfc6.htm" />
+    <HelpKINode Title="Widget.Output.Owner Property " Url="html/173b30a3-f2b4-1f99-91c7-cb4888253375.htm" />
   </HelpKINode>
   <HelpKINode Title="owner property" Url="html/bfa8df03-afab-5aa9-34b4-bc017ea3386a.htm" />
   <HelpKINode Title="OwnerName property" Url="html/1a9c1b63-4ba0-0f53-b1ca-6a800fa99807.htm" />
@@ -1329,21 +1329,11 @@
   <HelpKINode Title="TargetGameObject property" Url="html/fab6e42e-fcec-a7e1-5c79-b64167eecc90.htm" />
   <HelpKINode Title="TargetInput property" Url="html/114a503f-bcc7-bd15-f644-e68d2b2b610e.htm" />
   <HelpKINode Title="TargetObject property" Url="html/d1dd517e-b772-018d-3b49-4f2c4481db56.htm" />
-  <HelpKINode Title="text property" Url="html/0a7ebfe9-b1e0-b2ad-4309-96a168ed04eb.htm" />
   <HelpKINode Title="Text property">
-    <HelpKINode Title="TextData.Text Property " Url="html/e4bada8f-519f-3fb9-0941-3c3939b70b5e.htm" />
+    <HelpKINode Title="TextToSpeechData.Text Property " Url="html/524d6062-8352-fc59-dab4-042b847f78e0.htm" />
     <HelpKINode Title="WSConnector.TextMessage.Text Property " Url="html/87ed4827-7aed-5686-bdc0-ee48e46acbec.htm" />
   </HelpKINode>
-  <HelpKINode Title="TextData class">
-    <HelpKINode Title="TextData Class" Url="html/743acf02-8ad6-7522-bfc8-1d3447fd8f22.htm" />
-    <HelpKINode Title="about TextData class" Url="html/743acf02-8ad6-7522-bfc8-1d3447fd8f22.htm" />
-    <HelpKINode Title="constructor" Url="html/2b300e71-9f5d-81de-bef6-95e7152c014a.htm" />
-    <HelpKINode Title="methods" Url="html/c24cb35c-2738-1622-f8d6-8d3653b581fa.htm" />
-    <HelpKINode Title="properties" Url="html/cda2e5ad-dc73-6fc6-d544-fa08f01fd8a2.htm" />
-  </HelpKINode>
-  <HelpKINode Title="TextData.GetName method" Url="html/801fc600-b8fc-9624-4c2a-15d2725fa170.htm" />
-  <HelpKINode Title="TextData.Text property" Url="html/e4bada8f-519f-3fb9-0941-3c3939b70b5e.htm" />
-  <HelpKINode Title="TextData.TextData constructor" Url="html/2b300e71-9f5d-81de-bef6-95e7152c014a.htm" />
+  <HelpKINode Title="text property" Url="html/0a7ebfe9-b1e0-b2ad-4309-96a168ed04eb.htm" />
   <HelpKINode Title="TextMessage class">
     <HelpKINode Title="properties" Url="html/f103af64-ea1f-1a6e-4e74-b90f1d4ac81b.htm" />
   </HelpKINode>
@@ -1362,6 +1352,16 @@
   <HelpKINode Title="TextToSpeech.ToSpeechCallback delegate" Url="html/94e4e3a8-f9e3-751a-5072-8a837de5afcd.htm" />
   <HelpKINode Title="TextToSpeech.Voice property" Url="html/60067052-f72f-8eae-77ee-72e287a6c458.htm" />
   <HelpKINode Title="TextToSpeech.VoiceType enumeration" Url="html/fbf1cef8-b912-d317-41c8-25bfa695130f.htm" />
+  <HelpKINode Title="TextToSpeechData class">
+    <HelpKINode Title="TextToSpeechData Class" Url="html/29573304-e448-82a5-bca5-644449e0812c.htm" />
+    <HelpKINode Title="about TextToSpeechData class" Url="html/29573304-e448-82a5-bca5-644449e0812c.htm" />
+    <HelpKINode Title="constructor" Url="html/4c82e0a9-a062-e270-1ca4-c1b4c7a8ca72.htm" />
+    <HelpKINode Title="methods" Url="html/9620019e-dac9-60b9-7ed8-bcfbb02fae60.htm" />
+    <HelpKINode Title="properties" Url="html/6823f13e-128f-4c3a-cca4-0cc3cc2ec7ae.htm" />
+  </HelpKINode>
+  <HelpKINode Title="TextToSpeechData.GetName method" Url="html/1ac096f5-41b8-e619-449c-073b0ba22ca6.htm" />
+  <HelpKINode Title="TextToSpeechData.Text property" Url="html/524d6062-8352-fc59-dab4-042b847f78e0.htm" />
+  <HelpKINode Title="TextToSpeechData.TextToSpeechData constructor" Url="html/4c82e0a9-a062-e270-1ca4-c1b4c7a8ca72.htm" />
   <HelpKINode Title="TextToSpeechWidget class">
     <HelpKINode Title="TextToSpeechWidget Class" Url="html/7e85ec80-109e-0d47-3a05-9d89a54ff3ed.htm" />
     <HelpKINode Title="about TextToSpeechWidget class" Url="html/7e85ec80-109e-0d47-3a05-9d89a54ff3ed.htm" />
@@ -1517,8 +1517,8 @@
   <HelpKINode Title="UpdateRoutines method" Url="html/e76d1482-d6a0-99e7-f7e1-e1b0d79e7ea5.htm" />
   <HelpKINode Title="UploadDialog method" Url="html/94788d7f-9054-d893-f9eb-fb4a08bd7d85.htm" />
   <HelpKINode Title="URL property">
-    <HelpKINode Title="SpeechModel.URL Property " Url="html/cd3a3c4c-fa06-36c5-57df-895c999263c1.htm" />
     <HelpKINode Title="RESTConnector.URL Property " Url="html/0019bff3-0def-4b33-cbb1-e7c45ec056b7.htm" />
+    <HelpKINode Title="SpeechModel.URL Property " Url="html/cd3a3c4c-fa06-36c5-57df-895c999263c1.htm" />
     <HelpKINode Title="WSConnector.URL Property " Url="html/f2399da2-f234-5dd2-43f7-919686952f43.htm" />
   </HelpKINode>
   <HelpKINode Title="url property">

@@ -113,7 +113,7 @@ namespace IBM.Watson.Widgets
         [SerializeField]
         private Output m_AudioOutput = new Output(typeof(AudioData));
         [SerializeField]
-        private Output m_LevelOutput = new Output(typeof(FloatData));
+        private Output m_LevelOutput = new Output(typeof(LevelData));
 		[SerializeField]
         private Output m_ActivateOutput = new Output(typeof(BooleanData));
         [SerializeField, Tooltip("Size of recording buffer in seconds.")]
@@ -273,7 +273,7 @@ namespace IBM.Watson.Widgets
                         lastReadPos = writePos;
                     }
 
-					m_LevelOutput.SendData(new FloatData(fLevel * m_LevelOutputModifier));
+					m_LevelOutput.SendData(new LevelData(fLevel * m_LevelOutputModifier));
                 }
             }
 
