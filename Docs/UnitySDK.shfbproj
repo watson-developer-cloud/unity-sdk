@@ -20,7 +20,7 @@
     <ComponentPath>
     </ComponentPath>
     <BuildAssemblerVerbosity>OnlyWarningsAndErrors</BuildAssemblerVerbosity>
-    <HelpFileFormat>Website</HelpFileFormat>
+    <HelpFileFormat>HtmlHelp1, Website</HelpFileFormat>
     <IndentHtml>False</IndentHtml>
     <KeepLogFile>True</KeepLogFile>
     <DisableCodeBlockComponent>False</DisableCodeBlockComponent>
@@ -66,7 +66,6 @@
     </NamespaceSummaries>
     <ApiFilter>
       <Filter entryType="Namespace" fullName="" isExposed="False" />
-<Filter entryType="Namespace" fullName="DentedPixel.LTEditor" isExposed="False" />
 <Filter entryType="Namespace" fullName="FullSerializer" isExposed="False" />
 <Filter entryType="Namespace" fullName="FullSerializer.Internal" isExposed="False" />
 <Filter entryType="Namespace" fullName="FullSerializer.Internal.DirectConverters" isExposed="False" />
@@ -75,7 +74,16 @@
     <Filter entryType="Constructor" fullName="IBM.Watson.Data.SpeechResultList.#ctor" filterName=".ctor" isExposed="False" />
   </Filter>
 </Filter>
+<Filter entryType="Namespace" fullName="IBM.Watson.Data.QA" isExposed="False" />
+<Filter entryType="Namespace" fullName="IBM.Watson.Data.XRAY" isExposed="False" />
 <Filter entryType="Namespace" fullName="IBM.Watson.Editor" isExposed="False" />
+<Filter entryType="Namespace" fullName="IBM.Watson.Services" isExposed="False" />
+<Filter entryType="Namespace" fullName="IBM.Watson.Services.v1" isExposed="True">
+  <Filter entryType="Class" fullName="IBM.Watson.Services.v1.DeepQA" filterName="DeepQA" isExposed="False" />
+  <Filter entryType="Delegate" fullName="IBM.Watson.Services.v1.DeepQA.OnQuestion" filterName="DeepQA.OnQuestion" isExposed="False" />
+  <Filter entryType="Class" fullName="IBM.Watson.Services.v1.XRAY" filterName="XRAY" isExposed="False" />
+  <Filter entryType="Delegate" fullName="IBM.Watson.Services.v1.XRAY.OnAskQuestion" filterName="XRAY.OnAskQuestion" isExposed="True" />
+</Filter>
 <Filter entryType="Namespace" fullName="IBM.Watson.UnitTests" isExposed="False" />
 <Filter entryType="Namespace" fullName="IBM.Watson.Widgets" isExposed="True">
   <Filter entryType="Class" fullName="IBM.Watson.Widgets.MicrophoneWidget" filterName="MicrophoneWidget" isExposed="True">
@@ -90,11 +98,23 @@
     <Filter entryType="Method" fullName="IBM.Watson.Widgets.SpeechToTextWidget.GetName" filterName="GetName" isExposed="False" />
     <Filter entryType="Method" fullName="IBM.Watson.Widgets.SpeechToTextWidget.Start" filterName="Start" isExposed="False" />
   </Filter>
+  <Filter entryType="Class" fullName="IBM.Watson.Widgets.Widget" filterName="Widget" isExposed="True">
+    <Filter entryType="Method" fullName="IBM.Watson.Widgets.Widget.Awake" filterName="Awake" isExposed="False" />
+    <Filter entryType="Method" fullName="IBM.Watson.Widgets.Widget.Start" filterName="Start" isExposed="False" />
+  </Filter>
 </Filter>
 <Filter entryType="Namespace" fullName="IBM.Watson.Widgets.Avatar" isExposed="True">
   <Filter entryType="Class" fullName="IBM.Watson.Widgets.Avatar.AvatarWidget" filterName="AvatarWidget" isExposed="True">
+    <Filter entryType="Method" fullName="IBM.Watson.Widgets.Avatar.AvatarWidget.Awake" filterName="Awake" isExposed="False" />
     <Filter entryType="Method" fullName="IBM.Watson.Widgets.Avatar.AvatarWidget.Start" filterName="Start" isExposed="False" />
   </Filter>
+  <Filter entryType="Class" fullName="IBM.Watson.Widgets.Avatar.GlassRingManager" filterName="GlassRingManager" isExposed="True">
+    <Filter entryType="Method" fullName="IBM.Watson.Widgets.Avatar.GlassRingManager.Start" filterName="Start" isExposed="False" />
+  </Filter>
+  <Filter entryType="Class" fullName="IBM.Watson.Widgets.Avatar.LightRingManager" filterName="LightRingManager" isExposed="True">
+    <Filter entryType="Method" fullName="IBM.Watson.Widgets.Avatar.LightRingManager.Start" filterName="Start" isExposed="False" />
+  </Filter>
+  <Filter entryType="Class" fullName="IBM.Watson.Widgets.Avatar.PebbleRow" filterName="PebbleRow" isExposed="False" />
 </Filter>
 <Filter entryType="Namespace" fullName="MiniJSON" isExposed="False" />
 <Filter entryType="Namespace" fullName="TouchScript.Examples" isExposed="False" />

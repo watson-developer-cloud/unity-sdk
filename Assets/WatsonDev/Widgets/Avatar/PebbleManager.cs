@@ -51,7 +51,9 @@ namespace IBM.Watson.Widgets.Avatar
         [SerializeField]
         private float m_SpeedAudioLevel = 50.0f;
         [SerializeField]
-		private float m_SmoothnessPebbleMovementInTheFirstRow = 1.0f;
+		private float m_SmoothnessPebbleMovementInTheFirstRowOnAvatarSpeaking = 1.0f;
+		[SerializeField]
+		private float m_SmoothnessPebbleMovementInTheFirstRowOnUserSpeaking = 20.0f;
 		[SerializeField]
 		private float m_SmoothnessForBottom = 0.95f;
 		[SerializeField]
@@ -248,7 +250,7 @@ namespace IBM.Watson.Widgets.Avatar
 										m_PebbleRowList[i].pebbleList[pebbleIndex].transform.localPosition.x, 
 										valueToSet, 
 										m_PebbleRowList[i].pebbleList[pebbleIndex].transform.localPosition.z),
-										m_SmoothnessPebbleMovementInTheFirstRow);
+										m_SmoothnessPebbleMovementInTheFirstRowOnAvatarSpeaking);
 
 								}
 								else{
@@ -258,7 +260,7 @@ namespace IBM.Watson.Widgets.Avatar
 										m_PebbleRowList[i].pebbleList[j].transform.localPosition.x, 
 										audioLevelData, 
 										m_PebbleRowList[i].pebbleList[j].transform.localPosition.z),
-										m_SmoothnessPebbleMovementInTheFirstRow);
+										Time.deltaTime * m_SmoothnessPebbleMovementInTheFirstRowOnUserSpeaking);
 
 								}
 							}
