@@ -90,6 +90,9 @@ namespace IBM.Watson.Widgets.Question
             ScrollToTop();
         }
 
+		/// <summary>
+		/// Scroll to the top of the passage. Called when passage is updated.
+		/// </summary>
         private void ScrollToTop()
         {
             ScrollRect scrollRect = GetComponentInChildren<ScrollRect>();

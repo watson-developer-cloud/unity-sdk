@@ -43,6 +43,10 @@ namespace IBM.Watson.Widgets.Question
 			EventManager.Instance.UnregisterEventReceiver( Constants.Event.ON_QUESTION_ANSWERS, OnAnswerData );
 		}
 
+		/// <summary>
+		/// Callback for when answer data is received.
+		/// </summary>
+		/// <param name="args">Arguments.</param>
 		private void OnAnswerData( object [] args )
 		{
             if ( Focused )
