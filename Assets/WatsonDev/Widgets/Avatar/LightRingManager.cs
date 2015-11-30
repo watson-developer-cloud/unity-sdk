@@ -570,9 +570,9 @@ namespace IBM.Watson.Widgets.Avatar
 
                 //Log.Status("LightRingManager", "animationTime: {0} - LastValueAnimationFlare[i] {1} to ratioPositionForMouth: {2}", animationTime, LastValueAnimationFlare[i], ratioPositionForMouth);
                 
-				while(LastValueAnimationFlare[i] > ratioPositionForMouth){
-					ratioPositionForMouth += 1.0f;
-				}
+//				while(LastValueAnimationFlare[i] > ratioPositionForMouth){
+//					ratioPositionForMouth += 1.0f;
+//				}
 
 				MoveAnimationOnFlare[i] = LeanTween.moveLocal(m_LightFlarePivotParentList[i], BezierPathAllInOne, animationTime).setOrientToPath(true).setAxis(Vector3.forward).setFrom(Vector3.one * LastValueAnimationFlare[i]).setTo(Vector3.one * ratioPositionForMouth).setEase(easeForMoveToMouthPosition).setOnComplete((System.Object o)=>{
 					if (o is int){
