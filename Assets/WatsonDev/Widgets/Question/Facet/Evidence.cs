@@ -35,7 +35,7 @@ namespace IBM.Watson.Widgets.Question
         private int m_MaxEvidence = 3;
 
         private List<EvidenceItem> m_EvidenceItems = new List<EvidenceItem>();
-        private Data.XRAY.Answers m_AnswerData = null;
+        private DataModels.XRAY.Answers m_AnswerData = null;
 
         private void OnEnable()
         {
@@ -51,7 +51,7 @@ namespace IBM.Watson.Widgets.Question
         {
             if ( Focused )
             {
-                m_AnswerData = args != null && args.Length > 0 ? args[0] as Data.XRAY.Answers : null;
+                m_AnswerData = args != null && args.Length > 0 ? args[0] as DataModels.XRAY.Answers : null;
 
                 while (m_EvidenceItems.Count != 0)
                 {
@@ -62,7 +62,7 @@ namespace IBM.Watson.Widgets.Question
                 if (m_AnswerData != null && m_AnswerData.HasAnswer()
                     && m_AnswerData.answers[0].evidence != null)
                 {
-                    Data.XRAY.Answer answer = m_AnswerData.answers[0];
+                    DataModels.XRAY.Answer answer = m_AnswerData.answers[0];
 
                     for (int i = 0; i < answer.evidence.Length; i++)
                     {

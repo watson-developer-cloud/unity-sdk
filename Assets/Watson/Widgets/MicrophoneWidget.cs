@@ -17,7 +17,7 @@
 */
 
 
-using IBM.Watson.Data;
+using IBM.Watson.DataTypes;
 using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
 using System.Collections;

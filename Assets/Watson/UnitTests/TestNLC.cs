@@ -21,7 +21,7 @@
 using System.Collections;
 using IBM.Watson.Services.v1;
 using IBM.Watson.Logging;
-using IBM.Watson.Data;
+using IBM.Watson.DataModels;
 
 namespace IBM.Watson.UnitTests
 {

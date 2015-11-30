@@ -16,12 +16,13 @@
 * @author Richard Lyle (rolyle@us.ibm.com)
 */
 
+using IBM.Watson.DataTypes;
 using IBM.Watson.Services.v1;
 using IBM.Watson.Logging;
+using IBM.Watson.Utilities;
+using IBM.Watson.DataModels;
 using UnityEngine;
 using UnityEngine.UI;
-using IBM.Watson.Utilities;
-using IBM.Watson.Data;
 using System;
 using System.Collections.Generic;
 

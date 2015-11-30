@@ -19,7 +19,7 @@
 
 using FullSerializer;
 using IBM.Watson.Connection;
-using IBM.Watson.Data.QA;
+using IBM.Watson.DataModels.QA;
 using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
 using System;

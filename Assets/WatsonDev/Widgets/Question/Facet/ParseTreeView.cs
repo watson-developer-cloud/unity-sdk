@@ -21,7 +21,7 @@ using System.Collections;
 using System.Collections.Generic;
 using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
-using IBM.Watson.Data.XRAY;
+using IBM.Watson.DataModels.XRAY;
 
 namespace IBM.Watson.Widgets.Question
 {
@@ -92,7 +92,7 @@ namespace IBM.Watson.Widgets.Question
         {
             if (Focused )
             {
-                m_ParseData = args != null && args.Length > 0 ? args[0] as Data.XRAY.ParseData : null;
+                m_ParseData = args != null && args.Length > 0 ? args[0] as DataModels.XRAY.ParseData : null;
                 GenerateParseTree();
             }
         }
@@ -104,7 +104,7 @@ namespace IBM.Watson.Widgets.Question
         private void OnQuestionData( object [] args )
         {
             if (Focused )
-                m_QuestionData = args != null && args.Length > 0 ? args[0] as Data.XRAY.Questions : null;
+                m_QuestionData = args != null && args.Length > 0 ? args[0] as DataModels.XRAY.Questions : null;
         }
 
         /// <summary>

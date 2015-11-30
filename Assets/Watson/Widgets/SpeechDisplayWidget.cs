@@ -17,7 +17,8 @@
 */
 
 
-using IBM.Watson.Data;
+using IBM.Watson.DataModels;
+using IBM.Watson.DataTypes;
 using UnityEngine;
 using UnityEngine.UI;
 

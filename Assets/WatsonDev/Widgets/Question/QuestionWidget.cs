@@ -19,8 +19,8 @@
 
 using IBM.Watson.Widgets.Avatar;
 using IBM.Watson.Logging;
-using IBM.Watson.Data.XRAY;
-using IBM.Watson.Data.QA;
+using IBM.Watson.DataModels.XRAY;
+using IBM.Watson.DataModels.QA;
 using UnityEngine;
 using System.Collections.Generic;
 

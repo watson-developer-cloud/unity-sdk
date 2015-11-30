@@ -16,13 +16,14 @@
 * @author Richard Lyle (rolyle@us.ibm.com)
 */
 
-#define ENABLE_DEBUGGING
+//#define ENABLE_DEBUGGING
 
+using IBM.Watson.DataModels;
+using IBM.Watson.DataTypes;
 using IBM.Watson.Services.v1;
 using IBM.Watson.Logging;
 using UnityEngine;
 using UnityEngine.UI;
-using IBM.Watson.Data;
 
 #pragma warning disable 414
 

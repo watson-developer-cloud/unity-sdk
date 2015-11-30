@@ -19,7 +19,7 @@
 using IBM.Watson.Logging;
 using IBM.Watson.Connection;
 using IBM.Watson.Utilities;
-using IBM.Watson.Data;
+using IBM.Watson.DataModels;
 using MiniJSON;
 using System;
 using System.Collections.Generic;
