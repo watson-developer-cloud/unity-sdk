@@ -484,22 +484,58 @@ namespace IBM.Watson.Widgets.Avatar
         }
 
 		private float distanceForNotUnderstanding = 0.05f;
-		//private float timeForNotUnderstanding = 0.1f;
-		public bool stopOnStartAnimation = true;
+
+		private int numberOfLoopOnNotUnderstanding = 3;
         private void AnimateLightFlareForNotUnderstanding()
         {
 
             StopLightFlareAnimation();
 			AnimationState = LightIndicatorAnimationState.NOT_UNDERSTAND;
-			UnityEngine.Debug.LogWarning("Animation Started - Didn't understand");
+			//UnityEngine.Debug.LogWarning("Animation Started - Didn't understand");
 
             //TODO: Finish the understanding part
 			for (int i = 0; i < m_LightFlarePivotParentList.Length; i++) {
 
-				float lastValue = getRationInOneRange(LastValueAnimationFlare[i]);
-				float targetRatioEnd = getRationInOneRange( LastValueAnimationFlare[i] + distanceForNotUnderstanding * Mathf.Sign(LastValueAnimationFlare[i]) );
+				float initialValue = getRationInOneRange(LastValueAnimationFlare[i]);
+				float targetRatioEnd = initialValue - distanceForNotUnderstanding * Mathf.Sign(LastValueAnimationFlare[i]);
 
-				MoveAnimationOnFlare[i] = LeanTween.moveLocal(m_LightFlarePivotParentList[i], BezierPathAllInOne, m_AnimationTime * m_AvatarWidgetAttached.MoodTimeModifier).setOrientToPath(true).setAxis(Vector3.forward).setFrom(Vector3.one * lastValue).setTo(Vector3.one * targetRatioEnd).setEase(LeanTweenType.linear).setLoopPingPong(3).setOnComplete((System.Object o)=>{
+				MoveAnimationOnFlare[i] = LeanTween.value(gameObject, initialValue, targetRatioEnd, m_AnimationTime * m_AvatarWidgetAttached.BehaviorTimeModifier).setEase(LeanTweenType.easeInOutSine).setLoopPingPong(numberOfLoopOnNotUnderstanding).setOnUpdate((float f, System.Object o)=>{
+					if (o is int){
+						int indexPivot = (int)o;
+						int currentLoop = LeanTween.descr(MoveAnimationOnFlare[indexPivot]).loopCount;
+						float direction = LeanTween.descr(MoveAnimationOnFlare[indexPivot]).direction;
+
+						float currentLoopNormalized = currentLoop / (numberOfLoopOnNotUnderstanding * 2.0f);
+						//float valueToBe = initialValue + (f - initialValue) * currentLoopNormalized;
+						if(currentLoop != 1)
+							LastValueAnimationFlare[indexPivot] = Mathf.Lerp(LastValueAnimationFlare[indexPivot], f, currentLoopNormalized);
+						else
+							LastValueAnimationFlare[indexPivot] = Mathf.Lerp(LastValueAnimationFlare[indexPivot], initialValue, currentLoopNormalized);
+
+						//float valueToBe = Mathf.Lerp(lastValue, 
+						BezierPathAllInOne.placeLocal( m_LightFlarePivotParentList[indexPivot].transform, getRationInOneRange(LastValueAnimationFlare[indexPivot]) );
+
+					}
+					else{
+						Log.Warning("LightRingManager", "AnimateLightFlareForThinking has invalid parameter : {0}", o.ToString());
+					}
+				}, i).setOnComplete((System.Object o)=>{
+					if (o is int){
+						int indexPivot = (int)o;
+						if(indexPivot == m_LightFlarePivotParentList.Length - 1){
+							//UnityEngine.Debug.LogWarning("Animation Finished - Didn't understand");
+							AnimationState = LightIndicatorAnimationState.NAN;
+							OnChangedBehavior(null);
+						}
+					}
+					else{
+						Log.Warning("LightRingManager", "AnimateLightFlareForThinking has invalid parameter : {0}", o.ToString());
+					}
+					
+				}, i).id;
+
+				/*
+				MoveAnimationOnFlare[i] = LeanTween.moveLocal(m_LightFlarePivotParentList[i], BezierPathAllInOne, m_AnimationTime * m_AvatarWidgetAttached.BehaviorTimeModifier).setOrientToPath(true).setAxis(Vector3.forward).setFrom(Vector3.one * lastValue).setTo(Vector3.one * targetRatioEnd).setEase(LeanTweenType.easeOutSine).setLoopPingPong(3).setOnComplete((System.Object o)=>{
 					if (o is int){
 						int indexPivot = (int)o;
 						if(indexPivot == m_LightFlarePivotParentList.Length - 1){
@@ -513,6 +549,7 @@ namespace IBM.Watson.Widgets.Avatar
 					}
 					
 				}, i).id;
+				*/
 			}
 
         }
