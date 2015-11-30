@@ -47,7 +47,7 @@ namespace IBM.Watson.Widgets.Question
         private ParseData m_ParseData = null;
         private Questions m_QuestionData = null;
 
-		private float horizontalWordSpacing = 10f;
+		private float horizontalWordSpacing = 25f;
 		private float verticalWordSpacing = 160f;
 
         private int m_WordIndex = 0;
@@ -143,7 +143,8 @@ namespace IBM.Watson.Widgets.Question
 			int siblingCount = parentRectTransfrom.childCount;
 			RectTransform lastSibling = siblingCount > 0 ? parentRectTransfrom.GetChild(siblingCount - 1).gameObject.GetComponent<RectTransform>() : null;
 
-			float wordX = siblingCount > 0 ? lastSibling.sizeDelta.x + lastSibling.rect.width + horizontalWordSpacing : 0f;
+//			float wordX = siblingCount > 0 ? lastSibling.sizeDelta.x + lastSibling.rect.width + horizontalWordSpacing : 0f;
+			float wordX = siblingCount > 0 ? lastSibling.position.x + lastSibling.rect.width + horizontalWordSpacing : 0f;
 			GameObject wordGameObject = Instantiate(m_ParseTreeTextItemPrefab, new Vector3(wordX, 0f, 0f), Quaternion.identity) as GameObject;
 
 			//	set parent to parent transform
