@@ -24,7 +24,7 @@ namespace IBM.Watson.Widgets
 {
 
     /// <summary>
-    /// This Event Widget class maps key events to a SerializedDelegate.
+    /// This Event Widget class maps events to a SerializedDelegate.
     /// </summary>
 	public class EventWidget : Widget
     {

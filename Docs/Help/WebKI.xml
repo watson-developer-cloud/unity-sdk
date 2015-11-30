@@ -131,7 +131,6 @@
   </HelpKINode>
   <HelpKINode Title="ClassifierWidget.ClassifierWidget constructor" Url="html/e4b5a2c7-e9ea-5ca7-54f2-91426b446536.htm" />
   <HelpKINode Title="ClassifierWidget.GetName method" Url="html/7067b64a-1244-0968-cd72-e4b774c37da9.htm" />
-  <HelpKINode Title="ClassifierWidget.OnClassifierResult delegate" Url="html/9ca3bec7-86ac-fe11-116f-64d38cf0e3de.htm" />
   <HelpKINode Title="classifier_id property">
     <HelpKINode Title="Classifier.classifier_id Property " Url="html/eaf052fe-4afd-0e3d-ab95-86ba76744356.htm" />
     <HelpKINode Title="ClassifyResult.classifier_id Property " Url="html/5b400110-9592-a5eb-c750-af4d0199c0c0.htm" />
@@ -169,13 +168,13 @@
   <HelpKINode Title="Collider property" Url="html/cb227a1b-c7f6-52be-e5f3-0474a40b5590.htm" />
   <HelpKINode Title="ColliderList property" Url="html/2530cc81-e73a-49f4-1827-14d6fbbde442.htm" />
   <HelpKINode Title="Combine method" Url="html/e76abe8f-2606-989e-b9e2-4d0e1109dfbb.htm" />
-  <HelpKINode Title="confidence property">
-    <HelpKINode Title="ConverseResponse.confidence Property " Url="html/dc16a058-0969-7f45-4d45-8582b8f5bc8c.htm" />
-    <HelpKINode Title="Class.confidence Property " Url="html/de769fb9-ac78-fed8-e530-0a56938f56a8.htm" />
-  </HelpKINode>
   <HelpKINode Title="Confidence property">
     <HelpKINode Title="SpeechAlt.Confidence Property " Url="html/13dffcae-236c-0ec9-4124-e010a8680703.htm" />
     <HelpKINode Title="WordConfidence.Confidence Property " Url="html/77423d6c-930f-d0e1-a3be-c067a24969e2.htm" />
+  </HelpKINode>
+  <HelpKINode Title="confidence property">
+    <HelpKINode Title="Class.confidence Property " Url="html/de769fb9-ac78-fed8-e530-0a56938f56a8.htm" />
+    <HelpKINode Title="ConverseResponse.confidence Property " Url="html/dc16a058-0969-7f45-4d45-8582b8f5bc8c.htm" />
   </HelpKINode>
   <HelpKINode Title="Config class">
     <HelpKINode Title="Config Class" Url="html/3c641cbf-3352-3929-5c9c-179b62a37a59.htm" />
@@ -656,7 +655,6 @@
   <HelpKINode Title="IBM.Watson.Widgets.ActivateWidget class" Url="html/71457367-2135-8345-4889-207415ac84b3.htm" />
   <HelpKINode Title="IBM.Watson.Widgets.ClassDisplayWidget class" Url="html/644392ff-53f4-52ad-27d1-26f76905fcbb.htm" />
   <HelpKINode Title="IBM.Watson.Widgets.ClassifierWidget class" Url="html/bd55941c-79e8-2b5e-c69d-5501f118aef5.htm" />
-  <HelpKINode Title="IBM.Watson.Widgets.ClassifierWidget.OnClassifierResult delegate" Url="html/9ca3bec7-86ac-fe11-116f-64d38cf0e3de.htm" />
   <HelpKINode Title="IBM.Watson.Widgets.EventWidget class" Url="html/16c2f7c6-b758-254a-9c7d-1d2446cee6d5.htm" />
   <HelpKINode Title="IBM.Watson.Widgets.KeyboardWidget class" Url="html/253ad0ae-7281-32f3-05b9-ee9d0df9a1b9.htm" />
   <HelpKINode Title="IBM.Watson.Widgets.MicrophoneWidget class" Url="html/55be7d0c-b3c8-90c3-ac18-0b19fc48ca23.htm" />
@@ -738,11 +736,11 @@
     <HelpKINode Title="constructor" Url="html/9525f192-12a4-b5c0-8c9e-f218f8ba93b6.htm" />
     <HelpKINode Title="properties" Url="html/97ca993d-b167-9ebf-7d82-53ef0fa1eff1.htm" />
   </HelpKINode>
-  <HelpKINode Title="Language property" Url="html/f455ddaf-bcce-9c3a-7ce0-61f478936200.htm" />
   <HelpKINode Title="language property">
-    <HelpKINode Title="Classifier.language Property " Url="html/0742ae77-173b-c753-e1bf-3e12f20aeaf0.htm" />
     <HelpKINode Title="Language.language Property " Url="html/0463e3fa-08a0-8a5c-389b-9673747b2b15.htm" />
+    <HelpKINode Title="Classifier.language Property " Url="html/0742ae77-173b-c753-e1bf-3e12f20aeaf0.htm" />
   </HelpKINode>
+  <HelpKINode Title="Language property" Url="html/f455ddaf-bcce-9c3a-7ce0-61f478936200.htm" />
   <HelpKINode Title="Language.Language constructor" Url="html/9525f192-12a4-b5c0-8c9e-f218f8ba93b6.htm" />
   <HelpKINode Title="Language.language property" Url="html/0463e3fa-08a0-8a5c-389b-9673747b2b15.htm" />
   <HelpKINode Title="Language.name property" Url="html/52c10716-53f9-6dc5-0ef2-a8e35e168b5a.htm" />
@@ -844,8 +842,8 @@
   <HelpKINode Title="name property">
     <HelpKINode Title="DialogEntry.name Property " Url="html/701bc8a1-9355-fe41-b607-f3d95653da66.htm" />
     <HelpKINode Title="TranslationModel.name Property " Url="html/49ef94ca-0362-e618-6c62-05be958f0eee.htm" />
-    <HelpKINode Title="Classifier.name Property " Url="html/120c318a-9ad6-2d9b-668d-c69d9c4e4bcf.htm" />
     <HelpKINode Title="Language.name Property " Url="html/52c10716-53f9-6dc5-0ef2-a8e35e168b5a.htm" />
+    <HelpKINode Title="Classifier.name Property " Url="html/120c318a-9ad6-2d9b-668d-c69d9c4e4bcf.htm" />
   </HelpKINode>
   <HelpKINode Title="Name property">
     <HelpKINode Title="SpeechModel.Name Property " Url="html/70a0efe8-9eea-c811-bc90-333224fe0365.htm" />
@@ -878,12 +876,10 @@
     <HelpKINode Title="NlcWidget Class" Url="html/25170318-c098-c051-03bd-60ef82147b5a.htm" />
     <HelpKINode Title="about NlcWidget class" Url="html/25170318-c098-c051-03bd-60ef82147b5a.htm" />
     <HelpKINode Title="constructor" Url="html/84900c74-ef9c-77ee-3756-dbcd3e3e4ea0.htm" />
-    <HelpKINode Title="methods" Url="html/d9ca5047-40a9-7ac9-9884-bc13308e5daf.htm" />
     <HelpKINode Title="properties" Url="html/9c61db2c-239a-a978-d782-4970957e387a.htm" />
   </HelpKINode>
   <HelpKINode Title="NlcWidget.NLC property" Url="html/e34b98ec-292f-816c-e971-06e78f76c068.htm" />
   <HelpKINode Title="NlcWidget.NlcWidget constructor" Url="html/84900c74-ef9c-77ee-3756-dbcd3e3e4ea0.htm" />
-  <HelpKINode Title="NlcWidget.OnDebugCommand method" Url="html/1f8d7028-dba4-c7f4-43a0-8a26d06a6044.htm" />
   <HelpKINode Title="NONE enumeration member">
     <HelpKINode Title="Constants.Event Enumeration" Url="html/a8185e89-4100-2c78-051a-ea7d53975372.htm" />
     <HelpKINode Title="KeyModifiers Enumeration" Url="html/1f2ea707-a489-5bea-dd95-5703b5719cda.htm" />
@@ -938,7 +934,6 @@
   <HelpKINode Title="OnBeginEdit method" Url="html/5d24f874-d8b5-2f2b-bffe-dec5588e4df3.htm" />
   <HelpKINode Title="OnButton method" Url="html/06283a1b-3a86-39c7-6d3a-24b4cce150d8.htm" />
   <HelpKINode Title="OnClose property" Url="html/857148d5-e022-1983-8513-3482534179e4.htm" />
-  <HelpKINode Title="OnDebugCommand method" Url="html/1f8d7028-dba4-c7f4-43a0-8a26d06a6044.htm" />
   <HelpKINode Title="OnDebugMessage method" Url="html/172dd1c2-7070-a2ec-fa67-7654628741bd.htm" />
   <HelpKINode Title="OnEndEdit method" Url="html/3f2881bc-2cab-fb5f-9974-3970dfd9ef32.htm" />
   <HelpKINode Title="OnError property" Url="html/93459a16-11cb-83e0-144c-cff7e1bff6fa.htm" />
@@ -1324,11 +1319,11 @@
   <HelpKINode Title="TargetGameObject property" Url="html/fab6e42e-fcec-a7e1-5c79-b64167eecc90.htm" />
   <HelpKINode Title="TargetInput property" Url="html/114a503f-bcc7-bd15-f644-e68d2b2b610e.htm" />
   <HelpKINode Title="TargetObject property" Url="html/d1dd517e-b772-018d-3b49-4f2c4481db56.htm" />
+  <HelpKINode Title="text property" Url="html/0a7ebfe9-b1e0-b2ad-4309-96a168ed04eb.htm" />
   <HelpKINode Title="Text property">
     <HelpKINode Title="TextToSpeechData.Text Property " Url="html/524d6062-8352-fc59-dab4-042b847f78e0.htm" />
     <HelpKINode Title="WSConnector.TextMessage.Text Property " Url="html/87ed4827-7aed-5686-bdc0-ee48e46acbec.htm" />
   </HelpKINode>
-  <HelpKINode Title="text property" Url="html/0a7ebfe9-b1e0-b2ad-4309-96a168ed04eb.htm" />
   <HelpKINode Title="TextMessage class">
     <HelpKINode Title="properties" Url="html/f103af64-ea1f-1a6e-4e74-b90f1d4ac81b.htm" />
   </HelpKINode>
@@ -1512,8 +1507,8 @@
   <HelpKINode Title="UpdateRoutines method" Url="html/e76d1482-d6a0-99e7-f7e1-e1b0d79e7ea5.htm" />
   <HelpKINode Title="UploadDialog method" Url="html/94788d7f-9054-d893-f9eb-fb4a08bd7d85.htm" />
   <HelpKINode Title="URL property">
-    <HelpKINode Title="RESTConnector.URL Property " Url="html/0019bff3-0def-4b33-cbb1-e7c45ec056b7.htm" />
     <HelpKINode Title="SpeechModel.URL Property " Url="html/cd3a3c4c-fa06-36c5-57df-895c999263c1.htm" />
+    <HelpKINode Title="RESTConnector.URL Property " Url="html/0019bff3-0def-4b33-cbb1-e7c45ec056b7.htm" />
     <HelpKINode Title="WSConnector.URL Property " Url="html/f2399da2-f234-5dd2-43f7-919686952f43.htm" />
   </HelpKINode>
   <HelpKINode Title="url property">
