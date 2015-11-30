@@ -16,6 +16,7 @@
 */
 
 using IBM.Watson.Utilities;
+using IBM.Watson.Debug;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -28,13 +29,30 @@ namespace IBM.Watson.Logging
     /// </summary>
     public enum LogLevel
     {
+        /// <summary>
+        /// Not used.
+        /// </summary>
         NONE,
+        /// <summary>
+        /// Debug level log message, this should be used for messages for the developer.
+        /// </summary>
         DEBUG,
+        /// <summary>
+        /// Status level log message, this should inform the user what is happening in the application.
+        /// </summary>
         STATUS,
+        /// <summary>
+        /// Warning log level should be used for messages when something may be wrong.
+        /// </summary>
         WARNING,
+        /// <summary>
+        /// Error log level should be used for messages when something has going wrong.
+        /// </summary>
         ERROR,
+        /// <summary>
+        /// Critical level log messages should be used for catastrophic failures.
+        /// </summary>
         CRITICAL,
-        ALL,
     };
 
     /// <summary>
@@ -42,9 +60,21 @@ namespace IBM.Watson.Logging
     /// </summary>
     public class LogRecord
     {
+        /// <summary>
+        /// The time stamp this log message in UTC time.
+        /// </summary>
         public DateTime m_TimeStamp = DateTime.UtcNow;
+        /// <summary>
+        /// The level of this log message.
+        /// </summary>
         public LogLevel m_Level = LogLevel.STATUS;
+        /// <summary>
+        /// What sub-system sent this message.
+        /// </summary>
         public string m_SubSystem;
+        /// <summary>
+        /// The log message.
+        /// </summary>
         public string m_Message;
 
         public LogRecord(LogLevel level, string subSystem, string messageFmt, params object[] args)

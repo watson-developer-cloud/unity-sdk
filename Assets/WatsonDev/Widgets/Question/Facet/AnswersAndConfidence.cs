@@ -13,7 +13,6 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *
-* @author Taj Santiago (asantiago@us.ibm.com)
 */
 
 using UnityEngine;
@@ -44,6 +43,10 @@ namespace IBM.Watson.Widgets.Question
 			EventManager.Instance.UnregisterEventReceiver( Constants.Event.ON_QUESTION_ANSWERS, OnAnswerData );
 		}
 
+		/// <summary>
+		/// Callback for when answer data is received.
+		/// </summary>
+		/// <param name="args">Arguments.</param>
 		private void OnAnswerData( object [] args )
 		{
             if ( Focused )

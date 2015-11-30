@@ -26,7 +26,13 @@ namespace IBM.Watson.Logging
     public class FileReactor : ILogReactor
     {
         #region Public Properties
+        /// <summary>
+        /// The filename of the log file.
+        /// </summary>
         public string LogFile { get; set; }
+        /// <summary>
+        /// Minimum level of messages to save into the log file.
+        /// </summary>
         public LogLevel Level { get; set; }
         #endregion
 
@@ -59,6 +65,10 @@ namespace IBM.Watson.Logging
         #endregion
 
         #region ILogReactor interface
+        /// <summary>
+        /// Process a LogRecord object.
+        /// </summary>
+        /// <param name="log">The log record.</param>
         public void ProcessLog(LogRecord log)
         {
             if (log.m_Level >= Level)

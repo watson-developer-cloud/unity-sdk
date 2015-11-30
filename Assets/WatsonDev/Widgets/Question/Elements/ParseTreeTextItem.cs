@@ -57,6 +57,9 @@ namespace IBM.Watson.Widgets.Question
             }
         }
 
+		/// <summary>
+		/// Word position in the sentence.
+		/// </summary>
 		private long m_Position;
 		public long Position
 		{
@@ -67,6 +70,9 @@ namespace IBM.Watson.Widgets.Question
 			}
 		}
 
+		/// <summary>
+		/// Part of speech of the word
+		/// </summary>
         [SerializeField]
         private string m_POS;
         public string POS
@@ -78,6 +84,9 @@ namespace IBM.Watson.Widgets.Question
             }
         }
 
+		/// <summary>
+		/// Slot of the word
+		/// </summary>
         [SerializeField]
         private string m_Slot;
         public string Slot
@@ -86,12 +95,9 @@ namespace IBM.Watson.Widgets.Question
             set { m_Slot = value; }
         }
 
-//		public int m_ChildWordIndex { get; set; }
 		public RectTransform m_ParentWordRectTransform { get; set; }
 
         public List<string> m_Features = new List<string>();
-//		public List<GameObject> m_LeftChild = new List<GameObject>();
-//		public List<GameObject> m_RightChild = new List<GameObject>();
         private RectTransform m_RectTransform;
         private Color m_ColorLight = new Color(0.8f, 0.8f, 0.8f);
         private Color m_ColorDark = new Color(0.8f, 0.8f, 0.8f);
@@ -116,6 +122,9 @@ namespace IBM.Watson.Widgets.Question
 			Invoke("UpdateBoundingBox", 1f);
         }
 
+		/// <summary>
+		/// Updates the bounding box.
+		/// </summary>
 		private void UpdateBoundingBox()
 		{
 			RectTransform textRectTransform = m_ParseTreeTextField.gameObject.GetComponent<RectTransform>();

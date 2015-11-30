@@ -26,6 +26,10 @@ namespace IBM.Watson.Logging
     /// </summary>
     public interface ILogReactor
     {
+        /// <summary>
+        /// Process a LogRecord object.
+        /// </summary>
+        /// <param name="log">The log record.</param>
         void ProcessLog(LogRecord log);
     }
 }

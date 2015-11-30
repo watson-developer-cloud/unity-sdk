@@ -25,6 +25,9 @@ using IBM.Watson.Logging;
 
 namespace IBM.Watson.Utilities
 {
+    /// <summary>
+    /// This class manages a cache of binary data by ID.
+    /// </summary>
     public class DataCache
     {
         #region Private Data

@@ -21,7 +21,7 @@ using System.Text;
 namespace IBM.Watson.Utilities
 {
     /// <summary>
-    /// Helper class for holding a user & password, used by both the WSCOnnector & RESTConnector.
+    /// Helper class for holding a user and password, used by both the WSCOnnector and RESTConnector.
     /// </summary>
     public class Credentials
     {
@@ -33,9 +33,19 @@ namespace IBM.Watson.Utilities
             Password = password;
         }
 
+        /// <summary>
+        /// The username.
+        /// </summary>
         public string User { get; set; }
+        /// <summary>
+        /// The password.
+        /// </summary>
         public string Password { get; set; }
 
+        /// <summary>
+        /// Create basic authentication header data for REST requests.
+        /// </summary>
+        /// <returns>The authentication data base64 encoded.</returns>
         public string CreateAuthorization()
         {
             return "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(User + ":" + Password));

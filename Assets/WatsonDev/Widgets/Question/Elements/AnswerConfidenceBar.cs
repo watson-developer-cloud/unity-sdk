@@ -43,7 +43,6 @@ namespace IBM.Watson.Widgets.Question
             }
         }
 
-
         private double m_Confidence;
         public double Confidence
         {
