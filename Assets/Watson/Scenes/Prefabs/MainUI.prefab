@@ -254,6 +254,7 @@ MonoBehaviour:
   - UnitTests
   - TestTTS
   - TestNLC
+  - XRay
   - TestMic
 --- !u!114 &11461980
 MonoBehaviour:
