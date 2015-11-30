@@ -83,7 +83,7 @@ public class MainUI : MonoBehaviour
         while( m_ButtonLayout.transform.childCount > 0 )
             DestroyImmediate( m_ButtonLayout.transform.GetChild(0).gameObject );
 
-        Log.Debug( "MainUI", "UpdateBottons, level = {0}", Application.loadedLevelName );
+        //Log.Debug( "MainUI", "UpdateBottons, level = {0}", Application.loadedLevelName );
         if ( Application.loadedLevelName == MAIN_SCENE )
         {
             foreach( var scene in m_SceneNames )
