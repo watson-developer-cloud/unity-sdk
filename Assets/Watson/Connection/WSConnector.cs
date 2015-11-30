@@ -13,7 +13,6 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *
-* @author Richard Lyle (rolyle@us.ibm.com)
 */
 
 //! Uncomment to enable message debugging
@@ -21,7 +20,6 @@
 
 using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;

@@ -24,7 +24,7 @@ namespace IBM.Watson.Camera
 {
 
     /// <summary>
-    /// Watson camera. The main responsible camera on the scene of the Watson applications which handles the camera movements via touch / keyboard inputs / voice commands.iu8889
+    /// Watson camera. The main responsible camera on the scene of the Watson applications which handles the camera movements via touch / keyboard inputs / voice commands.
     /// </summary>
     public class WatsonCamera : MonoBehaviour
     {
