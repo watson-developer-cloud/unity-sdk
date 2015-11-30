@@ -13,7 +13,7 @@
     <RootNamespace>Documentation</RootNamespace>
     <Name>Documentation</Name>
     <!-- SHFB properties -->
-    <FrameworkVersion>.NET Framework 4.5</FrameworkVersion>
+    <FrameworkVersion>.NET Framework 3.5</FrameworkVersion>
     <OutputPath>Help\</OutputPath>
     <HtmlHelpName>WatsonUnitySDK</HtmlHelpName>
     <Language>en-US</Language>
@@ -41,29 +41,37 @@
       <DocumentationSource sourceFile="..\Temp\UnityVS_bin\Debug\Assembly-CSharp.xml" />
     </DocumentationSources>
     <NamespaceSummaries>
-      <NamespaceSummaryItem name="DentedPixel.LTEditor" isDocumented="True" />
-      <NamespaceSummaryItem name="FullSerializer" isDocumented="True" />
-      <NamespaceSummaryItem name="FullSerializer.Internal" isDocumented="True" />
-      <NamespaceSummaryItem name="FullSerializer.Internal.DirectConverters" isDocumented="True" />
-      <NamespaceSummaryItem name="MiniJSON" isDocumented="True" />
-      <NamespaceSummaryItem name="TouchScript.Examples" isDocumented="True" />
-      <NamespaceSummaryItem name="TouchScript.Examples.CameraControl" isDocumented="True" />
-      <NamespaceSummaryItem name="TouchScript.Examples.Checkers" isDocumented="True" />
-      <NamespaceSummaryItem name="TouchScript.Examples.Colors" isDocumented="True" />
-      <NamespaceSummaryItem name="TouchScript.Examples.Input" isDocumented="True" />
-      <NamespaceSummaryItem name="TouchScript.Examples.Multiuser" isDocumented="True" />
-      <NamespaceSummaryItem name="TouchScript.Examples.Photos" isDocumented="True" />
-      <NamespaceSummaryItem name="TouchScript.Examples.Portal" isDocumented="True" />
-      <NamespaceSummaryItem name="TouchScript.Examples.Tap" isDocumented="True" />
-      <NamespaceSummaryItem name="TouchScript.Examples.UI" isDocumented="True" />
-      <NamespaceSummaryItem name="UnityStandardAssets.ImageEffects" isDocumented="True" />
-      <NamespaceSummaryItem name="UnityStandardAssets.Utility" isDocumented="True" />
-      <NamespaceSummaryItem name="WebSocketSharp" isDocumented="True" />
-      <NamespaceSummaryItem name="WebSocketSharp.Net" isDocumented="True" />
-      <NamespaceSummaryItem name="WebSocketSharp.Net.WebSockets" isDocumented="True" />
-      <NamespaceSummaryItem name="WebSocketSharp.Server" isDocumented="True" />
-      <NamespaceSummaryItem name="(global)" isDocumented="True" />
-    </NamespaceSummaries>
+      <NamespaceSummaryItem name="DentedPixel.LTEditor" isDocumented="False" />
+<NamespaceSummaryItem name="FullSerializer" isDocumented="False" />
+<NamespaceSummaryItem name="FullSerializer.Internal" isDocumented="False" />
+<NamespaceSummaryItem name="FullSerializer.Internal.DirectConverters" isDocumented="False" />
+<NamespaceSummaryItem name="MiniJSON" isDocumented="False" />
+<NamespaceSummaryItem name="TouchScript.Examples" isDocumented="False" />
+<NamespaceSummaryItem name="TouchScript.Examples.CameraControl" isDocumented="False" />
+<NamespaceSummaryItem name="TouchScript.Examples.Checkers" isDocumented="False" />
+<NamespaceSummaryItem name="TouchScript.Examples.Colors" isDocumented="False" />
+<NamespaceSummaryItem name="TouchScript.Examples.Input" isDocumented="False" />
+<NamespaceSummaryItem name="TouchScript.Examples.Multiuser" isDocumented="False" />
+<NamespaceSummaryItem name="TouchScript.Examples.Photos" isDocumented="False" />
+<NamespaceSummaryItem name="TouchScript.Examples.Portal" isDocumented="False" />
+<NamespaceSummaryItem name="TouchScript.Examples.Tap" isDocumented="False" />
+<NamespaceSummaryItem name="TouchScript.Examples.UI" isDocumented="False" />
+<NamespaceSummaryItem name="UnityStandardAssets.ImageEffects" isDocumented="False" />
+<NamespaceSummaryItem name="UnityStandardAssets.Utility" isDocumented="False" />
+<NamespaceSummaryItem name="WebSocketSharp" isDocumented="False" />
+<NamespaceSummaryItem name="WebSocketSharp.Net" isDocumented="False" />
+<NamespaceSummaryItem name="WebSocketSharp.Net.WebSockets" isDocumented="False" />
+<NamespaceSummaryItem name="WebSocketSharp.Server" isDocumented="False" />
+<NamespaceSummaryItem name="(global)" isDocumented="False" />
+<NamespaceSummaryItem name="IBM.Watson.Camera" isDocumented="True">Watson Unity SDK camera controls and touch interfaces.</NamespaceSummaryItem>
+<NamespaceSummaryItem name="IBM.Watson.Connection" isDocumented="True">Connection classes.</NamespaceSummaryItem>
+<NamespaceSummaryItem name="IBM.Watson.DataModels" isDocumented="True">Data models for all services.</NamespaceSummaryItem>
+<NamespaceSummaryItem name="IBM.Watson.DataTypes" isDocumented="True">Data types for Widget communications.</NamespaceSummaryItem>
+<NamespaceSummaryItem name="IBM.Watson.Debug" isDocumented="True">Debugging classes.</NamespaceSummaryItem>
+<NamespaceSummaryItem name="IBM.Watson.Logging" isDocumented="True">Logging subsystem.</NamespaceSummaryItem>
+<NamespaceSummaryItem name="IBM.Watson.Services.v1" isDocumented="True">Version 1.0 of all services.</NamespaceSummaryItem>
+<NamespaceSummaryItem name="IBM.Watson.Utilities" isDocumented="True">Various utility classes.</NamespaceSummaryItem>
+<NamespaceSummaryItem name="IBM.Watson.Widgets" isDocumented="True">Widget classes.</NamespaceSummaryItem></NamespaceSummaries>
     <ApiFilter>
       <Filter entryType="Namespace" fullName="" isExposed="False" />
 <Filter entryType="Namespace" fullName="FullSerializer" isExposed="False" />
@@ -135,7 +143,7 @@
 <Filter entryType="Namespace" fullName="WebSocketSharp.Server" isExposed="False" /></ApiFilter>
     <VisibleItems>Protected, ProtectedInternalAsProtected</VisibleItems>
     <RootNamespaceTitle>IBM.Watson</RootNamespaceTitle>
-    <MissingTags>Summary, Parameter, Returns, Namespace, TypeParameter</MissingTags>
+    <MissingTags>Summary, Parameter, Returns, AutoDocumentCtors, Namespace, TypeParameter, AutoDocumentDispose</MissingTags>
   </PropertyGroup>
   <!-- There are no properties for these groups.  AnyCPU needs to appear in order for Visual Studio to perform
 			 the build.  The others are optional common platform types that may appear. -->

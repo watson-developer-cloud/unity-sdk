@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shfbBuild product="Sandcastle Help File Builder and Tools" version="2015.10.10.0" projectFile="C:\Work\watson_unity_plugin\Docs\UnitySDK.shfbproj" started="11/30/2015 3:36:19 PM">
+<shfbBuild product="Sandcastle Help File Builder and Tools" version="2015.10.10.0" projectFile="C:\Work\watson_unity_plugin\Docs\UnitySDK.shfbproj" started="11/30/2015 4:09:20 PM">
 <buildStep step="Initializing">
 Finding tools...
 The Sandcastle tools are located in &#39;C:\Program Files (x86)\EWSoftware\Sandcastle Help File Builder\&#39;
@@ -30,16 +30,16 @@ Copying XML comments files
 <buildStep step="GenerateSharedContent">
 Generating shared content files (en-US, English (United States))...
 <plugIn name="Lightweight Website Style" behavior="After" priority="1000">
-</plugIn>    Last step completed in 00:00:00.0156
+</plugIn>    Last step completed in 00:00:00.0000
 </buildStep>
 <buildStep step="GenerateApiFilter">
 Generating API filter for MRefBuilder...
-    Last step completed in 00:00:00.0156
+    Last step completed in 00:00:00.0313
 </buildStep>
 <buildStep step="GenerateReflectionInfo">
 Generating reflection information...
 [C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe - GenerateRefInfo.proj]
-Build started 11/30/2015 3:36:19 PM.
+Build started 11/30/2015 4:09:21 PM.
 Project &quot;C:\Work\watson_unity_plugin\Docs\Help\Working\GenerateRefInfo.proj&quot; on node 1 (default targets).
 PrepareForBuild:
   Creating directory &quot;obj\Debug\&quot;.
@@ -58,13 +58,13 @@ Done Building Project &quot;C:\Work\watson_unity_plugin\Docs\Help\Working\Genera
 
 Build succeeded.
 
-Time Elapsed 00:00:00.95
-    Last step completed in 00:00:01.2116
+Time Elapsed 00:00:00.90
+    Last step completed in 00:00:01.1619
 </buildStep>
 <buildStep step="TransformReflectionInfo">
 Transforming reflection output...
 [C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe - TransformManifest.proj]
-Build started 11/30/2015 3:36:21 PM.
+Build started 11/30/2015 4:09:22 PM.
 Project &quot;C:\Work\watson_unity_plugin\Docs\Help\Working\TransformManifest.proj&quot; on node 1 (default targets).
 TransformManifest:
   XslTransform (v2015.10.10.0)
@@ -84,12 +84,12 @@ Done Building Project &quot;C:\Work\watson_unity_plugin\Docs\Help\Working\Transf
 
 Build succeeded.
 
-Time Elapsed 00:00:00.65
-    Last step completed in 00:00:00.8406
+Time Elapsed 00:00:00.64
+    Last step completed in 00:00:00.8438
 </buildStep>
 <buildStep step="GenerateNamespaceSummaries">
 Generating namespace summary information...
-    Last step completed in 00:00:00.0260
+    Last step completed in 00:00:00.0313
 </buildStep>
 <buildStep step="CopyAdditionalContent">
 Copying additional content files...
@@ -103,7 +103,7 @@ Merging conceptual and additional tables of contents...
 <buildStep step="GenerateIntermediateTableOfContents">
 Generating intermediate table of contents file...
 [C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe - GenerateIntermediateTOC.proj]
-Build started 11/30/2015 3:36:21 PM.
+Build started 11/30/2015 4:09:23 PM.
 Project &quot;C:\Work\watson_unity_plugin\Docs\Help\Working\GenerateIntermediateTOC.proj&quot; on node 1 (default targets).
 GenerateIntermediateTOC:
   XslTransform (v2015.10.10.0)
@@ -116,22 +116,22 @@ Build succeeded.
 
 Time Elapsed 00:00:00.39
 Generating conceptual content intermediate TOC file...
-    Last step completed in 00:00:00.5881
+    Last step completed in 00:00:00.5781
 </buildStep>
 <buildStep step="CreateBuildAssemblerConfigs">
 Creating Sandcastle configuration files...
     sandcastle.config
-    Last step completed in 00:00:00.1094
+    Last step completed in 00:00:00.1024
 </buildStep>
 <buildStep step="MergeCustomConfigs">
 Merging custom build component configurations
 C:\Work\watson_unity_plugin\Docs\Help\Working\sandcastle.config
-    Last step completed in 00:00:00.0000
+    Last step completed in 00:00:00.0050
 </buildStep>
 <buildStep step="BuildReferenceTopics">
 Building reference help topics...
 [C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe - BuildReferenceTopics.proj]
-Build started 11/30/2015 3:36:22 PM.
+Build started 11/30/2015 4:09:24 PM.
 Project &quot;C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj&quot; on node 1 (default targets).
 BuildReferenceTopics:
   BuildAssembler (v2015.10.10.0)
@@ -139,7 +139,6 @@ BuildReferenceTopics:
   Portions Copyright c 2006-2015, Eric Woodruff, All Rights Reserved.
   Loading configuration...
   Processing topics...
-BuildAssembler : warning : ShowMissingComponent: [N:IBM.Watson.Camera] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Camera.QualityManager] Unknown reference link target &#39;T:UnityEngine.Object&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Camera.QualityManager] Unknown reference link target &#39;T:UnityEngine.Component&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Camera.QualityManager] Unknown reference link target &#39;T:UnityEngine.Behaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
@@ -148,7 +147,6 @@ BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Camera.
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Camera.QualityManager] Unknown reference link target &#39;T:UnityEngine.Component&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Camera.QualityManager] Unknown reference link target &#39;T:UnityEngine.Behaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Camera.QualityManager] Unknown reference link target &#39;T:UnityEngine.MonoBehaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Camera.QualityManager.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.Camera.QualityManager.Instance] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Camera.QualityManager.OnNextQualityLevel] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Camera.WatsonCamera] Unknown reference link target &#39;T:UnityEngine.Object&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
@@ -159,7 +157,6 @@ BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Camera.
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Camera.WatsonCamera] Unknown reference link target &#39;T:UnityEngine.Component&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Camera.WatsonCamera] Unknown reference link target &#39;T:UnityEngine.Behaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Camera.WatsonCamera] Unknown reference link target &#39;T:UnityEngine.MonoBehaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Camera.WatsonCamera.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Camera.WatsonCamera.AnimationPause] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Camera.WatsonCamera.AnimationPauseResume] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Camera.WatsonCamera.AnimationResume] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
@@ -186,66 +183,34 @@ BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Camera.WatsonCame
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Camera.WatsonCamera.ZoomIn(System.Object[])] Missing &lt;param name=&quot;args&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Camera.WatsonCamera.ZoomOut(System.Object[])] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Camera.WatsonCamera.ZoomOut(System.Object[])] Missing &lt;param name=&quot;args&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [N:IBM.Watson.Connection] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Connection.RESTConnector.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Connection.RESTConnector.Form.#ctor(System.Byte[],System.String,System.String)] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Connection.RESTConnector.Form.#ctor(System.Byte[],System.String,System.String)] Missing &lt;param name=&quot;contents&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Connection.RESTConnector.Form.#ctor(System.Byte[],System.String,System.String)] Missing &lt;param name=&quot;fileName&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Connection.RESTConnector.Form.#ctor(System.Byte[],System.String,System.String)] Missing &lt;param name=&quot;mimeType&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Connection.RESTConnector.Form.#ctor(System.Int32)] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Connection.RESTConnector.Form.#ctor(System.Int32)] Missing &lt;param name=&quot;n&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Connection.RESTConnector.Form.#ctor(System.String)] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Connection.RESTConnector.Form.#ctor(System.String)] Missing &lt;param name=&quot;s&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.Connection.RESTConnector.Form.BoxedObject] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.Connection.RESTConnector.Form.Contents] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.Connection.RESTConnector.Form.FileName] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.Connection.RESTConnector.Form.IsBinary] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.Connection.RESTConnector.Form.MimeType] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Connection.RESTConnector.Request.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Connection.RESTConnector.Response.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [T:IBM.Watson.Connection.RESTConnector.ResponseEvent] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Connection.WSConnector.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Connection.WSConnector.Send(IBM.Watson.Connection.WSConnector.Message,System.Boolean)] Missing &lt;param name=&quot;queue&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Connection.WSConnector.BinaryMessage.#ctor(System.Byte[])] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Connection.WSConnector.BinaryMessage.#ctor(System.Byte[])] Missing &lt;param name=&quot;data&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [T:IBM.Watson.Connection.WSConnector.ConnectorEvent] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Connection.WSConnector.Message.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [T:IBM.Watson.Connection.WSConnector.MessageEvent] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Connection.WSConnector.TextMessage.#ctor(System.String)] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Connection.WSConnector.TextMessage.#ctor(System.String)] Missing &lt;param name=&quot;text&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [N:IBM.Watson.DataModels] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataModels.Class.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataModels.Classifier.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataModels.Classifiers.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.DataModels.Classifiers.classifiers] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataModels.ClassifyResult.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataModels.ConverseResponse.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataModels.DialogEntry.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataModels.Dialogs.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataModels.Language.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataModels.Languages.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataModels.SpeechAlt.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataModels.SpeechModel.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataModels.SpeechResult.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataModels.SpeechResultList.HasFinalResult] Missing &lt;returns&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataModels.TimeStamp.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataModels.Translation.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataModels.TranslationModel.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataModels.TranslationModels.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.DataModels.TranslationModels.models] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataModels.Translations.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.DataModels.Translations.character_count] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.DataModels.Translations.translations] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.DataModels.Translations.word_count] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataModels.WordConfidence.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [N:IBM.Watson.DataTypes] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [M:IBM.Watson.DataTypes.AudioData.#ctor(UnityEngine.AudioClip,System.Single)] Unknown reference link target &#39;T:UnityEngine.AudioClip&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [M:IBM.Watson.DataTypes.AudioData.#ctor(UnityEngine.AudioClip,System.Single)] Unknown reference link target &#39;T:UnityEngine.AudioClip&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [P:IBM.Watson.DataTypes.AudioData.Clip] Unknown reference link target &#39;T:UnityEngine.AudioClip&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [P:IBM.Watson.DataTypes.AudioData.Clip] Unknown reference link target &#39;T:UnityEngine.AudioClip&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataTypes.BooleanData.#ctor(System.Boolean)] Missing &lt;param name=&quot;b&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataTypes.TextToSpeechData.#ctor(System.String)] Missing &lt;param name=&quot;text&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [N:IBM.Watson.Debug] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Debug.DebugConsole] Unknown reference link target &#39;T:UnityEngine.Object&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Debug.DebugConsole] Unknown reference link target &#39;T:UnityEngine.Component&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Debug.DebugConsole] Unknown reference link target &#39;T:UnityEngine.Behaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
@@ -268,7 +233,6 @@ BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Debug.DebugConsol
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Debug.DebugConsole.UnregisterDebugInfo(System.String,IBM.Watson.Debug.DebugConsole.GetDebugInfo)] Missing &lt;returns&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Debug.DebugConsole.UnregisterDebugInfo(System.String,IBM.Watson.Debug.DebugConsole.GetDebugInfo)] Missing &lt;param name=&quot;label&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Debug.DebugConsole.UnregisterDebugInfo(System.String,IBM.Watson.Debug.DebugConsole.GetDebugInfo)] Missing &lt;param name=&quot;callback&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [N:IBM.Watson.Logging] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.Logging.DebugReactor.Level] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Logging.DebugReactor.ProcessLog(IBM.Watson.Logging.LogRecord)] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Logging.DebugReactor.ProcessLog(IBM.Watson.Logging.LogRecord)] Missing &lt;param name=&quot;log&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
@@ -278,9 +242,7 @@ BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Logging.FileReact
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Logging.FileReactor.ProcessLog(IBM.Watson.Logging.LogRecord)] Missing &lt;param name=&quot;log&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Logging.ILogReactor.ProcessLog(IBM.Watson.Logging.LogRecord)] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Logging.ILogReactor.ProcessLog(IBM.Watson.Logging.LogRecord)] Missing &lt;param name=&quot;log&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Logging.Logger.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Logging.Logger.InstallDefaultReactors] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Logging.LogRecord.#ctor(IBM.Watson.Logging.LogLevel,System.String,System.String,System.Object[])] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Logging.LogRecord.#ctor(IBM.Watson.Logging.LogLevel,System.String,System.String,System.Object[])] Missing &lt;param name=&quot;level&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Logging.LogRecord.#ctor(IBM.Watson.Logging.LogLevel,System.String,System.String,System.Object[])] Missing &lt;param name=&quot;subSystem&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Logging.LogRecord.#ctor(IBM.Watson.Logging.LogLevel,System.String,System.String,System.Object[])] Missing &lt;param name=&quot;messageFmt&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
@@ -289,36 +251,17 @@ BuildAssembler : warning : ShowMissingComponent: [F:IBM.Watson.Logging.LogRecord
 BuildAssembler : warning : ShowMissingComponent: [F:IBM.Watson.Logging.LogRecord.m_Message] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [F:IBM.Watson.Logging.LogRecord.m_SubSystem] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [F:IBM.Watson.Logging.LogRecord.m_TimeStamp] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [N:IBM.Watson.Services.v1] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Services.v1.Dialog.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Services.v1.Dialog.DeleteDialog(System.String,IBM.Watson.Services.v1.Dialog.OnDialogCallback)] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Services.v1.Dialog.DeleteDialog(System.String,IBM.Watson.Services.v1.Dialog.OnDialogCallback)] Missing &lt;returns&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Services.v1.Dialog.DeleteDialog(System.String,IBM.Watson.Services.v1.Dialog.OnDialogCallback)] Missing &lt;param name=&quot;dialogId&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Services.v1.Dialog.DeleteDialog(System.String,IBM.Watson.Services.v1.Dialog.OnDialogCallback)] Missing &lt;param name=&quot;callback&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Services.v1.Dialog.DownloadDialog(System.String,System.String,IBM.Watson.Services.v1.Dialog.OnDialogCallback,IBM.Watson.Services.v1.Dialog.DialogFormat)] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Services.v1.Dialog.DownloadDialog(System.String,System.String,IBM.Watson.Services.v1.Dialog.OnDialogCallback,IBM.Watson.Services.v1.Dialog.DialogFormat)] Missing &lt;returns&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Services.v1.Dialog.DownloadDialog(System.String,System.String,IBM.Watson.Services.v1.Dialog.OnDialogCallback,IBM.Watson.Services.v1.Dialog.DialogFormat)] Missing &lt;param name=&quot;dialogId&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Services.v1.Dialog.DownloadDialog(System.String,System.String,IBM.Watson.Services.v1.Dialog.OnDialogCallback,IBM.Watson.Services.v1.Dialog.DialogFormat)] Missing &lt;param name=&quot;dialogFileName&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Services.v1.Dialog.DownloadDialog(System.String,System.String,IBM.Watson.Services.v1.Dialog.OnDialogCallback,IBM.Watson.Services.v1.Dialog.DialogFormat)] Missing &lt;param name=&quot;callback&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Services.v1.Dialog.DownloadDialog(System.String,System.String,IBM.Watson.Services.v1.Dialog.OnDialogCallback,IBM.Watson.Services.v1.Dialog.DialogFormat)] Missing &lt;param name=&quot;format&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.Services.v1.Dialog.SaveFile] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [T:IBM.Watson.Services.v1.Dialog.DialogFormat] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Services.v1.NLC.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Services.v1.NLC.FindClassifier(System.String,IBM.Watson.Services.v1.NLC.OnFindClassifier)] Missing &lt;param name=&quot;classifierName&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Services.v1.NLC.FindClassifier(System.String,IBM.Watson.Services.v1.NLC.OnFindClassifier)] Missing &lt;param name=&quot;callback&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Services.v1.SpeechToText.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Services.v1.SpeechToText.Recognize(UnityEngine.AudioClip,IBM.Watson.Services.v1.SpeechToText.OnRecognize)] Missing &lt;returns&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [M:IBM.Watson.Services.v1.SpeechToText.Recognize(UnityEngine.AudioClip,IBM.Watson.Services.v1.SpeechToText.OnRecognize)] Unknown reference link target &#39;T:UnityEngine.AudioClip&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [M:IBM.Watson.Services.v1.SpeechToText.Recognize(UnityEngine.AudioClip,IBM.Watson.Services.v1.SpeechToText.OnRecognize)] Unknown reference link target &#39;T:UnityEngine.AudioClip&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Services.v1.TextToSpeech.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Services.v1.TextToSpeech.ToSpeechCallback] Unknown reference link target &#39;T:UnityEngine.AudioClip&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Services.v1.TextToSpeech.ToSpeechCallback] Unknown reference link target &#39;T:UnityEngine.AudioClip&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Services.v1.Translate.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Services.v1.Translate.GetModel(System.String,IBM.Watson.Services.v1.Translate.GetModelCallback)] Missing &lt;returns&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Services.v1.Translate.GetModel(System.String,IBM.Watson.Services.v1.Translate.GetModelCallback)] Missing &lt;param name=&quot;model_id&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Services.v1.Translate.GetModel(System.String,IBM.Watson.Services.v1.Translate.GetModelCallback)] Missing &lt;param name=&quot;callback&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Services.v1.Translate.Identify(System.String,IBM.Watson.Services.v1.Translate.IdentifyCallback)] Missing &lt;returns&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [N:IBM.Watson.Utilities] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Utilities.AudioClipUtil.Combine(UnityEngine.AudioClip[])] Missing &lt;returns&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [M:IBM.Watson.Utilities.AudioClipUtil.Combine(UnityEngine.AudioClip[])] Unknown reference link target &#39;T:UnityEngine.AudioClip&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [M:IBM.Watson.Utilities.AudioClipUtil.Combine(UnityEngine.AudioClip[])] Unknown reference link target &#39;T:UnityEngine.AudioClip&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
@@ -329,7 +272,6 @@ BuildAssembler : warning : ResolveReferenceLinksComponent: [M:IBM.Watson.Utiliti
 BuildAssembler : warning : ShowMissingComponent: [T:IBM.Watson.Utilities.Config] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Utilities.Config.LoadConfig(System.String)] Missing &lt;returns&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Utilities.Config.SaveConfig(System.Boolean)] Missing &lt;returns&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Utilities.Config.CredentialInfo.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [F:IBM.Watson.Utilities.Config.CredentialInfo.m_Password] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [F:IBM.Watson.Utilities.Config.CredentialInfo.m_URL] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [F:IBM.Watson.Utilities.Config.CredentialInfo.m_User] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
@@ -359,8 +301,6 @@ BuildAssembler : warning : ShowMissingComponent: [F:IBM.Watson.Utilities.Constan
 BuildAssembler : warning : ShowMissingComponent: [F:IBM.Watson.Utilities.Constants.String.DEBUG_DISPLAY_AVATAR_MOOD] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [F:IBM.Watson.Utilities.Constants.String.DEBUG_DISPLAY_QUALITY] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [T:IBM.Watson.Utilities.Credentials] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Utilities.Credentials.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Utilities.Credentials.#ctor(System.String,System.String)] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Utilities.Credentials.#ctor(System.String,System.String)] Missing &lt;param name=&quot;user&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Utilities.Credentials.#ctor(System.String,System.String)] Missing &lt;param name=&quot;password&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Utilities.Credentials.CreateAuthorization] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
@@ -370,7 +310,6 @@ BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.Utilities.Credent
 BuildAssembler : warning : ShowMissingComponent: [T:IBM.Watson.Utilities.DataCache] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Utilities.DataCache.Flush(System.String)] Missing &lt;param name=&quot;id&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Utilities.DataCache.Save(System.String,System.Byte[])] Missing &lt;param name=&quot;data&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Utilities.EventManager.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Utilities.KeyEventManager] Unknown reference link target &#39;T:UnityEngine.Object&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Utilities.KeyEventManager] Unknown reference link target &#39;T:UnityEngine.Component&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Utilities.KeyEventManager] Unknown reference link target &#39;T:UnityEngine.Behaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
@@ -379,7 +318,6 @@ BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Utiliti
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Utilities.KeyEventManager] Unknown reference link target &#39;T:UnityEngine.Component&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Utilities.KeyEventManager] Unknown reference link target &#39;T:UnityEngine.Behaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Utilities.KeyEventManager] Unknown reference link target &#39;T:UnityEngine.MonoBehaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Utilities.KeyEventManager.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Utilities.KeyEventManager.RegisterKeyEvent(UnityEngine.KeyCode,IBM.Watson.Utilities.KeyModifiers,IBM.Watson.Utilities.Constants.Event)] Missing &lt;param name=&quot;eventType&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [M:IBM.Watson.Utilities.KeyEventManager.RegisterKeyEvent(UnityEngine.KeyCode,IBM.Watson.Utilities.KeyModifiers,IBM.Watson.Utilities.Constants.Event)] Unknown reference link target &#39;T:UnityEngine.KeyCode&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [M:IBM.Watson.Utilities.KeyEventManager.RegisterKeyEvent(UnityEngine.KeyCode,IBM.Watson.Utilities.KeyModifiers,IBM.Watson.Utilities.Constants.Event)] Unknown reference link target &#39;T:UnityEngine.KeyCode&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
@@ -388,7 +326,6 @@ BuildAssembler : warning : ResolveReferenceLinksComponent: [M:IBM.Watson.Utiliti
 BuildAssembler : warning : ResolveReferenceLinksComponent: [M:IBM.Watson.Utilities.KeyEventManager.UnregisterKeyEvent(UnityEngine.KeyCode,IBM.Watson.Utilities.KeyModifiers,IBM.Watson.Utilities.Constants.Event)] Unknown reference link target &#39;T:UnityEngine.KeyCode&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [T:IBM.Watson.Utilities.ObservedList`1] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [T:IBM.Watson.Utilities.ObservedList`1] Missing &lt;typeparam name=&quot;T&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Utilities.ObservedList`1.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Utilities.ObservedList`1.Add(`0)] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Utilities.ObservedList`1.Add(`0)] Missing &lt;param name=&quot;item&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [E:IBM.Watson.Utilities.ObservedList`1.Added] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
@@ -420,13 +357,10 @@ BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Utiliti
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Utilities.Runnable] Unknown reference link target &#39;T:UnityEngine.Component&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Utilities.Runnable] Unknown reference link target &#39;T:UnityEngine.Behaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Utilities.Runnable] Unknown reference link target &#39;T:UnityEngine.MonoBehaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Utilities.Runnable.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Utilities.SerializedDelegate.#ctor(System.Type)] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Utilities.SerializedDelegate.#ctor(System.Type)] Missing &lt;param name=&quot;delegateType&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [P:IBM.Watson.Utilities.SerializedDelegate.TargetGameObject] Unknown reference link target &#39;T:UnityEngine.GameObject&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [P:IBM.Watson.Utilities.SerializedDelegate.TargetGameObject] Unknown reference link target &#39;T:UnityEngine.GameObject&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [T:IBM.Watson.Utilities.Singleton`1] Missing &lt;typeparam name=&quot;T&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Utilities.Singleton`1.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Utilities.TimedDestroy] Unknown reference link target &#39;T:UnityEngine.Object&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Utilities.TimedDestroy] Unknown reference link target &#39;T:UnityEngine.Component&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Utilities.TimedDestroy] Unknown reference link target &#39;T:UnityEngine.Behaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
@@ -435,7 +369,6 @@ BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Utiliti
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Utilities.TimedDestroy] Unknown reference link target &#39;T:UnityEngine.Component&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Utilities.TimedDestroy] Unknown reference link target &#39;T:UnityEngine.Behaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Utilities.TimedDestroy] Unknown reference link target &#39;T:UnityEngine.MonoBehaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Utilities.TimedDestroy.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Utilities.TouchEventManager] Unknown reference link target &#39;T:UnityEngine.Object&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Utilities.TouchEventManager] Unknown reference link target &#39;T:UnityEngine.Component&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Utilities.TouchEventManager] Unknown reference link target &#39;T:UnityEngine.Behaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
@@ -444,7 +377,6 @@ BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Utiliti
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Utilities.TouchEventManager] Unknown reference link target &#39;T:UnityEngine.Component&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Utilities.TouchEventManager] Unknown reference link target &#39;T:UnityEngine.Behaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Utilities.TouchEventManager] Unknown reference link target &#39;T:UnityEngine.MonoBehaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Utilities.TouchEventManager.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.Utilities.TouchEventManager.MainCamera] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [P:IBM.Watson.Utilities.TouchEventManager.MainCamera] Unknown reference link target &#39;T:UnityEngine.Camera&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [P:IBM.Watson.Utilities.TouchEventManager.MainCamera] Unknown reference link target &#39;T:UnityEngine.Camera&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
@@ -503,7 +435,6 @@ BuildAssembler : warning : ResolveReferenceLinksComponent: [M:IBM.Watson.Utiliti
 BuildAssembler : warning : ResolveReferenceLinksComponent: [M:IBM.Watson.Utilities.WaveFile.CreateWAV(UnityEngine.AudioClip,System.Int32)] Unknown reference link target &#39;T:UnityEngine.AudioClip&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [M:IBM.Watson.Utilities.WaveFile.ParseWAV(System.String,System.Byte[])] Unknown reference link target &#39;T:UnityEngine.AudioClip&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [M:IBM.Watson.Utilities.WaveFile.ParseWAV(System.String,System.Byte[])] Unknown reference link target &#39;T:UnityEngine.AudioClip&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [N:IBM.Watson.Widgets] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.ActivateWidget] Unknown reference link target &#39;T:UnityEngine.Object&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.ActivateWidget] Unknown reference link target &#39;T:UnityEngine.Component&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.ActivateWidget] Unknown reference link target &#39;T:UnityEngine.Behaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
@@ -512,7 +443,6 @@ BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.ActivateWidget] Unknown reference link target &#39;T:UnityEngine.Component&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.ActivateWidget] Unknown reference link target &#39;T:UnityEngine.Behaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.ActivateWidget] Unknown reference link target &#39;T:UnityEngine.MonoBehaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.ActivateWidget.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.ActivateWidget.GetName] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.ActivateWidget.GetName] Missing &lt;returns&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.ActivateWidget.OnButton] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
@@ -524,7 +454,6 @@ BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.ClassDisplayWidget] Unknown reference link target &#39;T:UnityEngine.Component&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.ClassDisplayWidget] Unknown reference link target &#39;T:UnityEngine.Behaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.ClassDisplayWidget] Unknown reference link target &#39;T:UnityEngine.MonoBehaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.ClassDisplayWidget.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.ClassDisplayWidget.GetName] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.ClassDisplayWidget.GetName] Missing &lt;returns&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.ClassifierWidget] Unknown reference link target &#39;T:UnityEngine.Object&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
@@ -535,7 +464,6 @@ BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.ClassifierWidget] Unknown reference link target &#39;T:UnityEngine.Component&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.ClassifierWidget] Unknown reference link target &#39;T:UnityEngine.Behaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.ClassifierWidget] Unknown reference link target &#39;T:UnityEngine.MonoBehaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.ClassifierWidget.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.Widgets.ClassifierWidget.ClassifyInput] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.Widgets.ClassifierWidget.ClassifyOutput] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.ClassifierWidget.GetName] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
@@ -549,7 +477,6 @@ BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.EventWidget] Unknown reference link target &#39;T:UnityEngine.Component&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.EventWidget] Unknown reference link target &#39;T:UnityEngine.Behaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.EventWidget] Unknown reference link target &#39;T:UnityEngine.MonoBehaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.EventWidget.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.EventWidget.GetName] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.EventWidget.GetName] Missing &lt;returns&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.KeyboardWidget] Unknown reference link target &#39;T:UnityEngine.Object&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
@@ -560,7 +487,6 @@ BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.KeyboardWidget] Unknown reference link target &#39;T:UnityEngine.Component&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.KeyboardWidget] Unknown reference link target &#39;T:UnityEngine.Behaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.KeyboardWidget] Unknown reference link target &#39;T:UnityEngine.MonoBehaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.KeyboardWidget.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.KeyboardWidget.GetName] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.KeyboardWidget.GetName] Missing &lt;returns&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.MicrophoneWidget] Unknown reference link target &#39;T:UnityEngine.Object&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
@@ -571,7 +497,6 @@ BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.MicrophoneWidget] Unknown reference link target &#39;T:UnityEngine.Component&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.MicrophoneWidget] Unknown reference link target &#39;T:UnityEngine.Behaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.MicrophoneWidget] Unknown reference link target &#39;T:UnityEngine.MonoBehaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.MicrophoneWidget.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.NlcWidget] Unknown reference link target &#39;T:UnityEngine.Object&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.NlcWidget] Unknown reference link target &#39;T:UnityEngine.Component&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.NlcWidget] Unknown reference link target &#39;T:UnityEngine.Behaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
@@ -580,7 +505,6 @@ BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.NlcWidget] Unknown reference link target &#39;T:UnityEngine.Component&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.NlcWidget] Unknown reference link target &#39;T:UnityEngine.Behaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.NlcWidget] Unknown reference link target &#39;T:UnityEngine.MonoBehaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.NlcWidget.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.Widgets.NlcWidget.NLC] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.NlcWidget.OnDebugCommand(System.Object[])] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.NlcWidget.OnDebugCommand(System.Object[])] Missing &lt;param name=&quot;args&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
@@ -592,7 +516,6 @@ BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.SpeechDisplayWidget] Unknown reference link target &#39;T:UnityEngine.Component&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.SpeechDisplayWidget] Unknown reference link target &#39;T:UnityEngine.Behaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.SpeechDisplayWidget] Unknown reference link target &#39;T:UnityEngine.MonoBehaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.SpeechDisplayWidget.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.SpeechDisplayWidget.GetName] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.SpeechDisplayWidget.GetName] Missing &lt;returns&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.SpeechToTextWidget] Unknown reference link target &#39;T:UnityEngine.Object&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
@@ -603,7 +526,6 @@ BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.SpeechToTextWidget] Unknown reference link target &#39;T:UnityEngine.Component&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.SpeechToTextWidget] Unknown reference link target &#39;T:UnityEngine.Behaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.SpeechToTextWidget] Unknown reference link target &#39;T:UnityEngine.MonoBehaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.SpeechToTextWidget.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.TextToSpeechWidget] Unknown reference link target &#39;T:UnityEngine.Object&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.TextToSpeechWidget] Unknown reference link target &#39;T:UnityEngine.Component&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.TextToSpeechWidget] Unknown reference link target &#39;T:UnityEngine.Behaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
@@ -616,7 +538,6 @@ BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.TextToSpeechWidget] Unknown reference link target &#39;M:IBM.Watson.Widgets.Widget.Start&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [Methods.T:IBM.Watson.Widgets.TextToSpeechWidget] Unknown reference link target &#39;M:IBM.Watson.Widgets.Widget.Start&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [Methods.T:IBM.Watson.Widgets.TextToSpeechWidget] Unknown reference link target &#39;M:IBM.Watson.Widgets.Widget.Start&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.TextToSpeechWidget.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.TextToSpeechWidget.GetName] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.TextToSpeechWidget.GetName] Missing &lt;returns&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.TextToSpeechWidget.OnTextToSpeech] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
@@ -629,7 +550,6 @@ BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.TouchWidget] Unknown reference link target &#39;T:UnityEngine.Component&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.TouchWidget] Unknown reference link target &#39;T:UnityEngine.Behaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.TouchWidget] Unknown reference link target &#39;T:UnityEngine.MonoBehaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.TouchWidget.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.TouchWidget.GetName] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.TouchWidget.GetName] Missing &lt;returns&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.Widget] Unknown reference link target &#39;T:UnityEngine.Object&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
@@ -648,8 +568,6 @@ BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.Widget] Unknown reference link target &#39;T:UnityEngine.Component&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.Widget] Unknown reference link target &#39;T:UnityEngine.Behaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.Widget] Unknown reference link target &#39;T:UnityEngine.MonoBehaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.Widget.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.Widget.Data.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.Widget.Input.ToString] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.Widget.Input.ToString] Missing &lt;returns&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.Widget.Output.SendData(IBM.Watson.Widgets.Widget.Data)] Missing &lt;returns&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
@@ -659,19 +577,19 @@ BuildAssembler : warning : ResolveReferenceLinksComponent: [P:IBM.Watson.Widgets
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.Widget.Output.ToString] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.Widget.Output.ToString] Missing &lt;returns&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
   Processed 707 topic(s)
-  519 warning(s)
+  437 warning(s)
   CopyFromIndexComponent: &quot;reflection&quot; in-memory cache entries used: 4 of 15.
   CopyFromIndexComponent: &quot;comments&quot; in-memory cache entries used: 1 of 30.
 Done Building Project &quot;C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj&quot; (default targets).
 
 Build succeeded.
 
-Time Elapsed 00:00:14.12
-    Last step completed in 00:00:14.3616
+Time Elapsed 00:00:15.12
+    Last step completed in 00:00:15.3491
 </buildStep>
 <buildStep step="CombiningIntermediateTocFiles">
 Combining conceptual and API intermediate TOC files...
-    Last step completed in 00:00:00.0035
+    Last step completed in 00:00:00.0000
 </buildStep>
 <buildStep step="ExtractingHtmlInfo">
 Extracting HTML info for HTML Help 1 and/or website...
@@ -693,7 +611,7 @@ Processed 707 HTML files
 Sorting keywords and generating See Also indices
 Saving website keyword index to C:\Work\watson_unity_plugin\Docs\Help\Working\WebKI.xml
 Saving website table of contents to C:\Work\watson_unity_plugin\Docs\Help\Working\WebTOC.xml
-    Last step completed in 00:00:02.3757
+    Last step completed in 00:00:02.5269
 </buildStep>
 <buildStep step="CopyStandardHelpContent">
 Copying standard help content...
@@ -834,7 +752,7 @@ C:\Program Files (x86)\EWSoftware\Sandcastle Help File Builder\PresentationStyle
 C:\Program Files (x86)\EWSoftware\Sandcastle Help File Builder\PresentationStyles\VS2013\Web\icons\TocOpen.gif -&gt; C:\Work\watson_unity_plugin\Docs\Help\Working\Output\Website\icons\TocOpen.gif
 C:\Program Files (x86)\EWSoftware\Sandcastle Help File Builder\PresentationStyles\VS2013\Web\scripts\branding-Website.js -&gt; C:\Work\watson_unity_plugin\Docs\Help\Working\Output\Website\scripts\branding-Website.js
 C:\Program Files (x86)\EWSoftware\Sandcastle Help File Builder\PresentationStyles\VS2013\Web\scripts\jquery-1.11.0.min.js -&gt; C:\Work\watson_unity_plugin\Docs\Help\Working\Output\Website\scripts\jquery-1.11.0.min.js
-    Last step completed in 00:00:00.1511
+    Last step completed in 00:00:00.1250
 </buildStep>
 <buildStep step="GenerateHelpFormatTableOfContents">
 Generating HTML Help 1 table of contents file...
@@ -846,7 +764,7 @@ Generating HTML Help 1 index file...
 </buildStep>
 <buildStep step="GenerateHelpProject">
 Generating HTML Help 1 project file...
-    Last step completed in 00:00:00.0070
+    Last step completed in 00:00:00.0156
 </buildStep>
 <buildStep step="CompilingHelpFile">
 Compiling HTML Help 1 file...
@@ -865,9 +783,9 @@ Compiling HTML Help 1 file...
   
   709	Topics
   
-  7,427	Local links
+  7,493	Local links
   
-  489	Internet links
+  491	Internet links
   
   0	Graphics
   
@@ -875,11 +793,11 @@ Compiling HTML Help 1 file...
   
   
   
-  Created c:\Work\watson_unity_plugin\Docs\Help\Working\Output\HtmlHelp1\WatsonUnitySDK.chm, 798,991 bytes
+  Created c:\Work\watson_unity_plugin\Docs\Help\Working\Output\HtmlHelp1\WatsonUnitySDK.chm, 802,161 bytes
   
-  Compression decreased file by 4,781,380 bytes.
+  Compression decreased file by 4,783,952 bytes.
   
-    Last step completed in 00:00:03.0218
+    Last step completed in 00:00:02.9688
 </buildStep>
 <buildStep step="GenerateHelpFormatTableOfContents">
 Generating website table of contents file...
@@ -890,7 +808,7 @@ Generating full-text index for the website...
 
 <plugIn name="Lightweight Website Style" behavior="After" priority="1000">
 Adding lightweight search and TOC elements to each topic...
-</plugIn>    Last step completed in 00:00:04.8208
+</plugIn>    Last step completed in 00:00:04.9718
 </buildStep>
 <buildStep step="CopyingWebsiteFiles">
 Copying website files to output folder...
@@ -898,15 +816,15 @@ Copying website files to output folder...
 Copied 500 files
 Copied 1000 files
 Copied 1041 files for the website content
-    Last step completed in 00:00:00.7782
+    Last step completed in 00:00:00.7500
 </buildStep>
 <buildStep step="CleanIntermediates">
 Removing intermediate files...
-    Last step completed in 00:00:00.3852
+    Last step completed in 00:00:00.4375
 </buildStep>
 <buildStep step="Completed">
 
-Build completed successfully at 11/30/2015 3:36:48 PM.  Total time: 00:00:29.2275
+Build completed successfully at 11/30/2015 4:09:51 PM.  Total time: 00:00:30.3913
 
 </buildStep>
 </shfbBuild>
