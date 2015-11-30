@@ -16,13 +16,7 @@
     <HelpKINode Title="SpeechToTextWidget.Active Property " Url="html/8700fe01-da0b-2c79-a662-14d29cc3bb1c.htm" />
     <HelpKINode Title="TouchEventManager.Active Property " Url="html/5f6ebabe-d67c-aaef-1258-34795199e0b5.htm" />
   </HelpKINode>
-  <HelpKINode Title="Add method" Url="html/86f692e9-5ee8-f2f5-376b-72dd5f096403.htm" />
-  <HelpKINode Title="Added event" Url="html/3f7c8c80-f189-b1f6-0fec-52536fe9889d.htm" />
-  <HelpKINode Title="AddRange method" Url="html/c3507ebf-ab8a-2af4-14b7-ae61ff6578b5.htm" />
-  <HelpKINode Title="ALL enumeration member">
-    <HelpKINode Title="LogLevel Enumeration" Url="html/453d36d6-98b0-5450-8e0f-5a20e5f9c556.htm" />
-    <HelpKINode Title="Translate.TypeFilter Enumeration" Url="html/95f3ef9c-b95e-a341-5a2d-4fd54d903843.htm" />
-  </HelpKINode>
+  <HelpKINode Title="ALL enumeration member" Url="html/95f3ef9c-b95e-a341-5a2d-4fd54d903843.htm" />
   <HelpKINode Title="ALT enumeration member" Url="html/1f2ea707-a489-5bea-dd95-5703b5719cda.htm" />
   <HelpKINode Title="Alternatives property" Url="html/7e6b82a2-b968-b1ee-fe03-aa025157320b.htm" />
   <HelpKINode Title="AnimationPause method" Url="html/764d8f9d-fab0-1fe8-3c4b-83a91551e8e1.htm" />
@@ -79,7 +73,6 @@
   <HelpKINode Title="BooleanData.GetName method" Url="html/1df8a763-4137-a3ed-a5f7-02daf94800bd.htm" />
   <HelpKINode Title="BoxedObject property" Url="html/04312817-1db9-b83f-027d-13d8c96c71f6.htm" />
   <HelpKINode Title="CanDragObject property" Url="html/c1869cd5-25ab-f9d8-ab8f-1f78fe8e63fd.htm" />
-  <HelpKINode Title="Changed event" Url="html/4d7466a4-71d1-ca0e-eae4-094d34ccc151.htm" />
   <HelpKINode Title="character_count property" Url="html/0cc1c50f-acd8-3dcb-7ed6-0e8cbac33281.htm" />
   <HelpKINode Title="CheckEqualityQuaternion method" Url="html/d895333d-19e9-ad80-f694-63f27bea9ebe.htm" />
   <HelpKINode Title="Class class">
@@ -160,7 +153,6 @@
   <HelpKINode Title="ClassifyResultData.GetName method" Url="html/be28d945-d78a-5333-5232-19b5ab0b7516.htm" />
   <HelpKINode Title="ClassifyResultData.Result property" Url="html/7c3deaad-33f3-a82e-17d2-f4be9bf0b4fa.htm" />
   <HelpKINode Title="class_name property" Url="html/31f9698b-c272-3fd0-bb49-dc144285951b.htm" />
-  <HelpKINode Title="Clear method" Url="html/02f1ec5b-3b1a-fedd-65bb-17054761c8fa.htm" />
   <HelpKINode Title="client_id property" Url="html/259551b5-c27b-44d3-9cbd-fdf4e71bf6fd.htm" />
   <HelpKINode Title="Clip property" Url="html/2cc7648e-3f28-1be5-744e-47cd6732e3ac.htm" />
   <HelpKINode Title="Close method" Url="html/6250d3de-f7b7-3a6c-4033-36a41e0ad198.htm" />
@@ -334,15 +326,15 @@
   <HelpKINode Title="DebugConsole.RegisterDebugInfo method" Url="html/9283b095-9607-7632-fb17-cef9a5f309cf.htm" />
   <HelpKINode Title="DebugConsole.UnregisterDebugInfo method" Url="html/9efaa3f8-74b5-3ce2-aefb-1221cc32ea8e.htm" />
   <HelpKINode Title="DebugReactor class">
-    <HelpKINode Title="DebugReactor Class" Url="html/3896490d-028e-838d-84ea-3b033754d549.htm" />
-    <HelpKINode Title="about DebugReactor class" Url="html/3896490d-028e-838d-84ea-3b033754d549.htm" />
-    <HelpKINode Title="constructor" Url="html/a86f0728-3438-a88c-8a1a-e41bcb36fe28.htm" />
-    <HelpKINode Title="methods" Url="html/930204e3-019b-c2c5-1b18-28cd61be0ef2.htm" />
-    <HelpKINode Title="properties" Url="html/6e1c7ffc-74eb-c353-b40a-fa493ad18b45.htm" />
+    <HelpKINode Title="DebugReactor Class" Url="html/96bdf998-9987-eab5-54d1-2ee99a410430.htm" />
+    <HelpKINode Title="about DebugReactor class" Url="html/96bdf998-9987-eab5-54d1-2ee99a410430.htm" />
+    <HelpKINode Title="constructor" Url="html/92e516e7-1fd0-2295-47da-7eadb1d81531.htm" />
+    <HelpKINode Title="methods" Url="html/d3ec3089-2082-6771-6d14-eb20d66345d8.htm" />
+    <HelpKINode Title="properties" Url="html/c6975272-1729-93b2-b827-9b2e9977524d.htm" />
   </HelpKINode>
-  <HelpKINode Title="DebugReactor.DebugReactor constructor" Url="html/a86f0728-3438-a88c-8a1a-e41bcb36fe28.htm" />
-  <HelpKINode Title="DebugReactor.Level property" Url="html/76108b5f-edf2-a81d-aa7f-6c695c180bc7.htm" />
-  <HelpKINode Title="DebugReactor.ProcessLog method" Url="html/ac5200cd-eba2-56a1-534b-1c70a9a2f693.htm" />
+  <HelpKINode Title="DebugReactor.DebugReactor constructor" Url="html/92e516e7-1fd0-2295-47da-7eadb1d81531.htm" />
+  <HelpKINode Title="DebugReactor.Level property" Url="html/9b296aff-8fb5-c964-4121-62e9519a57ee.htm" />
+  <HelpKINode Title="DebugReactor.ProcessLog method" Url="html/d1559f39-4f59-df33-6018-bfcba5c7e33a.htm" />
   <HelpKINode Title="DEBUG_DISPLAY_AVATAR_MOOD field" Url="html/4a755a4c-3715-14d6-d443-312ea590d72a.htm" />
   <HelpKINode Title="DEBUG_DISPLAY_QUALITY field" Url="html/6f79bf6b-6927-d7c8-09e1-bf0355d11b2a.htm" />
   <HelpKINode Title="DEFAULT enumeration member" Url="html/95f3ef9c-b95e-a341-5a2d-4fd54d903843.htm" />
@@ -585,8 +577,8 @@
   <HelpKINode Title="IBM.Watson.Debug namespace" Url="html/ab0cc62f-23a9-d5b2-655a-34aa3ae3c872.htm" />
   <HelpKINode Title="IBM.Watson.Debug.DebugConsole class" Url="html/66af2857-e038-1f72-d376-386efed36023.htm" />
   <HelpKINode Title="IBM.Watson.Debug.DebugConsole.GetDebugInfo delegate" Url="html/dedcc312-5ae4-4916-d35f-ccb776c319e4.htm" />
+  <HelpKINode Title="IBM.Watson.Debug.DebugReactor class" Url="html/96bdf998-9987-eab5-54d1-2ee99a410430.htm" />
   <HelpKINode Title="IBM.Watson.Logging namespace" Url="html/e9416531-301a-f7ae-5dcd-b35bb51af631.htm" />
-  <HelpKINode Title="IBM.Watson.Logging.DebugReactor class" Url="html/3896490d-028e-838d-84ea-3b033754d549.htm" />
   <HelpKINode Title="IBM.Watson.Logging.FileReactor class" Url="html/944bb1d5-c948-5709-d525-162c80efc5e2.htm" />
   <HelpKINode Title="IBM.Watson.Logging.ILogReactor interface" Url="html/7aa9a6e3-9c39-37b2-f353-f03731e431d1.htm" />
   <HelpKINode Title="IBM.Watson.Logging.Log class" Url="html/6e5ede2e-2deb-d1b9-90f1-84f4fadcb217.htm" />
@@ -640,8 +632,6 @@
   <HelpKINode Title="IBM.Watson.Utilities.EventManager.OnReceiveEvent delegate" Url="html/e252057c-5fc5-b187-dfeb-cfbba520b0c9.htm" />
   <HelpKINode Title="IBM.Watson.Utilities.KeyEventManager class" Url="html/a5dcb42d-b975-fb9c-4b8f-70ee541fa546.htm" />
   <HelpKINode Title="IBM.Watson.Utilities.KeyModifiers enumeration" Url="html/1f2ea707-a489-5bea-dd95-5703b5719cda.htm" />
-  <HelpKINode Title="IBM.Watson.Utilities.ObservedList(Of T) class" Url="html/f081e84d-c39f-7085-a2af-aea065b54a73.htm" />
-  <HelpKINode Title="IBM.Watson.Utilities.ObservedList&lt;T&gt; class" Url="html/f081e84d-c39f-7085-a2af-aea065b54a73.htm" />
   <HelpKINode Title="IBM.Watson.Utilities.Runnable class" Url="html/7b46e523-4fef-9088-2da6-c210cb77640d.htm" />
   <HelpKINode Title="IBM.Watson.Utilities.SerializedDelegate class" Url="html/fedd4832-218f-1fc3-7592-91e8dfff8ca9.htm" />
   <HelpKINode Title="IBM.Watson.Utilities.Singleton(Of T) class" Url="html/d1875005-8c7b-c900-074d-22487cf86ee8.htm" />
@@ -683,8 +673,6 @@
   <HelpKINode Title="input property" Url="html/67560d65-e6dd-af37-d0d3-e1aa474056f7.htm" />
   <HelpKINode Title="InputName property" Url="html/704473ad-2cdc-4238-a3de-8c012f2249a5.htm" />
   <HelpKINode Title="Inputs property" Url="html/94ec48d5-a947-a305-b412-c5142b375da4.htm" />
-  <HelpKINode Title="Insert method" Url="html/a39685b1-d54a-5f47-7c24-389e604152c3.htm" />
-  <HelpKINode Title="InsertRange method" Url="html/7d20ccc4-0b22-f08e-ed74-73ea4f706a55.htm" />
   <HelpKINode Title="InstallDefaultReactors method" Url="html/706ed8ae-1d66-44e5-689c-a4c89c23648a.htm" />
   <HelpKINode Title="InstallReactor method" Url="html/aa602b64-390c-69da-11e1-22c2cea968fa.htm" />
   <HelpKINode Title="Instance property">
@@ -702,7 +690,6 @@
   <HelpKINode Title="IsConnected property" Url="html/20912254-020e-edc0-1016-6281ed0f5287.htm" />
   <HelpKINode Title="IsInside property" Url="html/f46e7d73-523c-1c7f-af72-f657b4fbfe64.htm" />
   <HelpKINode Title="IsListening property" Url="html/72d9cbe2-c546-ca86-1c7d-6203e8a1629b.htm" />
-  <HelpKINode Title="Item property" Url="html/34b2cb3c-396a-560d-0774-7b2207b0afc2.htm" />
   <HelpKINode Title="it_IT_Francesca enumeration member" Url="html/fbf1cef8-b912-d317-41c8-25bfa695130f.htm" />
   <HelpKINode Title="ja_JP_Emi enumeration member" Url="html/fbf1cef8-b912-d317-41c8-25bfa695130f.htm" />
   <HelpKINode Title="JSON enumeration member" Url="html/9c5ced61-2e3e-94c2-dea2-197267738725.htm" />
@@ -736,11 +723,11 @@
     <HelpKINode Title="constructor" Url="html/9525f192-12a4-b5c0-8c9e-f218f8ba93b6.htm" />
     <HelpKINode Title="properties" Url="html/97ca993d-b167-9ebf-7d82-53ef0fa1eff1.htm" />
   </HelpKINode>
-  <HelpKINode Title="language property">
-    <HelpKINode Title="Language.language Property " Url="html/0463e3fa-08a0-8a5c-389b-9673747b2b15.htm" />
-    <HelpKINode Title="Classifier.language Property " Url="html/0742ae77-173b-c753-e1bf-3e12f20aeaf0.htm" />
-  </HelpKINode>
   <HelpKINode Title="Language property" Url="html/f455ddaf-bcce-9c3a-7ce0-61f478936200.htm" />
+  <HelpKINode Title="language property">
+    <HelpKINode Title="Classifier.language Property " Url="html/0742ae77-173b-c753-e1bf-3e12f20aeaf0.htm" />
+    <HelpKINode Title="Language.language Property " Url="html/0463e3fa-08a0-8a5c-389b-9673747b2b15.htm" />
+  </HelpKINode>
   <HelpKINode Title="Language.Language constructor" Url="html/9525f192-12a4-b5c0-8c9e-f218f8ba93b6.htm" />
   <HelpKINode Title="Language.language property" Url="html/0463e3fa-08a0-8a5c-389b-9673747b2b15.htm" />
   <HelpKINode Title="Language.name property" Url="html/52c10716-53f9-6dc5-0ef2-a8e35e168b5a.htm" />
@@ -754,7 +741,7 @@
   <HelpKINode Title="Languages.Languages constructor" Url="html/bc65e2e0-c6ed-0683-dc21-fabb6af3f5a6.htm" />
   <HelpKINode Title="Languages.languages property" Url="html/26d3858e-bb67-f184-c35b-58b1b507f198.htm" />
   <HelpKINode Title="Level property">
-    <HelpKINode Title="DebugReactor.Level Property " Url="html/76108b5f-edf2-a81d-aa7f-6c695c180bc7.htm" />
+    <HelpKINode Title="DebugReactor.Level Property " Url="html/9b296aff-8fb5-c964-4121-62e9519a57ee.htm" />
     <HelpKINode Title="FileReactor.Level Property " Url="html/2f5913e4-1743-bc2e-2008-8e3705f716c8.htm" />
   </HelpKINode>
   <HelpKINode Title="LevelData class">
@@ -841,9 +828,9 @@
   <HelpKINode Title="m_User field" Url="html/128cd657-86bb-d9da-b360-1f6d073bccf5.htm" />
   <HelpKINode Title="name property">
     <HelpKINode Title="DialogEntry.name Property " Url="html/701bc8a1-9355-fe41-b607-f3d95653da66.htm" />
+    <HelpKINode Title="Classifier.name Property " Url="html/120c318a-9ad6-2d9b-668d-c69d9c4e4bcf.htm" />
     <HelpKINode Title="TranslationModel.name Property " Url="html/49ef94ca-0362-e618-6c62-05be958f0eee.htm" />
     <HelpKINode Title="Language.name Property " Url="html/52c10716-53f9-6dc5-0ef2-a8e35e168b5a.htm" />
-    <HelpKINode Title="Classifier.name Property " Url="html/120c318a-9ad6-2d9b-668d-c69d9c4e4bcf.htm" />
   </HelpKINode>
   <HelpKINode Title="Name property">
     <HelpKINode Title="SpeechModel.Name Property " Url="html/70a0efe8-9eea-c811-bc90-333224fe0365.htm" />
@@ -886,50 +873,6 @@
     <HelpKINode Title="LogLevel Enumeration" Url="html/453d36d6-98b0-5450-8e0f-5a20e5f9c556.htm" />
   </HelpKINode>
   <HelpKINode Title="NON_DEFAULT enumeration member" Url="html/95f3ef9c-b95e-a341-5a2d-4fd54d903843.htm" />
-  <HelpKINode Title="ObservedList(Of T) class">
-    <HelpKINode Title="ObservedList(T) Class" Url="html/f081e84d-c39f-7085-a2af-aea065b54a73.htm" />
-    <HelpKINode Title="about ObservedList(Of T) class" Url="html/f081e84d-c39f-7085-a2af-aea065b54a73.htm" />
-    <HelpKINode Title="constructor" Url="html/652175ab-e5d3-2d47-1345-d6070e5a14e6.htm" />
-    <HelpKINode Title="events" Url="html/019d1534-0267-11b8-4c42-74bad2b5dc91.htm" />
-    <HelpKINode Title="methods" Url="html/a96b9197-746e-6e20-9828-a46fe27a78ef.htm" />
-    <HelpKINode Title="properties" Url="html/46fb5814-0800-e1b5-c6d8-b4a45b8e2334.htm" />
-  </HelpKINode>
-  <HelpKINode Title="ObservedList(Of T).Add method" Url="html/86f692e9-5ee8-f2f5-376b-72dd5f096403.htm" />
-  <HelpKINode Title="ObservedList(Of T).Added event" Url="html/3f7c8c80-f189-b1f6-0fec-52536fe9889d.htm" />
-  <HelpKINode Title="ObservedList(Of T).AddRange method" Url="html/c3507ebf-ab8a-2af4-14b7-ae61ff6578b5.htm" />
-  <HelpKINode Title="ObservedList(Of T).Changed event" Url="html/4d7466a4-71d1-ca0e-eae4-094d34ccc151.htm" />
-  <HelpKINode Title="ObservedList(Of T).Clear method" Url="html/02f1ec5b-3b1a-fedd-65bb-17054761c8fa.htm" />
-  <HelpKINode Title="ObservedList(Of T).Insert method" Url="html/a39685b1-d54a-5f47-7c24-389e604152c3.htm" />
-  <HelpKINode Title="ObservedList(Of T).InsertRange method" Url="html/7d20ccc4-0b22-f08e-ed74-73ea4f706a55.htm" />
-  <HelpKINode Title="ObservedList(Of T).Item property" Url="html/34b2cb3c-396a-560d-0774-7b2207b0afc2.htm" />
-  <HelpKINode Title="ObservedList(Of T).ObservedList constructor" Url="html/652175ab-e5d3-2d47-1345-d6070e5a14e6.htm" />
-  <HelpKINode Title="ObservedList(Of T).Remove method" Url="html/62d194a4-b09e-a9f7-4eae-9a52bc0b284d.htm" />
-  <HelpKINode Title="ObservedList(Of T).RemoveAll method" Url="html/da2f67fd-138a-07c2-926d-06b60baf17bb.htm" />
-  <HelpKINode Title="ObservedList(Of T).Removed event" Url="html/3a9204ed-1637-6960-5d80-2cfa99c4eaf6.htm" />
-  <HelpKINode Title="ObservedList(Of T).RemoveRange method" Url="html/17ae5f78-0217-3ea4-83ce-6246d487f081.htm" />
-  <HelpKINode Title="ObservedList(Of T).Updated event" Url="html/15f3f982-ad73-fba0-b656-3269fa5ae2b6.htm" />
-  <HelpKINode Title="ObservedList&lt;T&gt; class">
-    <HelpKINode Title="ObservedList(T) Class" Url="html/f081e84d-c39f-7085-a2af-aea065b54a73.htm" />
-    <HelpKINode Title="about ObservedList&lt;T&gt; class" Url="html/f081e84d-c39f-7085-a2af-aea065b54a73.htm" />
-    <HelpKINode Title="constructor" Url="html/652175ab-e5d3-2d47-1345-d6070e5a14e6.htm" />
-    <HelpKINode Title="events" Url="html/019d1534-0267-11b8-4c42-74bad2b5dc91.htm" />
-    <HelpKINode Title="methods" Url="html/a96b9197-746e-6e20-9828-a46fe27a78ef.htm" />
-    <HelpKINode Title="properties" Url="html/46fb5814-0800-e1b5-c6d8-b4a45b8e2334.htm" />
-  </HelpKINode>
-  <HelpKINode Title="ObservedList&lt;T&gt;.Add method" Url="html/86f692e9-5ee8-f2f5-376b-72dd5f096403.htm" />
-  <HelpKINode Title="ObservedList&lt;T&gt;.Added event" Url="html/3f7c8c80-f189-b1f6-0fec-52536fe9889d.htm" />
-  <HelpKINode Title="ObservedList&lt;T&gt;.AddRange method" Url="html/c3507ebf-ab8a-2af4-14b7-ae61ff6578b5.htm" />
-  <HelpKINode Title="ObservedList&lt;T&gt;.Changed event" Url="html/4d7466a4-71d1-ca0e-eae4-094d34ccc151.htm" />
-  <HelpKINode Title="ObservedList&lt;T&gt;.Clear method" Url="html/02f1ec5b-3b1a-fedd-65bb-17054761c8fa.htm" />
-  <HelpKINode Title="ObservedList&lt;T&gt;.Insert method" Url="html/a39685b1-d54a-5f47-7c24-389e604152c3.htm" />
-  <HelpKINode Title="ObservedList&lt;T&gt;.InsertRange method" Url="html/7d20ccc4-0b22-f08e-ed74-73ea4f706a55.htm" />
-  <HelpKINode Title="ObservedList&lt;T&gt;.Item property" Url="html/34b2cb3c-396a-560d-0774-7b2207b0afc2.htm" />
-  <HelpKINode Title="ObservedList&lt;T&gt;.ObservedList constructor" Url="html/652175ab-e5d3-2d47-1345-d6070e5a14e6.htm" />
-  <HelpKINode Title="ObservedList&lt;T&gt;.Remove method" Url="html/62d194a4-b09e-a9f7-4eae-9a52bc0b284d.htm" />
-  <HelpKINode Title="ObservedList&lt;T&gt;.RemoveAll method" Url="html/da2f67fd-138a-07c2-926d-06b60baf17bb.htm" />
-  <HelpKINode Title="ObservedList&lt;T&gt;.Removed event" Url="html/3a9204ed-1637-6960-5d80-2cfa99c4eaf6.htm" />
-  <HelpKINode Title="ObservedList&lt;T&gt;.RemoveRange method" Url="html/17ae5f78-0217-3ea4-83ce-6246d487f081.htm" />
-  <HelpKINode Title="ObservedList&lt;T&gt;.Updated event" Url="html/15f3f982-ad73-fba0-b656-3269fa5ae2b6.htm" />
   <HelpKINode Title="OGG enumeration member" Url="html/f45a04e5-051c-6256-648a-2406ff5b3dfe.htm" />
   <HelpKINode Title="OnBeginEdit method" Url="html/5d24f874-d8b5-2f2b-bffe-dec5588e4df3.htm" />
   <HelpKINode Title="OnButton method" Url="html/06283a1b-3a86-39c7-6d3a-24b4cce150d8.htm" />
@@ -1030,7 +973,7 @@
     <HelpKINode Title="fields" Url="html/bfad57c4-e1f7-8d12-1f6b-67abd81252f8.htm" />
   </HelpKINode>
   <HelpKINode Title="ProcessLog method">
-    <HelpKINode Title="DebugReactor.ProcessLog Method " Url="html/ac5200cd-eba2-56a1-534b-1c70a9a2f693.htm" />
+    <HelpKINode Title="DebugReactor.ProcessLog Method " Url="html/d1559f39-4f59-df33-6018-bfcba5c7e33a.htm" />
     <HelpKINode Title="FileReactor.ProcessLog Method " Url="html/5dea6a42-2c8e-0d20-67fb-44ffd17bf791.htm" />
     <HelpKINode Title="ILogReactor.ProcessLog Method " Url="html/f78c33a9-b5bf-97e9-df1e-f20d6434e6f4.htm" />
     <HelpKINode Title="Logger.ProcessLog Method " Url="html/7bb50bf8-94b0-6033-a4e4-72806f9e6ac7.htm" />
@@ -1056,10 +999,6 @@
   <HelpKINode Title="RegisterEventReceiver method" Url="html/9f278a68-d5fa-f068-7518-b956dd4b5e8b.htm" />
   <HelpKINode Title="RegisterKeyEvent method" Url="html/64c24bee-e248-3ee3-110f-af5c3ee6a1e0.htm" />
   <HelpKINode Title="RegisterTapEvent method" Url="html/9959a968-0d61-4ea8-6a17-f24d2cb0bef9.htm" />
-  <HelpKINode Title="Remove method" Url="html/62d194a4-b09e-a9f7-4eae-9a52bc0b284d.htm" />
-  <HelpKINode Title="RemoveAll method" Url="html/da2f67fd-138a-07c2-926d-06b60baf17bb.htm" />
-  <HelpKINode Title="Removed event" Url="html/3a9204ed-1637-6960-5d80-2cfa99c4eaf6.htm" />
-  <HelpKINode Title="RemoveRange method" Url="html/17ae5f78-0217-3ea4-83ce-6246d487f081.htm" />
   <HelpKINode Title="RemoveReactor method" Url="html/a73c8aca-4196-32e4-5756-51b89d582336.htm" />
   <HelpKINode Title="RemoveTags method" Url="html/be87c1ed-0bb8-8e69-54bb-3226a0c75f64.htm" />
   <HelpKINode Title="Request class">
@@ -1319,11 +1258,11 @@
   <HelpKINode Title="TargetGameObject property" Url="html/fab6e42e-fcec-a7e1-5c79-b64167eecc90.htm" />
   <HelpKINode Title="TargetInput property" Url="html/114a503f-bcc7-bd15-f644-e68d2b2b610e.htm" />
   <HelpKINode Title="TargetObject property" Url="html/d1dd517e-b772-018d-3b49-4f2c4481db56.htm" />
-  <HelpKINode Title="text property" Url="html/0a7ebfe9-b1e0-b2ad-4309-96a168ed04eb.htm" />
   <HelpKINode Title="Text property">
     <HelpKINode Title="TextToSpeechData.Text Property " Url="html/524d6062-8352-fc59-dab4-042b847f78e0.htm" />
     <HelpKINode Title="WSConnector.TextMessage.Text Property " Url="html/87ed4827-7aed-5686-bdc0-ee48e46acbec.htm" />
   </HelpKINode>
+  <HelpKINode Title="text property" Url="html/0a7ebfe9-b1e0-b2ad-4309-96a168ed04eb.htm" />
   <HelpKINode Title="TextMessage class">
     <HelpKINode Title="properties" Url="html/f103af64-ea1f-1a6e-4e74-b90f1d4ac81b.htm" />
   </HelpKINode>
@@ -1503,17 +1442,16 @@
   <HelpKINode Title="UnregisterEventReceivers method" Url="html/af29919f-ce2e-d44d-6d54-581bacb0f2ce.htm" />
   <HelpKINode Title="UnregisterKeyEvent method" Url="html/ea9585f6-09f4-dabd-fdfd-2e276223f2d7.htm" />
   <HelpKINode Title="UnregisterTapEvent method" Url="html/d9ed7e0f-fea5-36f6-3bae-125b0c0af804.htm" />
-  <HelpKINode Title="Updated event" Url="html/15f3f982-ad73-fba0-b656-3269fa5ae2b6.htm" />
   <HelpKINode Title="UpdateRoutines method" Url="html/e76d1482-d6a0-99e7-f7e1-e1b0d79e7ea5.htm" />
   <HelpKINode Title="UploadDialog method" Url="html/94788d7f-9054-d893-f9eb-fb4a08bd7d85.htm" />
   <HelpKINode Title="URL property">
-    <HelpKINode Title="SpeechModel.URL Property " Url="html/cd3a3c4c-fa06-36c5-57df-895c999263c1.htm" />
     <HelpKINode Title="RESTConnector.URL Property " Url="html/0019bff3-0def-4b33-cbb1-e7c45ec056b7.htm" />
+    <HelpKINode Title="SpeechModel.URL Property " Url="html/cd3a3c4c-fa06-36c5-57df-895c999263c1.htm" />
     <HelpKINode Title="WSConnector.URL Property " Url="html/f2399da2-f234-5dd2-43f7-919686952f43.htm" />
   </HelpKINode>
   <HelpKINode Title="url property">
-    <HelpKINode Title="Classifier.url Property " Url="html/3a98f860-1917-cae8-fc24-c3c6fd7f06ca.htm" />
     <HelpKINode Title="ClassifyResult.url Property " Url="html/e902bc2b-23e5-8b71-c736-19f08b9415e7.htm" />
+    <HelpKINode Title="Classifier.url Property " Url="html/3a98f860-1917-cae8-fc24-c3c6fd7f06ca.htm" />
   </HelpKINode>
   <HelpKINode Title="User property" Url="html/6c15d7b6-68f7-789e-443a-8709fd054679.htm" />
   <HelpKINode Title="UsingGateway property">
