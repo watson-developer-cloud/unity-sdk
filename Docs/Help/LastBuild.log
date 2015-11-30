@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shfbBuild product="Sandcastle Help File Builder and Tools" version="2015.10.10.0" projectFile="C:\Work\watson_unity_plugin\Docs\UnitySDK.shfbproj" started="11/30/2015 3:06:56 PM">
+<shfbBuild product="Sandcastle Help File Builder and Tools" version="2015.10.10.0" projectFile="C:\Work\watson_unity_plugin\Docs\UnitySDK.shfbproj" started="11/30/2015 3:36:19 PM">
 <buildStep step="Initializing">
 Finding tools...
 The Sandcastle tools are located in &#39;C:\Program Files (x86)\EWSoftware\Sandcastle Help File Builder\&#39;
@@ -30,7 +30,7 @@ Copying XML comments files
 <buildStep step="GenerateSharedContent">
 Generating shared content files (en-US, English (United States))...
 <plugIn name="Lightweight Website Style" behavior="After" priority="1000">
-</plugIn>    Last step completed in 00:00:00.0031
+</plugIn>    Last step completed in 00:00:00.0156
 </buildStep>
 <buildStep step="GenerateApiFilter">
 Generating API filter for MRefBuilder...
@@ -39,7 +39,7 @@ Generating API filter for MRefBuilder...
 <buildStep step="GenerateReflectionInfo">
 Generating reflection information...
 [C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe - GenerateRefInfo.proj]
-Build started 11/30/2015 3:06:57 PM.
+Build started 11/30/2015 3:36:19 PM.
 Project &quot;C:\Work\watson_unity_plugin\Docs\Help\Working\GenerateRefInfo.proj&quot; on node 1 (default targets).
 PrepareForBuild:
   Creating directory &quot;obj\Debug\&quot;.
@@ -58,13 +58,13 @@ Done Building Project &quot;C:\Work\watson_unity_plugin\Docs\Help\Working\Genera
 
 Build succeeded.
 
-Time Elapsed 00:00:00.92
-    Last step completed in 00:00:01.1548
+Time Elapsed 00:00:00.95
+    Last step completed in 00:00:01.2116
 </buildStep>
 <buildStep step="TransformReflectionInfo">
 Transforming reflection output...
 [C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe - TransformManifest.proj]
-Build started 11/30/2015 3:06:58 PM.
+Build started 11/30/2015 3:36:21 PM.
 Project &quot;C:\Work\watson_unity_plugin\Docs\Help\Working\TransformManifest.proj&quot; on node 1 (default targets).
 TransformManifest:
   XslTransform (v2015.10.10.0)
@@ -85,11 +85,11 @@ Done Building Project &quot;C:\Work\watson_unity_plugin\Docs\Help\Working\Transf
 Build succeeded.
 
 Time Elapsed 00:00:00.65
-    Last step completed in 00:00:00.8594
+    Last step completed in 00:00:00.8406
 </buildStep>
 <buildStep step="GenerateNamespaceSummaries">
 Generating namespace summary information...
-    Last step completed in 00:00:00.0313
+    Last step completed in 00:00:00.0260
 </buildStep>
 <buildStep step="CopyAdditionalContent">
 Copying additional content files...
@@ -103,7 +103,7 @@ Merging conceptual and additional tables of contents...
 <buildStep step="GenerateIntermediateTableOfContents">
 Generating intermediate table of contents file...
 [C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe - GenerateIntermediateTOC.proj]
-Build started 11/30/2015 3:06:59 PM.
+Build started 11/30/2015 3:36:21 PM.
 Project &quot;C:\Work\watson_unity_plugin\Docs\Help\Working\GenerateIntermediateTOC.proj&quot; on node 1 (default targets).
 GenerateIntermediateTOC:
   XslTransform (v2015.10.10.0)
@@ -114,14 +114,14 @@ Done Building Project &quot;C:\Work\watson_unity_plugin\Docs\Help\Working\Genera
 
 Build succeeded.
 
-Time Elapsed 00:00:00.37
+Time Elapsed 00:00:00.39
 Generating conceptual content intermediate TOC file...
-    Last step completed in 00:00:00.5683
+    Last step completed in 00:00:00.5881
 </buildStep>
 <buildStep step="CreateBuildAssemblerConfigs">
 Creating Sandcastle configuration files...
     sandcastle.config
-    Last step completed in 00:00:00.1250
+    Last step completed in 00:00:00.1094
 </buildStep>
 <buildStep step="MergeCustomConfigs">
 Merging custom build component configurations
@@ -131,7 +131,7 @@ C:\Work\watson_unity_plugin\Docs\Help\Working\sandcastle.config
 <buildStep step="BuildReferenceTopics">
 Building reference help topics...
 [C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe - BuildReferenceTopics.proj]
-Build started 11/30/2015 3:07:00 PM.
+Build started 11/30/2015 3:36:22 PM.
 Project &quot;C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj&quot; on node 1 (default targets).
 BuildReferenceTopics:
   BuildAssembler (v2015.10.10.0)
@@ -239,62 +239,12 @@ BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.DataModels.Transl
 BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.DataModels.Translations.word_count] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataModels.WordConfidence.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [N:IBM.Watson.DataTypes] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataTypes.AudioData.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataTypes.AudioData.#ctor(UnityEngine.AudioClip,System.Single)] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataTypes.AudioData.#ctor(UnityEngine.AudioClip,System.Single)] Missing &lt;param name=&quot;clip&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataTypes.AudioData.#ctor(UnityEngine.AudioClip,System.Single)] Missing &lt;param name=&quot;maxLevel&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [M:IBM.Watson.DataTypes.AudioData.#ctor(UnityEngine.AudioClip,System.Single)] Unknown reference link target &#39;T:UnityEngine.AudioClip&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [M:IBM.Watson.DataTypes.AudioData.#ctor(UnityEngine.AudioClip,System.Single)] Unknown reference link target &#39;T:UnityEngine.AudioClip&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.DataTypes.AudioData.Clip] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [P:IBM.Watson.DataTypes.AudioData.Clip] Unknown reference link target &#39;T:UnityEngine.AudioClip&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [P:IBM.Watson.DataTypes.AudioData.Clip] Unknown reference link target &#39;T:UnityEngine.AudioClip&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataTypes.AudioData.GetName] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataTypes.AudioData.GetName] Missing &lt;returns&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.DataTypes.AudioData.MaxLevel] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataTypes.BooleanData.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataTypes.BooleanData.#ctor(System.Boolean)] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataTypes.BooleanData.#ctor(System.Boolean)] Missing &lt;param name=&quot;b&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.DataTypes.BooleanData.Boolean] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataTypes.BooleanData.GetName] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataTypes.BooleanData.GetName] Missing &lt;returns&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataTypes.ClassifyResultData.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataTypes.ClassifyResultData.#ctor(IBM.Watson.DataModels.ClassifyResult)] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataTypes.ClassifyResultData.#ctor(IBM.Watson.DataModels.ClassifyResult)] Missing &lt;param name=&quot;result&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataTypes.ClassifyResultData.GetName] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataTypes.ClassifyResultData.GetName] Missing &lt;returns&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.DataTypes.ClassifyResultData.Result] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [T:IBM.Watson.DataTypes.DisableMicData] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataTypes.DisableMicData.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataTypes.DisableMicData.#ctor(System.Boolean)] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataTypes.DisableMicData.#ctor(System.Boolean)] Missing &lt;param name=&quot;b&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.DataTypes.DisableMicData.Boolean] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataTypes.DisableMicData.GetName] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataTypes.DisableMicData.GetName] Missing &lt;returns&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataTypes.FloatData.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataTypes.FloatData.#ctor(System.Single)] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataTypes.FloatData.#ctor(System.Single)] Missing &lt;param name=&quot;f&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.DataTypes.FloatData.Float] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataTypes.FloatData.GetName] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataTypes.FloatData.GetName] Missing &lt;returns&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [T:IBM.Watson.DataTypes.SpeakingStateData] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataTypes.SpeakingStateData.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataTypes.SpeakingStateData.#ctor(System.Boolean)] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataTypes.SpeakingStateData.#ctor(System.Boolean)] Missing &lt;param name=&quot;b&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.DataTypes.SpeakingStateData.Boolean] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataTypes.SpeakingStateData.GetName] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataTypes.SpeakingStateData.GetName] Missing &lt;returns&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataTypes.SpeechToTextData.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataTypes.SpeechToTextData.#ctor(IBM.Watson.DataModels.SpeechResultList)] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataTypes.SpeechToTextData.#ctor(IBM.Watson.DataModels.SpeechResultList)] Missing &lt;param name=&quot;result&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataTypes.SpeechToTextData.GetName] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataTypes.SpeechToTextData.GetName] Missing &lt;returns&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.DataTypes.SpeechToTextData.Results] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataTypes.TextData.#ctor] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataTypes.TextData.#ctor(System.String)] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataTypes.TextData.#ctor(System.String)] Missing &lt;param name=&quot;text&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataTypes.TextData.GetName] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataTypes.TextData.GetName] Missing &lt;returns&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.DataTypes.TextData.Text] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
+BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.DataTypes.TextToSpeechData.#ctor(System.String)] Missing &lt;param name=&quot;text&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [N:IBM.Watson.Debug] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Debug.DebugConsole] Unknown reference link target &#39;T:UnityEngine.Object&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Debug.DebugConsole] Unknown reference link target &#39;T:UnityEngine.Component&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
@@ -709,19 +659,19 @@ BuildAssembler : warning : ResolveReferenceLinksComponent: [P:IBM.Watson.Widgets
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.Widget.Output.ToString] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.Widget.Output.ToString] Missing &lt;returns&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
   Processed 707 topic(s)
-  569 warning(s)
+  519 warning(s)
   CopyFromIndexComponent: &quot;reflection&quot; in-memory cache entries used: 4 of 15.
   CopyFromIndexComponent: &quot;comments&quot; in-memory cache entries used: 1 of 30.
 Done Building Project &quot;C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj&quot; (default targets).
 
 Build succeeded.
 
-Time Elapsed 00:00:14.35
-    Last step completed in 00:00:14.5928
+Time Elapsed 00:00:14.12
+    Last step completed in 00:00:14.3616
 </buildStep>
 <buildStep step="CombiningIntermediateTocFiles">
 Combining conceptual and API intermediate TOC files...
-    Last step completed in 00:00:00.0045
+    Last step completed in 00:00:00.0035
 </buildStep>
 <buildStep step="ExtractingHtmlInfo">
 Extracting HTML info for HTML Help 1 and/or website...
@@ -743,7 +693,7 @@ Processed 707 HTML files
 Sorting keywords and generating See Also indices
 Saving website keyword index to C:\Work\watson_unity_plugin\Docs\Help\Working\WebKI.xml
 Saving website table of contents to C:\Work\watson_unity_plugin\Docs\Help\Working\WebTOC.xml
-    Last step completed in 00:00:02.2642
+    Last step completed in 00:00:02.3757
 </buildStep>
 <buildStep step="CopyStandardHelpContent">
 Copying standard help content...
@@ -884,7 +834,7 @@ C:\Program Files (x86)\EWSoftware\Sandcastle Help File Builder\PresentationStyle
 C:\Program Files (x86)\EWSoftware\Sandcastle Help File Builder\PresentationStyles\VS2013\Web\icons\TocOpen.gif -&gt; C:\Work\watson_unity_plugin\Docs\Help\Working\Output\Website\icons\TocOpen.gif
 C:\Program Files (x86)\EWSoftware\Sandcastle Help File Builder\PresentationStyles\VS2013\Web\scripts\branding-Website.js -&gt; C:\Work\watson_unity_plugin\Docs\Help\Working\Output\Website\scripts\branding-Website.js
 C:\Program Files (x86)\EWSoftware\Sandcastle Help File Builder\PresentationStyles\VS2013\Web\scripts\jquery-1.11.0.min.js -&gt; C:\Work\watson_unity_plugin\Docs\Help\Working\Output\Website\scripts\jquery-1.11.0.min.js
-    Last step completed in 00:00:00.1045
+    Last step completed in 00:00:00.1511
 </buildStep>
 <buildStep step="GenerateHelpFormatTableOfContents">
 Generating HTML Help 1 table of contents file...
@@ -896,7 +846,7 @@ Generating HTML Help 1 index file...
 </buildStep>
 <buildStep step="GenerateHelpProject">
 Generating HTML Help 1 project file...
-    Last step completed in 00:00:00.0065
+    Last step completed in 00:00:00.0070
 </buildStep>
 <buildStep step="CompilingHelpFile">
 Compiling HTML Help 1 file...
@@ -925,11 +875,11 @@ Compiling HTML Help 1 file...
   
   
   
-  Created c:\Work\watson_unity_plugin\Docs\Help\Working\Output\HtmlHelp1\WatsonUnitySDK.chm, 796,957 bytes
+  Created c:\Work\watson_unity_plugin\Docs\Help\Working\Output\HtmlHelp1\WatsonUnitySDK.chm, 798,991 bytes
   
-  Compression decreased file by 4,784,080 bytes.
+  Compression decreased file by 4,781,380 bytes.
   
-    Last step completed in 00:00:02.8568
+    Last step completed in 00:00:03.0218
 </buildStep>
 <buildStep step="GenerateHelpFormatTableOfContents">
 Generating website table of contents file...
@@ -940,7 +890,7 @@ Generating full-text index for the website...
 
 <plugIn name="Lightweight Website Style" behavior="After" priority="1000">
 Adding lightweight search and TOC elements to each topic...
-</plugIn>    Last step completed in 00:00:04.5341
+</plugIn>    Last step completed in 00:00:04.8208
 </buildStep>
 <buildStep step="CopyingWebsiteFiles">
 Copying website files to output folder...
@@ -948,15 +898,15 @@ Copying website files to output folder...
 Copied 500 files
 Copied 1000 files
 Copied 1041 files for the website content
-    Last step completed in 00:00:00.6250
+    Last step completed in 00:00:00.7782
 </buildStep>
 <buildStep step="CleanIntermediates">
 Removing intermediate files...
-    Last step completed in 00:00:00.3281
+    Last step completed in 00:00:00.3852
 </buildStep>
 <buildStep step="Completed">
 
-Build completed successfully at 11/30/2015 3:07:25 PM.  Total time: 00:00:28.5899
+Build completed successfully at 11/30/2015 3:36:48 PM.  Total time: 00:00:29.2275
 
 </buildStep>
 </shfbBuild>

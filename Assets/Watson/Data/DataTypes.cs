@@ -13,7 +13,6 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *
-* @author Richard Lyle (rolyle@us.ibm.com)
 */
 
 
@@ -27,21 +26,35 @@ using UnityEngine;
 namespace IBM.Watson.DataTypes
 {
     /// <summary>
-    /// This data class is for text data.
+    /// This data class is for text data to spoken by the TextToSpeech widget.
     /// </summary>
-    public class TextData : Widget.Data
+    public class TextToSpeechData : Widget.Data
     {
-        public TextData()
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public TextToSpeechData()
         { }
-        public TextData(string text)
+        /// <summary>
+        /// String constructor.
+        /// </summary>
+        /// <param name="text"></param>
+        public TextToSpeechData(string text)
         {
             Text = text;
         }
+        /// <summary>
+        /// Name of this data type.
+        /// </summary>
+        /// <returns>A human readable name for this data type.</returns>
         public override string GetName()
         {
-            return "Text";
+            return "TextToSpeech";
         }
 
+        /// <summary>
+        /// The text to convert to speech.
+        /// </summary>
         public string Text { get; set; }
     };
 
@@ -50,19 +63,37 @@ namespace IBM.Watson.DataTypes
     /// </summary>
     public class AudioData : Widget.Data
     {
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
         public AudioData()
         { }
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="clip">The AudioClip.</param>
+        /// <param name="maxLevel">The maximum sample level in the audio clip.</param>
         public AudioData(AudioClip clip, float maxLevel)
         {
             Clip = clip;
             MaxLevel = maxLevel;
         }
+        /// <summary>
+        /// Name of this data type.
+        /// </summary>
+        /// <returns>The readable name.</returns>
         public override string GetName()
         {
             return "Audio";
         }
 
+        /// <summary>
+        /// The AudioClip.
+        /// </summary>
         public AudioClip Clip { get; set; }
+        /// <summary>
+        /// The maximum level in the audio clip.
+        /// </summary>
         public float MaxLevel { get; set; }
     };
 
@@ -71,66 +102,128 @@ namespace IBM.Watson.DataTypes
     /// </summary>
     public class BooleanData : Widget.Data
     {
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
         public BooleanData()
         { }
+        /// <summary>
+        /// Data constructor.
+        /// </summary>
+        /// <param name="b"></param>
         public BooleanData(bool b)
         {
             Boolean = b;
         }
+        /// <summary>
+        /// Name of this data type.
+        /// </summary>
+        /// <returns>The readable name.</returns>
         public override string GetName()
         {
             return "Boolean";
         }
 
+        /// <summary>
+        /// The bool value.
+        /// </summary>
         public bool Boolean { get; set; }
     };
 
+    /// <summary>
+    /// Boolean state sent when TextToSpeech starts and ends playing audio.
+    /// </summary>
     public class SpeakingStateData : Widget.Data
     {
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
         public SpeakingStateData()
         { }
+        /// <summary>
+        /// Data constructor.
+        /// </summary>
+        /// <param name="b">The speaking state, true for speaking, false for not.</param>
         public SpeakingStateData( bool b ) 
         {
             Boolean = b;
         }
+        /// <summary>
+        /// Name of this data type.
+        /// </summary>
+        /// <returns>The readable name.</returns>
         public override string GetName()
         {
             return "Speaking";
         }
-        public bool Boolean { get; set; }
-    }
 
-    public class DisableMicData : Widget.Data
-    {
-        public DisableMicData()
-        { }
-        public DisableMicData( bool b ) 
-        {
-            Boolean = b;
-        }
-        public override string GetName()
-        {
-            return "DisableMic";
-        }
+        /// <summary>
+        /// Speaking state property. True if speaking, false if not.
+        /// </summary>
         public bool Boolean { get; set; }
     }
 
     /// <summary>
-    /// This class is for float data.
+    /// Boolean state for disabling the microphone input.
     /// </summary>
-    public class FloatData : Widget.Data
+    public class DisableMicData : Widget.Data
     {
-        public FloatData()
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public DisableMicData()
         { }
-        public FloatData( float f )
+        /// <summary>
+        /// Data constructor.
+        /// </summary>
+        /// <param name="b">Disable microphone state.</param>
+        public DisableMicData( bool b ) 
+        {
+            Boolean = b;
+        }
+        /// <summary>
+        /// Name of this data type.
+        /// </summary>
+        /// <returns>The readable name.</returns>
+        public override string GetName()
+        {
+            return "DisableMic";
+        }
+        /// <summary>
+        /// Disable microphone state, true for disabled, false for not.
+        /// </summary>
+        public bool Boolean { get; set; }
+    }
+
+    /// <summary>
+    /// This class is for audio level data.
+    /// </summary>
+    public class LevelData : Widget.Data
+    {
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public LevelData()
+        { }
+        /// <summary>
+        /// Data constructor.
+        /// </summary>
+        /// <param name="f">The level data.</param>
+        public LevelData( float f )
         {
             Float = f;
         }
+        /// <summary>
+        /// Name of this data type.
+        /// </summary>
+        /// <returns>The readable name.</returns>
         public override string GetName()
         {
-            return "Float";
+            return "Level";
         }
-
+        /// <summary>
+        /// The level data.
+        /// </summary>
         public float Float { get; set; }
     };
 
@@ -139,17 +232,30 @@ namespace IBM.Watson.DataTypes
     /// </summary>
     public class SpeechToTextData : Widget.Data
     {
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
         public SpeechToTextData()
         { }
+        /// <summary>
+        /// Data constructor.
+        /// </summary>
+        /// <param name="result">The SpeechToText results.</param>
         public SpeechToTextData(SpeechResultList result)
         {
             Results = result;
         }
+        /// <summary>
+        /// Name of this data type.
+        /// </summary>
+        /// <returns>The readable name.</returns>
         public override string GetName()
         {
             return "SpeechToText";
         }
-
+        /// <summary>
+        /// The Result object.
+        /// </summary>
         public SpeechResultList Results { get; set; }
     };
 
@@ -158,18 +264,31 @@ namespace IBM.Watson.DataTypes
     /// </summary>
     public class ClassifyResultData : Widget.Data
     {
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
         public ClassifyResultData()
         { }
+        /// <summary>
+        /// Data constructor.
+        /// </summary>
+        /// <param name="result">The ClassifyResult object.</param>
         public ClassifyResultData( ClassifyResult result )
         {
             Result = result;
         }
 
+        /// <summary>
+        /// Name of this data type.
+        /// </summary>
+        /// <returns>The readable name.</returns>
         public override string GetName()
         {
             return "ClassifyResult";
         }
-
+        /// <summary>
+        /// The ClassifyResult object.
+        /// </summary>
         public ClassifyResult Result { get; set; }
     };
 }
