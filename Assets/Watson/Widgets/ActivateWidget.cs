@@ -33,6 +33,9 @@ namespace IBM.Watson.Widgets
         }
         #endregion
 
+        /// <summary>
+        /// Button event handler.
+        /// </summary>
         public void OnButton()
         {
             m_ActivateOutput.SendData( new BooleanData(m_SendValue) );

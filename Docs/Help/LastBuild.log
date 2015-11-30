@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shfbBuild product="Sandcastle Help File Builder and Tools" version="2015.10.10.0" projectFile="C:\Work\watson_unity_plugin\Docs\UnitySDK.shfbproj" started="11/30/2015 4:09:20 PM">
+<shfbBuild product="Sandcastle Help File Builder and Tools" version="2015.10.10.0" projectFile="C:\Work\watson_unity_plugin\Docs\UnitySDK.shfbproj" started="11/30/2015 4:32:40 PM">
 <buildStep step="Initializing">
 Finding tools...
 The Sandcastle tools are located in &#39;C:\Program Files (x86)\EWSoftware\Sandcastle Help File Builder\&#39;
@@ -30,16 +30,16 @@ Copying XML comments files
 <buildStep step="GenerateSharedContent">
 Generating shared content files (en-US, English (United States))...
 <plugIn name="Lightweight Website Style" behavior="After" priority="1000">
-</plugIn>    Last step completed in 00:00:00.0000
+</plugIn>    Last step completed in 00:00:00.0156
 </buildStep>
 <buildStep step="GenerateApiFilter">
 Generating API filter for MRefBuilder...
-    Last step completed in 00:00:00.0313
+    Last step completed in 00:00:00.0156
 </buildStep>
 <buildStep step="GenerateReflectionInfo">
 Generating reflection information...
 [C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe - GenerateRefInfo.proj]
-Build started 11/30/2015 4:09:21 PM.
+Build started 11/30/2015 4:32:41 PM.
 Project &quot;C:\Work\watson_unity_plugin\Docs\Help\Working\GenerateRefInfo.proj&quot; on node 1 (default targets).
 PrepareForBuild:
   Creating directory &quot;obj\Debug\&quot;.
@@ -48,7 +48,7 @@ GenerateRefInfo:
   Copyright c 2006-2015, Microsoft Corporation, All Rights Reserved.
   Portions Copyright c 2006-2015, Eric Woodruff, All Rights Reserved.
   Loaded 1 assemblies for reflection and 1 dependency assemblies.
-  Wrote information on 9 namespaces, 121 types, and 539 members
+  Wrote information on 9 namespaces, 121 types, and 537 members
   Copying file from &quot;reflection.org&quot; to &quot;reflection.all&quot;.
   XslTransform (v2015.10.10.0)
   Copyright c 2006-2015, Microsoft Corporation, All Rights Reserved.
@@ -58,13 +58,13 @@ Done Building Project &quot;C:\Work\watson_unity_plugin\Docs\Help\Working\Genera
 
 Build succeeded.
 
-Time Elapsed 00:00:00.90
-    Last step completed in 00:00:01.1619
+Time Elapsed 00:00:01.06
+    Last step completed in 00:00:01.3454
 </buildStep>
 <buildStep step="TransformReflectionInfo">
 Transforming reflection output...
 [C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe - TransformManifest.proj]
-Build started 11/30/2015 4:09:22 PM.
+Build started 11/30/2015 4:32:42 PM.
 Project &quot;C:\Work\watson_unity_plugin\Docs\Help\Working\TransformManifest.proj&quot; on node 1 (default targets).
 TransformManifest:
   XslTransform (v2015.10.10.0)
@@ -85,7 +85,7 @@ Done Building Project &quot;C:\Work\watson_unity_plugin\Docs\Help\Working\Transf
 Build succeeded.
 
 Time Elapsed 00:00:00.64
-    Last step completed in 00:00:00.8438
+    Last step completed in 00:00:00.8604
 </buildStep>
 <buildStep step="GenerateNamespaceSummaries">
 Generating namespace summary information...
@@ -103,7 +103,7 @@ Merging conceptual and additional tables of contents...
 <buildStep step="GenerateIntermediateTableOfContents">
 Generating intermediate table of contents file...
 [C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe - GenerateIntermediateTOC.proj]
-Build started 11/30/2015 4:09:23 PM.
+Build started 11/30/2015 4:32:43 PM.
 Project &quot;C:\Work\watson_unity_plugin\Docs\Help\Working\GenerateIntermediateTOC.proj&quot; on node 1 (default targets).
 GenerateIntermediateTOC:
   XslTransform (v2015.10.10.0)
@@ -114,24 +114,24 @@ Done Building Project &quot;C:\Work\watson_unity_plugin\Docs\Help\Working\Genera
 
 Build succeeded.
 
-Time Elapsed 00:00:00.39
+Time Elapsed 00:00:00.48
 Generating conceptual content intermediate TOC file...
-    Last step completed in 00:00:00.5781
+    Last step completed in 00:00:00.6947
 </buildStep>
 <buildStep step="CreateBuildAssemblerConfigs">
 Creating Sandcastle configuration files...
     sandcastle.config
-    Last step completed in 00:00:00.1024
+    Last step completed in 00:00:00.0936
 </buildStep>
 <buildStep step="MergeCustomConfigs">
 Merging custom build component configurations
 C:\Work\watson_unity_plugin\Docs\Help\Working\sandcastle.config
-    Last step completed in 00:00:00.0050
+    Last step completed in 00:00:00.0055
 </buildStep>
 <buildStep step="BuildReferenceTopics">
 Building reference help topics...
 [C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe - BuildReferenceTopics.proj]
-Build started 11/30/2015 4:09:24 PM.
+Build started 11/30/2015 4:32:44 PM.
 Project &quot;C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj&quot; on node 1 (default targets).
 BuildReferenceTopics:
   BuildAssembler (v2015.10.10.0)
@@ -445,7 +445,6 @@ BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.ActivateWidget] Unknown reference link target &#39;T:UnityEngine.MonoBehaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.ActivateWidget.GetName] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.ActivateWidget.GetName] Missing &lt;returns&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.ActivateWidget.OnButton] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.ClassDisplayWidget] Unknown reference link target &#39;T:UnityEngine.Object&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.ClassDisplayWidget] Unknown reference link target &#39;T:UnityEngine.Component&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.ClassDisplayWidget] Unknown reference link target &#39;T:UnityEngine.Behaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
@@ -464,11 +463,6 @@ BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.ClassifierWidget] Unknown reference link target &#39;T:UnityEngine.Component&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.ClassifierWidget] Unknown reference link target &#39;T:UnityEngine.Behaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.ClassifierWidget] Unknown reference link target &#39;T:UnityEngine.MonoBehaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.Widgets.ClassifierWidget.ClassifyInput] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.Widgets.ClassifierWidget.ClassifyOutput] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.ClassifierWidget.GetName] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.ClassifierWidget.GetName] Missing &lt;returns&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [T:IBM.Watson.Widgets.ClassifierWidget.OnClassifierResult] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.EventWidget] Unknown reference link target &#39;T:UnityEngine.Object&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.EventWidget] Unknown reference link target &#39;T:UnityEngine.Component&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.EventWidget] Unknown reference link target &#39;T:UnityEngine.Behaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
@@ -505,7 +499,6 @@ BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.NlcWidget] Unknown reference link target &#39;T:UnityEngine.Component&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.NlcWidget] Unknown reference link target &#39;T:UnityEngine.Behaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.NlcWidget] Unknown reference link target &#39;T:UnityEngine.MonoBehaviour&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [P:IBM.Watson.Widgets.NlcWidget.NLC] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.NlcWidget.OnDebugCommand(System.Object[])] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.NlcWidget.OnDebugCommand(System.Object[])] Missing &lt;param name=&quot;args&quot;/&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.SpeechDisplayWidget] Unknown reference link target &#39;T:UnityEngine.Object&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
@@ -540,7 +533,6 @@ BuildAssembler : warning : ResolveReferenceLinksComponent: [Methods.T:IBM.Watson
 BuildAssembler : warning : ResolveReferenceLinksComponent: [Methods.T:IBM.Watson.Widgets.TextToSpeechWidget] Unknown reference link target &#39;M:IBM.Watson.Widgets.Widget.Start&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.TextToSpeechWidget.GetName] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.TextToSpeechWidget.GetName] Missing &lt;returns&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.TextToSpeechWidget.OnTextToSpeech] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.TextToSpeechWidget.Start] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.TouchWidget] Unknown reference link target &#39;T:UnityEngine.Object&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ResolveReferenceLinksComponent: [T:IBM.Watson.Widgets.TouchWidget] Unknown reference link target &#39;T:UnityEngine.Component&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
@@ -576,20 +568,20 @@ BuildAssembler : warning : ResolveReferenceLinksComponent: [P:IBM.Watson.Widgets
 BuildAssembler : warning : ResolveReferenceLinksComponent: [P:IBM.Watson.Widgets.Widget.Output.TargetObject] Unknown reference link target &#39;T:UnityEngine.GameObject&#39;. [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.Widget.Output.ToString] Missing &lt;summary&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
 BuildAssembler : warning : ShowMissingComponent: [M:IBM.Watson.Widgets.Widget.Output.ToString] Missing &lt;returns&gt; documentation [C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj]
-  Processed 707 topic(s)
-  437 warning(s)
+  Processed 704 topic(s)
+  429 warning(s)
   CopyFromIndexComponent: &quot;reflection&quot; in-memory cache entries used: 4 of 15.
   CopyFromIndexComponent: &quot;comments&quot; in-memory cache entries used: 1 of 30.
 Done Building Project &quot;C:\Work\watson_unity_plugin\Docs\Help\Working\BuildReferenceTopics.proj&quot; (default targets).
 
 Build succeeded.
 
-Time Elapsed 00:00:15.12
-    Last step completed in 00:00:15.3491
+Time Elapsed 00:00:16.37
+    Last step completed in 00:00:16.6020
 </buildStep>
 <buildStep step="CombiningIntermediateTocFiles">
 Combining conceptual and API intermediate TOC files...
-    Last step completed in 00:00:00.0000
+    Last step completed in 00:00:00.0045
 </buildStep>
 <buildStep step="ExtractingHtmlInfo">
 Extracting HTML info for HTML Help 1 and/or website...
@@ -601,17 +593,17 @@ E-Mail: Eric@EWoodruff.us
 Using LCID &#39;1033&#39;, code page &#39;65001&#39;, encoding charset &#39;UTF-8&#39;.
 
 Processing Help 1 files in C:\Work\watson_unity_plugin\Docs\Help\Working\Output\HtmlHelp1
-Processed 707 HTML files
+Processed 704 HTML files
 Sorting keywords and generating See Also indices
 Saving HTML Help 1 keyword index to C:\Work\watson_unity_plugin\Docs\Help\Working\WatsonUnitySDK.hhk
 Saving HTML Help 1 table of contents to C:\Work\watson_unity_plugin\Docs\Help\Working\WatsonUnitySDK.hhc
 
 Processing website files in C:\Work\watson_unity_plugin\Docs\Help\Working\Output\Website
-Processed 707 HTML files
+Processed 704 HTML files
 Sorting keywords and generating See Also indices
 Saving website keyword index to C:\Work\watson_unity_plugin\Docs\Help\Working\WebKI.xml
 Saving website table of contents to C:\Work\watson_unity_plugin\Docs\Help\Working\WebTOC.xml
-    Last step completed in 00:00:02.5269
+    Last step completed in 00:00:02.7259
 </buildStep>
 <buildStep step="CopyStandardHelpContent">
 Copying standard help content...
@@ -752,7 +744,7 @@ C:\Program Files (x86)\EWSoftware\Sandcastle Help File Builder\PresentationStyle
 C:\Program Files (x86)\EWSoftware\Sandcastle Help File Builder\PresentationStyles\VS2013\Web\icons\TocOpen.gif -&gt; C:\Work\watson_unity_plugin\Docs\Help\Working\Output\Website\icons\TocOpen.gif
 C:\Program Files (x86)\EWSoftware\Sandcastle Help File Builder\PresentationStyles\VS2013\Web\scripts\branding-Website.js -&gt; C:\Work\watson_unity_plugin\Docs\Help\Working\Output\Website\scripts\branding-Website.js
 C:\Program Files (x86)\EWSoftware\Sandcastle Help File Builder\PresentationStyles\VS2013\Web\scripts\jquery-1.11.0.min.js -&gt; C:\Work\watson_unity_plugin\Docs\Help\Working\Output\Website\scripts\jquery-1.11.0.min.js
-    Last step completed in 00:00:00.1250
+    Last step completed in 00:00:00.2064
 </buildStep>
 <buildStep step="GenerateHelpFormatTableOfContents">
 Generating HTML Help 1 table of contents file...
@@ -764,7 +756,7 @@ Generating HTML Help 1 index file...
 </buildStep>
 <buildStep step="GenerateHelpProject">
 Generating HTML Help 1 project file...
-    Last step completed in 00:00:00.0156
+    Last step completed in 00:00:00.0085
 </buildStep>
 <buildStep step="CompilingHelpFile">
 Compiling HTML Help 1 file...
@@ -781,9 +773,9 @@ Compiling HTML Help 1 file...
   
   Compile time: 0 minutes, 2 seconds
   
-  709	Topics
+  706	Topics
   
-  7,493	Local links
+  7,462	Local links
   
   491	Internet links
   
@@ -793,11 +785,11 @@ Compiling HTML Help 1 file...
   
   
   
-  Created c:\Work\watson_unity_plugin\Docs\Help\Working\Output\HtmlHelp1\WatsonUnitySDK.chm, 802,161 bytes
+  Created c:\Work\watson_unity_plugin\Docs\Help\Working\Output\HtmlHelp1\WatsonUnitySDK.chm, 800,877 bytes
   
-  Compression decreased file by 4,783,952 bytes.
+  Compression decreased file by 4,763,670 bytes.
   
-    Last step completed in 00:00:02.9688
+    Last step completed in 00:00:03.0823
 </buildStep>
 <buildStep step="GenerateHelpFormatTableOfContents">
 Generating website table of contents file...
@@ -808,23 +800,23 @@ Generating full-text index for the website...
 
 <plugIn name="Lightweight Website Style" behavior="After" priority="1000">
 Adding lightweight search and TOC elements to each topic...
-</plugIn>    Last step completed in 00:00:04.9718
+</plugIn>    Last step completed in 00:00:05.1158
 </buildStep>
 <buildStep step="CopyingWebsiteFiles">
 Copying website files to output folder...
 
 Copied 500 files
 Copied 1000 files
-Copied 1041 files for the website content
-    Last step completed in 00:00:00.7500
+Copied 1037 files for the website content
+    Last step completed in 00:00:00.6406
 </buildStep>
 <buildStep step="CleanIntermediates">
 Removing intermediate files...
-    Last step completed in 00:00:00.4375
+    Last step completed in 00:00:00.4089
 </buildStep>
 <buildStep step="Completed">
 
-Build completed successfully at 11/30/2015 4:09:51 PM.  Total time: 00:00:30.3913
+Build completed successfully at 11/30/2015 4:33:12 PM.  Total time: 00:00:32.3520
 
 </buildStep>
 </shfbBuild>
