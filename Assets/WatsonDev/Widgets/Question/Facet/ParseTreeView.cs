@@ -136,18 +136,14 @@ namespace IBM.Watson.Widgets.Question
 		/// <param name="parseWord">Parse word.</param>
 		/// <param name="parentRectTransfrom">Parent rect transfrom.</param>
 		/// <param name="parentWordRectTransform">Parent word rect transform.</param>
-		private void CreateParseWord(ParseTree parseWord, RectTransform parentRectTransfrom, RectTransform parentWordRectTransform)
+		private void CreateParseWord(ParseTree parseWord, RectTransform parentRectTransform, RectTransform parentWordRectTransform)
 		{
 			//	instantiate word
-			int siblingCount = parentRectTransfrom.childCount;
-			RectTransform lastSibling = siblingCount > 0 ? parentRectTransfrom.GetChild(siblingCount - 1).gameObject.GetComponent<RectTransform>() : null;
-
-			float wordX = siblingCount > 0 ? lastSibling.sizeDelta.x + lastSibling.rect.width + horizontalWordSpacing : 0f;
-			GameObject wordGameObject = Instantiate(m_ParseTreeTextItemPrefab, new Vector3(wordX, 0f, 0f), Quaternion.identity) as GameObject;
+			GameObject wordGameObject = Instantiate(m_ParseTreeTextItemPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity) as GameObject;
 
 			//	set parent to parent transform
             RectTransform wordRectTransform = wordGameObject.GetComponent<RectTransform>();
-			wordRectTransform.SetParent(parentRectTransfrom, false);
+			wordRectTransform.SetParent(parentRectTransform, false);
 
 			//	set properties
 			long wordPosition = parseWord.position;
@@ -160,6 +156,24 @@ namespace IBM.Watson.Widgets.Question
 
 			//	add to word list
 			m_WordList.Add(word);
+
+			float wordX = 0f;
+			int siblingCount = parentRectTransform.childCount;
+			int lastSiblingIndex = wordGameObject.transform.GetSiblingIndex() - 1;
+			RectTransform lastSiblingWordRectTransform = null;
+			if(siblingCount > 1)
+				lastSiblingWordRectTransform = parentRectTransform.gameObject.transform.GetChild(lastSiblingIndex).GetComponent<RectTransform>();
+			
+			if(parentRectTransform.gameObject.name == "Right Child")
+			{
+				wordX = siblingCount > 1 ? lastSiblingWordRectTransform.sizeDelta.x - wordGameObject.transform.GetChild(0).GetComponent<RectTransform>().rect.width - horizontalWordSpacing : 0f;
+			}
+			else if(parentRectTransform.gameObject.name == "Left Child")
+			{
+				wordX = siblingCount > 1 ? lastSiblingWordRectTransform.sizeDelta.x + lastSiblingWordRectTransform.rect.width + horizontalWordSpacing : 0f;
+			}
+			
+			wordGameObject.transform.localPosition = new Vector3(wordX, 0f, 0f);
 			
 			if(parseWord.rightChildren.Length > 0)
 			{
@@ -175,19 +189,18 @@ namespace IBM.Watson.Widgets.Question
 					CreateParseWord(parseWord.rightChildren[k], rightChildRectTransform, wordRectTransform);
 				}
 			}
-
+			
 			if(parseWord.leftChildren.Length > 0)
 			{
 				//	create and populate left children
 				GameObject leftChild = new GameObject("Left Child");
 				RectTransform leftChildRectTransform = leftChild.AddComponent<RectTransform>();
 				leftChild.AddComponent<CanvasRenderer>();
-
+				
 				if(parseWord.rightChildren.Length > 0)
 				{
 					RectTransform rightChildRectTransform = wordRectTransform.FindChild("Right Child").GetComponent<RectTransform>();
 					leftChildRectTransform.position = leftChild.GetComponent<RectTransform>().rect.x + leftChild.GetComponent<RectTransform>().rect.width > rightChildRectTransform.rect.x ? new Vector3(rightChildRectTransform.anchoredPosition.x - 400f, -verticalWordSpacing, 0f) : new Vector3(-200f, -verticalWordSpacing, 0f);
-					
 				}
 				else
 				{
@@ -195,14 +208,14 @@ namespace IBM.Watson.Widgets.Question
 				}
 				
 				leftChildRectTransform.SetParent(wordRectTransform, false);
-
+				
 				for(int i = parseWord.leftChildren.Length - 1; i >= 0; i--)
 				{
 					CreateParseWord(parseWord.leftChildren[i], leftChildRectTransform, wordRectTransform);
 				}
 			}
-
-			if(parentRectTransfrom != m_ParseCanvasRectTransform)
+			
+			if(parentRectTransform != m_ParseCanvasRectTransform)
 				CreateArrow(parentWordRectTransform, wordRectTransform);
 		}
 
