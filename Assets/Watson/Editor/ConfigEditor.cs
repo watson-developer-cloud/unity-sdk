@@ -15,6 +15,9 @@
 *
 */
 
+// uncomment to enable gateway
+//#define ENABLE_GATEWAY
+
 #if UNITY_EDITOR
 
 using IBM.Watson.Connection;
@@ -37,6 +40,7 @@ namespace IBM.Watson.Editor
     {
         #region Constants
         private const string BLUEMIX_REGISTRATION = "https://console.ng.bluemix.net/registration/";
+        private const string API_REFERENCE = "/Watson/Editor/Help/WatsonUnitySDK.chm";
 
         private class ServiceSetup
         {
@@ -96,7 +100,16 @@ namespace IBM.Watson.Editor
             System.IO.File.WriteAllText(Application.streamingAssetsPath + "/Config.json", Config.Instance.SaveConfig());
         }
 
-        [MenuItem("Watson/Configuration Editor")]
+        [MenuItem("Watson/API Reference", false, 100 )]
+        private static void ShowHelp()
+        {
+            string helpFile = "file://" + Application.dataPath + API_REFERENCE;
+            Log.Debug( "ConfigEditor", "helpFile = {0}", helpFile );
+            
+            Application.OpenURL( helpFile );
+        }
+
+        [MenuItem("Watson/Configuration Editor", false, 0 )]
         private static void EditConfig()
         {
             GetWindow<ConfigEditor>().Show();
@@ -109,12 +122,14 @@ namespace IBM.Watson.Editor
         private Vector2 m_ScrollPos = Vector2.zero;
         private string m_PastedCredentials = "\n\n\n\n\n\n\n";
 
+#if ENABLE_GATEWAY
 #if UNITY_EDITOR
         private string m_GatewayUser = "admin";
         private string m_GatewayPassword = "admin123";
 #else
         private string m_GatewayUser = "";
         private string m_GatewayPassword = "";
+#endif
 #endif
 
         private void OnGUI()
@@ -229,6 +244,7 @@ namespace IBM.Watson.Editor
                 cfg.TimeOut = EditorGUILayout.FloatField("Timeout", cfg.TimeOut);
                 cfg.MaxRestConnections = EditorGUILayout.IntField("Max Connections", cfg.MaxRestConnections);
 
+#if ENABLE_GATEWAY
                 cfg.EnableGateway = EditorGUILayout.ToggleLeft("Enable Gateway", cfg.EnableGateway);
                 if (cfg.EnableGateway)
                 {
@@ -301,6 +317,7 @@ namespace IBM.Watson.Editor
 
                     EditorGUI.indentLevel -= 1;
                 }
+#endif
 
                 EditorGUILayout.LabelField("BlueMix Credentials");
                 EditorGUI.indentLevel += 1;
