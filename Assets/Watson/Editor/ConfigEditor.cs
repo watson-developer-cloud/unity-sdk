@@ -104,8 +104,6 @@ namespace IBM.Watson.Editor
         private static void ShowHelp()
         {
             string helpFile = "file://" + Application.dataPath + API_REFERENCE;
-            Log.Debug( "ConfigEditor", "helpFile = {0}", helpFile );
-            
             Application.OpenURL( helpFile );
         }
 
