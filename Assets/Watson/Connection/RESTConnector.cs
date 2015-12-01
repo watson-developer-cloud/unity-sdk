@@ -15,14 +15,17 @@
 *
 */
 
+// uncomment to enable experimental gateway code.
+//#define ENABLE_GATEWAY
+
+using IBM.Watson.Utilities;
+using IBM.Watson.Logging;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using IBM.Watson.Utilities;
-using IBM.Watson.Logging;
-using UnityEngine;
 using System.Text;
 using System.Threading;
+using UnityEngine;
 
 #if UNITY_EDITOR
 using System.Net;
@@ -37,6 +40,11 @@ namespace IBM.Watson.Connection
     public class RESTConnector
     {
         #region Public Types
+        /// <summary>
+        /// This delegate type is declared for a Response handler function.
+        /// </summary>
+        /// <param name="req">The original request object.</param>
+        /// <param name="resp">The response object.</param>
         public delegate void ResponseEvent(Request req, Response resp);
 
         /// <summary>
@@ -66,7 +74,7 @@ namespace IBM.Watson.Connection
         };
 
         /// <summary>
-        /// multi-part form data class.
+        /// Multi-part form data class.
         /// </summary>
         public class Form
         {
@@ -89,15 +97,30 @@ namespace IBM.Watson.Connection
                 MimeType = mimeType;
             }
 
+            /// <summary>
+            /// True if the contained data is binary.
+            /// </summary>
             public bool IsBinary { get; set; }
+            /// <summary>
+            /// The boxed POD data type, only set if IsBinary is false.
+            /// </summary>
             public object BoxedObject { get; set; }
+            /// <summary>
+            /// If IsBinary is true, then this will contain the binary data.
+            /// </summary>
             public byte [] Contents { get; set; }
+            /// <summary>
+            /// The filename of the binary data.
+            /// </summary>
             public string FileName { get; set; }
+            /// <summary>
+            /// The Mime-Type of the binary data.
+            /// </summary>
             public string MimeType { get; set; }
         };
 
         /// <summary>
-        /// This class is created to make a request to send through the IConnector object to the server.
+        /// This class is created to make a request to send to the server.
         /// </summary>
         public class Request
         {
@@ -160,6 +183,7 @@ namespace IBM.Watson.Connection
         #endregion
 
         #region Private Data
+#if ENABLE_GATEWAY
         //! This dictionary is used to translated from a service ID & function into a service-type 
         //! value which is needed by the gateway. 
         private static Dictionary<string,string> sm_GatewayServiceTypes = new Dictionary<string,string>()
@@ -170,6 +194,7 @@ namespace IBM.Watson.Connection
             { "TranslateV1/v2/translate", "language-translation" },
             //{ "NlcV1/v1/delete", "natural-language-delete" },
         };
+#endif
         //! Dictionary of connectors by service & function.
         private static Dictionary<string,RESTConnector > sm_Connectors = new Dictionary<string, RESTConnector>();
         #endregion
@@ -190,6 +215,7 @@ namespace IBM.Watson.Connection
 
             Config cfg = Config.Instance;
            
+#if ENABLE_GATEWAY
             string serviceType = null;
             if ( cfg.EnableGateway 
                 && sm_GatewayServiceTypes.TryGetValue( connectorID, out serviceType ) )
@@ -205,7 +231,7 @@ namespace IBM.Watson.Connection
                 sm_Connectors[ connectorID ] = connector;
                 return connector;
             }
-
+#endif
             Config.CredentialInfo cred = cfg.FindCredentials( serviceID );
             if (cred == null)
             {
@@ -284,7 +310,6 @@ namespace IBM.Watson.Connection
         {
             // yield AFTER we increment the connection count, so the Send() function can return immediately
             m_ActiveConnections += 1;
-            //Log.Debug( "RESTConnector", "ActiveConnections {0}", m_ActiveConnections );
             yield return null;
 
             while (m_Requests.Count > 0)
@@ -434,7 +459,6 @@ namespace IBM.Watson.Connection
 
             // reduce the connection count before we exit..
             m_ActiveConnections -= 1;
-            //Log.Debug( "RESTConnector", "ActiveConnections {0}", m_ActiveConnections );
             yield break;
         }
 

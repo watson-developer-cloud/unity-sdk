@@ -21,6 +21,9 @@ using UnityEngine.Serialization;
 
 namespace IBM.Watson.Utilities
 {
+    /// <summary>
+    /// This class wraps all constants.
+    /// </summary>
     public static class Constants
     {
 

@@ -32,11 +32,7 @@ namespace IBM.Watson.Widgets
     /// </summary>
     public class ClassifierWidget : Widget
     {
-        /// <summary>
-        /// Callback delegate for a classifier result.
-        /// </summary>
-        /// <param name="result">The classify result object.</param>
-        public delegate void OnClassifierResult( ClassifyResult result );
+        private delegate void OnClassifierResult( ClassifyResult result );
 
         #region Widget interface
         /// <summary>

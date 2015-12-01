@@ -76,7 +76,7 @@ namespace IBM.Watson.Widgets.Avatar
         /// <param name="args">If there 2 parameters we consider 1st parameter is AvatarWidget object, otherwise we are using initial AvatarWidget object's values to call other functions</param>
 		protected void OnChangedMood(object[] args)
         {
-            if (args.Length == 0 || args.Length == 1)
+			if (args == null || args.Length == 0 || args.Length == 1)
             {
                 if ( m_AvatarWidgetAttached != null )
 				    ChangedMood(m_AvatarWidgetAttached.MoodColor, m_AvatarWidgetAttached.MoodTimeModifier);
@@ -112,7 +112,7 @@ namespace IBM.Watson.Widgets.Avatar
         /// <param name="args">If there 2 parameters we consider 1st parameter is AvatarWidget object, otherwise we are using initial AvatarWidget object's values to call other functions</param>
 		protected void OnChangedBehavior(object[] args)
         {
-            if (args.Length == 0 || args.Length == 1)
+			if (args == null || args.Length == 0 || args.Length == 1)
             {
 				ChangedBehavior(m_AvatarWidgetAttached.BehaviourColor, m_AvatarWidgetAttached.BehaviorTimeModifier);
             }

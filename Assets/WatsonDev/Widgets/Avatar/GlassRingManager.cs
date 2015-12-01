@@ -34,6 +34,7 @@ namespace IBM.Watson.Widgets.Avatar
         private int m_ColorAnimationOnGlass = -1;
 		private int m_ColorAnimationOnGlassLoop = -1;
         private Color m_LastColorUsedInAnimation = Color.white;
+		private bool m_IsNotUnderstanding = false;
         #endregion
 
         #region OnDisable / Awake
@@ -92,10 +93,14 @@ namespace IBM.Watson.Widgets.Avatar
         /// <param name="timeModifier"></param>
         public override void ChangedBehavior(Color color, float timeModifier)
         {
+			if (m_IsNotUnderstanding)
+				return;
+
             if (m_GlassRingMaterial != null)
             {
 
 				StopAnimationGlassRingColor();
+				m_IsNotUnderstanding = (m_AvatarWidgetAttached.State == AvatarWidget.AvatarState.DONT_UNDERSTAND);
 
                 m_ColorAnimationOnGlass = LeanTween.value(gameObject, m_LastColorUsedInAnimation, color, m_AnimationTime).setOnUpdateColor(
                     (Color colorToFadeIn) =>
@@ -105,19 +110,23 @@ namespace IBM.Watson.Widgets.Avatar
                     }).setOnComplete(
                     (System.Object o) =>
                     {
-						
 						m_ColorAnimationOnGlass = -1;
 						
-						if(o is Color){
-							Color colorToBe = (Color) o;
-							m_ColorAnimationOnGlassLoop = LeanTween.value(gameObject, colorToBe, Color.white, m_AnimationTime * timeModifier).setLoopPingPong().setOnUpdateColor(
-								(Color colorToLoop) =>
-								{
+						if(m_IsNotUnderstanding){
+							m_IsNotUnderstanding = false;
+							ChangedBehavior(m_AvatarWidgetAttached.BehaviourColor, m_AvatarWidgetAttached.BehaviorTimeModifier);
+						}
+						else{
+							if(o is Color){
+								Color colorToBe = (Color) o;
+								m_ColorAnimationOnGlassLoop = LeanTween.value(gameObject, colorToBe, Color.white, m_AnimationTime * timeModifier).setLoopPingPong().setOnUpdateColor(
+									(Color colorToLoop) =>
+									{
 									m_GlassRingMaterial.SetColor("_SpecColor", colorToLoop);
 									m_LastColorUsedInAnimation = colorToLoop;
 								}).id;
+							}
 						}
-                       
 
                     }, color).id;
 

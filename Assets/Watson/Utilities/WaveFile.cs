@@ -24,6 +24,9 @@ using UnityEngine;
 
 namespace IBM.Watson.Utilities
 {
+    /// <summary>
+    /// WAV Utility functions.
+    /// </summary>
     static public class WaveFile
     {
         #region Private Types

@@ -26,6 +26,9 @@ using System;
 
 namespace IBM.Watson.Utilities
 {
+    /// <summary>
+    /// This class is used to hold configuration data for SDK.
+    /// </summary>
     public class Config
     {
         /// <summary>
