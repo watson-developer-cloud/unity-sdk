@@ -17,6 +17,7 @@
 
 
 using IBM.Watson.DataModels;
+using IBM.Watson.Utilities;
 using IBM.Watson.Widgets;
 using UnityEngine;
 
@@ -68,6 +69,11 @@ namespace IBM.Watson.DataTypes
         /// </summary>
         public AudioData()
         { }
+        ~AudioData()
+        {
+            AudioClipUtil.DestroyAudioClip( Clip );
+        }
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -95,6 +101,7 @@ namespace IBM.Watson.DataTypes
         /// The maximum level in the audio clip.
         /// </summary>
         public float MaxLevel { get; set; }
+
     };
 
     /// <summary>

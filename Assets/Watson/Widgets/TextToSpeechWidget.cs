@@ -22,6 +22,7 @@ using IBM.Watson.Logging;
 using IBM.Watson.DataTypes;
 using System.Collections.Generic;
 using IBM.Watson.Utilities;
+using System;
 
 #pragma warning disable 414
 
@@ -64,6 +65,11 @@ namespace IBM.Watson.Widgets
 
         private class Speech
         {
+            ~Speech()
+            {
+                AudioClipUtil.DestroyAudioClip( Clip );
+            }
+
             public AudioClip Clip { get; set; }
 
             public Speech(TextToSpeech tts, string text, bool usePost)
@@ -75,9 +81,11 @@ namespace IBM.Watson.Widgets
             {
                 Clip = clip;
             }
+
         };
 
         private Queue<Speech> m_SpeechQueue = new Queue<Speech>();
+        private Speech m_ActiveSpeech = null;
         #endregion
 
         /// <summary>
@@ -114,6 +122,7 @@ namespace IBM.Watson.Widgets
         private void OnEnable()
         {
             Logger.InstallDefaultReactors();
+            AudioClipUtil.StartDestroyQueue();
 
             if (m_StatusText != null)
                 m_StatusText.text = "READY";
@@ -135,7 +144,7 @@ namespace IBM.Watson.Widgets
             {
                 CancelInvoke("OnEndSpeech");
 
-                Speech speech = m_SpeechQueue.Dequeue();
+                m_ActiveSpeech = m_SpeechQueue.Dequeue();
                 if (m_Speaking.IsConnected)
                     m_Speaking.SendData(new SpeakingStateData(true));
                 if (m_DisableMic.IsConnected)
@@ -143,10 +152,10 @@ namespace IBM.Watson.Widgets
 
                 m_Source.spatialBlend = 0.0f;     // 2D sound
                 m_Source.loop = false;            // do not loop
-                m_Source.clip = speech.Clip;             // clip
+                m_Source.clip = m_ActiveSpeech.Clip;             // clip
                 m_Source.Play();
 
-                Invoke("OnEndSpeech", ((float)speech.Clip.samples / (float)speech.Clip.frequency) + 0.1f);
+                Invoke("OnEndSpeech", ((float)m_ActiveSpeech.Clip.samples / (float)m_ActiveSpeech.Clip.frequency) + 0.1f);
                 if (m_LevelOut.IsConnected)
                 {
                     m_LastPlayPos = 0;
@@ -184,6 +193,8 @@ namespace IBM.Watson.Widgets
                 m_DisableMic.SendData(new DisableMicData(false));
             if (m_Source.isPlaying)
                 m_Source.Stop();
+
+            m_ActiveSpeech = null;
         }
 
         protected override string GetName()
