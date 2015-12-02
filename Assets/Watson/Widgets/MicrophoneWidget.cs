@@ -83,6 +83,24 @@ namespace IBM.Watson.Widgets
         }
         #endregion
 
+		#region Public Function - For UI interaction
+
+		/// <summary>
+		/// Activates the microphone.
+		/// </summary>
+		public void ActivateMicrophone(){
+			Active = true;
+
+		}
+
+		/// <summary>
+		/// Deactivates the microphone.
+		/// </summary>
+		public void DeactivateMicrophone(){
+			Active = false;
+		}
+
+		#endregion
         #region Widget interface
         /// <exclude />
         protected override string GetName()

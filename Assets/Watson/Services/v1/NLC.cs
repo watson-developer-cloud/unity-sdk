@@ -118,7 +118,7 @@ namespace IBM.Watson.Services.v1
             {
                 bool bFound = false;
                 foreach( var c in classifiers.classifiers )
-                    if ( c.name == ClassifierName )
+                    if ( c.name.StartsWith( ClassifierName ) )
                     {
                         // now get the classifier details..
                         bFound = Service.GetClassifier( c.classifier_id, GetClassifier );
