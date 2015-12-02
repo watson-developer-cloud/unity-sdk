@@ -150,35 +150,14 @@ namespace IBM.Watson.Widgets.Question
 			ParseTreeTextItem word = wordGameObject.GetComponent<ParseTreeTextItem>();
 			word.ParseTreeWord = parseWord.text;
 			word.Position = wordPosition;
+			word.ParentNode = parseWord.parentNode;
 			word.POS = GetPOS(wordPosition);
 			word.Slot = GetSlot(wordPosition);
 			word.m_Features = GetFeatures(wordPosition);
-
 			//	add to word list
 			m_WordList.Add(word);
 
-			float wordX = 0f;
-			int siblingCount = parentRectTransform.childCount;
-			int lastSiblingIndex = wordGameObject.transform.GetSiblingIndex() - 1;
-			RectTransform lastSiblingWordRectTransform = null;
-			if(siblingCount > 1)
-			{
-				lastSiblingWordRectTransform = parentRectTransform.gameObject.transform.GetChild(lastSiblingIndex).GetComponent<RectTransform>();
-				Log.Debug("ParseTreeView", "word: " + word.ParseTreeWord + ", width: " + wordGameObject.transform.GetChild(0).GetComponent<RectTransform>().rect.width + ", x: " + lastSiblingWordRectTransform.anchoredPosition.x);
-				StartCoroutine(PositionWord(word, wordGameObject, lastSiblingWordRectTransform));
-			}
-			
-			if(parentRectTransform.gameObject.name == "Right Child")
-			{
-				wordX = siblingCount > 1 ? lastSiblingWordRectTransform.anchoredPosition.x - wordGameObject.transform.GetChild(0).GetComponent<RectTransform>().rect.width - horizontalWordSpacing : 0f;
-			}
-			else if(parentRectTransform.gameObject.name == "Left Child")
-			{
-				wordX = siblingCount > 1 ? lastSiblingWordRectTransform.anchoredPosition.x + lastSiblingWordRectTransform.rect.width + horizontalWordSpacing : 0f;
-			}
-			
-			wordGameObject.transform.localPosition = new Vector3(wordX, 0f, 0f);
-			
+			//	Create right child
 			if(parseWord.rightChildren.Length > 0)
 			{
 				//	create and populate right children
@@ -193,7 +172,8 @@ namespace IBM.Watson.Widgets.Question
 					CreateParseWord(parseWord.rightChildren[k], rightChildRectTransform, wordRectTransform);
 				}
 			}
-			
+
+			//	create left child
 			if(parseWord.leftChildren.Length > 0)
 			{
 				//	create and populate left children
@@ -221,12 +201,42 @@ namespace IBM.Watson.Widgets.Question
 			
 			if(parentRectTransform != m_ParseCanvasRectTransform)
 				CreateArrow(parentWordRectTransform, wordRectTransform);
+
+			StartCoroutine(PositionWord(wordRectTransform, parentRectTransform));
 		}
 
-		private IEnumerator PositionWord(ParseTreeTextItem word, GameObject wordGameObject, RectTransform lastSiblingWordRectTransform)
+		/// <summary>
+		/// Positions the words after they are populated based on if the parent is the left or right child.
+		/// </summary>
+		/// <returns>The word.</returns>
+		/// <param name="wordRectTransform">Word rect transform.</param>
+		/// <param name="parentRectTransform">Parent rect transform.</param>
+		private IEnumerator PositionWord(RectTransform wordRectTransform, RectTransform parentRectTransform)
 		{
-			yield return new WaitForSeconds(1f);
-				Log.Debug("ParseTreeView", "word: " + word.ParseTreeWord + ", width: " + wordGameObject.transform.GetChild(0).GetComponent<RectTransform>().rect.width + ", x: " + lastSiblingWordRectTransform.anchoredPosition.x);
+			yield return new WaitForSeconds(0.1f);
+
+			//	Declare word x
+			float wordX = 0f;
+
+			//	If it is the first word in the gameObject do not reposition
+			if(wordRectTransform.GetSiblingIndex() == 0)
+				yield break;
+
+			//	Declare the last sibling's Text RectTransform
+			RectTransform lastSiblingWordRectTransform = parentRectTransform.GetChild(wordRectTransform.GetSiblingIndex() - 1).FindChild("ParseTreeText").GetComponent<RectTransform>();
+			RectTransform wordTextRectTransform = wordRectTransform.FindChild("ParseTreeText").GetComponent<RectTransform>();
+
+			//	Expand word placment for Left Children to the left and Right  children to the Right
+			if(parentRectTransform.gameObject.name == "Left Child")
+			{
+				wordX = lastSiblingWordRectTransform.anchoredPosition.x - wordTextRectTransform.sizeDelta.x - lastSiblingWordRectTransform.sizeDelta.x/2 - horizontalWordSpacing;
+			}
+			else if(parentRectTransform.gameObject.name == "Right Child")
+			{
+				wordX = lastSiblingWordRectTransform.anchoredPosition.x + lastSiblingWordRectTransform.sizeDelta.x + lastSiblingWordRectTransform.sizeDelta.x/2 + horizontalWordSpacing;
+			}
+
+			wordRectTransform.gameObject.transform.localPosition = new Vector3(wordX, 0f, 0f);
 		}
 
 		/// <summary>
@@ -273,21 +283,10 @@ namespace IBM.Watson.Widgets.Question
 		/// <param name="childRectTransform">Child rect transform.</param>
 		private void CreateArrow(RectTransform parentRectTransform, RectTransform childRectTransform)
 		{
-			//	find two points
-			Vector3 parentPoint = parentRectTransform.position;
-			Vector3 childPoint = childRectTransform.position + (new Vector3(0f, childRectTransform.rect.height/2, 0f) * 0.01f);
-
-			Vector3 direction = parentPoint - childPoint;
-			direction = parentRectTransform.TransformDirection(direction);
-			float angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg - 90f;
-
-			GameObject arrowGameObject = Instantiate(m_ParseTreeArrow, parentPoint, Quaternion.Euler(new Vector3(0f, 0f, angle))) as GameObject;
-			RectTransform arrowRectTransform = arrowGameObject.GetComponent<RectTransform>();
-			float dist = Vector3.Distance(parentPoint, childPoint);
-			Vector2 tempSizedelta = arrowRectTransform.sizeDelta;
-			tempSizedelta.x = dist * 160f;
-			arrowRectTransform.sizeDelta = tempSizedelta;
-			arrowRectTransform.SetParent(parentRectTransform, false);
+			GameObject arrowGameObject = Instantiate(m_ParseTreeArrow) as GameObject;
+			ParseTreeArrow parseTreeArrowScript = arrowGameObject.GetComponent<ParseTreeArrow>();
+			parseTreeArrowScript.parentRectTransform = parentRectTransform;
+			parseTreeArrowScript.childRectTransform = childRectTransform;
 		}
 
         /// <summary>
