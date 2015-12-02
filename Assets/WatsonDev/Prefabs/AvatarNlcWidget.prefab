@@ -9,8 +9,9 @@ GameObject:
   m_Component:
   - 4: {fileID: 434176}
   - 114: {fileID: 11489316}
+  - 114: {fileID: 11416770}
   m_Layer: 0
-  m_Name: NlcWidget
+  m_Name: AvatarNlcWidget
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28,6 +29,24 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
+--- !u!114 &11416770
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 150770}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e421b0b8c204bd344918bc3963c06ccc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AutoConnect: 1
+  m_Mappings:
+  - m_Event: 0
+    m_Callback:
+      m_Target: {fileID: 150770}
+      m_Component: NlcWidget
+      m_Method: OnDebugCommand
 --- !u!114 &11489316
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -43,7 +62,7 @@ MonoBehaviour:
   m_ClassifyOutput:
     m_TargetObject: {fileID: 0}
     m_TargetConnection: Classifier/Classified
-  m_ClassifierName: 
+  m_ClassifierName: XRAY/
   m_ClassifierId: 
   m_MinWordConfidence: .40000000000000002
   m_IgnoreWordConfidence: .20000000000000001
@@ -291,6 +310,10 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[26].m_Event
       value: 416
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassifierName
+      value: XRAY/
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
