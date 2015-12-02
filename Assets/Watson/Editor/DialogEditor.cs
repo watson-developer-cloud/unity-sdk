@@ -113,7 +113,13 @@ namespace IBM.Watson.Editor
 
             m_ScrollPos = EditorGUILayout.BeginScrollView(m_ScrollPos);
 
-            if (m_Dialogs == null || GUILayout.Button("Refresh"))
+            if ( m_Refreshing )
+            {
+                EditorGUI.BeginDisabledGroup(true);
+                GUILayout.Button( "Refreshing..." );
+                EditorGUI.EndDisabledGroup();
+            }
+            else if (m_Dialogs == null || GUILayout.Button("Refresh"))
                 OnRefresh();
 
             EditorGUILayout.LabelField("Dialogs:");
