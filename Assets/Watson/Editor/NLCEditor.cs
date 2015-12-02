@@ -296,7 +296,7 @@ namespace IBM.Watson.Editor
                     }
                     if ( GUILayout.Button( "Train", GUILayout.Width( 100 ) ) )
                     {
-                        string classifierName = data.Name + "_" + DateTime.Now.ToString();
+                        string classifierName = data.Name + "/" + DateTime.Now.ToString();
 
                         if ( EditorUtility.DisplayDialog( "Confirm", "Please confirm you want to train a new instance: " + classifierName, "Yes", "No" ) )
                         {
@@ -323,7 +323,7 @@ namespace IBM.Watson.Editor
                                 for (int i = 0; i < m_Classifiers.classifiers.Length; ++i)
                                 {
                                     Classifier cl = m_Classifiers.classifiers[i];
-                                    if (! cl.name.StartsWith( data.Name + "_" ) )
+                                    if (! cl.name.StartsWith( data.Name + "/" ) )
                                         continue;
 
                                     EditorGUILayout.BeginHorizontal();
@@ -465,6 +465,8 @@ namespace IBM.Watson.Editor
             EditorGUI.BeginDisabledGroup(string.IsNullOrEmpty(m_NewClassifierLang) || string.IsNullOrEmpty(m_NewClassifierName));
             if (GUILayout.Button("Create"))
             {
+                m_NewClassifierName = m_NewClassifierName.Replace( "/", "_" );
+
                 string classifierFile = Application.dataPath + CLASSIFIERS_DIRECTORY + "/" + m_NewClassifierName + ".json";
                 if (!File.Exists(classifierFile)
                     || EditorUtility.DisplayDialog("Confirm", string.Format("Classifier file {0} already exists, are you sure you wish to overwrite?", classifierFile), "YES", "NO"))
