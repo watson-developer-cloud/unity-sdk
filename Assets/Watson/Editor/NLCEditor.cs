@@ -263,7 +263,7 @@ namespace IBM.Watson.Editor
                     EditorGUILayout.BeginHorizontal();
 
                     bool expanded = data.Expanded;
-                    data.Expanded = EditorGUILayout.Foldout(expanded, data.Name + " (Language: " + data.Language + ")");
+                    data.Expanded = EditorGUILayout.Foldout(expanded, data.Name + " [Language: " + data.Language + "]");
                     if ( data.Expanded != expanded )
                         data.Save();
 

@@ -44,7 +44,7 @@ namespace IBM.Watson.UnitTests
 
             if (! m_UploadTested )
             {
-                m_Dialog.UploadDialog( DIALOG_NAME, OnDialogUploaded, Application.dataPath + "/../Docs/pizza_sample.xml" );
+                m_Dialog.UploadDialog( DIALOG_NAME, OnDialogUploaded, Application.dataPath + "/Watson/Editor/TestData/pizza_sample.xml" );
                 while(! m_UploadTested )
                     yield return null;
             }
