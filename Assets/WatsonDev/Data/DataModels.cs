@@ -248,6 +248,7 @@ namespace IBM.Watson.DataModels
         {
             public long position { get; set; }
             public string text { get; set; }
+			public int parentNode { get; set; }
             public ParseTree[] rightChildren { get; set; }
             public ParseTree[] leftChildren { get; set; }
         };

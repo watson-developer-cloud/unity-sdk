@@ -95,6 +95,14 @@ namespace IBM.Watson.Widgets.Question
             set { m_Slot = value; }
         }
 
+		[SerializeField]
+		private int m_ParentNode;
+		public int ParentNode
+		{
+			get { return m_ParentNode; }
+			set { m_ParentNode = value; }
+		}
+
 		public RectTransform m_ParentWordRectTransform { get; set; }
 
         public List<string> m_Features = new List<string>();

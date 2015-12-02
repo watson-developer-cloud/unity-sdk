@@ -150,6 +150,7 @@ namespace IBM.Watson.Widgets.Question
 			ParseTreeTextItem word = wordGameObject.GetComponent<ParseTreeTextItem>();
 			word.ParseTreeWord = parseWord.text;
 			word.Position = wordPosition;
+			word.ParentNode = parseWord.parentNode;
 			word.POS = GetPOS(wordPosition);
 			word.Slot = GetSlot(wordPosition);
 			word.m_Features = GetFeatures(wordPosition);
@@ -224,17 +225,18 @@ namespace IBM.Watson.Widgets.Question
 			if(parentRectTransform != m_ParseCanvasRectTransform)
 				CreateArrow(parentWordRectTransform, wordRectTransform);
 
-			StartCoroutine(PositionWords());
+//			StartCoroutine(PositionWords());
+//			StartCoroutine(PositionWord());
 		}
 
-//		private IEnumerator PositionWord(ParseTreeTextItem word, GameObject wordGameObject, RectTransform lastSiblingWordRectTransform)
+//		private IEnumerator PositionWord(ParseTreeTextItem word, GameObject wordGameObject)
 //		{
 //			yield return new WaitForSeconds(1f);
-//				Log.Debug("ParseTreeView", "word: " + word.ParseTreeWord + ", width: " + wordGameObject.transform.GetChild(0).GetComponent<RectTransform>().rect.width + ", x: " + lastSiblingWordRectTransform.anchoredPosition.x);
-
-			//	position word
+////				Log.Debug("ParseTreeView", "word: " + word.ParseTreeWord + ", width: " + wordGameObject.transform.GetChild(0).GetComponent<RectTransform>().rect.width + ", x: " + lastSiblingWordRectTransform.anchoredPosition.x);
+//
+////			position word
 //			float wordX = 0f;
-//			int siblingCount = parentRectTransform.childCount;
+////			int siblingCount = parentRectTransform.childCount;
 //			int lastSiblingIndex = wordGameObject.transform.GetSiblingIndex() - 1;
 //			RectTransform lastSiblingWordRectTransform = null;
 //			if(siblingCount > 1)
@@ -256,12 +258,12 @@ namespace IBM.Watson.Widgets.Question
 //			wordGameObject.transform.localPosition = new Vector3(wordX, 0f, 0f);
 //		}
 
-		private IEnumerator PositionWords()
-		{
-			yield return new WaitForSeconds(1f);
-
-			
-		}
+//		private IEnumerator PositionWords()
+//		{
+//			yield return new WaitForSeconds(1f);
+//
+//			
+//		}
 
 		/// <summary>
 		/// Gets the PO.
