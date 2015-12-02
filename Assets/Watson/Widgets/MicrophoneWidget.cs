@@ -146,6 +146,8 @@ namespace IBM.Watson.Widgets
         {
             if (m_RecordingRoutine == 0)
             {
+                AudioClipUtil.StartDestroyQueue();
+
                 m_RecordingRoutine = Runnable.Run(RecordingHandler());
                 m_ActivateOutput.SendData(new BooleanData(true));
 
@@ -174,14 +176,21 @@ namespace IBM.Watson.Widgets
                         AudioSource source = GetComponentInChildren<AudioSource>();
                         if (source != null)
                         {
+                            // destroy any previous audio clip..
+                            if ( source.clip != null )
+                                AudioClipUtil.DestroyAudioClip( source.clip );
+
                             source.spatialBlend = 0.0f;     // 2D sound
                             source.loop = false;            // do not loop
-                            source.clip = combined;             // clip
+                            source.clip = combined;         // clip
                             source.Play();
                         }
                         else
                             Log.Warning("MicrophoneWidget", "Failed to find AudioSource.");
                     }
+
+                    foreach( var clip in m_Playback )
+                        AudioClipUtil.DestroyAudioClip( clip );
                     m_Playback.Clear();
                 }
             }

@@ -80,7 +80,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         private bool m_ListenActive = false;
         private bool m_AudioSent = false;
         private bool m_IsListening = false;
-        private Queue<AudioClip> m_ListenRecordings = new Queue<AudioClip>();
+        private Queue<AudioData> m_ListenRecordings = new Queue<AudioData>();
         private int m_KeepAliveRoutine = 0;                      // ID of the keep alive co-routine
         private float m_LastKeepAlive = 0.0f;
         private string m_RecognizeModel = "en-US_BroadbandModel";    // ID of the model to use.
@@ -145,9 +145,9 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         #region Listening Functions
 
         /// <summary>
-        /// This starts the service listening to the microphone and invoking the callback for any recognized 
-        /// speech. StopListening() should be called to stop this service from sending audio data to the
-        /// server. This function can send a continuous stream of audio to the server for processing.
+        /// This starts the service listening and it will invoke the callback for any recognized speech.
+        /// OnListen() must be called by the user to queue audio data to send to the service. 
+        /// StopListening() should be called when you want to stop listening.
         /// </summary>
         /// <param name="callback">All recognize results are passed to this callback.</param>
         /// <returns>Returns true on success, false on failure.</returns>
@@ -171,7 +171,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         /// <summary>
         /// This function should be invoked with the AudioData input after StartListening() method has been invoked.
         /// The user should continue to invoke this function until they are ready to call StopListening(), typically
-        /// microphone input is feed into this function.
+        /// microphone input is sent to this function.
         /// </summary>
         /// <param name="clip">A AudioData object containing the AudioClip and max level found in the clip.</param>
         public void OnListen(AudioData clip)
@@ -195,7 +195,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                     {
                         // we have not received the "listening" state yet from the server, so just queue
                         // the audio clips until that happens.
-                        m_ListenRecordings.Enqueue(clip.Clip);
+                        m_ListenRecordings.Enqueue(clip);
 
                         // We need to check the length of this queue and do something if it gets too full.
                         if (m_ListenRecordings.Count > MAX_QUEUED_RECORDINGS)
@@ -364,8 +364,8 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                                     // send all pending audio clips ..
                                     while (m_ListenRecordings.Count > 0)
                                     {
-                                        AudioClip clip = m_ListenRecordings.Dequeue();
-                                        m_ListenSocket.Send(new WSConnector.BinaryMessage(AudioClipUtil.GetL16(clip)));
+                                        AudioData clip = m_ListenRecordings.Dequeue();
+                                        m_ListenSocket.Send(new WSConnector.BinaryMessage(AudioClipUtil.GetL16(clip.Clip)));
                                         m_AudioSent = true;
                                     }
                                 }

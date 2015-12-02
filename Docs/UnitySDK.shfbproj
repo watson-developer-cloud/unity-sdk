@@ -14,13 +14,13 @@
     <Name>Documentation</Name>
     <!-- SHFB properties -->
     <FrameworkVersion>.NET Framework 3.5</FrameworkVersion>
-    <OutputPath>Help\</OutputPath>
+    <OutputPath>..\Assets\Watson\Editor\Help\</OutputPath>
     <HtmlHelpName>WatsonUnitySDK</HtmlHelpName>
     <Language>en-US</Language>
     <ComponentPath>
     </ComponentPath>
     <BuildAssemblerVerbosity>OnlyWarningsAndErrors</BuildAssemblerVerbosity>
-    <HelpFileFormat>HtmlHelp1, Website</HelpFileFormat>
+    <HelpFileFormat>HtmlHelp1</HelpFileFormat>
     <IndentHtml>False</IndentHtml>
     <KeepLogFile>True</KeepLogFile>
     <DisableCodeBlockComponent>False</DisableCodeBlockComponent>
@@ -28,12 +28,12 @@
     <HelpFileVersion>1.0.0.0</HelpFileVersion>
     <MaximumGroupParts>2</MaximumGroupParts>
     <NamespaceGrouping>False</NamespaceGrouping>
-    <SyntaxFilters>Standard</SyntaxFilters>
+    <SyntaxFilters>C#</SyntaxFilters>
     <SdkLinkTarget>Blank</SdkLinkTarget>
     <RootNamespaceContainer>True</RootNamespaceContainer>
     <PresentationStyle>VS2013</PresentationStyle>
     <Preliminary>False</Preliminary>
-    <NamingMethod>Guid</NamingMethod>
+    <NamingMethod>HashedMemberName</NamingMethod>
     <HelpTitle>Watson Unity SDK</HelpTitle>
     <ContentPlacement>AboveNamespaces</ContentPlacement>
     <DocumentationSources>

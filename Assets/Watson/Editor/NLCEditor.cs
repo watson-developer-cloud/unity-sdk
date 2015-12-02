@@ -51,7 +51,7 @@ namespace IBM.Watson.Editor
         }
 
 
-        [MenuItem("Watson/NLC Editor")]
+        [MenuItem("Watson/NLC Editor", false, 2 )]
         private static void EditConfig()
         {
             GetWindow<NLCEditor>().Show();

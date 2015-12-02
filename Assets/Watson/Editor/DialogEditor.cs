@@ -50,7 +50,7 @@ namespace IBM.Watson.Editor
         }
 
 
-        [MenuItem("Watson/Dialog Editor")]
+        [MenuItem("Watson/Dialog Editor", false, 1 )]
         private static void EditConfig()
         {
             DialogEditor window = GetWindow<DialogEditor>();

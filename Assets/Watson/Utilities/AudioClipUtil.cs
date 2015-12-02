@@ -17,6 +17,8 @@
 
 using IBM.Watson.Logging;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -104,6 +106,71 @@ namespace IBM.Watson.Utilities
             Array.Copy(stream.GetBuffer(), data, data.Length);
 
             return data;
+        }
+
+        private static Queue<AudioClip> sm_DestroyQueue = new Queue<AudioClip>();
+        private static int sm_DestroyQueueID = 0;
+
+        /// <summary>
+        /// Returns the state of the AudioClip destroy queue.
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsDestroyQueueActive()
+        {
+            return sm_DestroyQueueID != 0;
+        }
+
+        /// <summary>
+        /// Start up the AudioClip destroy queue processor.
+        /// </summary>
+        public static void StartDestroyQueue()
+        {
+            if ( sm_DestroyQueueID == 0 )
+                sm_DestroyQueueID = Runnable.Run( ProcessDestroyQueue() );
+        }
+
+        /// <summary>
+        /// Stop the AudioClip destroy processor.
+        /// </summary>
+        public static void StopDestroyQueue()
+        {
+            if ( sm_DestroyQueueID != 0 )
+            {
+                Runnable.Stop( sm_DestroyQueueID );
+                sm_DestroyQueueID = 0;
+            }
+        }
+
+        /// <summary>
+        /// Queue an AudioClip for destruction on the main thread. This function is thread-safe.
+        /// </summary>
+        /// <param name="clip"></param>
+        public static void DestroyAudioClip( AudioClip clip )
+        {
+            if ( sm_DestroyQueueID == 0 )
+                    throw new WatsonException( "AudioClip destroy queue not started." );
+
+            lock( sm_DestroyQueue )
+                sm_DestroyQueue.Enqueue( clip );
+        }
+
+        private static IEnumerator ProcessDestroyQueue()
+        {
+            yield return null;
+
+            while( sm_DestroyQueueID != 0 )
+            {
+                yield return new WaitForSeconds( 1.0f );
+
+                lock( sm_DestroyQueue )
+                {
+                    while( sm_DestroyQueue.Count > 0 )
+                    {
+                        AudioClip clip = sm_DestroyQueue.Dequeue();
+                        UnityEngine.Object.DestroyImmediate( clip, true );
+                    }
+                }
+            }
         }
     }
 }
