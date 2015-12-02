@@ -154,8 +154,9 @@ namespace IBM.Watson.Widgets.Question
 			word.POS = GetPOS(wordPosition);
 			word.Slot = GetSlot(wordPosition);
 			word.m_Features = GetFeatures(wordPosition);
-			//	add to word list
-			m_WordList.Add(word);
+			//	add to word list at insert position
+			int insertPosition = (int)word.Position < m_WordList.Count ? (int)word.Position : m_WordList.Count;
+			m_WordList.Insert(insertPosition, word);
 
 			//	Create right child
 			if(parseWord.rightChildren.Length > 0)

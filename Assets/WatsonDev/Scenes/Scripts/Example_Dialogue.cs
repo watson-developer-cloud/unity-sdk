@@ -20,54 +20,96 @@ using IBM.Watson.DataModels;
 using IBM.Watson.Utilities;
 using IBM.Watson.Services.v1;
 using IBM.Watson.Widgets;
+using IBM.Watson.Logging;
 
 public class Example_Dialogue : MonoBehaviour {
-	private Dialog m_Dialog = new Dialog();
-	private string m_DialogId = null;
-	private int m_DialogClientId = 0;
-	private int m_DialogConversationId = 0;
-	private ClassifyResult m_ClassifyResult = null;
+	const string DIALOG_NAME = "ut_20151029_5";
+	
+	Dialog m_Dialog = new Dialog();
+	bool m_GetDialogsTested = false;
+	bool m_UploadTested = false;
+	bool m_ConverseTested = false;
+	bool m_DeleteTested = false;
+	string m_DialogID = null;
+	int m_ClientID = 0;
+	int m_ConversationID = 0;
 
-	private ClassifyResult GetClassifyResult( object [] args )
+	private void TestDialogue()
 	{
-		if ( args != null && args.Length > 0 )
-			return args[0] as ClassifyResult;
-		return null;
+//		m_Dialog.GetDialogs( OnGetDialogs );
+//		while(! m_GetDialogsTested )
+//			yield return null;
+//		
+//		if (! m_UploadTested )
+//		{
+//			m_Dialog.UploadDialog( DIALOG_NAME, OnDialogUploaded, Application.dataPath + "/../Docs/pizza_sample.xml" );
+//			while(! m_UploadTested )
+//				yield return null;
+//		}
+//		
+//		if (! string.IsNullOrEmpty( m_DialogID ) )
+//		{
+//			m_Dialog.Converse( m_DialogID, "Hello", OnConverse );
+//			while( !m_ConverseTested )
+//				yield return null;
+//			
+//			m_ConverseTested = false;
+//			m_Dialog.Converse( m_DialogID, "What do you have?", OnConverse, 
+//			                  m_ConversationID, m_ClientID );
+//			while( !m_ConverseTested )
+//				yield return null;
+//		}
+//		
+//		
+//		m_Dialog.DeleteDialog( m_DialogID, OnDialogDeleted );
+//		while(! m_DeleteTested )
+//			yield return null;
+//		
+//		yield break;
 	}
 
-	public void OnDialog(object [] args)
+	private void OnDialogDeleted( bool success )
 	{
-		ClassifyResult result = GetClassifyResult( args );
-		if ( result == null )
-			throw new WatsonException( "ClassifyResult expected." );
-
-		m_ClassifyResult = result;
-		Debug.Log("m_ClassifyResult: " + m_ClassifyResult.classifier_id + ", " + m_ClassifyResult.text + ", " + m_ClassifyResult.top_class);
-		
-		if (!string.IsNullOrEmpty(m_DialogId))
-		{
-			if (m_Dialog.Converse(m_DialogId, result.text, OnDialogResponse, m_DialogConversationId, m_DialogClientId))
-			{
-				Debug.Log("conversed");
-			}
-		}
+		m_DeleteTested = true;
 	}
-
-	private void OnDialogResponse(ConverseResponse resp)
+	
+	private void OnConverse( ConverseResponse resp )
 	{
-		if (resp != null)
+		if ( resp != null )
 		{
-			m_DialogClientId = resp.client_id;
-			m_DialogConversationId = resp.conversation_id;
+			m_ClientID = resp.client_id;
+			m_ConversationID = resp.conversation_id;
 			
-			if (resp.response != null)
+			foreach( var r in resp.response )
+				Log.Debug( "TestDialog", "Response: {0}", r );
+		}
+		m_ConverseTested = true;
+	}
+	
+	private void OnDialogUploaded( string id )
+	{
+		if (! string.IsNullOrEmpty( id ) )
+		{
+			Log.Debug( "TestDialog", "Dialog ID: {0}", id );
+			m_DialogID = id;
+		}
+		m_UploadTested = true;
+	}
+	
+	private void OnGetDialogs( Dialogs dialogs )
+	{
+		if (dialogs != null && dialogs.dialogs != null )
+		{
+			foreach( var d in dialogs.dialogs )
 			{
-				foreach (var t in resp.response)
+				Log.Debug( "TestDialog", "Name: {0}, ID: {1}", d.name, d.dialog_id );
+				if ( d.name == DIALOG_NAME )
 				{
-//					if (!string.IsNullOrEmpty(t))
-//						m_TextOutput.SendData(new TextToSpeechData(t));
+					m_UploadTested = true;
+					m_DialogID = d.dialog_id;
 				}
 			}
 		}
+		m_GetDialogsTested = true;         
 	}
 }
