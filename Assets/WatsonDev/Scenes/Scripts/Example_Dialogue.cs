@@ -27,50 +27,33 @@ public class Example_Dialogue : MonoBehaviour {
 	
 	Dialog m_Dialog = new Dialog();
 	bool m_GetDialogsTested = false;
-	bool m_UploadTested = false;
-	bool m_ConverseTested = false;
-	bool m_DeleteTested = false;
 	string m_DialogID = null;
 	int m_ClientID = 0;
 	int m_ConversationID = 0;
+	bool isDialogAvailable = false;
 
-	private void TestDialogue()
+	void OnEnable()
 	{
-//		m_Dialog.GetDialogs( OnGetDialogs );
-//		while(! m_GetDialogsTested )
-//			yield return null;
-//		
-//		if (! m_UploadTested )
-//		{
-//			m_Dialog.UploadDialog( DIALOG_NAME, OnDialogUploaded, Application.dataPath + "/../Docs/pizza_sample.xml" );
-//			while(! m_UploadTested )
-//				yield return null;
-//		}
-//		
-//		if (! string.IsNullOrEmpty( m_DialogID ) )
-//		{
-//			m_Dialog.Converse( m_DialogID, "Hello", OnConverse );
-//			while( !m_ConverseTested )
-//				yield return null;
-//			
-//			m_ConverseTested = false;
-//			m_Dialog.Converse( m_DialogID, "What do you have?", OnConverse, 
-//			                  m_ConversationID, m_ClientID );
-//			while( !m_ConverseTested )
-//				yield return null;
-//		}
-//		
-//		
+		m_Dialog.GetDialogs( OnGetDialogs );
+//		m_Dialog.UploadDialog( DIALOG_NAME, OnDialogUploaded, Application.dataPath + "/../Docs/pizza_sample.xml" );
+	}
+
+	void OnDisable()
+	{
 //		m_Dialog.DeleteDialog( m_DialogID, OnDialogDeleted );
-//		while(! m_DeleteTested )
-//			yield return null;
-//		
-//		yield break;
+	}
+
+	public void Converse(string dialog)
+	{
+		if (! string.IsNullOrEmpty( m_DialogID ) )
+		{
+			m_Dialog.Converse( m_DialogID, dialog, OnConverse );
+		}
 	}
 
 	private void OnDialogDeleted( bool success )
 	{
-		m_DeleteTested = true;
+		Log.Debug("Example_Dialogue", "Deleted");
 	}
 	
 	private void OnConverse( ConverseResponse resp )
@@ -83,7 +66,6 @@ public class Example_Dialogue : MonoBehaviour {
 			foreach( var r in resp.response )
 				Log.Debug( "TestDialog", "Response: {0}", r );
 		}
-		m_ConverseTested = true;
 	}
 	
 	private void OnDialogUploaded( string id )
@@ -93,7 +75,6 @@ public class Example_Dialogue : MonoBehaviour {
 			Log.Debug( "TestDialog", "Dialog ID: {0}", id );
 			m_DialogID = id;
 		}
-		m_UploadTested = true;
 	}
 	
 	private void OnGetDialogs( Dialogs dialogs )
@@ -105,11 +86,12 @@ public class Example_Dialogue : MonoBehaviour {
 				Log.Debug( "TestDialog", "Name: {0}, ID: {1}", d.name, d.dialog_id );
 				if ( d.name == DIALOG_NAME )
 				{
-					m_UploadTested = true;
+					isDialogAvailable = true;
 					m_DialogID = d.dialog_id;
 				}
 			}
 		}
-		m_GetDialogsTested = true;         
+
+		if(!isDialogAvailable) m_Dialog.UploadDialog( DIALOG_NAME, OnDialogUploaded, Application.dataPath + "/../Docs/pizza_sample.xml" );
 	}
 }
