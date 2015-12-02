@@ -163,7 +163,7 @@ namespace IBM.Watson.Editor
                     GUILayout.BeginHorizontal();
 
                     GUIStyle labelStyle = new GUIStyle(GUI.skin.label);
-                    labelStyle.normal.textColor = bValid ? Color.green : Color.red; 
+                    labelStyle.normal.textColor = bValid ? Color.green : Color.grey; 
 
                     GUILayout.Label( string.Format( "Service {0} {1}...", setup.ServiceName, bValid ? "Configured" : "NOT CONFIGURED" ), labelStyle );
 
