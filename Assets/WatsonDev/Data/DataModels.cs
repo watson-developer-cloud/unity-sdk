@@ -203,7 +203,8 @@ namespace IBM.Watson.DataModels
             PREPOSITION,
             CONJUNCTION,
             INTERJECTION,
-            SPECIAL
+            SPECIAL,
+			SUBINF
         };
         /// <summary>
         /// This data class holds a single word of the ParseData.
@@ -239,6 +240,7 @@ namespace IBM.Watson.DataModels
                 { "inter", WordPosition.INTERJECTION },     // ?
                 { "incomplete", WordPosition.INVALID },
                 { "special", WordPosition.SPECIAL },
+				{ "subinf", WordPosition.SUBINF },
             };
         };
 

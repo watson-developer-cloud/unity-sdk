@@ -153,32 +153,33 @@ namespace IBM.Watson.Widgets.Question
 			word.POS = GetPOS(wordPosition);
 			word.Slot = GetSlot(wordPosition);
 			word.m_Features = GetFeatures(wordPosition);
-
 			//	add to word list
 			m_WordList.Add(word);
 
-			float wordX = 0f;
-			int siblingCount = parentRectTransform.childCount;
-			int lastSiblingIndex = wordGameObject.transform.GetSiblingIndex() - 1;
-			RectTransform lastSiblingWordRectTransform = null;
-			if(siblingCount > 1)
-			{
-				lastSiblingWordRectTransform = parentRectTransform.gameObject.transform.GetChild(lastSiblingIndex).GetComponent<RectTransform>();
-				Log.Debug("ParseTreeView", "word: " + word.ParseTreeWord + ", width: " + wordGameObject.transform.GetChild(0).GetComponent<RectTransform>().rect.width + ", x: " + lastSiblingWordRectTransform.anchoredPosition.x);
-				StartCoroutine(PositionWord(word, wordGameObject, lastSiblingWordRectTransform));
-			}
-			
-			if(parentRectTransform.gameObject.name == "Right Child")
-			{
-				wordX = siblingCount > 1 ? lastSiblingWordRectTransform.anchoredPosition.x - wordGameObject.transform.GetChild(0).GetComponent<RectTransform>().rect.width - horizontalWordSpacing : 0f;
-			}
-			else if(parentRectTransform.gameObject.name == "Left Child")
-			{
-				wordX = siblingCount > 1 ? lastSiblingWordRectTransform.anchoredPosition.x + lastSiblingWordRectTransform.rect.width + horizontalWordSpacing : 0f;
-			}
-			
-			wordGameObject.transform.localPosition = new Vector3(wordX, 0f, 0f);
-			
+//			//	position word
+//			float wordX = 0f;
+//			int siblingCount = parentRectTransform.childCount;
+//			int lastSiblingIndex = wordGameObject.transform.GetSiblingIndex() - 1;
+//			RectTransform lastSiblingWordRectTransform = null;
+//			if(siblingCount > 1)
+//			{
+//				lastSiblingWordRectTransform = parentRectTransform.gameObject.transform.GetChild(lastSiblingIndex).GetComponent<RectTransform>();
+////				Log.Debug("ParseTreeView", "word: " + word.ParseTreeWord + ", width: " + wordGameObject.transform.GetChild(0).GetComponent<RectTransform>().rect.width + ", x: " + lastSiblingWordRectTransform.anchoredPosition.x);
+//				StartCoroutine(PositionWord(word, wordGameObject, lastSiblingWordRectTransform));
+//			}
+//			
+//			if(parentRectTransform.gameObject.name == "Right Child")
+//			{
+//				wordX = siblingCount > 1 ? lastSiblingWordRectTransform.anchoredPosition.x - wordGameObject.transform.GetChild(0).GetComponent<RectTransform>().rect.width - horizontalWordSpacing : 0f;
+//			}
+//			else if(parentRectTransform.gameObject.name == "Left Child")
+//			{
+//				wordX = siblingCount > 1 ? lastSiblingWordRectTransform.anchoredPosition.x + lastSiblingWordRectTransform.rect.width + horizontalWordSpacing : 0f;
+//			}
+//			
+//			wordGameObject.transform.localPosition = new Vector3(wordX, 0f, 0f);
+
+			//	Create right child
 			if(parseWord.rightChildren.Length > 0)
 			{
 				//	create and populate right children
@@ -193,7 +194,8 @@ namespace IBM.Watson.Widgets.Question
 					CreateParseWord(parseWord.rightChildren[k], rightChildRectTransform, wordRectTransform);
 				}
 			}
-			
+
+			//	create left child
 			if(parseWord.leftChildren.Length > 0)
 			{
 				//	create and populate left children
@@ -221,12 +223,44 @@ namespace IBM.Watson.Widgets.Question
 			
 			if(parentRectTransform != m_ParseCanvasRectTransform)
 				CreateArrow(parentWordRectTransform, wordRectTransform);
+
+			StartCoroutine(PositionWords());
 		}
 
-		private IEnumerator PositionWord(ParseTreeTextItem word, GameObject wordGameObject, RectTransform lastSiblingWordRectTransform)
+//		private IEnumerator PositionWord(ParseTreeTextItem word, GameObject wordGameObject, RectTransform lastSiblingWordRectTransform)
+//		{
+//			yield return new WaitForSeconds(1f);
+//				Log.Debug("ParseTreeView", "word: " + word.ParseTreeWord + ", width: " + wordGameObject.transform.GetChild(0).GetComponent<RectTransform>().rect.width + ", x: " + lastSiblingWordRectTransform.anchoredPosition.x);
+
+			//	position word
+//			float wordX = 0f;
+//			int siblingCount = parentRectTransform.childCount;
+//			int lastSiblingIndex = wordGameObject.transform.GetSiblingIndex() - 1;
+//			RectTransform lastSiblingWordRectTransform = null;
+//			if(siblingCount > 1)
+//			{
+//				lastSiblingWordRectTransform = parentRectTransform.gameObject.transform.GetChild(lastSiblingIndex).GetComponent<RectTransform>();
+//				//				Log.Debug("ParseTreeView", "word: " + word.ParseTreeWord + ", width: " + wordGameObject.transform.GetChild(0).GetComponent<RectTransform>().rect.width + ", x: " + lastSiblingWordRectTransform.anchoredPosition.x);
+//				StartCoroutine(PositionWord(word, wordGameObject, lastSiblingWordRectTransform));
+//			}
+//			
+//			if(parentRectTransform.gameObject.name == "Right Child")
+//			{
+//				wordX = siblingCount > 1 ? lastSiblingWordRectTransform.anchoredPosition.x - wordGameObject.transform.GetChild(0).GetComponent<RectTransform>().rect.width - horizontalWordSpacing : 0f;
+//			}
+//			else if(parentRectTransform.gameObject.name == "Left Child")
+//			{
+//				wordX = siblingCount > 1 ? lastSiblingWordRectTransform.anchoredPosition.x + lastSiblingWordRectTransform.rect.width + horizontalWordSpacing : 0f;
+//			}
+//			
+//			wordGameObject.transform.localPosition = new Vector3(wordX, 0f, 0f);
+//		}
+
+		private IEnumerator PositionWords()
 		{
 			yield return new WaitForSeconds(1f);
-				Log.Debug("ParseTreeView", "word: " + word.ParseTreeWord + ", width: " + wordGameObject.transform.GetChild(0).GetComponent<RectTransform>().rect.width + ", x: " + lastSiblingWordRectTransform.anchoredPosition.x);
+
+			
 		}
 
 		/// <summary>
@@ -273,21 +307,10 @@ namespace IBM.Watson.Widgets.Question
 		/// <param name="childRectTransform">Child rect transform.</param>
 		private void CreateArrow(RectTransform parentRectTransform, RectTransform childRectTransform)
 		{
-			//	find two points
-			Vector3 parentPoint = parentRectTransform.position;
-			Vector3 childPoint = childRectTransform.position + (new Vector3(0f, childRectTransform.rect.height/2, 0f) * 0.01f);
-
-			Vector3 direction = parentPoint - childPoint;
-			direction = parentRectTransform.TransformDirection(direction);
-			float angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg - 90f;
-
-			GameObject arrowGameObject = Instantiate(m_ParseTreeArrow, parentPoint, Quaternion.Euler(new Vector3(0f, 0f, angle))) as GameObject;
-			RectTransform arrowRectTransform = arrowGameObject.GetComponent<RectTransform>();
-			float dist = Vector3.Distance(parentPoint, childPoint);
-			Vector2 tempSizedelta = arrowRectTransform.sizeDelta;
-			tempSizedelta.x = dist * 160f;
-			arrowRectTransform.sizeDelta = tempSizedelta;
-			arrowRectTransform.SetParent(parentRectTransform, false);
+			GameObject arrowGameObject = Instantiate(m_ParseTreeArrow) as GameObject;
+			ParseTreeArrow parseTreeArrowScript = arrowGameObject.GetComponent<ParseTreeArrow>();
+			parseTreeArrowScript.parentRectTransform = parentRectTransform;
+			parseTreeArrowScript.childRectTransform = childRectTransform;
 		}
 
         /// <summary>
