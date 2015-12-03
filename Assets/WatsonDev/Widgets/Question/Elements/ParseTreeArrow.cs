@@ -17,12 +17,14 @@
 
 using UnityEngine;
 using System.Collections;
+using IBM.Watson.Logging;
 
 namespace IBM.Watson.Widgets.Question
 {
 	public class ParseTreeArrow : MonoBehaviour {
-		public RectTransform parentRectTransform;
-		public RectTransform childRectTransform;
+		public RectTransform ParentRectTransform;
+		public RectTransform ChildRectTransform;
+		private Canvas FacetCanvas;
 
 		void Update()
 		{
@@ -32,24 +34,37 @@ namespace IBM.Watson.Widgets.Question
 		//	test update
 		public void UpdateArrow()
 		{
-			//	find two points
-			Vector3 parentPoint = parentRectTransform.position - (new Vector3(0f, parentRectTransform.rect.height/2 + 50f, 0f) * 0.01f);
-			Vector3 childPoint = childRectTransform.position + (new Vector3(0f, childRectTransform.rect.height/2, 0f) * 0.01f);
-			
-			Vector3 direction = childPoint - parentPoint;
-			direction = parentRectTransform.TransformDirection(direction);
-			float angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg - 90f;
+			Vector3 localStartPoint = new Vector3(0f, -ParentRectTransform.rect.height/2 - 10f, 0f);
+			Vector3 localEndPoint = GetPositionInCanvasSpace(ChildRectTransform) - GetPositionInCanvasSpace(ParentRectTransform) + new Vector3(0f, ChildRectTransform.rect.height/2, 0f);
 
 			RectTransform rectTransform = gameObject.GetComponent<RectTransform>();
-			rectTransform.position = parentPoint;
+			rectTransform.anchoredPosition = localStartPoint;
+
+
+			Vector3 direction = localEndPoint - localStartPoint;
+			direction = ParentRectTransform.InverseTransformDirection(direction);
+			float angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg - 90f;
+
 			rectTransform.rotation = Quaternion.Euler(new Vector3(0f, 0f, -angle));
 
-			RectTransform arrowRectTransform = gameObject.GetComponent<RectTransform>();
-			float dist = Vector3.Distance(parentPoint, childPoint);
-			Vector2 tempSizedelta = arrowRectTransform.sizeDelta;
-			tempSizedelta.x = dist * 45f;
-			arrowRectTransform.sizeDelta = tempSizedelta;
-			arrowRectTransform.SetParent(parentRectTransform, false);
+			float dist = Vector3.Distance(localStartPoint, localEndPoint);
+			Vector3 tempSizedelta = rectTransform.sizeDelta;
+			tempSizedelta.x = dist;
+			rectTransform.sizeDelta = tempSizedelta;
+			rectTransform.SetParent(ParentRectTransform, false);
+		}
+
+		private Vector3 GetPositionInCanvasSpace(RectTransform rectTransform)
+		{
+			Vector3 resultPoint = Vector3.zero;
+			RectTransform[] rectTransformArray = rectTransform.GetComponentsInParent<RectTransform>();
+
+			foreach(RectTransform parentRectTransform in rectTransformArray)
+			{
+				resultPoint += parentRectTransform.localPosition;
+			}
+
+			return resultPoint;
 		}
 	}
 }
