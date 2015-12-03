@@ -31,7 +31,7 @@ namespace IBM.Watson.Widgets
     /// <summary>
     /// Translation widget to handle translation service calls
     /// </summary>
-	public class TranslationWidget : Widget
+	public class TranslationDisplayWidget : Widget
     {
 		#region Private Data
 		private Translate m_Translate = new Translate();
@@ -44,8 +44,10 @@ namespace IBM.Watson.Widgets
 		private Dropdown m_DropDownSourceLanguage = null;
 		[SerializeField]
 		private Dropdown m_DropDownTargetLanguage = null;
-
-
+		[SerializeField]
+		private TextToSpeechWidget m_TextToSpeechToChangeVoice = null;
+		[SerializeField]
+		private Button m_TextToSpeechButton = null;
 
 		private Dictionary<string, string> m_LanguageToIdentify = new Dictionary<string, string> ();
 		private Dictionary<string, List<string>> m_LanguageToTranslate = new Dictionary<string, List<string>> ();
@@ -108,20 +110,14 @@ namespace IBM.Watson.Widgets
 
 		#endregion
 
-		private void OnEnable()
+		void OnEnable()
 		{
+			Log.Status ("TranslationWidget", "OnEnable");
+			//UnityEngine.Debug.LogWarning("TranslationWidget - OnEnable");
 			m_Translate.GetLanguages( OnGetLanguagesAndGetModelsAfter );
-			//m_Translate.GetTranslation( "What does the fox say?", "en", "es", OnGetTranslation );
-			//m_Translate.GetTranslation( "What does the fox say?", "en", "fr", OnGetTranslation );
-
-			//m_Translate.GetModel( "en-es", OnGetModel );
-
-			
-
-
 		}
 		
-		private void OnDisable()
+		void OnDisable()
 		{
 
 		}
@@ -186,6 +182,7 @@ namespace IBM.Watson.Widgets
 		private void OnGetLanguagesAndGetModelsAfter( Languages languages )
 		{
 			if (languages != null && languages.languages.Length > 0) {
+				Log.Status( "TranslationWidget", "OnGetLanguagesAndGetModelsAfter as {0}", languages.languages.Length );
 				m_LanguageToIdentify.Clear();
 
 				foreach (var lang in languages.languages) {
@@ -223,6 +220,8 @@ namespace IBM.Watson.Widgets
 
 		private void OnGetModels( TranslationModels models )
 		{
+			Log.Status( "TranslationWidget", "OnGetModels as {0}", models.models.Length );
+
 			if ( models != null && models.models.Length > 0)
 			{
 				m_LanguageToTranslate.Clear();
@@ -290,12 +289,13 @@ namespace IBM.Watson.Widgets
 			}
 
 			ResetTargetLanguageDropDown ();
-
+			ResetVoiceForTargetLanguage ();
 			OnTranslation ();
 		}
 
 		public void DropDownTargetValueChanged(){
 			OnTranslation ();
+			ResetVoiceForTargetLanguage ();
 		}
 
 		public void ResetTargetLanguageDropDown(){
@@ -308,14 +308,14 @@ namespace IBM.Watson.Widgets
 					m_DropDownTargetLanguage.value = -1;
 					int defaultInitialValueToLanguage = 0;
 
-					foreach (string itemLanguage in m_LanguageToTranslate.Keys) {
+					foreach (string itemLanguage in m_LanguageToTranslate[m_DetectLanguage]) {
 						if(string.Equals(itemLanguage, m_DetectLanguage))
 						   continue;
 
 						m_DropDownTargetLanguage.options.Add (new Dropdown.OptionData (m_LanguageToIdentify[itemLanguage]));
 						
 						if(String.Equals(m_DefaultLanguageToTranslate, itemLanguage)){
-							defaultInitialValueToLanguage = m_DropDownTargetLanguage.options.Count - 1; //first item 'Detect Language' will be removed
+							defaultInitialValueToLanguage = m_DropDownTargetLanguage.options.Count - 1; 
 						}
 					}
 
@@ -337,7 +337,7 @@ namespace IBM.Watson.Widgets
 						m_DropDownTargetLanguage.options.Add (new Dropdown.OptionData (m_LanguageToIdentify[itemLanguage]));
 
 						if(String.Equals(m_DefaultLanguageToTranslate, itemLanguage)){
-							defaultInitialValueToLanguage = m_DropDownTargetLanguage.options.Count - 1; //first item 'Detect Language' will be removed
+							defaultInitialValueToLanguage = m_DropDownTargetLanguage.options.Count - 1; 
 						}
 					}
 
@@ -351,6 +351,37 @@ namespace IBM.Watson.Widgets
 
 			} else {
 				Log.Error("TranslationWidget", "ResetTargetLanguageDropDown - Source language has not been set.");
+			}
+		}
+
+		private void ResetVoiceForTargetLanguage(){
+			if (m_TextToSpeechToChangeVoice != null) {
+				bool enableSpeechButton = true;
+				if(string.Equals( ToLanguage, "en")){
+					m_TextToSpeechToChangeVoice.Voice = TextToSpeech.VoiceType.en_US_Michael;
+				}
+				else if(string.Equals( ToLanguage, "de")){
+					m_TextToSpeechToChangeVoice.Voice = TextToSpeech.VoiceType.de_DE_Dieter;
+				}
+				else if(string.Equals( ToLanguage, "es")){
+					m_TextToSpeechToChangeVoice.Voice = TextToSpeech.VoiceType.es_ES_Enrique;
+				}
+				else if(string.Equals( ToLanguage, "fr")){
+					m_TextToSpeechToChangeVoice.Voice = TextToSpeech.VoiceType.fr_FR_Renee;
+				}
+				else if(string.Equals( ToLanguage, "it")){
+					m_TextToSpeechToChangeVoice.Voice = TextToSpeech.VoiceType.it_IT_Francesca;
+				}
+				else if(string.Equals( ToLanguage, "ja")){
+					m_TextToSpeechToChangeVoice.Voice = TextToSpeech.VoiceType.ja_JP_Emi;
+				}
+				else{
+					//disable Speaking button because there is no proper voice to talk
+					enableSpeechButton = false;
+				}
+
+				if(m_TextToSpeechButton != null)
+					m_TextToSpeechButton.interactable = enableSpeechButton;
 			}
 		}
 

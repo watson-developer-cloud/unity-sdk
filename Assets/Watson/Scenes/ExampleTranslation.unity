@@ -148,7 +148,7 @@ GameObject:
   - 4: {fileID: 166592640}
   - 114: {fileID: 166592641}
   m_Layer: 0
-  m_Name: TranslationWidget
+  m_Name: TranslationDisplayWidget
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -177,11 +177,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c45b7eb3f0ab3485ea7c10d6ba554116, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AutoConnect: 1
+  m_AutoConnect: 0
   m_Input: {fileID: 170134804}
   m_Output: {fileID: 1194631211}
   m_DropDownSourceLanguage: {fileID: 947455489}
   m_DropDownTargetLanguage: {fileID: 1606170139}
+  m_TextToSpeechToChangeVoice: {fileID: 0}
 --- !u!1 &169592466
 GameObject:
   m_ObjectHideFlags: 0
@@ -217,7 +218,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 240, y: -175}
-  m_SizeDelta: {x: 100, y: 30}
+  m_SizeDelta: {x: 380, y: 30}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &169592468
 MonoBehaviour:
@@ -240,7 +241,7 @@ MonoBehaviour:
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: .960784316, g: .960784316, b: .960784316, a: 1}
-    m_PressedColor: {r: 1, g: 0, b: 0, a: 1}
+    m_PressedColor: {r: .125490203, g: .592156887, b: .768627524, a: 1}
     m_DisabledColor: {r: .784313738, g: .784313738, b: .784313738, a: .501960814}
     m_ColorMultiplier: 1
     m_FadeDuration: .100000001
@@ -279,9 +280,9 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
-  m_PreserveAspect: 0
+  m_Sprite: {fileID: 21300000, guid: a1df770bebe9f478f932ed6628eeba91, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -1734,7 +1735,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 240, y: -517.000122}
-  m_SizeDelta: {x: 100, y: 30}
+  m_SizeDelta: {x: 380, y: 30}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &908425283
 MonoBehaviour:
@@ -1757,7 +1758,7 @@ MonoBehaviour:
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: .960784316, g: .960784316, b: .960784316, a: 1}
-    m_PressedColor: {r: .373107702, g: .757352948, b: .439356893, a: 1}
+    m_PressedColor: {r: .125490203, g: .592156887, b: .768627524, a: 1}
     m_DisabledColor: {r: .784313738, g: .784313738, b: .784313738, a: .501960814}
     m_ColorMultiplier: 1
     m_FadeDuration: .100000001
@@ -1807,9 +1808,9 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
-  m_PreserveAspect: 0
+  m_Sprite: {fileID: 21300000, guid: 2fc78218dc80140cf99b81872657dfbc, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -3020,7 +3021,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Push To Talk
+  m_Text: 
 --- !u!222 &1642640565
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3734,7 +3735,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Hear
+  m_Text: 
 --- !u!222 &1914253462
 CanvasRenderer:
   m_ObjectHideFlags: 0
