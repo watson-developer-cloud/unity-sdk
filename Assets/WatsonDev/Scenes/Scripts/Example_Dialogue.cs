@@ -22,7 +22,16 @@ using IBM.Watson.Services.v1;
 using IBM.Watson.Widgets;
 using IBM.Watson.Logging;
 
-public class Example_Dialogue : MonoBehaviour {
+public class Example_Dialogue : Widget {
+	#region implemented abstract members of Widget
+
+	protected override string GetName ()
+	{
+		return "Dialog";
+	}
+
+	#endregion
+
 	const string DIALOG_NAME = "ut_20151029_5";
 	
 	Dialog m_Dialog = new Dialog();
