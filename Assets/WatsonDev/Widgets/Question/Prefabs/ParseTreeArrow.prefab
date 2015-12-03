@@ -29,8 +29,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fcc1bd68f2564ad2ab3ff64552ef761, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parentRectTransform: {fileID: 0}
-  childRectTransform: {fileID: 0}
+  ParentRectTransform: {fileID: 0}
+  ChildRectTransform: {fileID: 0}
 --- !u!114 &11425098
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -87,7 +87,31 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Pivot.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Pivot.y
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 145180}

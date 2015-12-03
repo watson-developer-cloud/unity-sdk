@@ -285,9 +285,12 @@ namespace IBM.Watson.Widgets.Question
 		private void CreateArrow(RectTransform parentRectTransform, RectTransform childRectTransform)
 		{
 			GameObject arrowGameObject = Instantiate(m_ParseTreeArrow) as GameObject;
+			RectTransform arrowRectTransform = arrowGameObject.GetComponent<RectTransform>();
 			ParseTreeArrow parseTreeArrowScript = arrowGameObject.GetComponent<ParseTreeArrow>();
-			parseTreeArrowScript.parentRectTransform = parentRectTransform;
-			parseTreeArrowScript.childRectTransform = childRectTransform;
+			parseTreeArrowScript.ParentRectTransform = parentRectTransform;
+			parseTreeArrowScript.ChildRectTransform = childRectTransform;
+
+			arrowRectTransform.SetParent(parentRectTransform, false);
 		}
 
         /// <summary>

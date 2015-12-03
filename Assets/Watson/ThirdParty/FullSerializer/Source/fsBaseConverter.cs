@@ -107,7 +107,7 @@ namespace FullSerializer {
             fsData memberData;
             if (data.TryGetValue(name, out memberData) == false) {
                 value = default(T);
-                return fsResult.Fail("Unable to find member \"" + name + "\"");
+                return fsResult.Warn("Unable to find member \"" + name + "\"");
             }
 
             object storage = null;

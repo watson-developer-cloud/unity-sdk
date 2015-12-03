@@ -51,6 +51,11 @@ namespace IBM.Watson.Widgets
         private Input m_SpeechInput = new Input( "SpeechInput", typeof(SpeechToTextData), "OnSpeechInput" );
 		[SerializeField]
 		private float m_MinConfidenceToShow = 0.5f;
+
+		private string m_PreviousOutputTextWithStatus = "";
+		private string m_PreviousOutputText = "";
+		private float m_ThresholdTimeFromLastInput = 3.0f; //3 secs as threshold time. After 3 secs from last OnSpeechInput, we are considering input as new input
+		private float m_TimeAtLastInterim = 0.0f;
         #endregion
 
         private void OnSpeechInput( Data data )
@@ -60,12 +65,21 @@ namespace IBM.Watson.Widgets
                 SpeechResultList result = ((SpeechToTextData)data).Results;
                 if (result != null && result.Results.Length > 0)
                 {
-					if(m_Output != null && !m_ContinuousText)
-                    	m_Output.text = "";
-					if(m_OutputAsInputField != null && !m_ContinuousText)
-						m_OutputAsInputField.text = "";
-					if(m_OutputStatus != null)
-						m_OutputStatus.text = "";
+					string outputTextWithStatus = "";
+					string outputText = "";
+
+					if(Time.time - m_TimeAtLastInterim > m_ThresholdTimeFromLastInput){
+						if(m_Output != null)
+							m_PreviousOutputTextWithStatus = m_Output.text;
+						if(m_OutputAsInputField != null)
+							m_PreviousOutputText = m_OutputAsInputField.text;
+					}
+
+					if(m_Output != null && m_ContinuousText)
+						outputTextWithStatus = m_PreviousOutputTextWithStatus;
+
+					if(m_OutputAsInputField != null && m_ContinuousText)
+						outputText = m_PreviousOutputText;
 
                     foreach( var res in result.Results )
                     {
@@ -73,17 +87,21 @@ namespace IBM.Watson.Widgets
                         {
                             string text = alt.Transcript;
 							if(m_Output != null){
-                            	m_Output.text += string.Format( "{0} ({1}, {2:0.00})\n", text, res.Final ? "Final" : "Interim", alt.Confidence );
+								m_Output.text = string.Concat(outputTextWithStatus, string.Format( "{0} ({1}, {2:0.00})\n", text, res.Final ? "Final" : "Interim", alt.Confidence) );
 							}
+
 							if(m_OutputAsInputField != null){
 								if(!res.Final || alt.Confidence > m_MinConfidenceToShow){
-									m_OutputAsInputField.text = string.Concat( m_OutputAsInputField.text , " ", text);
+									m_OutputAsInputField.text = string.Concat( outputText , " ", text);
 
 									if(m_OutputStatus != null){
-										m_OutputStatus.text += string.Format( "{0}, {1:0.00}", res.Final ? "Final" : "Interim", alt.Confidence );
+										m_OutputStatus.text = string.Format( "{0}, {1:0.00}", res.Final ? "Final" : "Interim", alt.Confidence );
 									}
 								}
 							}
+
+							if(!res.Final)
+								m_TimeAtLastInterim = Time.time;
 
                         }
                     }
