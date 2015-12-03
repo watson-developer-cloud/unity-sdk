@@ -61,6 +61,14 @@ namespace IBM.Watson.Widgets
 		private string m_DefaultLanguageFromTranslate = "DETECT";
 		private string m_DefaultLanguageToTranslate = "en";
 		private string m_DefaultDomainToUse = "conversational";
+		private float m_ThresholdTimeToTranslate = 1.0f; //in each second there can be a translate request not more than it. 
+		private float m_TimeLastTranslateRequest = 0.0f;
+		private bool m_IsThereTranslationWaiting = false;
+
+		private int m_ThresholdCharacterCountToStopIdentifyLanguage = 10; //after 10 character it stops calling identify language
+		private float m_ThresholdTimeToIdentify = 1.0f; //in each second there can be a translate request not more than it. 
+		private float m_TimeLastIdentifyRequest = 0.0f;
+		private bool m_IsThereIdentifynWaiting = false;
 		#endregion
 
         #region Widget interface
@@ -75,10 +83,8 @@ namespace IBM.Watson.Widgets
 		public string FromLanguage{
 			get{
 				string valueToReturn = null;
-				if(m_DropDownSourceLanguage != null && !string.IsNullOrEmpty(m_FromDetectedLanguage) && m_DropDownSourceLanguage.value == 0){
-					valueToReturn = m_FromDetectedLanguage;
-				}
-				else if(m_DropDownSourceLanguage != null && m_LanguageToTranslate.Keys != null && m_LanguageToTranslate.Keys.Count > m_DropDownSourceLanguage.value && m_DropDownSourceLanguage.value >= 0){
+
+				if(m_DropDownSourceLanguage != null && m_LanguageToTranslate.Keys != null && m_LanguageToTranslate.Keys.Count > m_DropDownSourceLanguage.value && m_DropDownSourceLanguage.value >= 0){
 					valueToReturn = m_LanguagesFrom[m_DropDownSourceLanguage.value];
 				}
 
@@ -89,9 +95,22 @@ namespace IBM.Watson.Widgets
 		public string ToLanguage{
 			get{
 				string valueToReturn = null;
-				if(m_DropDownTargetLanguage != null && m_LanguageToTranslate != null && FromLanguage != null && m_LanguageToTranslate.ContainsKey(FromLanguage) && m_LanguageToTranslate[FromLanguage].Count > m_DropDownTargetLanguage.value && m_DropDownTargetLanguage.value >= 0){
-					valueToReturn = m_LanguageToTranslate[FromLanguage][m_DropDownTargetLanguage.value];
+				if(m_DropDownTargetLanguage != null && m_LanguageToTranslate != null && FromLanguage != null && m_LanguageToTranslate.ContainsKey(FromDetectedLanguage) && m_LanguageToTranslate[FromDetectedLanguage].Count > m_DropDownTargetLanguage.value && m_DropDownTargetLanguage.value >= 0){
+					valueToReturn = m_LanguageToTranslate[FromDetectedLanguage][m_DropDownTargetLanguage.value];
 				}
+				return valueToReturn;
+			}
+		}
+
+		public string FromDetectedLanguage{
+			get{
+				string valueToReturn = null;
+				if(m_DropDownSourceLanguage != null && !string.IsNullOrEmpty(m_FromDetectedLanguage) && m_DropDownSourceLanguage.value == 0){
+					valueToReturn = m_FromDetectedLanguage;
+				}
+				if(string.IsNullOrEmpty(valueToReturn))
+					valueToReturn = FromLanguage;
+
 				return valueToReturn;
 			}
 		}
@@ -102,9 +121,15 @@ namespace IBM.Watson.Widgets
 			}
 		}
 
+		public bool IsFromLanguageToDetectedAlready{
+			get{
+				return !string.Equals(FromDetectedLanguage, m_DetectLanguage);
+			}
+		}
+
 		public bool IsSameLanguage{	//No need to call translate
 			get{
-				return String.Equals(FromLanguage, ToLanguage);
+				return String.Equals(FromDetectedLanguage, ToLanguage);
 			}
 		}
 
@@ -122,6 +147,18 @@ namespace IBM.Watson.Widgets
 
 		}
 
+		void Update(){
+			if (m_IsThereTranslationWaiting && Time.time - m_TimeLastTranslateRequest > m_ThresholdTimeToTranslate) {
+				m_IsThereTranslationWaiting = false;
+				OnTranslation();
+			}
+
+			if (m_IsThereIdentifynWaiting && Time.time - m_TimeLastIdentifyRequest > m_ThresholdTimeToIdentify) {
+				m_IsThereIdentifynWaiting = false;
+				IdentifyLanguageFromInputTextIfNeeded();
+			}
+		}
+
 		/// <summary>
 		/// Button event handler.
 		/// </summary>
@@ -131,10 +168,7 @@ namespace IBM.Watson.Widgets
 				if(FromLanguage != null && ToLanguage != null){
 					if (m_Input != null) {
 						Translate(m_Input.text);
-
-						if(IsFromLanguageToDetect && !string.IsNullOrEmpty(m_Input.text)){	//Identify and translate
-							m_Translate.Identify(m_Input.text, OnIdentifyAndTranslateFromLanguage );
-						}
+						IdentifyLanguageFromInputTextIfNeeded();
 
 					}
 					else{
@@ -150,12 +184,35 @@ namespace IBM.Watson.Widgets
 			}
 		}
 
+		private void IdentifyLanguageFromInputTextIfNeeded(){
+			if(IsFromLanguageToDetect && !string.IsNullOrEmpty(m_Input.text) && ( !IsFromLanguageToDetectedAlready || m_Input.text.Length < m_ThresholdCharacterCountToStopIdentifyLanguage) ){	//Identify and translate. If already detected then check the length of the char to no to detect one more time.
+
+				if(Time.time - m_TimeLastIdentifyRequest > m_ThresholdTimeToIdentify){
+					m_TimeLastIdentifyRequest = Time.time;
+					m_Translate.Identify(m_Input.text, OnIdentifyAndTranslateFromLanguage );
+					m_IsThereIdentifynWaiting = false;
+				}
+				else{
+					m_IsThereIdentifynWaiting = true;
+				}
+
+			}
+
+		}
+		
 		private void Translate(string text){
 			if (!string.IsNullOrEmpty (text)) {
-				if (IsSameLanguage || IsFromLanguageToDetect) {	//same language or it is still not detected!
+				if (IsSameLanguage || (IsFromLanguageToDetect && !IsFromLanguageToDetectedAlready)) {	//same language or it is still not detected!
 					SetOutput(text);
 				} else {
-					m_Translate.GetTranslation (m_Input.text, FromLanguage, ToLanguage, OnGetTranslation);
+					if(Time.time - m_TimeLastTranslateRequest > m_ThresholdTimeToTranslate){
+						m_TimeLastTranslateRequest = Time.time;
+						m_Translate.GetTranslation (m_Input.text, FromDetectedLanguage, ToLanguage, OnGetTranslation);
+						m_IsThereTranslationWaiting = false;
+					}
+					else{
+						m_IsThereTranslationWaiting = true;
+					}
 				}
 			} else {
 				//translation text is empty - clear output text
@@ -201,16 +258,24 @@ namespace IBM.Watson.Widgets
 
 		private void OnIdentifyAndTranslateFromLanguage(string lang){
 			//Log.Status( "TranslationWidget", "OnIdentifyAndTranslateFromLanguage as {0}", lang );
-			for (int i = 0; m_LanguagesFrom != null && i < m_LanguagesFrom.Length; i++) {
-				if(String.Equals(m_LanguagesFrom[i], lang)){
-					m_FromDetectedLanguage = lang;
-					m_DropDownSourceLanguage.captionText.text = string.Format(m_DetectedLanguageNameFormat, m_LanguageToIdentify[lang]);
-					m_DropDownSourceLanguage.options[0].text = string.Format(m_DetectedLanguageNameFormat, m_LanguageToIdentify[lang]);
-					ResetTargetLanguageDropDown();
-					Translate(m_Input.text);
-					break;
+
+			//Identified language is different then current language
+			if(!string.Equals(lang, FromDetectedLanguage)){
+
+				for (int i = 0; m_LanguagesFrom != null && i < m_LanguagesFrom.Length; i++) {
+					if(String.Equals(m_LanguagesFrom[i], lang)){
+						m_FromDetectedLanguage = lang;
+						m_DropDownSourceLanguage.captionText.text = string.Format(m_DetectedLanguageNameFormat, m_LanguageToIdentify[lang]);
+						m_DropDownSourceLanguage.options[0].text = string.Format(m_DetectedLanguageNameFormat, m_LanguageToIdentify[lang]);
+						ResetTargetLanguageDropDown();
+						ResetVoiceForTargetLanguage();
+						Translate(m_Input.text);
+						break;
+					}
 				}
 			}
+
+
 		}
 
 		private IEnumerator EnableInteractiveDropDown(){
@@ -302,7 +367,7 @@ namespace IBM.Watson.Widgets
 			if (FromLanguage != null) {
 
 				//Add all languages, because first item is detect language
-				if(m_LanguageToTranslate != null && string.Equals(m_DetectLanguage, FromLanguage)){
+				if(m_LanguageToTranslate != null && string.Equals(m_DetectLanguage, FromDetectedLanguage)){
 					string languageToPrevious = ToLanguage;
 					m_DropDownTargetLanguage.options.Clear ();
 					m_DropDownTargetLanguage.value = -1;
@@ -324,13 +389,13 @@ namespace IBM.Watson.Widgets
 
 				}
 				//Add target language corresponding source language
-				else if(m_LanguageToTranslate != null && m_LanguageToTranslate.ContainsKey(FromLanguage) && m_LanguageToTranslate[FromLanguage] != null){
+				else if(m_LanguageToTranslate != null && m_LanguageToTranslate.ContainsKey(FromDetectedLanguage) && m_LanguageToTranslate[FromDetectedLanguage] != null){
 					string languageToPrevious = ToLanguage;
 					m_DropDownTargetLanguage.options.Clear ();
 					m_DropDownTargetLanguage.value = -1;
 					int defaultInitialValueToLanguage = 0;
 
-					foreach (string itemLanguage in m_LanguageToTranslate[FromLanguage]) {
+					foreach (string itemLanguage in m_LanguageToTranslate[FromDetectedLanguage]) {
 						if(string.Equals(itemLanguage, m_DetectLanguage))
 							continue;
 
