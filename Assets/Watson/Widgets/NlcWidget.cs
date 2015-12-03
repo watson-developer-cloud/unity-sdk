@@ -43,6 +43,8 @@ namespace IBM.Watson.Widgets
         [SerializeField]
         private Output m_ClassifyOutput = new Output( typeof(ClassifyResultData) );
         [SerializeField]
+        private string m_ClassifierName = string.Empty;
+        [SerializeField]
         private string m_ClassifierId = string.Empty;
         [SerializeField, Tooltip("What is the minimum word confidence needed to send onto the NLC?")]
         private double m_MinWordConfidence = 0.4;
@@ -120,6 +122,8 @@ namespace IBM.Watson.Widgets
             {
                 foreach( var classifier in classifiers.classifiers )
                 {
+                    if (! string.IsNullOrEmpty( m_ClassifierName ) && !classifier.name.StartsWith( m_ClassifierName ) )
+                        continue;
                     if ( classifier.language != m_Language )
                         continue;
 

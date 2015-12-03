@@ -14,13 +14,13 @@
     <Name>Documentation</Name>
     <!-- SHFB properties -->
     <FrameworkVersion>.NET Framework 3.5</FrameworkVersion>
-    <OutputPath>Help\</OutputPath>
+    <OutputPath>..\Assets\Watson\Editor\Help\</OutputPath>
     <HtmlHelpName>WatsonUnitySDK</HtmlHelpName>
     <Language>en-US</Language>
     <ComponentPath>
     </ComponentPath>
     <BuildAssemblerVerbosity>OnlyWarningsAndErrors</BuildAssemblerVerbosity>
-    <HelpFileFormat>HtmlHelp1, Website</HelpFileFormat>
+    <HelpFileFormat>HtmlHelp1</HelpFileFormat>
     <IndentHtml>False</IndentHtml>
     <KeepLogFile>True</KeepLogFile>
     <DisableCodeBlockComponent>False</DisableCodeBlockComponent>

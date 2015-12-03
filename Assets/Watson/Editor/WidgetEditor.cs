@@ -26,7 +26,7 @@ namespace IBM.Watson.Editor
 {
     public static class WidgetConnector
     {
-        [MenuItem("Watson/Widgets/Resolve Connections")]
+        [MenuItem("Watson/Widgets/Resolve Connections", false, 4 )]
         private static void AutoConnectWidgets()
         {
             Widget [] widgets = Object.FindObjectsOfType<Widget>();

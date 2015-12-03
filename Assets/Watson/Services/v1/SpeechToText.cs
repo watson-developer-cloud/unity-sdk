@@ -80,7 +80,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         private bool m_ListenActive = false;
         private bool m_AudioSent = false;
         private bool m_IsListening = false;
-        private Queue<AudioClip> m_ListenRecordings = new Queue<AudioClip>();
+        private Queue<AudioData> m_ListenRecordings = new Queue<AudioData>();
         private int m_KeepAliveRoutine = 0;                      // ID of the keep alive co-routine
         private float m_LastKeepAlive = 0.0f;
         private string m_RecognizeModel = "en-US_BroadbandModel";    // ID of the model to use.
@@ -195,7 +195,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                     {
                         // we have not received the "listening" state yet from the server, so just queue
                         // the audio clips until that happens.
-                        m_ListenRecordings.Enqueue(clip.Clip);
+                        m_ListenRecordings.Enqueue(clip);
 
                         // We need to check the length of this queue and do something if it gets too full.
                         if (m_ListenRecordings.Count > MAX_QUEUED_RECORDINGS)
@@ -364,8 +364,8 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                                     // send all pending audio clips ..
                                     while (m_ListenRecordings.Count > 0)
                                     {
-                                        AudioClip clip = m_ListenRecordings.Dequeue();
-                                        m_ListenSocket.Send(new WSConnector.BinaryMessage(AudioClipUtil.GetL16(clip)));
+                                        AudioData clip = m_ListenRecordings.Dequeue();
+                                        m_ListenSocket.Send(new WSConnector.BinaryMessage(AudioClipUtil.GetL16(clip.Clip)));
                                         m_AudioSent = true;
                                     }
                                 }

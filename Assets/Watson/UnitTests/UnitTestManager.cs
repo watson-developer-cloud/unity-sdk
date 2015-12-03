@@ -216,7 +216,7 @@ public static class RunUnitTest
     }
 
 #if UNITY_EDITOR
-    [MenuItem("Watson/Run All UnitTests")]
+    [MenuItem("Watson/Run All UnitTests",false, 50)]
     static public void AllNoQuit()
     {
         Logger.InstallDefaultReactors();

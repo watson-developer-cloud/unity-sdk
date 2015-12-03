@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Prefabs:
   - {fileID: 121396, guid: 337eda4d7be18aa45bc090ad9cc57644, type: 2}
   - {fileID: 175116, guid: 9a2ef11f904aaee419cdda40a956943c, type: 2}
-  - {fileID: 150770, guid: d82e765678923254584e439593116ca4, type: 2}
+  - {fileID: 150770, guid: 404c9649ee877c04aa05e9fd32006d07, type: 2}
   - {fileID: 122206, guid: 2f1b2c8996342c64f9853650319be032, type: 2}
   - {fileID: 108938, guid: c66bfe61a112240958d0988cf86caa87, type: 2}
 --- !u!114 &11460156
@@ -343,6 +343,10 @@ Prefab:
       propertyPath: m_StateInfo.Array.data[6].m_Speed
       value: 17
       objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Prefabs.Array.data[2]
+      value: 
+      objectReference: {fileID: 150770, guid: 404c9649ee877c04aa05e9fd32006d07, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 128814}
