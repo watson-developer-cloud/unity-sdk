@@ -21,6 +21,7 @@ using UnityEditor;
 using UnityEngine;
 using IBM.Watson.Widgets;
 using System.Reflection;
+using System.Collections.Generic;
 
 namespace IBM.Watson.Editor
 {
@@ -38,46 +39,42 @@ namespace IBM.Watson.Editor
     [CustomPropertyDrawer(typeof(Widget.Input))]
     public class WidgetInputDrawer : PropertyDrawer
     {
-        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        const float m_Rows = 3;
+        private bool m_Expanded = true;
+        private static Dictionary<string,bool> sm_ExpandedStates = new Dictionary<string, bool>();
+
+        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            // Using BeginProperty / EndProperty on the parent property means that
-            // prefab override logic works on the entire property.
-            EditorGUI.BeginProperty(position, label, property);
+            if (! sm_ExpandedStates.ContainsKey( property.propertyPath ) )
+                sm_ExpandedStates[ property.propertyPath ] = true;
 
-            // Draw label
-            position = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
+            if ( sm_ExpandedStates[ property.propertyPath] )
+                return base.GetPropertyHeight(property, label) * m_Rows;
+            else
+                return base.GetPropertyHeight(property, label );
+        }
 
-            // Don't make child fields be indented
-            var indent = EditorGUI.indentLevel;
-            //EditorGUI.indentLevel = 0;
+        public override void OnGUI(Rect pos, SerializedProperty property, GUIContent label)
+        {
+            Widget.Input target = DrawerHelper.GetParent( property ) as Widget.Input;
+			if (target == null)
+				return;
+            if (target.Owner == null)
+                target.Owner = property.serializedObject.targetObject as Widget;
 
-            // get the containing object.. (e.g. SpeechToTextWidget)
-            object parent = property.serializedObject.targetObject;
-            // find the property in question as a data member..
-            MemberInfo [] infos = parent.GetType().GetMember( property.name, 
-                BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.GetField );
-            foreach( var info in infos )
+            //EditorGUIUtility.LookLikeControls();
+            bool expanded_state = sm_ExpandedStates[ property.propertyPath];
+            bool expanded = EditorGUI.Foldout( m_Expanded ? new Rect(pos.x, pos.y, pos.width / 2, pos.height / m_Rows) : pos, expanded_state, label );
+            if ( expanded_state )
             {
-                FieldInfo field = info as FieldInfo;
-                if ( field == null )
-                    continue;
-
-                Widget.Input input = field.GetValue( parent ) as Widget.Input;
-                if ( input == null )
-                    continue;
-                if ( input.Owner == null )
-                    input.Owner = parent as Widget;
-
-                // TODO: Make this read-only if possible.
-                //EditorGUI.BeginDisabledGroup(true);
-                EditorGUI.TextField( position, input.FullInputName );
-                //EditorGUI.EndDisabledGroup();
+                EditorGUI.indentLevel += 1;
+                EditorGUI.LabelField( new Rect(pos.x, pos.y += pos.height / m_Rows, pos.width, pos.height / m_Rows), 
+                    "Input Name: " + target.FullInputName );
+                EditorGUI.LabelField( new Rect(pos.x, pos.y += pos.height / m_Rows, pos.width, pos.height / m_Rows), 
+                    "Data Type: " + target.DataTypeName );
+                EditorGUI.indentLevel -= 1;
             }
-
-            // Set indent back to what it was
-            EditorGUI.indentLevel = indent;
-
-            EditorGUI.EndProperty();
+            sm_ExpandedStates[ property.propertyPath] = expanded;
         }
 	}
 }

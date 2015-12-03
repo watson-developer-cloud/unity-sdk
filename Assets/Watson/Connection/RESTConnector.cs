@@ -132,6 +132,10 @@ namespace IBM.Watson.Connection
 
             #region Public Properties
             /// <summary>
+            /// If true, then request will be cancelled.
+            /// </summary>
+            public bool Cancel { get; set; }
+            /// <summary>
             /// True to send a delete method.
             /// </summary>
             public bool Delete { get; set; }
@@ -315,6 +319,8 @@ namespace IBM.Watson.Connection
             while (m_Requests.Count > 0)
             {
                 Request req = m_Requests.Dequeue();
+                if ( req.Cancel )
+                    continue;
                 string url = URL;
                 if (! string.IsNullOrEmpty( req.Function ) )
                     url += req.Function;
@@ -383,10 +389,15 @@ namespace IBM.Watson.Connection
                     // wait for the request to complete.
                     while(! www.isDone )
                     {
+                        if ( req.Cancel )
+                            break;
                         if ( Time.time > (startTime + Config.Instance.TimeOut) )
                             break;
                         yield return null;
                     }
+
+                    if ( req.Cancel )
+                        continue;
 
                     bool bError = false;
                     if (! string.IsNullOrEmpty( www.error ) )
@@ -441,10 +452,15 @@ namespace IBM.Watson.Connection
                     deleteReq.Send( url, req.Headers );
                     while(! deleteReq.IsComplete )
                     {
+                        if ( req.Cancel )
+                            break;
                         if ( Time.time > (startTime + Config.Instance.TimeOut) )
                             break;
                         yield return null;
                     }
+
+                    if ( req.Cancel )
+                        continue;
 
                     resp.Success = deleteReq.Success;
 #else

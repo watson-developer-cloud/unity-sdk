@@ -164,46 +164,9 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 11404672, guid: 9321ac016e311474e94c27e42bdac14f, type: 2}
-      propertyPath: m_Voice
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11495760, guid: 9321ac016e311474e94c27e42bdac14f, type: 2}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1579246694}
-    - target: {fileID: 11495760, guid: 9321ac016e311474e94c27e42bdac14f, type: 2}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnTextToSpeech
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 11404672, guid: 9321ac016e311474e94c27e42bdac14f, type: 2}
-    - {fileID: 8254672, guid: 9321ac016e311474e94c27e42bdac14f, type: 2}
+    m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9321ac016e311474e94c27e42bdac14f, type: 2}
   m_IsPrefabParent: 0
---- !u!114 &980950518 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 11410406, guid: 9321ac016e311474e94c27e42bdac14f,
-    type: 2}
-  m_PrefabInternal: {fileID: 980950517}
-  m_Script: {fileID: 575553740, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
---- !u!224 &980950519 stripped
-RectTransform:
-  m_PrefabParentObject: {fileID: 22495110, guid: 9321ac016e311474e94c27e42bdac14f,
-    type: 2}
-  m_PrefabInternal: {fileID: 980950517}
---- !u!114 &980950520 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 11495760, guid: 9321ac016e311474e94c27e42bdac14f,
-    type: 2}
-  m_PrefabInternal: {fileID: 980950517}
-  m_Script: {fileID: 1392445389, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
---- !u!114 &980950521 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 11484930, guid: 9321ac016e311474e94c27e42bdac14f,
-    type: 2}
-  m_PrefabInternal: {fileID: 980950517}
-  m_Script: {fileID: 708705254, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
 --- !u!1 &1413669089
 GameObject:
   m_ObjectHideFlags: 0
@@ -278,66 +241,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
---- !u!1001 &1579246693
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 980950519}
-    m_Modifications:
-    - target: {fileID: 487028, guid: 2f1b2c8996342c64f9853650319be032, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 607
-      objectReference: {fileID: 0}
-    - target: {fileID: 487028, guid: 2f1b2c8996342c64f9853650319be032, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 418
-      objectReference: {fileID: 0}
-    - target: {fileID: 487028, guid: 2f1b2c8996342c64f9853650319be032, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 487028, guid: 2f1b2c8996342c64f9853650319be032, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 487028, guid: 2f1b2c8996342c64f9853650319be032, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 487028, guid: 2f1b2c8996342c64f9853650319be032, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 487028, guid: 2f1b2c8996342c64f9853650319be032, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 487028, guid: 2f1b2c8996342c64f9853650319be032, type: 2}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11419508, guid: 2f1b2c8996342c64f9853650319be032, type: 2}
-      propertyPath: m_Input
-      value: 
-      objectReference: {fileID: 980950518}
-    - target: {fileID: 11419508, guid: 2f1b2c8996342c64f9853650319be032, type: 2}
-      propertyPath: m_StatusText
-      value: 
-      objectReference: {fileID: 980950521}
-    - target: {fileID: 11419508, guid: 2f1b2c8996342c64f9853650319be032, type: 2}
-      propertyPath: m_TextToSpeechButton
-      value: 
-      objectReference: {fileID: 980950520}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 2f1b2c8996342c64f9853650319be032, type: 2}
-  m_IsPrefabParent: 0
---- !u!114 &1579246694 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 11419508, guid: 2f1b2c8996342c64f9853650319be032,
-    type: 2}
-  m_PrefabInternal: {fileID: 1579246693}
-  m_Script: {fileID: 11500000, guid: 19bbf0e483a3ecb4b88d5144d66059e4, type: 3}
 --- !u!1 &1925691767
 GameObject:
   m_ObjectHideFlags: 0

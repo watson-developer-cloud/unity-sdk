@@ -114,7 +114,7 @@ namespace IBM.Watson.Logging
             {
                 // install the default reactors...
                 sm_bInstalledDefaultReactors = true;
-#if UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_IOS || UNITY_ANDROID
                 Logger.Instance.InstallReactor( new DebugReactor() );
 #endif
                 Logger.Instance.InstallReactor( new FileReactor( Application.persistentDataPath + "/Watson.log" ) );

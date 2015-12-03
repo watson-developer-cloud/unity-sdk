@@ -88,6 +88,26 @@ namespace IBM.Watson.Widgets
         private Speech m_ActiveSpeech = null;
         #endregion
 
+		#region Public Memebers
+
+		/// <summary>
+		/// Gets or sets the voice. Default voice is English, US - Michael
+		/// </summary>
+		/// <value>The voice.</value>
+		public TextToSpeech.VoiceType Voice 
+		{
+			get
+			{
+				return m_Voice;
+			}
+			set
+			{
+				m_Voice = value;
+			}
+		}
+
+		#endregion
+
         /// <summary>
         /// Button event handler.
         /// </summary>
