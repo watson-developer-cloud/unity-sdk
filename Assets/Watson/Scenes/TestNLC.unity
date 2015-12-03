@@ -85,7 +85,7 @@ NavMeshSettings:
     cellSize: .166666672
     manualCellSize: 0
   m_NavMeshData: {fileID: 0}
---- !u!1001 &749696620
+--- !u!1001 &759769474
 Prefab:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -164,6 +164,46 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 22420144, guid: df29f10b1d0988f43909a2a59bea318b, type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: -40.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 22420144, guid: df29f10b1d0988f43909a2a59bea318b, type: 2}
+      propertyPath: m_SizeDelta.y
+      value: -81
+      objectReference: {fileID: 0}
+    - target: {fileID: 22414460, guid: df29f10b1d0988f43909a2a59bea318b, type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22414460, guid: df29f10b1d0988f43909a2a59bea318b, type: 2}
+      propertyPath: m_SizeDelta.y
+      value: 960
+      objectReference: {fileID: 0}
+    - target: {fileID: 22420144, guid: df29f10b1d0988f43909a2a59bea318b, type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490388, guid: df29f10b1d0988f43909a2a59bea318b, type: 2}
+      propertyPath: m_Color.r
+      value: .992647052
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490388, guid: df29f10b1d0988f43909a2a59bea318b, type: 2}
+      propertyPath: m_Color.g
+      value: .992647052
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490388, guid: df29f10b1d0988f43909a2a59bea318b, type: 2}
+      propertyPath: m_Color.b
+      value: .992647052
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490388, guid: df29f10b1d0988f43909a2a59bea318b, type: 2}
+      propertyPath: m_FontData.m_FontSize
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 11429260, guid: df29f10b1d0988f43909a2a59bea318b, type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: df29f10b1d0988f43909a2a59bea318b, type: 2}
   m_IsPrefabParent: 0
@@ -240,7 +280,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
 --- !u!1 &1925691767
 GameObject:
   m_ObjectHideFlags: 0
