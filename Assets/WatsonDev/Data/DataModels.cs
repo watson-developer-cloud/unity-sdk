@@ -32,6 +32,7 @@ namespace IBM.Watson.DataModels
         /// <summary>
         /// Data class for GetQuestions() method.
         /// </summary>
+        [fsObject]
         public class QuestionText
         {
             /// <summary>
@@ -95,6 +96,7 @@ namespace IBM.Watson.DataModels
         /// <summary>
         /// Data class for GetQuestions() method.
         /// </summary>
+        [fsObject]
         public class Question
         {
             /// <summary>
@@ -137,6 +139,7 @@ namespace IBM.Watson.DataModels
         /// <summary>
         /// Data class for GetQuestions() method.
         /// </summary>
+        [fsObject]
         public class Questions
         {
             /// <summary>
@@ -204,11 +207,12 @@ namespace IBM.Watson.DataModels
             CONJUNCTION,
             INTERJECTION,
             SPECIAL,
-			SUBINF
+            SUBINF
         };
         /// <summary>
         /// This data class holds a single word of the ParseData.
         /// </summary>
+        [fsObject]
         public class ParseWord
         {
             public string Word { get; set; }
@@ -240,29 +244,33 @@ namespace IBM.Watson.DataModels
                 { "inter", WordPosition.INTERJECTION },     // ?
                 { "incomplete", WordPosition.INVALID },
                 { "special", WordPosition.SPECIAL },
-				{ "subinf", WordPosition.SUBINF },
+                { "subinf", WordPosition.SUBINF },
             };
         };
 
+        [fsObject]
         public class ParseTree
         {
             public long position { get; set; }
             public string text { get; set; }
-			public int parentNode { get; set; }
+            public int parentNode { get; set; }
             public ParseTree[] rightChildren { get; set; }
             public ParseTree[] leftChildren { get; set; }
         };
 
+        [fsObject]
         public class Value
         {
             public string text { get; set; }
             public string value { get; set; }
         };
+        [fsObject]
         public class ArrayValue
         {
             public string text { get; set; }
             public string[] value { get; set; }
         };
+        [fsObject]
         public class Parse
         {
             public string[] flags { get; set; }
@@ -318,6 +326,7 @@ namespace IBM.Watson.DataModels
             public ParseTree parseTree { get; set; }
         };
 
+        [fsObject]
         public class Evidence
         {
             public string title { get; set; }
@@ -339,11 +348,13 @@ namespace IBM.Watson.DataModels
                     corpus = e.metadataMap.corpusName;
             }
         };
+        [fsObject]
         public class Variant
         {
             public string text { get; set; }
             public string relationship { get; set; }
         };
+        [fsObject]
         public class Feature
         {
             public string featureId { get; set; }
@@ -353,22 +364,26 @@ namespace IBM.Watson.DataModels
             public double weightedScore { get; set; }
         };
 
+        [fsObject]
         public class Cell
         {
             public string Value { get; set; }
             public int ColSpan { get; set; }            // how many colums does this cell span, by default just 1..
             public bool Highlighted { get; set; }
         };
+        [fsObject]
         public class Row
         {
             public Cell[] columns { get; set; }
         };
 
+        [fsObject]
         public class Table
         {
             public Row[] rows { get; set; }
         };
 
+        [fsObject]
         public class Answer
         {
             public string answerText { get; set; }
@@ -395,6 +410,7 @@ namespace IBM.Watson.DataModels
                 }
             }
         };
+        [fsObject]
         public class Answers
         {
             public string _id { get; set; }
@@ -463,6 +479,7 @@ namespace IBM.Watson.DataModels
             }
         };
 
+        [fsObject]
         public class AskResponse
         {
             public Questions questions { get; set; }
@@ -475,11 +492,13 @@ namespace IBM.Watson.DataModels
     #region QA Models
     namespace QA
     {
+        [fsObject]
         public class Value
         {
             public string value { get; set; }
         };
 
+        [fsObject]
         public class MetaDataMap
         {
             public string originalFile { get; set; }
@@ -490,6 +509,7 @@ namespace IBM.Watson.DataModels
             public string CorpusPlusDocno { get; set; }
         };
 
+        [fsObject]
         public class Evidence
         {
             public string value { get; set; }
@@ -502,6 +522,7 @@ namespace IBM.Watson.DataModels
             public MetaDataMap metadataMap { get; set; }
         };
 
+        [fsObject]
         public class Synonym
         {
             public bool isChosen { get; set; }
@@ -509,12 +530,14 @@ namespace IBM.Watson.DataModels
             public double weight { get; set; }
         };
 
+        [fsObject]
         public class SynSet
         {
             public string name { get; set; }
             public Synonym[] synSet { get; set; }
         };
 
+        [fsObject]
         public class SynonymList
         {
             public string partOfSpeech { get; set; }
@@ -523,12 +546,14 @@ namespace IBM.Watson.DataModels
             public SynSet[] synSet { get; set; }
         };
 
+        [fsObject]
         public class EvidenceRequest
         {
             public long items { get; set; }
             public string profile { get; set; }
         };
 
+        [fsObject]
         public class Answer
         {
             public long id { get; set; }
@@ -608,6 +633,7 @@ namespace IBM.Watson.DataModels
                 return null;
             }
         };
+        [fsObject]
         public class Slots
         {
             public string pred { get; set; }
@@ -615,6 +641,7 @@ namespace IBM.Watson.DataModels
             public string objprep { get; set; }
             public string psubj { get; set; }
         };
+        [fsObject]
         public class Word
         {
             public Slots compSlotParseNodes { get; set; }
@@ -632,11 +659,13 @@ namespace IBM.Watson.DataModels
             public Word[] lmods { get; set; }
             public Word[] rmods { get; set; }
         };
+        [fsObject]
         public class ParseTree : Word
         {
             public string parseScore { get; set; }
         };
 
+        [fsObject]
         public class Question
         {
             public Value[] qclasslist { get; set; }
@@ -662,6 +691,7 @@ namespace IBM.Watson.DataModels
 
             public string questionId { get; set; }      // local cache ID
         };
+        [fsObject]
         public class QuestionClass
         {
             public string out_of_domain { get; set; }
@@ -671,6 +701,7 @@ namespace IBM.Watson.DataModels
         /// <summary>
         /// The response object for QA.AskQuestion().
         /// </summary>
+        [fsObject]
         public class Response
         {
             public Question question { get; set; }
@@ -680,6 +711,7 @@ namespace IBM.Watson.DataModels
         /// <summary>
         /// A list of responses.
         /// </summary>
+        [fsObject]
         public class ResponseList
         {
             public Response[] responses { get; set; }

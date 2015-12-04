@@ -17,6 +17,7 @@
 
 
 using System;
+using FullSerializer;
 
 namespace IBM.Watson.DataModels
 {
@@ -24,6 +25,7 @@ namespace IBM.Watson.DataModels
     /// <summary>
     /// This data class is contained by Dialogs, it represents a single dialog available.
     /// </summary>
+    [fsObject]
     public class DialogEntry
     {
         /// <summary>
@@ -38,6 +40,7 @@ namespace IBM.Watson.DataModels
     /// <summary>
     /// The object returned by GetDialogs().
     /// </summary>
+    [fsObject]
     public class Dialogs
     {
         /// <summary>
@@ -48,6 +51,7 @@ namespace IBM.Watson.DataModels
     /// <summary>
     /// This data class holds the response to a call to Converse().
     /// </summary>
+    [fsObject]
     public class ConverseResponse
     {
         /// <summary>
@@ -77,6 +81,7 @@ namespace IBM.Watson.DataModels
     /// <summary>
     /// Language data class.
     /// </summary>
+    [fsObject]
     public class Language
     {
         /// <summary>
@@ -91,6 +96,7 @@ namespace IBM.Watson.DataModels
     /// <summary>
     /// Languages data class.
     /// </summary>
+    [fsObject]
     public class Languages
     {
         /// <summary>
@@ -101,6 +107,7 @@ namespace IBM.Watson.DataModels
     /// <summary>
     /// Translation data class.
     /// </summary>
+    [fsObject]
     public class Translation
     {
         /// <summary>
@@ -111,6 +118,7 @@ namespace IBM.Watson.DataModels
     /// <summary>
     /// Translate data class returned by the TranslateCallback.
     /// </summary>
+    [fsObject]
     public class Translations
     {
         public long word_count { get; set; }
@@ -120,6 +128,7 @@ namespace IBM.Watson.DataModels
     /// <summary>
     /// Language model data class.
     /// </summary>
+    [fsObject]
     public class TranslationModel
     {
         /// <summary>
@@ -166,6 +175,7 @@ namespace IBM.Watson.DataModels
     /// <summary>
     /// Models data class.
     /// </summary>
+    [fsObject]
     public class TranslationModels
     {
         public TranslationModel[] models { get; set; }
@@ -176,6 +186,7 @@ namespace IBM.Watson.DataModels
     /// <summary>
     /// This data class holds the data for a given classifier returned by GetClassifier().
     /// </summary>
+    [fsObject]
     public class Classifier
     {
         /// <summary>
@@ -210,6 +221,7 @@ namespace IBM.Watson.DataModels
     /// <summary>
     /// This data class wraps an array of Classifiers.
     /// </summary>
+    [fsObject]
     public class Classifiers
     {
         public Classifier[] classifiers { get; set; }
@@ -217,6 +229,7 @@ namespace IBM.Watson.DataModels
     /// <summary>
     /// A class returned by the ClassifyResult object.
     /// </summary>
+    [fsObject]
     public class Class
     {
         /// <summary>
@@ -231,6 +244,7 @@ namespace IBM.Watson.DataModels
     /// <summary>
     /// This result object is returned by the Classify() method.
     /// </summary>
+    [fsObject]
     public class ClassifyResult
     {
         /// <summary>
@@ -277,6 +291,7 @@ namespace IBM.Watson.DataModels
     /// <summary>
     /// This data class holds the data for a given speech model.
     /// </summary>
+    [fsObject]
     public class SpeechModel
     {
         /// <summary>
@@ -303,6 +318,7 @@ namespace IBM.Watson.DataModels
     /// <summary>
     /// This data class holds the confidence value for a given recognized word.
     /// </summary>
+    [fsObject]
     public class WordConfidence
     {
         /// <summary>
@@ -317,6 +333,7 @@ namespace IBM.Watson.DataModels
     /// <summary>
     /// This data class holds the start and stop times for a word.
     /// </summary>
+    [fsObject]
     public class TimeStamp
     {
         /// <summary>
@@ -335,6 +352,7 @@ namespace IBM.Watson.DataModels
     /// <summary>
     /// This data class holds the actual transcript for the text generated from speech audio data.
     /// </summary>
+    [fsObject]
     public class SpeechAlt
     {
         /// <summary>
@@ -357,6 +375,7 @@ namespace IBM.Watson.DataModels
     /// <summary>
     /// A Result object that is returned by the Recognize() method.
     /// </summary>
+    [fsObject]
     public class SpeechResult
     {
         /// <summary>
@@ -371,6 +390,7 @@ namespace IBM.Watson.DataModels
     /// <summary>
     /// This data class holds a list of Result objects returned by the Recognize() method.
     /// </summary>
+    [fsObject]
     public class SpeechResultList
     {
         /// <summary>
