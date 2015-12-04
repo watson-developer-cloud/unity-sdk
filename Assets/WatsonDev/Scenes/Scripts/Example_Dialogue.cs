@@ -21,6 +21,8 @@ using IBM.Watson.Utilities;
 using IBM.Watson.Services.v1;
 using IBM.Watson.Widgets;
 using IBM.Watson.Logging;
+using IBM.Watson.DataModels;
+using IBM.Watson.DataTypes;
 
 public class Example_Dialogue : Widget {
 	#region implemented abstract members of Widget
@@ -40,6 +42,9 @@ public class Example_Dialogue : Widget {
 	int m_ClientID = 0;
 	int m_ConversationID = 0;
 	bool isDialogAvailable = false;
+
+	[SerializeField]
+	private Input m_SpeechInput = new Input( "SpeechInput", typeof(SpeechToTextData), "OnSpeechInput" );
 
 	void OnEnable()
 	{
@@ -101,6 +106,6 @@ public class Example_Dialogue : Widget {
 			}
 		}
 
-		if(!isDialogAvailable) m_Dialog.UploadDialog( DIALOG_NAME, OnDialogUploaded, Application.dataPath + "/../Docs/pizza_sample.xml" );
+		if(!isDialogAvailable) m_Dialog.UploadDialog( DIALOG_NAME, OnDialogUploaded, Application.dataPath + "/../Assets/Watson/Editor/TestData/pizza_sample.xml" );
 	}
 }
