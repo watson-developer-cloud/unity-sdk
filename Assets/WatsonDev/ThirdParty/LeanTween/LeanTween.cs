@@ -1239,7 +1239,7 @@ public static LTDescr[] tweens;
 private static int[] tweensFinished;
 private static LTDescr tween;
 private static int tweenMaxSearch = -1;
-private static int maxTweens = 400;
+private static int maxTweens = 600;
 private static int frameRendered= -1;
 private static GameObject _tweenEmpty;
 private static float dtEstimated;
