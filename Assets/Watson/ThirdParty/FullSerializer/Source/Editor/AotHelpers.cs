@@ -3,37 +3,36 @@ using System.IO;
 using System.Reflection;
 using FullSerializer;
 using UnityEngine;
+using UnityEditor;
 
 namespace FullSerializer
 {
     public static class AotHelpers
     {
-        public const string OutputDirectory = "Assets/Watson/Data/fsAotCompilations/";
-
-        [UnityEditor.MenuItem("FullSerializer/Add Seen Aot Compilations (minimal output)")]
+        [MenuItem("Watson/FullSerializer/Add Seen Aot Compilations", false, 5 )]
         public static void AddSeenAotCompilations()
         {
-            if (Directory.Exists(OutputDirectory) == false)
-            {
-                Directory.CreateDirectory(OutputDirectory);
-            }
+            var outputDirectory = EditorUtility.SaveFolderPanel( "Please select save path?", Application.dataPath,  "fsAotCompilations" );           
+            if (!Directory.Exists(outputDirectory) == false)
+                Directory.CreateDirectory(outputDirectory);
 
             foreach (var aot in fsAotCompilationManager.AvailableAotCompilations)
             {
                 Debug.Log("Performing AOT compilation for " + aot.Key.CSharpName(true));
-                var path = Path.Combine(OutputDirectory, "AotConverter_" + aot.Key.CSharpName(true, true) + ".cs");
+                var path = Path.Combine(outputDirectory, "AotConverter_" + aot.Key.CSharpName(true, true) + ".cs");
                 var compilation = aot.Value;
                 File.WriteAllText(path, compilation);
             }
+
+            AssetDatabase.Refresh();
         }
 
-        [UnityEditor.MenuItem("FullSerializer/Add Discoverable Aot Compilations (more output)")]
+        [MenuItem("Watson/FullSerializer/Add Discoverable Aot Compilations", false, 5 )]
         public static void AddAllDiscoverableAotCompilations()
         {
-            if (Directory.Exists(OutputDirectory) == false)
-            {
-                Directory.CreateDirectory(OutputDirectory);
-            }
+            var outputDirectory = EditorUtility.SaveFolderPanel( "Please select save path?", Application.dataPath,  "fsAotCompilations" );           
+            if (!Directory.Exists(outputDirectory) == false)
+                Directory.CreateDirectory(outputDirectory);
 
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
@@ -67,7 +66,7 @@ namespace FullSerializer
                         if (fsAotCompilationManager.TryToPerformAotCompilation(t, out compilation))
                         {
                             Debug.Log("Performing AOT compilation for " + t);
-                            string path = Path.Combine(OutputDirectory, "AotConverter_" + t.CSharpName(true, true) + ".cs");
+                            string path = Path.Combine(outputDirectory, "AotConverter_" + t.CSharpName(true, true) + ".cs");
                             File.WriteAllText(path, compilation);
                         }
                         else
@@ -77,6 +76,8 @@ namespace FullSerializer
                     }
                 }
             }
+
+            AssetDatabase.Refresh();
         }
     }
 

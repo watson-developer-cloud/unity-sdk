@@ -127,7 +127,7 @@ namespace IBM.Watson.Widgets.Question
 			CreateParseWord(m_ParseData.parseTree, m_ParseCanvasRectTransform, m_ParseCanvasRectTransform);
 
 			WordIndex = 0;
-			InvokeRepeating("CycleWords", 2f, 2f);
+			Runnable.Run(CycleWords());
         }
 
 		/// <summary>
@@ -347,9 +347,13 @@ namespace IBM.Watson.Widgets.Question
         /// <summary>
         /// Cycles through words via WordIndex.
         /// </summary>
-        private void CycleWords()
+        private IEnumerator CycleWords()
         {
-            WordIndex++;
+			while(true)
+			{
+				yield return new WaitForSeconds(2f);
+		        WordIndex++;
+			}
         }
     }
 }
