@@ -24,7 +24,7 @@ using IBM.Watson.Logging;
 using IBM.Watson.DataModels;
 using IBM.Watson.DataTypes;
 
-public class ExampleDialogue : Widget {
+public class ExampleDialog : Widget {
 	#region implemented abstract members of Widget
 
 	protected override string GetName ()
