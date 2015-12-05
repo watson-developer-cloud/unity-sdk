@@ -37,6 +37,21 @@ namespace IBM.Watson.Widgets
 		private VerticalLayoutGroup m_DialogLayout = null;
 		[SerializeField]
 		private ScrollRect m_ScrollRect = null;
+		[SerializeField]
+		private Input m_SpeechInput = new Input( "SpeechInput", typeof(SpeechToTextData), "OnSpeechInput" );
+		[SerializeField]
+		private GameObject m_QuestionPrefab;
+		[SerializeField]
+		private GameObject m_AnswerPrefab;
+		[SerializeField]
+		private int m_HistoryCount = 50;
+
+		Dialog m_Dialog = new Dialog();
+		string m_DialogID = null;
+		int m_ClientID = 0;
+		int m_ConversationID = 0;
+		bool isDialogAvailable = false;
+		const string DIALOG_NAME = "ut_20151029_5";
 
 		#region implemented abstract members of Widget
 		
@@ -47,17 +62,6 @@ namespace IBM.Watson.Widgets
 		
 		#endregion
 		
-		const string DIALOG_NAME = "ut_20151029_5";
-		
-		Dialog m_Dialog = new Dialog();
-		bool m_GetDialogsTested = false;
-		string m_DialogID = null;
-		int m_ClientID = 0;
-		int m_ConversationID = 0;
-		bool isDialogAvailable = false;
-		
-		[SerializeField]
-		private Input m_SpeechInput = new Input( "SpeechInput", typeof(SpeechToTextData), "OnSpeechInput" );
 		
 		void OnEnable()
 		{
@@ -80,9 +84,10 @@ namespace IBM.Watson.Widgets
 		
 		private void OnDialogDeleted( bool success )
 		{
-			Log.Debug("Example_Dialogue", "Deleted");
+			Log.Debug("DialogDisplayWidget", "Dialog Deleted");
 		}
-		
+
+
 		private void OnConverse( ConverseResponse resp )
 		{
 			if ( resp != null )
@@ -91,7 +96,10 @@ namespace IBM.Watson.Widgets
 				m_ConversationID = resp.conversation_id;
 				
 				foreach( var r in resp.response )
-					Log.Debug( "TestDialog", "Response: {0}", r );
+				{
+					Log.Debug( "DialogDisplayWidget", "Response: {0}", r );
+					AddDialog(r, m_AnswerPrefab);
+				}
 			}
 		}
 		
@@ -99,7 +107,7 @@ namespace IBM.Watson.Widgets
 		{
 			if (! string.IsNullOrEmpty( id ) )
 			{
-				Log.Debug( "TestDialog", "Dialog ID: {0}", id );
+				Log.Debug( "DialogDisplayWidget", "Dialog ID: {0}", id );
 				m_DialogID = id;
 			}
 		}
@@ -110,7 +118,7 @@ namespace IBM.Watson.Widgets
 			{
 				foreach( var d in dialogs.dialogs )
 				{
-					Log.Debug( "TestDialog", "Name: {0}, ID: {1}", d.name, d.dialog_id );
+					Log.Debug( "DialogDisplayWidget", "Name: {0}, ID: {1}", d.name, d.dialog_id );
 					if ( d.name == DIALOG_NAME )
 					{
 						isDialogAvailable = true;
@@ -122,12 +130,84 @@ namespace IBM.Watson.Widgets
 			if(!isDialogAvailable) m_Dialog.UploadDialog( DIALOG_NAME, OnDialogUploaded, Application.dataPath + "/../Assets/Watson/Editor/TestData/pizza_sample.xml" );
 		}
 
-		private void AddChat(string add, GameObject prefab)
+		private void OnSpeechInput(Data data)
+		{
+			SpeechResultList result = ((SpeechToTextData)data).Results;
+			if (result != null && result.Results.Length > 0)
+			{
+				foreach(SpeechResult res in result.Results)
+				{
+					foreach(SpeechAlt alt in res.Alternatives)
+					{
+						if(res.Final)
+						{
+							string text = alt.Transcript;
+							Log.Debug("DialogDisplayWidget", "Understood: "+ text);
+							Converse(text);
+							AddDialog(text, m_QuestionPrefab);
+						}
+					}
+				}
+			}
+		}
+
+//		private void OnSpeechInput( Data data )
+//		{
+//			if ( m_Output != null || m_OutputAsInputField != null)
+//			{
+//				SpeechResultList result = ((SpeechToTextData)data).Results;
+//				if (result != null && result.Results.Length > 0)
+//				{
+//					string outputTextWithStatus = "";
+//					string outputText = "";
+//					
+//					if(Time.time - m_TimeAtLastInterim > m_ThresholdTimeFromLastInput){
+//						if(m_Output != null)
+//							m_PreviousOutputTextWithStatus = m_Output.text;
+//						if(m_OutputAsInputField != null)
+//							m_PreviousOutputText = m_OutputAsInputField.text;
+//					}
+//					
+//					if(m_Output != null && m_ContinuousText)
+//						outputTextWithStatus = m_PreviousOutputTextWithStatus;
+//					
+//					if(m_OutputAsInputField != null && m_ContinuousText)
+//						outputText = m_PreviousOutputText;
+//					
+//					foreach( var res in result.Results )
+//					{
+//						foreach( var alt in res.Alternatives )
+//						{
+//							string text = alt.Transcript;
+//							if(m_Output != null){
+//								m_Output.text = string.Concat(outputTextWithStatus, string.Format( "{0} ({1}, {2:0.00})\n", text, res.Final ? "Final" : "Interim", alt.Confidence) );
+//							}
+//							
+//							if(m_OutputAsInputField != null){
+//								if(!res.Final || alt.Confidence > m_MinConfidenceToShow){
+//									m_OutputAsInputField.text = string.Concat( outputText , " ", text);
+//									
+//									if(m_OutputStatus != null){
+//										m_OutputStatus.text = string.Format( "{0}, {1:0.00}", res.Final ? "Final" : "Interim", alt.Confidence );
+//									}
+//								}
+//							}
+//							
+//							if(!res.Final)
+//								m_TimeAtLastInterim = Time.time;
+//							
+//						}
+//					}
+//				}
+//			}
+//		}
+		
+		private void AddDialog(string add, GameObject prefab)
 		{
 			if (m_DialogLayout == null)
-				throw new WatsonException("m_ChatLayout is null.");
+				throw new WatsonException("m_DialogLayout is null.");
 			if (prefab == null)
-				throw new ArgumentNullException("prefab");
+				throw new ArgumentNullException("prefab is null");
 			
 			int newLine = add.IndexOf( '\n' );
 			if ( newLine > 0 )
@@ -138,8 +218,8 @@ namespace IBM.Watson.Widgets
 			textObject.transform.SetParent(m_DialogLayout.transform, false);
 			
 			// remove old children..
-//			while (m_DialogLayout.transform.childCount > m_HistoryCount)
-//				DestroyImmediate(m_DialogLayout.transform.GetChild(0).gameObject);
+			while (m_DialogLayout.transform.childCount > m_HistoryCount)
+				DestroyImmediate(m_DialogLayout.transform.GetChild(0).gameObject);
 			
 			Invoke("ScrollToEnd", 0.5f);
 		}
