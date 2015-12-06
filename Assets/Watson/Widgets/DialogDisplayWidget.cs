@@ -45,6 +45,8 @@ namespace IBM.Watson.Widgets
 		private GameObject m_AnswerPrefab;
 		[SerializeField]
 		private int m_HistoryCount = 50;
+		[SerializeField]
+		private Output m_ResultOutput = new Output( typeof(TextToSpeechData) );
 
 		Dialog m_Dialog = new Dialog();
 		string m_DialogID = null;
@@ -71,7 +73,7 @@ namespace IBM.Watson.Widgets
 		
 		void OnDisable()
 		{
-			//		m_Dialog.DeleteDialog( m_DialogID, OnDialogDeleted );
+//					m_Dialog.DeleteDialog( m_DialogID, OnDialogDeleted );
 		}
 		
 		public void Converse(string dialog)
@@ -99,6 +101,7 @@ namespace IBM.Watson.Widgets
 				{
 					Log.Debug( "DialogDisplayWidget", "Response: {0}", r );
 					AddDialog(r, m_AnswerPrefab);
+					m_ResultOutput.SendData(new TextToSpeechData(r));
 				}
 			}
 		}
@@ -150,57 +153,6 @@ namespace IBM.Watson.Widgets
 				}
 			}
 		}
-
-//		private void OnSpeechInput( Data data )
-//		{
-//			if ( m_Output != null || m_OutputAsInputField != null)
-//			{
-//				SpeechResultList result = ((SpeechToTextData)data).Results;
-//				if (result != null && result.Results.Length > 0)
-//				{
-//					string outputTextWithStatus = "";
-//					string outputText = "";
-//					
-//					if(Time.time - m_TimeAtLastInterim > m_ThresholdTimeFromLastInput){
-//						if(m_Output != null)
-//							m_PreviousOutputTextWithStatus = m_Output.text;
-//						if(m_OutputAsInputField != null)
-//							m_PreviousOutputText = m_OutputAsInputField.text;
-//					}
-//					
-//					if(m_Output != null && m_ContinuousText)
-//						outputTextWithStatus = m_PreviousOutputTextWithStatus;
-//					
-//					if(m_OutputAsInputField != null && m_ContinuousText)
-//						outputText = m_PreviousOutputText;
-//					
-//					foreach( var res in result.Results )
-//					{
-//						foreach( var alt in res.Alternatives )
-//						{
-//							string text = alt.Transcript;
-//							if(m_Output != null){
-//								m_Output.text = string.Concat(outputTextWithStatus, string.Format( "{0} ({1}, {2:0.00})\n", text, res.Final ? "Final" : "Interim", alt.Confidence) );
-//							}
-//							
-//							if(m_OutputAsInputField != null){
-//								if(!res.Final || alt.Confidence > m_MinConfidenceToShow){
-//									m_OutputAsInputField.text = string.Concat( outputText , " ", text);
-//									
-//									if(m_OutputStatus != null){
-//										m_OutputStatus.text = string.Format( "{0}, {1:0.00}", res.Final ? "Final" : "Interim", alt.Confidence );
-//									}
-//								}
-//							}
-//							
-//							if(!res.Final)
-//								m_TimeAtLastInterim = Time.time;
-//							
-//						}
-//					}
-//				}
-//			}
-//		}
 		
 		private void AddDialog(string add, GameObject prefab)
 		{
@@ -216,8 +168,7 @@ namespace IBM.Watson.Widgets
 			GameObject textObject = Instantiate(prefab) as GameObject;
 			textObject.GetComponent<Text>().text = Utility.RemoveTags( add );
 			textObject.transform.SetParent(m_DialogLayout.transform, false);
-			
-			// remove old children..
+
 			while (m_DialogLayout.transform.childCount > m_HistoryCount)
 				DestroyImmediate(m_DialogLayout.transform.GetChild(0).gameObject);
 			
