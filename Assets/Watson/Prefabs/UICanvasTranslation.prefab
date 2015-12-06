@@ -13,7 +13,7 @@ GameObject:
   - 114: {fileID: 11455926}
   - 114: {fileID: 11404762}
   m_Layer: 0
-  m_Name: UITranslation
+  m_Name: UICanvasTranslation
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
