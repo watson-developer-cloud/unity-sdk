@@ -40,19 +40,19 @@ namespace IBM.Watson.Widgets
 		[SerializeField]
 		private Input m_SpeechInput = new Input( "SpeechInput", typeof(SpeechToTextData), "OnSpeechInput" );
 		[SerializeField]
+		private Output m_ResultOutput = new Output( typeof(TextToSpeechData) );
+		[SerializeField]
 		private GameObject m_QuestionPrefab;
 		[SerializeField]
 		private GameObject m_AnswerPrefab;
 		[SerializeField]
 		private int m_HistoryCount = 50;
-		[SerializeField]
-		private Output m_ResultOutput = new Output( typeof(TextToSpeechData) );
 
-		Dialog m_Dialog = new Dialog();
-		string m_DialogID = null;
-		int m_ClientID = 0;
-		int m_ConversationID = 0;
-		bool isDialogAvailable = false;
+		private Dialog m_Dialog = new Dialog();
+		private string m_DialogID = null;
+		private int m_ClientID = 0;
+		private int m_ConversationID = 0;
+		private bool isDialogAvailable = false;
 		const string DIALOG_NAME = "ut_20151029_5";
 
 		#region implemented abstract members of Widget
@@ -75,21 +75,32 @@ namespace IBM.Watson.Widgets
 		{
 //					m_Dialog.DeleteDialog( m_DialogID, OnDialogDeleted );
 		}
-		
+
+		/// <summary>
+		/// Converse the specified dialog.
+		/// </summary>
+		/// <param name="dialog">Dialog.</param>
 		public void Converse(string dialog)
 		{
 			if (! string.IsNullOrEmpty( m_DialogID ) )
 			{
-				m_Dialog.Converse( m_DialogID, dialog, OnConverse );
+				m_Dialog.Converse( m_DialogID, dialog, OnConverse, m_ConversationID, m_ClientID);
 			}
 		}
-		
+
+		/// <summary>
+		/// Callback for deleting dialog from server.
+		/// </summary>
+		/// <param name="success">If set to <c>true</c> success.</param>
 		private void OnDialogDeleted( bool success )
 		{
 			Log.Debug("DialogDisplayWidget", "Dialog Deleted");
 		}
 
-
+		/// <summary>
+		/// Callback for conversing with Watson.
+		/// </summary>
+		/// <param name="resp">Resp.</param>
 		private void OnConverse( ConverseResponse resp )
 		{
 			if ( resp != null )
@@ -105,7 +116,11 @@ namespace IBM.Watson.Widgets
 				}
 			}
 		}
-		
+
+		/// <summary>
+		/// Callback for uploading dialog.
+		/// </summary>
+		/// <param name="id">Identifier.</param>
 		private void OnDialogUploaded( string id )
 		{
 			if (! string.IsNullOrEmpty( id ) )
@@ -114,7 +129,11 @@ namespace IBM.Watson.Widgets
 				m_DialogID = id;
 			}
 		}
-		
+
+		/// <summary>
+		/// Callback for getting dialog from server.
+		/// </summary>
+		/// <param name="dialogs">Dialogs.</param>
 		private void OnGetDialogs( Dialogs dialogs )
 		{
 			if (dialogs != null && dialogs.dialogs != null )
@@ -133,6 +152,10 @@ namespace IBM.Watson.Widgets
 			if(!isDialogAvailable) m_Dialog.UploadDialog( DIALOG_NAME, OnDialogUploaded, Application.dataPath + "/../Assets/Watson/Editor/TestData/pizza_sample.xml" );
 		}
 
+		/// <summary>
+		/// Callback for speech input.
+		/// </summary>
+		/// <param name="data">Data.</param>
 		private void OnSpeechInput(Data data)
 		{
 			SpeechResultList result = ((SpeechToTextData)data).Results;
@@ -145,7 +168,6 @@ namespace IBM.Watson.Widgets
 						if(res.Final)
 						{
 							string text = alt.Transcript;
-							Log.Debug("DialogDisplayWidget", "Understood: "+ text);
 							Converse(text);
 							AddDialog(text, m_QuestionPrefab);
 						}
@@ -153,7 +175,12 @@ namespace IBM.Watson.Widgets
 				}
 			}
 		}
-		
+
+		/// <summary>
+		/// Adds lines of dialog to the window.
+		/// </summary>
+		/// <param name="add">Add.</param>
+		/// <param name="prefab">Prefab.</param>
 		private void AddDialog(string add, GameObject prefab)
 		{
 			if (m_DialogLayout == null)
@@ -174,7 +201,10 @@ namespace IBM.Watson.Widgets
 			
 			Invoke("ScrollToEnd", 0.5f);
 		}
-		
+
+		/// <summary>
+		/// Scrolls to end of dialog window.
+		/// </summary>
 		private void ScrollToEnd()
 		{
 			if (m_ScrollRect != null)
