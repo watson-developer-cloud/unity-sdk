@@ -193,7 +193,7 @@ namespace IBM.Watson.Widgets
 				add = add.Substring( 0, newLine );
 			
 			GameObject textObject = Instantiate(prefab) as GameObject;
-			textObject.GetComponent<Text>().text = Utility.RemoveTags( add );
+			textObject.GetComponentInChildren<Text>().text = Utility.RemoveTags( add );
 			textObject.transform.SetParent(m_DialogLayout.transform, false);
 
 			while (m_DialogLayout.transform.childCount > m_HistoryCount)
