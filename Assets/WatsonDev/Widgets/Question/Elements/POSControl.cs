@@ -34,6 +34,10 @@ namespace IBM.Watson.Widgets.Question
         private Vector3 m_ScaleDownSize = new Vector3(1f, 1f, 1f);
         private float m_TransitionTime = 0.5f;
 
+		private int m_AnimationTextColor = -1;
+		private int m_AnimationTextScale = -1;
+		private int m_AnimationTextAlpha = -1;
+
         private bool m_IsHighlighted = true;
         public bool IsHighlighted
         {
@@ -41,9 +45,10 @@ namespace IBM.Watson.Widgets.Question
             set
             {
                 m_IsHighlighted = value;
-                LeanTween.textColor(m_RectTransform, IsHighlighted ? m_ColorLight : m_ColorDark, m_TransitionTime);
-                LeanTween.scale(m_RectTransform, IsHighlighted ? m_ScaleUpSize : m_ScaleDownSize, m_TransitionTime);
-				LeanTween.alpha(m_TextBox.GetComponent<RectTransform>(), IsHighlighted ? 1.0f : 0.0f, m_TransitionTime);
+				StopAnimations();
+				m_AnimationTextColor = LeanTween.textColor(m_RectTransform, IsHighlighted ? m_ColorLight : m_ColorDark, m_TransitionTime).id;
+				m_AnimationTextScale = LeanTween.scale(m_RectTransform, IsHighlighted ? m_ScaleUpSize : m_ScaleDownSize, m_TransitionTime).id;
+				m_AnimationTextAlpha = LeanTween.alpha(m_TextBox.GetComponent<RectTransform>(), IsHighlighted ? 1.0f : 0.0f, m_TransitionTime).id;
             }
         }
 
@@ -67,5 +72,22 @@ namespace IBM.Watson.Widgets.Question
         {
             m_RectTransform = gameObject.GetComponent<RectTransform>();
         }
+
+		private void StopAnimations(){
+			if (LeanTween.descr (m_AnimationTextColor) != null) {
+				LeanTween.cancel(m_AnimationTextColor);
+				m_AnimationTextColor = -1;
+			}
+			
+			if (LeanTween.descr (m_AnimationTextScale) != null) {
+				LeanTween.cancel(m_AnimationTextScale);
+				m_AnimationTextScale = -1;
+			}
+			
+			if (LeanTween.descr (m_AnimationTextAlpha) != null) {
+				LeanTween.cancel(m_AnimationTextAlpha);
+				m_AnimationTextAlpha = -1;
+			}
+		}
     }
 }

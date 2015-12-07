@@ -32,6 +32,10 @@ namespace IBM.Watson.Widgets.Question
 		[SerializeField]
 		private RectTransform m_BoundingBox;
 
+		private int m_AnimationTextColor = -1;
+		private int m_AnimationTextScale = -1;
+		private int m_AnimationTextAlpha = -1;
+
         private bool m_IsHighlighted = false;
         public bool IsHighlighted
         {
@@ -40,9 +44,10 @@ namespace IBM.Watson.Widgets.Question
             {
                 m_IsHighlighted = value;
                 m_RectTransform = m_ParseTreeTextField.gameObject.GetComponent<RectTransform>();
-                LeanTween.textColor(m_RectTransform, m_IsHighlighted ? m_ColorLight : m_ColorDark, m_TransitionTime);
-                LeanTween.scale(m_RectTransform, m_IsHighlighted ? m_ScaleUpSize : m_ScaleDownSize, m_TransitionTime);
-				LeanTween.alpha(m_BoundingBox, IsHighlighted ? 1.0f : 0.0f, m_TransitionTime);
+				StopAnimations();
+				m_AnimationTextColor = LeanTween.textColor(m_RectTransform, m_IsHighlighted ? m_ColorLight : m_ColorDark, m_TransitionTime).id;
+				m_AnimationTextScale = LeanTween.scale(m_RectTransform, m_IsHighlighted ? m_ScaleUpSize : m_ScaleDownSize, m_TransitionTime).id;
+				m_AnimationTextAlpha = LeanTween.alpha(m_BoundingBox, IsHighlighted ? 1.0f : 0.0f, m_TransitionTime).id;
             }
         }
 
@@ -144,6 +149,23 @@ namespace IBM.Watson.Widgets.Question
 
 			m_BoundingBox.sizeDelta = new Vector2(boxWidth, boxHeight);
 			m_BoundingBox.anchoredPosition = new Vector2(boxX, boxY);
+		}
+
+		private void StopAnimations(){
+			if (LeanTween.descr (m_AnimationTextColor) != null) {
+				LeanTween.cancel(m_AnimationTextColor);
+				m_AnimationTextColor = -1;
+			}
+
+			if (LeanTween.descr (m_AnimationTextScale) != null) {
+				LeanTween.cancel(m_AnimationTextScale);
+				m_AnimationTextScale = -1;
+			}
+
+			if (LeanTween.descr (m_AnimationTextAlpha) != null) {
+				LeanTween.cancel(m_AnimationTextAlpha);
+				m_AnimationTextAlpha = -1;
+			}
 		}
     }
 }
