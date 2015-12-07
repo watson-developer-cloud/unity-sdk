@@ -95,7 +95,7 @@ GameObject:
   - 114: {fileID: 11464822}
   - 114: {fileID: 11461624}
   m_Layer: 5
-  m_Name: DialogDisplayWidget
+  m_Name: DialogWidget
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
