@@ -98,7 +98,6 @@ GameObject:
   - 223: {fileID: 22357656}
   - 114: {fileID: 11488114}
   - 114: {fileID: 11402984}
-  - 114: {fileID: 11457080}
   m_Layer: 0
   m_Name: TestMic
   m_TagString: Untagged
@@ -529,20 +528,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &11457080
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 144112}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d93da73dba5f4142a000ef6c7306aa9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Prefabs:
-  - {fileID: 107580, guid: d184dafb38dcd454fa71b0a822fd916a, type: 2}
-  - {fileID: 105938, guid: 93de29c59c9f01240a5e0462b34954e0, type: 2}
 --- !u!114 &11471676
 MonoBehaviour:
   m_ObjectHideFlags: 1
