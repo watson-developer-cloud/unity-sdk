@@ -40,6 +40,8 @@ namespace IBM.Watson.Widgets
         [SerializeField]
         private Input m_TextInput = new Input("Text", typeof(TextToSpeechData), "OnTextInput");
         [SerializeField]
+        private Input m_VoiceInput = new Input( "Voice", typeof(VoiceData), "OnVoiceSelect" );
+        [SerializeField]
         private Output m_Speaking = new Output(typeof(SpeakingStateData));
         [SerializeField]
         private Output m_DisableMic = new Output(typeof(DisableMicData));
@@ -137,6 +139,15 @@ namespace IBM.Watson.Widgets
 
                 m_SpeechQueue.Enqueue(new Speech(m_TTS, text.Text, m_UsePost));
             }
+        }
+
+        private void OnVoiceSelect(Data data)
+        {
+            VoiceData voice = data as VoiceData;
+            if ( voice == null )
+                throw new WatsonException( "Unexpected data type" );
+
+            m_Voice = voice.Voice;
         }
 
         private void OnEnable()
