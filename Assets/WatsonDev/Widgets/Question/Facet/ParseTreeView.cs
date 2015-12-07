@@ -49,6 +49,8 @@ namespace IBM.Watson.Widgets.Question
 		private float horizontalWordSpacing = 100f;
 		private float verticalWordSpacing = 160f;
 
+		private int coroutineID;
+
         private int m_WordIndex = 0;
         public int WordIndex
         {
@@ -84,6 +86,13 @@ namespace IBM.Watson.Widgets.Question
             EventManager.Instance.UnregisterEventReceiver( Constants.Event.ON_QUESTION, OnQuestionData );
         }
 
+		void OnDestroy()
+		{
+			Log.Debug("ParseTreeView", "Stopping coroutine: " + coroutineID);
+			Runnable.Stop(coroutineID);
+			coroutineID = -1;
+		}	
+
 		/// <summary>
 		/// Callback for Parse data event.
 		/// </summary>
@@ -111,7 +120,6 @@ namespace IBM.Watson.Widgets.Question
         /// </summary>
         private void GenerateParseTree()
         {
-            CancelInvoke();
             while (m_WordList.Count > 0)
             {
                 Destroy(m_WordList[0].gameObject);
@@ -127,7 +135,8 @@ namespace IBM.Watson.Widgets.Question
 			CreateParseWord(m_ParseData.parseTree, m_ParseCanvasRectTransform, m_ParseCanvasRectTransform);
 
 			WordIndex = 0;
-			Runnable.Run(CycleWords());
+			coroutineID = Runnable.Run(CycleWords());
+			Log.Debug("ParseTreeView", "coroutineID: " + coroutineID);
         }
 
 		/// <summary>
@@ -352,7 +361,7 @@ namespace IBM.Watson.Widgets.Question
 			while(true)
 			{
 				yield return new WaitForSeconds(2f);
-		        WordIndex++;
+		        if(coroutineID > 0) WordIndex++;
 			}
         }
     }
