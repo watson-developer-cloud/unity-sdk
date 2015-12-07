@@ -101,6 +101,7 @@
 /Users/dogukan/Documents/Unity Projects/WatsonPlugin/ProjectSettings
 /Users/dogukan/Documents/Unity Projects/WatsonPlugin/BuildScripts
 /Users/dogukan/Documents/Unity Projects/WatsonPlugin/Assets/BuildReport
+/Users/dogukan/Documents/Unity Projects/WatsonPlugin/Assets/WatsonDev
 
 
 # ----------------------------- Prefix Excludes -------------------------------

@@ -148,6 +148,7 @@ namespace IBM.Watson.Widgets
 		}
 
 		void Update(){
+			//If is there translation text is waiting to translate we will translate it. It will happen if user type faster than time threshold
 			if (m_IsThereTranslationWaiting && Time.time - m_TimeLastTranslateRequest > m_ThresholdTimeToTranslate) {
 				m_IsThereTranslationWaiting = false;
 				OnTranslation();
