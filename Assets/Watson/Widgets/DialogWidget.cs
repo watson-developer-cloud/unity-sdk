@@ -29,7 +29,7 @@ namespace IBM.Watson.Widgets
     /// <summary>
     /// Dialog widget.
     /// </summary>
-    public class DialogDisplayWidget : Widget
+    public class DialogWidget : Widget
     {
         [SerializeField]
         private VerticalLayoutGroup m_DialogLayout = null;
@@ -50,10 +50,10 @@ namespace IBM.Watson.Widgets
         private string m_DialogID = null;
         private int m_ClientID = 0;
         private int m_ConversationID = 0;
-        private bool isDialogAvailable = false;
+
         const string DIALOG_NAME = "ut_20151029_5";
 
-        #region implemented abstract members of Widget
+        #region Widget Interface
 
         protected override string GetName()
         {
@@ -63,7 +63,7 @@ namespace IBM.Watson.Widgets
         #endregion
 
 
-        void OnEnable()
+        private void OnEnable()
         {
             m_Dialog.GetDialogs(OnGetDialogs);
         }
@@ -95,7 +95,9 @@ namespace IBM.Watson.Widgets
                 {
                     Log.Debug("DialogDisplayWidget", "Response: {0}", r);
                     AddDialog(r, m_AnswerPrefab);
-                    m_ResultOutput.SendData(new TextToSpeechData(r));
+
+                    if ( m_ResultOutput.IsConnected )
+                        m_ResultOutput.SendData(new TextToSpeechData(r));
                 }
             }
         }
@@ -110,7 +112,6 @@ namespace IBM.Watson.Widgets
             {
                 Log.Debug("DialogDisplayWidget", "Dialog ID: {0}", id);
                 m_DialogID = id;
-                Converse(" ");
             }
         }
 
@@ -126,15 +127,11 @@ namespace IBM.Watson.Widgets
                 {
                     Log.Debug("DialogDisplayWidget", "Name: {0}, ID: {1}", d.name, d.dialog_id);
                     if (d.name == DIALOG_NAME)
-                    {
-                        isDialogAvailable = true;
                         m_DialogID = d.dialog_id;
-                        Converse(" ");
-                    }
                 }
             }
 
-            if (!isDialogAvailable)
+            if ( string.IsNullOrEmpty( m_DialogID ) )
                 m_Dialog.UploadDialog(DIALOG_NAME, OnDialogUploaded, Application.dataPath + "/Watson/Editor/TestData/pizza_sample.xml");
         }
 
@@ -145,20 +142,12 @@ namespace IBM.Watson.Widgets
         private void OnSpeechInput(Data data)
         {
             SpeechResultList result = ((SpeechToTextData)data).Results;
-            if (result != null && result.Results.Length > 0)
+            if ( result != null && result.HasFinalResult() )
             {
-                foreach (SpeechResult res in result.Results)
-                {
-                    foreach (SpeechAlt alt in res.Alternatives)
-                    {
-                        if (res.Final)
-                        {
-                            string text = alt.Transcript;
-                            Converse(text);
-                            AddDialog(text, m_QuestionPrefab);
-                        }
-                    }
-                }
+                string text = result.Results[0].Alternatives[0].Transcript;
+
+                Converse(text);
+                AddDialog(text, m_QuestionPrefab);
             }
         }
 
@@ -169,23 +158,24 @@ namespace IBM.Watson.Widgets
         /// <param name="prefab">Prefab.</param>
         private void AddDialog(string add, GameObject prefab)
         {
-            if (m_DialogLayout == null)
-                throw new WatsonException("m_DialogLayout is null.");
-            if (prefab == null)
-                throw new ArgumentNullException("prefab is null");
+            if ( m_DialogLayout != null )
+            {
+                if (prefab == null)
+                    throw new ArgumentNullException("prefab is null");
 
-            int newLine = add.IndexOf('\n');
-            if (newLine > 0)
-                add = add.Substring(0, newLine);
+                int newLine = add.IndexOf('\n');
+                if (newLine > 0)
+                    add = add.Substring(0, newLine);
 
-            GameObject textObject = Instantiate(prefab) as GameObject;
-            textObject.GetComponentInChildren<Text>().text = Utility.RemoveTags(add);
-            textObject.transform.SetParent(m_DialogLayout.transform, false);
+                GameObject textObject = Instantiate(prefab) as GameObject;
+                textObject.GetComponentInChildren<Text>().text = Utility.RemoveTags(add);
+                textObject.transform.SetParent(m_DialogLayout.transform, false);
 
-            while (m_DialogLayout.transform.childCount > m_HistoryCount)
-                DestroyImmediate(m_DialogLayout.transform.GetChild(0).gameObject);
+                while (m_DialogLayout.transform.childCount > m_HistoryCount)
+                    DestroyImmediate(m_DialogLayout.transform.GetChild(0).gameObject);
 
-            Invoke("ScrollToEnd", 0.5f);
+                Invoke("ScrollToEnd", 0.5f);
+            }
         }
 
         /// <summary>
