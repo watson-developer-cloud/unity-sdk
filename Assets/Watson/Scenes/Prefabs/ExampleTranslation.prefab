@@ -2826,10 +2826,10 @@ RectTransform:
   - {fileID: 22477722}
   m_Father: {fileID: 22409264}
   m_RootOrder: 5
-  m_AnchorMin: {x: .5, y: 1}
-  m_AnchorMax: {x: .5, y: 1}
-  m_AnchoredPosition: {x: 6.99986267, y: -252.669998}
-  m_SizeDelta: {x: 1161.80005, y: 39}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 6.99987793, y: -252.669998}
+  m_SizeDelta: {x: -54.1999512, y: 39}
   m_Pivot: {x: .5, y: .5}
 --- !u!224 &22461008
 RectTransform:
