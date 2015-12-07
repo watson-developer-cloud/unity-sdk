@@ -250,6 +250,7 @@ MonoBehaviour:
   m_ButtonLayout: {fileID: 11480006}
   m_ButtonPrefab: {fileID: 11485798, guid: 529f0c2dd4d6c2449a17341c8afd2dc1, type: 2}
   m_SceneNames:
+  - ExampleDialog
   - TestMic
   - TestNLC
   - TestSTT
@@ -494,11 +495,11 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 22468840}
   m_RootOrder: 1
-  m_AnchorMin: {x: .5, y: .5}
-  m_AnchorMax: {x: .5, y: .5}
-  m_AnchoredPosition: {x: -306, y: 0}
+  m_AnchorMin: {x: 0, y: .5}
+  m_AnchorMax: {x: 0, y: .5}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 335, y: 536}
-  m_Pivot: {x: .5, y: .5}
+  m_Pivot: {x: 0, y: .5}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
