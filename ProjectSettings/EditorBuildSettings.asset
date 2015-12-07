@@ -19,3 +19,5 @@ EditorBuildSettings:
     path: Assets/WatsonDev/Scenes/XRay.unity
   - enabled: 1
     path: Assets/Watson/Scenes/TestMic.unity
+  - enabled: 1
+    path: Assets/Watson/Scenes/ExampleDialog.unity
