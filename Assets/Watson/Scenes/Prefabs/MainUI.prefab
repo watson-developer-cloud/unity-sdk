@@ -344,7 +344,7 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_Sprite: {fileID: 21300000, guid: 6d2a2f439faf747198573d8e1d4192a8, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -499,10 +499,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 22411986}
   m_RootOrder: 2
-  m_AnchorMin: {x: 0, y: .5}
-  m_AnchorMax: {x: 0, y: .5}
-  m_AnchoredPosition: {x: 45, y: -28.9999695}
-  m_SizeDelta: {x: 335, y: 479}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 152.25, y: -1.52587891e-05}
+  m_SizeDelta: {x: -304, y: -481}
   m_Pivot: {x: 0, y: .5}
 --- !u!1001 &100100000
 Prefab:
