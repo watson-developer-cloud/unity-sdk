@@ -107,15 +107,22 @@ public class MainUI : MonoBehaviour
 
     private void OnLoadLevel( string name )
     {
+		GameObject touchScript = GameObject.Find("TouchScript");
+		if(touchScript != null){
+			DestroyImmediate(touchScript);
+		}
+
         Log.Debug( "MainUI", "OnLoadLevel, name = {0}", name );
+
         Application.LoadLevel( name );
     }
 
     public void OnBack()
     {
         Log.Debug( "MainUI", "OnBack invoked" );
-        if (Application.loadedLevelName != MAIN_SCENE)
-            Application.LoadLevel( MAIN_SCENE );
+        if (Application.loadedLevelName != MAIN_SCENE) {
+			OnLoadLevel (MAIN_SCENE);
+		}
         else
             Application.Quit();
     }
