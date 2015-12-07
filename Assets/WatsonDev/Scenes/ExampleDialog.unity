@@ -255,10 +255,6 @@ Prefab:
       propertyPath: m_Pivot.y
       value: .5
       objectReference: {fileID: 0}
-    - target: {fileID: 11464254, guid: a306b0f0554ba4138bd89976def7cc2c, type: 2}
-      propertyPath: m_ResultOutput.m_TargetObject
-      value: 
-      objectReference: {fileID: 655379675}
     - target: {fileID: 11462016, guid: a306b0f0554ba4138bd89976def7cc2c, type: 2}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -275,6 +271,10 @@ Prefab:
       propertyPath: m_Delegates.Array.data[3].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1109226333}
+    - target: {fileID: 11464254, guid: a306b0f0554ba4138bd89976def7cc2c, type: 2}
+      propertyPath: m_ResultOutput.m_TargetObject
+      value: 
+      objectReference: {fileID: 655379675}
     - target: {fileID: 22494054, guid: a306b0f0554ba4138bd89976def7cc2c, type: 2}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -282,6 +282,10 @@ Prefab:
     - target: {fileID: 22494054, guid: a306b0f0554ba4138bd89976def7cc2c, type: 2}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22435692, guid: a306b0f0554ba4138bd89976def7cc2c, type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: -6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a306b0f0554ba4138bd89976def7cc2c, type: 2}
@@ -407,10 +411,10 @@ MonoBehaviour:
   m_Script: {fileID: 1980459831, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 640, y: 960}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3

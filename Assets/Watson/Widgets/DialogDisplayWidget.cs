@@ -127,6 +127,7 @@ namespace IBM.Watson.Widgets
 			{
 				Log.Debug( "DialogDisplayWidget", "Dialog ID: {0}", id );
 				m_DialogID = id;
+				Converse (" ");
 			}
 		}
 
@@ -145,6 +146,7 @@ namespace IBM.Watson.Widgets
 					{
 						isDialogAvailable = true;
 						m_DialogID = d.dialog_id;
+						Converse (" ");
 					}
 				}
 			}
