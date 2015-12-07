@@ -118,6 +118,9 @@ namespace IBM.Watson.Editor
                         IEnumerator e = m_ActiveTest.RunTest();
                         while (e.MoveNext())
                         {
+                            if ( m_ActiveTest.TestFailed )
+                                break;
+
                             yield return null;
                             if (Time.time > (fStartTime + TEST_TIMEOUT))
                             {

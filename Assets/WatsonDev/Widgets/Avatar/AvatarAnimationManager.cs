@@ -54,15 +54,17 @@ namespace IBM.Watson.Widgets.Avatar
 
         #region OnEnable / OnDisable For Event Registration
 
-        void OnEnable()
+        protected override void OnEnable()
         {
+			base.OnEnable ();
             EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_AVATAR_MOVE_DEFAULT, AnimateMoveDefault);
             EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_AVATAR_MOVE_DOWN, AnimateMoveDown);
             EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_AVATAR_STOP_MOVE, StopAnimationMove);
         }
 
-        void OnDisable()
+		protected override void OnDisable()
         {
+			base.OnDisable ();
             EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_AVATAR_MOVE_DEFAULT, AnimateMoveDefault);
             EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_AVATAR_MOVE_DOWN, AnimateMoveDown);
             EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_AVATAR_STOP_MOVE, StopAnimationMove);
