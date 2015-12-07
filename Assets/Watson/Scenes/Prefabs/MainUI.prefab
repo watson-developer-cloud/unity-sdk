@@ -251,6 +251,7 @@ MonoBehaviour:
   m_ButtonPrefab: {fileID: 11485798, guid: 529f0c2dd4d6c2449a17341c8afd2dc1, type: 2}
   m_SceneNames:
   - ExampleDialog
+  - ExampleTranslation
   - TestMic
   - TestNLC
   - TestSTT
