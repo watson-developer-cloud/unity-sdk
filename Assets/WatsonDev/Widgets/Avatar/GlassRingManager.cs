@@ -44,7 +44,7 @@ namespace IBM.Watson.Widgets.Avatar
 
 			if (m_GlassRingMaterial != null)
 			{
-				m_GlassRingMaterial.SetColor("_SpecColor", m_InitialColorOfGlassRingMaterial);
+				m_GlassRingMaterial.SetColor("_Color", m_InitialColorOfGlassRingMaterial);	
 			}
 		}
 
@@ -62,7 +62,7 @@ namespace IBM.Watson.Widgets.Avatar
                 if (childMeshRenderer != null)
                 {
                     m_GlassRingMaterial = childMeshRenderer.sharedMaterial;
-                    m_InitialColorOfGlassRingMaterial = m_GlassRingMaterial.GetColor("_SpecColor");
+					m_InitialColorOfGlassRingMaterial = m_GlassRingMaterial.GetColor("_Color"); // .GetColor("_SpecColor");
                 }
                 else
                 {
@@ -106,7 +106,8 @@ namespace IBM.Watson.Widgets.Avatar
                     (Color colorToFadeIn) =>
                     {
                         m_LastColorUsedInAnimation = colorToFadeIn;
-                        m_GlassRingMaterial.SetColor("_SpecColor", colorToFadeIn);
+						colorToFadeIn.a = m_InitialColorOfGlassRingMaterial.a;
+						m_GlassRingMaterial.SetColor("_Color", colorToFadeIn);	//_SpecColor
                     }).setOnComplete(
                     (System.Object o) =>
                     {
@@ -122,7 +123,8 @@ namespace IBM.Watson.Widgets.Avatar
 								m_ColorAnimationOnGlassLoop = LeanTween.value(gameObject, colorToBe, Color.white, m_AnimationTime * timeModifier).setLoopPingPong().setOnUpdateColor(
 									(Color colorToLoop) =>
 									{
-									m_GlassRingMaterial.SetColor("_SpecColor", colorToLoop);
+									colorToLoop.a = m_InitialColorOfGlassRingMaterial.a;
+									m_GlassRingMaterial.SetColor("_Color", colorToLoop);
 									m_LastColorUsedInAnimation = colorToLoop;
 								}).id;
 							}
