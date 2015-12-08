@@ -26,6 +26,8 @@ using System.Collections;
 using System.Collections.Generic;
 using IBM.Watson.Utilities;
 
+#pragma warning disable 414
+
 namespace IBM.Watson.Widgets
 {
 
