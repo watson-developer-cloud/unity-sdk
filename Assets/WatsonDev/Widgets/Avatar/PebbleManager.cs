@@ -49,6 +49,8 @@ namespace IBM.Watson.Widgets.Avatar
 		private float m_SpeedFadingOut = 4.0f;
         [SerializeField]
         private float m_SpeedAudioLevel = 50.0f;
+		[SerializeField]
+		private float m_SpeedByPebbleLocation = 60.0f;
         [SerializeField]
 		private float m_SmoothnessPebbleMovementInTheFirstRowOnAvatarSpeaking = 1.0f;
 		[SerializeField]
@@ -159,6 +161,9 @@ namespace IBM.Watson.Widgets.Avatar
         /// <param name="setDataOnFrame">If set to <c>true</c> set data on frame.</param>
         public void SetAudioData(float audioLevelData, bool isWatsonTalking = false, bool setDataOnFrame = true)
         {
+			if (m_PebbleRowList == null || m_PebbleRowList.Length == 0)
+				return;
+
             this.m_SetDataOnFrame = setDataOnFrame;
 			this.m_IsWatsonIsTalking = isWatsonTalking;
 
@@ -233,10 +238,10 @@ namespace IBM.Watson.Widgets.Avatar
 									}
 
 									if(pebbleIndexInWave < numberOfPebbleInHalfWave){ //lower end part
-										valueToSet = Mathf.Lerp(m_PebbleRowList[i].pebbleList[pebbleIndex].transform.localPosition.y, m_PebbleRowList[i].pebbleList[pebbleIndex + 1].transform.localPosition.y, speedByPebbleLocation);
+										valueToSet = Mathf.Lerp(m_PebbleRowList[i].pebbleList[pebbleIndex].transform.localPosition.y, m_PebbleRowList[i].pebbleList[pebbleIndex + 1].transform.localPosition.y, speedByPebbleLocation * Time.deltaTime * m_SpeedByPebbleLocation);
 									}
 									else if(pebbleIndexInWave > numberOfPebbleInHalfWave){ //higher end after center point!
-										valueToSet = Mathf.Lerp(m_PebbleRowList[i].pebbleList[pebbleIndex].transform.localPosition.y, m_PebbleRowList[i].pebbleList[pebbleIndex - 1].transform.localPosition.y, speedByPebbleLocation);
+										valueToSet = Mathf.Lerp(m_PebbleRowList[i].pebbleList[pebbleIndex].transform.localPosition.y, m_PebbleRowList[i].pebbleList[pebbleIndex - 1].transform.localPosition.y, speedByPebbleLocation * Time.deltaTime * m_SpeedByPebbleLocation);
 									}
 									else{   //Our center main data
 										valueToSet = Mathf.Lerp(m_PebbleRowList[i].pebbleList[pebbleIndex].transform.localPosition.y, audioLevelData, Time.deltaTime * m_SpeedAudioLevel);

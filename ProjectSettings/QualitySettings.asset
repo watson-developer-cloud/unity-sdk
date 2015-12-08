@@ -4,7 +4,7 @@
 QualitySettings:
   m_ObjectHideFlags: 0
   serializedVersion: 5
-  m_CurrentQuality: 0
+  m_CurrentQuality: 2
   m_QualitySettings:
   - serializedVersion: 2
     name: Fantastic
@@ -29,7 +29,12 @@ QualitySettings:
     lodBias: 2
     maximumLODLevel: 0
     particleRaycastBudget: 4096
-    excludedTargetPlatforms: []
+    excludedTargetPlatforms:
+    - iPhone
+    - Tizen
+    - WebGL
+    - Samsung TV
+    - Web
   - serializedVersion: 2
     name: VR
     pixelLightCount: 4
@@ -53,14 +58,67 @@ QualitySettings:
     lodBias: 2
     maximumLODLevel: 0
     particleRaycastBudget: 4096
+    excludedTargetPlatforms:
+    - iPhone
+    - Tizen
+    - WebGL
+    - Samsung TV
+    - Web
+  - serializedVersion: 2
+    name: Tablet
+    pixelLightCount: 2
+    shadows: 0
+    shadowResolution: 1
+    shadowProjection: 1
+    shadowCascades: 1
+    shadowDistance: 150
+    shadowNearPlaneOffset: 2
+    shadowCascade2Split: .386430502
+    shadowCascade4Split: {x: .0666666701, y: .199999988, z: .466666639}
+    blendWeights: 1
+    textureQuality: 0
+    anisotropicTextures: 1
+    antiAliasing: 2
+    softParticles: 0
+    softVegetation: 1
+    realtimeReflectionProbes: 0
+    billboardsFaceCameraPosition: 0
+    vSyncCount: 0
+    lodBias: 2
+    maximumLODLevel: 0
+    particleRaycastBudget: 256
+    excludedTargetPlatforms: []
+  - serializedVersion: 2
+    name: Fastest
+    pixelLightCount: 1
+    shadows: 0
+    shadowResolution: 0
+    shadowProjection: 1
+    shadowCascades: 1
+    shadowDistance: 150
+    shadowNearPlaneOffset: 2
+    shadowCascade2Split: .386430502
+    shadowCascade4Split: {x: .0666666701, y: .199999988, z: .466666639}
+    blendWeights: 1
+    textureQuality: 1
+    anisotropicTextures: 0
+    antiAliasing: 0
+    softParticles: 0
+    softVegetation: 1
+    realtimeReflectionProbes: 0
+    billboardsFaceCameraPosition: 0
+    vSyncCount: 0
+    lodBias: 2
+    maximumLODLevel: 0
+    particleRaycastBudget: 128
     excludedTargetPlatforms: []
   m_PerPlatformDefaultQuality:
-    Android: 0
-    Samsung TV: 0
+    Android: 3
+    Samsung TV: 3
     Standalone: 0
-    Tizen: 0
+    Tizen: 2
     WP8: 0
-    Web: 0
-    WebGL: 0
+    Web: 2
+    WebGL: 3
     Windows Store Apps: 0
-    iPhone: 0
+    iPhone: 2
