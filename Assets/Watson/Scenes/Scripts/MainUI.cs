@@ -32,6 +32,8 @@ public class MainUI : MonoBehaviour
     [SerializeField]
     private Button m_ButtonPrefab = null;
     [SerializeField]
+    private GameObject m_ButtonUI = null;
+    [SerializeField]
     private string [] m_SceneNames = null;
 
     private const string MAIN_SCENE = "Main";
@@ -60,10 +62,12 @@ public class MainUI : MonoBehaviour
 
     private IEnumerator Start()
     {
+        if ( m_ButtonUI == null )
+            throw new WatsonException( "m_ButtonUI is null." );
         if ( m_ButtonLayout == null )
             throw new WatsonException( "m_ButtonLayout is null." );
         if ( m_ButtonPrefab == null )
-            throw new WatsonException( "m_ButtonLayout is null." );
+            throw new WatsonException( "m_ButtonPrefab is null." );
 
         // wait for the configuration to be loaded first..
         while (!Config.Instance.ConfigLoaded)
@@ -86,6 +90,8 @@ public class MainUI : MonoBehaviour
         //Log.Debug( "MainUI", "UpdateBottons, level = {0}", Application.loadedLevelName );
         if ( Application.loadedLevelName == MAIN_SCENE )
         {
+            m_ButtonUI.SetActive( true );
+
             foreach( var scene in m_SceneNames )
             {
                 if ( string.IsNullOrEmpty( scene ) )
@@ -103,10 +109,19 @@ public class MainUI : MonoBehaviour
                 button.onClick.AddListener( () => OnLoadLevel(captured) );
             }
         }
+        else
+        {
+            m_ButtonUI.SetActive( false );
+        }
     }
 
     private void OnLoadLevel( string name )
     {
+		GameObject touchScript = GameObject.Find("TouchScript");
+		if(touchScript != null){
+			DestroyImmediate(touchScript);
+		}
+
         Log.Debug( "MainUI", "OnLoadLevel, name = {0}", name );
         Application.LoadLevel( name );
     }
@@ -114,8 +129,9 @@ public class MainUI : MonoBehaviour
     public void OnBack()
     {
         Log.Debug( "MainUI", "OnBack invoked" );
-        if (Application.loadedLevelName != MAIN_SCENE)
-            Application.LoadLevel( MAIN_SCENE );
+        if (Application.loadedLevelName != MAIN_SCENE) {
+			OnLoadLevel (MAIN_SCENE);
+		}
         else
             Application.Quit();
     }

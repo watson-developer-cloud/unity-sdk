@@ -17,9 +17,11 @@
 
 
 using IBM.Watson.DataModels;
+using IBM.Watson.Services.v1;
 using IBM.Watson.Utilities;
 using IBM.Watson.Widgets;
 using UnityEngine;
+using System;
 
 /// <summary>
 /// Data classes for holding data for services and widgets.
@@ -57,6 +59,23 @@ namespace IBM.Watson.DataTypes
         /// The text to convert to speech.
         /// </summary>
         public string Text { get; set; }
+    };
+
+    public class VoiceData : Widget.Data
+    {
+        public VoiceData()
+        { }
+        public VoiceData( TextToSpeech.VoiceType voice )
+        {
+            Voice = voice;
+        }
+
+        public override string GetName()
+        {
+            return "Voice";
+        }
+
+        public TextToSpeech.VoiceType Voice { get; set; }
     };
 
     /// <summary>
