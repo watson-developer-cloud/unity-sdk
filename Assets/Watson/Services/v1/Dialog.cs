@@ -213,7 +213,11 @@ namespace IBM.Watson.Services.v1
                     if ( SaveFile != null )
                         SaveFile( downloadReq.DialogFileName, resp.Data );
                     else
+					{
+						#if !UNITY_WEBPLAYER
                         File.WriteAllBytes( downloadReq.DialogFileName, resp.Data );
+						#endif
+					}
                 }
                 catch( Exception e )
                 {
@@ -241,10 +245,14 @@ namespace IBM.Watson.Services.v1
                 throw new ArgumentNullException("dialogFileName");
 
             byte [] dialogData = null;
-            if ( LoadFile != null )
-                dialogData = LoadFile( dialogFileName );
-            else
-                dialogData = File.ReadAllBytes( dialogFileName );
+            if (LoadFile != null)
+				dialogData = LoadFile (dialogFileName);
+			else 
+			{
+				#if !UNITY_WEBPLAYER
+				dialogData = File.ReadAllBytes (dialogFileName);
+				#endif
+			}
 
             if ( dialogData == null )
             {

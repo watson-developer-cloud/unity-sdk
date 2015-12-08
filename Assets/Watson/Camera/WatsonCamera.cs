@@ -145,6 +145,7 @@ namespace IBM.Watson.Camera
 
         public void ShowVirtualKeyboard(System.Object[] args)
         {
+			#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
             try
             {
                 System.Diagnostics.Process.Start("TabTip.exe");
@@ -153,7 +154,7 @@ namespace IBM.Watson.Camera
             {
                 Log.Error("WatsonCamera", "ShowVirtualKeyboard has exception: {0}", e.Message);
             }
-
+			#endif
         }
         #endregion
 
