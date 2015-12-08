@@ -358,6 +358,10 @@ namespace IBM.Watson.Widgets.Question
             //Cube.LeaveTheSceneAndDestroy();
         }
 
+		/// <summary>
+		/// Raises the question pipeline event.
+		/// </summary>
+		/// <param name="args">Arguments.</param>
         public void OnQuestionPipeline( object[] args)
         {
             string pipeline = (args != null && args.Length > 0) ? args[0] as string : null;
@@ -419,7 +423,7 @@ namespace IBM.Watson.Widgets.Question
 			GenerateSides();
         }
 
-		public void GenerateSides()
+		private void GenerateSides()
 		{
 			ClearSides();
 

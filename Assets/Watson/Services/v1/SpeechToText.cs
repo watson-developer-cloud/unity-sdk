@@ -47,6 +47,11 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         /// </summary>
         private const float WS_KEEP_ALIVE_TIME = 20.0f;
         /// <summary>
+        /// If no listen state is received after start is sent within this time, we will timeout
+        /// and stop listening. 
+        /// </summary>
+        private const float LISTEN_TIMEOUT = 10.0f;
+        /// <summary>
         /// How many recording AudioClips will we queue before we enter a error state.
         /// </summary>
         private const int MAX_QUEUED_RECORDINGS = 30;
@@ -82,7 +87,8 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         private bool m_IsListening = false;
         private Queue<AudioData> m_ListenRecordings = new Queue<AudioData>();
         private int m_KeepAliveRoutine = 0;                      // ID of the keep alive co-routine
-        private float m_LastKeepAlive = 0.0f;
+        private DateTime m_LastKeepAlive = DateTime.Now;
+        private DateTime m_LastStartSent = DateTime.Now;
         private string m_RecognizeModel = "en-US_BroadbandModel";    // ID of the model to use.
         private int m_MaxAlternatives = 1;                  // maximum number of alternatives to return.
         private bool m_Timestamps = false;
@@ -163,7 +169,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
             m_IsListening = true;
             m_ListenCallback = callback;
             m_KeepAliveRoutine = Runnable.Run(KeepAlive());
-            m_LastKeepAlive = Time.time;
+            m_LastKeepAlive = DateTime.Now;
 
             return true;
         }
@@ -197,10 +203,13 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                         // the audio clips until that happens.
                         m_ListenRecordings.Enqueue(clip);
 
-                        // We need to check the length of this queue and do something if it gets too full.
-                        if (m_ListenRecordings.Count > MAX_QUEUED_RECORDINGS)
+                        // After sending start, we should get into the listening state within the amount of time specified
+                        // by LISTEN_TIMEOUT. If not, then stop listening and record the error. Additionally, we need to 
+                        // check the length of this queue and do something if it gets too full.
+                        if (m_ListenRecordings.Count > MAX_QUEUED_RECORDINGS
+                            || (DateTime.Now - m_LastStartSent).TotalSeconds > LISTEN_TIMEOUT )
                         {
-                            Log.Error("SpeechToText", "Recording queue has hit the maximum size.");
+                            Log.Error("SpeechToText", "Failed to enter listening state." );
 
                             StopListening();
                             if (OnError != null)
@@ -280,6 +289,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
             start["timestamps"] = m_Timestamps;
 
             m_ListenSocket.Send(new WSConnector.TextMessage(Json.Serialize(start)));
+            m_LastStartSent = DateTime.Now;
         }
 
         private void SendStop()
@@ -293,6 +303,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                 stop["action"] = "stop";
 
                 m_ListenSocket.Send(new WSConnector.TextMessage(Json.Serialize(stop)));
+                m_LastStartSent = DateTime.Now;     // sending stop, will send the listening state again..
                 m_ListenActive = false;
             }
         }
@@ -304,7 +315,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
             {
                 yield return null;
 
-                if (Time.time > (m_LastKeepAlive + WS_KEEP_ALIVE_TIME))
+                if ( (DateTime.Now - m_LastKeepAlive).TotalSeconds > WS_KEEP_ALIVE_TIME )
                 {
                     Dictionary<string, string> nop = new Dictionary<string, string>();
                     nop["action"] = "no-op";
@@ -313,7 +324,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                     Log.Debug( "SpeechToText", "Sending keep alive." );
 #endif
                     m_ListenSocket.Send(new WSConnector.TextMessage(Json.Serialize(nop)));
-                    m_LastKeepAlive = Time.time;
+                    m_LastKeepAlive = DateTime.Now;
                 }
             }
             Log.Debug( "SpeechToText", "KeepAlive exited." );
@@ -330,14 +341,14 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                 {
                     if (json.Contains("results"))
                     {
-                        // when we get results, start listening for the next block ..
-                        // if continuous is true, then we don't need to do this..
-                        if (! EnableContinousRecognition )
-                            SendStart();
-
                         SpeechResultList results = ParseRecognizeResponse(json);
                         if (results != null)
                         {
+                            // when we get results, start listening for the next block ..
+                            // if continuous is true, then we don't need to do this..
+                            if (! EnableContinousRecognition && results.HasFinalResult() )
+                                SendStart();
+
                             if (m_ListenCallback != null)
                                 m_ListenCallback(results);
                             else

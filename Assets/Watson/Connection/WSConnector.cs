@@ -292,40 +292,47 @@ namespace IBM.Watson.Connection
         // NOTE: ALl functions in this region are operating in a background thread, do NOT call any Unity functions!
         private void SendMessages()
         {
-            WebSocket ws = null;
+            try {
+                WebSocket ws = null;
 
-            ws = new WebSocket(URL);
-            if ( Headers != null )
-                ws.Headers = Headers;
-            if ( Authentication != null )
-                ws.SetCredentials(Authentication.User, Authentication.Password, true);
-            ws.OnOpen += OnWSOpen;
-            ws.OnClose += OnWSClose;
-            ws.OnError += OnWSError;
-            ws.OnMessage += OnWSMessage;
-            ws.Connect();
+                ws = new WebSocket(URL);
+                if ( Headers != null )
+                    ws.Headers = Headers;
+                if ( Authentication != null )
+                    ws.SetCredentials(Authentication.User, Authentication.Password, true);
+                ws.OnOpen += OnWSOpen;
+                ws.OnClose += OnWSClose;
+                ws.OnError += OnWSError;
+                ws.OnMessage += OnWSMessage;
+                ws.Connect();
 
-            while (m_ConnectionState == ConnectionState.CONNECTED)
-            {
-                m_SendEvent.WaitOne();
-
-                Message msg = null;
-                lock( m_SendQueue )
+                while (m_ConnectionState == ConnectionState.CONNECTED)
                 {
-                    if (m_SendQueue.Count > 0)
-                        msg = m_SendQueue.Dequeue();
+                    m_SendEvent.WaitOne( 500 );
+
+                    Message msg = null;
+                    lock( m_SendQueue )
+                    {
+                        if (m_SendQueue.Count > 0)
+                            msg = m_SendQueue.Dequeue();
+                    }
+
+                    if (msg == null )
+                        continue;
+
+                    if ( msg is TextMessage )
+                        ws.Send( ((TextMessage)msg).Text );
+                    else if ( msg is BinaryMessage )
+                        ws.Send( ((BinaryMessage)msg).Data );
                 }
 
-                if (msg == null )
-                    continue;
-
-                if ( msg is TextMessage )
-                    ws.Send( ((TextMessage)msg).Text );
-                else if ( msg is BinaryMessage )
-                    ws.Send( ((BinaryMessage)msg).Data );
+                ws.Close();
             }
-
-            ws.Close();
+            catch( System.Exception e )
+            {
+                m_ConnectionState = ConnectionState.DISCONNECTED;
+                Log.Error( "WSConnector", "Caught WebSocket exception: {0}", e.ToString() );
+            }
         }
 
         private void OnWSOpen(object sender, System.EventArgs e)
