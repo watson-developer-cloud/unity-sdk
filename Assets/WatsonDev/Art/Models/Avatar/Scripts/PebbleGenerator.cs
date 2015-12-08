@@ -18,7 +18,51 @@
 using UnityEngine;
 using IBM.Watson.Widgets.Avatar;
 
-#if UNITY_EDITOR
+[System.Serializable]
+public class PebbleGeneratorConfig{
+	private float m_angleSlice = 1.0f;
+	private float m_distanceFromCenter = 10.0f;
+	private int m_numberOfRow = 1;
+	private float m_distanceBetweenRows = 1.0f;
+	private Vector3 m_sphereSize = Vector3.one;
+
+	public string qualityName;
+	public float angleSlice = 1.0f;
+	public float distanceFromCenter = 10.0f;
+	public int numberOfRow = 1;
+	public float distanceBetweenRows = 1.0f;
+	public Vector3 sphereSize = Vector3.one;
+
+	public bool IsThereAnyChange
+	{
+		get
+		{
+			return (m_angleSlice != angleSlice)
+				|| (m_distanceFromCenter != distanceFromCenter)
+				|| (m_numberOfRow != numberOfRow)
+				|| (m_distanceBetweenRows != distanceBetweenRows)
+				|| (m_sphereSize != sphereSize);
+		}
+		
+	}
+	
+	public void SetValuesAsDefault()
+	{
+		m_angleSlice = angleSlice;
+		m_distanceFromCenter = distanceFromCenter;
+		m_numberOfRow = numberOfRow;
+		m_distanceBetweenRows = distanceBetweenRows;
+		m_sphereSize = sphereSize;
+	}
+
+	public void ResetDefaultValues(){
+		m_angleSlice = 0;
+		m_distanceFromCenter = 0;
+		m_numberOfRow = 0;
+		m_distanceBetweenRows = 0;
+		m_sphereSize = Vector3.zero;
+	}
+}
 
 /// <summary>
 /// Editor class for generating pebbles for the avatar.
@@ -27,18 +71,21 @@ using IBM.Watson.Widgets.Avatar;
 [RequireComponent(typeof(PebbleManager))]
 public class PebbleGenerator : MonoBehaviour
 {
+	[SerializeField]
+	private PebbleGeneratorConfig[] m_PebbleConfig;
+	private PebbleGeneratorConfig m_CurrentConfig = null;
 
-    private float m_angleSlice = 1.0f;
-    private float m_distanceFromCenter = 10.0f;
-    private int m_numberOfRow = 1;
-    private float m_distanceBetweenRows = 1.0f;
-    private Vector3 m_sphereSize = Vector3.one;
-
-    public float angleSlice = 1.0f;
-    public float distanceFromCenter = 10.0f;
-    public int numberOfRow = 1;
-    public float distanceBetweenRows = 1.0f;
-    public Vector3 sphereSize = Vector3.one;
+	public PebbleGeneratorConfig CurrentConfig{
+		get{
+			return m_CurrentConfig;
+		}
+		set{
+			m_CurrentConfig = value;
+			if(m_CurrentConfig != null){
+				m_CurrentConfig.ResetDefaultValues();
+			}
+		}
+	}
 
     public UnityEngine.Rendering.ShadowCastingMode shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
     public bool receiveShadows = false;
@@ -57,45 +104,63 @@ public class PebbleGenerator : MonoBehaviour
     {
         m_pebbleManager = transform.GetComponent<PebbleManager>();
         ClearAllSpheres();
+
+		if (m_PebbleConfig == null || m_PebbleConfig.Length == 0) {
+			m_PebbleConfig = new PebbleGeneratorConfig[QualitySettings.names.Length];
+			for (int i = 0; i < m_PebbleConfig.Length ; i++) {
+				m_PebbleConfig[i] = new PebbleGeneratorConfig();
+				m_PebbleConfig[i].qualityName = QualitySettings.names [i];
+
+				if(m_PebbleConfig [i].qualityName == QualitySettings.names [QualitySettings.GetQualityLevel()]){
+					CurrentConfig = m_PebbleConfig [i];
+				}
+			}
+		} else {
+			for (int i = 0; i < m_PebbleConfig.Length; i++) {
+				if(m_PebbleConfig [i].qualityName == QualitySettings.names [QualitySettings.GetQualityLevel()]){
+					CurrentConfig = m_PebbleConfig [i];
+					break;
+				}
+			}
+		}
+
+		if (CurrentConfig == null) {
+			if(m_PebbleConfig != null && m_PebbleConfig.Length > 0)
+				CurrentConfig = m_PebbleConfig[0];
+			else 
+				CurrentConfig = new PebbleGeneratorConfig();
+		}
+
+		ResetPebblesIfNeeded ();
     }
 
-    // Update is called once per frame
+	#if UNITY_EDITOR
+
     void Update()
     {
-        if (IsThereAnyChange)
-        {
-            SetValuesAsDefault();
-            ClearAllSpheres();
-            ClearList();
-            CreateSpheres();
-            if (isUsingSharedMesh)
-            {
-                MakeAllIndividualRowsAsSharedMesh();
-            }
-        }
+		ResetPebblesIfNeeded ();
+		if (CurrentConfig != null && CurrentConfig.qualityName != QualitySettings.names [QualitySettings.GetQualityLevel ()]) {
+			Start();
+		}
     }
+	#endif
 
-    bool IsThereAnyChange
-    {
-        get
-        {
-            return (m_angleSlice != angleSlice)
-                || (m_distanceFromCenter != distanceFromCenter)
-                || (m_numberOfRow != numberOfRow)
-                || (m_distanceBetweenRows != distanceBetweenRows)
-                || (m_sphereSize != sphereSize);
-        }
+	void ResetPebblesIfNeeded(){
+		if (CurrentConfig != null && CurrentConfig.IsThereAnyChange) {
+			ResetPebbles();
+		}
+	}
 
-    }
-
-    void SetValuesAsDefault()
-    {
-        m_angleSlice = angleSlice;
-        m_distanceFromCenter = distanceFromCenter;
-        m_numberOfRow = numberOfRow;
-        m_distanceBetweenRows = distanceBetweenRows;
-        m_sphereSize = sphereSize;
-    }
+	void ResetPebbles(){
+		CurrentConfig.SetValuesAsDefault ();
+		ClearAllSpheres ();
+		ClearList ();
+		CreateSpheres ();
+		if (isUsingSharedMesh) {
+			MakeAllIndividualRowsAsSharedMesh ();
+		}
+	}
+   
 
     void ClearAllSpheres()
     {
@@ -125,24 +190,24 @@ public class PebbleGenerator : MonoBehaviour
     void CreateSpheres()
     {
 
-        if (angleSlice <= 0)
+		if (CurrentConfig.angleSlice <= 0)
         {
             Debug.LogError("Error on angle Slice value");
-            angleSlice = 1.0f;
+			CurrentConfig.angleSlice = 1.0f;
         }
 
-        int numberOfSpheresInRow = (int)(360.0f / angleSlice);
-        int numberOfTotalSpheres = numberOfSpheresInRow * numberOfRow;
+		int numberOfSpheresInRow = (int)(360.0f / CurrentConfig.angleSlice);
+		int numberOfTotalSpheres = numberOfSpheresInRow * CurrentConfig.numberOfRow;
         spehereList = new GameObject[numberOfTotalSpheres];
 
-        rowObjects = new GameObject[numberOfRow];
+		rowObjects = new GameObject[CurrentConfig.numberOfRow];
 
         if (m_pebbleManager == null)
             m_pebbleManager = transform.GetComponent<PebbleManager>();
 
-        m_pebbleManager.PebbleRowList = new PebbleRow[numberOfRow];
+		m_pebbleManager.PebbleRowList = new PebbleRow[CurrentConfig.numberOfRow];
 
-        for (int indexOfRow = 0; indexOfRow < numberOfRow; indexOfRow++)
+		for (int indexOfRow = 0; indexOfRow < CurrentConfig.numberOfRow; indexOfRow++)
         {
             rowObjects[indexOfRow] = new GameObject();
             rowObjects[indexOfRow].name = indexOfRow.ToString();
@@ -156,7 +221,7 @@ public class PebbleGenerator : MonoBehaviour
 
             for (int indexOfSpheresInRow = 0; indexOfSpheresInRow < numberOfSpheresInRow; indexOfSpheresInRow++)
             {
-                float angle = angleSlice * indexOfSpheresInRow * Mathf.Deg2Rad;
+				float angle = CurrentConfig.angleSlice * indexOfSpheresInRow * Mathf.Deg2Rad;
                 int indexOfSphere = indexOfSpheresInRow + indexOfRow * numberOfSpheresInRow;
 
                 if (indexOfSphere == 0)
@@ -166,6 +231,7 @@ public class PebbleGenerator : MonoBehaviour
                     MeshRenderer meshRenderer = spehereList[indexOfSpheresInRow + indexOfRow * numberOfSpheresInRow].GetComponent<MeshRenderer>();
                     meshRenderer.shadowCastingMode = shadowCastingMode;
                     meshRenderer.receiveShadows = receiveShadows;
+					meshRenderer.useLightProbes = false;
                     //meshRenderer.material = material;
                     meshRenderer.sharedMaterial = material;
 
@@ -186,8 +252,8 @@ public class PebbleGenerator : MonoBehaviour
 
                 Transform parentTransform = rowObjects[indexOfRow].transform;
                 spehereList[indexOfSphere].transform.parent = parentTransform;
-                spehereList[indexOfSphere].transform.position = parentTransform.position + new Vector3(Mathf.Sin(angle) * (distanceFromCenter + distanceBetweenRows * indexOfRow), 0.0f, Mathf.Cos(angle) * (distanceFromCenter + distanceBetweenRows * indexOfRow));
-                spehereList[indexOfSphere].transform.localScale = Vector3.Scale(sphereSize, new Vector3(1.0f / parentTransform.lossyScale.x, 1.0f / parentTransform.lossyScale.y, 1.0f / parentTransform.lossyScale.z));
+				spehereList[indexOfSphere].transform.position = parentTransform.position + new Vector3(Mathf.Sin(angle) * (CurrentConfig.distanceFromCenter + CurrentConfig.distanceBetweenRows * indexOfRow), 0.0f, Mathf.Cos(angle) * (CurrentConfig.distanceFromCenter + CurrentConfig.distanceBetweenRows * indexOfRow));
+				spehereList[indexOfSphere].transform.localScale = Vector3.Scale(CurrentConfig.sphereSize, new Vector3(1.0f / parentTransform.lossyScale.x, 1.0f / parentTransform.lossyScale.y, 1.0f / parentTransform.lossyScale.z));
                 spehereList[indexOfSphere].name = indexOfSpheresInRow.ToString();
 
                 m_pebbleManager.PebbleRowList[indexOfRow].pebbleList[indexOfSpheresInRow] = spehereList[indexOfSphere];
@@ -199,7 +265,7 @@ public class PebbleGenerator : MonoBehaviour
     void MakeAllIndividualRowsAsSharedMesh()
     {
         //For each row we combine all meshes separately
-        for (int indexOfRow = 0; indexOfRow < numberOfRow; indexOfRow++)
+		for (int indexOfRow = 0; indexOfRow < CurrentConfig.numberOfRow; indexOfRow++)
         {
 
             MeshFilter[] meshFilters = rowObjects[indexOfRow].transform.GetComponentsInChildren<MeshFilter>();
@@ -228,4 +294,4 @@ public class PebbleGenerator : MonoBehaviour
     }
 }
 
-#endif
+
