@@ -330,14 +330,14 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                 {
                     if (json.Contains("results"))
                     {
-                        // when we get results, start listening for the next block ..
-                        // if continuous is true, then we don't need to do this..
-                        if (! EnableContinousRecognition )
-                            SendStart();
-
                         SpeechResultList results = ParseRecognizeResponse(json);
                         if (results != null)
                         {
+                            // when we get results, start listening for the next block ..
+                            // if continuous is true, then we don't need to do this..
+                            if (! EnableContinousRecognition && results.HasFinalResult() )
+                                SendStart();
+
                             if (m_ListenCallback != null)
                                 m_ListenCallback(results);
                             else
