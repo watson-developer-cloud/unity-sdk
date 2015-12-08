@@ -61,6 +61,24 @@ namespace IBM.Watson.DataTypes
         public string Text { get; set; }
     };
 
+    public class LanguageData : Widget.Data
+    {
+        public LanguageData()
+        {}
+
+        public LanguageData( string language )
+        {
+            Language = language;
+        }
+
+        public override string GetName()
+        {
+            return "Language";
+        }
+
+        public string Language { get; set; }
+    };
+
     public class VoiceData : Widget.Data
     {
         public VoiceData()

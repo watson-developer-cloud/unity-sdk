@@ -23,6 +23,7 @@ using IBM.Watson.Services.v1;
 using IBM.Watson.Logging;
 using UnityEngine;
 using UnityEngine.UI;
+using IBM.Watson.Utilities;
 
 #pragma warning disable 414
 
@@ -56,7 +57,11 @@ namespace IBM.Watson.Widgets
         [SerializeField]
         private Input m_AudioInput = new Input( "Audio", typeof(AudioData), "OnAudio" );
         [SerializeField]
+        private Input m_LanguageInput = new Input( "Language", typeof(LanguageData), "OnLanguage" );
+        [SerializeField]
         private Output m_ResultOutput = new Output( typeof(SpeechToTextData) );
+        [SerializeField, Tooltip( "Language ID to use in the speech recognition model.") ]
+        private string m_Language = "en-US";
         #endregion
 
         #region Public Properties
@@ -113,6 +118,8 @@ namespace IBM.Watson.Widgets
 
 	        if ( m_StatusText != null )
 	            m_StatusText.text = "READY";
+            if (! m_STT.GetModels( OnGetModels ) )
+                Log.Error( "SpeechToTextWidget", "Failed to rquest models." );
 	    }
 
 	    private void OnError( string error )
@@ -128,6 +135,43 @@ namespace IBM.Watson.Widgets
                 Active = true;
 
             m_STT.OnListen( (AudioData)data );
+        }
+
+        private void OnLanguage(Data data)
+        {
+            LanguageData language = data as LanguageData;
+            if ( language == null )
+                throw new WatsonException( "Unexpected data type" );
+
+            if (! string.IsNullOrEmpty( language.Language ) )
+            {
+                m_Language = language.Language;
+
+                if (! m_STT.GetModels( OnGetModels ) )
+                    Log.Error( "SpeechToTextWidget", "Failed to rquest models." );
+            }
+        }
+
+        private void OnGetModels( SpeechModel [] models )
+        {
+            if ( models != null )
+            {
+                SpeechModel bestModel = null;
+                foreach( var model in models )
+                {
+                    if ( model.Language.StartsWith( m_Language )
+                        && (bestModel == null || model.Rate > bestModel.Rate) )
+                    {
+                        bestModel = model;
+                    }
+                }
+
+                if ( bestModel != null )
+                {
+                    Log.Status( "SpeechToTextWidget", "Selecting Recognize Model: {0} ", bestModel.Name );
+                    m_STT.RecognizeModel = bestModel.Name;
+                }
+            }
         }
 
 	    private void OnRecognize(SpeechResultList result)

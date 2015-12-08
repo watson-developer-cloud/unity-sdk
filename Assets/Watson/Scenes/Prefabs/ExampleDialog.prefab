@@ -694,6 +694,7 @@ MonoBehaviour:
   m_ResultOutput:
     m_TargetObject: {fileID: 0}
     m_TargetConnection: 
+  m_LanguageModel: en
 --- !u!114 &11404564
 MonoBehaviour:
   m_ObjectHideFlags: 1

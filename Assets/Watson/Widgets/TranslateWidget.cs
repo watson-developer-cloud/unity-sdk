@@ -52,6 +52,8 @@ namespace IBM.Watson.Widgets
         [SerializeField]
         private Dropdown m_DropDownTargetLanguage = null;
         [SerializeField]
+        private Output m_RecognizeLanguageOutput = new Output(typeof(LanguageData));
+        [SerializeField]
         private Input m_SpeechInput = new Input("SpeechInput", typeof(SpeechToTextData), "OnSpeechInput");
         [SerializeField]
         private Output m_SpeechOutput = new Output(typeof(TextToSpeechData));
@@ -59,9 +61,13 @@ namespace IBM.Watson.Widgets
         private Output m_VoiceOutput = new Output(typeof(VoiceData));
         [SerializeField]
         private string m_DefaultDomainToUse = "conversational";
+        [SerializeField]
+        private string m_DetectLanguageName = "Detect Language";
+        private string m_DetectLanguageID = "";
 
         // Mapping from language ID to it's Name
         private Dictionary<string, string> m_LanguageIDToName = new Dictionary<string, string>();
+        // Mapping from language name to ID
         private Dictionary<string, string> m_LanguageNameToID = new Dictionary<string, string>();
         // Mapping from language to a list of languages that can be translated into..
         private Dictionary<string, List<string>> m_LanguageToTranslate = new Dictionary<string, List<string>>();
@@ -69,8 +75,6 @@ namespace IBM.Watson.Widgets
         private string[] m_Languages = null;
         // Last string of input text    
         private string m_TranslateText = string.Empty;
-        private string m_DetectLanguage = "";
-        private string m_DetectLanguageName = "Detect Language";
         #endregion
 
         #region Widget interface
@@ -82,7 +86,7 @@ namespace IBM.Watson.Widgets
 
         #region Public Members
         /// <summary>
-        /// 
+        /// Set or get the source language ID. If set to null or empty, then the language will be auto-detected.
         /// </summary>
         public string SourceLanguage {
             set {
@@ -90,6 +94,8 @@ namespace IBM.Watson.Widgets
                 {
                     m_SourceLanguage = value;
 
+                    if ( m_RecognizeLanguageOutput.IsConnected && !string.IsNullOrEmpty(m_SourceLanguage) )
+                        m_RecognizeLanguageOutput.SendData( new LanguageData( m_SourceLanguage ) );
                     ResetSourceLanguageDropDown();
                     ResetTargetLanguageDropDown();
                 }
@@ -98,7 +104,7 @@ namespace IBM.Watson.Widgets
         }
 
         /// <summary>
-        /// 
+        /// Set or get the target language ID.
         /// </summary>
         public string TargetLanguage {
             set
@@ -111,7 +117,6 @@ namespace IBM.Watson.Widgets
             }
             get { return m_TargetLanguage; }
         }
-
         #endregion
 
         private void OnEnable()
@@ -131,6 +136,14 @@ namespace IBM.Watson.Widgets
                 m_DropDownSourceLanguage.onValueChanged.AddListener( delegate { DropDownSourceValueChanged(); } );
             if ( m_DropDownTargetLanguage != null )
                 m_DropDownTargetLanguage.onValueChanged.AddListener( delegate { DropDownTargetValueChanged(); } );
+        }
+
+        protected override void Start()
+        {
+            base.Start();
+
+            if ( m_RecognizeLanguageOutput.IsConnected && !string.IsNullOrEmpty(m_SourceLanguage) )
+                m_RecognizeLanguageOutput.SendData( new LanguageData( m_SourceLanguage ) );
         }
 
         private void OnInputEnd()
@@ -224,8 +237,8 @@ namespace IBM.Watson.Widgets
                     m_LanguageNameToID[lang.name] = lang.language;
                 }
 
-                m_LanguageIDToName[m_DetectLanguage] = m_DetectLanguageName;
-                m_LanguageNameToID[ m_DetectLanguageName ] = m_DetectLanguage;
+                m_LanguageIDToName[m_DetectLanguageID] = m_DetectLanguageName;
+                m_LanguageNameToID[ m_DetectLanguageName ] = m_DetectLanguageID;
                 m_Translate.GetModels(OnGetModels); //To fill dropdown with models to use in Translation
             }
             else
@@ -244,8 +257,8 @@ namespace IBM.Watson.Widgets
                 List<string> listLanguages = new List<string>();    //From - To language list to use in translation
 
                 //Adding initial language as detected!
-                listLanguages.Add(m_DetectLanguage);
-                m_LanguageToTranslate.Add(m_DetectLanguage, new List<string>());
+                listLanguages.Add(m_DetectLanguageID);
+                m_LanguageToTranslate.Add(m_DetectLanguageID, new List<string>());
 
                 foreach (var model in models.models)
                 {
@@ -267,8 +280,8 @@ namespace IBM.Watson.Widgets
                         if (!listLanguages.Contains(model.target))
                             listLanguages.Add(model.target);
 
-                        if (!m_LanguageToTranslate[m_DetectLanguage].Contains(model.target))
-                            m_LanguageToTranslate[m_DetectLanguage].Add(model.target);
+                        if (!m_LanguageToTranslate[m_DetectLanguageID].Contains(model.target))
+                            m_LanguageToTranslate[m_DetectLanguageID].Add(model.target);
                     }
                 }
 
@@ -379,10 +392,6 @@ namespace IBM.Watson.Widgets
                     Log.Warning( "TranslateWidget", "Unsupported voice for language {0}", TargetLanguage );
             }
         }
-
-
     }
-
-
-
 }
+
