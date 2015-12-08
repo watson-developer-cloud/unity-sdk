@@ -309,7 +309,7 @@ namespace IBM.Watson.Widgets.Question
         {
             for (int i = 0; i < m_WordList.Count; i++)
             {
-                m_WordList[i].IsHighlighted = false;
+				if(m_WordList[i].IsHighlighted) m_WordList[i].IsHighlighted = false;
             }
 
             m_WordList[WordIndex].IsHighlighted = true;
@@ -319,11 +319,11 @@ namespace IBM.Watson.Widgets.Question
                 POSControl posControl = m_POSList[j].GetComponent<POSControl>();
                 if (posControl.POS == m_WordList[WordIndex].POS.ToLower() || posControl.POS == m_WordList[WordIndex].Slot.ToLower())
                 {
-                    posControl.IsHighlighted = true;
+					if(!posControl.IsHighlighted) posControl.IsHighlighted = true;
                 }
                 else
                 {
-                    posControl.IsHighlighted = false;
+					if(posControl.IsHighlighted) posControl.IsHighlighted = false;
                 }
             }
 
@@ -332,13 +332,13 @@ namespace IBM.Watson.Widgets.Question
                 if (m_QuestionData.questions[0].question.lat.Length == 0 
                     && m_QuestionData.questions[0].question.focus.Length == 0)
                 {
-                    m_POSList[2].GetComponent<POSControl>().IsHighlighted = true;
+					if(!m_POSList[2].GetComponent<POSControl>().IsHighlighted) m_POSList[2].GetComponent<POSControl>().IsHighlighted = true;
                 }
                 if (m_QuestionData.questions[0].question.lat.Length > 0)
                 {
                     if (m_WordList[WordIndex].ParseTreeWord.ToLower() == m_QuestionData.questions[0].question.lat[0].ToLower())
                     {
-                        m_POSList[1].GetComponent<POSControl>().IsHighlighted = true;
+						if(!m_POSList[1].GetComponent<POSControl>().IsHighlighted) m_POSList[1].GetComponent<POSControl>().IsHighlighted = true;
                     }
                 }
 
@@ -347,7 +347,7 @@ namespace IBM.Watson.Widgets.Question
                 {
                     if (m_WordList[WordIndex].ParseTreeWord.ToLower() == m_QuestionData.questions[0].question.focus[0].ToLower())
                     {
-                        m_POSList[0].GetComponent<POSControl>().IsHighlighted = true;
+						if(!m_POSList[0].GetComponent<POSControl>().IsHighlighted) m_POSList[0].GetComponent<POSControl>().IsHighlighted = true;
                     }
                 }
             }
