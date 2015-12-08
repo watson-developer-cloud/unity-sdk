@@ -86,7 +86,7 @@ namespace IBM.Watson.Widgets
 
         #region Public Members
         /// <summary>
-        /// 
+        /// Set or get the source language ID. If set to null or empty, then the language will be auto-detected.
         /// </summary>
         public string SourceLanguage {
             set {
@@ -94,7 +94,7 @@ namespace IBM.Watson.Widgets
                 {
                     m_SourceLanguage = value;
 
-                    if ( m_RecognizeLanguageOutput.IsConnected )
+                    if ( m_RecognizeLanguageOutput.IsConnected && !string.IsNullOrEmpty(m_SourceLanguage) )
                         m_RecognizeLanguageOutput.SendData( new LanguageData( m_SourceLanguage ) );
                     ResetSourceLanguageDropDown();
                     ResetTargetLanguageDropDown();
@@ -104,7 +104,7 @@ namespace IBM.Watson.Widgets
         }
 
         /// <summary>
-        /// 
+        /// Set or get the target language ID.
         /// </summary>
         public string TargetLanguage {
             set
@@ -117,7 +117,6 @@ namespace IBM.Watson.Widgets
             }
             get { return m_TargetLanguage; }
         }
-
         #endregion
 
         private void OnEnable()
@@ -393,10 +392,6 @@ namespace IBM.Watson.Widgets
                     Log.Warning( "TranslateWidget", "Unsupported voice for language {0}", TargetLanguage );
             }
         }
-
-
     }
-
-
-
 }
+
