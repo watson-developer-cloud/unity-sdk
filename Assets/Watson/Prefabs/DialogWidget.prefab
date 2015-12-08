@@ -394,6 +394,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AutoConnect: 1
+  m_DialogName: 52b472bc387a4b0cae9627bf
+  m_AutoUploadDialog: /Watson/Editor/TestData/pizza_sample.xml
   m_DialogLayout: {fileID: 11412678}
   m_ScrollRect: {fileID: 11428570}
   m_ResultOutput:
@@ -784,6 +786,10 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_AutoUploadDialog
+      value: /Watson/Editor/TestData/pizza_sample.xml
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

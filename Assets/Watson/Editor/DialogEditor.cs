@@ -57,7 +57,6 @@ namespace IBM.Watson.Editor
             window.Show( true );
         }
 
-        private bool m_Visible = false;
         private Texture m_WatsonIcon = null;
         private Vector2 m_ScrollPos = Vector2.zero;
         private Dialog m_Dialog = new Dialog();

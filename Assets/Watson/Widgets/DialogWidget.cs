@@ -15,22 +15,29 @@
 *
 */
 
+#pragma warning disable 414
+
+using UnityEngine;
+using System;
+using UnityEngine.UI;
+using IBM.Watson.Logging;
+using IBM.Watson.Utilities;
+using IBM.Watson.DataModels;
+using IBM.Watson.Services.v1;
+using IBM.Watson.DataTypes;
+
+
 namespace IBM.Watson.Widgets
 {
-    using UnityEngine;
-    using System;
-    using UnityEngine.UI;
-    using IBM.Watson.Logging;
-    using IBM.Watson.Utilities;
-    using IBM.Watson.DataModels;
-    using IBM.Watson.Services.v1;
-    using IBM.Watson.DataTypes;
-
     /// <summary>
-    /// Dialog widget.
+    /// This Widget class wraps the Dialog service. It will look for a given dialog by name, if not found then it can auto-upload the dialog
     /// </summary>
     public class DialogWidget : Widget
     {
+        [SerializeField, Tooltip( "The name prefix of the dialog to use." ) ]
+        private string m_DialogName = Guid.NewGuid().ToString().Replace( "-", "" ).Substring( 0, 24 );      // NOTE: the limit of a dialog name is 24 characters, plus it has to be globally unique!
+        [SerializeField, Tooltip( "If no dialog is found by name, then this dialog will automatically be uploaded. (Editor Only)") ]
+        private string m_AutoUploadDialog = "/Watson/Editor/TestData/pizza_sample.xml";
         [SerializeField]
         private VerticalLayoutGroup m_DialogLayout = null;
         [SerializeField]
@@ -51,8 +58,6 @@ namespace IBM.Watson.Widgets
         private int m_ClientID = 0;
         private int m_ConversationID = 0;
 
-        const string DIALOG_NAME = "ut_20151029_5";
-
         #region Widget Interface
 
         protected override string GetName()
@@ -69,21 +74,17 @@ namespace IBM.Watson.Widgets
         }
 
         /// <summary>
-        /// Converse the specified dialog.
+        /// Converse with the dialog system.
         /// </summary>
-        /// <param name="dialog">Dialog.</param>
+        /// <param name="dialog">Text to send to the dialog system.</param>
         public void Converse(string dialog)
         {
             if (!string.IsNullOrEmpty(m_DialogID))
-            {
                 m_Dialog.Converse(m_DialogID, dialog, OnConverse, m_ConversationID, m_ClientID);
-            }
+            else
+                Log.Warning( "DialogWidget", "m_DialogID is null." );
         }
 
-        /// <summary>
-        /// Callback for conversing with Watson.
-        /// </summary>
-        /// <param name="resp">Resp.</param>
         private void OnConverse(ConverseResponse resp)
         {
             if (resp != null)
@@ -93,7 +94,7 @@ namespace IBM.Watson.Widgets
 
                 foreach (var r in resp.response)
                 {
-                    Log.Debug("DialogDisplayWidget", "Response: {0}", r);
+                    Log.Debug("DialogWidget", "Response: {0}", r);
                     AddDialog(r, m_AnswerPrefab);
 
                     if ( m_ResultOutput.IsConnected )
@@ -102,10 +103,6 @@ namespace IBM.Watson.Widgets
             }
         }
 
-        /// <summary>
-        /// Callback for uploading dialog.
-        /// </summary>
-        /// <param name="id">Identifier.</param>
         private void OnDialogUploaded(string id)
         {
             if (!string.IsNullOrEmpty(id))
@@ -115,10 +112,6 @@ namespace IBM.Watson.Widgets
             }
         }
 
-        /// <summary>
-        /// Callback for getting dialog from server.
-        /// </summary>
-        /// <param name="dialogs">Dialogs.</param>
         private void OnGetDialogs(Dialogs dialogs)
         {
             if (dialogs != null && dialogs.dialogs != null)
@@ -126,19 +119,20 @@ namespace IBM.Watson.Widgets
                 foreach (var d in dialogs.dialogs)
                 {
                     Log.Debug("DialogDisplayWidget", "Name: {0}, ID: {1}", d.name, d.dialog_id);
-                    if (d.name == DIALOG_NAME)
+                    if (d.name == m_DialogName )
                         m_DialogID = d.dialog_id;
                 }
             }
 
+#if UNITY_EDITOR
             if ( string.IsNullOrEmpty( m_DialogID ) )
-                m_Dialog.UploadDialog(DIALOG_NAME, OnDialogUploaded, Application.dataPath + "/Watson/Editor/TestData/pizza_sample.xml");
+            {
+                m_Dialog.UploadDialog(m_DialogName, OnDialogUploaded,
+                    Application.dataPath + m_AutoUploadDialog );
+            }
+#endif
         }
 
-        /// <summary>
-        /// Callback for speech input.
-        /// </summary>
-        /// <param name="data">Data.</param>
         private void OnSpeechInput(Data data)
         {
             SpeechResultList result = ((SpeechToTextData)data).Results;
@@ -151,11 +145,6 @@ namespace IBM.Watson.Widgets
             }
         }
 
-        /// <summary>
-        /// Adds lines of dialog to the window.
-        /// </summary>
-        /// <param name="add">Add.</param>
-        /// <param name="prefab">Prefab.</param>
         private void AddDialog(string add, GameObject prefab)
         {
             if ( m_DialogLayout != null )
@@ -178,9 +167,6 @@ namespace IBM.Watson.Widgets
             }
         }
 
-        /// <summary>
-        /// Scrolls to end of dialog window.
-        /// </summary>
         private void ScrollToEnd()
         {
             if (m_ScrollRect != null)
