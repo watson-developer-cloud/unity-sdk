@@ -114,7 +114,15 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         /// <summary>
         /// This property controls which recognize model we use when making recognize requests of the server.
         /// </summary>
-        public string RecognizeModel { get { return m_RecognizeModel; } set { m_RecognizeModel = value; } }
+        public string RecognizeModel { get { return m_RecognizeModel; }
+            set {
+                if ( m_RecognizeModel != value )
+                {
+                    m_RecognizeModel = value;
+                    StopListening();        // close any active connection when our model is changed.
+                }
+            }
+        }
         /// <summary>
         /// Returns the maximum number of alternatives returned by recognize.
         /// </summary>
