@@ -225,7 +225,7 @@ public enum LeanTweenType{
 * @class LTDescr
 * @constructor
 */
-
+[Serializable]
 public class LTDescr {
 	public bool toggle;
 	public bool useEstimatedTime;
@@ -1236,8 +1236,10 @@ public static bool throwErrors = true;
 public static float tau = Mathf.PI*2.0f; 
 
 public static LTDescr[] tweens;
+public LTDescr[] tweensPublic;
 private static int[] tweensFinished;
 private static LTDescr tween;
+
 private static int tweenMaxSearch = -1;
 private static int maxTweens = 600;
 private static int frameRendered= -1;
@@ -1314,6 +1316,7 @@ public static void reset(){
 
 public void Update(){
 	LeanTween.update();
+		tweensPublic = tweens;
 }
 
 public void OnLevelWasLoaded( int lvl ){
