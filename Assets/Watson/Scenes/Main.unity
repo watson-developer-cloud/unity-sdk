@@ -248,6 +248,22 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 22468068, guid: a8b93b7079a69044fb723b0bcc6a0e8c, type: 2}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22453550, guid: a8b93b7079a69044fb723b0bcc6a0e8c, type: 2}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 22428922, guid: a8b93b7079a69044fb723b0bcc6a0e8c, type: 2}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 131708, guid: a8b93b7079a69044fb723b0bcc6a0e8c, type: 2}
+      propertyPath: m_Name
+      value: Watson_Logo
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a8b93b7079a69044fb723b0bcc6a0e8c, type: 2}
   m_IsPrefabParent: 0
