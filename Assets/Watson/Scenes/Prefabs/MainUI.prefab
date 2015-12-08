@@ -663,6 +663,11 @@ Prefab:
       propertyPath: m_MatchWidthOrHeight
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ButtonPrefab
+      value: 
+      objectReference: {fileID: 11485798, guid: 529f0c2dd4d6c2449a17341c8afd2dc1,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 163758}
