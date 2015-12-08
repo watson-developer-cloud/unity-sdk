@@ -33,7 +33,9 @@ namespace IBM.Watson.UnitTests
         bool m_FindClassifierTested = false;
         bool m_TrainClasifierTested = false;
         bool m_TrainClassifier = false;
+#if TEST_DELETE
         bool m_DeleteTested = false;
+#endif
         string m_ClassifierId = null;
         bool m_ClassifyTested = false;
 
@@ -70,11 +72,13 @@ namespace IBM.Watson.UnitTests
             yield break;
         }
 
+#if TEST_DELETE
         private void OnDeleteClassifier( bool success )
         {
             Test( success );
             m_DeleteTested = true;
         }
+#endif
 
         private void OnFindClassifier( Classifier find )
         {

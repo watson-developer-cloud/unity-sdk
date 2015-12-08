@@ -213,7 +213,11 @@ namespace IBM.Watson.Services.v1
                     if ( SaveFile != null )
                         SaveFile( downloadReq.DialogFileName, resp.Data );
                     else
+					{
+						#if !UNITY_WEBPLAYER
                         File.WriteAllBytes( downloadReq.DialogFileName, resp.Data );
+						#endif
+					}
                 }
                 catch( Exception e )
                 {
@@ -237,24 +241,46 @@ namespace IBM.Watson.Services.v1
         /// <returns>Returns true if the upload was submitted.</returns>
         public bool UploadDialog( string dialogName, OnUploadDialog callback, string dialogFileName )
         {
-            if (string.IsNullOrEmpty(dialogName))
-                throw new ArgumentNullException("dialogName");
             if (string.IsNullOrEmpty(dialogFileName))
                 throw new ArgumentNullException("dialogFileName");
-            if (callback == null)
-                throw new ArgumentNullException("callback");
 
             byte [] dialogData = null;
-            if ( LoadFile != null )
-                dialogData = LoadFile( dialogFileName );
-            else
-                dialogData = File.ReadAllBytes( dialogFileName );
+            if (LoadFile != null)
+				dialogData = LoadFile (dialogFileName);
+			else 
+			{
+				#if !UNITY_WEBPLAYER
+				dialogData = File.ReadAllBytes (dialogFileName);
+				#endif
+			}
 
             if ( dialogData == null )
             {
                 Log.Error( "Dialog", "Failed to load dialog file data {0}", dialogFileName );
                 return false;
             }
+
+            return UploadDialog( dialogName, callback, dialogData, Path.GetFileName( dialogFileName ) );
+        }
+
+        /// <summary>
+        /// This uploads a new dialog to the service.
+        /// </summary>
+        /// <param name="dialogName">The name of the dialog.</param>
+        /// <param name="callback">The callback to receive the dialog ID.</param>
+        /// <param name="dialogData">The raw byte data of the dialog.</param>
+        /// <param name="dataFileName">This must be the filename including the extension so the dialog service knows how to parse the data.</param>
+        /// <returns>Returns true if the upload was submitted.</returns>
+        public bool UploadDialog( string dialogName, OnUploadDialog callback, byte [] dialogData, string dataFileName )
+        {
+            if (string.IsNullOrEmpty(dialogName))
+                throw new ArgumentNullException("dialogName");
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (dialogData == null)
+                throw new ArgumentNullException("dialogData");
+            if (string.IsNullOrEmpty(dataFileName) )
+                throw new ArgumentNullException("dataFileName");
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/v1/dialogs");
             if (connector == null)
@@ -265,10 +291,11 @@ namespace IBM.Watson.Services.v1
             req.OnResponse = OnCreateDialogResp;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             req.Forms["name"] = new RESTConnector.Form( dialogName );
-            req.Forms["file"] = new RESTConnector.Form( dialogData, Path.GetFileName( dialogFileName ) );
+            req.Forms["file"] = new RESTConnector.Form( dialogData, dataFileName );
 
             return connector.Send(req);
         }
+
         private class UploadDialogReq : RESTConnector.Request
         {
             public OnUploadDialog Callback { get; set; }

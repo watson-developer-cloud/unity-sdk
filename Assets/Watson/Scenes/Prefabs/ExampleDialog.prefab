@@ -738,6 +738,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AutoConnect: 1
+  m_DialogName: 429010086e6a4000826b6d0e
+  m_AutoUploadDialog: /Watson/Editor/TestData/pizza_sample.xml
   m_DialogLayout: {fileID: 11493918}
   m_ScrollRect: {fileID: 11468700}
   m_ResultOutput:
@@ -1216,7 +1218,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 11422446}
   m_HandleRect: {fileID: 22473444}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:

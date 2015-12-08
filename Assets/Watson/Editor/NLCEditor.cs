@@ -275,7 +275,7 @@ namespace IBM.Watson.Editor
                             try {
                                 data.Import( path );
                             }
-                            catch( Exception e )
+                            catch
                             {
                                 EditorUtility.DisplayDialog("Error", "Failed to load training data: " + path, "OK");
                             }

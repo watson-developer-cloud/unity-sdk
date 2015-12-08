@@ -58,9 +58,9 @@ namespace IBM.Watson.Logging
                     File.Copy( src, dst, true );
                 }
             }
-
-            File.WriteAllText(LogFile, string.Format("Log File Started {0}...\n",
-                DateTime.UtcNow.ToString("MM/dd/yyyy HH:mm:ss")) );
+			#if !UNITY_WEBPLAYER
+            File.WriteAllText(LogFile, string.Format("Log File Started {0}...\n", DateTime.UtcNow.ToString("MM/dd/yyyy HH:mm:ss")) );
+			#endif
         }
         #endregion
 
@@ -73,9 +73,11 @@ namespace IBM.Watson.Logging
         {
             if (log.m_Level >= Level)
             {
+				#if !UNITY_WEBPLAYER
                 File.AppendAllText(LogFile, string.Format("[{0}][{1}][{2}] {3}\n",
                     log.m_TimeStamp.ToString("MM/dd/yyyy HH:mm:ss"),
                     log.m_SubSystem, log.m_Level.ToString(), log.m_Message));
+				#endif
             }
         }
         #endregion
