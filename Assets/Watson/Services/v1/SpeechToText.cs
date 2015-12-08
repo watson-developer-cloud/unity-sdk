@@ -87,7 +87,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         private bool m_IsListening = false;
         private Queue<AudioData> m_ListenRecordings = new Queue<AudioData>();
         private int m_KeepAliveRoutine = 0;                      // ID of the keep alive co-routine
-        private float m_LastKeepAlive = 0.0f;
+        private DateTime m_LastKeepAlive = DateTime.Now;
         private DateTime m_LastStartSent = DateTime.Now;
         private string m_RecognizeModel = "en-US_BroadbandModel";    // ID of the model to use.
         private int m_MaxAlternatives = 1;                  // maximum number of alternatives to return.
@@ -169,7 +169,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
             m_IsListening = true;
             m_ListenCallback = callback;
             m_KeepAliveRoutine = Runnable.Run(KeepAlive());
-            m_LastKeepAlive = Time.time;
+            m_LastKeepAlive = DateTime.Now;
 
             return true;
         }
@@ -303,6 +303,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                 stop["action"] = "stop";
 
                 m_ListenSocket.Send(new WSConnector.TextMessage(Json.Serialize(stop)));
+                m_LastStartSent = DateTime.Now;     // sending stop, will send the listening state again..
                 m_ListenActive = false;
             }
         }
@@ -314,7 +315,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
             {
                 yield return null;
 
-                if (Time.time > (m_LastKeepAlive + WS_KEEP_ALIVE_TIME))
+                if ( (DateTime.Now - m_LastKeepAlive).TotalSeconds > WS_KEEP_ALIVE_TIME )
                 {
                     Dictionary<string, string> nop = new Dictionary<string, string>();
                     nop["action"] = "no-op";
@@ -323,7 +324,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                     Log.Debug( "SpeechToText", "Sending keep alive." );
 #endif
                     m_ListenSocket.Send(new WSConnector.TextMessage(Json.Serialize(nop)));
-                    m_LastKeepAlive = Time.time;
+                    m_LastKeepAlive = DateTime.Now;
                 }
             }
             Log.Debug( "SpeechToText", "KeepAlive exited." );
