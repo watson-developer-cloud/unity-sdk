@@ -72,7 +72,6 @@ namespace IBM.Watson.Widgets.Avatar
         private int m_NumberOfLightFlare = 3;
 		private LightIndicatorAnimationState m_AnimationState = LightIndicatorAnimationState.NOT_PRESENT;
 		private LightIndicatorAnimationState m_AnimationStatePrevious = LightIndicatorAnimationState.NAN;
-		private float m_AnimationDirection = 1.0f; //1.0f is normal direction = clock-wise rotation on Avatar. -1 = counter clock-wise rotation
 
         [SerializeField]
         private GameObject[] m_LightFlarePivotParentList;
@@ -503,7 +502,6 @@ namespace IBM.Watson.Widgets.Avatar
 					if (o is int){
 						int indexPivot = (int)o;
 						int currentLoop = LeanTween.descr(MoveAnimationOnFlare[indexPivot]).loopCount;
-						float direction = LeanTween.descr(MoveAnimationOnFlare[indexPivot]).direction;
 
 						float currentLoopNormalized = currentLoop / (numberOfLoopOnNotUnderstanding * 2.0f);
 						//float valueToBe = initialValue + (f - initialValue) * currentLoopNormalized;
@@ -564,16 +562,11 @@ namespace IBM.Watson.Widgets.Avatar
 
             if (animationTime > 0.0f)
             {
-				float initialTimeModifier = 1.0f;
                 for (int i = 0; i < m_LightFlarePivotParentList.Length; i++)
                 {
 					float lastValue = LastValueAnimationFlare[i];
 					float targetRatioInital = ((1.0f/ m_NumberOfLightFlare) * i);
 					float targetRatioEnd = (1.0f/ m_NumberOfLightFlare) * (i + 1);
-
-					if(i == 0){
-						initialTimeModifier = Mathf.Abs(lastValue - targetRatioInital);
-					}
 
 					if(LastValueAnimationFlare[i] > targetRatioEnd){
 						targetRatioInital += 1.0f;
@@ -671,7 +664,6 @@ namespace IBM.Watson.Widgets.Avatar
             StopLightFlareAnimation();
 			AnimationState = LightIndicatorAnimationState.ANSWERING;
            
-            float timeToGoMouthPosition = 0.9f;
             LeanTweenType easeForMoveToMouthPosition = LeanTweenType.easeInOutCirc;
 			float animationTime = 0.5f;
             //Log.Status("LightRingManager", "AnimateLightFlareForAnswering: {0}", m_LightFlarePivotParentList.Length);
