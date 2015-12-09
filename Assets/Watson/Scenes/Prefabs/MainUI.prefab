@@ -312,27 +312,43 @@ MonoBehaviour:
   - m_SceneName: ExampleDialog
     m_SceneDesc: Example Dialog
     m_CustomBackButtonPosition: {x: 0, y: 0, z: 0}
+    m_CustomBackButtonScale: {x: 0, y: 0}
+    m_IsVisibleBackButton: 1
   - m_SceneName: ExampleTranslation
     m_SceneDesc: Example Translation
     m_CustomBackButtonPosition: {x: 0, y: 0, z: 0}
+    m_CustomBackButtonScale: {x: 0, y: 0}
+    m_IsVisibleBackButton: 1
   - m_SceneName: TestMic
     m_SceneDesc: Microphone
     m_CustomBackButtonPosition: {x: 0, y: 0, z: 0}
+    m_CustomBackButtonScale: {x: 0, y: 0}
+    m_IsVisibleBackButton: 1
   - m_SceneName: TestNLC
     m_SceneDesc: Natural Language Classifier (NLC)
     m_CustomBackButtonPosition: {x: 0, y: 0, z: 0}
+    m_CustomBackButtonScale: {x: 0, y: 0}
+    m_IsVisibleBackButton: 1
   - m_SceneName: TestSTT
     m_SceneDesc: Speech To Text (STT)
     m_CustomBackButtonPosition: {x: 0, y: 0, z: 0}
+    m_CustomBackButtonScale: {x: 0, y: 0}
+    m_IsVisibleBackButton: 1
   - m_SceneName: TestTTS
     m_SceneDesc: Text To Speech (TTS)
     m_CustomBackButtonPosition: {x: 0, y: 0, z: 0}
+    m_CustomBackButtonScale: {x: 0, y: 0}
+    m_IsVisibleBackButton: 1
   - m_SceneName: UnitTests
     m_SceneDesc: Unit Tests
     m_CustomBackButtonPosition: {x: 0, y: -400, z: 0}
+    m_CustomBackButtonScale: {x: 0, y: 0}
+    m_IsVisibleBackButton: 1
   - m_SceneName: XRay
     m_SceneDesc: XRay
-    m_CustomBackButtonPosition: {x: -10, y: -30, z: 0}
+    m_CustomBackButtonPosition: {x: -30, y: 0, z: 0}
+    m_CustomBackButtonScale: {x: 120, y: 120}
+    m_IsVisibleBackButton: 0
 --- !u!114 &11461980
 MonoBehaviour:
   m_ObjectHideFlags: 1
