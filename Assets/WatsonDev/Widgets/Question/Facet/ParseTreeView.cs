@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
 using IBM.Watson.DataModels.XRAY;
+using UnityEngine.UI;
 
 namespace IBM.Watson.Widgets.Question
 {
@@ -210,8 +211,7 @@ namespace IBM.Watson.Widgets.Question
 			}
 			
 			if(parentRectTransform != m_ParseCanvasRectTransform)
-				CreateArrow(parentWordRectTransform, wordRectTransform);
-
+				CreateArrow(parentWordRectTransform.GetComponentInChildren<Text>().gameObject.GetComponent<RectTransform>(), wordGameObject.transform.GetComponentInChildren<Text>().gameObject.GetComponent<RectTransform>());
 			StartCoroutine(PositionWord(wordRectTransform, parentRectTransform));
 		}
 
@@ -299,7 +299,7 @@ namespace IBM.Watson.Widgets.Question
 			parseTreeArrowScript.ParentRectTransform = parentRectTransform;
 			parseTreeArrowScript.ChildRectTransform = childRectTransform;
 
-			arrowRectTransform.SetParent(parentRectTransform, false);
+			arrowRectTransform.SetParent(parentRectTransform.parent.transform, false);
 		}
 
         /// <summary>

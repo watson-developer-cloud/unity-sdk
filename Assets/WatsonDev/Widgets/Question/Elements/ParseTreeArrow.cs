@@ -34,36 +34,43 @@ namespace IBM.Watson.Widgets.Question
 		//	test update
 		public void UpdateArrow()
 		{
+
+
 			Vector3 localStartPoint = new Vector3(0f, -ParentRectTransform.rect.height/2 - 10f, 0f);
 			Vector3 localEndPoint = GetPositionInCanvasSpace(ChildRectTransform) - GetPositionInCanvasSpace(ParentRectTransform) + new Vector3(0f, ChildRectTransform.rect.height/2, 0f);
-
+//			Log.Debug("ParseTreeArrow", "localStartPoint: " + localStartPoint);
+//			Log.Debug("ParseTreeArrow", "localEndPoint: " + localEndPoint);
+//
 			RectTransform rectTransform = gameObject.GetComponent<RectTransform>();
 			rectTransform.anchoredPosition = localStartPoint;
-
-
-			Vector3 direction = localEndPoint - localStartPoint;
-			direction = ParentRectTransform.InverseTransformDirection(direction);
+		
+			Vector3 direction = (localEndPoint - localStartPoint).normalized;
+//			direction = ParentRectTransform.InverseTransformDirection(direction);
+//			float angle = Vector3.Angle(GetPositionInCanvasSpace(ChildRectTransform), GetPositionInCanvasSpace(ParentRectTransform)) * Mathf.Rad2Deg - 90f;
 			float angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg - 90f;
-
-			rectTransform.rotation = Quaternion.Euler(new Vector3(0f, 0f, -angle));
-
+//
+////			float angle = Vector2.Angle(GetPositionInCanvasSpace(ParentRectTransform), GetPositionInCanvasSpace(ChildRectTransform));
+//			float angle = Vector2.Angle(ParentRectTransform.position, ChildRectTransform.position);
+			rectTransform.localRotation = Quaternion.Euler(new Vector3(0f, 0f, -angle));
+//			rectTransform.localRotation = angle;
+//
+			//	length of arrow
 			float dist = Vector3.Distance(localStartPoint, localEndPoint);
 			Vector3 tempSizedelta = rectTransform.sizeDelta;
 			tempSizedelta.x = dist;
 			rectTransform.sizeDelta = tempSizedelta;
-			rectTransform.SetParent(ParentRectTransform, false);
+//			rectTransform.SetParent(ParentRectTransform, false);
 		}
 
 		private Vector3 GetPositionInCanvasSpace(RectTransform rectTransform)
 		{
-			Vector3 resultPoint = Vector3.zero;
+			Vector3 resultPoint = Vector3.left;
 			RectTransform[] rectTransformArray = rectTransform.GetComponentsInParent<RectTransform>();
 
 			foreach(RectTransform parentRectTransform in rectTransformArray)
 			{
 				resultPoint += parentRectTransform.localPosition;
 			}
-
 			return resultPoint;
 		}
 	}
