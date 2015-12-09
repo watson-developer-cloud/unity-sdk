@@ -36,7 +36,7 @@ namespace IBM.Watson.Widgets.Question
 		private int m_AnimationTextScale = -1;
 		private int m_AnimationTextAlpha = -1;
 
-        private bool m_IsHighlighted = false;
+        private bool m_IsHighlighted = true;
         public bool IsHighlighted
         {
             get { return m_IsHighlighted; }
