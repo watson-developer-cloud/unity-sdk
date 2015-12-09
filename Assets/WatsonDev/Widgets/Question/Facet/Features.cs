@@ -69,7 +69,7 @@ namespace IBM.Watson.Widgets.Question
                         if (i >= m_MaxFeatures)
                             break;
 
-                        GameObject featureItemGameObject = Instantiate(m_FeatureItemPrefab, new Vector3(95f, -i * 50f - 150f, 0f), Quaternion.identity) as GameObject;
+                        GameObject featureItemGameObject = Instantiate(m_FeatureItemPrefab, new Vector3(269f, -i * 50f - 150f, 0f), Quaternion.identity) as GameObject;
                         RectTransform featureItemRectTransform = featureItemGameObject.GetComponent<RectTransform>();
                         featureItemRectTransform.SetParent(m_FeaturesCanvasRectTransform, false);
                         FeatureItem featureItem = featureItemGameObject.GetComponent<FeatureItem>();
