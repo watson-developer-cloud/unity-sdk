@@ -148,7 +148,8 @@ namespace IBM.Watson.Editor
 
         static void UpdateRunnable()
         {
-            Runnable.Instance.UpdateRoutines();
+            if (! Application.isPlaying )
+                Runnable.Instance.UpdateRoutines();
         }
 
         [MenuItem("Watson/NLC Editor", false, 2)]
