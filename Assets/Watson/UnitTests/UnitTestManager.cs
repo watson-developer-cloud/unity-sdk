@@ -233,7 +233,8 @@ public static class RunUnitTest
 
     static void UpdateRunnable()
     {
-        Runnable.Instance.UpdateRoutines();
+        if (! Application.isPlaying )
+            Runnable.Instance.UpdateRoutines();
     }
 
     static void OnTestsComplete()
