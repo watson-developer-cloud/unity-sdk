@@ -71,7 +71,7 @@ namespace IBM.Watson.Widgets.Question
                 }
 
                 UpdateHighlightedWord();
-				PositionParseTree(WordIndex);
+//				PositionParseTree(WordIndex);
             }
         }
 
@@ -372,26 +372,28 @@ namespace IBM.Watson.Widgets.Question
 			}
         }
 
-		private void PositionParseTree(int index)
-		{
-			Vector2 relativeWordPosition = GetPositionInCanvasSpace(m_WordListSorted[index].GetComponent<RectTransform>());
-			LeanTween.move(m_ParseCanvasRectTransform, m_ParseCanvasRectTransform.anchoredPosition - relativeWordPosition, 1.75f).setEase( LeanTweenType.easeOutQuad );
-		}
-
-		private Vector2 GetPositionInCanvasSpace(RectTransform rectTransform)
-		{
-			Vector2 resultPoint = Vector2.zero;
-			RectTransform[] rectTransformArray = rectTransform.GetComponentsInParent<RectTransform>();
-			
-			foreach(RectTransform parentGORectTransform in rectTransformArray)
-			{
-				resultPoint += parentGORectTransform.anchoredPosition;
-			}
-
-			//	remove mask transform
-			resultPoint -= new Vector2(-52f, -278f);
-
-			return resultPoint;
-		}
+		//	methods for shifting parse tree to focused word - call PositionParseTree on index change 
+//		private void PositionParseTree(int index)
+//		{
+//			//	to focus on word
+//			Vector2 relativeWordPosition = GetPositionInCanvasSpace(m_WordListSorted[index].GetComponent<RectTransform>());
+//			LeanTween.move(m_ParseCanvasRectTransform, m_ParseCanvasRectTransform.anchoredPosition - relativeWordPosition, 1.75f).setEase( LeanTweenType.easeOutQuad);
+//		}
+//
+//		private Vector2 GetPositionInCanvasSpace(RectTransform rectTransform)
+//		{
+//			Vector2 resultPoint = Vector2.zero;
+//			RectTransform[] rectTransformArray = rectTransform.GetComponentsInParent<RectTransform>();
+//			
+//			foreach(RectTransform parentGORectTransform in rectTransformArray)
+//			{
+//				resultPoint += parentGORectTransform.anchoredPosition;
+//			}
+//
+//			//	remove mask transform
+//			resultPoint -= new Vector2(-52f, -278f);
+//
+//			return resultPoint;
+//		}
     }
 }
