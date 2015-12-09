@@ -91,7 +91,7 @@ namespace IBM.Watson.Widgets
  	                m_STT.StopListening();
 	                if ( m_StatusText != null )
 	                    m_StatusText.text = "READY";
-                   }
+                }
             }
         }
         #endregion
@@ -121,6 +121,12 @@ namespace IBM.Watson.Widgets
             if (! m_STT.GetModels( OnGetModels ) )
                 Log.Error( "SpeechToTextWidget", "Failed to rquest models." );
 	    }
+
+        private void OnDisable()
+        {
+            if ( Active )
+                Active = false;
+        }
 
 	    private void OnError( string error )
 	    {
