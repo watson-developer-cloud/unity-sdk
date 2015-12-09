@@ -60,9 +60,9 @@ namespace IBM.Watson.Widgets.Question
             if (FeatureString != "")
             {
                 gameObject.SetActive(true);
-                if (FeatureString.Length > 15)
+                if (FeatureString.Length > 20)
                 {
-                    string temp = FeatureString.Substring(0, 15);
+                    string temp = FeatureString.Substring(0, 20);
                     m_FeatureText.text = temp + "...";
                 }
                 else
