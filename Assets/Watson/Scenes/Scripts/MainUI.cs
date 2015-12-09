@@ -30,6 +30,8 @@ public class MenuScene{
 	public string m_SceneName;
 	public string m_SceneDesc;
 	public Vector3 m_CustomBackButtonPosition = Vector3.zero;
+	public Vector2 m_CustomBackButtonScale = Vector2.zero;
+	public bool m_IsVisibleBackButton = true;
 }
 
 public class MainUI : MonoBehaviour
@@ -43,6 +45,8 @@ public class MainUI : MonoBehaviour
 	[SerializeField]
 	private RectTransform m_ButtonBack = null;
 	private Vector3 m_InitialBackButtonPosition;
+	private Vector3 m_InitialBackButtonScale;
+	private Color m_InitialBackButtonColor;
 
     [SerializeField]
 	private MenuScene [] m_Scenes = null;
@@ -86,8 +90,23 @@ public class MainUI : MonoBehaviour
             throw new WatsonException( "m_ButtonPrefab is null." );
 		if ( m_ButtonBack == null )
 			throw new WatsonException( "m_ButtonBack is null." );
-		else
-			m_InitialBackButtonPosition = m_ButtonBack.GetComponent<RectTransform>().anchoredPosition3D;
+		else{
+			if(m_ButtonBack.GetComponent<RectTransform>() != null){
+				m_InitialBackButtonPosition = m_ButtonBack.GetComponent<RectTransform>().anchoredPosition3D;
+				m_InitialBackButtonScale = m_ButtonBack.GetComponent<RectTransform>().sizeDelta;
+			}
+			else{
+				throw new WatsonException( "m_ButtonBack doesn't have RectTransform" );
+			}
+
+			if(m_ButtonBack.GetComponent<Image>() != null){
+				m_InitialBackButtonColor = m_ButtonBack.GetComponentInChildren<Image>().color;
+			}
+			else{
+				throw new WatsonException( "m_ButtonBack doesn't have Image" );
+			}
+
+		}
         // wait for the configuration to be loaded first..
         while (!Config.Instance.ConfigLoaded)
             yield return null;
@@ -156,13 +175,30 @@ public class MainUI : MonoBehaviour
 			if(m_Scenes[i].m_SceneName == name){
 				if(m_Scenes[i].m_CustomBackButtonPosition != Vector3.zero){
 					m_ButtonBack.anchoredPosition3D = m_Scenes[i].m_CustomBackButtonPosition;
+					ChangeVisibilityOfButton(m_ButtonBack, m_Scenes[i].m_IsVisibleBackButton);
 				}
 				else{
 					m_ButtonBack.anchoredPosition3D = m_InitialBackButtonPosition;
+					ChangeVisibilityOfButton(m_ButtonBack, true);
 				}
+
+				if(m_Scenes[i].m_CustomBackButtonScale != Vector2.zero){
+					m_ButtonBack.sizeDelta = m_Scenes[i].m_CustomBackButtonScale;
+				}
+				else{
+					m_ButtonBack.sizeDelta = m_InitialBackButtonScale;
+				}
+
 				break;
 			}
 		}
+	}
+
+	private void ChangeVisibilityOfButton(RectTransform buttonBack, bool isVisible){
+		if(buttonBack.GetComponentInChildren<Text>() != null)
+			buttonBack.GetComponentInChildren<Text>().enabled = isVisible;
+		if(buttonBack.GetComponentInChildren<Image>() != null)
+			buttonBack.GetComponentInChildren<Image>().color = isVisible ? m_InitialBackButtonColor : new Color(m_InitialBackButtonColor.r, m_InitialBackButtonColor.g, m_InitialBackButtonColor.b, 0.0f);
 	}
 
     public void OnBack()
