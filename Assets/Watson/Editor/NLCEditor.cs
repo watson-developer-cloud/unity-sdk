@@ -138,18 +138,8 @@ namespace IBM.Watson.Editor
             titleContent.text = "NLC Editor";
 #endif
             m_WatsonIcon = (Texture2D)Resources.Load(Constants.Resources.WATSON_ICON, typeof(Texture2D));
-            EditorApplication.update += UpdateRunnable;
-        }
 
-        private void OnDisable()
-        {
-            EditorApplication.update -= UpdateRunnable;
-        }
-
-        static void UpdateRunnable()
-        {
-            if (! Application.isPlaying )
-                Runnable.Instance.UpdateRoutines();
+            Runnable.EnableRunnableInEditor();
         }
 
         [MenuItem("Watson/NLC Editor", false, 2)]
