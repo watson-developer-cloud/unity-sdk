@@ -1,0 +1,389 @@
+subconj	Subordinate conjunction, like if, after, ...
+conj	Coordinate conjunction, like and, or, ...
+qual	Qualifier, like very, even. Can modify adverbs and adjectives, not verbs.
+subinf	For multiwords like in order to and so as to that act like preinfinitve to for infinitive verbs.
+infto	The preinfinitive sense of to, or analogs in the other languages.
+forto	The sense of for in for-to constructions like for John to be there.
+thatconj	The subordinate conjunction sense of that (or que, che, da\ss).
+special	A catch-all category for special "words" like apostrophe-s.
+incomplete	Used as the part-of-speech category for the top node of an incomplete parse.
+comcord	Comma-delimited coordination.
+cord	Indicating head of coordination.
+badvenadj	A past participle of such a verb does not easily fill the nadj slot. Example: said.
+comppref	Lexical feature to favor comp slot analysis.
+gerund	This gets marked on an ing-verb that has become a gerund, as in the barking of the dogs.
+infveden	Citation form can be an infinitive or past or a past participle -- like put.
+infven	Citation form can be an infinitive or a past participle -- like become.
+ingprep	A verb whose ing form behaves like a preposition. Example: concern.
+invertv	A verb (like arise or come) that allows its subject on the right and a comp PP or there left modifier.
+npref	Prefers to modify nouns over verbs, as head of non-finite VP.
+objpref	Verb preferring NP object over finite clause or that-complement.
+postcomp	Means that the verb cannot have a comp slot filler preceding a filler of (obj n).
+propsubj	A verb sense whose slot frame includes (subj v).
+q	Question clause.
+relvp	Relative clause.
+sayv	Lexical feature for say verbs.
+se	German verb that takes sein for the present perfect.
+sta	Stative verb.
+thatcpref	Verb allowing both finite VP or that-complement but preferring the latter.
+transalt	Verb (like increase) allowing transitivity alternation. The theme (the entity undergoing change) can be either the direct object or the subject (when no direct object is given).
+vcond	Conditional mood.
+vdep	Dependent clause.
+ved	Preterite form of verb (ex: became).
+veden	Past participle and preterit forms are identical (ex: abandoned).
+ven	Past participle.
+vfin	Finite verb.
+vfinf	German infinitive verb modified by zu.
+vfut	Future tense (for Latin languages).
+vimperf	Imperfect (for Latin languages).
+vimpr	Imperative VP.
+vind	Indicative mood.
+vindep	Indepedent clause.
+vinf	Infinitive.
+ving	Present participle.
+virreg	Morphological feature for verbs with irregular inflection (used in Romance languages).
+vlast	VP whose last modifier is another VP.
+vobjc	(For GSG) a verb with an overtly filled obj or iobj.
+vobjnom	(For GSG) a verb with a nominative overtly filled obj.
+vpass	Passive ven verb, as in he was taken.
+vpast	Past tense.
+vperfcond	Morphological feature for ambiguous forms of past perfect or pluperfect and conditional (used in Romance languages).
+vpers1	First person.
+vpers2	Second person.
+vpers3	Third person.
+vpinf	Used in Brazilian Portuguese for class of verbs.
+vpluperf	Pluperfect (for Latin languages).
+vpref	Prefers to modify verbs over nouns, as head of non-finite VP.
+vpres	Present tense.
+vrelv	Verb that easily allows a relative clause modifier of its subject to right-extraposed.
+vsbjnc	Subjunctive.
+vsubj	VP with overtly filled subject.
+vthat	Relative clause with that as the relative pronoun.
+whever	A clause like whatever you see or whichever road you take that is modified by an extraposed wh-ever NP.
+acc	Accusative.
+advnoun	A noun that can behave adverbially. Main examples: time nouns and locative nouns.
+cn	Common noun.
+collectn	Lexical feature indicating that noun is a group.
+cpropn	Proper noun, like "Dane" or "Italian", that is like a common noun in denoting a class.
+dat	Dative.
+def	Definite pronoun.
+detr	Noun requiring a determiner when it (the noun) is singular.
+dy	Feature to indicate "day" (time-wise).
+encprn	Can be an enclitic (for the Latin languages).
+f	Feminine.
+gen	Genitive.
+glom	A multiword noun obtained by agglomerating certain capitalized nouns in sequence.
+goodap	Can easily be a right conjunct in comma coordination even though it itself is not coordinated.
+hplmod	Noun that allows a plural nnoun modifier.
+indef	Indefinite pronoun.
+iobjprn	Can be non-clitic iobj (Latin languages).
+lmeas	Linear measure.
+loc	Locative.
+locnoun	Locative noun (ex: east).
+meas	Measure.
+mf	Masculine or feminine.
+mo	Month.
+nadjpn	Pronoun that can fill nadj and must agree with head noun (Latin languages).
+nadvn	Noun that can fill nadv and must agree with head noun (Latin languages).
+nom	Nominative.
+nonn	A noun that cannot have an nnoun modifier.
+notnnoun	A noun that cannot be an nnoun modifier.
+npremod	Can be a noun premodifier of a noun even though it is also an adjective.
+nt	Neuter.
+num	A number noun.
+objpprn	Can be object of preposition (Latin languages).
+objprn	Can be non-clitic obj (Latin languages).
+oreflprn	Can be use only as a reflexive (Latin languages).
+percent	A percent number noun.
+pers1	First person.
+pers2	Second person.
+pers3	Third person.
+perspron	Personal pronoun.
+plmod	Noun that can be an nnoun even when it is plural.
+posit	Position (like middle or end).
+poss	Possesive pronoun.
+procprn	Can be proclitic (Latin languages).
+pron	Pronoun.
+propcn	Semantic type in ontology file (not used).
+propn	Proper noun.
+quantn	Denotes a quantity (like all or half).
+reflprn	Reflexive pronoun.
+relnp	An NP that can be the relativizer of a relative clause.
+title	A title
+tm	Time.
+tma	Time for period span (ex: week).
+tmdetr	Noun that indicates time and takes a determiner (ex: winter).
+tmrel	Noun that indicates time and takes relative clause (ex: time).
+tonoun	A noun, like school, that can by itself (without premodifiers) be the objprep of to, even though it is also a verb.
+uif	Uninflected.
+way	Manner/way.
+whevern	An NP like whatever or whichever road.
+adjnoun	Adjectives like poor that can have a the premodifier and act like the head of an NP.
+adjpass	An adjective like delighted that is also a past participle, but the past participle is not allowed to fill pred(en).
+aqual	(For German) an adjective, like denkbar that can premodify an adverb (filling advpre).
+badpre	Adjective not preferred in predicate (ex: near).
+compar	Comparative.
+detadj	Adjectives like next and last that have an implicit definite article.
+erest	Can use -er and -est for comparative and superlative. Applies to adverbs too
+lmeasadj	Adjective like high allowing constructions like three feet high.
+noadv	(For German) an adjective that cannot be used as an adverb.
+noattrib	Not allowed as filler of nadj.
+nocompa	Not allowed as filler of comp(a).
+nocompare	Not allowing comparison (for Latin languages).
+nopred	Not allowed as filler of pred.
+novadj	Adjective unlikely to fill vadj slot (ex: other).
+nqual	Adjectives like medium that allow constructions like a medium quality car.
+possadj	Adjective that indicates possession (Romance languages).
+post	Adjective like available that can easily postmodify a noun, as in the first car available.
+soadjp	Gets put by the grammar on an adjective phrase like so good to allow that phrase to fill nadv in an NP like so good a person. This is done when the adjective (like good) is premodified by a qualifier marked soqual.
+superl	Superlative.
+thatmod	'that' being used as a modifier
+tmadj	A time adjective like early.
+tmeasadj	Adjective that conveys idea of time (ex: old).
+toadj	Similar to tonoun.
+adjmod	Adverb that is adjective too (ex: likely).
+amtmoda	Adverb indicating approximation (ex: about).
+badadjmod	Preferred not to modify adjective.
+compar	Comparative.
+conjadv	Adverb that can function as coordinator (ex: also).
+detadv	Can modify a determiner.
+geodir	Geographical direction (ex: east).
+initialmod	Modifies on left only as first modifier.
+interj	An interjection.
+introadv	Adverb like hello that easily left-coordinates by comma-coordination.
+invertadv	Adverb that allows certain constructions Adv Verb Subj.
+loadv	Easily modifies a locational prep or adverb (particle).
+locadv	Locative adverb like above.
+motion	Motion (ex: down).
+noadvpre	Cannot have (qualifier) premodifier.
+nopadv	Cannot modify preposition.
+notadjmod	Cannot modify an adjective.
+notinitialmod	Cannot appear clause-initially.
+notleftmod	Cannot modify verb on left.
+notnadv	Cannot premodify a noun.
+notrightmod	Cannot modify verb on right.
+nounadv	Can modify noun.
+nperadv	Can fill nper slot for nouns, like apiece and each.
+npost	Can postmodify a noun in slot nadjp.
+partf	Adverb that can be a particle (also applies to prepositions that can be particles).
+post	Can postmodify (like enough).
+ppadv	Can modify preposition (with no penalty).
+prefadv	Adverb analysis as vadv is preferred over noun analysis as obj.
+reladv	For Spanish, an adverb like cuando that can create a relative clause.
+superl	Superlative.
+thereprep	Adverb like thereafter, thereof, ....
+tmadv	Time adverb like before, early, ....
+vpost	Cannot modify a finite verb on the left.
+all	Only for the determiner all.
+ingdet	Marked on possdets and the. Can premodify present participle verbs.
+possdet	Possessive pronoun as determiner.
+prefdet	Preferred as determiner (over other parts of speech).
+reldet	For Spanish, a determiner like cuyo that can create an NP serving as relativizer.
+the	Marked only on the.
+badattrib	If it modifies an adjective, then that adjective cannot fill nadj slot.
+c	Modifies only comparative adverbs.
+post	Can postmodify.
+pre	Can premodify (the default).
+soqual	See soadjp for adjectives above.
+wh	wh-word (ex: how).
+assc	For as (or analogs in other languages).
+comparsc	For assc or thansc.
+finsc	Allows only finite clause complements (filling sccomp).
+notleftsc	A clause with this as head cannot left-modify a clause (as vsubconj). Example: for.
+okadjsc	Allows adjective complement.
+oknounsc	Allows noun complement.
+oknsubconj	Can fill nsubconj.
+poorsubconj	Preferred not as subconj.
+sbjncsc	For the Latin languages: Suppose a subjconj S has a finite clause complement C (C is filler of sccomp). Then S must be marked sbjncsc if C is marked vsbjnc (subjunctive) but not vind (indicative). And if S is marked sbjncsc and C is marked vsbjc, then remove vind from C if it is present.
+thansc	For than (or analogs in other languages).
+timesc	Subordinate conjunction indicating time (ex: before).
+tosc	Allows infto complement.
+whsc	A wh-subconj (like whether).
+accobj	(For German) allows the objprep to be accusative.
+adjobj	(For German) allows the objprep to be an adjective or past participle phrase.
+amtmod	Preposition (multiword) that indicates motion (ex: up to).
+asprep	For as and analogs in other languages.
+badcoord	Preposition not preferred in coordination (ex: except).
+badnprep	Preposition not preferred as preposition to noun (ex: because of).
+badobjping	Cannot have a ving objprep (under certain conditions).
+daprep	For German. For PPs like dabei and darauf. A word da+Prep is unfolded to a PP with head Prep marked daprep and objprep filled by es.
+datobj	(For German) allows the objprep to be dative.
+genobj	(For German) allows the objprep to be genitive.
+hasadjobj	(For German) the objprep is an adjective or past participle phrase.
+infobj	(For Latin languages) has an objprep that is an infinitive VP.
+locmp	Used for multiword prepositions that fill comp(lo).
+locprep	Prepostion indicating location (ex: near).
+motionp	Prefers not to fill comp if the matrix verb is marked sta.
+nonlocp	Cannot be a filler of comp(lo).
+notwhpp	Cannot have wh objprep (under certain conditions).
+pobjp	The objprep can be a PP itself. Example: from.
+ppost	The preposition can follow the objprep. If the preposition is marked ppost but not ppre, then the preposition must be on the right.
+ppre	The preposition can precede the objprep. There is no need to mark this feature on the preposition, in order to allow the preposition to be on the left, unless the preposition is marked ppost.
+pprefn	Prefers to modify nouns.
+pprefv	Prefers to modify verbs.
+preflprn	Marked by the grammar on a PP when the objprep is a reflexive pronoun.
+proplocpp	To mark modifier of locative preposition.
+proptmpp	To mark modifier of temporal preposition.
+relpp	A PP that can serve as a relativizer for a relative clause.
+staticp	Preposition like in or on that is used normally to represent static location vs. goal of motion (as with into and onto).
+thatcobj	...
+timep	Common modifier of time nouns, as in two days after the meeting.
+timepp	For certain PPs where the objprep is a time noun.
+woprep	Like daprep, but with wo instead of da.
+abst	Abstraction.
+accomp	Accomplishment, achievment. < act.
+act	Act by a human.
+activity	Activity (ex: "dancing").
+actor	Person, professional or amateur, who acts; Actor (ex: "pantomimer").
+agreement	Exchange of promises.
+ameas	Unit of area measure. < meas.
+anml	Animal.
+art	Learned superior skill.
+artcomp	Artistic composition – includes litcomp, musicomp, show.
+artf	Artifact. < physobj.
+artist	In the general sense of person doing creative work, not just visual arts.
+athlete	Athlete (ex: "alpinist").
+biz	A business, commercial enterprise. < org.
+bodyofwater	Body of water.
+capitalist	Person who invests capital in a (large) business.
+century	Named century like "300 B.C.".
+change	Action of going from one state to another, result of that action.
+chngmag	Change magnitude/size (verb type).
+clothing	For item of clothing or an accessory (ex: "sock", "anklet").
+cmeas	Unit of volume measure. < meas.
+cognition	Result of perception, learning, reasoning.
+cognsa	Cognitive state or activity.
+coll	Collection. Largely > collectn. Includes nouns like "shrubbery" that don't highlight the set nature as much.
+collectn	Collective noun dealing overtly with a set – like "set", "group", "family".
+comdoc	Commercial document.
+comm	Communication – something communicated between people. < abst.
+communicator	Writer, reporter, broadcaster, etc.
+composer	For individual who composes music-based creation (ex: "songwriter").
+concept	For noun indicating a concept (ex: "assumption").
+cond	Condition – state at a given time.
+container	Something that can hold or include (ex: "box").
+cpropn	Common proper noun. A propn, like "German" that can name a class, and so is like a common noun.
+create	Cause sth to exist or become (verb type).
+creation	An artf created by person(s).
+creator	Person who creates things skillfully.
+cst	State or province in a country.
+ctitle	A postposed company title, like "Inc." or "Co.".
+ctry	Named country.
+cty	Named city.
+dance	Act of dancing.
+dancer	Person who performs dances (ex: "ballerina").
+device	Instl invented for a particular purpose.
+discipline	Branch of knowledge.
+doc	Document.
+dy	Day. Named weekdays like Tuesday or named holiday days.
+emeas	Unit of electromagnetic measure. < meas.
+engineer	Professional (ex: "programmer").
+entertainer	Person, professional or amateur, who is in show business (ex: "actor").
+era	Time period (ex: "antiquity").
+evnt	Event.
+expert	Person knowledgeable in a knowledge domain or very good at doing something (ex: "adjuster").
+facility	Building or place providing a service. < artf.
+feeling	Feeling, emotion.
+geoarea	Geographical area, demarcated area of the earth. < location.
+geoform	Geological formation. < natent.
+geopol	Named geopolitical unit – like ctry, cst, cty.
+gname	Human given name.
+goodperson	Benefactor, philanthropist, etc.
+govseat	Government seat ("capital", etc.).
+groupact	Group action (by humans). < act.
+h	Human individual
+hdofstate	Head of state.
+hg	Human group.
+hi	Human individual.
+imeas	Unit of illumination measure. < meas.
+inst	Instrument. Device that requires skill to use. < device < instl.
+instl	Instrumentality. Artifact(s) instrumental in accomplishing some end.
+instt	Institution, establishment. < org.
+intellectual	Person who does not used hands but brains to perform tasks (ex: "academician").
+langunit	Language unit, like word, discourse, etc.
+leader	Person expert in some knowledge domain or at leading others (ex: "bishop").
+legaldoc	Legal document.
+litcomp	Literary composition.
+liv	Living thing.
+lmeas	Unit of linear measure. < meas.
+loc	Pronoun for location, like "here", "anywhere" or certain general locational common nouns like "outside".
+location	Point or region in space.
+locn	Named location – like a geopol or an ocean.
+locnoun	Noun like "here" or "east" that can function adverbially or fill comp(lo). > loc.
+m	Male.
+massn	Mass noun.
+material	...
+meas	Unit of measure.
+mmeas	Unit of money. < meas.
+mo	Month. Named months like October.
+monarch	Sole hereditary ruler of state or nation (ex: "czar").
+money	Currency, coins, medium that can be exchanged for goods and/or services (ex: "fund").
+move	Change locations (verb type).
+movie	Motion picture (ex: "movie").
+musician	...
+musicomp	Musical composition.
+name	Usual sense. < langunit.
+natent	Natural entity (not made by humans). < physobj.
+natlang	Natural language.
+natphenom	Natural phenomenon.
+ntitle	A postposed part of a human name like "Jr." or "Sr.".
+org	Organization, group of humans that work together. < hg.
+percent	Percent expression.
+performer	Person who acts or plays music (ex: "accompanist").
+personage	Influential person.
+physobj	Physical object.
+physphenom	Physical phenomenon. < natphenom.
+place	Area set aside for a purpose. < geoarea < location.
+plant	Multicellular organism that produces its own food by photosynthesis (ex: "fir").
+plantmaterial	Material derived from plants (ex: "bamboo").
+play	A dramatic work.
+preserver	Person who keeps others safe, e.g. "policenman".
+process	Sequence of events of change.
+professional	A person who has a learned profession.
+propcn	A common noun, like "society" or "mathematics", that can name a single entity and function like a propn – sometimes capitalized, especially in older writing.
+property	(Synonym of "attribute").
+psychofea	Phychological feature – like cognition or feeling.
+ptitle	A postposed human title, like "Ph.D." or "M.D.".
+quantn	Quantity pronoun like "more", "half", or ordinal number or collectn noun.
+relative	Person related by blood or marriage.
+relig	Named religion. < instt.
+rlent	Role entity. An entity (usually person) viewed as having a particular role – includes many human roles like leader, artist, engineer, ...
+rmeas	Relation between measures, like rate or scale.
+saying	Expression or locution.
+sayv	Verb of saying (verb type).
+sbst	Substance.
+scientist	Expert in natural or physical sciences (ex: "physicist").
+show	Public exhibition or entertainment.
+sname	Human surname.
+socialevent	Human social event.
+sound	Sensation produced by vibrations to ears, auditory effect, noise (ex: noisiness).
+speechact	Speech act, e.g. request, command, promise.
+sport	Sport. Athletic activity (ex: acrobatics).
+sta	Stative (not change of state) (verb type).
+strct	Structure (thing constructed). < artf.
+title	Human title, like "President" or "Professor".
+tm	Time noun, like "year" or "yesterday".
+tma	Time noun, usually a pron or propn, or that behaves as such – e.g. "now", "tomorrow".
+tmdetr	Time noun, like "season", that requires a determiner in order to act adverbially.
+tmeas	Unit of temperature measure. < meas.
+tmperiod	Time period.
+tmrel	Time noun allowing certain finite clauses as nrel modifiers.
+tool	Implement used in practice of a vocation. < instl.
+trait	Distinguishing feature of personal nature.
+transaction	Process, exchange (ex: "arbitrage").
+transalt	Transitivity alternation – verb (like "increase") where the THEME can be subj or obj (verb type).
+traveler	Person who moves about for business or pleasure (ex: "alien").
+uspres	U.S. president.
+ust	U.S. state. < cst.
+vchng	Change (verb type).
+vchngmag	Change magnitude/size (verb type).
+vcreate	Cause sth to exist or become (verb type).
+vmeas	Unit of sound volume measure. < meas.
+vmove	Change locations (verb type).
+wlocn	Named water mass, like "Atlantic Ocean".
+wmeas	Unit of weight measure. < meas.
+worker	Person with a non-professional occupation.
+writer	Person, professional or amateur, who communicates with written word (ex: "Byron").
+yr	Year. Specific year, usually given numerically.
+
+

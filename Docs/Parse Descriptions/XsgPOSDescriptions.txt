@@ -1,0 +1,15 @@
+noun	A word that functions as the name of some specific thing or set of things; can be the main word of a sentence's subject or the object of a verb or preposition
+verb	A word that can be conjugated; forms the main part of the predicate of a sentence
+adj	A word or phrase naming an attribute, added to or grammatically related to a noun to modify or describe it
+adv	A word or phrase that modifies or qualifies an adjective, verb, or other adverb
+det	A modifying words that determines the kind of reference a noun or noun group has, like 'the' or 'a'
+prep	A word governing, and usually precedeing, a noun or pronoun and expressing a relation to another word in the clause. Examples are 'in', 'about', 'at'
+subconj	Subordinate conjunction, like 'if', 'after'
+conj	Coordinate conjunction, like 'and', 'or'...
+qual	Qualifier, like 'very', 'even'. Can modify adverbs and adjectives, not verbs
+subinf	For multiwords like 'in order to' and 'so as to' that act like the preinfinitive 'to' for infinitive verbs
+infto	The preinfinitive sense of 'to', or analogs in other languages
+forto	The sense of 'for' in 'for-to' constructions like 'for JJ to be there'
+thatconj	The subordinate conjunction sense of 'that'
+special	A catch-all category for special "words" like apostrophe-s
+incomplete	Used as the part-of-speech category for the top node of an parsed deemed "incomplete"
