@@ -42,6 +42,7 @@ namespace IBM.Watson.Widgets.Question
         [SerializeField]
         private List<GameObject> m_POSList = new List<GameObject>();
         private List<ParseTreeTextItem> m_WordList = new List<ParseTreeTextItem>();
+		private ParseTreeTextItem[] m_WordListSorted;// = new List<ParseTreeTextItem>();
 		private List<GameObject> m_ArrowList = new List<GameObject>();
 
         private ParseData m_ParseData = null;
@@ -56,13 +57,13 @@ namespace IBM.Watson.Widgets.Question
             get { return m_WordIndex; }
             set
             {
-                if (value > m_WordList.Count - 1)
+				if (value > m_WordListSorted.Length - 1)
                 {
                     m_WordIndex = 0;
                 }
                 else if (value < 0)
                 {
-                    m_WordIndex = m_WordList.Count;
+					m_WordIndex = m_WordListSorted.Length;
                 }
                 else
                 {
@@ -131,6 +132,16 @@ namespace IBM.Watson.Widgets.Question
 			}
 
 			CreateParseWord(m_ParseData.parseTree, m_ParseCanvasRectTransform, m_ParseCanvasRectTransform);
+
+
+			Log.Debug("ParseTreeView", "num words: " + m_ParseData.Words.Length);
+
+			//	sort
+			m_WordListSorted = new ParseTreeTextItem[m_WordList.Count];
+			foreach(ParseTreeTextItem textItem in m_WordList)
+			{
+				m_WordListSorted[textItem.Position] = textItem;
+			}
 
 			WordIndex = 0;
 			StartCoroutine(CycleWords());
@@ -303,17 +314,17 @@ namespace IBM.Watson.Widgets.Question
         /// </summary>
         private void UpdateHighlightedWord()
         {
-            for (int i = 0; i < m_WordList.Count; i++)
+			for (int i = 0; i < m_WordListSorted.Length; i++)
             {
-				if(m_WordList[i].IsHighlighted) m_WordList[i].IsHighlighted = false;
+				if(m_WordListSorted[i].IsHighlighted) m_WordListSorted[i].IsHighlighted = false;
             }
 
-            m_WordList[WordIndex].IsHighlighted = true;
+			m_WordListSorted[WordIndex].IsHighlighted = true;
 
             for (int j = 0; j < m_POSList.Count; j++)
             {
                 POSControl posControl = m_POSList[j].GetComponent<POSControl>();
-                if (posControl.POS == m_WordList[WordIndex].POS.ToLower() || posControl.POS == m_WordList[WordIndex].Slot.ToLower())
+				if (posControl.POS == m_WordListSorted[WordIndex].POS.ToLower() || posControl.POS == m_WordListSorted[WordIndex].Slot.ToLower())
                 {
 					if(!posControl.IsHighlighted) posControl.IsHighlighted = true;
                 }
@@ -332,7 +343,7 @@ namespace IBM.Watson.Widgets.Question
                 }
                 if (m_QuestionData.questions[0].question.lat.Length > 0)
                 {
-                    if (m_WordList[WordIndex].ParseTreeWord.ToLower() == m_QuestionData.questions[0].question.lat[0].ToLower())
+					if (m_WordListSorted[WordIndex].ParseTreeWord.ToLower() == m_QuestionData.questions[0].question.lat[0].ToLower())
                     {
 						if(!m_POSList[1].GetComponent<POSControl>().IsHighlighted) m_POSList[1].GetComponent<POSControl>().IsHighlighted = true;
                     }
@@ -341,7 +352,7 @@ namespace IBM.Watson.Widgets.Question
 
                 if (m_QuestionData.questions[0].question.focus.Length > 0)
                 {
-                    if (m_WordList[WordIndex].ParseTreeWord.ToLower() == m_QuestionData.questions[0].question.focus[0].ToLower())
+					if (m_WordListSorted[WordIndex].ParseTreeWord.ToLower() == m_QuestionData.questions[0].question.focus[0].ToLower())
                     {
 						if(!m_POSList[0].GetComponent<POSControl>().IsHighlighted) m_POSList[0].GetComponent<POSControl>().IsHighlighted = true;
                     }
@@ -363,9 +374,7 @@ namespace IBM.Watson.Widgets.Question
 
 		private void PositionParseTree(int index)
 		{
-			Vector2 relativeWordPosition = GetPositionInCanvasSpace(m_WordList[index].GetComponent<RectTransform>());
-//			m_ParseCanvasRectTransform.anchoredPosition = m_ParseCanvasRectTransform.anchoredPosition - relativeWordPosition;
-
+			Vector2 relativeWordPosition = GetPositionInCanvasSpace(m_WordListSorted[index].GetComponent<RectTransform>());
 			LeanTween.move(m_ParseCanvasRectTransform, m_ParseCanvasRectTransform.anchoredPosition - relativeWordPosition, 1.75f).setEase( LeanTweenType.easeOutQuad );
 		}
 
