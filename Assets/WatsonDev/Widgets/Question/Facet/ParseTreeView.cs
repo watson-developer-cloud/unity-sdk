@@ -50,8 +50,6 @@ namespace IBM.Watson.Widgets.Question
 		private float horizontalWordSpacing = 100f;
 		private float verticalWordSpacing = 160f;
 
-		private int coroutineID;
-
         private int m_WordIndex = 0;
         public int WordIndex
         {
@@ -72,6 +70,7 @@ namespace IBM.Watson.Widgets.Question
                 }
 
                 UpdateHighlightedWord();
+				PositionParseTree(WordIndex);
             }
         }
 
@@ -89,9 +88,7 @@ namespace IBM.Watson.Widgets.Question
 
 		void OnDestroy()
 		{
-			Log.Debug("ParseTreeView", "Stopping coroutine: " + coroutineID);
-			Runnable.Stop(coroutineID);
-			coroutineID = -1;
+			StopCoroutine(CycleWords());
 		}	
 
 		/// <summary>
@@ -136,8 +133,7 @@ namespace IBM.Watson.Widgets.Question
 			CreateParseWord(m_ParseData.parseTree, m_ParseCanvasRectTransform, m_ParseCanvasRectTransform);
 
 			WordIndex = 0;
-			coroutineID = Runnable.Run(CycleWords());
-			Log.Debug("ParseTreeView", "coroutineID: " + coroutineID);
+			StartCoroutine(CycleWords());
         }
 
 		/// <summary>
@@ -361,8 +357,32 @@ namespace IBM.Watson.Widgets.Question
 			while(true)
 			{
 				yield return new WaitForSeconds(2f);
-		        if(coroutineID > 0) WordIndex++;
+		        WordIndex++;
 			}
         }
+
+		private void PositionParseTree(int index)
+		{
+			Vector2 relativeWordPosition = GetPositionInCanvasSpace(m_WordList[index].GetComponent<RectTransform>());
+//			m_ParseCanvasRectTransform.anchoredPosition = m_ParseCanvasRectTransform.anchoredPosition - relativeWordPosition;
+
+			LeanTween.move(m_ParseCanvasRectTransform, m_ParseCanvasRectTransform.anchoredPosition - relativeWordPosition, 1.75f).setEase( LeanTweenType.easeOutQuad );
+		}
+
+		private Vector2 GetPositionInCanvasSpace(RectTransform rectTransform)
+		{
+			Vector2 resultPoint = Vector2.zero;
+			RectTransform[] rectTransformArray = rectTransform.GetComponentsInParent<RectTransform>();
+			
+			foreach(RectTransform parentGORectTransform in rectTransformArray)
+			{
+				resultPoint += parentGORectTransform.anchoredPosition;
+			}
+
+			//	remove mask transform
+			resultPoint -= new Vector2(-52f, -278f);
+
+			return resultPoint;
+		}
     }
 }
