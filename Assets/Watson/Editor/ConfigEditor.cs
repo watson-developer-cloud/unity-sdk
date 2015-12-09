@@ -133,7 +133,7 @@ namespace IBM.Watson.Editor
 
         private void OnServiceStatus( string serviceID, bool active )
         {
-            Log.Debug( "ConfigEditor", "Service Status for {0} is {1}.", serviceID, active ? "up" : "down" );
+            //Log.Debug( "ConfigEditor", "Service Status for {0} is {1}.", serviceID, active ? "up" : "down" );
             m_ServiceStatus[ serviceID ] = active;
         }
 
@@ -216,7 +216,7 @@ namespace IBM.Watson.Editor
                     GUIStyle labelStyle = new GUIStyle(GUI.skin.label);
                     labelStyle.normal.textColor = bValid ? Color.green : Color.grey; 
 
-                    GUILayout.Label( string.Format( "Service {0} {1}...", setup.ServiceName, bValid ? "Configured" : "NOT CONFIGURED" ), labelStyle );
+                    GUILayout.Label( string.Format( "Service {0} {1}.", setup.ServiceName, bValid ? "CONFIGURED" : "NOT CONFIGURED" ), labelStyle );
 
                     if ( GUILayout.Button( "Configure", GUILayout.Width( 100 ) ) )
                         Application.OpenURL( setup.URL );
@@ -290,12 +290,6 @@ namespace IBM.Watson.Editor
             } 
             else
             {
-                if ( GUILayout.Button( "Basic Mode" ) )
-                {
-                    m_WizardMode = true;
-                    PlayerPrefs.SetInt( "WizardMode", 1 );
-                }
-
                 cfg.TimeOut = EditorGUILayout.FloatField("Timeout", cfg.TimeOut);
                 cfg.MaxRestConnections = EditorGUILayout.IntField("Max Connections", cfg.MaxRestConnections);
 
@@ -395,6 +389,12 @@ namespace IBM.Watson.Editor
 
                 if (GUILayout.Button("Save"))
                     SaveConfig();
+
+                if ( GUILayout.Button( "Basic Mode" ) )
+                {
+                    m_WizardMode = true;
+                    PlayerPrefs.SetInt( "WizardMode", 1 );
+                }
             }
 
             EditorGUILayout.EndScrollView();
