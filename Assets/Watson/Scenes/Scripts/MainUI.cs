@@ -25,6 +25,13 @@ using System.Collections.Generic;
 using System.IO;
 using IBM.Watson.Logging;
 
+[System.Serializable]
+public class MenuScene{
+	public string m_SceneName;
+	public string m_SceneDesc;
+	public Vector3 m_CustomBackButtonPosition = Vector3.zero;
+}
+
 public class MainUI : MonoBehaviour
 {
     [SerializeField]
@@ -32,9 +39,13 @@ public class MainUI : MonoBehaviour
     [SerializeField]
     private Button m_ButtonPrefab = null;
     [SerializeField]
-    private GameObject m_ButtonUI = null;
+    private GameObject m_BackgroundUI = null;
+	[SerializeField]
+	private RectTransform m_ButtonBack = null;
+	private Vector3 m_InitialBackButtonPosition;
+
     [SerializeField]
-    private string [] m_SceneNames = null;
+	private MenuScene [] m_Scenes = null;
 
     private const string MAIN_SCENE = "Main";
 
@@ -56,19 +67,27 @@ public class MainUI : MonoBehaviour
             scenes.Add(name);
         }
         scenes.Sort();
-        context.m_SceneNames = scenes.ToArray();
+		context.m_Scenes = new MenuScene[scenes.Count];
+		for (int i = 0; i < scenes.Count; i++) {
+			context.m_Scenes[i] = new MenuScene();
+			context.m_Scenes[i].m_SceneName = scenes[i];
+			context.m_Scenes[i].m_SceneDesc = scenes[i];
+		}
     }
 #endif
 
     private IEnumerator Start()
     {
-        if ( m_ButtonUI == null )
-            throw new WatsonException( "m_ButtonUI is null." );
+        if ( m_BackgroundUI == null )
+			throw new WatsonException( "m_BackgroundUI is null." );
         if ( m_ButtonLayout == null )
             throw new WatsonException( "m_ButtonLayout is null." );
         if ( m_ButtonPrefab == null )
             throw new WatsonException( "m_ButtonPrefab is null." );
-
+		if ( m_ButtonBack == null )
+			throw new WatsonException( "m_ButtonBack is null." );
+		else
+			m_InitialBackButtonPosition = m_ButtonBack.GetComponent<RectTransform>().anchoredPosition3D;
         // wait for the configuration to be loaded first..
         while (!Config.Instance.ConfigLoaded)
             yield return null;
@@ -90,11 +109,11 @@ public class MainUI : MonoBehaviour
         //Log.Debug( "MainUI", "UpdateBottons, level = {0}", Application.loadedLevelName );
         if ( Application.loadedLevelName == MAIN_SCENE )
         {
-            m_ButtonUI.SetActive( true );
+            m_BackgroundUI.SetActive( true );
 
-            foreach( var scene in m_SceneNames )
+            foreach( var scene in m_Scenes )
             {
-                if ( string.IsNullOrEmpty( scene ) )
+                if ( string.IsNullOrEmpty( scene.m_SceneName ) )
                     continue;
 
                 GameObject buttonObj = GameObject.Instantiate( m_ButtonPrefab.gameObject );
@@ -102,16 +121,16 @@ public class MainUI : MonoBehaviour
 
                 Text buttonText = buttonObj.GetComponentInChildren<Text>();
                 if ( buttonText != null )
-                    buttonText.text = scene;
+                    buttonText.text = scene.m_SceneDesc;
                 Button button = buttonObj.GetComponentInChildren<Button>();
 
-                string captured = scene;
+                string captured = scene.m_SceneName;
                 button.onClick.AddListener( () => OnLoadLevel(captured) );
             }
         }
         else
         {
-            m_ButtonUI.SetActive( false );
+            m_BackgroundUI.SetActive( false );
         }
     }
 
@@ -123,8 +142,28 @@ public class MainUI : MonoBehaviour
 		}
 
         Log.Debug( "MainUI", "OnLoadLevel, name = {0}", name );
-        Application.LoadLevel( name );
+		StartCoroutine (loadLevelAsync (name));
+        //Application.LoadLevel( name );
     }
+
+	private IEnumerator loadLevelAsync(string name){
+		AsyncOperation asyncOperation= Application.LoadLevelAsync (name);
+		while (!asyncOperation.isDone) {
+			yield return new WaitForSeconds(0.1f);
+		}
+
+		for (int i = 0; m_Scenes != null && i < m_Scenes.Length; i++) {
+			if(m_Scenes[i].m_SceneName == name){
+				if(m_Scenes[i].m_CustomBackButtonPosition != Vector3.zero){
+					m_ButtonBack.anchoredPosition3D = m_Scenes[i].m_CustomBackButtonPosition;
+				}
+				else{
+					m_ButtonBack.anchoredPosition3D = m_InitialBackButtonPosition;
+				}
+				break;
+			}
+		}
+	}
 
     public void OnBack()
     {

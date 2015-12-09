@@ -34,6 +34,7 @@ namespace IBM.Watson.Widgets
     /// </summary>
     public class DialogWidget : Widget
     {
+        #region Private Data
         [SerializeField, Tooltip( "The name prefix of the dialog to use." ) ]
         private string m_DialogName = Guid.NewGuid().ToString().Replace( "-", "" ).Substring( 0, 24 );      // NOTE: the limit of a dialog name is 24 characters, plus it has to be globally unique!
         [SerializeField, Tooltip( "If no dialog is found by name, then this dialog will automatically be uploaded. (Editor Only)") ]
@@ -47,9 +48,9 @@ namespace IBM.Watson.Widgets
         [SerializeField]
         private Output m_ResultOutput = new Output(typeof(TextToSpeechData));
         [SerializeField]
-        private GameObject m_QuestionPrefab;
+        private GameObject m_QuestionPrefab = null;
         [SerializeField]
-        private GameObject m_AnswerPrefab;
+        private GameObject m_AnswerPrefab = null;
         [SerializeField]
         private int m_HistoryCount = 50;
 
@@ -57,6 +58,7 @@ namespace IBM.Watson.Widgets
         private string m_DialogID = null;
         private int m_ClientID = 0;
         private int m_ConversationID = 0;
+        #endregion
 
         #region Widget Interface
 
