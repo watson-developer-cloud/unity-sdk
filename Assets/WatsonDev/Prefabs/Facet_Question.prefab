@@ -644,6 +644,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 22444970}
   - 114: {fileID: 11414602}
+  - 222: {fileID: 22256546}
   m_Layer: 10
   m_Name: ParseTree
   m_TagString: Untagged
@@ -2955,6 +2956,12 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 177998}
+--- !u!222 &22256546
+CanvasRenderer:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 171684}
 --- !u!222 &22258864
 CanvasRenderer:
   m_ObjectHideFlags: 1
@@ -3532,9 +3539,9 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: .5, y: .5}
   m_AnchorMax: {x: .5, y: .5}
-  m_AnchoredPosition: {x: -456, y: 437}
+  m_AnchoredPosition: {x: -456, y: 487}
   m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: .5, y: .5}
+  m_Pivot: {x: .5, y: 1}
 --- !u!224 &22446682
 RectTransform:
   m_ObjectHideFlags: 1

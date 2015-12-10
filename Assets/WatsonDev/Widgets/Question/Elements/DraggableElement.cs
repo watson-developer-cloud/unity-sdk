@@ -31,67 +31,14 @@ public class DraggableElement : MonoBehaviour, IDragHandler, IBeginDragHandler, 
 	[SerializeField]
 	private RectTransform m_CanvasRectTransform;
 	private RectTransform m_RectTransform;
-//	private Vector2 m_Offset;
-
-//	[Serializable]
-//	private class FullScreenDragEventMapping
-//	{
-//		[Tooltip("If there is no drag layer object set, it uses FullScreen")]
-//		public GameObject m_DragLayerObject = null;
-//		public int m_NumberOfFinger = 1;
-//		public int m_SortingLayer = 0;
-//		public bool m_IsDragInside = true;
-//		public Constants.Event m_Callback = Constants.Event.NONE;
-//	};
-	
-//	[SerializeField]
-//	private List<FullScreenDragEventMapping> m_FullScreenDragMappings = new List<FullScreenDragEventMapping>();
+	private Vector2 m_Offset;
+//	private Vector2 m_OriginalPosition;
 
 	void Awake()
 	{
 		m_RectTransform = gameObject.GetComponent<RectTransform>();
 	}
-
-	void OnEnable()
-	{
-//		if (TouchEventManager.Instance == null) 
-//		{
-//			Log.Error ("DraggableElement", "There should be TouchEventManager in the scene! No TouchEventManager found.");
-//			return;
-//		}
-//
-//		foreach (var mapping in m_FullScreenDragMappings)
-//		{
-//			TouchEventManager.Instance.RegisterDragEvent(mapping.m_DragLayerObject, mapping.m_Callback, mapping.m_NumberOfFinger, mapping.m_SortingLayer, isDragInside: mapping.m_IsDragInside);
-//			EventManager.Instance.RegisterEventReceiver(mapping.m_Callback, OnParseTreeDrag);
-//		}
-	}
-
-	void OnDisable()
-	{
-//		if (TouchEventManager.Instance == null) 
-//		{
-//			Log.Error ("DraggableElement", "There should be TouchEventManager in the scene! No TouchEventManager found.");
-//			return;
-//		}
-//
-//		foreach (var mapping in m_FullScreenDragMappings)
-//		{
-//			TouchEventManager.Instance.UnregisterDragEvent(mapping.m_DragLayerObject, mapping.m_Callback, mapping.m_NumberOfFinger, mapping.m_SortingLayer, isDragInside: mapping.m_IsDragInside);
-//		}
-	}
-//
-//	void OnParseTreeDrag(System.Object[] args = null)
-//	{
-//		if (args == null || args.Length == 0 || args.Length == 1)
-//		{
-//			Log.Debug("DraggableElement", "OnParseTreeDrag");
-//		}
-//		else
-//		{
-//			Log.Error("DraggableElement", "OnParseTreeDrag no args");
-//		}
-//	}
+	
 	#region IDragHandler implementation
 
 	public void OnDrag (PointerEventData eventData)
@@ -100,7 +47,7 @@ public class DraggableElement : MonoBehaviour, IDragHandler, IBeginDragHandler, 
 		{
 			Vector2 tempPosition;
 			RectTransformUtility.ScreenPointToLocalPointInRectangle(m_CanvasRectTransform, eventData.position, Camera.main, out tempPosition);
-			m_RectTransform.anchoredPosition = tempPosition;
+			m_RectTransform.anchoredPosition = tempPosition - m_RectTransform.anchoredPosition;
 		}
 	}
 
@@ -110,22 +57,13 @@ public class DraggableElement : MonoBehaviour, IDragHandler, IBeginDragHandler, 
 
 	public void OnBeginDrag (PointerEventData eventData)
 	{
-//		RectTransformUtility.ScreenPointToLocalPointInRectangle(m_RectTransform, eventData.position, Camera.main, out m_Offset);
+//		m_OriginalPosition = m_RectTransform.anchoredPosition;
+		RectTransformUtility.ScreenPointToLocalPointInRectangle(m_RectTransform, eventData.position, Camera.main, out m_Offset);
 	}
 
 	#endregion
 
 	#region IEndDragHandler implementation
-	public void OnEndDrag (PointerEventData eventData)
-	{
-
-	}
+	public void OnEndDrag (PointerEventData eventData) {}
 	#endregion
-
-	private Vector2 GetOffset()
-	{
-		Vector2 touchOffset = Vector2.zero;
-
-		return touchOffset;
-	}
 }
