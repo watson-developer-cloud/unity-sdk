@@ -36,20 +36,9 @@ namespace IBM.Watson.Editor
             titleContent.text = "Dialog Editor";
 #endif
             m_WatsonIcon = (Texture2D)Resources.Load(Constants.Resources.WATSON_ICON, typeof(Texture2D));
-            EditorApplication.update += UpdateRunnable;
-        }
 
-        private void OnDisable()
-        {
-            EditorApplication.update -= UpdateRunnable;
+            Runnable.EnableRunnableInEditor();
         }
-
-        static void UpdateRunnable()
-        {
-            if (! Application.isPlaying )
-                Runnable.Instance.UpdateRoutines();
-        }
-
 
         [MenuItem("Watson/Dialog Editor", false, 1 )]
         private static void EditConfig()

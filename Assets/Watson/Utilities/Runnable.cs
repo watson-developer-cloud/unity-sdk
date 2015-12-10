@@ -58,6 +58,24 @@ namespace IBM.Watson.Utilities
             if (Instance.m_Routines.TryGetValue(ID, out r))
                 r.Stop = true;
         }
+
+#if UNITY_EDITOR
+        private static bool sm_EditorRunnable = false;
+
+        public static void EnableRunnableInEditor()
+        {
+            if (! sm_EditorRunnable )
+            {
+                sm_EditorRunnable = true;
+                UnityEditor.EditorApplication.update += UpdateRunnable;
+            }
+        }
+        static void UpdateRunnable()
+        {
+            if (! Application.isPlaying )
+                Instance.UpdateRoutines();
+        }
+#endif
         #endregion
 
         #region Private Types

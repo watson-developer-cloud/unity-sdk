@@ -15,13 +15,14 @@
 *
 */
 
-// uncomment to enable gateway
+// uncomment to enable gateway code (Experimental)
 //#define ENABLE_GATEWAY
 
 #if UNITY_EDITOR
 
 using IBM.Watson.Connection;
 using IBM.Watson.Logging;
+using IBM.Watson.Services;
 using IBM.Watson.Utilities;
 using System;
 using System.Collections;
@@ -69,6 +70,10 @@ namespace IBM.Watson.Editor
         private const string YES = "Yes";
         private const string NO = "No";
         private const string OK = "Okay";
+
+        private IWatsonService [] m_Services = null;
+        private Dictionary<string,bool> m_ServiceStatus = new Dictionary<string,bool>();
+        private int m_CheckServiceRoutine = 0;
         #endregion
 
         [UnityEditor.Callbacks.DidReloadScripts]
@@ -90,14 +95,53 @@ namespace IBM.Watson.Editor
             titleContent.text = "Config Editor";
 #endif
             m_WatsonIcon = (Texture2D)Resources.Load(Constants.Resources.WATSON_ICON, typeof(Texture2D));
+            m_StatusUnknown = (Texture2D)Resources.Load( "status_unknown", typeof(Texture2D));
+            m_StatusDown = (Texture2D)Resources.Load( "status_down", typeof(Texture2D));
+            m_StatusUp = (Texture2D)Resources.Load( "status_up", typeof(Texture2D));
             m_WizardMode = PlayerPrefs.GetInt( "WizardMode", 1 ) != 0;
+
+            Runnable.EnableRunnableInEditor();
+            m_CheckServiceRoutine = Runnable.Run( CheckServices() );
+        }
+
+        private void OnDisable()
+        {
+            if ( m_CheckServiceRoutine != 0 )
+            {
+                Runnable.Stop( m_CheckServiceRoutine );
+                m_CheckServiceRoutine = 0;
+            }
+        }
+
+        private IEnumerator CheckServices()
+        {
+            yield return null;
+            m_Services = ServiceHelper.GetAllServices();
+
+            DateTime lastCheck = DateTime.Now;
+
+            while( true )
+            {
+                foreach( var service in m_Services )
+                    service.GetServiceStatus( OnServiceStatus );
+
+                while( (DateTime.Now - lastCheck).TotalSeconds < 60.0f )
+                    yield return null;
+                lastCheck = DateTime.Now;
+            }
+        }
+
+        private void OnServiceStatus( string serviceID, bool active )
+        {
+            //Log.Debug( "ConfigEditor", "Service Status for {0} is {1}.", serviceID, active ? "up" : "down" );
+            m_ServiceStatus[ serviceID ] = active;
         }
 
         private static void SaveConfig()
         {
-            if (!System.IO.Directory.Exists(Application.streamingAssetsPath))
-                System.IO.Directory.CreateDirectory(Application.streamingAssetsPath);
-            System.IO.File.WriteAllText(Application.streamingAssetsPath + "/Config.json", Config.Instance.SaveConfig());
+            if (!Directory.Exists(Application.streamingAssetsPath))
+               Directory.CreateDirectory(Application.streamingAssetsPath);
+            File.WriteAllText(Application.streamingAssetsPath + "/Config.json", Config.Instance.SaveConfig());
         }
 
         [MenuItem("Watson/API Reference", false, 100 )]
@@ -117,6 +161,9 @@ namespace IBM.Watson.Editor
 
         private bool m_WizardMode = true;
         private Texture m_WatsonIcon = null;
+        private Texture m_StatusUnknown = null;
+        private Texture m_StatusUp = null;
+        private Texture m_StatusDown = null;
         private Vector2 m_ScrollPos = Vector2.zero;
         private string m_PastedCredentials = "\n\n\n\n\n\n\n";
 
@@ -139,12 +186,6 @@ namespace IBM.Watson.Editor
             m_ScrollPos = EditorGUILayout.BeginScrollView(m_ScrollPos);
             if ( m_WizardMode )
             {
-                if ( GUILayout.Button( "Advanced Mode" ) )
-                {
-                    m_WizardMode = false;
-                    PlayerPrefs.SetInt( "WizardMode", 0 );
-                }
-
                 //GUILayout.Label( "Use this dialog to generate your configuration file for the Watson Unity SDK." );
                 //GUILayout.Label( "If you have never registered for Watson BlueMix services, click on the button below to begin registration." );
 
@@ -162,10 +203,20 @@ namespace IBM.Watson.Editor
 
                     GUILayout.BeginHorizontal();
 
+                    if ( m_ServiceStatus.ContainsKey( setup.ServiceID ) )
+                    {
+                        if ( m_ServiceStatus[setup.ServiceID] )
+                            GUILayout.Label( m_StatusUp );
+                        else
+                            GUILayout.Label( m_StatusDown );
+                    }
+                    else
+                        GUILayout.Label( m_StatusUnknown );
+
                     GUIStyle labelStyle = new GUIStyle(GUI.skin.label);
                     labelStyle.normal.textColor = bValid ? Color.green : Color.grey; 
 
-                    GUILayout.Label( string.Format( "Service {0} {1}...", setup.ServiceName, bValid ? "Configured" : "NOT CONFIGURED" ), labelStyle );
+                    GUILayout.Label( string.Format( "Service {0} {1}.", setup.ServiceName, bValid ? "CONFIGURED" : "NOT CONFIGURED" ), labelStyle );
 
                     if ( GUILayout.Button( "Configure", GUILayout.Width( 100 ) ) )
                         Application.OpenURL( setup.URL );
@@ -230,15 +281,15 @@ namespace IBM.Watson.Editor
 
                 if ( GUILayout.Button( "Save" ) )
                     SaveConfig();
+
+                if ( GUILayout.Button( "Advanced Mode" ) )
+                {
+                    m_WizardMode = false;
+                    PlayerPrefs.SetInt( "WizardMode", 0 );
+                }
             } 
             else
             {
-                if ( GUILayout.Button( "Basic Mode" ) )
-                {
-                    m_WizardMode = true;
-                    PlayerPrefs.SetInt( "WizardMode", 1 );
-                }
-
                 cfg.TimeOut = EditorGUILayout.FloatField("Timeout", cfg.TimeOut);
                 cfg.MaxRestConnections = EditorGUILayout.IntField("Max Connections", cfg.MaxRestConnections);
 
@@ -338,6 +389,12 @@ namespace IBM.Watson.Editor
 
                 if (GUILayout.Button("Save"))
                     SaveConfig();
+
+                if ( GUILayout.Button( "Basic Mode" ) )
+                {
+                    m_WizardMode = true;
+                    PlayerPrefs.SetInt( "WizardMode", 1 );
+                }
             }
 
             EditorGUILayout.EndScrollView();

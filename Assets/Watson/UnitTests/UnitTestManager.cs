@@ -211,7 +211,7 @@ public static class RunUnitTest
     {
         Logger.InstallDefaultReactors();
 #if UNITY_EDITOR
-        EditorApplication.update += UpdateRunnable;
+        Runnable.EnableRunnableInEditor();
 #endif
 
         IBM.Watson.Editor.UnitTestManager instance = IBM.Watson.Editor.UnitTestManager.Instance;
@@ -225,7 +225,7 @@ public static class RunUnitTest
     static public void AllNoQuit()
     {
         Logger.InstallDefaultReactors();
-        EditorApplication.update += UpdateRunnable;
+        Runnable.EnableRunnableInEditor();
 
         IBM.Watson.Editor.UnitTestManager instance = IBM.Watson.Editor.UnitTestManager.Instance;
         instance.OnTestCompleteCallback = OnTestsComplete;
@@ -233,18 +233,7 @@ public static class RunUnitTest
     }
 #endif
 
-    static void UpdateRunnable()
-    {
-        if (! Application.isPlaying )
-            Runnable.Instance.UpdateRoutines();
-    }
-
     static void OnTestsComplete()
-    {
-#if UNITY_EDITOR
-        EditorApplication.update -= UpdateRunnable;
-#endif
-    }
-
+    {}
 }
 
