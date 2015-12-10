@@ -176,7 +176,7 @@ namespace IBM.Watson.Widgets.Question
 
             if (hasStateChanged)
             {
-                EventManager.Instance.SendEvent(Constants.Event.ON_CHANGE_STATE_QUESTIONCUBE_ANIMATION);
+                EventManager.Instance.SendEvent(Constants.Event.ON_CHANGE_STATE_QUESTIONCUBE_ANIMATION, m_currentState);
             }
 
         }
