@@ -341,6 +341,26 @@ namespace IBM.Watson.Utilities
 			/// Event fired after user is tapping three times - used for some hot keys like open / close debug info etc.
 			/// </summary>
 			ON_TAP_THREETIMES,
+			/// <summary>
+			/// Event fired after three tap on bottom left - hot corner
+			/// </summary>
+			ON_TAP_THREETIMES_BOTTOM_LEFT,
+			/// <summary>
+			/// Event fired after three tap on bottom right - hot corner
+			/// </summary>
+			ON_TAP_THREETIMES_BOTTOM_RIGHT,
+			/// <summary>
+			/// Event fired after three tap on top left - hot corner
+			/// </summary>
+			ON_TAP_THREETIMES_TOP_LEFT,
+			/// <summary>
+			/// Event fired after three tap on top right - hot corner
+			/// </summary>
+			ON_TAP_THREETIMES_TOP_RIGHT,
+			/// <summary>
+			/// Event fired to open virtual keyboard
+			/// </summary>
+			ON_VIRTUAL_KEYBOARD_TOGGLE,
             #endregion
         }
 

@@ -46,7 +46,7 @@ MonoBehaviour:
   - {fileID: 175116, guid: 9a2ef11f904aaee419cdda40a956943c, type: 2}
   - {fileID: 150770, guid: 404c9649ee877c04aa05e9fd32006d07, type: 2}
   - {fileID: 122206, guid: 2f1b2c8996342c64f9853650319be032, type: 2}
-  - {fileID: 162718, guid: 0c228ab095a7f4531ae386a17d69e30f, type: 2}
+  - {fileID: 151990, guid: eeb597a62cb0b496794e1a9cfc6fb9b3, type: 2}
 --- !u!114 &11460156
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -222,7 +222,7 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_Prefabs.Array.data[4]
       value: 
-      objectReference: {fileID: 162718, guid: 0c228ab095a7f4531ae386a17d69e30f, type: 2}
+      objectReference: {fileID: 151990, guid: eeb597a62cb0b496794e1a9cfc6fb9b3, type: 2}
     - target: {fileID: 0}
       propertyPath: m_StateInfo.Array.data[1].m_Color.r
       value: .945098042
