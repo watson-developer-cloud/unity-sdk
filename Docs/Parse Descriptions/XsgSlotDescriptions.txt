@@ -1,0 +1,68 @@
+subj	the subject of the sentence or phrase
+obj	the object of the main verb
+iobj	the indirect object of the main verb
+comp	a compliment of the main verb
+pred	a predicate for the verb 'be' -- such as [happy] in 'JJ is happy'
+auxcomp	slot used for primarily modal verbs compliments
+vadv	adverb that modifies a verb
+vprep	preposition that modifies a verb
+vsubconj	subordinate conjunction that modifies a verb
+vnfvp	non-finite verb phrase
+vfvp	finite verb phrase
+vforto	for-phrase that modifies a verb
+vcomment	a comment that modifies a  verb
+vadjp	an adjective phrase that modifies a verb
+vvoc	addressing a person or thing directly
+vadj	adjective modifying a verb
+vdet	determiner modifying a verb
+vnoun	noun modifying a verb
+vrel	relative clause modifying a verb
+vextra	extra clause modifying a verb
+vpreinf	example: zu sehen
+whadv	wh-word acting as an adverb
+whprep	wh-word acting as a preposition
+nsubj	a noun that is part of the subject, but not the main noun
+nobj	a noun object
+ncomp	a noun compliment
+ndet	determiner modifying a noun
+nadj	adjective modifying a noun
+nnoun	a noun modifying another noun
+nadv	an adverb modifying a noun
+nposs	a possessive marker ['s] modifying a noun
+nadjp	an adjective phrase modifying a noun
+nper	the [per] modifying a noun (ex: 'per gallon')
+nprop	a proposition modifying a noun
+nappos	a noun phrase modifying a noun
+nloc	a location noun
+nprep	a preposition modifying a noun
+ngen	genitive modifying a noun
+nrel	relative clause modifying a noun
+nrela	relative cluse modifying a noun
+nnfvp	non-finite verb phrase modifying a noun
+nsubconj	subordinate conjunction modifying a noun
+ncompar	comparative phrase modifying a noun
+nsothat so-that phrase modifying a noun
+aobj	adjective object
+adjpre	pre-modifier of an adjective
+anoun	noun modifying an adjective
+adjpost	post-modifier of an adjective
+acompar comparative-phrase modifying an adjective
+aprep	preposition modifying an adjective
+asothat	so-that phrase modifying an adjective
+arel	relative clause modifying an adjective
+anfvp	non-finite verb phrase modifying an adjective
+advpre	pre-modifier of an adverb
+advpost post-modifier of an adverb
+advinf	infinitive modifying an adverb
+avsothat	so-that phrase modifying an adverb
+avcompar	comparative phrase modifying an adverb
+padv	adverb modifying a preposition
+dadv	adverb modifying a determiner
+sccomp	complement slot for a subordinate conjunction
+scadv	adjunct slot for a subordinate conjunction
+tocomp	the compliment of a infinitive
+toadv	the adjunct of an infinitive
+forsubj	the subject of a for-clause
+forcomp	the compliment of a for-clause
+thatcomp	complement for a that-clause
+subinfcomp	compliment for a subordinate infinitive

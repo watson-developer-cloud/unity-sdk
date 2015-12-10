@@ -35,7 +35,7 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
     /// This class wraps the Watson SpeechToText service.
     /// <a href="http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/speech-to-text.html">SpeechToText Service</a>
     /// </summary>
-    public class SpeechToText
+    public class SpeechToText : IWatsonService
     {
         #region Constants
         /// <summary>
@@ -698,6 +698,39 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                 return null;
             }
         }
-#endregion
+        #endregion
+
+        #region IWatsonService interface
+        public string GetServiceID()
+        {
+            return SERVICE_ID;
+        }
+
+        public void GetServiceStatus(ServiceStatus callback)
+        {
+            new CheckServiceStatus( this, callback );
+        }
+
+        private class CheckServiceStatus
+        {
+            private SpeechToText m_Service = null;
+            private ServiceStatus m_Callback = null;
+
+            public CheckServiceStatus( SpeechToText service, ServiceStatus callback )
+            {
+                m_Service = service;
+                m_Callback = callback;
+
+                if (! m_Service.GetModels( OnCheckService ) )
+                    m_Callback( SERVICE_ID, false );
+            }
+
+            private void OnCheckService( SpeechModel [] models  )
+            {
+                if ( m_Callback != null ) 
+                    m_Callback( SERVICE_ID, models != null );
+            }
+        };
+        #endregion
     }
 }

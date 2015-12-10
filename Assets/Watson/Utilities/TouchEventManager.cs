@@ -179,6 +179,8 @@ namespace IBM.Watson.Utilities
 		[SerializeField]
 		private TapGesture m_TapGesture;
 		[SerializeField]
+		private TapGesture m_ThreeTapGesture;
+		[SerializeField]
 		private ScreenTransformGesture m_OneFingerMoveGesture;
 		[SerializeField]
 		private ScreenTransformGesture m_TwoFingerMoveGesture;
@@ -212,6 +214,7 @@ namespace IBM.Watson.Utilities
 		{
 			m_mainCamera = UnityEngine.Camera.main;
 			m_TapGesture.Tapped += TapGesture_Tapped;
+			m_ThreeTapGesture.Tapped += ThreeTapGesture_Tapped;
 
 			m_OneFingerMoveGesture.Transformed += OneFingerTransformedHandler;
 			m_TwoFingerMoveGesture.Transformed += TwoFingerTransformedHandler;
@@ -222,7 +225,8 @@ namespace IBM.Watson.Utilities
 
         private void OnDisable()
 		{
-			m_TapGesture.Tapped += TapGesture_Tapped;
+			m_TapGesture.Tapped -= TapGesture_Tapped;
+			m_ThreeTapGesture.Tapped -= ThreeTapGesture_Tapped;
 
 			m_OneFingerMoveGesture.Transformed -= OneFingerTransformedHandler;
 			m_TwoFingerMoveGesture.Transformed -= TwoFingerTransformedHandler;
@@ -475,7 +479,7 @@ namespace IBM.Watson.Utilities
 		{   
             if (m_Active)
 			{
-                //Log.Status("TouchEventManager", "TapGesture_Tapped: {0} ", m_TapGesture.ScreenPosition);
+				//Log.Status("TouchEventManager", "TapGesture_Tapped: {0}", m_TapGesture.ScreenPosition);
 
                 TouchEventData tapEventToFire = null;
 				RaycastHit hit = default(RaycastHit);
@@ -552,6 +556,19 @@ namespace IBM.Watson.Utilities
 		}
 
         #endregion
+
+		#region Three Tap Gesture Call
+
+		private void ThreeTapGesture_Tapped(object sender, System.EventArgs e)
+		{
+			if (m_Active) 
+			{
+				//Log.Status("TouchEventManager", "ThreeTapGesture_Tapped: {0} - {1}", m_ThreeTapGesture.ScreenPosition, m_ThreeTapGesture.NumTouches);
+				EventManager.Instance.SendEvent(Constants.Event.ON_TAP_THREETIMES, m_ThreeTapGesture);
+			}
+		}
+
+		#endregion
 
         #region PressGesture Events -  Call - There is no registration is sends automatically the press event
         

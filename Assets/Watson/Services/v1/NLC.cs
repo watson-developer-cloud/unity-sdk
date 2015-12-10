@@ -31,7 +31,7 @@ namespace IBM.Watson.Services.v1
     /// This class wraps the Natural Language Classifier service.
     /// <a href="http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/nl-classifier.html">NLC Service</a>
     /// </summary>
-    public class NLC
+    public class NLC : IWatsonService
     {
         #region Public Types
         /// <summary>
@@ -480,6 +480,39 @@ namespace IBM.Watson.Services.v1
             return classify;
         }
 
+        #endregion
+
+        #region IWatsonService interface
+        public string GetServiceID()
+        {
+            return SERVICE_ID;
+        }
+
+        public void GetServiceStatus(ServiceStatus callback)
+        {
+            new CheckServiceStatus( this, callback );
+        }
+
+        private class CheckServiceStatus
+        {
+            private NLC m_Service = null;
+            private ServiceStatus m_Callback = null;
+
+            public CheckServiceStatus( NLC service, ServiceStatus callback )
+            {
+                m_Service = service;
+                m_Callback = callback;
+
+                if (! m_Service.GetClassifiers( OnCheckService ) )
+                    m_Callback( SERVICE_ID, false );
+            }
+
+            private void OnCheckService( Classifiers classifiers )
+            {
+                if ( m_Callback != null ) 
+                    m_Callback( SERVICE_ID, classifiers != null );
+            }
+        };
         #endregion
     }
 }

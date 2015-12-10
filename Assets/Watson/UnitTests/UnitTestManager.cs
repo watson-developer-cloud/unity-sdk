@@ -180,14 +180,16 @@ namespace IBM.Watson.Editor
 
             if (m_TestsAvailable != null)
             {
+				GUILayout.BeginArea(new Rect(Screen.width * 0.3f, Screen.height * 0.15f, Screen.width * 0.4f, Screen.height * 0.85f));
                 foreach (var t in m_TestsAvailable)
                 {
                     string sButtonLabel = "Run " + t.Name;
-                    if (GUILayout.Button(sButtonLabel))
+					if (GUILayout.Button(sButtonLabel,GUILayout.MinWidth(Screen.width * 0.4f), GUILayout.MinHeight(Screen.height * 0.04f)))
                     {
                         QueueTest(t, true);
                     }
                 }
+				GUILayout.EndArea();
             }
         }
         #endregion
@@ -209,7 +211,7 @@ public static class RunUnitTest
     {
         Logger.InstallDefaultReactors();
 #if UNITY_EDITOR
-        EditorApplication.update += UpdateRunnable;
+        Runnable.EnableRunnableInEditor();
 #endif
 
         IBM.Watson.Editor.UnitTestManager instance = IBM.Watson.Editor.UnitTestManager.Instance;
@@ -223,7 +225,7 @@ public static class RunUnitTest
     static public void AllNoQuit()
     {
         Logger.InstallDefaultReactors();
-        EditorApplication.update += UpdateRunnable;
+        Runnable.EnableRunnableInEditor();
 
         IBM.Watson.Editor.UnitTestManager instance = IBM.Watson.Editor.UnitTestManager.Instance;
         instance.OnTestCompleteCallback = OnTestsComplete;
@@ -231,17 +233,7 @@ public static class RunUnitTest
     }
 #endif
 
-    static void UpdateRunnable()
-    {
-        Runnable.Instance.UpdateRoutines();
-    }
-
     static void OnTestsComplete()
-    {
-#if UNITY_EDITOR
-        EditorApplication.update -= UpdateRunnable;
-#endif
-    }
-
+    {}
 }
 

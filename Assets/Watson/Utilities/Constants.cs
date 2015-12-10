@@ -80,6 +80,14 @@ namespace IBM.Watson.Utilities
             /// Event to close the application
             /// </summary>
             ON_APPLICATION_QUIT,
+			/// <summary>
+			/// Event to make application idle
+			/// </summary>
+			ON_APPLICATION_TO_BECOME_IDLE,
+			/// <summary>
+			/// Event after appliation became idle
+			/// </summary>
+			ON_APPLICATION_BECAME_IDLE,
             #endregion
 
             #region Avatar 
@@ -325,7 +333,14 @@ namespace IBM.Watson.Utilities
             /// Event while user is speaking
             /// </summary>
             ON_USER_SPEAKING,
-
+			/// <summary>
+			/// Event fired after any keyboard down
+			/// </summary>
+			ON_KEYBOARD_ANYKEY_DOWN,
+			/// <summary>
+			/// Event fired after user is tapping three times - used for some hot keys like open / close debug info etc.
+			/// </summary>
+			ON_TAP_THREETIMES,
             #endregion
         }
 

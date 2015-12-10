@@ -287,6 +287,23 @@ namespace IBM.Watson.DataModels
     };
     #endregion
 
+    #region TextToSpeech Models
+    [fsObject]
+    public class Voice
+    {
+        public string name { get; set; }
+        public string language { get; set; }
+        public string gender { get; set; }
+        public string url { get; set; }
+    };
+   
+    [fsObject]
+    public class Voices
+    {
+        public Voice [] voices { get; set; }
+    };
+    #endregion
+
     #region SpeechToText Models
     /// <summary>
     /// This data class holds the data for a given speech model.

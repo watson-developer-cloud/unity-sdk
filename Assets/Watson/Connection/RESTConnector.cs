@@ -15,6 +15,8 @@
 *
 */
 
+// uncomment to enable debugging
+//#define ENABLE_DEBUGGING
 // uncomment to enable experimental gateway code.
 //#define ENABLE_GATEWAY
 
@@ -384,7 +386,9 @@ namespace IBM.Watson.Connection
                     else 
                         www = new WWW( url, req.Send, req.Headers );
 
-                    Log.Status( "RESTCOnnector", "URL: {0}", url );
+#if ENABLE_DEBUGGING
+                    Log.Debug( "RESTCOnnector", "URL: {0}", url );
+#endif
 
                     // wait for the request to complete.
                     while(! www.isDone )
