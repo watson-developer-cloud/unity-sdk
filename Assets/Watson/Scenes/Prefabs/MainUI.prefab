@@ -341,7 +341,7 @@ MonoBehaviour:
     m_IsVisibleBackButton: 1
   - m_SceneName: UnitTests
     m_SceneDesc: Unit Tests
-    m_CustomBackButtonPosition: {x: 0, y: -400, z: 0}
+    m_CustomBackButtonPosition: {x: 0, y: 0, z: 0}
     m_CustomBackButtonScale: {x: 0, y: 0}
     m_IsVisibleBackButton: 1
   - m_SceneName: XRay

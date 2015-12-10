@@ -208,7 +208,10 @@ namespace IBM.Watson.Widgets.Avatar
 			new Vector3 (27.75155f, 0.0005040758f, -17.34113f)
 		};
 
+		[SerializeField]
         private Material m_SharedMaterialLightFlare;
+		[SerializeField]
+		private Material m_SharedMaterialLightRing;
         private Color m_TintColorSharedMaterialLightFlareInitial = Color.white;
         private Color m_ColorAnimationFlareLast = Color.white;
 
@@ -278,7 +281,8 @@ namespace IBM.Watson.Widgets.Avatar
                 {
                     m_LightFlareChild[i] = m_LightFlarePivotParentList[i].GetComponentInChildren<MeshRenderer>().gameObject;
                 }
-                m_SharedMaterialLightFlare = m_LightFlareChild[0].transform.GetComponent<MeshRenderer>().sharedMaterial;
+				if(m_SharedMaterialLightFlare == null)
+                	m_SharedMaterialLightFlare = m_LightFlareChild[0].transform.GetComponent<MeshRenderer>().sharedMaterial;
                 m_TintColorSharedMaterialLightFlareInitial = m_SharedMaterialLightFlare.GetColor("_TintColor");
             }
 
@@ -362,7 +366,13 @@ namespace IBM.Watson.Widgets.Avatar
 				m_ColorAnimationOnRing = -1;
             }
 
-            m_ColorAnimationOnRing = LeanTween.color(gameObject, color, animationTime).id; //.setFromColor (Color.white).setLoopPingPong ();
+			if (m_SharedMaterialLightRing == null) {
+				m_ColorAnimationOnRing = LeanTween.color (gameObject, color, animationTime).id; //.setFromColor (Color.white).setLoopPingPong ();
+			} else {
+				m_ColorAnimationOnRing = LeanTween.value (gameObject, m_SharedMaterialLightRing.color, color, animationTime).setOnUpdate ((Color c) => {
+					m_SharedMaterialLightRing.color = c;
+				}).id; 
+			}
         }
 
         private void StopAnimateLightFlareColor()

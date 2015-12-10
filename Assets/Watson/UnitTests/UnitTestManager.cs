@@ -180,14 +180,16 @@ namespace IBM.Watson.Editor
 
             if (m_TestsAvailable != null)
             {
+				GUILayout.BeginArea(new Rect(Screen.width * 0.3f, Screen.height * 0.15f, Screen.width * 0.4f, Screen.height * 0.85f));
                 foreach (var t in m_TestsAvailable)
                 {
                     string sButtonLabel = "Run " + t.Name;
-                    if (GUILayout.Button(sButtonLabel))
+					if (GUILayout.Button(sButtonLabel,GUILayout.MinWidth(Screen.width * 0.4f), GUILayout.MinHeight(Screen.height * 0.04f)))
                     {
                         QueueTest(t, true);
                     }
                 }
+				GUILayout.EndArea();
             }
         }
         #endregion
