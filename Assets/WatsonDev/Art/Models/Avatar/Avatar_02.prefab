@@ -52475,6 +52475,8 @@ MonoBehaviour:
   m_LightFlareEase: 4
   m_AnimationTime: 1
   m_LightFlarePivotParentList: []
+  m_SharedMaterialLightFlare: {fileID: 0}
+  m_SharedMaterialLightRing: {fileID: 0}
 --- !u!114 &11491276
 MonoBehaviour:
   m_ObjectHideFlags: 1
