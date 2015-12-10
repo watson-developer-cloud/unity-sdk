@@ -55,7 +55,7 @@ namespace IBM.Watson.Widgets.Question
 
 		private Vector3 GetPositionInCanvasSpace(RectTransform rectTransform)
 		{
-			Vector3 resultPoint = Vector3.left;
+			Vector3 resultPoint = Vector3.zero;
 			RectTransform[] rectTransformArray = rectTransform.GetComponentsInParent<RectTransform>();
 
 			foreach(RectTransform parentRectTransform in rectTransformArray)

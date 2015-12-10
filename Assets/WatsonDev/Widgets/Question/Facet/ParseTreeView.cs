@@ -42,6 +42,7 @@ namespace IBM.Watson.Widgets.Question
         [SerializeField]
         private List<GameObject> m_POSList = new List<GameObject>();
         private List<ParseTreeTextItem> m_WordList = new List<ParseTreeTextItem>();
+		private ParseTreeTextItem[] m_WordListSorted;// = new List<ParseTreeTextItem>();
 		private List<GameObject> m_ArrowList = new List<GameObject>();
 
         private ParseData m_ParseData = null;
@@ -50,21 +51,19 @@ namespace IBM.Watson.Widgets.Question
 		private float horizontalWordSpacing = 100f;
 		private float verticalWordSpacing = 160f;
 
-		private int coroutineID;
-
         private int m_WordIndex = 0;
         public int WordIndex
         {
             get { return m_WordIndex; }
             set
             {
-                if (value > m_WordList.Count - 1)
+				if (value > m_WordListSorted.Length - 1)
                 {
                     m_WordIndex = 0;
                 }
                 else if (value < 0)
                 {
-                    m_WordIndex = m_WordList.Count;
+					m_WordIndex = m_WordListSorted.Length;
                 }
                 else
                 {
@@ -72,6 +71,7 @@ namespace IBM.Watson.Widgets.Question
                 }
 
                 UpdateHighlightedWord();
+//				PositionParseTree(WordIndex);
             }
         }
 
@@ -89,9 +89,7 @@ namespace IBM.Watson.Widgets.Question
 
 		void OnDestroy()
 		{
-			Log.Debug("ParseTreeView", "Stopping coroutine: " + coroutineID);
-			Runnable.Stop(coroutineID);
-			coroutineID = -1;
+			StopCoroutine(CycleWords());
 		}	
 
 		/// <summary>
@@ -135,9 +133,15 @@ namespace IBM.Watson.Widgets.Question
 
 			CreateParseWord(m_ParseData.parseTree, m_ParseCanvasRectTransform, m_ParseCanvasRectTransform);
 
+			//	sort
+			m_WordListSorted = new ParseTreeTextItem[m_WordList.Count];
+			foreach(ParseTreeTextItem textItem in m_WordList)
+			{
+				m_WordListSorted[textItem.Position] = textItem;
+			}
+
 			WordIndex = 0;
-			coroutineID = Runnable.Run(CycleWords());
-			Log.Debug("ParseTreeView", "coroutineID: " + coroutineID);
+			StartCoroutine(CycleWords());
         }
 
 		/// <summary>
@@ -149,7 +153,7 @@ namespace IBM.Watson.Widgets.Question
 		private void CreateParseWord(ParseTree parseWord, RectTransform parentRectTransform, RectTransform parentWordRectTransform)
 		{
 			//	instantiate word
-			GameObject wordGameObject = Instantiate(m_ParseTreeTextItemPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity) as GameObject;
+			GameObject wordGameObject = Instantiate(m_ParseTreeTextItemPrefab, parentRectTransform != m_ParseCanvasRectTransform ? new Vector3(0f, 0f, 0f) : new Vector3(-456f, 487f, 0f), Quaternion.identity) as GameObject;
 
 			//	set parent to parent transform
             RectTransform wordRectTransform = wordGameObject.GetComponent<RectTransform>();
@@ -307,17 +311,17 @@ namespace IBM.Watson.Widgets.Question
         /// </summary>
         private void UpdateHighlightedWord()
         {
-            for (int i = 0; i < m_WordList.Count; i++)
+			for (int i = 0; i < m_WordListSorted.Length; i++)
             {
-				if(m_WordList[i].IsHighlighted) m_WordList[i].IsHighlighted = false;
+				if(m_WordListSorted[i].IsHighlighted) m_WordListSorted[i].IsHighlighted = false;
             }
 
-            m_WordList[WordIndex].IsHighlighted = true;
+			m_WordListSorted[WordIndex].IsHighlighted = true;
 
             for (int j = 0; j < m_POSList.Count; j++)
             {
                 POSControl posControl = m_POSList[j].GetComponent<POSControl>();
-                if (posControl.POS == m_WordList[WordIndex].POS.ToLower() || posControl.POS == m_WordList[WordIndex].Slot.ToLower())
+				if (posControl.POS == m_WordListSorted[WordIndex].POS.ToLower() || posControl.POS == m_WordListSorted[WordIndex].Slot.ToLower())
                 {
 					if(!posControl.IsHighlighted) posControl.IsHighlighted = true;
                 }
@@ -336,7 +340,7 @@ namespace IBM.Watson.Widgets.Question
                 }
                 if (m_QuestionData.questions[0].question.lat.Length > 0)
                 {
-                    if (m_WordList[WordIndex].ParseTreeWord.ToLower() == m_QuestionData.questions[0].question.lat[0].ToLower())
+					if (m_WordListSorted[WordIndex].ParseTreeWord.ToLower() == m_QuestionData.questions[0].question.lat[0].ToLower())
                     {
 						if(!m_POSList[1].GetComponent<POSControl>().IsHighlighted) m_POSList[1].GetComponent<POSControl>().IsHighlighted = true;
                     }
@@ -345,7 +349,7 @@ namespace IBM.Watson.Widgets.Question
 
                 if (m_QuestionData.questions[0].question.focus.Length > 0)
                 {
-                    if (m_WordList[WordIndex].ParseTreeWord.ToLower() == m_QuestionData.questions[0].question.focus[0].ToLower())
+					if (m_WordListSorted[WordIndex].ParseTreeWord.ToLower() == m_QuestionData.questions[0].question.focus[0].ToLower())
                     {
 						if(!m_POSList[0].GetComponent<POSControl>().IsHighlighted) m_POSList[0].GetComponent<POSControl>().IsHighlighted = true;
                     }
@@ -361,8 +365,32 @@ namespace IBM.Watson.Widgets.Question
 			while(true)
 			{
 				yield return new WaitForSeconds(2f);
-		        if(coroutineID > 0) WordIndex++;
+		        WordIndex++;
 			}
         }
+
+		//	methods for shifting parse tree to focused word - call PositionParseTree on index change 
+//		private void PositionParseTree(int index)
+//		{
+//			//	to focus on word
+//			Vector2 relativeWordPosition = GetPositionInCanvasSpace(m_WordListSorted[index].GetComponent<RectTransform>());
+//			LeanTween.move(m_ParseCanvasRectTransform, m_ParseCanvasRectTransform.anchoredPosition - relativeWordPosition, 1.75f).setEase( LeanTweenType.easeOutQuad);
+//		}
+//
+//		private Vector2 GetPositionInCanvasSpace(RectTransform rectTransform)
+//		{
+//			Vector2 resultPoint = Vector2.zero;
+//			RectTransform[] rectTransformArray = rectTransform.GetComponentsInParent<RectTransform>();
+//			
+//			foreach(RectTransform parentGORectTransform in rectTransformArray)
+//			{
+//				resultPoint += parentGORectTransform.anchoredPosition;
+//			}
+//
+//			//	remove mask transform
+//			resultPoint -= new Vector2(-52f, -278f);
+//
+//			return resultPoint;
+//		}
     }
 }
