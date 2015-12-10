@@ -133,9 +133,6 @@ namespace IBM.Watson.Widgets.Question
 
 			CreateParseWord(m_ParseData.parseTree, m_ParseCanvasRectTransform, m_ParseCanvasRectTransform);
 
-
-			Log.Debug("ParseTreeView", "num words: " + m_ParseData.Words.Length);
-
 			//	sort
 			m_WordListSorted = new ParseTreeTextItem[m_WordList.Count];
 			foreach(ParseTreeTextItem textItem in m_WordList)

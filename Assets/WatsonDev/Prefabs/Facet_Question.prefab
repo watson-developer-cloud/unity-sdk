@@ -1275,12 +1275,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Facet: {fileID: 11403426}
   m_CanvasRectTransform: {fileID: 22443750}
-  m_FullScreenDragMappings:
-  - m_DragLayerObject: {fileID: 171684}
-    m_NumberOfFinger: 1
-    m_SortingLayer: 0
-    m_IsDragInside: 0
-    m_Callback: 0
 --- !u!114 &11414894
 MonoBehaviour:
   m_ObjectHideFlags: 1
