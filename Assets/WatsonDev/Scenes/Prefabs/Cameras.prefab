@@ -34,6 +34,7 @@ GameObject:
   - 114: {fileID: 11450530}
   - 114: {fileID: 11467584}
   - 114: {fileID: 11444306}
+  - 114: {fileID: 11460946}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -283,6 +284,17 @@ MonoBehaviour:
   - m_Key: 53
     m_Modifiers: 2
     m_Event: 502
+--- !u!114 &11460946
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 172636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d56af23d758c64b1188c7169f8e7652a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &11467584
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -356,7 +368,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_Mappings.Array.data[12].m_Event
-      value: 502
+      value: 501
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_Mappings.Array.data[12].m_Key

@@ -19,6 +19,7 @@
 using UnityEngine;
 using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
+using IBM.Watson.Widgets.Question;
 
 namespace IBM.Watson.Camera
 {
@@ -47,7 +48,7 @@ namespace IBM.Watson.Camera
 		private Quaternion m_TargetCameraRotationBeforeIdle;
 		private int m_AnimationCameraIdle = -1;
 		private float m_LastTimeActionCaptured = 0.0f;
-		private float m_TimeForWaitingToBecomeIdle = 600.0f;	//10min as idle just test purpose for now! TODO: change it!
+		private float m_TimeForWaitingToBecomeIdle = 6000.0f;	//10min as idle just test purpose for now! TODO: change it!
 		private bool m_IsIdle = false;
 
         //TODO: Add boundary limits
@@ -67,9 +68,11 @@ namespace IBM.Watson.Camera
 
 			EventManager.Instance.RegisterEventReceiver (Constants.Event.ON_KEYBOARD_ANYKEY_DOWN, ChangeOnScene);			//any keyboard press make it awake
 			EventManager.Instance.RegisterEventReceiver (Constants.Event.ON_TOUCH_PRESSED_FULLSCREEN, ChangeOnScene);		//any touch press make it awake
+			EventManager.Instance.RegisterEventReceiver (Constants.Event.ON_TOUCH_RELEASED_FULLSCREEN, ChangeOnScene);		//any touch release make it awake
 			EventManager.Instance.RegisterEventReceiver (Constants.Event.ON_CHANGE_AVATAR_STATE_FINISH, ChangeOnScene);		//and avatar state change (voice recognition / or failure make it awake)
 			EventManager.Instance.RegisterEventReceiver (Constants.Event.ON_CHANGE_STATE_QUESTIONCUBE_ANIMATION, QuestionStateChanged);
 			EventManager.Instance.RegisterEventReceiver (Constants.Event.ON_APPLICATION_TO_BECOME_IDLE, MakeIdle);
+			EventManager.Instance.RegisterEventReceiver (Constants.Event.ON_VIRTUAL_KEYBOARD_TOGGLE, ShowVirtualKeyboard);
             // TouchEventManager.Instance.RegisterDragEvent (gameObject, DragTwoFinger, numberOfFinger: 2);
             // EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_CHANGE_STATE_QUESTIONCUBE_ANIMATION, ResetCameraPosition);
         }
@@ -78,9 +81,11 @@ namespace IBM.Watson.Camera
         {
 			EventManager.Instance.UnregisterEventReceiver (Constants.Event.ON_KEYBOARD_ANYKEY_DOWN, ChangeOnScene);
 			EventManager.Instance.UnregisterEventReceiver (Constants.Event.ON_TOUCH_PRESSED_FULLSCREEN, ChangeOnScene);
+			EventManager.Instance.UnregisterEventReceiver (Constants.Event.ON_TOUCH_RELEASED_FULLSCREEN, ChangeOnScene);
 			EventManager.Instance.UnregisterEventReceiver (Constants.Event.ON_CHANGE_AVATAR_STATE_FINISH, ChangeOnScene);
 			EventManager.Instance.UnregisterEventReceiver (Constants.Event.ON_CHANGE_STATE_QUESTIONCUBE_ANIMATION, QuestionStateChanged);
 			EventManager.Instance.UnregisterEventReceiver (Constants.Event.ON_APPLICATION_TO_BECOME_IDLE, MakeIdle);
+			EventManager.Instance.UnregisterEventReceiver (Constants.Event.ON_VIRTUAL_KEYBOARD_TOGGLE, ShowVirtualKeyboard);
             //TouchEventManager.Instance.UnregisterDragEvent (gameObject, DragTwoFinger, numberOfFinger: 2);
             //EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_CHANGE_STATE_QUESTIONCUBE_ANIMATION, ResetCameraPosition);
         }
@@ -99,12 +104,27 @@ namespace IBM.Watson.Camera
             CameraPositionOnUpdate();
         }
 
+
 		void QuestionStateChanged(System.Object[] args = null){
+			if (args != null && args.Length == 1 && args [0] is int) {
+				//( args[0] as Ques
+				CubeAnimationManager.CubeAnimationState cubeAnimationState = (CubeAnimationManager.CubeAnimationState)args [0];
+				if (cubeAnimationState == CubeAnimationManager.CubeAnimationState.FOCUSING_TO_SIDE || cubeAnimationState == CubeAnimationManager.CubeAnimationState.IDLE_AS_FOCUSED) {
+					m_LastTimeActionCaptured = float.MaxValue;	//there won't be any idle animation if cube has focused
+				}
+				else{
+					m_LastTimeActionCaptured = Time.realtimeSinceStartup;
+				}
+			} else {
+				m_LastTimeActionCaptured = Time.realtimeSinceStartup;
+			}
 
 		}
 
 		void ChangeOnScene(System.Object[] args = null){
 			m_LastTimeActionCaptured = Time.realtimeSinceStartup;
+			if(m_IsIdle)
+				EventManager.Instance.SendEvent(Constants.Event.ON_APPLICATION_TO_BECOME_IDLE, false);
 		}
 
 		void CheckIdleState(){
@@ -112,10 +132,7 @@ namespace IBM.Watson.Camera
 				//if it is Idle then changing state now
 				if(!m_IsIdle)
 					EventManager.Instance.SendEvent(Constants.Event.ON_APPLICATION_TO_BECOME_IDLE, true);
-			} else {
-				if(m_IsIdle)	//it was true, so now changing state now
-					EventManager.Instance.SendEvent(Constants.Event.ON_APPLICATION_TO_BECOME_IDLE, false);
-			}
+			} 
 		}
 
 		private float minDistance = 60.0f;
@@ -191,7 +208,8 @@ namespace IBM.Watson.Camera
 			}
 			else
 			{
-				Log.Warning("WatsonCamera", "MakeIdle has invalid argument");
+				MakeIdle(new object[]{!m_IsIdle});
+				//Log.Warning("WatsonCamera", "MakeIdle has invalid argument");
 			}
 		}
 
@@ -290,6 +308,8 @@ namespace IBM.Watson.Camera
             {
                 Log.Error("WatsonCamera", "ShowVirtualKeyboard has exception: {0}", e.Message);
             }
+			#elif UNITY_IOS || UNITY_ANDROID
+				TouchScreenKeyboard.Open("",TouchScreenKeyboardType.Default, false, false, false,false,"");
 			#endif
         }
         #endregion
