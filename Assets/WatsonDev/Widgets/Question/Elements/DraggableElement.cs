@@ -20,8 +20,12 @@ using System.Collections;
 using UnityEngine.EventSystems;
 using IBM.Watson.Widgets.Question;
 using IBM.Watson.Logging;
+using IBM.Watson.Utilities;
+using System;
+using System.Collections.Generic;
+using System.Reflection;
 
-public class DraggableElement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
+public class DraggableElement : MonoBehaviour//, IDragHandler, IBeginDragHandler, IEndDragHandler
 {
 	[SerializeField]
 	private Facet m_Facet;
@@ -30,38 +34,80 @@ public class DraggableElement : MonoBehaviour, IDragHandler, IBeginDragHandler, 
 	private RectTransform m_RectTransform;
 //	private Vector2 m_Offset;
 
+	[Serializable]
+	private class FullScreenDragEventMapping
+	{
+		[Tooltip("If there is no drag layer object set, it uses FullScreen")]
+		public GameObject m_DragLayerObject = null;
+		public int m_NumberOfFinger = 1;
+		public int m_SortingLayer = 0;
+		public bool m_IsDragInside = true;
+		public Constants.Event m_Callback = Constants.Event.NONE;
+	};
+	
+	[SerializeField]
+	private List<FullScreenDragEventMapping> m_FullScreenDragMappings = new List<FullScreenDragEventMapping>();
+
 	void Awake()
 	{
 		m_RectTransform = gameObject.GetComponent<RectTransform>();
 	}
 
-	#region IDragHandler implementation
-
-	public void OnDrag (PointerEventData eventData)
+	void OnEnable()
 	{
-		if(m_Facet.Focused)
+		if (TouchEventManager.Instance == null) 
 		{
-			Vector2 tempPosition;
-			RectTransformUtility.ScreenPointToLocalPointInRectangle(m_CanvasRectTransform, eventData.position, Camera.main, out tempPosition);
-			m_RectTransform.anchoredPosition = tempPosition;
+			Log.Error ("DraggableElement", "There should be TouchEventManager in the scene! No TouchEventManager found.");
+			return;
+		}
+
+		foreach (var mapping in m_FullScreenDragMappings)
+		{
+			TouchEventManager.Instance.RegisterDragEvent(mapping.m_DragLayerObject, mapping.m_Callback, mapping.m_NumberOfFinger, mapping.m_SortingLayer, isDragInside: mapping.m_IsDragInside);
 		}
 	}
 
-	#endregion
-
-	#region IBeginDragHandler implementation
-
-	public void OnBeginDrag (PointerEventData eventData)
+	void OnDisable()
 	{
-//		RectTransformUtility.ScreenPointToLocalPointInRectangle(m_RectTransform, eventData.position, Camera.main, out m_Offset);
+		if (TouchEventManager.Instance == null) 
+		{
+			Log.Error ("DraggableElement", "There should be TouchEventManager in the scene! No TouchEventManager found.");
+			return;
+		}
+
+		foreach (var mapping in m_FullScreenDragMappings)
+		{
+			TouchEventManager.Instance.UnregisterDragEvent(mapping.m_DragLayerObject, mapping.m_Callback, mapping.m_NumberOfFinger, mapping.m_SortingLayer, isDragInside: mapping.m_IsDragInside);
+		}
 	}
 
-	#endregion
-
-	#region IEndDragHandler implementation
-	public void OnEndDrag (PointerEventData eventData)
-	{
-
-	}
-	#endregion
+//	#region IDragHandler implementation
+//
+//	public void OnDrag (PointerEventData eventData)
+//	{
+//		if(m_Facet.Focused)
+//		{
+//			Vector2 tempPosition;
+//			RectTransformUtility.ScreenPointToLocalPointInRectangle(m_CanvasRectTransform, eventData.position, Camera.main, out tempPosition);
+//			m_RectTransform.anchoredPosition = tempPosition;
+//		}
+//	}
+//
+//	#endregion
+//
+//	#region IBeginDragHandler implementation
+//
+//	public void OnBeginDrag (PointerEventData eventData)
+//	{
+////		RectTransformUtility.ScreenPointToLocalPointInRectangle(m_RectTransform, eventData.position, Camera.main, out m_Offset);
+//	}
+//
+//	#endregion
+//
+//	#region IEndDragHandler implementation
+//	public void OnEndDrag (PointerEventData eventData)
+//	{
+//
+//	}
+//	#endregion
 }
