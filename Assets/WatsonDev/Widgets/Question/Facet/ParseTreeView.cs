@@ -153,7 +153,7 @@ namespace IBM.Watson.Widgets.Question
 		private void CreateParseWord(ParseTree parseWord, RectTransform parentRectTransform, RectTransform parentWordRectTransform)
 		{
 			//	instantiate word
-			GameObject wordGameObject = Instantiate(m_ParseTreeTextItemPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity) as GameObject;
+			GameObject wordGameObject = Instantiate(m_ParseTreeTextItemPrefab, parentRectTransform != m_ParseCanvasRectTransform ? new Vector3(0f, 0f, 0f) : new Vector3(-456f, 487f, 0f), Quaternion.identity) as GameObject;
 
 			//	set parent to parent transform
             RectTransform wordRectTransform = wordGameObject.GetComponent<RectTransform>();

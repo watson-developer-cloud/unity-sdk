@@ -47,7 +47,7 @@ public class DraggableElement : MonoBehaviour, IDragHandler, IBeginDragHandler, 
 		{
 			Vector2 tempPosition;
 			RectTransformUtility.ScreenPointToLocalPointInRectangle(m_CanvasRectTransform, eventData.position, Camera.main, out tempPosition);
-			m_RectTransform.anchoredPosition = tempPosition - m_RectTransform.anchoredPosition;
+			m_RectTransform.anchoredPosition = tempPosition - m_Offset - new Vector2(-52f, -278f);	//	parse tree mask position
 		}
 	}
 
