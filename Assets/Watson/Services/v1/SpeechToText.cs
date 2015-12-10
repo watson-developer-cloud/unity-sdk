@@ -392,6 +392,15 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
                         }
 
                     }
+                    else if ( json.Contains("error") )
+                    {
+                        string error = (string)json["error"];
+                        Log.Error( "SpeechToText", "Error: {0}", error );
+
+                        StopListening();
+                        if ( OnError != null )
+                            OnError( error );
+                    }
                     else
                     {
                         Log.Warning("SpeechToText", "Unknown message: {0}", tm.Text);
