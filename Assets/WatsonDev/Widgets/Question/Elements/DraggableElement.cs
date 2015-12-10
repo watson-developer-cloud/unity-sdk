@@ -32,7 +32,6 @@ public class DraggableElement : MonoBehaviour, IDragHandler, IBeginDragHandler, 
 	private RectTransform m_CanvasRectTransform;
 	private RectTransform m_RectTransform;
 	private Vector2 m_Offset;
-//	private Vector2 m_OriginalPosition;
 
 	void Awake()
 	{
@@ -40,7 +39,10 @@ public class DraggableElement : MonoBehaviour, IDragHandler, IBeginDragHandler, 
 	}
 	
 	#region IDragHandler implementation
-
+	/// <summary>
+	/// Raises the drag event.
+	/// </summary>
+	/// <param name="eventData">Event data.</param>
 	public void OnDrag (PointerEventData eventData)
 	{
 		if(m_Facet.Focused)
@@ -54,16 +56,22 @@ public class DraggableElement : MonoBehaviour, IDragHandler, IBeginDragHandler, 
 	#endregion
 
 	#region IBeginDragHandler implementation
-
+	/// <summary>
+	/// Raises the begin drag event.
+	/// </summary>
+	/// <param name="eventData">Event data.</param>
 	public void OnBeginDrag (PointerEventData eventData)
 	{
-//		m_OriginalPosition = m_RectTransform.anchoredPosition;
 		RectTransformUtility.ScreenPointToLocalPointInRectangle(m_RectTransform, eventData.position, Camera.main, out m_Offset);
 	}
 
 	#endregion
 
 	#region IEndDragHandler implementation
+	/// <summary>
+	/// Raises the end drag event.
+	/// </summary>
+	/// <param name="eventData">Event data.</param>
 	public void OnEndDrag (PointerEventData eventData) {}
 	#endregion
 }
