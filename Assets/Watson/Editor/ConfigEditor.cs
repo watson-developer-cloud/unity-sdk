@@ -74,6 +74,7 @@ namespace IBM.Watson.Editor
         private IWatsonService [] m_Services = null;
         private Dictionary<string,bool> m_ServiceStatus = new Dictionary<string,bool>();
         private int m_CheckServiceRoutine = 0;
+        private bool m_CheckServicesNow = false;
         #endregion
 
         [UnityEditor.Callbacks.DidReloadScripts]
@@ -125,9 +126,10 @@ namespace IBM.Watson.Editor
                 foreach( var service in m_Services )
                     service.GetServiceStatus( OnServiceStatus );
 
-                while( (DateTime.Now - lastCheck).TotalSeconds < 60.0f )
+                while( (DateTime.Now - lastCheck).TotalSeconds < 60.0f && !m_CheckServicesNow )
                     yield return null;
                 lastCheck = DateTime.Now;
+                m_CheckServicesNow = false;
             }
         }
 
@@ -206,12 +208,12 @@ namespace IBM.Watson.Editor
                     if ( m_ServiceStatus.ContainsKey( setup.ServiceID ) )
                     {
                         if ( m_ServiceStatus[setup.ServiceID] )
-                            GUILayout.Label( m_StatusUp );
+                            GUILayout.Label( m_StatusUp, GUILayout.Width( 20 ) );
                         else
-                            GUILayout.Label( m_StatusDown );
+                            GUILayout.Label( m_StatusDown, GUILayout.Width( 20 ) );
                     }
                     else
-                        GUILayout.Label( m_StatusUnknown );
+                        GUILayout.Label( m_StatusUnknown, GUILayout.Width( 20 ) );
 
                     GUIStyle labelStyle = new GUIStyle(GUI.skin.label);
                     labelStyle.normal.textColor = bValid ? Color.green : Color.grey; 
@@ -269,6 +271,8 @@ namespace IBM.Watson.Editor
 
                     if ( bParsed )
                     {
+                        m_CheckServicesNow = true;
+
                         EditorUtility.DisplayDialog( "Complete", "Credentials applied.", OK );
                         m_PastedCredentials = "\n\n\n\n\n\n\n";
                         GUI.FocusControl("Apply");
@@ -374,7 +378,20 @@ namespace IBM.Watson.Editor
                 {
                     Config.CredentialInfo info = cfg.Credentials[i];
 
+                    GUILayout.BeginHorizontal();
                     info.m_ServiceID = EditorGUILayout.TextField("ServiceID", info.m_ServiceID);
+
+                    if ( m_ServiceStatus.ContainsKey( info.m_ServiceID ) )
+                    {
+                        if ( m_ServiceStatus[info.m_ServiceID] )
+                            GUILayout.Label( m_StatusUp, GUILayout.Width( 20 ) );
+                        else
+                            GUILayout.Label( m_StatusDown, GUILayout.Width( 20 ) );
+                    }
+                    else
+                        GUILayout.Label( m_StatusUnknown, GUILayout.Width( 20 ) );
+                    GUILayout.EndHorizontal();
+
                     info.m_URL = EditorGUILayout.TextField("URL", info.m_URL);
                     info.m_User = EditorGUILayout.TextField("User", info.m_User);
                     info.m_Password = EditorGUILayout.TextField("Password", info.m_Password);
@@ -388,7 +405,10 @@ namespace IBM.Watson.Editor
                 EditorGUI.indentLevel -= 1;
 
                 if (GUILayout.Button("Save"))
+                {
+                    m_CheckServicesNow = true;
                     SaveConfig();
+                }
 
                 if ( GUILayout.Button( "Basic Mode" ) )
                 {

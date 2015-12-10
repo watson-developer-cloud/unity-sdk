@@ -37,7 +37,7 @@ ehthumbs.db
 
 /BuildScripts/Clients/Windows
 /Builds
-Output/
+/Output
 /Clients
 /Assets/StreamingAssets/parse
 /Assets/StreamingAssets/Thunderstone

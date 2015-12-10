@@ -42,12 +42,14 @@ namespace IBM.Watson.Widgets.Question
             get { return m_IsHighlighted; }
             set
             {
-                m_IsHighlighted = value;
-                m_RectTransform = m_ParseTreeTextField.gameObject.GetComponent<RectTransform>();
-				StopAnimations();
-				m_AnimationTextColor = LeanTween.textColor(m_RectTransform, m_IsHighlighted ? m_ColorLight : m_ColorDark, m_TransitionTime).id;
-				m_AnimationTextScale = LeanTween.scale(m_RectTransform, m_IsHighlighted ? m_ScaleUpSize : m_ScaleDownSize, m_TransitionTime).id;
-				m_AnimationTextAlpha = LeanTween.alpha(m_BoundingBox, IsHighlighted ? 1.0f : 0.0f, m_TransitionTime).id;
+				if(m_IsHighlighted != value){
+		            m_IsHighlighted = value;
+		            m_RectTransform = m_ParseTreeTextField.gameObject.GetComponent<RectTransform>();
+					StopAnimations();
+					m_AnimationTextColor = LeanTween.textColor(m_RectTransform, m_IsHighlighted ? m_ColorLight : m_ColorDark, m_TransitionTime).id;
+					m_AnimationTextScale = LeanTween.scale(m_RectTransform, m_IsHighlighted ? m_ScaleUpSize : m_ScaleDownSize, m_TransitionTime).id;
+					m_AnimationTextAlpha = LeanTween.alpha(m_BoundingBox, IsHighlighted ? 1.0f : 0.0f, m_TransitionTime).id;
+				}
             }
         }
 
@@ -125,6 +127,10 @@ namespace IBM.Watson.Widgets.Question
         {
             m_RectTransform = m_ParseTreeTextField.gameObject.GetComponent<RectTransform>();
         }
+
+		void OnDisable(){
+			StopAnimations ();
+		}
 
         /// <summary>
         /// Update the ParseTree text view.
