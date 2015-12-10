@@ -28,6 +28,7 @@ public class DraggableElement : MonoBehaviour, IDragHandler, IBeginDragHandler, 
 	[SerializeField]
 	private RectTransform m_CanvasRectTransform;
 	private RectTransform m_RectTransform;
+//	private Vector2 m_Offset;
 
 	void Awake()
 	{
@@ -52,7 +53,7 @@ public class DraggableElement : MonoBehaviour, IDragHandler, IBeginDragHandler, 
 
 	public void OnBeginDrag (PointerEventData eventData)
 	{
-
+//		RectTransformUtility.ScreenPointToLocalPointInRectangle(m_RectTransform, eventData.position, Camera.main, out m_Offset);
 	}
 
 	#endregion
