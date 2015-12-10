@@ -99,7 +99,7 @@ namespace IBM.Watson.Utilities
                 foreach (var kp in m_KeyEvents)
                 {
                     KeyCode key = (KeyCode)(kp.Key & KEYCODE_MASK);
-
+				
                     if (Input.GetKeyDown(key))
                     {
                         bool bFireEvent = true;
@@ -127,6 +127,10 @@ namespace IBM.Watson.Utilities
                         if (bFireEvent)
                             fire.Add(kp.Value);
                     }
+
+					if(Input.anyKeyDown){
+						EventManager.Instance.SendEvent(Constants.Event.ON_KEYBOARD_ANYKEY_DOWN);
+					}
                 }
 
                 // now fire the events outside of the dictionary loop so we don't throw an exception..

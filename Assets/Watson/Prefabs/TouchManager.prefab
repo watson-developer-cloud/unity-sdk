@@ -16,6 +16,7 @@ GameObject:
   - 114: {fileID: 11464796}
   - 114: {fileID: 11444476}
   - 114: {fileID: 11411050}
+  - 114: {fileID: 11459434}
   m_Layer: 0
   m_Name: TouchManager
   m_TagString: Untagged
@@ -277,6 +278,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_TapGesture: {fileID: 11464796}
+  m_ThreeTapGesture: {fileID: 11459434}
   m_OneFingerMoveGesture: {fileID: 11471262}
   m_TwoFingerMoveGesture: {fileID: 11410502}
   m_PressGesture: {fileID: 11444476}
@@ -297,6 +299,31 @@ MonoBehaviour:
   Tags:
     tagList:
     - Mouse
+--- !u!114 &11459434
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 109220}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1235405773, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  advancedProps: 0
+  minTouches: 0
+  maxTouches: 0
+  combineTouches: 0
+  combineTouchesInterval: .300000012
+  useSendMessage: 0
+  sendStateChangeMessages: 0
+  sendMessageTarget: {fileID: 0}
+  requireGestureToFail: {fileID: 0}
+  friendlyGestures:
+  - {fileID: 11464796}
+  numberOfTapsRequired: 3
+  timeLimit: .699999988
+  distanceLimit: .300000012
 --- !u!114 &11464796
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -317,7 +344,8 @@ MonoBehaviour:
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
   requireGestureToFail: {fileID: 0}
-  friendlyGestures: []
+  friendlyGestures:
+  - {fileID: 11459434}
   numberOfTapsRequired: 1
   timeLimit: Infinity
   distanceLimit: Infinity
@@ -357,6 +385,10 @@ Prefab:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 0}
+      propertyPath: friendlyGestures.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
       propertyPath: layers.Array.data[0]
       value: 
       objectReference: {fileID: 11418270}
@@ -372,6 +404,30 @@ Prefab:
       propertyPath: m_ReleaseGesture
       value: 
       objectReference: {fileID: 11411050}
+    - target: {fileID: 0}
+      propertyPath: numberOfTapsRequired
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: distanceLimit
+      value: .300000012
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: timeLimit
+      value: .699999988
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ThreeTapGesture
+      value: 
+      objectReference: {fileID: 11459434}
+    - target: {fileID: 0}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: friendlyGestures.Array.data[0]
+      value: 
+      objectReference: {fileID: 11459434}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 109220}
