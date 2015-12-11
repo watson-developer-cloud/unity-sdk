@@ -21,7 +21,9 @@ using IBM.Watson.Connection;
 using IBM.Watson.DataModels.XRAY;
 using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
+using MiniJSON;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
@@ -32,14 +34,19 @@ namespace IBM.Watson.Services.v1
     /// This class wraps the XRAY back-end service.
     /// </summary>
     /// <remarks>This is an experimental service.</remarks>
-    public class XRAY
+    public class XRAY : IWatsonService
     {
         #region Public Types
         /// <summary>
         /// The callback delegate for AskQuestion().
         /// </summary>
-        /// <param name="questions">The </param>
+        /// <param name="response">The response containing the question, answer, and parse data.</param>
         public delegate void OnAskQuestion( AskResponse response );
+        /// <summary>
+        /// The callback delegate for Ping().
+        /// </summary>
+        /// <param name="success">Returns true if service responds.</param>
+        public delegate void OnPingCallback( bool success );
         #endregion
 
         #region Public Properties
@@ -59,9 +66,57 @@ namespace IBM.Watson.Services.v1
         private const string SERVICE_ID = "XrayV1";
         private const string XRAY_SUBSYSTEM = "XRAY";
         private const string ASK_QUESTION = "/v1/en/ask";
+        private const string PING = "/v1/en/ping";
         private Dictionary<string,DataCache> m_QuestionCache = new Dictionary<string, DataCache>();
         #endregion
 
+        #region Ping
+        /// <summary>
+        /// Ping the service to make sure it's up and running.
+        /// </summary>
+        /// <param name="callback">The callback to invoke with the status.</param>
+        /// <returns>Returns true if the request was submitted.</returns>
+        public bool Ping( OnPingCallback callback )
+        {
+            if ( callback == null )
+                throw new ArgumentNullException("callback" );
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, PING );
+            if (connector == null)
+                return false;
+
+            PingReq req = new PingReq();
+            req.Callback = callback;
+            req.OnResponse = OnPingResp;
+
+            return connector.Send(req);
+        }
+        private class PingReq : RESTConnector.Request
+        {
+            public OnPingCallback Callback { get; set; }
+        };
+
+        private void OnPingResp(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            if (resp.Success)
+            {
+                string jsonString = Encoding.UTF8.GetString(resp.Data);
+                if (jsonString != null)
+                {
+                    IDictionary json = (IDictionary)Json.Deserialize(jsonString);
+                    if (json != null && json.Contains( "status" ) )
+                        resp.Success = (string)json["status"] == "running";
+                    else
+                        resp.Success = false;
+                }
+                else
+                    resp.Success = false;
+            }
+
+            if (((PingReq)req).Callback != null)
+                ((PingReq)req).Callback(resp.Success);
+        }
+       #endregion
 
         #region AskQuestion
         /// <summary>
@@ -169,7 +224,44 @@ namespace IBM.Watson.Services.v1
 
             return response;
         }
+        #endregion
 
+        #region IWatsonService interface
+        /// <exclude />
+        public string GetServiceID()
+        {
+            return SERVICE_ID;
+        }
+
+        /// <exclude />
+        public void GetServiceStatus(ServiceStatus callback)
+        {
+            if ( Config.Instance.FindCredentials( SERVICE_ID ) != null )
+                new CheckServiceStatus( this, callback );
+            else
+                callback( SERVICE_ID, false );
+        }
+
+        private class CheckServiceStatus
+        {
+            private XRAY m_Service = null;
+            private ServiceStatus m_Callback = null;
+
+            public CheckServiceStatus( XRAY service, ServiceStatus callback )
+            {
+                m_Service = service;
+                m_Callback = callback;
+
+                if (! m_Service.Ping( OnPing ) )
+                    m_Callback( SERVICE_ID, false );
+            }
+
+            private void OnPing( bool success )
+            {
+                if ( m_Callback != null ) 
+                    m_Callback( SERVICE_ID, success );
+            }
+        };
         #endregion
     }
 
