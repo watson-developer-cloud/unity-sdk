@@ -114,6 +114,11 @@ namespace IBM.Watson.Utilities
 				m_isInside = isInside;
 			}
 
+			/// <summary>
+			/// Determines whether this instance has touched on the specified hitTransform.
+			/// </summary>
+			/// <returns><c>true</c> if this instance has touched on the specified hitTransform; otherwise, <c>false</c>.</returns>
+			/// <param name="hitTransform">Hit transform.</param>
 			public bool HasTouchedOn(Transform hitTransform){
 				bool hasTouchedOn = false;
 				if (ColliderList != null) 
@@ -235,6 +240,10 @@ namespace IBM.Watson.Utilities
             m_ReleaseGesture.Released -= ReleaseGestureReleased;
         }
 
+		/// <summary>
+		/// Gets the main camera.
+		/// </summary>
+		/// <value>The main camera.</value>
         public UnityEngine.Camera MainCamera
         {
             get
@@ -419,6 +428,7 @@ namespace IBM.Watson.Utilities
         /// <param name="callback">Callback to call after tapped on object (or outside of the object)</param>
         /// <param name="SortingLayer">Sorting layer to determine the corresponding tap object</param>
         /// <param name="isTapInside">Whether to tap on object or outside the object</param>
+		/// <param name="layerMask">Layer mask to tap. Default is the gameObjectToTouch's layer</param>
         /// <returns></returns>
 		public bool RegisterTapEvent(GameObject gameObjectToTouch, Constants.Event callback, int SortingLayer = 0, bool isTapInside = true, LayerMask layerMask = default(LayerMask))
 		{
@@ -454,6 +464,7 @@ namespace IBM.Watson.Utilities
         /// <param name="callback">Callback to call after tapped on object (or outside of the object)</param>
         /// <param name="SortingLayer">Sorting layer to determine the corresponding tap object</param>
         /// <param name="isTapInside">Whether to tap on object or outside the object</param>
+		/// <param name="layerMask">Layer mask to tap. Default is the gameObjectToTouch's layer</param>
         /// <returns></returns>
 		public bool UnregisterTapEvent(GameObject gameObjectToTouch, Constants.Event callback, int SortingLayer = 0, bool isTapInside = true, LayerMask layerMask = default(LayerMask))
 		{
