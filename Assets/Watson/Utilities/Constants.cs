@@ -361,6 +361,22 @@ namespace IBM.Watson.Utilities
 			/// Event fired to open virtual keyboard
 			/// </summary>
 			ON_VIRTUAL_KEYBOARD_TOGGLE,
+			/// <summary>
+			/// Event fired after three tap on middle left - hot corner
+			/// </summary>
+			ON_TAP_THREETIMES_MIDDLE_LEFT,
+			/// <summary>
+			/// Event fired after three tap on middle right - hot corner
+			/// </summary>
+			ON_TAP_THREETIMES_MIDDLE_RIGHT,
+			/// <summary>
+			/// Event fired after three tap on middle bottom - hot corner
+			/// </summary>
+			ON_TAP_THREETIMES_MIDDLE_BOTTOM,
+			/// <summary>
+			/// Event fired after three tap on middle top - hot corner
+			/// </summary>
+			ON_TAP_THREETIMES_MIDDLE_TOP,
             #endregion
         }
 

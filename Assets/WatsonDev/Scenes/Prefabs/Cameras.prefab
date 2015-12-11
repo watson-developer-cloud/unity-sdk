@@ -191,11 +191,11 @@ MonoBehaviour:
       m_Target: {fileID: 172636}
       m_Component: WatsonCamera
       m_Method: ZoomOut
-  - m_Event: 6
+  - m_Event: 311
     m_Callback:
       m_Target: {fileID: 172636}
       m_Component: WatsonCamera
-      m_Method: ApplicationQuit
+      m_Method: MoveUp
   - m_Event: 309
     m_Callback:
       m_Target: {fileID: 172636}
@@ -206,21 +206,11 @@ MonoBehaviour:
       m_Target: {fileID: 172636}
       m_Component: WatsonCamera
       m_Method: MoveRight
-  - m_Event: 311
-    m_Callback:
-      m_Target: {fileID: 172636}
-      m_Component: WatsonCamera
-      m_Method: MoveUp
   - m_Event: 312
     m_Callback:
       m_Target: {fileID: 172636}
       m_Component: WatsonCamera
       m_Method: MoveDown
-  - m_Event: 502
-    m_Callback:
-      m_Target: {fileID: 172636}
-      m_Component: WatsonCamera
-      m_Method: ShowVirtualKeyboard
 --- !u!114 &11450530
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -281,9 +271,6 @@ MonoBehaviour:
   - m_Key: 274
     m_Modifiers: 2
     m_Event: 312
-  - m_Key: 53
-    m_Modifiers: 2
-    m_Event: 502
 --- !u!114 &11460946
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -295,6 +282,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d56af23d758c64b1188c7169f8e7652a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_NormalizedThresholdWidth: .100000001
+  m_NormalizedThresholdHeight: .100000001
 --- !u!114 &11467584
 MonoBehaviour:
   m_ObjectHideFlags: 1

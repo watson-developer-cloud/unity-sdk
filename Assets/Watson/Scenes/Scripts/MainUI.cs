@@ -233,8 +233,6 @@ public class MainUI : MonoBehaviour
         }
 
         DontDestroyOnLoad(transform.gameObject);
-
-        Screen.sleepTimeout = SleepTimeout.NeverSleep;
     }
 
     IEnumerator MakeActiveEventSystemWithDelay(bool active)

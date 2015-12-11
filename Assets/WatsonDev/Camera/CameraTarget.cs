@@ -56,7 +56,7 @@ namespace IBM.Watson.Camera
 		public Vector3 TargetPosition{
 			get{
 	
-				if(m_CustomPosition != Vector3.zero){
+				if(m_UseCustomPosition){
 					return m_CustomPosition;
 				}
 				else{
