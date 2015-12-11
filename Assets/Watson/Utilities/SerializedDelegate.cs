@@ -29,6 +29,10 @@ namespace IBM.Watson.Utilities
     [Serializable]
     public class SerializedDelegate
     {
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        /// <param name="delegateType">The delegate type.</param>
         public SerializedDelegate( Type delegateType )
         {
             DelegateType = delegateType;

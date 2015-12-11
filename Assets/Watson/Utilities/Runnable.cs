@@ -62,6 +62,9 @@ namespace IBM.Watson.Utilities
 #if UNITY_EDITOR
         private static bool sm_EditorRunnable = false;
 
+        /// <summary>
+        /// This function enables the Runnable in edit mode.
+        /// </summary>
         public static void EnableRunnableInEditor()
         {
             if (! sm_EditorRunnable )

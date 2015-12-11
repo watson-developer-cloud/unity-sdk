@@ -25,15 +25,37 @@ using System.Collections.Generic;
 using System.IO;
 using IBM.Watson.Logging;
 
+/// <summary>
+/// Main UI menu item.
+/// </summary>
 [System.Serializable]
-public class MenuScene{
+public class MenuScene
+{
+    /// <summary>
+    /// The name of the scene.
+    /// </summary>
 	public string m_SceneName;
+    /// <summary>
+    /// the description of the scene.
+    /// </summary>
 	public string m_SceneDesc;
+    /// <summary>
+    /// Back button position for this scene.
+    /// </summary>
 	public Vector3 m_CustomBackButtonPosition = Vector3.zero;
+    /// <summary>
+    /// Back button scale for this scene.
+    /// </summary>
 	public Vector2 m_CustomBackButtonScale = Vector2.zero;
+    /// <summary>
+    /// Is the back button visible.
+    /// </summary>
 	public bool m_IsVisibleBackButton = true;
 }
 
+/// <summary>
+/// Script for the main UI.
+/// </summary>
 public class MainUI : MonoBehaviour
 {
     [SerializeField]
@@ -42,71 +64,77 @@ public class MainUI : MonoBehaviour
     private Button m_ButtonPrefab = null;
     [SerializeField]
     private GameObject m_BackgroundUI = null;
-	[SerializeField]
-	private RectTransform m_ButtonBack = null;
-	private Vector3 m_InitialBackButtonPosition;
-	private Vector3 m_InitialBackButtonScale;
-	private Color m_InitialBackButtonColor;
+    [SerializeField]
+    private RectTransform m_ButtonBack = null;
+    private Vector3 m_InitialBackButtonPosition;
+    private Vector3 m_InitialBackButtonScale;
+    private Color m_InitialBackButtonColor;
 
     [SerializeField]
-	private MenuScene [] m_Scenes = null;
+    private MenuScene[] m_Scenes = null;
 
     private const string MAIN_SCENE = "Main";
 
 #if UNITY_EDITOR
     [UnityEditor.MenuItem("CONTEXT/MainUI/Update Scene Names")]
-     private static void UpdateNames(UnityEditor.MenuCommand command)
-     {
+    private static void UpdateNames(UnityEditor.MenuCommand command)
+    {
         MainUI context = (MainUI)command.context;
         List<string> scenes = new List<string>();
         foreach (UnityEditor.EditorBuildSettingsScene scene in UnityEditor.EditorBuildSettings.scenes)
         {
-            if ( scene == null || !scene.enabled )
+            if (scene == null || !scene.enabled)
                 continue;
 
             string name = Path.GetFileNameWithoutExtension(scene.path);
-            if ( name == MAIN_SCENE )
+            if (name == MAIN_SCENE)
                 continue;
 
             scenes.Add(name);
         }
         scenes.Sort();
-		context.m_Scenes = new MenuScene[scenes.Count];
-		for (int i = 0; i < scenes.Count; i++) {
-			context.m_Scenes[i] = new MenuScene();
-			context.m_Scenes[i].m_SceneName = scenes[i];
-			context.m_Scenes[i].m_SceneDesc = scenes[i];
-		}
+        context.m_Scenes = new MenuScene[scenes.Count];
+        for (int i = 0; i < scenes.Count; i++)
+        {
+            context.m_Scenes[i] = new MenuScene();
+            context.m_Scenes[i].m_SceneName = scenes[i];
+            context.m_Scenes[i].m_SceneDesc = scenes[i];
+        }
     }
 #endif
 
     private IEnumerator Start()
     {
-        if ( m_BackgroundUI == null )
-			throw new WatsonException( "m_BackgroundUI is null." );
-        if ( m_ButtonLayout == null )
-            throw new WatsonException( "m_ButtonLayout is null." );
-        if ( m_ButtonPrefab == null )
-            throw new WatsonException( "m_ButtonPrefab is null." );
-		if ( m_ButtonBack == null )
-			throw new WatsonException( "m_ButtonBack is null." );
-		else{
-			if(m_ButtonBack.GetComponent<RectTransform>() != null){
-				m_InitialBackButtonPosition = m_ButtonBack.GetComponent<RectTransform>().anchoredPosition3D;
-				m_InitialBackButtonScale = m_ButtonBack.GetComponent<RectTransform>().sizeDelta;
-			}
-			else{
-				throw new WatsonException( "m_ButtonBack doesn't have RectTransform" );
-			}
+        if (m_BackgroundUI == null)
+            throw new WatsonException("m_BackgroundUI is null.");
+        if (m_ButtonLayout == null)
+            throw new WatsonException("m_ButtonLayout is null.");
+        if (m_ButtonPrefab == null)
+            throw new WatsonException("m_ButtonPrefab is null.");
+        if (m_ButtonBack == null)
+            throw new WatsonException("m_ButtonBack is null.");
+        else
+        {
+            if (m_ButtonBack.GetComponent<RectTransform>() != null)
+            {
+                m_InitialBackButtonPosition = m_ButtonBack.GetComponent<RectTransform>().anchoredPosition3D;
+                m_InitialBackButtonScale = m_ButtonBack.GetComponent<RectTransform>().sizeDelta;
+            }
+            else
+            {
+                throw new WatsonException("m_ButtonBack doesn't have RectTransform");
+            }
 
-			if(m_ButtonBack.GetComponent<Image>() != null){
-				m_InitialBackButtonColor = m_ButtonBack.GetComponentInChildren<Image>().color;
-			}
-			else{
-				throw new WatsonException( "m_ButtonBack doesn't have Image" );
-			}
+            if (m_ButtonBack.GetComponent<Image>() != null)
+            {
+                m_InitialBackButtonColor = m_ButtonBack.GetComponentInChildren<Image>().color;
+            }
+            else
+            {
+                throw new WatsonException("m_ButtonBack doesn't have Image");
+            }
 
-		}
+        }
         // wait for the configuration to be loaded first..
         while (!Config.Instance.ConfigLoaded)
             yield return null;
@@ -115,107 +143,121 @@ public class MainUI : MonoBehaviour
         UpdateButtons();
     }
 
-    private void OnLevelWasLoaded(int level )
+    private void OnLevelWasLoaded(int level)
     {
         UpdateButtons();
     }
 
     private void UpdateButtons()
     {
-        while( m_ButtonLayout.transform.childCount > 0 )
-            DestroyImmediate( m_ButtonLayout.transform.GetChild(0).gameObject );
+        while (m_ButtonLayout.transform.childCount > 0)
+            DestroyImmediate(m_ButtonLayout.transform.GetChild(0).gameObject);
 
         //Log.Debug( "MainUI", "UpdateBottons, level = {0}", Application.loadedLevelName );
-        if ( Application.loadedLevelName == MAIN_SCENE )
+        if (Application.loadedLevelName == MAIN_SCENE)
         {
-            m_BackgroundUI.SetActive( true );
+            m_BackgroundUI.SetActive(true);
 
-            foreach( var scene in m_Scenes )
+            foreach (var scene in m_Scenes)
             {
-                if ( string.IsNullOrEmpty( scene.m_SceneName ) )
+                if (string.IsNullOrEmpty(scene.m_SceneName))
                     continue;
 
-                GameObject buttonObj = GameObject.Instantiate( m_ButtonPrefab.gameObject );
-                buttonObj.transform.SetParent( m_ButtonLayout.transform, false );
+                GameObject buttonObj = GameObject.Instantiate(m_ButtonPrefab.gameObject);
+                buttonObj.transform.SetParent(m_ButtonLayout.transform, false);
 
                 Text buttonText = buttonObj.GetComponentInChildren<Text>();
-                if ( buttonText != null )
+                if (buttonText != null)
                     buttonText.text = scene.m_SceneDesc;
                 Button button = buttonObj.GetComponentInChildren<Button>();
 
                 string captured = scene.m_SceneName;
-                button.onClick.AddListener( () => OnLoadLevel(captured) );
+                button.onClick.AddListener(() => OnLoadLevel(captured));
             }
         }
         else
         {
-            m_BackgroundUI.SetActive( false );
+            m_BackgroundUI.SetActive(false);
         }
     }
 
-    private void OnLoadLevel( string name )
+    private void OnLoadLevel(string name)
     {
-		GameObject touchScript = GameObject.Find("TouchScript");
-		if(touchScript != null){
-			DestroyImmediate(touchScript);
-		}
+        GameObject touchScript = GameObject.Find("TouchScript");
+        if (touchScript != null)
+        {
+            DestroyImmediate(touchScript);
+        }
 
-        Log.Debug( "MainUI", "OnLoadLevel, name = {0}", name );
-		StartCoroutine (loadLevelAsync (name));
+        Log.Debug("MainUI", "OnLoadLevel, name = {0}", name);
+        StartCoroutine(loadLevelAsync(name));
         //Application.LoadLevel( name );
     }
 
-	private IEnumerator loadLevelAsync(string name){
-		AsyncOperation asyncOperation= Application.LoadLevelAsync (name);
-		while (!asyncOperation.isDone) {
-			yield return new WaitForSeconds(0.1f);
-		}
+    private IEnumerator loadLevelAsync(string name)
+    {
+        AsyncOperation asyncOperation = Application.LoadLevelAsync(name);
+        while (!asyncOperation.isDone)
+        {
+            yield return new WaitForSeconds(0.1f);
+        }
 
-		for (int i = 0; m_Scenes != null && i < m_Scenes.Length; i++) {
-			if(m_Scenes[i].m_SceneName == name){
-				if(m_Scenes[i].m_CustomBackButtonPosition != Vector3.zero){
-					m_ButtonBack.anchoredPosition3D = m_Scenes[i].m_CustomBackButtonPosition;
-					ChangeVisibilityOfButton(m_ButtonBack, m_Scenes[i].m_IsVisibleBackButton);
-				}
-				else{
-					m_ButtonBack.anchoredPosition3D = m_InitialBackButtonPosition;
-					ChangeVisibilityOfButton(m_ButtonBack, true);
-				}
+        for (int i = 0; m_Scenes != null && i < m_Scenes.Length; i++)
+        {
+            if (m_Scenes[i].m_SceneName == name)
+            {
+                if (m_Scenes[i].m_CustomBackButtonPosition != Vector3.zero)
+                {
+                    m_ButtonBack.anchoredPosition3D = m_Scenes[i].m_CustomBackButtonPosition;
+                    ChangeVisibilityOfButton(m_ButtonBack, m_Scenes[i].m_IsVisibleBackButton);
+                }
+                else
+                {
+                    m_ButtonBack.anchoredPosition3D = m_InitialBackButtonPosition;
+                    ChangeVisibilityOfButton(m_ButtonBack, true);
+                }
 
-				if(m_Scenes[i].m_CustomBackButtonScale != Vector2.zero){
-					m_ButtonBack.sizeDelta = m_Scenes[i].m_CustomBackButtonScale;
-				}
-				else{
-					m_ButtonBack.sizeDelta = m_InitialBackButtonScale;
-				}
+                if (m_Scenes[i].m_CustomBackButtonScale != Vector2.zero)
+                {
+                    m_ButtonBack.sizeDelta = m_Scenes[i].m_CustomBackButtonScale;
+                }
+                else
+                {
+                    m_ButtonBack.sizeDelta = m_InitialBackButtonScale;
+                }
 
-				break;
-			}
-		}
-	}
+                break;
+            }
+        }
+    }
 
-	private void ChangeVisibilityOfButton(RectTransform buttonBack, bool isVisible){
-		if(buttonBack.GetComponentInChildren<Text>() != null)
-			buttonBack.GetComponentInChildren<Text>().enabled = isVisible;
-		if(buttonBack.GetComponentInChildren<Image>() != null)
-			buttonBack.GetComponentInChildren<Image>().color = isVisible ? m_InitialBackButtonColor : new Color(m_InitialBackButtonColor.r, m_InitialBackButtonColor.g, m_InitialBackButtonColor.b, 0.0f);
-	}
+    private void ChangeVisibilityOfButton(RectTransform buttonBack, bool isVisible)
+    {
+        if (buttonBack.GetComponentInChildren<Text>() != null)
+            buttonBack.GetComponentInChildren<Text>().enabled = isVisible;
+        if (buttonBack.GetComponentInChildren<Image>() != null)
+            buttonBack.GetComponentInChildren<Image>().color = isVisible ? m_InitialBackButtonColor : new Color(m_InitialBackButtonColor.r, m_InitialBackButtonColor.g, m_InitialBackButtonColor.b, 0.0f);
+    }
 
+    /// <summary>
+    /// Back button handler for the MainUI.
+    /// </summary>
     public void OnBack()
     {
-        Log.Debug( "MainUI", "OnBack invoked" );
-        if (Application.loadedLevelName != MAIN_SCENE) {
-			OnLoadLevel (MAIN_SCENE);
-		}
+        Log.Debug("MainUI", "OnBack invoked");
+        if (Application.loadedLevelName != MAIN_SCENE)
+        {
+            OnLoadLevel(MAIN_SCENE);
+        }
         else
             Application.Quit();
     }
 
     private static MainUI _instance = null;
-    void Awake()
+    private void Awake()
     {
         if (!_instance)
-        {  
+        {
             //first-time opening
             _instance = this;
         }
@@ -235,21 +277,21 @@ public class MainUI : MonoBehaviour
         DontDestroyOnLoad(transform.gameObject);
     }
 
-    IEnumerator MakeActiveEventSystemWithDelay(bool active)
+    private IEnumerator MakeActiveEventSystemWithDelay(bool active)
     {
         yield return new WaitForEndOfFrame();
         MakeActiveEventSystem(active);
     }
 
-    void MakeActiveEventSystem(bool active)
+    private void MakeActiveEventSystem(bool active)
     {
-        Log.Debug( "MainUI", "MakeActiveEventSystem, active = {0}", active );
-        object [] systems = Resources.FindObjectsOfTypeAll( typeof(EventSystem) );
-        foreach( var system in systems )
-            ((EventSystem)system).gameObject.SetActive( active );
+        Log.Debug("MainUI", "MakeActiveEventSystem, active = {0}", active);
+        object[] systems = Resources.FindObjectsOfTypeAll(typeof(EventSystem));
+        foreach (var system in systems)
+            ((EventSystem)system).gameObject.SetActive(active);
     }
 
-    void Update()
+    private void Update()
     {
         if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.Escape))
         {

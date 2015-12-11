@@ -205,7 +205,6 @@ public static class RunUnitTest
     /// <summary>
     /// Public functions invoked from the command line to run all UnitTest objects.
     /// </summary>
-    /// 
     static public void All()
     {
         Logger.InstallDefaultReactors();
@@ -220,6 +219,9 @@ public static class RunUnitTest
     }
 
 #if UNITY_EDITOR
+    /// <summary>
+    /// Menu item handler for running all unit tests.
+    /// </summary>
     [MenuItem("Watson/Run All UnitTests",false, 50)]
     static public void AllNoQuit()
     {

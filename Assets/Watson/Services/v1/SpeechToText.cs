@@ -710,14 +710,19 @@ namespace IBM.Watson.Services.v1            // Add DeveloperCloud
         #endregion
 
         #region IWatsonService interface
+        /// <exclude />
         public string GetServiceID()
         {
             return SERVICE_ID;
         }
 
+        /// <exclude />
         public void GetServiceStatus(ServiceStatus callback)
         {
-            new CheckServiceStatus( this, callback );
+            if ( Config.Instance.FindCredentials( SERVICE_ID ) != null )
+                new CheckServiceStatus( this, callback );
+            else
+                callback( SERVICE_ID, false );
         }
 
         private class CheckServiceStatus

@@ -23,9 +23,6 @@ using IBM.Watson.Widgets;
 using UnityEngine;
 using System;
 
-/// <summary>
-/// Data classes for holding data for services and widgets.
-/// </summary>
 namespace IBM.Watson.DataTypes
 {
     /// <summary>

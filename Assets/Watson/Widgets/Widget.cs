@@ -24,7 +24,6 @@ using UnityEngine;
 
 namespace IBM.Watson.Widgets
 {
-
     /// <summary>
     /// This is the base class for all widgets. A Widget has any number of inputs and outputs that carry a specific type of data.
     /// </summary>
