@@ -15,20 +15,23 @@
 *
 */
 
-
 using UnityEngine;
 using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
-using IBM.Watson.Widgets.Question;
 
 namespace IBM.Watson.Camera
 {
-
+	/// <summary>
+	/// Hot corners to handle Three Tap on corners and middle points of the current device screen. 
+	/// </summary>
 	public class HotCorner : MonoBehaviour {
 
-		private float m_thresholdCornerWidth = 0.1f;
-		private float m_thresholdCornerHeight = 0.1f;
+		[SerializeField]
+		private float m_NormalizedThresholdWidth = 0.1f;
+		[SerializeField]
+		private float m_NormalizedThresholdHeight = 0.1f;
 
+		#region TapThreeTimes Event Handles
 
 		void OnEnable(){
 			EventManager.Instance.RegisterEventReceiver (Constants.Event.ON_TAP_THREETIMES, TapThreeTimes);
@@ -43,21 +46,37 @@ namespace IBM.Watson.Camera
 				//Got three tap gesture, now checking the corners
 				TouchScript.Gestures.TapGesture tapGesture = args [0] as TouchScript.Gestures.TapGesture;
 
-				if(tapGesture.NormalizedScreenPosition.x < m_thresholdCornerWidth && tapGesture.NormalizedScreenPosition.y < m_thresholdCornerHeight){
-					//bottom left
+				if(tapGesture.NormalizedScreenPosition.x < m_NormalizedThresholdWidth && tapGesture.NormalizedScreenPosition.y < m_NormalizedThresholdHeight){
+					EventManager.Instance.SendEvent(Constants.Event.ON_TAP_THREETIMES_BOTTOM_LEFT);
 					TapOnBottomLeft();
 				}
-				else if(tapGesture.NormalizedScreenPosition.x < m_thresholdCornerWidth && tapGesture.NormalizedScreenPosition.y > 1.0f - m_thresholdCornerHeight){
-					//top left
+				else if(tapGesture.NormalizedScreenPosition.x < m_NormalizedThresholdWidth && tapGesture.NormalizedScreenPosition.y > 1.0f - m_NormalizedThresholdHeight){
+					EventManager.Instance.SendEvent(Constants.Event.ON_TAP_THREETIMES_TOP_LEFT);
 					TapOnTopLeft();
 				}
-				else if(tapGesture.NormalizedScreenPosition.x > 1.0f - m_thresholdCornerWidth && tapGesture.NormalizedScreenPosition.y < m_thresholdCornerHeight){
-					//bottom right
+				else if(tapGesture.NormalizedScreenPosition.x > 1.0f - m_NormalizedThresholdWidth && tapGesture.NormalizedScreenPosition.y < m_NormalizedThresholdHeight){
+					EventManager.Instance.SendEvent(Constants.Event.ON_TAP_THREETIMES_BOTTOM_RIGHT);
 					TapOnBottomRight();
 				}
-				else if(tapGesture.NormalizedScreenPosition.x > 1.0f - m_thresholdCornerWidth && tapGesture.NormalizedScreenPosition.y > 1.0f - m_thresholdCornerHeight){
-					//top right
+				else if(tapGesture.NormalizedScreenPosition.x > 1.0f - m_NormalizedThresholdWidth && tapGesture.NormalizedScreenPosition.y > 1.0f - m_NormalizedThresholdHeight){
+					EventManager.Instance.SendEvent(Constants.Event.ON_TAP_THREETIMES_TOP_RIGHT);
 					TapOnTopRight();
+				}
+				else if(tapGesture.NormalizedScreenPosition.x < m_NormalizedThresholdWidth && tapGesture.NormalizedScreenPosition.y > 0.5f - (m_NormalizedThresholdHeight / 2.0f) && tapGesture.NormalizedScreenPosition.y < 0.5f + (m_NormalizedThresholdHeight / 2.0f)){
+					EventManager.Instance.SendEvent(Constants.Event.ON_TAP_THREETIMES_MIDDLE_LEFT);
+					TapOnMiddleLeft();
+				}
+				else if(tapGesture.NormalizedScreenPosition.x > 1.0f - m_NormalizedThresholdWidth && tapGesture.NormalizedScreenPosition.y > 0.5f - (m_NormalizedThresholdHeight / 2.0f) && tapGesture.NormalizedScreenPosition.y < 0.5f + (m_NormalizedThresholdHeight / 2.0f)){
+					EventManager.Instance.SendEvent(Constants.Event.ON_TAP_THREETIMES_MIDDLE_RIGHT);
+					TapOnMiddleRight();
+				}
+				else if(tapGesture.NormalizedScreenPosition.x > 0.5f - (m_NormalizedThresholdWidth / 2.0f) && tapGesture.NormalizedScreenPosition.x < 0.5f + (m_NormalizedThresholdWidth / 2.0f) && tapGesture.NormalizedScreenPosition.y < m_NormalizedThresholdHeight){
+					EventManager.Instance.SendEvent(Constants.Event.ON_TAP_THREETIMES_MIDDLE_BOTTOM);
+					TapOnMiddleBottom();
+				}
+				else if(tapGesture.NormalizedScreenPosition.x > 0.5f - (m_NormalizedThresholdWidth / 2.0f) && tapGesture.NormalizedScreenPosition.x < 0.5f + (m_NormalizedThresholdWidth / 2.0f)  && tapGesture.NormalizedScreenPosition.y > 1.0f - m_NormalizedThresholdHeight){
+					EventManager.Instance.SendEvent(Constants.Event.ON_TAP_THREETIMES_MIDDLE_TOP);
+					TapOnMiddleTop();
 				}
 				else{
 					//do nothing
@@ -68,24 +87,44 @@ namespace IBM.Watson.Camera
 			}
 		}
 
+		#endregion
+
+		#region Custom Events to Call on Corners
+
 		void TapOnBottomLeft(){
-			EventManager.Instance.SendEvent(Constants.Event.ON_TAP_THREETIMES_BOTTOM_LEFT);
 			EventManager.Instance.SendEvent(Constants.Event.ON_DEBUG_TOGGLE);
 		}
 
 		void TapOnBottomRight(){
-			EventManager.Instance.SendEvent(Constants.Event.ON_TAP_THREETIMES_BOTTOM_RIGHT);
 			EventManager.Instance.SendEvent(Constants.Event.ON_VIRTUAL_KEYBOARD_TOGGLE);
 		}
 
 		void TapOnTopLeft(){
-			EventManager.Instance.SendEvent(Constants.Event.ON_TAP_THREETIMES_TOP_LEFT);
+
 		}
 
 		void TapOnTopRight(){
-			EventManager.Instance.SendEvent(Constants.Event.ON_TAP_THREETIMES_TOP_RIGHT);
 			EventManager.Instance.SendEvent(Constants.Event.ON_APPLICATION_TO_BECOME_IDLE);
 		}
+
+		void TapOnMiddleLeft(){
+
+		}
+
+		void TapOnMiddleRight(){
+
+		}
+
+		void TapOnMiddleTop(){
+
+		}
+		
+		void TapOnMiddleBottom(){
+
+		}
+
+		#endregion
+
 	}
 
 }

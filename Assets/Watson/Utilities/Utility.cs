@@ -50,29 +50,39 @@ namespace IBM.Watson.Utilities
             return types.ToArray();
         }
 
-		private static float DELTA_FLOAT = 0.0001f;
 		/// <summary>
 		/// Approximately the specified a, b and tolerance.
 		/// </summary>
-		/// <param name="a">The alpha component.</param>
-		/// <param name="b">The blue component.</param>
+		/// <param name="a">The first component.</param>
+		/// <param name="b">The second component.</param>
 		/// <param name="tolerance">Tolerance.</param>
-		public static bool Approximately(float a, float b, float tolerance)
+		public static bool Approximately(float a, float b, float tolerance = 0.0001f)
 		{
 			return (Mathf.Abs(a - b) < tolerance);
 		}
 
 		/// <summary>
-		/// Checks the equality quaternion.
+		/// Approximately the specified a, b and tolerance.
 		/// </summary>
-		/// <returns><c>true</c>, if equality quaternion was checked, <c>false</c> otherwise.</returns>
-		/// <param name="a">The alpha component.</param>
-		/// <param name="b">The blue component.</param>
-		public static bool CheckEqualityQuaternion(Quaternion a, Quaternion b){
+		/// <param name="a">The first component.</param>
+		/// <param name="b">The second component.</param>
+		/// <param name="tolerance">Tolerance.</param>
+		public static bool Approximately(Vector3 a, Vector3 b, float tolerance = 0.0001f)
+		{
+			return Approximately (a.x, b.x, tolerance) && Approximately (a.y, b.y, tolerance) && Approximately (a.z, b.z, tolerance);
+		}
+
+		/// <summary>
+		/// Approximately Quaternion with the specified a, b and tolerance.
+		/// </summary>
+		/// <param name="a">The first component.</param>
+		/// <param name="b">The second component.</param>
+		/// <param name="tolerance">Tolerance.</param>
+		public static bool Approximately(Quaternion a, Quaternion b, float tolerance = 0.0001f){
 			return 
-				(Approximately(a.eulerAngles.x, b.eulerAngles.x, DELTA_FLOAT) || Approximately((a.eulerAngles.x < 0 ? a.eulerAngles.x + 360.0f : a.eulerAngles.x) , (b.eulerAngles.x < 0 ? b.eulerAngles.x + 360.0f : b.eulerAngles.x), DELTA_FLOAT)) &&
-					(Approximately(a.eulerAngles.y, b.eulerAngles.y, DELTA_FLOAT) || Approximately((a.eulerAngles.y < 0 ? a.eulerAngles.y + 360.0f : a.eulerAngles.y) , (b.eulerAngles.y < 0 ? b.eulerAngles.y + 360.0f : b.eulerAngles.y), DELTA_FLOAT)) &&
-					(Approximately(a.eulerAngles.z, b.eulerAngles.z, DELTA_FLOAT) || Approximately((a.eulerAngles.z < 0 ? a.eulerAngles.z + 360.0f : a.eulerAngles.z) , (b.eulerAngles.z < 0 ? b.eulerAngles.z + 360.0f : b.eulerAngles.z), DELTA_FLOAT));
+				(Approximately(a.eulerAngles.x, b.eulerAngles.x, tolerance) || Approximately((a.eulerAngles.x < 0 ? a.eulerAngles.x + 360.0f : a.eulerAngles.x) , (b.eulerAngles.x < 0 ? b.eulerAngles.x + 360.0f : b.eulerAngles.x), tolerance)) &&
+					(Approximately(a.eulerAngles.y, b.eulerAngles.y, tolerance) || Approximately((a.eulerAngles.y < 0 ? a.eulerAngles.y + 360.0f : a.eulerAngles.y) , (b.eulerAngles.y < 0 ? b.eulerAngles.y + 360.0f : b.eulerAngles.y), tolerance)) &&
+					(Approximately(a.eulerAngles.z, b.eulerAngles.z, tolerance) || Approximately((a.eulerAngles.z < 0 ? a.eulerAngles.z + 360.0f : a.eulerAngles.z) , (b.eulerAngles.z < 0 ? b.eulerAngles.z + 360.0f : b.eulerAngles.z), tolerance));
 		}
 
 		/// <summary>
