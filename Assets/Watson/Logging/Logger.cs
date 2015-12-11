@@ -77,6 +77,13 @@ namespace IBM.Watson.Logging
         /// </summary>
         public string m_Message;
 
+        /// <summary>
+        /// The default constructor for a LogRecord.
+        /// </summary>
+        /// <param name="level">The log level.</param>
+        /// <param name="subSystem">The subsystem that orignates this log messages.</param>
+        /// <param name="messageFmt">The message string with format parameters.</param>
+        /// <param name="args">The format parameters.</param>
         public LogRecord(LogLevel level, string subSystem, string messageFmt, params object[] args)
         {
             m_Level = level;

@@ -75,6 +75,7 @@ namespace IBM.Watson.Widgets
             }
             #endregion
 
+            /// <exclude />
             public override string ToString()
             {
                 return (Owner != null ? Owner.name : "null") + "." + InputName + " (" + DataType.Name + ")";

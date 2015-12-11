@@ -170,8 +170,17 @@ namespace IBM.Watson.Services.v1
         /// </summary>
         public enum TypeFilter
         {
+            /// <summary>
+            /// Default types 
+            /// </summary>
             DEFAULT,
+            /// <summary>
+            /// Non-Default types
+            /// </summary>
             NON_DEFAULT,
+            /// <summary>
+            /// All types are returned.
+            /// </summary>
             ALL
         }
 

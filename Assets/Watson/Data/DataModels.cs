@@ -187,6 +187,9 @@ namespace IBM.Watson.DataModels
     [fsObject]
     public class TranslationModels
     {
+        /// <summary>
+        /// The array of TranslationModel objects.
+        /// </summary>
         public TranslationModel[] models { get; set; }
     }
     #endregion

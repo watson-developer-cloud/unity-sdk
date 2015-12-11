@@ -27,9 +27,21 @@ namespace IBM.Watson.Utilities
     [Flags]
     public enum KeyModifiers
     {
+        /// <summary>
+        /// No key modifier down.
+        /// </summary>
         NONE = 0x0,
+        /// <summary>
+        /// Shift key down.
+        /// </summary>
         SHIFT = 0x1,
+        /// <summary>
+        /// Control key down.
+        /// </summary>
         CONTROL = 0x2,
+        /// <summary>
+        /// Alt key down.
+        /// </summary>
         ALT = 0x4
     };
 
@@ -65,7 +77,7 @@ namespace IBM.Watson.Utilities
         /// </summary>
         /// <param name="key">The KeyCode of the key.</param>
         /// <param name="modifiers">KeyCode modifiers</param>
-        /// <param name="callback">The delegate to invoke.</param>
+        /// <param name="eventType">The event to send.</param>
         /// <returns>True is returned on success.</returns>
         public bool RegisterKeyEvent(KeyCode key, KeyModifiers modifiers, Constants.Event eventType)
         {
@@ -78,7 +90,7 @@ namespace IBM.Watson.Utilities
         /// </summary>
         /// <param name="key">The KeyCode to unregister.</param>
         /// <param name="modifiers">Additional keys that must be down as well to fire the event.</param>
-        /// <param name="callback">If provided, then the key will be unregistered only the callback matches the existing registration.</param>
+        /// <param name="eventType">If provided, then the key will be unregistered only the event matches the existing registration.</param>
         /// <returns>True is returned on success.</returns>
 		public bool UnregisterKeyEvent(KeyCode key, KeyModifiers modifiers = KeyModifiers.NONE, Constants.Event eventType = Constants.Event.NONE )
         {

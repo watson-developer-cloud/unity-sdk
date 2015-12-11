@@ -140,6 +140,9 @@ namespace IBM.Watson.Connection
         /// </summary>
         public class Request
         {
+            /// <summary>
+            /// Default constructor.
+            /// </summary>
             public Request()
             {
                 Parameters = new Dictionary<string, object>();

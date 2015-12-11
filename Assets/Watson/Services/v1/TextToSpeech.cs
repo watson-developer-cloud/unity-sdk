@@ -41,6 +41,10 @@ namespace IBM.Watson.Services.v1
         /// </summary>
         /// <param name="clip">The AudioClip containing the audio to play.</param>
         public delegate void ToSpeechCallback(AudioClip clip);
+        /// <summary>
+        /// This callback is used by the GetVoices() function.
+        /// </summary>
+        /// <param name="voices">The Voices object.</param>
         public delegate void GetVoicesCallback( Voices voices );
 
         /// <summary>
@@ -48,8 +52,17 @@ namespace IBM.Watson.Services.v1
         /// </summary>
         public enum AudioFormatType
         {
+            /// <summary>
+            /// OGG Vorbis format
+            /// </summary>
             OGG = 0,
+            /// <summary>
+            /// Linear PCM format.
+            /// </summary>
             WAV,                    //Currently used
+            /// <summary>
+            /// FLAC audio format.
+            /// </summary>
             FLAC
         };
 
@@ -58,17 +71,53 @@ namespace IBM.Watson.Services.v1
         /// </summary>
         public enum VoiceType
         {
+            /// <summary>
+            /// US male voice.
+            /// </summary>
             en_US_Michael = 0,
+            /// <summary>
+            /// US female voice.
+            /// </summary>
             en_US_Lisa,
+            /// <summary>
+            /// US female voice.
+            /// </summary>
             en_US_Allison,
+            /// <summary>
+            /// Great Britan female voice.
+            /// </summary>
             en_GB_Kate,
+            /// <summary>
+            /// Spanish male voice.
+            /// </summary>
             es_ES_Enrique,
+            /// <summary>
+            /// Spanish female voice.
+            /// </summary>
             es_ES_Laura,
+            /// <summary>
+            /// US female voice.
+            /// </summary>
             es_US_Sofia,
+            /// <summary>
+            /// German male voice.
+            /// </summary>
             de_DE_Dieter,
+            /// <summary>
+            /// German female voice.
+            /// </summary>
             de_DE_Birgit,
+            /// <summary>
+            /// French female voice.
+            /// </summary>
             fr_FR_Renee,
+            /// <summary>
+            /// Italian female voice.
+            /// </summary>
             it_IT_Francesca,
+            /// <summary>
+            /// Japanese female voice.
+            /// </summary>
             ja_JP_Emi,
         };
         #endregion

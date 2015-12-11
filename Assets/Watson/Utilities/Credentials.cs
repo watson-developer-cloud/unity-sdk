@@ -25,8 +25,16 @@ namespace IBM.Watson.Utilities
     /// </summary>
     public class Credentials
     {
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
         public Credentials()
         { }
+        /// <summary>
+        /// Constructor that takes the user name and password.
+        /// </summary>
+        /// <param name="user">The string containing the user name.</param>
+        /// <param name="password">A string containing the password.</param>
         public Credentials( string user, string password )
         {
             User = user;
@@ -34,7 +42,7 @@ namespace IBM.Watson.Utilities
         }
 
         /// <summary>
-        /// The username.
+        /// The user name.
         /// </summary>
         public string User { get; set; }
         /// <summary>

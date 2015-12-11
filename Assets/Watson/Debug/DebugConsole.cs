@@ -195,7 +195,7 @@ namespace IBM.Watson.Debug
         }
 
         #region Event Handlers
-        public void OnDebugMessage( object [] args )
+        private void OnDebugMessage( object [] args )
         {
             if ( args != null && args.Length > 0 )
             {
@@ -208,12 +208,12 @@ namespace IBM.Watson.Debug
             }
         }
 
-        public void OnToggleActive( object [] args )
+        private void OnToggleActive( object [] args )
         {
             Active = !Active;
         }
 
-        public void OnBeginEdit( object [] args )
+        private void OnBeginEdit( object [] args )
         {
             if (! Active )
                 Active = true;
@@ -228,6 +228,9 @@ namespace IBM.Watson.Debug
             }
         }
 
+        /// <summary>
+        /// Event handler for input end.
+        /// </summary>
         public void OnEndEdit()
         {
             if ( m_CommandInput != null )

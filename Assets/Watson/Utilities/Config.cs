@@ -40,8 +40,17 @@ namespace IBM.Watson.Utilities
             /// The ID of the service this is the credentials.
             /// </summary>
             public string m_ServiceID;
+            /// <summary>
+            /// The URL for these credentials.
+            /// </summary>
             public string m_URL;
+            /// <summary>
+            /// The user name for these credentials.
+            /// </summary>
             public string m_User;
+            /// <summary>
+            /// The password for these credentials.
+            /// </summary>
             public string m_Password;
 
             /// <summary>

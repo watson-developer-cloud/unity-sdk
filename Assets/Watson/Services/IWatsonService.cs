@@ -21,6 +21,11 @@ using System.Collections.Generic;
 
 namespace IBM.Watson.Services
 {
+    /// <summary>
+    /// Callback for the GetServiceStatus() function.
+    /// </summary>
+    /// <param name="serviceID">The ID of the service.</param>
+    /// <param name="active">The status of the service, true is up, false is down.</param>
     public delegate void ServiceStatus( string serviceID, bool active );
 
     /// <summary>
