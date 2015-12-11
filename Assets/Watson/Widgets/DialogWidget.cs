@@ -61,7 +61,7 @@ namespace IBM.Watson.Widgets
         #endregion
 
         #region Widget Interface
-
+        /// <exclude />
         protected override string GetName()
         {
             return "Dialog";

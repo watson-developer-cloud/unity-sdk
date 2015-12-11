@@ -42,41 +42,43 @@
     </DocumentationSources>
     <NamespaceSummaries>
       <NamespaceSummaryItem name="DentedPixel.LTEditor" isDocumented="False" />
-<NamespaceSummaryItem name="FullSerializer" isDocumented="False" />
-<NamespaceSummaryItem name="FullSerializer.Internal" isDocumented="False" />
-<NamespaceSummaryItem name="FullSerializer.Internal.DirectConverters" isDocumented="False" />
-<NamespaceSummaryItem name="MiniJSON" isDocumented="False" />
-<NamespaceSummaryItem name="TouchScript.Examples" isDocumented="False" />
-<NamespaceSummaryItem name="TouchScript.Examples.CameraControl" isDocumented="False" />
-<NamespaceSummaryItem name="TouchScript.Examples.Checkers" isDocumented="False" />
-<NamespaceSummaryItem name="TouchScript.Examples.Colors" isDocumented="False" />
-<NamespaceSummaryItem name="TouchScript.Examples.Input" isDocumented="False" />
-<NamespaceSummaryItem name="TouchScript.Examples.Multiuser" isDocumented="False" />
-<NamespaceSummaryItem name="TouchScript.Examples.Photos" isDocumented="False" />
-<NamespaceSummaryItem name="TouchScript.Examples.Portal" isDocumented="False" />
-<NamespaceSummaryItem name="TouchScript.Examples.Tap" isDocumented="False" />
-<NamespaceSummaryItem name="TouchScript.Examples.UI" isDocumented="False" />
-<NamespaceSummaryItem name="UnityStandardAssets.ImageEffects" isDocumented="False" />
-<NamespaceSummaryItem name="UnityStandardAssets.Utility" isDocumented="False" />
-<NamespaceSummaryItem name="WebSocketSharp" isDocumented="False" />
-<NamespaceSummaryItem name="WebSocketSharp.Net" isDocumented="False" />
-<NamespaceSummaryItem name="WebSocketSharp.Net.WebSockets" isDocumented="False" />
-<NamespaceSummaryItem name="WebSocketSharp.Server" isDocumented="False" />
-<NamespaceSummaryItem name="(global)" isDocumented="False" />
-<NamespaceSummaryItem name="IBM.Watson.Camera" isDocumented="True">Watson Unity SDK camera controls and touch interfaces.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="IBM.Watson.Connection" isDocumented="True">Connection classes.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="IBM.Watson.DataModels" isDocumented="True">Data models for all services.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="IBM.Watson.DataTypes" isDocumented="True">Data types for Widget communications.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="IBM.Watson.Debug" isDocumented="True">Debugging classes.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="IBM.Watson.Logging" isDocumented="True">Logging subsystem.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="IBM.Watson.Services.v1" isDocumented="True">Version 1.0 of all services.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="IBM.Watson.Utilities" isDocumented="True">Various utility classes.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="IBM.Watson.Widgets" isDocumented="True">Widget classes.</NamespaceSummaryItem></NamespaceSummaries>
+      <NamespaceSummaryItem name="FullSerializer" isDocumented="False" />
+      <NamespaceSummaryItem name="FullSerializer.Internal" isDocumented="False" />
+      <NamespaceSummaryItem name="FullSerializer.Internal.DirectConverters" isDocumented="False" />
+      <NamespaceSummaryItem name="MiniJSON" isDocumented="False" />
+      <NamespaceSummaryItem name="TouchScript.Examples" isDocumented="False" />
+      <NamespaceSummaryItem name="TouchScript.Examples.CameraControl" isDocumented="False" />
+      <NamespaceSummaryItem name="TouchScript.Examples.Checkers" isDocumented="False" />
+      <NamespaceSummaryItem name="TouchScript.Examples.Colors" isDocumented="False" />
+      <NamespaceSummaryItem name="TouchScript.Examples.Input" isDocumented="False" />
+      <NamespaceSummaryItem name="TouchScript.Examples.Multiuser" isDocumented="False" />
+      <NamespaceSummaryItem name="TouchScript.Examples.Photos" isDocumented="False" />
+      <NamespaceSummaryItem name="TouchScript.Examples.Portal" isDocumented="False" />
+      <NamespaceSummaryItem name="TouchScript.Examples.Tap" isDocumented="False" />
+      <NamespaceSummaryItem name="TouchScript.Examples.UI" isDocumented="False" />
+      <NamespaceSummaryItem name="UnityStandardAssets.ImageEffects" isDocumented="False" />
+      <NamespaceSummaryItem name="UnityStandardAssets.Utility" isDocumented="False" />
+      <NamespaceSummaryItem name="WebSocketSharp" isDocumented="False" />
+      <NamespaceSummaryItem name="WebSocketSharp.Net" isDocumented="False" />
+      <NamespaceSummaryItem name="WebSocketSharp.Net.WebSockets" isDocumented="False" />
+      <NamespaceSummaryItem name="WebSocketSharp.Server" isDocumented="False" />
+      <NamespaceSummaryItem name="(global)" isDocumented="False" />
+      <NamespaceSummaryItem name="IBM.Watson.Camera" isDocumented="True">Watson Unity SDK camera controls and touch interfaces.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="IBM.Watson.Connection" isDocumented="True">Connection classes.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="IBM.Watson.DataModels" isDocumented="True">Data models for all services.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="IBM.Watson.DataTypes" isDocumented="True">Data types for Widget communications.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="IBM.Watson.Debug" isDocumented="True">Debugging classes.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="IBM.Watson.Logging" isDocumented="True">Logging subsystem.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="IBM.Watson.Services.v1" isDocumented="True">Version 1.0 of all services.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="IBM.Watson.Utilities" isDocumented="True">Various utility classes.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="IBM.Watson.Widgets" isDocumented="True">Widget classes.</NamespaceSummaryItem>
+    </NamespaceSummaries>
     <ApiFilter>
       <Filter entryType="Namespace" fullName="" isExposed="False" />
 <Filter entryType="Namespace" fullName="FullSerializer" isExposed="False" />
 <Filter entryType="Namespace" fullName="FullSerializer.Internal" isExposed="False" />
 <Filter entryType="Namespace" fullName="FullSerializer.Internal.DirectConverters" isExposed="False" />
+<Filter entryType="Namespace" fullName="FullSerializer.Speedup" isExposed="False" />
 <Filter entryType="Namespace" fullName="IBM.Watson.DataModels" isExposed="True">
   <Filter entryType="Class" fullName="IBM.Watson.DataModels.SpeechResultList" filterName="SpeechResultList" isExposed="True">
     <Filter entryType="Constructor" fullName="IBM.Watson.DataModels.SpeechResultList.#ctor" filterName=".ctor" isExposed="False" />
@@ -102,6 +104,10 @@
 </Filter>
 <Filter entryType="Namespace" fullName="IBM.Watson.UnitTests" isExposed="False" />
 <Filter entryType="Namespace" fullName="IBM.Watson.Utilities" isExposed="True">
+  <Filter entryType="Class" fullName="IBM.Watson.Utilities.Constants.String" filterName="Constants.String" isExposed="True">
+    <Filter entryType="Field" fullName="IBM.Watson.Utilities.Constants.String.DEBUG_DISPLAY_AVATAR_MOOD" filterName="DEBUG_DISPLAY_AVATAR_MOOD" isExposed="False" />
+    <Filter entryType="Field" fullName="IBM.Watson.Utilities.Constants.String.DEBUG_DISPLAY_QUALITY" filterName="DEBUG_DISPLAY_QUALITY" isExposed="False" />
+  </Filter>
   <Filter entryType="Class" fullName="IBM.Watson.Utilities.WatsonBaseAnimationManager" filterName="WatsonBaseAnimationManager" isExposed="False" />
 </Filter>
 <Filter entryType="Namespace" fullName="IBM.Watson.Widgets" isExposed="True">

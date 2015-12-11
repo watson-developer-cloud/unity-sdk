@@ -48,12 +48,16 @@ namespace IBM.Watson.Utilities
             /// Generate JSON credentials.
             /// </summary>
             /// <returns>Returns a string of the JSON.</returns>
-            /// {
             public string MakeJSON()
             {
                 return "{\n\t\"credentials\": {\n\t\t\"url\": \"" + m_URL + "\",\n\t\t\"username\": \"" + m_User + "\",\n\t\t\"password\": \"" + m_Password + "\"\n\t}\n}";
             }
 
+            /// <summary>
+            /// Parses a BlueMix json credentials into this object.
+            /// </summary>
+            /// <param name="json">The JSON data to parse.</param>
+            /// <returns>Returns true on success.</returns>
             public bool ParseJSON( string json )
             {
                 try {

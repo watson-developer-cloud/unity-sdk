@@ -29,6 +29,7 @@ namespace IBM.Watson.Widgets
     public class KeyboardWidget : Widget
     {
         #region Widget interface
+        /// <exclude />
         protected override string GetName()
         {
             return "Keyboard";

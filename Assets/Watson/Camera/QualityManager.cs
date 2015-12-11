@@ -27,7 +27,7 @@ namespace IBM.Watson.Camera
     public class QualityManager : MonoBehaviour
     {
         /// <summary>
-        /// 
+        /// Returns the singleton instance of the QualityManager object.
         /// </summary>
         public static QualityManager Instance { get { return Singleton<QualityManager>.Instance; } }
 
@@ -37,6 +37,9 @@ namespace IBM.Watson.Camera
             DebugConsole.Instance.RegisterDebugInfo( "QUALITY", OnQualityDebugInfo );           
         }
         
+        /// <summary>
+        /// Event handler to move to the next quality level.
+        /// </summary>
         public void OnNextQualityLevel()
         {
             QualitySettings.SetQualityLevel( (QualitySettings.GetQualityLevel() + 1) % QualitySettings.names.Length, true );

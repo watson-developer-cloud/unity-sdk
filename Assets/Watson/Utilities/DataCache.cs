@@ -126,7 +126,7 @@ namespace IBM.Watson.Utilities
         /// Save data into the cache by ID.
         /// </summary>
         /// <param name="id">The ID to save.</param>
-        /// <param name="data"></param>
+        /// <param name="data">The data of the object to save.</param>
         public void Save(string id, byte[] data)
         {
             id = id.Replace('/', '_');
@@ -152,7 +152,7 @@ namespace IBM.Watson.Utilities
         /// <summary>
         /// Flush a specific item from the cache.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">The ID of the object to flush.</param>
         public void Flush( string id )
         {
             id = id.Replace('/', '_');

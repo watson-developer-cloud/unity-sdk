@@ -80,17 +80,31 @@ namespace IBM.Watson.Connection
         /// </summary>
         public class Form
         {
+            /// <summary>
+            /// Make a multi-part form object from a string.
+            /// </summary>
+            /// <param name="s">The string data.</param>
             public Form( string s )
             {
                 IsBinary = false;
                 BoxedObject = s;
             }
+            /// <summary>
+            /// Make a multi-part form object from an int.
+            /// </summary>
+            /// <param name="n">The int data.</param>
             public Form( int n )
             {
                 IsBinary = false;
                 BoxedObject = n;
             }
 
+            /// <summary>
+            /// Make a multi-part form object from binary data.
+            /// </summary>
+            /// <param name="contents">The binary data.</param>
+            /// <param name="fileName">The filename of the binary data.</param>
+            /// <param name="mimeType">The mime type of the data.</param>
             public Form( byte [] contents, string fileName = null, string mimeType = null )
             {
                 IsBinary = true;

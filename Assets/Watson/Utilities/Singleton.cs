@@ -26,7 +26,7 @@ namespace IBM.Watson.Utilities
     /// Singleton pattern class. This class detects if T is a MonoBehavior and will 
     /// make a containing GameObject.  
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">The typename of the class to create as a singleton object.</typeparam>
     public class Singleton<T> where T:class
     {
         #region Private Data

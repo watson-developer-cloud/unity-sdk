@@ -78,6 +78,7 @@ namespace IBM.Watson.Widgets
         #endregion
 
         #region Widget interface
+        /// <exclude />
         protected override string GetName()
         {
             return "Translate";
@@ -126,6 +127,7 @@ namespace IBM.Watson.Widgets
             m_Translate.GetLanguages(OnGetLanguages);
         }
 
+        /// <exclude />
         protected override void Awake()
         {
             base.Awake();
@@ -138,6 +140,7 @@ namespace IBM.Watson.Widgets
                 m_DropDownTargetLanguage.onValueChanged.AddListener( delegate { DropDownTargetValueChanged(); } );
         }
 
+        /// <exclude />
         protected override void Start()
         {
             base.Start();

@@ -121,8 +121,17 @@ namespace IBM.Watson.DataModels
     [fsObject]
     public class Translations
     {
+        /// <summary>
+        /// Number of words in the translation.
+        /// </summary>
         public long word_count { get; set; }
+        /// <summary>
+        /// Number of characters in the translation.
+        /// </summary>
         public long character_count { get; set; }
+        /// <summary>
+        /// A array of translations.
+        /// </summary>
         public Translation[] translations { get; set; }
     }
     /// <summary>
@@ -224,6 +233,9 @@ namespace IBM.Watson.DataModels
     [fsObject]
     public class Classifiers
     {
+        /// <summary>
+        /// An array of classifiers.
+        /// </summary>
         public Classifier[] classifiers { get; set; }
     };
     /// <summary>
@@ -288,18 +300,39 @@ namespace IBM.Watson.DataModels
     #endregion
 
     #region TextToSpeech Models
+    /// <summary>
+    /// A voice model object for TextToSpeech.
+    /// </summary>
     [fsObject]
     public class Voice
     {
+        /// <summary>
+        /// The name of the voice model.
+        /// </summary>
         public string name { get; set; }
+        /// <summary>
+        /// The language ID of this voice model.
+        /// </summary>
         public string language { get; set; }
+        /// <summary>
+        /// The gender of the voice model.
+        /// </summary>
         public string gender { get; set; }
+        /// <summary>
+        /// The URL of the voice model.
+        /// </summary>
         public string url { get; set; }
     };
    
+    /// <summary>
+    /// This object contains a list of voices.
+    /// </summary>
     [fsObject]
     public class Voices
     {
+        /// <summary>
+        /// The array of Voice objects.
+        /// </summary>
         public Voice [] voices { get; set; }
     };
     #endregion

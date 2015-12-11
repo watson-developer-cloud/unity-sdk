@@ -204,7 +204,6 @@ public static class RunUnitTest
 {
     /// <summary>
     /// Public functions invoked from the command line to run all UnitTest objects.
-    /// (e.g. "C:\Program Files\Unity\Editor\Unity.exe" -quit -batchmode -executemethod UnitTestManager.RunAll -projectPath <pathname>)
     /// </summary>
     /// 
     static public void All()

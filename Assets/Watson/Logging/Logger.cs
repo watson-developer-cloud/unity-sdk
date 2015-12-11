@@ -106,7 +106,7 @@ namespace IBM.Watson.Logging
 
         #region Public Functions
         /// <summary>
-        /// Install a default debug & file reactor.
+        /// Install a default debug and file reactor.
         /// </summary>
         public static void InstallDefaultReactors()
         {

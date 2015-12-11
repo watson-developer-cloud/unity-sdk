@@ -100,10 +100,9 @@ namespace IBM.Watson.Debug
         /// <summary>
         /// Register a debug info 
         /// </summary>
-        /// <param name="label"></param>
-        /// <param name="callback"></param>
-        /// <returns></returns>
-        public bool RegisterDebugInfo( string label, GetDebugInfo callback )
+        /// <param name="label">The label to display next to the string returned by the callback.</param>
+        /// <param name="callback">A callback function to invoke that should return a string to display in the debug console.</param>
+        public void RegisterDebugInfo( string label, GetDebugInfo callback )
         {
             if ( string.IsNullOrEmpty( label ) )
                 throw new ArgumentNullException( "label" );
@@ -118,14 +117,14 @@ namespace IBM.Watson.Debug
             m_DebugInfos.Add( info );
 
             info.m_InfoObject.transform.SetParent( m_DebugInfoLayout.transform, false );
-            return true;
         }
 
         /// <summary>
-        /// 
+        /// Unregister a debug info hook.
         /// </summary>
-        /// <param name="label"></param>
-        /// <returns></returns>
+        /// <param name="label">The label to unregister.</param>
+        /// <param name="callback">The callback to unregister. If null, then the callback will be matched by label only.</param>
+        /// <returns>Returns true if the callback was unregistered.</returns>
 		public bool UnregisterDebugInfo( string label, GetDebugInfo callback = null )
         {
             if ( string.IsNullOrEmpty( label ) )
@@ -134,6 +133,9 @@ namespace IBM.Watson.Debug
             {
                 if ( m_DebugInfos[i].m_Label == label )
                 {
+                    if ( callback != null && callback != m_DebugInfos[i].m_Callback )
+                        continue;
+
                     Destroy( m_DebugInfos[i].m_InfoObject );
                     m_DebugInfos.RemoveAt( i );
                     return true;
