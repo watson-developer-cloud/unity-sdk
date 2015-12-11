@@ -349,6 +349,11 @@ MonoBehaviour:
     m_CustomBackButtonPosition: {x: -30, y: 0, z: 0}
     m_CustomBackButtonScale: {x: 120, y: 120}
     m_IsVisibleBackButton: 0
+  - m_SceneName: XRay WoodSide
+    m_SceneDesc: XRay WoodSide
+    m_CustomBackButtonPosition: {x: -30, y: 0, z: 0}
+    m_CustomBackButtonScale: {x: 120, y: 120}
+    m_IsVisibleBackButton: 0
 --- !u!114 &11461980
 MonoBehaviour:
   m_ObjectHideFlags: 1
