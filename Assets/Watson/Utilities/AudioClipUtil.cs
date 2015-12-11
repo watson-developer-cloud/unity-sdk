@@ -34,7 +34,7 @@ namespace IBM.Watson.Utilities
         /// and frequency.
         /// </summary>
         /// <param name="clips">Variable number of AudioClip objects may be provided.</param>
-        /// <returns></returns>
+        /// <returns>Returns the resulting AudioClip.</returns>
         public static AudioClip Combine(params AudioClip[] clips)
         {
             if (clips == null || clips.Length == 0)
@@ -114,7 +114,7 @@ namespace IBM.Watson.Utilities
         /// <summary>
         /// Returns the state of the AudioClip destroy queue.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Returns true if the destoy queue processor is active.</returns>
         public static bool IsDestroyQueueActive()
         {
             return sm_DestroyQueueID != 0;
@@ -144,7 +144,7 @@ namespace IBM.Watson.Utilities
         /// <summary>
         /// Queue an AudioClip for destruction on the main thread. This function is thread-safe.
         /// </summary>
-        /// <param name="clip"></param>
+        /// <param name="clip">The AudioClip to destroy.</param>
         public static void DestroyAudioClip( AudioClip clip )
         {
             if ( sm_DestroyQueueID == 0 )

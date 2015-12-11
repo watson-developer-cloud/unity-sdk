@@ -28,27 +28,13 @@ namespace IBM.Watson.Utilities
     {
 
         /// <summary>
-        /// All Keycodes used via keyboard listed here.
-        /// </summary>
-        public static class KeyCodes
-        {
-			//Debug Mode Key Pressed to use the keys given below
-			public const KeyModifiers MODIFIER_KEY = KeyModifiers.SHIFT;
-
-            //Cube actions keycodes
-            public const KeyCode CUBE_TO_FOLD = KeyCode.F;
-            public const KeyCode CUBE_TO_UNFOLD = KeyCode.U;
-            public const KeyCode CUBE_TO_FOCUS = KeyCode.Z;
-            public const KeyCode CUBE_TO_UNFOCUS = KeyCode.X;
-			public const KeyCode CUBE_TO_ROTATE_OR_PAUSE = KeyCode.R;
-
-        }
-
-        /// <summary>
         /// All constant event names used in SDK and Applications listed here. 
         /// </summary>
         public enum Event
         {
+            /// <summary>
+            /// Invalid event type.
+            /// </summary>
             NONE = -1,
 
             #region Debug
@@ -369,6 +355,9 @@ namespace IBM.Watson.Utilities
         /// </summary>
         public static class Path
         {
+            /// <summary>
+            /// Configuration file name.
+            /// </summary>
             public const string CONFIG_FILE = "/Config.json";
         }
 
@@ -377,9 +366,14 @@ namespace IBM.Watson.Utilities
         /// </summary>
         public static class Resources
         {
+            /// <summary>
+            /// Watson icon.
+            /// </summary>
             public const string WATSON_ICON = "WatsonSpriteIcon_32x32";
+            /// <summary>
+            /// Watson logo.
+            /// </summary>
             public const string WATSON_LOGO = "WatsonSpriteLogo_506x506";
-
         }
 
         /// <summary>
@@ -387,7 +381,9 @@ namespace IBM.Watson.Utilities
         /// </summary>
         public static class String
         {
+            /// <exclude />
             public const string DEBUG_DISPLAY_QUALITY = "Quality: {0}";
+            /// <exclude />
             public const string DEBUG_DISPLAY_AVATAR_MOOD = "Behavior:{0} Mood: {1}";
         }
 

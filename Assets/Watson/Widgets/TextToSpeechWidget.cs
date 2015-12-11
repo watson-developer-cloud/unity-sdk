@@ -159,6 +159,7 @@ namespace IBM.Watson.Widgets
                 m_StatusText.text = "READY";
         }
 
+        /// <exclude />
         protected override void Start()
         {
             base.Start();
@@ -226,6 +227,7 @@ namespace IBM.Watson.Widgets
             m_ActiveSpeech = null;
         }
 
+        /// <exclude />
         protected override string GetName()
         {
             return "TextToSpeech";

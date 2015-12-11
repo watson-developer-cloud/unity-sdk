@@ -30,6 +30,7 @@ namespace IBM.Watson.Widgets
     public class ClassDisplayWidget : Widget
     {
         #region Widget interface
+        /// <exclude />
         protected override string GetName()
         {
             return "ClassDisplay";

@@ -35,10 +35,7 @@ namespace IBM.Watson.Widgets
         private delegate void OnClassifierResult( ClassifyResult result );
 
         #region Widget interface
-        /// <summary>
-        /// Widget interface implementation.
-        /// </summary>
-        /// <returns>A friendly name for this widget.</returns>
+        /// <exclude />
         protected override string GetName()
         {
             return "Classifier";

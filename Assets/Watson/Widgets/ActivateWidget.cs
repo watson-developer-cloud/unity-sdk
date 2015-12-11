@@ -27,6 +27,7 @@ namespace IBM.Watson.Widgets
     public class ActivateWidget : Widget
     {
         #region Widget interface
+        /// <exclude />
         protected override string GetName()
         {
             return "Activate";

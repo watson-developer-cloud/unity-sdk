@@ -33,7 +33,15 @@ namespace IBM.Watson.Connection
     public class WSConnector
     {
         #region Public Types
+        /// <summary>
+        /// Callback for a connector event.
+        /// </summary>
+        /// <param name="connection">The WSConnector object.</param>
         public delegate void ConnectorEvent(WSConnector connection);
+        /// <summary>
+        /// Callback for a message received on the connector.
+        /// </summary>
+        /// <param name="resp">The message object.</param>
         public delegate void MessageEvent( Message resp);
 
         /// <summary>
@@ -70,6 +78,10 @@ namespace IBM.Watson.Connection
         /// </summary>
         public class BinaryMessage : Message
         {
+            /// <summary>
+            /// Constructor for a BinaryMessage object.
+            /// </summary>
+            /// <param name="data">The binary data to send as a message.</param>
             public BinaryMessage(byte[] data)
             {
                 Data = data;
@@ -87,6 +99,10 @@ namespace IBM.Watson.Connection
         /// </summary>
         public class TextMessage : Message
         {
+            /// <summary>
+            /// Constructor for a TextMessage object.
+            /// </summary>
+            /// <param name="text">The string of the text to send as a message.</param>
             public TextMessage( string text )
             {
                 Text = text;
@@ -215,6 +231,7 @@ namespace IBM.Watson.Connection
         /// This function sends the given message object.
         /// </summary>
         /// <param name="msg">This is either a BinaryMessage or TextMessage object.</param>
+        /// <param name="queue">If true, then this function will not signal or start the sending thread.</param>
         public void Send(Message msg, bool queue = false )
         {
 #if ENABLE_MESSAGE_DEBUGGING

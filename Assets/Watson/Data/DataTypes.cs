@@ -61,38 +61,66 @@ namespace IBM.Watson.DataTypes
         public string Text { get; set; }
     };
 
+    /// <summary>
+    /// Data type for a source language change.
+    /// </summary>
     public class LanguageData : Widget.Data
     {
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
         public LanguageData()
         {}
 
+        /// <summary>
+        /// Constructor which takes the language ID as a string.
+        /// </summary>
+        /// <param name="language">The language ID.</param>
         public LanguageData( string language )
         {
             Language = language;
         }
 
+        /// <exclude />
         public override string GetName()
         {
             return "Language";
         }
 
+        /// <summary>
+        /// The language ID.
+        /// </summary>
         public string Language { get; set; }
     };
 
+    /// <summary>
+    /// Data type sent to change the voice type.
+    /// </summary>
     public class VoiceData : Widget.Data
     {
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
         public VoiceData()
         { }
+        /// <summary>
+        /// Constructor which takes the voice type enumeration.
+        /// </summary>
+        /// <param name="voice">The voice to select.</param>
         public VoiceData( TextToSpeech.VoiceType voice )
         {
             Voice = voice;
         }
 
+        /// <exclude />
         public override string GetName()
         {
             return "Voice";
         }
 
+        /// <summary>
+        /// The enumeration of the voice to select.
+        /// </summary>
         public TextToSpeech.VoiceType Voice { get; set; }
     };
 
@@ -106,6 +134,8 @@ namespace IBM.Watson.DataTypes
         /// </summary>
         public AudioData()
         { }
+
+        /// <exclude />
         ~AudioData()
         {
             AudioClipUtil.DestroyAudioClip( Clip );

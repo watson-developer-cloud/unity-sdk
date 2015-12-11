@@ -29,6 +29,7 @@ namespace IBM.Watson.Widgets
 	public class EventWidget : Widget
     {
         #region Widget interface
+         /// <exclude />
         protected override string GetName()
         {
             return "Event";

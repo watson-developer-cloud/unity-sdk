@@ -31,6 +31,7 @@ namespace IBM.Watson.Widgets
     public class SpeechDisplayWidget : Widget
     {
         #region Widget interface
+        /// <exclude />
         protected override string GetName()
         {
             return "SpeechDisplay";

@@ -170,6 +170,7 @@ namespace IBM.Watson.Widgets
             }
             #endregion
 
+            /// <exclude />
             public override string ToString()
             {
                 return (Owner != null ? Owner.name : "null") + " (" + DataType.Name + ")";
@@ -221,7 +222,7 @@ namespace IBM.Watson.Widgets
             /// <summary>
             /// Starts this Output.
             /// </summary>
-            /// <param name="owner"></param>
+            /// <param name="owner">The Widget owner of this Output.</param>
             public virtual void Start(Widget owner)
             {
                 Owner = owner;
@@ -233,6 +234,7 @@ namespace IBM.Watson.Widgets
             /// Sends a data object to the target of this output.
             /// </summary>
             /// <param name="data">Data object to send.</param>
+            /// <returns>Returns true if the data was sent to another widget.</returns>
             public virtual bool SendData(Data data)
             {
                 if (ResolveTargetInput())
@@ -435,7 +437,7 @@ namespace IBM.Watson.Widgets
         /// <summary>
         /// Implemented to provide a friendly name for a widget object.
         /// </summary>
-        /// <returns>A string name for this widget.</returns>
+        /// <returns>A string containing the name for this widget.</returns>
         protected abstract string GetName();
         #endregion
     }
