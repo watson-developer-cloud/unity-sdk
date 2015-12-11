@@ -79,6 +79,10 @@
 <Filter entryType="Namespace" fullName="FullSerializer.Internal" isExposed="False" />
 <Filter entryType="Namespace" fullName="FullSerializer.Internal.DirectConverters" isExposed="False" />
 <Filter entryType="Namespace" fullName="FullSerializer.Speedup" isExposed="False" />
+<Filter entryType="Namespace" fullName="IBM.Watson.Camera" isExposed="True">
+  <Filter entryType="Class" fullName="IBM.Watson.Camera.CameraTarget" filterName="CameraTarget" isExposed="False" />
+  <Filter entryType="Class" fullName="IBM.Watson.Camera.IdleCamera" filterName="IdleCamera" isExposed="False" />
+</Filter>
 <Filter entryType="Namespace" fullName="IBM.Watson.DataModels" isExposed="True">
   <Filter entryType="Class" fullName="IBM.Watson.DataModels.SpeechResultList" filterName="SpeechResultList" isExposed="True">
     <Filter entryType="Constructor" fullName="IBM.Watson.DataModels.SpeechResultList.#ctor" filterName=".ctor" isExposed="False" />
@@ -86,10 +90,25 @@
 </Filter>
 <Filter entryType="Namespace" fullName="IBM.Watson.DataModels.QA" isExposed="False" />
 <Filter entryType="Namespace" fullName="IBM.Watson.DataModels.XRAY" isExposed="False" />
+<Filter entryType="Namespace" fullName="IBM.Watson.DataTypes" isExposed="True">
+  <Filter entryType="Class" fullName="IBM.Watson.DataTypes.AudioData" filterName="AudioData" isExposed="True">
+    <Filter entryType="Method" fullName="IBM.Watson.DataTypes.AudioData.Finalize" filterName="Finalize" isExposed="False" />
+  </Filter>
+  <Filter entryType="Class" fullName="IBM.Watson.DataTypes.LanguageData" filterName="LanguageData" isExposed="True">
+    <Filter entryType="Method" fullName="IBM.Watson.DataTypes.LanguageData.GetName" filterName="GetName" isExposed="False" />
+  </Filter>
+  <Filter entryType="Class" fullName="IBM.Watson.DataTypes.VoiceData" filterName="VoiceData" isExposed="True">
+    <Filter entryType="Method" fullName="IBM.Watson.DataTypes.VoiceData.GetName" filterName="GetName" isExposed="False" />
+  </Filter>
+</Filter>
 <Filter entryType="Namespace" fullName="IBM.Watson.Editor" isExposed="False" />
 <Filter entryType="Namespace" fullName="IBM.Watson.Services.v1" isExposed="True">
   <Filter entryType="Class" fullName="IBM.Watson.Services.v1.DeepQA" filterName="DeepQA" isExposed="False" />
   <Filter entryType="Delegate" fullName="IBM.Watson.Services.v1.DeepQA.OnQuestion" filterName="DeepQA.OnQuestion" isExposed="False" />
+  <Filter entryType="Class" fullName="IBM.Watson.Services.v1.Dialog" filterName="Dialog" isExposed="True">
+    <Filter entryType="Method" fullName="IBM.Watson.Services.v1.Dialog.GetServiceID" filterName="GetServiceID" isExposed="False" />
+    <Filter entryType="Method" fullName="IBM.Watson.Services.v1.Dialog.GetServiceStatus" filterName="GetServiceStatus" isExposed="False" />
+  </Filter>
   <Filter entryType="Class" fullName="IBM.Watson.Services.v1.Geolocation" filterName="Geolocation" isExposed="False" />
   <Filter entryType="Class" fullName="IBM.Watson.Services.v1.Geolocation.attributes" filterName="Geolocation.attributes" isExposed="False" />
   <Filter entryType="Class" fullName="IBM.Watson.Services.v1.Geolocation.extent" filterName="Geolocation.extent" isExposed="False" />
@@ -99,8 +118,25 @@
   <Filter entryType="Class" fullName="IBM.Watson.Services.v1.Geolocation.locations" filterName="Geolocation.locations" isExposed="False" />
   <Filter entryType="Delegate" fullName="IBM.Watson.Services.v1.Geolocation.OnGetLocation" filterName="Geolocation.OnGetLocation" isExposed="False" />
   <Filter entryType="Class" fullName="IBM.Watson.Services.v1.Geolocation.spatialReference" filterName="Geolocation.spatialReference" isExposed="False" />
+  <Filter entryType="Class" fullName="IBM.Watson.Services.v1.NLC" filterName="NLC" isExposed="True">
+    <Filter entryType="Method" fullName="IBM.Watson.Services.v1.NLC.GetServiceID" filterName="GetServiceID" isExposed="False" />
+    <Filter entryType="Method" fullName="IBM.Watson.Services.v1.NLC.GetServiceStatus" filterName="GetServiceStatus" isExposed="False" />
+  </Filter>
+  <Filter entryType="Class" fullName="IBM.Watson.Services.v1.SpeechToText" filterName="SpeechToText" isExposed="True">
+    <Filter entryType="Method" fullName="IBM.Watson.Services.v1.SpeechToText.GetServiceID" filterName="GetServiceID" isExposed="False" />
+    <Filter entryType="Method" fullName="IBM.Watson.Services.v1.SpeechToText.GetServiceStatus" filterName="GetServiceStatus" isExposed="False" />
+  </Filter>
+  <Filter entryType="Class" fullName="IBM.Watson.Services.v1.TextToSpeech" filterName="TextToSpeech" isExposed="True">
+    <Filter entryType="Method" fullName="IBM.Watson.Services.v1.TextToSpeech.GetServiceID" filterName="GetServiceID" isExposed="False" />
+    <Filter entryType="Method" fullName="IBM.Watson.Services.v1.TextToSpeech.GetServiceStatus" filterName="GetServiceStatus" isExposed="False" />
+  </Filter>
+  <Filter entryType="Class" fullName="IBM.Watson.Services.v1.Translate" filterName="Translate" isExposed="True">
+    <Filter entryType="Method" fullName="IBM.Watson.Services.v1.Translate.GetServiceID" filterName="GetServiceID" isExposed="False" />
+    <Filter entryType="Method" fullName="IBM.Watson.Services.v1.Translate.GetServiceStatus" filterName="GetServiceStatus" isExposed="False" />
+  </Filter>
   <Filter entryType="Class" fullName="IBM.Watson.Services.v1.XRAY" filterName="XRAY" isExposed="False" />
   <Filter entryType="Delegate" fullName="IBM.Watson.Services.v1.XRAY.OnAskQuestion" filterName="XRAY.OnAskQuestion" isExposed="False" />
+  <Filter entryType="Delegate" fullName="IBM.Watson.Services.v1.XRAY.OnPingCallback" filterName="XRAY.OnPingCallback" isExposed="True" />
 </Filter>
 <Filter entryType="Namespace" fullName="IBM.Watson.UnitTests" isExposed="False" />
 <Filter entryType="Namespace" fullName="IBM.Watson.Utilities" isExposed="True">
@@ -111,6 +147,24 @@
   <Filter entryType="Class" fullName="IBM.Watson.Utilities.WatsonBaseAnimationManager" filterName="WatsonBaseAnimationManager" isExposed="False" />
 </Filter>
 <Filter entryType="Namespace" fullName="IBM.Watson.Widgets" isExposed="True">
+  <Filter entryType="Class" fullName="IBM.Watson.Widgets.ActivateWidget" filterName="ActivateWidget" isExposed="True">
+    <Filter entryType="Method" fullName="IBM.Watson.Widgets.ActivateWidget.GetName" filterName="GetName" isExposed="False" />
+  </Filter>
+  <Filter entryType="Class" fullName="IBM.Watson.Widgets.ClassDisplayWidget" filterName="ClassDisplayWidget" isExposed="True">
+    <Filter entryType="Method" fullName="IBM.Watson.Widgets.ClassDisplayWidget.GetName" filterName="GetName" isExposed="False" />
+  </Filter>
+  <Filter entryType="Class" fullName="IBM.Watson.Widgets.ClassifierWidget" filterName="ClassifierWidget" isExposed="True">
+    <Filter entryType="Method" fullName="IBM.Watson.Widgets.ClassifierWidget.GetName" filterName="GetName" isExposed="False" />
+  </Filter>
+  <Filter entryType="Class" fullName="IBM.Watson.Widgets.DialogWidget" filterName="DialogWidget" isExposed="True">
+    <Filter entryType="Method" fullName="IBM.Watson.Widgets.DialogWidget.GetName" filterName="GetName" isExposed="False" />
+  </Filter>
+  <Filter entryType="Class" fullName="IBM.Watson.Widgets.EventWidget" filterName="EventWidget" isExposed="True">
+    <Filter entryType="Method" fullName="IBM.Watson.Widgets.EventWidget.GetName" filterName="GetName" isExposed="False" />
+  </Filter>
+  <Filter entryType="Class" fullName="IBM.Watson.Widgets.KeyboardWidget" filterName="KeyboardWidget" isExposed="True">
+    <Filter entryType="Method" fullName="IBM.Watson.Widgets.KeyboardWidget.GetName" filterName="GetName" isExposed="False" />
+  </Filter>
   <Filter entryType="Class" fullName="IBM.Watson.Widgets.MicrophoneWidget" filterName="MicrophoneWidget" isExposed="True">
     <Filter entryType="Method" fullName="IBM.Watson.Widgets.MicrophoneWidget.GetName" filterName="GetName" isExposed="False" />
     <Filter entryType="Method" fullName="IBM.Watson.Widgets.MicrophoneWidget.Start" filterName="Start" isExposed="False" />
@@ -119,13 +173,34 @@
     <Filter entryType="Method" fullName="IBM.Watson.Widgets.NlcWidget.GetName" filterName="GetName" isExposed="False" />
     <Filter entryType="Method" fullName="IBM.Watson.Widgets.NlcWidget.Start" filterName="Start" isExposed="False" />
   </Filter>
+  <Filter entryType="Class" fullName="IBM.Watson.Widgets.SpeechDisplayWidget" filterName="SpeechDisplayWidget" isExposed="True">
+    <Filter entryType="Method" fullName="IBM.Watson.Widgets.SpeechDisplayWidget.GetName" filterName="GetName" isExposed="False" />
+  </Filter>
   <Filter entryType="Class" fullName="IBM.Watson.Widgets.SpeechToTextWidget" filterName="SpeechToTextWidget" isExposed="True">
     <Filter entryType="Method" fullName="IBM.Watson.Widgets.SpeechToTextWidget.GetName" filterName="GetName" isExposed="False" />
     <Filter entryType="Method" fullName="IBM.Watson.Widgets.SpeechToTextWidget.Start" filterName="Start" isExposed="False" />
   </Filter>
+  <Filter entryType="Class" fullName="IBM.Watson.Widgets.TextToSpeechWidget" filterName="TextToSpeechWidget" isExposed="True">
+    <Filter entryType="Method" fullName="IBM.Watson.Widgets.TextToSpeechWidget.GetName" filterName="GetName" isExposed="False" />
+    <Filter entryType="Method" fullName="IBM.Watson.Widgets.TextToSpeechWidget.Start" filterName="Start" isExposed="False" />
+  </Filter>
+  <Filter entryType="Class" fullName="IBM.Watson.Widgets.TouchWidget" filterName="TouchWidget" isExposed="True">
+    <Filter entryType="Method" fullName="IBM.Watson.Widgets.TouchWidget.GetName" filterName="GetName" isExposed="False" />
+  </Filter>
+  <Filter entryType="Class" fullName="IBM.Watson.Widgets.TranslateWidget" filterName="TranslateWidget" isExposed="True">
+    <Filter entryType="Method" fullName="IBM.Watson.Widgets.TranslateWidget.Awake" filterName="Awake" isExposed="False" />
+    <Filter entryType="Method" fullName="IBM.Watson.Widgets.TranslateWidget.GetName" filterName="GetName" isExposed="False" />
+    <Filter entryType="Method" fullName="IBM.Watson.Widgets.TranslateWidget.Start" filterName="Start" isExposed="False" />
+  </Filter>
   <Filter entryType="Class" fullName="IBM.Watson.Widgets.Widget" filterName="Widget" isExposed="True">
     <Filter entryType="Method" fullName="IBM.Watson.Widgets.Widget.Awake" filterName="Awake" isExposed="False" />
     <Filter entryType="Method" fullName="IBM.Watson.Widgets.Widget.Start" filterName="Start" isExposed="False" />
+  </Filter>
+  <Filter entryType="Class" fullName="IBM.Watson.Widgets.Widget.Input" filterName="Widget.Input" isExposed="True">
+    <Filter entryType="Method" fullName="IBM.Watson.Widgets.Widget.Input.ToString" filterName="ToString" isExposed="False" />
+  </Filter>
+  <Filter entryType="Class" fullName="IBM.Watson.Widgets.Widget.Output" filterName="Widget.Output" isExposed="True">
+    <Filter entryType="Method" fullName="IBM.Watson.Widgets.Widget.Output.ToString" filterName="ToString" isExposed="False" />
   </Filter>
 </Filter>
 <Filter entryType="Namespace" fullName="IBM.Watson.Widgets.Avatar" isExposed="False" />
