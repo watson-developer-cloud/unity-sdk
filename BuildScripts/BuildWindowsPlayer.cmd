@@ -5,7 +5,7 @@ SET PROJECT=%CD%\..\
 IF "%UNITY_EXE%"=="" SET "UNITY_EXE=C:\Program Files\Unity\Editor\Unity.exe"
 
 mkdir %PROJECT%\Clients\Windows\
-"%UNITY_EXE%" -batchmode -quit -projectPath %PROJECT% -buildWindowsPlayer %PROJECT%\Clients\Windows\UnityTest.exe
+"%UNITY_EXE%" -batchmode -quit -projectPath %PROJECT% -buildWindows64Player %PROJECT%\Clients\Windows\UnityTest.exe
 IF NOT "%ERRORLEVEL%"=="0" goto error
 
 :success
