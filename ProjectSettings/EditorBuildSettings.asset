@@ -16,10 +16,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Watson/Scenes/TestNLC.unity
   - enabled: 1
-    path: Assets/WatsonDev/Scenes/XRay.unity
-  - enabled: 1
     path: Assets/Watson/Scenes/TestMic.unity
   - enabled: 1
     path: Assets/Watson/Scenes/ExampleDialog.unity
   - enabled: 1
     path: Assets/Watson/Scenes/ExampleTranslation.unity
+  - enabled: 1
+    path: Assets/WatsonDev/Scenes/XRay.unity
+  - enabled: 1
+    path: Assets/WatsonDev/Scenes/XRay WoodSide.unity
