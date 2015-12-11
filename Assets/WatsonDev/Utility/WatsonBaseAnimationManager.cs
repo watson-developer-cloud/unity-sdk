@@ -30,6 +30,7 @@ namespace IBM.Watson.Utilities
 		private static float sm_speedModifier = 1.0f;
 		private static float sm_speedModifierConstant = 1.1f;
 
+		/// <exclude />
 		protected virtual void OnEnable(){
 			EventManager.Instance.RegisterEventReceiver (Constants.Event.ON_ANIMATION_STOP, OnAnimationStop);
 			EventManager.Instance.RegisterEventReceiver (Constants.Event.ON_ANIMATION_PAUSE, OnAnimationPause);
@@ -40,6 +41,7 @@ namespace IBM.Watson.Utilities
 
 		}
 
+		/// <exclude />
 		protected virtual void OnDisable(){
 			EventManager.Instance.UnregisterEventReceiver (Constants.Event.ON_ANIMATION_STOP, OnAnimationStop);
 			EventManager.Instance.UnregisterEventReceiver (Constants.Event.ON_ANIMATION_PAUSE, OnAnimationPause);
@@ -49,36 +51,64 @@ namespace IBM.Watson.Utilities
 			EventManager.Instance.UnregisterEventReceiver (Constants.Event.ON_ANIMATION_SPEED_DEFAULT, OnAnimationSpeedDefault);
 		}
 
+		/// <summary>
+		/// Event handler on animation stop
+		/// </summary>
+		/// <param name="args">Arguments.</param>
 		private void OnAnimationStop(System.Object[] args){
 			OnAnimationStop ();
 		}
 
+		/// <summary>
+		/// Event handler on animation pause
+		/// </summary>
+		/// <param name="args">Arguments.</param>
 		private void OnAnimationPause(System.Object[] args){
 			OnAnimationPause ();
 		}
 
+		/// <summary>
+		/// Event handler on animation resume
+		/// </summary>
+		/// <param name="args">Arguments.</param>
 		private void OnAnimationResume(System.Object[] args){
 			OnAnimationResume ();
 		}
 
+		/// <summary>
+		/// Event handler on animation speed up
+		/// </summary>
+		/// <param name="args">Arguments.</param>
 		private void OnAnimationSpeedUp(System.Object[] args){
 			sm_speedModifier *= sm_speedModifierConstant;
 			OnAnimationSpeedChange (sm_speedModifier);
 		}
-		
+
+		/// <summary>
+		/// Event handler on animation speed down
+		/// </summary>
+		/// <param name="args">Arguments.</param>
 		private void OnAnimationSpeedDown(System.Object[] args){
 			sm_speedModifier *= (1.0f / sm_speedModifierConstant);
 			OnAnimationSpeedChange (sm_speedModifier);
 		}
 
+		/// <summary>
+		/// Event handler on animation speed set default
+		/// </summary>
+		/// <param name="args">Arguments.</param>
 		private void OnAnimationSpeedDefault(System.Object[] args){
 			sm_speedModifier = 1.0f;
 			OnAnimationSpeedChange (sm_speedModifier);
 		}
 
+		/// <exclude />
 		protected virtual void OnAnimationStop(){ }
+		/// <exclude />
 		protected virtual void OnAnimationPause(){ }
+		/// <exclude />
 		protected virtual void OnAnimationResume(){ }
+		/// <exclude />
 		protected virtual void OnAnimationSpeedChange(float speedModifier){ }
 
 	}
