@@ -184,6 +184,10 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 11458500, guid: a8b93b7079a69044fb723b0bcc6a0e8c, type: 2}
+      propertyPath: m_Scenes.Array.size
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 22411986, guid: a8b93b7079a69044fb723b0bcc6a0e8c, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -255,6 +259,46 @@ Prefab:
     - target: {fileID: 22411986, guid: a8b93b7079a69044fb723b0bcc6a0e8c, type: 2}
       propertyPath: m_Pivot.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11458500, guid: a8b93b7079a69044fb723b0bcc6a0e8c, type: 2}
+      propertyPath: m_Scenes.Array.data[7].m_SceneName
+      value: XRay
+      objectReference: {fileID: 0}
+    - target: {fileID: 11458500, guid: a8b93b7079a69044fb723b0bcc6a0e8c, type: 2}
+      propertyPath: m_Scenes.Array.data[7].m_SceneDesc
+      value: XRay
+      objectReference: {fileID: 0}
+    - target: {fileID: 11458500, guid: a8b93b7079a69044fb723b0bcc6a0e8c, type: 2}
+      propertyPath: m_Scenes.Array.data[7].m_CustomBackButtonPosition.x
+      value: -30
+      objectReference: {fileID: 0}
+    - target: {fileID: 11458500, guid: a8b93b7079a69044fb723b0bcc6a0e8c, type: 2}
+      propertyPath: m_Scenes.Array.data[7].m_CustomBackButtonScale.x
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 11458500, guid: a8b93b7079a69044fb723b0bcc6a0e8c, type: 2}
+      propertyPath: m_Scenes.Array.data[7].m_CustomBackButtonScale.y
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 11458500, guid: a8b93b7079a69044fb723b0bcc6a0e8c, type: 2}
+      propertyPath: m_Scenes.Array.data[8].m_SceneName
+      value: XRay WoodSide
+      objectReference: {fileID: 0}
+    - target: {fileID: 11458500, guid: a8b93b7079a69044fb723b0bcc6a0e8c, type: 2}
+      propertyPath: m_Scenes.Array.data[8].m_SceneDesc
+      value: XRay WoodSide
+      objectReference: {fileID: 0}
+    - target: {fileID: 11458500, guid: a8b93b7079a69044fb723b0bcc6a0e8c, type: 2}
+      propertyPath: m_Scenes.Array.data[8].m_CustomBackButtonPosition.x
+      value: -30
+      objectReference: {fileID: 0}
+    - target: {fileID: 11458500, guid: a8b93b7079a69044fb723b0bcc6a0e8c, type: 2}
+      propertyPath: m_Scenes.Array.data[8].m_CustomBackButtonScale.x
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 11458500, guid: a8b93b7079a69044fb723b0bcc6a0e8c, type: 2}
+      propertyPath: m_Scenes.Array.data[8].m_CustomBackButtonScale.y
+      value: 120
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a8b93b7079a69044fb723b0bcc6a0e8c, type: 2}
