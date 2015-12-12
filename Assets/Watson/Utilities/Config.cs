@@ -251,15 +251,43 @@ namespace IBM.Watson.Utilities
         }
 
         /// <summary>
+        /// Finds a variable name and returns the Variable object
+        /// </summary>
+        /// <param name="key">The name of the variable to find.</param>
+        /// <returns>Returns the Variable object or null if not found.</returns>
+        public Variable GetVariable( string key )
+        {
+            foreach( var var in m_Variables )
+                if ( var.Key == key )
+                    return var;
+
+            return null;
+        }
+
+        /// <summary>
         /// Resolves any variables found in the input string and returns the variable values in the returned string.
         /// </summary>
         /// <param name="input">A string containing variables.</param>
-        /// <returns></returns>
+        /// <returns>Returns the string with all variables resolved to their actual values. Any missing variables are removed from the string.</returns>
         public string ResolveVariables( string input )
         {
             string output = input;
             foreach( var var in m_Variables )
-                output = output.Replace( "$" + var.Key + "$", var.Value );
+                output = output.Replace( "${" + var.Key + "}", var.Value );
+
+            // remove any variables still in the string..
+            int variableIndex = output.IndexOf( "${" );
+            while( variableIndex >= 0 )
+            {
+                int endVariable = output.IndexOf( "}", variableIndex );
+                if ( endVariable < 0 )
+                    break;      // end not found..
+
+                output = output.Remove( variableIndex, (endVariable - variableIndex) + 1 );
+
+                // next..
+                variableIndex = output.IndexOf( "${" );
+            }
 
             return output;
         }

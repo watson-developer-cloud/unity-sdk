@@ -43,8 +43,8 @@ MonoBehaviour:
   m_ClassifyOutput:
     m_TargetObject: {fileID: 0}
     m_TargetConnection: Classifier/Classified
-  m_ClassifierName: $NLC_CLASSIFIER_NAME$
-  m_ClassifierId: $NLC_CLASSIFIER_ID$
+  m_ClassifierName: ${NLC_CLASSIFIER_NAME}
+  m_ClassifierId: ${NLC_CLASSIFIER_ID}
   m_MinWordConfidence: .40000000000000002
   m_IgnoreWordConfidence: .20000000000000001
   m_MinClassEventConfidence: .5
@@ -126,7 +126,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassifierId
-      value: $NLC_CLASSIFIER_ID$
+      value: ${NLC_CLASSIFIER_ID}
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[3].m_Event
@@ -294,7 +294,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassifierName
-      value: $NLC_CLASSIFIER_NAME$
+      value: ${NLC_CLASSIFIER_NAME}
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

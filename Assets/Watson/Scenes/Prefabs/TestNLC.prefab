@@ -1109,8 +1109,8 @@ MonoBehaviour:
   m_ClassifyOutput:
     m_TargetObject: {fileID: 0}
     m_TargetConnection: Classifier/Classified
-  m_ClassifierName: 
-  m_ClassifierId: 
+  m_ClassifierName: ${NLC_CLASSIFIER_NAME}
+  m_ClassifierId: ${NLC_CLASSIFIER_ID}
   m_MinWordConfidence: .40000000000000002
   m_IgnoreWordConfidence: .20000000000000001
   m_MinClassEventConfidence: .5
