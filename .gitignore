@@ -35,10 +35,6 @@ ehthumbs.db
 # Custom Ignores #
 # ============== #
 
-/BuildScripts/Clients/Windows
-/Builds
-/Output
 /Clients
-/Assets/StreamingAssets/parse
-/Assets/StreamingAssets/Thunderstone
-/Assets/StreamingAssets/Woodside
+/Assets/StreamingAssets/Config.json
+/Assets/StreamingAssets/Config.json.meta
