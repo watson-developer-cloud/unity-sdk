@@ -145,6 +145,10 @@ namespace IBM.Watson.Widgets
         {
             base.Start();
 
+            // resolve variables
+            m_SourceLanguage = Config.Instance.ResolveVariables( m_SourceLanguage );
+            m_TargetLanguage = Config.Instance.ResolveVariables( m_TargetLanguage );
+
             if ( m_RecognizeLanguageOutput.IsConnected && !string.IsNullOrEmpty(m_SourceLanguage) )
                 m_RecognizeLanguageOutput.SendData( new LanguageData( m_SourceLanguage ) );
         }

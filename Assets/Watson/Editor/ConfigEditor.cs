@@ -400,8 +400,30 @@ namespace IBM.Watson.Editor
                         cfg.Credentials.RemoveAt(i--);
                 }
 
-                if (GUILayout.Button("Add"))
+                if (GUILayout.Button("Add Credential"))
                     cfg.Credentials.Add(new Config.CredentialInfo());
+                EditorGUI.indentLevel -= 1;
+
+                EditorGUILayout.LabelField("Variables");
+                EditorGUI.indentLevel += 1;
+                for (int i = 0; i < cfg.Variables.Count; ++i)
+                {
+                    Config.Variable variable = cfg.Variables[i];
+
+                    GUILayout.BeginHorizontal();
+
+                    variable.Key = EditorGUILayout.TextField( variable.Key );
+                    EditorGUILayout.LabelField( "=", GUILayout.Width( 30 ) );
+                    variable.Value = EditorGUILayout.TextField( variable.Value );
+
+                    if (GUILayout.Button("Delete", GUILayout.Width( 100 ) ))
+                        cfg.Variables.RemoveAt(i--);
+
+                    GUILayout.EndHorizontal();
+                }
+
+                if (GUILayout.Button("Add Variable"))
+                    cfg.Variables.Add(new Config.Variable());
                 EditorGUI.indentLevel -= 1;
 
                 if (GUILayout.Button("Save"))

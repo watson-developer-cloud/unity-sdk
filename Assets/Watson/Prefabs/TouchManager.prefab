@@ -227,7 +227,8 @@ MonoBehaviour:
   useSendMessage: 0
   sendMessageEvents: 60
   sendMessageTarget: {fileID: 0}
-  layers: []
+  layers:
+  - {fileID: 0}
 --- !u!114 &11426162
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -382,7 +383,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 0}
       propertyPath: layers.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: friendlyGestures.Array.size

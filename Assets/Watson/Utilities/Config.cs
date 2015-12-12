@@ -32,8 +32,25 @@ namespace IBM.Watson.Utilities
     public class Config
     {
         /// <summary>
+        /// Serialized class for holding generic key/value pairs.
+        /// </summary>
+        [fsObject]
+        public class Variable
+        {
+            /// <summary>
+            /// The key name.
+            /// </summary>
+            public string Key { get; set; }
+            /// <summary>
+            /// The value referenced by the key.
+            /// </summary>
+            public string Value { get; set; }
+        };
+
+        /// <summary>
         /// Serialized class for holding the user credentials for a service.
         /// </summary>
+        [fsObject]
         public class CredentialInfo
         {
             /// <summary>
@@ -100,6 +117,8 @@ namespace IBM.Watson.Utilities
         private string m_ProductKey = null;
         [fsProperty]
         private List<CredentialInfo> m_Credentials = new List<CredentialInfo>();
+        [fsProperty]
+        private List<Variable> m_Variables = new List<Variable>();
 
         private static fsSerializer sm_Serializer = new fsSerializer();
         #endregion
@@ -126,6 +145,10 @@ namespace IBM.Watson.Utilities
         /// Returns the list of credentials used to login to the various services.
         /// </summary>
         public List<CredentialInfo> Credentials { get { return m_Credentials; } set { m_Credentials = value; } }
+        /// <summary>
+        /// Returns a list of variables which can hold key/value data.
+        /// </summary>
+        public List<Variable> Variables { get { return m_Variables; } set { m_Variables = value; } }
         /// <summary>
         /// Enable the gateway usage.
         /// </summary>
@@ -225,6 +248,20 @@ namespace IBM.Watson.Utilities
                 return fsJsonPrinter.PrettyJson(data);
 
             return fsJsonPrinter.CompressedJson(data);
+        }
+
+        /// <summary>
+        /// Resolves any variables found in the input string and returns the variable values in the returned string.
+        /// </summary>
+        /// <param name="input">A string containing variables.</param>
+        /// <returns></returns>
+        public string ResolveVariables( string input )
+        {
+            string output = input;
+            foreach( var var in m_Variables )
+                output = output.Replace( "$" + var.Key + "$", var.Value );
+
+            return output;
         }
 
         private IEnumerator LoadConfigCR()

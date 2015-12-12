@@ -82,6 +82,10 @@ namespace IBM.Watson.Widgets
 	    {
             base.Start();
 
+            // resolve configuration variables
+            m_ClassifierName = Config.Instance.ResolveVariables( m_ClassifierName );
+            m_ClassifierId = Config.Instance.ResolveVariables( m_ClassifierId );
+
             // start the default log reactors if needed..
 	        Logger.InstallDefaultReactors();
 
