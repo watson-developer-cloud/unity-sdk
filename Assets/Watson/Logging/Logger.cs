@@ -97,13 +97,13 @@ namespace IBM.Watson.Logging
     /// objects. See the static class Log for functions the end user of this system should actually
     /// be calling. This class is thread safe.
     /// </summary>
-    public class Logger
+    public class LogSystem
     {
         #region Public Properties
         /// <summary>
         /// Returns the singleton instance of the Logger object.
         /// </summary>
-		public static Logger Instance { get { if(! sm_bInstalledDefaultReactors) InstallDefaultReactors(); return Singleton<Logger>.Instance; } }
+		public static LogSystem Instance { get { if(! sm_bInstalledDefaultReactors) InstallDefaultReactors(); return Singleton<LogSystem>.Instance; } }
         #endregion
 
         #region Private Data
@@ -122,9 +122,9 @@ namespace IBM.Watson.Logging
                 // install the default reactors...
                 sm_bInstalledDefaultReactors = true;
 #if UNITY_EDITOR || UNITY_IOS || UNITY_ANDROID
-                Logger.Instance.InstallReactor( new DebugReactor() );
+                LogSystem.Instance.InstallReactor( new DebugReactor() );
 #endif
-                Logger.Instance.InstallReactor( new FileReactor( Application.persistentDataPath + "/Watson.log" ) );
+                LogSystem.Instance.InstallReactor( new FileReactor( Application.persistentDataPath + "/Watson.log" ) );
             }
         }
 
@@ -182,7 +182,7 @@ namespace IBM.Watson.Logging
 #if UNITY_EDITOR
         public static void Debug(string subSystem, string messageFmt, params object[] args)
         {
-            Logger.Instance.ProcessLog(new LogRecord(LogLevel.DEBUG, subSystem, messageFmt, args));
+            LogSystem.Instance.ProcessLog(new LogRecord(LogLevel.DEBUG, subSystem, messageFmt, args));
         }
 #else
         // We compile out Log.Debug() functions in release builds.
@@ -198,7 +198,7 @@ namespace IBM.Watson.Logging
         /// <param name="args">Formatting arguments.</param>
         public static void Status(string subSystem, string messageFmt, params object[] args)
         {
-            Logger.Instance.ProcessLog(new LogRecord(LogLevel.STATUS, subSystem, messageFmt, args));
+            LogSystem.Instance.ProcessLog(new LogRecord(LogLevel.STATUS, subSystem, messageFmt, args));
         }
         /// <summary>
         /// Log a WARNING level message.
@@ -208,7 +208,7 @@ namespace IBM.Watson.Logging
         /// <param name="args">Formatting arguments.</param>
         public static void Warning(string subSystem, string messageFmt, params object[] args)
         {
-            Logger.Instance.ProcessLog(new LogRecord(LogLevel.WARNING, subSystem, messageFmt, args));
+            LogSystem.Instance.ProcessLog(new LogRecord(LogLevel.WARNING, subSystem, messageFmt, args));
         }
         /// <summary>
         /// Log a ERROR level message.
@@ -218,7 +218,7 @@ namespace IBM.Watson.Logging
         /// <param name="args">Formatting arguments.</param>
         public static void Error(string subSystem, string messageFmt, params object[] args)
         {
-            Logger.Instance.ProcessLog(new LogRecord(LogLevel.ERROR, subSystem, messageFmt, args));
+            LogSystem.Instance.ProcessLog(new LogRecord(LogLevel.ERROR, subSystem, messageFmt, args));
         }
          /// <summary>
         /// Log a CRITICAL level message.
@@ -228,7 +228,7 @@ namespace IBM.Watson.Logging
         /// <param name="args">Formatting arguments.</param>
        public static void Critical(string subSystem, string messageFmt, params object[] args)
         {
-            Logger.Instance.ProcessLog(new LogRecord(LogLevel.CRITICAL, subSystem, messageFmt, args));
+            LogSystem.Instance.ProcessLog(new LogRecord(LogLevel.CRITICAL, subSystem, messageFmt, args));
         }
     }
 }

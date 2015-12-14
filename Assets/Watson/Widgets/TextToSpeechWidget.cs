@@ -152,7 +152,7 @@ namespace IBM.Watson.Widgets
 
         private void OnEnable()
         {
-            Logger.InstallDefaultReactors();
+            LogSystem.InstallDefaultReactors();
             AudioClipUtil.StartDestroyQueue();
 
             if (m_StatusText != null)

@@ -87,7 +87,7 @@ namespace IBM.Watson.Widgets
             m_ClassifierId = Config.Instance.ResolveVariables( m_ClassifierId );
 
             // start the default log reactors if needed..
-	        Logger.InstallDefaultReactors();
+	        LogSystem.InstallDefaultReactors();
 
             if (string.IsNullOrEmpty(m_ClassifierId))
             {

@@ -170,7 +170,7 @@ namespace IBM.Watson.Editor
 
         private void Start()
         {
-            Logger.InstallDefaultReactors();
+            LogSystem.InstallDefaultReactors();
         }
 
         private void OnGUI()
@@ -207,7 +207,7 @@ public static class RunUnitTest
     /// </summary>
     static public void All()
     {
-        Logger.InstallDefaultReactors();
+        LogSystem.InstallDefaultReactors();
 #if UNITY_EDITOR
         Runnable.EnableRunnableInEditor();
 #endif
@@ -225,7 +225,7 @@ public static class RunUnitTest
     [MenuItem("Watson/Run All UnitTests",false, 50)]
     static public void AllNoQuit()
     {
-        Logger.InstallDefaultReactors();
+        LogSystem.InstallDefaultReactors();
         Runnable.EnableRunnableInEditor();
 
         IBM.Watson.Editor.UnitTestManager instance = IBM.Watson.Editor.UnitTestManager.Instance;
