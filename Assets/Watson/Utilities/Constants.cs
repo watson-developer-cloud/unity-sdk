@@ -401,6 +401,9 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             public const string DEBUG_DISPLAY_QUALITY = "Quality: {0}";
             /// <exclude />
             public const string DEBUG_DISPLAY_AVATAR_MOOD = "Behavior:{0} Mood: {1}";
+			/// <exclude />
+			public const string KEY_CONFIG_CLIENT_NAME = "CLIENT_NAME";
+			public const string CLIENT_TEXTURE_LOGO = "{0}/Logo/{0}_LOGO";
         }
 
 

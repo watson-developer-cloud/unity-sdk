@@ -27,10 +27,82 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 	public class AppController : MonoBehaviour {
 
 		#region Private Members
+		private static AppController mp_instance = null;
 		private bool m_isAnimationPaused = false;
+
+		//Client Related variables
+		private string m_ClientName;
+		private Texture m_ClientLogoTexture;
+		#endregion
+
+		#region Public Members
+
+		public static AppController instance
+		{
+			get{
+				if (mp_instance == null) {
+					Log.Error ("AppController", "There is no instance for AppController so creating one.");
+					GameObject gameObject = new GameObject ();
+					gameObject.name = "_AppController";
+					mp_instance = gameObject.AddComponent<AppController> ();
+				}
+				
+				return mp_instance;
+			}
+		}
+
+		/// <summary>
+		/// Gets the name of the client.
+		/// </summary>
+		/// <value>The name of the client.</value>
+		public string ClientName{
+			get{
+				if (Config.Instance.ConfigLoaded) {
+					if(string.IsNullOrEmpty(m_ClientName))
+						m_ClientName = Config.Instance.GetVariableValue (Constants.String.KEY_CONFIG_CLIENT_NAME);
+					
+					return m_ClientName;
+				}
+				else
+					return null;
+			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating is custom client.
+		/// </summary>
+		/// <value><c>true</c> if is custom client; otherwise, <c>false</c>.</value>
+		public static bool IsCustomClient{
+			get{
+				return !string.IsNullOrEmpty (instance.ClientName);
+			}
+		}
+
+		/// <summary>
+		/// Gets the client logo texture.
+		/// </summary>
+		/// <value>The client logo texture.</value>
+		public Texture ClientLogoTexture{
+			get{
+				if (m_ClientLogoTexture == null) {
+					if (IsCustomClient) {
+						m_ClientLogoTexture = Resources.Load( string.Format(Constants.String.CLIENT_TEXTURE_LOGO, ClientName)) as Texture;
+					} else {
+						Log.Warning ("AppController", "Requested client logo texture but there is no custom client");
+					}
+				}
+				return m_ClientLogoTexture;
+			}
+		}
+
 		#endregion
 
 		#region Start
+
+		void Awake(){
+			mp_instance = this;
+		}
+
 		// Use this for initialization
 		void Start () {
 			Screen.sleepTimeout = SleepTimeout.NeverSleep;

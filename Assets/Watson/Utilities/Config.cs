@@ -264,6 +264,20 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             return null;
         }
 
+		/// <summary>
+		/// Gets the variable value.
+		/// </summary>
+		/// <returns>The variable value.</returns>
+		/// <param name="key">Key.</param>
+		public string GetVariableValue(string key)
+		{
+			Variable v = GetVariable (key);
+			if (v != null)
+				return v.Value;
+		
+			return null;
+		}
+
         /// <summary>
         /// Resolves any variables found in the input string and returns the variable values in the returned string.
         /// </summary>
