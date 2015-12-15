@@ -47,10 +47,11 @@ The SDK contains a TestNLC classifier, which contains classes for temperature an
 
 ## Developing a basic application in one minute
 You can quickly develop a basic application that uses the Speech to Text service and the Natural Language Classifier service by using the prefabs that come with the SDK. Ensure that you prepare the test data before you complete the the following steps:
-1. Drag the following prefabs from `Assets -> Watson -> Prefabs`, and drop them in the Hierarchy tab:
+1. Create a new scene and drag the following prefabs from `Assets -> Watson -> Prefabs`, and drop them in the Hierarchy tab:
   * MicWidget
   * SpeechToTextWidget
   * NlcWidget
+  * ClassDisplayWidget
 2. Select the **NlcWidget**.
 5. In the **Classifier Name** field in the Inspector tab, specify `TestNLC/`.
 6. In the NLC Editor, expand the **TestNLC** classifier, expand the classes, and determine which questions about the weather to ask to test the classifier.
