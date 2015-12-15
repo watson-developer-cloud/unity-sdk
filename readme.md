@@ -7,31 +7,18 @@ Ensure that you have the following prerequisites:
 * [Unity](https://unity3d.com/get-unity). You win! You can use the **free** Personal edition.
 
 ## Getting the Watson SDK and adding it to Unity
-You can get the SDK either by cloning the the repository from GitHub or by downloading it from the Unity Asset Store.
+You can get the SDK by cloning the the repository from GitHub.
 ### Getting the SDK from GitHub and adding it to Unity
-1. Clone the Watson SDK repository from GitHub by issuing one of the following commands in your terminal:
+1. Clone the Watson SDK repository from GitHub by issuing the following command in your terminal:
   ```
-  git clone https://
-  ```
-  ```
-  git clone git@github.com:
+  git clone https://github.com/watson-developer-cloud/unity-sdk
   ```
 2. Open Unity.
 3. Add the Watson SDK package by selecting **Assets -> Import Package -> Custom Package**.
-4. Navigate to the location of the `WatsonUnitySDK.unitypackage`, and click **Open**. The Importing package window is displayed.
+4. Navigate to the location of the `WatsonDeveloperCloud.unitypackage`, and click **Open**. The Importing package window is displayed.
 5. Click **Import**. The asset is imported, and the prompt to configure your Watson service credentials is displayed.
 6. Click **Yes**. The Config Editor is displayed, and the Watson services to be configured are in the list.
 7. Go to [Configuring Watson service credentials](#configuring-Watson-service-credentials).
-### Getting the SDK from the Unity Asset Store
-1. Open Unity.
-2. Click **Window -> Asset Store**.
-3. Search for Watson SDK.
-4. Click **Open in Unity**.
-5. Click **Download**. The Terms of Service agreement is displayed.
-6. Read the Terms of Service agreement, and click **Accept**. The Importing package window is displayed.
-7. Click **Import**. The asset is imported, and the prompt to configure your Watson service credentials is displayed.
-8. Click **Yes**. The Config Editor is displayed, and the Watson services to be configured are in the list.
-9. Go to [Configuring Watson service credentials](#configuring-Watson-service-credentials).
 
 ## Configuring your service credentials
 1. Determine which services to configure.
