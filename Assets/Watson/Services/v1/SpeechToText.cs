@@ -211,13 +211,10 @@ namespace IBM.Watson.DeveloperCloud.Services.v1            // Add DeveloperCloud
                         // the audio clips until that happens.
                         m_ListenRecordings.Enqueue(clip);
 
-                        // After sending start, we should get into the listening state within the amount of time specified
-                        // by LISTEN_TIMEOUT. If not, then stop listening and record the error. Additionally, we need to 
                         // check the length of this queue and do something if it gets too full.
-                        if (m_ListenRecordings.Count > MAX_QUEUED_RECORDINGS
-                            || (DateTime.Now - m_LastStartSent).TotalSeconds > LISTEN_TIMEOUT )
+                        if (m_ListenRecordings.Count > MAX_QUEUED_RECORDINGS)
                         {
-                            Log.Error("SpeechToText", "Failed to enter listening state." );
+                            Log.Error("SpeechToText", "Recording queue is full." );
 
                             StopListening();
                             if (OnError != null)
@@ -229,6 +226,17 @@ namespace IBM.Watson.DeveloperCloud.Services.v1            // Add DeveloperCloud
                 {
                     SendStop();
                     m_AudioSent = false;
+                }
+
+                // After sending start, we should get into the listening state within the amount of time specified
+                // by LISTEN_TIMEOUT. If not, then stop listening and record the error.
+                if ( !m_ListenActive && (DateTime.Now - m_LastStartSent).TotalSeconds > LISTEN_TIMEOUT )
+                {
+                    Log.Error("SpeechToText", "Failed to enter listening state." );
+
+                    StopListening();
+                    if (OnError != null)
+                        OnError("Failed to enter listening state.");
                 }
             }
         }
