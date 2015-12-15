@@ -4,7 +4,7 @@ echo Building UnitySDK package...
 SET PROJECT=%CD%\..\
 IF "%UNITY_EXE%"=="" SET "UNITY_EXE=C:\Program Files\Unity\Editor\Unity.exe"
 
-"%UNITY_EXE%" -batchmode -quit -exportPackage Assets/Watson WatsonUnitySDK.unitypackage -projectPath %PROJECT%
+"%UNITY_EXE%" -batchmode -quit -exportPackage Assets/Watson WatsonDeveloperCloud.unitypackage -projectPath %PROJECT%
 
 IF "%ERRORLEVEL%"=="0" goto success
 echo Package build FAILED!

@@ -52,7 +52,7 @@ namespace IBM.Watson.DeveloperCloud.Services
     public static class ServiceHelper
     {
         /// <summary>
-        /// This returns ann instance of all services.
+        /// This returns a instance of all services.
         /// </summary>
         /// <returns>An array of IWatsonService instances.</returns>
         public static IWatsonService [] GetAllServices()
