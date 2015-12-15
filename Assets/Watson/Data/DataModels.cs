@@ -19,7 +19,7 @@
 using System;
 using FullSerializer;
 
-namespace IBM.Watson.DataModels
+namespace IBM.Watson.DeveloperCloud.DataModels
 {
     #region Dialog Models
     /// <summary>

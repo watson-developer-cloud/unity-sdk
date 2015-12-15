@@ -19,11 +19,10 @@
 
 using UnityEditor;
 using UnityEngine;
-using IBM.Watson.Widgets;
-using System.Reflection;
+using IBM.Watson.DeveloperCloud.Widgets;
 using System.Collections.Generic;
 
-namespace IBM.Watson.Editor
+namespace IBM.Watson.DeveloperCloud.Editor
 {
     public static class WidgetConnector
     {

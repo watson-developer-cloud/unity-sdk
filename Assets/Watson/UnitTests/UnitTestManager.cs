@@ -19,14 +19,14 @@ using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
-using IBM.Watson.Logging;
-using IBM.Watson.Utilities;
-using IBM.Watson.UnitTests;
+using IBM.Watson.DeveloperCloud.Logging;
+using IBM.Watson.DeveloperCloud.Utilities;
+using IBM.Watson.DeveloperCloud.UnitTests;
 using System.Collections.Generic;
 using System.Collections;
 using System;
 
-namespace IBM.Watson.Editor
+namespace IBM.Watson.DeveloperCloud.Editor
 {
     /// <summary>
     /// This class implements a UI using OnGUI and allows the user to run a UnitTest by clicking on a button. Additionally,
@@ -212,7 +212,7 @@ public static class RunUnitTest
         Runnable.EnableRunnableInEditor();
 #endif
 
-        IBM.Watson.Editor.UnitTestManager instance = IBM.Watson.Editor.UnitTestManager.Instance;
+        IBM.Watson.DeveloperCloud.Editor.UnitTestManager instance = IBM.Watson.DeveloperCloud.Editor.UnitTestManager.Instance;
         instance.QuitOnTestsComplete = true;
         instance.OnTestCompleteCallback = OnTestsComplete;
         instance.QueueTests(Utility.FindAllDerivedTypes(typeof(UnitTest)), true);
@@ -228,7 +228,7 @@ public static class RunUnitTest
         LogSystem.InstallDefaultReactors();
         Runnable.EnableRunnableInEditor();
 
-        IBM.Watson.Editor.UnitTestManager instance = IBM.Watson.Editor.UnitTestManager.Instance;
+        IBM.Watson.DeveloperCloud.Editor.UnitTestManager instance = IBM.Watson.DeveloperCloud.Editor.UnitTestManager.Instance;
         instance.OnTestCompleteCallback = OnTestsComplete;
         instance.QueueTests(Utility.FindAllDerivedTypes(typeof(UnitTest)), true);
     }

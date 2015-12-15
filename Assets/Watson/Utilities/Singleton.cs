@@ -20,7 +20,7 @@
 using UnityEngine;
 using System;
 
-namespace IBM.Watson.Utilities
+namespace IBM.Watson.DeveloperCloud.Utilities
 {
     /// <summary>
     /// Singleton pattern class. This class detects if T is a MonoBehavior and will 

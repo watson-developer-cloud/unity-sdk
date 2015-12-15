@@ -20,19 +20,16 @@
 
 #if UNITY_EDITOR
 
-using IBM.Watson.Connection;
-using IBM.Watson.Logging;
-using IBM.Watson.Services;
-using IBM.Watson.Utilities;
+using IBM.Watson.DeveloperCloud.Services;
+using IBM.Watson.DeveloperCloud.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using UnityEditor;
 using UnityEngine;
 
-namespace IBM.Watson.Editor
+namespace IBM.Watson.DeveloperCloud.Editor
 {
     /// <summary>
     /// This class implements a window for editing the Watson configuration settings from Unity.

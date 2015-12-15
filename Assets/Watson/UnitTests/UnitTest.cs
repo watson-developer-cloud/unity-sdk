@@ -15,11 +15,11 @@
 *
 */
 
-using IBM.Watson.Logging;
+using IBM.Watson.DeveloperCloud.Logging;
 using System.Collections;
 using UnityEngine;
 
-namespace IBM.Watson.UnitTests {
+namespace IBM.Watson.DeveloperCloud.UnitTests {
 
     /// <summary>
     /// This is the base class for all UnitTest classes. Derive from this class and implement the RunTest() function.

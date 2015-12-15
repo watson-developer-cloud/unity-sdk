@@ -15,14 +15,14 @@
 *
 */
 
-using IBM.Watson.Utilities;
-using IBM.Watson.Logging;
+using IBM.Watson.DeveloperCloud.Utilities;
+using IBM.Watson.DeveloperCloud.Logging;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 
-namespace IBM.Watson.Widgets
+namespace IBM.Watson.DeveloperCloud.Widgets
 {
 
     /// <summary>

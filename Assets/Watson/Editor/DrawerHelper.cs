@@ -20,7 +20,7 @@ using System.Collections;
 using System.Reflection;
 using UnityEditor;
 
-namespace IBM.Watson.Editor
+namespace IBM.Watson.DeveloperCloud.Editor
 {
     public static class DrawerHelper
     {

@@ -19,7 +19,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace IBM.Watson.Services
+namespace IBM.Watson.DeveloperCloud.Services
 {
     /// <summary>
     /// Callback for the GetServiceStatus() function.

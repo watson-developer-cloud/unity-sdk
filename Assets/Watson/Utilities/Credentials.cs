@@ -18,7 +18,7 @@
 using System;
 using System.Text;
 
-namespace IBM.Watson.Utilities
+namespace IBM.Watson.DeveloperCloud.Utilities
 {
     /// <summary>
     /// Helper class for holding a user and password, used by both the WSCOnnector and RESTConnector.

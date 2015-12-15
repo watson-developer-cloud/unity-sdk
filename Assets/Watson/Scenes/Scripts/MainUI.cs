@@ -16,14 +16,14 @@
 */
 
 
-using IBM.Watson.Utilities;
+using IBM.Watson.DeveloperCloud.Utilities;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
 using System.IO;
-using IBM.Watson.Logging;
+using IBM.Watson.DeveloperCloud.Logging;
 
 /// <summary>
 /// Main UI menu item.

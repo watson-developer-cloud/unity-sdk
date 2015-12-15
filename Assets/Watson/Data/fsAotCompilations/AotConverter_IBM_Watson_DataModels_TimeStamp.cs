@@ -8,8 +8,8 @@ namespace FullSerializer {
 }
 
 namespace FullSerializer.Speedup {
-    public class IBM_Watson_DataModels_TimeStamp_DirectConverter : fsDirectConverter<IBM.Watson.DataModels.TimeStamp> {
-        protected override fsResult DoSerialize(IBM.Watson.DataModels.TimeStamp model, Dictionary<string, fsData> serialized) {
+    public class IBM_Watson_DataModels_TimeStamp_DirectConverter : fsDirectConverter<IBM.Watson.DeveloperCloud.DataModels.TimeStamp> {
+        protected override fsResult DoSerialize(IBM.Watson.DeveloperCloud.DataModels.TimeStamp model, Dictionary<string, fsData> serialized) {
             var result = fsResult.Success;
 
             result += SerializeMember(serialized, "Word", model.Word);
@@ -19,7 +19,7 @@ namespace FullSerializer.Speedup {
             return result;
         }
 
-        protected override fsResult DoDeserialize(Dictionary<string, fsData> data, ref IBM.Watson.DataModels.TimeStamp model) {
+        protected override fsResult DoDeserialize(Dictionary<string, fsData> data, ref IBM.Watson.DeveloperCloud.DataModels.TimeStamp model) {
             var result = fsResult.Success;
 
             var t0 = model.Word;
@@ -38,7 +38,7 @@ namespace FullSerializer.Speedup {
         }
 
         public override object CreateInstance(fsData data, Type storageType) {
-            return new IBM.Watson.DataModels.TimeStamp();
+            return new IBM.Watson.DeveloperCloud.DataModels.TimeStamp();
         }
     }
 }

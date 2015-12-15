@@ -8,8 +8,8 @@ namespace FullSerializer {
 }
 
 namespace FullSerializer.Speedup {
-    public class IBM_Watson_DataModels_TranslationModel_DirectConverter : fsDirectConverter<IBM.Watson.DataModels.TranslationModel> {
-        protected override fsResult DoSerialize(IBM.Watson.DataModels.TranslationModel model, Dictionary<string, fsData> serialized) {
+    public class IBM_Watson_DataModels_TranslationModel_DirectConverter : fsDirectConverter<IBM.Watson.DeveloperCloud.DataModels.TranslationModel> {
+        protected override fsResult DoSerialize(IBM.Watson.DeveloperCloud.DataModels.TranslationModel model, Dictionary<string, fsData> serialized) {
             var result = fsResult.Success;
 
             result += SerializeMember(serialized, "model_id", model.model_id);
@@ -26,7 +26,7 @@ namespace FullSerializer.Speedup {
             return result;
         }
 
-        protected override fsResult DoDeserialize(Dictionary<string, fsData> data, ref IBM.Watson.DataModels.TranslationModel model) {
+        protected override fsResult DoDeserialize(Dictionary<string, fsData> data, ref IBM.Watson.DeveloperCloud.DataModels.TranslationModel model) {
             var result = fsResult.Success;
 
             var t0 = model.model_id;
@@ -73,7 +73,7 @@ namespace FullSerializer.Speedup {
         }
 
         public override object CreateInstance(fsData data, Type storageType) {
-            return new IBM.Watson.DataModels.TranslationModel();
+            return new IBM.Watson.DeveloperCloud.DataModels.TranslationModel();
         }
     }
 }

@@ -16,14 +16,14 @@
 */
 
 
-using IBM.Watson.Logging;
-using IBM.Watson.Utilities;
+using IBM.Watson.DeveloperCloud.Logging;
+using IBM.Watson.DeveloperCloud.Utilities;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace IBM.Watson.Debug
+namespace IBM.Watson.DeveloperCloud.Debug
 {
     /// <summary>
     /// This class handles the display and updating of the debug console. This class must be attached onto a prefab object, since

@@ -20,14 +20,14 @@
 using UnityEngine;
 using System;
 using UnityEngine.UI;
-using IBM.Watson.Logging;
-using IBM.Watson.Utilities;
-using IBM.Watson.DataModels;
-using IBM.Watson.Services.v1;
-using IBM.Watson.DataTypes;
+using IBM.Watson.DeveloperCloud.Logging;
+using IBM.Watson.DeveloperCloud.Utilities;
+using IBM.Watson.DeveloperCloud.DataModels;
+using IBM.Watson.DeveloperCloud.Services.v1;
+using IBM.Watson.DeveloperCloud.DataTypes;
 
 
-namespace IBM.Watson.Widgets
+namespace IBM.Watson.DeveloperCloud.Widgets
 {
     /// <summary>
     /// This Widget class wraps the Dialog service. It will look for a given dialog by name, if not found then it can auto-upload the dialog

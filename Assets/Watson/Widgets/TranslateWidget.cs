@@ -17,18 +17,18 @@
 
 using UnityEngine;
 using UnityEngine.UI;
-using IBM.Watson.DataModels;
-using IBM.Watson.DataTypes;
-using IBM.Watson.Logging;
-using IBM.Watson.Services.v1;
+using IBM.Watson.DeveloperCloud.DataModels;
+using IBM.Watson.DeveloperCloud.DataTypes;
+using IBM.Watson.DeveloperCloud.Logging;
+using IBM.Watson.DeveloperCloud.Services.v1;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using IBM.Watson.Utilities;
+using IBM.Watson.DeveloperCloud.Utilities;
 
 #pragma warning disable 414
 
-namespace IBM.Watson.Widgets
+namespace IBM.Watson.DeveloperCloud.Widgets
 {
 
     /// <summary>

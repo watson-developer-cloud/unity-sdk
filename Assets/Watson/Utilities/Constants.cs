@@ -19,7 +19,7 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.Serialization;
 
-namespace IBM.Watson.Utilities
+namespace IBM.Watson.DeveloperCloud.Utilities
 {
     /// <summary>
     /// This class wraps all constants.

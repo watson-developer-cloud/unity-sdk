@@ -15,12 +15,12 @@
 *
 */
 
-using IBM.Watson.Utilities;
+using IBM.Watson.DeveloperCloud.Utilities;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace IBM.Watson.Widgets
+namespace IBM.Watson.DeveloperCloud.Widgets
 {
 
     /// <summary>

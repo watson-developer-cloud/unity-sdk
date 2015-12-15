@@ -15,11 +15,11 @@
 *
 */
 
-using IBM.Watson.Logging;
+using IBM.Watson.DeveloperCloud.Logging;
 using UnityEngine;
 
 
-namespace IBM.Watson.Utilities
+namespace IBM.Watson.DeveloperCloud.Utilities
 {
 	/// <summary>
 	/// General application related event handlers and some configurations

@@ -16,14 +16,14 @@
 */
 
 
-using IBM.Watson.DataModels;
-using IBM.Watson.Services.v1;
-using IBM.Watson.Utilities;
-using IBM.Watson.Widgets;
+using IBM.Watson.DeveloperCloud.DataModels;
+using IBM.Watson.DeveloperCloud.Services.v1;
+using IBM.Watson.DeveloperCloud.Utilities;
+using IBM.Watson.DeveloperCloud.Widgets;
 using UnityEngine;
 using System;
 
-namespace IBM.Watson.DataTypes
+namespace IBM.Watson.DeveloperCloud.DataTypes
 {
     /// <summary>
     /// This data class is for text data to spoken by the TextToSpeech widget.

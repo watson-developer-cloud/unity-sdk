@@ -8,8 +8,8 @@ namespace FullSerializer {
 }
 
 namespace FullSerializer.Speedup {
-    public class IBM_Watson_DataModels_SpeechResult_DirectConverter : fsDirectConverter<IBM.Watson.DataModels.SpeechResult> {
-        protected override fsResult DoSerialize(IBM.Watson.DataModels.SpeechResult model, Dictionary<string, fsData> serialized) {
+    public class IBM_Watson_DataModels_SpeechResult_DirectConverter : fsDirectConverter<IBM.Watson.DeveloperCloud.DataModels.SpeechResult> {
+        protected override fsResult DoSerialize(IBM.Watson.DeveloperCloud.DataModels.SpeechResult model, Dictionary<string, fsData> serialized) {
             var result = fsResult.Success;
 
             result += SerializeMember(serialized, "Final", model.Final);
@@ -18,7 +18,7 @@ namespace FullSerializer.Speedup {
             return result;
         }
 
-        protected override fsResult DoDeserialize(Dictionary<string, fsData> data, ref IBM.Watson.DataModels.SpeechResult model) {
+        protected override fsResult DoDeserialize(Dictionary<string, fsData> data, ref IBM.Watson.DeveloperCloud.DataModels.SpeechResult model) {
             var result = fsResult.Success;
 
             var t0 = model.Final;
@@ -33,7 +33,7 @@ namespace FullSerializer.Speedup {
         }
 
         public override object CreateInstance(fsData data, Type storageType) {
-            return new IBM.Watson.DataModels.SpeechResult();
+            return new IBM.Watson.DeveloperCloud.DataModels.SpeechResult();
         }
     }
 }

@@ -8,8 +8,8 @@ namespace FullSerializer {
 }
 
 namespace FullSerializer.Speedup {
-    public class IBM_Watson_DataModels_WordConfidence_DirectConverter : fsDirectConverter<IBM.Watson.DataModels.WordConfidence> {
-        protected override fsResult DoSerialize(IBM.Watson.DataModels.WordConfidence model, Dictionary<string, fsData> serialized) {
+    public class IBM_Watson_DataModels_WordConfidence_DirectConverter : fsDirectConverter<IBM.Watson.DeveloperCloud.DataModels.WordConfidence> {
+        protected override fsResult DoSerialize(IBM.Watson.DeveloperCloud.DataModels.WordConfidence model, Dictionary<string, fsData> serialized) {
             var result = fsResult.Success;
 
             result += SerializeMember(serialized, "Word", model.Word);
@@ -18,7 +18,7 @@ namespace FullSerializer.Speedup {
             return result;
         }
 
-        protected override fsResult DoDeserialize(Dictionary<string, fsData> data, ref IBM.Watson.DataModels.WordConfidence model) {
+        protected override fsResult DoDeserialize(Dictionary<string, fsData> data, ref IBM.Watson.DeveloperCloud.DataModels.WordConfidence model) {
             var result = fsResult.Success;
 
             var t0 = model.Word;
@@ -33,7 +33,7 @@ namespace FullSerializer.Speedup {
         }
 
         public override object CreateInstance(fsData data, Type storageType) {
-            return new IBM.Watson.DataModels.WordConfidence();
+            return new IBM.Watson.DeveloperCloud.DataModels.WordConfidence();
         }
     }
 }

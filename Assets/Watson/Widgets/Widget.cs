@@ -15,14 +15,14 @@
 *
 */
 
-using IBM.Watson.Logging;
-using IBM.Watson.Utilities;
+using IBM.Watson.DeveloperCloud.Logging;
+using IBM.Watson.DeveloperCloud.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 
-namespace IBM.Watson.Widgets
+namespace IBM.Watson.DeveloperCloud.Widgets
 {
     /// <summary>
     /// This is the base class for all widgets. A Widget has any number of inputs and outputs that carry a specific type of data.

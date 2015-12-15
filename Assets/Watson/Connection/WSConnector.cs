@@ -18,14 +18,14 @@
 //! Uncomment to enable message debugging
 //#define ENABLE_MESSAGE_DEBUGGING
 
-using IBM.Watson.Logging;
-using IBM.Watson.Utilities;
+using IBM.Watson.DeveloperCloud.Logging;
+using IBM.Watson.DeveloperCloud.Utilities;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using WebSocketSharp;
 
-namespace IBM.Watson.Connection
+namespace IBM.Watson.DeveloperCloud.Connection
 {
     /// <summary>
     /// WebSocket connector class.

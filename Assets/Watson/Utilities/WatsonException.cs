@@ -15,9 +15,9 @@
 *
 */
 
-using IBM.Watson.Logging; 
+using IBM.Watson.DeveloperCloud.Logging; 
 
-namespace IBM.Watson.Utilities
+namespace IBM.Watson.DeveloperCloud.Utilities
 {
     /// <summary>
     /// Watson exception class.

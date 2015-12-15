@@ -8,8 +8,8 @@ namespace FullSerializer {
 }
 
 namespace FullSerializer.Speedup {
-    public class IBM_Watson_DataModels_Class_DirectConverter : fsDirectConverter<IBM.Watson.DataModels.Class> {
-        protected override fsResult DoSerialize(IBM.Watson.DataModels.Class model, Dictionary<string, fsData> serialized) {
+    public class IBM_Watson_DataModels_Class_DirectConverter : fsDirectConverter<IBM.Watson.DeveloperCloud.DataModels.Class> {
+        protected override fsResult DoSerialize(IBM.Watson.DeveloperCloud.DataModels.Class model, Dictionary<string, fsData> serialized) {
             var result = fsResult.Success;
 
             result += SerializeMember(serialized, "confidence", model.confidence);
@@ -18,7 +18,7 @@ namespace FullSerializer.Speedup {
             return result;
         }
 
-        protected override fsResult DoDeserialize(Dictionary<string, fsData> data, ref IBM.Watson.DataModels.Class model) {
+        protected override fsResult DoDeserialize(Dictionary<string, fsData> data, ref IBM.Watson.DeveloperCloud.DataModels.Class model) {
             var result = fsResult.Success;
 
             var t0 = model.confidence;
@@ -33,7 +33,7 @@ namespace FullSerializer.Speedup {
         }
 
         public override object CreateInstance(fsData data, Type storageType) {
-            return new IBM.Watson.DataModels.Class();
+            return new IBM.Watson.DeveloperCloud.DataModels.Class();
         }
     }
 }

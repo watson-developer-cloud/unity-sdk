@@ -19,11 +19,11 @@ using UnityEngine;
 using UnityEditor;
 using System.Reflection;
 using System.Collections.Generic;
-using IBM.Watson.Utilities;
-using IBM.Watson.Logging;
+using IBM.Watson.DeveloperCloud.Utilities;
+using IBM.Watson.DeveloperCloud.Logging;
 using System;
 
-namespace IBM.Watson.Editor
+namespace IBM.Watson.DeveloperCloud.Editor
 {
     /// <summary>
     /// PropertyDrawer for SerializedDelegate type.

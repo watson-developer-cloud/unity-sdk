@@ -16,10 +16,10 @@
 */
 
 using System.Collections;
-using IBM.Watson.Utilities;
-using IBM.Watson.Logging;
+using IBM.Watson.DeveloperCloud.Utilities;
+using IBM.Watson.DeveloperCloud.Logging;
 
-namespace IBM.Watson.UnitTests
+namespace IBM.Watson.DeveloperCloud.UnitTests
 {
     public class TestEventManager : UnitTest
     {

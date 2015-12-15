@@ -18,14 +18,14 @@
 //#define TEST_DELETE
 
 using System.Collections;
-using IBM.Watson.Services.v1;
-using IBM.Watson.Logging;
-using IBM.Watson.DataModels;
+using IBM.Watson.DeveloperCloud.Services.v1;
+using IBM.Watson.DeveloperCloud.Logging;
+using IBM.Watson.DeveloperCloud.DataModels;
 using System.IO;
 using UnityEngine;
 using System;
 
-namespace IBM.Watson.UnitTests
+namespace IBM.Watson.DeveloperCloud.UnitTests
 {
     public class TestNLC : UnitTest
     {

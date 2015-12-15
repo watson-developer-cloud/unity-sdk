@@ -17,19 +17,19 @@
 
 #if UNITY_EDITOR
 
-using IBM.Watson.Utilities;
-using IBM.Watson.Services.v1;
+using IBM.Watson.DeveloperCloud.Utilities;
+using IBM.Watson.DeveloperCloud.Services.v1;
 using UnityEditor;
 using UnityEngine;
 using System.IO;
-using IBM.Watson.DataModels;
-using IBM.Watson.Logging;
+using IBM.Watson.DeveloperCloud.DataModels;
+using IBM.Watson.DeveloperCloud.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using FullSerializer;
 
-namespace IBM.Watson.Editor
+namespace IBM.Watson.DeveloperCloud.Editor
 {
 
     class NLCEditor : EditorWindow

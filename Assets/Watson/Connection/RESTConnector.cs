@@ -20,8 +20,8 @@
 // uncomment to enable experimental gateway code.
 //#define ENABLE_GATEWAY
 
-using IBM.Watson.Utilities;
-using IBM.Watson.Logging;
+using IBM.Watson.DeveloperCloud.Utilities;
+using IBM.Watson.DeveloperCloud.Logging;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -34,7 +34,7 @@ using System.Net;
 using System.Net.Security;
 #endif
 
-namespace IBM.Watson.Connection
+namespace IBM.Watson.DeveloperCloud.Connection
 {
     /// <summary>
     /// REST connector class.

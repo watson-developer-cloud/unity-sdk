@@ -17,14 +17,14 @@
 
 using System.Collections;
 using System.Collections.Generic;
-using IBM.Watson.Logging;
+using IBM.Watson.DeveloperCloud.Logging;
 using UnityEngine;
 using FullSerializer;
 using System.IO;
 using MiniJSON;
 using System;
 
-namespace IBM.Watson.Utilities
+namespace IBM.Watson.DeveloperCloud.Utilities
 {
     /// <summary>
     /// This class is used to hold configuration data for SDK.

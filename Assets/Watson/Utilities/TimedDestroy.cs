@@ -18,7 +18,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace IBM.Watson.Utilities
+namespace IBM.Watson.DeveloperCloud.Utilities
 {
     /// <summary>
     /// Helper class for automatically destroying objects after a static amount of time has elapsed.

@@ -22,7 +22,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace IBM.Watson.Utilities
+namespace IBM.Watson.DeveloperCloud.Utilities
 {
     /// <summary>
     /// Helper class for running co-routines without having to inherit from MonoBehavior.

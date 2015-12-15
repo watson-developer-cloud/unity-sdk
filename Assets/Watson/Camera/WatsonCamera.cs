@@ -17,10 +17,10 @@
 
 
 using UnityEngine;
-using IBM.Watson.Logging;
-using IBM.Watson.Utilities;
+using IBM.Watson.DeveloperCloud.Logging;
+using IBM.Watson.DeveloperCloud.Utilities;
 
-namespace IBM.Watson.Camera
+namespace IBM.Watson.DeveloperCloud.Camera
 {
 
     /// <summary>

@@ -17,9 +17,9 @@
 
 using UnityEngine;
 using System.Collections;
-using IBM.Watson.Utilities;
+using IBM.Watson.DeveloperCloud.Utilities;
 
-namespace IBM.Watson.UnitTests
+namespace IBM.Watson.DeveloperCloud.UnitTests
 {
     public class TestRunnable : UnitTest
     {

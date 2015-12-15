@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace IBM.Watson.Utilities
+namespace IBM.Watson.DeveloperCloud.Utilities
 {
     /// <summary>
     /// Key press modifiers

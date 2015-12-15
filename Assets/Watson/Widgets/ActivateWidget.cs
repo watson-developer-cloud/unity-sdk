@@ -15,10 +15,10 @@
 *
 */
 
-using IBM.Watson.DataTypes;
+using IBM.Watson.DeveloperCloud.DataTypes;
 using UnityEngine;
 
-namespace IBM.Watson.Widgets
+namespace IBM.Watson.DeveloperCloud.Widgets
 {
     /// <summary>
     /// Simple widget class for connecting a UI button to an activation input on a widget.

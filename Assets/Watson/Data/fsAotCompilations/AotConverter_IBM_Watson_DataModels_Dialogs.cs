@@ -8,8 +8,8 @@ namespace FullSerializer {
 }
 
 namespace FullSerializer.Speedup {
-    public class IBM_Watson_DataModels_Dialogs_DirectConverter : fsDirectConverter<IBM.Watson.DataModels.Dialogs> {
-        protected override fsResult DoSerialize(IBM.Watson.DataModels.Dialogs model, Dictionary<string, fsData> serialized) {
+    public class IBM_Watson_DataModels_Dialogs_DirectConverter : fsDirectConverter<IBM.Watson.DeveloperCloud.DataModels.Dialogs> {
+        protected override fsResult DoSerialize(IBM.Watson.DeveloperCloud.DataModels.Dialogs model, Dictionary<string, fsData> serialized) {
             var result = fsResult.Success;
 
             result += SerializeMember(serialized, "dialogs", model.dialogs);
@@ -17,7 +17,7 @@ namespace FullSerializer.Speedup {
             return result;
         }
 
-        protected override fsResult DoDeserialize(Dictionary<string, fsData> data, ref IBM.Watson.DataModels.Dialogs model) {
+        protected override fsResult DoDeserialize(Dictionary<string, fsData> data, ref IBM.Watson.DeveloperCloud.DataModels.Dialogs model) {
             var result = fsResult.Success;
 
             var t0 = model.dialogs;
@@ -28,7 +28,7 @@ namespace FullSerializer.Speedup {
         }
 
         public override object CreateInstance(fsData data, Type storageType) {
-            return new IBM.Watson.DataModels.Dialogs();
+            return new IBM.Watson.DeveloperCloud.DataModels.Dialogs();
         }
     }
 }

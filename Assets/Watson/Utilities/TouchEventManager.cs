@@ -19,9 +19,9 @@
 using UnityEngine;
 using System.Collections.Generic;
 using TouchScript.Gestures;
-using IBM.Watson.Logging;
+using IBM.Watson.DeveloperCloud.Logging;
 
-namespace IBM.Watson.Utilities
+namespace IBM.Watson.DeveloperCloud.Utilities
 {
     /// <summary>
     /// Touch Event Manager for all touch events. 

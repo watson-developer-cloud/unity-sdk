@@ -16,12 +16,12 @@
 */
 
 
-using IBM.Watson.Logging;
+using IBM.Watson.DeveloperCloud.Logging;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace IBM.Watson.Utilities
+namespace IBM.Watson.DeveloperCloud.Utilities
 {
     /// <summary>
     /// Singleton class for sending and receiving events.

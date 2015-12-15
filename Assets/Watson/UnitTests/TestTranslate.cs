@@ -16,12 +16,12 @@
 */
 
 
-using IBM.Watson.DataModels;
-using IBM.Watson.Logging;
-using IBM.Watson.Services.v1;
+using IBM.Watson.DeveloperCloud.DataModels;
+using IBM.Watson.DeveloperCloud.Logging;
+using IBM.Watson.DeveloperCloud.Services.v1;
 using System.Collections;
 
-namespace IBM.Watson.UnitTests
+namespace IBM.Watson.DeveloperCloud.UnitTests
 {
     public class TestTranslate : UnitTest
     {

@@ -18,7 +18,7 @@
 using UnityEngine;
 using System.Collections;
 
-namespace IBM.Watson.Logging
+namespace IBM.Watson.DeveloperCloud.Logging
 {
     /// <summary>
     /// Any class that implement this interface can be added to the Logger class as a reactor and hook

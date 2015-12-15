@@ -21,9 +21,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
-using IBM.Watson.Logging;
+using IBM.Watson.DeveloperCloud.Logging;
 
-namespace IBM.Watson.Utilities
+namespace IBM.Watson.DeveloperCloud.Utilities
 {
     /// <summary>
     /// This class manages a cache of binary data by ID.

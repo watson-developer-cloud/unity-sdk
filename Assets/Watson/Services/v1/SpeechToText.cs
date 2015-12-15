@@ -17,11 +17,11 @@
 
 #define ENABLE_DEBUGGING
 
-using IBM.Watson.DataTypes;
-using IBM.Watson.DataModels;
-using IBM.Watson.Logging;
-using IBM.Watson.Connection;
-using IBM.Watson.Utilities;
+using IBM.Watson.DeveloperCloud.DataTypes;
+using IBM.Watson.DeveloperCloud.DataModels;
+using IBM.Watson.DeveloperCloud.Logging;
+using IBM.Watson.DeveloperCloud.Connection;
+using IBM.Watson.DeveloperCloud.Utilities;
 using MiniJSON;
 using System;
 using System.Collections;
@@ -29,7 +29,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Text;
 
-namespace IBM.Watson.Services.v1            // Add DeveloperCloud
+namespace IBM.Watson.DeveloperCloud.Services.v1            // Add DeveloperCloud
 {
     /// <summary>
     /// This class wraps the Watson SpeechToText service.

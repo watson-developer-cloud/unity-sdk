@@ -18,7 +18,7 @@
 using System;
 using System.IO;
 
-namespace IBM.Watson.Logging
+namespace IBM.Watson.DeveloperCloud.Logging
 {
     /// <summary>
     /// FileReactor log reactor class.

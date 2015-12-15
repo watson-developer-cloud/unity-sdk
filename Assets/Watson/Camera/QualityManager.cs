@@ -16,10 +16,10 @@
 */
 
 using UnityEngine;
-using IBM.Watson.Utilities;
-using IBM.Watson.Debug;
+using IBM.Watson.DeveloperCloud.Utilities;
+using IBM.Watson.DeveloperCloud.Debug;
 
-namespace IBM.Watson.Camera
+namespace IBM.Watson.DeveloperCloud.Camera
 {
     /// <summary>
     /// This singleton manages the quality level of all rendering in the application.
