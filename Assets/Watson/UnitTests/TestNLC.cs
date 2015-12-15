@@ -21,6 +21,7 @@ using System.Collections;
 using IBM.Watson.DeveloperCloud.Services.v1;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.DataModels;
+using IBM.Watson.DeveloperCloud.Utilities;
 using System.IO;
 using UnityEngine;
 using System;
@@ -41,6 +42,9 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         public override IEnumerator RunTest()
         {
+            if ( Config.Instance.FindCredentials( m_NLC.GetServiceID() ) == null )
+                yield break;
+
             m_NLC.FindClassifier( "TestNLC/", OnFindClassifier );
             while(! m_FindClassifierTested )
                 yield return null;

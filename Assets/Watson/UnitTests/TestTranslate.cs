@@ -19,6 +19,7 @@
 using IBM.Watson.DeveloperCloud.DataModels;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Services.v1;
+using IBM.Watson.DeveloperCloud.Utilities;
 using System.Collections;
 
 namespace IBM.Watson.DeveloperCloud.UnitTests
@@ -34,6 +35,9 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         public override IEnumerator RunTest()
         {
+            if ( Config.Instance.FindCredentials( m_Translate.GetServiceID() ) == null )
+                yield break;
+
             m_Translate.GetModel( "en-es", OnGetModel );
             while(! m_GetModelTested )
                 yield return null;

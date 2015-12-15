@@ -19,6 +19,7 @@ using UnityEngine;
 using System.Collections;
 using IBM.Watson.DeveloperCloud.Services.v1;
 using IBM.Watson.DeveloperCloud.Logging;
+using IBM.Watson.DeveloperCloud.Utilities;
 
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
@@ -30,6 +31,9 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 
         public override IEnumerator RunTest()
         {
+            if ( Config.Instance.FindCredentials( m_TTS.GetServiceID() ) == null )
+                yield break;
+
             m_TTS.ToSpeech( "Hello World using GET", OnSpeechGET );                  // Test GET
             while (!m_GetTested)
                 yield return null;

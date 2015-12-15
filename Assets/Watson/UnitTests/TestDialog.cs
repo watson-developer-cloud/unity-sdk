@@ -19,6 +19,7 @@ using System.Collections;
 using IBM.Watson.DeveloperCloud.Services.v1;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.DataModels;
+using IBM.Watson.DeveloperCloud.Utilities;
 using UnityEngine;
 
 namespace IBM.Watson.DeveloperCloud.UnitTests
@@ -38,6 +39,9 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         public override IEnumerator RunTest()
         {
+            if ( Config.Instance.FindCredentials( m_Dialog.GetServiceID() ) == null )
+                yield break;
+
             m_Dialog.GetDialogs( OnGetDialogs );
             while(! m_GetDialogsTested )
                 yield return null;
