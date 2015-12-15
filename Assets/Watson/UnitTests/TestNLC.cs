@@ -29,7 +29,7 @@ namespace IBM.Watson.UnitTests
 {
     public class TestNLC : UnitTest
     {
-        NLC m_NLC = new NLC();
+        LanguageClassifier m_NLC = new LanguageClassifier();
         bool m_FindClassifierTested = false;
         bool m_TrainClasifierTested = false;
         bool m_TrainClassifier = false;

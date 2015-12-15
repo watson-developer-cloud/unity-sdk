@@ -35,7 +35,7 @@ namespace IBM.Watson.Widgets
 	public class NlcWidget : Widget
 	{
 	    #region Private Data
-	    private NLC m_NLC = new NLC();
+	    private LanguageClassifier m_NLC = new LanguageClassifier();
         private Classifier m_Selected = null;
 
         [SerializeField]
@@ -73,7 +73,7 @@ namespace IBM.Watson.Widgets
         /// <summary>
         /// Returns the NLC service object.
         /// </summary>
-        public NLC NLC { get { return m_NLC; } }
+        public LanguageClassifier NLC { get { return m_NLC; } }
         #endregion
 
          #region MonoBehaviour interface

@@ -134,7 +134,7 @@ namespace IBM.Watson.Editor
 
         private void OnEnable()
         {
-#if UNITY_5_2
+#if UNITY_5
             titleContent.text = "NLC Editor";
 #endif
             m_WatsonIcon = (Texture2D)Resources.Load(Constants.Resources.WATSON_ICON, typeof(Texture2D));
@@ -150,7 +150,7 @@ namespace IBM.Watson.Editor
 
         private Texture m_WatsonIcon = null;
         private Vector2 m_ScrollPos = Vector2.zero;
-        private NLC m_NLC = new NLC();
+        private LanguageClassifier m_NLC = new LanguageClassifier();
         private Classifiers m_Classifiers = null;
         private static fsSerializer sm_Serializer = new fsSerializer();
         private List<ClassifierData> m_ClassifierData = null;
