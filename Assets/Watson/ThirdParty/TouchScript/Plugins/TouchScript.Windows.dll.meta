@@ -1,0 +1,24 @@
+fileFormatVersion: 2
+guid: bb6056dc800c1084da7273cb9f23f5cb
+PluginImporter:
+  serializedVersion: 1
+  iconMap: {}
+  executionOrder:
+    TouchScript.InputSources.Win7TouchInput: -1130
+    TouchScript.InputSources.Win8TouchInput: -1140
+  isPreloaded: 0
+  platformData:
+    Any:
+      enabled: 1
+      settings: {}
+    Editor:
+      enabled: 0
+      settings:
+        DefaultValueInitialized: true
+    WindowsStoreApps:
+      enabled: 0
+      settings:
+        CPU: AnyCPU
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,302 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &150770
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 434176}
+  - 114: {fileID: 11489316}
+  m_Layer: 0
+  m_Name: NlcWidget
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &434176
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 150770}
+  m_LocalRotation: {x: 0, y: -.819152117, z: 0, w: .573576331}
+  m_LocalPosition: {x: -207.606384, y: 418, z: 570.393372}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+--- !u!114 &11489316
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 150770}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cef7f2b9e6b24041a94bde309b342ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AutoConnect: 1
+  m_ClassifyOutput:
+    m_TargetObject: {fileID: 0}
+    m_TargetConnection: Classifier/Classified
+  m_ClassifierName: ${NLC_CLASSIFIER_NAME}
+  m_ClassifierId: ${NLC_CLASSIFIER_ID}
+  m_MinWordConfidence: .40000000000000002
+  m_IgnoreWordConfidence: .20000000000000001
+  m_MinClassEventConfidence: .5
+  m_Language: en
+  m_ClassEventList:
+  - m_Class: wakeup
+    m_Event: 403
+  - m_Class: sleep
+    m_Event: 404
+  - m_Class: cancel
+    m_Event: 210
+  - m_Class: dialog
+    m_Event: 402
+  - m_Class: debug_on
+    m_Event: 405
+  - m_Class: debug_off
+    m_Event: 406
+  - m_Class: fold
+    m_Event: 407
+  - m_Class: unfold
+    m_Event: 408
+  - m_Class: answers
+    m_Event: 409
+  - m_Class: evidence
+    m_Event: 410
+  - m_Class: chat
+    m_Event: 411
+  - m_Class: parse
+    m_Event: 412
+  - m_Class: location
+    m_Event: 413
+  - m_Class: question-thunderstone
+    m_Event: 401
+  - m_Class: question-woodside
+    m_Event: 401
+  - m_Class: question-numerati_woodside
+    m_Event: 401
+  - m_Class: pan_left
+    m_Event: -1
+  - m_Class: pan_right
+    m_Event: -1
+  - m_Class: pan_up
+    m_Event: -1
+  - m_Class: pan_down
+    m_Event: -1
+  - m_Class: zoom_in
+    m_Event: -1
+  - m_Class: zoom_out
+    m_Event: -1
+  - m_Class: show_next_passage
+    m_Event: 415
+  - m_Class: show_next_answer
+    m_Event: 415
+  - m_Class: show_next
+    m_Event: 415
+  - m_Class: show_previous_passage
+    m_Event: 416
+  - m_Class: show_previous_answer
+    m_Event: 416
+  - m_Class: show_previous
+    m_Event: 416
+  - m_Class: scroll_up
+    m_Event: 417
+  - m_Class: scroll_down
+    m_Event: 418
+  - m_Class: repeat_last_action
+    m_Event: 419
+  m_TopClassText: {fileID: 0}
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.size
+      value: 31
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassifierId
+      value: ${NLC_CLASSIFIER_ID}
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[3].m_Event
+      value: 402
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_AutoConnect
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[0].m_Event
+      value: 403
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[5].m_Event
+      value: 406
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[13].m_Class
+      value: question-thunderstone
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[13].m_Event
+      value: 401
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[14].m_Class
+      value: question-woodside
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[14].m_Event
+      value: 401
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[15].m_Class
+      value: question-numerati_woodside
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[2].m_Class
+      value: cancel
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[2].m_Event
+      value: 210
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[16].m_Class
+      value: pan_left
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[16].m_Event
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[17].m_Class
+      value: pan_right
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[17].m_Event
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[18].m_Class
+      value: pan_up
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[19].m_Class
+      value: pan_down
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[18].m_Event
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[19].m_Event
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[20].m_Class
+      value: zoom_in
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[21].m_Class
+      value: zoom_out
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[20].m_Event
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[21].m_Event
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[22].m_Class
+      value: show_next_passage
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[23].m_Class
+      value: show_next_answer
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[24].m_Class
+      value: show_next
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[25].m_Class
+      value: show_previous_passage
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[26].m_Class
+      value: show_previous_answer
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[27].m_Class
+      value: show_previous
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[28].m_Class
+      value: scroll_up
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[29].m_Class
+      value: scroll_down
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[30].m_Class
+      value: repeat_last_action
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[30].m_Event
+      value: 419
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[29].m_Event
+      value: 418
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[28].m_Event
+      value: 417
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[27].m_Event
+      value: 416
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[22].m_Event
+      value: 415
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[23].m_Event
+      value: 415
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[24].m_Event
+      value: 415
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[25].m_Event
+      value: 416
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[26].m_Event
+      value: 416
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassifierName
+      value: ${NLC_CLASSIFIER_NAME}
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 150770}
+  m_IsPrefabParent: 1
