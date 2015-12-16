@@ -24,9 +24,9 @@ using System.Collections;
 
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
-    public class TestTranslate : UnitTest
+    public class TestLanguageTranslation : UnitTest
     {
-        private Translate m_Translate = new Translate();
+        private LanguageTranslation m_Translate = new LanguageTranslation();
         private bool m_GetModelTested = false;
         private bool m_GetModelsTested = false;
         private bool m_GetLanguagesTested = false;

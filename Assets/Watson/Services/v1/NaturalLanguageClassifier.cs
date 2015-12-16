@@ -31,7 +31,7 @@ namespace IBM.Watson.DeveloperCloud.Services.v1
     /// This class wraps the Natural Language Classifier service.
     /// <a href="http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/nl-classifier.html">NLC Service</a>
     /// </summary>
-    public class LanguageClassifier : IWatsonService
+    public class NaturalLanguageClassifier : IWatsonService
     {
         #region Public Types
         /// <summary>
@@ -94,7 +94,7 @@ namespace IBM.Watson.DeveloperCloud.Services.v1
 
         private class FindClassifierReq
         {
-            public FindClassifierReq( LanguageClassifier service, string classifierName, OnFindClassifier callback )
+            public FindClassifierReq( NaturalLanguageClassifier service, string classifierName, OnFindClassifier callback )
             {
                 if (service == null)
                     throw new ArgumentNullException("service");
@@ -110,7 +110,7 @@ namespace IBM.Watson.DeveloperCloud.Services.v1
                 Service.GetClassifiers( GetClassifiers );
             }
 
-            public LanguageClassifier Service { get; set; }
+            public NaturalLanguageClassifier Service { get; set; }
             public string ClassifierName { get; set; }
             public OnFindClassifier Callback { get; set; }
 
@@ -500,10 +500,10 @@ namespace IBM.Watson.DeveloperCloud.Services.v1
 
         private class CheckServiceStatus
         {
-            private LanguageClassifier m_Service = null;
+            private NaturalLanguageClassifier m_Service = null;
             private ServiceStatus m_Callback = null;
 
-            public CheckServiceStatus( LanguageClassifier service, ServiceStatus callback )
+            public CheckServiceStatus( NaturalLanguageClassifier service, ServiceStatus callback )
             {
                 m_Service = service;
                 m_Callback = callback;

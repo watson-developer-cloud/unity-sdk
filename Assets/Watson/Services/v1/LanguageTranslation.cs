@@ -32,7 +32,7 @@ namespace IBM.Watson.DeveloperCloud.Services.v1
     /// This class wraps the Language Translation service.
     /// <a href="http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/language-translation.html">Language Translation Service</a>
     /// </summary>
-    public class Translate : IWatsonService
+    public class LanguageTranslation : IWatsonService
     {
         #region Public Types
         /// <summary>
@@ -438,10 +438,10 @@ namespace IBM.Watson.DeveloperCloud.Services.v1
 
         private class CheckServiceStatus
         {
-            private Translate m_Service = null;
+            private LanguageTranslation m_Service = null;
             private ServiceStatus m_Callback = null;
 
-            public CheckServiceStatus( Translate service, ServiceStatus callback )
+            public CheckServiceStatus( LanguageTranslation service, ServiceStatus callback )
             {
                 m_Service = service;
                 m_Callback = callback;

@@ -34,10 +34,10 @@ namespace IBM.Watson.DeveloperCloud.Widgets
     /// <summary>
     /// Translation widget to handle translation service calls
     /// </summary>
-	public class TranslateWidget : Widget
+	public class LanguageTranslationWidget : Widget
     {
         #region Private Data
-        private Translate m_Translate = new Translate();
+        private LanguageTranslation m_Translate = new LanguageTranslation();
 
         [SerializeField, Tooltip("Source language, if empty language will be auto-detected.")]
         private string m_SourceLanguage = string.Empty;
@@ -187,10 +187,10 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 
         private class TranslateRequest
         {
-            private TranslateWidget m_Widget;
+            private LanguageTranslationWidget m_Widget;
             private string m_Text;
 
-            public TranslateRequest( TranslateWidget widget, string text )
+            public TranslateRequest( LanguageTranslationWidget widget, string text )
             {
                 m_Widget = widget;
                 m_Text = text;

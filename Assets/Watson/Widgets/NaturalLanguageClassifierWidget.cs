@@ -32,10 +32,10 @@ namespace IBM.Watson.DeveloperCloud.Widgets
     /// <summary>
     /// Natural Language Classifier Widget.
     /// </summary>
-	public class NlcWidget : Widget
+	public class NaturalLanguageClassifierWidget : Widget
 	{
 	    #region Private Data
-	    private LanguageClassifier m_NLC = new LanguageClassifier();
+	    private NaturalLanguageClassifier m_NLC = new NaturalLanguageClassifier();
         private Classifier m_Selected = null;
 
         [SerializeField]
@@ -73,7 +73,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         /// <summary>
         /// Returns the NLC service object.
         /// </summary>
-        public LanguageClassifier NLC { get { return m_NLC; } }
+        public NaturalLanguageClassifier NLC { get { return m_NLC; } }
         #endregion
 
          #region MonoBehaviour interface
