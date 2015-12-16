@@ -150,7 +150,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
 
         private Texture m_WatsonIcon = null;
         private Vector2 m_ScrollPos = Vector2.zero;
-        private LanguageClassifier m_NLC = new LanguageClassifier();
+        private NaturalLanguageClassifier m_NLC = new NaturalLanguageClassifier();
         private Classifiers m_Classifiers = null;
         private static fsSerializer sm_Serializer = new fsSerializer();
         private List<ClassifierData> m_ClassifierData = null;

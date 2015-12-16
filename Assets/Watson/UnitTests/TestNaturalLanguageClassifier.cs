@@ -28,9 +28,9 @@ using System;
 
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
-    public class TestNLC : UnitTest
+    public class TestNaturalLanguageClassifier : UnitTest
     {
-        LanguageClassifier m_NLC = new LanguageClassifier();
+        NaturalLanguageClassifier m_NLC = new NaturalLanguageClassifier();
         bool m_FindClassifierTested = false;
         bool m_TrainClasifierTested = false;
         bool m_TrainClassifier = false;

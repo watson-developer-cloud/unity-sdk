@@ -190,17 +190,17 @@ public class MainUI : MonoBehaviour
         }
 
         Log.Debug("MainUI", "OnLoadLevel, name = {0}", name);
-        StartCoroutine(loadLevelAsync(name));
-        //Application.LoadLevel( name );
+        StartCoroutine(LoadLevelAsync(name));
     }
 
-    private IEnumerator loadLevelAsync(string name)
+    private IEnumerator LoadLevelAsync(string name)
     {
         AsyncOperation asyncOperation = Application.LoadLevelAsync(name);
+        if ( asyncOperation == null )
+            yield break;
+
         while (!asyncOperation.isDone)
-        {
             yield return new WaitForSeconds(0.1f);
-        }
 
         for (int i = 0; m_Scenes != null && i < m_Scenes.Length; i++)
         {
@@ -236,7 +236,8 @@ public class MainUI : MonoBehaviour
         if (buttonBack.GetComponentInChildren<Text>() != null)
             buttonBack.GetComponentInChildren<Text>().enabled = isVisible;
         if (buttonBack.GetComponentInChildren<Image>() != null)
-            buttonBack.GetComponentInChildren<Image>().color = isVisible ? m_InitialBackButtonColor : new Color(m_InitialBackButtonColor.r, m_InitialBackButtonColor.g, m_InitialBackButtonColor.b, 0.0f);
+            buttonBack.GetComponentInChildren<Image>().color = isVisible ? m_InitialBackButtonColor : 
+                new Color(m_InitialBackButtonColor.r, m_InitialBackButtonColor.g, m_InitialBackButtonColor.b, 0.0f);
     }
 
     /// <summary>
