@@ -35,6 +35,3 @@ ehthumbs.db
 # Custom Ignores #
 # ============== #
 
-/Clients
-Assets/StreamingAssets/Config.json
-Assets/StreamingAssets/Config.json.meta
