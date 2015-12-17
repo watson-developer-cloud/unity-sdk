@@ -11,7 +11,8 @@ You can get the SDK by cloning the the repository from GitHub.
 
 ### Installing the SDK source into your Unity project
 1. Clone the following GIT repository into a directory within your current Unity project.
-      * git clone https://github.com/watson-developer-cloud/unity-sdk.git OR
+      * git clone https://github.com/watson-developer-cloud/unity-sdk.git 
+         * OR
       * git submodule add https://github.com/watson-developer-cloud/unity-sdk.git
 2. Go to [Configuring Watson service credentials](#configuring-Watson-service-credentials).
 	
