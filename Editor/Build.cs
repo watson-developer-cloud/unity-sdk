@@ -122,6 +122,18 @@ public class Build
         FullSerializer.AotHelpers.CleanAOT();
         IsBuilding = false; 
 
+        // if BuildPlayer returned no error, but we can't find the file, flag this build as a failure then..
+        if (string.IsNullOrEmpty( BuildError) && !File.Exists( buildPath ) && !Directory.Exists( buildPath ) )
+            BuildError = "Failed to build player: " + buildPath;
+
+        // check the command line arguments, if we find -executeMethod Build.* then quit this editor..
+        string [] args = Environment.GetCommandLineArgs();
+        for(int i=0;i<args.Length;++i)
+        {
+            if ( args[i] == "-executemethod" && (i + 1) < args.Length && args[i+1].StartsWith( "Build." ) )
+                EditorApplication.Exit( string.IsNullOrEmpty(BuildError) ? 0 : 1);
+        }
+
         // TODO: Check if launch from the command line, if so then quit out..
         yield break;
     }
