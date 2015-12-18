@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
-using FullSerializer;
 using UnityEngine;
 using UnityEditor;
 
@@ -9,26 +8,8 @@ namespace FullSerializer
 {
     public static class AotHelpers
     {
-        //[MenuItem("Watson/FullSerializer/Add Seen Aot Compilations", false, 5 )]
-        public static void AddSeenAotCompilations()
-        {
-            var outputDirectory = EditorUtility.SaveFolderPanel( "Please select save path?", Application.dataPath,  "fsAotCompilations" );           
-            if (!Directory.Exists(outputDirectory) == false)
-                Directory.CreateDirectory(outputDirectory);
-
-            foreach (var aot in fsAotCompilationManager.AvailableAotCompilations)
-            {
-                Debug.Log("Performing AOT compilation for " + aot.Key.CSharpName(true));
-                var path = Path.Combine(outputDirectory, "AotConverter_" + aot.Key.CSharpName(true, true) + ".cs");
-                var compilation = aot.Value;
-                File.WriteAllText(path, compilation);
-            }
-
-            AssetDatabase.Refresh();
-        }
-
         [MenuItem("Watson/FullSerializer/Build AOT", false, 5 )]
-        public static void AddAllDiscoverableAotCompilations()
+        public static void BuildAOT()
         {
             var outputDirectory = Application.dataPath + "/fsAotCompilations";           
             if (!Directory.Exists(outputDirectory))
