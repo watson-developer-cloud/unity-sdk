@@ -38,7 +38,8 @@ namespace IBM.Watson.DeveloperCloud.Editor
     {
         #region Constants
         private const string BLUEMIX_REGISTRATION = "https://console.ng.bluemix.net/registration/";
-        private const string API_REFERENCE = "/Watson/Editor/Help/WatsonUnitySDK.chm";
+        private const string API_REFERENCE = "WatsonUnitySDK.chm";
+        private const string README = "https://github.com/watson-developer-cloud/unity-sdk/blob/develop/readme.md";
 
         private class ServiceSetup
         {
@@ -143,11 +144,31 @@ namespace IBM.Watson.DeveloperCloud.Editor
             File.WriteAllText(Application.streamingAssetsPath + "/Config.json", Config.Instance.SaveConfig());
         }
 
-        [MenuItem("Watson/API Reference", false, 100 )]
-        private static void ShowHelp()
+        private static string FindFile( string directory, string name )
         {
-            string helpFile = "file://" + Application.dataPath + API_REFERENCE;
-            Application.OpenURL( helpFile );
+            foreach( var f in Directory.GetFiles( directory ) )
+                if ( f.EndsWith( name ) )
+                    return f;
+
+            foreach( var d in Directory.GetDirectories( directory ) )
+            {
+                string found = FindFile( d, name );
+                if ( found != null )
+                    return found;
+            }
+
+            return null;
+        }
+
+        [MenuItem("Watson/API Reference", false, 100 )]
+        private static void ShowAPIReference()
+        {
+            Application.OpenURL( "file://" + FindFile( Application.dataPath, API_REFERENCE ) );
+        }
+        [MenuItem("Watson/Getting Started", false, 100 )]
+        private static void ShowReadme()
+        {
+            Application.OpenURL( README );
         }
 
         [MenuItem("Watson/Configuration Editor", false, 0 )]
