@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Watson/Scenes/Main.unity
+  - enabled: 1
+    path: Assets/Watson/Scenes/TestSTT.unity
+  - enabled: 1
+    path: Assets/Watson/Scenes/UnitTests.unity
+  - enabled: 1
+    path: Assets/Watson/Scenes/TestTTS.unity
+  - enabled: 1
+    path: Assets/Watson/Scenes/TestNLC.unity
+  - enabled: 1
+    path: Assets/Watson/Scenes/TestMic.unity
+  - enabled: 1
+    path: Assets/Watson/Scenes/ExampleDialog.unity
+  - enabled: 1
+    path: Assets/Watson/Scenes/ExampleTranslation.unity
