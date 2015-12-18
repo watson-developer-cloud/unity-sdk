@@ -9,7 +9,7 @@ namespace FullSerializer
 {
     public static class AotHelpers
     {
-        [MenuItem("Watson/FullSerializer/Add Seen Aot Compilations", false, 5 )]
+        //[MenuItem("Watson/FullSerializer/Add Seen Aot Compilations", false, 5 )]
         public static void AddSeenAotCompilations()
         {
             var outputDirectory = EditorUtility.SaveFolderPanel( "Please select save path?", Application.dataPath,  "fsAotCompilations" );           
@@ -27,11 +27,11 @@ namespace FullSerializer
             AssetDatabase.Refresh();
         }
 
-        [MenuItem("Watson/FullSerializer/Add Discoverable Aot Compilations", false, 5 )]
+        [MenuItem("Watson/FullSerializer/Build AOT", false, 5 )]
         public static void AddAllDiscoverableAotCompilations()
         {
-            var outputDirectory = EditorUtility.SaveFolderPanel( "Please select save path?", Application.dataPath,  "fsAotCompilations" );           
-            if (!Directory.Exists(outputDirectory) == false)
+            var outputDirectory = Application.dataPath + "/fsAotCompilations";           
+            if (!Directory.Exists(outputDirectory))
                 Directory.CreateDirectory(outputDirectory);
 
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
@@ -79,6 +79,20 @@ namespace FullSerializer
 
             AssetDatabase.Refresh();
         }
+
+        [MenuItem("Watson/FullSerializer/Clean AOT", false, 6 )]
+        public static void CleanAOT()
+        {
+            var outputDirectory = Application.dataPath + "/fsAotCompilations";           
+            if (Directory.Exists(outputDirectory))
+            {
+                Directory.Delete( outputDirectory, true );
+                File.Delete( outputDirectory + ".meta" );
+
+                AssetDatabase.Refresh();
+            }
+        }
+
     }
 
 }

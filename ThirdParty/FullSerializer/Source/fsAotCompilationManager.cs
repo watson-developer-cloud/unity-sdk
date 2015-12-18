@@ -65,6 +65,23 @@ namespace FullSerializer {
         }
 
         /// <summary>
+        /// Checks a member name to see if it's a keyword, if so it prefixes it with @ so it will compile.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        private static string ValidateMemberName( string name )
+        {
+            string [] keywords = new string[] { "default", "const" };
+            foreach( var kw in keywords )
+            {
+                if ( name == kw )
+                    return "@" + name;
+            }
+
+            return name;
+        }
+
+        /// <summary>
         /// AOT compiles the object (in C#).
         /// </summary>
         private static string GenerateDirectConverterForTypeInCSharp(Type type, fsMetaProperty[] members, bool isConstructorPublic) {
@@ -87,7 +104,7 @@ namespace FullSerializer {
             sb.AppendLine("            var result = fsResult.Success;");
             sb.AppendLine();
             foreach (var member in members) {
-                sb.AppendLine("            result += SerializeMember(serialized, \"" + member.JsonName + "\", model." + member.MemberName + ");");
+                sb.AppendLine("            result += SerializeMember(serialized, \"" + member.JsonName + "\", model." + ValidateMemberName( member.MemberName ) + ");");
             }
             sb.AppendLine();
             sb.AppendLine("            return result;");
@@ -98,9 +115,9 @@ namespace FullSerializer {
             sb.AppendLine();
             for (int i = 0; i < members.Length; ++i) {
                 var member = members[i];
-                sb.AppendLine("            var t" + i + " = model." + member.MemberName + ";");
+                sb.AppendLine("            var t" + i + " = model." + ValidateMemberName( member.MemberName ) + ";");
                 sb.AppendLine("            result += DeserializeMember(data, \"" + member.JsonName + "\", out t" + i + ");");
-                sb.AppendLine("            model." + member.MemberName + " = t" + i + ";");
+                sb.AppendLine("            model." + ValidateMemberName( member.MemberName ) + " = t" + i + ";");
                 sb.AppendLine();
             }
             sb.AppendLine("            return result;");
