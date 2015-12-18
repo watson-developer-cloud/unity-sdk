@@ -33,15 +33,15 @@ namespace IBM.Watson.DeveloperCloud.Widgets
     /// Natural Language Classifier Widget.
     /// </summary>
 	public class NaturalLanguageClassifierWidget : Widget
-	{
-	    #region Private Data
-	    private NaturalLanguageClassifier m_NLC = new NaturalLanguageClassifier();
+    {
+        #region Private Data
+        private NaturalLanguageClassifier m_NLC = new NaturalLanguageClassifier();
         private Classifier m_Selected = null;
 
         [SerializeField]
-        private Input m_RecognizeInput = new Input( "Recognize", typeof(SpeechToTextData), "OnRecognize" );
+        private Input m_RecognizeInput = new Input("Recognize", typeof(SpeechToTextData), "OnRecognize");
         [SerializeField]
-        private Output m_ClassifyOutput = new Output( typeof(ClassifyResultData) );
+        private Output m_ClassifyOutput = new Output(typeof(ClassifyResultData));
         [SerializeField]
         private string m_ClassifierName = string.Empty;
         [SerializeField]
@@ -63,7 +63,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         };
         [SerializeField]
         private List<ClassEventMapping> m_ClassEventList = new List<ClassEventMapping>();
-        private Dictionary<string,Constants.Event> m_ClassEventMap = new Dictionary<string,Constants.Event>();
+        private Dictionary<string, Constants.Event> m_ClassEventMap = new Dictionary<string, Constants.Event>();
 
         [SerializeField]
         private Text m_TopClassText = null;
@@ -76,39 +76,39 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         public NaturalLanguageClassifier NLC { get { return m_NLC; } }
         #endregion
 
-         #region MonoBehaviour interface
+        #region MonoBehaviour interface
         /// <exclude />
         protected override void Start()
-	    {
+        {
             base.Start();
 
             // resolve configuration variables
-            m_ClassifierName = Config.Instance.ResolveVariables( m_ClassifierName );
-            m_ClassifierId = Config.Instance.ResolveVariables( m_ClassifierId );
+            m_ClassifierName = Config.Instance.ResolveVariables(m_ClassifierName);
+            m_ClassifierId = Config.Instance.ResolveVariables(m_ClassifierId);
 
             // start the default log reactors if needed..
-	        LogSystem.InstallDefaultReactors();
+            LogSystem.InstallDefaultReactors();
 
             if (string.IsNullOrEmpty(m_ClassifierId))
             {
-                Log.Status( "NlcWidget", "Auto selecting a classifier." );
-                if (! m_NLC.GetClassifiers( OnGetClassifiers ) )
-                    Log.Error( "NlcWidget", "Failed to request all classifiers." );
+                Log.Status("NlcWidget", "Auto selecting a classifier.");
+                if (!m_NLC.GetClassifiers(OnGetClassifiers))
+                    Log.Error("NlcWidget", "Failed to request all classifiers.");
             }
             else
             {
-                if (! m_NLC.GetClassifier( m_ClassifierId, OnGetClassifier ) )
-                    Log.Equals( "NlcWidget", "Failed to request classifier." );
+                if (!m_NLC.GetClassifier(m_ClassifierId, OnGetClassifier))
+                    Log.Equals("NlcWidget", "Failed to request classifier.");
             }
         }
 
         private void OnEnable()
         {
-            EventManager.Instance.RegisterEventReceiver( Constants.Event.ON_DEBUG_COMMAND, OnDebugCommand );
-	    }
+            EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_DEBUG_COMMAND, OnDebugCommand);
+        }
         private void OnDisable()
         {
-            EventManager.Instance.UnregisterEventReceiver( Constants.Event.ON_DEBUG_COMMAND, OnDebugCommand );
+            EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_DEBUG_COMMAND, OnDebugCommand);
         }
         #endregion
 
@@ -120,33 +120,33 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         }
         #endregion
 
-        private void OnGetClassifiers( Classifiers classifiers )
+        private void OnGetClassifiers(Classifiers classifiers)
         {
-            if ( classifiers != null )
+            if (classifiers != null)
             {
-                foreach( var classifier in classifiers.classifiers )
+                foreach (var classifier in classifiers.classifiers)
                 {
-                    if (! string.IsNullOrEmpty( m_ClassifierName ) && !classifier.name.StartsWith( m_ClassifierName ) )
+                    if (!string.IsNullOrEmpty(m_ClassifierName) && !classifier.name.StartsWith(m_ClassifierName))
                         continue;
-                    if ( classifier.language != m_Language )
+                    if (classifier.language != m_Language)
                         continue;
 
-                    m_NLC.GetClassifier( classifier.classifier_id, OnGetClassifier );
+                    m_NLC.GetClassifier(classifier.classifier_id, OnGetClassifier);
                 }
             }
         }
 
-        private void OnGetClassifier( Classifier classifier )
+        private void OnGetClassifier(Classifier classifier)
         {
-            if ( classifier != null && classifier.status == "Available" )
+            if (classifier != null && classifier.status == "Available")
             {
-                if ( m_Selected == null || m_Selected.created.CompareTo( classifier.created ) < 0 )
+                if (m_Selected == null || m_Selected.created.CompareTo(classifier.created) < 0)
                 {
                     m_Selected = classifier;
                     m_ClassifierId = m_Selected.classifier_id;
 
-                    Log.Status( "NlcWidget", "Selected classifier {0}, Created: {1}, Name: {2}", 
-                        m_Selected.classifier_id, m_Selected.created, m_Selected.name );
+                    Log.Status("NlcWidget", "Selected classifier {0}, Created: {1}, Name: {2}",
+                        m_Selected.classifier_id, m_Selected.created, m_Selected.name);
                 }
             }
         }
@@ -164,70 +164,70 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 
                 if (textConfidence > m_MinWordConfidence)
                 {
-                    if (! string.IsNullOrEmpty( m_ClassifierId ) )
+                    if (!string.IsNullOrEmpty(m_ClassifierId))
                     {
                         if (!m_NLC.Classify(m_ClassifierId, text, OnClassified))
                             Log.Error("NlcWidget", "Failed to send {0} to NLC.", text);
                     }
                     else
-                        Log.Equals( "NlcWidget", "No valid classifier set." );
+                        Log.Equals("NlcWidget", "No valid classifier set.");
                 }
                 else
                 {
-                    if (textConfidence > m_IgnoreWordConfidence )
-                        EventManager.Instance.SendEvent( Constants.Event.ON_CLASSIFY_FAILURE, result );
+                    if (textConfidence > m_IgnoreWordConfidence)
+                        EventManager.Instance.SendEvent(Constants.Event.ON_CLASSIFY_FAILURE, result);
                 }
             }
         }
 
-	    private void OnClassified(ClassifyResult result)
-	    {
-            EventManager.Instance.SendEvent( Constants.Event.ON_CLASSIFY_RESULT, result );
+        private void OnClassified(ClassifyResult result)
+        {
+            EventManager.Instance.SendEvent(Constants.Event.ON_CLASSIFY_RESULT, result);
 
-            if ( m_ClassifyOutput.IsConnected )
-                m_ClassifyOutput.SendData( new ClassifyResultData( result ) );
+            if (m_ClassifyOutput.IsConnected)
+                m_ClassifyOutput.SendData(new ClassifyResultData(result));
 
-            if ( result != null )
+            if (result != null)
             {
-                Log.Debug( "NlcWidget", "OnClassified: {0} ({1:0.00})", result.top_class, result.topConfidence );
+                Log.Debug("NlcWidget", "OnClassified: {0} ({1:0.00})", result.top_class, result.topConfidence);
 
-                if ( m_TopClassText != null )
-                    m_TopClassText.text = result.top_class; 
+                if (m_TopClassText != null)
+                    m_TopClassText.text = result.top_class;
 
-                if ( !string.IsNullOrEmpty( result.top_class) )
+                if (!string.IsNullOrEmpty(result.top_class))
                 {
-                    if ( result.topConfidence >= m_MinClassEventConfidence )
+                    if (result.topConfidence >= m_MinClassEventConfidence)
                     {
-                        if ( m_ClassEventList.Count > 0 && m_ClassEventMap.Count == 0 )
+                        if (m_ClassEventList.Count > 0 && m_ClassEventMap.Count == 0)
                         {
                             // initialize the map
-                            foreach( var ev in m_ClassEventList )
-                                m_ClassEventMap[ ev.m_Class ] = ev.m_Event;
+                            foreach (var ev in m_ClassEventList)
+                                m_ClassEventMap[ev.m_Class] = ev.m_Event;
                         }
 
                         Constants.Event sendEvent;
-                        if (! m_ClassEventMap.TryGetValue( result.top_class, out sendEvent ) )
+                        if (!m_ClassEventMap.TryGetValue(result.top_class, out sendEvent))
                         {
-                            Log.Warning( "NlcWidget", "No class mapping found for {0}", result.top_class );
-                            EventManager.Instance.SendEvent( result.top_class, result );
+                            Log.Warning("NlcWidget", "No class mapping found for {0}", result.top_class);
+                            EventManager.Instance.SendEvent(result.top_class, result);
                         }
                         else
-                            EventManager.Instance.SendEvent( sendEvent, result );
+                            EventManager.Instance.SendEvent(sendEvent, result);
                     }
                     else
                     {
-                        if ( result.topConfidence > m_IgnoreWordConfidence )
-                            EventManager.Instance.SendEvent( Constants.Event.ON_CLASSIFY_FAILURE, result );
+                        if (result.topConfidence > m_IgnoreWordConfidence)
+                            EventManager.Instance.SendEvent(Constants.Event.ON_CLASSIFY_FAILURE, result);
                     }
                 }
             }
-	    }
+        }
 
         #region Event Handlers
-        private void OnDebugCommand( object [] args )
+        private void OnDebugCommand(object[] args)
         {
             string text = args != null && args.Length > 0 ? args[0] as string : string.Empty;
-            if (! string.IsNullOrEmpty( text ) && !string.IsNullOrEmpty(m_ClassifierId) )
+            if (!string.IsNullOrEmpty(text) && !string.IsNullOrEmpty(m_ClassifierId))
             {
                 if (!m_NLC.Classify(m_ClassifierId, text, OnClassified))
                     Log.Error("NlcWidget", "Failed to send {0} to NLC.", (string)args[0]);

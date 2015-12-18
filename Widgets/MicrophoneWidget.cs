@@ -83,8 +83,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         }
         #endregion
 
-		#region Public Function - For UI interaction
-
+		#region Public Functions
 		/// <summary>
 		/// Activates the microphone.
 		/// </summary>
@@ -101,6 +100,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 		}
 
 		#endregion
+
         #region Widget interface
         /// <exclude />
         protected override string GetName()
