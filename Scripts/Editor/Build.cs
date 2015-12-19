@@ -134,7 +134,6 @@ public class Build
                 EditorApplication.Exit( string.IsNullOrEmpty(BuildError) ? 0 : 1);
         }
 
-        // TODO: Check if launch from the command line, if so then quit out..
         yield break;
     }
 
