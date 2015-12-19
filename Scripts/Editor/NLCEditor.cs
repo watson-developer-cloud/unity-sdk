@@ -35,7 +35,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
     class NLCEditor : EditorWindow
     {
         #region Constants
-        private const string CLASSIFIERS_DIRECTORY = "/Watson/Editor/Classifiers";
+        private const string CLASSIFIERS_DIRECTORY = "/Classifiers";
         #endregion
 
         #region Private Types
@@ -148,6 +148,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
             GetWindow<NLCEditor>().Show();
         }
 
+        private string m_ClassifiersFolder = null;
         private Texture m_WatsonIcon = null;
         private Vector2 m_ScrollPos = Vector2.zero;
         private NaturalLanguageClassifier m_NLC = new NaturalLanguageClassifier();
@@ -194,15 +195,38 @@ namespace IBM.Watson.DeveloperCloud.Editor
                 OnRefresh();
         }
 
+        private static string FindDirectory( string check, string name )
+        {
+            foreach( var d in Directory.GetDirectories( check ) )
+            {
+                string dir = d.Replace( "\\", "/" );        // normalize the slashes
+                if ( dir.EndsWith( name ) )
+                    return d;
+
+                string found = FindDirectory( d, name );
+                if ( found != null )
+                    return found;
+            }
+
+            return null;
+        }
+
         private void OnRefresh()
         {
             if (!m_Refreshing)
             {
-                if (!Directory.Exists(Application.dataPath + CLASSIFIERS_DIRECTORY))
-                    Directory.CreateDirectory(Application.dataPath + CLASSIFIERS_DIRECTORY);
+                if ( m_ClassifiersFolder != null && !Directory.Exists(m_ClassifiersFolder) )
+                    m_ClassifiersFolder = null;
+                if ( m_ClassifiersFolder == null )
+                    m_ClassifiersFolder = FindDirectory( Application.dataPath, CLASSIFIERS_DIRECTORY );
+                if ( m_ClassifiersFolder == null )
+                {
+                    m_ClassifiersFolder = Application.dataPath + "/Watson/Editor" + CLASSIFIERS_DIRECTORY;
+                    Directory.CreateDirectory( m_ClassifiersFolder );
+                }
 
                 m_ClassifierData = new List<ClassifierData>();
-                foreach (var file in Directory.GetFiles(Application.dataPath + CLASSIFIERS_DIRECTORY, "*.json"))
+                foreach (var file in Directory.GetFiles(m_ClassifiersFolder, "*.json"))
                 {
                     ClassifierData data = new ClassifierData();
                     if (data.Load(file))
@@ -458,7 +482,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
             {
                 m_NewClassifierName = m_NewClassifierName.Replace( "/", "_" );
 
-                string classifierFile = Application.dataPath + CLASSIFIERS_DIRECTORY + "/" + m_NewClassifierName + ".json";
+                string classifierFile = m_ClassifiersFolder + "/" + m_NewClassifierName + ".json";
                 if (!File.Exists(classifierFile)
                     || EditorUtility.DisplayDialog("Confirm", string.Format("Classifier file {0} already exists, are you sure you wish to overwrite?", classifierFile), "YES", "NO"))
                 {
