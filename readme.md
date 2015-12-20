@@ -1,4 +1,5 @@
-# IBM Watson SDK for Unity
+# Watson Developer Cloud Unity SDK
+
 Use this SDK to build Watson-powered applications in Unity. It comes with a set of prefabs that you can use to develop a simple Watson application in just one minute.
 
 ## Before you begin
