@@ -33,7 +33,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 438902}
   - 114: {fileID: 11412284}
-  - 114: {fileID: 11406678}
   m_Layer: 0
   m_Name: Inputs
   m_TagString: Untagged
@@ -84,22 +83,6 @@ Transform:
   - {fileID: 22440388}
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!114 &11406678
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 132064}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 33cbf52dea18b40649d742b0c6f96d3c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  advancedProps: 0
-  DisableOnNonTouchPlatforms: 1
-  Tags:
-    tagList:
-    - Touch
 --- !u!114 &11412284
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -380,7 +363,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 0}
       propertyPath: layers.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: friendlyGestures.Array.size
@@ -389,7 +372,7 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: layers.Array.data[0]
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 11437114}
     - target: {fileID: 0}
       propertyPath: maxTouches
       value: 0
