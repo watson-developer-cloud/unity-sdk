@@ -299,7 +299,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                         lastReadPos = writePos;
                     }
 
-					m_LevelOutput.SendData(new LevelData(fLevel * m_LevelOutputModifier));
+                    m_LevelOutput.SendData(new LevelData(fLevel * m_LevelOutputModifier, m_LevelOutputModifier));
                 }
             }
 

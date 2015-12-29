@@ -208,7 +208,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                 {
                     float[] samples = new float[currentPos - m_LastPlayPos];
                     m_Source.clip.GetData(samples, m_LastPlayPos);
-                    m_LevelOut.SendData(new LevelData(Mathf.Max(samples) * m_LevelOutputModifier));
+                    m_LevelOut.SendData(new LevelData(Mathf.Max(samples) * m_LevelOutputModifier, m_LevelOutputModifier));
                     m_LastPlayPos = currentPos;
                 }
             }

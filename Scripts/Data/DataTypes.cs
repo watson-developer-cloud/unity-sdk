@@ -280,9 +280,10 @@ namespace IBM.Watson.DeveloperCloud.DataTypes
         /// Data constructor.
         /// </summary>
         /// <param name="f">The level data.</param>
-        public LevelData( float f )
+        public LevelData( float f , float m = 1.0f)
         {
             Float = f;
+            Modifier = m;
         }
         /// <summary>
         /// Name of this data type.
@@ -296,6 +297,14 @@ namespace IBM.Watson.DeveloperCloud.DataTypes
         /// The level data.
         /// </summary>
         public float Float { get; set; }
+
+        /// <summary>
+        /// Modifier of Level data. Default is 1.0
+        /// </summary>
+        /// <value>The modifier.</value>
+        public float Modifier { get; set; }
+
+        public float NormalizedFloat { get{  if(Modifier == 0.0f) Modifier = 1.0f; return Float / Modifier;}}
     };
 
     /// <summary>

@@ -16,14 +16,15 @@
 */
 
 
+using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
 using System.Collections;
+using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using System.Collections.Generic;
-using System.IO;
-using IBM.Watson.DeveloperCloud.Logging;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Main UI menu item.
@@ -154,7 +155,7 @@ public class MainUI : MonoBehaviour
             DestroyImmediate(m_ButtonLayout.transform.GetChild(0).gameObject);
 
         //Log.Debug( "MainUI", "UpdateBottons, level = {0}", Application.loadedLevelName );
-        if (Application.loadedLevelName == MAIN_SCENE)
+        if(SceneManager.GetActiveScene().name == MAIN_SCENE)
         {
             m_BackgroundUI.SetActive(true);
 
@@ -195,7 +196,8 @@ public class MainUI : MonoBehaviour
 
     private IEnumerator LoadLevelAsync(string name)
     {
-        AsyncOperation asyncOperation = Application.LoadLevelAsync(name);
+       
+        AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(name);
         if ( asyncOperation == null )
             yield break;
 
@@ -246,7 +248,7 @@ public class MainUI : MonoBehaviour
     public void OnBack()
     {
         Log.Debug("MainUI", "OnBack invoked");
-        if (Application.loadedLevelName != MAIN_SCENE)
+        if (SceneManager.GetActiveScene().name != MAIN_SCENE)
         {
             OnLoadLevel(MAIN_SCENE);
         }
