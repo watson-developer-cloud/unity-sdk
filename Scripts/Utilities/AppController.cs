@@ -66,6 +66,9 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 				else
 					return null;
 			}
+            set{
+                m_ClientName = value;
+            }
 		}
 
 		/// <summary>
