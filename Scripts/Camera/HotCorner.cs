@@ -116,7 +116,7 @@ namespace IBM.Watson.DeveloperCloud.Camera
 		}
 
 		void TapOnMiddleTop(){
-
+            EventManager.Instance.SendEvent(Constants.Event.ON_AVATAR_TOP_LIGHT_TOGGLE);
 		}
 		
 		void TapOnMiddleBottom(){

@@ -125,7 +125,15 @@ namespace IBM.Watson.DeveloperCloud.Logging
                 LogSystem.Instance.InstallReactor( new DebugReactor() );
 #endif
                 LogSystem.Instance.InstallReactor( new FileReactor( Application.persistentDataPath + "/Watson.log" ) );
+
+                Application.logMessageReceived += UnityLogCallback;
             }
+        }
+
+        static void UnityLogCallback( string condition, string stacktrace, LogType type )
+        {
+            if ( type == LogType.Exception )
+                Log.Critical( "Unity", "Unity Exception {0} : {1}", condition, stacktrace );
         }
 
         /// <summary>
@@ -138,6 +146,8 @@ namespace IBM.Watson.DeveloperCloud.Logging
             {
                 m_Reactors.Add(reactor);
             }
+            // set our default reactor flag to true if the user installs their own reactors.
+            sm_bInstalledDefaultReactors = true;
         }
 
         /// <summary>

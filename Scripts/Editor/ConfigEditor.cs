@@ -399,7 +399,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
                     GUILayout.BeginHorizontal();
                     info.m_ServiceID = EditorGUILayout.TextField("ServiceID", info.m_ServiceID);
 
-                    if ( m_ServiceStatus.ContainsKey( info.m_ServiceID ) )
+                    if ( !string.IsNullOrEmpty(info.m_ServiceID) && m_ServiceStatus.ContainsKey( info.m_ServiceID ) )
                     {
                         if ( m_ServiceStatus[info.m_ServiceID] )
                             GUILayout.Label( m_StatusUp, GUILayout.Width( 20 ) );

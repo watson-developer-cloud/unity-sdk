@@ -86,9 +86,6 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             m_ClassifierName = Config.Instance.ResolveVariables(m_ClassifierName);
             m_ClassifierId = Config.Instance.ResolveVariables(m_ClassifierId);
 
-            // start the default log reactors if needed..
-            LogSystem.InstallDefaultReactors();
-
             if (string.IsNullOrEmpty(m_ClassifierId))
             {
                 Log.Status("NlcWidget", "Auto selecting a classifier.");

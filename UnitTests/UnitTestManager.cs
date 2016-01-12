@@ -170,7 +170,6 @@ namespace IBM.Watson.DeveloperCloud.Editor
 
         private void Start()
         {
-            LogSystem.InstallDefaultReactors();
         }
 
         private void OnGUI()
@@ -207,7 +206,6 @@ public static class RunUnitTest
     /// </summary>
     static public void All()
     {
-        LogSystem.InstallDefaultReactors();
 #if UNITY_EDITOR
         Runnable.EnableRunnableInEditor();
 #endif
@@ -225,7 +223,6 @@ public static class RunUnitTest
     [MenuItem("Watson/Run All UnitTests",false, 50)]
     static public void AllNoQuit()
     {
-        LogSystem.InstallDefaultReactors();
         Runnable.EnableRunnableInEditor();
 
         IBM.Watson.DeveloperCloud.Editor.UnitTestManager instance = IBM.Watson.DeveloperCloud.Editor.UnitTestManager.Instance;

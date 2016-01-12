@@ -279,6 +279,25 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 		}
 
         /// <summary>
+        /// Sets the variable value.
+        /// </summary>
+        /// <returns><c>true</c>, if variable value was set, <c>false</c> otherwise.</returns>
+        /// <param name="key">Key.</param>
+        /// <param name="value">Value.</param>
+        public bool SetVariableValue(string key, string value)
+        {
+            bool success = false;
+            Variable v = GetVariable (key);
+            if (v != null)
+            {
+                v.Value = value;
+                success = true;
+            }
+
+            return success;
+        }
+
+        /// <summary>
         /// Resolves any variables found in the input string and returns the variable values in the returned string.
         /// </summary>
         /// <param name="input">A string containing variables.</param>

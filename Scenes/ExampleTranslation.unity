@@ -85,7 +85,7 @@ NavMeshSettings:
     cellSize: 0.16666667
     manualCellSize: 0
   m_NavMeshData: {fileID: 0}
---- !u!1001 &61850556
+--- !u!1001 &2091643909
 Prefab:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -158,19 +158,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22495556, guid: a3d494ba4406e9f488a9bc4fb7d7511a, type: 2}
       propertyPath: m_Pivot.x
-      value: .5
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 22495556, guid: a3d494ba4406e9f488a9bc4fb7d7511a, type: 2}
       propertyPath: m_Pivot.y
-      value: .5
-      objectReference: {fileID: 0}
-    - target: {fileID: 8288762, guid: a3d494ba4406e9f488a9bc4fb7d7511a, type: 2}
-      propertyPath: panLevelCustomCurve.m_RotationOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8288762, guid: a3d494ba4406e9f488a9bc4fb7d7511a, type: 2}
-      propertyPath: reverbZoneMixCustomCurve.m_RotationOrder
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a3d494ba4406e9f488a9bc4fb7d7511a, type: 2}

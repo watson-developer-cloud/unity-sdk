@@ -113,6 +113,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// Event when avatar is speaking. 
             /// </summary>
             ON_AVATAR_SPEAKING,
+            /// <summary>
+            /// Event toggle of top light avatar
+            /// </summary>
+            ON_AVATAR_TOP_LIGHT_TOGGLE,
             #endregion
 
             #region Question
