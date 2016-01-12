@@ -41,7 +41,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 		{
 			get{
 				if (mp_instance == null) {
-					Log.Error ("AppController", "There is no instance for AppController so creating one.");
+                    Log.Warning ("AppController", "There is no instance for AppController so creating one.");
 					GameObject gameObject = new GameObject ();
 					gameObject.name = "_AppController";
 					mp_instance = gameObject.AddComponent<AppController> ();
@@ -66,6 +66,9 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 				else
 					return null;
 			}
+            set{
+                m_ClientName = value;
+            }
 		}
 
 		/// <summary>
