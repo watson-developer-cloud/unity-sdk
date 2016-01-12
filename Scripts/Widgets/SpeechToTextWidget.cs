@@ -114,7 +114,6 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         protected override void Start()
 	    {
             base.Start();
-	        LogSystem.InstallDefaultReactors();
 
 	        if ( m_StatusText != null )
 	            m_StatusText.text = "READY";
