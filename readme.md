@@ -1,4 +1,5 @@
-# IBM Watson SDK for Unity
+# Watson Developer Cloud Unity SDK
+
 Use this SDK to build Watson-powered applications in Unity. It comes with a set of prefabs that you can use to develop a simple Watson application in just one minute.
 
 ## Before you begin
@@ -14,6 +15,9 @@ You can get the SDK by cloning the the repository from GitHub.
       * git clone https://github.com/watson-developer-cloud/unity-sdk.git 
          * OR
       * git submodule add https://github.com/watson-developer-cloud/unity-sdk.git
+	     * OR
+      * Click on the "Download Zip" button at the following URL https://github.com/watson-developer-cloud/unity-sdk, extract the zip file into your project directory.
+	  
 2. Go to [Configuring Watson service credentials](#configuring-Watson-service-credentials).
 	
 
