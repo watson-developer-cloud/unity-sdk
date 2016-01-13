@@ -20,7 +20,6 @@ using UnityEngine;
 using IBM.Watson.DeveloperCloud.Camera;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
-using IBM.Watson.DeveloperCloud.Widgets.Question;
 
 namespace IBM.Watson.DeveloperCloud.Camera
 {
