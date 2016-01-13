@@ -221,7 +221,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
                     m_ClassifiersFolder = FindDirectory( Application.dataPath, CLASSIFIERS_DIRECTORY );
                 if ( m_ClassifiersFolder == null )
                 {
-                    m_ClassifiersFolder = Application.dataPath + "/Watson/Editor" + CLASSIFIERS_DIRECTORY;
+                    m_ClassifiersFolder = Application.dataPath + "/Watson/Scripts/Editor" + CLASSIFIERS_DIRECTORY;
                     Directory.CreateDirectory( m_ClassifiersFolder );
                 }
 

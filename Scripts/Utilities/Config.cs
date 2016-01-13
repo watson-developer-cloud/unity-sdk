@@ -198,7 +198,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 				LoadConfig( System.IO.File.ReadAllText( Application.streamingAssetsPath + Constants.Path.CONFIG_FILE ) );
             }
             catch( System.IO.FileNotFoundException )
-            {}
+            {
+                // mark as loaded anyway, so we don't keep retrying..
+                ConfigLoaded = true;
+            }
 #else
             Runnable.Run(LoadConfigCR());
 #endif
@@ -211,24 +214,33 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// <returns></returns>
         public bool LoadConfig(string json)
         {
-            fsData data = null;
-            fsResult r = fsJsonParser.Parse(json, out data);
-            if (!r.Succeeded)
-            {
-                Log.Error("Config", "Failed to parse Config.json: {0}", r.ToString());
-                return false;
-            }
+            try {
+                fsData data = null;
+                fsResult r = fsJsonParser.Parse(json, out data);
+                if (!r.Succeeded)
+                {
+                    Log.Error("Config", "Failed to parse Config.json: {0}", r.ToString());
+                    return false;
+                }
 
-            object obj = this;
-            r = sm_Serializer.TryDeserialize(data, GetType(), ref obj);
-            if (!r.Succeeded)
+                object obj = this;
+                r = sm_Serializer.TryDeserialize(data, GetType(), ref obj);
+                if (!r.Succeeded)
+                {
+                    Log.Error("Config", "Failed to parse Config.json: {0}", r.ToString());
+                    return false;
+                }
+
+                ConfigLoaded = true;
+                return true;
+            }
+            catch( Exception e )
             {
-                Log.Error("Config", "Failed to parse Config.json: {0}", r.ToString());
-                return false;
+                Log.Error( "Config", "Failed to load config: {0}", e.ToString() );
             }
 
             ConfigLoaded = true;
-            return true;
+            return false;
         }
 
         /// <summary>
