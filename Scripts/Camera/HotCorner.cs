@@ -26,10 +26,12 @@ namespace IBM.Watson.DeveloperCloud.Camera
 	/// </summary>
 	public class HotCorner : MonoBehaviour {
 
+        #region Private Members
 		[SerializeField]
 		private float m_NormalizedThresholdWidth = 0.1f;
 		[SerializeField]
 		private float m_NormalizedThresholdHeight = 0.1f;
+        #endregion
 
 		#region TapThreeTimes Event Handles
 
