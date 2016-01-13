@@ -200,6 +200,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             catch( System.IO.FileNotFoundException )
             {
                 // mark as loaded anyway, so we don't keep retrying..
+                Log.Error( "Config", "Failed to load config file." );
                 ConfigLoaded = true;
             }
 #else
