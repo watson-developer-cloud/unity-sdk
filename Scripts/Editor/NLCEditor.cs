@@ -34,10 +34,6 @@ namespace IBM.Watson.DeveloperCloud.Editor
 
     class NLCEditor : EditorWindow
     {
-        #region Constants
-        private const string CLASSIFIERS_DIRECTORY = "/Classifiers";
-        #endregion
-
         #region Private Types
         private class ClassifierData
         {
@@ -215,15 +211,9 @@ namespace IBM.Watson.DeveloperCloud.Editor
         {
             if (!m_Refreshing)
             {
-                if ( m_ClassifiersFolder != null && !Directory.Exists(m_ClassifiersFolder) )
-                    m_ClassifiersFolder = null;
-                if ( m_ClassifiersFolder == null )
-                    m_ClassifiersFolder = FindDirectory( Application.dataPath, CLASSIFIERS_DIRECTORY );
-                if ( m_ClassifiersFolder == null )
-                {
-                    m_ClassifiersFolder = Application.dataPath + "/Watson/Scripts/Editor" + CLASSIFIERS_DIRECTORY;
+                m_ClassifiersFolder = Path.Combine( Application.dataPath, Config.Instance.ClassifierDirectory );
+                if (! Directory.Exists( m_ClassifiersFolder ) )
                     Directory.CreateDirectory( m_ClassifiersFolder );
-                }
 
                 m_ClassifierData = new List<ClassifierData>();
                 foreach (var file in Directory.GetFiles(m_ClassifiersFolder, "*.json"))

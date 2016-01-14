@@ -290,7 +290,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
                     if ( bParsed )
                     {
                         m_CheckServicesNow = true;
-
+                        
                         EditorUtility.DisplayDialog( "Complete", "Credentials applied.", OK );
                         m_PastedCredentials = "\n\n\n\n\n\n\n";
                         GUI.FocusControl("Apply");
@@ -312,6 +312,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
             } 
             else
             {
+                cfg.ClassifierDirectory = EditorGUILayout.TextField("Classifier Directory", cfg.ClassifierDirectory );
                 cfg.TimeOut = EditorGUILayout.FloatField("Timeout", cfg.TimeOut);
                 cfg.MaxRestConnections = EditorGUILayout.IntField("Max Connections", cfg.MaxRestConnections);
 
