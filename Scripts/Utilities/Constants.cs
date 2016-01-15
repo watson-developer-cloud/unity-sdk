@@ -367,6 +367,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 			/// Event fired after three tap on middle top - hot corner
 			/// </summary>
 			ON_TAP_THREETIMES_MIDDLE_TOP,
+			/// <summary>
+			/// 
+			/// </summary>
+			ON_CLASSIFY_PERSONNEL,
             #endregion
         }
 
