@@ -106,6 +106,8 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 
         #region Private Data
         [fsProperty]
+        private string m_ClassifierDirectory = "Watson/Scripts/Editor/Classifiers/";
+        [fsProperty]
         private float m_TimeOut = 30.0f;
         [fsProperty]
         private int m_MaxRestConnections = 5;
@@ -133,6 +135,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// Returns the singleton instance.
         /// </summary>
         public static Config Instance { get { return Singleton<Config>.Instance; } }
+        /// <summary>
+        /// Returns the location of the classifiers
+        /// </summary>
+        public string ClassifierDirectory { get {return m_ClassifierDirectory; } set { m_ClassifierDirectory = value; } }
         /// <summary>
         /// Returns the Timeout for requests made to the server.
         /// </summary>
