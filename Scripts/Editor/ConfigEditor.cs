@@ -1,4 +1,9 @@
-﻿/**
+﻿// uncomment to enable gateway code (Experimental)
+//#define ENABLE_GATEWAY
+
+#if UNITY_EDITOR
+
+/**
 * Copyright 2015 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,13 +20,10 @@
 *
 */
 
-// uncomment to enable gateway code (Experimental)
-//#define ENABLE_GATEWAY
-
-#if UNITY_EDITOR
 
 using IBM.Watson.DeveloperCloud.Services;
 using IBM.Watson.DeveloperCloud.Utilities;
+using IBM.Watson.DeveloperCloud.Connection;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -142,6 +144,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
             if (!Directory.Exists(Application.streamingAssetsPath))
                Directory.CreateDirectory(Application.streamingAssetsPath);
             File.WriteAllText(Application.streamingAssetsPath + "/Config.json", Config.Instance.SaveConfig());
+            RESTConnector.FlushConnectors();
         }
 
         private static string FindFile( string directory, string name )
