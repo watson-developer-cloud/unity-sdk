@@ -164,6 +164,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// Event sent to cancel the current question.
             /// </summary>
             ON_QUESTION_CANCEL,
+			/// <summary>
+			/// Event sent containing personal information.
+			/// </summary>
+			ON_QUESTION_PERSONAL_INFO,
             #endregion
 
             #region Animation / Camera
