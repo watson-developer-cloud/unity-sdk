@@ -50,6 +50,11 @@ namespace IBM.Watson.DeveloperCloud.Connection
         public delegate void ResponseEvent(Request req, Response resp);
 
         /// <summary>
+        /// This delegate is invoked to provide download progress.
+        /// </summary>
+        /// <param name="progress"></param>
+        public delegate void ProgressEvent( float progress );
+        /// <summary>
         /// The class is returned by a Request object containing the response to a request made
         /// by the client.
         /// </summary>
@@ -182,6 +187,14 @@ namespace IBM.Watson.DeveloperCloud.Connection
             /// The callback that is invoked when a response is received.
             /// </summary>
             public ResponseEvent OnResponse { get; set; }
+            /// <summary>
+            /// This callback is invoked to provide progress on the WWW download.
+            /// </summary>
+            public ProgressEvent OnDownloadProgress { get; set; }
+            /// <summary>
+            /// This callback is invoked to provide upload progress.
+            /// </summary>
+            public ProgressEvent OnUploadProgress { get; set; }
             #endregion
         }
         #endregion
@@ -414,6 +427,10 @@ namespace IBM.Watson.DeveloperCloud.Connection
                             break;
                         if ( Time.time > (startTime + Config.Instance.TimeOut) )
                             break;
+                        if ( req.OnUploadProgress != null )
+                            req.OnUploadProgress( www.uploadProgress );
+                        if ( req.OnDownloadProgress != null )
+                            req.OnDownloadProgress( www.progress );
                         yield return null;
                     }
 
