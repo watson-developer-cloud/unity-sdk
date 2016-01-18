@@ -303,17 +303,21 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// <returns><c>true</c>, if variable value was set, <c>false</c> otherwise.</returns>
         /// <param name="key">Key.</param>
         /// <param name="value">Value.</param>
-        public bool SetVariableValue(string key, string value)
+        public bool SetVariableValue(string key, string value, bool bAdd = false )
         {
-            bool success = false;
             Variable v = GetVariable (key);
-            if (v != null)
+            if (v == null)
             {
-                v.Value = value;
-                success = true;
+                if (! bAdd )
+                    return false;
+
+                v = new Variable();
+                v.Key = key;
+                m_Variables.Add( v );
             }
 
-            return success;
+            v.Value = value;
+            return true;
         }
 
         /// <summary>

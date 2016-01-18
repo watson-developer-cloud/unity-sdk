@@ -68,7 +68,12 @@ public class Build
         return scenes.ToArray();
     }
 
-    private static string GetBuildPath( BuildTarget target )
+    /// <summary>
+    /// Get the build path for the specified target.
+    /// </summary>
+    /// <param name="target">The BuildTarget.</param>
+    /// <returns>The full path to the build.</returns>
+    public static string GetBuildPath( BuildTarget target )
     {
         string projectName = Path.GetFileNameWithoutExtension( Application.productName );
         if ( target == BuildTarget.StandaloneWindows || target == BuildTarget.StandaloneWindows64 )
@@ -77,6 +82,8 @@ public class Build
             projectName += ".app";
         else if ( target == BuildTarget.Android )
             projectName += ".apk";
+        else if ( target == BuildTarget.iOS )
+            projectName += ".ipa";
 
         string directory = Application.dataPath + "/../Clients/" + target.ToString();
         if ( Directory.Exists( directory ) )
@@ -86,7 +93,7 @@ public class Build
         return directory + "/" + projectName;
     }
 
-    private static void StartBuild( BuildTarget target )
+    public static int StartBuild( BuildTarget target )
     {
         if (! IsBuilding )
         {
@@ -94,8 +101,10 @@ public class Build
             BuildTarget = target;
 
             Runnable.EnableRunnableInEditor();
-            Runnable.Run( ExecuteBuild() );
+            return Runnable.Run( ExecuteBuild() );
         }
+
+        return -1;
     }
 
     private static IEnumerator ExecuteBuild()
