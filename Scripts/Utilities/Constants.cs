@@ -376,6 +376,21 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 			/// </summary>
 			ON_CLASSIFY_PERSONNEL,
             #endregion
+
+			#region Map Interactions
+			/// <summary>
+			/// Event fired when one finger dragging on Map
+			/// </summary>
+			ON_MAP_DRAG_ONE_FINGER = 600,
+			/// <summary>
+			/// Event fired when one finger Tap on Map
+			/// </summary>
+			ON_MAP_TAP_ONE,
+			/// <summary>
+			/// Event fired when Double tap on Map
+			/// </summary>
+			ON_MAP_TAP_DOUBLE,
+			#endregion
         }
 
         /// <summary>

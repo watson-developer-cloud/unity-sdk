@@ -13,9 +13,10 @@ GameObject:
   - 114: {fileID: 11437114}
   - 114: {fileID: 11479124}
   - 114: {fileID: 11457544}
-  - 114: {fileID: 11461230}
   - 114: {fileID: 11469728}
   - 114: {fileID: 11459306}
+  - 114: {fileID: 11461230}
+  - 114: {fileID: 11479102}
   - 114: {fileID: 11417566}
   m_Layer: 0
   m_Name: TouchManager
@@ -162,6 +163,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_TapGesture: {fileID: 11461230}
+  m_DoubleTapGesture: {fileID: 11479102}
   m_ThreeTapGesture: {fileID: 11417566}
   m_OneFingerMoveGesture: {fileID: 11479124}
   m_TwoFingerMoveGesture: {fileID: 11457544}
@@ -251,6 +253,7 @@ MonoBehaviour:
   requireGestureToFail: {fileID: 0}
   friendlyGestures:
   - {fileID: 11417566}
+  - {fileID: 11479102}
   numberOfTapsRequired: 1
   timeLimit: Infinity
   distanceLimit: Infinity
@@ -276,6 +279,31 @@ MonoBehaviour:
   requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   ignoreChildren: 0
+--- !u!114 &11479102
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 109220}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a878a6ff128243dfb1d89ca0273f059, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  advancedProps: 0
+  minTouches: 0
+  maxTouches: 0
+  combineTouches: 0
+  combineTouchesInterval: 0.3
+  useSendMessage: 0
+  sendStateChangeMessages: 0
+  sendMessageTarget: {fileID: 0}
+  requireGestureToFail: {fileID: 0}
+  friendlyGestures:
+  - {fileID: 11461230}
+  numberOfTapsRequired: 2
+  timeLimit: 0.7
+  distanceLimit: 0.3
 --- !u!114 &11479124
 MonoBehaviour:
   m_ObjectHideFlags: 1

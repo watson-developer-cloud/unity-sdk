@@ -41,7 +41,9 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 		public class TouchEventData
 		{
 			private Collider m_Collider;
+            private Collider2D m_Collider2D;
 			private Collider[] m_ColliderList;
+            private Collider2D[] m_Collider2DList;
 			private GameObject m_GameObject;
 			private Constants.Event m_tapEventCallback;
 			private Constants.Event m_dragEventCallback;
@@ -57,9 +59,17 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// </summary>
 			public Collider Collider { get { return m_Collider; } }
             /// <summary>
+            /// If it is tap event (or one time action event) we are returning the collider of the event.
+            /// </summary>
+            public Collider2D Collider2D { get { return m_Collider2D; } }
+            /// <summary>
             /// If there is a drag event (or continues action) we are holding game object and all colliders inside that object
             /// </summary>
 			public Collider[] ColliderList { get {  if(m_ColliderList == null && m_Collider != null) m_ColliderList = new Collider[]{m_Collider}; return m_ColliderList; } }
+            /// <summary>
+            /// If there is a drag event (or continues action) we are holding game object and all colliders inside that object
+            /// </summary>
+            public Collider2D[] ColliderList2D { get {  if(m_Collider2DList == null && m_Collider2D != null) m_Collider2DList = new Collider2D[]{m_Collider2D}; return m_Collider2DList; } }
             /// <summary>
             /// If the touch event has happened inside of that object (collider) we will fire that event. Otherwise, it is considered as outside
             /// </summary>
@@ -80,7 +90,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 			/// Gets a value indicating whether this instance can drag object.
 			/// </summary>
 			/// <value><c>true</c> if this instance can drag object; otherwise, <c>false</c>.</value>
-			public bool CanDragObject{ get { return GameObjectAttached != null && ColliderList != null && ColliderList.Length > 0; } }
+            public bool CanDragObject{ get { return GameObjectAttached != null && ((ColliderList != null && ColliderList.Length > 0) || (ColliderList2D != null && ColliderList2D.Length > 0)); } }
 
             /// <summary>
             /// Touch event constructor for Tap Event registration. 
@@ -91,7 +101,9 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// <param name="isInside">Whether the tap is inside the object or not</param>
 			public TouchEventData(Collider collider, Constants.Event callback, int sortingLayer, bool isInside){
 				m_Collider = collider;
+                m_Collider2D = null;
 				m_ColliderList = null;
+                m_Collider2DList = null;
 				m_tapEventCallback = callback;
 				m_SortingLayer = sortingLayer;
 				m_isInside = isInside;
@@ -107,8 +119,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 			public TouchEventData(GameObject gameObject, Constants.Event callback, int sortingLayer, bool isInside){
 				m_GameObject = gameObject;
 				m_ColliderList = null;
-				if(gameObject != null)
-					m_ColliderList = gameObject.GetComponentsInChildren<Collider>();
+                if(gameObject != null){
+                    m_ColliderList = gameObject.GetComponentsInChildren<Collider>();
+                    m_Collider2DList = gameObject.GetComponentsInChildren<Collider2D>();
+                }
 				m_dragEventCallback = callback;
 				m_SortingLayer = sortingLayer;
 				m_isInside = isInside;
@@ -131,6 +145,17 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 					}
 			
 				}
+
+                if (!hasTouchedOn && ColliderList2D != null) 
+                {
+                    foreach (Collider2D itemCollider in ColliderList2D) {
+                        if(itemCollider.transform == hitTransform){
+                            hasTouchedOn = true;
+                            break;
+                        }
+                    }
+
+                }
 				return hasTouchedOn;
 			}
 
@@ -147,6 +172,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 				{
 					isEqual = 
                         (touchEventData.Collider == this.Collider &&
+                        touchEventData.Collider2D == this.Collider2D &&
                         touchEventData.GameObjectAttached == this.GameObjectAttached &&
                         touchEventData.IsInside == this.IsInside && 
 						touchEventData.SortingLayer == this.SortingLayer &&
@@ -177,12 +203,15 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 
 		private bool m_Active = true;
 		private Dictionary<int, List<TouchEventData>> m_TapEvents = new Dictionary<int, List<TouchEventData>>();
-		private Dictionary<int, List<TouchEventData>> m_DragEvents = new Dictionary<int, List<TouchEventData>>();
+        private Dictionary<int, List<TouchEventData>> m_DoubleTapEvents = new Dictionary<int, List<TouchEventData>>();
+        private Dictionary<int, List<TouchEventData>> m_DragEvents = new Dictionary<int, List<TouchEventData>>();
 		#endregion
 
 		#region Serialized Private 
 		[SerializeField]
 		private TapGesture m_TapGesture;
+        [SerializeField]
+        private TapGesture m_DoubleTapGesture;
 		[SerializeField]
 		private TapGesture m_ThreeTapGesture;
 		[SerializeField]
@@ -219,6 +248,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 		{
 			m_mainCamera = UnityEngine.Camera.main;
 			m_TapGesture.Tapped += TapGesture_Tapped;
+            m_DoubleTapGesture.Tapped += DoubleTapGesture_Tapped;
 			m_ThreeTapGesture.Tapped += ThreeTapGesture_Tapped;
 
 			m_OneFingerMoveGesture.Transformed += OneFingerTransformedHandler;
@@ -231,6 +261,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         private void OnDisable()
 		{
 			m_TapGesture.Tapped -= TapGesture_Tapped;
+            m_DoubleTapGesture.Tapped -= DoubleTapGesture_Tapped;
 			m_ThreeTapGesture.Tapped -= ThreeTapGesture_Tapped;
 
 			m_OneFingerMoveGesture.Transformed -= OneFingerTransformedHandler;
@@ -311,7 +342,8 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 				TouchEventData dragEventToFire = null;
 					
 				Ray rayForDrag = MainCamera.ScreenPointToRay(m_OneFingerMoveGesture.ScreenPosition);
-				RaycastHit hit;
+                RaycastHit hit;
+                RaycastHit2D hit2D;
 
 
 				foreach (var kp in m_DragEvents) {
@@ -330,8 +362,24 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 							//If we can drag the object, we should check that whether there is a raycast or not!
 							if(dragEventData.CanDragObject){
 								bool isHitOnLayer = Physics.Raycast(rayForDrag, out hit, Mathf.Infinity, 1 << dragEventData.GameObjectAttached.layer);
+                                Transform hitTransform = null;
 
-								if(isHitOnLayer && dragEventData.HasTouchedOn(hit.transform) && dragEventData.IsInside){
+                                if (isHitOnLayer)
+                                {
+                                    hitTransform = hit.transform;
+                                }
+                                else
+                                {
+                                    hit2D = Physics2D.Raycast(rayForDrag.origin, rayForDrag.direction, Mathf.Infinity, 1 << dragEventData.GameObjectAttached.layer);
+                                    if (hit2D.collider != null)
+                                    {
+                                        isHitOnLayer = true;
+                                        hitTransform = hit2D.transform;
+                                    }
+                                }
+                                    
+
+                                if(isHitOnLayer && dragEventData.HasTouchedOn(hitTransform) && dragEventData.IsInside){
 									hasDragOnObject = true;
 								}
                                 else if (!isHitOnLayer && !dragEventData.IsInside)
@@ -567,6 +615,156 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 		}
 
         #endregion
+
+        #region Double TapEvents - Register / UnRegister / Call 
+
+        /// <summary>
+        /// Register tap event to given callback
+        /// </summary>
+        /// <param name="gameObjectToTouch">Game object to tap on</param>
+        /// <param name="callback">Callback to call after tapped on object (or outside of the object)</param>
+        /// <param name="SortingLayer">Sorting layer to determine the corresponding tap object</param>
+        /// <param name="isTapInside">Whether to tap on object or outside the object</param>
+        /// <param name="layerMask">Layer mask to tap. Default is the gameObjectToTouch's layer</param>
+        /// <returns></returns>
+        public bool RegisterDoubleTapEvent(GameObject gameObjectToTouch, Constants.Event callback, int SortingLayer = 0, bool isDoubleTapInside = true, LayerMask layerMask = default(LayerMask))
+        {
+            Collider[] colliderList = gameObjectToTouch.GetComponentsInChildren<Collider>();
+
+            if(colliderList != null){
+                foreach (Collider itemCollider in colliderList) 
+                {
+                    int layerMaskAsKey = (layerMask != default(LayerMask))? layerMask.value : (1 << gameObjectToTouch.layer);
+
+                    if (m_DoubleTapEvents.ContainsKey (layerMaskAsKey)) 
+                    {
+                        m_DoubleTapEvents[layerMaskAsKey].Add( new TouchEventData(itemCollider, callback, SortingLayer, isDoubleTapInside));
+                    } 
+                    else 
+                    {
+                        m_DoubleTapEvents[layerMaskAsKey] = new List<TouchEventData>() {  new TouchEventData(itemCollider, callback, SortingLayer, isDoubleTapInside) };
+                    }
+                }
+            }
+            else{
+                Log.Warning("TouchEventManager","There is no collider of given gameobjectToTouch");
+            }
+
+
+            return true;
+        }
+
+        /// <summary>
+        ///  Unregister tap event to given callback
+        /// </summary>
+        /// <param name="gameObjectToTouch">Game object to tap on</param>
+        /// <param name="callback">Callback to call after tapped on object (or outside of the object)</param>
+        /// <param name="SortingLayer">Sorting layer to determine the corresponding tap object</param>
+        /// <param name="isDoubleTapInside">Whether to tap on object or outside the object</param>
+        /// <param name="layerMask">Layer mask to tap. Default is the gameObjectToTouch's layer</param>
+        /// <returns></returns>
+        public bool UnregisterDoubleTapEvent(GameObject gameObjectToTouch, Constants.Event callback, int SortingLayer = 0, bool isDoubleTapInside = true, LayerMask layerMask = default(LayerMask))
+        {
+            bool success = false;
+
+            int layerMaskAsKey = (layerMask != default(LayerMask))? layerMask.value : (1 << gameObjectToTouch.layer);
+
+            if (m_DoubleTapEvents.ContainsKey (layerMaskAsKey)) 
+            {
+                success = true;
+                Collider[] colliderList = gameObjectToTouch.GetComponentsInChildren<Collider>();
+                foreach (Collider itemCollider in colliderList) 
+                {
+                    success &= m_DoubleTapEvents[layerMaskAsKey].Remove( new TouchEventData(itemCollider, callback, SortingLayer, isDoubleTapInside) );
+                }
+            } 
+
+            return success;
+        }
+
+
+        private void DoubleTapGesture_Tapped(object sender, System.EventArgs e)
+        {   
+            if (m_Active)
+            {
+                //Log.Status("TouchEventManager", "DoubleTapGesture_Tapped: {0}", m_DoubleTapGesture.ScreenPosition);
+
+                TouchEventData tapEventToFire = null;
+                RaycastHit hit = default(RaycastHit);
+
+                foreach (var kp in m_DoubleTapEvents)
+                {
+
+                    Ray rayForTab = MainCamera.ScreenPointToRay(m_DoubleTapGesture.ScreenPosition);
+
+                    bool isHitOnLayer = Physics.Raycast(rayForTab, out hit, Mathf.Infinity, kp.Key);
+
+                    for (int i = 0; i < kp.Value.Count; ++i)
+                    {
+                        TouchEventData tapEventData = kp.Value[i];
+
+                        if (tapEventData.TapCallback == Constants.Event.NONE)
+                        {
+                            Log.Warning("TouchEventManager", "Removing invalid event receiver from TapEventList");
+                            kp.Value.RemoveAt(i--);
+                            continue;
+                        }
+
+                        if(isHitOnLayer && hit.collider.transform == tapEventData.Collider.transform && tapEventData.IsInside){
+                            //Tapped inside the object
+                            if(tapEventToFire == null)
+                            {
+                                tapEventToFire = tapEventData;
+                            }
+                            else
+                            {
+                                if(tapEventData.SortingLayer > tapEventToFire.SortingLayer || 
+                                    (tapEventToFire.SortingLayer == tapEventData.SortingLayer && !tapEventToFire.IsInside))
+                                {
+                                    tapEventToFire = tapEventData;
+                                }
+                                else
+                                {
+                                    //do nothing
+                                }
+                            }
+
+                        }
+                        else if( (!isHitOnLayer || hit.collider.transform != tapEventData.Collider.transform) && !tapEventData.IsInside){
+                            //Tapped outside the object
+                            if(tapEventToFire == null)
+                            {
+                                tapEventToFire = tapEventData;
+                            }
+                            else
+                            {
+                                if(tapEventData.SortingLayer > tapEventToFire.SortingLayer)
+                                {
+                                    tapEventToFire = tapEventData;
+                                }
+                                else
+                                {
+                                    //do nothing
+                                }
+                            }
+                        }
+                        else{
+                            //do nothing
+                        }
+                    }
+
+                }
+
+                if(tapEventToFire != null && tapEventToFire.TapCallback != Constants.Event.NONE)
+                    EventManager.Instance.SendEvent(tapEventToFire.TapCallback, m_DoubleTapGesture, hit);
+                //tapEventToFire.TapCallback(m_DoubleTapGesture, tapEventToFire.Collider.transform);
+
+            }
+
+        }
+
+        #endregion
+
 
 		#region Three Tap Gesture Call
 
