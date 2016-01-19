@@ -16,7 +16,7 @@
 */
 
 #if UNITY_EDITOR
-
+ 
 using UnityEngine;
 using UnityEditor;
 using System.Collections;
@@ -68,7 +68,12 @@ public class Build
         return scenes.ToArray();
     }
 
-    private static string GetBuildPath( BuildTarget target )
+    /// <summary>
+    /// Get the build path for the specified target.
+    /// </summary>
+    /// <param name="target">The BuildTarget.</param>
+    /// <returns>The full path to the build.</returns>
+    public static string GetBuildPath( BuildTarget target, bool bCleanTarget = false )
     {
         string projectName = Path.GetFileNameWithoutExtension( Application.productName );
         if ( target == BuildTarget.StandaloneWindows || target == BuildTarget.StandaloneWindows64 )
@@ -77,16 +82,18 @@ public class Build
             projectName += ".app";
         else if ( target == BuildTarget.Android )
             projectName += ".apk";
+        else if ( target == BuildTarget.iOS )
+            projectName += ".ipa";
 
         string directory = Application.dataPath + "/../Clients/" + target.ToString();
-        if ( Directory.Exists( directory ) )
+        if ( bCleanTarget && Directory.Exists( directory ) )
             Directory.Delete( directory, true );
 
         Directory.CreateDirectory( directory );
         return directory + "/" + projectName;
     }
 
-    private static void StartBuild( BuildTarget target )
+    public static int StartBuild( BuildTarget target )
     {
         if (! IsBuilding )
         {
@@ -94,21 +101,26 @@ public class Build
             BuildTarget = target;
 
             Runnable.EnableRunnableInEditor();
-            Runnable.Run( ExecuteBuild() );
+            return Runnable.Run( ExecuteBuild() );
         }
+
+        return -1;
     }
 
     private static IEnumerator ExecuteBuild()
     {
         yield return null;
 
-        /// generate the AOT code, wait for it to be compiled..
-        FullSerializer.AotHelpers.BuildAOT();
-        while( EditorApplication.isCompiling )
-            yield return null;
+        if ( BuildTarget == BuildTarget.iOS )
+        {
+            /// generate the AOT code, wait for it to be compiled..
+            FullSerializer.AotHelpers.BuildAOT();
+            while( EditorApplication.isCompiling )
+                yield return null;
+        }
 
         string [] buildScenes = GetBuildScenes();
-        string buildPath = GetBuildPath( BuildTarget );
+        string buildPath = GetBuildPath( BuildTarget, true );
 
         BuildError = string.Empty;
         try {
@@ -119,7 +131,8 @@ public class Build
             BuildError = e.ToString();
         }
 
-        FullSerializer.AotHelpers.CleanAOT();
+        if ( BuildTarget == BuildTarget.iOS )
+            FullSerializer.AotHelpers.CleanAOT();
         IsBuilding = false; 
 
         // if BuildPlayer returned no error, but we can't find the file, flag this build as a failure then..

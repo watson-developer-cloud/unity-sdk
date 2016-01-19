@@ -59,6 +59,16 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                 r.Stop = true;
         }
 
+        /// <summary>
+        /// Check if a routine is still running.
+        /// </summary>
+        /// <param name="id">The ID returned by Run().</param>
+        /// <returns>Returns true if the routine is still active.</returns>
+        static public bool IsRunning( int id )
+        {
+            return Instance.m_Routines.ContainsKey( id );
+        }
+
 #if UNITY_EDITOR
         private static bool sm_EditorRunnable = false;
 
@@ -78,6 +88,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             if (! Application.isPlaying )
                 Instance.UpdateRoutines();
         }
+
 #endif
         #endregion
 

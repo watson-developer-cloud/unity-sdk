@@ -246,7 +246,9 @@ namespace IBM.Watson.DeveloperCloud.Services.v1
 
             byte [] dialogData = null;
             if (LoadFile != null)
+            {
 				dialogData = LoadFile (dialogFileName);
+            }
 			else 
 			{
 				#if !UNITY_WEBPLAYER

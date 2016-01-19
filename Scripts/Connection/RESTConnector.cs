@@ -50,6 +50,11 @@ namespace IBM.Watson.DeveloperCloud.Connection
         public delegate void ResponseEvent(Request req, Response resp);
 
         /// <summary>
+        /// This delegate is invoked to provide download progress.
+        /// </summary>
+        /// <param name="progress"></param>
+        public delegate void ProgressEvent( float progress );
+        /// <summary>
         /// The class is returned by a Request object containing the response to a request made
         /// by the client.
         /// </summary>
@@ -182,6 +187,14 @@ namespace IBM.Watson.DeveloperCloud.Connection
             /// The callback that is invoked when a response is received.
             /// </summary>
             public ResponseEvent OnResponse { get; set; }
+            /// <summary>
+            /// This callback is invoked to provide progress on the WWW download.
+            /// </summary>
+            public ProgressEvent OnDownloadProgress { get; set; }
+            /// <summary>
+            /// This callback is invoked to provide upload progress.
+            /// </summary>
+            public ProgressEvent OnUploadProgress { get; set; }
             #endregion
         }
         #endregion
@@ -382,20 +395,25 @@ namespace IBM.Watson.DeveloperCloud.Connection
                             Log.Warning( "RESTConnector", "Do not use both Send & Form fields in a Request object." );
 
                         WWWForm form = new WWWForm();
-                        foreach( var kp in req.Forms )
-                        {
-                            if ( kp.Value.IsBinary )
-                                form.AddBinaryData( kp.Key, kp.Value.Contents, kp.Value.FileName, kp.Value.MimeType );
-                            else if ( kp.Value.BoxedObject is string )
-                                form.AddField( kp.Key, (string)kp.Value.BoxedObject );
-                            else if ( kp.Value.BoxedObject is int )
-                                form.AddField( kp.Key, (int)kp.Value.BoxedObject );
-                            else if ( kp.Value.BoxedObject != null )
-                                Log.Warning( "RESTCOnnector", "Unsupported form field type {0}", kp.Value.BoxedObject.GetType().ToString() );
+                        try {
+                            foreach( var kp in req.Forms )
+                            {
+                                if ( kp.Value.IsBinary )
+                                    form.AddBinaryData( kp.Key, kp.Value.Contents, kp.Value.FileName, kp.Value.MimeType );
+                                else if ( kp.Value.BoxedObject is string )
+                                    form.AddField( kp.Key, (string)kp.Value.BoxedObject );
+                                else if ( kp.Value.BoxedObject is int )
+                                    form.AddField( kp.Key, (int)kp.Value.BoxedObject );
+                                else if ( kp.Value.BoxedObject != null )
+                                    Log.Warning( "RESTCOnnector", "Unsupported form field type {0}", kp.Value.BoxedObject.GetType().ToString() );
+                            }
+                            foreach( var kp in form.headers )
+                                req.Headers[ kp.Key ] = kp.Value;
                         }
-                        foreach( var kp in form.headers )
-                            req.Headers[ kp.Key ] = kp.Value;
-                
+                        catch( Exception e )
+                        {
+                            Log.Error( "RESTConnector", "Exception when initializing WWWForm: {0}", e.ToString() );
+                        }
                         www = new WWW( url, form.data, req.Headers );
                     }
                     else if (req.Send == null)
@@ -414,6 +432,10 @@ namespace IBM.Watson.DeveloperCloud.Connection
                             break;
                         if ( Time.time > (startTime + Config.Instance.TimeOut) )
                             break;
+                        if ( req.OnUploadProgress != null )
+                            req.OnUploadProgress( www.uploadProgress );
+                        if ( req.OnDownloadProgress != null )
+                            req.OnDownloadProgress( www.progress );
                         yield return null;
                     }
 
