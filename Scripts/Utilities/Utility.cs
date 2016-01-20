@@ -56,6 +56,17 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// <param name="a">The first component.</param>
         /// <param name="b">The second component.</param>
         /// <param name="tolerance">Tolerance.</param>
+        public static bool Approximately(double a, double b, double tolerance = 0.0001)
+        {
+            return (System.Math.Abs(a - b) < tolerance);
+        }
+
+        /// <summary>
+        /// Approximately the specified a, b and tolerance.
+        /// </summary>
+        /// <param name="a">The first component.</param>
+        /// <param name="b">The second component.</param>
+        /// <param name="tolerance">Tolerance.</param>
         public static bool Approximately(float a, float b, float tolerance = 0.0001f)
         {
             return (Mathf.Abs(a - b) < tolerance);
