@@ -129,24 +129,31 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// <param name="data">The data of the object to save.</param>
         public void Save(string id, byte[] data)
         {
-            id = id.Replace('/', '_');
+            if (data != null && data.Length > 0)
+            {
+                id = id.Replace('/', '_');
 
-            if ( m_Cache.ContainsKey( id ) )
-                Flush( id );
+                if (m_Cache.ContainsKey(id))
+                    Flush(id);
 
-            CacheItem item = new CacheItem();
-            item.Path = m_CachePath + id + ".bytes";
-            item.Id = id;
-            item.Time = DateTime.Now;
-            item.Data = data;
+                CacheItem item = new CacheItem();
+                item.Path = m_CachePath + id + ".bytes";
+                item.Id = id;
+                item.Time = DateTime.Now;
+                item.Data = data;
 
-            File.WriteAllBytes( item.Path, data);
-            m_CurrentCacheSize += item.Data.Length;
+                File.WriteAllBytes(item.Path, data);
+                m_CurrentCacheSize += item.Data.Length;
 
-            m_Cache[id] = item;
+                m_Cache[id] = item;
 
-            while( m_CurrentCacheSize > m_MaxCacheSize )
-                FlushOldest();
+                while (m_CurrentCacheSize > m_MaxCacheSize)
+                    FlushOldest();
+            }
+            else
+            {
+                Log.Error( "DataCache", "Empty data came to the cache, couldn't cache any null data" );
+            }
         }
 
         /// <summary>
