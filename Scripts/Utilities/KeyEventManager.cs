@@ -140,8 +140,8 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                             fire.Add(kp.Value);
                     }
 
-					if(Input.anyKeyDown){
-						EventManager.Instance.SendEvent(Constants.Event.ON_KEYBOARD_ANYKEY_DOWN);
+                    if(Input.anyKeyDown && !string.IsNullOrEmpty(Input.inputString)){
+                        EventManager.Instance.SendEvent(Constants.Event.ON_KEYBOARD_ANYKEY_DOWN);
 					}
                 }
 
