@@ -340,6 +340,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         public Output[] Outputs { get { if (! m_Initialized ) InitializeIO(); return m_Outputs; } }
         #endregion
 
+        #region Public Functions
         /// <summary>
         /// Call this function to go ahead and resolve auto-connections to other widgets. Normally,
         /// we would try to auto connect when the Awake() is called, this can be called to resolve
@@ -350,6 +351,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             InitializeIO();
             InitializeConnections();
         }
+        #endregion
 
         #region Private Functions
         private void InitializeIO()

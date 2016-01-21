@@ -59,7 +59,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         private class ClassEventMapping
         {
             public string m_Class = null;
-            public Constants.Event m_Event = (Constants.Event)0;
+            public Constants.Event m_Event = Constants.Event.NONE;
         };
         [SerializeField]
         private List<ClassEventMapping> m_ClassEventList = new List<ClassEventMapping>();
@@ -117,6 +117,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         }
         #endregion
 
+        #region Private Functions
         private void OnGetClassifiers(Classifiers classifiers)
         {
             if (classifiers != null)
@@ -219,6 +220,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                 }
             }
         }
+        #endregion
 
         #region Event Handlers
         private void OnDebugCommand(object[] args)
