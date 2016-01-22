@@ -410,7 +410,18 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 			/// Event fired when Double tap on Map
 			/// </summary>
 			ON_MAP_TAP_DOUBLE,
-			#endregion
+            #endregion
+
+            #region Update
+            /// <summary>
+            /// Event fire to confirm an update
+            /// </summary>
+            CONFIRM_UPDATE = 700,
+            /// <summary>
+            /// Event fire to dismiss the update 
+            /// </summary>
+            DISMISS_UPDATE,
+            #endregion
         }
 
         /// <summary>
