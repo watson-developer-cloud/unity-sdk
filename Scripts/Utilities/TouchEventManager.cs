@@ -15,6 +15,8 @@
 *
 */
 
+// uncomment to enable debugging
+//#define ENABLE_DEBUGGING
 
 using UnityEngine;
 using System.Collections.Generic;
@@ -538,7 +540,9 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 		{   
             if (m_Active)
 			{
-				//Log.Status("TouchEventManager", "TapGesture_Tapped: {0}", m_TapGesture.ScreenPosition);
+                #if ENABLE_DEBUGGING
+                Log.Debug("TouchEventManager", "TapGesture_Tapped: {0} - {1}", m_TapGesture.ScreenPosition, m_TapGesture.NumTouches);
+                #endif
 
                 TouchEventData tapEventToFire = null;
 				RaycastHit hit = default(RaycastHit);
@@ -687,7 +691,9 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         {   
             if (m_Active)
             {
-                //Log.Status("TouchEventManager", "DoubleTapGesture_Tapped: {0}", m_DoubleTapGesture.ScreenPosition);
+                #if ENABLE_DEBUGGING
+                Log.Debug("TouchEventManager", "DoubleTapGesture_Tapped: {0} - {1}", m_DoubleTapGesture.ScreenPosition, m_DoubleTapGesture.NumTouches);
+                #endif
 
                 TouchEventData tapEventToFire = null;
                 RaycastHit hit = default(RaycastHit);
@@ -772,7 +778,9 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 		{
 			if (m_Active) 
 			{
-				//Log.Status("TouchEventManager", "ThreeTapGesture_Tapped: {0} - {1}", m_ThreeTapGesture.ScreenPosition, m_ThreeTapGesture.NumTouches);
+                #if ENABLE_DEBUGGING
+                Log.Debug("TouchEventManager", "ThreeTapGesture_Tapped: {0} - {1}", m_ThreeTapGesture.ScreenPosition, m_ThreeTapGesture.NumTouches);
+                #endif
 				EventManager.Instance.SendEvent(Constants.Event.ON_TAP_THREETIMES, m_ThreeTapGesture);
 			}
 		}
@@ -783,6 +791,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         
         private void PressGesturePressed(object sender, System.EventArgs e)
         {
+            #if ENABLE_DEBUGGING
+            Log.Debug("TouchEventManager", "PressGesturePressed: {0} - {1}", m_PressGesture.ScreenPosition, m_PressGesture.NumTouches);
+            #endif
+
             EventManager.Instance.SendEvent(Constants.Event.ON_TOUCH_PRESSED_FULLSCREEN, m_PressGesture);
         }
         
