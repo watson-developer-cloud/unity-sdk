@@ -117,6 +117,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// Event toggle of top light avatar
             /// </summary>
             ON_AVATAR_TOP_LIGHT_TOGGLE,
+            /// <summary>
+            /// Event to wake up avatar
+            /// </summary>
+            ON_AVATAR_TO_WAKE_UP,
             #endregion
 
             #region Question
