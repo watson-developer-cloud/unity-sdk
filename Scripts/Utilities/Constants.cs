@@ -379,6 +379,22 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 			/// 
 			/// </summary>
 			ON_CLASSIFY_PERSONNEL,
+            /// <summary>
+            /// Event fired when a single tap occur
+            /// </summary>
+            ON_TAP_ONE,
+            /// /// <summary>
+            /// Event fired when a double tap occur
+            /// </summary>
+            ON_TAP_DOUBLE,
+            /// <summary>
+            /// Event fired when one finger fullscreen drag occur
+            /// </summary>
+            ON_DRAG_ONE_FINGER_FULLSCREEN,
+            /// <summary>
+            /// Event fired when two finger fullscreen drag occur
+            /// </summary>
+            ON_DRAG_TWO_FINGER_FULLSCREEN,
             #endregion
 
 			#region Map Interactions

@@ -421,6 +421,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 					EventManager.Instance.SendEvent(dragEventToFire.DragCallback, m_OneFingerMoveGesture);
 					//dragEventToFire.DragCallback(m_OneFingerManipulationGesture);
 
+                EventManager.Instance.SendEvent(Constants.Event.ON_DRAG_ONE_FINGER_FULLSCREEN, m_OneFingerMoveGesture);
 			}
 			
 		}
@@ -463,6 +464,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 					EventManager.Instance.SendEvent(dragEventToFire.DragCallback, m_TwoFingerMoveGesture);
 					//dragEventToFire.DragCallback(m_TwoFingerMoveGesture);
 				
+                EventManager.Instance.SendEvent(Constants.Event.ON_DRAG_TWO_FINGER_FULLSCREEN, m_TwoFingerMoveGesture);
 			}
 		}
 
@@ -614,6 +616,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 					EventManager.Instance.SendEvent(tapEventToFire.TapCallback, m_TapGesture, hit);
 					//tapEventToFire.TapCallback(m_TapGesture, tapEventToFire.Collider.transform);
 
+                EventManager.Instance.SendEvent(Constants.Event.ON_TAP_ONE, m_TapGesture);
 			}
             
 		}
@@ -765,6 +768,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                     EventManager.Instance.SendEvent(tapEventToFire.TapCallback, m_DoubleTapGesture, hit);
                 //tapEventToFire.TapCallback(m_DoubleTapGesture, tapEventToFire.Collider.transform);
 
+                EventManager.Instance.SendEvent(Constants.Event.ON_TAP_DOUBLE, m_DoubleTapGesture);
             }
 
         }
