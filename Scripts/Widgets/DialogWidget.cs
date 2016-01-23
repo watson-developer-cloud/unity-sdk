@@ -34,6 +34,16 @@ namespace IBM.Watson.DeveloperCloud.Widgets
     /// </summary>
     public class DialogWidget : Widget
     {
+        #region Inputs
+        [SerializeField]
+        private Input m_SpeechInput = new Input("SpeechInput", typeof(SpeechToTextData), "OnSpeechInput");
+        #endregion
+
+        #region Outputs
+        [SerializeField]
+        private Output m_ResultOutput = new Output(typeof(TextToSpeechData));
+        #endregion
+
         #region Private Data
         [SerializeField, Tooltip( "The name prefix of the dialog to use." ) ]
         private string m_DialogName = Guid.NewGuid().ToString().Replace( "-", "" ).Substring( 0, 24 );      // NOTE: the limit of a dialog name is 24 characters, plus it has to be globally unique!
@@ -43,10 +53,6 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         private VerticalLayoutGroup m_DialogLayout = null;
         [SerializeField]
         private ScrollRect m_ScrollRect = null;
-        [SerializeField]
-        private Input m_SpeechInput = new Input("SpeechInput", typeof(SpeechToTextData), "OnSpeechInput");
-        [SerializeField]
-        private Output m_ResultOutput = new Output(typeof(TextToSpeechData));
         [SerializeField]
         private GameObject m_QuestionPrefab = null;
         [SerializeField]
@@ -69,12 +75,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 
         #endregion
 
-
-        private void OnEnable()
-        {
-            m_Dialog.GetDialogs(OnGetDialogs);
-        }
-
+        #region Public Functions
         /// <summary>
         /// Converse with the dialog system.
         /// </summary>
@@ -85,6 +86,13 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                 m_Dialog.Converse(m_DialogID, dialog, OnConverse, m_ConversationID, m_ClientID);
             else
                 Log.Warning( "DialogWidget", "m_DialogID is null." );
+        }
+        #endregion
+
+        #region Event Handlers
+        private void OnEnable()
+        {
+            m_Dialog.GetDialogs(OnGetDialogs);
         }
 
         private void OnConverse(ConverseResponse resp)
@@ -146,7 +154,9 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                 AddDialog(text, m_QuestionPrefab);
             }
         }
+        #endregion
 
+        #region Private Functions
         private void AddDialog(string add, GameObject prefab)
         {
             if ( m_DialogLayout != null )
@@ -174,5 +184,6 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             if (m_ScrollRect != null)
                 m_ScrollRect.verticalNormalizedPosition = 0.0f;
         }
+        #endregion
     }
 }

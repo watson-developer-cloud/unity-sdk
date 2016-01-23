@@ -30,6 +30,11 @@ namespace IBM.Watson.DeveloperCloud.Widgets
     /// </summary>
     public class SpeechDisplayWidget : Widget
     {
+        #region Inputs
+        [SerializeField]
+        private Input m_SpeechInput = new Input( "SpeechInput", typeof(SpeechToTextData), "OnSpeechInput" );
+        #endregion
+
         #region Widget interface
         /// <exclude />
         protected override string GetName()
@@ -48,8 +53,6 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 		private InputField m_OutputAsInputField = null;
 		[SerializeField]
 		private Text m_OutputStatus = null;
-        [SerializeField]
-        private Input m_SpeechInput = new Input( "SpeechInput", typeof(SpeechToTextData), "OnSpeechInput" );
 		[SerializeField]
 		private float m_MinConfidenceToShow = 0.5f;
 
@@ -59,6 +62,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 		private float m_TimeAtLastInterim = 0.0f;
         #endregion
 
+        #region Event Handlers
         private void OnSpeechInput( Data data )
         {
 			if ( m_Output != null || m_OutputAsInputField != null)
@@ -109,6 +113,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                 }
             }
         }
+        #endregion
 
     }
 }

@@ -34,14 +34,20 @@ namespace IBM.Watson.DeveloperCloud.Widgets
     /// </summary>
 	public class NaturalLanguageClassifierWidget : Widget
     {
+        #region Inputs
+        [SerializeField]
+        private Input m_RecognizeInput = new Input("Recognize", typeof(SpeechToTextData), "OnRecognize");
+        #endregion
+
+        #region Outputs
+        [SerializeField]
+        private Output m_ClassifyOutput = new Output(typeof(ClassifyResultData));
+        #endregion
+
         #region Private Data
         private NaturalLanguageClassifier m_NLC = new NaturalLanguageClassifier();
         private Classifier m_Selected = null;
 
-        [SerializeField]
-        private Input m_RecognizeInput = new Input("Recognize", typeof(SpeechToTextData), "OnRecognize");
-        [SerializeField]
-        private Output m_ClassifyOutput = new Output(typeof(ClassifyResultData));
         [SerializeField]
         private string m_ClassifierName = string.Empty;
         [SerializeField]
@@ -76,7 +82,15 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         public NaturalLanguageClassifier NLC { get { return m_NLC; } }
         #endregion
 
-        #region MonoBehaviour interface
+        #region Widget interface
+        /// <exclude />
+        protected override string GetName()
+        {
+            return "NLC";
+        }
+        #endregion
+
+        #region Event Handlers
         /// <exclude />
         protected override void Start()
         {
@@ -107,17 +121,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         {
             EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_DEBUG_COMMAND, OnDebugCommand);
         }
-        #endregion
 
-        #region Widget interface
-        /// <exclude />
-        protected override string GetName()
-        {
-            return "NLC";
-        }
-        #endregion
-
-        #region Private Functions
         private void OnGetClassifiers(Classifiers classifiers)
         {
             if (classifiers != null)
@@ -220,9 +224,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                 }
             }
         }
-        #endregion
 
-        #region Event Handlers
         private void OnDebugCommand(object[] args)
         {
             string text = args != null && args.Length > 0 ? args[0] as string : string.Empty;

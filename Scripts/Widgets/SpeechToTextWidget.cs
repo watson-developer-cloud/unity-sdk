@@ -34,6 +34,18 @@ namespace IBM.Watson.DeveloperCloud.Widgets
     /// </summary>
 	public class SpeechToTextWidget : Widget
 	{
+        #region Inputs
+        [SerializeField]
+        private Input m_AudioInput = new Input( "Audio", typeof(AudioData), "OnAudio" );
+        [SerializeField]
+        private Input m_LanguageInput = new Input( "Language", typeof(LanguageData), "OnLanguage" );
+        #endregion
+
+        #region Outputs
+        [SerializeField]
+        private Output m_ResultOutput = new Output( typeof(SpeechToTextData) );
+        #endregion
+
 	    #region Private Data
 	    private SpeechToText m_STT = new SpeechToText();
 	    [SerializeField]
@@ -54,12 +66,6 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         private bool m_EnableInterimResults = false;
 	    [SerializeField]
 	    private Text m_Transcript = null;
-        [SerializeField]
-        private Input m_AudioInput = new Input( "Audio", typeof(AudioData), "OnAudio" );
-        [SerializeField]
-        private Input m_LanguageInput = new Input( "Language", typeof(LanguageData), "OnLanguage" );
-        [SerializeField]
-        private Output m_ResultOutput = new Output( typeof(SpeechToTextData) );
         [SerializeField, Tooltip( "Language ID to use in the speech recognition model.") ]
         private string m_Language = "en-US";
         #endregion
@@ -96,6 +102,15 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         }
         #endregion
 
+        #region Widget Interface
+        /// <exclude />
+        protected override string GetName()
+        {
+            return "SpeechToText";
+        }
+        #endregion
+
+        #region Event handlers
         /// <summary>
         /// Button handler to toggle the active state of this widget.
         /// </summary>
@@ -103,12 +118,6 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 	    {
             Active = !Active;
 	    }
-
-        /// <exclude />
-        protected override string GetName()
-        {
-            return "SpeechToText";
-        }
 
         /// <exclude />
         protected override void Start()
@@ -201,6 +210,6 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                 }
             }
 	    }
-
-	}
+        #endregion
+    }
 }

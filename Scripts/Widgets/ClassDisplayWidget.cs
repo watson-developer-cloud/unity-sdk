@@ -29,6 +29,11 @@ namespace IBM.Watson.DeveloperCloud.Widgets
     /// </summary>
     public class ClassDisplayWidget : Widget
     {
+        #region Inputs
+        [SerializeField]
+        private Input m_ClassInput = new Input( "ClassInput", typeof(ClassifyResultData), "OnClassInput" );
+        #endregion
+
         #region Widget interface
         /// <exclude />
         protected override string GetName()
@@ -40,10 +45,9 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         #region Private Data
         [SerializeField]
         private Text m_ClassDisplay = null;
-        [SerializeField]
-        private Input m_ClassInput = new Input( "ClassInput", typeof(ClassifyResultData), "OnClassInput" );
         #endregion
 
+        #region Event Handlers
         private void OnClassInput( Data data )
         {
             ClassifyResultData results = (ClassifyResultData)data;
@@ -53,5 +57,6 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                     results.Result.top_class, results.Result.topConfidence );
             }
         }
+        #endregion
     }
 }
