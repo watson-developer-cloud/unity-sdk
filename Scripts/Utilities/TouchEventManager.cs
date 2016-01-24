@@ -249,28 +249,38 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 		private void OnEnable()
 		{
 			m_mainCamera = UnityEngine.Camera.main;
-			m_TapGesture.Tapped += TapGesture_Tapped;
-            m_DoubleTapGesture.Tapped += DoubleTapGesture_Tapped;
-			m_ThreeTapGesture.Tapped += ThreeTapGesture_Tapped;
-
-			m_OneFingerMoveGesture.Transformed += OneFingerTransformedHandler;
-			m_TwoFingerMoveGesture.Transformed += TwoFingerTransformedHandler;
-
-            m_PressGesture.Pressed += PressGesturePressed;
-            m_ReleaseGesture.Released += ReleaseGestureReleased;
+            if (m_TapGesture != null)
+			    m_TapGesture.Tapped += TapGesture_Tapped;
+            if ( m_DoubleTapGesture != null )
+                m_DoubleTapGesture.Tapped += DoubleTapGesture_Tapped;
+            if ( m_ThreeTapGesture != null )
+			    m_ThreeTapGesture.Tapped += ThreeTapGesture_Tapped;
+            if ( m_OneFingerMoveGesture != null )
+			    m_OneFingerMoveGesture.Transformed += OneFingerTransformedHandler;
+            if ( m_TwoFingerMoveGesture != null )
+			    m_TwoFingerMoveGesture.Transformed += TwoFingerTransformedHandler;
+            if ( m_PressGesture != null)
+                m_PressGesture.Pressed += PressGesturePressed;
+            if ( m_ReleaseGesture != null )
+                m_ReleaseGesture.Released += ReleaseGestureReleased;
         }
 
         private void OnDisable()
 		{
-			m_TapGesture.Tapped -= TapGesture_Tapped;
-            m_DoubleTapGesture.Tapped -= DoubleTapGesture_Tapped;
-			m_ThreeTapGesture.Tapped -= ThreeTapGesture_Tapped;
-
-			m_OneFingerMoveGesture.Transformed -= OneFingerTransformedHandler;
-			m_TwoFingerMoveGesture.Transformed -= TwoFingerTransformedHandler;
-
-            m_PressGesture.Pressed -= PressGesturePressed;
-            m_ReleaseGesture.Released -= ReleaseGestureReleased;
+            if ( m_TapGesture != null )
+			    m_TapGesture.Tapped -= TapGesture_Tapped;
+            if ( m_DoubleTapGesture != null )
+                m_DoubleTapGesture.Tapped -= DoubleTapGesture_Tapped;
+            if ( m_ThreeTapGesture != null )
+			    m_ThreeTapGesture.Tapped -= ThreeTapGesture_Tapped;
+            if ( m_OneFingerMoveGesture != null )
+			    m_OneFingerMoveGesture.Transformed -= OneFingerTransformedHandler;
+            if( m_TwoFingerMoveGesture != null )
+			    m_TwoFingerMoveGesture.Transformed -= TwoFingerTransformedHandler;
+            if ( m_PressGesture != null )
+                m_PressGesture.Pressed -= PressGesturePressed;
+            if ( m_ReleaseGesture != null )
+                m_ReleaseGesture.Released -= ReleaseGestureReleased;
         }
 
 		/// <summary>
