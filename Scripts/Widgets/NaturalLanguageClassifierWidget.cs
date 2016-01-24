@@ -41,7 +41,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 
         #region Outputs
         [SerializeField]
-        private Output m_ClassifyOutput = new Output(typeof(ClassifyResultData));
+        private Output m_ClassifyOutput = new Output(typeof(ClassifyResultData), true );
         #endregion
 
         #region Private Data

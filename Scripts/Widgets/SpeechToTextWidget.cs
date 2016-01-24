@@ -43,7 +43,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 
         #region Outputs
         [SerializeField]
-        private Output m_ResultOutput = new Output( typeof(SpeechToTextData) );
+        private Output m_ResultOutput = new Output( typeof(SpeechToTextData), true );
         #endregion
 
 	    #region Private Data
