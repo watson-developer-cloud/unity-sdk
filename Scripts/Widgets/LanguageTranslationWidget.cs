@@ -36,6 +36,20 @@ namespace IBM.Watson.DeveloperCloud.Widgets
     /// </summary>
 	public class LanguageTranslationWidget : Widget
     {
+        #region Inputs
+        [SerializeField]
+        private Input m_SpeechInput = new Input("SpeechInput", typeof(SpeechToTextData), "OnSpeechInput");
+        #endregion
+
+        #region Outputs
+        [SerializeField]
+        private Output m_RecognizeLanguageOutput = new Output(typeof(LanguageData));
+        [SerializeField]
+        private Output m_SpeechOutput = new Output(typeof(TextToSpeechData));
+        [SerializeField]
+        private Output m_VoiceOutput = new Output(typeof(VoiceData));
+        #endregion
+
         #region Private Data
         private LanguageTranslation m_Translate = new LanguageTranslation();
 
@@ -51,14 +65,6 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         private Dropdown m_DropDownSourceLanguage = null;
         [SerializeField]
         private Dropdown m_DropDownTargetLanguage = null;
-        [SerializeField]
-        private Output m_RecognizeLanguageOutput = new Output(typeof(LanguageData));
-        [SerializeField]
-        private Input m_SpeechInput = new Input("SpeechInput", typeof(SpeechToTextData), "OnSpeechInput");
-        [SerializeField]
-        private Output m_SpeechOutput = new Output(typeof(TextToSpeechData));
-        [SerializeField]
-        private Output m_VoiceOutput = new Output(typeof(VoiceData));
         [SerializeField]
         private string m_DefaultDomainToUse = "conversational";
         [SerializeField]
@@ -120,6 +126,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         }
         #endregion
 
+        #region Event Handlers
         private void OnEnable()
         {
             Log.Status("TranslationWidget", "OnEnable");
@@ -169,66 +176,6 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             SpeechToTextData speech = data as SpeechToTextData;
             if ( speech != null && speech.Results.HasFinalResult() )
                Translate( speech.Results.Results[0].Alternatives[0].Transcript );
-        }
-
-        
-        private void Translate(string text)
-        {
-            if (!string.IsNullOrEmpty(text))
-            {
-                m_TranslateText = text;
-
-                if ( m_Input != null )
-                    m_Input.text = text;
-
-                new TranslateRequest( this, text );
-            }
-        }
-
-        private class TranslateRequest
-        {
-            private LanguageTranslationWidget m_Widget;
-            private string m_Text;
-
-            public TranslateRequest( LanguageTranslationWidget widget, string text )
-            {
-                m_Widget = widget;
-                m_Text = text;
-
-                if ( string.IsNullOrEmpty( m_Widget.SourceLanguage ) )
-                    m_Widget.m_Translate.Identify( m_Text, OnIdentified );
-                else
-                    m_Widget.m_Translate.GetTranslation( m_Text, m_Widget.SourceLanguage, m_Widget.TargetLanguage, OnGetTranslation );
-            }
-
-            private void OnIdentified( string language )
-            {
-                if (! string.IsNullOrEmpty( language ) )
-                {
-                    m_Widget.SourceLanguage = language;
-                    m_Widget.m_Translate.GetTranslation( m_Text, language, m_Widget.TargetLanguage, OnGetTranslation );
-                }
-                else
-                    Log.Error( "TranslateWidget", "Failed to identify language: {0}", m_Text );
-            }
-
-            private void OnGetTranslation( Translations translations )
-            {
-                if ( translations != null && translations.translations.Length > 0 )
-                    m_Widget.SetOutput( translations.translations[0].translation );
-            }
-        };
-
-
-        private void SetOutput(string text)
-        {
-            Log.Debug( "TranslateWidget", "SetOutput(): {0}", text );
-
-            if (m_Output != null)
-                m_Output.text = text;
-
-            if ( m_SpeechOutput.IsConnected )
-                m_SpeechOutput.SendData( new TextToSpeechData( text ) );
         }
 
         private void OnGetLanguages(Languages languages)
@@ -296,6 +243,66 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                 ResetSourceLanguageDropDown();
                 ResetVoiceForTargetLanguage();
             }
+        }
+        #endregion
+
+        #region Private Functions
+        private void Translate(string text)
+        {
+            if (!string.IsNullOrEmpty(text))
+            {
+                m_TranslateText = text;
+
+                if ( m_Input != null )
+                    m_Input.text = text;
+
+                new TranslateRequest( this, text );
+            }
+        }
+
+        private class TranslateRequest
+        {
+            private LanguageTranslationWidget m_Widget;
+            private string m_Text;
+
+            public TranslateRequest( LanguageTranslationWidget widget, string text )
+            {
+                m_Widget = widget;
+                m_Text = text;
+
+                if ( string.IsNullOrEmpty( m_Widget.SourceLanguage ) )
+                    m_Widget.m_Translate.Identify( m_Text, OnIdentified );
+                else
+                    m_Widget.m_Translate.GetTranslation( m_Text, m_Widget.SourceLanguage, m_Widget.TargetLanguage, OnGetTranslation );
+            }
+
+            private void OnIdentified( string language )
+            {
+                if (! string.IsNullOrEmpty( language ) )
+                {
+                    m_Widget.SourceLanguage = language;
+                    m_Widget.m_Translate.GetTranslation( m_Text, language, m_Widget.TargetLanguage, OnGetTranslation );
+                }
+                else
+                    Log.Error( "TranslateWidget", "Failed to identify language: {0}", m_Text );
+            }
+
+            private void OnGetTranslation( Translations translations )
+            {
+                if ( translations != null && translations.translations.Length > 0 )
+                    m_Widget.SetOutput( translations.translations[0].translation );
+            }
+        };
+
+        private void SetOutput(string text)
+        {
+            Log.Debug( "TranslateWidget", "SetOutput(): {0}", text );
+
+            if (m_Output != null)
+                m_Output.text = text;
+
+            if ( m_SpeechOutput.IsConnected )
+                m_SpeechOutput.SendData( new TextToSpeechData( text ) );
         }
 
         private void ResetSourceLanguageDropDown()
@@ -399,6 +406,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                     Log.Warning( "TranslateWidget", "Unsupported voice for language {0}", TargetLanguage );
             }
         }
+        #endregion
     }
 }
 

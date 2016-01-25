@@ -117,6 +117,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// Event toggle of top light avatar
             /// </summary>
             ON_AVATAR_TOP_LIGHT_TOGGLE,
+            /// <summary>
+            /// Event to wake up avatar
+            /// </summary>
+            ON_AVATAR_TO_WAKE_UP,
             #endregion
 
             #region Question
@@ -375,6 +379,22 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 			/// 
 			/// </summary>
 			ON_CLASSIFY_PERSONNEL,
+            /// <summary>
+            /// Event fired when a single tap occur
+            /// </summary>
+            ON_TAP_ONE,
+            /// /// <summary>
+            /// Event fired when a double tap occur
+            /// </summary>
+            ON_TAP_DOUBLE,
+            /// <summary>
+            /// Event fired when one finger fullscreen drag occur
+            /// </summary>
+            ON_DRAG_ONE_FINGER_FULLSCREEN,
+            /// <summary>
+            /// Event fired when two finger fullscreen drag occur
+            /// </summary>
+            ON_DRAG_TWO_FINGER_FULLSCREEN,
             #endregion
 
 			#region Map Interactions
@@ -390,7 +410,18 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 			/// Event fired when Double tap on Map
 			/// </summary>
 			ON_MAP_TAP_DOUBLE,
-			#endregion
+            #endregion
+
+            #region Update
+            /// <summary>
+            /// Event fire to confirm an update
+            /// </summary>
+            CONFIRM_UPDATE = 700,
+            /// <summary>
+            /// Event fire to dismiss the update 
+            /// </summary>
+            DISMISS_UPDATE,
+            #endregion
         }
 
         /// <summary>

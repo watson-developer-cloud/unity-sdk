@@ -37,7 +37,8 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             return "Touch";
         }
         #endregion
-        
+
+        #region Private Data
         [Serializable]
         private class TapEventMapping
         {
@@ -64,7 +65,9 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 
         [SerializeField]
         private List<FullScreenDragEventMapping> m_FullScreenDragMappings = new List<FullScreenDragEventMapping>();
+        #endregion
 
+        #region Event Handlers
         private void OnEnable()
         {
 			if (TouchEventManager.Instance == null) 
@@ -102,6 +105,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 				TouchEventManager.Instance.UnregisterDragEvent(mapping.m_DragLayerObject, mapping.m_Callback, mapping.m_NumberOfFinger, mapping.m_SortingLayer, isDragInside: mapping.m_IsDragInside);
             }
         }
+        #endregion
     }
 
 }

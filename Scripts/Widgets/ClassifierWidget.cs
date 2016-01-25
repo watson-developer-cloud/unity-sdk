@@ -32,7 +32,15 @@ namespace IBM.Watson.DeveloperCloud.Widgets
     /// </summary>
     public class ClassifierWidget : Widget
     {
-        private delegate void OnClassifierResult( ClassifyResult result );
+        #region Inputs
+        [SerializeField]
+        private Input m_ClassifyInput = new Input( "Classified", typeof(ClassifyResultData), "OnClassifyInput" );
+        #endregion
+
+        #region Outputs
+        [SerializeField]
+        private Output m_ClassifyOutput = new Output( typeof(ClassifyResultData) );
+        #endregion
 
         #region Widget interface
         /// <exclude />
@@ -43,6 +51,8 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         #endregion
 
         #region Private Data
+        private delegate void OnClassifierResult( ClassifyResult result );
+
         [Serializable]
         private class Mapping
         {
@@ -53,13 +63,9 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 
         [SerializeField]
         private List<Mapping> m_Mappings = new List<Mapping>();
-        [SerializeField]
-        private Input m_ClassifyInput = new Input( "Classified", typeof(ClassifyResultData), "OnClassifyInput" );
-        [SerializeField]
-        private Output m_ClassifyOutput = new Output( typeof(ClassifyResultData) );
         #endregion
 
-        #region Input Handler
+        #region Event Handlers
         private void OnClassifyInput( Data data )
         {
             ClassifyResultData input = (ClassifyResultData)data;

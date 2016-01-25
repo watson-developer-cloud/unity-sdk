@@ -34,19 +34,25 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 	[RequireComponent(typeof(AudioSource))]
     public class TextToSpeechWidget : Widget
     {
-        #region Private Data
-        TextToSpeech m_TTS = new TextToSpeech();
-
+        #region Inputs
         [SerializeField]
         private Input m_TextInput = new Input("Text", typeof(TextToSpeechData), "OnTextInput");
         [SerializeField]
         private Input m_VoiceInput = new Input( "Voice", typeof(VoiceData), "OnVoiceSelect" );
+        #endregion
+
+        #region Outputs
         [SerializeField]
         private Output m_Speaking = new Output(typeof(SpeakingStateData));
         [SerializeField]
         private Output m_DisableMic = new Output(typeof(DisableMicData));
         [SerializeField]
         private Output m_LevelOut = new Output(typeof(LevelData));
+        #endregion
+
+        #region Private Data
+        TextToSpeech m_TTS = new TextToSpeech();
+
         [SerializeField, Tooltip("How often to send level out data in seconds.")]
         private float m_LevelOutInterval = 0.05f;
         [SerializeField]
@@ -108,8 +114,9 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 			}
 		}
 
-		#endregion
+        #endregion
 
+        #region Event Handlers
         /// <summary>
         /// Button event handler.
         /// </summary>
@@ -124,6 +131,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             if (m_TextToSpeechButton != null)
                 m_TextToSpeechButton.interactable = false;
         }
+        #endregion
 
         #region Private Functions
         private void OnTextInput(Data data)

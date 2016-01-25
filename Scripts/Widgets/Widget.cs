@@ -59,6 +59,11 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         [Serializable]
         public class Input
         {
+            #region Private Data
+            [NonSerialized]
+            private List<Output>    m_Connections = new List<Output>();
+            #endregion
+
             #region Construction
             /// <summary>
             /// Constructs an input object for a Widget.
@@ -66,20 +71,24 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             /// <param name="name">The name of the input.</param>
             /// <param name="dataType">The type of data the input takes.</param>
             /// <param name="receiverFunction">The name of the function to invoke with the input. The input function must match
+            /// <param name="allowMany">If true, then allow more than one output to connect to this input.</param>
             /// the OnReceiveData callback.</param>
-            public Input(string name, Type dataType, string receiverFunction)
+            public Input(string name, Type dataType, string receiverFunction, bool allowMany = true)
             {
                 InputName = name;
                 DataType = dataType;
                 ReceiverFunction = receiverFunction;
+                AllowMany = allowMany;
             }
             #endregion
 
+            #region Object Interface
             /// <exclude />
             public override string ToString()
             {
                 return (Owner != null ? Owner.name : "null") + "." + InputName + " (" + DataType.Name + ")";
             }
+            #endregion
 
             #region Public Properties
             /// <summary>
@@ -93,7 +102,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             /// <summary>
             /// The name of this input.
             /// </summary>
-            public string InputName { get; set; }
+            public string InputName { get; private set; }
             /// <summary>
             /// The fully qualified name of this input.
             /// </summary>
@@ -101,7 +110,15 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             /// <summary>
             /// The type of data this input accepts.
             /// </summary>
-            public Type DataType { get; set; }
+            public Type DataType { get; private set; }
+            /// <summary>
+            /// If true, then more than one output may connect to this input.
+            /// </summary>
+            public bool AllowMany { get; private set; }
+            /// <summary>
+            /// The array of outputs connected to this input.
+            /// </summary>
+            public Output [] Connections { get { return m_Connections.ToArray(); } }
             /// <summary>
             /// The name of the data type.
             /// </summary>
@@ -109,14 +126,28 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             /// <summary>
             /// The name of the receiver function.
             /// </summary>
-            public string ReceiverFunction { get; set; }
+            public string ReceiverFunction { get; private set; }
             /// <summary>
             /// The delegate to the receiver function, this is set when Start() is called on this input.
             /// </summary>
-            public OnReceiveData DataReceiver { get; set; }
+            public OnReceiveData DataReceiver { get; private set; }
             #endregion
 
             #region Public Functions
+            public bool AddOutput( Output output )
+            {
+                if ( !AllowMany && m_Connections.Count > 0 )
+                    return false;
+                if ( m_Connections.Contains( output ) )
+                    return false;
+                m_Connections.Add( output );
+                return true;
+            }
+            public bool RemoveOutput( Output output )
+            {
+                return m_Connections.Remove( output );
+            }
+
             /// <summary>
             /// Start this Input.
             /// </summary>
@@ -159,28 +190,147 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         [Serializable]
         public class Output
         {
+            #region Public Types
+            [Serializable]
+            public class Connection
+            {
+                #region Private Data
+                [NonSerialized]
+                private Output m_Owner = null;
+                [SerializeField]
+                private GameObject m_TargetObject = null;
+                [SerializeField]
+                private string m_TargetConnection = null;
+                [NonSerialized]
+                private bool m_TargetInputResolved = false;
+                [NonSerialized]
+                private Input m_TargetInput = null;
+                #endregion
+
+                #region Public Properties
+                /// <summary>
+                /// This returns a reference to the target object.
+                /// </summary>
+                public GameObject TargetObject { get { return m_TargetObject; } set { m_TargetObject = value; m_TargetInputResolved = false; } }
+                /// <summary>
+                /// The name of the target connection on the target object.
+                /// </summary>
+                public string TargetConnection { get { return m_TargetConnection; } set { m_TargetConnection = value; m_TargetInputResolved = false; } }
+                /// <summary>
+                /// This returns a reference to the target input object.
+                /// </summary>
+                public Input TargetInput { get { return m_TargetInput; }
+                    set {
+                        if ( m_TargetInput != null )
+                            m_TargetInput.RemoveOutput( m_Owner );
+
+                        if ( value != null && value.AddOutput( m_Owner ) )
+                        {
+                            m_TargetInput = value;
+                            m_TargetObject = m_TargetInput.Owner.gameObject;
+                            m_TargetConnection = m_TargetInput.FullInputName;
+                        }
+                        else
+                        {
+                            m_TargetObject = null;
+                            m_TargetConnection = string.Empty;
+                        }
+                        m_TargetInputResolved = true;
+                    }
+                }
+                #endregion
+
+                #region Public Functions
+                public bool ResolveTargetInput()
+                {
+                    if (!m_TargetInputResolved)
+                    {
+                        m_TargetInputResolved = true;
+                        m_TargetInput = null;
+
+                        if (m_TargetObject == null)
+                            return false;
+
+                        string inputName = m_TargetConnection;
+                        string componentName = null;
+
+                        int seperator = inputName.IndexOf('/');
+                        if (seperator >= 0)
+                        {
+                            componentName = inputName.Substring(0, seperator);
+                            inputName = inputName.Substring(seperator + 1);
+                        }
+
+                        Widget[] widgets = m_TargetObject.GetComponents<Widget>();
+                        foreach (var widget in widgets)
+                        {
+                            if (!string.IsNullOrEmpty(componentName)
+                                && widget.WidgetName != componentName)
+                                continue;   // widget is the wrong type, the target is not here..
+
+                            foreach (Input input in widget.Inputs)
+                            {
+                                if (!string.IsNullOrEmpty(inputName)
+                                    && input.InputName != inputName)
+                                    continue;
+                                if (input.DataType != m_Owner.DataType)
+                                    continue;
+                                if (! m_TargetInput.AddOutput( m_Owner ) ) 
+                                    continue;
+
+                                m_TargetInput = input;
+                                return true;
+                            }
+                        }
+
+                        Log.Error("Widget", "Failed to resolve target {0} for object {1}.", m_TargetConnection, m_TargetObject.name);
+                        return false;
+                    }
+
+                    return m_TargetInput != null;
+                }
+
+                public void Start( Output owner )
+                {
+                    m_Owner = owner;
+                }
+                #endregion
+            };
+            #endregion
+
             #region Constructor
             /// <summary>
             /// The constructor for an widget output object.
             /// </summary>
             /// <param name="dataType">The type of data this widget outputs.</param>
-            public Output(Type dataType)
+            /// <param name="allowMany">If true, then this output will connect to more than one input.</param>
+            public Output(Type dataType, bool allowMany = false )
             {
                 DataType = dataType;
+                AllowMany = allowMany;
             }
             #endregion
 
+            #region Object Interface
             /// <exclude />
             public override string ToString()
             {
                 return (Owner != null ? Owner.name : "null") + " (" + DataType.Name + ")";
             }
+            #endregion
 
             #region Public Properties
             /// <summary>
             /// Returns true if this output is connected to a input.
             /// </summary>
-            public bool IsConnected { get { return ResolveTargetInput(); } }
+            public bool IsConnected { get {
+                    foreach( var c in m_Connections )
+                        if ( c.ResolveTargetInput() )
+                            return true;
+                    return false;
+                }
+            }
+            public Connection [] Connections { get { return m_Connections.ToArray(); } }
             /// <summary>
             /// Returns a reference to the Widget owner, this is set when the Widget initializes.
             /// </summary>
@@ -190,32 +340,9 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             /// </summary>
             public Type DataType { get; set; }
             /// <summary>
-            /// This returns a reference to the target input object.
+            /// If true, allows more than one input to be connected to this output.
             /// </summary>
-            public Input TargetInput { get { return m_TargetInput; }
-                set {
-                    m_TargetInput = value;
-                    if ( m_TargetInput != null )
-                    {
-                        m_TargetObject = m_TargetInput.Owner.gameObject;
-                        m_TargetConnection = m_TargetInput.FullInputName;
-                    }
-                    else
-                    {
-                        m_TargetObject = null;
-                        m_TargetConnection = string.Empty;
-                    }
-                    m_TargetInputResolved = true;
-                }
-            }
-            /// <summary>
-            /// This returns a reference to the target object.
-            /// </summary>
-            public GameObject TargetObject { get { return m_TargetObject; } set { m_TargetObject = value; m_TargetInputResolved = false; } }
-            /// <summary>
-            /// The name of the target connection on the target object.
-            /// </summary>
-            public string TargetConnection { get { return m_TargetConnection; } set { m_TargetConnection = value; m_TargetInputResolved = false; } }
+            public bool AllowMany { get; private set; } 
             #endregion
 
             #region Public Functions
@@ -226,9 +353,8 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             public virtual void Start(Widget owner)
             {
                 Owner = owner;
-
-                m_TargetInputResolved = false;
-                m_TargetInput = null;
+                foreach( var c in m_Connections )
+                    c.Start(this);
             }
             /// <summary>
             /// Sends a data object to the target of this output.
@@ -237,82 +363,77 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             /// <returns>Returns true if the data was sent to another widget.</returns>
             public virtual bool SendData(Data data)
             {
-                if (ResolveTargetInput())
+                bool sent = false;
+                foreach( var c in m_Connections )
                 {
-                    try
+                    if (c.ResolveTargetInput())
                     {
-                        m_TargetInput.ReceiveData(data);
-                        return true;
-                    }
-                    catch (Exception e)
-                    {
-                        Log.Error("Widget", "Exception sending data {0} to input {1} on object {2}: {3}",
-                            data.Name, m_TargetInput.InputName, m_TargetObject.name, e.ToString());
-                    }
-                }
-
-                return false;
-            }
-            #endregion
-
-            #region Private Functions
-            private bool ResolveTargetInput()
-            {
-                if (!m_TargetInputResolved)
-                {
-                    m_TargetInputResolved = true;
-                    m_TargetInput = null;
-
-                    // if we have no target object, then default to our own game object..
-                    if (m_TargetObject == null)
-                        return false;
-
-                    string inputName = m_TargetConnection;
-                    string componentName = null;
-
-                    int seperator = inputName.IndexOf('/');
-                    if (seperator >= 0)
-                    {
-                        componentName = inputName.Substring(0, seperator);
-                        inputName = inputName.Substring(seperator + 1);
-                    }
-
-                    Widget[] widgets = m_TargetObject.GetComponents<Widget>();
-                    foreach (var widget in widgets)
-                    {
-                        if (!string.IsNullOrEmpty(componentName)
-                            && widget.WidgetName != componentName)
-                            continue;   // widget is the wrong type, the target is not here..
-
-                        foreach (Input input in widget.Inputs)
+                        try {
+                            c.TargetInput.ReceiveData(data);
+                            sent = true;
+                        }
+                        catch (Exception e)
                         {
-                            if (!string.IsNullOrEmpty(inputName)
-                                && input.InputName != inputName)
-                                continue;
-                            if (input.DataType != this.DataType)
-                                continue;
-
-                            m_TargetInput = input;
-                            return true;
+                            Log.Error("Widget", "Exception sending data {0} to input {1} on object {2}: {3}",
+                                data.Name, c.TargetInput.InputName, c.TargetObject.name, e.ToString());
                         }
                     }
-
-                    Log.Error("Widget", "Failed to resolve target {0} for object {1}.", m_TargetConnection, m_TargetObject.name);
-                    return false;
                 }
+                return sent;
+            }
 
-                return m_TargetInput != null;
+            /// <summary>
+            /// Add a connection to this output, returns false if the connection can't be made.
+            /// </summary>
+            /// <param name="input">A reference to the connection to establish.</param>
+            /// <returns>Returns true on success.</returns>
+            public bool AddConnection( Input input )
+            {
+                if (! AllowMany && m_Connections.Count > 0 )
+                    return false;       // already connected.
+                if ( input.DataType != DataType )
+                    return false;       // wrong data type
+
+                Connection c = new Connection();
+                c.Start(this);
+                c.TargetInput = input;
+                m_Connections.Add( c );
+
+                return true;
+            }
+
+            /// <summary>
+            /// Add a connect to a given object and optional target input. 
+            /// </summary>
+            /// <param name="targetObject">The object to target.</param>
+            /// <param name="targetConnection">A optional argument of the target input on the object.</param>
+            /// <returns>Returns true if a Connection object was added.</returns>
+            public bool AddConnection( GameObject targetObject, string targetConnection = null )
+            {
+                if (! AllowMany && m_Connections.Count > 0 )
+                    return false;       // already connected.
+                
+                Connection c = new Connection();
+                c.Start(this);
+                c.TargetObject = targetObject;
+                if ( targetConnection != null )
+                    c.TargetConnection = targetConnection;
+                if (! c.ResolveTargetInput() )
+                    return false;       // couldn't resolve a input 
+                m_Connections.Add( c );
+
+                return true;
+            }
+
+            public bool RemoveConnection( Connection c )
+            {
+                return m_Connections.Remove( c );
             }
             #endregion
 
             #region Private Data
             [SerializeField]
-            private GameObject m_TargetObject = null;
-            [SerializeField]
-            private string m_TargetConnection = null;
-
-            private bool m_TargetInputResolved = false;
-            private Input m_TargetInput = null;
+            List<Connection> m_Connections = new List<Connection>();
             #endregion
         };
         #endregion
@@ -382,16 +503,12 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 
                     foreach( var output in widget.Outputs )
                     {
-                        if ( output.IsConnected )
-                            continue;     // this output is already connected, so skip..
-
                         foreach( var input in m_Inputs )
                         {
                             if ( input.DataType == output.DataType )
                             {
-                                Log.Status( "Widget", "Auto-Connecting {0} -> {1}", output.ToString(), input.ToString() ); 
-                                output.TargetInput = input;
-                                break;
+                                if ( output.AddConnection( input ) )
+                                    Log.Status( "Widget", "Auto-Connecting {0} -> {1}", output.ToString(), input.ToString() ); 
                             }
                         }
                     }

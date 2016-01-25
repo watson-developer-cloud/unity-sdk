@@ -156,6 +156,10 @@ namespace IBM.Watson.DeveloperCloud.Connection
 
             #region Public Properties
             /// <summary>
+            /// Custom timeout for this Request. This timeout is used if this timeout is larger than the value in the Config class.
+            /// </summary>
+            public float Timeout { get; set; }
+            /// <summary>
             /// If true, then request will be cancelled.
             /// </summary>
             public bool Cancel { get; set; }
@@ -387,7 +391,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
 
                 Response resp = new Response();
 
-                float startTime = Time.time;
+                DateTime startTime = DateTime.Now;
                 if (! req.Delete )
                 {
                     WWW www = null;
@@ -428,11 +432,12 @@ namespace IBM.Watson.DeveloperCloud.Connection
 #endif
 
                     // wait for the request to complete.
+                    float timeout = Mathf.Max( Config.Instance.TimeOut, req.Timeout );
                     while(! www.isDone )
                     {
                         if ( req.Cancel )
                             break;
-                        if ( Time.time > (startTime + Config.Instance.TimeOut) )
+                        if ( (DateTime.Now - startTime).TotalSeconds > timeout )
                             break;
                         if ( req.OnUploadProgress != null )
                             req.OnUploadProgress( www.uploadProgress );
@@ -484,7 +489,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
                             url, string.IsNullOrEmpty( www.error ) ? "Timeout" : www.error );
                     }
 
-                    resp.ElapsedTime = Time.time - startTime;
+                    resp.ElapsedTime = (float)(DateTime.Now - startTime).TotalSeconds;
                     if ( req.OnResponse != null )
                         req.OnResponse( req, resp );
 
@@ -493,13 +498,15 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 else
                 {
 #if UNITY_EDITOR
+                    float timeout = Mathf.Max( Config.Instance.TimeOut, req.Timeout );
+
                     DeleteRequest deleteReq = new DeleteRequest();
                     deleteReq.Send( url, req.Headers );
                     while(! deleteReq.IsComplete )
                     {
                         if ( req.Cancel )
                             break;
-                        if ( Time.time > (startTime + Config.Instance.TimeOut) )
+                        if ( (DateTime.Now - startTime).TotalSeconds > timeout )
                             break;
                         yield return null;
                     }
@@ -512,7 +519,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
                     Log.Warning( "RESTConnector", "DELETE method is supported in the editor only." );
                     resp.Success = false;
 #endif
-                    resp.ElapsedTime = Time.time - startTime;
+                    resp.ElapsedTime = (float)(DateTime.Now - startTime).TotalSeconds;
                     if ( req.OnResponse != null )
                         req.OnResponse( req, resp );
                 }

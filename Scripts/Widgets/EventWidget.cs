@@ -37,6 +37,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         }
         #endregion
 
+        #region Private Data
         [Serializable]
         private class Mapping
         {
@@ -46,7 +47,9 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 
         [SerializeField]
         private List<Mapping> m_Mappings = new List<Mapping>();
+        #endregion
 
+        #region Event Handlers
         private void OnEnable()
         {
             foreach (var mapping in m_Mappings)
@@ -62,6 +65,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                 EventManager.Instance.UnregisterEventReceiver(mapping.m_Event, mapping.m_Callback.ResolveDelegate() as EventManager.OnReceiveEvent);
             }
         }
+        #endregion
     }
 
 }
