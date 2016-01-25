@@ -244,13 +244,14 @@ namespace IBM.Watson.DeveloperCloud.Connection
         /// </summary>
         /// <param name="serviceID">The ID of the service.</param>
         /// <param name="function">The name of the function.</param>
+        /// <param name="useCache">If true, then the connections will use a static cache.</param>
         /// <returns>Returns a RESTConnector object or null on error.</returns>
-        public static RESTConnector GetConnector( string serviceID, string function )
+        public static RESTConnector GetConnector( string serviceID, string function, bool useCache = true )
         {
             RESTConnector connector = null;
 
             string connectorID = serviceID + function;
-            if ( sm_Connectors.TryGetValue( connectorID, out connector ) )
+            if ( useCache && sm_Connectors.TryGetValue( connectorID, out connector ) )
                 return connector;
 
             Config cfg = Config.Instance;
@@ -283,7 +284,8 @@ namespace IBM.Watson.DeveloperCloud.Connection
             connector.UsingGateway = false;
             connector.URL = cred.m_URL + function;
             connector.Authentication = new Credentials( cred.m_User, cred.m_Password );
-            sm_Connectors[ connectorID ] = connector;
+            if ( useCache )
+                sm_Connectors[ connectorID ] = connector;
 
             return connector;
         }
