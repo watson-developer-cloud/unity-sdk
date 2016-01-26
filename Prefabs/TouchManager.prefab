@@ -18,6 +18,7 @@ GameObject:
   - 114: {fileID: 11461230}
   - 114: {fileID: 11479102}
   - 114: {fileID: 11417566}
+  - 114: {fileID: 11495534}
   m_Layer: 0
   m_Name: TouchManager
   m_TagString: Untagged
@@ -170,6 +171,7 @@ MonoBehaviour:
   m_TwoFingerMoveGesture: {fileID: 11457544}
   m_PressGesture: {fileID: 11469728}
   m_ReleaseGesture: {fileID: 11459306}
+  m_LongPressGesture: {fileID: 11495534}
 --- !u!114 &11455964
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -347,7 +349,31 @@ MonoBehaviour:
   useSendMessage: 0
   sendMessageEvents: 60
   sendMessageTarget: {fileID: 0}
-  layers: []
+  layers:
+  - {fileID: 0}
+--- !u!114 &11495534
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 109220}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65c8d97aff62a473e888feae3bec54cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  advancedProps: 0
+  minTouches: 1
+  maxTouches: 1
+  combineTouches: 0
+  combineTouchesInterval: 0.3
+  useSendMessage: 0
+  sendStateChangeMessages: 0
+  sendMessageTarget: {fileID: 0}
+  requireGestureToFail: {fileID: 0}
+  friendlyGestures: []
+  timeToPress: 1
+  distanceLimit: 1
 --- !u!223 &22308338
 Canvas:
   m_ObjectHideFlags: 1
@@ -392,7 +418,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 0}
       propertyPath: layers.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: friendlyGestures.Array.size
@@ -404,7 +430,7 @@ Prefab:
       objectReference: {fileID: 11437114}
     - target: {fileID: 0}
       propertyPath: maxTouches
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_PressGesture
@@ -420,7 +446,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: distanceLimit
-      value: .300000012
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: timeLimit
@@ -437,6 +463,14 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: friendlyGestures.Array.data[0]
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_LongPressGesture
+      value: 
+      objectReference: {fileID: 11495534}
+    - target: {fileID: 0}
+      propertyPath: minTouches
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
