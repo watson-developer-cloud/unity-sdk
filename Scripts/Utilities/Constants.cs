@@ -121,6 +121,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// Event to wake up avatar
             /// </summary>
             ON_AVATAR_TO_WAKE_UP,
+            /// <summary>
+            /// Tap on avatar on question flow mode
+            /// </summary>
+            ON_AVATAR_TAP_SINGLE,
             #endregion
 
             #region Question
@@ -172,6 +176,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 			/// Event sent containing personal information.
 			/// </summary>
 			ON_QUESTION_PERSONAL_INFO,
+            /// <summary>
+            /// Event fired when question flow to start
+            /// </summary>
+            QUESTION_FLOW_TO_START,
             #endregion
 
             #region Animation / Camera
@@ -395,6 +403,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// Event fired when two finger fullscreen drag occur
             /// </summary>
             ON_DRAG_TWO_FINGER_FULLSCREEN,
+            /// <summary>
+            /// Event fired when there is long press with one finger
+            /// </summary>
+            ON_LONG_PRESS_ONE_FINGER,
             #endregion
 
 			#region Map Interactions
@@ -422,6 +434,18 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// </summary>
             DISMISS_UPDATE,
             #endregion
+
+            #region Authorizations
+            /// <summary>
+            /// Event fired as soon as user Logged in 
+            /// </summary>
+            USER_LOGGED_IN = 800,
+            /// <summary>
+            /// Event fired as soon as user Logged out 
+            /// </summary>
+            USER_LOGGED_OUT
+            #endregion
+
         }
 
         /// <summary>

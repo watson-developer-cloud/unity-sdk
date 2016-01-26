@@ -16,7 +16,7 @@
 */
 
 // uncomment to enable debugging
-//#define ENABLE_DEBUGGING
+#define ENABLE_DEBUGGING
 
 using UnityEngine;
 using System.Collections.Generic;
@@ -224,6 +224,8 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         private PressGesture m_PressGesture;
         [SerializeField]
         private ReleaseGesture m_ReleaseGesture;
+        [SerializeField]
+        private LongPressGesture m_LongPressGesture;
 
         #endregion
 
@@ -263,6 +265,9 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                 m_PressGesture.Pressed += PressGesturePressed;
             if ( m_ReleaseGesture != null )
                 m_ReleaseGesture.Released += ReleaseGestureReleased;
+            if ( m_LongPressGesture != null )
+                m_LongPressGesture.LongPressed += LongPressGesturePressed;
+            
         }
 
         private void OnDisable()
@@ -281,6 +286,8 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                 m_PressGesture.Pressed -= PressGesturePressed;
             if ( m_ReleaseGesture != null )
                 m_ReleaseGesture.Released -= ReleaseGestureReleased;
+            if ( m_LongPressGesture != null )
+                m_LongPressGesture.LongPressed -= LongPressGesturePressed;
         }
 
 		/// <summary>
@@ -814,10 +821,27 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         
         #endregion
 
+        #region Long Press Gesture Events
+
+        private void LongPressGesturePressed(object sender, System.EventArgs e)
+        {
+            #if ENABLE_DEBUGGING
+            Log.Debug("TouchEventManager", "LongPressGesturePressed: {0} - {1}", m_LongPressGesture.ScreenPosition, m_LongPressGesture.NumTouches);
+            #endif
+
+            EventManager.Instance.SendEvent(Constants.Event.ON_LONG_PRESS_ONE_FINGER, m_LongPressGesture);
+        }
+
+        #endregion
+
         #region ReleaseGesture Events - Call - There is no registration is sends automatically the release event
         
         private void ReleaseGestureReleased(object sender, System.EventArgs e)
         {
+            #if ENABLE_DEBUGGING
+            Log.Debug("TouchEventManager", "ReleaseGestureReleased: {0} - {1}", m_ReleaseGesture.ScreenPosition, m_ReleaseGesture.NumTouches);
+            #endif
+
             EventManager.Instance.SendEvent(Constants.Event.ON_TOUCH_RELEASED_FULLSCREEN, m_ReleaseGesture);
         }
         
