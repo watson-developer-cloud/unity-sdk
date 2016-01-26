@@ -19,6 +19,7 @@
 using IBM.Watson.DeveloperCloud.DataTypes;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -50,6 +51,8 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         #region Private Data
         private bool m_Active = false;
         private bool m_Disabled = false;
+        private bool m_Failure = false;
+        private DateTime m_LastFailure = DateTime.Now;
 
         [SerializeField]
         private bool m_ActivateOnStart = true;
@@ -71,6 +74,11 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         private int m_RecordingRoutine = 0;                      // ID of our co-routine when recording, 0 if not recording currently.
         private AudioClip m_Recording = null;
         private List<AudioClip> m_Playback = new List<AudioClip>();
+        #endregion
+
+        #region Constants
+        // how often to retry the open the microphone on failure
+        private const int RETRY_INTERVAL = 10000;       
         #endregion
 
         #region Public Properties
@@ -115,6 +123,25 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             }
         }
         /// <summary>
+        /// This is set to true when the microhphone fails, the update will continue to try to start
+        /// the microphone so long as it's active.
+        /// </summary>
+        public bool Failure
+        {
+            get { return m_Failure; }
+            private set
+            {
+                if ( m_Failure != value )
+                {
+                    m_Failure = value;
+                    if ( m_Failure )
+                        m_LastFailure = DateTime.Now;
+                }
+            }
+        }
+
+
+        /// <summary>
         /// Button handler for toggling the active state.
         /// </summary>
         public void OnToggleActive()
@@ -130,7 +157,6 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         public void ActivateMicrophone()
         {
             Active = true;
-
         }
 
         /// <summary>
@@ -158,6 +184,15 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             base.Start();
             if (m_ActivateOnStart)
                 Active = true;
+        }
+        private void Update()
+        {
+            if ( Failure && Active && !Disable 
+                && (DateTime.Now - m_LastFailure).TotalMilliseconds > RETRY_INTERVAL )
+            {
+                // try to restart the recording..
+                StartRecording();
+            }
         }
         private void OnDisableInput(Data data)
         {
@@ -222,6 +257,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 
         private IEnumerator RecordingHandler()
         {
+            Failure = false;
 #if UNITY_WEBPLAYER
             yield return Application.RequestUserAuthorization( UserAuthorization.Microphone );
 #endif
@@ -230,7 +266,8 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 
             if (m_Recording == null)
             {
-                Log.Error("MicrophoneWidget", "Failed to start recording.");
+                Failure = true;
+                StopRecording();
                 yield break;
             }
 
@@ -246,6 +283,15 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             while (m_RecordingRoutine != 0 && m_Recording != null)
             {
                 int writePos = Microphone.GetPosition(m_MicrophoneID);
+                if ( writePos > m_Recording.samples )
+                {
+                    Log.Error( "MicrophoneWidget", "Microphone disconnected.");
+
+                    Failure = true;
+                    StopRecording();
+                    yield break;
+                }
+
                 if (bOutputAudio)
                 {
                     if ((bFirstBlock && writePos >= midPoint)
