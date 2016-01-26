@@ -180,6 +180,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// Event fired when question flow to start
             /// </summary>
             QUESTION_FLOW_TO_START,
+            /// <summary>
+            /// Event fired when question flow to stop
+            /// </summary>
+            QUESTION_FLOW_TO_STOP,
             #endregion
 
             #region Animation / Camera

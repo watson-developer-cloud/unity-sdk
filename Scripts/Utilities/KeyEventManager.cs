@@ -141,7 +141,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                     }
 
                     if(Input.anyKeyDown && !string.IsNullOrEmpty(Input.inputString)){
-                        EventManager.Instance.SendEvent(Constants.Event.ON_KEYBOARD_ANYKEY_DOWN);
+                        EventManager.Instance.SendEvent(Constants.Event.ON_KEYBOARD_ANYKEY_DOWN, Input.inputString);
 					}
                 }
 
