@@ -125,6 +125,14 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// Tap on avatar on question flow mode
             /// </summary>
             ON_AVATAR_TAP_SINGLE,
+            /// <summary>
+            /// Event fired when there is long press with one finger on Avatar object
+            /// </summary>
+            ON_AVATAR_LONG_PRESS_ONE_FINGER,
+            /// <summary>
+            /// Drag on avatar on question flow mode
+            /// </summary>
+            ON_AVATAR_DRAG_ONE_FINGER,
             #endregion
 
             #region Question
