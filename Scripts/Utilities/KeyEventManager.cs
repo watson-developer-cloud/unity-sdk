@@ -71,6 +71,18 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         public static KeyEventManager Instance { get { return Singleton<KeyEventManager>.Instance; } }
         #endregion
 
+        #region OnEnable / OnDisable - Initial keys to capture
+        private void OnEnable()
+        {
+            KeyEventManager.Instance.RegisterKeyEvent(KeyCode.Tab, KeyModifiers.NONE, Constants.Event.ON_KEYBOARD_TAB );
+        }
+
+        private void OnDisable()
+        {
+            KeyEventManager.Instance.UnregisterKeyEvent(KeyCode.Tab, KeyModifiers.NONE, Constants.Event.ON_KEYBOARD_TAB );
+        }
+        #endregion
+
         #region Public Functions
         /// <summary>
         /// Register a key event.

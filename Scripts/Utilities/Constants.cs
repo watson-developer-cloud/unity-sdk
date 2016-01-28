@@ -419,6 +419,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// Event fired when there is long press with one finger
             /// </summary>
             ON_LONG_PRESS_ONE_FINGER,
+            /// <summary>
+            /// Event fired when user hit Tab key from keyboard
+            /// </summary>
+            ON_KEYBOARD_TAB,
             #endregion
 
 			#region Map Interactions

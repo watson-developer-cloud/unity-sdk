@@ -197,6 +197,9 @@ namespace IBM.Watson.DeveloperCloud.Debug
         #region Event Handlers
         private void OnDebugMessage( object [] args )
         {
+            if (!AppController.IsUserLoggedIn)
+                return;
+            
             if ( args != null && args.Length > 0 )
             {
                 if ( args[0] is string )
@@ -210,11 +213,17 @@ namespace IBM.Watson.DeveloperCloud.Debug
 
         private void OnToggleActive( object [] args )
         {
+            if (!AppController.IsUserLoggedIn)
+                return;
+            
             Active = !Active;
         }
 
         private void OnBeginEdit( object [] args )
         {
+            if (!AppController.IsUserLoggedIn)
+                return;
+            
             if (! Active )
                 Active = true;
 
@@ -233,6 +242,9 @@ namespace IBM.Watson.DeveloperCloud.Debug
         /// </summary>
         public void OnEndEdit()
         {
+            if (!AppController.IsUserLoggedIn)
+                return;
+            
             if ( m_CommandInput != null )
             {
                 EventManager.Instance.SendEvent( Constants.Event.ON_DEBUG_COMMAND, m_CommandInput.text );
