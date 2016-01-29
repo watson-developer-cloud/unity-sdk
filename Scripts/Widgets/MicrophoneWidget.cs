@@ -283,7 +283,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             while (m_RecordingRoutine != 0 && m_Recording != null)
             {
                 int writePos = Microphone.GetPosition(m_MicrophoneID);
-                if ( writePos > m_Recording.samples )
+                if ( writePos > m_Recording.samples || !Microphone.IsRecording(m_MicrophoneID) )
                 {
                     Log.Error( "MicrophoneWidget", "Microphone disconnected.");
 
