@@ -459,8 +459,27 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// <summary>
             /// Event fired as soon as user Logged out 
             /// </summary>
-            USER_LOGGED_OUT
+            USER_LOGGED_OUT,
             #endregion
+
+			#region Feature Visualization
+			/// <summary>
+			/// Event fired when tapping question in feature visulaztion.
+			/// </summary>
+			FEATURE_VISUALIZATION_TAP_QUESTION,
+			/// <summary>
+			/// Event fired when tapping answer in feature visulaztion.
+			/// </summary>
+			FEATURE_VISUALIZATION_TAP_ANSWER,
+			/// <summary>
+			/// Event fired when tapping feature in feature visulaztion
+			/// </summary>
+			FEATURE_VISUALIZATION_TAP_FEATURE,
+			/// <summary>
+			/// Event fired when tapping feature render texture
+			/// </summary>
+			FEATURE_VISUALIZATION_TAP_RENDERTEXTURE
+			#endregion
 
         }
 

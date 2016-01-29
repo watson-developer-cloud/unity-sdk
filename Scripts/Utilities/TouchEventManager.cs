@@ -16,7 +16,7 @@
 */
 
 // uncomment to enable debugging
-#define ENABLE_DEBUGGING
+//#define ENABLE_DEBUGGING
 
 using UnityEngine;
 using System.Collections.Generic;
