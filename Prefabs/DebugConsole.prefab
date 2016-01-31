@@ -304,9 +304,6 @@ MonoBehaviour:
   - m_Key: 96
     m_Modifiers: 0
     m_Event: 1
-  - m_Key: 13
-    m_Modifiers: 0
-    m_Event: 2
 --- !u!114 &11477586
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -659,7 +656,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 0}
       propertyPath: m_Mappings.Array.size
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ReferenceResolution.x

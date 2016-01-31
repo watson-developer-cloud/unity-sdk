@@ -111,12 +111,14 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 
         void OnEnable(){
             EventManager.Instance.RegisterEventReceiver (Constants.Event.USER_LOGGED_IN, OnUserLoggedIn);           
-            EventManager.Instance.RegisterEventReceiver (Constants.Event.USER_LOGGED_OUT, OnUserLoggedOut);                       
+            EventManager.Instance.RegisterEventReceiver (Constants.Event.USER_LOGGED_OUT, OnUserLoggedOut);
+            EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_VIRTUAL_KEYBOARD_TOGGLE, ShowVirtualKeyboard);
         }
 
         void OnDisable(){
             EventManager.Instance.UnregisterEventReceiver (Constants.Event.USER_LOGGED_IN, OnUserLoggedIn);
             EventManager.Instance.UnregisterEventReceiver (Constants.Event.USER_LOGGED_OUT, OnUserLoggedOut);
+            EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_VIRTUAL_KEYBOARD_TOGGLE, ShowVirtualKeyboard);
         }
 
         void OnUserLoggedIn(System.Object[] args = null)

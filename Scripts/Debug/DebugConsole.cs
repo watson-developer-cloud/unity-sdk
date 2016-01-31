@@ -166,6 +166,7 @@ namespace IBM.Watson.DeveloperCloud.Debug
             EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_DEBUG_MESSAGE, OnDebugMessage);
             EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_DEBUG_TOGGLE, OnToggleActive);
             EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_DEBUG_BEGIN_COMMAND, OnBeginEdit);
+            EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_KEYBOARD_RETURN, OnKeyboardReturn);
         }
 
         private void OnDisable()
@@ -173,6 +174,7 @@ namespace IBM.Watson.DeveloperCloud.Debug
             EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_DEBUG_MESSAGE, OnDebugMessage);
             EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_DEBUG_TOGGLE, OnToggleActive);
             EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_DEBUG_BEGIN_COMMAND, OnBeginEdit);
+            EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_KEYBOARD_RETURN, OnKeyboardReturn);
         }
 
         private void Update()
@@ -195,6 +197,12 @@ namespace IBM.Watson.DeveloperCloud.Debug
         }
 
         #region Event Handlers
+
+        private void OnKeyboardReturn(object[] args)
+        {
+            EventManager.Instance.SendEvent(Constants.Event.ON_DEBUG_BEGIN_COMMAND);
+        }
+
         private void OnDebugMessage( object [] args )
         {
             if (!AppController.IsUserLoggedIn)

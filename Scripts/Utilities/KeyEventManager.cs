@@ -75,11 +75,13 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         private void OnEnable()
         {
             KeyEventManager.Instance.RegisterKeyEvent(KeyCode.Tab, KeyModifiers.NONE, Constants.Event.ON_KEYBOARD_TAB );
+            KeyEventManager.Instance.RegisterKeyEvent(KeyCode.Return, KeyModifiers.NONE, Constants.Event.ON_KEYBOARD_RETURN);
         }
 
         private void OnDisable()
         {
             KeyEventManager.Instance.UnregisterKeyEvent(KeyCode.Tab, KeyModifiers.NONE, Constants.Event.ON_KEYBOARD_TAB );
+            KeyEventManager.Instance.UnregisterKeyEvent(KeyCode.Return, KeyModifiers.NONE, Constants.Event.ON_KEYBOARD_RETURN);
         }
         #endregion
 

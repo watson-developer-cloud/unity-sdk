@@ -423,13 +423,17 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// Event fired when user hit Tab key from keyboard
             /// </summary>
             ON_KEYBOARD_TAB,
+            /// <summary>
+            /// Event fired when user hit Return key from keyboard
+            /// </summary>
+            ON_KEYBOARD_RETURN,
             #endregion
 
-			#region Map Interactions
-			/// <summary>
-			/// Event fired when one finger dragging on Map
-			/// </summary>
-			ON_MAP_DRAG_ONE_FINGER = 600,
+            #region Map Interactions
+            /// <summary>
+            /// Event fired when one finger dragging on Map
+            /// </summary>
+            ON_MAP_DRAG_ONE_FINGER = 600,
 			/// <summary>
 			/// Event fired when one finger Tap on Map
 			/// </summary>
