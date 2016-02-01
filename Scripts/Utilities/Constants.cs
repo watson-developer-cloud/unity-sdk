@@ -133,6 +133,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// Drag on avatar on question flow mode
             /// </summary>
             ON_AVATAR_DRAG_ONE_FINGER,
+            /// <summary>
+            /// Event to move Avatar move down away
+            /// </summary>
+            ON_AVATAR_MOVE_DOWN_AWAY,
             #endregion
 
             #region Question
@@ -192,6 +196,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// Event fired when question flow to stop
             /// </summary>
             QUESTION_FLOW_TO_STOP,
+            /// <summary>
+            /// Event to immerse features
+            /// </summary>
+            ON_QUESTION_IMMERSE_FEATURES,
             #endregion
 
             #region Animation / Camera
