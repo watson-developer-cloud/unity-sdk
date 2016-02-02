@@ -490,7 +490,11 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 			/// <summary>
 			/// Event fired when tapping feature render texture
 			/// </summary>
-			FEATURE_VISUALIZATION_TAP_RENDERTEXTURE
+			FEATURE_VISUALIZATION_TAP_RENDERTEXTURE,
+			/// <summary>
+			/// Event fired when tapping feature header from the evidence facet
+			/// </summary>
+			FEATURE_VISUALIZATION_SHOW_FEATURE_VISUALIZATION
 			#endregion
 
         }
