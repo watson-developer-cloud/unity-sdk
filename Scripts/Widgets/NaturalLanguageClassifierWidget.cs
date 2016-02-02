@@ -176,8 +176,12 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                 }
                 else
                 {
+                    Log.Debug( "NlcWidget", "Text confidence {0} < {1} (Min word confidence)", textConfidence, m_MinWordConfidence );
                     if (textConfidence > m_IgnoreWordConfidence)
+                    {
+                        Log.Debug( "NlcWidget", "Text confidence {0} > {1} (Ignore word confidence)", textConfidence, m_IgnoreWordConfidence );
                         EventManager.Instance.SendEvent(Constants.Event.ON_CLASSIFY_FAILURE, result);
+                    }
                 }
             }
         }

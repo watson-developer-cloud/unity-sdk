@@ -508,15 +508,41 @@ namespace IBM.Watson.DeveloperCloud.Services.v1
                 m_Service = service;
                 m_Callback = callback;
 
-                if (! m_Service.GetClassifiers( OnCheckService ) )
+                if (! m_Service.GetClassifiers( OnCheckServices ) )
                     m_Callback( SERVICE_ID, false );
             }
 
-            private void OnCheckService( Classifiers classifiers )
+            private void OnCheckServices( Classifiers classifiers )
             {
-                if ( m_Callback != null ) 
-                    m_Callback( SERVICE_ID, classifiers != null );
+                if ( m_Callback != null )
+                {
+                    if ( classifiers.classifiers.Length > 0 )
+                    {
+                        // check the status of one classifier, if it's listed as "Unavailable" then fail 
+                        if (! m_Service.GetClassifier( classifiers.classifiers[0].classifier_id, OnCheckService ) )
+                            m_Callback( SERVICE_ID, false );
+                    }
+                    else
+                        m_Callback( SERVICE_ID, true );     // no classifiers to check, just return success then..
+                }
+                else
+                    m_Callback( SERVICE_ID, false );
             }
+
+            private void OnCheckService( Classifier classifier )
+            {
+                if ( classifier.status == "Unavailable" || classifier.status == "Failed" )
+                {
+                    Log.Error( "NaturalLanguageClassifier", "Status of classifier {0} came back as {1}.", 
+                        classifier.classifier_id, classifier.status );
+                    m_Callback( SERVICE_ID, false );
+                }
+                else
+                {
+                    m_Callback( SERVICE_ID, true );
+                }
+            }
+
         };
         #endregion
     }
