@@ -24,6 +24,8 @@ namespace IBM.Watson.DeveloperCloud.Utilities
     {
         [SerializeField]
         private List<GameObject> m_Prefabs = new List<GameObject>();
+        [SerializeField]
+        private bool m_SetParent = true;
 
         private void Awake()
         {
@@ -33,7 +35,8 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                     continue;
 
                 GameObject instance = Instantiate( prefab );
-                instance.transform.SetParent( transform, false );
+                if ( m_SetParent )
+                    instance.transform.SetParent( transform, false );
             }
         }
     }

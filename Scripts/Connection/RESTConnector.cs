@@ -375,8 +375,10 @@ namespace IBM.Watson.DeveloperCloud.Connection
                         value = Convert.ToBase64String((byte[])value);    // convert any byte data into base64 string
                     else if (value is Int32 || value is Int64 || value is UInt32 || value is UInt64 )
                         value = value.ToString();
-                    else
+                    else if ( value != null )
                         Log.Warning( "RESTConnector", "Unsupported parameter value type {0}", value.GetType().Name );
+                    else
+                        Log.Error( "RESTConnector", "Parameter {0} value is null", key );
 
                     if (args == null)
                         args = new StringBuilder();

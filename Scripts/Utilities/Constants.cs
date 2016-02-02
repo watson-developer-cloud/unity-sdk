@@ -463,17 +463,6 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             DISMISS_UPDATE,
             #endregion
 
-            #region Authorizations
-            /// <summary>
-            /// Event fired as soon as user Logged in 
-            /// </summary>
-            USER_LOGGED_IN = 800,
-            /// <summary>
-            /// Event fired as soon as user Logged out 
-            /// </summary>
-            USER_LOGGED_OUT,
-            #endregion
-
 			#region Feature Visualization
 			/// <summary>
 			/// Event fired when tapping question in feature visulaztion.

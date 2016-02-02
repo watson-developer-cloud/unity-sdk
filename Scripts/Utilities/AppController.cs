@@ -33,7 +33,6 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 		//Client Related variables
 		private string m_ClientName;
 		private Texture m_ClientLogoTexture;
-        private bool m_IsUserLoggedIn;
 		#endregion
 
 		#region Public Members
@@ -82,12 +81,6 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 			}
 		}
 
-        public static bool IsUserLoggedIn{
-            get{
-                return instance.m_IsUserLoggedIn;
-            }
-        }
-
 		/// <summary>
 		/// Gets the client logo texture.
 		/// </summary>
@@ -110,24 +103,11 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         #region OnEnable / OnDisable - Registering Event Handlers
 
         void OnEnable(){
-            EventManager.Instance.RegisterEventReceiver (Constants.Event.USER_LOGGED_IN, OnUserLoggedIn);           
-            EventManager.Instance.RegisterEventReceiver (Constants.Event.USER_LOGGED_OUT, OnUserLoggedOut);
             EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_VIRTUAL_KEYBOARD_TOGGLE, ShowVirtualKeyboard);
         }
 
         void OnDisable(){
-            EventManager.Instance.UnregisterEventReceiver (Constants.Event.USER_LOGGED_IN, OnUserLoggedIn);
-            EventManager.Instance.UnregisterEventReceiver (Constants.Event.USER_LOGGED_OUT, OnUserLoggedOut);
             EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_VIRTUAL_KEYBOARD_TOGGLE, ShowVirtualKeyboard);
-        }
-
-        void OnUserLoggedIn(System.Object[] args = null)
-        {
-            m_IsUserLoggedIn = true;
-        }
-        void OnUserLoggedOut(System.Object[] args = null)
-        {
-            m_IsUserLoggedIn = false;
         }
 
         #endregion
