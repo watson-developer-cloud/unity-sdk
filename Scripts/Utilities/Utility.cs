@@ -234,6 +234,16 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             return s;
         }
 
+        /// <summary>
+        /// Gets the on off string.
+        /// </summary>
+        /// <returns>The on off string.</returns>
+        /// <param name="b">If set to <c>true</c> b.</param>
+        public static string GetOnOffString(bool b)
+        {
+            return b?"ON": "OFF";
+        }
+
     }
 
 

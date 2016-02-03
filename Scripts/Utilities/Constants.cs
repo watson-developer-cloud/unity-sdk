@@ -74,6 +74,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 			/// Event after appliation became idle
 			/// </summary>
 			ON_APPLICATION_BECAME_IDLE,
+            /// <summary>
+            /// AFter toggle the debug console on or off.
+            /// </summary>
+            ON_DEBUG_TOGGLE_FINISH,
             #endregion
 
             #region Avatar 
@@ -435,6 +439,14 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// Event fired when user hit Return key from keyboard
             /// </summary>
             ON_KEYBOARD_RETURN,
+            /// <summary>
+            /// Event fired when user hit Escape key from keyboard
+            /// </summary>
+            ON_KEYBOARD_ESCAPE,
+            /// <summary>
+            /// Event fired when user hit back quote key from keyboard (for open console)
+            /// </summary>
+            ON_KEYBOARD_BACKQUOTE,
             #endregion
 
             #region Map Interactions
@@ -461,13 +473,21 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// Event fire to dismiss the update 
             /// </summary>
             DISMISS_UPDATE,
+            /// <summary>
+            /// Event fire to check for update
+            /// </summary>
+            CHECK_FOR_UPDATES,
+            /// <summary>
+            /// Event fired after getting new version number from backend
+            /// </summary>
+            CHECK_FOR_UPDATES_FINISH,
             #endregion
 
 			#region Feature Visualization
 			/// <summary>
 			/// Event fired when tapping question in feature visulaztion.
 			/// </summary>
-			FEATURE_VISUALIZATION_TAP_QUESTION,
+			FEATURE_VISUALIZATION_TAP_QUESTION = 800,
 			/// <summary>
 			/// Event fired when tapping answer in feature visulaztion.
 			/// </summary>
@@ -483,8 +503,15 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 			/// <summary>
 			/// Event fired when tapping feature header from the evidence facet
 			/// </summary>
-			FEATURE_VISUALIZATION_SHOW_FEATURE_VISUALIZATION
+			FEATURE_VISUALIZATION_SHOW_FEATURE_VISUALIZATION,
 			#endregion
+
+            #region User Actions
+            /// <summary>
+            /// Event fired to user logout
+            /// </summary>
+            USER_TO_LOGOUT = 900
+            #endregion
 
         }
 
@@ -526,6 +553,8 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 			/// <exclude />
 			public const string KEY_CONFIG_CLIENT_NAME = "CLIENT_NAME";
 			public const string CLIENT_TEXTURE_LOGO = "{0}/Logo/{0}_LOGO";
+
+            public const string DATE_LOCAL_FORMAT = "";
         }
 
 

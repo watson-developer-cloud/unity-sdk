@@ -104,10 +104,14 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 
         void OnEnable(){
             EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_VIRTUAL_KEYBOARD_TOGGLE, ShowVirtualKeyboard);
+            EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_KEYBOARD_ESCAPE, ApplicationQuit);
+            EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_APPLICATION_QUIT, ApplicationQuit);
         }
 
         void OnDisable(){
             EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_VIRTUAL_KEYBOARD_TOGGLE, ShowVirtualKeyboard);
+            EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_KEYBOARD_ESCAPE, ApplicationQuit);
+            EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_APPLICATION_QUIT, ApplicationQuit);
         }
 
         #endregion
@@ -215,7 +219,11 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 		/// <param name="args">Arguments.</param>
 		public void ApplicationQuit(System.Object[] args = null)
 		{
-			Application.Quit();
+            #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+            #else
+            Application.Quit();
+            #endif
 		}
 
 		#endregion
