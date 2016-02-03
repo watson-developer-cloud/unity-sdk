@@ -61,9 +61,13 @@ namespace IBM.Watson.DeveloperCloud.Debug
         private List<DebugInfo> m_DebugInfos = new List<DebugInfo>();
 
         [SerializeField]
-        private bool m_Active = false;
+        private bool m_ActiveOutput = false;
+        [SerializeField]
+        private bool m_ActiveInput = false;
         [SerializeField, Tooltip("The root of the debug console, this is what is hidden or displayed to show the console when active.")]
-        private GameObject m_Root = null;
+        private GameObject m_RootOutput = null;
+        [SerializeField]
+        private GameObject m_RootInput = null;
         [SerializeField]
         private LayoutGroup m_MessageLayout = null;
         [SerializeField]
@@ -82,16 +86,27 @@ namespace IBM.Watson.DeveloperCloud.Debug
         /// </summary>
         public static DebugConsole Instance { get; private set; }
         /// <summary>
-        /// Returns true if this console is being displayed.
+        /// Returns true if this debug console output is being displayed.
         /// </summary>
-        public bool Active { get { return m_Active; }
+        public bool ActiveOutput { get { return m_ActiveOutput; }
             set {
-                if ( m_Active != value )
+                if ( m_ActiveOutput != value )
                 {
-                    m_Active = value;
-                    m_Root.SetActive( m_Active );
-                    if ( m_Active )
-                        m_CommandInput.gameObject.SetActive( false );
+                    m_ActiveOutput = value;
+                    m_RootOutput.SetActive( m_ActiveOutput );
+                }
+            }
+        }
+
+        /// <summary>
+        /// Returns true if this debug input field is being displayed.
+        /// </summary>
+        public bool ActiveInput { get { return m_ActiveInput; }
+            set {
+                if ( m_ActiveInput != value )
+                {
+                    m_ActiveInput = value;
+                    m_RootInput.SetActive( m_ActiveInput );
                 }
             }
         }
@@ -147,39 +162,49 @@ namespace IBM.Watson.DeveloperCloud.Debug
 
         private void Start()
         {
-            if (m_Root == null
+            if (m_RootInput == null
+                || m_RootOutput == null
                 || m_MessageLayout == null
                 || m_MessagePrefab == null
                 || m_CommandInput == null
                 || m_DebugInfoLayout == null
                 || m_DebugInfoPrefab == null)
             {
-                Log.Error( "DebugConsole", "DebugConsole is missing references to it's parts, disabling debug console." );
-                gameObject.SetActive( false );
+                Log.Error("DebugConsole", "DebugConsole is missing references to it's parts, disabling debug console.");
+                gameObject.SetActive(false);
             }
-            else 
-                m_Root.SetActive( m_Active );
+            else
+            {
+                m_RootInput.SetActive(m_ActiveInput);
+                m_RootOutput.SetActive(m_ActiveOutput);
+            }
         }
 
         private void OnEnable()
         {
             EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_DEBUG_MESSAGE, OnDebugMessage);
+
             EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_DEBUG_TOGGLE, OnToggleActive);
+            EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_KEYBOARD_BACKQUOTE, OnToggleActive);
+
             EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_DEBUG_BEGIN_COMMAND, OnBeginEdit);
-            EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_KEYBOARD_RETURN, OnKeyboardReturn);
+            EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_KEYBOARD_RETURN, OnBeginEdit);
         }
 
         private void OnDisable()
         {
             EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_DEBUG_MESSAGE, OnDebugMessage);
+
             EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_DEBUG_TOGGLE, OnToggleActive);
+            EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_KEYBOARD_BACKQUOTE, OnToggleActive);
+
             EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_DEBUG_BEGIN_COMMAND, OnBeginEdit);
-            EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_KEYBOARD_RETURN, OnKeyboardReturn);
+            EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_KEYBOARD_RETURN, OnBeginEdit);
         }
 
         private void Update()
         {
-            if ( Active )
+            if ( ActiveOutput )
             {
                 for(int i=0;i<m_DebugInfos.Count;++i)
                 {
@@ -198,11 +223,6 @@ namespace IBM.Watson.DeveloperCloud.Debug
 
         #region Event Handlers
 
-        private void OnKeyboardReturn(object[] args)
-        {
-            EventManager.Instance.SendEvent(Constants.Event.ON_DEBUG_BEGIN_COMMAND);
-        }
-
         private void OnDebugMessage( object [] args )
         {
             if ( args != null && args.Length > 0 )
@@ -218,16 +238,15 @@ namespace IBM.Watson.DeveloperCloud.Debug
 
         private void OnToggleActive( object [] args )
         {
-            Active = !Active;
+            ActiveOutput = !ActiveOutput;
+            EventManager.Instance.SendEvent( Constants.Event.ON_DEBUG_TOGGLE_FINISH);
         }
 
         private void OnBeginEdit( object [] args )
         {
-            if (! Active )
-                Active = true;
-
             if ( m_CommandInput != null )
             {
+                ActiveInput = true;
                 m_CommandInput.gameObject.SetActive( true );
                 m_CommandInput.ActivateInputField();
 
@@ -246,7 +265,8 @@ namespace IBM.Watson.DeveloperCloud.Debug
                 EventManager.Instance.SendEvent( Constants.Event.ON_DEBUG_COMMAND, m_CommandInput.text );
                 m_CommandInput.text = string.Empty;
                 m_CommandInput.gameObject.SetActive( false );   // hide the input     
-                
+                ActiveInput = false;
+
                 // restore the key manager state
                 KeyEventManager.Instance.Active = true;
             }
