@@ -199,7 +199,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// <summary>
             /// Event fired when question flow to start
             /// </summary>
-            QUESTION_FLOW_TO_START,
+            QUESTION_FLOW_TO_RESTART,
             /// <summary>
             /// Event fired when question flow to stop
             /// </summary>
