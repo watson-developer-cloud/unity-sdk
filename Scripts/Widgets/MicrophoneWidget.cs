@@ -198,6 +198,13 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         {
             Disable = ((DisableMicData)data).Boolean;
         }
+
+        void OnDestroy() 
+        {
+            Active = false;
+            Disable = true;
+        }
+
         #endregion
 
         #region Recording Functions
