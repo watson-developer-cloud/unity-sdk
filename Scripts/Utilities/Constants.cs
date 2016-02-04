@@ -78,6 +78,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// AFter toggle the debug console on or off.
             /// </summary>
             ON_DEBUG_TOGGLE_FINISH,
+            /// <summary>
+            /// This is sent to provide additional info about a error that is ocurring.
+            /// </summary>
+            ON_ERROR_INFO,
             #endregion
 
             #region Avatar 
