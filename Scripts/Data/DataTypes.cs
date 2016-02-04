@@ -267,6 +267,39 @@ namespace IBM.Watson.DeveloperCloud.DataTypes
     }
 
     /// <summary>
+    /// Boolean state for disabling the CloseCaption output.
+    /// </summary>
+    public class DisableCloseCaptionData : Widget.Data
+    {
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public DisableCloseCaptionData()
+        { }
+        /// <summary>
+        /// Data constructor.
+        /// </summary>
+        /// <param name="b">Disable DisableCloseCaptionData state.</param>
+        public DisableCloseCaptionData( bool b ) 
+        {
+            Boolean = b;
+        }
+        /// <summary>
+        /// Name of this data type.
+        /// </summary>
+        /// <returns>The readable name.</returns>
+        public override string GetName()
+        {
+            return "DisableCloseCaptionData";
+        }
+        /// <summary>
+        /// Disable DisableCloseCaptionData state, true for disabled, false for not.
+        /// </summary>
+        public bool Boolean { get; set; }
+    }
+
+
+    /// <summary>
     /// This class is for audio level data.
     /// </summary>
     public class LevelData : Widget.Data
@@ -337,6 +370,48 @@ namespace IBM.Watson.DeveloperCloud.DataTypes
         /// The Result object.
         /// </summary>
         public SpeechResultList Results { get; set; }
+
+        /// <summary>
+        /// Gets a value indicating whether the result text is final.
+        /// </summary>
+        /// <value><c>true</c> if the result text is final; otherwise, <c>false</c>.</value>
+        public bool IsFinal
+        {
+            get{
+                bool isFinal = false;
+                if (Results != null && Results.Results.Length > 0)
+                {
+                    isFinal = Results.Results[0].Final;
+                }
+
+                return isFinal;
+            }
+        }
+
+        public string _Text = null;
+        /// <summary>
+        /// Gets the highest confident text.
+        /// </summary>
+        /// <value>The text with highest confidence or final text</value>
+        public string Text
+        {
+            get{
+                if (string.IsNullOrEmpty(_Text))
+                {
+                    if (Results != null && Results.Results.Length > 0)
+                    {
+                        SpeechResult speechResult = Results.Results[0];
+                        if (speechResult.Alternatives != null && speechResult.Alternatives.Length > 0)
+                        {
+                            _Text = speechResult.Alternatives[0].Transcript;
+                        }
+                    }
+                }
+                return _Text;
+
+            }
+
+        }
     };
 
     /// <summary>

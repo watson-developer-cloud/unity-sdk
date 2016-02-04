@@ -141,6 +141,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// Event to move Avatar move down away
             /// </summary>
             ON_AVATAR_MOVE_DOWN_AWAY,
+            /// <summary>
+            /// Event fired after avatar close caption
+            /// </summary>
+            CLOSECAPTION_AVATAR_MESSAGE,
             #endregion
 
             #region Question
@@ -510,7 +514,23 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// <summary>
             /// Event fired to user logout
             /// </summary>
-            USER_TO_LOGOUT = 900
+            USER_TO_LOGOUT = 900,
+            /// <summary>
+            /// Event fired after user close caption
+            /// </summary>
+            CLOSECAPTION_USER_MESSAGE,
+            /// <summary>
+            /// Event fired to set ON for close caption system
+            /// </summary>
+            CLOSECAPTION_ON,
+            /// <summary>
+            /// Event fired to set OFF for close caption system
+            /// </summary>
+            CLOSECAPTION_OFF,
+            /// <summary>
+            /// Event fired to toggle the close caption system
+            /// </summary>
+            CLOSECAPTION_TOGGLE
             #endregion
 
         }

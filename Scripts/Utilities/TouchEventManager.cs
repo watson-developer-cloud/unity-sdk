@@ -565,6 +565,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 
                 TouchEventData tapEventToFire = null;
 				RaycastHit hit = default(RaycastHit);
+                RaycastHit hitToFire = default(RaycastHit);
 
 				foreach (var kp in m_TapEvents)
 				{
@@ -589,6 +590,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 							if(tapEventToFire == null)
 							{
 								tapEventToFire = tapEventData;
+                                hitToFire = hit;
 							}
 							else
 							{
@@ -596,6 +598,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 								   (tapEventToFire.SortingLayer == tapEventData.SortingLayer && !tapEventToFire.IsInside))
 								{
 									tapEventToFire = tapEventData;
+                                    hitToFire = hit;
 								}
 								else
 								{
@@ -609,12 +612,14 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 							if(tapEventToFire == null)
 							{
 								tapEventToFire = tapEventData;
+                                hitToFire = hit;
 							}
 							else
 							{
 								if(tapEventData.SortingLayer > tapEventToFire.SortingLayer)
 								{
 									tapEventToFire = tapEventData;
+                                    hitToFire = hit;
 								}
 								else
 								{
@@ -630,7 +635,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 				}
 
 				if(tapEventToFire != null && tapEventToFire.TapCallback != Constants.Event.NONE)
-					EventManager.Instance.SendEvent(tapEventToFire.TapCallback, m_TapGesture, hit);
+                    EventManager.Instance.SendEvent(tapEventToFire.TapCallback, m_TapGesture, hitToFire);
 					//tapEventToFire.TapCallback(m_TapGesture, tapEventToFire.Collider.transform);
 
                 EventManager.Instance.SendEvent(Constants.Event.ON_TAP_ONE, m_TapGesture);
@@ -717,6 +722,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 
                 TouchEventData tapEventToFire = null;
                 RaycastHit hit = default(RaycastHit);
+                RaycastHit hitToFire = default(RaycastHit);
 
                 foreach (var kp in m_DoubleTapEvents)
                 {
@@ -741,6 +747,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                             if(tapEventToFire == null)
                             {
                                 tapEventToFire = tapEventData;
+                                hitToFire = hit;
                             }
                             else
                             {
@@ -748,6 +755,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                                     (tapEventToFire.SortingLayer == tapEventData.SortingLayer && !tapEventToFire.IsInside))
                                 {
                                     tapEventToFire = tapEventData;
+                                    hitToFire = hit;
                                 }
                                 else
                                 {
@@ -761,12 +769,14 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                             if(tapEventToFire == null)
                             {
                                 tapEventToFire = tapEventData;
+                                hitToFire = hit;
                             }
                             else
                             {
                                 if(tapEventData.SortingLayer > tapEventToFire.SortingLayer)
                                 {
                                     tapEventToFire = tapEventData;
+                                    hitToFire = hit;
                                 }
                                 else
                                 {
@@ -782,7 +792,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                 }
 
                 if(tapEventToFire != null && tapEventToFire.TapCallback != Constants.Event.NONE)
-                    EventManager.Instance.SendEvent(tapEventToFire.TapCallback, m_DoubleTapGesture, hit);
+                    EventManager.Instance.SendEvent(tapEventToFire.TapCallback, m_DoubleTapGesture, hitToFire);
                 //tapEventToFire.TapCallback(m_DoubleTapGesture, tapEventToFire.Collider.transform);
 
                 EventManager.Instance.SendEvent(Constants.Event.ON_TAP_DOUBLE, m_DoubleTapGesture);
