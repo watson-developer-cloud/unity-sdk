@@ -501,17 +501,24 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                     if ( widget == null || widget == this )
                         continue;       // we never connect to ourselves
 
-                    foreach( var output in widget.Outputs )
+                    if (widget.Outputs != null)
                     {
-                        foreach( var input in m_Inputs )
+                        foreach( var output in widget.Outputs )
                         {
-                            if ( input.DataType == output.DataType )
+                            if (m_Inputs != null)
                             {
-                                if ( output.AddConnection( input ) )
-                                    Log.Status( "Widget", "Auto-Connecting {0} -> {1}", output.ToString(), input.ToString() ); 
+                                foreach (var input in m_Inputs)
+                                {
+                                    if (input.DataType == output.DataType)
+                                    {
+                                        if (output.AddConnection(input))
+                                            Log.Status("Widget", "Auto-Connecting {0} -> {1}", output.ToString(), input.ToString()); 
+                                    }
+                                }
                             }
                         }
                     }
+
                 }
             }
         }

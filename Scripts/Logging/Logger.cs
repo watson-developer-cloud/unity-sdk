@@ -112,6 +112,14 @@ namespace IBM.Watson.DeveloperCloud.Logging
         #endregion
 
         #region Public Functions
+        public static List<ILogReactor> ReactorsInstalled
+        {
+            get
+            {
+                return LogSystem.Instance.m_Reactors;
+            }
+        }
+
         /// <summary>
         /// Install a default debug and file reactor.
         /// </summary>

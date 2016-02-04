@@ -34,6 +34,16 @@ namespace IBM.Watson.DeveloperCloud.Logging
         /// Minimum level of messages to save into the log file.
         /// </summary>
         public LogLevel Level { get; set; }
+
+        /// <summary>
+        /// Gets the log text written to the file system
+        /// </summary>
+        /// <value>The log text written.</value>
+        public string LogTextWritten{
+            get{
+                return File.ReadAllText(LogFile);
+            }
+        }
         #endregion
 
         #region Construction
