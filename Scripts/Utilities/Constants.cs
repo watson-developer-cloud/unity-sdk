@@ -352,6 +352,19 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// To repeat last action (ex. more zoom-in)
             /// </summary>
             ON_COMMAND_REPEAT_LAST_ACTION,
+            /// <summary>
+            /// Show first item, it depends on context
+            /// </summary>
+            ON_COMMAND_FIRST,
+            /// <summary>
+            /// Show last item, it depends on context
+            /// </summary>
+            ON_COMMAND_LAST,
+            /// <summary>
+            /// Cancel command
+            /// </summary>
+            ON_COMMAND_CANCEL,
+
             #endregion
 
             #region Input - Touch
@@ -534,7 +547,19 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// <summary>
             /// Event fired to toggle the close caption system
             /// </summary>
-            CLOSECAPTION_TOGGLE
+            CLOSECAPTION_TOGGLE,
+            /// <summary>
+            /// To show system health panel
+            /// </summary>
+            SHOW_SYSTEM_HEALTH,
+            /// <summary>
+            /// To show system log panel
+            /// </summary>
+            SHOW_SYSTEM_LOG,
+            /// <summary>
+            /// To show system log panel
+            /// </summary>
+            SHOW_APPLICATION_ABOUT
             #endregion
 
         }

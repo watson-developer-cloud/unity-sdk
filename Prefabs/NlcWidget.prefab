@@ -54,7 +54,7 @@ MonoBehaviour:
   - m_Class: sleep
     m_Event: 404
   - m_Class: cancel
-    m_Event: 210
+    m_Event: 422
   - m_Class: dialog
     m_Event: 402
   - m_Class: debug_on
@@ -117,6 +117,32 @@ MonoBehaviour:
     m_Event: 700
   - m_Class: cancel_update
     m_Event: 701
+  - m_Class: close_caption_on
+    m_Event: 902
+  - m_Class: close_caption_off
+    m_Event: 903
+  - m_Class: log_out
+    m_Event: 900
+  - m_Class: virtual_keyboard_show
+    m_Event: 510
+  - m_Class: show_first
+    m_Event: 420
+  - m_Class: show_first_answer
+    m_Event: 420
+  - m_Class: show_first_passage
+    m_Event: 420
+  - m_Class: show_last
+    m_Event: 421
+  - m_Class: show_last_answer
+    m_Event: 421
+  - m_Class: show_last_passage
+    m_Event: 421
+  - m_Class: health_panel_show
+    m_Event: 905
+  - m_Class: log_panel_show
+    m_Event: 906
+  - m_Class: about_xray
+    m_Event: 907
   m_TopClassText: {fileID: 0}
 --- !u!1001 &100100000
 Prefab:
@@ -127,7 +153,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.size
-      value: 34
+      value: 47
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassifierId
@@ -175,7 +201,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[2].m_Event
-      value: 210
+      value: 422
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[16].m_Class
@@ -332,6 +358,102 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_MinClassEventConfidence
       value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[34].m_Event
+      value: 902
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[34].m_Class
+      value: close_caption_on
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[35].m_Event
+      value: 903
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[35].m_Class
+      value: close_caption_off
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[36].m_Event
+      value: 900
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[36].m_Class
+      value: log_out
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[37].m_Event
+      value: 510
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[37].m_Class
+      value: virtual_keyboard_show
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[38].m_Class
+      value: show_first
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[38].m_Event
+      value: 420
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[39].m_Class
+      value: show_first_answer
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[40].m_Class
+      value: show_first_passage
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[41].m_Class
+      value: show_last
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[41].m_Event
+      value: 421
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[42].m_Class
+      value: show_last_answer
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[43].m_Class
+      value: show_last_passage
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[44].m_Class
+      value: health_panel_show
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[44].m_Event
+      value: 905
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[45].m_Class
+      value: log_panel_show
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[45].m_Event
+      value: 906
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[46].m_Class
+      value: about_xray
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[46].m_Event
+      value: 907
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[47].m_Class
+      value: cancel
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[47].m_Event
+      value: 422
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
