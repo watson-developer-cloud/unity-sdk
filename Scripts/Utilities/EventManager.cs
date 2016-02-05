@@ -132,7 +132,13 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                         receivers.RemoveAt(i--);
                         continue;
                     }
-                    receivers[i](args);
+                    try {
+                        receivers[i](args);
+                    }
+                    catch( Exception ex )
+                    {
+                        Log.Error( "EventManager", "Event Receiver Exception: {0}", ex.ToString() );
+                    }
                 }
                 return true;
             }
