@@ -525,6 +525,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 			/// Event fired when tapping feature header from the evidence facet
 			/// </summary>
 			FEATURE_VISUALIZATION_SHOW_FEATURE_VISUALIZATION,
+			/// <summary>
+			/// Event sent when feature visualization data is received.
+			/// </summary>
+			ON_QUESTION_FEATURE_VISUALIZATION,
 			#endregion
 
             #region User Actions
