@@ -75,7 +75,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         {
             ~Speech()
             {
-                AudioClipUtil.DestroyAudioClip( Clip );
+                UnityObjectUtil.DestroyUnityObject( Clip );
             }
 
             public AudioClip Clip { get; set; }
@@ -160,7 +160,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 
         private void OnEnable()
         {
-            AudioClipUtil.StartDestroyQueue();
+            UnityObjectUtil.StartDestroyQueue();
 
             if (m_StatusText != null)
                 m_StatusText.text = "READY";

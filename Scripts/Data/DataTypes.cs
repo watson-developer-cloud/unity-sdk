@@ -135,7 +135,7 @@ namespace IBM.Watson.DeveloperCloud.DataTypes
         /// <exclude />
         ~AudioData()
         {
-            AudioClipUtil.DestroyAudioClip( Clip );
+            UnityObjectUtil.DestroyUnityObject( Clip );
         }
 
         /// <summary>

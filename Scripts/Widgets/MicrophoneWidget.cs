@@ -212,7 +212,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         {
             if (m_RecordingRoutine == 0)
             {
-                AudioClipUtil.StartDestroyQueue();
+                UnityObjectUtil.StartDestroyQueue();
 
                 m_RecordingRoutine = Runnable.Run(RecordingHandler());
                 m_ActivateOutput.SendData(new BooleanData(true));
@@ -244,7 +244,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                         {
                             // destroy any previous audio clip..
                             if (source.clip != null)
-                                AudioClipUtil.DestroyAudioClip(source.clip);
+                                UnityObjectUtil.DestroyUnityObject(source.clip);
 
                             source.spatialBlend = 0.0f;     // 2D sound
                             source.loop = false;            // do not loop
@@ -256,7 +256,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                     }
 
                     foreach (var clip in m_Playback)
-                        AudioClipUtil.DestroyAudioClip(clip);
+                        UnityObjectUtil.DestroyUnityObject(clip);
                     m_Playback.Clear();
                 }
             }
