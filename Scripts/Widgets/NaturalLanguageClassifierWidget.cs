@@ -80,6 +80,58 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         /// Returns the NLC service object.
         /// </summary>
         public NaturalLanguageClassifier NLC { get { return m_NLC; } }
+
+        /// <summary>
+        /// Gets or sets the value of ignore word confidence.
+        /// </summary>
+        /// <value>The ignore word confidence.</value>
+        public Double IgnoreWordConfidence
+        {
+            get
+            {
+                return m_IgnoreWordConfidence;
+            }
+            set
+            {
+                m_IgnoreWordConfidence = value;
+                if (value > MinWordConfidence)
+                    MinWordConfidence = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the minimum value of word confidence.
+        /// </summary>
+        /// <value>The minimum word confidence.</value>
+        public Double MinWordConfidence
+        {
+            get
+            {
+                return m_MinWordConfidence;
+            }
+            set
+            {
+                m_MinWordConfidence = value;
+                if (value < IgnoreWordConfidence)
+                    IgnoreWordConfidence = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the minimum value of class event confidence.
+        /// </summary>
+        /// <value>The minimum class event confidence.</value>
+        public Double MinClassEventConfidence
+        {
+            get
+            {
+                return m_MinClassEventConfidence;
+            }
+            set
+            {
+                m_MinClassEventConfidence = value;
+            }
+        }
         #endregion
 
         #region Widget interface
