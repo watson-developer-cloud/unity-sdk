@@ -172,6 +172,10 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         {
             base.Start();
 
+            m_IgnoreWordConfidenceDelta = PlayerPrefs.GetFloat(Constants.String.PLAYERPREFS_NLC_IGNORE_DELTACONFIDENCE, 0);
+            m_MinWordConfidenceDelta = PlayerPrefs.GetFloat(Constants.String.PLAYERPREFS_NLC_MIN_WORD_DELTACONFIDENCE, 0);
+            m_MinClassEventConfidenceDelta = PlayerPrefs.GetFloat(Constants.String.PLAYERPREFS_NLC_MIN_CLASS_DELTACONFIDENCE, 0);
+
             // resolve configuration variables
             m_ClassifierName = Config.Instance.ResolveVariables(m_ClassifierName);
             m_ClassifierId = Config.Instance.ResolveVariables(m_ClassifierId);
