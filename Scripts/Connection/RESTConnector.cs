@@ -204,6 +204,11 @@ namespace IBM.Watson.DeveloperCloud.Connection
         #endregion
 
         #region Public Properties
+        private static float sm_LogResponseTime = 3.0f;
+        /// <summary>
+        /// Specify a time to log to the logging system when a response takes longer than this amount.
+        /// </summary>
+        public static float LogResponseTime { get { return sm_LogResponseTime; } set { sm_LogResponseTime = value; } }
         /// <summary>
         /// Base URL for REST requests.
         /// </summary>
@@ -496,10 +501,8 @@ namespace IBM.Watson.DeveloperCloud.Connection
                     resp.ElapsedTime = (float)(DateTime.Now - startTime).TotalSeconds;
 
                     // if the response is over a threshold, then log with status instead of debug
-                    if ( resp.ElapsedTime > 3.0f )
-                        Log.Critical( "RESTConnector", "Request {0} completed in {1} seconds.", url, resp.ElapsedTime );
-                    else
-                        Log.Debug( "RESTConnector", "Request {0} completed in {1} seconds.", url, resp.ElapsedTime );
+                    if ( resp.ElapsedTime > LogResponseTime )
+                        Log.Warning( "RESTConnector", "Request {0} completed in {1} seconds.", url, resp.ElapsedTime );
 
                     if ( req.OnResponse != null )
                         req.OnResponse( req, resp );
