@@ -68,6 +68,8 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 	    private Text m_Transcript = null;
         [SerializeField, Tooltip( "Language ID to use in the speech recognition model.") ]
         private string m_Language = "en-US";
+        [SerializeField]
+        private bool m_LogResult = false;
         #endregion
 
         #region Public Properties
@@ -206,6 +208,11 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                         if ( m_Transcript != null )
                             m_Transcript.text += string.Format( "{0} ({1}, {2:0.00})\n",
                                 text, res.Final ? "Final" : "Interim", alt.Confidence );
+
+                        if (m_LogResult)
+                        {
+                            Log.Status("SpeechToTextWidget", string.Format( "OnRecognize: {0} ({1}, {2:0.00})", text, res.Final ? "Final" : "Interim", alt.Confidence ));
+                        }
                     }
                 }
             }
