@@ -494,6 +494,13 @@ namespace IBM.Watson.DeveloperCloud.Connection
                     }
 
                     resp.ElapsedTime = (float)(DateTime.Now - startTime).TotalSeconds;
+
+                    // if the response is over a threshold, then log with status instead of debug
+                    if ( resp.ElapsedTime > 3.0f )
+                        Log.Critical( "RESTConnector", "Request {0} completed in {1} seconds.", url, resp.ElapsedTime );
+                    else
+                        Log.Debug( "RESTConnector", "Request {0} completed in {1} seconds.", url, resp.ElapsedTime );
+
                     if ( req.OnResponse != null )
                         req.OnResponse( req, resp );
 

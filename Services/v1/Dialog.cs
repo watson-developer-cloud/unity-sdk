@@ -294,6 +294,7 @@ namespace IBM.Watson.DeveloperCloud.Services.v1
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             req.Forms["name"] = new RESTConnector.Form( dialogName );
             req.Forms["file"] = new RESTConnector.Form( dialogData, dataFileName );
+            req.Timeout = 10 * 60.0f;       // increase timeout to 10 minutes
 
             return connector.Send(req);
         }
