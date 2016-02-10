@@ -531,15 +531,23 @@ namespace IBM.Watson.DeveloperCloud.Services.v1
 
             private void OnCheckService( Classifier classifier )
             {
-                if ( classifier.status == "Unavailable" || classifier.status == "Failed" )
+                if ( classifier != null )
                 {
-                    Log.Error( "NaturalLanguageClassifier", "Status of classifier {0} came back as {1}.", 
-                        classifier.classifier_id, classifier.status );
-                    m_Callback( SERVICE_ID, false );
+                    if ( classifier.status == "Unavailable" || classifier.status == "Failed" )
+                    {
+                        Log.Error( "NaturalLanguageClassifier", "Status of classifier {0} came back as {1}.", 
+                            classifier.classifier_id, classifier.status );
+                        m_Callback( SERVICE_ID, false );
+                    }
+                    else
+                    {
+                        m_Callback( SERVICE_ID, true );
+                    }
                 }
                 else
                 {
-                    m_Callback( SERVICE_ID, true );
+                    Log.Error( "NaturalLanguageClassifier", "Failed to get classifier." );
+                    m_Callback( SERVICE_ID, false );
                 }
             }
 
