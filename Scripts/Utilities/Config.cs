@@ -329,7 +329,13 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         {
             string output = input;
             foreach( var var in m_Variables )
-                output = output.Replace( "${" + var.Key + "}", var.Value );
+            {
+                string value = var.Value;
+                if ( value.Contains( "${" ) )
+                    value = ResolveVariables( value );
+
+                output = output.Replace( "${" + var.Key + "}", value );
+            }
 
             // remove any variables still in the string..
             int variableIndex = output.IndexOf( "${" );

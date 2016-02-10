@@ -80,7 +80,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
         private void OnUploadDialog( string dialogId )
         {
             if ( string.IsNullOrEmpty( dialogId ) )
-                Log.Error( "DialogEditor", "Failed to train classifier." );
+                Log.Error( "DialogEditor", "Failed to upload dialog." );
             else
                 OnRefresh();
         }
