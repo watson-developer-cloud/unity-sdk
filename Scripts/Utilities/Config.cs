@@ -325,14 +325,14 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// </summary>
         /// <param name="input">A string containing variables.</param>
         /// <returns>Returns the string with all variables resolved to their actual values. Any missing variables are removed from the string.</returns>
-        public string ResolveVariables( string input )
+        public string ResolveVariables( string input, bool recursive = true )
         {
             string output = input;
             foreach( var var in m_Variables )
             {
                 string value = var.Value;
-                if ( value.Contains( "${" ) )
-                    value = ResolveVariables( value );
+                if ( recursive && value.Contains( "${" ) )
+                    value = ResolveVariables( value, false );
 
                 output = output.Replace( "${" + var.Key + "}", value );
             }
