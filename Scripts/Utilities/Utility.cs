@@ -212,14 +212,14 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// </summary>
         /// <param name="s"></param>
         /// <returns></returns>
-        public static string RemoveTags(string s)
+        public static string RemoveTags(string s, char tagStartChar = '<', char tagEndChar = '>' )
         {
             if (!string.IsNullOrEmpty(s))
             {
-                int tagStart = s.IndexOf('<');
+                int tagStart = s.IndexOf(tagStartChar);
                 while (tagStart >= 0)
                 {
-                    int tagEnd = s.IndexOf('>', tagStart);
+                    int tagEnd = s.IndexOf(tagEndChar, tagStart);
                     if (tagEnd < 0)
                         break;
 
@@ -227,7 +227,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                     string post = tagEnd < s.Length ? s.Substring(tagEnd + 1) : string.Empty;
                     s = pre + post;
 
-                    tagStart = s.IndexOf('<');
+                    tagStart = s.IndexOf(tagStartChar);
                 }
             }
 
