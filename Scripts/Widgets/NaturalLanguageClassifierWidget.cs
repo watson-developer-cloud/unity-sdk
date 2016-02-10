@@ -84,13 +84,6 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         /// </summary>
         public NaturalLanguageClassifier NLC { get { return m_NLC; } }
 
-        public float IgnoreWordConfidenceInitial
-        {
-            get
-            {
-                return m_IgnoreWordConfidence;
-            }
-        }
         /// <summary>
         /// Gets or sets the value of ignore word confidence.
         /// </summary>
@@ -104,18 +97,22 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             set
             {
                 m_IgnoreWordConfidenceDelta = value - m_IgnoreWordConfidence;
-                if (value > MinWordConfidence)
-                    MinWordConfidence = value;
+                if (IgnoreWordConfidence > MinWordConfidence)
+                    MinWordConfidence = IgnoreWordConfidence;
+                PlayerPrefs.SetFloat( "m_IgnoreWordConfidenceDelta", m_IgnoreWordConfidenceDelta );
+                PlayerPrefs.Save();
+            }
+        }
+        public float IgnoreWordConfidenceDelta
+        {
+            get { return m_IgnoreWordConfidenceDelta; }
+            set {
+                m_IgnoreWordConfidenceDelta = value; 
+                PlayerPrefs.SetFloat( "m_IgnoreWordConfidenceDelta", m_IgnoreWordConfidenceDelta );
+                PlayerPrefs.Save();
             }
         }
 
-        public float MinWordConfidenceInitial
-        {
-            get
-            {
-                return m_MinWordConfidence;
-            }
-        }
         /// <summary>
         /// Gets or sets the minimum value of word confidence.
         /// </summary>
@@ -128,19 +125,23 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             }
             set
             {
-                m_MinWordConfidenceDelta =  value - m_MinWordConfidence;
-                if (value < IgnoreWordConfidence)
-                    IgnoreWordConfidence = value;
+                m_MinWordConfidenceDelta = value - m_MinWordConfidence;
+                if (MinWordConfidence < IgnoreWordConfidence)
+                    IgnoreWordConfidence = MinWordConfidence;
+                PlayerPrefs.SetFloat( "m_MinWordConfidenceDelta", m_MinWordConfidenceDelta );
+                PlayerPrefs.Save();
+            }
+        }
+        public float MinWordConfidenceDelta
+        {
+            get { return m_MinWordConfidenceDelta; }
+            set {
+                m_MinWordConfidenceDelta = value; 
+                PlayerPrefs.SetFloat( "m_MinWordConfidenceDelta", m_MinWordConfidenceDelta );
+                PlayerPrefs.Save();
             }
         }
 
-        public float MinClassEventConfidenceInitial
-        {
-            get
-            {
-                return m_MinClassEventConfidence;
-            }
-        }
         /// <summary>
         /// Gets or sets the minimum value of class event confidence.
         /// </summary>
@@ -154,6 +155,17 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             set
             {
                 m_MinClassEventConfidenceDelta = value - m_MinClassEventConfidence;
+                PlayerPrefs.SetFloat( "m_MinClassEventConfidenceDelta", m_MinClassEventConfidenceDelta );
+                PlayerPrefs.Save();
+            }
+        }
+        public float MinClassEventConfidenceDelta
+        {
+            get { return m_MinClassEventConfidenceDelta; }
+            set {
+                m_MinClassEventConfidenceDelta = value;
+                PlayerPrefs.SetFloat( "m_MinClassEventConfidenceDelta", m_MinClassEventConfidenceDelta );
+                PlayerPrefs.Save();
             }
         }
         #endregion
@@ -172,9 +184,9 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         {
             base.Start();
 
-            m_IgnoreWordConfidenceDelta = PlayerPrefs.GetFloat(Constants.String.PLAYERPREFS_NLC_IGNORE_DELTACONFIDENCE, 0);
-            m_MinWordConfidenceDelta = PlayerPrefs.GetFloat(Constants.String.PLAYERPREFS_NLC_MIN_WORD_DELTACONFIDENCE, 0);
-            m_MinClassEventConfidenceDelta = PlayerPrefs.GetFloat(Constants.String.PLAYERPREFS_NLC_MIN_CLASS_DELTACONFIDENCE, 0);
+            m_IgnoreWordConfidenceDelta = PlayerPrefs.GetFloat( "m_IgnoreWordConfidenceDelta", 0.0f );
+            m_MinWordConfidenceDelta = PlayerPrefs.GetFloat( "m_MinWordConfidenceDelta", 0.0f );
+            m_MinClassEventConfidenceDelta = PlayerPrefs.GetFloat( "m_MinClassEventConfidenceDelta", 0.0f );
 
             // resolve configuration variables
             m_ClassifierName = Config.Instance.ResolveVariables(m_ClassifierName);

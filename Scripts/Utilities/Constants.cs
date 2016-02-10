@@ -608,11 +608,6 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 			public const string CLIENT_TEXTURE_LOGO = "{0}/Logo/{0}_LOGO";
 
             public const string DATE_LOCAL_FORMAT = "";
-
-            public const string PLAYERPREFS_NLC_IGNORE_DELTACONFIDENCE = "NLC_IGNORE_DELTACONFIDENCE";
-            public const string PLAYERPREFS_NLC_MIN_WORD_DELTACONFIDENCE = "NLC_MIN_WORD_DELTACONFIDENCE";
-            public const string PLAYERPREFS_NLC_MIN_CLASS_DELTACONFIDENCE = "NLC_MIN_CLASS_DELTACONFIDENCE";
-
         }
 
     }
