@@ -118,7 +118,7 @@ namespace IBM.Watson.DeveloperCloud.Services.v1
             {
                 bool bFound = false;
                 foreach( var c in classifiers.classifiers )
-                    if ( c.name.StartsWith( ClassifierName ) )
+                    if ( c.name.ToLower().StartsWith( ClassifierName.ToLower() ) )
                     {
                         // now get the classifier details..
                         bFound = Service.GetClassifier( c.classifier_id, GetClassifier );
@@ -126,7 +126,10 @@ namespace IBM.Watson.DeveloperCloud.Services.v1
                     }
 
                 if (! bFound )
+                {
+                    Log.Error( "NLC", "Fail to find classifier {0}", ClassifierName );
                     Callback( null );
+                }
             }
 
             private void GetClassifier( Classifier classifier )

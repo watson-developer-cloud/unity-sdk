@@ -218,15 +218,20 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         {
             if (classifiers != null)
             {
+                bool bFound = false;
                 foreach (var classifier in classifiers.classifiers)
                 {
-                    if (!string.IsNullOrEmpty(m_ClassifierName) && !classifier.name.StartsWith(m_ClassifierName))
+                    if (!string.IsNullOrEmpty(m_ClassifierName) && !classifier.name.ToLower().StartsWith(m_ClassifierName.ToLower()))
                         continue;
                     if (classifier.language != m_Language)
                         continue;
 
                     m_NLC.GetClassifier(classifier.classifier_id, OnGetClassifier);
+                    bFound = true;
                 }
+
+                if (! bFound )
+                    Log.Error( "NLCWidget", "No classifiers found that match {0}", m_ClassifierName );
             }
         }
 
