@@ -75,7 +75,8 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         {
             ~Speech()
             {
-                UnityObjectUtil.DestroyUnityObject( Clip );
+                if ( Clip != null )
+                    UnityObjectUtil.DestroyUnityObject( Clip );
             }
 
             public AudioClip Clip { get; set; }
@@ -176,27 +177,33 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         private void Update()
         {
             if (m_Source != null && !m_Source.isPlaying
-                && m_SpeechQueue.Count > 0
-                && m_SpeechQueue.Peek().Clip != null)
+                && m_SpeechQueue.Count > 0 )
             {
                 CancelInvoke("OnEndSpeech");
 
                 m_ActiveSpeech = m_SpeechQueue.Dequeue();
-                if (m_Speaking.IsConnected)
-                    m_Speaking.SendData(new SpeakingStateData(true));
-                if (m_DisableMic.IsConnected)
-                    m_DisableMic.SendData(new DisableMicData(true));
-
-                m_Source.spatialBlend = 0.0f;     // 2D sound
-                m_Source.loop = false;            // do not loop
-                m_Source.clip = m_ActiveSpeech.Clip;             // clip
-                m_Source.Play();
-
-                Invoke("OnEndSpeech", ((float)m_ActiveSpeech.Clip.samples / (float)m_ActiveSpeech.Clip.frequency) + 0.1f);
-                if (m_LevelOut.IsConnected)
+                if ( m_ActiveSpeech.Clip != null )
                 {
-                    m_LastPlayPos = 0;
-                    InvokeRepeating("OnLevelOut", m_LevelOutInterval, m_LevelOutInterval);
+                    if (m_Speaking.IsConnected)
+                        m_Speaking.SendData(new SpeakingStateData(true));
+                    if (m_DisableMic.IsConnected)
+                        m_DisableMic.SendData(new DisableMicData(true));
+
+                    m_Source.spatialBlend = 0.0f;     // 2D sound
+                    m_Source.loop = false;            // do not loop
+                    m_Source.clip = m_ActiveSpeech.Clip;             // clip
+                    m_Source.Play();
+
+                    Invoke("OnEndSpeech", ((float)m_ActiveSpeech.Clip.samples / (float)m_ActiveSpeech.Clip.frequency) + 0.1f);
+                    if (m_LevelOut.IsConnected)
+                    {
+                        m_LastPlayPos = 0;
+                        InvokeRepeating("OnLevelOut", m_LevelOutInterval, m_LevelOutInterval);
+                    }
+                }
+                else
+                {
+                    Log.Warning( "TextToSpeechWidget", "Skipping null AudioClip" );
                 }
             }
 
