@@ -18,14 +18,13 @@
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Connection;
 using IBM.Watson.DeveloperCloud.Utilities;
-using IBM.Watson.DeveloperCloud.DataModels;
 using MiniJSON;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using FullSerializer;
 
-namespace IBM.Watson.DeveloperCloud.Services.v1
+namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
 {
     /// <summary>
     /// This class wraps the Natural Language Classifier service.

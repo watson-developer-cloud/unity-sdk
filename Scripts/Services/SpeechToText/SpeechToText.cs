@@ -18,7 +18,6 @@
 #define ENABLE_DEBUGGING
 
 using IBM.Watson.DeveloperCloud.DataTypes;
-using IBM.Watson.DeveloperCloud.DataModels;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Connection;
 using IBM.Watson.DeveloperCloud.Utilities;
@@ -29,7 +28,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Text;
 
-namespace IBM.Watson.DeveloperCloud.Services.v1            // Add DeveloperCloud
+namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 {
     /// <summary>
     /// This class wraps the Watson SpeechToText service.
@@ -114,9 +113,12 @@ namespace IBM.Watson.DeveloperCloud.Services.v1            // Add DeveloperCloud
         /// <summary>
         /// This property controls which recognize model we use when making recognize requests of the server.
         /// </summary>
-        public string RecognizeModel { get { return m_RecognizeModel; }
-            set {
-                if ( m_RecognizeModel != value )
+        public string RecognizeModel
+        {
+            get { return m_RecognizeModel; }
+            set
+            {
+                if (m_RecognizeModel != value)
                 {
                     m_RecognizeModel = value;
                     StopListening();        // close any active connection when our model is changed.
@@ -192,7 +194,7 @@ namespace IBM.Watson.DeveloperCloud.Services.v1            // Add DeveloperCloud
         {
             if (m_IsListening)
             {
-                if ( m_RecordingHZ < 0 )
+                if (m_RecordingHZ < 0)
                 {
                     m_RecordingHZ = clip.Clip.frequency;
                     SendStart();
@@ -214,7 +216,7 @@ namespace IBM.Watson.DeveloperCloud.Services.v1            // Add DeveloperCloud
                         // check the length of this queue and do something if it gets too full.
                         if (m_ListenRecordings.Count > MAX_QUEUED_RECORDINGS)
                         {
-                            Log.Error("SpeechToText", "Recording queue is full." );
+                            Log.Error("SpeechToText", "Recording queue is full.");
 
                             StopListening();
                             if (OnError != null)
@@ -230,9 +232,9 @@ namespace IBM.Watson.DeveloperCloud.Services.v1            // Add DeveloperCloud
 
                 // After sending start, we should get into the listening state within the amount of time specified
                 // by LISTEN_TIMEOUT. If not, then stop listening and record the error.
-                if ( !m_ListenActive && (DateTime.Now - m_LastStartSent).TotalSeconds > LISTEN_TIMEOUT )
+                if (!m_ListenActive && (DateTime.Now - m_LastStartSent).TotalSeconds > LISTEN_TIMEOUT)
                 {
-                    Log.Error("SpeechToText", "Failed to enter listening state." );
+                    Log.Error("SpeechToText", "Failed to enter listening state.");
 
                     StopListening();
                     if (OnError != null)
@@ -331,19 +333,19 @@ namespace IBM.Watson.DeveloperCloud.Services.v1            // Add DeveloperCloud
             {
                 yield return null;
 
-                if ( (DateTime.Now - m_LastKeepAlive).TotalSeconds > WS_KEEP_ALIVE_TIME )
+                if ((DateTime.Now - m_LastKeepAlive).TotalSeconds > WS_KEEP_ALIVE_TIME)
                 {
                     Dictionary<string, string> nop = new Dictionary<string, string>();
                     nop["action"] = "no-op";
 
 #if ENABLE_DEBUGGING
-                    Log.Debug( "SpeechToText", "Sending keep alive." );
+                    Log.Debug("SpeechToText", "Sending keep alive.");
 #endif
                     m_ListenSocket.Send(new WSConnector.TextMessage(Json.Serialize(nop)));
                     m_LastKeepAlive = DateTime.Now;
                 }
             }
-            Log.Debug( "SpeechToText", "KeepAlive exited." );
+            Log.Debug("SpeechToText", "KeepAlive exited.");
         }
 
         private void OnListenMessage(WSConnector.Message msg)
@@ -362,7 +364,7 @@ namespace IBM.Watson.DeveloperCloud.Services.v1            // Add DeveloperCloud
                         {
                             // when we get results, start listening for the next block ..
                             // if continuous is true, then we don't need to do this..
-                            if (! EnableContinousRecognition && results.HasFinalResult() )
+                            if (!EnableContinousRecognition && results.HasFinalResult())
                                 SendStart();
 
                             if (m_ListenCallback != null)
@@ -384,7 +386,7 @@ namespace IBM.Watson.DeveloperCloud.Services.v1            // Add DeveloperCloud
                         {
                             if (m_IsListening)
                             {
-                                if (! m_ListenActive )
+                                if (!m_ListenActive)
                                 {
                                     m_ListenActive = true;
 
@@ -400,14 +402,14 @@ namespace IBM.Watson.DeveloperCloud.Services.v1            // Add DeveloperCloud
                         }
 
                     }
-                    else if ( json.Contains("error") )
+                    else if (json.Contains("error"))
                     {
                         string error = (string)json["error"];
-                        Log.Error( "SpeechToText", "Error: {0}", error );
+                        Log.Error("SpeechToText", "Error: {0}", error);
 
                         StopListening();
-                        if ( OnError != null )
-                            OnError( error );
+                        if (OnError != null)
+                            OnError(error);
                     }
                     else
                     {
@@ -424,7 +426,7 @@ namespace IBM.Watson.DeveloperCloud.Services.v1            // Add DeveloperCloud
         private void OnListenClosed(WSConnector connector)
         {
 #if ENABLE_DEBUGGING
-            Log.Debug( "SpeechToText", "OnListenClosed(), State = {0}", connector.State.ToString() );
+            Log.Debug("SpeechToText", "OnListenClosed(), State = {0}", connector.State.ToString());
 #endif
 
             m_ListenActive = false;
@@ -437,10 +439,9 @@ namespace IBM.Watson.DeveloperCloud.Services.v1            // Add DeveloperCloud
             }
         }
 
-#endregion
+        #endregion
 
-
-#region GetModels Functions
+        #region GetModels Functions
         /// <summary>
         /// This function retrieves all the language models that the user may use by setting the RecognizeModel 
         /// public property.
@@ -532,9 +533,9 @@ namespace IBM.Watson.DeveloperCloud.Services.v1            // Add DeveloperCloud
 
             return null;
         }
-#endregion
+        #endregion
 
-#region Recognize Functions
+        #region Recognize Functions
         /// <summary>
         /// This function POSTs the given audio clip the recognize function and convert speech into text. This function should be used
         /// only on AudioClips under 4MB once they have been converted into WAV format. Use the StartListening() for continuous
@@ -727,10 +728,10 @@ namespace IBM.Watson.DeveloperCloud.Services.v1            // Add DeveloperCloud
         /// <exclude />
         public void GetServiceStatus(ServiceStatus callback)
         {
-            if ( Config.Instance.FindCredentials( SERVICE_ID ) != null )
-                new CheckServiceStatus( this, callback );
+            if (Config.Instance.FindCredentials(SERVICE_ID) != null)
+                new CheckServiceStatus(this, callback);
             else
-                callback( SERVICE_ID, false );
+                callback(SERVICE_ID, false);
         }
 
         private class CheckServiceStatus
@@ -738,19 +739,19 @@ namespace IBM.Watson.DeveloperCloud.Services.v1            // Add DeveloperCloud
             private SpeechToText m_Service = null;
             private ServiceStatus m_Callback = null;
 
-            public CheckServiceStatus( SpeechToText service, ServiceStatus callback )
+            public CheckServiceStatus(SpeechToText service, ServiceStatus callback)
             {
                 m_Service = service;
                 m_Callback = callback;
 
-                if (! m_Service.GetModels( OnCheckService ) )
-                    m_Callback( SERVICE_ID, false );
+                if (!m_Service.GetModels(OnCheckService))
+                    m_Callback(SERVICE_ID, false);
             }
 
-            private void OnCheckService( SpeechModel [] models  )
+            private void OnCheckService(SpeechModel[] models)
             {
-                if ( m_Callback != null ) 
-                    m_Callback( SERVICE_ID, models != null );
+                if (m_Callback != null)
+                    m_Callback(SERVICE_ID, models != null);
             }
         };
         #endregion

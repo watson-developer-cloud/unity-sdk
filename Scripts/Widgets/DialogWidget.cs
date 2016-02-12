@@ -22,10 +22,9 @@ using System;
 using UnityEngine.UI;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
-using IBM.Watson.DeveloperCloud.DataModels;
-using IBM.Watson.DeveloperCloud.Services.v1;
+using IBM.Watson.DeveloperCloud.Services.Dialog.v1;
+using IBM.Watson.DeveloperCloud.Services.SpeechToText.v1;
 using IBM.Watson.DeveloperCloud.DataTypes;
-
 
 namespace IBM.Watson.DeveloperCloud.Widgets
 {

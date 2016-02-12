@@ -15,13 +15,12 @@
 *
 */
 
-
-using IBM.Watson.DeveloperCloud.DataModels;
-using IBM.Watson.DeveloperCloud.Services.v1;
+using IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1;
+using IBM.Watson.DeveloperCloud.Services.SpeechToText.v1;
+using IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
 using IBM.Watson.DeveloperCloud.Widgets;
 using UnityEngine;
-using System;
 
 namespace IBM.Watson.DeveloperCloud.DataTypes
 {
@@ -104,7 +103,7 @@ namespace IBM.Watson.DeveloperCloud.DataTypes
         /// Constructor which takes the voice type enumeration.
         /// </summary>
         /// <param name="voice">The voice to select.</param>
-        public VoiceData( TextToSpeech.VoiceType voice )
+        public VoiceData( VoiceType voice )
         {
             Voice = voice;
         }
@@ -118,7 +117,7 @@ namespace IBM.Watson.DeveloperCloud.DataTypes
         /// <summary>
         /// The enumeration of the voice to select.
         /// </summary>
-        public TextToSpeech.VoiceType Voice { get; set; }
+        public VoiceType Voice { get; set; }
     };
 
     /// <summary>

@@ -18,9 +18,8 @@
 //#define TEST_DELETE
 
 using System.Collections;
-using IBM.Watson.DeveloperCloud.Services.v1;
+using IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1;
 using IBM.Watson.DeveloperCloud.Logging;
-using IBM.Watson.DeveloperCloud.DataModels;
 using IBM.Watson.DeveloperCloud.Utilities;
 using System.IO;
 using UnityEngine;

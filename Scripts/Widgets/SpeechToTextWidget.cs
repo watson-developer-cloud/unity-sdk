@@ -17,9 +17,8 @@
 
 //#define ENABLE_DEBUGGING
 
-using IBM.Watson.DeveloperCloud.DataModels;
 using IBM.Watson.DeveloperCloud.DataTypes;
-using IBM.Watson.DeveloperCloud.Services.v1;
+using IBM.Watson.DeveloperCloud.Services.SpeechToText.v1;
 using IBM.Watson.DeveloperCloud.Logging;
 using UnityEngine;
 using UnityEngine.UI;

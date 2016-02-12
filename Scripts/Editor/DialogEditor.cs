@@ -18,11 +18,10 @@
 #if UNITY_EDITOR
 
 using IBM.Watson.DeveloperCloud.Utilities;
-using IBM.Watson.DeveloperCloud.Services.v1;
+using IBM.Watson.DeveloperCloud.Services.Dialog.v1;
 using UnityEditor;
 using UnityEngine;
 using System.IO;
-using IBM.Watson.DeveloperCloud.DataModels;
 using IBM.Watson.DeveloperCloud.Logging;
 
 namespace IBM.Watson.DeveloperCloud.Editor

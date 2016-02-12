@@ -18,7 +18,6 @@
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Connection;
 using IBM.Watson.DeveloperCloud.Utilities;
-using IBM.Watson.DeveloperCloud.DataModels;
 using MiniJSON;
 using System;
 using System.Collections.Generic;
@@ -27,7 +26,7 @@ using FullSerializer;
 using System.Collections;
 using System.IO;
 
-namespace IBM.Watson.DeveloperCloud.Services.v1
+namespace IBM.Watson.DeveloperCloud.Services.Dialog.v1
 {
     /// <summary>
     /// This class wraps the Watson Dialog service. 

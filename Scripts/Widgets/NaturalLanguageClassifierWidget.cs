@@ -16,10 +16,10 @@
 */
 
 using IBM.Watson.DeveloperCloud.DataTypes;
-using IBM.Watson.DeveloperCloud.Services.v1;
+using IBM.Watson.DeveloperCloud.Services.SpeechToText.v1;
+using IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
-using IBM.Watson.DeveloperCloud.DataModels;
 using UnityEngine;
 using UnityEngine.UI;
 using System;

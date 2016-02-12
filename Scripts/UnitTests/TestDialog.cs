@@ -16,9 +16,8 @@
 */
 
 using System.Collections;
-using IBM.Watson.DeveloperCloud.Services.v1;
+using IBM.Watson.DeveloperCloud.Services.Dialog.v1;
 using IBM.Watson.DeveloperCloud.Logging;
-using IBM.Watson.DeveloperCloud.DataModels;
 using IBM.Watson.DeveloperCloud.Utilities;
 using UnityEngine;
 
