@@ -79,6 +79,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                     UnityObjectUtil.DestroyUnityObject( Clip );
             }
 
+            public bool Ready { get; set; }
             public AudioClip Clip { get; set; }
 
             public Speech(TextToSpeech tts, string text, bool usePost)
@@ -89,6 +90,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             private void OnAudioClip(AudioClip clip)
             {
                 Clip = clip;
+                Ready = true;
             }
 
         };
@@ -177,7 +179,8 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         private void Update()
         {
             if (m_Source != null && !m_Source.isPlaying
-                && m_SpeechQueue.Count > 0 )
+                && m_SpeechQueue.Count > 0 
+                && m_SpeechQueue.Peek().Ready )
             {
                 CancelInvoke("OnEndSpeech");
 
