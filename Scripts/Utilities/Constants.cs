@@ -212,6 +212,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// Event to immerse features
             /// </summary>
             ON_QUESTION_IMMERSE_FEATURES,
+            /// <summary>
+            /// Event fired when location with ship tracking information
+            /// </summary>
+            ON_QUESTION_LOCATION_SHIPTRACKING,
             #endregion
 
             #region Animation / Camera

@@ -15,11 +15,15 @@
 *
 */
 
+
+using FullSerializer;
+using IBM.Watson.DeveloperCloud.Logging;
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 using UnityEngine;
+
 
 namespace IBM.Watson.DeveloperCloud.Utilities
 {
@@ -28,6 +32,8 @@ namespace IBM.Watson.DeveloperCloud.Utilities
     /// </summary>
     static public class Utility
     {
+        private static fsSerializer sm_Serializer = new fsSerializer();
+
         /// <summary>
         /// This helper functions returns all Type's that inherit from the given type.
         /// </summary>
@@ -242,6 +248,39 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         public static string GetOnOffString(bool b)
         {
             return b?"ON": "OFF";
+        }
+
+        /// <summary>
+        /// Deserializes the response.
+        /// </summary>
+        /// <returns>The response.</returns>
+        /// <param name="resp">Resp.</param>
+        /// <param name="obj">Object.</param>
+        /// <typeparam name="T">The 1st type parameter.</typeparam>
+        public static T DeserializeResponse<T>( byte [] resp, object obj = null ) where T : class, new()
+        {
+            string json = Encoding.UTF8.GetString( resp );
+            try {
+                fsData data = null;
+                fsResult r = fsJsonParser.Parse(json, out data);
+                if (!r.Succeeded)
+                    throw new WatsonException(r.FormattedMessages);
+
+                if ( obj == null )
+                    obj = new T();
+
+                r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                if (!r.Succeeded)
+                    throw new WatsonException(r.FormattedMessages);
+
+                return (T)obj;
+            }
+            catch (Exception e)
+            {
+                Log.Error("Utility", "DeserializeResponse Exception: {0}", e.ToString());
+            }
+
+            return null;
         }
 
     }
