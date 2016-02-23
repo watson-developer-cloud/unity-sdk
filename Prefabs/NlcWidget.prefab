@@ -112,7 +112,7 @@ MonoBehaviour:
   - m_Class: repeat_last_action
     m_Event: 419
   - m_Class: personnel
-    m_Event: 515
+    m_Event: 423
   - m_Class: confirm_update
     m_Event: 700
   - m_Class: cancel_update
@@ -143,6 +143,8 @@ MonoBehaviour:
     m_Event: 906
   - m_Class: about_xray
     m_Event: 907
+  - m_Class: ship_tracking
+    m_Event: 215
   m_TopClassText: {fileID: 0}
 --- !u!1001 &100100000
 Prefab:
@@ -153,7 +155,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.size
-      value: 47
+      value: 48
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassifierId
@@ -333,7 +335,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[31].m_Event
-      value: 515
+      value: 423
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[32].m_Class
@@ -449,11 +451,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[47].m_Class
-      value: cancel
+      value: ship_tracking
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[47].m_Event
-      value: 422
+      value: 215
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

@@ -368,6 +368,14 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// Cancel command
             /// </summary>
             ON_COMMAND_CANCEL,
+            /// <summary>
+            /// On classify the question as personnel information related
+            /// </summary>
+            ON_CLASSIFY_PERSONNEL,
+            /// <summary>
+            /// On Classify the question as ship tracking question
+            /// </summary>
+            ON_CLASSIFY_SHIP_TRACKING,
 
             #endregion
 
@@ -432,10 +440,6 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 			/// Event fired after three tap on middle top - hot corner
 			/// </summary>
 			ON_TAP_THREETIMES_MIDDLE_TOP,
-			/// <summary>
-			/// 
-			/// </summary>
-			ON_CLASSIFY_PERSONNEL,
             /// <summary>
             /// Event fired when a single tap occur
             /// </summary>
