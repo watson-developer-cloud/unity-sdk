@@ -567,8 +567,15 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// <summary>
             /// To show system log panel
             /// </summary>
-            SHOW_APPLICATION_ABOUT
+            SHOW_APPLICATION_ABOUT,
             #endregion
+
+			#region Answer selection
+			/// <summary>
+			/// Answer or passage selection
+			/// </summary>
+			SELECT_ANSWER
+			#endregion
 
         }
 
