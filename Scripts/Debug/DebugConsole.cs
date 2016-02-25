@@ -259,7 +259,8 @@ namespace IBM.Watson.DeveloperCloud.Debug
                 KeyEventManager.Instance.Active = false;
 
 				//	turn off mic
-				m_MicWidget.Active = false;
+				if(m_MicWidget != null)
+					m_MicWidget.Active = false;
 
 				//	timer to turn mic back on
 				StartCoroutine(ActivateMicAfterTime(10f));
@@ -282,14 +283,16 @@ namespace IBM.Watson.DeveloperCloud.Debug
                 KeyEventManager.Instance.Active = true;
 
 				//	turn on mic
-				m_MicWidget.Active = true;
+				if(m_MicWidget != null)
+					m_MicWidget.Active = true;
             }
         }
 
 		private IEnumerator ActivateMicAfterTime(float time)
 		{
 			yield return new WaitForSeconds(time);
-			m_MicWidget.Active = true;
+			if(m_MicWidget != null)
+				m_MicWidget.Active = true;
 		}
         #endregion
     }
