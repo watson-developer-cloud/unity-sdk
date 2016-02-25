@@ -144,7 +144,7 @@ MonoBehaviour:
   - m_Class: about_xray
     m_Event: 907
   - m_Class: ship_tracking
-    m_Event: 215
+    m_Event: 424
   m_TopClassText: {fileID: 0}
 --- !u!1001 &100100000
 Prefab:
@@ -455,7 +455,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[47].m_Event
-      value: 215
+      value: 424
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

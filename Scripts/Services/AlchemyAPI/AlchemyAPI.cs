@@ -28,6 +28,9 @@ using System.IO;
 
 namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 {
+    /// <summary>
+    /// Service integration for Alchemy API
+    /// </summary>
     public class AlchemyAPI : IWatsonService {
 
         #region Private Data
@@ -37,6 +40,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
         #region Entity Extraction
         private const string SERVICE_ENTITY_EXTRACTION = "/calls/text/TextGetRankedNamedEntities";
+        private string mp_ApiKey = null;
 
         public delegate void OnGetEntityExtraction( EntityExtractionData entityExtractionData );
 
@@ -48,6 +52,11 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 throw new ArgumentNullException("callback");
             if (string.IsNullOrEmpty(text))
                 throw new WatsonException("GetEntityExtraction needs to have some text to work.");
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                mp_ApiKey = Config.Instance.GetVariableValue("ALCHEMY_API_KEY");
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                throw new WatsonException("GetEntityExtraction - ALCHEMY_API_KEY needs to be defined in config.json");
+
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_ENTITY_EXTRACTION);
             if (connector == null)
@@ -55,7 +64,8 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
             GetEntityExtractionRequest req = new GetEntityExtractionRequest();
             req.Callback = callback;
-            req.Parameters["apikey"] = "e794767b4f5cee4068ceb9d02d3d1f9cccb7cf23";  //TODO: Delete and get from Config.json
+
+            req.Parameters["apikey"] = mp_ApiKey; 
             req.Parameters["text"] = text;
             req.Parameters["url"] = "";
             req.Parameters["outputMode"] = "json";
