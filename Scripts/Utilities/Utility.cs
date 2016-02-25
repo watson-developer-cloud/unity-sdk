@@ -283,7 +283,25 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             return null;
         }
 
+		/// <summary>
+		/// Strips the prepending ! statment from string.
+		/// </summary>
+		/// <returns>The string.</returns>
+		/// <param name="s">S.</param>
+		public static string StripString(string s)
+		{
+			string[] delimiter = new string[] {"!", "! "};
+			string[] newString = s.Split(delimiter, System.StringSplitOptions.None);
+			if(newString.Length > 1)
+			{
+				return newString[1];
+			}
+			else
+			{
+				return s;
+			}
+			
+		}
     }
-
 
 }
