@@ -132,7 +132,7 @@ namespace IBM.Watson.DeveloperCloud.Logging
 #if UNITY_EDITOR || UNITY_IOS || UNITY_ANDROID
                 LogSystem.Instance.InstallReactor( new DebugReactor() );
 #endif
-                LogSystem.Instance.InstallReactor( new FileReactor( Application.persistentDataPath + "/Watson.log" ) );
+                LogSystem.Instance.InstallReactor( new FileReactor( Application.persistentDataPath + "/" + Application.productName + ".log" ) );
 
                 Application.logMessageReceived += UnityLogCallback;
             }
