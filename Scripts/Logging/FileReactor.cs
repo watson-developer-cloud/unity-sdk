@@ -83,11 +83,11 @@ namespace IBM.Watson.DeveloperCloud.Logging
         {
             if (log.m_Level >= Level)
             {
-				#if !UNITY_WEBPLAYER
+#if !UNITY_WEBPLAYER
                 File.AppendAllText(LogFile, string.Format("[{0}][{1}][{2}] {3}\n",
                     log.m_TimeStamp.ToString("MM/dd/yyyy HH:mm:ss"),
                     log.m_SubSystem, log.m_Level.ToString(), log.m_Message));
-				#endif
+#endif
             }
         }
         #endregion

@@ -103,7 +103,7 @@ namespace IBM.Watson.DeveloperCloud.Logging
         /// <summary>
         /// Returns the singleton instance of the Logger object.
         /// </summary>
-		public static LogSystem Instance { get { if(! sm_bInstalledDefaultReactors) InstallDefaultReactors(); return Singleton<LogSystem>.Instance; } }
+		public static LogSystem Instance { get { return Singleton<LogSystem>.Instance; } }
         #endregion
 
         #region Private Data
