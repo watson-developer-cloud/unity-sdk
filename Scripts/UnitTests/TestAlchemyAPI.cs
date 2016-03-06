@@ -28,30 +28,25 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         
         AlchemyAPI m_AlchemnyAPI = new AlchemyAPI();
         bool m_EntityExtractionTested = false;
-        int m_NumberOfTestEntityExtraction = 17;
+        int m_NumberOfTestEntityExtraction = 6;
 
         public override IEnumerator RunTest()
         {
+            Log.Status("TestAlchemyAPI", "Test waiting to start");
+
+
             if ( Config.Instance.FindCredentials( m_AlchemnyAPI.GetServiceID() ) == null )
                 yield break;
 
-            m_AlchemnyAPI.GetEntityExtraction(OnGetEntityExtraction, "Where is the Woodside Donaldson");
-            m_AlchemnyAPI.GetEntityExtraction(OnGetEntityExtraction, "Where is the LNG Egis");
-            m_AlchemnyAPI.GetEntityExtraction(OnGetEntityExtraction, "Where is the NWS Swift");
-            m_AlchemnyAPI.GetEntityExtraction(OnGetEntityExtraction, "Where are our LNG Ships");
-            m_AlchemnyAPI.GetEntityExtraction(OnGetEntityExtraction, "Which LNG ships are close to Karratha");
-            m_AlchemnyAPI.GetEntityExtraction(OnGetEntityExtraction, "What is the nearest ship to Woodside Goode");
-            m_AlchemnyAPI.GetEntityExtraction(OnGetEntityExtraction, "Can you tell me the location of Woodside Rogers");
-            m_AlchemnyAPI.GetEntityExtraction(OnGetEntityExtraction, "Can you tell me the location of ship LNG Ebisu");
-            m_AlchemnyAPI.GetEntityExtraction(OnGetEntityExtraction, "Can you tell me the location of ship Northwest Sandpiper");
-            m_AlchemnyAPI.GetEntityExtraction(OnGetEntityExtraction, "Show me the location of ship Sea Eagle");
-            m_AlchemnyAPI.GetEntityExtraction(OnGetEntityExtraction, "When is ship Shear Water due to reach port Karratha");
-            m_AlchemnyAPI.GetEntityExtraction(OnGetEntityExtraction, "What is the eta of ship Woodside Goode");
-            m_AlchemnyAPI.GetEntityExtraction(OnGetEntityExtraction, "What is the current speed of ship Woodside Donaldson");
-            m_AlchemnyAPI.GetEntityExtraction(OnGetEntityExtraction, "What is the destination of ship Woodside Rogers");
-            m_AlchemnyAPI.GetEntityExtraction(OnGetEntityExtraction, "What is the capacity of ship LNG Ebisu");
-            m_AlchemnyAPI.GetEntityExtraction(OnGetEntityExtraction, "What is the draught of ship Northwest Sandpiper");
-            m_AlchemnyAPI.GetEntityExtraction(OnGetEntityExtraction, "Is ship Snipe laden or ballast");
+            Log.Status("TestAlchemyAPI", "Test Started");
+
+            m_NumberOfTestEntityExtraction = 6;
+            m_AlchemnyAPI.GetEntityExtraction(OnGetEntityExtraction, "How are you Watson?");
+            m_AlchemnyAPI.GetEntityExtraction(OnGetEntityExtraction, "How can Watson help patients?");
+            m_AlchemnyAPI.GetEntityExtraction(OnGetEntityExtraction, "Where is Watson?");       //Name
+            m_AlchemnyAPI.GetEntityExtraction(OnGetEntityExtraction, "Where is Paris?");        //Location
+            m_AlchemnyAPI.GetEntityExtraction(OnGetEntityExtraction, "Which ships are close to Karratha");  //location with name
+            m_AlchemnyAPI.GetEntityExtraction(OnGetEntityExtraction, "Are you artifical intelligence?");
 
             while(! m_EntityExtractionTested )
                 yield return null;
