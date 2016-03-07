@@ -16,7 +16,7 @@
 */
 
 // uncomment to enable debugging
-//#define ENABLE_DEBUGGING
+#define ENABLE_DEBUGGING
 // uncomment to enable experimental gateway code.
 //#define ENABLE_GATEWAY
 

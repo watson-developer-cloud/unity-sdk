@@ -170,6 +170,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
 
         private void Start()
         {
+			LogSystem.InstallDefaultReactors();
         }
 
         private void OnGUI()
