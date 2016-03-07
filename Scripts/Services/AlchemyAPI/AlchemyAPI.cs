@@ -42,7 +42,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         private const string SERVICE_ENTITY_EXTRACTION = "/calls/text/TextGetRankedNamedEntities";
         private string mp_ApiKey = null;
 
-        public delegate void OnGetEntityExtraction( EntityExtractionData entityExtractionData );
+        public delegate void OnGetEntityExtraction( EntityExtractionData entityExtractionData, string data );
 
         //http://access.alchemyapi.com/calls/text/TextGetRankedNamedEntities
 
@@ -82,12 +82,14 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             req.Parameters["structuredEntities"] = "1";
 
             req.OnResponse = OnGetEntityExtractionResponse;
+            req.Data = text;
 
             return connector.Send(req);
         }
 
         private class GetEntityExtractionRequest : RESTConnector.Request
         {
+            public string Data { get; set;}
             public OnGetEntityExtraction Callback { get; set; }
         };
 
@@ -116,7 +118,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             }
 
             if (((GetEntityExtractionRequest)req).Callback != null)
-                ((GetEntityExtractionRequest)req).Callback(resp.Success ? entityExtractionData : null);
+                ((GetEntityExtractionRequest)req).Callback(resp.Success ? entityExtractionData : null, ((GetEntityExtractionRequest)req).Data);
         }
 
         #endregion
@@ -151,7 +153,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                     m_Callback( SERVICE_ID, false );
             }
 
-            void OnGetEntityExtraction (EntityExtractionData entityExtractionData)
+            void OnGetEntityExtraction (EntityExtractionData entityExtractionData, string data)
             {
                 if ( m_Callback != null ) 
                     m_Callback( SERVICE_ID, entityExtractionData != null );

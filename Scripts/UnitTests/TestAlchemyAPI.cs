@@ -56,7 +56,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
 
 
-        private void OnGetEntityExtraction( EntityExtractionData entityExtractionData )
+        private void OnGetEntityExtraction(EntityExtractionData entityExtractionData, string data)
         {
             m_NumberOfTestEntityExtraction--;
             Log.Status("TestAlchemyAPI", "Remaining: {0}, Has Geo Information: {1}, Geo: {2}, OnGetEntityExtraction: {3}", m_NumberOfTestEntityExtraction, entityExtractionData.HasGeographicInformation, (entityExtractionData.HasGeographicInformation?entityExtractionData.GeoLocation.ToString(): "None"), entityExtractionData);
