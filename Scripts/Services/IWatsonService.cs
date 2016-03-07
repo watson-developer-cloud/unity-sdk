@@ -62,8 +62,12 @@ namespace IBM.Watson.DeveloperCloud.Services
             Type [] types = Utilities.Utility.FindAllDerivedTypes( typeof(IWatsonService) );
             foreach( var type in types )
             {
-                object serviceObject = Activator.CreateInstance( type );
-                services.Add( serviceObject as IWatsonService );
+                try {
+                    object serviceObject = Activator.CreateInstance( type );
+                    services.Add( serviceObject as IWatsonService );
+                }
+                catch( Exception )
+                { }
             }
 
             return services.ToArray();
