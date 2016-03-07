@@ -254,10 +254,4 @@ namespace IBM.Watson.DeveloperCloud.Services.DeepQA.v1
         public Numerati() : base( "numerati" )
         { }
     }
-
-    public class WatsonInWalls : DeepQA
-    {
-        public WatsonInWalls() : base( "wiw" )
-        { }
-    }
 }
