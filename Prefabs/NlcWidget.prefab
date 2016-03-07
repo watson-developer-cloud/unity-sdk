@@ -44,9 +44,12 @@ MonoBehaviour:
     m_Connections: []
   m_ClassifierName: ${NLC_CLASSIFIER_NAME}
   m_ClassifierId: ${NLC_CLASSIFIER_ID}
-  m_MinWordConfidence: 0.3
-  m_IgnoreWordConfidence: 0.2
-  m_MinClassEventConfidence: 0.4
+  m_MinWordConfidence: 0
+  m_MinWordConfidenceDelta: 0
+  m_IgnoreWordConfidence: 0
+  m_IgnoreWordConfidenceDelta: 0
+  m_MinClassEventConfidence: 0
+  m_MinClassEventConfidenceDelta: 0
   m_Language: en
   m_ClassEventList:
   - m_Class: wakeup
@@ -449,11 +452,27 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[47].m_Class
-      value: cancel
+      value: about_xray
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[47].m_Event
-      value: 422
+      value: 907
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[48].m_Class
+      value: about_xray
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[48].m_Event
+      value: 907
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[49].m_Class
+      value: about_xray
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[49].m_Event
+      value: 907
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
