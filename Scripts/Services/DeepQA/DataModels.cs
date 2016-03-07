@@ -17,7 +17,6 @@
 
 using FullSerializer;
 using System.Collections.Generic;
-using IBM.Watson.DeveloperCloud.Services.XRAY.v1;
 
 namespace IBM.Watson.DeveloperCloud.Services.DeepQA.v1
 {
@@ -101,6 +100,25 @@ namespace IBM.Watson.DeveloperCloud.Services.DeepQA.v1
             text = text.Replace("\\t", "\t");
             return text.Trim(new char[] { '\n', '\r', '\t', ' ' });
         }
+
+        [fsObject]
+        public class Cell
+        {
+            public string Value { get; set; }
+            public int ColSpan { get; set; }            // how many colums does this cell span, by default just 1..
+            public bool Highlighted { get; set; }
+        };
+        [fsObject]
+        public class Row
+        {
+            public Cell[] columns { get; set; }
+        };
+
+        [fsObject]
+        public class Table
+        {
+            public Row[] rows { get; set; }
+        };
 
         /// <summary>
         /// Helper function to extract all tables from the formatted answer
