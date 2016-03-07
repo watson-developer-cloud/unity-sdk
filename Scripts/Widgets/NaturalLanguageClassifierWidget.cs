@@ -54,15 +54,15 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         private string m_ClassifierId = string.Empty;
         [SerializeField, Tooltip("What is the minimum word confidence needed to send onto the NLC?")]
         private float m_MinWordConfidence = 0f;
-		[SerializeField]
+//		[SerializeField]
         private float m_MinWordConfidenceDelta = 0.0f;
         [SerializeField, Tooltip("Recognized speech below this confidence is just ignored.")]
         private float m_IgnoreWordConfidence = 0f;
-		[SerializeField]
+//		[SerializeField]
         private float m_IgnoreWordConfidenceDelta = 0.0f;
         [SerializeField, Tooltip("What is the minimum confidence for a classification event to be fired.")]
         private float m_MinClassEventConfidence = 0f;
-		[SerializeField]
+//		[SerializeField]
         private float m_MinClassEventConfidenceDelta = 0.0f;
         [SerializeField]
         private string m_Language = "en";
