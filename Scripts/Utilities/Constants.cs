@@ -271,7 +271,14 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// Event to move the camera down
             /// </summary>
             ON_CAMERA_MOVE_DOWN,
-            
+            /// <summary>
+            /// Event to set Antialiasing on / off
+            /// </summary>
+            ON_CAMERA_SET_ANTIALIASING,
+            /// <summary>
+            /// Event to set depth of field on / off
+            /// </summary>
+            ON_CAMERA_SET_DEPTHOFFIELD,
             #endregion
 
             #region NLC

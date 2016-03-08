@@ -20,6 +20,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
+using UnityStandardAssets.ImageEffects;
 
 namespace IBM.Watson.DeveloperCloud.Camera
 {
@@ -45,6 +46,9 @@ namespace IBM.Watson.DeveloperCloud.Camera
         private float m_ZoomSpeed = 20.0f;
         [SerializeField]
         private float m_SpeedForCameraAnimation = 2f;
+
+        private Antialiasing m_AntiAliasing;
+        private DepthOfField m_DepthOfField;
 
         #endregion
 
@@ -110,11 +114,30 @@ namespace IBM.Watson.DeveloperCloud.Camera
 
         #endregion
 
+        #region Event Registration
+
+        void OnEnable()
+        {
+            EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_CAMERA_SET_ANTIALIASING, OnCameraSetAntiAliasing);
+            EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_CAMERA_SET_DEPTHOFFIELD, OnCameraSetDepthOfField);
+        }
+
+        void OnDisable()
+        {
+            EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_CAMERA_SET_ANTIALIASING, OnCameraSetAntiAliasing);
+            EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_CAMERA_SET_DEPTHOFFIELD, OnCameraSetDepthOfField);
+        }
+
+        #endregion
+
         #region Start / Update
 
         void Awake(){
             mp_Instance = this;
+            m_AntiAliasing = this.GetComponent<Antialiasing>();
+            m_DepthOfField = this.GetComponent<DepthOfField>();
         }
+
 		void Start(){
 			m_CameraInitialLocation = transform.localPosition;
 			m_CameraInitialRotation = transform.rotation;
@@ -179,6 +202,33 @@ namespace IBM.Watson.DeveloperCloud.Camera
         #endregion
 
         #region Camera Events Received from Outside - Set default position / Move Left - Right - Up - Down / Zoom-in-out
+
+        public void OnCameraSetAntiAliasing(System.Object[] args)
+        {
+            if (args != null && args.Length == 1 && args[0] is bool)
+            {
+                bool valueSet = (bool)args[0];
+
+                if (m_AntiAliasing != null)
+                {
+                    m_AntiAliasing.enabled = valueSet;
+                }
+            }
+        }
+
+        public void OnCameraSetDepthOfField(System.Object[] args)
+        {
+            if (args != null && args.Length == 1 && args[0] is bool)
+            {
+                bool valueSet = (bool)args[0];
+
+                if (m_DepthOfField != null)
+                {
+                    m_DepthOfField.enabled = valueSet;
+                }
+            }
+        }
+
 
 		/// <summary>
 		/// Event handler reseting the camera position.
