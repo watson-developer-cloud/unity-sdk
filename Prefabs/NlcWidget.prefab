@@ -45,11 +45,8 @@ MonoBehaviour:
   m_ClassifierName: ${NLC_CLASSIFIER_NAME}
   m_ClassifierId: ${NLC_CLASSIFIER_ID}
   m_MinWordConfidence: 0
-  m_MinWordConfidenceDelta: 0
   m_IgnoreWordConfidence: 0
-  m_IgnoreWordConfidenceDelta: 0
   m_MinClassEventConfidence: 0
-  m_MinClassEventConfidenceDelta: 0
   m_Language: en
   m_ClassEventList:
   - m_Class: wakeup
@@ -146,6 +143,8 @@ MonoBehaviour:
     m_Event: 906
   - m_Class: about_xray
     m_Event: 907
+  - m_Class: ship_tracking
+    m_Event: 424
   m_TopClassText: {fileID: 0}
 --- !u!1001 &100100000
 Prefab:
@@ -156,7 +155,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.size
-      value: 47
+      value: 48
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassifierId
@@ -452,11 +451,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[47].m_Class
-      value: about_xray
+      value: ship_tracking
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[47].m_Event
-      value: 907
+      value: 424
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[48].m_Class
