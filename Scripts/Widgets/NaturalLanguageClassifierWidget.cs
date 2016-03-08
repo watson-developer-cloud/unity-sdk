@@ -53,13 +53,13 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         [SerializeField]
         private string m_ClassifierId = string.Empty;
         [SerializeField, Tooltip("What is the minimum word confidence needed to send onto the NLC?")]
-        private float m_MinWordConfidence = 0.4f;
+        private float m_MinWordConfidence = 0f;
         private float m_MinWordConfidenceDelta = 0.0f;
         [SerializeField, Tooltip("Recognized speech below this confidence is just ignored.")]
-        private float m_IgnoreWordConfidence = 0.2f;
+        private float m_IgnoreWordConfidence = 0f;
         private float m_IgnoreWordConfidenceDelta = 0.0f;
         [SerializeField, Tooltip("What is the minimum confidence for a classification event to be fired.")]
-        private float m_MinClassEventConfidence = 0.5f;
+        private float m_MinClassEventConfidence = 0f;
         private float m_MinClassEventConfidenceDelta = 0.0f;
         [SerializeField]
         private string m_Language = "en";
@@ -96,10 +96,11 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             }
             set
             {
-                m_IgnoreWordConfidenceDelta = value - m_IgnoreWordConfidence;
+                m_IgnoreWordConfidenceDelta = value + m_IgnoreWordConfidence;
                 if (IgnoreWordConfidence > MinWordConfidence)
                     MinWordConfidence = IgnoreWordConfidence;
                 PlayerPrefs.SetFloat( "m_IgnoreWordConfidenceDelta", m_IgnoreWordConfidenceDelta );
+				Log.Debug("NauralLanguageClassifierWidget", "SETTING IgnoreWordConfidence TO {0}", IgnoreWordConfidence);
                 PlayerPrefs.Save();
             }
         }
@@ -109,6 +110,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             set {
                 m_IgnoreWordConfidenceDelta = value; 
                 PlayerPrefs.SetFloat( "m_IgnoreWordConfidenceDelta", m_IgnoreWordConfidenceDelta );
+				Log.Debug("NauralLanguageClassifierWidget", "SETTING IgnoreWordConfidenceDelta TO {0}", IgnoreWordConfidenceDelta);
                 PlayerPrefs.Save();
             }
         }
@@ -121,14 +123,16 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         {
             get
             {
-                return Mathf.Clamp01(m_MinWordConfidence + m_MinWordConfidenceDelta);
+				return Mathf.Clamp01(m_MinWordConfidence + m_MinWordConfidenceDelta);
+//                return Mathf.Clamp01(m_MinWordConfidenceDelta);
             }
             set
             {
-                m_MinWordConfidenceDelta = value - m_MinWordConfidence;
+                m_MinWordConfidenceDelta = value + m_MinWordConfidence;
                 if (MinWordConfidence < IgnoreWordConfidence)
                     IgnoreWordConfidence = MinWordConfidence;
-                PlayerPrefs.SetFloat( "m_MinWordConfidenceDelta", m_MinWordConfidenceDelta );
+				PlayerPrefs.SetFloat( "m_MinWordConfidenceDelta", m_MinWordConfidenceDelta );
+				Log.Debug("NauralLanguageClassifierWidget", "SETTING MinWordConfidence TO {0}", MinWordConfidence);
                 PlayerPrefs.Save();
             }
         }
@@ -138,6 +142,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             set {
                 m_MinWordConfidenceDelta = value; 
                 PlayerPrefs.SetFloat( "m_MinWordConfidenceDelta", m_MinWordConfidenceDelta );
+				Log.Debug("NauralLanguageClassifierWidget", "SETTING MinWordConfidenceDelta TO {0}", MinWordConfidenceDelta);
                 PlayerPrefs.Save();
             }
         }
@@ -154,8 +159,9 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             }
             set
             {
-                m_MinClassEventConfidenceDelta = value - m_MinClassEventConfidence;
+                m_MinClassEventConfidenceDelta = value + m_MinClassEventConfidence;
                 PlayerPrefs.SetFloat( "m_MinClassEventConfidenceDelta", m_MinClassEventConfidenceDelta );
+				Log.Debug("NauralLanguageClassifierWidget", "SETTING MinClassEventConfidence TO {0}", MinClassEventConfidence);
                 PlayerPrefs.Save();
             }
         }
@@ -165,6 +171,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             set {
                 m_MinClassEventConfidenceDelta = value;
                 PlayerPrefs.SetFloat( "m_MinClassEventConfidenceDelta", m_MinClassEventConfidenceDelta );
+				Log.Debug("NauralLanguageClassifierWidget", "SETTING MinClassEventConfidenceDelta TO {0}", MinClassEventConfidenceDelta);
                 PlayerPrefs.Save();
             }
         }

@@ -123,7 +123,7 @@ namespace IBM.Watson.DeveloperCloud.Logging
         /// <summary>
         /// Install a default debug and file reactor.
         /// </summary>
-        public static void InstallDefaultReactors()
+        public static void InstallDefaultReactors( int logHistory = 2 )
         {
             if (! sm_bInstalledDefaultReactors )
             {
@@ -132,7 +132,7 @@ namespace IBM.Watson.DeveloperCloud.Logging
 #if UNITY_EDITOR || UNITY_IOS || UNITY_ANDROID
                 LogSystem.Instance.InstallReactor( new DebugReactor() );
 #endif
-                LogSystem.Instance.InstallReactor( new FileReactor( Application.persistentDataPath + "/" + Application.productName + ".log" ) );
+                LogSystem.Instance.InstallReactor( new FileReactor( Application.persistentDataPath + "/" + Application.productName + ".log", LogLevel.STATUS, logHistory ) );
 
                 Application.logMessageReceived += UnityLogCallback;
             }
