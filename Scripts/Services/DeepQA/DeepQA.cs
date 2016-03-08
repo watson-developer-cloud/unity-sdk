@@ -231,8 +231,7 @@ namespace IBM.Watson.DeveloperCloud.Services.DeepQA.v1
 
             private void OnQuestion( Question question )
             {
-                if ( question != null ) 
-                    m_Callback( m_Service.GetServiceID(), question != null );
+                m_Callback( m_Service.GetServiceID(), question != null );
             }
         };
         #endregion
