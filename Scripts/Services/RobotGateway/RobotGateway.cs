@@ -55,7 +55,6 @@ namespace IBM.Watson.DeveloperCloud.Services.RobotGateway.v1
         };
         private void PingResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            string response = Encoding.UTF8.GetString(resp.Data);
             if (((PingReq)req).Callback != null)
                 ((PingReq)req).Callback(resp.Success);
         }
