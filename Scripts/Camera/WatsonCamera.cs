@@ -49,6 +49,7 @@ namespace IBM.Watson.DeveloperCloud.Camera
 
         private Antialiasing m_AntiAliasing;
         private DepthOfField m_DepthOfField;
+        private bool m_DisableTwoFinger = false;
 
         #endregion
 
@@ -120,12 +121,14 @@ namespace IBM.Watson.DeveloperCloud.Camera
         {
             EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_CAMERA_SET_ANTIALIASING, OnCameraSetAntiAliasing);
             EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_CAMERA_SET_DEPTHOFFIELD, OnCameraSetDepthOfField);
+            EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_CAMERA_SET_TWOFINGERDRAG, OnCameraSetTwoFingerDrag);
         }
 
         void OnDisable()
         {
             EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_CAMERA_SET_ANTIALIASING, OnCameraSetAntiAliasing);
             EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_CAMERA_SET_DEPTHOFFIELD, OnCameraSetDepthOfField);
+            EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_CAMERA_SET_TWOFINGERDRAG, OnCameraSetTwoFingerDrag);
         }
 
         #endregion
@@ -184,6 +187,9 @@ namespace IBM.Watson.DeveloperCloud.Camera
 		/// <param name="args">Arguments.</param>
         public void DragTwoFinger(System.Object[] args)
         {
+            if (m_DisableTwoFinger)
+                return;
+            
             if (args != null && args.Length == 1 && args[0] is TouchScript.Gestures.ScreenTransformGesture)
             {
                 TouchScript.Gestures.ScreenTransformGesture transformGesture = args[0] as TouchScript.Gestures.ScreenTransformGesture;
@@ -226,6 +232,14 @@ namespace IBM.Watson.DeveloperCloud.Camera
                 {
                     m_DepthOfField.enabled = valueSet;
                 }
+            }
+        }
+
+        public void OnCameraSetTwoFingerDrag(System.Object[] args)
+        {
+            if (args != null && args.Length == 1 && args[0] is bool)
+            {
+                m_DisableTwoFinger = !(bool)args[0];
             }
         }
 

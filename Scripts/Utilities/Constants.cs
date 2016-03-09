@@ -283,6 +283,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// Event to set depth of field on / off
             /// </summary>
             ON_CAMERA_SET_DEPTHOFFIELD,
+            /// <summary>
+            /// Event to set two finger enable / disable on camera
+            /// </summary>
+            ON_CAMERA_SET_TWOFINGERDRAG,
             #endregion
 
             #region NLC
@@ -510,6 +514,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 			/// Event fired when Double tap on Map
 			/// </summary>
 			ON_MAP_TAP_DOUBLE,
+            /// <summary>
+            /// Event fired when two finger dragging on Map - to zoom
+            /// </summary>
+            ON_MAP_DRAG_TWO_FINGER,
             #endregion
 
             #region Update
