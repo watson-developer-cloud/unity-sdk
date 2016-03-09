@@ -145,6 +145,8 @@ MonoBehaviour:
     m_Event: 907
   - m_Class: ship_tracking
     m_Event: 424
+  - m_Class: procurement
+    m_Event: 426
   m_TopClassText: {fileID: 0}
 --- !u!1001 &100100000
 Prefab:
@@ -155,7 +157,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.size
-      value: 48
+      value: 49
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassifierId
@@ -459,11 +461,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[48].m_Class
-      value: about_xray
+      value: procurement
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[48].m_Event
-      value: 907
+      value: 426
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[49].m_Class

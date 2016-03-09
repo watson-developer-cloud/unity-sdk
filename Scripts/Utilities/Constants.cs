@@ -216,6 +216,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// Event fired when location with ship tracking information
             /// </summary>
             ON_QUESTION_LOCATION_SHIPTRACKING,
+			/// <summary>
+			/// Event fired when location with procurement information
+			/// </summary>
+			ON_QUESTION_PROCUREMENT,
             #endregion
 
             #region Animation / Camera
@@ -339,6 +343,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// 
             /// </summary>
             ON_COMMAND_LOCATION,
+			/// <summary>
+			/// 
+			/// </summary>
+			ON_COMMAND_PROCUREMENT,
             /// <summary>
             /// Sent when any classify result is made.
             /// </summary>
@@ -383,6 +391,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// On Classify the question as ship tracking question
             /// </summary>
             ON_CLASSIFY_SHIP_TRACKING,
+			/// <summary>
+			/// On Classify the question as procurement question
+			/// </summary>
+			ON_CLASSIFY_PROCUREMENT,
 
             #endregion
 
