@@ -49,7 +49,7 @@ namespace IBM.Watson.DeveloperCloud.Camera
 
         private Antialiasing m_AntiAliasing;
         private DepthOfField m_DepthOfField;
-        private bool m_DisableTwoFinger = false;
+        private bool m_DisableInteractivity = false;
 
         #endregion
 
@@ -121,14 +121,14 @@ namespace IBM.Watson.DeveloperCloud.Camera
         {
             EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_CAMERA_SET_ANTIALIASING, OnCameraSetAntiAliasing);
             EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_CAMERA_SET_DEPTHOFFIELD, OnCameraSetDepthOfField);
-            EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_CAMERA_SET_TWOFINGERDRAG, OnCameraSetTwoFingerDrag);
+            EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_CAMERA_SET_INTERACTIVITY, OnCameraSetTwoFingerDrag);
         }
 
         void OnDisable()
         {
             EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_CAMERA_SET_ANTIALIASING, OnCameraSetAntiAliasing);
             EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_CAMERA_SET_DEPTHOFFIELD, OnCameraSetDepthOfField);
-            EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_CAMERA_SET_TWOFINGERDRAG, OnCameraSetTwoFingerDrag);
+            EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_CAMERA_SET_INTERACTIVITY, OnCameraSetTwoFingerDrag);
         }
 
         #endregion
@@ -187,7 +187,7 @@ namespace IBM.Watson.DeveloperCloud.Camera
 		/// <param name="args">Arguments.</param>
         public void DragTwoFinger(System.Object[] args)
         {
-            if (m_DisableTwoFinger)
+            if (m_DisableInteractivity)
                 return;
             
             if (args != null && args.Length == 1 && args[0] is TouchScript.Gestures.ScreenTransformGesture)
@@ -239,7 +239,7 @@ namespace IBM.Watson.DeveloperCloud.Camera
         {
             if (args != null && args.Length == 1 && args[0] is bool)
             {
-                m_DisableTwoFinger = !(bool)args[0];
+                m_DisableInteractivity = !(bool)args[0];
             }
         }
 
@@ -250,6 +250,8 @@ namespace IBM.Watson.DeveloperCloud.Camera
 		/// <param name="args">Arguments.</param>
         public void ResetCameraPosition(System.Object[] args)
         {
+            if (m_DisableInteractivity)
+                return;
             //Log.Status("WatsonCamera", "Reset Camera Position");
             DefaultCameraTarget.TargetPosition = m_CameraInitialLocation;
             DefaultCameraTarget.TargetRotation = m_CameraInitialRotation;
@@ -261,6 +263,9 @@ namespace IBM.Watson.DeveloperCloud.Camera
 		/// <param name="args">Arguments.</param>
         public void MoveUp(System.Object[] args)
         {
+            if (m_DisableInteractivity)
+                return;
+            
             DefaultCameraTarget.TargetPosition += this.transform.up;
         }
 
@@ -270,6 +275,9 @@ namespace IBM.Watson.DeveloperCloud.Camera
 		/// <param name="args">Arguments.</param>
         public void MoveDown(System.Object[] args)
         {
+            if (m_DisableInteractivity)
+                return;
+            
             DefaultCameraTarget.TargetPosition += this.transform.up * -1.0f;
         }
 
@@ -279,6 +287,9 @@ namespace IBM.Watson.DeveloperCloud.Camera
 		/// <param name="args">Arguments.</param>
         public void MoveLeft(System.Object[] args)
         {
+            if (m_DisableInteractivity)
+                return;
+            
             DefaultCameraTarget.TargetPosition += this.transform.right * -1.0f;;
         }
 
@@ -288,6 +299,9 @@ namespace IBM.Watson.DeveloperCloud.Camera
 		/// <param name="args">Arguments.</param>
         public void MoveRight(System.Object[] args)
         {
+            if (m_DisableInteractivity)
+                return;
+            
             DefaultCameraTarget.TargetPosition += this.transform.right;
         }
 
@@ -297,6 +311,9 @@ namespace IBM.Watson.DeveloperCloud.Camera
 		/// <param name="args">Arguments.</param>
         public void ZoomIn(System.Object[] args)
         {
+            if (m_DisableInteractivity)
+                return;
+            
             DefaultCameraTarget.TargetPosition += transform.forward * m_ZoomSpeed;
         }
 
@@ -306,6 +323,9 @@ namespace IBM.Watson.DeveloperCloud.Camera
 		/// <param name="args">Arguments.</param>
         public void ZoomOut(System.Object[] args)
         {
+            if (m_DisableInteractivity)
+                return;
+            
             DefaultCameraTarget.TargetPosition += transform.forward * m_ZoomSpeed * -1.0f;
         }
 

@@ -284,9 +284,9 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// </summary>
             ON_CAMERA_SET_DEPTHOFFIELD,
             /// <summary>
-            /// Event to set two finger enable / disable on camera
+            /// Event to set interactivity enable / disable on camera
             /// </summary>
-            ON_CAMERA_SET_TWOFINGERDRAG,
+            ON_CAMERA_SET_INTERACTIVITY,
             #endregion
 
             #region NLC
@@ -347,10 +347,6 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// 
             /// </summary>
             ON_COMMAND_LOCATION,
-			/// <summary>
-			/// 
-			/// </summary>
-			ON_COMMAND_PROCUREMENT,
             /// <summary>
             /// Sent when any classify result is made.
             /// </summary>
@@ -399,6 +395,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 			/// On Classify the question as procurement question
 			/// </summary>
 			ON_CLASSIFY_PROCUREMENT,
+            /// <summary>
+            /// 
+            /// </summary>
+            ON_COMMAND_PROCUREMENT,
 
             #endregion
 
@@ -605,7 +605,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 			/// <summary>
 			/// Answer or passage selection
 			/// </summary>
-			SELECT_ANSWER
+			SELECT_ANSWER = 950
 			#endregion
 
         }
