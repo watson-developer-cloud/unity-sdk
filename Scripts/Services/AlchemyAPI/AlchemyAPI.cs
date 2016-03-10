@@ -35,12 +35,13 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
         #region Private Data
         private const string SERVICE_ID = "AlchemyAPIV1";
+        private static string mp_ApiKey = null;
+
         private static fsSerializer sm_Serializer = new fsSerializer();
         #endregion
 
         #region Entity Extraction
         private const string SERVICE_ENTITY_EXTRACTION = "/calls/text/TextGetRankedNamedEntities";
-        private string mp_ApiKey = null;
 
         public delegate void OnGetEntityExtraction( EntityExtractionData entityExtractionData, string data );
 
@@ -119,6 +120,127 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
             if (((GetEntityExtractionRequest)req).Callback != null)
                 ((GetEntityExtractionRequest)req).Callback(resp.Success ? entityExtractionData : null, ((GetEntityExtractionRequest)req).Data);
+        }
+
+        #endregion
+
+        #region Combined Call
+
+        private const string SERVICE_COMBINED_CALLS = "/calls/text/TextGetCombinedData"; 
+
+        public delegate void OnGetCombinedCall( CombinedCallData combinedCallData, string data);
+
+        //http://access.alchemyapi.com/calls/text/TextGetRankedNamedEntities
+
+        public bool GetCombinedCall(OnGetCombinedCall callback, string text, 
+            bool includeEntity = true, 
+            bool includeKeywoard = true,
+            bool includeTaxonomy = false,
+            bool includeConcept = false,
+            bool includeFeed = false,
+            bool includeDocEmotion = false,
+            bool includeRelation = false,
+            bool includePubDate = false,
+            bool includeDocSentiment = false,
+            bool includePageImage = false,
+            bool includeImageKW = false)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(text))
+                throw new WatsonException("GetCombinedCall needs to have some text to work.");
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                mp_ApiKey = Config.Instance.GetVariableValue("ALCHEMY_API_KEY");
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                throw new WatsonException("GetCombinedCall - ALCHEMY_API_KEY needs to be defined in config.json");
+            if( !includeEntity 
+                && !includeKeywoard 
+                && !includeTaxonomy
+                && !includeConcept
+                && !includeFeed 
+                && !includeDocEmotion
+                && !includeRelation
+                && !includePubDate
+                && !includeDocSentiment
+                && !includePageImage
+                && !includeImageKW)
+                throw new WatsonException("GetCombinedCall - There should be some service included.");
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_COMBINED_CALLS);
+            if (connector == null)
+                return false;
+
+            GetCombinedCallRequest req = new GetCombinedCallRequest();
+            req.Callback = callback;
+
+            List<string> requestServices = new List<string>();
+            if (includeEntity)
+                requestServices.Add("entity");
+            if(includeKeywoard)  
+                requestServices.Add("keyword");
+            if(includeTaxonomy)  
+                requestServices.Add("taxonomy");
+            if(includeConcept)  
+                requestServices.Add("concept");
+            if(includeFeed)  
+                requestServices.Add("feed");
+            if(includeDocEmotion)  
+                requestServices.Add("doc-emotion");
+            if(includeRelation)  
+                requestServices.Add("relation");
+            if(includePubDate)  
+                requestServices.Add("pub-date");
+            if(includeDocSentiment)  
+                requestServices.Add("doc-sentiment");
+            if(includePageImage)  
+                requestServices.Add("page-image");
+            if(includeImageKW)  
+                requestServices.Add("image-kw");
+
+            req.Parameters["apikey"] = mp_ApiKey; 
+            req.Parameters["text"] = text;
+            req.Parameters["extract"] = string.Join(",", requestServices.ToArray());
+            req.Parameters["outputMode"] = "json";
+            req.Parameters["showSourceText"] = "1";
+
+            req.OnResponse = OnGetCombinedCallResponse;
+            req.Data = text;
+
+            return connector.Send(req);
+        }
+
+        private class GetCombinedCallRequest : RESTConnector.Request
+        {
+            public string Data { get; set;}
+            public OnGetCombinedCall Callback { get; set; }
+        };
+
+        private void OnGetCombinedCallResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            CombinedCallData combinedCallData = new CombinedCallData();
+            if (resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = combinedCallData;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("AlchemyAPI", "OnGetCombinedCallResponse Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((GetCombinedCallRequest)req).Callback != null)
+                ((GetCombinedCallRequest)req).Callback(resp.Success ? combinedCallData : null, ((GetCombinedCallRequest)req).Data);
         }
 
         #endregion

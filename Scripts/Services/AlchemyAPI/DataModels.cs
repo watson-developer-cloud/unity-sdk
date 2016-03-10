@@ -17,6 +17,7 @@
 
 using FullSerializer;
 using System.Text;
+using System.Collections.Generic;
 using IBM.Watson.DeveloperCloud.Services.ESRI.v1;
 
 namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
@@ -637,6 +638,50 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
             return string.Format("[Entity: type={0} - EntityType={8}, relevance={1}, knowledgeGraph={2}, count={3}, text={4}, disambiguated={5}, quotations={6}, sentiment={7}]", type, relevance, knowledgeGraph, count, text, disambiguated, stringBuilder.ToString(), sentiment, EntityType);
         }
+
+        public bool HasGeographicInformation
+        {
+            get
+            {
+                string geoString = null;
+                if (disambiguated != null)
+                {
+                    geoString = disambiguated.geo;
+                }
+                return !string.IsNullOrEmpty(geoString);
+            }
+        }
+
+        private PositionOnMap _GeoLocation = null;
+        public PositionOnMap GeoLocation
+        {
+            get
+            {
+                if (_GeoLocation == null)
+                {
+                    string geoString = null;
+                    if (disambiguated != null)
+                    {
+                        geoString = disambiguated.geo;
+                        if (!string.IsNullOrEmpty(geoString))
+                        {
+                            string[] geoValues = geoString.Split(' ');
+                            if (geoValues != null && geoValues.Length == 2)
+                            {
+                                double latitute = 0;
+                                double longitutde = 0;
+
+                                if (double.TryParse(geoValues[0], out latitute) && double.TryParse(geoValues[1], out longitutde))
+                                {
+                                    _GeoLocation = new PositionOnMap(latitute, longitutde, disambiguated.name);
+                                }
+                            }
+                        }
+                    }
+                }
+                return _GeoLocation;
+            }
+        }
     };
 
     [fsObject]
@@ -697,4 +742,156 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             return string.Format("[Sentiment: type={0}, score={1}, mixed={2}]", type, score, mixed);
         }
     };
+
+    [fsObject]
+    public class CombinedCallData
+    {
+        public string status { get; set; }
+        public string totalTransactions { get; set; }
+        public string language { get; set; }
+        public string text { get; set; }
+        public Keyword[] keywords { get; set; }
+        public Entity[] entities { get; set; }
+        public Sentiment docSentiment{ get; set; }
+        public Concept[] concepts{ get; set; }
+        public Relation[] relations{ get; set; }
+        public Taxonomy[] taxonomy{ get; set; }
+        public DocEmotions[] docEmotions{ get; set; }
+
+        public bool HasData
+        {
+            get
+            {
+                return EntityCombined != null && EntityCombined.Count > 0;
+            }
+        }
+
+        private List<string> _EntityCombined = null;
+        public List<string> EntityCombined
+        {
+            get
+            {
+                if (_EntityCombined == null)
+                {
+                    _EntityCombined = new List<string>();
+
+                    for (int i = 0; keywords != null && i < keywords.Length; i++)
+                    {
+                        if(!_EntityCombined.Contains(keywords[i].text))
+                            _EntityCombined.Add(keywords[i].text);
+                    }
+
+                    for (int i = 0; entities != null && i < entities.Length; i++)
+                    {
+                        if(!_EntityCombined.Contains(entities[i].text))
+                            _EntityCombined.Add(entities[i].text);
+                    }
+                }
+
+                return _EntityCombined;
+            }
+        }
+
+        public string EntityCombinedCommaSeperated
+        {
+            get
+            {
+                if (EntityCombined.Count > 0)
+                    return string.Join(",", EntityCombined.ToArray());
+                return "";
+            }
+        }
+    };
+
+
+    [fsObject]
+    public class Keyword
+    {
+        public string text { get; set; }
+        public string relevance { get; set; }
+        public KnowledgeGraph knowledgeGraph{ get; set; }
+        public Sentiment sentiment { get; set; }
+
+    };
+
+    [fsObject]
+    public class Concept
+    {
+        public string text { get; set; }
+        public string relevance { get; set; }
+        public KnowledgeGraph knowledgeGraph{ get; set; }
+        public string website { get; set; }
+        public string geo { get; set; }
+        public string dbpedia { get; set; }
+        public string freebase { get; set; }
+        public string yago { get; set; }
+        public string opencyc{ get; set; }
+        public string ciaFactbook{ get; set; }
+        public string census{ get; set; }
+        public string geonames{ get; set; }
+        public string musicBrainz{ get; set; }
+        public string crunchbase{ get; set; }
+    };
+
+    [fsObject]
+    public class Relation
+    {
+        public string sentence { get; set; }
+        public Subject subject { get; set; }
+        public Entity entity { get; set; }
+        public Action action { get; set; }
+        public ObjectData @object { get; set; }
+    };
+
+    [fsObject]
+    public class Subject
+    {
+        public string text { get; set; }
+        public Sentiment sentiment { get; set; }
+    };
+
+    [fsObject]
+    public class Action
+    {
+        public string text { get; set; }
+        public string lemmatized { get; set; }
+        public Verb verb { get; set; }
+    };
+
+    [fsObject]
+    public class Verb
+    {
+        public string text { get; set; }
+        public string tense { get; set; }
+        public string negated { get; set; }
+    };
+
+    [fsObject]
+    public class ObjectData
+    {
+        public string text { get; set; }
+        public Sentiment sentiment { get; set; }
+        public Sentiment sentimentFromSubject{ get; set; }
+        public Entity entity { get; set; }
+    };
+
+    [fsObject]
+    public class Taxonomy
+    {
+        public string label { get; set; }
+        public string score { get; set; }
+        public string confident { get; set; }
+    };
+
+    [fsObject]
+    public class DocEmotions
+    {
+        public string anger { get; set; }
+        public string disgust { get; set; }
+        public string fear { get; set; }
+        public string joy { get; set; }
+        public string sadness { get; set; }
+    };
+
+
 }

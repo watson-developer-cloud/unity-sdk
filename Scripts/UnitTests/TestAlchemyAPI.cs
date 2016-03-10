@@ -41,12 +41,12 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             Log.Status("TestAlchemyAPI", "Test Started");
 
             m_NumberOfTestEntityExtraction = 6;
-            m_AlchemnyAPI.GetEntityExtraction(OnGetEntityExtraction, "How are you Watson?");
-            m_AlchemnyAPI.GetEntityExtraction(OnGetEntityExtraction, "How can Watson help patients?");
-            m_AlchemnyAPI.GetEntityExtraction(OnGetEntityExtraction, "Where is Watson?");       //Name
-            m_AlchemnyAPI.GetEntityExtraction(OnGetEntityExtraction, "Where is Paris?");        //Location
-            m_AlchemnyAPI.GetEntityExtraction(OnGetEntityExtraction, "Which ships are close to Karratha");  //location with name
-            m_AlchemnyAPI.GetEntityExtraction(OnGetEntityExtraction, "Are you artifical intelligence?");
+            m_AlchemnyAPI.GetCombinedCall(OnGetCombinedCall, "How are you Watson?");
+            m_AlchemnyAPI.GetCombinedCall(OnGetCombinedCall, "How can Watson help patients?");
+            m_AlchemnyAPI.GetCombinedCall(OnGetCombinedCall, "Where is Watson?");       //Name
+            m_AlchemnyAPI.GetCombinedCall(OnGetCombinedCall, "Where is Paris?");        //Location
+            m_AlchemnyAPI.GetCombinedCall(OnGetCombinedCall, "Which ships are close to Karratha");  //location with name
+            m_AlchemnyAPI.GetCombinedCall(OnGetCombinedCall, "Are you artifical intelligence?");
 
             while(! m_EntityExtractionTested )
                 yield return null;
@@ -56,10 +56,10 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
 
 
-        private void OnGetEntityExtraction(EntityExtractionData entityExtractionData, string data)
+        private void OnGetCombinedCall(CombinedCallData combinedCallData, string data)
         {
             m_NumberOfTestEntityExtraction--;
-            Log.Status("TestAlchemyAPI", "Remaining: {0}, Has Geo Information: {1}, Geo: {2}, OnGetEntityExtraction: {3}", m_NumberOfTestEntityExtraction, entityExtractionData.HasGeographicInformation, (entityExtractionData.HasGeographicInformation?entityExtractionData.GeoLocation.ToString(): "None"), entityExtractionData);
+            Log.Status("TestAlchemyAPI", "Remaining: {0}, original text:{1}, OnGetCombinedCall: {2}", m_NumberOfTestEntityExtraction, data, combinedCallData.EntityCombinedCommaSeperated);
 
             if(m_NumberOfTestEntityExtraction <= 0){
                 Test( true );
