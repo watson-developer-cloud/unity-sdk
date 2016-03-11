@@ -47,6 +47,8 @@ namespace IBM.Watson.DeveloperCloud.Camera
         [SerializeField]
         private float m_SpeedForCameraAnimation = 2f;
 
+        private float m_CommandMovementModifier = 10.0f;
+
         private Antialiasing m_AntiAliasing;
         private DepthOfField m_DepthOfField;
         private bool m_DisableInteractivity = false;
@@ -266,7 +268,7 @@ namespace IBM.Watson.DeveloperCloud.Camera
             if (m_DisableInteractivity)
                 return;
             
-            DefaultCameraTarget.TargetPosition += this.transform.up;
+            DefaultCameraTarget.TargetPosition += this.transform.up * m_CommandMovementModifier;
         }
 
 		/// <summary>
@@ -278,7 +280,7 @@ namespace IBM.Watson.DeveloperCloud.Camera
             if (m_DisableInteractivity)
                 return;
             
-            DefaultCameraTarget.TargetPosition += this.transform.up * -1.0f;
+            DefaultCameraTarget.TargetPosition += this.transform.up * -m_CommandMovementModifier;
         }
 
 		/// <summary>
@@ -290,7 +292,7 @@ namespace IBM.Watson.DeveloperCloud.Camera
             if (m_DisableInteractivity)
                 return;
             
-            DefaultCameraTarget.TargetPosition += this.transform.right * -1.0f;;
+            DefaultCameraTarget.TargetPosition += this.transform.right * -m_CommandMovementModifier;
         }
 
 		/// <summary>
@@ -302,7 +304,7 @@ namespace IBM.Watson.DeveloperCloud.Camera
             if (m_DisableInteractivity)
                 return;
             
-            DefaultCameraTarget.TargetPosition += this.transform.right;
+            DefaultCameraTarget.TargetPosition += this.transform.right * m_CommandMovementModifier;
         }
 
 		/// <summary>

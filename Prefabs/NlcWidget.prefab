@@ -82,17 +82,17 @@ MonoBehaviour:
   - m_Class: question-numerati_woodside
     m_Event: 401
   - m_Class: pan_left
-    m_Event: -1
+    m_Event: 309
   - m_Class: pan_right
-    m_Event: -1
+    m_Event: 310
   - m_Class: pan_up
-    m_Event: -1
+    m_Event: 311
   - m_Class: pan_down
-    m_Event: -1
+    m_Event: 312
   - m_Class: zoom_in
-    m_Event: -1
+    m_Event: 307
   - m_Class: zoom_out
-    m_Event: -1
+    m_Event: 308
   - m_Class: show_next_passage
     m_Event: 415
   - m_Class: show_next_answer
@@ -213,7 +213,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[16].m_Event
-      value: -1
+      value: 309
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[17].m_Class
@@ -221,7 +221,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[17].m_Event
-      value: -1
+      value: 310
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[18].m_Class
@@ -233,11 +233,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[18].m_Event
-      value: -1
+      value: 311
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[19].m_Event
-      value: -1
+      value: 312
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[20].m_Class
@@ -249,11 +249,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[20].m_Event
-      value: -1
+      value: 307
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[21].m_Event
-      value: -1
+      value: 308
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[22].m_Class
