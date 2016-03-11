@@ -18,7 +18,6 @@
 using FullSerializer;
 using System.Text;
 using System.Collections.Generic;
-using IBM.Watson.DeveloperCloud.Services.XRAY.v1;
 
 namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 {
@@ -105,6 +104,35 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         }
 
     };
+
+    public class PositionOnMap
+    {
+        public string PositionName;
+        public double Latitude;    //Y : North - south
+        public double Longitude;   //X : West - East
+
+        public double X { get { return Longitude; } }
+        public double Y { get { return Latitude; } }
+
+        public PositionOnMap(double latitude, double longitude)
+        {
+            this.Latitude = latitude;
+            this.Longitude = longitude;
+        }
+
+        public PositionOnMap(double latitude, double longitude, string positionName)
+        {
+            this.Latitude = latitude;
+            this.Longitude = longitude;
+            this.PositionName = positionName;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("[PositionOnMap: Name: {0}, Latitude:{1}, Longitude:{2}]", PositionName, Latitude.ToString(), Longitude.ToString());
+        }
+    }
+
 
     public enum EntityPrimaryType
     {
