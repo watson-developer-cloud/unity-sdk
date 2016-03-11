@@ -250,6 +250,75 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             return b?"ON": "OFF";
         }
 
+
+        /// <summary>
+        /// Strips the prepending ! statment from string.
+        /// </summary>
+        /// <returns>The string.</returns>
+        /// <param name="s">S.</param>
+        public static string StripString(string s)
+        {
+            string[] delimiter = new string[] {"!", "! "};
+            string[] newString = s.Split(delimiter, System.StringSplitOptions.None);
+            if(newString.Length > 1)
+            {
+                return newString[1];
+            }
+            else
+            {
+                return s;
+            }
+
+        }
+
+
+        #region Cache Generic Deserialization
+
+        public static void SaveToCache<T>(Dictionary<string,DataCache> dictionaryCache, string cacheDirectoryId, string cacheId, T objectToCache, string prefix="", long maxCacheSize = 1024 * 1024 * 50, double maxCacheAge = 24 * 7) where T : class, new()
+        {
+            if (objectToCache != null)
+            {
+                DataCache cache = null;
+
+                if (!dictionaryCache.TryGetValue(cacheDirectoryId, out cache))
+                {
+                    cache = new DataCache( prefix + cacheDirectoryId, maxCacheSize: maxCacheSize, maxCacheAge: double.MaxValue);   //We will store the values as max time
+                    dictionaryCache[ cacheDirectoryId ] = cache;
+                }
+
+                fsData data = null;
+                fsResult r = sm_Serializer.TrySerialize(objectToCache.GetType(), objectToCache, out data);
+                if (!r.Succeeded)
+                    throw new WatsonException(r.FormattedMessages);
+
+                cache.Save(cacheId, Encoding.UTF8.GetBytes(fsJsonPrinter.PrettyJson(data)));
+            }
+        }
+
+        public static T GetFromCache<T>(Dictionary<string,DataCache> dictionaryCache, string cacheDirectoryId, string cacheId, string prefix="") where T : class, new()
+        {
+            T cachedObject = null;
+
+            DataCache cache = null;
+            if (! dictionaryCache.TryGetValue( cacheDirectoryId, out cache ) )
+            {
+                cache = new DataCache( prefix + cacheDirectoryId );
+                dictionaryCache[ cacheDirectoryId ] = cache;
+            }
+
+            byte [] cached = cache.Find( cacheId );
+            if ( cached != null )
+            {
+                cachedObject = DeserializeResponse<T>( cached );
+                if ( cachedObject != null)
+                {
+                    return cachedObject;
+                }
+            }
+
+            return cachedObject;
+        }
+
         /// <summary>
         /// Deserializes the response.
         /// </summary>
@@ -283,25 +352,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             return null;
         }
 
-		/// <summary>
-		/// Strips the prepending ! statment from string.
-		/// </summary>
-		/// <returns>The string.</returns>
-		/// <param name="s">S.</param>
-		public static string StripString(string s)
-		{
-			string[] delimiter = new string[] {"!", "! "};
-			string[] newString = s.Split(delimiter, System.StringSplitOptions.None);
-			if(newString.Length > 1)
-			{
-				return newString[1];
-			}
-			else
-			{
-				return s;
-			}
-			
-		}
+
+        #endregion
+
     }
+
 
 }

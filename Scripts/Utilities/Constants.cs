@@ -216,6 +216,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// Event fired when location with ship tracking information
             /// </summary>
             ON_QUESTION_LOCATION_SHIPTRACKING,
+			/// <summary>
+			/// Event fired when location with procurement information
+			/// </summary>
+			ON_QUESTION_PROCUREMENT,
             #endregion
 
             #region Animation / Camera
@@ -271,7 +275,18 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// Event to move the camera down
             /// </summary>
             ON_CAMERA_MOVE_DOWN,
-            
+            /// <summary>
+            /// Event to set Antialiasing on / off
+            /// </summary>
+            ON_CAMERA_SET_ANTIALIASING,
+            /// <summary>
+            /// Event to set depth of field on / off
+            /// </summary>
+            ON_CAMERA_SET_DEPTHOFFIELD,
+            /// <summary>
+            /// Event to set interactivity enable / disable on camera
+            /// </summary>
+            ON_CAMERA_SET_INTERACTIVITY,
             #endregion
 
             #region NLC
@@ -368,6 +383,22 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// Cancel command
             /// </summary>
             ON_COMMAND_CANCEL,
+            /// <summary>
+            /// On classify the question as personnel information related
+            /// </summary>
+            ON_CLASSIFY_PERSONNEL,
+            /// <summary>
+            /// On Classify the question as ship tracking question
+            /// </summary>
+            ON_CLASSIFY_SHIP_TRACKING,
+			/// <summary>
+			/// On Classify the question as procurement question
+			/// </summary>
+			ON_CLASSIFY_PROCUREMENT,
+            /// <summary>
+            /// 
+            /// </summary>
+            ON_COMMAND_PROCUREMENT,
 
             #endregion
 
@@ -432,10 +463,6 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 			/// Event fired after three tap on middle top - hot corner
 			/// </summary>
 			ON_TAP_THREETIMES_MIDDLE_TOP,
-			/// <summary>
-			/// 
-			/// </summary>
-			ON_CLASSIFY_PERSONNEL,
             /// <summary>
             /// Event fired when a single tap occur
             /// </summary>
@@ -487,6 +514,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 			/// Event fired when Double tap on Map
 			/// </summary>
 			ON_MAP_TAP_DOUBLE,
+            /// <summary>
+            /// Event fired when two finger dragging on Map - to zoom
+            /// </summary>
+            ON_MAP_DRAG_TWO_FINGER,
             #endregion
 
             #region Update
@@ -574,7 +605,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 			/// <summary>
 			/// Answer or passage selection
 			/// </summary>
-			SELECT_ANSWER
+			SELECT_ANSWER = 950
 			#endregion
 
         }
