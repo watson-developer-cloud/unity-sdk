@@ -18,6 +18,7 @@
 using FullSerializer;
 using System.Text;
 using System.Collections.Generic;
+using IBM.Watson.DeveloperCloud.Services.XRAY.v1;
 
 namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 {
@@ -54,6 +55,41 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                     }
                 }
                 return !string.IsNullOrEmpty(geoString);
+            }
+        }
+
+        private PositionOnMap _GeoLocation = null;
+        public PositionOnMap GeoLocation
+        {
+            get
+            {
+                if (_GeoLocation == null)
+                {
+                    string geoString = null;
+                    for (int i = 0; entities != null && i < entities.Length; i++)
+                    {
+                        if (entities[i].disambiguated != null)
+                        {
+                            geoString = entities[i].disambiguated.geo;
+                            if (!string.IsNullOrEmpty(geoString))
+                            {
+                                string[] geoValues = geoString.Split(' ');
+                                if (geoValues != null && geoValues.Length == 2)
+                                {
+                                    double latitute = 0;
+                                    double longitutde = 0;
+
+                                    if (double.TryParse(geoValues[0], out latitute) && double.TryParse(geoValues[1], out longitutde))
+                                    {
+                                        _GeoLocation = new PositionOnMap(latitute, longitutde, entities[i].disambiguated.name);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                return _GeoLocation;
             }
         }
 
@@ -615,6 +651,37 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 return !string.IsNullOrEmpty(geoString);
             }
         }
+
+        private PositionOnMap _GeoLocation = null;
+        public PositionOnMap GeoLocation
+        {
+            get
+            {
+                if (_GeoLocation == null)
+                {
+                    string geoString = null;
+                    if (disambiguated != null)
+                    {
+                        geoString = disambiguated.geo;
+                        if (!string.IsNullOrEmpty(geoString))
+                        {
+                            string[] geoValues = geoString.Split(' ');
+                            if (geoValues != null && geoValues.Length == 2)
+                            {
+                                double latitute = 0;
+                                double longitutde = 0;
+
+                                if (double.TryParse(geoValues[0], out latitute) && double.TryParse(geoValues[1], out longitutde))
+                                {
+                                    _GeoLocation = new PositionOnMap(latitute, longitutde, disambiguated.name);
+                                }
+                            }
+                        }
+                    }
+                }
+                return _GeoLocation;
+            }
+        }
     };
 
     [fsObject]
@@ -749,12 +816,6 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             return stringBuilder.ToString();
         }
 
-        public override string ToString()
-        {
-            return string.Format("[CombinedCallData: status={0}, totalTransactions={1}, language={2}, text={3}, keywords={4}, entities={5}, docSentiment={6}, concepts={7}, " +
-                "relations={8}, taxonomy={9}, docEmotions={10}, dates={11}, HasData={12}, " +
-                "EntityCombined={13}, EntityCombinedCommaSeperated={14}]", status, totalTransactions, language, text, keywords, entities, docSentiment, concepts, relations, taxonomy, docEmotions, dates, HasData, EntityCombined, EntityCombinedCommaSeperated);
-        }
     };
 
 
@@ -766,32 +827,6 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         public KnowledgeGraph knowledgeGraph{ get; set; }
         public Sentiment sentiment { get; set; }
 
-    };
-
-    [fsObject]
-    public class DateData
-    {
-        public string text { get; set; }
-        public string date { get; set; }
-
-        private System.DateTime m_dateValue = default(System.DateTime);
-        public System.DateTime DateValue
-        {
-            get
-            {
-                if (m_dateValue == default(System.DateTime) && !string.IsNullOrEmpty(date) && date.Length > 8)
-                {
-                    //19840101T000000
-                    System.DateTime.TryParseExact(date.Remove(8), 
-                        "yyyyddMM",
-                        System.Globalization.CultureInfo.InvariantCulture, 
-                        System.Globalization.DateTimeStyles.None, 
-                        out m_dateValue);
-                    
-                }
-                return m_dateValue;
-            }
-        }
     };
 
     [fsObject]
@@ -873,5 +908,30 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         public string sadness { get; set; }
     };
 
+    [fsObject]
+    public class DateData
+    {
+        public string text { get; set; }
+        public string date { get; set; }
+
+        private System.DateTime m_dateValue = default(System.DateTime);
+        public System.DateTime DateValue
+        {
+            get
+            {
+                if (m_dateValue == default(System.DateTime) && !string.IsNullOrEmpty(date) && date.Length > 8)
+                {
+                    //19840101T000000
+                    System.DateTime.TryParseExact(date.Remove(8), 
+                        "yyyyddMM",
+                        System.Globalization.CultureInfo.InvariantCulture, 
+                        System.Globalization.DateTimeStyles.None, 
+                        out m_dateValue);
+
+                }
+                return m_dateValue;
+            }
+        }
+    };
 
 }

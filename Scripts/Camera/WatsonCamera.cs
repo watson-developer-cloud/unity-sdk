@@ -48,6 +48,10 @@ namespace IBM.Watson.DeveloperCloud.Camera
 
         private float m_CommandMovementModifier = 10.0f;
 
+        [SerializeField]
+        private MonoBehaviour m_AntiAliasing;
+        [SerializeField]
+        private MonoBehaviour m_DepthOfField;
         private bool m_DisableInteractivity = false;
 
         #endregion
@@ -118,11 +122,15 @@ namespace IBM.Watson.DeveloperCloud.Camera
 
         void OnEnable()
         {
+            EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_CAMERA_SET_ANTIALIASING, OnCameraSetAntiAliasing);
+            EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_CAMERA_SET_DEPTHOFFIELD, OnCameraSetDepthOfField);
             EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_CAMERA_SET_INTERACTIVITY, OnCameraSetTwoFingerDrag);
         }
 
         void OnDisable()
         {
+            EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_CAMERA_SET_ANTIALIASING, OnCameraSetAntiAliasing);
+            EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_CAMERA_SET_DEPTHOFFIELD, OnCameraSetDepthOfField);
             EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_CAMERA_SET_INTERACTIVITY, OnCameraSetTwoFingerDrag);
         }
 
@@ -201,6 +209,32 @@ namespace IBM.Watson.DeveloperCloud.Camera
         #endregion
 
         #region Camera Events Received from Outside - Set default position / Move Left - Right - Up - Down / Zoom-in-out
+
+        public void OnCameraSetAntiAliasing(System.Object[] args)
+        {
+            if (args != null && args.Length == 1 && args[0] is bool)
+            {
+                bool valueSet = (bool)args[0];
+
+                if (m_AntiAliasing != null)
+                {
+                    m_AntiAliasing.enabled = valueSet;
+                }
+            }
+        }
+
+        public void OnCameraSetDepthOfField(System.Object[] args)
+        {
+            if (args != null && args.Length == 1 && args[0] is bool)
+            {
+                bool valueSet = (bool)args[0];
+
+                if (m_DepthOfField != null)
+                {
+                    m_DepthOfField.enabled = valueSet;
+                }
+            }
+        }
 
         public void OnCameraSetTwoFingerDrag(System.Object[] args)
         {
