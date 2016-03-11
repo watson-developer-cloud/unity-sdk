@@ -135,6 +135,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         public bool GetCombinedCall(OnGetCombinedCall callback, string text, 
             bool includeEntity = true, 
             bool includeKeywoard = true,
+            bool includeDate = true,
             bool includeTaxonomy = false,
             bool includeConcept = false,
             bool includeFeed = false,
@@ -155,6 +156,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 throw new WatsonException("GetCombinedCall - ALCHEMY_API_KEY needs to be defined in config.json");
             if( !includeEntity 
                 && !includeKeywoard 
+                && !includeDate
                 && !includeTaxonomy
                 && !includeConcept
                 && !includeFeed 
@@ -178,6 +180,8 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 requestServices.Add("entity");
             if(includeKeywoard)  
                 requestServices.Add("keyword");
+            if(includeKeywoard)  
+                requestServices.Add("dates");
             if(includeTaxonomy)  
                 requestServices.Add("taxonomy");
             if(includeConcept)  

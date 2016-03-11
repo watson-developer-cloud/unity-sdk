@@ -757,6 +757,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         public Relation[] relations{ get; set; }
         public Taxonomy[] taxonomy{ get; set; }
         public DocEmotions[] docEmotions{ get; set; }
+        public DateData[] dates{ get; set; }
 
         public bool HasData
         {
@@ -801,6 +802,26 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 return "";
             }
         }
+
+        public string ToLongString()
+        {
+            StringBuilder stringBuilder = new StringBuilder( string.Format("[CombinedCallData: status={0}, totalTransactions={1}, language={2}, text={3}", status, totalTransactions, language, text));
+
+            stringBuilder.Append(EntityCombinedCommaSeperated);
+            for (int i = 0; dates != null && i < dates.Length; i++)
+            {
+                stringBuilder.Append(" Date: " + dates[i].DateValue.ToString());
+            }
+
+            return stringBuilder.ToString();
+        }
+
+        public override string ToString()
+        {
+            return string.Format("[CombinedCallData: status={0}, totalTransactions={1}, language={2}, text={3}, keywords={4}, entities={5}, docSentiment={6}, concepts={7}, " +
+                "relations={8}, taxonomy={9}, docEmotions={10}, dates={11}, HasData={12}, " +
+                "EntityCombined={13}, EntityCombinedCommaSeperated={14}]", status, totalTransactions, language, text, keywords, entities, docSentiment, concepts, relations, taxonomy, docEmotions, dates, HasData, EntityCombined, EntityCombinedCommaSeperated);
+        }
     };
 
 
@@ -812,6 +833,32 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         public KnowledgeGraph knowledgeGraph{ get; set; }
         public Sentiment sentiment { get; set; }
 
+    };
+
+    [fsObject]
+    public class DateData
+    {
+        public string text { get; set; }
+        public string date { get; set; }
+
+        private System.DateTime m_dateValue = default(System.DateTime);
+        public System.DateTime DateValue
+        {
+            get
+            {
+                if (m_dateValue == default(System.DateTime) && !string.IsNullOrEmpty(date) && date.Length > 8)
+                {
+                    //19840101T000000
+                    System.DateTime.TryParseExact(date.Remove(8), 
+                        "yyyyddMM",
+                        System.Globalization.CultureInfo.InvariantCulture, 
+                        System.Globalization.DateTimeStyles.None, 
+                        out m_dateValue);
+                    
+                }
+                return m_dateValue;
+            }
+        }
     };
 
     [fsObject]

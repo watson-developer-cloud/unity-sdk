@@ -28,7 +28,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         
         AlchemyAPI m_AlchemnyAPI = new AlchemyAPI();
         bool m_EntityExtractionTested = false;
-        int m_NumberOfTestEntityExtraction = 6;
+        int m_NumberOfTestEntityExtraction = -1;
 
         public override IEnumerator RunTest()
         {
@@ -40,13 +40,14 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             Log.Status("TestAlchemyAPI", "Test Started");
 
-            m_NumberOfTestEntityExtraction = 6;
+            m_NumberOfTestEntityExtraction = 7;
             m_AlchemnyAPI.GetCombinedCall(OnGetCombinedCall, "How are you Watson?");
             m_AlchemnyAPI.GetCombinedCall(OnGetCombinedCall, "How can Watson help patients?");
             m_AlchemnyAPI.GetCombinedCall(OnGetCombinedCall, "Where is Watson?");       //Name
             m_AlchemnyAPI.GetCombinedCall(OnGetCombinedCall, "Where is Paris?");        //Location
             m_AlchemnyAPI.GetCombinedCall(OnGetCombinedCall, "Which ships are close to Karratha");  //location with name
             m_AlchemnyAPI.GetCombinedCall(OnGetCombinedCall, "Are you artifical intelligence?");
+            m_AlchemnyAPI.GetCombinedCall(OnGetCombinedCall, "What happened in NewYork in december 1913 and February 1975");
 
             while(! m_EntityExtractionTested )
                 yield return null;
@@ -59,7 +60,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnGetCombinedCall(CombinedCallData combinedCallData, string data)
         {
             m_NumberOfTestEntityExtraction--;
-            Log.Status("TestAlchemyAPI", "Remaining: {0}, original text:{1}, OnGetCombinedCall: {2}", m_NumberOfTestEntityExtraction, data, combinedCallData.EntityCombinedCommaSeperated);
+            Log.Status("TestAlchemyAPI", "Remaining: {0}, original text:{1}, OnGetCombinedCall: {2}, OnLongResult: {3}", m_NumberOfTestEntityExtraction, data, combinedCallData.EntityCombinedCommaSeperated, combinedCallData.ToLongString());
 
             if(m_NumberOfTestEntityExtraction <= 0){
                 Test( true );
