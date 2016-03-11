@@ -18,7 +18,6 @@
 using FullSerializer;
 using System.Text;
 using System.Collections.Generic;
-using IBM.Watson.DeveloperCloud.Services.ESRI.v1;
 
 namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 {
@@ -55,41 +54,6 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                     }
                 }
                 return !string.IsNullOrEmpty(geoString);
-            }
-        }
-
-        private PositionOnMap _GeoLocation = null;
-        public PositionOnMap GeoLocation
-        {
-            get
-            {
-                if (_GeoLocation == null)
-                {
-                    string geoString = null;
-                    for (int i = 0; entities != null && i < entities.Length; i++)
-                    {
-                        if (entities[i].disambiguated != null)
-                        {
-                            geoString = entities[i].disambiguated.geo;
-                            if (!string.IsNullOrEmpty(geoString))
-                            {
-                                string[] geoValues = geoString.Split(' ');
-                                if (geoValues != null && geoValues.Length == 2)
-                                {
-                                    double latitute = 0;
-                                    double longitutde = 0;
-
-                                    if (double.TryParse(geoValues[0], out latitute) && double.TryParse(geoValues[1], out longitutde))
-                                    {
-                                        _GeoLocation = new PositionOnMap(latitute, longitutde, entities[i].disambiguated.name);
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                return _GeoLocation;
             }
         }
 
@@ -649,37 +613,6 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                     geoString = disambiguated.geo;
                 }
                 return !string.IsNullOrEmpty(geoString);
-            }
-        }
-
-        private PositionOnMap _GeoLocation = null;
-        public PositionOnMap GeoLocation
-        {
-            get
-            {
-                if (_GeoLocation == null)
-                {
-                    string geoString = null;
-                    if (disambiguated != null)
-                    {
-                        geoString = disambiguated.geo;
-                        if (!string.IsNullOrEmpty(geoString))
-                        {
-                            string[] geoValues = geoString.Split(' ');
-                            if (geoValues != null && geoValues.Length == 2)
-                            {
-                                double latitute = 0;
-                                double longitutde = 0;
-
-                                if (double.TryParse(geoValues[0], out latitute) && double.TryParse(geoValues[1], out longitutde))
-                                {
-                                    _GeoLocation = new PositionOnMap(latitute, longitutde, disambiguated.name);
-                                }
-                            }
-                        }
-                    }
-                }
-                return _GeoLocation;
             }
         }
     };

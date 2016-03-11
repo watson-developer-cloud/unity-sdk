@@ -504,6 +504,8 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
         {
             private NaturalLanguageClassifier m_Service = null;
             private ServiceStatus m_Callback = null;
+            private int m_GetClassifierCount = 0;
+            private int m_ClassifyCount = 0;
 
             public CheckServiceStatus( NaturalLanguageClassifier service, ServiceStatus callback )
             {
@@ -511,7 +513,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
                 m_Callback = callback;
 
                 if (! m_Service.GetClassifiers( OnCheckServices ) )
-                    m_Callback( SERVICE_ID, false );
+                    OnFailure( "Failed to call GetClassifiers()" );
             }
 
             private void OnCheckServices( Classifiers classifiers )
@@ -520,9 +522,17 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
                 {
                     if ( classifiers.classifiers.Length > 0 )
                     {
-                        // check the status of one classifier, if it's listed as "Unavailable" then fail 
-                        if (! m_Service.GetClassifier( classifiers.classifiers[0].classifier_id, OnCheckService ) )
-                            m_Callback( SERVICE_ID, false );
+                        foreach( var classifier in classifiers.classifiers )
+                        {
+                            // check the status of one classifier, if it's listed as "Unavailable" then fail 
+                            if (! m_Service.GetClassifier( classifier.classifier_id, OnCheckService ) )
+                            {
+                                OnFailure( "Failed to call GetClassifier()" );
+                                break;
+                            }
+                            else
+                                m_GetClassifierCount += 1;
+                        }
                     }
                     else
                         m_Callback( SERVICE_ID, true );     // no classifiers to check, just return success then..
@@ -533,24 +543,51 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
 
             private void OnCheckService( Classifier classifier )
             {
-                if ( classifier != null )
+                if ( m_GetClassifierCount > 0 )
                 {
-                    if ( classifier.status == "Unavailable" || classifier.status == "Failed" )
+                    m_GetClassifierCount -= 1;
+                    if ( classifier != null )
                     {
-                        Log.Error( "NaturalLanguageClassifier", "Status of classifier {0} came back as {1}.", 
-                            classifier.classifier_id, classifier.status );
-                        m_Callback( SERVICE_ID, false );
+                        if ( classifier.status == "Unavailable" || classifier.status == "Failed" )
+                        {
+                            OnFailure( string.Format("Status of classifier {0} came back as {1}.", 
+                                classifier.classifier_id, classifier.status) );
+                        }
+                        else
+                        {
+                            // try to classify something with this classifier..
+                            if (! m_Service.Classify( classifier.classifier_id, "Hello World", OnClassify ) )
+                                OnFailure( "Failed to invoke Classify" );
+                            else
+                                m_ClassifyCount += 1;
+                        }
                     }
                     else
-                    {
-                        m_Callback( SERVICE_ID, true );
-                    }
+                        OnFailure( "Failed to get classifier." );
                 }
-                else
+            }
+
+            private void OnClassify( ClassifyResult result )
+            {
+                if ( m_ClassifyCount > 0 )
                 {
-                    Log.Error( "NaturalLanguageClassifier", "Failed to get classifier." );
-                    m_Callback( SERVICE_ID, false );
+                    m_ClassifyCount -= 1;
+                    if ( result != null )
+                    {
+                        // success!
+                        if ( m_ClassifyCount == 0 )
+                            m_Callback(SERVICE_ID, true);
+                    }
+                    else
+                        OnFailure( "Failed to classify." );
                 }
+            }
+
+            void OnFailure( string msg )
+            {
+                Log.Error( "NaturalLanguageClassifier", msg );
+                m_Callback(SERVICE_ID, false);
+                m_GetClassifierCount = m_ClassifyCount = 0;
             }
 
         };

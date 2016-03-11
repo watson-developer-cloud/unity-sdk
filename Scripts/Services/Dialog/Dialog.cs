@@ -452,6 +452,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Dialog.v1
         {
             private Dialog m_Service = null;
             private ServiceStatus m_Callback = null;
+            private int m_DialogCount = 0;
 
             public CheckServiceStatus( Dialog service, ServiceStatus callback )
             {
@@ -459,13 +460,45 @@ namespace IBM.Watson.DeveloperCloud.Services.Dialog.v1
                 m_Callback = callback;
 
                 if (! m_Service.GetDialogs( OnGetDialogs ) )
-                    m_Callback( SERVICE_ID, false );
+                    OnFailure( "Failed to invoke GetDialogs()." );
             }
 
             private void OnGetDialogs( Dialogs dialogs )
             {
-                if ( m_Callback != null ) 
-                    m_Callback( SERVICE_ID, dialogs != null );
+                if ( m_Callback != null )
+                {
+                    foreach( var dialog in dialogs.dialogs )
+                    {
+                        if (! m_Service.Converse( dialog.dialog_id, "Hello", OnDialog ) )
+                            OnFailure( "Failed to invoke Converse()." );
+                        else
+                            m_DialogCount += 1;
+                    }
+                }
+                else
+                    OnFailure( "GetDialogs() failed." );
+            }
+
+            private void OnDialog( ConverseResponse resp )
+            {
+                if ( m_DialogCount > 0 )
+                {
+                    m_DialogCount -= 1;
+                    if ( resp != null )
+                    {
+                        if ( m_DialogCount == 0 )
+                            m_Callback( SERVICE_ID, true );
+                    }
+                    else
+                        OnFailure( "ConverseResponse is null." );
+                }
+            }
+
+            private void OnFailure(string msg)
+            {
+                Log.Error("NaturalLanguageClassifier", msg);
+                m_Callback(SERVICE_ID, false);
+                m_DialogCount = 0;
             }
         };
         #endregion
