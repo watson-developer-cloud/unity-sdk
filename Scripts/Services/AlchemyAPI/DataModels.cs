@@ -57,12 +57,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             }
         }
 
-        private PositionOnMap _GeoLocation = null;
+        private PositionOnMap m_GeoLocation = null;
         public PositionOnMap GeoLocation
         {
             get
             {
-                if (_GeoLocation == null)
+                if (m_GeoLocation == null)
                 {
                     string geoString = null;
                     for (int i = 0; entities != null && i < entities.Length; i++)
@@ -80,7 +80,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
                                     if (double.TryParse(geoValues[0], out latitute) && double.TryParse(geoValues[1], out longitutde))
                                     {
-                                        _GeoLocation = new PositionOnMap(latitute, longitutde, entities[i].disambiguated.name);
+                                        m_GeoLocation = new PositionOnMap(latitute, longitutde, entities[i].disambiguated.name);
                                         break;
                                     }
                                 }
@@ -88,7 +88,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                         }
                     }
                 }
-                return _GeoLocation;
+                return m_GeoLocation;
             }
         }
 
