@@ -150,7 +150,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// <param name="nameChild">Name child.</param>
         /// <param name="isContains">Check string contains the name instead of equality.</param>
         /// <param name="sortByName">If true, children will be returned sorted by their name.</param>
-        public static T[] FindObjects<T>(GameObject parent, string nameChild, bool isContains = false, bool sortByName = false) where T : Component
+		public static T[] FindObjects<T>(GameObject parent, string nameChild, bool isContains = false, bool sortByName = false, bool includeInactive = true) where T : Component
         {
             T[] childObjects = null;
             List<T> listGameObject = new List<T>();
@@ -160,7 +160,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             for (int i = 0; i < childPath.Length; i++)
             {
                 string childTransformName = childPath[i];
-                T[] childerenTransform = parent.GetComponentsInChildren<T>(includeInactive: true);
+				T[] childerenTransform = parent.GetComponentsInChildren<T>(includeInactive: includeInactive);
                 if (childerenTransform != null)
                 {
                     foreach (T item in childerenTransform)
