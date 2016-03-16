@@ -399,14 +399,17 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// 
             /// </summary>
             ON_COMMAND_PROCUREMENT,
+			/// <summary>
+			/// 
+			/// </summary>
+			ON_COMMAND_PROCUREMENT_LIST,
+			#endregion
 
-            #endregion
-
-            #region Input - Touch
-            /// <summary>
-            /// Event if there is touch on fullscreen pressed - It is called for each touch
-            /// </summary>
-            ON_TOUCH_PRESSED_FULLSCREEN = 500,
+			#region Input - Touch
+			/// <summary>
+			/// Event if there is touch on fullscreen pressed - It is called for each touch
+			/// </summary>
+			ON_TOUCH_PRESSED_FULLSCREEN = 500,
             /// <summary>
             /// Event if 
             /// </summary>
