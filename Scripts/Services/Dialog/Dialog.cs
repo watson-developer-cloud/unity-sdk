@@ -510,7 +510,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Dialog.v1
 
             private void OnFailure(string msg)
             {
-                Log.Error("NaturalLanguageClassifier", msg);
+                Log.Error("Dialog", msg);
                 m_Callback(SERVICE_ID, false);
                 m_DialogCount = 0;
             }

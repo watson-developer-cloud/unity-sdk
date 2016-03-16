@@ -619,6 +619,16 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// Configuration file name.
             /// </summary>
             public const string CONFIG_FILE = "/Config.json";
+
+            /// <summary>
+            /// Cache folder to customize a parent folder for cache directory
+            /// </summary>
+            public static string CACHE_FOLDER = "";   //It needs to start with / 
+
+            /// <summary>
+            /// Log folder to customize a parent folder for logs
+            /// </summary>
+            public static string LOG_FOLDER = "";    //It needs to start with / 
         }
 
         /// <summary>
