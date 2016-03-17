@@ -129,7 +129,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Dialog.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("NLC", "GetDialogs Exception: {0}", e.ToString());
+                    Log.Error("Dialog", "GetDialogs Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
