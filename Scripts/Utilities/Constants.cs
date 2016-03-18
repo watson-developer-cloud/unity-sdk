@@ -220,6 +220,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 			/// Event fired when location with procurement information
 			/// </summary>
 			ON_QUESTION_PROCUREMENT,
+			/// <summary>
+			/// Event fired when location with procurement information
+			/// </summary>
+			ON_QUESTION_COMBINED_CALL,
             #endregion
 
             #region Animation / Camera
@@ -403,6 +407,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 			/// 
 			/// </summary>
 			ON_COMMAND_PROCUREMENT_LIST,
+			/// <summary>
+			/// 
+			/// </summary>
+			ON_COMMAND_ENTITY_EXTRACTION,
 			#endregion
 
 			#region Input - Touch
