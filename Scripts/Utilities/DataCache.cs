@@ -134,7 +134,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                 id = id.Replace('/', '_');
 
                 if (m_Cache.ContainsKey(id))
+                {
+                    Log.Debug("DataCache", "Has same key in the cache. Flushing old one: {0}", id);
                     Flush(id);
+                }
 
                 CacheItem item = new CacheItem();
                 item.Path = m_CachePath + id + ".bytes";
@@ -205,8 +208,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                     oldest = kp.Value;
             }
 
-            if ( oldest != null )
-                Flush( oldest.Id );
+            if (oldest != null)
+            {
+                Flush(oldest.Id);
+            }
         }
 
         /// <summary>
