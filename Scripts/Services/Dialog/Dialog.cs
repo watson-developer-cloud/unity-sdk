@@ -129,7 +129,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Dialog.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("NLC", "GetDialogs Exception: {0}", e.ToString());
+                    Log.Error("Dialog", "GetDialogs Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -459,8 +459,22 @@ namespace IBM.Watson.DeveloperCloud.Services.Dialog.v1
                 m_Service = service;
                 m_Callback = callback;
 
-                if (! m_Service.GetDialogs( OnGetDialogs ) )
-                    OnFailure( "Failed to invoke GetDialogs()." );
+                string customServiceID = Config.Instance.GetVariableValue(SERVICE_ID+"_ID");
+
+                //If custom classifierID is defined then we are using it to check the service health
+                if(!string.IsNullOrEmpty(customServiceID)){
+
+                    if (! m_Service.Converse( customServiceID, "Hello", OnDialog ) )
+                        OnFailure( "Failed to invoke Converse()." );
+                    else
+                        m_DialogCount += 1;
+                }
+                else{
+                    if (! m_Service.GetDialogs( OnGetDialogs ) )
+                        OnFailure( "Failed to invoke GetDialogs()." );
+                }
+
+               
             }
 
             private void OnGetDialogs( Dialogs dialogs )
@@ -496,7 +510,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Dialog.v1
 
             private void OnFailure(string msg)
             {
-                Log.Error("NaturalLanguageClassifier", msg);
+                Log.Error("Dialog", msg);
                 m_Callback(SERVICE_ID, false);
                 m_DialogCount = 0;
             }

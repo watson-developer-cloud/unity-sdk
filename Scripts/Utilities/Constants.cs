@@ -220,6 +220,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 			/// Event fired when location with procurement information
 			/// </summary>
 			ON_QUESTION_PROCUREMENT,
+			/// <summary>
+			/// Event fired when location with procurement information
+			/// </summary>
+			ON_QUESTION_COMBINED_CALL,
             #endregion
 
             #region Animation / Camera
@@ -399,14 +403,21 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// 
             /// </summary>
             ON_COMMAND_PROCUREMENT,
+			/// <summary>
+			/// 
+			/// </summary>
+			ON_COMMAND_PROCUREMENT_LIST,
+			/// <summary>
+			/// 
+			/// </summary>
+			ON_COMMAND_ENTITY_EXTRACTION,
+			#endregion
 
-            #endregion
-
-            #region Input - Touch
-            /// <summary>
-            /// Event if there is touch on fullscreen pressed - It is called for each touch
-            /// </summary>
-            ON_TOUCH_PRESSED_FULLSCREEN = 500,
+			#region Input - Touch
+			/// <summary>
+			/// Event if there is touch on fullscreen pressed - It is called for each touch
+			/// </summary>
+			ON_TOUCH_PRESSED_FULLSCREEN = 500,
             /// <summary>
             /// Event if 
             /// </summary>
@@ -619,6 +630,16 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// Configuration file name.
             /// </summary>
             public const string CONFIG_FILE = "/Config.json";
+
+            /// <summary>
+            /// Cache folder to customize a parent folder for cache directory
+            /// </summary>
+            public static string CACHE_FOLDER = "";   //It needs to start with / 
+
+            /// <summary>
+            /// Log folder to customize a parent folder for logs
+            /// </summary>
+            public static string LOG_FOLDER = "";    //It needs to start with / 
         }
 
         /// <summary>
