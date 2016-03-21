@@ -149,6 +149,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// Event fired after avatar close caption
             /// </summary>
             CLOSECAPTION_AVATAR_MESSAGE,
+            /// <summary>
+            /// Event fired to change interacitity of avatar 
+            /// </summary>
+            ON_AVATAR_SET_INTERACTIVITY,
             #endregion
 
             #region Question
