@@ -151,6 +151,14 @@ MonoBehaviour:
     m_Event: 604
   - m_Class: right_map
     m_Event: 605
+  - m_Class: older_purchase_orders
+    m_Event: 606
+  - m_Class: vendor_list
+    m_Event: 427
+  - m_Class: newer_purchase_orders
+    m_Event: 607
+  - m_Class: purchase_orders
+    m_Event: 426
   m_TopClassText: {fileID: 0}
 --- !u!1001 &100100000
 Prefab:

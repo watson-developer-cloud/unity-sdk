@@ -543,6 +543,17 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             ON_MAP_TO_SHOW_RIGHT,
             #endregion
 
+			#region Procurement
+			/// <summary>
+			/// Show older POs
+			/// </summary>
+			PROCUREMENT_ON_SHOW_OLDER_PURCHASE_ORDERS,
+			/// <summary>
+			/// Show newer POs
+			/// </summary>
+			PROCUREMENT_ON_SHOW_NEWER_PURCHASE_ORDERS,
+			#endregion
+
             #region Update
             /// <summary>
             /// Event fire to confirm an update
