@@ -533,6 +533,14 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// Event fired when two finger dragging on Map - to zoom
             /// </summary>
             ON_MAP_DRAG_TWO_FINGER,
+            /// <summary>
+            /// To show left map
+            /// </summary>
+            ON_MAP_TO_SHOW_LEFT,
+            /// <summary>
+            /// To show right map
+            /// </summary>
+            ON_MAP_TO_SHOW_RIGHT,
             #endregion
 
             #region Update

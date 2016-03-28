@@ -147,6 +147,10 @@ MonoBehaviour:
     m_Event: 424
   - m_Class: procurement
     m_Event: 425
+  - m_Class: left_map
+    m_Event: 604
+  - m_Class: right_map
+    m_Event: 605
   m_TopClassText: {fileID: 0}
 --- !u!1001 &100100000
 Prefab:
