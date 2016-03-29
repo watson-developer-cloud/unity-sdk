@@ -176,7 +176,11 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             {
                 Log.Debug( "DataCache", "Flushing {0} from cache.", item.Path );
 
-                m_CurrentCacheSize -= item.Data.Length;
+                if(item.Data != null)
+                    m_CurrentCacheSize -= item.Data.Length;
+                else
+                    m_CurrentCacheSize -= (new FileInfo(item.Path)).Length;
+                
                 File.Delete( item.Path );
 
                 m_Cache.Remove( id );
