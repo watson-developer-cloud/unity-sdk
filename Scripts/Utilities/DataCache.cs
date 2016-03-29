@@ -129,6 +129,24 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             return null;
         }
 
+        public bool IsCached(string id)
+        {
+            bool isCached = false;
+
+            if(!string.IsNullOrEmpty(id))
+            {
+                id = id.Replace('/', '_');
+
+                CacheItem item = null;
+                if (m_Cache.TryGetValue(id, out item))
+                {
+                    isCached = File.Exists(item.Path);
+                }
+            }
+
+            return isCached;
+        }
+
         /// <summary>
         /// Save data into the cache by ID.
         /// </summary>
