@@ -106,21 +106,24 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// <returns>The cached data, or null if not found.</returns>
         public byte[] Find(string id)
         {
-            id = id.Replace('/', '_');
-
-            CacheItem item = null;
-            if (m_Cache.TryGetValue(id, out item))
+            if(!string.IsNullOrEmpty(id))
             {
-                item.Time = DateTime.Now;
+                id = id.Replace('/', '_');
 
-                File.SetLastWriteTime( item.Path,  item.Time );
-
-                if (item.Data == null)
+                CacheItem item = null;
+                if (m_Cache.TryGetValue(id, out item))
                 {
-                    item.Data = File.ReadAllBytes(item.Path);
-                }
+                    item.Time = DateTime.Now;
 
-                return item.Data;
+                    File.SetLastWriteTime( item.Path,  item.Time );
+
+                    if (item.Data == null)
+                    {
+                        item.Data = File.ReadAllBytes(item.Path);
+                    }
+
+                    return item.Data;
+                }
             }
 
             return null;

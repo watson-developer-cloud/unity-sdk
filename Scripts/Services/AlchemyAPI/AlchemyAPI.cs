@@ -144,7 +144,8 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             bool includePubDate = false,
             bool includeDocSentiment = false,
             bool includePageImage = false,
-            bool includeImageKW = false)
+            bool includeImageKW = false,
+            string language = "english")
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -206,6 +207,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             req.Parameters["extract"] = string.Join(",", requestServices.ToArray());
             req.Parameters["outputMode"] = "json";
             req.Parameters["showSourceText"] = "1";
+            req.Parameters["language"] = language;
 
             req.OnResponse = OnGetCombinedCallResponse;
             req.Data = text;
