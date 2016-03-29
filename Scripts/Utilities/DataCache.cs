@@ -86,12 +86,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                     item.Path = f;
                     item.Id = Path.GetFileNameWithoutExtension(f);
                     item.Time = lastWrite;
-                    item.Data = File.ReadAllBytes(f);
-                    if ( item.Data == null )
-                        continue;
+                    item.Data = null;
 
                     m_Cache[item.Id] = item;
-                    m_CurrentCacheSize += item.Data.Length;
+                    m_CurrentCacheSize += (new FileInfo(f)).Length;
                 }
                 else
                 {
@@ -114,7 +112,13 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             if (m_Cache.TryGetValue(id, out item))
             {
                 item.Time = DateTime.Now;
+
                 File.SetLastWriteTime( item.Path,  item.Time );
+
+                if (item.Data == null)
+                {
+                    item.Data = File.ReadAllBytes(item.Path);
+                }
 
                 return item.Data;
             }
