@@ -91,7 +91,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         {
 			if (TouchEventManager.Instance == null) 
 			{
-				Log.Error ("TouchWidget", "There should be TouchEventManager in the scene! No TouchEventManager found.");
+				//Log.Error ("TouchWidget", "There should be TouchEventManager in the scene! No TouchEventManager found.");
 				return;
 			}
 
