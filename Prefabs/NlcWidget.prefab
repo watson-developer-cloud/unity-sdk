@@ -159,6 +159,8 @@ MonoBehaviour:
     m_Event: 607
   - m_Class: purchase_orders
     m_Event: 426
+  - m_Class: entity_extraction
+    m_Event: 428
   m_TopClassText: {fileID: 0}
 --- !u!1001 &100100000
 Prefab:
