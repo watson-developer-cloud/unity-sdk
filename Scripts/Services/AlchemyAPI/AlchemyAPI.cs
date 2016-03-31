@@ -40,6 +40,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         private static fsSerializer sm_Serializer = new fsSerializer();
         #endregion
 
+
         #region Entity Extraction
         private const string SERVICE_ENTITY_EXTRACTION = "/calls/text/TextGetRankedNamedEntities";
 
@@ -124,6 +125,88 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
         #endregion
 
+        #region Keywoard Extraction
+
+        private const string SERVICE_KEYWOARD_EXTRACTION = "/calls/text/TextGetRankedKeywords";
+
+        public delegate void OnGetKeywoardExtraction( KeywoardExtractionData entityExtractionData, string data );
+
+        public bool GetKeywoardExtraction(OnGetKeywoardExtraction callback, string text, string customData = null)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(text))
+                throw new WatsonException("GetKeywoardExtraction needs to have some text to work.");
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                mp_ApiKey = Config.Instance.GetVariableValue("ALCHEMY_API_KEY");
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                throw new WatsonException("GetKeywoardExtraction - ALCHEMY_API_KEY needs to be defined in config.json");
+
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_KEYWOARD_EXTRACTION);
+            if (connector == null)
+                return false;
+
+            GetKeywoardExtractionRequest req = new GetKeywoardExtractionRequest();
+            req.Callback = callback;
+
+            req.Parameters["apikey"] = mp_ApiKey; 
+            //req.Parameters["text"] = text;
+            req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
+            req.Forms = new Dictionary<string, RESTConnector.Form>();
+            req.Forms["text"] = new RESTConnector.Form(text);
+
+            req.Parameters["url"] = "";
+            req.Parameters["maxRetrieve"] = "1000";
+            req.Parameters["keywordExtractMode"] = "strict"; //strict , normal
+            req.Parameters["sentiment"] = "1";
+            req.Parameters["outputMode"] = "json";
+            req.Parameters["showSourceText"] = "1";
+            //req.Parameters["baseUrl"] = "";
+            req.Parameters["knowledgeGraph"] = "0";
+
+            req.OnResponse = OnGetKeywoardExtractionResponse;
+            req.Data = string.IsNullOrEmpty(customData)? text : customData;
+
+            return connector.Send(req);
+        }
+
+        private class GetKeywoardExtractionRequest : RESTConnector.Request
+        {
+            public string Data { get; set;}
+            public OnGetKeywoardExtraction Callback { get; set; }
+        };
+
+        private void OnGetKeywoardExtractionResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            KeywoardExtractionData keywoardExtractionData = new KeywoardExtractionData();
+            if (resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = keywoardExtractionData;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("AlchemyAPI", "OnGetKeywoardExtractionResponse Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((GetKeywoardExtractionRequest)req).Callback != null)
+                ((GetKeywoardExtractionRequest)req).Callback(resp.Success ? keywoardExtractionData : null, ((GetKeywoardExtractionRequest)req).Data);
+        }
+
+        #endregion
+
         #region Combined Call
 
         private const string SERVICE_COMBINED_CALLS = "/calls/text/TextGetCombinedData"; 
@@ -145,7 +228,8 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             bool includeDocSentiment = false,
             bool includePageImage = false,
             bool includeImageKW = false,
-            string language = "english")
+            string language = "english", 
+            string customData = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -203,14 +287,18 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 requestServices.Add("image-kw");
 
             req.Parameters["apikey"] = mp_ApiKey; 
-            req.Parameters["text"] = text;
+            //req.Parameters["text"] = text;
             req.Parameters["extract"] = string.Join(",", requestServices.ToArray());
             req.Parameters["outputMode"] = "json";
             req.Parameters["showSourceText"] = "1";
             req.Parameters["language"] = language;
 
+            req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
+            req.Forms = new Dictionary<string, RESTConnector.Form>();
+            req.Forms["text"] = new RESTConnector.Form(text);
+
             req.OnResponse = OnGetCombinedCallResponse;
-            req.Data = text;
+            req.Data =  string.IsNullOrEmpty(customData)? text : customData;
 
             return connector.Send(req);
         }

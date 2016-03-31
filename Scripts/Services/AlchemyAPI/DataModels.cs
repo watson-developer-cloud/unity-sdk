@@ -21,7 +21,7 @@ using System.Collections.Generic;
 
 namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 {
-    
+
     [fsObject]
     public class EntityExtractionData
     {
@@ -30,6 +30,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         public string url { get; set; }
         public string text { get; set; }
         public Entity[] entities { get; set; }
+        public KnowledgeGraph knowledgeGraph{ get; set; }
 
         public bool HasData
         {
@@ -104,6 +105,39 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         }
 
     };
+
+
+    [fsObject]
+    public class KeywoardExtractionData
+    {
+        public string status { get; set; }
+        public string language { get; set; }
+        public string url { get; set; }
+        public string text { get; set; }
+        public Keyword[] keywords { get; set; }
+        public KnowledgeGraph knowledgeGraph{ get; set; }
+
+        public bool HasData
+        {
+            get
+            {
+                return keywords != null && keywords.Length > 0;
+            }
+        }
+
+        public override string ToString()
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            for (int indexKeyword = 0; keywords != null && indexKeyword < keywords.Length; indexKeyword++)
+            {
+                stringBuilder.Append("\n\t");
+                stringBuilder.Append(keywords[indexKeyword].ToString());
+            }
+            return string.Format("[KeywoardExtractionData: status={0}, language={1}, url={2}, text={3}, keywords={4}]", status, language, url, text, stringBuilder.ToString());
+        }
+
+    };
+
 
     public class PositionOnMap
     {
@@ -765,6 +799,23 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         public string score { get; set; }
         public string mixed { get; set; }
 
+        private double m_Score = 0;
+        public double Score
+        {
+            get
+            {
+                if (m_Score == 0)
+                {
+                    if (!string.IsNullOrEmpty(score))
+                    {
+                        double.TryParse(score, out m_Score);
+                    }
+                }
+
+                return m_Score;
+            }
+        }
+
         public override string ToString()
         {
             return string.Format("[Sentiment: type={0}, score={1}, mixed={2}]", type, score, mixed);
@@ -856,6 +907,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         public Sentiment sentiment { get; set; }
 
     };
+
 
     [fsObject]
     public class Concept

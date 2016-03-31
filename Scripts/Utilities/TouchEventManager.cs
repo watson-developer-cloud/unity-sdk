@@ -289,6 +289,13 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                 m_ReleaseGesture.Released -= ReleaseGestureReleased;
             if ( m_LongPressGesture != null )
                 m_LongPressGesture.LongPressed -= LongPressGesturePressed;
+
+            if (m_DragEvents != null)
+                m_DragEvents.Clear();
+            if (m_TapEvents != null)
+                m_TapEvents.Clear();
+            if (m_DoubleTapEvents != null)
+                m_DoubleTapEvents.Clear();
         }
 
 		/// <summary>
