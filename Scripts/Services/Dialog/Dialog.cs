@@ -442,10 +442,15 @@ namespace IBM.Watson.DeveloperCloud.Services.Dialog.v1
         /// <exclude />
         public void GetServiceStatus(ServiceStatus callback)
         {
-            if ( Config.Instance.FindCredentials( SERVICE_ID ) != null )
-                new CheckServiceStatus( this, callback );
+            if (Config.Instance.FindCredentials(SERVICE_ID) != null)
+                new CheckServiceStatus(this, callback);
             else
-                callback( SERVICE_ID, false );
+            {
+                if (callback != null && callback.Target != null)
+                {
+                    callback(SERVICE_ID, false);
+                }
+            }
         }
 
         private class CheckServiceStatus
@@ -500,7 +505,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Dialog.v1
                     m_DialogCount -= 1;
                     if ( resp != null )
                     {
-                        if ( m_DialogCount == 0 )
+                        if ( m_DialogCount == 0 && m_Callback != null && m_Callback.Target != null)
                             m_Callback( SERVICE_ID, true );
                     }
                     else

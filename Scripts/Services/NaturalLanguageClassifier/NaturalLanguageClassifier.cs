@@ -535,16 +535,16 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
 
             private void OnCheckServices( Classifiers classifiers )
             {
-                if ( m_Callback != null )
+                if (m_Callback != null)
                 {
-                    if ( classifiers.classifiers.Length > 0 )
+                    if (classifiers.classifiers.Length > 0)
                     {
-                        foreach( var classifier in classifiers.classifiers )
+                        foreach (var classifier in classifiers.classifiers)
                         {
                             // check the status of one classifier, if it's listed as "Unavailable" then fail 
-                            if (! m_Service.GetClassifier( classifier.classifier_id, OnCheckService ) )
+                            if (!m_Service.GetClassifier(classifier.classifier_id, OnCheckService))
                             {
-                                OnFailure( "Failed to call GetClassifier()" );
+                                OnFailure("Failed to call GetClassifier()");
                                 break;
                             }
                             else
@@ -552,10 +552,20 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
                         }
                     }
                     else
-                        m_Callback( SERVICE_ID, true );     // no classifiers to check, just return success then..
+                    {
+                        if(m_Callback != null && m_Callback.Target != null )
+                        {
+                            m_Callback(SERVICE_ID, true);     // no classifiers to check, just return success then..
+                        }
+                    }
                 }
                 else
-                    m_Callback( SERVICE_ID, false );
+                {
+                    if (m_Callback != null && m_Callback.Target != null)
+                    {
+                        m_Callback(SERVICE_ID, false);
+                    }
+                }
             }
 
             private void OnCheckService( Classifier classifier )
@@ -592,8 +602,10 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
                     if ( result != null )
                     {
                         // success!
-                        if ( m_ClassifyCount == 0 )
+                        if (m_ClassifyCount == 0 && m_Callback != null && m_Callback.Target != null)
+                        {
                             m_Callback(SERVICE_ID, true);
+                        }
                     }
                     else
                         OnFailure( "Failed to classify." );
@@ -603,7 +615,10 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
             void OnFailure( string msg )
             {
                 Log.Error( "NaturalLanguageClassifier", msg );
-                m_Callback(SERVICE_ID, false);
+                if (m_Callback != null && m_Callback.Target != null)
+                {
+                    m_Callback(SERVICE_ID, false);
+                }
                 m_GetClassifierCount = m_ClassifyCount = 0;
             }
 

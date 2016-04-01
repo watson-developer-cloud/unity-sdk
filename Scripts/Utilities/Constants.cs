@@ -295,6 +295,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// Event to set interactivity enable / disable on camera
             /// </summary>
             ON_CAMERA_SET_INTERACTIVITY,
+            /// <summary>
+            /// Event to set default position of camera
+            /// </summary>
+            ON_CAMERA_RESET,
             #endregion
 
             #region NLC

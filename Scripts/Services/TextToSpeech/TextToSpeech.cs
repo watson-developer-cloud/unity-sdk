@@ -304,7 +304,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 
             private void OnCheckService( Voices voices )
             {
-                if ( m_Callback != null )
+                if ( m_Callback != null  && m_Callback.Target != null)
                     m_Callback( SERVICE_ID, voices != null );
             }
         };
