@@ -292,10 +292,11 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             req.Parameters["outputMode"] = "json";
             req.Parameters["showSourceText"] = "1";
             req.Parameters["language"] = language;
+			req.Parameters["text"] = text;
 
-            req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
-            req.Forms = new Dictionary<string, RESTConnector.Form>();
-            req.Forms["text"] = new RESTConnector.Form(text);
+//            req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
+//            req.Forms = new Dictionary<string, RESTConnector.Form>();
+//            req.Forms["text"] = new RESTConnector.Form(text);
 
             req.OnResponse = OnGetCombinedCallResponse;
             req.Data =  string.IsNullOrEmpty(customData)? text : customData;
