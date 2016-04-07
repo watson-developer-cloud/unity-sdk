@@ -44,6 +44,19 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         #endregion
 
         #region Public Functions
+
+        /// <summary>
+        /// Gets the name of the event.
+        /// </summary>
+        /// <returns>The event name.</returns>
+        /// <param name="eventType">Event type.</param>
+        public string GetEventName( Enum eventType)
+        {
+            if ( !m_EventTypeName.ContainsKey( eventType.GetType() ) )
+                InitializeEventTypeNames( eventType.GetType() );
+            return m_EventTypeName[eventType.GetType()][eventType];
+        }
+
         /// <summary>
         /// Register an event receiver with this EventManager.
         /// </summary>

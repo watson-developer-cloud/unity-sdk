@@ -32,11 +32,6 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 	[RequireComponent (typeof (TapGesture))]
 	public class TouchEventManager : MonoBehaviour {
 
-//		#region Public Types
-//		public delegate void TapEventDelegate(TapGesture tapGesture, Transform hitTransform);
-//		public delegate void DragEventDelegate(ScreenTransformGesture transformGesture);
-//		#endregion
-
         /// <summary>
         /// Touch Event Data holds all touch related event data for registering and unregistering events via Touch Event Manager.
         /// </summary>
@@ -47,8 +42,8 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 			private Collider[] m_ColliderList;
             private Collider2D[] m_Collider2DList;
 			private GameObject m_GameObject;
-			private Constants.Event m_tapEventCallback;
-			private Constants.Event m_dragEventCallback;
+            private string m_tapEventCallback;
+            private string m_dragEventCallback;
 			private bool m_isInside;
 			private int m_SortingLayer;
 
@@ -79,11 +74,11 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// <summary>
             /// Tap Delegate to call
             /// </summary>
-			public Constants.Event TapCallback{ get { return m_tapEventCallback; } }
+            public string TapCallback{ get { return m_tapEventCallback; } }
             /// <summary>
             /// Drag Delegate to call
             /// </summary>
-			public Constants.Event DragCallback{ get { return m_dragEventCallback; } }
+            public string DragCallback{ get { return m_dragEventCallback; } }
             /// <summary>
             /// Greater sorting layer is higher importance level. 
             /// </summary>
@@ -101,7 +96,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// <param name="callback">Callback for Tap Event. After tapped, callback will be invoked</param>
             /// <param name="sortingLayer">Sorting level in order to sort the event listeners</param>
             /// <param name="isInside">Whether the tap is inside the object or not</param>
-			public TouchEventData(Collider collider, Constants.Event callback, int sortingLayer, bool isInside){
+            public TouchEventData(Collider collider, string callback, int sortingLayer, bool isInside){
 				m_Collider = collider;
                 m_Collider2D = null;
 				m_ColliderList = null;
@@ -118,7 +113,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// <param name="callback">Callback for Drag event. After dragging started, callback will be invoked until drag will be finished</param>
             /// <param name="sortingLayer">Sorting level in order to sort the event listeners</param>
             /// <param name="isInside"></param>
-			public TouchEventData(GameObject gameObject, Constants.Event callback, int sortingLayer, bool isInside){
+			public TouchEventData(GameObject gameObject, string callback, int sortingLayer, bool isInside){
 				m_GameObject = gameObject;
 				m_ColliderList = null;
                 if(gameObject != null){
@@ -321,17 +316,31 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// <returns>Success result about registration</returns>
 		public bool RegisterDragEvent(GameObject gameObjectToDrag, Constants.Event callback, int numberOfFinger = 1, int SortingLayer = 0, bool isDragInside = true)
 		{
-			if (m_DragEvents.ContainsKey (numberOfFinger)) 
-			{
-				m_DragEvents[numberOfFinger].Add( new TouchEventData(gameObjectToDrag, callback, SortingLayer, isDragInside));
-			} 
-			else 
-			{
-				m_DragEvents[numberOfFinger] = new List<TouchEventData>() {  new TouchEventData(gameObjectToDrag, callback, SortingLayer, isDragInside) };
-			}
-			
-			return true;
+			return RegisterDragEvent(gameObjectToDrag, EventManager.Instance.GetEventName(callback), numberOfFinger, SortingLayer, isDragInside) ;
 		}
+
+        /// <summary>
+        /// Registers the drag event.
+        /// </summary>
+        /// <returns><c>true</c>, if drag event was registered, <c>false</c> otherwise.</returns>
+        /// <param name="gameObjectToDrag">Game object to drag.</param>
+        /// <param name="callback">Callback.</param>
+        /// <param name="numberOfFinger">Number of finger.</param>
+        /// <param name="SortingLayer">Sorting layer.</param>
+        /// <param name="isDragInside">If set to <c>true</c> is drag inside.</param>
+        public bool RegisterDragEvent(GameObject gameObjectToDrag, string callback, int numberOfFinger = 1, int SortingLayer = 0, bool isDragInside = true)
+        {
+            if (m_DragEvents.ContainsKey (numberOfFinger)) 
+            {
+                m_DragEvents[numberOfFinger].Add( new TouchEventData(gameObjectToDrag, callback, SortingLayer, isDragInside));
+            } 
+            else 
+            {
+                m_DragEvents[numberOfFinger] = new List<TouchEventData>() {  new TouchEventData(gameObjectToDrag, callback, SortingLayer, isDragInside) };
+            }
+
+            return true;
+        }
 
         /// <summary>
         /// Unregister Drag Event to given call back with given parameters
@@ -344,15 +353,31 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// <returns>Success result about unregistration</returns>
 		public bool UnregisterDragEvent(GameObject gameObjectToDrag, Constants.Event callback, int numberOfFinger = 1, int SortingLayer = 0, bool isDragInside = true)
 		{
-			bool success = false;
 			
-			if (m_DragEvents.ContainsKey (numberOfFinger)) 
-			{
-				success = m_DragEvents[numberOfFinger].Remove(  new TouchEventData(gameObjectToDrag, callback, SortingLayer, isDragInside) );
-			} 
-			
-			return success;
+            return UnregisterDragEvent(gameObjectToDrag, EventManager.Instance.GetEventName(callback), numberOfFinger, SortingLayer, isDragInside) ;
 		}
+
+        /// <summary>
+        /// Unregisters the drag event.
+        /// </summary>
+        /// <returns><c>true</c>, if drag event was unregistered, <c>false</c> otherwise.</returns>
+        /// <param name="gameObjectToDrag">Game object to drag.</param>
+        /// <param name="callback">Callback.</param>
+        /// <param name="numberOfFinger">Number of finger.</param>
+        /// <param name="SortingLayer">Sorting layer.</param>
+        /// <param name="isDragInside">If set to <c>true</c> is drag inside.</param>
+        public bool UnregisterDragEvent(GameObject gameObjectToDrag, string callback, int numberOfFinger = 1, int SortingLayer = 0, bool isDragInside = true)
+        {
+            bool success = false;
+
+            if (m_DragEvents.ContainsKey (numberOfFinger)) 
+            {
+                success = m_DragEvents[numberOfFinger].Remove(  new TouchEventData(gameObjectToDrag, callback, SortingLayer, isDragInside) );
+            } 
+
+            return success;
+        }
+
 
 		private void OneFingerTransformedHandler(object sender, System.EventArgs e)
 		{
@@ -371,7 +396,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 						for (int i = 0; i < kp.Value.Count; ++i) {
 							TouchEventData dragEventData = kp.Value [i];
 								
-							if (dragEventData.DragCallback == Constants.Event.NONE) {
+                            if ( string.IsNullOrEmpty(dragEventData.DragCallback) || dragEventData.DragCallback == EventManager.Instance.GetEventName(Constants.Event.NONE)) {
 								Log.Warning ("TouchEventManager", "Removing invalid event receiver from OneFingerDrag");
 								kp.Value.RemoveAt (i--);
 								continue;
@@ -434,9 +459,8 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 
 				}
 
-				if(dragEventToFire != null && dragEventToFire.DragCallback != Constants.Event.NONE)
+                if(dragEventToFire != null)
 					EventManager.Instance.SendEvent(dragEventToFire.DragCallback, m_OneFingerMoveGesture);
-					//dragEventToFire.DragCallback(m_OneFingerManipulationGesture);
 
                 EventManager.Instance.SendEvent(Constants.Event.ON_DRAG_ONE_FINGER_FULLSCREEN, m_OneFingerMoveGesture);
 			}
@@ -455,7 +479,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 						for (int i = 0; i < kp.Value.Count; ++i) {
 							TouchEventData dragEventData = kp.Value [i];
 							
-							if (dragEventData.DragCallback == Constants.Event.NONE) {
+                            if ( string.IsNullOrEmpty(dragEventData.DragCallback) || dragEventData.DragCallback == EventManager.Instance.GetEventName(Constants.Event.NONE)) {
 								Log.Warning ("TouchEventManager", "Removing invalid event receiver from TwoFingerDrag");
 								kp.Value.RemoveAt (i--);
 								continue;
@@ -477,9 +501,8 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 					
 				}
 				
-				if(dragEventToFire != null && dragEventToFire.DragCallback != Constants.Event.NONE)
+				if(dragEventToFire != null)
 					EventManager.Instance.SendEvent(dragEventToFire.DragCallback, m_TwoFingerMoveGesture);
-					//dragEventToFire.DragCallback(m_TwoFingerMoveGesture);
 				
                 EventManager.Instance.SendEvent(Constants.Event.ON_DRAG_TWO_FINGER_FULLSCREEN, m_TwoFingerMoveGesture);
 			}
@@ -501,30 +524,44 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// <returns></returns>
 		public bool RegisterTapEvent(GameObject gameObjectToTouch, Constants.Event callback, int SortingLayer = 0, bool isTapInside = true, LayerMask layerMask = default(LayerMask))
 		{
-			Collider[] colliderList = gameObjectToTouch.GetComponentsInChildren<Collider>();
-
-			if(colliderList != null){
-				foreach (Collider itemCollider in colliderList) 
-				{
-					int layerMaskAsKey = (layerMask != default(LayerMask))? layerMask.value : (1 << gameObjectToTouch.layer);
-					
-					if (m_TapEvents.ContainsKey (layerMaskAsKey)) 
-					{
-						m_TapEvents[layerMaskAsKey].Add( new TouchEventData(itemCollider, callback, SortingLayer, isTapInside));
-					} 
-					else 
-					{
-						m_TapEvents[layerMaskAsKey] = new List<TouchEventData>() {  new TouchEventData(itemCollider, callback, SortingLayer, isTapInside) };
-					}
-				}
-			}
-			else{
-				Log.Warning("TouchEventManager","There is no collider of given gameobjectToTouch");
-			}
-
-
-			return true;
+            return RegisterTapEvent(gameObjectToTouch, EventManager.Instance.GetEventName(callback), SortingLayer, isTapInside, layerMask);
 		}
+
+        /// <summary>
+        /// Registers the tap event.
+        /// </summary>
+        /// <returns><c>true</c>, if tap event was registered, <c>false</c> otherwise.</returns>
+        /// <param name="gameObjectToTouch">Game object to touch.</param>
+        /// <param name="callback">Callback.</param>
+        /// <param name="SortingLayer">Sorting layer.</param>
+        /// <param name="isTapInside">If set to <c>true</c> is tap inside.</param>
+        /// <param name="layerMask">Layer mask.</param>
+        public bool RegisterTapEvent(GameObject gameObjectToTouch, string callback, int SortingLayer = 0, bool isTapInside = true, LayerMask layerMask = default(LayerMask))
+        {
+            Collider[] colliderList = gameObjectToTouch.GetComponentsInChildren<Collider>();
+
+            if(colliderList != null){
+                foreach (Collider itemCollider in colliderList) 
+                {
+                    int layerMaskAsKey = (layerMask != default(LayerMask))? layerMask.value : (1 << gameObjectToTouch.layer);
+
+                    if (m_TapEvents.ContainsKey (layerMaskAsKey)) 
+                    {
+                        m_TapEvents[layerMaskAsKey].Add( new TouchEventData(itemCollider, callback, SortingLayer, isTapInside));
+                    } 
+                    else 
+                    {
+                        m_TapEvents[layerMaskAsKey] = new List<TouchEventData>() {  new TouchEventData(itemCollider, callback, SortingLayer, isTapInside) };
+                    }
+                }
+            }
+            else{
+                Log.Warning("TouchEventManager","There is no collider of given gameobjectToTouch");
+            }
+
+
+            return true;
+        }
 
         /// <summary>
         ///  Unregister tap event to given callback
@@ -537,23 +574,36 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// <returns></returns>
 		public bool UnregisterTapEvent(GameObject gameObjectToTouch, Constants.Event callback, int SortingLayer = 0, bool isTapInside = true, LayerMask layerMask = default(LayerMask))
 		{
-			bool success = false;
-
-			int layerMaskAsKey = (layerMask != default(LayerMask))? layerMask.value : (1 << gameObjectToTouch.layer);
-
-			if (m_TapEvents.ContainsKey (layerMaskAsKey)) 
-			{
-				success = true;
-				Collider[] colliderList = gameObjectToTouch.GetComponentsInChildren<Collider>();
-				foreach (Collider itemCollider in colliderList) 
-				{
-					success &= m_TapEvents[layerMaskAsKey].Remove( new TouchEventData(itemCollider, callback, SortingLayer, isTapInside) );
-				}
-			} 
-
-			return success;
+            return UnregisterTapEvent(gameObjectToTouch, EventManager.Instance.GetEventName(callback), SortingLayer, isTapInside, layerMask);
 		}
 
+        /// <summary>
+        /// Unregisters the tap event.
+        /// </summary>
+        /// <returns><c>true</c>, if tap event was unregistered, <c>false</c> otherwise.</returns>
+        /// <param name="gameObjectToTouch">Game object to touch.</param>
+        /// <param name="callback">Callback.</param>
+        /// <param name="SortingLayer">Sorting layer.</param>
+        /// <param name="isTapInside">If set to <c>true</c> is tap inside.</param>
+        /// <param name="layerMask">Layer mask.</param>
+        public bool UnregisterTapEvent(GameObject gameObjectToTouch, string callback, int SortingLayer = 0, bool isTapInside = true, LayerMask layerMask = default(LayerMask))
+        {
+            bool success = false;
+
+            int layerMaskAsKey = (layerMask != default(LayerMask))? layerMask.value : (1 << gameObjectToTouch.layer);
+
+            if (m_TapEvents.ContainsKey (layerMaskAsKey)) 
+            {
+                success = true;
+                Collider[] colliderList = gameObjectToTouch.GetComponentsInChildren<Collider>();
+                foreach (Collider itemCollider in colliderList) 
+                {
+                    success &= m_TapEvents[layerMaskAsKey].Remove( new TouchEventData(itemCollider, callback, SortingLayer, isTapInside) );
+                }
+            } 
+
+            return success;
+        }
 
 		private void TapGesture_Tapped(object sender, System.EventArgs e)
 		{   
@@ -578,7 +628,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 					{
 						TouchEventData tapEventData = kp.Value[i];
 
-						if (tapEventData.TapCallback == Constants.Event.NONE)
+                        if ( string.IsNullOrEmpty(tapEventData.TapCallback) || tapEventData.TapCallback == EventManager.Instance.GetEventName(Constants.Event.NONE))
 						{
 							Log.Warning("TouchEventManager", "Removing invalid event receiver from TapEventList");
 							kp.Value.RemoveAt(i--);
@@ -634,9 +684,8 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 
 				}
 
-				if(tapEventToFire != null && tapEventToFire.TapCallback != Constants.Event.NONE)
+				if(tapEventToFire != null)
                     EventManager.Instance.SendEvent(tapEventToFire.TapCallback, m_TapGesture, hitToFire);
-					//tapEventToFire.TapCallback(m_TapGesture, tapEventToFire.Collider.transform);
 
                 EventManager.Instance.SendEvent(Constants.Event.ON_TAP_ONE, m_TapGesture);
 			}
@@ -648,7 +697,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         #region Double TapEvents - Register / UnRegister / Call 
 
         /// <summary>
-        /// Register tap event to given callback
+        /// Register double tap event to given callback
         /// </summary>
         /// <param name="gameObjectToTouch">Game object to tap on</param>
         /// <param name="callback">Callback to call after tapped on object (or outside of the object)</param>
@@ -657,6 +706,20 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// <param name="layerMask">Layer mask to tap. Default is the gameObjectToTouch's layer</param>
         /// <returns></returns>
         public bool RegisterDoubleTapEvent(GameObject gameObjectToTouch, Constants.Event callback, int SortingLayer = 0, bool isDoubleTapInside = true, LayerMask layerMask = default(LayerMask))
+        {
+            return RegisterDoubleTapEvent(gameObjectToTouch, EventManager.Instance.GetEventName(callback), SortingLayer, isDoubleTapInside, layerMask);
+        }
+
+        /// <summary>
+        /// Registers the double tap event.
+        /// </summary>
+        /// <returns><c>true</c>, if double tap event was registered, <c>false</c> otherwise.</returns>
+        /// <param name="gameObjectToTouch">Game object to touch.</param>
+        /// <param name="callback">Callback.</param>
+        /// <param name="SortingLayer">Sorting layer.</param>
+        /// <param name="isDoubleTapInside">If set to <c>true</c> is double tap inside.</param>
+        /// <param name="layerMask">Layer mask.</param>
+        public bool RegisterDoubleTapEvent(GameObject gameObjectToTouch, string callback, int SortingLayer = 0, bool isDoubleTapInside = true, LayerMask layerMask = default(LayerMask))
         {
             Collider[] colliderList = gameObjectToTouch.GetComponentsInChildren<Collider>();
 
@@ -693,6 +756,20 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// <param name="layerMask">Layer mask to tap. Default is the gameObjectToTouch's layer</param>
         /// <returns></returns>
         public bool UnregisterDoubleTapEvent(GameObject gameObjectToTouch, Constants.Event callback, int SortingLayer = 0, bool isDoubleTapInside = true, LayerMask layerMask = default(LayerMask))
+        {
+            return UnregisterDoubleTapEvent(gameObjectToTouch, EventManager.Instance.GetEventName(callback), SortingLayer, isDoubleTapInside, layerMask);
+        }
+
+        /// <summary>
+        /// Unregisters the double tap event.
+        /// </summary>
+        /// <returns><c>true</c>, if double tap event was unregistered, <c>false</c> otherwise.</returns>
+        /// <param name="gameObjectToTouch">Game object to touch.</param>
+        /// <param name="callback">Callback.</param>
+        /// <param name="SortingLayer">Sorting layer.</param>
+        /// <param name="isDoubleTapInside">If set to <c>true</c> is double tap inside.</param>
+        /// <param name="layerMask">Layer mask.</param>
+        public bool UnregisterDoubleTapEvent(GameObject gameObjectToTouch, string callback, int SortingLayer = 0, bool isDoubleTapInside = true, LayerMask layerMask = default(LayerMask))
         {
             bool success = false;
 
@@ -735,7 +812,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                     {
                         TouchEventData tapEventData = kp.Value[i];
 
-                        if (tapEventData.TapCallback == Constants.Event.NONE)
+                        if (string.IsNullOrEmpty(tapEventData.TapCallback) || tapEventData.TapCallback == EventManager.Instance.GetEventName(Constants.Event.NONE))
                         {
                             Log.Warning("TouchEventManager", "Removing invalid event receiver from TapEventList");
                             kp.Value.RemoveAt(i--);
@@ -791,9 +868,8 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 
                 }
 
-                if(tapEventToFire != null && tapEventToFire.TapCallback != Constants.Event.NONE)
+                if(tapEventToFire != null)
                     EventManager.Instance.SendEvent(tapEventToFire.TapCallback, m_DoubleTapGesture, hitToFire);
-                //tapEventToFire.TapCallback(m_DoubleTapGesture, tapEventToFire.Collider.transform);
 
                 EventManager.Instance.SendEvent(Constants.Event.ON_TAP_DOUBLE, m_DoubleTapGesture);
             }
