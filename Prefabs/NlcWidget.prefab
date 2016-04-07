@@ -44,9 +44,9 @@ MonoBehaviour:
     m_Connections: []
   m_ClassifierName: ${NLC_CLASSIFIER_NAME}
   m_ClassifierId: ${NLC_CLASSIFIER_ID}
-  m_MinWordConfidence: 0.3
-  m_IgnoreWordConfidence: 0.2
-  m_MinClassEventConfidence: 0.4
+  m_MinWordConfidence: 0
+  m_IgnoreWordConfidence: 0
+  m_MinClassEventConfidence: 0
   m_Language: en
   m_ClassEventList:
   - m_Class: wakeup
@@ -82,17 +82,17 @@ MonoBehaviour:
   - m_Class: question-numerati_woodside
     m_Event: 401
   - m_Class: pan_left
-    m_Event: -1
+    m_Event: 309
   - m_Class: pan_right
-    m_Event: -1
+    m_Event: 310
   - m_Class: pan_up
-    m_Event: -1
+    m_Event: 311
   - m_Class: pan_down
-    m_Event: -1
+    m_Event: 312
   - m_Class: zoom_in
-    m_Event: -1
+    m_Event: 307
   - m_Class: zoom_out
-    m_Event: -1
+    m_Event: 308
   - m_Class: show_next_passage
     m_Event: 415
   - m_Class: show_next_answer
@@ -112,7 +112,7 @@ MonoBehaviour:
   - m_Class: repeat_last_action
     m_Event: 419
   - m_Class: personnel
-    m_Event: 515
+    m_Event: 423
   - m_Class: confirm_update
     m_Event: 700
   - m_Class: cancel_update
@@ -143,6 +143,24 @@ MonoBehaviour:
     m_Event: 906
   - m_Class: about_xray
     m_Event: 907
+  - m_Class: ship_tracking
+    m_Event: 424
+  - m_Class: procurement
+    m_Event: 425
+  - m_Class: left_map
+    m_Event: 604
+  - m_Class: right_map
+    m_Event: 605
+  - m_Class: older_purchase_orders
+    m_Event: 606
+  - m_Class: vendor_list
+    m_Event: 427
+  - m_Class: newer_purchase_orders
+    m_Event: 607
+  - m_Class: purchase_orders
+    m_Event: 426
+  - m_Class: entity_extraction
+    m_Event: 428
   m_TopClassText: {fileID: 0}
 --- !u!1001 &100100000
 Prefab:
@@ -153,7 +171,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.size
-      value: 47
+      value: 49
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassifierId
@@ -209,7 +227,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[16].m_Event
-      value: -1
+      value: 309
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[17].m_Class
@@ -217,7 +235,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[17].m_Event
-      value: -1
+      value: 310
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[18].m_Class
@@ -229,11 +247,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[18].m_Event
-      value: -1
+      value: 311
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[19].m_Event
-      value: -1
+      value: 312
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[20].m_Class
@@ -245,11 +263,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[20].m_Event
-      value: -1
+      value: 307
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[21].m_Event
-      value: -1
+      value: 308
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[22].m_Class
@@ -333,7 +351,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[31].m_Event
-      value: 515
+      value: 423
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[32].m_Class
@@ -449,11 +467,27 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[47].m_Class
-      value: cancel
+      value: ship_tracking
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_ClassEventList.Array.data[47].m_Event
-      value: 422
+      value: 424
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[48].m_Class
+      value: procurement
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[48].m_Event
+      value: 425
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[49].m_Class
+      value: about_xray
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[49].m_Event
+      value: 907
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

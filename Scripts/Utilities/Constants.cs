@@ -149,6 +149,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// Event fired after avatar close caption
             /// </summary>
             CLOSECAPTION_AVATAR_MESSAGE,
+            /// <summary>
+            /// Event fired to change interacitity of avatar 
+            /// </summary>
+            ON_AVATAR_SET_INTERACTIVITY,
             #endregion
 
             #region Question
@@ -212,6 +216,18 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// Event to immerse features
             /// </summary>
             ON_QUESTION_IMMERSE_FEATURES,
+            /// <summary>
+            /// Event fired when location with ship tracking information
+            /// </summary>
+            ON_QUESTION_LOCATION_SHIPTRACKING,
+			/// <summary>
+			/// Event fired when location with procurement information
+			/// </summary>
+			ON_QUESTION_PROCUREMENT,
+			/// <summary>
+			/// Event fired when location with procurement information
+			/// </summary>
+			ON_QUESTION_COMBINED_CALL,
             #endregion
 
             #region Animation / Camera
@@ -267,7 +283,22 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// Event to move the camera down
             /// </summary>
             ON_CAMERA_MOVE_DOWN,
-            
+            /// <summary>
+            /// Event to set Antialiasing on / off
+            /// </summary>
+            ON_CAMERA_SET_ANTIALIASING,
+            /// <summary>
+            /// Event to set depth of field on / off
+            /// </summary>
+            ON_CAMERA_SET_DEPTHOFFIELD,
+            /// <summary>
+            /// Event to set interactivity enable / disable on camera
+            /// </summary>
+            ON_CAMERA_SET_INTERACTIVITY,
+            /// <summary>
+            /// Event to set default position of camera
+            /// </summary>
+            ON_CAMERA_RESET,
             #endregion
 
             #region NLC
@@ -364,14 +395,37 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// Cancel command
             /// </summary>
             ON_COMMAND_CANCEL,
-
-            #endregion
-
-            #region Input - Touch
             /// <summary>
-            /// Event if there is touch on fullscreen pressed - It is called for each touch
+            /// On classify the question as personnel information related
             /// </summary>
-            ON_TOUCH_PRESSED_FULLSCREEN = 500,
+            ON_CLASSIFY_PERSONNEL,
+            /// <summary>
+            /// On Classify the question as ship tracking question
+            /// </summary>
+            ON_CLASSIFY_SHIP_TRACKING,
+			/// <summary>
+			/// On Classify the question as procurement question
+			/// </summary>
+			ON_CLASSIFY_PROCUREMENT,
+            /// <summary>
+            /// 
+            /// </summary>
+            ON_COMMAND_PROCUREMENT,
+			/// <summary>
+			/// 
+			/// </summary>
+			ON_COMMAND_PROCUREMENT_LIST,
+			/// <summary>
+			/// 
+			/// </summary>
+			ON_COMMAND_ENTITY_EXTRACTION,
+			#endregion
+
+			#region Input - Touch
+			/// <summary>
+			/// Event if there is touch on fullscreen pressed - It is called for each touch
+			/// </summary>
+			ON_TOUCH_PRESSED_FULLSCREEN = 500,
             /// <summary>
             /// Event if 
             /// </summary>
@@ -428,10 +482,6 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 			/// Event fired after three tap on middle top - hot corner
 			/// </summary>
 			ON_TAP_THREETIMES_MIDDLE_TOP,
-			/// <summary>
-			/// 
-			/// </summary>
-			ON_CLASSIFY_PERSONNEL,
             /// <summary>
             /// Event fired when a single tap occur
             /// </summary>
@@ -483,7 +533,30 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 			/// Event fired when Double tap on Map
 			/// </summary>
 			ON_MAP_TAP_DOUBLE,
+            /// <summary>
+            /// Event fired when two finger dragging on Map - to zoom
+            /// </summary>
+            ON_MAP_DRAG_TWO_FINGER,
+            /// <summary>
+            /// To show left map
+            /// </summary>
+            ON_MAP_TO_SHOW_LEFT,
+            /// <summary>
+            /// To show right map
+            /// </summary>
+            ON_MAP_TO_SHOW_RIGHT,
             #endregion
+
+			#region Procurement
+			/// <summary>
+			/// Show older POs
+			/// </summary>
+			PROCUREMENT_ON_SHOW_OLDER_PURCHASE_ORDERS,
+			/// <summary>
+			/// Show newer POs
+			/// </summary>
+			PROCUREMENT_ON_SHOW_NEWER_PURCHASE_ORDERS,
+			#endregion
 
             #region Update
             /// <summary>
@@ -563,8 +636,15 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// <summary>
             /// To show system log panel
             /// </summary>
-            SHOW_APPLICATION_ABOUT
+            SHOW_APPLICATION_ABOUT,
             #endregion
+
+			#region Answer selection
+			/// <summary>
+			/// Answer or passage selection
+			/// </summary>
+			SELECT_ANSWER = 950
+			#endregion
 
         }
 
@@ -577,6 +657,16 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// Configuration file name.
             /// </summary>
             public const string CONFIG_FILE = "/Config.json";
+
+            /// <summary>
+            /// Cache folder to customize a parent folder for cache directory
+            /// </summary>
+            public static string CACHE_FOLDER = "";   //It needs to start with / 
+
+            /// <summary>
+            /// Log folder to customize a parent folder for logs
+            /// </summary>
+            public static string LOG_FOLDER = "";    //It needs to start with / 
         }
 
         /// <summary>

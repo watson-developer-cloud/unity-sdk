@@ -72,7 +72,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             m_MaxCacheSize = maxCacheSize;
             m_MaxCacheAge = maxCacheAge;
 
-            m_CachePath = Application.persistentDataPath + "/" + cacheName + "/";
+            m_CachePath = Application.persistentDataPath + Constants.Path.CACHE_FOLDER + "/" + cacheName + "/";
             if (!Directory.Exists(m_CachePath))
                 Directory.CreateDirectory(m_CachePath);
 
@@ -86,12 +86,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                     item.Path = f;
                     item.Id = Path.GetFileNameWithoutExtension(f);
                     item.Time = lastWrite;
-                    item.Data = File.ReadAllBytes(f);
-                    if ( item.Data == null )
-                        continue;
+                    item.Data = null;
 
                     m_Cache[item.Id] = item;
-                    m_CurrentCacheSize += item.Data.Length;
+                    m_CurrentCacheSize += (new FileInfo(f)).Length;
                 }
                 else
                 {
@@ -108,18 +106,45 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// <returns>The cached data, or null if not found.</returns>
         public byte[] Find(string id)
         {
-            id = id.Replace('/', '_');
-
-            CacheItem item = null;
-            if (m_Cache.TryGetValue(id, out item))
+            if(!string.IsNullOrEmpty(id))
             {
-                item.Time = DateTime.Now;
-                File.SetLastWriteTime( item.Path,  item.Time );
+                id = id.Replace('/', '_');
 
-                return item.Data;
+                CacheItem item = null;
+                if (m_Cache.TryGetValue(id, out item))
+                {
+                    item.Time = DateTime.Now;
+
+                    File.SetLastWriteTime( item.Path,  item.Time );
+
+                    if (item.Data == null)
+                    {
+                        item.Data = File.ReadAllBytes(item.Path);
+                    }
+
+                    return item.Data;
+                }
             }
 
             return null;
+        }
+
+        public bool IsCached(string id)
+        {
+            bool isCached = false;
+
+            if(!string.IsNullOrEmpty(id))
+            {
+                id = id.Replace('/', '_');
+
+                CacheItem item = null;
+                if (m_Cache.TryGetValue(id, out item))
+                {
+                    isCached = File.Exists(item.Path);
+                }
+            }
+
+            return isCached;
         }
 
         /// <summary>
@@ -134,7 +159,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                 id = id.Replace('/', '_');
 
                 if (m_Cache.ContainsKey(id))
+                {
+                    Log.Debug("DataCache", "Has same key in the cache. Flushing old one: {0}", id);
                     Flush(id);
+                }
 
                 CacheItem item = new CacheItem();
                 item.Path = m_CachePath + id + ".bytes";
@@ -169,7 +197,11 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             {
                 Log.Debug( "DataCache", "Flushing {0} from cache.", item.Path );
 
-                m_CurrentCacheSize -= item.Data.Length;
+                if(item.Data != null)
+                    m_CurrentCacheSize -= item.Data.Length;
+                else
+                    m_CurrentCacheSize -= (new FileInfo(item.Path)).Length;
+                
                 File.Delete( item.Path );
 
                 m_Cache.Remove( id );
@@ -205,8 +237,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                     oldest = kp.Value;
             }
 
-            if ( oldest != null )
-                Flush( oldest.Id );
+            if (oldest != null)
+            {
+                Flush(oldest.Id);
+            }
         }
 
         /// <summary>

@@ -17,12 +17,11 @@
 
 using UnityEngine;
 using UnityEngine.UI;
-using IBM.Watson.DeveloperCloud.Services.v1;
+using IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.DataTypes;
 using System.Collections.Generic;
 using IBM.Watson.DeveloperCloud.Utilities;
-using System;
 
 #pragma warning disable 414
 
@@ -64,7 +63,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         [SerializeField]
         private Text m_StatusText = null;
         [SerializeField]
-        private TextToSpeech.VoiceType m_Voice = TextToSpeech.VoiceType.en_US_Michael;
+        private VoiceType m_Voice = VoiceType.en_US_Michael;
         [SerializeField]
         private bool m_UsePost = false;
 
@@ -105,7 +104,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 		/// Gets or sets the voice. Default voice is English, US - Michael
 		/// </summary>
 		/// <value>The voice.</value>
-		public TextToSpeech.VoiceType Voice 
+		public VoiceType Voice 
 		{
 			get
 			{

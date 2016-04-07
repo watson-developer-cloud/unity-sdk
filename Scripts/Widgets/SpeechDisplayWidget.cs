@@ -16,8 +16,8 @@
 */
 
 
-using IBM.Watson.DeveloperCloud.DataModels;
 using IBM.Watson.DeveloperCloud.DataTypes;
+using IBM.Watson.DeveloperCloud.Services.SpeechToText.v1;
 using UnityEngine;
 using UnityEngine.UI;
 

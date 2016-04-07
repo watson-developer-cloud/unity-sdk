@@ -17,12 +17,11 @@
 
 using UnityEngine;
 using UnityEngine.UI;
-using IBM.Watson.DeveloperCloud.DataModels;
 using IBM.Watson.DeveloperCloud.DataTypes;
 using IBM.Watson.DeveloperCloud.Logging;
-using IBM.Watson.DeveloperCloud.Services.v1;
+using IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v1;
+using IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using IBM.Watson.DeveloperCloud.Utilities;
 
@@ -391,17 +390,17 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             if ( m_VoiceOutput.IsConnected )
             {
                 if ( TargetLanguage == "en" )
-                    m_VoiceOutput.SendData( new VoiceData( TextToSpeech.VoiceType.en_US_Michael ) );
+                    m_VoiceOutput.SendData( new VoiceData( VoiceType.en_US_Michael ) );
                 else if ( TargetLanguage == "de" )
-                    m_VoiceOutput.SendData( new VoiceData( TextToSpeech.VoiceType.de_DE_Dieter ) );
+                    m_VoiceOutput.SendData( new VoiceData( VoiceType.de_DE_Dieter ) );
                 else if ( TargetLanguage == "es" )
-                    m_VoiceOutput.SendData( new VoiceData( TextToSpeech.VoiceType.es_ES_Enrique ) );
+                    m_VoiceOutput.SendData( new VoiceData( VoiceType.es_ES_Enrique ) );
                 else if ( TargetLanguage == "fr" )
-                    m_VoiceOutput.SendData( new VoiceData( TextToSpeech.VoiceType.fr_FR_Renee ) );
+                    m_VoiceOutput.SendData( new VoiceData( VoiceType.fr_FR_Renee ) );
                 else if ( TargetLanguage == "it" )
-                    m_VoiceOutput.SendData( new VoiceData( TextToSpeech.VoiceType.it_IT_Francesca ) );
+                    m_VoiceOutput.SendData( new VoiceData( VoiceType.it_IT_Francesca ) );
                 else if ( TargetLanguage == "ja" )
-                    m_VoiceOutput.SendData( new VoiceData( TextToSpeech.VoiceType.ja_JP_Emi ) );
+                    m_VoiceOutput.SendData( new VoiceData( VoiceType.ja_JP_Emi ) );
                 else
                     Log.Warning( "TranslateWidget", "Unsupported voice for language {0}", TargetLanguage );
             }

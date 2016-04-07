@@ -103,7 +103,7 @@ namespace IBM.Watson.DeveloperCloud.Logging
         /// <summary>
         /// Returns the singleton instance of the Logger object.
         /// </summary>
-		public static LogSystem Instance { get { if(! sm_bInstalledDefaultReactors) InstallDefaultReactors(); return Singleton<LogSystem>.Instance; } }
+		public static LogSystem Instance { get { return Singleton<LogSystem>.Instance; } }
         #endregion
 
         #region Private Data
@@ -123,7 +123,7 @@ namespace IBM.Watson.DeveloperCloud.Logging
         /// <summary>
         /// Install a default debug and file reactor.
         /// </summary>
-        public static void InstallDefaultReactors()
+        public static void InstallDefaultReactors( int logHistory = 2 )
         {
             if (! sm_bInstalledDefaultReactors )
             {
@@ -132,7 +132,11 @@ namespace IBM.Watson.DeveloperCloud.Logging
 #if UNITY_EDITOR || UNITY_IOS || UNITY_ANDROID
                 LogSystem.Instance.InstallReactor( new DebugReactor() );
 #endif
-                LogSystem.Instance.InstallReactor( new FileReactor( Application.persistentDataPath + "/Watson.log" ) );
+
+                if (!string.IsNullOrEmpty(Constants.Path.LOG_FOLDER) && !System.IO.Directory.Exists(Application.persistentDataPath + Constants.Path.LOG_FOLDER ))
+                    System.IO.Directory.CreateDirectory(Application.persistentDataPath + Constants.Path.LOG_FOLDER );
+                
+                LogSystem.Instance.InstallReactor( new FileReactor( Application.persistentDataPath + Constants.Path.LOG_FOLDER + "/" + Application.productName + ".log", LogLevel.STATUS, logHistory ) );
 
                 Application.logMessageReceived += UnityLogCallback;
             }

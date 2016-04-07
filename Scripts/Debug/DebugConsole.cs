@@ -22,6 +22,8 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using IBM.Watson.DeveloperCloud.Widgets;
+using System.Collections;
 
 namespace IBM.Watson.DeveloperCloud.Debug
 {
@@ -78,6 +80,8 @@ namespace IBM.Watson.DeveloperCloud.Debug
         private LayoutGroup m_DebugInfoLayout = null;
         [SerializeField]
         private Text m_DebugInfoPrefab = null;
+
+		private MicrophoneWidget m_MicWidget = null;
         #endregion
 
         #region Public Properties
@@ -177,6 +181,7 @@ namespace IBM.Watson.DeveloperCloud.Debug
             {
                 m_RootInput.SetActive(m_ActiveInput);
                 m_RootOutput.SetActive(m_ActiveOutput);
+				m_MicWidget = FindObjectOfType<MicrophoneWidget>();
             }
         }
 
@@ -252,6 +257,13 @@ namespace IBM.Watson.DeveloperCloud.Debug
 
                 // turn off all key press events..
                 KeyEventManager.Instance.Active = false;
+
+				//	turn off mic
+				if(m_MicWidget != null)
+					m_MicWidget.Active = false;
+
+				//	timer to turn mic back on
+				StartCoroutine(ActivateMicAfterTime(10f));
             }
         }
 
@@ -269,8 +281,19 @@ namespace IBM.Watson.DeveloperCloud.Debug
 
                 // restore the key manager state
                 KeyEventManager.Instance.Active = true;
+
+				//	turn on mic
+				if(m_MicWidget != null)
+					m_MicWidget.Active = true;
             }
         }
+
+		private IEnumerator ActivateMicAfterTime(float time)
+		{
+			yield return new WaitForSeconds(time);
+			if(m_MicWidget != null)
+				m_MicWidget.Active = true;
+		}
         #endregion
     }
 }
