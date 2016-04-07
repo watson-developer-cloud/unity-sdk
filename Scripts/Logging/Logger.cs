@@ -123,7 +123,7 @@ namespace IBM.Watson.DeveloperCloud.Logging
         /// <summary>
         /// Install a default debug and file reactor.
         /// </summary>
-        public static void InstallDefaultReactors( int logHistory = 2 )
+        public static void InstallDefaultReactors( int logHistory = 2 , LogLevel logLevelFileReactor = LogLevel.STATUS)
         {
             if (! sm_bInstalledDefaultReactors )
             {
@@ -136,7 +136,7 @@ namespace IBM.Watson.DeveloperCloud.Logging
                 if (!string.IsNullOrEmpty(Constants.Path.LOG_FOLDER) && !System.IO.Directory.Exists(Application.persistentDataPath + Constants.Path.LOG_FOLDER ))
                     System.IO.Directory.CreateDirectory(Application.persistentDataPath + Constants.Path.LOG_FOLDER );
                 
-                LogSystem.Instance.InstallReactor( new FileReactor( Application.persistentDataPath + Constants.Path.LOG_FOLDER + "/" + Application.productName + ".log", LogLevel.STATUS, logHistory ) );
+                LogSystem.Instance.InstallReactor( new FileReactor( Application.persistentDataPath + Constants.Path.LOG_FOLDER + "/" + Application.productName + ".log", logLevelFileReactor, logHistory ) );
 
                 Application.logMessageReceived += UnityLogCallback;
             }
