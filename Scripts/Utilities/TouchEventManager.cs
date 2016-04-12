@@ -445,14 +445,13 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 
 		private void OneFingerTransformedHandler(object sender, System.EventArgs e)
 		{
+            RaycastHit hit = default(RaycastHit);
+            RaycastHit2D hit2D = default(RaycastHit2D);
 			//Log.Status ("TouchEventManager", "oneFingerManipulationTransformedHandler: {0}", m_OneFingerMoveGesture.DeltaPosition);
 			if (m_Active) {
 				TouchEventData dragEventToFire = null;
 					
 				Ray rayForDrag = MainCamera.ScreenPointToRay(m_OneFingerMoveGesture.ScreenPosition);
-                RaycastHit hit;
-                RaycastHit2D hit2D;
-
 
 				foreach (var kp in m_DragEvents) {
 					if (kp.Key == 1) {
@@ -525,7 +524,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 				}
 
                 if(dragEventToFire != null)
-					EventManager.Instance.SendEvent(dragEventToFire.DragCallback, m_OneFingerMoveGesture);
+                    EventManager.Instance.SendEvent(dragEventToFire.DragCallback, m_OneFingerMoveGesture, hit, hit2D);
 
                 EventManager.Instance.SendEvent(Constants.Event.ON_DRAG_ONE_FINGER_FULLSCREEN, m_OneFingerMoveGesture);
 			}
