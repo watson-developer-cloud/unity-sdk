@@ -44,7 +44,7 @@ namespace IBM.Watson.DeveloperCloud.Camera
 		}
 
 		void TapThreeTimes(System.Object[] args = null){
-			if (args != null && args.Length == 1 && args [0] is TouchScript.Gestures.TapGesture) {
+			if (args != null && args.Length > 0 && args [0] is TouchScript.Gestures.TapGesture) {
 				//Got three tap gesture, now checking the corners
 				TouchScript.Gestures.TapGesture tapGesture = args [0] as TouchScript.Gestures.TapGesture;
 

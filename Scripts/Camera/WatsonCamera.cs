@@ -193,7 +193,7 @@ namespace IBM.Watson.DeveloperCloud.Camera
             if (m_DisableInteractivity)
                 return;
             
-            if (args != null && args.Length == 1 && args[0] is TouchScript.Gestures.ScreenTransformGesture)
+            if (args != null && args.Length > 0 && args[0] is TouchScript.Gestures.ScreenTransformGesture)
             {
                 TouchScript.Gestures.ScreenTransformGesture transformGesture = args[0] as TouchScript.Gestures.ScreenTransformGesture;
 
@@ -214,7 +214,7 @@ namespace IBM.Watson.DeveloperCloud.Camera
 
         public void OnCameraSetAntiAliasing(System.Object[] args)
         {
-            if (args != null && args.Length == 1 && args[0] is bool)
+            if (args != null && args.Length > 0 && args[0] is bool)
             {
                 bool valueSet = (bool)args[0];
 
@@ -227,7 +227,7 @@ namespace IBM.Watson.DeveloperCloud.Camera
 
         public void OnCameraSetDepthOfField(System.Object[] args)
         {
-            if (args != null && args.Length == 1 && args[0] is bool)
+            if (args != null && args.Length > 0 && args[0] is bool)
             {
                 bool valueSet = (bool)args[0];
 
@@ -240,7 +240,7 @@ namespace IBM.Watson.DeveloperCloud.Camera
 
         public void OnCameraSetTwoFingerDrag(System.Object[] args)
         {
-            if (args != null && args.Length == 1 && args[0] is bool)
+            if (args != null && args.Length > 0 && args[0] is bool)
             {
                 m_DisableInteractivity = !(bool)args[0];
             }

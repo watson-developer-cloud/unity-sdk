@@ -331,7 +331,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// Registers the drag event.
         /// </summary>
         /// <returns><c>true</c>, if drag event was registered, <c>false</c> otherwise.</returns>
-        /// <param name="gameObjectToDrag">Game object to drag.</param>
+        /// <param name="gameObjectToDrag">Game object to drag. If it is null then fullscreen drag is registered. </param>
         /// <param name="callback">Callback.</param>
         /// <param name="numberOfFinger">Number of finger.</param>
         /// <param name="SortingLayer">Sorting layer.</param>
@@ -340,29 +340,22 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         {
             bool success = false;
 
-            if (gameObjectToDrag != null)
+            if (!string.IsNullOrEmpty(callback))
             {
-                if (!string.IsNullOrEmpty(callback))
+                if (m_DragEvents.ContainsKey(numberOfFinger))
                 {
-                    if (m_DragEvents.ContainsKey(numberOfFinger))
-                    {
-                        m_DragEvents[numberOfFinger].Add(new TouchEventData(gameObjectToDrag, callback, SortingLayer, isDragInside));
-                    }
-                    else
-                    {
-                        m_DragEvents[numberOfFinger] = new List<TouchEventData>() { new TouchEventData(gameObjectToDrag, callback, SortingLayer, isDragInside) };
-                    }
-
-                    success = true;
+                    m_DragEvents[numberOfFinger].Add(new TouchEventData(gameObjectToDrag, callback, SortingLayer, isDragInside));
                 }
                 else
                 {
-                    Log.Warning("TouchEventManager", "There is no callback for drag event registration");
+                    m_DragEvents[numberOfFinger] = new List<TouchEventData>() { new TouchEventData(gameObjectToDrag, callback, SortingLayer, isDragInside) };
                 }
+
+                success = true;
             }
             else
             {
-                Log.Warning("TouchEventManager", "There is no gameobject for drag event registration");
+                Log.Warning("TouchEventManager", "There is no callback for drag event registration");
             }
 
             return success;
