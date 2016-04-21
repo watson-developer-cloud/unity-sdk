@@ -42,7 +42,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         {
             public KeyCode m_Key = (KeyCode)0;
             public KeyModifiers m_Modifiers = KeyModifiers.NONE;
-            public Constants.Event m_Event = Constants.Event.NONE;
+            public string m_Event = "";
         };
 
         [SerializeField]

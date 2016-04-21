@@ -187,24 +187,24 @@ namespace IBM.Watson.DeveloperCloud.Debug
 
         private void OnEnable()
         {
-            EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_DEBUG_MESSAGE, OnDebugMessage);
+            EventManager.Instance.RegisterEventReceiver("OnDebugMessage", OnDebugMessage);
 
-            EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_DEBUG_TOGGLE, OnToggleActive);
-            EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_KEYBOARD_BACKQUOTE, OnToggleActive);
+            EventManager.Instance.RegisterEventReceiver("OnDebugToggle", OnToggleActive);
+            EventManager.Instance.RegisterEventReceiver("OnKeyboardBackquote", OnToggleActive);
 
-            EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_DEBUG_BEGIN_COMMAND, OnBeginEdit);
-            EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_KEYBOARD_RETURN, OnBeginEdit);
+            EventManager.Instance.RegisterEventReceiver("OnDebugBeginCommand", OnBeginEdit);
+            EventManager.Instance.RegisterEventReceiver("OnKeyboardReturn", OnBeginEdit);
         }
 
         private void OnDisable()
         {
-            EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_DEBUG_MESSAGE, OnDebugMessage);
+			EventManager.Instance.UnregisterEventReceiver("OnDebugMessage", OnDebugMessage);
 
-            EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_DEBUG_TOGGLE, OnToggleActive);
-            EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_KEYBOARD_BACKQUOTE, OnToggleActive);
+			EventManager.Instance.UnregisterEventReceiver("OnDebugToggle", OnToggleActive);
+			EventManager.Instance.UnregisterEventReceiver("OnKeyboardBackquote", OnToggleActive);
 
-            EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_DEBUG_BEGIN_COMMAND, OnBeginEdit);
-            EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_KEYBOARD_RETURN, OnBeginEdit);
+			EventManager.Instance.UnregisterEventReceiver("OnDebugBeginCommand", OnBeginEdit);
+			EventManager.Instance.UnregisterEventReceiver("OnKeyboardReturn", OnBeginEdit);
         }
 
         private void Update()
@@ -244,7 +244,7 @@ namespace IBM.Watson.DeveloperCloud.Debug
         private void OnToggleActive( object [] args )
         {
             ActiveOutput = !ActiveOutput;
-            EventManager.Instance.SendEvent( Constants.Event.ON_DEBUG_TOGGLE_FINISH);
+            EventManager.Instance.SendEvent("OnDebugToggleFinish");
         }
 
         private void OnBeginEdit( object [] args )
@@ -274,7 +274,7 @@ namespace IBM.Watson.DeveloperCloud.Debug
         {
             if ( m_CommandInput != null )
             {
-                EventManager.Instance.SendEvent( Constants.Event.ON_DEBUG_COMMAND, m_CommandInput.text );
+                EventManager.Instance.SendEvent("OnDebugCommand", m_CommandInput.text );
                 m_CommandInput.text = string.Empty;
                 m_CommandInput.gameObject.SetActive( false );   // hide the input     
                 ActiveInput = false;

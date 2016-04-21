@@ -122,18 +122,18 @@ namespace IBM.Watson.DeveloperCloud.Camera
 
         void OnEnable()
         {
-            EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_CAMERA_RESET, ResetCameraPosition);
-            EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_CAMERA_SET_ANTIALIASING, OnCameraSetAntiAliasing);
-            EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_CAMERA_SET_DEPTHOFFIELD, OnCameraSetDepthOfField);
-            EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_CAMERA_SET_INTERACTIVITY, OnCameraSetTwoFingerDrag);
+            EventManager.Instance.RegisterEventReceiver("OnCameraReset", ResetCameraPosition);
+			EventManager.Instance.RegisterEventReceiver("OnCameraSetAntiAliasing", OnCameraSetAntiAliasing);
+            EventManager.Instance.RegisterEventReceiver("OnCameraSetDepthOfField", OnCameraSetDepthOfField);
+            EventManager.Instance.RegisterEventReceiver("OnCameraSetInteractivity", OnCameraSetTwoFingerDrag);
         }
 
         void OnDisable()
         {
-            EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_CAMERA_RESET, ResetCameraPosition);
-            EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_CAMERA_SET_ANTIALIASING, OnCameraSetAntiAliasing);
-            EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_CAMERA_SET_DEPTHOFFIELD, OnCameraSetDepthOfField);
-            EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_CAMERA_SET_INTERACTIVITY, OnCameraSetTwoFingerDrag);
+			EventManager.Instance.UnregisterEventReceiver("OnCameraReset", ResetCameraPosition);
+			EventManager.Instance.UnregisterEventReceiver("OnCameraSetAntiAliasing", OnCameraSetAntiAliasing);
+			EventManager.Instance.UnregisterEventReceiver("OnCameraSetDepthOfField", OnCameraSetDepthOfField);
+			EventManager.Instance.UnregisterEventReceiver("OnCameraSetInteractivity", OnCameraSetTwoFingerDrag);
         }
 
         #endregion

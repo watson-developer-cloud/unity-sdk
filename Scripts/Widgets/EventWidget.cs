@@ -41,7 +41,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         [Serializable]
         private class Mapping
         {
-            public Constants.Event m_Event = Constants.Event.NONE;
+            public string m_Event = "";
             public SerializedDelegate m_Callback = new SerializedDelegate(typeof(EventManager.OnReceiveEvent));
         };
 

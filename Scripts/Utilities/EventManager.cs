@@ -50,7 +50,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// </summary>
         /// <returns>The event name.</returns>
         /// <param name="eventType">Event type.</param>
-        public string GetEventName( Enum eventType)
+        public string GetEventName(string eventType)
         {
             if ( !m_EventTypeName.ContainsKey( eventType.GetType() ) )
                 InitializeEventTypeNames( eventType.GetType() );
