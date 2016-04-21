@@ -74,18 +74,18 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         #region OnEnable / OnDisable - Initial keys to capture
         private void OnEnable()
         {
-            KeyEventManager.Instance.RegisterKeyEvent(KeyCode.Tab, KeyModifiers.NONE, "onKeyboardTab" );
-            KeyEventManager.Instance.RegisterKeyEvent(KeyCode.Return, KeyModifiers.NONE, "onKeyboardReturn");
-            KeyEventManager.Instance.RegisterKeyEvent(KeyCode.Escape, KeyModifiers.NONE, "onKeyboardEscape");
-            KeyEventManager.Instance.RegisterKeyEvent(KeyCode.BackQuote, KeyModifiers.NONE, "onKeyboardBackquote");
+            KeyEventManager.Instance.RegisterKeyEvent(KeyCode.Tab, KeyModifiers.NONE, "OnKeyboardTab" );
+            KeyEventManager.Instance.RegisterKeyEvent(KeyCode.Return, KeyModifiers.NONE, "OnKeyboardReturn");
+            KeyEventManager.Instance.RegisterKeyEvent(KeyCode.Escape, KeyModifiers.NONE, "OnKeyboardEscape");
+            KeyEventManager.Instance.RegisterKeyEvent(KeyCode.BackQuote, KeyModifiers.NONE, "OnKeyboardBackquote");
         }
 
         private void OnDisable()
         {
-			KeyEventManager.Instance.UnregisterKeyEvent(KeyCode.Tab, KeyModifiers.NONE, "onKeyboardTab" );
-			KeyEventManager.Instance.UnregisterKeyEvent(KeyCode.Return, KeyModifiers.NONE, "onKeyboardReturn");
-			KeyEventManager.Instance.UnregisterKeyEvent(KeyCode.Escape, KeyModifiers.NONE, "onKeyboardEscape");
-			KeyEventManager.Instance.UnregisterKeyEvent(KeyCode.BackQuote, KeyModifiers.NONE, "onKeyboardBackquote");
+			KeyEventManager.Instance.UnregisterKeyEvent(KeyCode.Tab, KeyModifiers.NONE, "OnKeyboardTab" );
+			KeyEventManager.Instance.UnregisterKeyEvent(KeyCode.Return, KeyModifiers.NONE, "OnKeyboardReturn");
+			KeyEventManager.Instance.UnregisterKeyEvent(KeyCode.Escape, KeyModifiers.NONE, "OnKeyboardEscape");
+			KeyEventManager.Instance.UnregisterKeyEvent(KeyCode.BackQuote, KeyModifiers.NONE, "OnKeyboardBackquote");
         }
         #endregion
 
