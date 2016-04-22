@@ -72,7 +72,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             m_MaxCacheSize = maxCacheSize;
             m_MaxCacheAge = maxCacheAge;
 
-            m_CachePath = Application.persistentDataPath + Constants.Path.CACHE_FOLDER + "/" + cacheName + "/";
+			m_CachePath = Application.persistentDataPath + ConstantsXRAY.Path.CACHE_FOLDER + "/" + cacheName + "/";
             if (!Directory.Exists(m_CachePath))
                 Directory.CreateDirectory(m_CachePath);
 

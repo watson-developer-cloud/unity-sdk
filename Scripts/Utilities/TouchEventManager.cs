@@ -322,10 +322,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// <param name="SortingLayer">Sorting layer to determine the corresponding drag event listener</param>
         /// <param name="isDragInside">Not Applicable</param>
         /// <returns>Success result about registration</returns>
-		public bool RegisterDragEvent(GameObject gameObjectToDrag, Enum callback, int numberOfFinger = 1, int SortingLayer = 0, bool isDragInside = true)
-		{
-			return RegisterDragEvent(gameObjectToDrag, EventManager.Instance.GetEventName(callback), numberOfFinger, SortingLayer, isDragInside) ;
-		}
+//		public bool RegisterDragEvent(GameObject gameObjectToDrag, Enum callback, int numberOfFinger = 1, int SortingLayer = 0, bool isDragInside = true)
+//		{
+//			return RegisterDragEvent(gameObjectToDrag, EventManager.Instance.GetEventName(callback), numberOfFinger, SortingLayer, isDragInside) ;
+//		}
 
         /// <summary>
         /// Registers the drag event.
@@ -370,11 +370,11 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// <param name="SortingLayer">Sorting layer to determine the corresponding drag event listener</param>
         /// <param name="isDragInside">Not Applicable</param>
         /// <returns>Success result about unregistration</returns>
-		public bool UnregisterDragEvent(GameObject gameObjectToDrag, Enum callback, int numberOfFinger = 1, int SortingLayer = 0, bool isDragInside = true)
-		{
-            return UnregisterDragEvent(gameObjectToDrag, EventManager.Instance.GetEventName(callback), numberOfFinger, SortingLayer, isDragInside) ;
-		}
-
+//		public bool UnregisterDragEvent(GameObject gameObjectToDrag, Enum callback, int numberOfFinger = 1, int SortingLayer = 0, bool isDragInside = true)
+//		{
+//            return UnregisterDragEvent(gameObjectToDrag, EventManager.Instance.GetEventName(callback), numberOfFinger, SortingLayer, isDragInside) ;
+//		}
+//
         /// <summary>
         /// Unregisters the drag event.
         /// </summary>
@@ -452,7 +452,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 						for (int i = 0; i < kp.Value.Count; ++i) {
 							TouchEventData dragEventData = kp.Value [i];
 
-                            if ( string.IsNullOrEmpty(dragEventData.DragCallback) || dragEventData.DragCallback == EventManager.Instance.GetEventName(Constants.Event.NONE)) 
+                            if ( string.IsNullOrEmpty(dragEventData.DragCallback)) 
                             {
 								Log.Warning ("TouchEventManager", "Removing invalid event receiver from OneFingerDrag");
 								kp.Value.RemoveAt (i--);
@@ -519,7 +519,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                 if(dragEventToFire != null)
                     EventManager.Instance.SendEvent(dragEventToFire.DragCallback, m_OneFingerMoveGesture, hit, hit2D);
 
-                EventManager.Instance.SendEvent(Constants.Event.ON_DRAG_ONE_FINGER_FULLSCREEN, m_OneFingerMoveGesture);
+                EventManager.Instance.SendEvent("OnDragOneFingerFullscreen", m_OneFingerMoveGesture);
 			}
 			
 		}
@@ -536,7 +536,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 						for (int i = 0; i < kp.Value.Count; ++i) {
 							TouchEventData dragEventData = kp.Value [i];
 							
-                            if ( string.IsNullOrEmpty(dragEventData.DragCallback) || dragEventData.DragCallback == EventManager.Instance.GetEventName(Constants.Event.NONE)) 
+                            if ( string.IsNullOrEmpty(dragEventData.DragCallback)) 
                             {
 								Log.Warning ("TouchEventManager", "Removing invalid event receiver from TwoFingerDrag");
 								kp.Value.RemoveAt (i--);
@@ -562,7 +562,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 				if(dragEventToFire != null)
 					EventManager.Instance.SendEvent(dragEventToFire.DragCallback, m_TwoFingerMoveGesture);
 				
-                EventManager.Instance.SendEvent(Constants.Event.ON_DRAG_TWO_FINGER_FULLSCREEN, m_TwoFingerMoveGesture);
+                EventManager.Instance.SendEvent("OnDragTwoFingerFullscreen", m_TwoFingerMoveGesture);
 			}
 		}
 
@@ -580,10 +580,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// <param name="isTapInside">Whether to tap on object or outside the object</param>
 		/// <param name="layerMask">Layer mask to tap. Default is the gameObjectToTouch's layer</param>
         /// <returns></returns>
-		public bool RegisterTapEvent(GameObject gameObjectToTouch, Enum callback, int SortingLayer = 0, bool isTapInside = true, LayerMask layerMask = default(LayerMask))
-		{
-            return RegisterTapEvent(gameObjectToTouch, EventManager.Instance.GetEventName(callback), SortingLayer, isTapInside, layerMask);
-		}
+//		public bool RegisterTapEvent(GameObject gameObjectToTouch, Enum callback, int SortingLayer = 0, bool isTapInside = true, LayerMask layerMask = default(LayerMask))
+//		{
+//            return RegisterTapEvent(gameObjectToTouch, EventManager.Instance.GetEventName(callback), SortingLayer, isTapInside, layerMask);
+//		}
 
         /// <summary>
         /// Registers the tap event.
@@ -650,10 +650,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// <param name="isTapInside">Whether to tap on object or outside the object</param>
 		/// <param name="layerMask">Layer mask to tap. Default is the gameObjectToTouch's layer</param>
         /// <returns></returns>
-		public bool UnregisterTapEvent(GameObject gameObjectToTouch, Enum callback, int SortingLayer = 0, bool isTapInside = true, LayerMask layerMask = default(LayerMask))
-		{
-            return UnregisterTapEvent(gameObjectToTouch, EventManager.Instance.GetEventName(callback), SortingLayer, isTapInside, layerMask);
-		}
+//		public bool UnregisterTapEvent(GameObject gameObjectToTouch, Enum callback, int SortingLayer = 0, bool isTapInside = true, LayerMask layerMask = default(LayerMask))
+//		{
+//            return UnregisterTapEvent(gameObjectToTouch, EventManager.Instance.GetEventName(callback), SortingLayer, isTapInside, layerMask);
+//		}
 
         /// <summary>
         /// Unregisters the tap event.
@@ -751,7 +751,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                             continue;
                         }
 
-                        if ( string.IsNullOrEmpty(tapEventData.TapCallback) || tapEventData.TapCallback == EventManager.Instance.GetEventName(Constants.Event.NONE))
+                        if ( string.IsNullOrEmpty(tapEventData.TapCallback))
 						{
 							Log.Warning("TouchEventManager", "Removing invalid event receiver from TapEventList");
 							kp.Value.RemoveAt(i--);
@@ -810,7 +810,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 				if(tapEventToFire != null)
                     EventManager.Instance.SendEvent(tapEventToFire.TapCallback, m_TapGesture, hitToFire);
 
-                EventManager.Instance.SendEvent(Constants.Event.ON_TAP_ONE, m_TapGesture);
+                EventManager.Instance.SendEvent("OnSingleTap", m_TapGesture);
 			}
             
 		}
@@ -828,10 +828,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// <param name="isTapInside">Whether to tap on object or outside the object</param>
         /// <param name="layerMask">Layer mask to tap. Default is the gameObjectToTouch's layer</param>
         /// <returns></returns>
-        public bool RegisterDoubleTapEvent(GameObject gameObjectToTouch, Enum callback, int SortingLayer = 0, bool isDoubleTapInside = true, LayerMask layerMask = default(LayerMask))
-        {
-            return RegisterDoubleTapEvent(gameObjectToTouch, EventManager.Instance.GetEventName(callback), SortingLayer, isDoubleTapInside, layerMask);
-        }
+//        public bool RegisterDoubleTapEvent(GameObject gameObjectToTouch, Enum callback, int SortingLayer = 0, bool isDoubleTapInside = true, LayerMask layerMask = default(LayerMask))
+//        {
+//            return RegisterDoubleTapEvent(gameObjectToTouch, EventManager.Instance.GetEventName(callback), SortingLayer, isDoubleTapInside, layerMask);
+//        }
 
         /// <summary>
         /// Registers the double tap event.
@@ -898,10 +898,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// <param name="isDoubleTapInside">Whether to tap on object or outside the object</param>
         /// <param name="layerMask">Layer mask to tap. Default is the gameObjectToTouch's layer</param>
         /// <returns></returns>
-        public bool UnregisterDoubleTapEvent(GameObject gameObjectToTouch, Enum callback, int SortingLayer = 0, bool isDoubleTapInside = true, LayerMask layerMask = default(LayerMask))
-        {
-            return UnregisterDoubleTapEvent(gameObjectToTouch, EventManager.Instance.GetEventName(callback), SortingLayer, isDoubleTapInside, layerMask);
-        }
+//        public bool UnregisterDoubleTapEvent(GameObject gameObjectToTouch, Enum callback, int SortingLayer = 0, bool isDoubleTapInside = true, LayerMask layerMask = default(LayerMask))
+//        {
+//            return UnregisterDoubleTapEvent(gameObjectToTouch, EventManager.Instance.GetEventName(callback), SortingLayer, isDoubleTapInside, layerMask);
+//        }
 
         /// <summary>
         /// Unregisters the double tap event.
@@ -1000,7 +1000,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                             continue;
                         }
 
-                        if (string.IsNullOrEmpty(tapEventData.TapCallback) || tapEventData.TapCallback == EventManager.Instance.GetEventName(Constants.Event.NONE))
+                        if (string.IsNullOrEmpty(tapEventData.TapCallback))
                         {
                             Log.Warning("TouchEventManager", "Removing invalid event receiver from TapEventList");
                             kp.Value.RemoveAt(i--);
@@ -1059,7 +1059,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                 if(tapEventToFire != null)
                     EventManager.Instance.SendEvent(tapEventToFire.TapCallback, m_DoubleTapGesture, hitToFire);
 
-                EventManager.Instance.SendEvent(Constants.Event.ON_TAP_DOUBLE, m_DoubleTapGesture);
+                EventManager.Instance.SendEvent("OnDoubleTap", m_DoubleTapGesture);
             }
 
         }
@@ -1076,7 +1076,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                 #if ENABLE_DEBUGGING
                 Log.Debug("TouchEventManager", "ThreeTapGesture_Tapped: {0} - {1}", m_ThreeTapGesture.ScreenPosition, m_ThreeTapGesture.NumTouches);
                 #endif
-                EventManager.Instance.SendEvent(Constants.Event.ON_TAP_THREETIMES, m_ThreeTapGesture);
+                EventManager.Instance.SendEvent("OnTripleTap", m_ThreeTapGesture);
 			}
 		}
 
@@ -1090,7 +1090,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             Log.Debug("TouchEventManager", "PressGesturePressed: {0} - {1}", m_PressGesture.ScreenPosition, m_PressGesture.NumTouches);
             #endif
 
-            EventManager.Instance.SendEvent(Constants.Event.ON_TOUCH_PRESSED_FULLSCREEN, m_PressGesture);
+            EventManager.Instance.SendEvent("OnTouchPressedFullscreen", m_PressGesture);
         }
         
         #endregion
@@ -1103,7 +1103,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             Log.Debug("TouchEventManager", "LongPressGesturePressed: {0} - {1}", m_LongPressGesture.ScreenPosition, m_LongPressGesture.NumTouches);
             #endif
 
-            EventManager.Instance.SendEvent(Constants.Event.ON_LONG_PRESS_ONE_FINGER, m_LongPressGesture);
+            EventManager.Instance.SendEvent("OnLongPressOneFinger", m_LongPressGesture);
         }
 
         #endregion
@@ -1116,7 +1116,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             Log.Debug("TouchEventManager", "ReleaseGestureReleased: {0} - {1}", m_ReleaseGesture.ScreenPosition, m_ReleaseGesture.NumTouches);
             #endif
 
-            EventManager.Instance.SendEvent(Constants.Event.ON_TOUCH_RELEASED_FULLSCREEN, m_ReleaseGesture);
+            EventManager.Instance.SendEvent("OnTouchReleasedFullscreen", m_ReleaseGesture);
         }
         
 

@@ -11,11 +11,11 @@ public class ConfigLoader : MonoBehaviour
 
     #region OnEnable / OnDisable - Registering events
     void OnEnable(){
-        EventManager.Instance.RegisterEventReceiver(Constants.Event.USER_TO_LOGOUT, OnUserLogOut);
+        EventManager.Instance.RegisterEventReceiver("OnUserToLogout", OnUserLogOut);
     }
 
     void OnDisable(){
-        EventManager.Instance.UnregisterEventReceiver(Constants.Event.USER_TO_LOGOUT, OnUserLogOut);
+        EventManager.Instance.UnregisterEventReceiver("OnUserToLogout", OnUserLogOut);
     }
     #endregion
 

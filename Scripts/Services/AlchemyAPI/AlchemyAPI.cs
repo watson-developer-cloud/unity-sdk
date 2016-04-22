@@ -31,7 +31,8 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
     /// <summary>
     /// Service integration for Alchemy API
     /// </summary>
-    public class AlchemyAPI : IWatsonService {
+    public class AlchemyAPI : IWatsonService
+	{
 
         #region Private Data
         private const string SERVICE_ID = "AlchemyAPIV1";
