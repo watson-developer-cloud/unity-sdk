@@ -452,7 +452,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 						for (int i = 0; i < kp.Value.Count; ++i) {
 							TouchEventData dragEventData = kp.Value [i];
 
-                            if ( string.IsNullOrEmpty(dragEventData.DragCallback) || dragEventData.DragCallback == EventManager.Instance.GetEventName("")) 
+                            if ( string.IsNullOrEmpty(dragEventData.DragCallback)) 
                             {
 								Log.Warning ("TouchEventManager", "Removing invalid event receiver from OneFingerDrag");
 								kp.Value.RemoveAt (i--);
@@ -536,7 +536,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 						for (int i = 0; i < kp.Value.Count; ++i) {
 							TouchEventData dragEventData = kp.Value [i];
 							
-                            if ( string.IsNullOrEmpty(dragEventData.DragCallback) || dragEventData.DragCallback == EventManager.Instance.GetEventName("")) 
+                            if ( string.IsNullOrEmpty(dragEventData.DragCallback)) 
                             {
 								Log.Warning ("TouchEventManager", "Removing invalid event receiver from TwoFingerDrag");
 								kp.Value.RemoveAt (i--);
@@ -751,7 +751,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                             continue;
                         }
 
-                        if ( string.IsNullOrEmpty(tapEventData.TapCallback) || tapEventData.TapCallback == EventManager.Instance.GetEventName(""))
+                        if ( string.IsNullOrEmpty(tapEventData.TapCallback))
 						{
 							Log.Warning("TouchEventManager", "Removing invalid event receiver from TapEventList");
 							kp.Value.RemoveAt(i--);
@@ -1000,7 +1000,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                             continue;
                         }
 
-                        if (string.IsNullOrEmpty(tapEventData.TapCallback) || tapEventData.TapCallback == EventManager.Instance.GetEventName(""))
+                        if (string.IsNullOrEmpty(tapEventData.TapCallback))
                         {
                             Log.Warning("TouchEventManager", "Removing invalid event receiver from TapEventList");
                             kp.Value.RemoveAt(i--);
