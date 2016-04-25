@@ -25,20 +25,20 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 {
     public class TestTextToSpeech : UnitTest
     {
-        private TextToSpeech m_TTS = new TextToSpeech();
+		private TextToSpeech m_TextToSpeech = new TextToSpeech();
         private bool m_GetTested = false;
         private bool m_PostTested = false;
                 
         public override IEnumerator RunTest()
         {
-            if ( Config.Instance.FindCredentials( m_TTS.GetServiceID() ) == null )
+            if ( Config.Instance.FindCredentials( m_TextToSpeech.GetServiceID() ) == null )
                 yield break;
 
-            m_TTS.ToSpeech( "Hello World using GET", OnSpeechGET );                  // Test GET
+            m_TextToSpeech.ToSpeech( "Hello World using GET", OnSpeechGET );                  // Test GET
             while (!m_GetTested)
                 yield return null;
 
-            m_TTS.ToSpeech( "Hello World using POST", OnSpeechPOST, true );            // Test POST
+            m_TextToSpeech.ToSpeech( "Hello World using POST", OnSpeechPOST, true );            // Test POST
             while (!m_PostTested)
                 yield return null;
 

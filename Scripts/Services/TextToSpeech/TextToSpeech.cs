@@ -198,7 +198,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
             if (! DisableCache )
             {
                 if ( m_SpeechCache == null )
-                    m_SpeechCache = new DataCache( "TTS_" + m_VoiceTypes[m_Voice] );
+                    m_SpeechCache = new DataCache( "TextToSpeech_" + m_VoiceTypes[m_Voice] );
                 
                 byte [] data = m_SpeechCache.Find( textId );
                 if ( data != null )

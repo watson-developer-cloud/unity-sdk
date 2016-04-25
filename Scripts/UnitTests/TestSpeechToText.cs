@@ -25,15 +25,15 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 {
     public class TestSpeechToText : UnitTest
     {
-        private SpeechToText m_STT = new SpeechToText();
+        private SpeechToText m_SpeechToText = new SpeechToText();
         private bool m_GetModelsTested = false;
 
         public override IEnumerator RunTest()
         {
-            if ( Config.Instance.FindCredentials( m_STT.GetServiceID() ) == null )
+            if ( Config.Instance.FindCredentials( m_SpeechToText.GetServiceID() ) == null )
                 yield break;
 
-            m_STT.GetModels( OnGetModels );
+            m_SpeechToText.GetModels( OnGetModels );
 
             while(! m_GetModelsTested )
                 yield return null;

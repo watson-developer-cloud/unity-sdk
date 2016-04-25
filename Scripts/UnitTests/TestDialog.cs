@@ -67,6 +67,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
 
             m_Dialog.DeleteDialog( m_DialogID, OnDialogDeleted );
+
             while(! m_DeleteTested )
                 yield return null;
 

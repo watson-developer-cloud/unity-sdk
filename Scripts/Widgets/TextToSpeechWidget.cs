@@ -50,7 +50,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         #endregion
 
         #region Private Data
-        TextToSpeech m_TTS = new TextToSpeech();
+		TextToSpeech m_TextToSpeech = new TextToSpeech();
 
         [SerializeField, Tooltip("How often to send level out data in seconds.")]
         private float m_LevelOutInterval = 0.05f;
@@ -81,9 +81,9 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             public bool Ready { get; set; }
             public AudioClip Clip { get; set; }
 
-            public Speech(TextToSpeech tts, string text, bool usePost)
+            public Speech(TextToSpeech textToSpeech, string text, bool usePost)
             {
-                tts.ToSpeech(text, OnAudioClip, usePost);
+                textToSpeech.ToSpeech(text, OnAudioClip, usePost);
             }
 
             private void OnAudioClip(AudioClip clip)
@@ -124,10 +124,10 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         /// </summary>
         public void OnTextToSpeech()
         {
-            if (m_TTS.Voice != m_Voice)
-                m_TTS.Voice = m_Voice;
+            if (m_TextToSpeech.Voice != m_Voice)
+                m_TextToSpeech.Voice = m_Voice;
             if (m_Input != null)
-                m_SpeechQueue.Enqueue(new Speech(m_TTS, m_Input.text, m_UsePost));
+                m_SpeechQueue.Enqueue(new Speech(m_TextToSpeech, m_Input.text, m_UsePost));
             if (m_StatusText != null)
                 m_StatusText.text = "THINKING";
             if (m_TextToSpeechButton != null)
@@ -144,10 +144,10 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 
             if (!string.IsNullOrEmpty(text.Text))
             {
-                if (m_TTS.Voice != m_Voice)
-                    m_TTS.Voice = m_Voice;
+                if (m_TextToSpeech.Voice != m_Voice)
+                    m_TextToSpeech.Voice = m_Voice;
 
-                m_SpeechQueue.Enqueue(new Speech(m_TTS, text.Text, m_UsePost));
+                m_SpeechQueue.Enqueue(new Speech(m_TextToSpeech, text.Text, m_UsePost));
             }
         }
 
