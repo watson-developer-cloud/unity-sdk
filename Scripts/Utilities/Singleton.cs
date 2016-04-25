@@ -39,7 +39,8 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// </summary>
         public static T Instance
         {
-            get {
+            get
+			{
                 if ( sm_Instance == null )
                     CreateInstance();
                 return sm_Instance;

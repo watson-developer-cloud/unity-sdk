@@ -93,7 +93,8 @@ namespace IBM.Watson.DeveloperCloud.Debug
         /// Returns true if this debug console output is being displayed.
         /// </summary>
         public bool ActiveOutput { get { return m_ActiveOutput; }
-            set {
+            set
+			{
                 if ( m_ActiveOutput != value )
                 {
                     m_ActiveOutput = value;
@@ -106,7 +107,8 @@ namespace IBM.Watson.DeveloperCloud.Debug
         /// Returns true if this debug input field is being displayed.
         /// </summary>
         public bool ActiveInput { get { return m_ActiveInput; }
-            set {
+            set
+			{
                 if ( m_ActiveInput != value )
                 {
                     m_ActiveInput = value;

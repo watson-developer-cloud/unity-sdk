@@ -208,7 +208,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Dialog.v1
 
             if (resp.Success)
             {
-                try {
+                try
+				{
                     if ( SaveFile != null )
                         SaveFile( downloadReq.DialogFileName, resp.Data );
                     else
@@ -474,7 +475,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Dialog.v1
                     else
                         m_DialogCount += 1;
                 }
-                else{
+                else
+				{
                     if (! m_Service.GetDialogs( OnGetDialogs ) )
                         OnFailure( "Failed to invoke GetDialogs()." );
                 }

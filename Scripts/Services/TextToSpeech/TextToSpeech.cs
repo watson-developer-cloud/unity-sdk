@@ -90,7 +90,8 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
         /// This property allows the user to specify the voice to use.
         /// </summary>
         public VoiceType Voice { get { return m_Voice; }
-            set {
+            set
+			{
                 if ( m_Voice != value )
                 {
                     m_Voice = value;

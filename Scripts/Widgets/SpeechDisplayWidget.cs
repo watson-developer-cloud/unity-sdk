@@ -73,7 +73,8 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 					string outputTextWithStatus = "";
 					string outputText = "";
 
-					if(Time.time - m_TimeAtLastInterim > m_ThresholdTimeFromLastInput){
+					if(Time.time - m_TimeAtLastInterim > m_ThresholdTimeFromLastInput)
+					{
 						if(m_Output != null)
 							m_PreviousOutputTextWithStatus = m_Output.text;
 						if(m_OutputAsInputField != null)
@@ -91,15 +92,19 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                         foreach( var alt in res.Alternatives )
                         {
                             string text = alt.Transcript;
-							if(m_Output != null){
+							if(m_Output != null)
+							{
 								m_Output.text = string.Concat(outputTextWithStatus, string.Format( "{0} ({1}, {2:0.00})\n", text, res.Final ? "Final" : "Interim", alt.Confidence) );
 							}
 
-							if(m_OutputAsInputField != null){
-								if(!res.Final || alt.Confidence > m_MinConfidenceToShow){
+							if(m_OutputAsInputField != null)
+							{
+								if(!res.Final || alt.Confidence > m_MinConfidenceToShow)
+								{
 									m_OutputAsInputField.text = string.Concat( outputText , " ", text);
 
-									if(m_OutputStatus != null){
+									if(m_OutputStatus != null)
+									{
 										m_OutputStatus.text = string.Format( "{0}, {1:0.00}", res.Final ? "Final" : "Interim", alt.Confidence );
 									}
 								}

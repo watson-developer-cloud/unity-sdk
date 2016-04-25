@@ -276,7 +276,8 @@ namespace IBM.Watson.DeveloperCloud.Editor
                         var path = EditorUtility.OpenFilePanel("Select Training File", "", "csv");
                         if (!string.IsNullOrEmpty(path))
                         {
-                            try {
+                            try
+							{
                                 data.Import( path );
                             }
                             catch

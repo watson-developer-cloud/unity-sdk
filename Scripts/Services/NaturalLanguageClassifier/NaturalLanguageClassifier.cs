@@ -515,7 +515,8 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
                 string customClassifierID = Config.Instance.GetVariableValue(SERVICE_ID+"_ID");
                 m_Service.DisableCache = true;
                 //If custom classifierID is defined then we are using it to check the service health
-                if(!string.IsNullOrEmpty(customClassifierID)){
+                if(!string.IsNullOrEmpty(customClassifierID))
+				{
                     
                     if (! m_Service.GetClassifier(customClassifierID, OnCheckService ) )
                     {
@@ -526,7 +527,8 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
                         m_GetClassifierCount += 1;
                     }
                 }
-                else{
+                else
+				{
                     if (! m_Service.GetClassifiers( OnCheckServices ) )
                         OnFailure( "Failed to call GetClassifiers()" );
                 }

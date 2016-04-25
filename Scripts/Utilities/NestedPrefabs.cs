@@ -48,7 +48,8 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// <summary>
         /// It destroys the created object to set the initial state
         /// </summary>
-        public void DestroyCreatedObject(){
+        public void DestroyCreatedObject()
+		{
             foreach( GameObject gameObject in m_GameObjectCreated )
             {
                 if ( gameObject == null )
@@ -61,6 +62,5 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             Destroy(this.gameObject);
         }
         #endregion
-
     }
 }

@@ -309,7 +309,8 @@ namespace IBM.Watson.DeveloperCloud.Connection
         // NOTE: ALl functions in this region are operating in a background thread, do NOT call any Unity functions!
         private void SendMessages()
         {
-            try {
+            try
+			{
                 WebSocket ws = null;
 
                 ws = new WebSocket(URL);

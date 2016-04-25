@@ -10,11 +10,13 @@ public class ConfigLoader : MonoBehaviour
     private GameObject m_CreatedObject = null;
 
     #region OnEnable / OnDisable - Registering events
-    void OnEnable(){
+    void OnEnable()
+	{
         EventManager.Instance.RegisterEventReceiver("OnUserToLogout", OnUserLogOut);
     }
 
-    void OnDisable(){
+    void OnDisable()
+	{
         EventManager.Instance.UnregisterEventReceiver("OnUserToLogout", OnUserLogOut);
     }
     #endregion

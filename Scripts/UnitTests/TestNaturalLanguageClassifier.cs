@@ -119,7 +119,6 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             m_TrainClasifierTested = true;
         }
-
     }
 }
 

@@ -86,7 +86,8 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// <returns>Returns true on success.</returns>
             public bool ParseJSON( string json )
             {
-                try {
+                try
+				{
                     IDictionary iParse = Json.Deserialize( json ) as IDictionary;
                     IDictionary iCredentials = iParse["credentials"] as IDictionary;
                     m_URL = (string)iCredentials["url"];
@@ -198,7 +199,8 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         public void LoadConfig()
         {
 #if !UNITY_ANDROID || UNITY_EDITOR
-            try {
+            try
+			{
                 if (! Directory.Exists( Application.streamingAssetsPath ) )
                     Directory.CreateDirectory( Application.streamingAssetsPath );
 				LoadConfig( System.IO.File.ReadAllText( Application.streamingAssetsPath + Constants.Path.CONFIG_FILE ) );
@@ -221,7 +223,8 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// <returns></returns>
         public bool LoadConfig(string json)
         {
-            try {
+            try
+			{
                 fsData data = null;
                 fsResult r = fsJsonParser.Parse(json, out data);
                 if (!r.Succeeded)
@@ -364,8 +367,5 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             LoadConfig(request.text);
             yield break;
         }
-
-
-
     }
 }

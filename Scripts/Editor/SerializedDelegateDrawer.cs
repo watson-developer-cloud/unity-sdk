@@ -102,7 +102,6 @@ namespace IBM.Watson.DeveloperCloud.Editor
                 }
                 
             }
-               
 
             return components;
         }

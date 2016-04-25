@@ -62,7 +62,8 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             m_NumberOfTestEntityExtraction--;
             Log.Status("TestAlchemyAPI", "Remaining: {0}, original text:{1}, OnGetCombinedCall: {2}, OnLongResult: {3}", m_NumberOfTestEntityExtraction, data, combinedCallData.EntityCombinedCommaSeperated, combinedCallData.ToLongString());
 
-            if(m_NumberOfTestEntityExtraction <= 0){
+            if(m_NumberOfTestEntityExtraction <= 0)
+			{
                 Test( true );
                 m_EntityExtractionTested = true;
             }

@@ -114,7 +114,8 @@ namespace IBM.Watson.DeveloperCloud.Editor
                     // wait for the test to complete..
                     bool bTestException = true;
                     DateTime startTime = DateTime.Now;
-                    try {
+                    try
+					{
                         IEnumerator e = m_ActiveTest.RunTest();
                         while (e.MoveNext())
                         {

@@ -252,6 +252,5 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                 File.Delete( kp.Value.Path );
             m_Cache.Clear();
         }
-
     }
 }

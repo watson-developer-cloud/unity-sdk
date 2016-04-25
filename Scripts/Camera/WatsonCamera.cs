@@ -68,7 +68,8 @@ namespace IBM.Watson.DeveloperCloud.Camera
 
         public CameraTarget CurrentCameraTarget
         {
-            get{
+            get
+			{
                 if (m_TargetCamera == null)
                 {
                     InitializeCameraTargetList();
@@ -76,7 +77,8 @@ namespace IBM.Watson.DeveloperCloud.Camera
 
                 return m_TargetCamera;
             }
-            set{
+            set
+			{
                 if (value != null)
                 {
                     m_TargetCamera = value;
@@ -140,11 +142,13 @@ namespace IBM.Watson.DeveloperCloud.Camera
 
         #region Start / Update
 
-        void Awake(){
+        void Awake()
+		{
             mp_Instance = this;
         }
 
-		void Start(){
+		void Start()
+		{
 			m_CameraInitialLocation = transform.localPosition;
 			m_CameraInitialRotation = transform.rotation;
 		}
@@ -177,7 +181,6 @@ namespace IBM.Watson.DeveloperCloud.Camera
             m_ListCameraTarget.Add(defaultCameraTarget);
 
             m_TargetCamera = m_ListCameraTarget[0];
-
         }
 
 		#endregion
@@ -333,7 +336,5 @@ namespace IBM.Watson.DeveloperCloud.Camera
         }
 
         #endregion
-
     }
-
 }

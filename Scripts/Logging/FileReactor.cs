@@ -52,7 +52,8 @@ namespace IBM.Watson.DeveloperCloud.Logging
         /// </summary>
         /// <value>The log text written.</value>
         public string LogTextWritten{
-            get{
+            get
+			{
                 return File.ReadAllText(LogFile);
             }
         }

@@ -329,7 +329,8 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         public static T DeserializeResponse<T>( byte [] resp, object obj = null ) where T : class, new()
         {
             string json = Encoding.UTF8.GetString( resp );
-            try {
+            try
+			{
                 fsData data = null;
                 fsResult r = fsJsonParser.Parse(json, out data);
                 if (!r.Succeeded)
@@ -351,11 +352,6 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 
             return null;
         }
-
-
         #endregion
-
     }
-
-
 }

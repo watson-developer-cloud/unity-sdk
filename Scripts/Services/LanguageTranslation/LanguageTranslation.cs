@@ -457,6 +457,4 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v1
         };
         #endregion
     }
-
 }
-

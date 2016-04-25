@@ -26,7 +26,8 @@ namespace IBM.Watson.DeveloperCloud.Camera
     /// <summary>
     /// Camera target class to identify the camera target to follow the position and rotation
     /// </summary>
-	public class CameraTarget : MonoBehaviour {
+	public class CameraTarget : MonoBehaviour
+	{
 
 		#region Private Members
 
@@ -49,17 +50,22 @@ namespace IBM.Watson.DeveloperCloud.Camera
         /// Gets or sets the target position.
         /// </summary>
         /// <value>The target position.</value>
-		public Vector3 TargetPosition{
-			get{
+		public Vector3 TargetPosition
+		{
+			get
+			{
 	
-				if(m_UseCustomPosition){
+				if(m_UseCustomPosition)
+				{
 					return m_CustomPosition;
 				}
-				else{
+				else
+				{
 					return transform.position;
 				}
 			}
-			set{
+			set
+			{
 				m_UseCustomPosition = true;
 				m_CustomPosition = value;
 			}
@@ -69,8 +75,10 @@ namespace IBM.Watson.DeveloperCloud.Camera
         /// Gets or sets the target rotation.
         /// </summary>
         /// <value>The target rotation.</value>
-		public Quaternion TargetRotation{
-			get{
+		public Quaternion TargetRotation
+		{
+			get
+			{
 				if(m_UseCustomRotation)
 				{
 					return m_CustomRotation;
@@ -84,39 +92,49 @@ namespace IBM.Watson.DeveloperCloud.Camera
 							Vector3 relativePos = TargetObject.transform.position - CameraAttached.transform.position;
 							return Quaternion.LookRotation(relativePos);
 						}
-						else{
+						else
+						{
 							Log.Warning("CameraTarget", "WatsonCamera couldn't find");
 							return Quaternion.identity;
 						}
 					}
-					else{
+					else
+					{
 						Log.Warning("CameraTarget", "TargetObject couldn't find");
 						return Quaternion.identity;
 					}
 				}
-				else{
+				else
+				{
 					return transform.rotation;
 				}
 			}
-			set{
+			set
+			{
 				m_UseCustomRotation = true;
 				m_CustomRotation = value;
 			}
 		}
 
-		protected GameObject TargetObject{
-			get{
+		protected GameObject TargetObject
+		{
+			get
+			{
 				return m_CustomTargetObjectToLookAt;
 			}
-			set{
+			set
+			{
 				m_UseTargetObjectToRotate = true;
 				m_CustomTargetObjectToLookAt = value;
 			}
 		}
 
-		protected UnityEngine.Camera CameraAttached{
-			get{
-				if(mp_CameraAttached == null){
+		protected UnityEngine.Camera CameraAttached
+		{
+			get
+			{
+				if(mp_CameraAttached == null)
+				{
 					if(WatsonCameraAttached != null)
                         mp_CameraAttached = WatsonCameraAttached.GetComponent<UnityEngine.Camera>();
 				}
@@ -124,9 +142,12 @@ namespace IBM.Watson.DeveloperCloud.Camera
 			}
 		}
 
-        protected WatsonCamera WatsonCameraAttached{
-            get{
-                if(mp_WatsonCamera == null){
+        protected WatsonCamera WatsonCameraAttached
+		{
+            get
+			{
+                if(mp_WatsonCamera == null)
+				{
                     mp_WatsonCamera = GameObject.FindObjectOfType<WatsonCamera>();
                 }
                 return mp_WatsonCamera;

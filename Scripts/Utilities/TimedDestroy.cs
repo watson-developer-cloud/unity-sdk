@@ -117,6 +117,5 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             else
                 Destroy(gameObject);
         }
-
     }
 }

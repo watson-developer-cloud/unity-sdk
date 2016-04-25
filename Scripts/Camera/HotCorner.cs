@@ -95,7 +95,6 @@ namespace IBM.Watson.DeveloperCloud.Camera
 		}
 
 		#endregion
-
 	}
 
 }

@@ -56,13 +56,16 @@ namespace IBM.Watson.DeveloperCloud.Debug
 				                                 log.m_TimeStamp.ToString("MM/dd/yyyy HH:mm:ss"),
 				                                 log.m_SubSystem, log.m_Level.ToString(), log.m_Message);
 
-				if(log.m_Level == LogLevel.ERROR || log.m_Level == LogLevel.CRITICAL){
+				if(log.m_Level == LogLevel.ERROR || log.m_Level == LogLevel.CRITICAL)
+				{
 					UnityEngine.Debug.LogError(logString);
 				}
-				else if(log.m_Level == LogLevel.WARNING){
+				else if(log.m_Level == LogLevel.WARNING)
+				{
 					UnityEngine.Debug.LogWarning(logString);
 				}
-				else{
+				else
+				{
 					UnityEngine.Debug.Log(logString);
 				}
             }

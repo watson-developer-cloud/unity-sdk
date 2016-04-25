@@ -53,7 +53,6 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             m_GetTested = true;
 
             PlayClip( clip );
-
         }
 
         private void OnSpeechPOST( AudioClip clip )
@@ -81,6 +80,5 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 GameObject.Destroy( audioObject, clip.length );
             }
         }
-
     }
 }

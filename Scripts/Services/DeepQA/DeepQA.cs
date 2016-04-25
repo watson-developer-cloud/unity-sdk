@@ -251,6 +251,6 @@ namespace IBM.Watson.DeveloperCloud.Services.DeepQA.v1
     public class Numerati : DeepQA
     {
         public Numerati() : base( "numerati" )
-        { }
+        {}
     }
 }
