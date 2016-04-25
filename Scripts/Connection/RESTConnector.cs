@@ -525,7 +525,10 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 URL = url;
                 Headers = new Dictionary<string, string>();
                 foreach( var kp in headers )
-                    Headers[kp.Key] = kp.Value;           
+				{
+					if(kp.Key != "User-Agent")
+						Headers[kp.Key] = kp.Value;      
+				}
                 
                 m_Thread = new Thread( ProcessRequest );
                 m_Thread.Start();
