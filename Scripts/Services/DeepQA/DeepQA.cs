@@ -236,21 +236,4 @@ namespace IBM.Watson.DeveloperCloud.Services.DeepQA.v1
         };
         #endregion
     }
-
-    public class Thunderstone : DeepQA
-    {
-        public Thunderstone() : base("thunderstone")
-        {}
-    }
-    public class WatsonOnWatson : DeepQA
-    {
-        public WatsonOnWatson() : base("wow")
-        {}
-    }
-
-    public class Numerati : DeepQA
-    {
-        public Numerati() : base( "numerati" )
-        {}
-    }
 }

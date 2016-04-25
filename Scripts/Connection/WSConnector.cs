@@ -119,10 +119,6 @@ namespace IBM.Watson.DeveloperCloud.Connection
 
         #region Public Properties
         /// <summary>
-        /// Returns true if this connection is setup to use the gateway.
-        /// </summary>
-        public bool UsingGateway { get; set; }
-        /// <summary>
         /// This delegate is invoked when the connection is closed.
         /// </summary>
         public ConnectorEvent OnClose { get; set; }
@@ -156,14 +152,6 @@ namespace IBM.Watson.DeveloperCloud.Connection
         private AutoResetEvent m_ReceiveEvent = new AutoResetEvent(false);
         private Queue<Message> m_ReceiveQueue = new Queue<Message>();
         private int m_ReceiverRoutine = 0;
-
-        //! This dictionary is used to translated from a service ID & function into a service-type 
-        //! value which is needed by the gateway. 
-        private static Dictionary<string,string> sm_GatewayServiceTypes = new Dictionary<string,string>()
-        {
-            // TODO: Uncomment once gateway is fixed.
-            //{ "SpeechToTextV1/v1/recognize", "stt-stream" },
-        };
         #endregion
 
         /// <summary>
@@ -191,26 +179,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
         public static WSConnector CreateConnector( string serviceID, string function, string args )
         {
             WSConnector connector = null;
-            string connectorID = serviceID + function;
-
             Config cfg = Config.Instance;
-           
-            string serviceType = null;
-            if ( cfg.EnableGateway 
-                && sm_GatewayServiceTypes.TryGetValue( connectorID, out serviceType ) )
-            {
-                connector = new WSConnector();
-                connector.UsingGateway = true;
-                connector.URL = FixupURL( cfg.GatewayURL ) + "/" + serviceType; // + args;
-
-                Dictionary<string,object> auth = new Dictionary<string, object>();
-                auth["ROBOT_KEY"] = cfg.ProductKey;
-                auth["MAC_ID"] = "UnitySDK";
-                connector.Send( new TextMessage( MiniJSON.Json.Serialize( auth ) ), true );       // just queue, we want to let the user do any fix-ups before we actually try to connect
-
-                return connector;
-            }
-
             Config.CredentialInfo cred = cfg.FindCredentials( serviceID );
             if (cred == null)
             {
@@ -219,7 +188,6 @@ namespace IBM.Watson.DeveloperCloud.Connection
             }
 
             connector = new WSConnector();
-            connector.UsingGateway = false;
             connector.URL = FixupURL( cred.m_URL ) + function + args;
             connector.Authentication = new Credentials( cred.m_User, cred.m_Password );
 

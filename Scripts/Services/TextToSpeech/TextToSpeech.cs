@@ -224,7 +224,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
             req.Parameters["voice"] = m_VoiceTypes[m_Voice];
             req.OnResponse = ToSpeechResponse;
 
-            if (connector.UsingGateway || usePost )
+            if (usePost)
             {
                 Dictionary<string,string> upload = new Dictionary<string, string>();
                 upload["text"] = "\"" + text + "\"";

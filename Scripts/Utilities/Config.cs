@@ -113,12 +113,6 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         [fsProperty]
         private int m_MaxRestConnections = 5;
         [fsProperty]
-        private bool m_EnableGateway = false;
-        [fsProperty]
-        private string m_GatewayURL = ""; //"https://9.53.162.55:9443/webApp";
-        [fsProperty]
-        private string m_ProductKey = null;
-        [fsProperty]
         private List<CredentialInfo> m_Credentials = new List<CredentialInfo>();
         [fsProperty]
         private List<Variable> m_Variables = new List<Variable>();
@@ -156,19 +150,6 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// Returns a list of variables which can hold key/value data.
         /// </summary>
         public List<Variable> Variables { get { return m_Variables; } set { m_Variables = value; } }
-        /// <summary>
-        /// Enable the gateway usage.
-        /// </summary>
-        public bool EnableGateway { get { return m_EnableGateway; } set { m_EnableGateway = value; } }
-        /// <summary>
-        /// The URL of the gateway to use.
-        /// </summary>
-        public string GatewayURL { get { return m_GatewayURL; } set { m_GatewayURL = value; } }
-        /// <summary>
-        /// The product key used to communicate with the gateway.
-        /// </summary>
-        public string ProductKey { get { return m_ProductKey; } set { m_ProductKey = value; } }
-
         #endregion
 
         /// <summary>

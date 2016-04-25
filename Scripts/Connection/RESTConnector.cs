@@ -17,8 +17,6 @@
 
 // uncomment to enable debugging
 #define ENABLE_DEBUGGING
-// uncomment to enable experimental gateway code.
-//#define ENABLE_GATEWAY
 
 using IBM.Watson.DeveloperCloud.Utilities;
 using IBM.Watson.DeveloperCloud.Logging;
@@ -221,25 +219,9 @@ namespace IBM.Watson.DeveloperCloud.Connection
         /// Additional headers to attach to all requests.
         /// </summary>
         public Dictionary<string,string> Headers { get; set; }
-        /// <summary>
-        /// Returns true if this connector is going through the gateway.
-        /// </summary>
-        public bool UsingGateway { get; set; }
         #endregion
 
         #region Private Data
-#if ENABLE_GATEWAY
-        //! This dictionary is used to translated from a service ID & function into a service-type 
-        //! value which is needed by the gateway. 
-        private static Dictionary<string,string> sm_GatewayServiceTypes = new Dictionary<string,string>()
-        {
-            { "TextToSpeechV1/v1/synthesize", "tts" },
-            // TODO: Uncomment once gateway is fixed.
-            //{ "SpeechToTextV1/v1/recognize", "stt" },
-            { "TranslateV1/v2/translate", "language-translation" },
-            //{ "NlcV1/v1/delete", "natural-language-delete" },
-        };
-#endif
         //! Dictionary of connectors by service & function.
         private static Dictionary<string,RESTConnector > sm_Connectors = new Dictionary<string, RESTConnector>();
         #endregion
@@ -260,24 +242,6 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 return connector;
 
             Config cfg = Config.Instance;
-           
-#if ENABLE_GATEWAY
-            string serviceType = null;
-            if ( cfg.EnableGateway 
-                && sm_GatewayServiceTypes.TryGetValue( connectorID, out serviceType ) )
-            {
-                connector = new RESTConnector();
-                connector.UsingGateway = true;
-                connector.URL = cfg.GatewayURL + "/v1/en/service";
-                connector.Headers = new Dictionary<string, string>();
-                connector.Headers["ROBOT_KEY"] = cfg.ProductKey;
-                connector.Headers["MAC_ID"] = "UnitySDK";
-                connector.Headers["Service-Type" ] = serviceType;
-
-                sm_Connectors[ connectorID ] = connector;
-                return connector;
-            }
-#endif
             Config.CredentialInfo cred = cfg.FindCredentials( serviceID );
             if (cred == null)
             {
@@ -286,7 +250,6 @@ namespace IBM.Watson.DeveloperCloud.Connection
             }
 
             connector = new RESTConnector();
-            connector.UsingGateway = false;
             connector.URL = cred.m_URL + function;
             connector.Authentication = new Credentials( cred.m_User, cred.m_Password );
             if ( useCache )
