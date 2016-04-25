@@ -163,7 +163,7 @@ namespace IBM.Watson.DeveloperCloud.Services.DeepQA.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("NLC", "GetClassifiers Exception: {0}", e.ToString());
+                    Log.Error("Natural Language Classifier", "GetClassifiers Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }

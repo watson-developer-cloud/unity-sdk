@@ -31,7 +31,7 @@ using FullSerializer;
 namespace IBM.Watson.DeveloperCloud.Editor
 {
 
-    class NLCEditor : EditorWindow
+    class NaturalLanguageClassifierEditor : EditorWindow
     {
         #region Private Types
         private class ClassifierData
@@ -117,7 +117,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
                 }
                 catch (Exception e)
                 {
-                    Log.Error("NLCEditor", "Failed to load classifier data {1}: {0}", e.ToString(), filename);
+					Log.Error("NaturalLanguageClassifierEditor", "Failed to load classifier data {1}: {0}", e.ToString(), filename);
                     return false;
                 }
 
@@ -130,23 +130,23 @@ namespace IBM.Watson.DeveloperCloud.Editor
         private void OnEnable()
         {
 #if UNITY_5
-            titleContent.text = "NLC Editor";
+			titleContent.text = "Natural Language Classifier Editor";
 #endif
             m_WatsonIcon = (Texture2D)Resources.Load(Constants.Resources.WATSON_ICON, typeof(Texture2D));
 
             Runnable.EnableRunnableInEditor();
         }
 
-        [MenuItem("Watson/NLC Editor", false, 2)]
+		[MenuItem("Watson/Natural Language Classifier Editor", false, 2)]
         private static void EditConfig()
         {
-            GetWindow<NLCEditor>().Show();
+            GetWindow<NaturalLanguageClassifierEditor>().Show();
         }
 
         private string m_ClassifiersFolder = null;
         private Texture m_WatsonIcon = null;
         private Vector2 m_ScrollPos = Vector2.zero;
-        private NaturalLanguageClassifier m_NLC = new NaturalLanguageClassifier();
+		private NaturalLanguageClassifier m_NaturalLanguageClassifier = new NaturalLanguageClassifier();
         private Classifiers m_Classifiers = null;
         private static fsSerializer sm_Serializer = new fsSerializer();
         private List<ClassifierData> m_ClassifierData = null;
@@ -160,7 +160,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
             m_Classifiers = classifiers;
             foreach (var c in m_Classifiers.classifiers)
             {
-                m_NLC.GetClassifier(c.classifier_id, OnGetClassifier);
+                m_NaturalLanguageClassifier.GetClassifier(c.classifier_id, OnGetClassifier);
             }
         }
 
@@ -177,7 +177,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
         private void OnDeleteClassifier(bool success)
         {
             if (!success)
-                Log.Error("NLCTrainer", "Failed to delete classifier.");
+				Log.Error("Natural Language Classifier Trainer", "Failed to delete classifier.");
             else
                 OnRefresh();
         }
@@ -222,8 +222,8 @@ namespace IBM.Watson.DeveloperCloud.Editor
                         m_ClassifierData.Add(data);
                 }
 
-                if (!m_NLC.GetClassifiers(OnGetClassifiers))
-                    Log.Error("NLCTrainer", "Failed to request classifiers, please make sure your NlcV1 service has credentials configured.");
+                if (!m_NaturalLanguageClassifier.GetClassifiers(OnGetClassifiers))
+					Log.Error("Natural Language Classifier Trainer", "Failed to request classifiers, please make sure your NaturalLanguageClassifierV1 service has credentials configured.");
                 else
                     m_Refreshing = true;
             }
@@ -305,7 +305,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
 
                         if ( EditorUtility.DisplayDialog( "Confirm", "Please confirm you want to train a new instance: " + classifierName, "Yes", "No" ) )
                         {
-                            if (!m_NLC.TrainClassifier(classifierName, data.Language, data.Export(), OnClassiferTrained))
+                            if (!m_NaturalLanguageClassifier.TrainClassifier(classifierName, data.Language, data.Export(), OnClassiferTrained))
                                 EditorUtility.DisplayDialog("Error", "Failed to train classifier.", "OK");
                         }
                     }
@@ -336,7 +336,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
                                     if (GUILayout.Button("Delete", GUILayout.Width( 100 ) ))
                                     {
                                         if (EditorUtility.DisplayDialog("Confirm", string.Format("Confirm delete of classifier {0}", cl.classifier_id), "YES", "NO")
-                                            && !m_NLC.DeleteClassifer(cl.classifier_id, OnDeleteClassifier))
+                                            && !m_NaturalLanguageClassifier.DeleteClassifer(cl.classifier_id, OnDeleteClassifier))
                                         {
                                             EditorUtility.DisplayDialog("Error", "Failed to delete classifier.", "OK");
                                         }
@@ -507,7 +507,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
                         if (GUILayout.Button("Delete", GUILayout.Width( 100 ) ))
                         {
                             if (EditorUtility.DisplayDialog("Confirm", string.Format("Confirm delete of classifier {0}", cl.classifier_id), "YES", "NO")
-                                && !m_NLC.DeleteClassifer(cl.classifier_id, OnDeleteClassifier))
+                                && !m_NaturalLanguageClassifier.DeleteClassifer(cl.classifier_id, OnDeleteClassifier))
                             {
                                 EditorUtility.DisplayDialog("Error", "Failed to delete classifier.", "OK");
                             }
@@ -524,37 +524,6 @@ namespace IBM.Watson.DeveloperCloud.Editor
                 }
                 EditorGUI.indentLevel -= 1;
             }
-
-            //EditorGUILayout.LabelField("Create Classifier:" );
-            //EditorGUI.indentLevel += 1;
-
-            //m_NewClassifierName = EditorGUILayout.TextField("Name", m_NewClassifierName );    
-            //m_NewClassifierLang = EditorGUILayout.TextField("Language", m_NewClassifierLang );        
-
-            //EditorGUI.BeginDisabledGroup( string.IsNullOrEmpty(m_NewClassifierLang) || string.IsNullOrEmpty(m_NewClassifierName) );
-            //if ( GUILayout.Button( "Create" ) )
-            //{
-            //    var path = EditorUtility.OpenFilePanel( "Select Training File", "", "csv" );
-            //    if (! string.IsNullOrEmpty( path ) )
-            //    {
-            //        string trainingData = File.ReadAllText( path );
-            //        if (! string.IsNullOrEmpty( trainingData ) )
-            //        {
-            //            string name = m_NewClassifierName;
-            //            if ( string.IsNullOrEmpty( name ) )
-            //                name = DateTime.Now.ToString();
-
-            //            if (! m_NLC.TrainClassifier( name, m_NewClassifierLang, trainingData, OnClassiferTrained ) )
-            //                EditorUtility.DisplayDialog( "Error", "Failed to train classifier.", "OK" );
-            //        }
-            //        else
-            //            EditorUtility.DisplayDialog( "Error", "Failed to load training data: " + path, "OK" );
-            //    }
-
-            //    m_NewClassifierName = null;
-            //}
-            //EditorGUI.EndDisabledGroup();
-            //EditorGUI.indentLevel -= 1;
 
             EditorGUILayout.EndVertical();
             EditorGUILayout.EndScrollView();

@@ -145,7 +145,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("NLC", "GetVoices Exception: {0}", e.ToString());
+					Log.Error("Natural Language Classifier", "GetVoices Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }

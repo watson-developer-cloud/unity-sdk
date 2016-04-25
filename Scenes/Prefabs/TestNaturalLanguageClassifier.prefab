@@ -26,7 +26,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 22497212}
   m_Layer: 0
-  m_Name: TestNLC
+  m_Name: TestNaturalLanguageClassifier
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -582,6 +582,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AutoConnect: 1
+  m_ResultOutput:
+    m_Connections: []
   m_StatusText: {fileID: 0}
   m_DetectSilence: 1
   m_SilenceThreshold: 0.03
@@ -591,9 +593,6 @@ MonoBehaviour:
   m_EnableContinous: 1
   m_EnableInterimResults: 1
   m_Transcript: {fileID: 0}
-  m_ResultOutput:
-    m_TargetObject: {fileID: 0}
-    m_TargetConnection: 
   m_Language: en-US
 --- !u!114 &11420780
 MonoBehaviour:
@@ -826,11 +825,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_TapGesture: {fileID: 11424898}
+  m_DoubleTapGesture: {fileID: 0}
   m_ThreeTapGesture: {fileID: 11474440}
   m_OneFingerMoveGesture: {fileID: 11445766}
   m_TwoFingerMoveGesture: {fileID: 11432490}
   m_PressGesture: {fileID: 11461908}
   m_ReleaseGesture: {fileID: 11440322}
+  m_LongPressGesture: {fileID: 0}
 --- !u!114 &11445766
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -884,16 +885,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AutoConnect: 1
-  m_ActivateOnStart: 1
   m_AudioOutput:
-    m_TargetObject: {fileID: 0}
-    m_TargetConnection: 
+    m_Connections: []
   m_LevelOutput:
-    m_TargetObject: {fileID: 0}
-    m_TargetConnection: 
+    m_Connections: []
   m_ActivateOutput:
-    m_TargetObject: {fileID: 0}
-    m_TargetConnection: 
+    m_Connections: []
+  m_ActivateOnStart: 1
   m_RecordingBufferSize: 2
   m_RecordingHZ: 22050
   m_MicrophoneID: 
@@ -1075,8 +1073,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AutoConnect: 1
   m_ClassifyOutput:
-    m_TargetObject: {fileID: 0}
-    m_TargetConnection: Classifier/Classified
+    m_Connections: []
   m_ClassifierName: ${NLC_CLASSIFIER_NAME}
   m_ClassifierId: ${NLC_CLASSIFIER_ID}
   m_MinWordConfidence: 0.4
@@ -1211,6 +1208,7 @@ Canvas:
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -1229,6 +1227,7 @@ Canvas:
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
   m_SortingLayerID: 0
   m_SortingOrder: 9000
   m_TargetDisplay: 0

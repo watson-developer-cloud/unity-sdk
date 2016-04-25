@@ -29,7 +29,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 {
     public class TestNaturalLanguageClassifier : UnitTest
     {
-        NaturalLanguageClassifier m_NLC = new NaturalLanguageClassifier();
+        NaturalLanguageClassifier m_NaturalLanguageClassifier = new NaturalLanguageClassifier();
         bool m_FindClassifierTested = false;
         bool m_TrainClasifierTested = false;
         bool m_TrainClassifier = false;
@@ -41,24 +41,24 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         public override IEnumerator RunTest()
         {
-            if ( Config.Instance.FindCredentials( m_NLC.GetServiceID() ) == null )
+            if ( Config.Instance.FindCredentials( m_NaturalLanguageClassifier.GetServiceID() ) == null )
                 yield break;
 
-            m_NLC.FindClassifier( "TestNLC/", OnFindClassifier );
+			m_NaturalLanguageClassifier.FindClassifier( "TestNaturalLanguageClassifier/", OnFindClassifier );
             while(! m_FindClassifierTested )
                 yield return null;
 
             if ( m_TrainClassifier )
             {
-                string trainingData = File.ReadAllText( Application.dataPath + "/Watson/Editor/TestData/weather_data_train.csv" );
+                string trainingData = File.ReadAllText( Application.dataPath + "/Watson/Scripts/Editor/TestData/weather_data_train.csv" );
 
-                Test( m_NLC.TrainClassifier( "TestNLC/" + DateTime.Now.ToString(), "en", trainingData, OnTrainClassifier ) );
+				Test( m_NaturalLanguageClassifier.TrainClassifier( "TestNaturalLanguageClassifier/" + DateTime.Now.ToString(), "en", trainingData, OnTrainClassifier ) );
                 while( !m_TrainClasifierTested )
                     yield return null;
             }
             else if ( !string.IsNullOrEmpty( m_ClassifierId ) )
             {
-                Test( m_NLC.Classify( m_ClassifierId, "Is it hot outside", OnClassify ) );
+                Test( m_NaturalLanguageClassifier.Classify( m_ClassifierId, "Is it hot outside", OnClassify ) );
                 while(! m_ClassifyTested )
                     yield return null;
             }
@@ -66,7 +66,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 #if TEST_DELETE
             if ( !string.IsNullOrEmpty( m_ClassifierId ) )
             {
-                Test( m_NLC.DeleteClassifer( m_ClassifierId, OnDeleteClassifier ) );
+                Test( m_NaturalLanguageClassifier.DeleteClassifer( m_ClassifierId, OnDeleteClassifier ) );
                 while(! m_DeleteTested ) 
                     yield return null;
             }
@@ -87,7 +87,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         {
             if ( find != null )
             {
-                Log.Status( "TestNLC", "Find Result, Classifier ID: {0}, Status: {1}", find.classifier_id, find.status );
+				Log.Status( "TestNaturalLanguageClassifier", "Find Result, Classifier ID: {0}, Status: {1}", find.classifier_id, find.status );
 
                 m_TrainClassifier = false;
                 if ( find.status == "Available" )
@@ -105,7 +105,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             Test( result != null );
             if ( result != null )
             {
-                Log.Status( "TestNLC", "Classify Result: {0}", result.top_class );
+				Log.Status( "TestNaturalLanguageClassifier", "Classify Result: {0}", result.top_class );
                 Test( result.top_class == "temperature" );
             }
             m_ClassifyTested = true;
@@ -115,7 +115,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         {
             Test( classifier != null );
             if ( classifier != null )
-                Log.Status( "TestNLC", "Classifier ID: {0}, Status: {1}", classifier.classifier_id, classifier.status );
+				Log.Status( "TestNaturalLanguageClassifier", "Classifier ID: {0}, Status: {1}", classifier.classifier_id, classifier.status );
 
             m_TrainClasifierTested = true;
         }

@@ -315,7 +315,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Dialog.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("NLC", "UploadDialog Exception: {0}", e.ToString());
+					Log.Error("Natural Language Classifier", "UploadDialog Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -423,7 +423,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Dialog.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("NLC", "ConverseResp Exception: {0}", e.ToString());
+					Log.Error("Natural Language Classifier", "ConverseResp Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }

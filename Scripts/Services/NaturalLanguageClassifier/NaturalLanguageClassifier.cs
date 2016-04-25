@@ -28,7 +28,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
 {
     /// <summary>
     /// This class wraps the Natural Language Classifier service.
-    /// <a href="http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/nl-classifier.html">NLC Service</a>
+	/// <a href="http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/nl-classifier.html">Natural Language Classifier Service</a>
     /// </summary>
     public class NaturalLanguageClassifier : IWatsonService
     {
@@ -75,7 +75,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
         #endregion
 
         #region Private Data
-        private const string SERVICE_ID = "NlcV1";
+		private const string SERVICE_ID = "NaturalLanguageClassifierV1";
         private static fsSerializer sm_Serializer = new fsSerializer();
         private Dictionary<string,DataCache> m_ClassifyCache = new Dictionary<string, DataCache>();
         #endregion
@@ -126,7 +126,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
 
                 if (! bFound )
                 {
-                    Log.Error( "NLC", "Fail to find classifier {0}", ClassifierName );
+					Log.Error( "Natural Language Classifier", "Fail to find classifier {0}", ClassifierName );
                     Callback( null );
                 }
             }
@@ -183,7 +183,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("NLC", "GetClassifiers Exception: {0}", e.ToString());
+					Log.Error("Natural Language Classifier", "GetClassifiers Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -240,7 +240,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("NLC", "GetClassifiers Exception: {0}", e.ToString());
+					Log.Error("Natural Language Classifier", "GetClassifiers Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -310,7 +310,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("NLC", "GetClassifiers Exception: {0}", e.ToString());
+					Log.Error("Natural Language Classifier", "GetClassifiers Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -398,7 +398,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
                 DataCache cache = null;
                 if (! m_ClassifyCache.TryGetValue( classifierId, out cache ) )
                 {
-                    cache = new DataCache( "NLC_" + classifierId );
+					cache = new DataCache( "NaturalLanguageClassifier_" + classifierId );
                     m_ClassifyCache[ classifierId ] = cache;
                 }
 
@@ -476,7 +476,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
             }
             catch (Exception e)
             {
-                Log.Error("NLC", "GetClassifiers Exception: {0}", e.ToString());
+				Log.Error("Natural Language Classifier", "GetClassifiers Exception: {0}", e.ToString());
             }
 
             return classify;

@@ -28,7 +28,7 @@ using UnityEngine;
 namespace IBM.Watson.DeveloperCloud.Widgets
 {
     /// <summary>
-    /// This widget class maps NLC classifier results to a SerializedDelegate.
+    /// This widget class maps Natural Language Classifier results to a SerializedDelegate.
     /// </summary>
     public class ClassifierWidget : Widget
     {

@@ -25,7 +25,7 @@ using UnityEngine.UI;
 namespace IBM.Watson.DeveloperCloud.Widgets
 {
     /// <summary>
-    /// Simple widget for displaying the NLC classification in the UI.
+    /// Simple widget for displaying the Natural Language Classification in the UI.
     /// </summary>
     public class ClassDisplayWidget : Widget
     {
