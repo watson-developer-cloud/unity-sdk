@@ -107,7 +107,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 
         #region Private Data
         [fsProperty]
-        private string m_ClassifierDirectory = "Watson/Scripts/Editor/Classifiers/";
+        private string m_ClassifierDirectory = "unity-sdk/Scripts/Editor/Classifiers/";
         [fsProperty]
         private float m_TimeOut = 30.0f;
         [fsProperty]
