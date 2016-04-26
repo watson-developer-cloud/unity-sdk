@@ -19,16 +19,6 @@ You can get the SDK by cloning the the repository from GitHub.
       * Click on the "Download Zip" button at the following URL https://github.com/watson-developer-cloud/unity-sdk, extract the zip file into your project directory.
 	  
 2. Go to [Configuring Watson service credentials](#configuring-Watson-service-credentials).
-	
-
-### Installing the SDK from the Unity Package
-1. Download the `WatsonDeveloperCloud.unitypackage` file.
-2. Open Unity, then open your project or create a new one.
-3. Add the Watson SDK package by selecting **Assets -> Import Package -> Custom Package**.
-4. Navigate to the location of the `WatsonDeveloperCloud.unitypackage`, and click **Open**. The Importing package window is displayed.
-5. Click **Import**. The asset is imported, and the prompt to configure your Watson service credentials is displayed.
-6. Click **Yes**. The Config Editor is displayed, and the Watson services to be configured are in the list.
-7. Go to [Configuring Watson service credentials](#configuring-Watson-service-credentials).
 
 ## Configuring your service credentials
 1. Determine which services to configure.
