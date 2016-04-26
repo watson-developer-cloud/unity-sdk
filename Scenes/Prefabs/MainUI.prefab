@@ -329,7 +329,7 @@ MonoBehaviour:
     m_CustomBackButtonPosition: {x: 0, y: 0, z: 0}
     m_CustomBackButtonScale: {x: 0, y: 0}
     m_IsVisibleBackButton: 1
-  - m_SceneName: TestTextToSpeech
+  - m_SceneName: TestSpeechToText
     m_SceneDesc: Speech To Text (STT)
     m_CustomBackButtonPosition: {x: 0, y: 0, z: 0}
     m_CustomBackButtonScale: {x: 0, y: 0}
