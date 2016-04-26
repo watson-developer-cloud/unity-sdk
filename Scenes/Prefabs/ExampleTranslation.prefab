@@ -966,7 +966,7 @@ AudioSource:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-    m_RotationOrder: 4
+    m_RotationOrder: 0
   spreadCustomCurve:
     serializedVersion: 2
     m_Curve:
@@ -988,7 +988,7 @@ AudioSource:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-    m_RotationOrder: 4
+    m_RotationOrder: 0
 --- !u!82 &8288762
 AudioSource:
   m_ObjectHideFlags: 1
@@ -1098,16 +1098,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AutoConnect: 1
-  m_ActivateOnStart: 1
   m_AudioOutput:
-    m_TargetObject: {fileID: 0}
-    m_TargetConnection: 
+    m_Connections: []
   m_LevelOutput:
-    m_TargetObject: {fileID: 0}
-    m_TargetConnection: 
+    m_Connections: []
   m_ActivateOutput:
-    m_TargetObject: {fileID: 0}
-    m_TargetConnection: 
+    m_Connections: []
+  m_ActivateOnStart: 1
   m_RecordingBufferSize: 2
   m_RecordingHZ: 22050
   m_MicrophoneID: 
@@ -1287,11 +1284,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_TapGesture: {fileID: 11455074}
+  m_DoubleTapGesture: {fileID: 0}
   m_ThreeTapGesture: {fileID: 11496318}
   m_OneFingerMoveGesture: {fileID: 11467878}
   m_TwoFingerMoveGesture: {fileID: 11492616}
   m_PressGesture: {fileID: 11480846}
   m_ReleaseGesture: {fileID: 11482444}
+  m_LongPressGesture: {fileID: 0}
 --- !u!114 &11410742
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1543,7 +1542,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 7ff94ea14c816481191ba8fb97d349a5, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1eaeb3a02e12744e5a25a4169c3474a7, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -2181,6 +2180,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AutoConnect: 1
+  m_ResultOutput:
+    m_Connections: []
   m_StatusText: {fileID: 0}
   m_DetectSilence: 1
   m_SilenceThreshold: 0.03
@@ -2190,9 +2191,6 @@ MonoBehaviour:
   m_EnableContinous: 1
   m_EnableInterimResults: 1
   m_Transcript: {fileID: 0}
-  m_ResultOutput:
-    m_TargetObject: {fileID: 0}
-    m_TargetConnection: 
   m_Language: en-US
 --- !u!114 &11467620
 MonoBehaviour:
@@ -2213,7 +2211,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: d5b8d64f6d18844e781d2c63316a810f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: dcc763001129146f0bd779f1a3f3cee2, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -2284,21 +2282,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AutoConnect: 1
+  m_RecognizeLanguageOutput:
+    m_Connections: []
+  m_SpeechOutput:
+    m_Connections: []
+  m_VoiceOutput:
+    m_Connections: []
   m_SourceLanguage: 
   m_TargetLanguage: es
   m_Input: {fileID: 11487024}
   m_Output: {fileID: 11490962}
   m_DropDownSourceLanguage: {fileID: 11446976}
   m_DropDownTargetLanguage: {fileID: 11454536}
-  m_RecognizeLanguageOutput:
-    m_TargetObject: {fileID: 0}
-    m_TargetConnection: 
-  m_SpeechOutput:
-    m_TargetObject: {fileID: 0}
-    m_TargetConnection: 
-  m_VoiceOutput:
-    m_TargetObject: {fileID: 0}
-    m_TargetConnection: 
   m_DefaultDomainToUse: conversational
   m_DetectLanguageName: Detect Language
 --- !u!114 &11480480
@@ -2320,8 +2315,8 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: d2c2efadb47c74652863d505e27fb0cd, type: 3}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 11b8cc94d1829440d972e9e699902f64, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -2593,14 +2588,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AutoConnect: 1
   m_Speaking:
-    m_TargetObject: {fileID: 0}
-    m_TargetConnection: Microphone/Disable
+    m_Connections: []
   m_DisableMic:
-    m_TargetObject: {fileID: 0}
-    m_TargetConnection: 
+    m_Connections: []
   m_LevelOut:
-    m_TargetObject: {fileID: 0}
-    m_TargetConnection: 
+    m_Connections: []
   m_LevelOutInterval: 0.05
   m_LevelOutputModifier: 12
   m_TextToSpeechButton: {fileID: 0}
@@ -2967,6 +2959,7 @@ Canvas:
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
   m_SortingLayerID: 0
   m_SortingOrder: 9000
   m_TargetDisplay: 0
@@ -2985,6 +2978,7 @@ Canvas:
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0

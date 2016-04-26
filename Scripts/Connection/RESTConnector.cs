@@ -315,7 +315,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
                     headers[ kp.Key ] = kp.Value;
             }
 
-			headers.Add("User-Agent", Constants.String.VERSION);
+//			headers.Add("User-Agent", Constants.String.VERSION);
         }
 
         private IEnumerator ProcessRequestQueue()

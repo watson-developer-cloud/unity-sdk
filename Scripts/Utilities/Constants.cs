@@ -53,11 +53,11 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// <summary>
             /// Watson icon.
             /// </summary>
-            public const string WATSON_ICON = "WatsonSpriteIcon_32x32";
+            public const string WATSON_ICON = "watsonSpriteIcon-32x32";
             /// <summary>
             /// Watson logo.
             /// </summary>
-            public const string WATSON_LOGO = "WatsonSpriteLogo_506x506";
+            public const string WATSON_LOGO = "watsonSpriteLogo-506x506";
         }
 
         /// <summary>
