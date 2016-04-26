@@ -133,10 +133,10 @@ namespace IBM.Watson.DeveloperCloud.Logging
                 LogSystem.Instance.InstallReactor( new DebugReactor() );
 #endif
 
-				if (!string.IsNullOrEmpty(ConstantsXRAY.Path.LOG_FOLDER) && !System.IO.Directory.Exists(Application.persistentDataPath + ConstantsXRAY.Path.LOG_FOLDER ))
-					System.IO.Directory.CreateDirectory(Application.persistentDataPath + ConstantsXRAY.Path.LOG_FOLDER );
+				if (!string.IsNullOrEmpty(Constants.Path.LOG_FOLDER) && !System.IO.Directory.Exists(Application.persistentDataPath + Constants.Path.LOG_FOLDER ))
+					System.IO.Directory.CreateDirectory(Application.persistentDataPath + Constants.Path.LOG_FOLDER );
                 
-				LogSystem.Instance.InstallReactor( new FileReactor( Application.persistentDataPath + ConstantsXRAY.Path.LOG_FOLDER + "/" + Application.productName + ".log", logLevelFileReactor, logHistory ) );
+				LogSystem.Instance.InstallReactor( new FileReactor( Application.persistentDataPath + Constants.Path.LOG_FOLDER + "/" + Application.productName + ".log", logLevelFileReactor, logHistory ) );
 
                 Application.logMessageReceived += UnityLogCallback;
             }
