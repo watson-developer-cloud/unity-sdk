@@ -818,7 +818,7 @@ MonoBehaviour:
   m_ResultOutput:
     m_Connections: []
   m_DialogName: unity-sdk-test-dialog
-  m_AutoUploadDialog: /unity-sdk/Scripts/Editor/TestData/pizza_sample.xml
+  m_AutoUploadDialog: /Watson/Scripts/Editor/TestData/pizza_sample.xml
   m_DialogLayout: {fileID: 11486604}
   m_ScrollRect: {fileID: 11427780}
   m_QuestionPrefab: {fileID: 191706, guid: cb00305fa9669490fbe502513d85728d, type: 2}

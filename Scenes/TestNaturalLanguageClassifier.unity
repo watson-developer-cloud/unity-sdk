@@ -176,6 +176,16 @@ Prefab:
       propertyPath: m_ClassEventList.Array.data[1].m_Class
       value: conditions
       objectReference: {fileID: 0}
+    - target: {fileID: 11441044, guid: df29f10b1d0988f43909a2a59bea318b, type: 2}
+      propertyPath: layers.Array.data[0]
+      value: 
+      objectReference: {fileID: 230257436}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: df29f10b1d0988f43909a2a59bea318b, type: 2}
   m_IsPrefabParent: 0
+--- !u!114 &230257436 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 11407682, guid: df29f10b1d0988f43909a2a59bea318b,
+    type: 2}
+  m_PrefabInternal: {fileID: 230257435}
+  m_Script: {fileID: 11500000, guid: bc7fd33c57d694994b0ab9f33fcdcbea, type: 3}

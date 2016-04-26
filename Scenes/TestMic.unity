@@ -164,6 +164,16 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 11468580, guid: d7245209448fb3146858a16a4291e43d, type: 2}
+      propertyPath: layers.Array.data[0]
+      value: 
+      objectReference: {fileID: 613460439}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d7245209448fb3146858a16a4291e43d, type: 2}
   m_IsPrefabParent: 0
+--- !u!114 &613460439 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 11451280, guid: d7245209448fb3146858a16a4291e43d,
+    type: 2}
+  m_PrefabInternal: {fileID: 613460438}
+  m_Script: {fileID: 11500000, guid: bc7fd33c57d694994b0ab9f33fcdcbea, type: 3}

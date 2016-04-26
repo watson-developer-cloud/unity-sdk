@@ -47,7 +47,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         [SerializeField, Tooltip( "The name prefix of the dialog to use." ) ]
         private string m_DialogName = Guid.NewGuid().ToString().Replace( "-", "" ).Substring( 0, 24 );      // NOTE: the limit of a dialog name is 24 characters, plus it has to be globally unique!
         [SerializeField, Tooltip( "If no dialog is found by name, then this dialog will automatically be uploaded. (Editor Only)") ]
-        private string m_AutoUploadDialog = "/unity-sdk/Editor/TestData/pizza_sample.xml";
+        private string m_AutoUploadDialog = "/Watson/Editor/TestData/pizza_sample.xml";
         [SerializeField]
         private VerticalLayoutGroup m_DialogLayout = null;
         [SerializeField]

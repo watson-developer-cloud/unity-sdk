@@ -12,12 +12,12 @@ Ensure that you have the following prerequisites:
 You can get the SDK by cloning the the repository from GitHub.
 
 ### Installing the SDK source into your Unity project
-1. Clone the following GIT repository into a directory within your current Unity project.
-      * git clone https://github.com/watson-developer-cloud/unity-sdk.git 
+1. Clone the following GIT repository into the Assets directory within your current Unity project.
+      * git clone git@github.com:watson-developer-cloud/unity-sdk.git Assets/Watson/
          * OR
-      * git submodule add https://github.com/watson-developer-cloud/unity-sdk.git
+      * git submodule add https://github.com/watson-developer-cloud/unity-sdk.git Assets/Watson/
 	     * OR
-      * Click on the "Download Zip" button at the following URL https://github.com/watson-developer-cloud/unity-sdk, extract the zip file into your project directory.
+      * Click on the "Download Zip" button at the following URL https://github.com/watson-developer-cloud/unity-sdk, extract the zip file into your Assets directory and **rename the directory from unity-sdk to Watson.**
 	  
 2. Go to [Configuring Watson service credentials](#configuring-Watson-service-credentials).
 
@@ -40,10 +40,10 @@ You can get the SDK by cloning the the repository from GitHub.
 4. Click **Save**, and close the Config Editor.
 
 ## Preparing the test data for developing a basic application
-The SDK contains a TestNLC classifier, which contains classes for temperature and conditions. Before you develop a sample application in the next section, train the classifier on the test data.
+The SDK contains a Test Natural Language Classifier, which contains classes for temperature and conditions. Before you develop a sample application in the next section, train the classifier on the test data.
 
 1. Open the NLC Editor by clicking **Watson -> NLC Editor**.
-2. Locate the TestNLC classifier, and click **Train**. The training process begins. The process lasts a few minutes.
+2. Locate the Test Natural Language Classifier, and click **Train**. The training process begins. The process lasts a few minutes.
 3. To check the status of the training process, click **Refresh**. When the status changes from Training to Available, the process is finished, and you can begin to develop a basic application that uses the Natural Language Classifier, as described in the next section.
 
 ## Developing a basic application in one minute
@@ -54,8 +54,8 @@ You can quickly develop a basic application that uses the Speech to Text service
   * NlcWidget
   * ClassDisplayWidget
 2. Select the **NlcWidget**.
-5. In the **Classifier Name** field in the Inspector tab, specify `TestNLC/`.
-6. In the NLC Editor, expand the **TestNLC** classifier, expand the classes, and determine which questions about the weather to ask to test the classifier.
+5. In the **Classifier Name** field in the Inspector tab, specify `TestNaturalLanguageClassifier/`.
+6. In the NLC Editor, expand the **Test Natural Languge Classifier** , expand the classes, and determine which questions about the weather to ask to test the classifier.
 7. Run the application.
 8. Say your questions into the microphone to test the MicWidget, the SpeechToTextWidget, and the NlcWidget.
 
