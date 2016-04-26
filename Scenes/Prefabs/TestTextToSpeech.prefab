@@ -243,7 +243,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 22495110}
   m_Layer: 0
-  m_Name: TestTTS
+  m_Name: TestTextToSpeech
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -532,14 +532,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AutoConnect: 1
   m_Speaking:
-    m_TargetObject: {fileID: 0}
-    m_TargetConnection: Microphone/Disable
+    m_Connections: []
   m_DisableMic:
-    m_TargetObject: {fileID: 0}
-    m_TargetConnection: 
+    m_Connections: []
   m_LevelOut:
-    m_TargetObject: {fileID: 0}
-    m_TargetConnection: 
+    m_Connections: []
   m_LevelOutInterval: 0.05
   m_LevelOutputModifier: 12
   m_TextToSpeechButton: {fileID: 11495760}
@@ -800,11 +797,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_TapGesture: {fileID: 11417868}
+  m_DoubleTapGesture: {fileID: 0}
   m_ThreeTapGesture: {fileID: 11454706}
   m_OneFingerMoveGesture: {fileID: 11448190}
   m_TwoFingerMoveGesture: {fileID: 11479008}
   m_PressGesture: {fileID: 11486890}
   m_ReleaseGesture: {fileID: 11453848}
+  m_LongPressGesture: {fileID: 0}
 --- !u!114 &11440010
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1417,6 +1416,7 @@ Canvas:
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
   m_SortingLayerID: 0
   m_SortingOrder: 9000
   m_TargetDisplay: 0
@@ -1435,6 +1435,7 @@ Canvas:
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0

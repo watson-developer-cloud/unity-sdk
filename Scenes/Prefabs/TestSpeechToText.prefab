@@ -59,7 +59,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 22439340}
   m_Layer: 0
-  m_Name: TestSTT
+  m_Name: TestSpeechToText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -681,16 +681,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AutoConnect: 1
-  m_ActivateOnStart: 1
   m_AudioOutput:
-    m_TargetObject: {fileID: 0}
-    m_TargetConnection: 
+    m_Connections: []
   m_LevelOutput:
-    m_TargetObject: {fileID: 0}
-    m_TargetConnection: 
+    m_Connections: []
   m_ActivateOutput:
-    m_TargetObject: {fileID: 0}
-    m_TargetConnection: 
+    m_Connections: []
+  m_ActivateOnStart: 1
   m_RecordingBufferSize: 2
   m_RecordingHZ: 22050
   m_MicrophoneID: 
@@ -746,11 +743,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_TapGesture: {fileID: 11406378}
+  m_DoubleTapGesture: {fileID: 0}
   m_ThreeTapGesture: {fileID: 11499378}
   m_OneFingerMoveGesture: {fileID: 11434220}
   m_TwoFingerMoveGesture: {fileID: 11429534}
   m_PressGesture: {fileID: 11407130}
   m_ReleaseGesture: {fileID: 11491464}
+  m_LongPressGesture: {fileID: 0}
 --- !u!114 &11445124
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -878,6 +877,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AutoConnect: 1
+  m_ResultOutput:
+    m_Connections: []
   m_StatusText: {fileID: 0}
   m_DetectSilence: 1
   m_SilenceThreshold: 0.03
@@ -887,9 +888,6 @@ MonoBehaviour:
   m_EnableContinous: 1
   m_EnableInterimResults: 1
   m_Transcript: {fileID: 0}
-  m_ResultOutput:
-    m_TargetObject: {fileID: 0}
-    m_TargetConnection: 
   m_Language: en-US
 --- !u!114 &11467242
 MonoBehaviour:
@@ -1102,6 +1100,7 @@ Canvas:
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -1120,6 +1119,7 @@ Canvas:
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
   m_SortingLayerID: 0
   m_SortingOrder: 9000
   m_TargetDisplay: 0
