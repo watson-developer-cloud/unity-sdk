@@ -244,11 +244,11 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: .960784316, g: .960784316, b: .960784316, a: 1}
-    m_PressedColor: {r: .784313738, g: .784313738, b: .784313738, a: 1}
-    m_DisabledColor: {r: .784313738, g: .784313738, b: .784313738, a: .501960814}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
-    m_FadeDuration: .100000001
+    m_FadeDuration: 0.1
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
     m_PressedSprite: {fileID: 0}
@@ -263,7 +263,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 22494054}
   m_Direction: 2
   m_Value: 1
-  m_Size: .99999994
+  m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -335,7 +335,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: .838235259, g: .838235259, b: .838235259, a: 1}
+  m_Color: {r: 0.83823526, g: 0.83823526, b: 0.83823526, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -350,6 +350,7 @@ MonoBehaviour:
     m_MinSize: 10
     m_MaxSize: 40
     m_Alignment: 2
+    m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
@@ -370,9 +371,9 @@ MonoBehaviour:
   m_Horizontal: 1
   m_Vertical: 1
   m_MovementType: 2
-  m_Elasticity: .100000001
+  m_Elasticity: 0.1
   m_Inertia: 1
-  m_DecelerationRate: .135000005
+  m_DecelerationRate: 0.135
   m_ScrollSensitivity: 1
   m_Viewport: {fileID: 22431086}
   m_HorizontalScrollbar: {fileID: 0}
@@ -425,13 +426,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AutoConnect: 1
-  m_DialogName: 429010086e6a4000826b6d0e
-  m_AutoUploadDialog: /Watson/Editor/TestData/pizza_sample.xml
+  m_ResultOutput:
+    m_Connections: []
+  m_DialogName: unity-sdk-test-dialog-0.2.0
+  m_AutoUploadDialog: /unity-sdk/Scripts/Editor/TestData/pizza_sample.xml
   m_DialogLayout: {fileID: 11412678}
   m_ScrollRect: {fileID: 11428570}
-  m_ResultOutput:
-    m_TargetObject: {fileID: 0}
-    m_TargetConnection: TextToSpeech/Text
   m_QuestionPrefab: {fileID: 191706, guid: cb00305fa9669490fbe502513d85728d, type: 2}
   m_AnswerPrefab: {fileID: 197462, guid: cc807e1eadf1f44ad8185ecbe083364d, type: 2}
   m_HistoryCount: 50
@@ -734,8 +734,10 @@ Canvas:
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
+  m_TargetDisplay: 0
 --- !u!224 &22400342
 RectTransform:
   m_ObjectHideFlags: 1
@@ -750,9 +752,9 @@ RectTransform:
   m_RootOrder: 2
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 2.38418579e-07, y: -100}
+  m_AnchoredPosition: {x: 0.00000023841858, y: -100}
   m_SizeDelta: {x: -10, y: 1}
-  m_Pivot: {x: .5, y: .5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &22420118
 RectTransform:
   m_ObjectHideFlags: 1
@@ -770,7 +772,7 @@ RectTransform:
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: .5, y: .5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &22422416
 RectTransform:
   m_ObjectHideFlags: 1
@@ -809,7 +811,7 @@ RectTransform:
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: .5, y: .5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &22431086
 RectTransform:
   m_ObjectHideFlags: 1
@@ -844,7 +846,7 @@ RectTransform:
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 80}
-  m_Pivot: {x: .99000001, y: 1.10000002}
+  m_Pivot: {x: 0.99, y: 1.1}
 --- !u!224 &22434398
 RectTransform:
   m_ObjectHideFlags: 1
@@ -862,7 +864,7 @@ RectTransform:
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: -60}
   m_SizeDelta: {x: -40, y: -160}
-  m_Pivot: {x: .5, y: .5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &22443776
 RectTransform:
   m_ObjectHideFlags: 1
@@ -882,7 +884,7 @@ RectTransform:
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: .5, y: .5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &22453676
 RectTransform:
   m_ObjectHideFlags: 1
@@ -917,7 +919,7 @@ RectTransform:
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 5, y: -3}
-  m_Pivot: {x: 1, y: .5}
+  m_Pivot: {x: 1, y: 0.5}
 --- !u!224 &22486684
 RectTransform:
   m_ObjectHideFlags: 1
@@ -934,7 +936,7 @@ RectTransform:
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -20, y: 0}
-  m_Pivot: {x: .5, y: 1}
+  m_Pivot: {x: 0.5, y: 1}
 --- !u!224 &22492190
 RectTransform:
   m_ObjectHideFlags: 1
@@ -949,9 +951,9 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -6.10351562e-05, y: 0}
+  m_AnchoredPosition: {x: -0.000061035156, y: 0}
   m_SizeDelta: {x: 0, y: 35}
-  m_Pivot: {x: .0500000007, y: 2.0999999}
+  m_Pivot: {x: 0.05, y: 2.1}
 --- !u!224 &22494054
 RectTransform:
   m_ObjectHideFlags: 1
@@ -968,7 +970,7 @@ RectTransform:
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: .5, y: .5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

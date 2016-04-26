@@ -164,26 +164,6 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8239922, guid: d7245209448fb3146858a16a4291e43d, type: 2}
-      propertyPath: panLevelCustomCurve.m_RotationOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8239922, guid: d7245209448fb3146858a16a4291e43d, type: 2}
-      propertyPath: reverbZoneMixCustomCurve.m_RotationOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 22308688, guid: d7245209448fb3146858a16a4291e43d, type: 2}
-      propertyPath: m_PixelPerfect
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 22308688, guid: d7245209448fb3146858a16a4291e43d, type: 2}
-      propertyPath: m_OverridePixelPerfect
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 124186, guid: d7245209448fb3146858a16a4291e43d, type: 2}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d7245209448fb3146858a16a4291e43d, type: 2}
   m_IsPrefabParent: 0

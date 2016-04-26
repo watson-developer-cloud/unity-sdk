@@ -92,6 +92,10 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 11499936, guid: df29f10b1d0988f43909a2a59bea318b, type: 2}
+      propertyPath: m_ClassEventList.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 22497212, guid: df29f10b1d0988f43909a2a59bea318b, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -163,6 +167,14 @@ Prefab:
     - target: {fileID: 22497212, guid: df29f10b1d0988f43909a2a59bea318b, type: 2}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 11499936, guid: df29f10b1d0988f43909a2a59bea318b, type: 2}
+      propertyPath: m_ClassEventList.Array.data[0].m_Class
+      value: temperature
+      objectReference: {fileID: 0}
+    - target: {fileID: 11499936, guid: df29f10b1d0988f43909a2a59bea318b, type: 2}
+      propertyPath: m_ClassEventList.Array.data[1].m_Class
+      value: conditions
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: df29f10b1d0988f43909a2a59bea318b, type: 2}
