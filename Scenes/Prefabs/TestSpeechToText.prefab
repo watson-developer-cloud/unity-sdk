@@ -559,7 +559,7 @@ MonoBehaviour:
   sendMessageEvents: 60
   sendMessageTarget: {fileID: 0}
   layers:
-  - {fileID: 11431800}
+  - {fileID: 0}
 --- !u!114 &11416996
 MonoBehaviour:
   m_ObjectHideFlags: 1

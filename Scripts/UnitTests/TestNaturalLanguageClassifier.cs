@@ -50,7 +50,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             if ( m_TrainClassifier )
             {
-                string trainingData = File.ReadAllText( Application.dataPath + "/unity-sdk/Scripts/Editor/TestData/weather_data_train.csv" );
+                string trainingData = File.ReadAllText( Application.dataPath + "/Watson/Scripts/Editor/TestData/weather_data_train.csv" );
 
 				Test( m_NaturalLanguageClassifier.TrainClassifier( "TestNaturalLanguageClassifier/" + DateTime.Now.ToString(), "en", trainingData, OnTrainClassifier ) );
                 while( !m_TrainClasifierTested )
