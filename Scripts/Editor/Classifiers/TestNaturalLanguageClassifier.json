@@ -2,7 +2,7 @@
     "Expanded": true,
     "InstancesExpanded": false,
     "ClassesExpanded": false,
-    "Name": "TestNLC",
+    "Name": "Test Natural Language Classifier",
     "Language": "en",
     "Data": {
         "temperature": [
