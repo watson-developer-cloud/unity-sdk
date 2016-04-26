@@ -155,7 +155,7 @@ public class MainUI : MonoBehaviour
             DestroyImmediate(m_ButtonLayout.transform.GetChild(0).gameObject);
 
         //Log.Debug( "MainUI", "UpdateBottons, level = {0}", Application.loadedLevelName );
-        if(SceneManager.GetActiveScene().name == MAIN_SCENE)
+        if (SceneManager.GetActiveScene().name == MAIN_SCENE)
         {
             m_BackgroundUI.SetActive(true);
 
@@ -196,9 +196,9 @@ public class MainUI : MonoBehaviour
 
     private IEnumerator LoadLevelAsync(string name)
     {
-       
+
         AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(name);
-        if ( asyncOperation == null )
+        if (asyncOperation == null)
             yield break;
 
         while (!asyncOperation.isDone)
@@ -238,7 +238,7 @@ public class MainUI : MonoBehaviour
         if (buttonBack.GetComponentInChildren<Text>() != null)
             buttonBack.GetComponentInChildren<Text>().enabled = isVisible;
         if (buttonBack.GetComponentInChildren<Image>() != null)
-            buttonBack.GetComponentInChildren<Image>().color = isVisible ? m_InitialBackButtonColor : 
+            buttonBack.GetComponentInChildren<Image>().color = isVisible ? m_InitialBackButtonColor :
                 new Color(m_InitialBackButtonColor.r, m_InitialBackButtonColor.g, m_InitialBackButtonColor.b, 0.0f);
     }
 
