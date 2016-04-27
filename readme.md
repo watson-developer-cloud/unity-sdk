@@ -86,3 +86,6 @@ You can use the Natural Language Classifier Editor to import and export classifi
 3. To create a new class, specity a name for the new class in the empty field, and click **Add Class**.
 4. To add a phrase to the class, specify a phrase in the empty field, and click **Add Phrase**.
 5. Click **Train**.
+
+## Documentation
+To read the documentation you need to have a **chm reader** installed. Open the documentation by selcting API Reference the Watson menu (Watson -> API Reference).
