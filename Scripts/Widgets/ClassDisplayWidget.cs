@@ -31,7 +31,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
     {
         #region Inputs
         [SerializeField]
-        private Input m_ClassInput = new Input( "ClassInput", typeof(ClassifyResultData), "OnClassInput" );
+        private Input m_ClassInput = new Input("ClassInput", typeof(ClassifyResultData), "OnClassInput");
         #endregion
 
         #region Widget interface
@@ -48,13 +48,13 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         #endregion
 
         #region Event Handlers
-        private void OnClassInput( Data data )
+        private void OnClassInput(Data data)
         {
             ClassifyResultData results = (ClassifyResultData)data;
-            if ( m_ClassDisplay != null )
+            if (m_ClassDisplay != null)
             {
-                m_ClassDisplay.text = string.Format( "Top class: {0} ({1:0.00})", 
-                    results.Result.top_class, results.Result.topConfidence );
+                m_ClassDisplay.text = string.Format("Top class: {0} ({1:0.00})",
+                    results.Result.top_class, results.Result.topConfidence);
             }
         }
         #endregion

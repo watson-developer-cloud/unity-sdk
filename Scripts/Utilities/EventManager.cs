@@ -107,12 +107,13 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                         receivers.RemoveAt(i--);
                         continue;
                     }
-                    try {
+                    try
+                    {
                         receivers[i](args);
                     }
-                    catch( Exception ex )
+                    catch (Exception ex)
                     {
-                        Log.Error( "EventManager", "Event Receiver Exception: {0}", ex.ToString() );
+                        Log.Error("EventManager", "Event Receiver Exception: {0}", ex.ToString());
                     }
                 }
                 return true;
@@ -134,7 +135,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         #endregion
 
         #region Private Data
-        private Dictionary< Type, Dictionary<object, string> > m_EventTypeName = new Dictionary<Type, Dictionary<object, string> >();
+        private Dictionary<Type, Dictionary<object, string>> m_EventTypeName = new Dictionary<Type, Dictionary<object, string>>();
         private Dictionary<string, List<OnReceiveEvent>> m_EventMap = new Dictionary<string, List<OnReceiveEvent>>();
 
         private class AsyncEvent
@@ -160,11 +161,11 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         }
         #endregion
 
-        private void InitializeEventTypeNames( Type enumType )
+        private void InitializeEventTypeNames(Type enumType)
         {
-            m_EventTypeName[ enumType ] = new Dictionary<object, string>();
-            foreach (var en in Enum.GetNames(enumType) )
-                m_EventTypeName[ enumType ] [ Enum.Parse( enumType, en ) ] = en;
+            m_EventTypeName[enumType] = new Dictionary<object, string>();
+            foreach (var en in Enum.GetNames(enumType))
+                m_EventTypeName[enumType][Enum.Parse(enumType, en)] = en;
         }
     }
 }

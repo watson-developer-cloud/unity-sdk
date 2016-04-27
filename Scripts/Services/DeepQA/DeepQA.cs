@@ -102,7 +102,7 @@ namespace IBM.Watson.DeveloperCloud.Services.DeepQA.v1
         /// <param name="question">The text of the question.</param>
         /// <param name="callback">The callback to receive the response.</param>
         /// <returns>Returns true if the request was submitted.</returns>
-        public bool AskQuestion(string question, OnQuestion callback, int evidenceItems = 1, bool useCache = true )
+        public bool AskQuestion(string question, OnQuestion callback, int evidenceItems = 1, bool useCache = true)
         {
             if (string.IsNullOrEmpty(question))
                 throw new ArgumentNullException("question");
@@ -209,10 +209,10 @@ namespace IBM.Watson.DeveloperCloud.Services.DeepQA.v1
         /// <exclude />
         public void GetServiceStatus(ServiceStatus callback)
         {
-            if ( Config.Instance.FindCredentials( m_ServiceId ) != null )
-                new CheckServiceStatus( this, callback );
+            if (Config.Instance.FindCredentials(m_ServiceId) != null)
+                new CheckServiceStatus(this, callback);
             else
-                callback( m_ServiceId, false );
+                callback(m_ServiceId, false);
         }
 
         private class CheckServiceStatus
@@ -220,18 +220,18 @@ namespace IBM.Watson.DeveloperCloud.Services.DeepQA.v1
             private DeepQA m_Service = null;
             private ServiceStatus m_Callback = null;
 
-            public CheckServiceStatus( DeepQA service, ServiceStatus callback )
+            public CheckServiceStatus(DeepQA service, ServiceStatus callback)
             {
                 m_Service = service;
                 m_Callback = callback;
 
-                if (! m_Service.AskQuestion( "What is the best treatment for an African American male in heart failure?", OnQuestion, 1, false ) )
-                    m_Callback( m_Service.GetServiceID(), false );
+                if (!m_Service.AskQuestion("What is the best treatment for an African American male in heart failure?", OnQuestion, 1, false))
+                    m_Callback(m_Service.GetServiceID(), false);
             }
 
-            private void OnQuestion( Question question )
+            private void OnQuestion(Question question)
             {
-                m_Callback( m_Service.GetServiceID(), question != null );
+                m_Callback(m_Service.GetServiceID(), question != null);
             }
         };
         #endregion

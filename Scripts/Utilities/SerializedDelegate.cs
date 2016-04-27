@@ -33,7 +33,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// Default constructor.
         /// </summary>
         /// <param name="delegateType">The delegate type.</param>
-        public SerializedDelegate( Type delegateType )
+        public SerializedDelegate(Type delegateType)
         {
             DelegateType = delegateType;
         }
@@ -61,16 +61,16 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// <returns>Returns a delegate or null if the delegate can't be resolved.</returns>
         public Delegate ResolveDelegate()
         {
-            if ( m_Target == null )
+            if (m_Target == null)
                 return null;
             Component component = m_Target.GetComponent(m_Component);
-            if ( component == null )
+            if (component == null)
                 return null;
             MethodInfo info = component.GetType().GetMethod(m_Method, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.InvokeMethod);
-            if ( info == null )
+            if (info == null)
                 return null;
 
-            return Delegate.CreateDelegate( DelegateType, component, info );
+            return Delegate.CreateDelegate(DelegateType, component, info);
         }
     }
 }

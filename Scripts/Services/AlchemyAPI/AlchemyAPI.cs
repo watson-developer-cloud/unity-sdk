@@ -32,7 +32,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
     /// Service integration for Alchemy API
     /// </summary>
     public class AlchemyAPI : IWatsonService
-	{
+    {
 
         #region Private Data
         private const string SERVICE_ID = "AlchemyAPIV1";
@@ -45,7 +45,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         #region Entity Extraction
         private const string SERVICE_ENTITY_EXTRACTION = "/calls/text/TextGetRankedNamedEntities";
 
-        public delegate void OnGetEntityExtraction( EntityExtractionData entityExtractionData, string data );
+        public delegate void OnGetEntityExtraction(EntityExtractionData entityExtractionData, string data);
 
         //http://access.alchemyapi.com/calls/text/TextGetRankedNamedEntities
 
@@ -68,7 +68,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             GetEntityExtractionRequest req = new GetEntityExtractionRequest();
             req.Callback = callback;
 
-            req.Parameters["apikey"] = mp_ApiKey; 
+            req.Parameters["apikey"] = mp_ApiKey;
             req.Parameters["text"] = text;
             req.Parameters["url"] = "";
             req.Parameters["outputMode"] = "json";
@@ -92,7 +92,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
         private class GetEntityExtractionRequest : RESTConnector.Request
         {
-            public string Data { get; set;}
+            public string Data { get; set; }
             public OnGetEntityExtraction Callback { get; set; }
         };
 
@@ -130,7 +130,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
         private const string SERVICE_KEYWOARD_EXTRACTION = "/calls/text/TextGetRankedKeywords";
 
-        public delegate void OnGetKeywoardExtraction( KeywoardExtractionData entityExtractionData, string data );
+        public delegate void OnGetKeywoardExtraction(KeywoardExtractionData entityExtractionData, string data);
 
         public bool GetKeywoardExtraction(OnGetKeywoardExtraction callback, string text, string customData = null)
         {
@@ -151,7 +151,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             GetKeywoardExtractionRequest req = new GetKeywoardExtractionRequest();
             req.Callback = callback;
 
-            req.Parameters["apikey"] = mp_ApiKey; 
+            req.Parameters["apikey"] = mp_ApiKey;
             //req.Parameters["text"] = text;
             req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
             req.Forms = new Dictionary<string, RESTConnector.Form>();
@@ -167,14 +167,14 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             req.Parameters["knowledgeGraph"] = "0";
 
             req.OnResponse = OnGetKeywoardExtractionResponse;
-            req.Data = string.IsNullOrEmpty(customData)? text : customData;
+            req.Data = string.IsNullOrEmpty(customData) ? text : customData;
 
             return connector.Send(req);
         }
 
         private class GetKeywoardExtractionRequest : RESTConnector.Request
         {
-            public string Data { get; set;}
+            public string Data { get; set; }
             public OnGetKeywoardExtraction Callback { get; set; }
         };
 
@@ -210,14 +210,14 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
         #region Combined Call
 
-        private const string SERVICE_COMBINED_CALLS = "/calls/text/TextGetCombinedData"; 
+        private const string SERVICE_COMBINED_CALLS = "/calls/text/TextGetCombinedData";
 
-        public delegate void OnGetCombinedCall( CombinedCallData combinedCallData, string data);
+        public delegate void OnGetCombinedCall(CombinedCallData combinedCallData, string data);
 
         //http://access.alchemyapi.com/calls/text/TextGetRankedNamedEntities
 
-        public bool GetCombinedCall(OnGetCombinedCall callback, string text, 
-            bool includeEntity = true, 
+        public bool GetCombinedCall(OnGetCombinedCall callback, string text,
+            bool includeEntity = true,
             bool includeKeywoard = true,
             bool includeDate = true,
             bool includeTaxonomy = false,
@@ -229,7 +229,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             bool includeDocSentiment = false,
             bool includePageImage = false,
             bool includeImageKW = false,
-            string language = "english", 
+            string language = "english",
             string customData = null)
         {
             if (callback == null)
@@ -240,12 +240,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 mp_ApiKey = Config.Instance.GetVariableValue("ALCHEMY_API_KEY");
             if (string.IsNullOrEmpty(mp_ApiKey))
                 throw new WatsonException("GetCombinedCall - ALCHEMY_API_KEY needs to be defined in config.json");
-            if( !includeEntity 
-                && !includeKeywoard 
+            if (!includeEntity
+                && !includeKeywoard
                 && !includeDate
                 && !includeTaxonomy
                 && !includeConcept
-                && !includeFeed 
+                && !includeFeed
                 && !includeDocEmotion
                 && !includeRelation
                 && !includePubDate
@@ -264,30 +264,30 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             List<string> requestServices = new List<string>();
             if (includeEntity)
                 requestServices.Add("entity");
-            if(includeKeywoard)  
+            if (includeKeywoard)
                 requestServices.Add("keyword");
-            if(includeKeywoard)  
+            if (includeKeywoard)
                 requestServices.Add("dates");
-            if(includeTaxonomy)  
+            if (includeTaxonomy)
                 requestServices.Add("taxonomy");
-            if(includeConcept)  
+            if (includeConcept)
                 requestServices.Add("concept");
-            if(includeFeed)  
+            if (includeFeed)
                 requestServices.Add("feed");
-            if(includeDocEmotion)  
+            if (includeDocEmotion)
                 requestServices.Add("doc-emotion");
-            if(includeRelation)  
+            if (includeRelation)
                 requestServices.Add("relation");
-            if(includePubDate)  
+            if (includePubDate)
                 requestServices.Add("pub-date");
-            if(includeDocSentiment)  
+            if (includeDocSentiment)
                 requestServices.Add("doc-sentiment");
-            if(includePageImage)  
+            if (includePageImage)
                 requestServices.Add("page-image");
-            if(includeImageKW)  
+            if (includeImageKW)
                 requestServices.Add("image-kw");
 
-            req.Parameters["apikey"] = mp_ApiKey; 
+            req.Parameters["apikey"] = mp_ApiKey;
             //req.Parameters["text"] = text;
             req.Parameters["extract"] = string.Join(",", requestServices.ToArray());
             req.Parameters["outputMode"] = "json";
@@ -299,14 +299,14 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             req.Forms["text"] = new RESTConnector.Form(text);
 
             req.OnResponse = OnGetCombinedCallResponse;
-            req.Data =  string.IsNullOrEmpty(customData)? text : customData;
+            req.Data = string.IsNullOrEmpty(customData) ? text : customData;
 
             return connector.Send(req);
         }
 
         private class GetCombinedCallRequest : RESTConnector.Request
         {
-            public string Data { get; set;}
+            public string Data { get; set; }
             public OnGetCombinedCall Callback { get; set; }
         };
 
@@ -350,10 +350,10 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// <exclude />
         public void GetServiceStatus(ServiceStatus callback)
         {
-            if ( Config.Instance.FindCredentials( SERVICE_ID ) != null )
-                new CheckServiceStatus( this, callback );
+            if (Config.Instance.FindCredentials(SERVICE_ID) != null)
+                new CheckServiceStatus(this, callback);
             else
-                callback( SERVICE_ID, false );
+                callback(SERVICE_ID, false);
         }
 
         private class CheckServiceStatus
@@ -361,19 +361,19 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             private AlchemyAPI m_Service = null;
             private ServiceStatus m_Callback = null;
 
-            public CheckServiceStatus( AlchemyAPI service, ServiceStatus callback )
+            public CheckServiceStatus(AlchemyAPI service, ServiceStatus callback)
             {
                 m_Service = service;
                 m_Callback = callback;
 
-                if (! m_Service.GetEntityExtraction( OnGetEntityExtraction, "Test" ) )
-                    m_Callback( SERVICE_ID, false );
+                if (!m_Service.GetEntityExtraction(OnGetEntityExtraction, "Test"))
+                    m_Callback(SERVICE_ID, false);
             }
 
-            void OnGetEntityExtraction (EntityExtractionData entityExtractionData, string data)
+            void OnGetEntityExtraction(EntityExtractionData entityExtractionData, string data)
             {
-                if ( m_Callback != null ) 
-                    m_Callback( SERVICE_ID, entityExtractionData != null );
+                if (m_Callback != null)
+                    m_Callback(SERVICE_ID, entityExtractionData != null);
             }
 
         };

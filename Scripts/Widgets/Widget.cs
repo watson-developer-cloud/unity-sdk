@@ -61,7 +61,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         {
             #region Private Data
             [NonSerialized]
-            private List<Output>    m_Connections = new List<Output>();
+            private List<Output> m_Connections = new List<Output>();
             #endregion
 
             #region Construction
@@ -118,7 +118,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             /// <summary>
             /// The array of outputs connected to this input.
             /// </summary>
-            public Output [] Connections { get { return m_Connections.ToArray(); } }
+            public Output[] Connections { get { return m_Connections.ToArray(); } }
             /// <summary>
             /// The name of the data type.
             /// </summary>
@@ -134,18 +134,18 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             #endregion
 
             #region Public Functions
-            public bool AddOutput( Output output )
+            public bool AddOutput(Output output)
             {
-                if ( !AllowMany && m_Connections.Count > 0 )
+                if (!AllowMany && m_Connections.Count > 0)
                     return false;
-                if ( m_Connections.Contains( output ) )
+                if (m_Connections.Contains(output))
                     return false;
-                m_Connections.Add( output );
+                m_Connections.Add(output);
                 return true;
             }
-            public bool RemoveOutput( Output output )
+            public bool RemoveOutput(Output output)
             {
-                return m_Connections.Remove( output );
+                return m_Connections.Remove(output);
             }
 
             /// <summary>
@@ -167,7 +167,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                             Log.Error("Widget", "CreateDelegate failed for function {0}", ReceiverFunction);
                     }
                     else
-                        Log.Error("Widget", "Failed to find receiver function {0} in object {1}.", ReceiverFunction, Owner.gameObject.name );
+                        Log.Error("Widget", "Failed to find receiver function {0} in object {1}.", ReceiverFunction, Owner.gameObject.name);
                 }
             }
 
@@ -219,12 +219,15 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                 /// <summary>
                 /// This returns a reference to the target input object.
                 /// </summary>
-                public Input TargetInput { get { return m_TargetInput; }
-                    set {
-                        if ( m_TargetInput != null )
-                            m_TargetInput.RemoveOutput( m_Owner );
+                public Input TargetInput
+                {
+                    get { return m_TargetInput; }
+                    set
+                    {
+                        if (m_TargetInput != null)
+                            m_TargetInput.RemoveOutput(m_Owner);
 
-                        if ( value != null && value.AddOutput( m_Owner ) )
+                        if (value != null && value.AddOutput(m_Owner))
                         {
                             m_TargetInput = value;
                             m_TargetObject = m_TargetInput.Owner.gameObject;
@@ -275,7 +278,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                                     continue;
                                 if (input.DataType != m_Owner.DataType)
                                     continue;
-                                if (! m_TargetInput.AddOutput( m_Owner ) ) 
+                                if (!m_TargetInput.AddOutput(m_Owner))
                                     continue;
 
                                 m_TargetInput = input;
@@ -290,7 +293,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                     return m_TargetInput != null;
                 }
 
-                public void Start( Output owner )
+                public void Start(Output owner)
                 {
                     m_Owner = owner;
                 }
@@ -304,7 +307,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             /// </summary>
             /// <param name="dataType">The type of data this widget outputs.</param>
             /// <param name="allowMany">If true, then this output will connect to more than one input.</param>
-            public Output(Type dataType, bool allowMany = false )
+            public Output(Type dataType, bool allowMany = false)
             {
                 DataType = dataType;
                 AllowMany = allowMany;
@@ -323,14 +326,17 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             /// <summary>
             /// Returns true if this output is connected to a input.
             /// </summary>
-            public bool IsConnected { get {
-                    foreach( var c in m_Connections )
-                        if ( c.ResolveTargetInput() )
+            public bool IsConnected
+            {
+                get
+                {
+                    foreach (var c in m_Connections)
+                        if (c.ResolveTargetInput())
                             return true;
                     return false;
                 }
             }
-            public Connection [] Connections { get { return m_Connections.ToArray(); } }
+            public Connection[] Connections { get { return m_Connections.ToArray(); } }
             /// <summary>
             /// Returns a reference to the Widget owner, this is set when the Widget initializes.
             /// </summary>
@@ -342,7 +348,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             /// <summary>
             /// If true, allows more than one input to be connected to this output.
             /// </summary>
-            public bool AllowMany { get; private set; } 
+            public bool AllowMany { get; private set; }
             #endregion
 
             #region Public Functions
@@ -353,7 +359,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             public virtual void Start(Widget owner)
             {
                 Owner = owner;
-                foreach( var c in m_Connections )
+                foreach (var c in m_Connections)
                     c.Start(this);
             }
             /// <summary>
@@ -364,11 +370,12 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             public virtual bool SendData(Data data)
             {
                 bool sent = false;
-                foreach( var c in m_Connections )
+                foreach (var c in m_Connections)
                 {
                     if (c.ResolveTargetInput())
                     {
-                        try {
+                        try
+                        {
                             c.TargetInput.ReceiveData(data);
                             sent = true;
                         }
@@ -387,17 +394,17 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             /// </summary>
             /// <param name="input">A reference to the connection to establish.</param>
             /// <returns>Returns true on success.</returns>
-            public bool AddConnection( Input input )
+            public bool AddConnection(Input input)
             {
-                if (! AllowMany && m_Connections.Count > 0 )
+                if (!AllowMany && m_Connections.Count > 0)
                     return false;       // already connected.
-                if ( input.DataType != DataType )
+                if (input.DataType != DataType)
                     return false;       // wrong data type
 
                 Connection c = new Connection();
                 c.Start(this);
                 c.TargetInput = input;
-                m_Connections.Add( c );
+                m_Connections.Add(c);
 
                 return true;
             }
@@ -408,26 +415,26 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             /// <param name="targetObject">The object to target.</param>
             /// <param name="targetConnection">A optional argument of the target input on the object.</param>
             /// <returns>Returns true if a Connection object was added.</returns>
-            public bool AddConnection( GameObject targetObject, string targetConnection = null )
+            public bool AddConnection(GameObject targetObject, string targetConnection = null)
             {
-                if (! AllowMany && m_Connections.Count > 0 )
+                if (!AllowMany && m_Connections.Count > 0)
                     return false;       // already connected.
-                
+
                 Connection c = new Connection();
                 c.Start(this);
                 c.TargetObject = targetObject;
-                if ( targetConnection != null )
+                if (targetConnection != null)
                     c.TargetConnection = targetConnection;
-                if (! c.ResolveTargetInput() )
+                if (!c.ResolveTargetInput())
                     return false;       // couldn't resolve a input 
-                m_Connections.Add( c );
+                m_Connections.Add(c);
 
                 return true;
             }
 
-            public bool RemoveConnection( Connection c )
+            public bool RemoveConnection(Connection c)
             {
-                return m_Connections.Remove( c );
+                return m_Connections.Remove(c);
             }
             #endregion
 
@@ -454,11 +461,11 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         /// <summary>
         /// This returns an array of all inputs on this widget.
         /// </summary>
-        public Input[] Inputs { get { if (! m_Initialized ) InitializeIO(); return m_Inputs; } }
+        public Input[] Inputs { get { if (!m_Initialized) InitializeIO(); return m_Inputs; } }
         /// <summary>
         /// This returns an array of all outputs on this widget.
         /// </summary>
-        public Output[] Outputs { get { if (! m_Initialized ) InitializeIO(); return m_Outputs; } }
+        public Output[] Outputs { get { if (!m_Initialized) InitializeIO(); return m_Outputs; } }
         #endregion
 
         #region Public Functions
@@ -489,21 +496,21 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         private void InitializeConnections()
         {
             // we only auto-connect when running in the editor. Doing this run-time might be very dangerous.
-            if ( m_AutoConnect )
+            if (m_AutoConnect)
             {
                 // this boolean is serialized, so we only ever do this once. Set this at the start
                 // so we don't end up in a circular loop of widgets.
                 m_AutoConnect = false;
 
-                Widget [] widgets = FindObjectsOfType<Widget>();
-                foreach( var widget in widgets )
+                Widget[] widgets = FindObjectsOfType<Widget>();
+                foreach (var widget in widgets)
                 {
-                    if ( widget == null || widget == this )
+                    if (widget == null || widget == this)
                         continue;       // we never connect to ourselves
 
                     if (widget.Outputs != null)
                     {
-                        foreach( var output in widget.Outputs )
+                        foreach (var output in widget.Outputs)
                         {
                             if (m_Inputs != null)
                             {
@@ -512,7 +519,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                                     if (input.DataType == output.DataType)
                                     {
                                         if (output.AddConnection(input))
-                                            Log.Status("Widget", "Auto-Connecting {0} -> {1}", output.ToString(), input.ToString()); 
+                                            Log.Status("Widget", "Auto-Connecting {0} -> {1}", output.ToString(), input.ToString());
                                     }
                                 }
                             }
@@ -551,7 +558,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         {
             InitializeConnections();
         }
-        
+
         /// <exclude />
         protected virtual void Awake()
         {

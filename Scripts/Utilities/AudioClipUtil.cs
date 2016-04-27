@@ -48,12 +48,12 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                 if (clips[i] == null)
                     continue;
 
-                if ( firstClip != null )
+                if (firstClip != null)
                 {
-                    if ( firstClip.channels != clips[i].channels 
-                        || firstClip.frequency != clips[i].frequency )
+                    if (firstClip.channels != clips[i].channels
+                        || firstClip.frequency != clips[i].frequency)
                     {
-                        Log.Error( "AudioClipUtil", "Combine() requires clips to have the sample number of channels and same frequency." );
+                        Log.Error("AudioClipUtil", "Combine() requires clips to have the sample number of channels and same frequency.");
                         return null;
                     }
                 }
@@ -79,7 +79,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             if (length == 0)
                 return null;
 
-            AudioClip result = AudioClip.Create( firstClip.name, length / firstClip.channels, firstClip.channels, firstClip.frequency, false );
+            AudioClip result = AudioClip.Create(firstClip.name, length / firstClip.channels, firstClip.channels, firstClip.frequency, false);
             result.SetData(data, 0);
 
             return result;

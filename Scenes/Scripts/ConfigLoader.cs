@@ -11,38 +11,41 @@ public class ConfigLoader : MonoBehaviour
 
     #region OnEnable / OnDisable - Registering events
     void OnEnable()
-	{
+    {
         EventManager.Instance.RegisterEventReceiver("OnUserToLogout", OnUserLogOut);
     }
 
     void OnDisable()
-	{
+    {
         EventManager.Instance.UnregisterEventReceiver("OnUserToLogout", OnUserLogOut);
     }
     #endregion
 
-	// Use this for initialization
-	IEnumerator Start ()
+    IEnumerator Start()
     {
         // wait for the configuration to be loaded first..
         while (!Config.Instance.ConfigLoaded)
             yield return null;
-        	
-        // then initiate a prefab after we are done loading the config.
-        m_CreatedObject = GameObject.Instantiate( m_Prefab );
-	}
 
+        // then initiate a prefab after we are done loading the config.
+        m_CreatedObject = GameObject.Instantiate(m_Prefab);
+    }
+
+    /// <summary>
+    /// Handler for user logout
+    /// </summary>
+    /// <param name="args"></param>
     public void OnUserLogOut(System.Object[] args)
     {
         if (m_CreatedObject != null)
         {
             if (!m_CreatedObject.activeSelf)
                 m_CreatedObject.SetActive(true);
-            
+
             m_CreatedObject.SendMessage("DestroyCreatedObject", SendMessageOptions.DontRequireReceiver);
         }
         StartCoroutine(Start());
     }
-	
+
 
 }

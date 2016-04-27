@@ -30,22 +30,22 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         public override IEnumerator RunTest()
         {
-            if ( Config.Instance.FindCredentials( m_SpeechToText.GetServiceID() ) == null )
+            if (Config.Instance.FindCredentials(m_SpeechToText.GetServiceID()) == null)
                 yield break;
 
-            m_SpeechToText.GetModels( OnGetModels );
+            m_SpeechToText.GetModels(OnGetModels);
 
-            while(! m_GetModelsTested )
+            while (!m_GetModelsTested)
                 yield return null;
 
             yield break;
         }
 
-        private void OnGetModels( SpeechModel [] models )
+        private void OnGetModels(SpeechModel[] models)
         {
-            Test( models != null );
-            if ( models != null )
-                Log.Status( "TestSpeechToText", "GetModels() returned {0} models.", models.Length );
+            Test(models != null);
+            if (models != null)
+                Log.Status("TestSpeechToText", "GetModels() returned {0} models.", models.Length);
 
             m_GetModelsTested = true;
         }

@@ -39,34 +39,34 @@ namespace IBM.Watson.DeveloperCloud.Services.Dialog.v1
         /// This callback is passed into GetDialogs().
         /// </summary>
         /// <param name="dialogs">The list of dialogs returned by GetDialogs().</param>
-        public delegate void OnGetDialogs( Dialogs dialogs );
+        public delegate void OnGetDialogs(Dialogs dialogs);
         /// <summary>
         /// The callback for UploadDialog().
         /// </summary>
         /// <param name="dialog_id"></param>
-        public delegate void OnUploadDialog( string dialog_id );
+        public delegate void OnUploadDialog(string dialog_id);
         /// <summary>
         /// The callback for DeleteDialog().
         /// </summary>
         /// <param name="success"></param>
-        public delegate void OnDialogCallback( bool success );
+        public delegate void OnDialogCallback(bool success);
         /// <summary>
         /// The delegate for loading a file, used by UploadDialog().
         /// </summary>
         /// <param name="filename">The filename to load.</param>
         /// <returns>Should return a byte array of the file contents or null of failure.</returns>
-        public delegate byte [] LoadFileDelegate( string filename );
+        public delegate byte[] LoadFileDelegate(string filename);
         /// <summary>
         /// The delegate for saving a file, used by DownloadDialog().
         /// </summary>
         /// <param name="filename">The filename to save.</param>
         /// <param name="data">The data to save into the file.</param>
-        public delegate void SaveFileDelegate( string filename, byte [] data );
+        public delegate void SaveFileDelegate(string filename, byte[] data);
         /// <summary>
         /// The callback delegate for the Converse() function.
         /// </summary>
         /// <param name="resp">The response object to a call to Converse().</param>
-        public delegate void OnConverse( ConverseResponse resp );
+        public delegate void OnConverse(ConverseResponse resp);
         #endregion
 
         #region Public Properties
@@ -167,7 +167,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Dialog.v1
         /// <param name="callback">The callback to invoke on failure or success.</param>
         /// <param name="format">The format to download.</param>
         /// <returns>Returns true if request is sent.</returns>
-        public bool DownloadDialog( string dialogId, string dialogFileName, OnDialogCallback callback, DialogFormat format = DialogFormat.XML )
+        public bool DownloadDialog(string dialogId, string dialogFileName, OnDialogCallback callback, DialogFormat format = DialogFormat.XML)
         {
             if (string.IsNullOrEmpty(dialogId))
                 throw new ArgumentNullException("dialogId");
@@ -176,7 +176,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Dialog.v1
             if (callback == null)
                 throw new ArgumentNullException("callback");
 
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/v1/dialogs/" + dialogId );
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/v1/dialogs/" + dialogId);
             if (connector == null)
                 return false;
 
@@ -184,11 +184,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Dialog.v1
             req.DialogFileName = dialogFileName;
             req.Callback = callback;
             req.OnResponse = OnDownloadDialogResp;
-            if ( format == DialogFormat.XML )
+            if (format == DialogFormat.XML)
                 req.Headers["Accept"] = "application/wds+xml";
-            else if ( format == DialogFormat.JSON )
+            else if (format == DialogFormat.JSON)
                 req.Headers["Accept"] = "application/wds+json";
-            else 
+            else
                 req.Headers["Accept"] = "application/octet-stream";
 
             return connector.Send(req);
@@ -203,31 +203,31 @@ namespace IBM.Watson.DeveloperCloud.Services.Dialog.v1
         private void OnDownloadDialogResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DownloadDialogReq downloadReq = req as DownloadDialogReq;
-            if ( downloadReq == null )
-                throw new WatsonException( "Unexpected type." );
+            if (downloadReq == null)
+                throw new WatsonException("Unexpected type.");
 
             if (resp.Success)
             {
                 try
-				{
-                    if ( SaveFile != null )
-                        SaveFile( downloadReq.DialogFileName, resp.Data );
-                    else
-					{
-						#if !UNITY_WEBPLAYER
-                        File.WriteAllBytes( downloadReq.DialogFileName, resp.Data );
-						#endif
-					}
-                }
-                catch( Exception e )
                 {
-                    Log.Error( "Dialog", "Caught exception: {0}", e.ToString() );
+                    if (SaveFile != null)
+                        SaveFile(downloadReq.DialogFileName, resp.Data);
+                    else
+                    {
+#if !UNITY_WEBPLAYER
+                        File.WriteAllBytes(downloadReq.DialogFileName, resp.Data);
+#endif
+                    }
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Dialog", "Caught exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
 
             if (((DownloadDialogReq)req).Callback != null)
-                ((DownloadDialogReq)req).Callback( resp.Success );
+                ((DownloadDialogReq)req).Callback(resp.Success);
         }
         #endregion
 
@@ -239,30 +239,30 @@ namespace IBM.Watson.DeveloperCloud.Services.Dialog.v1
         /// <param name="callback">The callback to receive the dialog ID.</param>
         /// <param name="dialogFileName">The filename of the dialog file to upload.</param>
         /// <returns>Returns true if the upload was submitted.</returns>
-        public bool UploadDialog( string dialogName, OnUploadDialog callback, string dialogFileName )
+        public bool UploadDialog(string dialogName, OnUploadDialog callback, string dialogFileName)
         {
             if (string.IsNullOrEmpty(dialogFileName))
                 throw new ArgumentNullException("dialogFileName");
 
-            byte [] dialogData = null;
+            byte[] dialogData = null;
             if (LoadFile != null)
             {
-				dialogData = LoadFile (dialogFileName);
+                dialogData = LoadFile(dialogFileName);
             }
-			else 
-			{
-				#if !UNITY_WEBPLAYER
-				dialogData = File.ReadAllBytes (dialogFileName);
-				#endif
-			}
-
-            if ( dialogData == null )
+            else
             {
-                Log.Error( "Dialog", "Failed to load dialog file data {0}", dialogFileName );
+#if !UNITY_WEBPLAYER
+                dialogData = File.ReadAllBytes(dialogFileName);
+#endif
+            }
+
+            if (dialogData == null)
+            {
+                Log.Error("Dialog", "Failed to load dialog file data {0}", dialogFileName);
                 return false;
             }
 
-            return UploadDialog( dialogName, callback, dialogData, Path.GetFileName( dialogFileName ) );
+            return UploadDialog(dialogName, callback, dialogData, Path.GetFileName(dialogFileName));
         }
 
         /// <summary>
@@ -273,7 +273,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Dialog.v1
         /// <param name="dialogData">The raw byte data of the dialog.</param>
         /// <param name="dataFileName">This must be the filename including the extension so the dialog service knows how to parse the data.</param>
         /// <returns>Returns true if the upload was submitted.</returns>
-        public bool UploadDialog( string dialogName, OnUploadDialog callback, byte [] dialogData, string dataFileName )
+        public bool UploadDialog(string dialogName, OnUploadDialog callback, byte[] dialogData, string dataFileName)
         {
             if (string.IsNullOrEmpty(dialogName))
                 throw new ArgumentNullException("dialogName");
@@ -281,7 +281,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Dialog.v1
                 throw new ArgumentNullException("callback");
             if (dialogData == null)
                 throw new ArgumentNullException("dialogData");
-            if (string.IsNullOrEmpty(dataFileName) )
+            if (string.IsNullOrEmpty(dataFileName))
                 throw new ArgumentNullException("dataFileName");
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/v1/dialogs");
@@ -292,8 +292,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Dialog.v1
             req.Callback = callback;
             req.OnResponse = OnCreateDialogResp;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
-            req.Forms["name"] = new RESTConnector.Form( dialogName );
-            req.Forms["file"] = new RESTConnector.Form( dialogData, dataFileName );
+            req.Forms["name"] = new RESTConnector.Form(dialogName);
+            req.Forms["file"] = new RESTConnector.Form(dialogData, dataFileName);
             req.Timeout = 10 * 60.0f;       // increase timeout to 10 minutes
 
             return connector.Send(req);
@@ -310,18 +310,18 @@ namespace IBM.Watson.DeveloperCloud.Services.Dialog.v1
             {
                 try
                 {
-                    IDictionary json = Json.Deserialize( Encoding.UTF8.GetString( resp.Data ) ) as IDictionary;
+                    IDictionary json = Json.Deserialize(Encoding.UTF8.GetString(resp.Data)) as IDictionary;
                     id = (string)json["dialog_id"];
                 }
                 catch (Exception e)
                 {
-					Log.Error("Natural Language Classifier", "UploadDialog Exception: {0}", e.ToString());
+                    Log.Error("Natural Language Classifier", "UploadDialog Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
 
             if (((UploadDialogReq)req).Callback != null)
-                ((UploadDialogReq)req).Callback( id );
+                ((UploadDialogReq)req).Callback(id);
         }
         #endregion
 
@@ -332,14 +332,14 @@ namespace IBM.Watson.DeveloperCloud.Services.Dialog.v1
         /// <param name="dialogId">The ID of the dialog to delete.</param>
         /// <param name="callback">The callback to invoke on success or failure.</param>
         /// <returns>Returns true if request is sent.</returns>
-        public bool DeleteDialog( string dialogId, OnDialogCallback callback )
+        public bool DeleteDialog(string dialogId, OnDialogCallback callback)
         {
             if (string.IsNullOrEmpty(dialogId))
                 throw new ArgumentNullException("dialogId");
             if (callback == null)
                 throw new ArgumentNullException("callback");
 
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/v1/dialogs/" + dialogId );
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/v1/dialogs/" + dialogId);
             if (connector == null)
                 return false;
 
@@ -359,7 +359,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Dialog.v1
         private void OnDeleteDialogResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
             if (((DeleteDialogReq)req).Callback != null)
-                ((DeleteDialogReq)req).Callback( resp.Success );
+                ((DeleteDialogReq)req).Callback(resp.Success);
         }
         #endregion
 
@@ -373,8 +373,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Dialog.v1
         /// <param name="conversation_id">The conversation ID to use, if 0 then a new conversation will be started.</param>
         /// <param name="client_id">The client ID of the user.</param>
         /// <returns>Returns true if the request was submitted to the back-end.</returns>
-        public bool Converse( string dialogId, string input, OnConverse callback, 
-            int conversation_id = 0, int client_id = 0 )
+        public bool Converse(string dialogId, string input, OnConverse callback,
+            int conversation_id = 0, int client_id = 0)
         {
             if (string.IsNullOrEmpty(dialogId))
                 throw new ArgumentNullException("dialogId");
@@ -392,11 +392,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Dialog.v1
             req.Callback = callback;
             req.OnResponse = ConverseResp;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
-            req.Forms["input"] = new RESTConnector.Form( input );
-            if ( conversation_id != 0 )
-                req.Forms["conversation_id"] = new RESTConnector.Form( conversation_id );
-            if ( client_id != 0 )
-                req.Forms["client_id"] = new RESTConnector.Form( client_id );
+            req.Forms["input"] = new RESTConnector.Form(input);
+            if (conversation_id != 0)
+                req.Forms["conversation_id"] = new RESTConnector.Form(conversation_id);
+            if (client_id != 0)
+                req.Forms["client_id"] = new RESTConnector.Form(client_id);
 
             return connector.Send(req);
         }
@@ -423,7 +423,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Dialog.v1
                 }
                 catch (Exception e)
                 {
-					Log.Error("Natural Language Classifier", "ConverseResp Exception: {0}", e.ToString());
+                    Log.Error("Natural Language Classifier", "ConverseResp Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -460,58 +460,59 @@ namespace IBM.Watson.DeveloperCloud.Services.Dialog.v1
             private ServiceStatus m_Callback = null;
             private int m_DialogCount = 0;
 
-            public CheckServiceStatus( Dialog service, ServiceStatus callback )
+            public CheckServiceStatus(Dialog service, ServiceStatus callback)
             {
                 m_Service = service;
                 m_Callback = callback;
 
-                string customServiceID = Config.Instance.GetVariableValue(SERVICE_ID+"_ID");
+                string customServiceID = Config.Instance.GetVariableValue(SERVICE_ID + "_ID");
 
                 //If custom classifierID is defined then we are using it to check the service health
-                if(!string.IsNullOrEmpty(customServiceID)){
+                if (!string.IsNullOrEmpty(customServiceID))
+                {
 
-                    if (! m_Service.Converse( customServiceID, "Hello", OnDialog ) )
-                        OnFailure( "Failed to invoke Converse()." );
+                    if (!m_Service.Converse(customServiceID, "Hello", OnDialog))
+                        OnFailure("Failed to invoke Converse().");
                     else
                         m_DialogCount += 1;
                 }
                 else
-				{
-                    if (! m_Service.GetDialogs( OnGetDialogs ) )
-                        OnFailure( "Failed to invoke GetDialogs()." );
+                {
+                    if (!m_Service.GetDialogs(OnGetDialogs))
+                        OnFailure("Failed to invoke GetDialogs().");
                 }
 
-               
+
             }
 
-            private void OnGetDialogs( Dialogs dialogs )
+            private void OnGetDialogs(Dialogs dialogs)
             {
-                if ( m_Callback != null )
+                if (m_Callback != null)
                 {
-                    foreach( var dialog in dialogs.dialogs )
+                    foreach (var dialog in dialogs.dialogs)
                     {
-                        if (! m_Service.Converse( dialog.dialog_id, "Hello", OnDialog ) )
-                            OnFailure( "Failed to invoke Converse()." );
+                        if (!m_Service.Converse(dialog.dialog_id, "Hello", OnDialog))
+                            OnFailure("Failed to invoke Converse().");
                         else
                             m_DialogCount += 1;
                     }
                 }
                 else
-                    OnFailure( "GetDialogs() failed." );
+                    OnFailure("GetDialogs() failed.");
             }
 
-            private void OnDialog( ConverseResponse resp )
+            private void OnDialog(ConverseResponse resp)
             {
-                if ( m_DialogCount > 0 )
+                if (m_DialogCount > 0)
                 {
                     m_DialogCount -= 1;
-                    if ( resp != null )
+                    if (resp != null)
                     {
-                        if ( m_DialogCount == 0 && m_Callback != null && m_Callback.Target != null)
-                            m_Callback( SERVICE_ID, true );
+                        if (m_DialogCount == 0 && m_Callback != null && m_Callback.Target != null)
+                            m_Callback(SERVICE_ID, true);
                     }
                     else
-                        OnFailure( "ConverseResponse is null." );
+                        OnFailure("ConverseResponse is null.");
                 }
             }
 

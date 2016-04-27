@@ -43,7 +43,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             m_FpsAccumulator++;
             if (Time.realtimeSinceStartup > m_FpsNextPeriod)
             {
-                m_CurrentFps = (int) (m_FpsAccumulator/FPS_INTERVAL);
+                m_CurrentFps = (int)(m_FpsAccumulator / FPS_INTERVAL);
                 m_FpsAccumulator = 0;
                 m_FpsNextPeriod += FPS_INTERVAL;
                 m_Text.text = string.Format(DISPLAY, m_CurrentFps);

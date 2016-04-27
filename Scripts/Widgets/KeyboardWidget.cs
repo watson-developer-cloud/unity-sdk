@@ -54,7 +54,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         {
             foreach (var mapping in m_Mappings)
             {
-                KeyEventManager.Instance.RegisterKeyEvent(mapping.m_Key, mapping.m_Modifiers, mapping.m_Event );
+                KeyEventManager.Instance.RegisterKeyEvent(mapping.m_Key, mapping.m_Modifiers, mapping.m_Event);
             }
         }
 
@@ -67,5 +67,4 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         }
         #endregion
     }
-
 }

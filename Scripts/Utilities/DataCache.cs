@@ -41,9 +41,9 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             public string Path { get; set; }
             public string Id { get; set; }
             public DateTime Time { get; set; }
-            public byte [] Data { get; set; }
+            public byte[] Data { get; set; }
         };
-        private Dictionary<string, CacheItem> m_Cache = new Dictionary<string,CacheItem>();
+        private Dictionary<string, CacheItem> m_Cache = new Dictionary<string, CacheItem>();
         #endregion
 
         /// <summary>
@@ -52,9 +52,9 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// <param name="cacheName">The name of the cache.</param>
         /// <param name="maxCacheSize">Maximum cache size in bytes.</param>
         /// <param name="maxCacheAge">Maximum age of a cache item in hours.</param>
-        public DataCache(string cacheName, long maxCacheSize = 1024 * 1024 * 50, double maxCacheAge = 24 * 7 )
+        public DataCache(string cacheName, long maxCacheSize = 1024 * 1024 * 50, double maxCacheAge = 24 * 7)
         {
-            Initialize(cacheName,maxCacheSize,maxCacheAge);
+            Initialize(cacheName, maxCacheSize, maxCacheAge);
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// <param name="cacheName">The name of the cache.</param>
         /// <param name="maxCacheSize">Maximum cache size in bytes.</param>
         /// <param name="maxCacheAge">Maximum age of a cache item in hours.</param>
-        public void Initialize(string cacheName, long maxCacheSize, double maxCacheAge )
+        public void Initialize(string cacheName, long maxCacheSize, double maxCacheAge)
         {
             if (string.IsNullOrEmpty(cacheName))
                 throw new ArgumentNullException("cacheName");
@@ -72,7 +72,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             m_MaxCacheSize = maxCacheSize;
             m_MaxCacheAge = maxCacheAge;
 
-			m_CachePath = Application.persistentDataPath + Constants.Path.CACHE_FOLDER + "/" + cacheName + "/";
+            m_CachePath = Application.persistentDataPath + Constants.Path.CACHE_FOLDER + "/" + cacheName + "/";
             if (!Directory.Exists(m_CachePath))
                 Directory.CreateDirectory(m_CachePath);
 
@@ -80,7 +80,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             {
                 DateTime lastWrite = File.GetLastAccessTime(f);
                 double age = (DateTime.Now - lastWrite).TotalHours;
-                if ( age < m_MaxCacheAge )
+                if (age < m_MaxCacheAge)
                 {
                     CacheItem item = new CacheItem();
                     item.Path = f;
@@ -93,8 +93,8 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                 }
                 else
                 {
-                    Log.Debug( "DataCache", "Removing aged cache item {0}", f );
-                    File.Delete( f );
+                    Log.Debug("DataCache", "Removing aged cache item {0}", f);
+                    File.Delete(f);
                 }
             }
         }
@@ -106,7 +106,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// <returns>The cached data, or null if not found.</returns>
         public byte[] Find(string id)
         {
-            if(!string.IsNullOrEmpty(id))
+            if (!string.IsNullOrEmpty(id))
             {
                 id = id.Replace('/', '_');
 
@@ -115,7 +115,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                 {
                     item.Time = DateTime.Now;
 
-                    File.SetLastWriteTime( item.Path,  item.Time );
+                    File.SetLastWriteTime(item.Path, item.Time);
 
                     if (item.Data == null)
                     {
@@ -133,7 +133,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         {
             bool isCached = false;
 
-            if(!string.IsNullOrEmpty(id))
+            if (!string.IsNullOrEmpty(id))
             {
                 id = id.Replace('/', '_');
 
@@ -180,7 +180,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             }
             else
             {
-                Log.Error( "DataCache", "Empty data came to the cache, couldn't cache any null data" );
+                Log.Error("DataCache", "Empty data came to the cache, couldn't cache any null data");
             }
         }
 
@@ -188,23 +188,23 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// Flush a specific item from the cache.
         /// </summary>
         /// <param name="id">The ID of the object to flush.</param>
-        public void Flush( string id )
+        public void Flush(string id)
         {
             id = id.Replace('/', '_');
 
             CacheItem item = null;
-            if ( m_Cache.TryGetValue( id, out item ) )
+            if (m_Cache.TryGetValue(id, out item))
             {
-                Log.Debug( "DataCache", "Flushing {0} from cache.", item.Path );
+                Log.Debug("DataCache", "Flushing {0} from cache.", item.Path);
 
-                if(item.Data != null)
+                if (item.Data != null)
                     m_CurrentCacheSize -= item.Data.Length;
                 else
                     m_CurrentCacheSize -= (new FileInfo(item.Path)).Length;
-                
-                File.Delete( item.Path );
 
-                m_Cache.Remove( id );
+                File.Delete(item.Path);
+
+                m_Cache.Remove(id);
             }
         }
 
@@ -214,15 +214,15 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         public void FlushAged()
         {
             List<CacheItem> flush = new List<CacheItem>();
-            foreach( var kp in m_Cache )
+            foreach (var kp in m_Cache)
             {
                 double age = (DateTime.Now - kp.Value.Time).TotalHours;
-                if ( age > m_MaxCacheAge )
-                    flush.Add( kp.Value );
+                if (age > m_MaxCacheAge)
+                    flush.Add(kp.Value);
             }
 
-            foreach( var item in flush )
-                Flush( item.Id );
+            foreach (var item in flush)
+                Flush(item.Id);
         }
 
         /// <summary>
@@ -231,9 +231,9 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         public void FlushOldest()
         {
             CacheItem oldest = null;
-            foreach( var kp in m_Cache )
+            foreach (var kp in m_Cache)
             {
-                if (oldest == null || kp.Value.Time < oldest.Time )
+                if (oldest == null || kp.Value.Time < oldest.Time)
                     oldest = kp.Value;
             }
 
@@ -248,8 +248,8 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// </summary>
         public void Flush()
         {
-            foreach( var kp in m_Cache )
-                File.Delete( kp.Value.Path );
+            foreach (var kp in m_Cache)
+                File.Delete(kp.Value.Path);
             m_Cache.Clear();
         }
     }

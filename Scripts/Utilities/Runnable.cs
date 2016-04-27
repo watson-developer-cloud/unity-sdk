@@ -64,9 +64,9 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// </summary>
         /// <param name="id">The ID returned by Run().</param>
         /// <returns>Returns true if the routine is still active.</returns>
-        static public bool IsRunning( int id )
+        static public bool IsRunning(int id)
         {
-            return Instance.m_Routines.ContainsKey( id );
+            return Instance.m_Routines.ContainsKey(id);
         }
 
 #if UNITY_EDITOR
@@ -77,7 +77,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// </summary>
         public static void EnableRunnableInEditor()
         {
-            if (! sm_EditorRunnable )
+            if (!sm_EditorRunnable)
             {
                 sm_EditorRunnable = true;
                 UnityEditor.EditorApplication.update += UpdateRunnable;
@@ -85,7 +85,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         }
         static void UpdateRunnable()
         {
-            if (! Application.isPlaying )
+            if (!Application.isPlaying)
                 Instance.UpdateRoutines();
         }
 
@@ -155,14 +155,14 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// </summary>
         public void UpdateRoutines()
         {
-            if ( m_Routines.Count > 0 )
+            if (m_Routines.Count > 0)
             {
                 // we are not in play mode, so we must manually update our co-routines ourselves
                 List<Routine> routines = new List<Routine>();
-                foreach( var kp in m_Routines )
-                    routines.Add( kp.Value );
+                foreach (var kp in m_Routines)
+                    routines.Add(kp.Value);
 
-                foreach( var r in routines )
+                foreach (var r in routines)
                     r.MoveNext();
             }
         }
