@@ -42,7 +42,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
         /// Callback for a message received on the connector.
         /// </summary>
         /// <param name="resp">The message object.</param>
-        public delegate void MessageEvent( Message resp);
+        public delegate void MessageEvent(Message resp);
 
         /// <summary>
         /// ConnectionState enumeration describes the current state of this connector.
@@ -71,7 +71,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
         /// The base abstract class for a Message that can be sent/received by this class.
         /// </summary>
         public abstract class Message
-        {};
+        { };
 
         /// <summary>
         /// BinaryMessage for sending raw binary data.
@@ -103,7 +103,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
             /// Constructor for a TextMessage object.
             /// </summary>
             /// <param name="text">The string of the text to send as a message.</param>
-            public TextMessage( string text )
+            public TextMessage(string text)
             {
                 Text = text;
             }
@@ -133,7 +133,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
         /// <summary>
         /// Headers to pass when making the socket.
         /// </summary>
-        public Dictionary<string,string> Headers { get; set; }
+        public Dictionary<string, string> Headers { get; set; }
         /// <summary>
         /// Credentials used to authenticate with the server.
         /// </summary>
@@ -159,7 +159,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
         /// </summary>
         /// <param name="URL">The URL to fix up.</param>
         /// <returns>The fixed up URL.</returns>
-        public static string FixupURL( string URL )
+        public static string FixupURL(string URL)
         {
             if (URL.StartsWith("http://"))
                 URL = URL.Replace("http://", "ws://");
@@ -176,20 +176,20 @@ namespace IBM.Watson.DeveloperCloud.Connection
         /// <param name="function">The name of the function to connect.</param>
         /// <param name="args">Additional function arguments.</param>
         /// <returns>The WSConnector object or null or error.</returns>
-        public static WSConnector CreateConnector( string serviceID, string function, string args )
+        public static WSConnector CreateConnector(string serviceID, string function, string args)
         {
             WSConnector connector = null;
             Config cfg = Config.Instance;
-            Config.CredentialInfo cred = cfg.FindCredentials( serviceID );
+            Config.CredentialInfo cred = cfg.FindCredentials(serviceID);
             if (cred == null)
             {
-                Log.Error( "Config", "Failed to find BLueMix Credentials for service {0}.", serviceID );
+                Log.Error("Config", "Failed to find BLueMix Credentials for service {0}.", serviceID);
                 return null;
             }
 
             connector = new WSConnector();
-            connector.URL = FixupURL( cred.m_URL ) + function + args;
-            connector.Authentication = new Credentials( cred.m_User, cred.m_Password );
+            connector.URL = FixupURL(cred.m_URL) + function + args;
+            connector.Authentication = new Credentials(cred.m_User, cred.m_Password);
 
             return connector;
         }
@@ -200,34 +200,34 @@ namespace IBM.Watson.DeveloperCloud.Connection
         /// </summary>
         /// <param name="msg">This is either a BinaryMessage or TextMessage object.</param>
         /// <param name="queue">If true, then this function will not signal or start the sending thread.</param>
-        public void Send(Message msg, bool queue = false )
+        public void Send(Message msg, bool queue = false)
         {
 #if ENABLE_MESSAGE_DEBUGGING
             Log.Debug( "WSConnector", "Sending {0} message: {1}",
                 msg is TextMessage ? "TextMessage" : "BinaryMessage", 
                 msg is TextMessage ? ((TextMessage)msg).Text : ((BinaryMessage)msg).Data.Length.ToString() + " bytes" );
 #endif
-            lock( m_SendQueue )
+            lock (m_SendQueue)
             {
                 m_SendQueue.Enqueue(msg);
-                if (! queue )
+                if (!queue)
                     m_SendEvent.Set();
             }
 
-            if (!queue && m_SendThread == null )
+            if (!queue && m_SendThread == null)
             {
                 m_ConnectionState = ConnectionState.CONNECTING;
 
                 // start an actual thread for working with the WebSocket, otherwise
                 // we'll get errors from deep inside the library code.
-                m_SendThread = new Thread( SendMessages );
+                m_SendThread = new Thread(SendMessages);
                 m_SendThread.Start();
             }
 
             // Run our receiver as a co-routine so it can invoke functions 
             // on the main thread.
-            if ( m_ReceiverRoutine == 0 )
-                m_ReceiverRoutine = Runnable.Run( ProcessReceiveQueue() ); 
+            if (m_ReceiverRoutine == 0)
+                m_ReceiverRoutine = Runnable.Run(ProcessReceiveQueue());
         }
 
         /// <summary>
@@ -243,18 +243,18 @@ namespace IBM.Watson.DeveloperCloud.Connection
         #region Private Functions
         private IEnumerator ProcessReceiveQueue()
         {
-            while( m_ConnectionState == ConnectionState.CONNECTED 
-                || m_ConnectionState == ConnectionState.CONNECTING )
+            while (m_ConnectionState == ConnectionState.CONNECTED
+                || m_ConnectionState == ConnectionState.CONNECTING)
             {
                 yield return null;
 
                 // check for a signal with a timeout of 0, this it just a quicker way to know if we have messages
                 // without having to lock the m_ReceiveQueue object.
-                if ( m_ReceiveEvent.WaitOne( 0 ) )
+                if (m_ReceiveEvent.WaitOne(0))
                 {
-                    lock( m_ReceiveQueue )
+                    lock (m_ReceiveQueue)
                     {
-                        while( m_ReceiveQueue.Count > 0 )
+                        while (m_ReceiveQueue.Count > 0)
                         {
                             Message msg = m_ReceiveQueue.Dequeue();
 #if ENABLE_MESSAGE_DEBUGGING
@@ -262,14 +262,14 @@ namespace IBM.Watson.DeveloperCloud.Connection
                                 msg is TextMessage ? "TextMessage" : "BinaryMessage", 
                                 msg is TextMessage ? ((TextMessage)msg).Text : ((BinaryMessage)msg).Data.Length.ToString() + " bytes" );
 #endif 
-                            if ( OnMessage != null )
-                                OnMessage( msg );
+                            if (OnMessage != null)
+                                OnMessage(msg);
                         }
                     }
                 }
             }
-            if ( OnClose != null )
-                OnClose( this );
+            if (OnClose != null)
+                OnClose(this);
         }
         #endregion
 
@@ -278,13 +278,13 @@ namespace IBM.Watson.DeveloperCloud.Connection
         private void SendMessages()
         {
             try
-			{
+            {
                 WebSocket ws = null;
 
                 ws = new WebSocket(URL);
-                if ( Headers != null )
+                if (Headers != null)
                     ws.Headers = Headers;
-                if ( Authentication != null )
+                if (Authentication != null)
                     ws.SetCredentials(Authentication.User, Authentication.Password, true);
                 ws.OnOpen += OnWSOpen;
                 ws.OnClose += OnWSClose;
@@ -294,30 +294,30 @@ namespace IBM.Watson.DeveloperCloud.Connection
 
                 while (m_ConnectionState == ConnectionState.CONNECTED)
                 {
-                    m_SendEvent.WaitOne( 500 );
+                    m_SendEvent.WaitOne(500);
 
                     Message msg = null;
-                    lock( m_SendQueue )
+                    lock (m_SendQueue)
                     {
                         if (m_SendQueue.Count > 0)
                             msg = m_SendQueue.Dequeue();
                     }
 
-                    if (msg == null )
+                    if (msg == null)
                         continue;
 
-                    if ( msg is TextMessage )
-                        ws.Send( ((TextMessage)msg).Text );
-                    else if ( msg is BinaryMessage )
-                        ws.Send( ((BinaryMessage)msg).Data );
+                    if (msg is TextMessage)
+                        ws.Send(((TextMessage)msg).Text);
+                    else if (msg is BinaryMessage)
+                        ws.Send(((BinaryMessage)msg).Data);
                 }
 
                 ws.Close();
             }
-            catch( System.Exception e )
+            catch (System.Exception e)
             {
                 m_ConnectionState = ConnectionState.DISCONNECTED;
-                Log.Error( "WSConnector", "Caught WebSocket exception: {0}", e.ToString() );
+                Log.Error("WSConnector", "Caught WebSocket exception: {0}", e.ToString());
             }
         }
 
@@ -334,13 +334,13 @@ namespace IBM.Watson.DeveloperCloud.Connection
         private void OnWSMessage(object sender, MessageEventArgs e)
         {
             Message msg = null;
-            if ( e.Type == Opcode.Text )
-                msg = new TextMessage( e.Data );
-            else if ( e.Type == Opcode.Binary )
-                msg = new BinaryMessage( e.RawData );
+            if (e.Type == Opcode.Text)
+                msg = new TextMessage(e.Data);
+            else if (e.Type == Opcode.Binary)
+                msg = new BinaryMessage(e.RawData);
 
-            lock( m_ReceiveQueue )
-                m_ReceiveQueue.Enqueue( msg );
+            lock (m_ReceiveQueue)
+                m_ReceiveQueue.Enqueue(msg);
             m_ReceiveEvent.Set();
         }
 

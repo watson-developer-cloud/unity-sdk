@@ -33,20 +33,20 @@ namespace IBM.Watson.DeveloperCloud.Debug
 
         void Start()
         {
-           	//KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CHANGE_QUALITY, KeyModifiers.NONE, OnNextQualityLevel ); 
-            DebugConsole.Instance.RegisterDebugInfo( "QUALITY", OnQualityDebugInfo );           
+            //KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CHANGE_QUALITY, KeyModifiers.NONE, OnNextQualityLevel ); 
+            DebugConsole.Instance.RegisterDebugInfo("QUALITY", OnQualityDebugInfo);
         }
-        
+
         /// <summary>
         /// Event handler to move to the next quality level.
         /// </summary>
         public void OnNextQualityLevel()
         {
-            QualitySettings.SetQualityLevel( (QualitySettings.GetQualityLevel() + 1) % QualitySettings.names.Length, true );
+            QualitySettings.SetQualityLevel((QualitySettings.GetQualityLevel() + 1) % QualitySettings.names.Length, true);
         }
         private string OnQualityDebugInfo()
         {
-            return QualitySettings.names[ QualitySettings.GetQualityLevel() ];
+            return QualitySettings.names[QualitySettings.GetQualityLevel()];
         }
     }
 }

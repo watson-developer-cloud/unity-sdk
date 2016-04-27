@@ -30,7 +30,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 	public class EventWidget : Widget
     {
         #region Widget interface
-         /// <exclude />
+        /// <exclude />
         protected override string GetName()
         {
             return "Event";
@@ -54,7 +54,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         {
             foreach (var mapping in m_Mappings)
             {
-               EventManager.Instance.RegisterEventReceiver(mapping.m_Event, mapping.m_Callback.ResolveDelegate() as EventManager.OnReceiveEvent);
+                EventManager.Instance.RegisterEventReceiver(mapping.m_Event, mapping.m_Callback.ResolveDelegate() as EventManager.OnReceiveEvent);
             }
         }
 

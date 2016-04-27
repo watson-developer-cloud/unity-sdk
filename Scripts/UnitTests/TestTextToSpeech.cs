@@ -25,51 +25,51 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 {
     public class TestTextToSpeech : UnitTest
     {
-		private TextToSpeech m_TextToSpeech = new TextToSpeech();
+        private TextToSpeech m_TextToSpeech = new TextToSpeech();
         private bool m_GetTested = false;
         private bool m_PostTested = false;
-                
+
         public override IEnumerator RunTest()
         {
-            if ( Config.Instance.FindCredentials( m_TextToSpeech.GetServiceID() ) == null )
+            if (Config.Instance.FindCredentials(m_TextToSpeech.GetServiceID()) == null)
                 yield break;
 
-            m_TextToSpeech.ToSpeech( "Hello World using GET", OnSpeechGET );                  // Test GET
+            m_TextToSpeech.ToSpeech("Hello World using GET", OnSpeechGET);                  // Test GET
             while (!m_GetTested)
                 yield return null;
 
-            m_TextToSpeech.ToSpeech( "Hello World using POST", OnSpeechPOST, true );            // Test POST
+            m_TextToSpeech.ToSpeech("Hello World using POST", OnSpeechPOST, true);            // Test POST
             while (!m_PostTested)
                 yield return null;
 
             yield break;
         }
 
-        private void OnSpeechGET( AudioClip clip )
+        private void OnSpeechGET(AudioClip clip)
         {
-            Log.Debug( "TestTestToSpeech", "OnSpeechGET invoked." );
+            Log.Debug("TestTestToSpeech", "OnSpeechGET invoked.");
 
-            Test( clip != null );
+            Test(clip != null);
             m_GetTested = true;
 
-            PlayClip( clip );
+            PlayClip(clip);
         }
 
-        private void OnSpeechPOST( AudioClip clip )
+        private void OnSpeechPOST(AudioClip clip)
         {
-            Log.Debug( "TestTestToSpeech", "OnSpechPOST invoked." );
+            Log.Debug("TestTestToSpeech", "OnSpechPOST invoked.");
 
-            Test( clip != null );
+            Test(clip != null);
             m_PostTested = true;
 
-            PlayClip( clip );
+            PlayClip(clip);
         }
 
-        private void PlayClip( AudioClip clip )
+        private void PlayClip(AudioClip clip)
         {
-            if ( Application.isPlaying && clip != null )
+            if (Application.isPlaying && clip != null)
             {
-                GameObject audioObject = new GameObject( "AudioObject" );
+                GameObject audioObject = new GameObject("AudioObject");
                 AudioSource source = audioObject.AddComponent<AudioSource>();
                 source.spatialBlend = 0.0f;     // 2D sound
                 source.loop = false;            // do not loop
@@ -77,7 +77,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 source.Play();
 
                 // automatically destroy the object after the sound has played..
-                GameObject.Destroy( audioObject, clip.length );
+                GameObject.Destroy(audioObject, clip.length);
             }
         }
     }

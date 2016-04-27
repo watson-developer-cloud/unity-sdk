@@ -51,7 +51,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
         /// This delegate is invoked to provide download progress.
         /// </summary>
         /// <param name="progress"></param>
-        public delegate void ProgressEvent( float progress );
+        public delegate void ProgressEvent(float progress);
         /// <summary>
         /// The class is returned by a Request object containing the response to a request made
         /// by the client.
@@ -87,7 +87,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
             /// Make a multi-part form object from a string.
             /// </summary>
             /// <param name="s">The string data.</param>
-            public Form( string s )
+            public Form(string s)
             {
                 IsBinary = false;
                 BoxedObject = s;
@@ -96,7 +96,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
             /// Make a multi-part form object from an int.
             /// </summary>
             /// <param name="n">The int data.</param>
-            public Form( int n )
+            public Form(int n)
             {
                 IsBinary = false;
                 BoxedObject = n;
@@ -108,7 +108,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
             /// <param name="contents">The binary data.</param>
             /// <param name="fileName">The filename of the binary data.</param>
             /// <param name="mimeType">The mime type of the data.</param>
-            public Form( byte [] contents, string fileName = null, string mimeType = null )
+            public Form(byte[] contents, string fileName = null, string mimeType = null)
             {
                 IsBinary = true;
                 Contents = contents;
@@ -127,7 +127,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
             /// <summary>
             /// If IsBinary is true, then this will contain the binary data.
             /// </summary>
-            public byte [] Contents { get; set; }
+            public byte[] Contents { get; set; }
             /// <summary>
             /// The filename of the binary data.
             /// </summary>
@@ -176,15 +176,15 @@ namespace IBM.Watson.DeveloperCloud.Connection
             /// <summary>
             /// Additional headers to provide in the request.
             /// </summary>
-            public Dictionary<string,string> Headers { get; set; }
+            public Dictionary<string, string> Headers { get; set; }
             /// <summary>
             /// The data to send through the connection. Do not use Forms if set.
             /// </summary>
-            public byte [] Send { get; set; }
+            public byte[] Send { get; set; }
             /// <summary>
             /// Multi-part form data that needs to be sent. Do not use Send if set.
             /// </summary>
-            public Dictionary<string,Form> Forms { get; set; }
+            public Dictionary<string, Form> Forms { get; set; }
             /// <summary>
             /// The callback that is invoked when a response is received.
             /// </summary>
@@ -211,19 +211,19 @@ namespace IBM.Watson.DeveloperCloud.Connection
         /// Base URL for REST requests.
         /// </summary>
         public string URL { get; set; }
-         /// <summary>
+        /// <summary>
         /// Credentials used to authenticate with the server.
         /// </summary>
         public Credentials Authentication { get; set; }
         /// <summary>
         /// Additional headers to attach to all requests.
         /// </summary>
-        public Dictionary<string,string> Headers { get; set; }
+        public Dictionary<string, string> Headers { get; set; }
         #endregion
 
         #region Private Data
         //! Dictionary of connectors by service & function.
-        private static Dictionary<string,RESTConnector > sm_Connectors = new Dictionary<string, RESTConnector>();
+        private static Dictionary<string, RESTConnector> sm_Connectors = new Dictionary<string, RESTConnector>();
         #endregion
 
         /// <summary>
@@ -233,27 +233,27 @@ namespace IBM.Watson.DeveloperCloud.Connection
         /// <param name="function">The name of the function.</param>
         /// <param name="useCache">If true, then the connections will use a static cache.</param>
         /// <returns>Returns a RESTConnector object or null on error.</returns>
-        public static RESTConnector GetConnector( string serviceID, string function, bool useCache = true )
+        public static RESTConnector GetConnector(string serviceID, string function, bool useCache = true)
         {
             RESTConnector connector = null;
 
             string connectorID = serviceID + function;
-            if ( useCache && sm_Connectors.TryGetValue( connectorID, out connector ) )
+            if (useCache && sm_Connectors.TryGetValue(connectorID, out connector))
                 return connector;
 
             Config cfg = Config.Instance;
-            Config.CredentialInfo cred = cfg.FindCredentials( serviceID );
+            Config.CredentialInfo cred = cfg.FindCredentials(serviceID);
             if (cred == null)
             {
-                Log.Error( "Config", "Failed to find credentials for service {0}.", serviceID );
+                Log.Error("Config", "Failed to find credentials for service {0}.", serviceID);
                 return null;
             }
 
             connector = new RESTConnector();
             connector.URL = cred.m_URL + function;
-            connector.Authentication = new Credentials( cred.m_User, cred.m_Password );
-            if ( useCache )
-                sm_Connectors[ connectorID ] = connector;
+            connector.Authentication = new Credentials(cred.m_User, cred.m_Password);
+            if (useCache)
+                sm_Connectors[connectorID] = connector;
 
             return connector;
         }
@@ -276,14 +276,14 @@ namespace IBM.Watson.DeveloperCloud.Connection
         /// <returns>true is returned on success, false is returned if the Request can't be sent.</returns>
         public bool Send(Request request)
         {
-            if ( request == null )
+            if (request == null)
                 throw new ArgumentNullException("request");
 
             m_Requests.Enqueue(request);
 
             // if we are not already running a co-routine to send the Requests
             // then start one at this point.
-            if ( m_ActiveConnections < Config.Instance.MaxRestConnections )
+            if (m_ActiveConnections < Config.Instance.MaxRestConnections)
             {
                 // This co-routine will increment m_ActiveConnections then yield back to us so
                 // we can return from the Send() as quickly as possible.
@@ -302,20 +302,20 @@ namespace IBM.Watson.DeveloperCloud.Connection
         #region Private Functions
         private void AddHeaders(Dictionary<string, string> headers)
         {
-            if ( Authentication != null )
+            if (Authentication != null)
             {
-                if ( headers == null )
+                if (headers == null)
                     throw new ArgumentNullException("headers");
-                headers.Add("Authorization", Authentication.CreateAuthorization() );
+                headers.Add("Authorization", Authentication.CreateAuthorization());
             }
 
-            if ( Headers != null )
+            if (Headers != null)
             {
-                foreach( var kp in Headers )
-                    headers[ kp.Key ] = kp.Value;
+                foreach (var kp in Headers)
+                    headers[kp.Key] = kp.Value;
             }
 
-//			headers.Add("User-Agent", Constants.String.VERSION);
+            headers.Add("User-Agent", Constants.String.VERSION);
         }
 
         private IEnumerator ProcessRequestQueue()
@@ -327,10 +327,10 @@ namespace IBM.Watson.DeveloperCloud.Connection
             while (m_Requests.Count > 0)
             {
                 Request req = m_Requests.Dequeue();
-                if ( req.Cancel )
+                if (req.Cancel)
                     continue;
                 string url = URL;
-                if (! string.IsNullOrEmpty( req.Function ) )
+                if (!string.IsNullOrEmpty(req.Function))
                     url += req.Function;
 
                 StringBuilder args = null;
@@ -343,12 +343,12 @@ namespace IBM.Watson.DeveloperCloud.Connection
                         value = WWW.EscapeURL((string)value);             // escape the value
                     else if (value is byte[])
                         value = Convert.ToBase64String((byte[])value);    // convert any byte data into base64 string
-                    else if (value is Int32 || value is Int64 || value is UInt32 || value is UInt64 )
+                    else if (value is Int32 || value is Int64 || value is UInt32 || value is UInt64)
                         value = value.ToString();
-                    else if ( value != null )
-                        Log.Warning( "RESTConnector", "Unsupported parameter value type {0}", value.GetType().Name );
+                    else if (value != null)
+                        Log.Warning("RESTConnector", "Unsupported parameter value type {0}", value.GetType().Name);
                     else
-                        Log.Error( "RESTConnector", "Parameter {0} value is null", key );
+                        Log.Error("RESTConnector", "Parameter {0} value is null", key);
 
                     if (args == null)
                         args = new StringBuilder();
@@ -361,97 +361,98 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 if (args != null && args.Length > 0)
                     url += "?" + args.ToString();
 
-                AddHeaders( req.Headers );
+                AddHeaders(req.Headers);
 
                 Response resp = new Response();
 
                 DateTime startTime = DateTime.Now;
-                if (! req.Delete )
+                if (!req.Delete)
                 {
                     WWW www = null;
-                    if ( req.Forms != null )
+                    if (req.Forms != null)
                     {
-                        if ( req.Send != null )
-                            Log.Warning( "RESTConnector", "Do not use both Send & Form fields in a Request object." );
+                        if (req.Send != null)
+                            Log.Warning("RESTConnector", "Do not use both Send & Form fields in a Request object.");
 
                         WWWForm form = new WWWForm();
-                        try {
-                            foreach( var kp in req.Forms )
-                            {
-                                if ( kp.Value.IsBinary )
-                                    form.AddBinaryData( kp.Key, kp.Value.Contents, kp.Value.FileName, kp.Value.MimeType );
-                                else if ( kp.Value.BoxedObject is string )
-                                    form.AddField( kp.Key, (string)kp.Value.BoxedObject );
-                                else if ( kp.Value.BoxedObject is int )
-                                    form.AddField( kp.Key, (int)kp.Value.BoxedObject );
-                                else if ( kp.Value.BoxedObject != null )
-                                    Log.Warning( "RESTCOnnector", "Unsupported form field type {0}", kp.Value.BoxedObject.GetType().ToString() );
-                            }
-                            foreach( var kp in form.headers )
-                                req.Headers[ kp.Key ] = kp.Value;
-                        }
-                        catch( Exception e )
+                        try
                         {
-                            Log.Error( "RESTConnector", "Exception when initializing WWWForm: {0}", e.ToString() );
+                            foreach (var kp in req.Forms)
+                            {
+                                if (kp.Value.IsBinary)
+                                    form.AddBinaryData(kp.Key, kp.Value.Contents, kp.Value.FileName, kp.Value.MimeType);
+                                else if (kp.Value.BoxedObject is string)
+                                    form.AddField(kp.Key, (string)kp.Value.BoxedObject);
+                                else if (kp.Value.BoxedObject is int)
+                                    form.AddField(kp.Key, (int)kp.Value.BoxedObject);
+                                else if (kp.Value.BoxedObject != null)
+                                    Log.Warning("RESTCOnnector", "Unsupported form field type {0}", kp.Value.BoxedObject.GetType().ToString());
+                            }
+                            foreach (var kp in form.headers)
+                                req.Headers[kp.Key] = kp.Value;
                         }
-                        www = new WWW( url, form.data, req.Headers );
+                        catch (Exception e)
+                        {
+                            Log.Error("RESTConnector", "Exception when initializing WWWForm: {0}", e.ToString());
+                        }
+                        www = new WWW(url, form.data, req.Headers);
                     }
                     else if (req.Send == null)
-                        www = new WWW( url, null, req.Headers );
-                    else 
-                        www = new WWW( url, req.Send, req.Headers );
+                        www = new WWW(url, null, req.Headers);
+                    else
+                        www = new WWW(url, req.Send, req.Headers);
 
 #if ENABLE_DEBUGGING
-                    Log.Debug( "RESTCOnnector", "URL: {0}", url );
+                    Log.Debug("RESTCOnnector", "URL: {0}", url);
 #endif
 
                     // wait for the request to complete.
-                    float timeout = Mathf.Max( Config.Instance.TimeOut, req.Timeout );
-                    while(! www.isDone )
+                    float timeout = Mathf.Max(Config.Instance.TimeOut, req.Timeout);
+                    while (!www.isDone)
                     {
-                        if ( req.Cancel )
+                        if (req.Cancel)
                             break;
-                        if ( (DateTime.Now - startTime).TotalSeconds > timeout )
+                        if ((DateTime.Now - startTime).TotalSeconds > timeout)
                             break;
-                        if ( req.OnUploadProgress != null )
-                            req.OnUploadProgress( www.uploadProgress );
-                        if ( req.OnDownloadProgress != null )
-                            req.OnDownloadProgress( www.progress );
+                        if (req.OnUploadProgress != null)
+                            req.OnUploadProgress(www.uploadProgress);
+                        if (req.OnDownloadProgress != null)
+                            req.OnDownloadProgress(www.progress);
                         yield return null;
                     }
 
-                    if ( req.Cancel )
+                    if (req.Cancel)
                         continue;
 
                     bool bError = false;
-                    if (! string.IsNullOrEmpty( www.error ) )
+                    if (!string.IsNullOrEmpty(www.error))
                     {
                         int nErrorCode = -1;
                         int nSeperator = www.error.IndexOf(' ');
-                        if ( nSeperator > 0 && int.TryParse( www.error.Substring( 0, nSeperator ).Trim() , out nErrorCode ) )
+                        if (nSeperator > 0 && int.TryParse(www.error.Substring(0, nSeperator).Trim(), out nErrorCode))
                             bError = nErrorCode != 200;
 
-                        if ( bError )
-                            Log.Error( "RESTConnector", "URL: {0}, ErrorCode: {1}, Error: {2}, Response: {3}", url, nErrorCode, www.error, 
-                                string.IsNullOrEmpty( www.text ) ? "" : www.text );
+                        if (bError)
+                            Log.Error("RESTConnector", "URL: {0}, ErrorCode: {1}, Error: {2}, Response: {3}", url, nErrorCode, www.error,
+                                string.IsNullOrEmpty(www.text) ? "" : www.text);
                         else
-                            Log.Warning( "RESTConnector", "URL: {0}, ErrorCode: {1}, Error: {2}, Response: {3}", url, nErrorCode, www.error, 
-                                string.IsNullOrEmpty( www.text ) ? "" : www.text );
+                            Log.Warning("RESTConnector", "URL: {0}, ErrorCode: {1}, Error: {2}, Response: {3}", url, nErrorCode, www.error,
+                                string.IsNullOrEmpty(www.text) ? "" : www.text);
                     }
-                    if (! www.isDone)
+                    if (!www.isDone)
                     {
-                        Log.Error( "RESTConnector", "Request timed out for URL: {0}", url );
+                        Log.Error("RESTConnector", "Request timed out for URL: {0}", url);
                         bError = true;
                     }
-                    if ( !bError && (www.bytes == null || www.bytes.Length == 0) )
+                    if (!bError && (www.bytes == null || www.bytes.Length == 0))
                     {
-                        Log.Warning( "RESTConnector", "No data recevied for URL: {0}", url );
+                        Log.Warning("RESTConnector", "No data recevied for URL: {0}", url);
                         bError = true;
                     }
 
 
                     // generate the Response object now..
-                    if ( !bError )
+                    if (!bError)
                     {
                         resp.Success = true;
                         resp.Data = www.bytes;
@@ -459,38 +460,38 @@ namespace IBM.Watson.DeveloperCloud.Connection
                     else
                     {
                         resp.Success = false;
-                        resp.Error = string.Format( "Request Error.\nURL: {0}\nError: {1}",
-                            url, string.IsNullOrEmpty( www.error ) ? "Timeout" : www.error );
+                        resp.Error = string.Format("Request Error.\nURL: {0}\nError: {1}",
+                            url, string.IsNullOrEmpty(www.error) ? "Timeout" : www.error);
                     }
 
                     resp.ElapsedTime = (float)(DateTime.Now - startTime).TotalSeconds;
 
                     // if the response is over a threshold, then log with status instead of debug
-                    if ( resp.ElapsedTime > LogResponseTime )
-                        Log.Warning( "RESTConnector", "Request {0} completed in {1} seconds.", url, resp.ElapsedTime );
+                    if (resp.ElapsedTime > LogResponseTime)
+                        Log.Warning("RESTConnector", "Request {0} completed in {1} seconds.", url, resp.ElapsedTime);
 
-                    if ( req.OnResponse != null )
-                        req.OnResponse( req, resp );
+                    if (req.OnResponse != null)
+                        req.OnResponse(req, resp);
 
-				    www.Dispose();
+                    www.Dispose();
                 }
                 else
                 {
 #if UNITY_EDITOR
-                    float timeout = Mathf.Max( Config.Instance.TimeOut, req.Timeout );
+                    float timeout = Mathf.Max(Config.Instance.TimeOut, req.Timeout);
 
                     DeleteRequest deleteReq = new DeleteRequest();
-                    deleteReq.Send( url, req.Headers );
-                    while(! deleteReq.IsComplete )
+                    deleteReq.Send(url, req.Headers);
+                    while (!deleteReq.IsComplete)
                     {
-                        if ( req.Cancel )
+                        if (req.Cancel)
                             break;
-                        if ( (DateTime.Now - startTime).TotalSeconds > timeout )
+                        if ((DateTime.Now - startTime).TotalSeconds > timeout)
                             break;
                         yield return null;
                     }
 
-                    if ( req.Cancel )
+                    if (req.Cancel)
                         continue;
 
                     resp.Success = deleteReq.Success;
@@ -499,8 +500,8 @@ namespace IBM.Watson.DeveloperCloud.Connection
                     resp.Success = false;
 #endif
                     resp.ElapsedTime = (float)(DateTime.Now - startTime).TotalSeconds;
-                    if ( req.OnResponse != null )
-                        req.OnResponse( req, resp );
+                    if (req.OnResponse != null)
+                        req.OnResponse(req, resp);
                 }
             }
 
@@ -513,24 +514,24 @@ namespace IBM.Watson.DeveloperCloud.Connection
         private class DeleteRequest
         {
             public string URL { get; set; }
-            public Dictionary<string,string> Headers { get; set; }
+            public Dictionary<string, string> Headers { get; set; }
             public bool IsComplete { get; set; }
             public bool Success { get; set; }
 
-            public bool Send( string url, Dictionary<string,string> headers )
+            public bool Send(string url, Dictionary<string, string> headers)
             {
-                if ( m_Thread != null && m_Thread.IsAlive )
+                if (m_Thread != null && m_Thread.IsAlive)
                     return false;
 
                 URL = url;
                 Headers = new Dictionary<string, string>();
-                foreach( var kp in headers )
-				{
-					if(kp.Key != "User-Agent")
-						Headers[kp.Key] = kp.Value;      
-				}
-                
-                m_Thread = new Thread( ProcessRequest );
+                foreach (var kp in headers)
+                {
+                    if (kp.Key != "User-Agent")
+                        Headers[kp.Key] = kp.Value;
+                }
+
+                m_Thread = new Thread(ProcessRequest);
                 m_Thread.Start();
                 return true;
             }
@@ -542,9 +543,9 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 // This fixes the exception thrown by self-signed certificates.
                 ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(delegate { return true; });
 
-                WebRequest deleteReq = WebRequest.Create( URL );
-                foreach( var kp in Headers )
-                    deleteReq.Headers.Add( kp.Key, kp.Value );
+                WebRequest deleteReq = WebRequest.Create(URL);
+                foreach (var kp in Headers)
+                    deleteReq.Headers.Add(kp.Key, kp.Value);
                 deleteReq.Method = "DELETE";
 
                 HttpWebResponse deleteResp = deleteReq.GetResponse() as HttpWebResponse;
@@ -553,7 +554,6 @@ namespace IBM.Watson.DeveloperCloud.Connection
             }
         };
 #endif
-
-#endregion
+        #endregion
     }
 }
