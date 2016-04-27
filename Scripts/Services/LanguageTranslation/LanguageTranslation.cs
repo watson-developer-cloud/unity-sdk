@@ -153,7 +153,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v1
                 }
                 catch (Exception e)
                 {
-					Log.Error("Natural Language Classifier", "GetTranslation Exception: {0}", e.ToString());
+                    Log.Error("Natural Language Classifier", "GetTranslation Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -243,7 +243,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v1
                 }
                 catch (Exception e)
                 {
-					Log.Error("Natural Language Classifier", "GetModels Exception: {0}", e.ToString());
+                    Log.Error("Natural Language Classifier", "GetModels Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -301,7 +301,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v1
                 }
                 catch (Exception e)
                 {
-					Log.Error("Natural Language Classifier", "GetModel Exception: {0}", e.ToString());
+                    Log.Error("Natural Language Classifier", "GetModel Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -357,7 +357,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v1
                 }
                 catch (Exception e)
                 {
-					Log.Error("Natural Language Classifier", "GetLanguages Exception: {0}", e.ToString());
+                    Log.Error("Natural Language Classifier", "GetLanguages Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -429,10 +429,10 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v1
         /// <exclude />
         public void GetServiceStatus(ServiceStatus callback)
         {
-            if ( Config.Instance.FindCredentials( SERVICE_ID ) != null )
-                new CheckServiceStatus( this, callback );
+            if (Config.Instance.FindCredentials(SERVICE_ID) != null)
+                new CheckServiceStatus(this, callback);
             else
-                callback( SERVICE_ID, false );
+                callback(SERVICE_ID, false);
         }
 
         private class CheckServiceStatus
@@ -440,19 +440,19 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v1
             private LanguageTranslation m_Service = null;
             private ServiceStatus m_Callback = null;
 
-            public CheckServiceStatus( LanguageTranslation service, ServiceStatus callback )
+            public CheckServiceStatus(LanguageTranslation service, ServiceStatus callback)
             {
                 m_Service = service;
                 m_Callback = callback;
 
-                if (! m_Service.GetLanguages( OnCheckService ) )
-                    m_Callback( SERVICE_ID, false );
+                if (!m_Service.GetLanguages(OnCheckService))
+                    m_Callback(SERVICE_ID, false);
             }
 
-            private void OnCheckService( Languages langs )
+            private void OnCheckService(Languages langs)
             {
-                if ( m_Callback != null )
-                    m_Callback( SERVICE_ID, langs != null );
+                if (m_Callback != null)
+                    m_Callback(SERVICE_ID, langs != null);
             }
         };
         #endregion

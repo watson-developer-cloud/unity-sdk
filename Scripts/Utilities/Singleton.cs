@@ -14,7 +14,7 @@
 * limitations under the License.
 *
 */
- 
+
 #define SINGLETONS_VISIBLE
 
 using UnityEngine;
@@ -27,7 +27,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
     /// make a containing GameObject.  
     /// </summary>
     /// <typeparam name="T">The typename of the class to create as a singleton object.</typeparam>
-    public class Singleton<T> where T:class
+    public class Singleton<T> where T : class
     {
         #region Private Data
         static private T sm_Instance = null;
@@ -40,8 +40,8 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         public static T Instance
         {
             get
-			{
-                if ( sm_Instance == null )
+            {
+                if (sm_Instance == null)
                     CreateInstance();
                 return sm_Instance;
             }
@@ -54,29 +54,29 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// </summary>
         private static void CreateInstance()
         {
-            if ( typeof(MonoBehaviour).IsAssignableFrom( typeof(T) ) )
+            if (typeof(MonoBehaviour).IsAssignableFrom(typeof(T)))
             {
                 string singletonName = "_" + typeof(T).Name;
 
-                GameObject singletonObject = GameObject.Find( singletonName );
-                if ( singletonObject == null )
-                    singletonObject = new GameObject( singletonName );
+                GameObject singletonObject = GameObject.Find(singletonName);
+                if (singletonObject == null)
+                    singletonObject = new GameObject(singletonName);
 #if SINGLETONS_VISIBLE
                 singletonObject.hideFlags = HideFlags.DontSave;
 #else
                 singletonObject.hideFlags = HideFlags.HideAndDontSave;
 #endif
                 sm_Instance = singletonObject.GetComponent<T>();
-                if ( sm_Instance == null )
-                    sm_Instance = singletonObject.AddComponent( typeof(T) ) as T;
+                if (sm_Instance == null)
+                    sm_Instance = singletonObject.AddComponent(typeof(T)) as T;
             }
             else
             {
-                sm_Instance = Activator.CreateInstance( typeof(T) ) as T;
+                sm_Instance = Activator.CreateInstance(typeof(T)) as T;
             }
 
-            if ( sm_Instance == null )
-                throw new WatsonException( "Failed to create instance " + typeof(T).Name );
+            if (sm_Instance == null)
+                throw new WatsonException("Failed to create instance " + typeof(T).Name);
         }
         #endregion
     }

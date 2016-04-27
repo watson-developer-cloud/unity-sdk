@@ -44,7 +44,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
         /// This callback is used by the GetVoices() function.
         /// </summary>
         /// <param name="voices">The Voices object.</param>
-        public delegate void GetVoicesCallback( Voices voices );
+        public delegate void GetVoicesCallback(Voices voices);
 
         #endregion
 
@@ -89,10 +89,12 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
         /// <summary>
         /// This property allows the user to specify the voice to use.
         /// </summary>
-        public VoiceType Voice { get { return m_Voice; }
+        public VoiceType Voice
+        {
+            get { return m_Voice; }
             set
-			{
-                if ( m_Voice != value )
+            {
+                if (m_Voice != value)
                 {
                     m_Voice = value;
                     m_SpeechCache = null;
@@ -107,10 +109,10 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
         /// </summary>
         /// <param name="callback">The callback to invoke with the list of available voices.</param>
         /// <returns>Returns ture if the request was submitted.</returns>
-        public bool GetVoices( GetVoicesCallback callback )
+        public bool GetVoices(GetVoicesCallback callback)
         {
-            if ( callback == null )
-                throw new ArgumentNullException("callback" );
+            if (callback == null)
+                throw new ArgumentNullException("callback");
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/v1/voices");
             if (connector == null)
@@ -145,7 +147,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
                 }
                 catch (Exception e)
                 {
-					Log.Error("Natural Language Classifier", "GetVoices Exception: {0}", e.ToString());
+                    Log.Error("Natural Language Classifier", "GetVoices Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -174,45 +176,45 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
         /// <param name="callback">The callback to invoke with the AudioClip.</param>
         /// <param name="usePost">If true, then we use post instead of get, this allows for text that exceeds the 5k limit.</param>
         /// <returns>Returns true if the request is sent.</returns>
-        public bool ToSpeech(string text, ToSpeechCallback callback, bool usePost = false )
+        public bool ToSpeech(string text, ToSpeechCallback callback, bool usePost = false)
         {
-            if ( string.IsNullOrEmpty( text ) )
-                throw new ArgumentNullException( "text" );
-            if ( callback == null )
-                throw new ArgumentNullException( "callback" );
+            if (string.IsNullOrEmpty(text))
+                throw new ArgumentNullException("text");
+            if (callback == null)
+                throw new ArgumentNullException("callback");
 
-            if ( !m_AudioFormats.ContainsKey(m_AudioFormat) )
+            if (!m_AudioFormats.ContainsKey(m_AudioFormat))
             {
-                Log.Error( "TextToSpeech", "Unsupported audio format: {0}", m_AudioFormat.ToString() );
+                Log.Error("TextToSpeech", "Unsupported audio format: {0}", m_AudioFormat.ToString());
                 return false;
             }
-            if ( !m_VoiceTypes.ContainsKey(m_Voice) )
+            if (!m_VoiceTypes.ContainsKey(m_Voice))
             {
-                Log.Error( "TextToSpeech", "Unsupported voice: {0}", m_Voice.ToString() );
+                Log.Error("TextToSpeech", "Unsupported voice: {0}", m_Voice.ToString());
                 return false;
             }
 
-            text = Utility.RemoveTags( text );
+            text = Utility.RemoveTags(text);
 
-            string textId = Utility.GetMD5( text );
-            if (! DisableCache )
+            string textId = Utility.GetMD5(text);
+            if (!DisableCache)
             {
-                if ( m_SpeechCache == null )
-                    m_SpeechCache = new DataCache( "TextToSpeech_" + m_VoiceTypes[m_Voice] );
-                
-                byte [] data = m_SpeechCache.Find( textId );
-                if ( data != null )
+                if (m_SpeechCache == null)
+                    m_SpeechCache = new DataCache("TextToSpeech_" + m_VoiceTypes[m_Voice]);
+
+                byte[] data = m_SpeechCache.Find(textId);
+                if (data != null)
                 {
-                    AudioClip clip = ProcessResponse( textId, data );
-                    callback( clip );
+                    AudioClip clip = ProcessResponse(textId, data);
+                    callback(clip);
                     return true;
                 }
             }
 
-            RESTConnector connector = RESTConnector.GetConnector( SERVICE_ID, "/v1/synthesize" );
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/v1/synthesize");
             if (connector == null)
             {
-                Log.Error( "TextToSpeech", "Failed to get connector." );
+                Log.Error("TextToSpeech", "Failed to get connector.");
                 return false;
             }
 
@@ -226,11 +228,11 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 
             if (usePost)
             {
-                Dictionary<string,string> upload = new Dictionary<string, string>();
+                Dictionary<string, string> upload = new Dictionary<string, string>();
                 upload["text"] = "\"" + text + "\"";
 
-                req.Send = Encoding.UTF8.GetBytes( Json.Serialize( upload ) ); 
-                req.Headers["Content-Type"] = "application/json";              
+                req.Send = Encoding.UTF8.GetBytes(Json.Serialize(upload));
+                req.Headers["Content-Type"] = "application/json";
             }
             else
             {
@@ -248,17 +250,17 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 
             //Log.Debug( "TextToSpeech", "Request completed in {0} seconds.", resp.ElapsedTime );
 
-            AudioClip clip = resp.Success ? ProcessResponse( speechReq.TextId, resp.Data ) : null;
-            if ( clip == null )
+            AudioClip clip = resp.Success ? ProcessResponse(speechReq.TextId, resp.Data) : null;
+            if (clip == null)
                 Log.Error("TextToSpeech", "Request Failed: {0}", resp.Error);
-            if ( m_SpeechCache != null && clip != null )
-                m_SpeechCache.Save( speechReq.TextId, resp.Data );
+            if (m_SpeechCache != null && clip != null)
+                m_SpeechCache.Save(speechReq.TextId, resp.Data);
 
             if (speechReq.Callback != null)
                 speechReq.Callback(clip);
         }
 
-        private AudioClip ProcessResponse( string textId, byte [] data )
+        private AudioClip ProcessResponse(string textId, byte[] data)
         {
             switch (m_AudioFormat)
             {
@@ -283,10 +285,10 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
         /// <exclude />
         public void GetServiceStatus(ServiceStatus callback)
         {
-            if ( Config.Instance.FindCredentials( SERVICE_ID ) != null )
-                new CheckServiceStatus( this, callback );
+            if (Config.Instance.FindCredentials(SERVICE_ID) != null)
+                new CheckServiceStatus(this, callback);
             else
-                callback( SERVICE_ID, false );
+                callback(SERVICE_ID, false);
         }
 
         private class CheckServiceStatus
@@ -294,19 +296,19 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
             private TextToSpeech m_Service = null;
             private ServiceStatus m_Callback = null;
 
-            public CheckServiceStatus( TextToSpeech service, ServiceStatus callback )
+            public CheckServiceStatus(TextToSpeech service, ServiceStatus callback)
             {
                 m_Service = service;
                 m_Callback = callback;
 
-                if (! m_Service.GetVoices( OnCheckService ) )
-                    m_Callback( SERVICE_ID, false );
+                if (!m_Service.GetVoices(OnCheckService))
+                    m_Callback(SERVICE_ID, false);
             }
 
-            private void OnCheckService( Voices voices )
+            private void OnCheckService(Voices voices)
             {
-                if ( m_Callback != null  && m_Callback.Target != null)
-                    m_Callback( SERVICE_ID, voices != null );
+                if (m_Callback != null && m_Callback.Target != null)
+                    m_Callback(SERVICE_ID, voices != null);
             }
         };
         #endregion

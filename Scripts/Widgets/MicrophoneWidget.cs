@@ -78,7 +78,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 
         #region Constants
         // how often to retry the open the microphone on failure
-        private const int RETRY_INTERVAL = 10000;       
+        private const int RETRY_INTERVAL = 10000;
         #endregion
 
         #region Public Properties
@@ -131,10 +131,10 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             get { return m_Failure; }
             private set
             {
-                if ( m_Failure != value )
+                if (m_Failure != value)
                 {
                     m_Failure = value;
-                    if ( m_Failure )
+                    if (m_Failure)
                         m_LastFailure = DateTime.Now;
                 }
             }
@@ -187,8 +187,8 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         }
         private void Update()
         {
-            if ( Failure && Active && !Disable 
-                && (DateTime.Now - m_LastFailure).TotalMilliseconds > RETRY_INTERVAL )
+            if (Failure && Active && !Disable
+                && (DateTime.Now - m_LastFailure).TotalMilliseconds > RETRY_INTERVAL)
             {
                 // try to restart the recording..
                 StartRecording();
@@ -199,7 +199,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             Disable = ((DisableMicData)data).Boolean;
         }
 
-        void OnDestroy() 
+        void OnDestroy()
         {
             Active = false;
             Disable = true;
@@ -290,9 +290,9 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             while (m_RecordingRoutine != 0 && m_Recording != null)
             {
                 int writePos = Microphone.GetPosition(m_MicrophoneID);
-                if ( writePos > m_Recording.samples || !Microphone.IsRecording(m_MicrophoneID) )
+                if (writePos > m_Recording.samples || !Microphone.IsRecording(m_MicrophoneID))
                 {
-                    Log.Error( "MicrophoneWidget", "Microphone disconnected.");
+                    Log.Error("MicrophoneWidget", "Microphone disconnected.");
 
                     Failure = true;
                     StopRecording();

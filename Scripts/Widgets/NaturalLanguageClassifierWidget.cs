@@ -41,18 +41,18 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 
         #region Outputs
         [SerializeField]
-        private Output m_ClassifyOutput = new Output(typeof(ClassifyResultData), true );
+        private Output m_ClassifyOutput = new Output(typeof(ClassifyResultData), true);
         #endregion
 
         #region Private Data
-		private NaturalLanguageClassifier m_NaturalLanguageClassifier = new NaturalLanguageClassifier();
+        private NaturalLanguageClassifier m_NaturalLanguageClassifier = new NaturalLanguageClassifier();
         private Classifier m_Selected = null;
 
         [SerializeField]
         private string m_ClassifierName = string.Empty;
         [SerializeField]
         private string m_ClassifierId = string.Empty;
-		[SerializeField, Tooltip("What is the minimum word confidence needed to send onto the Natural Language Classifier?")]
+        [SerializeField, Tooltip("What is the minimum word confidence needed to send onto the Natural Language Classifier?")]
         private float m_MinWordConfidence = 0f;
         private float m_MinWordConfidenceDelta = 0.0f;
         [SerializeField, Tooltip("Recognized speech below this confidence is just ignored.")]
@@ -68,13 +68,12 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         private class ClassEventMapping
         {
             public string m_Class = null;
-			public string m_Event = "";
-//          public Constants.Event m_Event = Constants.Event.NONE;
+            public string m_Event = "";
         };
         [SerializeField]
         private List<ClassEventMapping> m_ClassEventList = new List<ClassEventMapping>();
-		private Dictionary<string, string> m_ClassEventMap = new Dictionary<string, string>();
-//		private Dictionary<string, Constants.Event> m_ClassEventMap = new Dictionary<string, Constants.Event>();
+        private Dictionary<string, string> m_ClassEventMap = new Dictionary<string, string>();
+        //		private Dictionary<string, Constants.Event> m_ClassEventMap = new Dictionary<string, Constants.Event>();
 
         [SerializeField]
         private Text m_TopClassText = null;
@@ -101,16 +100,17 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                 m_IgnoreWordConfidenceDelta = value + m_IgnoreWordConfidence;
                 if (IgnoreWordConfidence > MinWordConfidence)
                     MinWordConfidence = IgnoreWordConfidence;
-                PlayerPrefs.SetFloat( "m_IgnoreWordConfidenceDelta", m_IgnoreWordConfidenceDelta );
+                PlayerPrefs.SetFloat("m_IgnoreWordConfidenceDelta", m_IgnoreWordConfidenceDelta);
                 PlayerPrefs.Save();
             }
         }
         public float IgnoreWordConfidenceDelta
         {
             get { return m_IgnoreWordConfidenceDelta; }
-            set {
-                m_IgnoreWordConfidenceDelta = value; 
-                PlayerPrefs.SetFloat( "m_IgnoreWordConfidenceDelta", m_IgnoreWordConfidenceDelta );
+            set
+            {
+                m_IgnoreWordConfidenceDelta = value;
+                PlayerPrefs.SetFloat("m_IgnoreWordConfidenceDelta", m_IgnoreWordConfidenceDelta);
                 PlayerPrefs.Save();
             }
         }
@@ -123,24 +123,25 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         {
             get
             {
-				return Mathf.Clamp01(m_MinWordConfidence + m_MinWordConfidenceDelta);
-//                return Mathf.Clamp01(m_MinWordConfidenceDelta);
+                return Mathf.Clamp01(m_MinWordConfidence + m_MinWordConfidenceDelta);
+                //                return Mathf.Clamp01(m_MinWordConfidenceDelta);
             }
             set
             {
                 m_MinWordConfidenceDelta = value + m_MinWordConfidence;
                 if (MinWordConfidence < IgnoreWordConfidence)
                     IgnoreWordConfidence = MinWordConfidence;
-				PlayerPrefs.SetFloat( "m_MinWordConfidenceDelta", m_MinWordConfidenceDelta );
+                PlayerPrefs.SetFloat("m_MinWordConfidenceDelta", m_MinWordConfidenceDelta);
                 PlayerPrefs.Save();
             }
         }
         public float MinWordConfidenceDelta
         {
             get { return m_MinWordConfidenceDelta; }
-            set {
-                m_MinWordConfidenceDelta = value; 
-                PlayerPrefs.SetFloat( "m_MinWordConfidenceDelta", m_MinWordConfidenceDelta );
+            set
+            {
+                m_MinWordConfidenceDelta = value;
+                PlayerPrefs.SetFloat("m_MinWordConfidenceDelta", m_MinWordConfidenceDelta);
                 PlayerPrefs.Save();
             }
         }
@@ -158,16 +159,17 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             set
             {
                 m_MinClassEventConfidenceDelta = value + m_MinClassEventConfidence;
-                PlayerPrefs.SetFloat( "m_MinClassEventConfidenceDelta", m_MinClassEventConfidenceDelta );
+                PlayerPrefs.SetFloat("m_MinClassEventConfidenceDelta", m_MinClassEventConfidenceDelta);
                 PlayerPrefs.Save();
             }
         }
         public float MinClassEventConfidenceDelta
         {
             get { return m_MinClassEventConfidenceDelta; }
-            set {
+            set
+            {
                 m_MinClassEventConfidenceDelta = value;
-                PlayerPrefs.SetFloat( "m_MinClassEventConfidenceDelta", m_MinClassEventConfidenceDelta );
+                PlayerPrefs.SetFloat("m_MinClassEventConfidenceDelta", m_MinClassEventConfidenceDelta);
                 PlayerPrefs.Save();
             }
         }
@@ -177,7 +179,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         /// <exclude />
         protected override string GetName()
         {
-			return "Natural Language Classifier";
+            return "Natural Language Classifier";
         }
         #endregion
 
@@ -187,9 +189,9 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         {
             base.Start();
 
-            m_IgnoreWordConfidenceDelta = PlayerPrefs.GetFloat( "m_IgnoreWordConfidenceDelta", 0.0f );
-            m_MinWordConfidenceDelta = PlayerPrefs.GetFloat( "m_MinWordConfidenceDelta", 0.0f );
-            m_MinClassEventConfidenceDelta = PlayerPrefs.GetFloat( "m_MinClassEventConfidenceDelta", 0.0f );
+            m_IgnoreWordConfidenceDelta = PlayerPrefs.GetFloat("m_IgnoreWordConfidenceDelta", 0.0f);
+            m_MinWordConfidenceDelta = PlayerPrefs.GetFloat("m_MinWordConfidenceDelta", 0.0f);
+            m_MinClassEventConfidenceDelta = PlayerPrefs.GetFloat("m_MinClassEventConfidenceDelta", 0.0f);
 
             // resolve configuration variables
             m_ClassifierName = Config.Instance.ResolveVariables(m_ClassifierName);
@@ -197,14 +199,14 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 
             if (string.IsNullOrEmpty(m_ClassifierId))
             {
-				Log.Status("NaturalLanguageClassifierWidget", "Auto selecting a classifier.");
+                Log.Status("NaturalLanguageClassifierWidget", "Auto selecting a classifier.");
                 if (!m_NaturalLanguageClassifier.GetClassifiers(OnGetClassifiers))
-					Log.Error("NaturalLanguageClassifierWidget", "Failed to request all classifiers.");
+                    Log.Error("NaturalLanguageClassifierWidget", "Failed to request all classifiers.");
             }
             else
             {
                 if (!m_NaturalLanguageClassifier.GetClassifier(m_ClassifierId, OnGetClassifier))
-					Log.Equals("NaturalLanguageClassifierWidget", "Failed to request classifier.");
+                    Log.Equals("NaturalLanguageClassifierWidget", "Failed to request classifier.");
             }
         }
 
@@ -233,8 +235,8 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                     bFound = true;
                 }
 
-                if (! bFound )
-					Log.Error( "NaturalLanguageClassifierWidget", "No classifiers found that match {0}", m_ClassifierName );
+                if (!bFound)
+                    Log.Error("NaturalLanguageClassifierWidget", "No classifiers found that match {0}", m_ClassifierName);
             }
         }
 
@@ -247,7 +249,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                     m_Selected = classifier;
                     m_ClassifierId = m_Selected.classifier_id;
 
-					Log.Status("NaturalLanguageClassifierWidget", "Selected classifier {0}, Created: {1}, Name: {2}",
+                    Log.Status("NaturalLanguageClassifierWidget", "Selected classifier {0}, Created: {1}, Name: {2}",
                         m_Selected.classifier_id, m_Selected.created, m_Selected.name);
                 }
             }
@@ -261,7 +263,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                 string text = result.Results[0].Alternatives[0].Transcript;
                 double textConfidence = result.Results[0].Alternatives[0].Confidence;
 
-				Log.Debug("NaturalLanguageClassifierWidget", "OnRecognize: {0} ({1:0.00})", text, textConfidence);
+                Log.Debug("NaturalLanguageClassifierWidget", "OnRecognize: {0} ({1:0.00})", text, textConfidence);
                 EventManager.Instance.SendEvent("OnDebugMessage", string.Format("{0} ({1:0.00})", text, textConfidence));
 
                 if (textConfidence > MinWordConfidence)
@@ -269,17 +271,17 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                     if (!string.IsNullOrEmpty(m_ClassifierId))
                     {
                         if (!m_NaturalLanguageClassifier.Classify(m_ClassifierId, text, OnClassified))
-							Log.Error("NaturalLanguageClassifierWidget", "Failed to send {0} to Natural Language Classifier.", text);
+                            Log.Error("NaturalLanguageClassifierWidget", "Failed to send {0} to Natural Language Classifier.", text);
                     }
                     else
-						Log.Equals("NaturalLanguageClassifierWidget", "No valid classifier set.");
+                        Log.Equals("NaturalLanguageClassifierWidget", "No valid classifier set.");
                 }
                 else
                 {
-					Log.Debug( "NaturalLanguagClassifierWidget", "Text confidence {0} < {1} (Min word confidence)", textConfidence, MinWordConfidence );
+                    Log.Debug("NaturalLanguagClassifierWidget", "Text confidence {0} < {1} (Min word confidence)", textConfidence, MinWordConfidence);
                     if (textConfidence > IgnoreWordConfidence)
                     {
-						Log.Debug( "NaturalLanguageClassifierWidget", "Text confidence {0} > {1} (Ignore word confidence)", textConfidence, IgnoreWordConfidence );
+                        Log.Debug("NaturalLanguageClassifierWidget", "Text confidence {0} > {1} (Ignore word confidence)", textConfidence, IgnoreWordConfidence);
                         EventManager.Instance.SendEvent("OnClassifyFailure", result);
                     }
                 }
@@ -295,7 +297,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 
             if (result != null)
             {
-				Log.Debug("NaturalLanguageClassifierWidget", "OnClassified: {0} ({1:0.00})", result.top_class, result.topConfidence);
+                Log.Debug("NaturalLanguageClassifierWidget", "OnClassified: {0} ({1:0.00})", result.top_class, result.topConfidence);
 
                 if (m_TopClassText != null)
                     m_TopClassText.text = result.top_class;
@@ -308,14 +310,14 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                         {
                             // initialize the map
                             foreach (var ev in m_ClassEventList)
-								m_ClassEventMap[ev.m_Class] = ev.m_Event;
+                                m_ClassEventMap[ev.m_Class] = ev.m_Event;
                         }
 
-						string sendEvent;
-//						Constants.Event sendEvent;
+                        string sendEvent;
+                        //						Constants.Event sendEvent;
                         if (!m_ClassEventMap.TryGetValue(result.top_class, out sendEvent))
                         {
-							Log.Warning("NaturalLanguageClassifierWidget", "No class mapping found for {0}", result.top_class);
+                            Log.Warning("NaturalLanguageClassifierWidget", "No class mapping found for {0}", result.top_class);
                             EventManager.Instance.SendEvent(result.top_class, result);
                         }
                         else
@@ -336,7 +338,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             if (!string.IsNullOrEmpty(text) && !string.IsNullOrEmpty(m_ClassifierId))
             {
                 if (!m_NaturalLanguageClassifier.Classify(m_ClassifierId, text, OnClassified))
-					Log.Error("NaturalLanguageClassifierWidget", "Failed to send {0} to Natural Language Classifier.", (string)args[0]);
+                    Log.Error("NaturalLanguageClassifierWidget", "Failed to send {0} to Natural Language Classifier.", (string)args[0]);
             }
         }
         #endregion

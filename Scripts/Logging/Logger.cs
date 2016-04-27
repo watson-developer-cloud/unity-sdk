@@ -123,29 +123,29 @@ namespace IBM.Watson.DeveloperCloud.Logging
         /// <summary>
         /// Install a default debug and file reactor.
         /// </summary>
-        public static void InstallDefaultReactors( int logHistory = 2 , LogLevel logLevelFileReactor = LogLevel.STATUS)
+        public static void InstallDefaultReactors(int logHistory = 2, LogLevel logLevelFileReactor = LogLevel.STATUS)
         {
-            if (! sm_bInstalledDefaultReactors )
+            if (!sm_bInstalledDefaultReactors)
             {
                 // install the default reactors...
                 sm_bInstalledDefaultReactors = true;
 #if UNITY_EDITOR || UNITY_IOS || UNITY_ANDROID
-                LogSystem.Instance.InstallReactor( new DebugReactor() );
+                LogSystem.Instance.InstallReactor(new DebugReactor());
 #endif
 
-				if (!string.IsNullOrEmpty(Constants.Path.LOG_FOLDER) && !System.IO.Directory.Exists(Application.persistentDataPath + Constants.Path.LOG_FOLDER ))
-					System.IO.Directory.CreateDirectory(Application.persistentDataPath + Constants.Path.LOG_FOLDER );
-                
-				LogSystem.Instance.InstallReactor( new FileReactor( Application.persistentDataPath + Constants.Path.LOG_FOLDER + "/" + Application.productName + ".log", logLevelFileReactor, logHistory ) );
+                if (!string.IsNullOrEmpty(Constants.Path.LOG_FOLDER) && !System.IO.Directory.Exists(Application.persistentDataPath + Constants.Path.LOG_FOLDER))
+                    System.IO.Directory.CreateDirectory(Application.persistentDataPath + Constants.Path.LOG_FOLDER);
+
+                LogSystem.Instance.InstallReactor(new FileReactor(Application.persistentDataPath + Constants.Path.LOG_FOLDER + "/" + Application.productName + ".log", logLevelFileReactor, logHistory));
 
                 Application.logMessageReceived += UnityLogCallback;
             }
         }
 
-        static void UnityLogCallback( string condition, string stacktrace, LogType type )
+        static void UnityLogCallback(string condition, string stacktrace, LogType type)
         {
-            if ( type == LogType.Exception )
-                Log.Critical( "Unity", "Unity Exception {0} : {1}", condition, stacktrace );
+            if (type == LogType.Exception)
+                Log.Critical("Unity", "Unity Exception {0} : {1}", condition, stacktrace);
         }
 
         /// <summary>
@@ -242,13 +242,13 @@ namespace IBM.Watson.DeveloperCloud.Logging
         {
             LogSystem.Instance.ProcessLog(new LogRecord(LogLevel.ERROR, subSystem, messageFmt, args));
         }
-         /// <summary>
+        /// <summary>
         /// Log a CRITICAL level message.
         /// </summary>
         /// <param name="subSystem">Name of the subsystem.</param>
         /// <param name="messageFmt">Message with formatting.</param>
         /// <param name="args">Formatting arguments.</param>
-       public static void Critical(string subSystem, string messageFmt, params object[] args)
+        public static void Critical(string subSystem, string messageFmt, params object[] args)
         {
             LogSystem.Instance.ProcessLog(new LogRecord(LogLevel.CRITICAL, subSystem, messageFmt, args));
         }

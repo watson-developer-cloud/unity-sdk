@@ -28,7 +28,7 @@ namespace IBM.Watson.DeveloperCloud.Services
     /// </summary>
     /// <param name="serviceID">The ID of the service.</param>
     /// <param name="active">The status of the service, true is up, false is down.</param>
-    public delegate void ServiceStatus( string serviceID, bool active );
+    public delegate void ServiceStatus(string serviceID, bool active);
 
     /// <summary>
     /// This interface defines common interface for all watson services.
@@ -45,7 +45,7 @@ namespace IBM.Watson.DeveloperCloud.Services
         /// state of the service once determined.
         /// </summary>
         /// <param name="callback">The callback to invoke.</param>
-        void GetServiceStatus( ServiceStatus callback );
+        void GetServiceStatus(ServiceStatus callback);
     }
 
     /// <summary>
@@ -57,20 +57,21 @@ namespace IBM.Watson.DeveloperCloud.Services
         /// This returns a instance of all services.
         /// </summary>
         /// <returns>An array of IWatsonService instances.</returns>
-        public static IWatsonService [] GetAllServices( bool reqCredentials = false )
+        public static IWatsonService[] GetAllServices(bool reqCredentials = false)
         {
             List<IWatsonService> services = new List<IWatsonService>();
 
-            Type [] types = Utilities.Utility.FindAllDerivedTypes( typeof(IWatsonService) );
-            foreach( var type in types )
+            Type[] types = Utilities.Utility.FindAllDerivedTypes(typeof(IWatsonService));
+            foreach (var type in types)
             {
-                try {
-                    IWatsonService serviceObject = Activator.CreateInstance( type ) as IWatsonService;
-                    if ( reqCredentials && Config.Instance.FindCredentials( serviceObject.GetServiceID() ) == null )
+                try
+                {
+                    IWatsonService serviceObject = Activator.CreateInstance(type) as IWatsonService;
+                    if (reqCredentials && Config.Instance.FindCredentials(serviceObject.GetServiceID()) == null)
                         continue;       // skip services that don't have credential data..
-                    services.Add( serviceObject as IWatsonService );
+                    services.Add(serviceObject as IWatsonService);
                 }
-                catch( Exception )
+                catch (Exception)
                 { }
             }
 

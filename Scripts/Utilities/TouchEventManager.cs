@@ -30,24 +30,24 @@ namespace IBM.Watson.DeveloperCloud.Utilities
     /// Touch Event Manager for all touch events. 
     /// Each element can register their touch related functions using this manager. 
     /// </summary>
-	[RequireComponent (typeof (TapGesture))]
-	public class TouchEventManager : MonoBehaviour
-	{
+	[RequireComponent(typeof(TapGesture))]
+    public class TouchEventManager : MonoBehaviour
+    {
 
         /// <summary>
         /// Touch Event Data holds all touch related event data for registering and unregistering events via Touch Event Manager.
         /// </summary>
 		public class TouchEventData
-		{
-			private Collider m_Collider;
+        {
+            private Collider m_Collider;
             private Collider2D m_Collider2D;
-			private Collider[] m_ColliderList;
+            private Collider[] m_ColliderList;
             private Collider2D[] m_Collider2DList;
-			private GameObject m_GameObject;
+            private GameObject m_GameObject;
             private string m_tapEventCallback;
             private string m_dragEventCallback;
-			private bool m_isInside;
-			private int m_SortingLayer;
+            private bool m_isInside;
+            private int m_SortingLayer;
 
             /// <summary> 
             /// Game Object related with touch event
@@ -64,32 +64,32 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// <summary>
             /// If there is a drag event (or continues action) we are holding game object and all colliders inside that object
             /// </summary>
-			public Collider[] ColliderList { get {  if(m_ColliderList == null && m_Collider != null) m_ColliderList = new Collider[]{m_Collider}; return m_ColliderList; } }
+			public Collider[] ColliderList { get { if (m_ColliderList == null && m_Collider != null) m_ColliderList = new Collider[] { m_Collider }; return m_ColliderList; } }
             /// <summary>
             /// If there is a drag event (or continues action) we are holding game object and all colliders inside that object
             /// </summary>
-            public Collider2D[] ColliderList2D { get {  if(m_Collider2DList == null && m_Collider2D != null) m_Collider2DList = new Collider2D[]{m_Collider2D}; return m_Collider2DList; } }
+            public Collider2D[] ColliderList2D { get { if (m_Collider2DList == null && m_Collider2D != null) m_Collider2DList = new Collider2D[] { m_Collider2D }; return m_Collider2DList; } }
             /// <summary>
             /// If the touch event has happened inside of that object (collider) we will fire that event. Otherwise, it is considered as outside
             /// </summary>
-            public bool IsInside{ get { return m_isInside; } }
+            public bool IsInside { get { return m_isInside; } }
             /// <summary>
             /// Tap Delegate to call
             /// </summary>
-            public string TapCallback{ get { return m_tapEventCallback; } }
+            public string TapCallback { get { return m_tapEventCallback; } }
             /// <summary>
             /// Drag Delegate to call
             /// </summary>
-            public string DragCallback{ get { return m_dragEventCallback; } }
+            public string DragCallback { get { return m_dragEventCallback; } }
             /// <summary>
             /// Greater sorting layer is higher importance level. 
             /// </summary>
-			public int SortingLayer{ get { return m_SortingLayer; } }
-			/// <summary>
-			/// Gets a value indicating whether this instance can drag object.
-			/// </summary>
-			/// <value><c>true</c> if this instance can drag object; otherwise, <c>false</c>.</value>
-            public bool CanDragObject{ get { return GameObjectAttached != null && ((ColliderList != null && ColliderList.Length > 0) || (ColliderList2D != null && ColliderList2D.Length > 0)); } }
+			public int SortingLayer { get { return m_SortingLayer; } }
+            /// <summary>
+            /// Gets a value indicating whether this instance can drag object.
+            /// </summary>
+            /// <value><c>true</c> if this instance can drag object; otherwise, <c>false</c>.</value>
+            public bool CanDragObject { get { return GameObjectAttached != null && ((ColliderList != null && ColliderList.Length > 0) || (ColliderList2D != null && ColliderList2D.Length > 0)); } }
 
             /// <summary>
             /// Touch event constructor for Tap Event registration. 
@@ -99,15 +99,15 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// <param name="sortingLayer">Sorting level in order to sort the event listeners</param>
             /// <param name="isInside">Whether the tap is inside the object or not</param>
             public TouchEventData(Collider collider, string callback, int sortingLayer, bool isInside)
-			{
-				m_Collider = collider;
+            {
+                m_Collider = collider;
                 m_Collider2D = null;
-				m_ColliderList = null;
+                m_ColliderList = null;
                 m_Collider2DList = null;
-				m_tapEventCallback = callback;
-				m_SortingLayer = sortingLayer;
-				m_isInside = isInside;
-			}
+                m_tapEventCallback = callback;
+                m_SortingLayer = sortingLayer;
+                m_isInside = isInside;
+            }
 
             /// <summary>
             /// Touch event constructor for Drag Event registration. 
@@ -117,81 +117,81 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// <param name="sortingLayer">Sorting level in order to sort the event listeners</param>
             /// <param name="isInside"></param>
 			public TouchEventData(GameObject gameObject, string callback, int sortingLayer, bool isInside)
-			{
-				m_GameObject = gameObject;
-				m_ColliderList = null;
-                if(gameObject != null)
-				{
+            {
+                m_GameObject = gameObject;
+                m_ColliderList = null;
+                if (gameObject != null)
+                {
                     m_ColliderList = gameObject.GetComponentsInChildren<Collider>();
                     m_Collider2DList = gameObject.GetComponentsInChildren<Collider2D>();
                 }
-				m_dragEventCallback = callback;
-				m_SortingLayer = sortingLayer;
-				m_isInside = isInside;
-			}
+                m_dragEventCallback = callback;
+                m_SortingLayer = sortingLayer;
+                m_isInside = isInside;
+            }
 
-			/// <summary>
-			/// Determines whether this instance has touched on the specified hitTransform.
-			/// </summary>
-			/// <returns><c>true</c> if this instance has touched on the specified hitTransform; otherwise, <c>false</c>.</returns>
-			/// <param name="hitTransform">Hit transform.</param>
-			public bool HasTouchedOn(Transform hitTransform)
-			{
-				bool hasTouchedOn = false;
-				if (ColliderList != null) 
-				{
-					foreach (Collider itemCollider in ColliderList)
-					{
-						if(itemCollider.transform == hitTransform)
-						{
-							hasTouchedOn = true;
-							break;
-						}
-					}
-				}
+            /// <summary>
+            /// Determines whether this instance has touched on the specified hitTransform.
+            /// </summary>
+            /// <returns><c>true</c> if this instance has touched on the specified hitTransform; otherwise, <c>false</c>.</returns>
+            /// <param name="hitTransform">Hit transform.</param>
+            public bool HasTouchedOn(Transform hitTransform)
+            {
+                bool hasTouchedOn = false;
+                if (ColliderList != null)
+                {
+                    foreach (Collider itemCollider in ColliderList)
+                    {
+                        if (itemCollider.transform == hitTransform)
+                        {
+                            hasTouchedOn = true;
+                            break;
+                        }
+                    }
+                }
 
-                if (!hasTouchedOn && ColliderList2D != null) 
+                if (!hasTouchedOn && ColliderList2D != null)
                 {
                     foreach (Collider2D itemCollider in ColliderList2D)
-					{
-                        if(itemCollider.transform == hitTransform)
-						{
+                    {
+                        if (itemCollider.transform == hitTransform)
+                        {
                             hasTouchedOn = true;
                             break;
                         }
                     }
 
                 }
-				return hasTouchedOn;
-			}
+                return hasTouchedOn;
+            }
 
             /// <summary>
             /// To check equality of the same Touch Event Data
             /// </summary>
             /// <param name="obj">Object to check equality</param>
             /// <returns>True if objects are equal</returns>
-			public override bool Equals (object obj)
-			{
-				bool isEqual = false;
-				TouchEventData touchEventData = obj as TouchEventData;
-				if (touchEventData != null) 
-				{
-					isEqual = 
+			public override bool Equals(object obj)
+            {
+                bool isEqual = false;
+                TouchEventData touchEventData = obj as TouchEventData;
+                if (touchEventData != null)
+                {
+                    isEqual =
                         (touchEventData.Collider == this.Collider &&
                         touchEventData.Collider2D == this.Collider2D &&
                         touchEventData.GameObjectAttached == this.GameObjectAttached &&
-                        touchEventData.IsInside == this.IsInside && 
-						touchEventData.SortingLayer == this.SortingLayer &&
-						touchEventData.DragCallback == this.DragCallback &&
-						touchEventData.TapCallback == this.TapCallback);
-				} 
-				else 
-				{
-					isEqual = base.Equals (obj);
-				}
+                        touchEventData.IsInside == this.IsInside &&
+                        touchEventData.SortingLayer == this.SortingLayer &&
+                        touchEventData.DragCallback == this.DragCallback &&
+                        touchEventData.TapCallback == this.TapCallback);
+                }
+                else
+                {
+                    isEqual = base.Equals(obj);
+                }
 
-				return isEqual;
-			}
+                return isEqual;
+            }
 
             /// <summary>
             /// Returns the hash code
@@ -204,26 +204,26 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 
         }
 
-		#region Private Data
-		private UnityEngine.Camera m_mainCamera;
+        #region Private Data
+        private UnityEngine.Camera m_mainCamera;
 
-		private bool m_Active = true;
-		private Dictionary<int, List<TouchEventData>> m_TapEvents = new Dictionary<int, List<TouchEventData>>();
+        private bool m_Active = true;
+        private Dictionary<int, List<TouchEventData>> m_TapEvents = new Dictionary<int, List<TouchEventData>>();
         private Dictionary<int, List<TouchEventData>> m_DoubleTapEvents = new Dictionary<int, List<TouchEventData>>();
         private Dictionary<int, List<TouchEventData>> m_DragEvents = new Dictionary<int, List<TouchEventData>>();
-		#endregion
+        #endregion
 
-		#region Serialized Private 
-		[SerializeField]
-		private TapGesture m_TapGesture;
+        #region Serialized Private 
+        [SerializeField]
+        private TapGesture m_TapGesture;
         [SerializeField]
         private TapGesture m_DoubleTapGesture;
-		[SerializeField]
-		private TapGesture m_ThreeTapGesture;
-		[SerializeField]
-		private ScreenTransformGesture m_OneFingerMoveGesture;
-		[SerializeField]
-		private ScreenTransformGesture m_TwoFingerMoveGesture;
+        [SerializeField]
+        private TapGesture m_ThreeTapGesture;
+        [SerializeField]
+        private ScreenTransformGesture m_OneFingerMoveGesture;
+        [SerializeField]
+        private ScreenTransformGesture m_TwoFingerMoveGesture;
         [SerializeField]
         private PressGesture m_PressGesture;
         [SerializeField]
@@ -239,59 +239,59 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// </summary>
         public bool Active { get { return m_Active; } set { m_Active = value; } }
 
-		private static TouchEventManager sm_Instance = null;
-		/// <summary>
-		/// The current instance of the TouchEventManager.
-		/// </summary>
-		public static TouchEventManager Instance { get { return sm_Instance; } }
-		#endregion
+        private static TouchEventManager sm_Instance = null;
+        /// <summary>
+        /// The current instance of the TouchEventManager.
+        /// </summary>
+        public static TouchEventManager Instance { get { return sm_Instance; } }
+        #endregion
 
-		#region Awake / OnEnable / OnDisable
+        #region Awake / OnEnable / OnDisable
 
-		void Awake()
-		{
-			sm_Instance = this;
-		}
+        void Awake()
+        {
+            sm_Instance = this;
+        }
 
-		private void OnEnable()
-		{
-			m_mainCamera = UnityEngine.Camera.main;
+        private void OnEnable()
+        {
+            m_mainCamera = UnityEngine.Camera.main;
             if (m_TapGesture != null)
-			    m_TapGesture.Tapped += TapGesture_Tapped;
-            if ( m_DoubleTapGesture != null )
+                m_TapGesture.Tapped += TapGesture_Tapped;
+            if (m_DoubleTapGesture != null)
                 m_DoubleTapGesture.Tapped += DoubleTapGesture_Tapped;
-            if ( m_ThreeTapGesture != null )
-			    m_ThreeTapGesture.Tapped += ThreeTapGesture_Tapped;
-            if ( m_OneFingerMoveGesture != null )
-			    m_OneFingerMoveGesture.Transformed += OneFingerTransformedHandler;
-            if ( m_TwoFingerMoveGesture != null )
-			    m_TwoFingerMoveGesture.Transformed += TwoFingerTransformedHandler;
-            if ( m_PressGesture != null)
+            if (m_ThreeTapGesture != null)
+                m_ThreeTapGesture.Tapped += ThreeTapGesture_Tapped;
+            if (m_OneFingerMoveGesture != null)
+                m_OneFingerMoveGesture.Transformed += OneFingerTransformedHandler;
+            if (m_TwoFingerMoveGesture != null)
+                m_TwoFingerMoveGesture.Transformed += TwoFingerTransformedHandler;
+            if (m_PressGesture != null)
                 m_PressGesture.Pressed += PressGesturePressed;
-            if ( m_ReleaseGesture != null )
+            if (m_ReleaseGesture != null)
                 m_ReleaseGesture.Released += ReleaseGestureReleased;
-            if ( m_LongPressGesture != null )
+            if (m_LongPressGesture != null)
                 m_LongPressGesture.LongPressed += LongPressGesturePressed;
-            
+
         }
 
         private void OnDisable()
-		{
-            if ( m_TapGesture != null )
-			    m_TapGesture.Tapped -= TapGesture_Tapped;
-            if ( m_DoubleTapGesture != null )
+        {
+            if (m_TapGesture != null)
+                m_TapGesture.Tapped -= TapGesture_Tapped;
+            if (m_DoubleTapGesture != null)
                 m_DoubleTapGesture.Tapped -= DoubleTapGesture_Tapped;
-            if ( m_ThreeTapGesture != null )
-			    m_ThreeTapGesture.Tapped -= ThreeTapGesture_Tapped;
-            if ( m_OneFingerMoveGesture != null )
-			    m_OneFingerMoveGesture.Transformed -= OneFingerTransformedHandler;
-            if( m_TwoFingerMoveGesture != null )
-			    m_TwoFingerMoveGesture.Transformed -= TwoFingerTransformedHandler;
-            if ( m_PressGesture != null )
+            if (m_ThreeTapGesture != null)
+                m_ThreeTapGesture.Tapped -= ThreeTapGesture_Tapped;
+            if (m_OneFingerMoveGesture != null)
+                m_OneFingerMoveGesture.Transformed -= OneFingerTransformedHandler;
+            if (m_TwoFingerMoveGesture != null)
+                m_TwoFingerMoveGesture.Transformed -= TwoFingerTransformedHandler;
+            if (m_PressGesture != null)
                 m_PressGesture.Pressed -= PressGesturePressed;
-            if ( m_ReleaseGesture != null )
+            if (m_ReleaseGesture != null)
                 m_ReleaseGesture.Released -= ReleaseGestureReleased;
-            if ( m_LongPressGesture != null )
+            if (m_LongPressGesture != null)
                 m_LongPressGesture.LongPressed -= LongPressGesturePressed;
 
             if (m_DragEvents != null)
@@ -302,15 +302,15 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                 m_DoubleTapEvents.Clear();
         }
 
-		/// <summary>
-		/// Gets the main camera.
-		/// </summary>
-		/// <value>The main camera.</value>
+        /// <summary>
+        /// Gets the main camera.
+        /// </summary>
+        /// <value>The main camera.</value>
         public UnityEngine.Camera MainCamera
         {
             get
             {
-                if(m_mainCamera == null)
+                if (m_mainCamera == null)
                     m_mainCamera = UnityEngine.Camera.main;
 
                 return m_mainCamera;
@@ -318,9 +318,9 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         }
 
 
-		#endregion
+        #endregion
 
-		#region OneFinger Events - Register / UnRegister / Call
+        #region OneFinger Events - Register / UnRegister / Call
         /// <summary>
         /// Registers the drag event.
         /// </summary>
@@ -372,7 +372,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             {
                 if (!string.IsNullOrEmpty(callback))
                 {
-                    
+
                     if (m_DragEvents.ContainsKey(numberOfFinger))
                     {
                         bool itemRemovedSuccess = m_DragEvents[numberOfFinger].Remove(new TouchEventData(gameObjectToDrag, callback, SortingLayer, isDragInside));
@@ -380,9 +380,9 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                         if (!itemRemovedSuccess)
                         {
 
-                            #if ENABLE_DEBUGGING
+#if ENABLE_DEBUGGING
                     Log.Debug("TouchEventManager", "UnregisterDragEvent couldn't remove touch event. Now, searching one by one. ");
-                            #endif
+#endif
 
                             for (int i = 0; i < m_DragEvents[numberOfFinger].Count; i++)
                             {
@@ -400,7 +400,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                         }
 
                         success &= itemRemovedSuccess;
-                    } 
+                    }
                 }
                 else
                 {
@@ -416,38 +416,38 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         }
 
 
-		private void OneFingerTransformedHandler(object sender, System.EventArgs e)
-		{
+        private void OneFingerTransformedHandler(object sender, System.EventArgs e)
+        {
             RaycastHit hit = default(RaycastHit);
             RaycastHit2D hit2D = default(RaycastHit2D);
-			//Log.Status ("TouchEventManager", "oneFingerManipulationTransformedHandler: {0}", m_OneFingerMoveGesture.DeltaPosition);
-			if (m_Active)
-			{
-				TouchEventData dragEventToFire = null;
-					
-				Ray rayForDrag = MainCamera.ScreenPointToRay(m_OneFingerMoveGesture.ScreenPosition);
+            //Log.Status ("TouchEventManager", "oneFingerManipulationTransformedHandler: {0}", m_OneFingerMoveGesture.DeltaPosition);
+            if (m_Active)
+            {
+                TouchEventData dragEventToFire = null;
 
-				foreach (var kp in m_DragEvents)
-				{
-					if (kp.Key == 1)
-					{
+                Ray rayForDrag = MainCamera.ScreenPointToRay(m_OneFingerMoveGesture.ScreenPosition);
 
-						for (int i = 0; i < kp.Value.Count; ++i)
-						{
-							TouchEventData dragEventData = kp.Value [i];
+                foreach (var kp in m_DragEvents)
+                {
+                    if (kp.Key == 1)
+                    {
 
-                            if ( string.IsNullOrEmpty(dragEventData.DragCallback)) 
+                        for (int i = 0; i < kp.Value.Count; ++i)
+                        {
+                            TouchEventData dragEventData = kp.Value[i];
+
+                            if (string.IsNullOrEmpty(dragEventData.DragCallback))
                             {
-								Log.Warning ("TouchEventManager", "Removing invalid event receiver from OneFingerDrag");
-								kp.Value.RemoveAt (i--);
-								continue;
-							}
+                                Log.Warning("TouchEventManager", "Removing invalid event receiver from OneFingerDrag");
+                                kp.Value.RemoveAt(i--);
+                                continue;
+                            }
 
-							bool hasDragOnObject = false;
-							//If we can drag the object, we should check that whether there is a raycast or not!
-							if(dragEventData.CanDragObject)
-							{
-								bool isHitOnLayer = Physics.Raycast(rayForDrag, out hit, Mathf.Infinity, 1 << dragEventData.GameObjectAttached.layer);
+                            bool hasDragOnObject = false;
+                            //If we can drag the object, we should check that whether there is a raycast or not!
+                            if (dragEventData.CanDragObject)
+                            {
+                                bool isHitOnLayer = Physics.Raycast(rayForDrag, out hit, Mathf.Infinity, 1 << dragEventData.GameObjectAttached.layer);
                                 Transform hitTransform = null;
 
                                 if (isHitOnLayer)
@@ -463,105 +463,105 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                                         hitTransform = hit2D.transform;
                                     }
                                 }
-                                    
 
-                                if(isHitOnLayer && dragEventData.HasTouchedOn(hitTransform) && dragEventData.IsInside)
-								{
-									hasDragOnObject = true;
-								}
+
+                                if (isHitOnLayer && dragEventData.HasTouchedOn(hitTransform) && dragEventData.IsInside)
+                                {
+                                    hasDragOnObject = true;
+                                }
                                 else if (!isHitOnLayer && !dragEventData.IsInside)
                                 {
                                     hasDragOnObject = true;
                                 }
                                 else
                                 {
-									//do nothing - we were checking that draggable object that we touched!
-								}
+                                    //do nothing - we were checking that draggable object that we touched!
+                                }
 
-							}
+                            }
 
-							if( hasDragOnObject || !dragEventData.CanDragObject)
-							{
-								//They are all fullscreen drags!
-								if (dragEventToFire == null) 
-								{
-									dragEventToFire = dragEventData;
-								} 
-								else 
-								{
-									if (dragEventData.SortingLayer > dragEventToFire.SortingLayer || (dragEventToFire.SortingLayer == dragEventData.SortingLayer && !dragEventToFire.IsInside))
-									{
-										dragEventToFire = dragEventData;
-									}
-									else
-									{
-										//do nothing
-									}
-								}
-							}
-						}
-					}
-				}
+                            if (hasDragOnObject || !dragEventData.CanDragObject)
+                            {
+                                //They are all fullscreen drags!
+                                if (dragEventToFire == null)
+                                {
+                                    dragEventToFire = dragEventData;
+                                }
+                                else
+                                {
+                                    if (dragEventData.SortingLayer > dragEventToFire.SortingLayer || (dragEventToFire.SortingLayer == dragEventData.SortingLayer && !dragEventToFire.IsInside))
+                                    {
+                                        dragEventToFire = dragEventData;
+                                    }
+                                    else
+                                    {
+                                        //do nothing
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
 
-                if(dragEventToFire != null)
+                if (dragEventToFire != null)
                     EventManager.Instance.SendEvent(dragEventToFire.DragCallback, m_OneFingerMoveGesture, hit, hit2D);
 
                 EventManager.Instance.SendEvent("OnDragOneFingerFullscreen", m_OneFingerMoveGesture);
-			}
-		}
+            }
+        }
 
-		private void TwoFingerTransformedHandler(object sender, System.EventArgs e)
-		{
-			//Log.Status ("TouchEventManager", "TwoFingerTransformedHandler: {0}", m_TwoFingerMoveGesture.DeltaPosition);
-			if (m_Active)
-			{
-				TouchEventData dragEventToFire = null;
+        private void TwoFingerTransformedHandler(object sender, System.EventArgs e)
+        {
+            //Log.Status ("TouchEventManager", "TwoFingerTransformedHandler: {0}", m_TwoFingerMoveGesture.DeltaPosition);
+            if (m_Active)
+            {
+                TouchEventData dragEventToFire = null;
 
-				foreach (var kp in m_DragEvents)
-				{
-					if (kp.Key == 2)
-					{
-						
-						for (int i = 0; i < kp.Value.Count; ++i)
-						{
-							TouchEventData dragEventData = kp.Value [i];
-							
-                            if ( string.IsNullOrEmpty(dragEventData.DragCallback)) 
+                foreach (var kp in m_DragEvents)
+                {
+                    if (kp.Key == 2)
+                    {
+
+                        for (int i = 0; i < kp.Value.Count; ++i)
+                        {
+                            TouchEventData dragEventData = kp.Value[i];
+
+                            if (string.IsNullOrEmpty(dragEventData.DragCallback))
                             {
-								Log.Warning ("TouchEventManager", "Removing invalid event receiver from TwoFingerDrag");
-								kp.Value.RemoveAt (i--);
-								continue;
-							}
-							
-							if (dragEventToFire == null)
-							{
-								dragEventToFire = dragEventData;
-							}
-							else
-							{
-								if (dragEventData.SortingLayer > dragEventToFire.SortingLayer || 
-								    (dragEventToFire.SortingLayer == dragEventData.SortingLayer && !dragEventToFire.IsInside))
-								{
-									dragEventToFire = dragEventData;
-								}
-								else
-								{
-									//do nothing
-								}
-							}
-						}
-					}
-				}
-				
-				if(dragEventToFire != null)
-					EventManager.Instance.SendEvent(dragEventToFire.DragCallback, m_TwoFingerMoveGesture);
-				
-                EventManager.Instance.SendEvent("OnDragTwoFingerFullscreen", m_TwoFingerMoveGesture);
-			}
-		}
-		#endregion
+                                Log.Warning("TouchEventManager", "Removing invalid event receiver from TwoFingerDrag");
+                                kp.Value.RemoveAt(i--);
+                                continue;
+                            }
 
-		#region TapEvents - Register / UnRegister / Call 
+                            if (dragEventToFire == null)
+                            {
+                                dragEventToFire = dragEventData;
+                            }
+                            else
+                            {
+                                if (dragEventData.SortingLayer > dragEventToFire.SortingLayer ||
+                                    (dragEventToFire.SortingLayer == dragEventData.SortingLayer && !dragEventToFire.IsInside))
+                                {
+                                    dragEventToFire = dragEventData;
+                                }
+                                else
+                                {
+                                    //do nothing
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (dragEventToFire != null)
+                    EventManager.Instance.SendEvent(dragEventToFire.DragCallback, m_TwoFingerMoveGesture);
+
+                EventManager.Instance.SendEvent("OnDragTwoFingerFullscreen", m_TwoFingerMoveGesture);
+            }
+        }
+        #endregion
+
+        #region TapEvents - Register / UnRegister / Call 
         /// <summary>
         /// Registers the tap event.
         /// </summary>
@@ -574,7 +574,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         public bool RegisterTapEvent(GameObject gameObjectToTouch, string callback, int SortingLayer = 0, bool isTapInside = true, LayerMask layerMask = default(LayerMask))
         {
             bool success = false;
-             
+
             if (gameObjectToTouch != null)
             {
                 if (!string.IsNullOrEmpty(callback))
@@ -613,7 +613,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             {
                 Log.Warning("TouchEventManager", "There is no gameobject for tap event registration");
             }
-				
+
             return success;
         }
 
@@ -648,9 +648,9 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                             if (!itemRemovedSuccess)
                             {
 
-                                #if ENABLE_DEBUGGING
+#if ENABLE_DEBUGGING
                         Log.Debug("TouchEventManager", "UnregisterTapEvent couldn't remove touch event. Now, searching one by one. ");
-                                #endif
+#endif
 
                                 for (int i = 0; i < m_TapEvents[layerMaskAsKey].Count; i++)
                                 {
@@ -684,27 +684,27 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             return success;
         }
 
-		private void TapGesture_Tapped(object sender, System.EventArgs e)
-		{   
+        private void TapGesture_Tapped(object sender, System.EventArgs e)
+        {
             if (m_Active)
-			{
-                #if ENABLE_DEBUGGING
+            {
+#if ENABLE_DEBUGGING
                 Log.Debug("TouchEventManager", "TapGesture_Tapped: {0} - {1}", m_TapGesture.ScreenPosition, m_TapGesture.NumTouches);
-                #endif
+#endif
 
                 TouchEventData tapEventToFire = null;
-				RaycastHit hit = default(RaycastHit);
+                RaycastHit hit = default(RaycastHit);
                 RaycastHit hitToFire = default(RaycastHit);
 
-				foreach (var kp in m_TapEvents)
-				{
-					Ray rayForTab = MainCamera.ScreenPointToRay(m_TapGesture.ScreenPosition);
+                foreach (var kp in m_TapEvents)
+                {
+                    Ray rayForTab = MainCamera.ScreenPointToRay(m_TapGesture.ScreenPosition);
 
-					bool isHitOnLayer = Physics.Raycast(rayForTab, out hit, Mathf.Infinity, kp.Key);
+                    bool isHitOnLayer = Physics.Raycast(rayForTab, out hit, Mathf.Infinity, kp.Key);
 
-					for (int i = 0; i < kp.Value.Count; ++i)
-					{
-						TouchEventData tapEventData = kp.Value[i];
+                    for (int i = 0; i < kp.Value.Count; ++i)
+                    {
+                        TouchEventData tapEventData = kp.Value[i];
 
                         if (kp.Value[i].Collider == null)
                         {
@@ -713,70 +713,70 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                             continue;
                         }
 
-                        if ( string.IsNullOrEmpty(tapEventData.TapCallback))
-						{
-							Log.Warning("TouchEventManager", "Removing invalid event receiver from TapEventList");
-							kp.Value.RemoveAt(i--);
-							continue;
-						}
+                        if (string.IsNullOrEmpty(tapEventData.TapCallback))
+                        {
+                            Log.Warning("TouchEventManager", "Removing invalid event receiver from TapEventList");
+                            kp.Value.RemoveAt(i--);
+                            continue;
+                        }
 
-						if(isHitOnLayer && hit.collider.transform == tapEventData.Collider.transform && tapEventData.IsInside)
-						{
-							//Tapped inside the object
-							if(tapEventToFire == null)
-							{
-								tapEventToFire = tapEventData;
+                        if (isHitOnLayer && hit.collider.transform == tapEventData.Collider.transform && tapEventData.IsInside)
+                        {
+                            //Tapped inside the object
+                            if (tapEventToFire == null)
+                            {
+                                tapEventToFire = tapEventData;
                                 hitToFire = hit;
-							}
-							else
-							{
-								if(tapEventData.SortingLayer > tapEventToFire.SortingLayer || 
-								   (tapEventToFire.SortingLayer == tapEventData.SortingLayer && !tapEventToFire.IsInside))
-								{
-									tapEventToFire = tapEventData;
+                            }
+                            else
+                            {
+                                if (tapEventData.SortingLayer > tapEventToFire.SortingLayer ||
+                                   (tapEventToFire.SortingLayer == tapEventData.SortingLayer && !tapEventToFire.IsInside))
+                                {
+                                    tapEventToFire = tapEventData;
                                     hitToFire = hit;
-								}
-								else
-								{
-									//do nothing
-								}
-							}
+                                }
+                                else
+                                {
+                                    //do nothing
+                                }
+                            }
 
-						}
-						else if( (!isHitOnLayer || hit.collider.transform != tapEventData.Collider.transform) && !tapEventData.IsInside)
-						{
-							//Tapped outside the object
-							if(tapEventToFire == null)
-							{
-								tapEventToFire = tapEventData;
+                        }
+                        else if ((!isHitOnLayer || hit.collider.transform != tapEventData.Collider.transform) && !tapEventData.IsInside)
+                        {
+                            //Tapped outside the object
+                            if (tapEventToFire == null)
+                            {
+                                tapEventToFire = tapEventData;
                                 hitToFire = hit;
-							}
-							else
-							{
-								if(tapEventData.SortingLayer > tapEventToFire.SortingLayer)
-								{
-									tapEventToFire = tapEventData;
+                            }
+                            else
+                            {
+                                if (tapEventData.SortingLayer > tapEventToFire.SortingLayer)
+                                {
+                                    tapEventToFire = tapEventData;
                                     hitToFire = hit;
-								}
-								else
-								{
-									//do nothing
-								}
-							}
-						}
-						else
-						{
-							//do nothing
-						}
-					}
-				}
+                                }
+                                else
+                                {
+                                    //do nothing
+                                }
+                            }
+                        }
+                        else
+                        {
+                            //do nothing
+                        }
+                    }
+                }
 
-				if(tapEventToFire != null)
+                if (tapEventToFire != null)
                     EventManager.Instance.SendEvent(tapEventToFire.TapCallback, m_TapGesture, hitToFire);
 
                 EventManager.Instance.SendEvent("OnSingleTap", m_TapGesture);
-			}
-		}
+            }
+        }
         #endregion
 
         #region Double TapEvents - Register / UnRegister / Call 
@@ -831,7 +831,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             {
                 Log.Warning("TouchEventManager", "There is no gameobject for double-tap event registration");
             }
-				
+
             return success;
         }
 
@@ -865,9 +865,9 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                             if (!itemRemovedSuccess)
                             {
 
-                                #if ENABLE_DEBUGGING
+#if ENABLE_DEBUGGING
                         Log.Debug("TouchEventManager", "UnregisterDoubleTapEvent couldn't remove touch event. Now, searching one by one. ");
-                                #endif
+#endif
 
                                 for (int i = 0; i < m_DoubleTapEvents[layerMaskAsKey].Count; i++)
                                 {
@@ -902,12 +902,12 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 
 
         private void DoubleTapGesture_Tapped(object sender, System.EventArgs e)
-        {   
+        {
             if (m_Active)
             {
-                #if ENABLE_DEBUGGING
+#if ENABLE_DEBUGGING
                 Log.Debug("TouchEventManager", "DoubleTapGesture_Tapped: {0} - {1}", m_DoubleTapGesture.ScreenPosition, m_DoubleTapGesture.NumTouches);
-                #endif
+#endif
 
                 TouchEventData tapEventToFire = null;
                 RaycastHit hit = default(RaycastHit);
@@ -938,17 +938,17 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                             continue;
                         }
 
-                        if(isHitOnLayer && hit.collider.transform == tapEventData.Collider.transform && tapEventData.IsInside)
-						{
+                        if (isHitOnLayer && hit.collider.transform == tapEventData.Collider.transform && tapEventData.IsInside)
+                        {
                             //Tapped inside the object
-                            if(tapEventToFire == null)
+                            if (tapEventToFire == null)
                             {
                                 tapEventToFire = tapEventData;
                                 hitToFire = hit;
                             }
                             else
                             {
-                                if(tapEventData.SortingLayer > tapEventToFire.SortingLayer || 
+                                if (tapEventData.SortingLayer > tapEventToFire.SortingLayer ||
                                     (tapEventToFire.SortingLayer == tapEventData.SortingLayer && !tapEventToFire.IsInside))
                                 {
                                     tapEventToFire = tapEventData;
@@ -961,17 +961,17 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                             }
 
                         }
-                        else if( (!isHitOnLayer || hit.collider.transform != tapEventData.Collider.transform) && !tapEventData.IsInside)
-						{
+                        else if ((!isHitOnLayer || hit.collider.transform != tapEventData.Collider.transform) && !tapEventData.IsInside)
+                        {
                             //Tapped outside the object
-                            if(tapEventToFire == null)
+                            if (tapEventToFire == null)
                             {
                                 tapEventToFire = tapEventData;
                                 hitToFire = hit;
                             }
                             else
                             {
-                                if(tapEventData.SortingLayer > tapEventToFire.SortingLayer)
+                                if (tapEventData.SortingLayer > tapEventToFire.SortingLayer)
                                 {
                                     tapEventToFire = tapEventData;
                                     hitToFire = hit;
@@ -983,14 +983,14 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                             }
                         }
                         else
-						{
+                        {
                             //do nothing
                         }
                     }
 
                 }
 
-                if(tapEventToFire != null)
+                if (tapEventToFire != null)
                     EventManager.Instance.SendEvent(tapEventToFire.TapCallback, m_DoubleTapGesture, hitToFire);
 
                 EventManager.Instance.SendEvent("OnDoubleTap", m_DoubleTapGesture);
@@ -1001,41 +1001,41 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         #endregion
 
 
-		#region Three Tap Gesture Call
+        #region Three Tap Gesture Call
 
-		private void ThreeTapGesture_Tapped(object sender, System.EventArgs e)
-		{
-			if (m_Active) 
-			{
-                #if ENABLE_DEBUGGING
+        private void ThreeTapGesture_Tapped(object sender, System.EventArgs e)
+        {
+            if (m_Active)
+            {
+#if ENABLE_DEBUGGING
                 Log.Debug("TouchEventManager", "ThreeTapGesture_Tapped: {0} - {1}", m_ThreeTapGesture.ScreenPosition, m_ThreeTapGesture.NumTouches);
-                #endif
+#endif
                 EventManager.Instance.SendEvent("OnTripleTap", m_ThreeTapGesture);
-			}
-		}
+            }
+        }
 
-		#endregion
+        #endregion
 
         #region PressGesture Events -  Call - There is no registration is sends automatically the press event
-        
+
         private void PressGesturePressed(object sender, System.EventArgs e)
         {
-            #if ENABLE_DEBUGGING
+#if ENABLE_DEBUGGING
             Log.Debug("TouchEventManager", "PressGesturePressed: {0} - {1}", m_PressGesture.ScreenPosition, m_PressGesture.NumTouches);
-            #endif
+#endif
 
             EventManager.Instance.SendEvent("OnTouchPressedFullscreen", m_PressGesture);
         }
-        
+
         #endregion
 
         #region Long Press Gesture Events
 
         private void LongPressGesturePressed(object sender, System.EventArgs e)
         {
-            #if ENABLE_DEBUGGING
+#if ENABLE_DEBUGGING
             Log.Debug("TouchEventManager", "LongPressGesturePressed: {0} - {1}", m_LongPressGesture.ScreenPosition, m_LongPressGesture.NumTouches);
-            #endif
+#endif
 
             EventManager.Instance.SendEvent("OnLongPressOneFinger", m_LongPressGesture);
         }
@@ -1043,12 +1043,12 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         #endregion
 
         #region ReleaseGesture Events - Call - There is no registration is sends automatically the release event
-        
+
         private void ReleaseGestureReleased(object sender, System.EventArgs e)
         {
-            #if ENABLE_DEBUGGING
+#if ENABLE_DEBUGGING
             Log.Debug("TouchEventManager", "ReleaseGestureReleased: {0} - {1}", m_ReleaseGesture.ScreenPosition, m_ReleaseGesture.NumTouches);
-            #endif
+#endif
 
             EventManager.Instance.SendEvent("OnTouchReleasedFullscreen", m_ReleaseGesture);
         }

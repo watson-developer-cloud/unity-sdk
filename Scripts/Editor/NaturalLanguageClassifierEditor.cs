@@ -117,7 +117,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
                 }
                 catch (Exception e)
                 {
-					Log.Error("NaturalLanguageClassifierEditor", "Failed to load classifier data {1}: {0}", e.ToString(), filename);
+                    Log.Error("NaturalLanguageClassifierEditor", "Failed to load classifier data {1}: {0}", e.ToString(), filename);
                     return false;
                 }
 
@@ -130,14 +130,14 @@ namespace IBM.Watson.DeveloperCloud.Editor
         private void OnEnable()
         {
 #if UNITY_5
-			titleContent.text = "Natural Language Classifier Editor";
+            titleContent.text = "Natural Language Classifier Editor";
 #endif
             m_WatsonIcon = (Texture2D)Resources.Load(Constants.Resources.WATSON_ICON, typeof(Texture2D));
 
             Runnable.EnableRunnableInEditor();
         }
 
-		[MenuItem("Watson/Natural Language Classifier Editor", false, 2)]
+        [MenuItem("Watson/Natural Language Classifier Editor", false, 2)]
         private static void EditConfig()
         {
             GetWindow<NaturalLanguageClassifierEditor>().Show();
@@ -146,7 +146,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
         private string m_ClassifiersFolder = null;
         private Texture m_WatsonIcon = null;
         private Vector2 m_ScrollPos = Vector2.zero;
-		private NaturalLanguageClassifier m_NaturalLanguageClassifier = new NaturalLanguageClassifier();
+        private NaturalLanguageClassifier m_NaturalLanguageClassifier = new NaturalLanguageClassifier();
         private Classifiers m_Classifiers = null;
         private static fsSerializer sm_Serializer = new fsSerializer();
         private List<ClassifierData> m_ClassifierData = null;
@@ -177,7 +177,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
         private void OnDeleteClassifier(bool success)
         {
             if (!success)
-				Log.Error("Natural Language Classifier Trainer", "Failed to delete classifier.");
+                Log.Error("Natural Language Classifier Trainer", "Failed to delete classifier.");
             else
                 OnRefresh();
         }
@@ -190,16 +190,16 @@ namespace IBM.Watson.DeveloperCloud.Editor
                 OnRefresh();
         }
 
-        private static string FindDirectory( string check, string name )
+        private static string FindDirectory(string check, string name)
         {
-            foreach( var d in Directory.GetDirectories( check ) )
+            foreach (var d in Directory.GetDirectories(check))
             {
-                string dir = d.Replace( "\\", "/" );        // normalize the slashes
-                if ( dir.EndsWith( name ) )
+                string dir = d.Replace("\\", "/");        // normalize the slashes
+                if (dir.EndsWith(name))
                     return d;
 
-                string found = FindDirectory( d, name );
-                if ( found != null )
+                string found = FindDirectory(d, name);
+                if (found != null)
                     return found;
             }
 
@@ -210,9 +210,9 @@ namespace IBM.Watson.DeveloperCloud.Editor
         {
             if (!m_Refreshing)
             {
-                m_ClassifiersFolder = Path.Combine( Application.dataPath, Config.Instance.ClassifierDirectory );
-                if (! Directory.Exists( m_ClassifiersFolder ) )
-                    Directory.CreateDirectory( m_ClassifiersFolder );
+                m_ClassifiersFolder = Path.Combine(Application.dataPath, Config.Instance.ClassifierDirectory);
+                if (!Directory.Exists(m_ClassifiersFolder))
+                    Directory.CreateDirectory(m_ClassifiersFolder);
 
                 m_ClassifierData = new List<ClassifierData>();
                 foreach (var file in Directory.GetFiles(m_ClassifiersFolder, "*.json"))
@@ -223,7 +223,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
                 }
 
                 if (!m_NaturalLanguageClassifier.GetClassifiers(OnGetClassifiers))
-					Log.Error("Natural Language Classifier Trainer", "Failed to request classifiers, please make sure your NaturalLanguageClassifierV1 service has credentials configured.");
+                    Log.Error("Natural Language Classifier Trainer", "Failed to request classifiers, please make sure your NaturalLanguageClassifierV1 service has credentials configured.");
                 else
                     m_Refreshing = true;
             }
@@ -236,7 +236,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
 
         private void OnGUI()
         {
-            if ( Event.current.type == EventType.repaint && !m_handleRepaintError )
+            if (Event.current.type == EventType.repaint && !m_handleRepaintError)
             {
                 m_handleRepaintError = true;
                 return;
@@ -268,17 +268,17 @@ namespace IBM.Watson.DeveloperCloud.Editor
 
                     bool expanded = data.Expanded;
                     data.Expanded = EditorGUILayout.Foldout(expanded, data.Name + " [Language: " + data.Language + "]");
-                    if ( data.Expanded != expanded )
+                    if (data.Expanded != expanded)
                         data.Save();
 
-                    if ( GUILayout.Button( "Import", GUILayout.Width( 100 ) ) )
+                    if (GUILayout.Button("Import", GUILayout.Width(100)))
                     {
                         var path = EditorUtility.OpenFilePanel("Select Training File", "", "csv");
                         if (!string.IsNullOrEmpty(path))
                         {
                             try
-							{
-                                data.Import( path );
+                            {
+                                data.Import(path);
                             }
                             catch
                             {
@@ -286,24 +286,24 @@ namespace IBM.Watson.DeveloperCloud.Editor
                             }
                         }
                     }
-                    if ( GUILayout.Button( "Export", GUILayout.Width( 100 ) ) )
+                    if (GUILayout.Button("Export", GUILayout.Width(100)))
                     {
-                        var path = EditorUtility.SaveFilePanel( "Export Training file", Application.dataPath, "", "csv" );
-                        if (! string.IsNullOrEmpty(path) )
-                            File.WriteAllText( path, data.Export() );
+                        var path = EditorUtility.SaveFilePanel("Export Training file", Application.dataPath, "", "csv");
+                        if (!string.IsNullOrEmpty(path))
+                            File.WriteAllText(path, data.Export());
                     }
-                    if ( GUILayout.Button( "Save", GUILayout.Width( 100 ) ) )
+                    if (GUILayout.Button("Save", GUILayout.Width(100)))
                         data.Save();
-                    if ( GUILayout.Button( "Delete", GUILayout.Width( 100 ) ) )
+                    if (GUILayout.Button("Delete", GUILayout.Width(100)))
                     {
-                        if ( EditorUtility.DisplayDialog( "Confirm", "Please confirm you want to delete classifier: " + data.Name, "Yes", "No" ) )
+                        if (EditorUtility.DisplayDialog("Confirm", "Please confirm you want to delete classifier: " + data.Name, "Yes", "No"))
                             deleteClassifier = data;
                     }
-                    if ( GUILayout.Button( "Train", GUILayout.Width( 100 ) ) )
+                    if (GUILayout.Button("Train", GUILayout.Width(100)))
                     {
                         string classifierName = data.Name + "/" + DateTime.Now.ToString();
 
-                        if ( EditorUtility.DisplayDialog( "Confirm", "Please confirm you want to train a new instance: " + classifierName, "Yes", "No" ) )
+                        if (EditorUtility.DisplayDialog("Confirm", "Please confirm you want to train a new instance: " + classifierName, "Yes", "No"))
                         {
                             if (!m_NaturalLanguageClassifier.TrainClassifier(classifierName, data.Language, data.Export(), OnClassiferTrained))
                                 EditorUtility.DisplayDialog("Error", "Failed to train classifier.", "OK");
@@ -316,11 +316,11 @@ namespace IBM.Watson.DeveloperCloud.Editor
                         EditorGUI.indentLevel += 1;
 
                         bool instancesExpanded = data.InstancesExpanded;
-                        data.InstancesExpanded = EditorGUILayout.Foldout( instancesExpanded, "Instances" );
-                        if ( instancesExpanded != data.InstancesExpanded )
+                        data.InstancesExpanded = EditorGUILayout.Foldout(instancesExpanded, "Instances");
+                        if (instancesExpanded != data.InstancesExpanded)
                             data.Save();
 
-                        if ( instancesExpanded )
+                        if (instancesExpanded)
                         {
                             EditorGUI.indentLevel += 1;
                             if (m_Classifiers != null)
@@ -328,12 +328,12 @@ namespace IBM.Watson.DeveloperCloud.Editor
                                 for (int i = 0; i < m_Classifiers.classifiers.Length; ++i)
                                 {
                                     Classifier cl = m_Classifiers.classifiers[i];
-                                    if (! cl.name.StartsWith( data.Name + "/" ) )
+                                    if (!cl.name.StartsWith(data.Name + "/"))
                                         continue;
 
                                     EditorGUILayout.BeginHorizontal();
                                     EditorGUILayout.LabelField("Name: " + cl.name);
-                                    if (GUILayout.Button("Delete", GUILayout.Width( 100 ) ))
+                                    if (GUILayout.Button("Delete", GUILayout.Width(100)))
                                     {
                                         if (EditorUtility.DisplayDialog("Confirm", string.Format("Confirm delete of classifier {0}", cl.classifier_id), "YES", "NO")
                                             && !m_NaturalLanguageClassifier.DeleteClassifer(cl.classifier_id, OnDeleteClassifier))
@@ -360,11 +360,11 @@ namespace IBM.Watson.DeveloperCloud.Editor
                             data.DataExpanded = new Dictionary<string, bool>();
 
                         bool classesExpanded = data.ClassesExpanded;
-                        data.ClassesExpanded = EditorGUILayout.Foldout( classesExpanded, "Classes" );
-                        if ( classesExpanded != data.ClassesExpanded )
+                        data.ClassesExpanded = EditorGUILayout.Foldout(classesExpanded, "Classes");
+                        if (classesExpanded != data.ClassesExpanded)
                             data.Save();
 
-                        if ( classesExpanded )
+                        if (classesExpanded)
                         {
                             EditorGUI.indentLevel += 1;
 
@@ -373,13 +373,13 @@ namespace IBM.Watson.DeveloperCloud.Editor
                             EditorGUI.BeginDisabledGroup(string.IsNullOrEmpty(m_NewClassName));
 
                             GUI.SetNextControlName("AddClass");
-                            if (GUILayout.Button("Add Class", GUILayout.Width( 100 ) ))
+                            if (GUILayout.Button("Add Class", GUILayout.Width(100)))
                             {
                                 data.Data[m_NewClassName] = new List<string>();
                                 data.Save();
 
                                 m_NewClassName = string.Empty;
-                                GUI.FocusControl( "AddClass" );
+                                GUI.FocusControl("AddClass");
                             }
                             EditorGUI.EndDisabledGroup();
                             EditorGUILayout.EndHorizontal();
@@ -392,12 +392,12 @@ namespace IBM.Watson.DeveloperCloud.Editor
 
                                 EditorGUILayout.BeginHorizontal();
                                 data.DataExpanded[kp.Key] = EditorGUILayout.Foldout(classExpanded, "Class: " + kp.Key);
-                                if ( classExpanded != data.DataExpanded[kp.Key] )
+                                if (classExpanded != data.DataExpanded[kp.Key])
                                     data.Save();
 
-                                if ( GUILayout.Button( "Delete", GUILayout.Width(100) ) )
+                                if (GUILayout.Button("Delete", GUILayout.Width(100)))
                                 {
-                                    if ( EditorUtility.DisplayDialog( "Confirm", "Please confirm you want to delete class: " + kp.Key, "Yes", "No" ) )
+                                    if (EditorUtility.DisplayDialog("Confirm", "Please confirm you want to delete class: " + kp.Key, "Yes", "No"))
                                         deleteClass = kp.Key;
                                 }
                                 EditorGUILayout.EndHorizontal();
@@ -417,7 +417,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
                                         data.Save();
 
                                         m_NewPhrase = string.Empty;
-                                        GUI.FocusControl( "AddPhrase" );
+                                        GUI.FocusControl("AddPhrase");
                                     }
                                     EditorGUI.EndDisabledGroup();
                                     EditorGUILayout.EndHorizontal();
@@ -437,10 +437,10 @@ namespace IBM.Watson.DeveloperCloud.Editor
                                 }
                             }
 
-                            if (! string.IsNullOrEmpty( deleteClass) )
+                            if (!string.IsNullOrEmpty(deleteClass))
                             {
-                                data.Data.Remove( deleteClass );
-                                data.DataExpanded.Remove( deleteClass );
+                                data.Data.Remove(deleteClass);
+                                data.DataExpanded.Remove(deleteClass);
                                 data.Save();
                             }
 
@@ -451,10 +451,10 @@ namespace IBM.Watson.DeveloperCloud.Editor
                     }
                 }
 
-                if ( deleteClassifier != null )
+                if (deleteClassifier != null)
                 {
-                    File.Delete( deleteClassifier.FileName );
-                    m_ClassifierData.Remove( deleteClassifier );
+                    File.Delete(deleteClassifier.FileName);
+                    m_ClassifierData.Remove(deleteClassifier);
 
                     AssetDatabase.Refresh();
                 }
@@ -470,7 +470,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
             EditorGUI.BeginDisabledGroup(string.IsNullOrEmpty(m_NewClassifierLang) || string.IsNullOrEmpty(m_NewClassifierName));
             if (GUILayout.Button("Create"))
             {
-                m_NewClassifierName = m_NewClassifierName.Replace( "/", "_" );
+                m_NewClassifierName = m_NewClassifierName.Replace("/", "_");
 
                 string classifierFile = m_ClassifiersFolder + "/" + m_NewClassifierName + ".json";
                 if (!File.Exists(classifierFile)
@@ -490,9 +490,9 @@ namespace IBM.Watson.DeveloperCloud.Editor
 
 
             bool showAllClassifiers = m_DisplayClassifiers;
-            m_DisplayClassifiers = EditorGUILayout.Foldout( showAllClassifiers, "All Classifier Instances" );
+            m_DisplayClassifiers = EditorGUILayout.Foldout(showAllClassifiers, "All Classifier Instances");
 
-            if ( showAllClassifiers )
+            if (showAllClassifiers)
             {
                 EditorGUI.indentLevel += 1;
 
@@ -504,7 +504,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
 
                         EditorGUILayout.BeginHorizontal();
                         EditorGUILayout.LabelField("Name: " + cl.name);
-                        if (GUILayout.Button("Delete", GUILayout.Width( 100 ) ))
+                        if (GUILayout.Button("Delete", GUILayout.Width(100)))
                         {
                             if (EditorUtility.DisplayDialog("Confirm", string.Format("Confirm delete of classifier {0}", cl.classifier_id), "YES", "NO")
                                 && !m_NaturalLanguageClassifier.DeleteClassifer(cl.classifier_id, OnDeleteClassifier))

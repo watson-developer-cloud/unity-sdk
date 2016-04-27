@@ -65,7 +65,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             if (m_AlphaFadeOnAwake)
             {
                 m_FadeAwakeRatio += (Time.deltaTime / m_FadeTimeOnAwake);
-                m_AlphaTarget.color = new Color(m_InitialColor.r, m_InitialColor.g, m_InitialColor.b,  Mathf.Clamp01(m_FadeAwakeRatio));
+                m_AlphaTarget.color = new Color(m_InitialColor.r, m_InitialColor.g, m_InitialColor.b, Mathf.Clamp01(m_FadeAwakeRatio));
                 if (m_FadeAwakeRatio > 1.0f)
                     m_AlphaFadeOnAwake = false;
             }
@@ -73,24 +73,24 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             if (!m_TimeReachedToDestroy)
             {
                 m_ElapsedTime += Time.deltaTime;
-                if (m_ElapsedTime > m_DestroyTime )
+                if (m_ElapsedTime > m_DestroyTime)
                 {
                     m_TimeReachedToDestroy = true;
                     OnTimeExpired();
                 }
             }
-           
-            if ( m_Fading )
+
+            if (m_Fading)
             {
                 float fElapsed = Time.time - m_FadeStart;
-                if ( fElapsed < m_FadeTime && m_AlphaTarget != null )
+                if (fElapsed < m_FadeTime && m_AlphaTarget != null)
                 {
                     Color c = m_AlphaTarget.color;
                     c.a = 1.0f - fElapsed / m_FadeTime;
                     m_AlphaTarget.color = c;
                 }
                 else
-                    Destroy( gameObject );            
+                    Destroy(gameObject);
             }
         }
 
@@ -103,7 +103,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             if (m_AlphaFade && m_AlphaTarget != null)
             {
                 m_AlphaTarget.color = m_InitialColor;
-              
+
             }
         }
 
