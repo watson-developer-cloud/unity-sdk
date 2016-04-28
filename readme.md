@@ -7,17 +7,13 @@ Use this SDK to build Watson-powered applications in Unity. It comes with a set 
 * [Getting the Watson SDK and adding it to Unity](#getting-the-watson-sdk-and-adding-it-to-unity)
   * [Installing the SDK source into your Unity project](#installing-the-sdk-source-into-your-unity-project)
 * [Configuring your service credentials](#configuring-your-service-credentials)
-* [Preparing the test data for developing a basic application](#preparing-the-test-data-for-developing-a-basic-application)
-* [Developing a basic application in one minute](#developing-a-basic-application-in-one-minute)
-* [Dialog and classifier management](#dialog-and-classifier-management)
-  * [Uploading dialogs](#uploading-dialogs)
-  * [Managing classifiers](#managing-classifiers)
 * [IBM Watson Services](#ibm-watson-services)
   * [Speech to Text](#speech-to-text)
   * [Text to Speech](#text-to-speech)
   * [Language Translation](#language-translation)
   * [Dialog](#dialog)
   * [Natural Language Classifier](#natural-language-classifier)
+* [Developing a basic application in one minute](#developing-a-basic-application-in-one-minute)
 * [Documentation](#documentation)
 * [License](#license)
 * [Contributing](#contributing)
@@ -31,7 +27,7 @@ Ensure that you have the following prerequisites:
 ## Getting the Watson SDK and adding it to Unity
 You can get the latest SDK release by going to the [github repository][wdc_unity_sdk] or by clicking [here][latest_release].
 
-## Installing the SDK source into your Unity project
+### Installing the SDK source into your Unity project
 Move the unity-sdk directory into the Assets directory of the Unity project. **Rename the SDK directory from 'unity-sdk' to 'Watson'.**
 
 ## Configuring your service credentials
