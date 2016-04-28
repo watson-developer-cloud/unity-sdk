@@ -314,8 +314,8 @@ MonoBehaviour:
     m_CustomBackButtonPosition: {x: 0, y: 0, z: 0}
     m_CustomBackButtonScale: {x: 0, y: 0}
     m_IsVisibleBackButton: 1
-  - m_SceneName: ExampleTranslation
-    m_SceneDesc: Example Translation
+  - m_SceneName: ExampleLanguageTranslation
+    m_SceneDesc: Example Language Translation
     m_CustomBackButtonPosition: {x: 0, y: 0, z: 0}
     m_CustomBackButtonScale: {x: 0, y: 0}
     m_IsVisibleBackButton: 1
