@@ -34,22 +34,22 @@ Move the unity-sdk directory into the Assets directory of the Unity project. **R
 You will need the 'username' and 'password' credentials for each service. Service credentials are different from your Bluemix account username and password.
 1. Determine which services to configure.
 2. If you have configured the services already, complete the following steps. Otherwise, go to step 3.
-  1. Log in to Bluemix at https://bluemix.net.
-  2. Navigate to the **Dashboard** on your Bluemix account.
-  3. Click the **tile** for a service.
-  4. Under **Add Service**, type a unique name for the service instance in the Service name field. For example, type 'my-service-name'. Leave the default values for the other options.
-  5. Click **Service Credentials**.
-  6. Copy the content in the **Service Credentials** field, and paste it in the credentials field in the Config Editor (**Watson -> Config Editor**) in Unity.
-  7. Click **Apply Credentials**.
-  8. Repeat steps 1 - 5 for each service you want to use.
+    1. Log in to Bluemix at https://bluemix.net.
+    2. Navigate to the **Dashboard** on your Bluemix account.
+    3. Click the **tile** for a service.
+    4. Under **Add Service**, type a unique name for the service instance in the Service name field. For example, type 'my-service-name'. Leave the default values for the other options.
+    5. Click **Service Credentials**.
+    6. Copy the content in the **Service Credentials** field, and paste it in the credentials field in the Config Editor (**Watson -> Config Editor**) in Unity.
+    7. Click **Apply Credentials**.
+    8. Repeat steps 1 - 5 for each service you want to use.
 3. If you need to configure the services that you want to use, complete the following steps.
-  1. In the Config Editor (**Watson -> Config Editor**), click the **Configure** button beside the service to register. The service window is displayed.
-  2. Under **Add Service**, type a unique name for the service instance in the Service name field. For example, type 'my-service-name'. Leave the default values for the other options.
-  3. Click **Create**.
-  4. Click **Service Credentials**.
-  5. Copy the content in the **Service Credentials** field, and paste it in the empty credentials field in the **Config Editor** in Unity.
-  6. Click **Apply Credentials**.
-  7. Repeat steps 1 - 5 for each service you want to use.
+    1. In the Config Editor (**Watson -> Config Editor**), click the **Configure** button beside the service to register. The service window is displayed.
+    2. Under **Add Service**, type a unique name for the service instance in the Service name field. For example, type 'my-service-name'. Leave the default values for the other options.
+    3. Click **Create**.
+    4. Click **Service Credentials**.
+    5. Copy the content in the **Service Credentials** field, and paste it in the empty credentials field in the **Config Editor** in Unity.
+    6. Click **Apply Credentials**.
+    7. Repeat steps 1 - 5 for each service you want to use.
 4. Click **Save**, and close the Config Editor.
 
 ## IBM Watson Services
