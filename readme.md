@@ -38,7 +38,7 @@ Ensure that you have the following prerequisites:
 You can get the SDK from the [github repository](wdc_unity_sdk).
 
 ### Installing the SDK source into your Unity project
-    1. Clone the following Git repository into the Assets directory within your current Unity project using one of the following methods.
+Clone the following Git repository into the Assets directory within your current Unity project using one of the following methods.
 
 #### git clone 
 ```sh
