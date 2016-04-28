@@ -235,14 +235,26 @@ private void OnConverse(ConverseResponse resp)
 ```
 
 ### Natural Language Classifier
-Use [Natural Language Classifier][natural_language_classifier] service to create a classifier instance by providing a set of representative strings and a set of one or more correct classes for each as training. Then use the trained classifier to classify your new question for best matching answers or to retrieve next actions for your application.
+Use [Natural Language Classifier][natural_language_classifier] service to create a classifier instance by providing a set of representative strings and a set of one or more correct classes for each as training. Then use the trained classifier to classify your new question for best matching answers or to retrieve next actions for your application. Create and train a Natural Language Classifier instance by following the instructions in [Creating new classifiers](#creating-new-classifiers) and [Editing and training classifiers](#editing-and-training-classifiers). Replace the ClassifierID below with the Natural Language Classifier instance's ClassifierID. 
 
-```java
-NaturalLanguageClassifier service = new NaturalLanguageClassifier();
-service.setUsernameAndPassword("<username>", "<password>");
+```cs
+private NaturalLanguageClassifier m_NaturalLanguageClassifier = new NaturalLanguageClassifier();
+private string m_InputString = "Is it hot outside?";
+private string m_ClassifierId = <ClassifierID>;
 
-Classification classification = service.classify("<classifier-id>", "Is it sunny?").execute();
-System.out.println(classification);
+void Start ()
+{
+  Debug.Log("Input String: " + m_InputString);
+  m_NaturalLanguageClassifier.Classify(m_ClassifierId, m_InputString, OnClassify);
+}
+
+private void OnClassify(ClassifyResult result)
+{
+  if (result != null)
+  {
+    Debug.Log("Classify Result: " + result.top_class);
+  }
+}
 ```
 
 ### Alchemy Language
