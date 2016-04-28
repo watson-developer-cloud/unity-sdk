@@ -24,9 +24,6 @@ Use this SDK to build Watson-powered applications in Unity. It comes with a set 
     * [Language Translation](#language-translation)
     * [Dialog](#dialog)
     * [Natural Language Classifier](#natural-language-classifier)
-    * [Alchemy Language](#alchemy-language)
-    * [Tone Analyzer](#tone-analyzer)
-    * [Tradeoff Analytics](#tradeoff-analytics)
 * [Documentation](#documentation)
 * [License](#license)
 * [Contributing](#contributing)
@@ -255,95 +252,6 @@ private void OnClassify(ClassifyResult result)
     Debug.Log("Classify Result: " + result.top_class);
   }
 }
-```
-
-### Alchemy Language
-[Alchemy Language][alchemy_language] offers 12 API functions as part of its text analysis service, each of which uses sophisticated natural language processing techniques to analyze your content and add high-level semantic information.
-
-Use the [Sentiment Analysis][sentiment_analysis] endpoint to identify positive/negative sentiment within a sample text document.
-
-```java
-AlchemyLanguage service = new AlchemyLanguage();
-service.setApiKey("<api_key>");
-
-Map<String,Object> params = new HashMap<String, Object>();
-params.put(AlchemyLanguage.TEXT, "IBM Watson won the Jeopardy television show hosted by Alex Trebek");
-DocumentSentiment sentiment = service.getSentiment(params).execute();
-
-System.out.println(sentiment);
-```
-
-### Tone Analyzer
-Use the [Tone Analyzer][tone_analyzer] service to get the tone of your email.
-
-```java
-ToneAnalyzer service = new ToneAnalyzer(ToneAnalyzer.VERSION_DATE_2016_02_11);
-service.setUsernameAndPassword("<username>", "<password>");
-
-String text =
-  "I know the times are difficult! Our sales have been "
-      + "disappointing for the past three quarters for our data analytics "
-      + "product suite. We have a competitive data analytics product "
-      + "suite in the industry. But we need to do our job selling it! "
-      + "We need to acknowledge and fix our sales challenges. "
-      + "We can’t blame the economy for our lack of execution! "
-      + "We are missing critical sales opportunities. "
-      + "Our product is in no way inferior to the competitor products. "
-      + "Our clients are hungry for analytical tools to improve their "
-      + "business outcomes. Economy has nothing to do with it.";
-
-// Call the service and get the tone
-ToneAnalysis tone = service.getTone(text).execute();
-System.out.println(tone);
-```
-
-### Tradeoff Analytics
-Use the [Tradeoff Analytics][tradeoff_analytics] service to find the best
-phone that minimizes price and weight and maximizes screen size.
-
-```java
-TradeoffAnalytics service = new TradeoffAnalytics();
-service.setUsernameAndPassword("<username>", "<password>");
-
-Problem problem = new Problem("phone");
-
-String price = "price";
-String ram = "ram";
-String screen = "screen";
-
-// Define the objectives
-List<Column> columns = new ArrayList<Column>();
-problem.setColumns(columns);
-
-columns.add(new NumericColumn().withRange(0, 100).withKey(price).withGoal(Goal.MIN).withObjective(true));
-columns.add(new NumericColumn().withKey(screen).withGoal(Goal.MAX).withObjective(true));
-columns.add(new NumericColumn().withKey(ram).withGoal(Goal.MAX));
-
-// Define the options to choose
-List<Option> options = new ArrayList<Option>();
-problem.setOptions(options);
-
-HashMap<String, Object> galaxySpecs = new HashMap<String, Object>();
-galaxySpecs.put(price, 50);
-galaxySpecs.put(ram, 45);
-galaxySpecs.put(screen, 5);
-options.add(new Option("1", "Galaxy S4").withValues(galaxySpecs));
-
-HashMap<String, Object> iphoneSpecs = new HashMap<String, Object>();
-iphoneSpecs.put(price, 99);
-iphoneSpecs.put(ram, 40);
-iphoneSpecs.put(screen, 4);
-options.add(new Option("2", "iPhone 5").withValues(iphoneSpecs));
-
-HashMap<String, Object> optimusSpecs = new HashMap<String, Object>();
-optimusSpecs.put(price, 10);
-optimusSpecs.put(ram, 300);
-optimusSpecs.put(screen, 5);
-options.add(new Option("3", "LG Optimus G").withValues(optimusSpecs));
-
-// Call the service and get the resolution
-Dilemma dilemma = service.dilemmas(problem).execute();
-System.out.println(dilemma);
 ```
 
 ## Documentation
