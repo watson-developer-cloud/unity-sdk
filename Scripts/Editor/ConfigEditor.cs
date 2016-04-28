@@ -34,7 +34,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
     class ConfigEditor : EditorWindow
     {
         #region Constants
-        private const string BLUEMIX_REGISTRATION = "https://console.ng.bluemix.net/registration/";
+		private const string BLUEMIX_REGISTRATION = "http://bluemix.net/registration";
         private const string API_REFERENCE = "WatsonUnitySDK.chm";
         private const string README = "https://github.com/watson-developer-cloud/unity-sdk/blob/develop/readme.md";
 
