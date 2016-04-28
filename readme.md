@@ -195,32 +195,47 @@ private void PlayClip(AudioClip clip)
 
 ### Language Translation
 Select a domain, then identify or select the language of text, and then translate the text from one supported language to another.  
-Example: Translate 'hello' from English to Spanish using the [Language Translation][language_translation] service.
+Example: Ask how to get to the disco in Spanish using [Language Translation][language_translation] service.
 
-```java
-LanguageTranslation service = new LanguageTranslation();
-service.setUsernameAndPassword("<username>", "<password>");
+```cs
+private LanguageTranslation m_Translate = new LanguageTranslation();
+private string m_PharseToTranslate = "How do I get to the disco?";
 
-TranslationResult translationResult = service.translate(
-  "hello", Language.ENGLISH, Language.SPANISH)
-  .execute();
+void Start ()
+{
+  Debug.Log("English Phrase to translate: " + m_PharseToTranslate);
+  m_Translate.GetTranslation(m_PharseToTranslate, "en", "es", OnGetTranslation);
+}
 
-System.out.println(translationResult);
+private void OnGetTranslation(Translations translation)
+{
+  if (translation != null && translation.translations.Length > 0)
+    Debug.Log("Spanish Translation: " + translation.translations[0].translation);
+}
 ```
 
 ### Dialog
-Returns the dialog list using the [Dialog][dialog] service.
+Converse with Watson using the [Dialog][dialog] service. Upload a dialog by following instructions on [Uploading Dialogs](#uploading-dialogs) and replace the DialogID in m_DialogID below with the uploaded dialog's DialogID.
 
-```java
-DialogService service = new DialogService();
-service.setUsernameAndPassword("<username>", "<password>");
+```cs
+private Dialog m_Dialog = new Dialog();
+private string m_DialogID = <DialogID>;
 
-List<Dialog> dialogs = service.getDialogs().execute();
-System.out.println(dialogs);
+void Start ()
+{
+  Debug.Log("User: 'Hello'");
+  m_Dialog.Converse(m_DialogID, "Hello", OnConverse);
+}
+
+private void OnConverse(ConverseResponse resp)
+{
+  foreach (string r in resp.response)
+    Debug.Log("Watson: " + r);
+}
 ```
 
 ### Natural Language Classifier
-Use [Natural Language Classifier](http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/nl-classifier/) service to create a classifier instance by providing a set of representative strings and a set of one or more correct classes for each as training. Then use the trained classifier to classify your new question for best matching answers or to retrieve next actions for your application.
+Use [Natural Language Classifier][natural_language_classifier] service to create a classifier instance by providing a set of representative strings and a set of one or more correct classes for each as training. Then use the trained classifier to classify your new question for best matching answers or to retrieve next actions for your application.
 
 ```java
 NaturalLanguageClassifier service = new NaturalLanguageClassifier();
@@ -229,8 +244,6 @@ service.setUsernameAndPassword("<username>", "<password>");
 Classification classification = service.classify("<classifier-id>", "Is it sunny?").execute();
 System.out.println(classification);
 ```
-
-**Note:** You will need to create and train a classifier in order to be able to classify phrases.
 
 ### Alchemy Language
 [Alchemy Language][alchemy_language] offers 12 API functions as part of its text analysis service, each of which uses sophisticated natural language processing techniques to analyze your content and add high-level semantic information.
