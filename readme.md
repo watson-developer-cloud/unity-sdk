@@ -25,7 +25,7 @@ Ensure that you have the following prerequisites:
 * Change the build settings in Unity (**File > Build Settings**) to PC, Mac & Linux Standalone. Click PC, Mac & Linux Standalone and click the Switch Platform button.
 
 ## Getting the Watson SDK and adding it to Unity
-You can get the latest SDK release by going to the [github repository][wdc_unity_sdk] or by clicking [here][latest_release].
+You can get the latest SDK release by clicking [here][latest_release].
 
 ### Installing the SDK source into your Unity project
 Move the unity-sdk directory into the Assets directory of the Unity project. **Rename the SDK directory from 'unity-sdk' to 'Watson'.**
