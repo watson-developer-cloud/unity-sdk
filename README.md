@@ -242,7 +242,7 @@ See [CONTRIBUTING.md](.github/CONTRIBUTING.md).
 
 [wdc]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/
 [wdc_unity_sdk]: https://github.com/watson-developer-cloud/unity-sdk
-[latest_release]: https://github.com/watson-developer-cloud/unity-sdk/archive/0.2.0.zip
+[latest_release]: https://github.com/watson-developer-cloud/unity-sdk/archive/0.3.0.zip
 [bluemix_registration]: http://bluemix.net/registration
 [get_unity]: https://unity3d.com/get-unity
 
