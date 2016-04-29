@@ -28,7 +28,7 @@ Ensure that you have the following prerequisites:
 You can get the latest SDK release by clicking [here][latest_release].
 
 ### Installing the SDK source into your Unity project
-Move the unity-sdk directory into the Assets directory of the Unity project. **Rename the SDK directory from 'unity-sdk' to 'Watson'.**
+Move the `unity-sdk` directory into the Assets directory of the Unity project. **Rename the SDK directory from `unity-sdk` to 'Watson'.**
 
 ## Configuring your service credentials
 You will need the 'username' and 'password' credentials for each service. Service credentials are different from your Bluemix account username and password.
@@ -60,7 +60,7 @@ Use the [Speech to Text][speech_to_text] service to recognize the text from a .w
 
 ```cs
 [SerializeField]
-private AudioClip m_AudioClip = new AudioClip(); 
+private AudioClip m_AudioClip = new AudioClip();
 private SpeechToText m_SpeechToText = new SpeechToText();
 
 void Start()
@@ -173,7 +173,7 @@ The SDK contains a Test Natural Language Classifier, which contains classes for 
 1. Open the Natural Language Classifier Editor by clicking **Watson -> Natural Language Classifier Editor**.
 2. Locate the Test Natural Language Classifier, and click **Train**. The training process begins. The process lasts a few minutes.
 3. To check the status of the training process, click **Refresh**. When the status changes from Training to Available, the process is finished.
-4. Replace the ClassifierID below with the Natural Language Classifier instance's ClassifierID. 
+4. Replace the ClassifierID below with the Natural Language Classifier instance's ClassifierID.
 
 ```cs
 private NaturalLanguageClassifier m_NaturalLanguageClassifier = new NaturalLanguageClassifier();
@@ -218,12 +218,12 @@ You can quickly develop a basic application that uses the Speech to Text service
     * ClassDisplayWidget
   2. Select the **Natural Language Classifier Widget**.
   5. In the **Classifier Name** field in the Inspector tab, specify 'TestNaturalLanguageClassifier'.
-  6. In the Natural Language Classifier Editor, expand the **Test Natural Languge Classifier** , expand the classes, and determine which questions about the weather to ask to test the classifier.
+  6. In the Natural Language Classifier Editor, expand the **Test Natural Language Classifier** , expand the classes, and determine which questions about the weather to ask to test the classifier.
   7. Run the application.
   8. Say your questions into the microphone to test the MicWidget, the SpeechToTextWidget, and the NaturalLanguageClassifierWidget.
 
 ## Documentation
-To read the documentation you need to have a **chm reader** installed. Open the documentation by selcting API Reference the Watson menu (**Watson -> API Reference**).
+To read the documentation you need to have a **chm reader** installed. Open the documentation by selecting API Reference the Watson menu (**Watson -> API Reference**).
 
 ## Questions
 
