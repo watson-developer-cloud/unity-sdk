@@ -159,10 +159,10 @@ private void OnConverse(ConverseResponse resp)
 ```
 #### Uploading dialogs
 You can upload dialogs by using the Dialog Editor.
-1. Click **Watson -> Dialog Editor**. The Dialog Editor window is displayed.
-2. Specify a **unique** name for the dialog in the **Name** field.
-3. Click **Upload**.
-4. Navigate to the dialog file to be uploaded, and click **Open**.
+  1. Click **Watson -> Dialog Editor**. The Dialog Editor window is displayed.
+  2. Specify a **unique** name for the dialog in the **Name** field.
+  3. Click **Upload**.
+  4. Navigate to the dialog file to be uploaded, and click **Open**.
 
 ### Natural Language Classifier
 Use [Natural Language Classifier][natural_language_classifier] service to create a classifier instance by providing a set of representative strings and a set of one or more correct classes for each as training. Then use the trained classifier to classify your new question for best matching answers or to retrieve next actions for your application.
