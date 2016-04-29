@@ -17,6 +17,7 @@
 
 
 using UnityEngine;
+using System.Collections.Generic;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
 
@@ -30,11 +31,12 @@ namespace IBM.Watson.DeveloperCloud.Camera
     {
 
         #region Private Variables
-        private Vector3 m_TargetCameraLocation;
-		private Quaternion m_TargetCameraRotation;
+        private static WatsonCamera mp_Instance;
+        private List<CameraTarget> m_ListCameraTarget = new List<CameraTarget>();
+        private CameraTarget m_TargetCamera = null;
 
         private Vector3 m_CameraInitialLocation;
-		private Quaternion m_CameraInitialRotation;
+        private Quaternion m_CameraInitialRotation;
         [SerializeField]
         private float m_PanSpeed = 0.07f;
         [SerializeField]
@@ -42,48 +44,165 @@ namespace IBM.Watson.DeveloperCloud.Camera
         [SerializeField]
         private float m_SpeedForCameraAnimation = 2f;
 
+        private float m_CommandMovementModifier = 10.0f;
+
+        [SerializeField]
+        private MonoBehaviour m_AntiAliasing;
+        [SerializeField]
+        private MonoBehaviour m_DepthOfField;
+        private bool m_DisableInteractivity = false;
+
+        #endregion
+
+        #region Public Variable
+
+        public static WatsonCamera Instance
+        {
+            get
+            {
+                return mp_Instance;
+            }
+        }
+
+        public CameraTarget CurrentCameraTarget
+        {
+            get
+            {
+                if (m_TargetCamera == null)
+                {
+                    InitializeCameraTargetList();
+                }
+
+                return m_TargetCamera;
+            }
+            set
+            {
+                if (value != null)
+                {
+                    m_TargetCamera = value;
+
+                    if (!m_ListCameraTarget.Contains(value))
+                    {
+                        m_ListCameraTarget.Add(value);
+                    }
+                }
+                else
+                {   //Delete current camera and clear from the list
+
+                    if (m_ListCameraTarget.Contains(m_TargetCamera))
+                    {
+                        m_ListCameraTarget.Remove(m_TargetCamera);
+                    }
+
+                    if (m_ListCameraTarget.Count > 0)
+                    {
+                        m_TargetCamera = m_ListCameraTarget[m_ListCameraTarget.Count - 1];
+                    }
+                    else
+                    {
+                        InitializeCameraTargetList();
+                    }
+                }
+            }
+        }
+
+        public CameraTarget DefaultCameraTarget
+        {
+            get
+            {
+                if (m_ListCameraTarget == null || m_ListCameraTarget.Count == 0)
+                    InitializeCameraTargetList();
+
+                return m_ListCameraTarget[0];
+            }
+        }
+
+        #endregion
+
+        #region Event Registration
+
+        void OnEnable()
+        {
+            EventManager.Instance.RegisterEventReceiver("OnCameraReset", ResetCameraPosition);
+            EventManager.Instance.RegisterEventReceiver("OnCameraSetAntiAliasing", OnCameraSetAntiAliasing);
+            EventManager.Instance.RegisterEventReceiver("OnCameraSetDepthOfField", OnCameraSetDepthOfField);
+            EventManager.Instance.RegisterEventReceiver("OnCameraSetInteractivity", OnCameraSetTwoFingerDrag);
+        }
+
+        void OnDisable()
+        {
+            EventManager.Instance.UnregisterEventReceiver("OnCameraReset", ResetCameraPosition);
+            EventManager.Instance.UnregisterEventReceiver("OnCameraSetAntiAliasing", OnCameraSetAntiAliasing);
+            EventManager.Instance.UnregisterEventReceiver("OnCameraSetDepthOfField", OnCameraSetDepthOfField);
+            EventManager.Instance.UnregisterEventReceiver("OnCameraSetInteractivity", OnCameraSetTwoFingerDrag);
+        }
+
         #endregion
 
         #region Start / Update
 
-		void Start(){
-			m_CameraInitialLocation = transform.localPosition;
-			m_CameraInitialRotation = transform.rotation;
-			
-			m_TargetCameraLocation = m_CameraInitialLocation;
-			m_TargetCameraRotation = m_CameraInitialRotation;
-		}
+        void Awake()
+        {
+            mp_Instance = this;
+        }
 
-		void Update()
-		{
-			CameraPositionOnUpdate ();
-		}
+        void Start()
+        {
+            m_CameraInitialLocation = transform.localPosition;
+            m_CameraInitialRotation = transform.rotation;
+        }
 
-		void CameraPositionOnUpdate()
-		{
-			//For Zooming and Panning
-			transform.localPosition = Vector3.Lerp(transform.localPosition, m_TargetCameraLocation, Time.deltaTime * m_SpeedForCameraAnimation);
-			transform.rotation = Quaternion.Lerp(transform.localRotation, m_TargetCameraRotation, Time.deltaTime * m_SpeedForCameraAnimation );
-		}
+        void Update()
+        {
+            CameraPositionOnUpdate();
+        }
 
-		#endregion
+        void CameraPositionOnUpdate()
+        {
+            //For Zooming and Panning
+            if (CurrentCameraTarget != null)
+            {
+                transform.localPosition = Vector3.Lerp(transform.localPosition, CurrentCameraTarget.TargetPosition, Time.deltaTime * m_SpeedForCameraAnimation);
+                transform.rotation = Quaternion.Lerp(transform.localRotation, CurrentCameraTarget.TargetRotation, Time.deltaTime * m_SpeedForCameraAnimation);
+            }
+        }
+
+        void InitializeCameraTargetList()
+        {
+            if (m_ListCameraTarget == null)
+                m_ListCameraTarget = new List<CameraTarget>();
+
+            m_ListCameraTarget.Clear();
+
+            CameraTarget defaultCameraTarget = this.gameObject.AddComponent<CameraTarget>();
+            defaultCameraTarget.TargetPosition = m_CameraInitialLocation;
+            defaultCameraTarget.TargetRotation = m_CameraInitialRotation;
+            m_ListCameraTarget.Add(defaultCameraTarget);
+
+            m_TargetCamera = m_ListCameraTarget[0];
+        }
+
+        #endregion
 
         #region Touch Drag Actions
 
-		/// <summary>
-		/// Event handler to pan and zoom with two-finger dragging
-		/// </summary>
-		/// <param name="args">Arguments.</param>
+        /// <summary>
+        /// Event handler to pan and zoom with two-finger dragging
+        /// </summary>
+        /// <param name="args">Arguments.</param>
         public void DragTwoFinger(System.Object[] args)
         {
-            if (args != null && args.Length == 1 && args[0] is TouchScript.Gestures.ScreenTransformGesture)
+            if (m_DisableInteractivity)
+                return;
+
+            if (args != null && args.Length > 0 && args[0] is TouchScript.Gestures.ScreenTransformGesture)
             {
                 TouchScript.Gestures.ScreenTransformGesture transformGesture = args[0] as TouchScript.Gestures.ScreenTransformGesture;
 
                 //Pannning with 2-finger
-                m_TargetCameraLocation += (transformGesture.DeltaPosition * m_PanSpeed * -1.0f);
+                DefaultCameraTarget.TargetPosition += (transformGesture.DeltaPosition * m_PanSpeed * -1.0f);
                 //Zooming with 2-finger
-                m_TargetCameraLocation += transform.forward * (transformGesture.DeltaScale - 1.0f) * m_ZoomSpeed;
+                DefaultCameraTarget.TargetPosition += transform.forward * (transformGesture.DeltaScale - 1.0f) * m_ZoomSpeed;
             }
             else
             {
@@ -94,74 +213,138 @@ namespace IBM.Watson.DeveloperCloud.Camera
         #endregion
 
         #region Camera Events Received from Outside - Set default position / Move Left - Right - Up - Down / Zoom-in-out
+        /// <summary>
+        /// Event Handler for setting Antialiasing event
+        /// </summary>
+        /// <param name="args">Arguments.</param>
+        public void OnCameraSetAntiAliasing(System.Object[] args)
+        {
+            if (args != null && args.Length > 0 && args[0] is bool)
+            {
+                bool valueSet = (bool)args[0];
 
-		/// <summary>
-		/// Event handler reseting the camera position.
-		/// </summary>
-		/// <param name="args">Arguments.</param>
+                if (m_AntiAliasing != null)
+                {
+                    m_AntiAliasing.enabled = valueSet;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Event Handler for setting Depth of Field event
+        /// </summary>
+        /// <param name="args">Arguments.</param>
+        public void OnCameraSetDepthOfField(System.Object[] args)
+        {
+            if (args != null && args.Length > 0 && args[0] is bool)
+            {
+                bool valueSet = (bool)args[0];
+
+                if (m_DepthOfField != null)
+                {
+                    m_DepthOfField.enabled = valueSet;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Event Handler for Two Finger Drag
+        /// </summary>
+        /// <param name="args">Arguments.</param>
+        public void OnCameraSetTwoFingerDrag(System.Object[] args)
+        {
+            if (args != null && args.Length > 0 && args[0] is bool)
+            {
+                m_DisableInteractivity = !(bool)args[0];
+            }
+        }
+
+
+        /// <summary>
+        /// Event handler reseting the camera position.
+        /// </summary>
+        /// <param name="args">Arguments.</param>
         public void ResetCameraPosition(System.Object[] args)
         {
+            if (m_DisableInteractivity)
+                return;
             //Log.Status("WatsonCamera", "Reset Camera Position");
-            m_TargetCameraLocation = m_CameraInitialLocation;
-			m_TargetCameraRotation = m_CameraInitialRotation;
+            DefaultCameraTarget.TargetPosition = m_CameraInitialLocation;
+            DefaultCameraTarget.TargetRotation = m_CameraInitialRotation;
         }
 
-		/// <summary>
-		/// Event handler moving the camera up.
-		/// </summary>
-		/// <param name="args">Arguments.</param>
+        /// <summary>
+        /// Event handler moving the camera up.
+        /// </summary>
+        /// <param name="args">Arguments.</param>
         public void MoveUp(System.Object[] args)
         {
-            m_TargetCameraLocation += Vector3.up;
+            if (m_DisableInteractivity)
+                return;
+
+            DefaultCameraTarget.TargetPosition += this.transform.up * m_CommandMovementModifier;
         }
 
-		/// <summary>
-		/// Event handler moving the camera down.
-		/// </summary>
-		/// <param name="args">Arguments.</param>
+        /// <summary>
+        /// Event handler moving the camera down.
+        /// </summary>
+        /// <param name="args">Arguments.</param>
         public void MoveDown(System.Object[] args)
         {
-            m_TargetCameraLocation += Vector3.down;
+            if (m_DisableInteractivity)
+                return;
+
+            DefaultCameraTarget.TargetPosition += this.transform.up * -m_CommandMovementModifier;
         }
 
-		/// <summary>
-		/// Event handler moving the camera left.
-		/// </summary>
-		/// <param name="args">Arguments.</param>
+        /// <summary>
+        /// Event handler moving the camera left.
+        /// </summary>
+        /// <param name="args">Arguments.</param>
         public void MoveLeft(System.Object[] args)
         {
-            m_TargetCameraLocation += Vector3.left;
+            if (m_DisableInteractivity)
+                return;
+
+            DefaultCameraTarget.TargetPosition += this.transform.right * -m_CommandMovementModifier;
         }
 
-		/// <summary>
-		/// Event handler moving the camera right.
-		/// </summary>
-		/// <param name="args">Arguments.</param>
+        /// <summary>
+        /// Event handler moving the camera right.
+        /// </summary>
+        /// <param name="args">Arguments.</param>
         public void MoveRight(System.Object[] args)
         {
-            m_TargetCameraLocation += Vector3.right;
+            if (m_DisableInteractivity)
+                return;
+
+            DefaultCameraTarget.TargetPosition += this.transform.right * m_CommandMovementModifier;
         }
 
-		/// <summary>
-		/// Event handler zooming-in the camera.
-		/// </summary>
-		/// <param name="args">Arguments.</param>
+        /// <summary>
+        /// Event handler zooming-in the camera.
+        /// </summary>
+        /// <param name="args">Arguments.</param>
         public void ZoomIn(System.Object[] args)
         {
-            m_TargetCameraLocation += transform.forward * m_ZoomSpeed;
+            if (m_DisableInteractivity)
+                return;
+
+            DefaultCameraTarget.TargetPosition += transform.forward * m_ZoomSpeed;
         }
 
-		/// <summary>
-		/// Event handler zooming-out the camera.
-		/// </summary>
-		/// <param name="args">Arguments.</param>
+        /// <summary>
+        /// Event handler zooming-out the camera.
+        /// </summary>
+        /// <param name="args">Arguments.</param>
         public void ZoomOut(System.Object[] args)
         {
-            m_TargetCameraLocation += transform.forward * m_ZoomSpeed * -1.0f;
+            if (m_DisableInteractivity)
+                return;
+
+            DefaultCameraTarget.TargetPosition += transform.forward * m_ZoomSpeed * -1.0f;
         }
 
         #endregion
-
     }
-
 }

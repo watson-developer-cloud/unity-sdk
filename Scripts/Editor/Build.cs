@@ -30,17 +30,20 @@ public class Build
     public static string BuildError { get; set; }
 
     #region Build Options
-    public static bool IsBuilding {
+    public static bool IsBuilding
+    {
         get { return EditorPrefs.GetInt("IsBuilding") != 0; }
-        set { EditorPrefs.SetInt( "IsBuilding", value ? 1 : 0 ); }
+        set { EditorPrefs.SetInt("IsBuilding", value ? 1 : 0); }
     }
-    public static BuildTarget BuildTarget {
+    public static BuildTarget BuildTarget
+    {
         get { return (BuildTarget)EditorPrefs.GetInt("BuildTarget"); }
-        set { EditorPrefs.SetInt( "BuildTarget", (int)value ); }
+        set { EditorPrefs.SetInt("BuildTarget", (int)value); }
     }
-    public static BuildOptions BuildOptions {
+    public static BuildOptions BuildOptions
+    {
         get { return (BuildOptions)EditorPrefs.GetInt("BuildOptions"); }
-        set { EditorPrefs.SetInt( "BuildOptions", (int)value ); }
+        set { EditorPrefs.SetInt("BuildOptions", (int)value); }
     }
     #endregion
 
@@ -48,10 +51,10 @@ public class Build
     private static void OnScriptsReloaded()
     {
         // start back up our build co-routine on script reloads..
-        if ( IsBuilding )
+        if (IsBuilding)
         {
             Runnable.EnableRunnableInEditor();
-            Runnable.Run( ExecuteBuild() );
+            Runnable.Run(ExecuteBuild());
         }
     }
 
@@ -68,97 +71,110 @@ public class Build
         return scenes.ToArray();
     }
 
-    private static string GetBuildPath( BuildTarget target )
+    /// <summary>
+    /// Get the build path for the specified target.
+    /// </summary>
+    /// <param name="target">The BuildTarget.</param>
+    /// <returns>The full path to the build.</returns>
+    public static string GetBuildPath(BuildTarget target, bool bCleanTarget = false)
     {
-        string projectName = Path.GetFileNameWithoutExtension( Application.productName );
-        if ( target == BuildTarget.StandaloneWindows || target == BuildTarget.StandaloneWindows64 )
+        string projectName = Path.GetFileNameWithoutExtension(Application.productName);
+        if (target == BuildTarget.StandaloneWindows || target == BuildTarget.StandaloneWindows64)
             projectName += ".exe";
-        else if ( target == BuildTarget.StandaloneOSXIntel || target == BuildTarget.StandaloneOSXIntel64 || target == BuildTarget.StandaloneOSXUniversal )
+        else if (target == BuildTarget.StandaloneOSXIntel || target == BuildTarget.StandaloneOSXIntel64 || target == BuildTarget.StandaloneOSXUniversal)
             projectName += ".app";
-        else if ( target == BuildTarget.Android )
+        else if (target == BuildTarget.Android)
             projectName += ".apk";
+        else if (target == BuildTarget.iOS)
+            projectName += ".ipa";
 
         string directory = Application.dataPath + "/../Clients/" + target.ToString();
-        if ( Directory.Exists( directory ) )
-            Directory.Delete( directory, true );
+        if (bCleanTarget && Directory.Exists(directory))
+            Directory.Delete(directory, true);
 
-        Directory.CreateDirectory( directory );
+        Directory.CreateDirectory(directory);
         return directory + "/" + projectName;
     }
 
-    private static void StartBuild( BuildTarget target )
+    public static int StartBuild(BuildTarget target)
     {
-        if (! IsBuilding )
+        if (!IsBuilding)
         {
             IsBuilding = true;
             BuildTarget = target;
 
             Runnable.EnableRunnableInEditor();
-            Runnable.Run( ExecuteBuild() );
+            return Runnable.Run(ExecuteBuild());
         }
+
+        return -1;
     }
 
     private static IEnumerator ExecuteBuild()
     {
         yield return null;
 
-        /// generate the AOT code, wait for it to be compiled..
-        FullSerializer.AotHelpers.BuildAOT();
-        while( EditorApplication.isCompiling )
-            yield return null;
+        if (BuildTarget == BuildTarget.iOS)
+        {
+            /// generate the AOT code, wait for it to be compiled..
+            FullSerializer.AotHelpers.BuildAOT();
+            while (EditorApplication.isCompiling)
+                yield return null;
+        }
 
-        string [] buildScenes = GetBuildScenes();
-        string buildPath = GetBuildPath( BuildTarget );
+        string[] buildScenes = GetBuildScenes();
+        string buildPath = GetBuildPath(BuildTarget, true);
 
         BuildError = string.Empty;
-        try {
-            BuildError = BuildPipeline.BuildPlayer( buildScenes, buildPath, BuildTarget, BuildOptions );
+        try
+        {
+            BuildError = BuildPipeline.BuildPlayer(buildScenes, buildPath, BuildTarget, BuildOptions);
         }
-        catch( Exception e )
+        catch (Exception e)
         {
             BuildError = e.ToString();
         }
 
-        FullSerializer.AotHelpers.CleanAOT();
-        IsBuilding = false; 
+        if (BuildTarget == BuildTarget.iOS)
+            FullSerializer.AotHelpers.CleanAOT();
+        IsBuilding = false;
 
         // if BuildPlayer returned no error, but we can't find the file, flag this build as a failure then..
-        if (string.IsNullOrEmpty( BuildError) && !File.Exists( buildPath ) && !Directory.Exists( buildPath ) )
+        if (string.IsNullOrEmpty(BuildError) && !File.Exists(buildPath) && !Directory.Exists(buildPath))
             BuildError = "Failed to build player: " + buildPath;
 
         // check the command line arguments, if we find -executeMethod Build.* then quit this editor..
-        string [] args = Environment.GetCommandLineArgs();
-        for(int i=0;i<args.Length;++i)
+        string[] args = Environment.GetCommandLineArgs();
+        for (int i = 0; i < args.Length; ++i)
         {
-            if ( args[i] == "-executemethod" && (i + 1) < args.Length && args[i+1].StartsWith( "Build." ) )
-                EditorApplication.Exit( string.IsNullOrEmpty(BuildError) ? 0 : 1);
+            if (args[i] == "-executemethod" && (i + 1) < args.Length && args[i + 1].StartsWith("Build."))
+                EditorApplication.Exit(string.IsNullOrEmpty(BuildError) ? 0 : 1);
         }
 
-        // TODO: Check if launch from the command line, if so then quit out..
         yield break;
     }
 
 
     #region Build Options
-    [MenuItem( "Watson/Build/Options/Development Build/On", false, 200 ) ]
+    [MenuItem("Watson/Build/Options/Development Build/On", false, 200)]
     public static void DevelopmentBuildOn()
     {
         BuildOptions |= BuildOptions.Development;
     }
 
-    [MenuItem( "Watson/Build/Options/Development Build/On", true, 200 ) ]
+    [MenuItem("Watson/Build/Options/Development Build/On", true, 200)]
     public static bool CanDevelopmentBuildOn()
     {
         return (BuildOptions & BuildOptions.Development) == 0;
     }
 
-    [MenuItem( "Watson/Build/Options/Development Build/Off", false, 200 ) ]
+    [MenuItem("Watson/Build/Options/Development Build/Off", false, 200)]
     public static void DevelopmentBuildOff()
     {
         BuildOptions &= ~BuildOptions.Development;
     }
 
-    [MenuItem( "Watson/Build/Options/Development Build/Off", true, 200 ) ]
+    [MenuItem("Watson/Build/Options/Development Build/Off", true, 200)]
     public static bool CanDevelopmentBuildOff()
     {
         return (BuildOptions & BuildOptions.Development) != 0;
@@ -166,46 +182,46 @@ public class Build
     #endregion
 
     #region Build Players
-    [MenuItem( "Watson/Build/Player/Windows x86", false, 200 )]
+    [MenuItem("Watson/Build/Player/Windows x86", false, 200)]
     public static void BuildWindows()
     {
-        StartBuild( BuildTarget.StandaloneWindows );
+        StartBuild(BuildTarget.StandaloneWindows);
     }
 
-    [MenuItem( "Watson/Build/Player/Windows x64", false, 200 )]
+    [MenuItem("Watson/Build/Player/Windows x64", false, 200)]
     public static void BuildWindows64()
     {
-        StartBuild( BuildTarget.StandaloneWindows64 );
+        StartBuild(BuildTarget.StandaloneWindows64);
     }
 
-    [MenuItem( "Watson/Build/Player/OSX x86", false, 200 )]
+    [MenuItem("Watson/Build/Player/OSX x86", false, 200)]
     public static void BuildOSX()
     {
-        StartBuild( BuildTarget.StandaloneOSXIntel );
+        StartBuild(BuildTarget.StandaloneOSXIntel);
     }
 
-    [MenuItem( "Watson/Build/Player/OSX x64", false, 200 )]
+    [MenuItem("Watson/Build/Player/OSX x64", false, 200)]
     public static void BuildOSX64()
     {
-        StartBuild( BuildTarget.StandaloneOSXIntel64 );
+        StartBuild(BuildTarget.StandaloneOSXIntel64);
     }
 
-    [MenuItem( "Watson/Build/Player/OSX Universal", false, 200 )]
+    [MenuItem("Watson/Build/Player/OSX Universal", false, 200)]
     public static void BuildOSXUniversal()
     {
-        StartBuild( BuildTarget.StandaloneOSXUniversal );
+        StartBuild(BuildTarget.StandaloneOSXUniversal);
     }
 
-    [MenuItem( "Watson/Build/Player/Android", false, 200 )]
+    [MenuItem("Watson/Build/Player/Android", false, 200)]
     public static void BuildAndroid()
     {
-        StartBuild( BuildTarget.Android );
+        StartBuild(BuildTarget.Android);
     }
 
-    [MenuItem( "Watson/Build/Player/iOS", false, 200 )]
+    [MenuItem("Watson/Build/Player/iOS", false, 200)]
     public static void BuildIOS()
     {
-        StartBuild( BuildTarget.iOS );
+        StartBuild(BuildTarget.iOS);
     }
     #endregion
 

@@ -36,22 +36,25 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         }
         #endregion
 
+        #region Private Data
         [Serializable]
         private class Mapping
         {
             public KeyCode m_Key = (KeyCode)0;
             public KeyModifiers m_Modifiers = KeyModifiers.NONE;
-            public Constants.Event m_Event = Constants.Event.NONE;
+            public string m_Event = "";
         };
 
         [SerializeField]
         private List<Mapping> m_Mappings = new List<Mapping>();
+        #endregion
 
+        #region Event Handlers
         private void OnEnable()
         {
             foreach (var mapping in m_Mappings)
             {
-                KeyEventManager.Instance.RegisterKeyEvent(mapping.m_Key, mapping.m_Modifiers, mapping.m_Event );
+                KeyEventManager.Instance.RegisterKeyEvent(mapping.m_Key, mapping.m_Modifiers, mapping.m_Event);
             }
         }
 
@@ -59,9 +62,9 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         {
             foreach (var mapping in m_Mappings)
             {
-                KeyEventManager.Instance.UnregisterKeyEvent(mapping.m_Key, mapping.m_Modifiers, mapping.m_Event );
+                KeyEventManager.Instance.UnregisterKeyEvent(mapping.m_Key, mapping.m_Modifiers, mapping.m_Event);
             }
         }
+        #endregion
     }
-
 }

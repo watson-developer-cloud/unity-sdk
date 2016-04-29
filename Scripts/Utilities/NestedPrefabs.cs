@@ -24,17 +24,43 @@ namespace IBM.Watson.DeveloperCloud.Utilities
     {
         [SerializeField]
         private List<GameObject> m_Prefabs = new List<GameObject>();
+        private List<GameObject> m_GameObjectCreated = new List<GameObject>();
+        [SerializeField]
+        private bool m_SetParent = true;
 
         private void Awake()
         {
-            foreach( GameObject prefab in m_Prefabs )
+            foreach (GameObject prefab in m_Prefabs)
             {
-                if ( prefab == null )
+                if (prefab == null)
                     continue;
 
-                GameObject instance = Instantiate( prefab );
-                instance.transform.SetParent( transform, false );
+                GameObject instance = Instantiate(prefab);
+                if (m_SetParent)
+                    instance.transform.SetParent(transform, false);
+
+                m_GameObjectCreated.Add(instance);
             }
         }
+
+        #region Destroy objects
+
+        /// <summary>
+        /// It destroys the created object to set the initial state
+        /// </summary>
+        public void DestroyCreatedObject()
+        {
+            foreach (GameObject gameObject in m_GameObjectCreated)
+            {
+                if (gameObject == null)
+                    continue;
+
+                gameObject.SendMessage("DestroyCreatedObject", SendMessageOptions.DontRequireReceiver);
+                Destroy(gameObject);
+            }
+            m_GameObjectCreated.Clear();
+            Destroy(this.gameObject);
+        }
+        #endregion
     }
 }

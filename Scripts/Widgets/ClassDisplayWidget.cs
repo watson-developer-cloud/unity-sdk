@@ -25,10 +25,15 @@ using UnityEngine.UI;
 namespace IBM.Watson.DeveloperCloud.Widgets
 {
     /// <summary>
-    /// Simple widget for displaying the NLC classification in the UI.
+    /// Simple widget for displaying the Natural Language Classification in the UI.
     /// </summary>
     public class ClassDisplayWidget : Widget
     {
+        #region Inputs
+        [SerializeField]
+        private Input m_ClassInput = new Input("ClassInput", typeof(ClassifyResultData), "OnClassInput");
+        #endregion
+
         #region Widget interface
         /// <exclude />
         protected override string GetName()
@@ -40,18 +45,18 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         #region Private Data
         [SerializeField]
         private Text m_ClassDisplay = null;
-        [SerializeField]
-        private Input m_ClassInput = new Input( "ClassInput", typeof(ClassifyResultData), "OnClassInput" );
         #endregion
 
-        private void OnClassInput( Data data )
+        #region Event Handlers
+        private void OnClassInput(Data data)
         {
             ClassifyResultData results = (ClassifyResultData)data;
-            if ( m_ClassDisplay != null )
+            if (m_ClassDisplay != null)
             {
-                m_ClassDisplay.text = string.Format( "Top class: {0} ({1:0.00})", 
-                    results.Result.top_class, results.Result.topConfidence );
+                m_ClassDisplay.text = string.Format("Top class: {0} ({1:0.00})",
+                    results.Result.top_class, results.Result.topConfidence);
             }
         }
+        #endregion
     }
 }

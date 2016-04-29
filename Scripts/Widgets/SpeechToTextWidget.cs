@@ -17,9 +17,8 @@
 
 //#define ENABLE_DEBUGGING
 
-using IBM.Watson.DeveloperCloud.DataModels;
 using IBM.Watson.DeveloperCloud.DataTypes;
-using IBM.Watson.DeveloperCloud.Services.v1;
+using IBM.Watson.DeveloperCloud.Services.SpeechToText.v1;
 using IBM.Watson.DeveloperCloud.Logging;
 using UnityEngine;
 using UnityEngine.UI;
@@ -34,8 +33,20 @@ namespace IBM.Watson.DeveloperCloud.Widgets
     /// </summary>
 	public class SpeechToTextWidget : Widget
 	{
+        #region Inputs
+        [SerializeField]
+        private Input m_AudioInput = new Input( "Audio", typeof(AudioData), "OnAudio" );
+        [SerializeField]
+        private Input m_LanguageInput = new Input( "Language", typeof(LanguageData), "OnLanguage" );
+        #endregion
+
+        #region Outputs
+        [SerializeField]
+        private Output m_ResultOutput = new Output( typeof(SpeechToTextData), true );
+        #endregion
+
 	    #region Private Data
-	    private SpeechToText m_STT = new SpeechToText();
+		private SpeechToText m_SpeechToText = new SpeechToText();
 	    [SerializeField]
 	    private Text m_StatusText = null;
 	    [SerializeField]
@@ -54,12 +65,6 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         private bool m_EnableInterimResults = false;
 	    [SerializeField]
 	    private Text m_Transcript = null;
-        [SerializeField]
-        private Input m_AudioInput = new Input( "Audio", typeof(AudioData), "OnAudio" );
-        [SerializeField]
-        private Input m_LanguageInput = new Input( "Language", typeof(LanguageData), "OnLanguage" );
-        [SerializeField]
-        private Output m_ResultOutput = new Output( typeof(SpeechToTextData) );
         [SerializeField, Tooltip( "Language ID to use in the speech recognition model.") ]
         private string m_Language = "en-US";
         #endregion
@@ -70,25 +75,25 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         /// </summary>
         public bool Active
         {
-            get { return m_STT.IsListening; }
+            get { return m_SpeechToText.IsListening; }
             set {
-                if ( value && !m_STT.IsListening )
+                if ( value && !m_SpeechToText.IsListening )
                 {
- 	                m_STT.DetectSilence = m_DetectSilence;
-	                m_STT.EnableWordConfidence = m_WordConfidence;
-	                m_STT.EnableTimestamps = m_TimeStamps;
-	                m_STT.SilenceThreshold = m_SilenceThreshold;
-	                m_STT.MaxAlternatives = m_MaxAlternatives;
-                    m_STT.EnableContinousRecognition = m_EnableContinous;
-                    m_STT.EnableInterimResults = m_EnableInterimResults;
-	                m_STT.OnError = OnError;
-	                m_STT.StartListening( OnRecognize );
+ 	                m_SpeechToText.DetectSilence = m_DetectSilence;
+	                m_SpeechToText.EnableWordConfidence = m_WordConfidence;
+	                m_SpeechToText.EnableTimestamps = m_TimeStamps;
+	                m_SpeechToText.SilenceThreshold = m_SilenceThreshold;
+	                m_SpeechToText.MaxAlternatives = m_MaxAlternatives;
+                    m_SpeechToText.EnableContinousRecognition = m_EnableContinous;
+                    m_SpeechToText.EnableInterimResults = m_EnableInterimResults;
+	                m_SpeechToText.OnError = OnError;
+	                m_SpeechToText.StartListening( OnRecognize );
 	                if ( m_StatusText != null )
 	                    m_StatusText.text = "LISTENING";
                 }
-                else if ( !value && m_STT.IsListening )
+                else if ( !value && m_SpeechToText.IsListening )
                 {
- 	                m_STT.StopListening();
+ 	                m_SpeechToText.StopListening();
 	                if ( m_StatusText != null )
 	                    m_StatusText.text = "READY";
                 }
@@ -96,6 +101,15 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         }
         #endregion
 
+        #region Widget Interface
+        /// <exclude />
+        protected override string GetName()
+        {
+            return "SpeechToText";
+        }
+        #endregion
+
+        #region Event handlers
         /// <summary>
         /// Button handler to toggle the active state of this widget.
         /// </summary>
@@ -105,21 +119,14 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 	    }
 
         /// <exclude />
-        protected override string GetName()
-        {
-            return "SpeechToText";
-        }
-
-        /// <exclude />
         protected override void Start()
 	    {
             base.Start();
-	        LogSystem.InstallDefaultReactors();
 
 	        if ( m_StatusText != null )
 	            m_StatusText.text = "READY";
-            if (! m_STT.GetModels( OnGetModels ) )
-                Log.Error( "SpeechToTextWidget", "Failed to rquest models." );
+            if (! m_SpeechToText.GetModels( OnGetModels ) )
+                Log.Error( "SpeechToTextWidget", "Failed to request models." );
 	    }
 
         private void OnDisable()
@@ -140,7 +147,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             if (! Active )
                 Active = true;
 
-            m_STT.OnListen( (AudioData)data );
+            m_SpeechToText.OnListen( (AudioData)data );
         }
 
         private void OnLanguage(Data data)
@@ -153,7 +160,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             {
                 m_Language = language.Language;
 
-                if (! m_STT.GetModels( OnGetModels ) )
+                if (! m_SpeechToText.GetModels( OnGetModels ) )
                     Log.Error( "SpeechToTextWidget", "Failed to rquest models." );
             }
         }
@@ -175,7 +182,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                 if ( bestModel != null )
                 {
                     Log.Status( "SpeechToTextWidget", "Selecting Recognize Model: {0} ", bestModel.Name );
-                    m_STT.RecognizeModel = bestModel.Name;
+                    m_SpeechToText.RecognizeModel = bestModel.Name;
                 }
             }
         }
@@ -202,6 +209,6 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                 }
             }
 	    }
-
-	}
+        #endregion
+    }
 }

@@ -18,11 +18,10 @@
 #if UNITY_EDITOR
 
 using IBM.Watson.DeveloperCloud.Utilities;
-using IBM.Watson.DeveloperCloud.Services.v1;
+using IBM.Watson.DeveloperCloud.Services.Dialog.v1;
 using UnityEditor;
 using UnityEngine;
 using System.IO;
-using IBM.Watson.DeveloperCloud.DataModels;
 using IBM.Watson.DeveloperCloud.Logging;
 
 namespace IBM.Watson.DeveloperCloud.Editor
@@ -40,11 +39,11 @@ namespace IBM.Watson.DeveloperCloud.Editor
             Runnable.EnableRunnableInEditor();
         }
 
-        [MenuItem("Watson/Dialog Editor", false, 1 )]
+        [MenuItem("Watson/Dialog Editor", false, 1)]
         private static void EditConfig()
         {
             DialogEditor window = GetWindow<DialogEditor>();
-            window.Show( true );
+            window.Show(true);
         }
 
         private Texture m_WatsonIcon = null;
@@ -55,42 +54,42 @@ namespace IBM.Watson.DeveloperCloud.Editor
         private bool m_Refreshing = false;
         private string m_CurrentDirectory = Application.dataPath;
 
-        private void OnGetDialogs(Dialogs dialogs )
+        private void OnGetDialogs(Dialogs dialogs)
         {
             m_Dialogs = dialogs;
             m_Refreshing = false;
         }
 
-        private void OnDeleteDialog( bool success )
+        private void OnDeleteDialog(bool success)
         {
-            if (! success )
-                Log.Error( "DialogEditor", "Failed to delete dialog." );
+            if (!success)
+                Log.Error("DialogEditor", "Failed to delete dialog.");
             else
                 OnRefresh();
         }
 
-        private void OnDownloadDialog( bool success )
+        private void OnDownloadDialog(bool success)
         {
-            if (! success )
-                Log.Error( "DialogEditor", "Failed to download dialog." );
+            if (!success)
+                Log.Error("DialogEditor", "Failed to download dialog.");
             else
-                Log.Status( "DialogEditor", "Dialog downloaded." );
+                Log.Status("DialogEditor", "Dialog downloaded.");
         }
 
-        private void OnUploadDialog( string dialogId )
+        private void OnUploadDialog(string dialogId)
         {
-            if ( string.IsNullOrEmpty( dialogId ) )
-                Log.Error( "DialogEditor", "Failed to train classifier." );
+            if (string.IsNullOrEmpty(dialogId))
+                Log.Error("DialogEditor", "Failed to upload dialog.");
             else
                 OnRefresh();
         }
 
         private void OnRefresh()
         {
-            if (! m_Refreshing )
+            if (!m_Refreshing)
             {
-                if (!m_Dialog.GetDialogs( OnGetDialogs ) )
-                    Log.Error( "DialogEditor", "Failed to request dialogs." );
+                if (!m_Dialog.GetDialogs(OnGetDialogs))
+                    Log.Error("DialogEditor", "Failed to request dialogs.");
                 else
                     m_Refreshing = true;
             }
@@ -102,10 +101,10 @@ namespace IBM.Watson.DeveloperCloud.Editor
 
             m_ScrollPos = EditorGUILayout.BeginScrollView(m_ScrollPos);
 
-            if ( m_Refreshing )
+            if (m_Refreshing)
             {
                 EditorGUI.BeginDisabledGroup(true);
-                GUILayout.Button( "Refreshing..." );
+                GUILayout.Button("Refreshing...");
                 EditorGUI.EndDisabledGroup();
             }
             else if (m_Dialogs == null || GUILayout.Button("Refresh"))
@@ -123,20 +122,20 @@ namespace IBM.Watson.DeveloperCloud.Editor
                     EditorGUILayout.BeginHorizontal();
                     DialogEntry d = m_Dialogs.dialogs[i];
 
-                    EditorGUILayout.LabelField( string.Format( "Name: {0}, ID: {1}", d.name, d.dialog_id ) );
+                    EditorGUILayout.LabelField(string.Format("Name: {0}, ID: {1}", d.name, d.dialog_id));
 
                     if (GUILayout.Button("Delete"))
                     {
-                        if ( EditorUtility.DisplayDialog( "Confirm", string.Format("Confirm delete of dialog {0}", d.dialog_id), "YES", "NO" ) )
-                            m_Dialog.DeleteDialog( d.dialog_id, OnDeleteDialog );
+                        if (EditorUtility.DisplayDialog("Confirm", string.Format("Confirm delete of dialog {0}", d.dialog_id), "YES", "NO"))
+                            m_Dialog.DeleteDialog(d.dialog_id, OnDeleteDialog);
                     }
                     if (GUILayout.Button("Download"))
                     {
-                        var path = EditorUtility.SaveFilePanel( "Save Dialog", m_CurrentDirectory, "Dialog", "xml" );
-                        if (! string.IsNullOrEmpty( path ) )
+                        var path = EditorUtility.SaveFilePanel("Save Dialog", m_CurrentDirectory, "Dialog", "xml");
+                        if (!string.IsNullOrEmpty(path))
                         {
-                            m_CurrentDirectory = Path.GetDirectoryName( path );
-                            m_Dialog.DownloadDialog( d.dialog_id, path, OnDownloadDialog );
+                            m_CurrentDirectory = Path.GetDirectoryName(path);
+                            m_Dialog.DownloadDialog(d.dialog_id, path, OnDownloadDialog);
                         }
                     }
 
@@ -147,21 +146,21 @@ namespace IBM.Watson.DeveloperCloud.Editor
             EditorGUILayout.EndVertical();
             EditorGUI.indentLevel -= 1;
 
-            EditorGUILayout.LabelField("Upload Dialog:" );
+            EditorGUILayout.LabelField("Upload Dialog:");
             EditorGUI.indentLevel += 1;
 
-            m_NewDialogName = EditorGUILayout.TextField("Name", m_NewDialogName );    
-            if ( GUILayout.Button( "Upload" ) )
+            m_NewDialogName = EditorGUILayout.TextField("Name", m_NewDialogName);
+            if (GUILayout.Button("Upload"))
             {
-                var path = EditorUtility.OpenFilePanel( "Select Dialog File", m_CurrentDirectory, "xml" );
-                if (! string.IsNullOrEmpty( path ) )
+                var path = EditorUtility.OpenFilePanel("Select Dialog File", m_CurrentDirectory, "xml");
+                if (!string.IsNullOrEmpty(path))
                 {
-                    m_CurrentDirectory = Path.GetDirectoryName( path );
-                    if ( string.IsNullOrEmpty( m_NewDialogName ) )
-                        m_NewDialogName = Path.GetFileNameWithoutExtension( path );
+                    m_CurrentDirectory = Path.GetDirectoryName(path);
+                    if (string.IsNullOrEmpty(m_NewDialogName))
+                        m_NewDialogName = Path.GetFileNameWithoutExtension(path);
 
-                    if (! m_Dialog.UploadDialog( m_NewDialogName, OnUploadDialog, path ) )
-                        Log.Error( "DialogEditor", "Failed to upload dialog." );
+                    if (!m_Dialog.UploadDialog(m_NewDialogName, OnUploadDialog, path))
+                        Log.Error("DialogEditor", "Failed to upload dialog.");
                 }
 
                 m_NewDialogName = null;

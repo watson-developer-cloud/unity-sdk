@@ -15,11 +15,15 @@
 *
 */
 
+
+using FullSerializer;
+using IBM.Watson.DeveloperCloud.Logging;
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 using UnityEngine;
+
 
 namespace IBM.Watson.DeveloperCloud.Utilities
 {
@@ -28,6 +32,8 @@ namespace IBM.Watson.DeveloperCloud.Utilities
     /// </summary>
     static public class Utility
     {
+        private static fsSerializer sm_Serializer = new fsSerializer();
+
         /// <summary>
         /// This helper functions returns all Type's that inherit from the given type.
         /// </summary>
@@ -48,6 +54,17 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             }
 
             return types.ToArray();
+        }
+
+        /// <summary>
+        /// Approximately the specified a, b and tolerance.
+        /// </summary>
+        /// <param name="a">The first component.</param>
+        /// <param name="b">The second component.</param>
+        /// <param name="tolerance">Tolerance.</param>
+        public static bool Approximately(double a, double b, double tolerance = 0.0001)
+        {
+            return (System.Math.Abs(a - b) < tolerance);
         }
 
         /// <summary>
@@ -133,7 +150,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// <param name="nameChild">Name child.</param>
         /// <param name="isContains">Check string contains the name instead of equality.</param>
         /// <param name="sortByName">If true, children will be returned sorted by their name.</param>
-        public static T[] FindObjects<T>(GameObject parent, string nameChild, bool isContains = false, bool sortByName = false) where T : Component
+		public static T[] FindObjects<T>(GameObject parent, string nameChild, bool isContains = false, bool sortByName = false, bool includeInactive = true) where T : Component
         {
             T[] childObjects = null;
             List<T> listGameObject = new List<T>();
@@ -143,7 +160,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             for (int i = 0; i < childPath.Length; i++)
             {
                 string childTransformName = childPath[i];
-                T[] childerenTransform = parent.GetComponentsInChildren<T>(includeInactive: true);
+				T[] childerenTransform = parent.GetComponentsInChildren<T>(includeInactive: includeInactive);
                 if (childerenTransform != null)
                 {
                     foreach (T item in childerenTransform)
@@ -201,14 +218,14 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// </summary>
         /// <param name="s"></param>
         /// <returns></returns>
-        public static string RemoveTags(string s)
+        public static string RemoveTags(string s, char tagStartChar = '<', char tagEndChar = '>' )
         {
             if (!string.IsNullOrEmpty(s))
             {
-                int tagStart = s.IndexOf('<');
+                int tagStart = s.IndexOf(tagStartChar);
                 while (tagStart >= 0)
                 {
-                    int tagEnd = s.IndexOf('>', tagStart);
+                    int tagEnd = s.IndexOf(tagEndChar, tagStart);
                     if (tagEnd < 0)
                         break;
 
@@ -216,14 +233,125 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                     string post = tagEnd < s.Length ? s.Substring(tagEnd + 1) : string.Empty;
                     s = pre + post;
 
-                    tagStart = s.IndexOf('<');
+                    tagStart = s.IndexOf(tagStartChar);
                 }
             }
 
             return s;
         }
 
+        /// <summary>
+        /// Gets the on off string.
+        /// </summary>
+        /// <returns>The on off string.</returns>
+        /// <param name="b">If set to <c>true</c> b.</param>
+        public static string GetOnOffString(bool b)
+        {
+            return b?"ON": "OFF";
+        }
+
+
+        /// <summary>
+        /// Strips the prepending ! statment from string.
+        /// </summary>
+        /// <returns>The string.</returns>
+        /// <param name="s">S.</param>
+        public static string StripString(string s)
+        {
+            string[] delimiter = new string[] {"!", "! "};
+            string[] newString = s.Split(delimiter, System.StringSplitOptions.None);
+            if(newString.Length > 1)
+            {
+                return newString[1];
+            }
+            else
+            {
+                return s;
+            }
+
+        }
+
+
+        #region Cache Generic Deserialization
+
+        public static void SaveToCache<T>(Dictionary<string,DataCache> dictionaryCache, string cacheDirectoryId, string cacheId, T objectToCache, string prefix="", long maxCacheSize = 1024 * 1024 * 50, double maxCacheAge = 24 * 7) where T : class, new()
+        {
+            if (objectToCache != null)
+            {
+                DataCache cache = null;
+
+                if (!dictionaryCache.TryGetValue(cacheDirectoryId, out cache))
+                {
+                    cache = new DataCache( prefix + cacheDirectoryId, maxCacheSize: maxCacheSize, maxCacheAge: double.MaxValue);   //We will store the values as max time
+                    dictionaryCache[ cacheDirectoryId ] = cache;
+                }
+
+                fsData data = null;
+                fsResult r = sm_Serializer.TrySerialize(objectToCache.GetType(), objectToCache, out data);
+                if (!r.Succeeded)
+                    throw new WatsonException(r.FormattedMessages);
+
+                cache.Save(cacheId, Encoding.UTF8.GetBytes(fsJsonPrinter.PrettyJson(data)));
+            }
+        }
+
+        public static T GetFromCache<T>(Dictionary<string,DataCache> dictionaryCache, string cacheDirectoryId, string cacheId, string prefix="") where T : class, new()
+        {
+            T cachedObject = null;
+
+            DataCache cache = null;
+            if (! dictionaryCache.TryGetValue( cacheDirectoryId, out cache ) )
+            {
+                cache = new DataCache( prefix + cacheDirectoryId );
+                dictionaryCache[ cacheDirectoryId ] = cache;
+            }
+
+            byte [] cached = cache.Find( cacheId );
+            if ( cached != null )
+            {
+                cachedObject = DeserializeResponse<T>( cached );
+                if ( cachedObject != null)
+                {
+                    return cachedObject;
+                }
+            }
+
+            return cachedObject;
+        }
+
+        /// <summary>
+        /// Deserializes the response.
+        /// </summary>
+        /// <returns>The response.</returns>
+        /// <param name="resp">Resp.</param>
+        /// <param name="obj">Object.</param>
+        /// <typeparam name="T">The 1st type parameter.</typeparam>
+        public static T DeserializeResponse<T>( byte [] resp, object obj = null ) where T : class, new()
+        {
+            string json = Encoding.UTF8.GetString( resp );
+            try
+			{
+                fsData data = null;
+                fsResult r = fsJsonParser.Parse(json, out data);
+                if (!r.Succeeded)
+                    throw new WatsonException(r.FormattedMessages);
+
+                if ( obj == null )
+                    obj = new T();
+
+                r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                if (!r.Succeeded)
+                    throw new WatsonException(r.FormattedMessages);
+
+                return (T)obj;
+            }
+            catch (Exception e)
+            {
+                Log.Error("Utility", "DeserializeResponse Exception: {0}", e.ToString());
+            }
+
+            return null;
+        }
+        #endregion
     }
-
-
 }

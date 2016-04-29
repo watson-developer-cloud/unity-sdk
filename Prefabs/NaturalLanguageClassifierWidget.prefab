@@ -1,0 +1,383 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &150770
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 434176}
+  - 114: {fileID: 11489316}
+  m_Layer: 0
+  m_Name: NaturalLanguageClassifierWidget
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &434176
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 150770}
+  m_LocalRotation: {x: 0, y: -0.8191521, z: 0, w: 0.57357633}
+  m_LocalPosition: {x: -207.60638, y: 418, z: 570.3934}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+--- !u!114 &11489316
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 150770}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cef7f2b9e6b24041a94bde309b342ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AutoConnect: 1
+  m_ClassifyOutput:
+    m_Connections: []
+  m_ClassifierName: ${NLC_CLASSIFIER_NAME}
+  m_ClassifierId: ${NLC_CLASSIFIER_ID}
+  m_MinWordConfidence: 0
+  m_IgnoreWordConfidence: 0
+  m_MinClassEventConfidence: 0
+  m_Language: en
+  m_ClassEventList: []
+  m_TopClassText: {fileID: 0}
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.size
+      value: 49
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassifierId
+      value: ${NLC_CLASSIFIER_ID}
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[3].m_Event
+      value: 402
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_AutoConnect
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[0].m_Event
+      value: 403
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[5].m_Event
+      value: 406
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[13].m_Class
+      value: question-thunderstone
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[13].m_Event
+      value: 401
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[14].m_Class
+      value: question-woodside
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[14].m_Event
+      value: 401
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[15].m_Class
+      value: question-numerati_woodside
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[2].m_Class
+      value: cancel
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[2].m_Event
+      value: 422
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[16].m_Class
+      value: pan_left
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[16].m_Event
+      value: 309
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[17].m_Class
+      value: pan_right
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[17].m_Event
+      value: 310
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[18].m_Class
+      value: pan_up
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[19].m_Class
+      value: pan_down
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[18].m_Event
+      value: 311
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[19].m_Event
+      value: 312
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[20].m_Class
+      value: zoom_in
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[21].m_Class
+      value: zoom_out
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[20].m_Event
+      value: 307
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[21].m_Event
+      value: 308
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[22].m_Class
+      value: show_next_passage
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[23].m_Class
+      value: show_next_answer
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[24].m_Class
+      value: show_next
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[25].m_Class
+      value: show_previous_passage
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[26].m_Class
+      value: show_previous_answer
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[27].m_Class
+      value: show_previous
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[28].m_Class
+      value: scroll_up
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[29].m_Class
+      value: scroll_down
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[30].m_Class
+      value: repeat_last_action
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[30].m_Event
+      value: 419
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[29].m_Event
+      value: 418
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[28].m_Event
+      value: 417
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[27].m_Event
+      value: 416
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[22].m_Event
+      value: 415
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[23].m_Event
+      value: 415
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[24].m_Event
+      value: 415
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[25].m_Event
+      value: 416
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[26].m_Event
+      value: 416
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassifierName
+      value: ${NLC_CLASSIFIER_NAME}
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[31].m_Class
+      value: personnel
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[31].m_Event
+      value: 423
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[32].m_Class
+      value: confirm_update
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[33].m_Class
+      value: cancel_update
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[32].m_Event
+      value: 700
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[33].m_Event
+      value: 701
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_MinWordConfidence
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_MinClassEventConfidence
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[34].m_Event
+      value: 902
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[34].m_Class
+      value: close_caption_on
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[35].m_Event
+      value: 903
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[35].m_Class
+      value: close_caption_off
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[36].m_Event
+      value: 900
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[36].m_Class
+      value: log_out
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[37].m_Event
+      value: 510
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[37].m_Class
+      value: virtual_keyboard_show
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[38].m_Class
+      value: show_first
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[38].m_Event
+      value: 420
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[39].m_Class
+      value: show_first_answer
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[40].m_Class
+      value: show_first_passage
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[41].m_Class
+      value: show_last
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[41].m_Event
+      value: 421
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[42].m_Class
+      value: show_last_answer
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[43].m_Class
+      value: show_last_passage
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[44].m_Class
+      value: health_panel_show
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[44].m_Event
+      value: 905
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[45].m_Class
+      value: log_panel_show
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[45].m_Event
+      value: 906
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[46].m_Class
+      value: about_xray
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[46].m_Event
+      value: 907
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[47].m_Class
+      value: ship_tracking
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[47].m_Event
+      value: 424
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[48].m_Class
+      value: procurement
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[48].m_Event
+      value: 425
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[49].m_Class
+      value: about_xray
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ClassEventList.Array.data[49].m_Event
+      value: 907
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 150770}
+  m_IsPrefabParent: 1

@@ -58,18 +58,6 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         }
 
         /// <summary>
-        /// Register an event receiver with this EventManager.
-        /// </summary>
-        /// <param name="eventType">Event type defined in Constants</param>
-        /// <param name="callback">The event receiver function.</param>
-        public void RegisterEventReceiver(Constants.Event eventType, OnReceiveEvent callback)
-        {
-            if (m_EventTypeName.Count == 0)
-                InitializeEventTypeNames();
-            RegisterEventReceiver(m_EventTypeName[eventType], callback);
-        }
-
-        /// <summary>
         /// Unregisters all event receivers.
         /// </summary>
         public void UnregisterAllEventReceivers()
@@ -98,19 +86,6 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         }
 
         /// <summary>
-        /// Unregister a specific receiver.
-        /// </summary>
-        /// <param name="eventType">Event type defined in Constants</param>
-        /// <param name="callback">The event handler.</param>
-        public void UnregisterEventReceiver(Constants.Event eventType, OnReceiveEvent callback)
-        {
-            if (m_EventTypeName.Count == 0)
-                InitializeEventTypeNames();
-            UnregisterEventReceiver(m_EventTypeName[eventType], callback);
-        }
-
-
-        /// <summary>
         /// Send an event to all registered receivers.
         /// </summary>
         /// <param name="eventName">The name of the event to send.</param>
@@ -132,28 +107,18 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                         receivers.RemoveAt(i--);
                         continue;
                     }
-                    receivers[i](args);
+                    try
+                    {
+                        receivers[i](args);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error("EventManager", "Event Receiver Exception: {0}", ex.ToString());
+                    }
                 }
                 return true;
             }
             return false;
-        }
-
-        /// <summary>
-        /// Send an event to all registered receivers.
-        /// </summary>
-        /// <param name="eventType">Event type defined in Constants</param>
-        /// <param name="args">Arguments to send to the event receiver.</param>
-        /// <returns>Returns true if a event receiver was found for the event.</returns>
-        public bool SendEvent(Constants.Event eventType, params object[] args)
-        {
-            if (m_EventTypeName.Count == 0)
-                InitializeEventTypeNames();
-
-            if (eventType != Constants.Event.NONE)
-                return SendEvent(m_EventTypeName[eventType], args);
-            else
-                return false;
         }
 
         /// <summary>
@@ -170,7 +135,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         #endregion
 
         #region Private Data
-        private Dictionary<Constants.Event, string> m_EventTypeName = new Dictionary<Constants.Event, string>();
+        private Dictionary<Type, Dictionary<object, string>> m_EventTypeName = new Dictionary<Type, Dictionary<object, string>>();
         private Dictionary<string, List<OnReceiveEvent>> m_EventMap = new Dictionary<string, List<OnReceiveEvent>>();
 
         private class AsyncEvent
@@ -196,13 +161,11 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         }
         #endregion
 
-        private void InitializeEventTypeNames()
+        private void InitializeEventTypeNames(Type enumType)
         {
-            foreach (var en in Enum.GetNames(typeof(Constants.Event)))
-                m_EventTypeName[(Constants.Event)Enum.Parse(typeof(Constants.Event), en)] = en;
-
+            m_EventTypeName[enumType] = new Dictionary<object, string>();
+            foreach (var en in Enum.GetNames(enumType))
+                m_EventTypeName[enumType][Enum.Parse(enumType, en)] = en;
         }
-
     }
-
 }

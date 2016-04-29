@@ -103,7 +103,7 @@ namespace IBM.Watson.DeveloperCloud.Logging
         /// <summary>
         /// Returns the singleton instance of the Logger object.
         /// </summary>
-		public static LogSystem Instance { get { if(! sm_bInstalledDefaultReactors) InstallDefaultReactors(); return Singleton<LogSystem>.Instance; } }
+		public static LogSystem Instance { get { return Singleton<LogSystem>.Instance; } }
         #endregion
 
         #region Private Data
@@ -112,20 +112,40 @@ namespace IBM.Watson.DeveloperCloud.Logging
         #endregion
 
         #region Public Functions
+        public static List<ILogReactor> ReactorsInstalled
+        {
+            get
+            {
+                return LogSystem.Instance.m_Reactors;
+            }
+        }
+
         /// <summary>
         /// Install a default debug and file reactor.
         /// </summary>
-        public static void InstallDefaultReactors()
+        public static void InstallDefaultReactors(int logHistory = 2, LogLevel logLevelFileReactor = LogLevel.STATUS)
         {
-            if (! sm_bInstalledDefaultReactors )
+            if (!sm_bInstalledDefaultReactors)
             {
                 // install the default reactors...
                 sm_bInstalledDefaultReactors = true;
 #if UNITY_EDITOR || UNITY_IOS || UNITY_ANDROID
-                LogSystem.Instance.InstallReactor( new DebugReactor() );
+                LogSystem.Instance.InstallReactor(new DebugReactor());
 #endif
-                LogSystem.Instance.InstallReactor( new FileReactor( Application.persistentDataPath + "/Watson.log" ) );
+
+                if (!string.IsNullOrEmpty(Constants.Path.LOG_FOLDER) && !System.IO.Directory.Exists(Application.persistentDataPath + Constants.Path.LOG_FOLDER))
+                    System.IO.Directory.CreateDirectory(Application.persistentDataPath + Constants.Path.LOG_FOLDER);
+
+                LogSystem.Instance.InstallReactor(new FileReactor(Application.persistentDataPath + Constants.Path.LOG_FOLDER + "/" + Application.productName + ".log", logLevelFileReactor, logHistory));
+
+                Application.logMessageReceived += UnityLogCallback;
             }
+        }
+
+        static void UnityLogCallback(string condition, string stacktrace, LogType type)
+        {
+            if (type == LogType.Exception)
+                Log.Critical("Unity", "Unity Exception {0} : {1}", condition, stacktrace);
         }
 
         /// <summary>
@@ -138,6 +158,8 @@ namespace IBM.Watson.DeveloperCloud.Logging
             {
                 m_Reactors.Add(reactor);
             }
+            // set our default reactor flag to true if the user installs their own reactors.
+            sm_bInstalledDefaultReactors = true;
         }
 
         /// <summary>
@@ -220,13 +242,13 @@ namespace IBM.Watson.DeveloperCloud.Logging
         {
             LogSystem.Instance.ProcessLog(new LogRecord(LogLevel.ERROR, subSystem, messageFmt, args));
         }
-         /// <summary>
+        /// <summary>
         /// Log a CRITICAL level message.
         /// </summary>
         /// <param name="subSystem">Name of the subsystem.</param>
         /// <param name="messageFmt">Message with formatting.</param>
         /// <param name="args">Formatting arguments.</param>
-       public static void Critical(string subSystem, string messageFmt, params object[] args)
+        public static void Critical(string subSystem, string messageFmt, params object[] args)
         {
             LogSystem.Instance.ProcessLog(new LogRecord(LogLevel.CRITICAL, subSystem, messageFmt, args));
         }

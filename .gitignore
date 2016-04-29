@@ -19,7 +19,7 @@ ExportedObj/
 *.user
 *.unityproj
 *.booproj
- 
+
 # ============ #
 # OS generated #
 # ============ #
@@ -38,3 +38,14 @@ ehthumbs.db
 /Clients
 Assets/StreamingAssets/Config.json
 Assets/StreamingAssets/Config.json.meta
+Resources.meta
+Scenes.meta
+Scripts.meta
+ThirdParty.meta
+Prefabs.meta
+Examples.meta
+Docs.meta
+Art.meta
+LICENSE.meta
+CHANGELOG.md.meta
+README.md.meta

@@ -25,6 +25,16 @@ namespace IBM.Watson.DeveloperCloud.Widgets
     /// </summary>
     public class ActivateWidget : Widget
     {
+        #region Outputs
+        [SerializeField]
+        private Output m_ActivateOutput = new Output(typeof(BooleanData), true);
+        #endregion
+
+        #region Private Data
+        [SerializeField]
+        private bool m_SendValue = true;
+        #endregion
+
         #region Widget interface
         /// <exclude />
         protected override string GetName()
@@ -33,17 +43,14 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         }
         #endregion
 
+        #region Event Handlers
         /// <summary>
         /// Button event handler.
         /// </summary>
         public void OnButton()
         {
-            m_ActivateOutput.SendData( new BooleanData(m_SendValue) );
+            m_ActivateOutput.SendData(new BooleanData(m_SendValue));
         }
-
-        [SerializeField]
-        private Output m_ActivateOutput = new Output( typeof(BooleanData) );     
-        [SerializeField]
-        private bool m_SendValue = true;   
+        #endregion
     }
 }

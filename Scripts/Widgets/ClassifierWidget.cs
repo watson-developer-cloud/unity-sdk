@@ -16,7 +16,7 @@
 */
 
 
-using IBM.Watson.DeveloperCloud.DataModels;
+using IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1;
 using IBM.Watson.DeveloperCloud.DataTypes;
 using IBM.Watson.DeveloperCloud.Utilities;
 using System;
@@ -28,11 +28,19 @@ using UnityEngine;
 namespace IBM.Watson.DeveloperCloud.Widgets
 {
     /// <summary>
-    /// This widget class maps NLC classifier results to a SerializedDelegate.
+    /// This widget class maps Natural Language Classifier results to a SerializedDelegate.
     /// </summary>
     public class ClassifierWidget : Widget
     {
-        private delegate void OnClassifierResult( ClassifyResult result );
+        #region Inputs
+        [SerializeField]
+        private Input m_ClassifyInput = new Input("Classified", typeof(ClassifyResultData), "OnClassifyInput");
+        #endregion
+
+        #region Outputs
+        [SerializeField]
+        private Output m_ClassifyOutput = new Output(typeof(ClassifyResultData));
+        #endregion
 
         #region Widget interface
         /// <exclude />
@@ -43,6 +51,8 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         #endregion
 
         #region Private Data
+        private delegate void OnClassifierResult(ClassifyResult result);
+
         [Serializable]
         private class Mapping
         {
@@ -53,27 +63,23 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 
         [SerializeField]
         private List<Mapping> m_Mappings = new List<Mapping>();
-        [SerializeField]
-        private Input m_ClassifyInput = new Input( "Classified", typeof(ClassifyResultData), "OnClassifyInput" );
-        [SerializeField]
-        private Output m_ClassifyOutput = new Output( typeof(ClassifyResultData) );
         #endregion
 
-        #region Input Handler
-        private void OnClassifyInput( Data data )
+        #region Event Handlers
+        private void OnClassifyInput(Data data)
         {
             ClassifyResultData input = (ClassifyResultData)data;
 
             bool bPassthrough = true;
             foreach (var mapping in m_Mappings)
             {
-                if ( mapping.m_Class == input.Result.top_class )
+                if (mapping.m_Class == input.Result.top_class)
                 {
                     OnClassifierResult callback = mapping.m_Callback.ResolveDelegate() as OnClassifierResult;
-                    if ( callback != null )
+                    if (callback != null)
                     {
-                        callback( input.Result );
-                        if ( mapping.m_Exclusive )
+                        callback(input.Result);
+                        if (mapping.m_Exclusive)
                         {
                             bPassthrough = false;
                             break;
@@ -82,8 +88,8 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                 }
             }
 
-            if ( bPassthrough )
-                m_ClassifyOutput.SendData( data );
+            if (bPassthrough)
+                m_ClassifyOutput.SendData(data);
         }
         #endregion
     }

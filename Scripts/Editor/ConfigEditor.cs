@@ -1,4 +1,5 @@
-﻿/**
+﻿#if UNITY_EDITOR
+/**
 * Copyright 2015 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,13 +16,9 @@
 *
 */
 
-// uncomment to enable gateway code (Experimental)
-//#define ENABLE_GATEWAY
-
-#if UNITY_EDITOR
-
 using IBM.Watson.DeveloperCloud.Services;
 using IBM.Watson.DeveloperCloud.Utilities;
+using IBM.Watson.DeveloperCloud.Connection;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -37,9 +34,9 @@ namespace IBM.Watson.DeveloperCloud.Editor
     class ConfigEditor : EditorWindow
     {
         #region Constants
-        private const string BLUEMIX_REGISTRATION = "https://console.ng.bluemix.net/registration/";
+		private const string BLUEMIX_REGISTRATION = "http://bluemix.net/registration";
         private const string API_REFERENCE = "WatsonUnitySDK.chm";
-        private const string README = "https://github.com/watson-developer-cloud/unity-sdk/blob/develop/readme.md";
+        private const string README = "https://github.com/watson-developer-cloud/unity-sdk/blob/develop/README.md";
 
         private class ServiceSetup
         {
@@ -60,7 +57,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
             new ServiceSetup() { ServiceName = "Translation", ServiceAPI = "language-translation/api",
                 URL ="https://console.ng.bluemix.net/catalog/language-translation/", ServiceID="TranslateV1" },
             new ServiceSetup() { ServiceName = "Natural Language Classifier", ServiceAPI = "natural-language-classifier/api",
-                URL ="https://console.ng.bluemix.net/catalog/natural-language-classifier/", ServiceID="NlcV1" }
+				URL ="https://console.ng.bluemix.net/catalog/natural-language-classifier/", ServiceID="NaturalLanguageClassifierV1" }
         };
 
         private const string TITLE = "Watson Unity SDK";
@@ -142,6 +139,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
             if (!Directory.Exists(Application.streamingAssetsPath))
                Directory.CreateDirectory(Application.streamingAssetsPath);
             File.WriteAllText(Application.streamingAssetsPath + "/Config.json", Config.Instance.SaveConfig());
+            RESTConnector.FlushConnectors();
         }
 
         private static string FindFile( string directory, string name )
@@ -186,16 +184,6 @@ namespace IBM.Watson.DeveloperCloud.Editor
         private Texture m_StatusDown = null;
         private Vector2 m_ScrollPos = Vector2.zero;
         private string m_PastedCredentials = "\n\n\n\n\n\n\n";
-
-#if ENABLE_GATEWAY
-#if UNITY_EDITOR
-        private string m_GatewayUser = "admin";
-        private string m_GatewayPassword = "admin123";
-#else
-        private string m_GatewayUser = "";
-        private string m_GatewayPassword = "";
-#endif
-#endif
 
         private void OnGUI()
         {
@@ -290,7 +278,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
                     if ( bParsed )
                     {
                         m_CheckServicesNow = true;
-
+                        
                         EditorUtility.DisplayDialog( "Complete", "Credentials applied.", OK );
                         m_PastedCredentials = "\n\n\n\n\n\n\n";
                         GUI.FocusControl("Apply");
@@ -312,83 +300,9 @@ namespace IBM.Watson.DeveloperCloud.Editor
             } 
             else
             {
+                cfg.ClassifierDirectory = EditorGUILayout.TextField("Classifier Directory", cfg.ClassifierDirectory );
                 cfg.TimeOut = EditorGUILayout.FloatField("Timeout", cfg.TimeOut);
                 cfg.MaxRestConnections = EditorGUILayout.IntField("Max Connections", cfg.MaxRestConnections);
-
-#if ENABLE_GATEWAY
-                cfg.EnableGateway = EditorGUILayout.ToggleLeft("Enable Gateway", cfg.EnableGateway);
-                if (cfg.EnableGateway)
-                {
-                    EditorGUI.indentLevel += 1;
-                    cfg.GatewayURL = EditorGUILayout.TextField("Gateway URL", cfg.GatewayURL);
-                    m_GatewayUser = EditorGUILayout.TextField("Gateway User", m_GatewayUser);
-                    m_GatewayPassword = EditorGUILayout.PasswordField("Gateway Password", m_GatewayPassword);
-
-                    cfg.ProductKey = EditorGUILayout.TextField("Product Key", cfg.ProductKey);
-                    if (GUILayout.Button("Create Product Key")
-                        && (string.IsNullOrEmpty(cfg.ProductKey) || EditorUtility.DisplayDialog("Confirm", "Please confirm you replacing your current key.", "Yes", "No")))
-                    {
-                        cfg.ProductKey = Guid.NewGuid().ToString();
-
-                        Dictionary<string, object> addKeyReq = new Dictionary<string, object>();
-                        addKeyReq["robotKey"] = cfg.ProductKey;
-                        addKeyReq["groupName"] = Application.productName;
-                        addKeyReq["deviceLimit"] = "9999";
-
-                        Dictionary<string, string> headers = new Dictionary<string, string>();
-                        headers["Authorization"] = new Credentials(m_GatewayUser, m_GatewayPassword).CreateAuthorization();
-                        headers["Content-Type"] = "application/json";
-
-                        byte[] data = Encoding.UTF8.GetBytes(MiniJSON.Json.Serialize(addKeyReq));
-                        WWW www = new WWW(cfg.GatewayURL + "/v1/admin/addKey", data, headers);
-                        while (!www.isDone) ;
-
-                        if (!string.IsNullOrEmpty(www.error))
-                            Log.Warning("ConfigEditor", "Register App Error: {0}", www.error);
-
-                        bool bRegistered = false;
-                        if (!string.IsNullOrEmpty(www.text))
-                        {
-                            IDictionary json = MiniJSON.Json.Deserialize(www.text) as IDictionary;
-                            if ( json != null && json.Contains("status"))
-                                bRegistered = (long)json["status"] != 0;
-                            else
-                                Log.Error( "ConfigEditor", "Invalid response from gateway: {0}", www.text );
-                        }
-
-                        if (bRegistered)
-                        {
-                            Dictionary<string, object> registerReq = new Dictionary<string, object>();
-                            registerReq["robotKey"] = cfg.ProductKey;
-                            registerReq["robotName"] = Application.productName;
-                            registerReq["macId"] = "UnitySDK";
-
-                            data = Encoding.UTF8.GetBytes(MiniJSON.Json.Serialize(registerReq));
-                            www = new WWW(cfg.GatewayURL + "/v1/admin/addRobot", data, headers);
-                            while (!www.isDone) ;
-
-                            if (!string.IsNullOrEmpty(www.error))
-                                Log.Warning("ConfigEditor", "Register Secret Error: {0}", www.error);
-
-                            bRegistered = false;
-                            if (!string.IsNullOrEmpty(www.text))
-                            {
-                                IDictionary json = MiniJSON.Json.Deserialize(www.text) as IDictionary;
-                                if (json.Contains("status"))
-                                    bRegistered = (long)json["status"] != 0;
-                            }
-                        }
-
-                        if (!bRegistered)
-                        {
-                            Config.Instance.ProductKey = string.Empty;
-                            EditorUtility.DisplayDialog("Error", "Failed to register product with gateway.", "OK");
-                        }
-                    }
-
-                    EditorGUI.indentLevel -= 1;
-                }
-#endif
 
                 EditorGUILayout.LabelField("BlueMix Credentials");
                 EditorGUI.indentLevel += 1;
@@ -399,7 +313,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
                     GUILayout.BeginHorizontal();
                     info.m_ServiceID = EditorGUILayout.TextField("ServiceID", info.m_ServiceID);
 
-                    if ( m_ServiceStatus.ContainsKey( info.m_ServiceID ) )
+                    if ( !string.IsNullOrEmpty(info.m_ServiceID) && m_ServiceStatus.ContainsKey( info.m_ServiceID ) )
                     {
                         if ( m_ServiceStatus[info.m_ServiceID] )
                             GUILayout.Label( m_StatusUp, GUILayout.Width( 20 ) );

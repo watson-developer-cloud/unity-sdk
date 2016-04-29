@@ -17,12 +17,11 @@
 
 using UnityEngine;
 using UnityEngine.UI;
-using IBM.Watson.DeveloperCloud.DataModels;
 using IBM.Watson.DeveloperCloud.DataTypes;
 using IBM.Watson.DeveloperCloud.Logging;
-using IBM.Watson.DeveloperCloud.Services.v1;
+using IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v1;
+using IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using IBM.Watson.DeveloperCloud.Utilities;
 
@@ -36,13 +35,27 @@ namespace IBM.Watson.DeveloperCloud.Widgets
     /// </summary>
 	public class LanguageTranslationWidget : Widget
     {
+        #region Inputs
+        [SerializeField]
+        private Input m_SpeechInput = new Input("SpeechInput", typeof(SpeechToTextData), "OnSpeechInput");
+        #endregion
+
+        #region Outputs
+        [SerializeField]
+        private Output m_RecognizeLanguageOutput = new Output(typeof(LanguageData));
+        [SerializeField]
+        private Output m_SpeechOutput = new Output(typeof(TextToSpeechData));
+        [SerializeField]
+        private Output m_VoiceOutput = new Output(typeof(VoiceData));
+        #endregion
+
         #region Private Data
         private LanguageTranslation m_Translate = new LanguageTranslation();
 
         [SerializeField, Tooltip("Source language, if empty language will be auto-detected.")]
         private string m_SourceLanguage = string.Empty;
         [SerializeField, Tooltip("Target language to translate into.")]
-        private string m_TargetLanguage = "es";  
+        private string m_TargetLanguage = "es";
         [SerializeField, Tooltip("Input field for inputting speech")]
         private InputField m_Input = null;
         [SerializeField, Tooltip("Output text for showing translated text")]
@@ -51,14 +64,6 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         private Dropdown m_DropDownSourceLanguage = null;
         [SerializeField]
         private Dropdown m_DropDownTargetLanguage = null;
-        [SerializeField]
-        private Output m_RecognizeLanguageOutput = new Output(typeof(LanguageData));
-        [SerializeField]
-        private Input m_SpeechInput = new Input("SpeechInput", typeof(SpeechToTextData), "OnSpeechInput");
-        [SerializeField]
-        private Output m_SpeechOutput = new Output(typeof(TextToSpeechData));
-        [SerializeField]
-        private Output m_VoiceOutput = new Output(typeof(VoiceData));
         [SerializeField]
         private string m_DefaultDomainToUse = "conversational";
         [SerializeField]
@@ -89,14 +94,16 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         /// <summary>
         /// Set or get the source language ID. If set to null or empty, then the language will be auto-detected.
         /// </summary>
-        public string SourceLanguage {
-            set {
-                if ( m_SourceLanguage != value )
+        public string SourceLanguage
+        {
+            set
+            {
+                if (m_SourceLanguage != value)
                 {
                     m_SourceLanguage = value;
 
-                    if ( m_RecognizeLanguageOutput.IsConnected && !string.IsNullOrEmpty(m_SourceLanguage) )
-                        m_RecognizeLanguageOutput.SendData( new LanguageData( m_SourceLanguage ) );
+                    if (m_RecognizeLanguageOutput.IsConnected && !string.IsNullOrEmpty(m_SourceLanguage))
+                        m_RecognizeLanguageOutput.SendData(new LanguageData(m_SourceLanguage));
                     ResetSourceLanguageDropDown();
                     ResetTargetLanguageDropDown();
                 }
@@ -107,10 +114,11 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         /// <summary>
         /// Set or get the target language ID.
         /// </summary>
-        public string TargetLanguage {
+        public string TargetLanguage
+        {
             set
             {
-                if ( TargetLanguage != value )
+                if (TargetLanguage != value)
                 {
                     m_TargetLanguage = value;
                     ResetVoiceForTargetLanguage();
@@ -120,6 +128,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         }
         #endregion
 
+        #region Event Handlers
         private void OnEnable()
         {
             Log.Status("TranslationWidget", "OnEnable");
@@ -132,12 +141,12 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         {
             base.Awake();
 
-            if ( m_Input != null )
-                m_Input.onEndEdit.AddListener( delegate { OnInputEnd(); } );
-            if ( m_DropDownSourceLanguage != null )
-                m_DropDownSourceLanguage.onValueChanged.AddListener( delegate { DropDownSourceValueChanged(); } );
-            if ( m_DropDownTargetLanguage != null )
-                m_DropDownTargetLanguage.onValueChanged.AddListener( delegate { DropDownTargetValueChanged(); } );
+            if (m_Input != null)
+                m_Input.onEndEdit.AddListener(delegate { OnInputEnd(); });
+            if (m_DropDownSourceLanguage != null)
+                m_DropDownSourceLanguage.onValueChanged.AddListener(delegate { DropDownSourceValueChanged(); });
+            if (m_DropDownTargetLanguage != null)
+                m_DropDownTargetLanguage.onValueChanged.AddListener(delegate { DropDownTargetValueChanged(); });
         }
 
         /// <exclude />
@@ -146,89 +155,29 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             base.Start();
 
             // resolve variables
-            m_SourceLanguage = Config.Instance.ResolveVariables( m_SourceLanguage );
-            m_TargetLanguage = Config.Instance.ResolveVariables( m_TargetLanguage );
+            m_SourceLanguage = Config.Instance.ResolveVariables(m_SourceLanguage);
+            m_TargetLanguage = Config.Instance.ResolveVariables(m_TargetLanguage);
 
-            if ( m_RecognizeLanguageOutput.IsConnected && !string.IsNullOrEmpty(m_SourceLanguage) )
-                m_RecognizeLanguageOutput.SendData( new LanguageData( m_SourceLanguage ) );
+            if (m_RecognizeLanguageOutput.IsConnected && !string.IsNullOrEmpty(m_SourceLanguage))
+                m_RecognizeLanguageOutput.SendData(new LanguageData(m_SourceLanguage));
         }
 
         private void OnInputEnd()
         {
-            if ( m_Input != null )
+            if (m_Input != null)
             {
-                if ( !string.IsNullOrEmpty(TargetLanguage) )
-                    Translate( m_Input.text );
+                if (!string.IsNullOrEmpty(TargetLanguage))
+                    Translate(m_Input.text);
                 else
                     Log.Error("TranslationWidget", "OnTranslation - Target Language should be set!");
             }
         }
 
-        private void OnSpeechInput( Data data )
+        private void OnSpeechInput(Data data)
         {
             SpeechToTextData speech = data as SpeechToTextData;
-            if ( speech != null && speech.Results.HasFinalResult() )
-               Translate( speech.Results.Results[0].Alternatives[0].Transcript );
-        }
-
-        
-        private void Translate(string text)
-        {
-            if (!string.IsNullOrEmpty(text))
-            {
-                m_TranslateText = text;
-
-                if ( m_Input != null )
-                    m_Input.text = text;
-
-                new TranslateRequest( this, text );
-            }
-        }
-
-        private class TranslateRequest
-        {
-            private LanguageTranslationWidget m_Widget;
-            private string m_Text;
-
-            public TranslateRequest( LanguageTranslationWidget widget, string text )
-            {
-                m_Widget = widget;
-                m_Text = text;
-
-                if ( string.IsNullOrEmpty( m_Widget.SourceLanguage ) )
-                    m_Widget.m_Translate.Identify( m_Text, OnIdentified );
-                else
-                    m_Widget.m_Translate.GetTranslation( m_Text, m_Widget.SourceLanguage, m_Widget.TargetLanguage, OnGetTranslation );
-            }
-
-            private void OnIdentified( string language )
-            {
-                if (! string.IsNullOrEmpty( language ) )
-                {
-                    m_Widget.SourceLanguage = language;
-                    m_Widget.m_Translate.GetTranslation( m_Text, language, m_Widget.TargetLanguage, OnGetTranslation );
-                }
-                else
-                    Log.Error( "TranslateWidget", "Failed to identify language: {0}", m_Text );
-            }
-
-            private void OnGetTranslation( Translations translations )
-            {
-                if ( translations != null && translations.translations.Length > 0 )
-                    m_Widget.SetOutput( translations.translations[0].translation );
-            }
-        };
-
-
-        private void SetOutput(string text)
-        {
-            Log.Debug( "TranslateWidget", "SetOutput(): {0}", text );
-
-            if (m_Output != null)
-                m_Output.text = text;
-
-            if ( m_SpeechOutput.IsConnected )
-                m_SpeechOutput.SendData( new TextToSpeechData( text ) );
+            if (speech != null && speech.Results.HasFinalResult())
+                Translate(speech.Results.Results[0].Alternatives[0].Transcript);
         }
 
         private void OnGetLanguages(Languages languages)
@@ -245,7 +194,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                 }
 
                 m_LanguageIDToName[m_DetectLanguageID] = m_DetectLanguageName;
-                m_LanguageNameToID[ m_DetectLanguageName ] = m_DetectLanguageID;
+                m_LanguageNameToID[m_DetectLanguageName] = m_DetectLanguageID;
                 m_Translate.GetModels(OnGetModels); //To fill dropdown with models to use in Translation
             }
             else
@@ -297,10 +246,70 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                 ResetVoiceForTargetLanguage();
             }
         }
+        #endregion
+
+        #region Private Functions
+        private void Translate(string text)
+        {
+            if (!string.IsNullOrEmpty(text))
+            {
+                m_TranslateText = text;
+
+                if (m_Input != null)
+                    m_Input.text = text;
+
+                new TranslateRequest(this, text);
+            }
+        }
+
+        private class TranslateRequest
+        {
+            private LanguageTranslationWidget m_Widget;
+            private string m_Text;
+
+            public TranslateRequest(LanguageTranslationWidget widget, string text)
+            {
+                m_Widget = widget;
+                m_Text = text;
+
+                if (string.IsNullOrEmpty(m_Widget.SourceLanguage))
+                    m_Widget.m_Translate.Identify(m_Text, OnIdentified);
+                else
+                    m_Widget.m_Translate.GetTranslation(m_Text, m_Widget.SourceLanguage, m_Widget.TargetLanguage, OnGetTranslation);
+            }
+
+            private void OnIdentified(string language)
+            {
+                if (!string.IsNullOrEmpty(language))
+                {
+                    m_Widget.SourceLanguage = language;
+                    m_Widget.m_Translate.GetTranslation(m_Text, language, m_Widget.TargetLanguage, OnGetTranslation);
+                }
+                else
+                    Log.Error("TranslateWidget", "Failed to identify language: {0}", m_Text);
+            }
+
+            private void OnGetTranslation(Translations translations)
+            {
+                if (translations != null && translations.translations.Length > 0)
+                    m_Widget.SetOutput(translations.translations[0].translation);
+            }
+        };
+
+        private void SetOutput(string text)
+        {
+            Log.Debug("TranslateWidget", "SetOutput(): {0}", text);
+
+            if (m_Output != null)
+                m_Output.text = text;
+
+            if (m_SpeechOutput.IsConnected)
+                m_SpeechOutput.SendData(new TextToSpeechData(text));
+        }
 
         private void ResetSourceLanguageDropDown()
         {
-            if ( m_DropDownSourceLanguage != null )
+            if (m_DropDownSourceLanguage != null)
             {
                 m_DropDownSourceLanguage.options.Clear();
 
@@ -320,16 +329,16 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 
         private void DropDownSourceValueChanged()
         {
-            if ( m_DropDownSourceLanguage != null && m_DropDownSourceLanguage.options.Count > 0 )
+            if (m_DropDownSourceLanguage != null && m_DropDownSourceLanguage.options.Count > 0)
             {
-                string selected = m_DropDownSourceLanguage.options[ m_DropDownSourceLanguage.value ].text;
-                if ( m_LanguageNameToID.ContainsKey( selected ) )
+                string selected = m_DropDownSourceLanguage.options[m_DropDownSourceLanguage.value].text;
+                if (m_LanguageNameToID.ContainsKey(selected))
                 {
-                    selected = m_LanguageNameToID[ selected ];
-                    if ( selected != SourceLanguage )
+                    selected = m_LanguageNameToID[selected];
+                    if (selected != SourceLanguage)
                     {
                         SourceLanguage = selected;
-                        Translate( m_TranslateText );
+                        Translate(m_TranslateText);
                     }
                 }
             }
@@ -337,16 +346,16 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 
         private void DropDownTargetValueChanged()
         {
-            if ( m_DropDownTargetLanguage != null && m_DropDownTargetLanguage.options.Count > 0 )
+            if (m_DropDownTargetLanguage != null && m_DropDownTargetLanguage.options.Count > 0)
             {
-                string selected = m_DropDownTargetLanguage.options[ m_DropDownTargetLanguage.value ].text;
-                if ( m_LanguageNameToID.ContainsKey( selected ) )
+                string selected = m_DropDownTargetLanguage.options[m_DropDownTargetLanguage.value].text;
+                if (m_LanguageNameToID.ContainsKey(selected))
                 {
-                    string target = m_LanguageNameToID[ selected ];
-                    if ( target != TargetLanguage )
+                    string target = m_LanguageNameToID[selected];
+                    if (target != TargetLanguage)
                     {
                         TargetLanguage = target;
-                        Translate( m_TranslateText );
+                        Translate(m_TranslateText);
                     }
                 }
             }
@@ -354,9 +363,9 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 
         private void ResetTargetLanguageDropDown()
         {
-            if ( m_DropDownTargetLanguage != null )
+            if (m_DropDownTargetLanguage != null)
             {
-                if ( !string.IsNullOrEmpty( SourceLanguage ) && m_LanguageToTranslate.ContainsKey( SourceLanguage ) )
+                if (!string.IsNullOrEmpty(SourceLanguage) && m_LanguageToTranslate.ContainsKey(SourceLanguage))
                 {
                     //Add target language corresponding source language
                     m_DropDownTargetLanguage.options.Clear();
@@ -381,24 +390,24 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 
         private void ResetVoiceForTargetLanguage()
         {
-            if ( m_VoiceOutput.IsConnected )
+            if (m_VoiceOutput.IsConnected)
             {
-                if ( TargetLanguage == "en" )
-                    m_VoiceOutput.SendData( new VoiceData( TextToSpeech.VoiceType.en_US_Michael ) );
-                else if ( TargetLanguage == "de" )
-                    m_VoiceOutput.SendData( new VoiceData( TextToSpeech.VoiceType.de_DE_Dieter ) );
-                else if ( TargetLanguage == "es" )
-                    m_VoiceOutput.SendData( new VoiceData( TextToSpeech.VoiceType.es_ES_Enrique ) );
-                else if ( TargetLanguage == "fr" )
-                    m_VoiceOutput.SendData( new VoiceData( TextToSpeech.VoiceType.fr_FR_Renee ) );
-                else if ( TargetLanguage == "it" )
-                    m_VoiceOutput.SendData( new VoiceData( TextToSpeech.VoiceType.it_IT_Francesca ) );
-                else if ( TargetLanguage == "ja" )
-                    m_VoiceOutput.SendData( new VoiceData( TextToSpeech.VoiceType.ja_JP_Emi ) );
+                if (TargetLanguage == "en")
+                    m_VoiceOutput.SendData(new VoiceData(VoiceType.en_US_Michael));
+                else if (TargetLanguage == "de")
+                    m_VoiceOutput.SendData(new VoiceData(VoiceType.de_DE_Dieter));
+                else if (TargetLanguage == "es")
+                    m_VoiceOutput.SendData(new VoiceData(VoiceType.es_ES_Enrique));
+                else if (TargetLanguage == "fr")
+                    m_VoiceOutput.SendData(new VoiceData(VoiceType.fr_FR_Renee));
+                else if (TargetLanguage == "it")
+                    m_VoiceOutput.SendData(new VoiceData(VoiceType.it_IT_Francesca));
+                else if (TargetLanguage == "ja")
+                    m_VoiceOutput.SendData(new VoiceData(VoiceType.ja_JP_Emi));
                 else
-                    Log.Warning( "TranslateWidget", "Unsupported voice for language {0}", TargetLanguage );
+                    Log.Warning("TranslateWidget", "Unsupported voice for language {0}", TargetLanguage);
             }
         }
+        #endregion
     }
 }
-

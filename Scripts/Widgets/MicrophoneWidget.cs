@@ -19,6 +19,7 @@
 using IBM.Watson.DeveloperCloud.DataTypes;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -33,6 +34,53 @@ namespace IBM.Watson.DeveloperCloud.Widgets
     /// </summary>
     public class MicrophoneWidget : Widget
     {
+        #region Inputs
+        [SerializeField]
+        private Input m_DisableInput = new Input("Disable", typeof(DisableMicData), "OnDisableInput");
+        #endregion
+
+        #region Outputs
+        [SerializeField]
+        private Output m_AudioOutput = new Output(typeof(AudioData));
+        [SerializeField]
+        private Output m_LevelOutput = new Output(typeof(LevelData));
+        [SerializeField]
+        private Output m_ActivateOutput = new Output(typeof(BooleanData));
+        #endregion
+
+        #region Private Data
+        private bool m_Active = false;
+        private bool m_Disabled = false;
+        private bool m_Failure = false;
+        private DateTime m_LastFailure = DateTime.Now;
+
+        [SerializeField]
+        private bool m_ActivateOnStart = true;
+        [SerializeField, Tooltip("Size of recording buffer in seconds.")]
+        private int m_RecordingBufferSize = 2;
+        [SerializeField]
+        private int m_RecordingHZ = 22050;                  // default recording HZ
+        [SerializeField, Tooltip("ID of the microphone to use.")]
+        private string m_MicrophoneID = null;               // what microphone to use for recording.
+        [SerializeField, Tooltip("How often to sample for level output.")]
+        private float m_LevelOutputInterval = 0.05f;
+        [SerializeField]
+        private float m_LevelOutputModifier = 1.0f;
+        [SerializeField, Tooltip("If true, microphone will playback recorded audio on stop.")]
+        private bool m_PlaybackRecording = false;
+        [SerializeField]
+        private Text m_StatusText = null;
+
+        private int m_RecordingRoutine = 0;                      // ID of our co-routine when recording, 0 if not recording currently.
+        private AudioClip m_Recording = null;
+        private List<AudioClip> m_Playback = new List<AudioClip>();
+        #endregion
+
+        #region Constants
+        // how often to retry the open the microphone on failure
+        private const int RETRY_INTERVAL = 10000;
+        #endregion
+
         #region Public Properties
         /// <summary>
         /// Returns a list of available microphone devices.
@@ -75,31 +123,51 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             }
         }
         /// <summary>
+        /// This is set to true when the microhphone fails, the update will continue to try to start
+        /// the microphone so long as it's active.
+        /// </summary>
+        public bool Failure
+        {
+            get { return m_Failure; }
+            private set
+            {
+                if (m_Failure != value)
+                {
+                    m_Failure = value;
+                    if (m_Failure)
+                        m_LastFailure = DateTime.Now;
+                }
+            }
+        }
+
+
+        /// <summary>
         /// Button handler for toggling the active state.
         /// </summary>
         public void OnToggleActive()
         {
-            Active = !Active;       
+            Active = !Active;
         }
         #endregion
 
-		#region Public Functions
-		/// <summary>
-		/// Activates the microphone.
-		/// </summary>
-		public void ActivateMicrophone(){
-			Active = true;
+        #region Public Functions
+        /// <summary>
+        /// Activates the microphone.
+        /// </summary>
+        public void ActivateMicrophone()
+        {
+            Active = true;
+        }
 
-		}
+        /// <summary>
+        /// Deactivates the microphone.
+        /// </summary>
+        public void DeactivateMicrophone()
+        {
+            Active = false;
+        }
 
-		/// <summary>
-		/// Deactivates the microphone.
-		/// </summary>
-		public void DeactivateMicrophone(){
-			Active = false;
-		}
-
-		#endregion
+        #endregion
 
         #region Widget interface
         /// <exclude />
@@ -109,7 +177,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         }
         #endregion
 
-        #region MonoBehaviour interface
+        #region Event Handlers
         /// <exclude />
         protected override void Start()
         {
@@ -117,54 +185,34 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             if (m_ActivateOnStart)
                 Active = true;
         }
-        #endregion
-
-        #region Private Data
-        private bool m_Active = false;
-        private bool m_Disabled = false;
-
-        [SerializeField]
-        private bool m_ActivateOnStart = true;
-        [SerializeField]
-        private Input m_DisableInput = new Input("Disable", typeof(DisableMicData), "OnDisableInput");
-        [SerializeField]
-        private Output m_AudioOutput = new Output(typeof(AudioData));
-        [SerializeField]
-        private Output m_LevelOutput = new Output(typeof(LevelData));
-		[SerializeField]
-        private Output m_ActivateOutput = new Output(typeof(BooleanData));
-        [SerializeField, Tooltip("Size of recording buffer in seconds.")]
-        private int m_RecordingBufferSize = 2;
-        [SerializeField]
-        private int m_RecordingHZ = 22050;                  // default recording HZ
-        [SerializeField, Tooltip("ID of the microphone to use.")]
-        private string m_MicrophoneID = null;               // what microphone to use for recording.
-        [SerializeField, Tooltip("How often to sample for level output.")]
-        private float m_LevelOutputInterval = 0.05f;
-		[SerializeField]
-		private float m_LevelOutputModifier = 1.0f;
-		[SerializeField, Tooltip("If true, microphone will playback recorded audio on stop.")]
-        private bool m_PlaybackRecording = false;
-        [SerializeField]
-        private Text m_StatusText = null;
-
-        private int m_RecordingRoutine = 0;                      // ID of our co-routine when recording, 0 if not recording currently.
-        private AudioClip m_Recording = null;
-        private List<AudioClip> m_Playback = new List<AudioClip>();
-
-        #endregion
-
-        #region Private Functions
+        private void Update()
+        {
+            if (Failure && Active && !Disable
+                && (DateTime.Now - m_LastFailure).TotalMilliseconds > RETRY_INTERVAL)
+            {
+                // try to restart the recording..
+                StartRecording();
+            }
+        }
         private void OnDisableInput(Data data)
         {
             Disable = ((DisableMicData)data).Boolean;
         }
 
+        void OnDestroy()
+        {
+            Active = false;
+            Disable = true;
+        }
+
+        #endregion
+
+        #region Recording Functions
         private void StartRecording()
         {
             if (m_RecordingRoutine == 0)
             {
-                AudioClipUtil.StartDestroyQueue();
+                UnityObjectUtil.StartDestroyQueue();
 
                 m_RecordingRoutine = Runnable.Run(RecordingHandler());
                 m_ActivateOutput.SendData(new BooleanData(true));
@@ -195,8 +243,8 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                         if (source != null)
                         {
                             // destroy any previous audio clip..
-                            if ( source.clip != null )
-                                AudioClipUtil.DestroyAudioClip( source.clip );
+                            if (source.clip != null)
+                                UnityObjectUtil.DestroyUnityObject(source.clip);
 
                             source.spatialBlend = 0.0f;     // 2D sound
                             source.loop = false;            // do not loop
@@ -207,8 +255,8 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                             Log.Warning("MicrophoneWidget", "Failed to find AudioSource.");
                     }
 
-                    foreach( var clip in m_Playback )
-                        AudioClipUtil.DestroyAudioClip( clip );
+                    foreach (var clip in m_Playback)
+                        UnityObjectUtil.DestroyUnityObject(clip);
                     m_Playback.Clear();
                 }
             }
@@ -216,17 +264,19 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 
         private IEnumerator RecordingHandler()
         {
+            Failure = false;
 #if UNITY_WEBPLAYER
             yield return Application.RequestUserAuthorization( UserAuthorization.Microphone );
 #endif
             m_Recording = Microphone.Start(m_MicrophoneID, true, m_RecordingBufferSize, m_RecordingHZ);
             yield return null;      // let m_RecordingRoutine get set..
 
-			if (m_Recording == null) 
-			{
-				Log.Error( "MicrophoneWidget", "Failed to start recording." );
-				yield break;
-			}
+            if (m_Recording == null)
+            {
+                Failure = true;
+                StopRecording();
+                yield break;
+            }
 
             bool bFirstBlock = true;
             int midPoint = m_Recording.samples / 2;
@@ -240,6 +290,15 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             while (m_RecordingRoutine != 0 && m_Recording != null)
             {
                 int writePos = Microphone.GetPosition(m_MicrophoneID);
+                if (writePos > m_Recording.samples || !Microphone.IsRecording(m_MicrophoneID))
+                {
+                    Log.Error("MicrophoneWidget", "Microphone disconnected.");
+
+                    Failure = true;
+                    StopRecording();
+                    yield break;
+                }
+
                 if (bOutputAudio)
                 {
                     if ((bFirstBlock && writePos >= midPoint)
@@ -256,7 +315,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 
                         if (m_PlaybackRecording)
                             m_Playback.Add(record.Clip);
-                        if ( m_AudioOutput.IsConnected && !m_AudioOutput.SendData(record))
+                        if (m_AudioOutput.IsConnected && !m_AudioOutput.SendData(record))
                             StopRecording();        // automatically stop recording if the callback goes away.
 
                         bFirstBlock = !bFirstBlock;
@@ -299,7 +358,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                         lastReadPos = writePos;
                     }
 
-					m_LevelOutput.SendData(new LevelData(fLevel * m_LevelOutputModifier));
+                    m_LevelOutput.SendData(new LevelData(fLevel * m_LevelOutputModifier, m_LevelOutputModifier));
                 }
             }
 

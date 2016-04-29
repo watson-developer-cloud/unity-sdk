@@ -22,10 +22,9 @@ using System;
 using UnityEngine.UI;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
-using IBM.Watson.DeveloperCloud.DataModels;
-using IBM.Watson.DeveloperCloud.Services.v1;
+using IBM.Watson.DeveloperCloud.Services.Dialog.v1;
+using IBM.Watson.DeveloperCloud.Services.SpeechToText.v1;
 using IBM.Watson.DeveloperCloud.DataTypes;
-
 
 namespace IBM.Watson.DeveloperCloud.Widgets
 {
@@ -34,19 +33,25 @@ namespace IBM.Watson.DeveloperCloud.Widgets
     /// </summary>
     public class DialogWidget : Widget
     {
+        #region Inputs
+        [SerializeField]
+        private Input m_SpeechInput = new Input("SpeechInput", typeof(SpeechToTextData), "OnSpeechInput");
+        #endregion
+
+        #region Outputs
+        [SerializeField]
+        private Output m_ResultOutput = new Output(typeof(TextToSpeechData));
+        #endregion
+
         #region Private Data
-        [SerializeField, Tooltip( "The name prefix of the dialog to use." ) ]
-        private string m_DialogName = Guid.NewGuid().ToString().Replace( "-", "" ).Substring( 0, 24 );      // NOTE: the limit of a dialog name is 24 characters, plus it has to be globally unique!
-        [SerializeField, Tooltip( "If no dialog is found by name, then this dialog will automatically be uploaded. (Editor Only)") ]
+        [SerializeField, Tooltip("The name prefix of the dialog to use.")]
+        private string m_DialogName = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 24);      // NOTE: the limit of a dialog name is 24 characters, plus it has to be globally unique!
+        [SerializeField, Tooltip("If no dialog is found by name, then this dialog will automatically be uploaded. (Editor Only)")]
         private string m_AutoUploadDialog = "/Watson/Editor/TestData/pizza_sample.xml";
         [SerializeField]
         private VerticalLayoutGroup m_DialogLayout = null;
         [SerializeField]
         private ScrollRect m_ScrollRect = null;
-        [SerializeField]
-        private Input m_SpeechInput = new Input("SpeechInput", typeof(SpeechToTextData), "OnSpeechInput");
-        [SerializeField]
-        private Output m_ResultOutput = new Output(typeof(TextToSpeechData));
         [SerializeField]
         private GameObject m_QuestionPrefab = null;
         [SerializeField]
@@ -69,12 +74,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 
         #endregion
 
-
-        private void OnEnable()
-        {
-            m_Dialog.GetDialogs(OnGetDialogs);
-        }
-
+        #region Public Functions
         /// <summary>
         /// Converse with the dialog system.
         /// </summary>
@@ -84,7 +84,14 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             if (!string.IsNullOrEmpty(m_DialogID))
                 m_Dialog.Converse(m_DialogID, dialog, OnConverse, m_ConversationID, m_ClientID);
             else
-                Log.Warning( "DialogWidget", "m_DialogID is null." );
+                Log.Warning("DialogWidget", "m_DialogID is null.");
+        }
+        #endregion
+
+        #region Event Handlers
+        private void OnEnable()
+        {
+            m_Dialog.GetDialogs(OnGetDialogs);
         }
 
         private void OnConverse(ConverseResponse resp)
@@ -99,7 +106,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                     Log.Debug("DialogWidget", "Response: {0}", r);
                     AddDialog(r, m_AnswerPrefab);
 
-                    if ( m_ResultOutput.IsConnected )
+                    if (m_ResultOutput.IsConnected)
                         m_ResultOutput.SendData(new TextToSpeechData(r));
                 }
             }
@@ -121,16 +128,16 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                 foreach (var d in dialogs.dialogs)
                 {
                     Log.Debug("DialogDisplayWidget", "Name: {0}, ID: {1}", d.name, d.dialog_id);
-                    if (d.name == m_DialogName )
+                    if (d.name == m_DialogName)
                         m_DialogID = d.dialog_id;
                 }
             }
 
 #if UNITY_EDITOR
-            if ( string.IsNullOrEmpty( m_DialogID ) )
+            if (string.IsNullOrEmpty(m_DialogID))
             {
                 m_Dialog.UploadDialog(m_DialogName, OnDialogUploaded,
-                    Application.dataPath + m_AutoUploadDialog );
+                    Application.dataPath + m_AutoUploadDialog);
             }
 #endif
         }
@@ -138,7 +145,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         private void OnSpeechInput(Data data)
         {
             SpeechResultList result = ((SpeechToTextData)data).Results;
-            if ( result != null && result.HasFinalResult() )
+            if (result != null && result.HasFinalResult())
             {
                 string text = result.Results[0].Alternatives[0].Transcript;
 
@@ -146,10 +153,12 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                 AddDialog(text, m_QuestionPrefab);
             }
         }
+        #endregion
 
+        #region Private Functions
         private void AddDialog(string add, GameObject prefab)
         {
-            if ( m_DialogLayout != null )
+            if (m_DialogLayout != null)
             {
                 if (prefab == null)
                     throw new ArgumentNullException("prefab is null");
@@ -174,5 +183,6 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             if (m_ScrollRect != null)
                 m_ScrollRect.verticalNormalizedPosition = 0.0f;
         }
+        #endregion
     }
 }

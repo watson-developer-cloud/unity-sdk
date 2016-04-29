@@ -30,28 +30,31 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 	public class EventWidget : Widget
     {
         #region Widget interface
-         /// <exclude />
+        /// <exclude />
         protected override string GetName()
         {
             return "Event";
         }
         #endregion
 
+        #region Private Data
         [Serializable]
         private class Mapping
         {
-            public Constants.Event m_Event = Constants.Event.NONE;
+            public string m_Event = "";
             public SerializedDelegate m_Callback = new SerializedDelegate(typeof(EventManager.OnReceiveEvent));
         };
 
         [SerializeField]
         private List<Mapping> m_Mappings = new List<Mapping>();
+        #endregion
 
+        #region Event Handlers
         private void OnEnable()
         {
             foreach (var mapping in m_Mappings)
             {
-               EventManager.Instance.RegisterEventReceiver(mapping.m_Event, mapping.m_Callback.ResolveDelegate() as EventManager.OnReceiveEvent);
+                EventManager.Instance.RegisterEventReceiver(mapping.m_Event, mapping.m_Callback.ResolveDelegate() as EventManager.OnReceiveEvent);
             }
         }
 
@@ -62,6 +65,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                 EventManager.Instance.UnregisterEventReceiver(mapping.m_Event, mapping.m_Callback.ResolveDelegate() as EventManager.OnReceiveEvent);
             }
         }
+        #endregion
     }
 
 }
