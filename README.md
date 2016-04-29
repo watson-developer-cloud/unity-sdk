@@ -210,16 +210,16 @@ You can use the Natural Language Classifier Editor to import and export classifi
 
 ## Developing a basic application in one minute
 You can quickly develop a basic application that uses the Speech to Text service and the Natural Language Classifier service by using the prefabs that come with the SDK. Ensure that you prepare the test data before you complete the the following steps:
-1. Create a new scene and drag the following prefabs from **Assets -> Watson -> Prefabs**, and drop them in the Hierarchy tab:
+  1. Create a new scene and drag the following prefabs from **Assets -> Watson -> Prefabs**, and drop them in the Hierarchy tab:
     * MicWidget
     * SpeechToTextWidget
     * Natural Language Classifier Widget
     * ClassDisplayWidget
-2. Select the **Natural Language Classifier Widget**.
-5. In the **Classifier Name** field in the Inspector tab, specify 'TestNaturalLanguageClassifier'.
-6. In the Natural Language Classifier Editor, expand the **Test Natural Languge Classifier** , expand the classes, and determine which questions about the weather to ask to test the classifier.
-7. Run the application.
-8. Say your questions into the microphone to test the MicWidget, the SpeechToTextWidget, and the NaturalLanguageClassifierWidget.
+  2. Select the **Natural Language Classifier Widget**.
+  5. In the **Classifier Name** field in the Inspector tab, specify 'TestNaturalLanguageClassifier'.
+  6. In the Natural Language Classifier Editor, expand the **Test Natural Languge Classifier** , expand the classes, and determine which questions about the weather to ask to test the classifier.
+  7. Run the application.
+  8. Say your questions into the microphone to test the MicWidget, the SpeechToTextWidget, and the NaturalLanguageClassifierWidget.
 
 ## Documentation
 To read the documentation you need to have a **chm reader** installed. Open the documentation by selcting API Reference the Watson menu (**Watson -> API Reference**).
