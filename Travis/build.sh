@@ -46,7 +46,7 @@ cat $(pwd)/osxBuild.log
 
 if [ $ERROR_CODE = 0 ] ; then
   echo "BUILDS SUCCEEDED! Exited with $ERROR_CODE"
-	exit 0
+  exit 0
 else
   echo "BUILDS FAILED! Exited with $ERROR_CODE"
   exit 1
