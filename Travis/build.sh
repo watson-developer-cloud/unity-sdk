@@ -3,16 +3,13 @@ project="unity-sdk-travis"
 
 ERROR_CODE=0
 
-echo "Changing directory to testProject directory. pwd: $(pwd)"
-cd Travis/UnityTestProject
-
 echo "Attempting to build $project for Windows. pwd: $(pwd)"
 /Applications/Unity/Unity.app/Contents/MacOS/Unity \
   -batchmode \
   -nographics \
   -silent-crashes \
-  -logFile $(pwd)/windowsBuild.log \
-  -projectPath $(pwd) \
+  -logFile $(pwd)/Travis/UnityTestProject/windowsBuild.log \
+  -projectPath $(pwd)/Travis/UnityTestProject \
   -executemethod RunTravisBuild.Windows \
   -quit
 if [ $? = 0 ] ; then
@@ -23,15 +20,15 @@ else
 fi
 
 echo 'Logs from build'
-cat $(pwd)/windowsBuild.log
+cat $(pwd)/Travis/UnityTestProject/windowsBuild.log
 
 echo "Attempting to build $project for OS X. pwd: $(pwd)"
 /Applications/Unity/Unity.app/Contents/MacOS/Unity \
   -batchmode \
   -nographics \
   -silent-crashes \
-  -logFile $(pwd)/osxBuild.log \
-  -projectPath $(pwd) \
+  -logFile $(pwd)/Travis/UnityTestProject/osxBuild.log \
+  -projectPath $(pwd)/Travis/UnityTestProject \
   -executemethod RunTravisBuild.OSX \
   -quit
 if [ $? = 0 ] ; then
@@ -42,7 +39,7 @@ else
 fi
 
 echo 'Logs from build'
-cat $(pwd)/osxBuild.log
+cat $(pwd)/Travis/UnityTestProject/osxBuild.log
 
 if [ $ERROR_CODE = 0 ] ; then
   echo "BUILDS SUCCEEDED! Exited with $ERROR_CODE"
