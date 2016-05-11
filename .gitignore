@@ -56,3 +56,10 @@ Travis.meta
 /Config.json
 /Config.json.meta
 /Config.json.enc.meta
+/Travis/build.sh.meta
+/Travis/createProject.sh.meta
+/Travis/installSDK.sh.meta
+/Travis/installUnity.sh.meta
+/Travis/README.md.meta
+/Travis/runTests.sh.meta
+/Travis/TravisBuild.cs.meta
