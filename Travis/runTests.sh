@@ -3,11 +3,11 @@ project="unity-sdk-travis"
 
 if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then
   echo '$TRAVIS_PULL_REQUEST is false, running tests'
-  echo "Creating Streaming Assets directory... pwd:$(pwd)"
+  echo "Attempting to create Streaming Assets directory..."
   mkdir -p Travis/UnityTestProject/Assets/StreamingAssets/
   if [ $? = 0 ] ; then
     echo "Creating StreamingAssets directory COMPLETED! Exited with $?"
-    echo "Decrypting config... pwd:$(pwd)"
+    echo "Attempting to decrypt config..."
     openssl aes-256-cbc -K $encrypted_984f19857b4c_key -iv $encrypted_984f19857b4c_iv -in Config.json.enc -out Travis/UnityTestProject/Assets/StreamingAssets/Config.json -d
     if [ $? = 0 ] ; then
       echo "Decrypting config COMPLETED! Exited with $?"
@@ -20,7 +20,7 @@ if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then
     exit 1
   fi
 
-  echo "Running UnitySDK Tests...  pwd: $(pwd)"
+  echo "Attempting to run UnitySDK integration Tests..."
   /Applications/Unity/Unity.app/Contents/MacOS/Unity \
     -batchmode \
     -nographics \

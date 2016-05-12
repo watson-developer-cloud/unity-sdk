@@ -1,12 +1,12 @@
 #! /bin/sh
 project="unity-sdk-travis"
 
-echo "Installing Watson Developer Cloud Unity SDK into the test project. pwd: $(pwd)"
+echo "Attempting to install Watson Developer Cloud Unity SDK into the test project..."
 mkdir -p Travis/UnityTestProject/Assets/Watson/
 git clone https://github.com/watson-developer-cloud/unity-sdk.git Travis/UnityTestProject/Assets/Watson/
 if [ $? = 0 ] ; then
   echo "WDC Unity SDK install SUCCEEDED! Exited with $?"
-  echo "Removing TravisBuild from Travis directory"
+  echo "Attempting to remove TravisBuild from Travis directory..."
   rm Travis/TravisBuild.cs
   if [ $? = 0 ] ; then
     echo "Removing travis build script SUCCEEDED! Exited with $?"
@@ -15,7 +15,7 @@ if [ $? = 0 ] ; then
     exit 1
   fi
 
-  echo "Moving Travis build script"
+  echo "Attempting to move Travis build script..."
   mkdir -p Travis/UnityTestProject/Assets/Scripts/Editor/
   mv Travis/UnityTestProject/Assets/Watson/Travis/TravisBuild.cs Travis/UnityTestProject/Assets/Scripts/Editor/TravisBuild.cs
   if [ $? = 0 ] ; then

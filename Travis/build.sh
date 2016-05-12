@@ -3,7 +3,7 @@ project="unity-sdk-travis"
 
 ERROR_CODE=0
 
-echo "Attempting to build $project for Windows. pwd: $(pwd)"
+echo "Attempting to build $project for Windows..."
 /Applications/Unity/Unity.app/Contents/MacOS/Unity \
   -batchmode \
   -nographics \
@@ -22,7 +22,7 @@ fi
 echo 'Logs from build'
 cat $(pwd)/Travis/UnityTestProject/windowsBuild.log
 
-echo "Attempting to build $project for OS X. pwd: $(pwd)"
+echo "Attempting to build $project for OS X..."
 /Applications/Unity/Unity.app/Contents/MacOS/Unity \
   -batchmode \
   -nographics \

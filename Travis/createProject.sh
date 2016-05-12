@@ -1,16 +1,16 @@
 #! /bin/sh
 project="unity-sdk-travis"
 
-echo "Creating directory for empty project Travis/UnityTestProject. pwd:$(pwd)"
+echo "Attempting to create directory for empty project Travis/UnityTestProject..."
 mkdir -p Travis/UnityTestProject
 
-echo "Creating an empty project into Travis/UnityTestProject. pwd:$(pwd)"
+echo "Attempting to create an empty project into Travis/UnityTestProject...."
 /Applications/Unity/Unity.app/Contents/MacOS/Unity \
   -batchmode \
   -nographics \
   -silent-crashes \
   -logFile $(pwd)/createProject.log \
-  -createProject $(pwd) Travis/UnityTestProject \
+  -createProject $(pwd)/Travis/UnityTestProject \
   -quit
 if [ $? = 0 ] ; then
   echo "Project creation COMPLETED! Exited with $?"
