@@ -14,8 +14,15 @@
 * limitations under the License.
 *
 */
+
+using System;
+using System.Text;
+using System.Collections.Generic;
 using FullSerializer;
+using MiniJSON;
 using IBM.Watson.DeveloperCloud.Utilities;
+using IBM.Watson.DeveloperCloud.Connection;
+using IBM.Watson.DeveloperCloud.Logging;
 
 namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 {
@@ -25,6 +32,16 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 	/// </summary>
 	public class Conversation : IWatsonService {
 		#region Public Types
+		/// <summary>
+		/// The callback for Message().
+		/// </summary>
+		/// <param name="success"></param>
+		public delegate void OnMessageCallback(bool success);
+		/// <summary>
+		/// The callback delegate for the Converse() function.
+		/// </summary>
+		/// <param name="resp">The response object to a call to Converse().</param>
+		public delegate void OnMessage(DataModels.MessageResponse resp);
 		#endregion
 
 		#region Public Properties
@@ -35,98 +52,88 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 		private static fsSerializer sm_Serializer = new fsSerializer();
 		#endregion
 
+		#region Message
+		/// <summary>
+		/// Message the specified workspaceId, input and callback.
+		/// </summary>
+		/// <param name="workspaceId">Workspace identifier.</param>
+		/// <param name="input">Input.</param>
+		/// <param name="callback">Callback.</param>
+		public bool Message(string workspaceId, string input, OnMessage callback)
+		{
+			if(string.IsNullOrEmpty(workspaceId))
+				throw new ArgumentNullException("workspaceId");
+			if(string.IsNullOrEmpty(input))
+				throw new ArgumentNullException("input");
+			if(callback == null)
+				throw new ArgumentNullException("callback");
+
+			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "v2/rest/workspaces");
+			if(connector == null)
+				return false;
+
+			string reqJson = "{\"input\": {\"text\": \"{0}\"}}";
+
+			MessageReq req = new MessageReq();
+			req.Callback = callback;
+			req.Headers["Content-Type"] = "application/json";
+			req.Function = "/" + workspaceId + "/message";
+			req.OnResponse = MessageResp;
+			req.Forms = new Dictionary<string, RESTConnector.Form>();
+			req.Forms["input"] = new RESTConnector.Form(input);
+
+			return connector.Send(req);
+		}
+
+		private class MessageReq : RESTConnector.Request
+		{
+			public OnMessage Callback { get; set; }
+		}
+
+		private void MessageResp(RESTConnector.Request req, RESTConnector.Response resp)
+		{
+			DataModels.MessageResponse response = new DataModels.MessageResponse();
+			if (resp.Success)
+			{
+				try
+				{
+					fsData data = null;
+					fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+					if (!r.Succeeded)
+						throw new WatsonException(r.FormattedMessages);
+
+					object obj = response;
+					r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+					if (!r.Succeeded)
+						throw new WatsonException(r.FormattedMessages);
+				}
+				catch (Exception e)
+				{
+					Log.Error("Conversation", "MessageResp Exception: {0}", e.ToString());
+					resp.Success = false;
+				}
+			}
+
+			if (((MessageReq)req).Callback != null)
+				((MessageReq)req).Callback(resp.Success ? response : null);
+		}
+		#endregion
+
 		#region IWatsonService implementation
 
-		/// <exclude />
 		public string GetServiceID()
 		{
 			return SERVICE_ID;
 		}
 
-		/// <exclude />
 		public void GetServiceStatus(ServiceStatus callback)
 		{
-			/*if (Config.Instance.FindCredentials(SERVICE_ID) != null)
-				new CheckServiceStatus(this, callback);
-			else
+			if (callback != null && callback.Target != null)
 			{
-				if (callback != null && callback.Target != null)
-				{
-					callback(SERVICE_ID, false);
-				}
-			}*/
-		}
-
-		/*private class CheckServiceStatus
-		{
-			private Conversation m_Service = null;
-			private ServiceStatus m_Callback = null;
-			private int m_DialogCount = 0;
-
-			public CheckServiceStatus(Conversation service, ServiceStatus callback)
-			{
-				m_Service = service;
-				m_Callback = callback;
-
-				string customServiceID = Config.Instance.GetVariableValue(SERVICE_ID + "_ID");
-
-				//If custom classifierID is defined then we are using it to check the service health
-//				if (!string.IsNullOrEmpty(customServiceID))
-//				{
-//
-//					if (!m_Service.Converse(customServiceID, "Hello", OnDialog))
-//						OnFailure("Failed to invoke Converse().");
-//					else
-//						m_DialogCount += 1;
-//				}
-//				else
-//				{
-//					if (!m_Service.GetDialogs(OnGetDialogs))
-//						OnFailure("Failed to invoke GetDialogs().");
-//				}
-
-
+				callback(SERVICE_ID, false);
 			}
-
-//			private void OnGetDialogs(Dialogs dialogs)
-//			{
-//				if (m_Callback != null)
-//				{
-//					foreach (var dialog in dialogs.dialogs)
-//					{
-//						if (!m_Service.Converse(dialog.dialog_id, "Hello", OnDialog))
-//							OnFailure("Failed to invoke Converse().");
-//						else
-//							m_DialogCount += 1;
-//					}
-//				}
-//				else
-//					OnFailure("GetDialogs() failed.");
-//			}
-//
-//			private void OnDialog(ConverseResponse resp)
-//			{
-//				if (m_DialogCount > 0)
-//				{
-//					m_DialogCount -= 1;
-//					if (resp != null)
-//					{
-//						if (m_DialogCount == 0 && m_Callback != null && m_Callback.Target != null)
-//							m_Callback(SERVICE_ID, true);
-//					}
-//					else
-//						OnFailure("ConverseResponse is null.");
-//				}
-//			}
-//
-//			private void OnFailure(string msg)
-//			{
-//				Log.Error("Dialog", msg);
-//				m_Callback(SERVICE_ID, false);
-//				m_DialogCount = 0;
-//			}
 		}
-*/
+
 		#endregion
 
 

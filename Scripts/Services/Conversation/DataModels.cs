@@ -79,11 +79,31 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 		#endregion
 
 		#region Message
+		/// <summary>
+		/// Message response.
+		/// </summary>
+		[fsObject]
 		public class MessageResponse
 		{
+			/// <summary>
+			/// Gets or sets the intents.
+			/// </summary>
+			/// <value>The intents.</value>
 			public MessageIntent[] intents { get; set; }
+			/// <summary>
+			/// Gets or sets the entities.
+			/// </summary>
+			/// <value>The entities.</value>
 			public EntityExample[] entities { get; set; }
+			/// <summary>
+			/// Gets or sets the output.
+			/// </summary>
+			/// <value>The output.</value>
 			public Output output { get; set; }
+			/// <summary>
+			/// Gets or sets the context.
+			/// </summary>
+			/// <value>The context.</value>
 			public object context { get; set; }
 		}
 		#endregion
@@ -351,6 +371,9 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 			public string text { get; set; }
 		}
 
+		/// <summary>
+		/// Go to.
+		/// </summary>
 		[fsObject]
 		public class GoTo
 		{
