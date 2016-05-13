@@ -81,7 +81,7 @@ namespace IBM.Watson.DeveloperCloud.Debug
         [SerializeField]
         private Text m_DebugInfoPrefab = null;
 
-		private MicrophoneWidget m_MicWidget = null;
+        private MicrophoneWidget m_MicWidget = null;
         #endregion
 
         #region Public Properties
@@ -92,12 +92,15 @@ namespace IBM.Watson.DeveloperCloud.Debug
         /// <summary>
         /// Returns true if this debug console output is being displayed.
         /// </summary>
-        public bool ActiveOutput { get { return m_ActiveOutput; }
-            set {
-                if ( m_ActiveOutput != value )
+        public bool ActiveOutput
+        {
+            get { return m_ActiveOutput; }
+            set
+            {
+                if (m_ActiveOutput != value)
                 {
                     m_ActiveOutput = value;
-                    m_RootOutput.SetActive( m_ActiveOutput );
+                    m_RootOutput.SetActive(m_ActiveOutput);
                 }
             }
         }
@@ -105,12 +108,15 @@ namespace IBM.Watson.DeveloperCloud.Debug
         /// <summary>
         /// Returns true if this debug input field is being displayed.
         /// </summary>
-        public bool ActiveInput { get { return m_ActiveInput; }
-            set {
-                if ( m_ActiveInput != value )
+        public bool ActiveInput
+        {
+            get { return m_ActiveInput; }
+            set
+            {
+                if (m_ActiveInput != value)
                 {
                     m_ActiveInput = value;
-                    m_RootInput.SetActive( m_ActiveInput );
+                    m_RootInput.SetActive(m_ActiveInput);
                 }
             }
         }
@@ -121,21 +127,21 @@ namespace IBM.Watson.DeveloperCloud.Debug
         /// </summary>
         /// <param name="label">The label to display next to the string returned by the callback.</param>
         /// <param name="callback">A callback function to invoke that should return a string to display in the debug console.</param>
-        public void RegisterDebugInfo( string label, GetDebugInfo callback )
+        public void RegisterDebugInfo(string label, GetDebugInfo callback)
         {
-            if ( string.IsNullOrEmpty( label ) )
-                throw new ArgumentNullException( "label" );
-            if ( callback == null )
-                throw new ArgumentNullException( "callback" );
+            if (string.IsNullOrEmpty(label))
+                throw new ArgumentNullException("label");
+            if (callback == null)
+                throw new ArgumentNullException("callback");
 
             DebugInfo info = new DebugInfo();
             info.m_Label = label;
             info.m_Callback = callback;
-            info.m_InfoObject = Instantiate( m_DebugInfoPrefab.gameObject ) as GameObject;
-            info.m_TextOutput = info.m_InfoObject.GetComponentInChildren<Text>();    
-            m_DebugInfos.Add( info );
+            info.m_InfoObject = Instantiate(m_DebugInfoPrefab.gameObject) as GameObject;
+            info.m_TextOutput = info.m_InfoObject.GetComponentInChildren<Text>();
+            m_DebugInfos.Add(info);
 
-            info.m_InfoObject.transform.SetParent( m_DebugInfoLayout.transform, false );
+            info.m_InfoObject.transform.SetParent(m_DebugInfoLayout.transform, false);
         }
 
         /// <summary>
@@ -144,19 +150,19 @@ namespace IBM.Watson.DeveloperCloud.Debug
         /// <param name="label">The label to unregister.</param>
         /// <param name="callback">The callback to unregister. If null, then the callback will be matched by label only.</param>
         /// <returns>Returns true if the callback was unregistered.</returns>
-		public bool UnregisterDebugInfo( string label, GetDebugInfo callback = null )
+		public bool UnregisterDebugInfo(string label, GetDebugInfo callback = null)
         {
-            if ( string.IsNullOrEmpty( label ) )
-                throw new ArgumentNullException( "label" );
-            for(int i=0;i<m_DebugInfos.Count;++i)
+            if (string.IsNullOrEmpty(label))
+                throw new ArgumentNullException("label");
+            for (int i = 0; i < m_DebugInfos.Count; ++i)
             {
-                if ( m_DebugInfos[i].m_Label == label )
+                if (m_DebugInfos[i].m_Label == label)
                 {
-                    if ( callback != null && callback != m_DebugInfos[i].m_Callback )
+                    if (callback != null && callback != m_DebugInfos[i].m_Callback)
                         continue;
 
-                    Destroy( m_DebugInfos[i].m_InfoObject );
-                    m_DebugInfos.RemoveAt( i );
+                    Destroy(m_DebugInfos[i].m_InfoObject);
+                    m_DebugInfos.RemoveAt(i);
                     return true;
                 }
             }
@@ -181,89 +187,89 @@ namespace IBM.Watson.DeveloperCloud.Debug
             {
                 m_RootInput.SetActive(m_ActiveInput);
                 m_RootOutput.SetActive(m_ActiveOutput);
-				m_MicWidget = FindObjectOfType<MicrophoneWidget>();
+                m_MicWidget = FindObjectOfType<MicrophoneWidget>();
             }
         }
 
         private void OnEnable()
         {
-            EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_DEBUG_MESSAGE, OnDebugMessage);
+            EventManager.Instance.RegisterEventReceiver("OnDebugMessage", OnDebugMessage);
 
-            EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_DEBUG_TOGGLE, OnToggleActive);
-            EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_KEYBOARD_BACKQUOTE, OnToggleActive);
+            EventManager.Instance.RegisterEventReceiver("OnDebugToggle", OnToggleActive);
+            EventManager.Instance.RegisterEventReceiver("OnKeyboardBackquote", OnToggleActive);
 
-            EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_DEBUG_BEGIN_COMMAND, OnBeginEdit);
-            EventManager.Instance.RegisterEventReceiver(Constants.Event.ON_KEYBOARD_RETURN, OnBeginEdit);
+            EventManager.Instance.RegisterEventReceiver("OnDebugBeginCommand", OnBeginEdit);
+            EventManager.Instance.RegisterEventReceiver("OnKeyboardReturn", OnBeginEdit);
         }
 
         private void OnDisable()
         {
-            EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_DEBUG_MESSAGE, OnDebugMessage);
+            EventManager.Instance.UnregisterEventReceiver("OnDebugMessage", OnDebugMessage);
 
-            EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_DEBUG_TOGGLE, OnToggleActive);
-            EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_KEYBOARD_BACKQUOTE, OnToggleActive);
+            EventManager.Instance.UnregisterEventReceiver("OnDebugToggle", OnToggleActive);
+            EventManager.Instance.UnregisterEventReceiver("OnKeyboardBackquote", OnToggleActive);
 
-            EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_DEBUG_BEGIN_COMMAND, OnBeginEdit);
-            EventManager.Instance.UnregisterEventReceiver(Constants.Event.ON_KEYBOARD_RETURN, OnBeginEdit);
+            EventManager.Instance.UnregisterEventReceiver("OnDebugBeginCommand", OnBeginEdit);
+            EventManager.Instance.UnregisterEventReceiver("OnKeyboardReturn", OnBeginEdit);
         }
 
         private void Update()
         {
-            if ( ActiveOutput )
+            if (ActiveOutput)
             {
-                for(int i=0;i<m_DebugInfos.Count;++i)
+                for (int i = 0; i < m_DebugInfos.Count; ++i)
                 {
                     DebugInfo info = m_DebugInfos[i];
-                    if ( info.m_Callback == null || info.m_TextOutput == null )
+                    if (info.m_Callback == null || info.m_TextOutput == null)
                     {
-                        if ( info.m_InfoObject != null )
-                            Destroy( info.m_InfoObject );
+                        if (info.m_InfoObject != null)
+                            Destroy(info.m_InfoObject);
                         m_DebugInfos.RemoveAt(i--);
                         continue;
                     }
-                    info.m_TextOutput.text = string.Format( "{0}: {1}", info.m_Label, info.m_Callback() );
+                    info.m_TextOutput.text = string.Format("{0}: {1}", info.m_Label, info.m_Callback());
                 }
             }
         }
 
         #region Event Handlers
 
-        private void OnDebugMessage( object [] args )
+        private void OnDebugMessage(object[] args)
         {
-            if ( args != null && args.Length > 0 )
+            if (args != null && args.Length > 0)
             {
-                if ( args[0] is string )
+                if (args[0] is string)
                 {
-                    GameObject messageObject = Instantiate( m_MessagePrefab.gameObject ) as GameObject;
-                    messageObject.GetComponent<Text>().text = Utility.RemoveTags( (string)args[0] );
-                    messageObject.transform.SetParent( m_MessageLayout.transform, false );
+                    GameObject messageObject = Instantiate(m_MessagePrefab.gameObject) as GameObject;
+                    messageObject.GetComponent<Text>().text = Utility.RemoveTags((string)args[0]);
+                    messageObject.transform.SetParent(m_MessageLayout.transform, false);
                 }
             }
         }
 
-        private void OnToggleActive( object [] args )
+        private void OnToggleActive(object[] args)
         {
             ActiveOutput = !ActiveOutput;
-            EventManager.Instance.SendEvent( Constants.Event.ON_DEBUG_TOGGLE_FINISH);
+            EventManager.Instance.SendEvent("OnDebugToggleFinish");
         }
 
-        private void OnBeginEdit( object [] args )
+        private void OnBeginEdit(object[] args)
         {
-            if ( m_CommandInput != null )
+            if (m_CommandInput != null)
             {
                 ActiveInput = true;
-                m_CommandInput.gameObject.SetActive( true );
+                m_CommandInput.gameObject.SetActive(true);
                 m_CommandInput.ActivateInputField();
 
                 // turn off all key press events..
                 KeyEventManager.Instance.Active = false;
 
-				//	turn off mic
-				if(m_MicWidget != null)
-					m_MicWidget.Active = false;
+                //	turn off mic
+                if (m_MicWidget != null)
+                    m_MicWidget.Active = false;
 
-				//	timer to turn mic back on
-				StartCoroutine(ActivateMicAfterTime(10f));
+                //	timer to turn mic back on
+                StartCoroutine(ActivateMicAfterTime(10f));
             }
         }
 
@@ -272,28 +278,28 @@ namespace IBM.Watson.DeveloperCloud.Debug
         /// </summary>
         public void OnEndEdit()
         {
-            if ( m_CommandInput != null )
+            if (m_CommandInput != null)
             {
-                EventManager.Instance.SendEvent( Constants.Event.ON_DEBUG_COMMAND, m_CommandInput.text );
+                EventManager.Instance.SendEvent("OnDebugCommand", m_CommandInput.text);
                 m_CommandInput.text = string.Empty;
-                m_CommandInput.gameObject.SetActive( false );   // hide the input     
+                m_CommandInput.gameObject.SetActive(false);   // hide the input     
                 ActiveInput = false;
 
                 // restore the key manager state
                 KeyEventManager.Instance.Active = true;
 
-				//	turn on mic
-				if(m_MicWidget != null)
-					m_MicWidget.Active = true;
+                //	turn on mic
+                if (m_MicWidget != null)
+                    m_MicWidget.Active = true;
             }
         }
 
-		private IEnumerator ActivateMicAfterTime(float time)
-		{
-			yield return new WaitForSeconds(time);
-			if(m_MicWidget != null)
-				m_MicWidget.Active = true;
-		}
+        private IEnumerator ActivateMicAfterTime(float time)
+        {
+            yield return new WaitForSeconds(time);
+            if (m_MicWidget != null)
+                m_MicWidget.Active = true;
+        }
         #endregion
     }
 }

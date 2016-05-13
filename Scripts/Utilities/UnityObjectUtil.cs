@@ -46,8 +46,8 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// </summary>
         public static void StartDestroyQueue()
         {
-            if ( sm_DestroyQueueID == 0 )
-                sm_DestroyQueueID = Runnable.Run( ProcessDestroyQueue() );
+            if (sm_DestroyQueueID == 0)
+                sm_DestroyQueueID = Runnable.Run(ProcessDestroyQueue());
         }
 
         /// <summary>
@@ -55,9 +55,9 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// </summary>
         public static void StopDestroyQueue()
         {
-            if ( sm_DestroyQueueID != 0 )
+            if (sm_DestroyQueueID != 0)
             {
-                Runnable.Stop( sm_DestroyQueueID );
+                Runnable.Stop(sm_DestroyQueueID);
                 sm_DestroyQueueID = 0;
             }
         }
@@ -66,29 +66,29 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// Queue an AudioClip for destruction on the main thread. This function is thread-safe.
         /// </summary>
         /// <param name="clip">The AudioClip to destroy.</param>
-        public static void DestroyUnityObject( UnityEngine.Object obj )
+        public static void DestroyUnityObject(UnityEngine.Object obj)
         {
-            if ( sm_DestroyQueueID == 0 )
-                    throw new WatsonException( "Destroy queue not started." );
+            if (sm_DestroyQueueID == 0)
+                throw new WatsonException("Destroy queue not started.");
 
-            lock( sm_DestroyQueue )
-                sm_DestroyQueue.Enqueue( obj );
+            lock (sm_DestroyQueue)
+                sm_DestroyQueue.Enqueue(obj);
         }
 
         private static IEnumerator ProcessDestroyQueue()
         {
             yield return null;
 
-            while( sm_DestroyQueueID != 0 )
+            while (sm_DestroyQueueID != 0)
             {
-                yield return new WaitForSeconds( 1.0f );
+                yield return new WaitForSeconds(1.0f);
 
-                lock( sm_DestroyQueue )
+                lock (sm_DestroyQueue)
                 {
-                    while( sm_DestroyQueue.Count > 0 )
+                    while (sm_DestroyQueue.Count > 0)
                     {
                         UnityEngine.Object obj = sm_DestroyQueue.Dequeue();
-                        UnityEngine.Object.DestroyImmediate( obj, true );
+                        UnityEngine.Object.DestroyImmediate(obj, true);
                     }
                 }
             }

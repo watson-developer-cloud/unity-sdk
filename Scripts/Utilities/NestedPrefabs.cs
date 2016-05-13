@@ -30,14 +30,14 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 
         private void Awake()
         {
-            foreach( GameObject prefab in m_Prefabs )
+            foreach (GameObject prefab in m_Prefabs)
             {
-                if ( prefab == null )
+                if (prefab == null)
                     continue;
 
-                GameObject instance = Instantiate( prefab );
-                if ( m_SetParent )
-                    instance.transform.SetParent( transform, false );
+                GameObject instance = Instantiate(prefab);
+                if (m_SetParent)
+                    instance.transform.SetParent(transform, false);
 
                 m_GameObjectCreated.Add(instance);
             }
@@ -48,10 +48,11 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// <summary>
         /// It destroys the created object to set the initial state
         /// </summary>
-        public void DestroyCreatedObject(){
-            foreach( GameObject gameObject in m_GameObjectCreated )
+        public void DestroyCreatedObject()
+        {
+            foreach (GameObject gameObject in m_GameObjectCreated)
             {
-                if ( gameObject == null )
+                if (gameObject == null)
                     continue;
 
                 gameObject.SendMessage("DestroyCreatedObject", SendMessageOptions.DontRequireReceiver);
@@ -61,6 +62,5 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             Destroy(this.gameObject);
         }
         #endregion
-
     }
 }

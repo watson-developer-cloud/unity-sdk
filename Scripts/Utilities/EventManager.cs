@@ -58,18 +58,6 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         }
 
         /// <summary>
-        /// Register an event receiver with this EventManager.
-        /// </summary>
-        /// <param name="eventType">Event type defined in Constants</param>
-        /// <param name="callback">The event receiver function.</param>
-        public void RegisterEventReceiver( Enum eventType, OnReceiveEvent callback)
-        {
-            if ( !m_EventTypeName.ContainsKey( eventType.GetType() ) )
-                InitializeEventTypeNames( eventType.GetType() );
-            RegisterEventReceiver( m_EventTypeName[eventType.GetType()][ eventType ], callback);
-        }
-
-        /// <summary>
         /// Unregisters all event receivers.
         /// </summary>
         public void UnregisterAllEventReceivers()
@@ -98,19 +86,6 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         }
 
         /// <summary>
-        /// Unregister a specific receiver.
-        /// </summary>
-        /// <param name="eventType">Event type defined in Constants</param>
-        /// <param name="callback">The event handler.</param>
-        public void UnregisterEventReceiver(Enum eventType, OnReceiveEvent callback)
-        {
-            if ( !m_EventTypeName.ContainsKey( eventType.GetType() ) )
-                InitializeEventTypeNames( eventType.GetType() );
-            UnregisterEventReceiver(m_EventTypeName[eventType.GetType()][eventType], callback);
-        }
-
-
-        /// <summary>
         /// Send an event to all registered receivers.
         /// </summary>
         /// <param name="eventName">The name of the event to send.</param>
@@ -132,30 +107,18 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                         receivers.RemoveAt(i--);
                         continue;
                     }
-                    try {
+                    try
+                    {
                         receivers[i](args);
                     }
-                    catch( Exception ex )
+                    catch (Exception ex)
                     {
-                        Log.Error( "EventManager", "Event Receiver Exception: {0}", ex.ToString() );
+                        Log.Error("EventManager", "Event Receiver Exception: {0}", ex.ToString());
                     }
                 }
                 return true;
             }
             return false;
-        }
-
-        /// <summary>
-        /// Send an event to all registered receivers.
-        /// </summary>
-        /// <param name="eventType">Event type defined in Constants</param>
-        /// <param name="args">Arguments to send to the event receiver.</param>
-        /// <returns>Returns true if a event receiver was found for the event.</returns>
-        public bool SendEvent( Enum eventType, params object[] args)
-        {
-            if ( !m_EventTypeName.ContainsKey( eventType.GetType() ) )
-                InitializeEventTypeNames( eventType.GetType() );
-            return SendEvent(m_EventTypeName[eventType.GetType()][eventType], args);
         }
 
         /// <summary>
@@ -172,7 +135,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         #endregion
 
         #region Private Data
-        private Dictionary< Type, Dictionary<object, string> > m_EventTypeName = new Dictionary<Type, Dictionary<object, string> >();
+        private Dictionary<Type, Dictionary<object, string>> m_EventTypeName = new Dictionary<Type, Dictionary<object, string>>();
         private Dictionary<string, List<OnReceiveEvent>> m_EventMap = new Dictionary<string, List<OnReceiveEvent>>();
 
         private class AsyncEvent
@@ -198,13 +161,11 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         }
         #endregion
 
-        private void InitializeEventTypeNames( Type enumType )
+        private void InitializeEventTypeNames(Type enumType)
         {
-            m_EventTypeName[ enumType ] = new Dictionary<object, string>();
-            foreach (var en in Enum.GetNames(enumType) )
-                m_EventTypeName[ enumType ] [ Enum.Parse( enumType, en ) ] = en;
+            m_EventTypeName[enumType] = new Dictionary<object, string>();
+            foreach (var en in Enum.GetNames(enumType))
+                m_EventTypeName[enumType][Enum.Parse(enumType, en)] = en;
         }
-
     }
-
 }

@@ -114,22 +114,23 @@ namespace IBM.Watson.DeveloperCloud.Editor
                     // wait for the test to complete..
                     bool bTestException = true;
                     DateTime startTime = DateTime.Now;
-                    try {
+                    try
+                    {
                         IEnumerator e = m_ActiveTest.RunTest();
                         while (e.MoveNext())
                         {
-                            if ( m_ActiveTest.TestFailed )
+                            if (m_ActiveTest.TestFailed)
                                 break;
 
                             yield return null;
-                            if ( (DateTime.Now - startTime).TotalSeconds > TEST_TIMEOUT )
+                            if ((DateTime.Now - startTime).TotalSeconds > TEST_TIMEOUT)
                             {
                                 Log.Error("UnitTestManager", "UnitTest {0} has timed out.", testType.Name);
                                 m_ActiveTest.TestFailed = true;
                                 break;
                             }
                         }
-                    
+
                         bTestException = false;
                         if (m_ActiveTest.TestFailed)
                         {
@@ -142,11 +143,11 @@ namespace IBM.Watson.DeveloperCloud.Editor
                             TestsComplete += 1;
                         }
                     }
-                    finally {}
+                    finally { }
 
-                    if ( bTestException )
+                    if (bTestException)
                     {
-                        Log.Error("UnitTestManager", "... UnitTest {0} threw exception.", testType.Name );
+                        Log.Error("UnitTestManager", "... UnitTest {0} threw exception.", testType.Name);
                         TestsFailed += 1;
                     }
                 }
@@ -180,22 +181,21 @@ namespace IBM.Watson.DeveloperCloud.Editor
 
             if (m_TestsAvailable != null)
             {
-				GUILayout.BeginArea(new Rect(Screen.width * 0.3f, Screen.height * 0.15f, Screen.width * 0.4f, Screen.height * 0.85f));
+                GUILayout.BeginArea(new Rect(Screen.width * 0.3f, Screen.height * 0.15f, Screen.width * 0.4f, Screen.height * 0.85f));
                 foreach (var t in m_TestsAvailable)
                 {
                     string sButtonLabel = "Run " + t.Name;
-					if (GUILayout.Button(sButtonLabel,GUILayout.MinWidth(Screen.width * 0.4f), GUILayout.MinHeight(Screen.height * 0.04f)))
+                    if (GUILayout.Button(sButtonLabel, GUILayout.MinWidth(Screen.width * 0.4f), GUILayout.MinHeight(Screen.height * 0.04f)))
                     {
                         QueueTest(t, true);
                     }
                 }
-				GUILayout.EndArea();
+                GUILayout.EndArea();
             }
         }
         #endregion
     }
 }
-
 
 /// <summary>
 /// This static class is for menu items and invoking a function from the command line, since it doesn't like namespaces.
@@ -221,7 +221,7 @@ public static class RunUnitTest
     /// <summary>
     /// Menu item handler for running all unit tests.
     /// </summary>
-    [MenuItem("Watson/Run All UnitTests",false, 50)]
+    [MenuItem("Watson/Run All UnitTests", false, 50)]
     static public void AllNoQuit()
     {
         Runnable.EnableRunnableInEditor();
@@ -233,6 +233,6 @@ public static class RunUnitTest
 #endif
 
     static void OnTestsComplete()
-    {}
+    { }
 }
 

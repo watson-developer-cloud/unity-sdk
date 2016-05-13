@@ -35,9 +35,9 @@ namespace IBM.Watson.DeveloperCloud.Editor
 
         public override void OnGUI(Rect pos, SerializedProperty properties, GUIContent label)
         {
-            SerializedDelegate target = DrawerHelper.GetParent( properties ) as SerializedDelegate;
-			if (target == null)
-				return;
+            SerializedDelegate target = DrawerHelper.GetParent(properties) as SerializedDelegate;
+            if (target == null)
+                return;
 
             SerializedProperty targetProperty = properties.FindPropertyRelative("m_Target");
             SerializedProperty methodProperty = properties.FindPropertyRelative("m_Method");
@@ -54,27 +54,27 @@ namespace IBM.Watson.DeveloperCloud.Editor
             EditorGUI.indentLevel++;
 
             // select target
-            if ( EditorGUI.PropertyField( new Rect(pos.x, pos.y += pos.height / rows, pos.width, pos.height / rows), targetProperty ) )
-                Log.Debug( "SerializedDelegate", "PropertyField()" );
+            if (EditorGUI.PropertyField(new Rect(pos.x, pos.y += pos.height / rows, pos.width, pos.height / rows), targetProperty))
+                Log.Debug("SerializedDelegate", "PropertyField()");
 
-            List<string> components = GetComponents( targetProperty );
-            if ( components != null )
+            List<string> components = GetComponents(targetProperty);
+            if (components != null)
             {
-                int selected = components.IndexOf( componentProperty.stringValue );
-                int select = EditorGUI.Popup( new Rect(pos.x, pos.y += pos.height / rows, pos.width, pos.height / rows),
-                    "Component", selected, components.ToArray() );  
+                int selected = components.IndexOf(componentProperty.stringValue);
+                int select = EditorGUI.Popup(new Rect(pos.x, pos.y += pos.height / rows, pos.width, pos.height / rows),
+                    "Component", selected, components.ToArray());
 
-                if ( select != selected )
+                if (select != selected)
                     componentProperty.stringValue = components[select];
 
-                List<string> methods = GetComponentMethods( target.DelegateType, targetProperty, componentProperty );
-                if ( methods != null )
+                List<string> methods = GetComponentMethods(target.DelegateType, targetProperty, componentProperty);
+                if (methods != null)
                 {
-                    selected = methods.IndexOf( methodProperty.stringValue );
-                    select = EditorGUI.Popup( new Rect(pos.x, pos.y += pos.height / rows, pos.width, pos.height / rows),
-                        "Method", selected, methods.ToArray() );  
+                    selected = methods.IndexOf(methodProperty.stringValue);
+                    select = EditorGUI.Popup(new Rect(pos.x, pos.y += pos.height / rows, pos.width, pos.height / rows),
+                        "Method", selected, methods.ToArray());
 
-                    if ( select != selected )
+                    if (select != selected)
                         methodProperty.stringValue = methods[select];
                 }
             }
@@ -82,15 +82,15 @@ namespace IBM.Watson.DeveloperCloud.Editor
             EditorGUI.indentLevel--;
         }
 
-        public List<string> GetComponents( SerializedProperty targetProperty )
+        public List<string> GetComponents(SerializedProperty targetProperty)
         {
             GameObject target = targetProperty.objectReferenceValue as GameObject;
-            if ( target == null )
+            if (target == null)
                 return null;
 
             List<string> components = new List<string>();
 
-            foreach( var c in target.GetComponents( typeof(Component) ))
+            foreach (var c in target.GetComponents(typeof(Component)))
             {
                 try
                 {
@@ -98,35 +98,35 @@ namespace IBM.Watson.DeveloperCloud.Editor
                 }
                 catch (Exception)
                 {
-                 
+
                 }
-                
+
             }
-               
 
             return components;
         }
 
-        public List<string> GetComponentMethods( Type delegateType, SerializedProperty targetProperty, SerializedProperty componentProperty )
+        public List<string> GetComponentMethods(Type delegateType, SerializedProperty targetProperty, SerializedProperty componentProperty)
         {
             GameObject target = targetProperty.objectReferenceValue as GameObject;
-            if ( target == null )
+            if (target == null)
                 return null;
-            Component component = target.GetComponent( componentProperty.stringValue );
-            if ( component == null )
+            Component component = target.GetComponent(componentProperty.stringValue);
+            if (component == null)
                 return null;
 
             List<string> methods = new List<string>();
-            foreach( var method in component.GetType().GetMethods(BindingFlags.Public|BindingFlags.Instance|BindingFlags.Static) )
+            foreach (var method in component.GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static))
             {
-                if (! method.DeclaringType.IsSubclassOf(typeof(Component) ) )
+                if (!method.DeclaringType.IsSubclassOf(typeof(Component)))
                     continue;
 
-                try {
-                    Delegate.CreateDelegate( delegateType, component, method );
-                    methods.Add( method.Name );
+                try
+                {
+                    Delegate.CreateDelegate(delegateType, component, method);
+                    methods.Add(method.Name);
                 }
-                catch( ArgumentException )
+                catch (ArgumentException)
                 { }
             }
 

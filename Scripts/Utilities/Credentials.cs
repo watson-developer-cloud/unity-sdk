@@ -35,7 +35,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// </summary>
         /// <param name="user">The string containing the user name.</param>
         /// <param name="password">A string containing the password.</param>
-        public Credentials( string user, string password )
+        public Credentials(string user, string password)
         {
             User = user;
             Password = password;

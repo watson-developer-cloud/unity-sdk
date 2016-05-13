@@ -37,7 +37,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         [SerializeField]
         private Input m_TextInput = new Input("Text", typeof(TextToSpeechData), "OnTextInput");
         [SerializeField]
-        private Input m_VoiceInput = new Input( "Voice", typeof(VoiceData), "OnVoiceSelect" );
+        private Input m_VoiceInput = new Input("Voice", typeof(VoiceData), "OnVoiceSelect");
         #endregion
 
         #region Outputs
@@ -50,7 +50,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         #endregion
 
         #region Private Data
-        TextToSpeech m_TTS = new TextToSpeech();
+        TextToSpeech m_TextToSpeech = new TextToSpeech();
 
         [SerializeField, Tooltip("How often to send level out data in seconds.")]
         private float m_LevelOutInterval = 0.05f;
@@ -74,16 +74,16 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         {
             ~Speech()
             {
-                if ( Clip != null )
-                    UnityObjectUtil.DestroyUnityObject( Clip );
+                if (Clip != null)
+                    UnityObjectUtil.DestroyUnityObject(Clip);
             }
 
             public bool Ready { get; set; }
             public AudioClip Clip { get; set; }
 
-            public Speech(TextToSpeech tts, string text, bool usePost)
+            public Speech(TextToSpeech textToSpeech, string text, bool usePost)
             {
-                tts.ToSpeech(text, OnAudioClip, usePost);
+                textToSpeech.ToSpeech(text, OnAudioClip, usePost);
             }
 
             private void OnAudioClip(AudioClip clip)
@@ -98,23 +98,23 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         private Speech m_ActiveSpeech = null;
         #endregion
 
-		#region Public Memebers
+        #region Public Memebers
 
-		/// <summary>
-		/// Gets or sets the voice. Default voice is English, US - Michael
-		/// </summary>
-		/// <value>The voice.</value>
-		public VoiceType Voice 
-		{
-			get
-			{
-				return m_Voice;
-			}
-			set
-			{
-				m_Voice = value;
-			}
-		}
+        /// <summary>
+        /// Gets or sets the voice. Default voice is English, US - Michael
+        /// </summary>
+        /// <value>The voice.</value>
+        public VoiceType Voice
+        {
+            get
+            {
+                return m_Voice;
+            }
+            set
+            {
+                m_Voice = value;
+            }
+        }
 
         #endregion
 
@@ -124,10 +124,10 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         /// </summary>
         public void OnTextToSpeech()
         {
-            if (m_TTS.Voice != m_Voice)
-                m_TTS.Voice = m_Voice;
+            if (m_TextToSpeech.Voice != m_Voice)
+                m_TextToSpeech.Voice = m_Voice;
             if (m_Input != null)
-                m_SpeechQueue.Enqueue(new Speech(m_TTS, m_Input.text, m_UsePost));
+                m_SpeechQueue.Enqueue(new Speech(m_TextToSpeech, m_Input.text, m_UsePost));
             if (m_StatusText != null)
                 m_StatusText.text = "THINKING";
             if (m_TextToSpeechButton != null)
@@ -144,18 +144,18 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 
             if (!string.IsNullOrEmpty(text.Text))
             {
-                if (m_TTS.Voice != m_Voice)
-                    m_TTS.Voice = m_Voice;
+                if (m_TextToSpeech.Voice != m_Voice)
+                    m_TextToSpeech.Voice = m_Voice;
 
-                m_SpeechQueue.Enqueue(new Speech(m_TTS, text.Text, m_UsePost));
+                m_SpeechQueue.Enqueue(new Speech(m_TextToSpeech, text.Text, m_UsePost));
             }
         }
 
         private void OnVoiceSelect(Data data)
         {
             VoiceData voice = data as VoiceData;
-            if ( voice == null )
-                throw new WatsonException( "Unexpected data type" );
+            if (voice == null)
+                throw new WatsonException("Unexpected data type");
 
             m_Voice = voice.Voice;
         }
@@ -178,13 +178,13 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         private void Update()
         {
             if (m_Source != null && !m_Source.isPlaying
-                && m_SpeechQueue.Count > 0 
-                && m_SpeechQueue.Peek().Ready )
+                && m_SpeechQueue.Count > 0
+                && m_SpeechQueue.Peek().Ready)
             {
                 CancelInvoke("OnEndSpeech");
 
                 m_ActiveSpeech = m_SpeechQueue.Dequeue();
-                if ( m_ActiveSpeech.Clip != null )
+                if (m_ActiveSpeech.Clip != null)
                 {
                     if (m_Speaking.IsConnected)
                         m_Speaking.SendData(new SpeakingStateData(true));
@@ -205,7 +205,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                 }
                 else
                 {
-                    Log.Warning( "TextToSpeechWidget", "Skipping null AudioClip" );
+                    Log.Warning("TextToSpeechWidget", "Skipping null AudioClip");
                 }
             }
 

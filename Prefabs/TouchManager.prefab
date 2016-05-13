@@ -349,8 +349,7 @@ MonoBehaviour:
   useSendMessage: 0
   sendMessageEvents: 60
   sendMessageTarget: {fileID: 0}
-  layers:
-  - {fileID: 0}
+  layers: []
 --- !u!114 &11495534
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -389,6 +388,7 @@ Canvas:
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
   m_SortingLayerID: 0
   m_SortingOrder: 9000
   m_TargetDisplay: 0

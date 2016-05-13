@@ -52,19 +52,22 @@ namespace IBM.Watson.DeveloperCloud.Debug
         {
             if (log.m_Level >= Level)
             {
-				string logString = string.Format("[{0}][{1}][{2}] {3}",
-				                                 log.m_TimeStamp.ToString("MM/dd/yyyy HH:mm:ss"),
-				                                 log.m_SubSystem, log.m_Level.ToString(), log.m_Message);
+                string logString = string.Format("[{0}][{1}][{2}] {3}",
+                                                 log.m_TimeStamp.ToString("MM/dd/yyyy HH:mm:ss"),
+                                                 log.m_SubSystem, log.m_Level.ToString(), log.m_Message);
 
-				if(log.m_Level == LogLevel.ERROR || log.m_Level == LogLevel.CRITICAL){
-					UnityEngine.Debug.LogError(logString);
-				}
-				else if(log.m_Level == LogLevel.WARNING){
-					UnityEngine.Debug.LogWarning(logString);
-				}
-				else{
-					UnityEngine.Debug.Log(logString);
-				}
+                if (log.m_Level == LogLevel.ERROR || log.m_Level == LogLevel.CRITICAL)
+                {
+                    UnityEngine.Debug.LogError(logString);
+                }
+                else if (log.m_Level == LogLevel.WARNING)
+                {
+                    UnityEngine.Debug.LogWarning(logString);
+                }
+                else
+                {
+                    UnityEngine.Debug.Log(logString);
+                }
             }
         }
         #endregion

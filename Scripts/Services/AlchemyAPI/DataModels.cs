@@ -30,7 +30,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         public string url { get; set; }
         public string text { get; set; }
         public Entity[] entities { get; set; }
-        public KnowledgeGraph knowledgeGraph{ get; set; }
+        public KnowledgeGraph knowledgeGraph { get; set; }
 
         public bool HasData
         {
@@ -115,7 +115,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         public string url { get; set; }
         public string text { get; set; }
         public Keyword[] keywords { get; set; }
-        public KnowledgeGraph knowledgeGraph{ get; set; }
+        public KnowledgeGraph knowledgeGraph { get; set; }
 
         public bool HasData
         {
@@ -662,12 +662,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
     {
         public string type { get; set; }
         public string relevance { get; set; }
-        public KnowledgeGraph knowledgeGraph{ get; set; }
+        public KnowledgeGraph knowledgeGraph { get; set; }
         public string count { get; set; }
         public string text { get; set; }
         public Disambiguated disambiguated { get; set; }
         public Quotation[] quotations { get; set; }
-        public Sentiment sentiment{ get; set; }
+        public Sentiment sentiment { get; set; }
 
         private EntityPrimaryType _EntityType = EntityPrimaryType.NONE;
         public EntityPrimaryType EntityType
@@ -678,7 +678,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 {
                     for (int i = (int)EntityPrimaryType.NONE; i < (int)EntityPrimaryType.NAN; i++)
                     {
-                        if(string.Compare(type, ((EntityPrimaryType)i).ToString()) == 0)
+                        if (string.Compare(type, ((EntityPrimaryType)i).ToString()) == 0)
                         {
                             _EntityType = ((EntityPrimaryType)i);
                             break;
@@ -831,12 +831,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         public string text { get; set; }
         public Keyword[] keywords { get; set; }
         public Entity[] entities { get; set; }
-        public Sentiment docSentiment{ get; set; }
-        public Concept[] concepts{ get; set; }
-        public Relation[] relations{ get; set; }
-        public Taxonomy[] taxonomy{ get; set; }
-        public DocEmotions[] docEmotions{ get; set; }
-        public DateData[] dates{ get; set; }
+        public Sentiment docSentiment { get; set; }
+        public Concept[] concepts { get; set; }
+        public Relation[] relations { get; set; }
+        public Taxonomy[] taxonomy { get; set; }
+        public DocEmotions[] docEmotions { get; set; }
+        public DateData[] dates { get; set; }
 
         public bool HasData
         {
@@ -857,13 +857,13 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
                     for (int i = 0; keywords != null && i < keywords.Length; i++)
                     {
-                        if(!_EntityCombined.Contains(keywords[i].text))
+                        if (!_EntityCombined.Contains(keywords[i].text))
                             _EntityCombined.Add(keywords[i].text);
                     }
 
                     for (int i = 0; entities != null && i < entities.Length; i++)
                     {
-                        if(!_EntityCombined.Contains(entities[i].text))
+                        if (!_EntityCombined.Contains(entities[i].text))
                             _EntityCombined.Add(entities[i].text);
                     }
                 }
@@ -884,7 +884,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
         public string ToLongString()
         {
-            StringBuilder stringBuilder = new StringBuilder( string.Format("[CombinedCallData: status={0}, totalTransactions={1}, language={2}, text={3}", status, totalTransactions, language, text));
+            StringBuilder stringBuilder = new StringBuilder(string.Format("[CombinedCallData: status={0}, totalTransactions={1}, language={2}, text={3}", status, totalTransactions, language, text));
 
             stringBuilder.Append(EntityCombinedCommaSeperated);
             for (int i = 0; dates != null && i < dates.Length; i++)
@@ -903,7 +903,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
     {
         public string text { get; set; }
         public string relevance { get; set; }
-        public KnowledgeGraph knowledgeGraph{ get; set; }
+        public KnowledgeGraph knowledgeGraph { get; set; }
         public Sentiment sentiment { get; set; }
 
     };
@@ -914,18 +914,18 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
     {
         public string text { get; set; }
         public string relevance { get; set; }
-        public KnowledgeGraph knowledgeGraph{ get; set; }
+        public KnowledgeGraph knowledgeGraph { get; set; }
         public string website { get; set; }
         public string geo { get; set; }
         public string dbpedia { get; set; }
         public string freebase { get; set; }
         public string yago { get; set; }
-        public string opencyc{ get; set; }
-        public string ciaFactbook{ get; set; }
-        public string census{ get; set; }
-        public string geonames{ get; set; }
-        public string musicBrainz{ get; set; }
-        public string crunchbase{ get; set; }
+        public string opencyc { get; set; }
+        public string ciaFactbook { get; set; }
+        public string census { get; set; }
+        public string geonames { get; set; }
+        public string musicBrainz { get; set; }
+        public string crunchbase { get; set; }
     };
 
     [fsObject]
@@ -966,7 +966,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
     {
         public string text { get; set; }
         public Sentiment sentiment { get; set; }
-        public Sentiment sentimentFromSubject{ get; set; }
+        public Sentiment sentimentFromSubject { get; set; }
         public Entity entity { get; set; }
     };
 
@@ -1002,10 +1002,10 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 if (m_dateValue == default(System.DateTime) && !string.IsNullOrEmpty(date) && date.Length > 8)
                 {
                     //19840101T000000
-                    System.DateTime.TryParseExact(date.Remove(8), 
+                    System.DateTime.TryParseExact(date.Remove(8),
                         "yyyyddMM",
-                        System.Globalization.CultureInfo.InvariantCulture, 
-                        System.Globalization.DateTimeStyles.None, 
+                        System.Globalization.CultureInfo.InvariantCulture,
+                        System.Globalization.DateTimeStyles.None,
                         out m_dateValue);
 
                 }

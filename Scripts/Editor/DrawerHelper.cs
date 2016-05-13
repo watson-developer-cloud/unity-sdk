@@ -43,7 +43,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
         public static object GetValue(object source, string name, int index)
         {
             var enumerable = GetValue(source, name) as IList;
-            if ( enumerable.Count <= index )
+            if (enumerable.Count <= index)
                 return null;
 
             return enumerable[index];

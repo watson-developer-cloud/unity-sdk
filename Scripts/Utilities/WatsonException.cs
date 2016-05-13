@@ -15,7 +15,7 @@
 *
 */
 
-using IBM.Watson.DeveloperCloud.Logging; 
+using IBM.Watson.DeveloperCloud.Logging;
 
 namespace IBM.Watson.DeveloperCloud.Utilities
 {
@@ -26,11 +26,11 @@ namespace IBM.Watson.DeveloperCloud.Utilities
     {
         public WatsonException(string message) : base(message)
         {
-            Log.Critical( "Exception", "Exception: {0}", message );
+            Log.Critical("Exception", "Exception: {0}", message);
         }
-        public WatsonException(string message, WatsonException innerException ) : base(message, innerException )
+        public WatsonException(string message, WatsonException innerException) : base(message, innerException)
         {
-            Log.Critical( "Exception", "Exception: {0}", message );
+            Log.Critical("Exception", "Exception: {0}", message);
         }
     }
 }

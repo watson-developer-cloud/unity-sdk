@@ -46,7 +46,8 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             public bool m_TapOnObject = true;
             public int m_SortingLayer = 0;
 			public LayerMask m_LayerMask = default(LayerMask);
-			public Constants.Event m_Callback = Constants.Event.NONE;
+			public string m_Callback = "";
+            public string m_CallbackString = "";
         };
 
         [Serializable]
@@ -57,7 +58,8 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             public int m_NumberOfFinger = 1;
             public int m_SortingLayer = 0;
             public bool m_IsDragInside = true;
-			public Constants.Event m_Callback = Constants.Event.NONE;
+			public string m_Callback = "";
+            public string m_CallbackString = "";
         };
 
         [SerializeField]
@@ -78,12 +80,34 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 
             foreach (var mapping in m_TapMappings)
             {
-				TouchEventManager.Instance.RegisterTapEvent(mapping.m_TapObject, mapping.m_Callback, mapping.m_SortingLayer, mapping.m_TapOnObject, mapping.m_LayerMask);
+                if (mapping.m_Callback != "" && string.IsNullOrEmpty(mapping.m_CallbackString))
+                {
+                    TouchEventManager.Instance.RegisterTapEvent(mapping.m_TapObject, mapping.m_Callback, mapping.m_SortingLayer, mapping.m_TapOnObject, mapping.m_LayerMask);
+                }
+                else if (mapping.m_Callback == "" && !string.IsNullOrEmpty(mapping.m_CallbackString))
+                {
+                    TouchEventManager.Instance.RegisterTapEvent(mapping.m_TapObject, mapping.m_CallbackString, mapping.m_SortingLayer, mapping.m_TapOnObject, mapping.m_LayerMask);
+                }
+                else
+                {
+                    Log.Warning("TouchWidget", "Callback function needs to be defined to register TouchWidget - Tap");
+                }
             }
 
             foreach (var mapping in m_FullScreenDragMappings)
             {
-				TouchEventManager.Instance.RegisterDragEvent(mapping.m_DragLayerObject, mapping.m_Callback, mapping.m_NumberOfFinger, mapping.m_SortingLayer, isDragInside: mapping.m_IsDragInside);
+                if (mapping.m_Callback != "" && string.IsNullOrEmpty(mapping.m_CallbackString))
+                {
+                    TouchEventManager.Instance.RegisterDragEvent(mapping.m_DragLayerObject, mapping.m_Callback, mapping.m_NumberOfFinger, mapping.m_SortingLayer, isDragInside: mapping.m_IsDragInside);
+                }
+                else if (mapping.m_Callback == "" && !string.IsNullOrEmpty(mapping.m_CallbackString))
+                {
+                    TouchEventManager.Instance.RegisterDragEvent(mapping.m_DragLayerObject, mapping.m_CallbackString, mapping.m_NumberOfFinger, mapping.m_SortingLayer, isDragInside: mapping.m_IsDragInside);
+                }
+                else
+                {
+                    Log.Warning("TouchWidget", "Callback function needs to be defined to register TouchWidget - Drag");
+                }
             }
         }
 
@@ -97,12 +121,36 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 
             foreach (var mapping in m_TapMappings)
             {
-				TouchEventManager.Instance.UnregisterTapEvent(mapping.m_TapObject, mapping.m_Callback, mapping.m_SortingLayer, mapping.m_TapOnObject, mapping.m_LayerMask);
+                if (mapping.m_Callback != "" && string.IsNullOrEmpty(mapping.m_CallbackString))
+                {
+                    TouchEventManager.Instance.UnregisterTapEvent(mapping.m_TapObject, mapping.m_Callback, mapping.m_SortingLayer, mapping.m_TapOnObject, mapping.m_LayerMask);
+                }
+                else if (mapping.m_Callback == "" && !string.IsNullOrEmpty(mapping.m_CallbackString))
+                {
+                    TouchEventManager.Instance.UnregisterTapEvent(mapping.m_TapObject, mapping.m_CallbackString, mapping.m_SortingLayer, mapping.m_TapOnObject, mapping.m_LayerMask);
+                }
+                else
+                {
+                    Log.Warning("TouchWidget", "Callback function needs to be defined to unregister TouchWidget - Tap");
+                }
             }
 
             foreach (var mapping in m_FullScreenDragMappings)
             {
-				TouchEventManager.Instance.UnregisterDragEvent(mapping.m_DragLayerObject, mapping.m_Callback, mapping.m_NumberOfFinger, mapping.m_SortingLayer, isDragInside: mapping.m_IsDragInside);
+                if (mapping.m_Callback != "" && string.IsNullOrEmpty(mapping.m_CallbackString))
+                {
+                    TouchEventManager.Instance.UnregisterDragEvent(mapping.m_DragLayerObject, mapping.m_Callback, mapping.m_NumberOfFinger, mapping.m_SortingLayer, isDragInside: mapping.m_IsDragInside);
+                }
+                else if (mapping.m_Callback == "" && !string.IsNullOrEmpty(mapping.m_CallbackString))
+                {
+                    TouchEventManager.Instance.UnregisterDragEvent(mapping.m_DragLayerObject, mapping.m_CallbackString, mapping.m_NumberOfFinger, mapping.m_SortingLayer, isDragInside: mapping.m_IsDragInside);
+                }
+                else
+                {
+                    Log.Warning("TouchWidget", "Callback function needs to be defined to unregister TouchWidget - Drag");
+                }
+
+				
             }
         }
         #endregion

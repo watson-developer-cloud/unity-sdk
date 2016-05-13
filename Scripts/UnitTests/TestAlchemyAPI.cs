@@ -25,7 +25,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 {
     public class TestAlchemyAPI : UnitTest
     {
-        
+
         AlchemyAPI m_AlchemnyAPI = new AlchemyAPI();
         bool m_EntityExtractionTested = false;
         int m_NumberOfTestEntityExtraction = -1;
@@ -35,7 +35,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             Log.Status("TestAlchemyAPI", "Test waiting to start");
 
 
-            if ( Config.Instance.FindCredentials( m_AlchemnyAPI.GetServiceID() ) == null )
+            if (Config.Instance.FindCredentials(m_AlchemnyAPI.GetServiceID()) == null)
                 yield break;
 
             Log.Status("TestAlchemyAPI", "Test Started");
@@ -49,21 +49,20 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             m_AlchemnyAPI.GetCombinedCall(OnGetCombinedCall, "Are you artifical intelligence?");
             m_AlchemnyAPI.GetCombinedCall(OnGetCombinedCall, "What happened in NewYork in december 1913 and February 1975");
 
-            while(! m_EntityExtractionTested )
+            while (!m_EntityExtractionTested)
                 yield return null;
 
             yield break;
         }
-
-
 
         private void OnGetCombinedCall(CombinedCallData combinedCallData, string data)
         {
             m_NumberOfTestEntityExtraction--;
             Log.Status("TestAlchemyAPI", "Remaining: {0}, original text:{1}, OnGetCombinedCall: {2}, OnLongResult: {3}", m_NumberOfTestEntityExtraction, data, combinedCallData.EntityCombinedCommaSeperated, combinedCallData.ToLongString());
 
-            if(m_NumberOfTestEntityExtraction <= 0){
-                Test( true );
+            if (m_NumberOfTestEntityExtraction <= 0)
+            {
+                Test(true);
                 m_EntityExtractionTested = true;
             }
 

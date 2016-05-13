@@ -38,88 +38,89 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         public override IEnumerator RunTest()
         {
-            if ( Config.Instance.FindCredentials( m_Dialog.GetServiceID() ) == null )
+            if (Config.Instance.FindCredentials(m_Dialog.GetServiceID()) == null)
                 yield break;
 
-            m_Dialog.GetDialogs( OnGetDialogs );
-            while(! m_GetDialogsTested )
+            m_Dialog.GetDialogs(OnGetDialogs);
+            while (!m_GetDialogsTested)
                 yield return null;
 
-            if (! m_UploadTested )
+            if (!m_UploadTested)
             {
-                m_Dialog.UploadDialog( DIALOG_NAME, OnDialogUploaded, Application.dataPath + "/Watson/Editor/TestData/pizza_sample.xml" );
-                while(! m_UploadTested )
+                m_Dialog.UploadDialog(DIALOG_NAME, OnDialogUploaded, Application.dataPath + "/Watson/Scripts/Editor/TestData/pizza_sample.xml");
+                while (!m_UploadTested)
                     yield return null;
             }
 
-            if (! string.IsNullOrEmpty( m_DialogID ) )
+            if (!string.IsNullOrEmpty(m_DialogID))
             {
-                m_Dialog.Converse( m_DialogID, "Hello", OnConverse );
-                while( !m_ConverseTested )
+                m_Dialog.Converse(m_DialogID, "Hello", OnConverse);
+                while (!m_ConverseTested)
                     yield return null;
 
                 m_ConverseTested = false;
-                m_Dialog.Converse( m_DialogID, "What do you have?", OnConverse, 
-                    m_ConversationID, m_ClientID );
-                while( !m_ConverseTested )
+                m_Dialog.Converse(m_DialogID, "What do you have?", OnConverse,
+                    m_ConversationID, m_ClientID);
+                while (!m_ConverseTested)
                     yield return null;
             }
 
 
-            m_Dialog.DeleteDialog( m_DialogID, OnDialogDeleted );
-            while(! m_DeleteTested )
+            m_Dialog.DeleteDialog(m_DialogID, OnDialogDeleted);
+
+            while (!m_DeleteTested)
                 yield return null;
 
             yield break;
         }
 
-        private void OnDialogDeleted( bool success )
+        private void OnDialogDeleted(bool success)
         {
-            Test( success );
+            Test(success);
             m_DeleteTested = true;
         }
 
-        private void OnConverse( ConverseResponse resp )
+        private void OnConverse(ConverseResponse resp)
         {
-            Test( resp != null );
-            if ( resp != null )
+            Test(resp != null);
+            if (resp != null)
             {
                 m_ClientID = resp.client_id;
                 m_ConversationID = resp.conversation_id;
 
-                foreach( var r in resp.response )
-                    Log.Debug( "TestDialog", "Response: {0}", r );
+                foreach (var r in resp.response)
+                    Log.Debug("TestDialog", "Response: {0}", r);
             }
             m_ConverseTested = true;
         }
 
-        private void OnDialogUploaded( string id )
+        private void OnDialogUploaded(string id)
         {
-            Test( !string.IsNullOrEmpty( id  ) );
-            if (! string.IsNullOrEmpty( id ) )
+            Test(!string.IsNullOrEmpty(id));
+            if (!string.IsNullOrEmpty(id))
             {
-                Log.Debug( "TestDialog", "Dialog ID: {0}", id );
+                Log.Debug("TestDialog", "Dialog ID: {0}", id);
                 m_DialogID = id;
             }
             m_UploadTested = true;
         }
 
-        private void OnGetDialogs( Dialogs dialogs )
+        private void OnGetDialogs(Dialogs dialogs)
         {
-            Test( dialogs != null );
-            if (dialogs != null && dialogs.dialogs != null )
+            Test(dialogs != null);
+            if (dialogs != null && dialogs.dialogs != null)
             {
-                foreach( var d in dialogs.dialogs )
+                foreach (var d in dialogs.dialogs)
                 {
-                    Log.Debug( "TestDialog", "Name: {0}, ID: {1}", d.name, d.dialog_id );
-                    if ( d.name == DIALOG_NAME )
+                    Log.Debug("TestDialog", "Name: {0}, ID: {1}", d.name, d.dialog_id);
+                    if (d.name == DIALOG_NAME)
                     {
                         m_UploadTested = true;
                         m_DialogID = d.dialog_id;
                     }
                 }
             }
-            m_GetDialogsTested = true;         
+            m_GetDialogsTested = true;
         }
     }
 }

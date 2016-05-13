@@ -84,10 +84,11 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// </summary>
             /// <param name="json">The JSON data to parse.</param>
             /// <returns>Returns true on success.</returns>
-            public bool ParseJSON( string json )
+            public bool ParseJSON(string json)
             {
-                try {
-                    IDictionary iParse = Json.Deserialize( json ) as IDictionary;
+                try
+                {
+                    IDictionary iParse = Json.Deserialize(json) as IDictionary;
                     IDictionary iCredentials = iParse["credentials"] as IDictionary;
                     m_URL = (string)iCredentials["url"];
                     m_User = (string)iCredentials["username"];
@@ -95,9 +96,9 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 
                     return true;
                 }
-                catch( Exception e )
+                catch (Exception e)
                 {
-                    Log.Error( "Config", "Caught Exception: {0}", e.ToString() );
+                    Log.Error("Config", "Caught Exception: {0}", e.ToString());
                 }
 
                 return false;
@@ -111,12 +112,6 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         private float m_TimeOut = 30.0f;
         [fsProperty]
         private int m_MaxRestConnections = 5;
-        [fsProperty]
-        private bool m_EnableGateway = false;
-        [fsProperty]
-        private string m_GatewayURL = ""; //"https://9.53.162.55:9443/webApp";
-        [fsProperty]
-        private string m_ProductKey = null;
         [fsProperty]
         private List<CredentialInfo> m_Credentials = new List<CredentialInfo>();
         [fsProperty]
@@ -138,7 +133,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// <summary>
         /// Returns the location of the classifiers
         /// </summary>
-        public string ClassifierDirectory { get {return m_ClassifierDirectory; } set { m_ClassifierDirectory = value; } }
+        public string ClassifierDirectory { get { return m_ClassifierDirectory; } set { m_ClassifierDirectory = value; } }
         /// <summary>
         /// Returns the Timeout for requests made to the server.
         /// </summary>
@@ -155,19 +150,6 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// Returns a list of variables which can hold key/value data.
         /// </summary>
         public List<Variable> Variables { get { return m_Variables; } set { m_Variables = value; } }
-        /// <summary>
-        /// Enable the gateway usage.
-        /// </summary>
-        public bool EnableGateway { get { return m_EnableGateway; } set { m_EnableGateway = value; } }
-        /// <summary>
-        /// The URL of the gateway to use.
-        /// </summary>
-        public string GatewayURL { get { return m_GatewayURL; } set { m_GatewayURL = value; } }
-        /// <summary>
-        /// The product key used to communicate with the gateway.
-        /// </summary>
-        public string ProductKey { get { return m_ProductKey; } set { m_ProductKey = value; } }
-
         #endregion
 
         /// <summary>
@@ -183,10 +165,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// </summary>
         /// <param name="serviceID">The ID of the service to find.</param>
         /// <returns>Returns null if the credentials cannot be found.</returns>
-        public CredentialInfo FindCredentials( string serviceID )
+        public CredentialInfo FindCredentials(string serviceID)
         {
-            foreach( var info in m_Credentials )
-                if ( info.m_ServiceID == serviceID )
+            foreach (var info in m_Credentials)
+                if (info.m_ServiceID == serviceID)
                     return info;
             return null;
         }
@@ -198,15 +180,16 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         public void LoadConfig()
         {
 #if !UNITY_ANDROID || UNITY_EDITOR
-            try {
-                if (! Directory.Exists( Application.streamingAssetsPath ) )
-                    Directory.CreateDirectory( Application.streamingAssetsPath );
-				LoadConfig( System.IO.File.ReadAllText( Application.streamingAssetsPath + Constants.Path.CONFIG_FILE ) );
+            try
+            {
+                if (!Directory.Exists(Application.streamingAssetsPath))
+                    Directory.CreateDirectory(Application.streamingAssetsPath);
+                LoadConfig(System.IO.File.ReadAllText(Application.streamingAssetsPath + Constants.Path.CONFIG_FILE));
             }
-            catch( System.IO.FileNotFoundException )
+            catch (System.IO.FileNotFoundException)
             {
                 // mark as loaded anyway, so we don't keep retrying..
-                Log.Error( "Config", "Failed to load config file." );
+                Log.Error("Config", "Failed to load config file.");
                 ConfigLoaded = true;
             }
 #else
@@ -221,7 +204,8 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// <returns></returns>
         public bool LoadConfig(string json)
         {
-            try {
+            try
+            {
                 fsData data = null;
                 fsResult r = fsJsonParser.Parse(json, out data);
                 if (!r.Succeeded)
@@ -241,9 +225,9 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                 ConfigLoaded = true;
                 return true;
             }
-            catch( Exception e )
+            catch (Exception e)
             {
-                Log.Error( "Config", "Failed to load config: {0}", e.ToString() );
+                Log.Error("Config", "Failed to load config: {0}", e.ToString());
             }
 
             ConfigLoaded = true;
@@ -274,28 +258,28 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// </summary>
         /// <param name="key">The name of the variable to find.</param>
         /// <returns>Returns the Variable object or null if not found.</returns>
-        public Variable GetVariable( string key )
+        public Variable GetVariable(string key)
         {
-            foreach( var var in m_Variables )
-                if ( var.Key == key )
+            foreach (var var in m_Variables)
+                if (var.Key == key)
                     return var;
 
             return null;
         }
 
-		/// <summary>
-		/// Gets the variable value.
-		/// </summary>
-		/// <returns>The variable value.</returns>
-		/// <param name="key">Key.</param>
-		public string GetVariableValue(string key)
-		{
-			Variable v = GetVariable (key);
-			if (v != null)
-				return v.Value;
-		
-			return null;
-		}
+        /// <summary>
+        /// Gets the variable value.
+        /// </summary>
+        /// <returns>The variable value.</returns>
+        /// <param name="key">Key.</param>
+        public string GetVariableValue(string key)
+        {
+            Variable v = GetVariable(key);
+            if (v != null)
+                return v.Value;
+
+            return null;
+        }
 
         /// <summary>
         /// Sets the variable value.
@@ -303,17 +287,17 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// <returns><c>true</c>, if variable value was set, <c>false</c> otherwise.</returns>
         /// <param name="key">Key.</param>
         /// <param name="value">Value.</param>
-        public bool SetVariableValue(string key, string value, bool bAdd = false )
+        public bool SetVariableValue(string key, string value, bool bAdd = false)
         {
-            Variable v = GetVariable (key);
+            Variable v = GetVariable(key);
             if (v == null)
             {
-                if (! bAdd )
+                if (!bAdd)
                     return false;
 
                 v = new Variable();
                 v.Key = key;
-                m_Variables.Add( v );
+                m_Variables.Add(v);
             }
 
             v.Value = value;
@@ -325,30 +309,30 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// </summary>
         /// <param name="input">A string containing variables.</param>
         /// <returns>Returns the string with all variables resolved to their actual values. Any missing variables are removed from the string.</returns>
-        public string ResolveVariables( string input, bool recursive = true )
+        public string ResolveVariables(string input, bool recursive = true)
         {
             string output = input;
-            foreach( var var in m_Variables )
+            foreach (var var in m_Variables)
             {
                 string value = var.Value;
-                if ( recursive && value.Contains( "${" ) )
-                    value = ResolveVariables( value, false );
+                if (recursive && value.Contains("${"))
+                    value = ResolveVariables(value, false);
 
-                output = output.Replace( "${" + var.Key + "}", value );
+                output = output.Replace("${" + var.Key + "}", value);
             }
 
             // remove any variables still in the string..
-            int variableIndex = output.IndexOf( "${" );
-            while( variableIndex >= 0 )
+            int variableIndex = output.IndexOf("${");
+            while (variableIndex >= 0)
             {
-                int endVariable = output.IndexOf( "}", variableIndex );
-                if ( endVariable < 0 )
+                int endVariable = output.IndexOf("}", variableIndex);
+                if (endVariable < 0)
                     break;      // end not found..
 
-                output = output.Remove( variableIndex, (endVariable - variableIndex) + 1 );
+                output = output.Remove(variableIndex, (endVariable - variableIndex) + 1);
 
                 // next..
-                variableIndex = output.IndexOf( "${" );
+                variableIndex = output.IndexOf("${");
             }
 
             return output;
@@ -364,8 +348,5 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             LoadConfig(request.text);
             yield break;
         }
-
-
-
     }
 }

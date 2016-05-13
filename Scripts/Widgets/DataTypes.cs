@@ -414,7 +414,7 @@ namespace IBM.Watson.DeveloperCloud.DataTypes
     };
 
     /// <summary>
-    /// This class is for NLC classify results.
+    /// This class is for Natural Language Classify results.
     /// </summary>
     public class ClassifyResultData : Widget.Data
     {

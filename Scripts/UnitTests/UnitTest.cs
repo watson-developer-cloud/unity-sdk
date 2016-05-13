@@ -19,8 +19,8 @@ using IBM.Watson.DeveloperCloud.Logging;
 using System.Collections;
 using UnityEngine;
 
-namespace IBM.Watson.DeveloperCloud.UnitTests {
-
+namespace IBM.Watson.DeveloperCloud.UnitTests
+{
     /// <summary>
     /// This is the base class for all UnitTest classes. Derive from this class and implement the RunTest() function.
     /// </summary>
@@ -34,11 +34,11 @@ namespace IBM.Watson.DeveloperCloud.UnitTests {
         /// Utility function that fails this test if false.
         /// </summary>
         /// <param name="condition">If false then the test is failed and the failure is logged.</param>
-        public void Test( bool condition )
+        public void Test(bool condition)
         {
-            if (! condition )
+            if (!condition)
             {
-                Log.Error( "UnitTest", "UnitTest {0} has failed, Stack:\n{1}", GetType().Name, StackTraceUtility.ExtractStackTrace () );
+                Log.Error("UnitTest", "UnitTest {0} has failed, Stack:\n{1}", GetType().Name, StackTraceUtility.ExtractStackTrace());
                 TestFailed = true;
             }
         }
