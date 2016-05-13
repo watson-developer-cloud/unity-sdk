@@ -62,10 +62,6 @@ namespace IBM.Watson.DeveloperCloud.Services.TradeoffAnalytics.v1
             fsData tempData = null;
             sm_Serializer.TrySerialize<Problem>(problem, out tempData);
 
-            //Dictionary<string, fsData> problemData = tempData.AsDictionary;
-
-            string jsonParsed = MiniJSON.Json.Serialize(tempData);
-
             Log.Status("GetDilemma", "JSON: {0}", tempData.ToString());
 
             req.Send = Encoding.UTF8.GetBytes(tempData.ToString());
@@ -119,32 +115,32 @@ namespace IBM.Watson.DeveloperCloud.Services.TradeoffAnalytics.v1
         /// <exclude />
         public void GetServiceStatus(ServiceStatus callback)
         {
-            if ( Utilities.Config.Instance.FindCredentials( SERVICE_ID ) != null )
-                new CheckServiceStatus( this, callback );
-            else
-                callback( SERVICE_ID, false );
+//            if ( Utilities.Config.Instance.FindCredentials( SERVICE_ID ) != null )
+//                new CheckServiceStatus( this, callback );
+//            else
+//                callback( SERVICE_ID, false );
         }
 
-        private class CheckServiceStatus
-        {
-            private TradeoffAnalytics m_Service = null;
-            private ServiceStatus m_Callback = null;
-
-            public CheckServiceStatus( TradeoffAnalytics service, ServiceStatus callback )
-            {
-                m_Service = service;
-                m_Callback = callback;
-
+//        private class CheckServiceStatus
+//        {
+//            private TradeoffAnalytics m_Service = null;
+//            private ServiceStatus m_Callback = null;
+//
+//            public CheckServiceStatus( TradeoffAnalytics service, ServiceStatus callback )
+//            {
+//                m_Service = service;
+//                m_Callback = callback;
+//
 //                if (! m_Service.Ping( OnPing ) )
 //                    m_Callback( SERVICE_ID, false );
-            }
+//            }
 
 //            private void OnPing( Voices voices )
 //            {
 //                if ( m_Callback != null )
 //                    m_Callback( SERVICE_ID, voices != null );
 //            }
-        };
+//        };
         #endregion
     }
 }
