@@ -17,24 +17,41 @@
 
 using UnityEngine;
 using System.Collections;
+using IBM.Watson.DeveloperCloud.UnitTests;
 using IBM.Watson.DeveloperCloud.Services.Conversation.v1;
+using IBM.Watson.DeveloperCloud.Utilities;
+using IBM.Watson.DeveloperCloud.Logging;
 
-public class ExampleConversation : MonoBehaviour
+public class TestConversation : UnitTest
 {
 	private Conversation m_Conversation = new Conversation();
 	private string m_WorkspaceID = "car_demo_1";
 	private string m_Input = "Can you unlock the door?";
+	private bool m_MessageTested = false;
 
-	void Start () {
-		Debug.Log("User: " + m_Input);
-		m_Conversation.Message(m_WorkspaceID, m_Input, OnMessage);
+	public override IEnumerator RunTest()
+	{
+		if (Config.Instance.FindCredentials(m_Conversation.GetServiceID()) == null)
+			yield break;
+
+		if(!m_MessageTested)
+		{
+			m_Conversation.Message(m_WorkspaceID, m_Input, OnMessage);
+			while(!m_MessageTested)
+				yield return null;
+		}
 	}
 
-	void OnMessage (DataModels.MessageResponse resp)
+	private void OnMessage(DataModels.MessageResponse resp)
 	{
-		foreach(DataModels.MessageIntent mi in resp.intents)
-			Debug.Log("intent: " + mi.intent + ", confidence: " + mi.confidence);
-		
-		Debug.Log("response: " + resp.output.text);
+		Test(resp != null);
+		if(resp != null)
+		{
+			foreach(DataModels.MessageIntent mi in resp.intents)
+				Log.Debug("TestConversation", "intent: " + mi.intent + ", confidence: " + mi.confidence);
+			Log.Debug("TestConversation", "response: " + resp.output.text);
+		}
+
+		m_MessageTested = true;
 	}
 }

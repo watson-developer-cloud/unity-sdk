@@ -30,7 +30,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 	/// This class wraps the Watson Conversation service. 
 	/// <a href="http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/conversation.html">Conversation Service</a>
 	/// </summary>
-	public class Conversation : IWatsonService {
+	public class Conversation : IWatsonService
+	{
 		#region Public Types
 		/// <summary>
 		/// The callback for Message().
@@ -68,19 +69,19 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 			if(callback == null)
 				throw new ArgumentNullException("callback");
 
-			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "v2/rest/workspaces");
+			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/v2/rest/workspaces");
 			if(connector == null)
 				return false;
 
-			string reqJson = "{\"input\": {\"text\": \"{0}\"}}";
+			string reqJson = "{{\"input\": {{\"text\": \"{0}\"}}}}";
+			string reqString = string.Format(reqJson, input);
 
 			MessageReq req = new MessageReq();
 			req.Callback = callback;
 			req.Headers["Content-Type"] = "application/json";
 			req.Function = "/" + workspaceId + "/message";
+			req.Send = Encoding.UTF8.GetBytes(reqString);
 			req.OnResponse = MessageResp;
-			req.Forms = new Dictionary<string, RESTConnector.Form>();
-			req.Forms["input"] = new RESTConnector.Form(input);
 
 			return connector.Send(req);
 		}
