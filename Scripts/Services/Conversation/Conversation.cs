@@ -34,6 +34,10 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 	{
 		#region Public Types
 		/// <summary>
+		/// The callback for GetWorkspaces().
+		/// </summary>
+		public delegate void OnGetWorkspaces(DataModels.Workspaces workspaces);
+		/// <summary>
 		/// The callback for Message().
 		/// </summary>
 		/// <param name="success"></param>
@@ -43,6 +47,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 		/// </summary>
 		/// <param name="resp">The response object to a call to Converse().</param>
 		public delegate void OnMessage(DataModels.MessageResponse resp);
+
 		#endregion
 
 		#region Public Properties
@@ -51,6 +56,62 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 		#region Private Data
 		private const string SERVICE_ID = "ConversationV1";
 		private static fsSerializer sm_Serializer = new fsSerializer();
+		#endregion
+
+		#region Workspaces
+		/// <summary>
+		/// Gets the available workspaces for the Conversation service
+		/// </summary>
+		/// <returns>Returns true if request has been sent.</returns>
+		/// <param name="callback">Callback.</param>
+		public bool GetWorkspaces(OnGetWorkspaces callback)
+		{
+			if(callback == null)
+				throw new ArgumentNullException("callback");
+
+			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/v2/rest/workspaces");
+			if(connector == null)
+				return false;
+
+			GetWorkspacesReq req = new GetWorkspacesReq();
+			req.Callback = callback;
+			req.OnResponse = OnGetWorkspacesResp;
+
+			return connector.Send(req);
+		}
+
+		private class GetWorkspacesReq : RESTConnector.Request
+		{
+			public OnGetWorkspaces Callback { get; set; }
+		}
+
+		private void OnGetWorkspacesResp(RESTConnector.Request req, RESTConnector.Response resp)
+		{
+			DataModels.Workspaces workspaces= new DataModels.Workspaces();
+			if (resp.Success)
+			{
+				try
+				{
+					fsData data = null;
+					fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+					if (!r.Succeeded)
+						throw new WatsonException(r.FormattedMessages);
+
+					object obj = workspaces;
+					r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+					if (!r.Succeeded)
+						throw new WatsonException(r.FormattedMessages);
+				}
+				catch (Exception e)
+				{
+					Log.Error("Conversation", "GetWorkspaces Exception: {0}", e.ToString());
+					resp.Success = false;
+				}
+			}
+
+			if (((GetWorkspacesReq)req).Callback != null)
+				((GetWorkspacesReq)req).Callback(resp.Success ? workspaces : null);
+		}
 		#endregion
 
 		#region Message
@@ -118,6 +179,15 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 			if (((MessageReq)req).Callback != null)
 				((MessageReq)req).Callback(resp.Success ? response : null);
 		}
+		#endregion
+
+		#region Intents
+		#endregion
+
+		#region Entities
+		#endregion
+
+		#region Dialog Nodes
 		#endregion
 
 		#region IWatsonService implementation
