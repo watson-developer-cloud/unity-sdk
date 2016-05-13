@@ -136,7 +136,5 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 		}
 
 		#endregion
-
-
 	}
 }
