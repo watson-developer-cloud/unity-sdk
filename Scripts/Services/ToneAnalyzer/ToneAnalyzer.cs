@@ -35,11 +35,16 @@ namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
         #endregion
 
         #region Get Tone
-
         private const string FUNCTION_TONE = "/v3/tone";
+        public delegate void OnGetToneAnalyzed( ToneAnalyzerResponse resp, string data );
 
-        public delegate void OnGetToneAnalyzed( ToneAnalysis resp, string data );
-
+        /// <summary>
+        /// Gets the tone analyze.
+        /// </summary>
+        /// <returns><c>true</c>, if tone analyze was gotten, <c>false</c> otherwise.</returns>
+        /// <param name="callback">Callback.</param>
+        /// <param name="text">Text.</param>
+        /// <param name="data">Data.</param>
         public bool GetToneAnalyze(OnGetToneAnalyzed callback, string text, string data = null)
         {
             if (callback == null)
@@ -71,7 +76,7 @@ namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
 
         private void GetToneAnalyzerResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            ToneAnalysis response = new ToneAnalysis();
+            ToneAnalyzerResponse response = new ToneAnalyzerResponse();
             if (resp.Success)
             {
                 try
@@ -130,7 +135,7 @@ namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
                     m_Callback( SERVICE_ID, false );
             }
 
-            private void OnGetToneAnalyzed( ToneAnalysis resp , string data)
+            private void OnGetToneAnalyzed( ToneAnalyzerResponse resp , string data)
             {
                 if ( m_Callback != null )
                     m_Callback( SERVICE_ID, resp != null );
