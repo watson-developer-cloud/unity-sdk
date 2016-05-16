@@ -17,7 +17,7 @@
 
 using FullSerializer;
 
-namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v1
+namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v2
 {
    
 

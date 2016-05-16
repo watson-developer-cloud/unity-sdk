@@ -25,12 +25,12 @@ using MiniJSON;
 using System;
 using FullSerializer;
 
-namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v1
+namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
 {
     public class ToneAnalyzer : IWatsonService {
 
         #region Private Data
-        private const string SERVICE_ID = "ToneAnalyzerV1";
+        private const string SERVICE_ID = "ToneAnalyzerV3";
         private static fsSerializer sm_Serializer = new fsSerializer();
         #endregion
 
@@ -38,7 +38,7 @@ namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v1
 
         private const string FUNCTION_TONE = "/v3/tone";
 
-        public delegate void OnGetToneAnalyzed( ToneAnalyzerResponse resp, string data );
+        public delegate void OnGetToneAnalyzed( ToneAnalysis resp, string data );
 
         public bool GetToneAnalyze(OnGetToneAnalyzed callback, string text, string data = null)
         {
@@ -71,7 +71,7 @@ namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v1
 
         private void GetToneAnalyzerResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            ToneAnalyzerResponse response = new ToneAnalyzerResponse();
+            ToneAnalysis response = new ToneAnalysis();
             if (resp.Success)
             {
                 try
@@ -130,7 +130,7 @@ namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v1
                     m_Callback( SERVICE_ID, false );
             }
 
-            private void OnGetToneAnalyzed( ToneAnalyzerResponse resp , string data)
+            private void OnGetToneAnalyzed( ToneAnalysis resp , string data)
             {
                 if ( m_Callback != null )
                     m_Callback( SERVICE_ID, resp != null );

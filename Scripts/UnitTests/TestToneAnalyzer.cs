@@ -17,7 +17,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
-using IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v1;
+using IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v2;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
 using UnityEngine;

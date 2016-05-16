@@ -57,7 +57,6 @@ namespace IBM.Watson.DeveloperCloud.Services.TradeoffAnalytics.v1
         public bool is_objective { get; set; }
         public string[] preference { get; set; }
         public Range range { get; set; }
-        public string[] categoricalRange { get; set; }
         public long significant_gain{ get; set; }
         public long significant_loss{ get; set; }
     }
