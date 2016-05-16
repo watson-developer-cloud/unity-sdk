@@ -73,7 +73,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             listColumn.Add(columnPrice);
             listColumn.Add(columnWeight);
-            listColumn.Add(columnBrandName);
+//            listColumn.Add(columnBrandName);
 
             problemToSolve.columns = listColumn.ToArray();
 
@@ -83,28 +83,28 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             Option option1 = new Option();
             option1.key = "1";
             option1.name = "Samsung Galaxy S4";
-            option1.values = new ApplicationDataValue();
-            option1.values.weight = 130;
-            option1.values.brand = "Samsung";
-            option1.values.price = 249;
+            option1.values = new TestDataValue();
+            (option1.values as TestDataValue).weight = 130;
+            (option1.values as TestDataValue).brand = "Samsung";
+            (option1.values as TestDataValue).price = 249;
             listOption.Add(option1);
 
             Option option2 = new Option();
             option2.key = "2";
             option2.name = "Apple iPhone 5";
-            option2.values = new ApplicationDataValue();
-            option2.values.weight = 112;
-            option2.values.brand = "Apple";
-            option2.values.price = 599;
+            option2.values = new TestDataValue();
+            (option2.values as TestDataValue).weight = 112;
+            (option2.values as TestDataValue).brand = "Apple";
+            (option2.values as TestDataValue).price = 599;
             listOption.Add(option2);
 
             Option option3 = new Option();
             option3.key = "3";
             option3.name = "HTC One";
-            option3.values = new ApplicationDataValue();
-            option3.values.weight = 143;
-            option3.values.brand = "HTC";
-            option3.values.price = 299;
+            option3.values = new TestDataValue();
+            (option3.values as TestDataValue).weight = 143;
+            (option3.values as TestDataValue).brand = "HTC";
+            (option3.values as TestDataValue).price = 299;
             listOption.Add(option3);
 
             problemToSolve.options = listOption.ToArray();
@@ -122,6 +122,23 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             m_GetDilemmaTested = true;
         }
 
+        /// <summary>
+        /// Application data value.
+        /// </summary>
+        public class TestDataValue : IBM.Watson.DeveloperCloud.Services.TradeoffAnalytics.v1.ApplicationDataValue
+        {
+            public double price { get; set; }
+            public double weight { get; set; }
+            public string brand { get; set; }
+        }
+
+        /// <summary>
+        /// Application data.
+        /// </summary>
+        public class TestData : IBM.Watson.DeveloperCloud.Services.TradeoffAnalytics.v1.ApplicationData
+        {
+
+        }
     }
 }
 

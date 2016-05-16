@@ -40,9 +40,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TradeoffAnalytics.v1
         #endregion
 
         #region Dilemmas
-
         private const string FUNCTION_DILEMMA = "/v1/dilemmas";
-
         public delegate void OnDilemma( DilemmasResponse resp );
 
         public bool GetDilemma(OnDilemma callback, Problem problem, Boolean generateVisualization)
@@ -115,32 +113,88 @@ namespace IBM.Watson.DeveloperCloud.Services.TradeoffAnalytics.v1
         /// <exclude />
         public void GetServiceStatus(ServiceStatus callback)
         {
-//            if ( Utilities.Config.Instance.FindCredentials( SERVICE_ID ) != null )
-//                new CheckServiceStatus( this, callback );
-//            else
-//                callback( SERVICE_ID, false );
+            if ( Utilities.Config.Instance.FindCredentials( SERVICE_ID ) != null )
+                new CheckServiceStatus( this, callback );
+            else
+                callback( SERVICE_ID, false );
         }
 
-//        private class CheckServiceStatus
-//        {
-//            private TradeoffAnalytics m_Service = null;
-//            private ServiceStatus m_Callback = null;
-//
-//            public CheckServiceStatus( TradeoffAnalytics service, ServiceStatus callback )
-//            {
-//                m_Service = service;
-//                m_Callback = callback;
-//
-//                if (! m_Service.Ping( OnPing ) )
-//                    m_Callback( SERVICE_ID, false );
-//            }
+        /// <summary>
+        /// Application data value.
+        /// </summary>
+        [fsObject]
+        public class PingDataValue : IBM.Watson.DeveloperCloud.Services.TradeoffAnalytics.v1.ApplicationDataValue
+        {
+            public double ping { get; set; }
+        }
 
-//            private void OnPing( Voices voices )
-//            {
-//                if ( m_Callback != null )
-//                    m_Callback( SERVICE_ID, voices != null );
-//            }
-//        };
+        /// <summary>
+        /// Application data.
+        /// </summary>
+        [fsObject]
+        public class PingData : IBM.Watson.DeveloperCloud.Services.TradeoffAnalytics.v1.ApplicationData
+        {
+
+        }
+
+        private class CheckServiceStatus
+        {
+            private TradeoffAnalytics m_Service = null;
+            private ServiceStatus m_Callback = null;
+
+            public CheckServiceStatus(TradeoffAnalytics service, ServiceStatus callback)
+            {
+                m_Service = service;
+                m_Callback = callback;
+
+                Problem problem = new Problem();
+                problem.subject = "ping";
+
+                List<Column> listColumn = new List<Column>();
+                Column pingColumn = new Column();
+                pingColumn.key = "ping";
+                pingColumn.type = "numeric";
+                pingColumn.goal = "min";
+                pingColumn.is_objective = true;
+                pingColumn.range = new ValueRange();
+                ((ValueRange)pingColumn.range).high = 1;
+                ((ValueRange)pingColumn.range).low = 0;
+                listColumn.Add(pingColumn);
+
+                problem.columns = listColumn.ToArray();
+
+                List<Option> listOption = new List<Option>();
+                Option pingOption = new Option();
+                pingOption.key = "ping";
+                pingOption.values = new PingDataValue();
+                (pingOption.values as PingDataValue).ping = 0;
+                listOption.Add(pingOption);
+
+                problem.options = listOption.ToArray();
+
+                if(!m_Service.GetDilemma(OnGetDilemma, problem, false))
+                    OnFailure("Failed to invoke OnGetDilemma().");
+            }
+
+            private void OnGetDilemma(DilemmasResponse resp)
+            {
+                if (m_Callback != null && resp != null)
+                {
+                    m_Callback(SERVICE_ID, true);
+                }
+                else
+                {
+                    OnFailure("DillemaResponse is null");
+                }
+            }
+
+            private void OnFailure(string msg)
+            {
+                Log.Error("TradeoffAnalytics", msg);
+                m_Callback(SERVICE_ID, false);
+            }
+        }
+        
         #endregion
     }
 }
