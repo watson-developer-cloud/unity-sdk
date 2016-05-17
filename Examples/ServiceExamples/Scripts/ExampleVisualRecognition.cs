@@ -24,6 +24,8 @@ using IBM.Watson.DeveloperCloud.Utilities;
 public class ExampleVisualRecognition : MonoBehaviour {
     private VisualRecognition m_VisualRecognition = new VisualRecognition();
     private string m_classifierName = "integration-test-classifier";
+    private string m_classifierID = "integrationtestclassifier_1745947114";
+    private string m_classifierToDelete = "";
 	
 	void Start () {
         LogSystem.InstallDefaultReactors();
@@ -35,7 +37,15 @@ public class ExampleVisualRecognition : MonoBehaviour {
 //            Debug.Log("Getting classifiers failed!");
 
         //  Find classifier by name
-        m_VisualRecognition.FindClassifier(m_classifierName, OnFindClassifier);
+//        m_VisualRecognition.FindClassifier(m_classifierName, OnFindClassifier);
+
+        //  Find classifier by ID
+//        if(!m_VisualRecognition.GetClassifier(m_classifierID, OnGetClassifier))
+//            Debug.Log("Getting classifier failed!");
+
+        //  Delete classifier by ID
+//        if(!m_VisualRecognition.DeleteClassifier(m_classifierToDelete, OnDeleteClassifier))
+//            Debug.Log("Deleting classifier failed!");
 	}
 
     private void OnGetClassifiers (GetClassifiersTopLevelBrief classifiers)
@@ -49,7 +59,7 @@ public class ExampleVisualRecognition : MonoBehaviour {
         }
         else
         {
-            Debug.Log("Request failed!");
+            Debug.Log("Failed to get classifiers!");
         }
     }
 
@@ -61,7 +71,31 @@ public class ExampleVisualRecognition : MonoBehaviour {
         }
         else
         {
-            Debug.Log("Failed to find classifier!");
+            Debug.Log("Failed to find classifier by name!");
+        }
+    }
+
+    private void OnGetClassifier(GetClassifiersPerClassifierVerbose classifier)
+    {
+        if(classifier != null)
+        {
+            Debug.Log("Classifier " + m_classifierID + " found! Classifier name: " + classifier.name);
+        }
+        else
+        {
+            Debug.Log("Failed to find classifier by ID!");
+        }
+    }
+
+    private void OnDeleteClassifier(bool success)
+    {
+        if(success)
+        {
+            Debug.Log("Deleted classifier " + m_classifierToDelete);
+        }
+        else
+        {
+            Debug.Log("Failed ot delete classifier by ID!");
         }
     }
 }

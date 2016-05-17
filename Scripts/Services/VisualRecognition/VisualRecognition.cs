@@ -43,6 +43,11 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// </summary>
         /// <param name="classifier">The classifier found by ID.</param>
         public delegate void OnGetClassifier(GetClassifiersPerClassifierVerbose classifier);
+        /// <summary>
+        /// This callback is used by the DeleteClassifier() method.
+        /// </summary>
+        /// <param name="success"></param>
+        public delegate void OnDeleteClassifier(bool success);
         #endregion
 
         #region Private Data
@@ -64,7 +69,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         #region Recognize Text
         #endregion
 
-        #region Find Classifier
+        #region Find Classifier by name
         public void FindClassifier(string classifierName, OnFindClassifier callback)
         {
             new FindClassifierReq(this, classifierName, callback);
@@ -87,21 +92,21 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 ClassifierName = classifierName;
                 Callback = callback;
 
-                Service.GetClassifiers(GetClassifiers);
+                Service.GetClassifiers(OnGetClassifiers);
             }
 
             public VisualRecognition Service { get; set; }
             public string ClassifierName { get; set; }
             public OnFindClassifier Callback { get; set; }
 
-            private void GetClassifiers(GetClassifiersTopLevelBrief classifiers)
+            private void OnGetClassifiers(GetClassifiersTopLevelBrief classifiers)
             {
                 bool bFound = false;
                 foreach(var c in classifiers.classifiers)
                 {
                     if(c.name.ToLower().StartsWith(ClassifierName.ToLower()))
                     {
-                        bFound = Service.GetClassifier(c.classifier_id, GetClassifier);
+                        bFound = Service.GetClassifier(c.classifier_id, OnGetClassifier);
                         break;
                     }
                 }
@@ -113,7 +118,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 }
             }
 
-            private void GetClassifier(GetClassifiersPerClassifierVerbose classifier)
+            private void OnGetClassifier(GetClassifiersPerClassifierVerbose classifier)
             {
                 if(Callback != null)
                     Callback(classifier);
@@ -234,10 +239,42 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         #endregion
 
         #region Delete Classifier
+        public bool DeleteClassifier(string classifierId, OnDeleteClassifier callback)
+        {
+            if(string.IsNullOrEmpty(classifierId))
+                throw new ArgumentNullException("classifierId");
+            if(callback == null)
+                throw new ArgumentNullException("callback");
+            if(string.IsNullOrEmpty(mp_ApiKey))
+                mp_ApiKey = Config.Instance.GetVariableValue("VISUAL_RECOGNITION_API_KEY");
+            if(string.IsNullOrEmpty(mp_ApiKey))
+                throw new WatsonException("GetClassifier - VISUAL_RECOGNITION_API_KEY needs to be defined in config.json");
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_CLASSIFIERS + "/" + classifierId);
+            if(connector == null)
+                return false;
+
+            DeleteClassifierReq req = new DeleteClassifierReq();
+            req.Callback = callback;
+            req.OnResponse = OnDeleteClassifierResp;
+            req.Delete = true;
+
+            return connector.Send(req);
+        }
+        private class DeleteClassifierReq : RESTConnector.Request
+        {
+            public OnDeleteClassifier Callback { get; set; }
+        }
+        private void OnDeleteClassifierResp(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            if(((DeleteClassifierReq)req).Callback != null)
+                ((DeleteClassifierReq)req).Callback(resp.Success);
+        }
         #endregion
 
         #region Get Classifier Details
         #endregion
+
         #region IWatsonService implementation
 
         public string GetServiceID()
