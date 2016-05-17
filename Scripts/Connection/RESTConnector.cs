@@ -251,7 +251,8 @@ namespace IBM.Watson.DeveloperCloud.Connection
 
             connector = new RESTConnector();
             connector.URL = cred.m_URL + function;
-            connector.Authentication = new Credentials(cred.m_User, cred.m_Password);
+            if(cred.HasCredentials())
+                connector.Authentication = new Credentials(cred.m_User, cred.m_Password);
             if (useCache)
                 sm_Connectors[connectorID] = connector;
 

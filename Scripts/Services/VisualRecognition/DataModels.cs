@@ -125,13 +125,13 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
     #region Classifiers
     [fsObject]
-    public class GetClassifiersTopLevelBreif
+    public class GetClassifiersTopLevelBrief
     {
-        public GetClassifiersPerClassifierBreif classifiers { get; set; }
+        public GetClassifiersPerClassifierBrief[] classifiers { get; set; }
     }
 
     [fsObject]
-    public class GetClassifiersPerClassifierBreif
+    public class GetClassifiersPerClassifierBrief
     {
         public string classifier_id { get; set; }
         public string name { get; set; }
