@@ -32,12 +32,17 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// Callback used by FindClassifier().
         /// </summary>
         /// <param name="classifier">The classifer found by name.</param>
-        public delegate void OnFindClassifier(GetClassifiersPerClassifierBrief classifier);
+        public delegate void OnFindClassifier(GetClassifiersPerClassifierVerbose classifier);
         /// <summary>
         /// The callback used by the GetClassifiers() method.
         /// </summary>
         /// <param name="classifiers"></param>
         public delegate void OnGetClassifiers(GetClassifiersTopLevelBrief classifiers);
+        /// <summary>
+        /// Callback used by the GetClassifier() method.
+        /// </summary>
+        /// <param name="classifier">The classifier found by ID.</param>
+        public delegate void OnGetClassifier(GetClassifiersPerClassifierVerbose classifier);
         #endregion
 
         #region Private Data
@@ -58,9 +63,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
         #region Recognize Text
         #endregion
-        /*
+
         #region Find Classifier
-        private void FindClassifier(string classifierName, OnFindClassifier callback)
+        public void FindClassifier(string classifierName, OnFindClassifier callback)
         {
             new FindClassifierReq(this, classifierName, callback);
         }
@@ -89,13 +94,33 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             public string ClassifierName { get; set; }
             public OnFindClassifier Callback { get; set; }
 
-            private void GetClassifiers(GetClassifiersTopLevelBreif classifiers)
+            private void GetClassifiers(GetClassifiersTopLevelBrief classifiers)
             {
+                bool bFound = false;
+                foreach(var c in classifiers.classifiers)
+                {
+                    if(c.name.ToLower().StartsWith(ClassifierName.ToLower()))
+                    {
+                        bFound = Service.GetClassifier(c.classifier_id, GetClassifier);
+                        break;
+                    }
+                }
 
+                if(!bFound)
+                {
+                    Log.Error("VisualRecognition", "Failed to find classifier {0}", ClassifierName);
+                    Callback(null);
+                }
+            }
+
+            private void GetClassifier(GetClassifiersPerClassifierVerbose classifier)
+            {
+                if(Callback != null)
+                    Callback(classifier);
             }
         }
         #endregion
-*/
+
         #region Get Classifiers
         public bool GetClassifiers(OnGetClassifiers callback)
         {
@@ -146,6 +171,62 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
             if(((GetClassifiersReq)req).Callback != null)
                 ((GetClassifiersReq)req).Callback(resp.Success ? classifiers : null);
+        }
+        #endregion
+
+        #region Get Classifier
+        public bool GetClassifier(string classifierId, OnGetClassifier callback)
+        {
+            if (string.IsNullOrEmpty(classifierId))
+                throw new ArgumentNullException("classifierId");
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if(string.IsNullOrEmpty(mp_ApiKey))
+                mp_ApiKey = Config.Instance.GetVariableValue("VISUAL_RECOGNITION_API_KEY");
+            if(string.IsNullOrEmpty(mp_ApiKey))
+                throw new WatsonException("GetClassifier - VISUAL_RECOGNITION_API_KEY needs to be defined in config.json");
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_CLASSIFIERS + "/" + classifierId);
+            if (connector == null)
+                return false;
+
+            GetClassifierReq req = new GetClassifierReq();
+            req.Callback = callback;
+            req.Parameters["api_key"] = mp_ApiKey;
+            req.OnResponse = OnGetClassifierResp;
+
+            return connector.Send(req);
+        }
+        private class GetClassifierReq : RESTConnector.Request
+        {
+            public OnGetClassifier Callback { get; set; }
+        };
+        private void OnGetClassifierResp(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            GetClassifiersPerClassifierVerbose classifier = new GetClassifiersPerClassifierVerbose();
+            if (resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = classifier;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Visual Recognition", "GetClassifier Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((GetClassifierReq)req).Callback != null)
+                ((GetClassifierReq)req).Callback(resp.Success ? classifier : null);
         }
         #endregion
 

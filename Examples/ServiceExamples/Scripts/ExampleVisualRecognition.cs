@@ -23,22 +23,25 @@ using IBM.Watson.DeveloperCloud.Utilities;
 
 public class ExampleVisualRecognition : MonoBehaviour {
     private VisualRecognition m_VisualRecognition = new VisualRecognition();
-
+    private string m_classifierName = "integration-test-classifier";
 	
 	void Start () {
         LogSystem.InstallDefaultReactors();
 
         Config.Instance.FindCredentials(m_VisualRecognition.GetServiceID());
-        
-        if(!m_VisualRecognition.GetClassifiers(OnGetClassifiers))
-            Debug.Log("Getting classifiers failed!");
+
+        //  Get all classifiers
+//        if(!m_VisualRecognition.GetClassifiers(OnGetClassifiers))
+//            Debug.Log("Getting classifiers failed!");
+
+        //  Find classifier by name
+        m_VisualRecognition.FindClassifier(m_classifierName, OnFindClassifier);
 	}
 
     private void OnGetClassifiers (GetClassifiersTopLevelBrief classifiers)
     {
         if(classifiers != null && classifiers.classifiers.Length > 0)
         {
-//            for(int i = 0; i < classifiers.classifiers.Length; 
             foreach(GetClassifiersPerClassifierBrief classifier in classifiers.classifiers)
             {
                 Debug.Log("Classifier: " + classifier.name + ", " + classifier.classifier_id);
@@ -47,6 +50,18 @@ public class ExampleVisualRecognition : MonoBehaviour {
         else
         {
             Debug.Log("Request failed!");
+        }
+    }
+
+    private void OnFindClassifier(GetClassifiersPerClassifierVerbose classifier)
+    {
+        if(classifier != null)
+        {
+            Debug.Log("Classifier " + m_classifierName + " found! ClassifierID: " + classifier.classifier_id);
+        }
+        else
+        {
+            Debug.Log("Failed to find classifier!");
         }
     }
 }
