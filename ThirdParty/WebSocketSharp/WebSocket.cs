@@ -871,7 +871,7 @@ namespace WebSocketSharp
       if ( Headers != null )
       {
            foreach( var kp in Headers )
-                Headers[ kp.Key ] = kp.Value;
+                    ret.Headers[ kp.Key ] = kp.Value;
       }
 
       var headers = ret.Headers;
