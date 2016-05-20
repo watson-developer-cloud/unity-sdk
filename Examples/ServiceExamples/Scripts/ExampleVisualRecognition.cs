@@ -25,7 +25,8 @@ public class ExampleVisualRecognition : MonoBehaviour {
     private VisualRecognition m_VisualRecognition = new VisualRecognition();
     private string m_classifierName = "integration-test-classifier";
     private string m_classifierID = "integrationtestclassifier_1745947114";
-    private string m_classifierToDelete = "";
+    private string m_classifierToDelete = "unitytestclassifier2b_37849361";
+    private string m_version = "2016-05-19";
 	
 	void Start () {
         LogSystem.InstallDefaultReactors();
@@ -44,8 +45,14 @@ public class ExampleVisualRecognition : MonoBehaviour {
 //            Debug.Log("Getting classifier failed!");
 
         //  Delete classifier by ID
-//        if(!m_VisualRecognition.DeleteClassifier(m_classifierToDelete, OnDeleteClassifier))
+//        if(!m_VisualRecognition.DeleteClassifier(m_classifierToDelete, m_version, OnDeleteClassifier))
 //            Debug.Log("Deleting classifier failed!");
+
+        //  Train classifier
+        string m_positiveExamplesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/taj_positive_examples.zip";
+        string m_negativeExamplesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/negative_examples.zip";
+        if(!m_VisualRecognition.TrainClassifier("unity-test-classifier5", "taj", m_positiveExamplesPath, m_negativeExamplesPath, m_version, OnTrainClassifier))
+            Debug.Log("Train classifier failed!");
 	}
 
     private void OnGetClassifiers (GetClassifiersTopLevelBrief classifiers)
@@ -95,7 +102,19 @@ public class ExampleVisualRecognition : MonoBehaviour {
         }
         else
         {
-            Debug.Log("Failed ot delete classifier by ID!");
+            Debug.Log("Failed to delete classifier by ID!");
+        }
+    }
+    
+    private void OnTrainClassifier(GetClassifiersPerClassifierVerbose classifier)
+    {
+        if(classifier != null)
+        {
+            Debug.Log("Classifier is training! " + classifier);
+        }
+        else
+        {
+            Debug.Log("Failed to train classifier!");
         }
     }
 }
