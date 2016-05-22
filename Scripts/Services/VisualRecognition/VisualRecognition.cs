@@ -117,6 +117,70 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             return connector.Send(req);
         }
 
+        public bool Classify(OnClassify callback, string imagePath = default(string), string jsonPath = default(string), 
+            string[] urls = default(string[]), string[] owners = default(string[]), string[] classifierIDs = default(string[]),
+            float threshold = default(float), string acceptLanguage = "en" )
+        {
+            if(string.IsNullOrEmpty(mp_ApiKey))
+                mp_ApiKey = Config.Instance.GetVariableValue("VISUAL_RECOGNITION_API_KEY");
+            if(string.IsNullOrEmpty(mp_ApiKey))
+                throw new WatsonException("FindClassifier - VISUAL_RECOGNITION_API_KEY needs to be defined in config.json");
+            if(callback == null)
+                throw new ArgumentNullException("callback");
+            if(!string.IsNullOrEmpty(jsonPath))
+            {
+                if(urls != default(string[]) || owners != default(string[]) || classifierIDs != default(string[]) || threshold != default(float[]))
+                    throw new WatsonException("Classify: Use either Json file OR define image urls, owners, classifierIDs and threshold manually!");
+            }
+            else
+            {
+                if(urls == default(string[]))
+                    throw new ArgumentException("Classify: Use either Json file OR define image urls, owners, classifierIDs and threshold manually!");
+            }
+
+            if(imagePath != default(string))
+            {
+                byte[] imageData = null;
+                if(LoadFile != null)
+                {
+                    imageData = LoadFile(imagePath);
+                }
+                else
+                {
+                    #if !UNITY_WEBPLAYER
+                    imageData = File.ReadAllBytes(imagePath);
+                    #endif
+                }
+            }
+
+            if(jsonPath != default(string))
+            {
+                byte[] jsonData = null;
+                if(LoadFile != null)
+                {
+                    jsonData = LoadFile(jsonPath);
+                }
+                else
+                {
+                    #if !UNITY_WEBPLAYER
+                    jsonData = File.ReadAllBytes(jsonPath);
+                    #endif
+                }
+            }
+
+            if(urls != default(string[]))
+            {
+
+            }
+        }
+
+        private string BuildParametersJson()
+        {
+            string parameters = "";
+
+            return parameters;
+        }
+
         private class ClassifyReq : RESTConnector.Request
         {
             public OnClassify Callback { get; set; }
