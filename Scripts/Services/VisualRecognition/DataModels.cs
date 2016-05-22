@@ -54,6 +54,14 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         public string type_hierarchy { get; set; }
     }
 
+    [fsObject]
+    public class ClassifyParameters
+    {
+        public string[] urls { get; set; }
+        public string[] classifier_ids { get; set; }
+        public string[] owners { get; set; }
+        public float threshold { get; set; }
+    }
     #endregion
 
     #region Detect Faces

@@ -25,10 +25,12 @@ using IBM.Watson.DeveloperCloud.Connection;
 using System.Text;
 using System.Collections.Generic;
 using System.IO;
+using MiniJSON;
 
 namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 {
-    public class VisualRecognition : IWatsonService {
+    public class VisualRecognition : IWatsonService
+    {
         #region Public Types
         /// <summary>
         /// Callback used by FindClassifier().
@@ -117,9 +119,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             return connector.Send(req);
         }
 
-        public bool Classify(OnClassify callback, string imagePath = default(string), string jsonPath = default(string), 
-            string[] urls = default(string[]), string[] owners = default(string[]), string[] classifierIDs = default(string[]),
-            float threshold = default(float), string acceptLanguage = "en" )
+        public bool Classify(OnClassify callback, string imagePath = default(string), string[] urls = default(string[]), string[] owners = default(string[]), string[] classifierIDs = default(string[]), float threshold = default(float), string acceptLanguage = "en" )
         {
             if(string.IsNullOrEmpty(mp_ApiKey))
                 mp_ApiKey = Config.Instance.GetVariableValue("VISUAL_RECOGNITION_API_KEY");
@@ -127,20 +127,12 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 throw new WatsonException("FindClassifier - VISUAL_RECOGNITION_API_KEY needs to be defined in config.json");
             if(callback == null)
                 throw new ArgumentNullException("callback");
-            if(!string.IsNullOrEmpty(jsonPath))
-            {
-                if(urls != default(string[]) || owners != default(string[]) || classifierIDs != default(string[]) || threshold != default(float[]))
-                    throw new WatsonException("Classify: Use either Json file OR define image urls, owners, classifierIDs and threshold manually!");
-            }
-            else
-            {
-                if(urls == default(string[]))
-                    throw new ArgumentException("Classify: Use either Json file OR define image urls, owners, classifierIDs and threshold manually!");
-            }
 
+            byte[] imageData = null;
+            string ext = "";
+            string mimeType = "";
             if(imagePath != default(string))
             {
-                byte[] imageData = null;
                 if(LoadFile != null)
                 {
                     imageData = LoadFile(imagePath);
@@ -151,34 +143,59 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                     imageData = File.ReadAllBytes(imagePath);
                     #endif
                 }
-            }
 
-            if(jsonPath != default(string))
-            {
-                byte[] jsonData = null;
-                if(LoadFile != null)
+                switch(Path.GetExtension(imagePath))
                 {
-                    jsonData = LoadFile(jsonPath);
-                }
-                else
-                {
-                    #if !UNITY_WEBPLAYER
-                    jsonData = File.ReadAllBytes(jsonPath);
-                    #endif
+                    case ".jpg":
+                    case ".jpeg":
+                        ext = ".jpg";
+                        mimeType = "image/jpeg";
+                        break;
+                    case ".png":
+                        ext = ".png";
+                        mimeType = "image/png";
+                        break;
+                    case ".gif":
+                        ext = ".gif";
+                        mimeType = "image/gif";
+                        break;
+                    case ".zip":
+                        ext = ".zip";
+                        mimeType = "application/zip";
+                        break;
+                    default:
+                        throw new WatsonException("Cannot classify unsupported file format " + Path.GetExtension(imagePath) + ". Please use jpg, gif, png or zip!");
                 }
             }
-
-            if(urls != default(string[]))
+                
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_CLASSIFY);
+            if(connector == null)
+                return false;
+            
+            ClassifyReq req = new ClassifyReq();
+            req.Callback = callback;
+            req.AcceptLanguage = acceptLanguage;
+            req.Parameters["api_key"] = mp_ApiKey;
+            req.Parameters["version"] = VisualRecognitionVersion.Version;
+            req.Forms = new Dictionary<string, RESTConnector.Form>();
+            req.Forms["parameters"] = new RESTConnector.Form(BuildParametersJson(urls, owners, classifierIDs, threshold));
+            if(imageData != null && !string.IsNullOrEmpty(ext) && !string.IsNullOrEmpty(mimeType))
             {
-
+                req.Forms["images_file"] = new RESTConnector.Form(imageData, "images_file" + ext, mimeType); 
             }
+
+            return connector.Send(req);
         }
 
-        private string BuildParametersJson()
+        private string BuildParametersJson(string[] urls, string[] owners, string[] classifierIDs, float threshold)
         {
-            string parameters = "";
+            ClassifyParameters cParameters = new ClassifyParameters();
+            cParameters.urls = urls;
+            cParameters.owners = owners;
+            cParameters.classifier_ids = classifierIDs;
+            cParameters.threshold = threshold;
 
-            return parameters;
+            return Json.Serialize(cParameters);
         }
 
         private class ClassifyReq : RESTConnector.Request

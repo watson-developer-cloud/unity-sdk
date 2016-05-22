@@ -56,7 +56,12 @@ public class ExampleVisualRecognition : MonoBehaviour {
 //            Log.Debug("ExampleVisualRecognition", "Train classifier failed!");
 
         //  Classify get
-        if(!m_VisualRecognition.Classify(m_imageURL, OnClassify))
+//        if(!m_VisualRecognition.Classify(m_imageURL, OnClassify))
+//            Log.Debug("ExampleVisualRecognition", "Classify image failed!");
+
+        //  Classify post
+        string m_imagesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/taj_positive_examples.zip";
+        if(!m_VisualRecognition.Classify(OnClassify, m_imagesPath))
             Log.Debug("ExampleVisualRecognition", "Classify image failed!");
 	}
 
