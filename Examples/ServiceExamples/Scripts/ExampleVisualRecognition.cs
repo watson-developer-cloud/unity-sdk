@@ -27,6 +27,7 @@ public class ExampleVisualRecognition : MonoBehaviour {
     private string m_classifierID = "integrationtestclassifier_1745947114";
     private string m_classifierToDelete = "unitytestclassifier2b_37849361";
     private string m_version = "2016-05-19";
+    private string m_imageURL = "https://upload.wikimedia.org/wikipedia/commons/e/e9/Official_portrait_of_Barack_Obama.jpg";
 	
 	void Start () {
         LogSystem.InstallDefaultReactors();
@@ -35,24 +36,28 @@ public class ExampleVisualRecognition : MonoBehaviour {
 
         //  Get all classifiers
 //        if(!m_VisualRecognition.GetClassifiers(OnGetClassifiers))
-//            Debug.Log("Getting classifiers failed!");
+//            Log.Debug("ExampleVisualRecognition", "Getting classifiers failed!");
 
         //  Find classifier by name
 //        m_VisualRecognition.FindClassifier(m_classifierName, OnFindClassifier);
 
         //  Find classifier by ID
 //        if(!m_VisualRecognition.GetClassifier(m_classifierID, OnGetClassifier))
-//            Debug.Log("Getting classifier failed!");
+//            Log.Debug("ExampleVisualRecognition", "Getting classifier failed!");
 
         //  Delete classifier by ID
 //        if(!m_VisualRecognition.DeleteClassifier(m_classifierToDelete, m_version, OnDeleteClassifier))
-//            Debug.Log("Deleting classifier failed!");
+//            Log.Debug("ExampleVisualRecognition", "Deleting classifier failed!");
 
         //  Train classifier
-        string m_positiveExamplesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/taj_positive_examples.zip";
-        string m_negativeExamplesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/negative_examples.zip";
-        if(!m_VisualRecognition.TrainClassifier("unity-test-classifier5", "taj", m_positiveExamplesPath, m_negativeExamplesPath, m_version, OnTrainClassifier))
-            Debug.Log("Train classifier failed!");
+//        string m_positiveExamplesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/taj_positive_examples.zip";
+//        string m_negativeExamplesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/negative_examples.zip";
+//        if(!m_VisualRecognition.TrainClassifier("unity-test-classifier5", "taj", m_positiveExamplesPath, m_negativeExamplesPath, m_version, OnTrainClassifier))
+//            Log.Debug("ExampleVisualRecognition", "Train classifier failed!");
+
+        //  Classify get
+        if(!m_VisualRecognition.Classify(m_imageURL, OnClassify))
+            Log.Debug("ExampleVisualRecognition", "Classify image failed!");
 	}
 
     private void OnGetClassifiers (GetClassifiersTopLevelBrief classifiers)
@@ -61,12 +66,12 @@ public class ExampleVisualRecognition : MonoBehaviour {
         {
             foreach(GetClassifiersPerClassifierBrief classifier in classifiers.classifiers)
             {
-                Debug.Log("Classifier: " + classifier.name + ", " + classifier.classifier_id);
+                Log.Debug("ExampleVisualRecognition", "Classifier: " + classifier.name + ", " + classifier.classifier_id);
             }
         }
         else
         {
-            Debug.Log("Failed to get classifiers!");
+            Log.Debug("ExampleVisualRecognition", "Failed to get classifiers!");
         }
     }
 
@@ -74,11 +79,11 @@ public class ExampleVisualRecognition : MonoBehaviour {
     {
         if(classifier != null)
         {
-            Debug.Log("Classifier " + m_classifierName + " found! ClassifierID: " + classifier.classifier_id);
+            Log.Debug("ExampleVisualRecognition", "Classifier " + m_classifierName + " found! ClassifierID: " + classifier.classifier_id);
         }
         else
         {
-            Debug.Log("Failed to find classifier by name!");
+            Log.Debug("ExampleVisualRecognition", "Failed to find classifier by name!");
         }
     }
 
@@ -86,11 +91,11 @@ public class ExampleVisualRecognition : MonoBehaviour {
     {
         if(classifier != null)
         {
-            Debug.Log("Classifier " + m_classifierID + " found! Classifier name: " + classifier.name);
+            Log.Debug("ExampleVisualRecognition", "Classifier " + m_classifierID + " found! Classifier name: " + classifier.name);
         }
         else
         {
-            Debug.Log("Failed to find classifier by ID!");
+            Log.Debug("ExampleVisualRecognition", "Failed to find classifier by ID!");
         }
     }
 
@@ -98,11 +103,11 @@ public class ExampleVisualRecognition : MonoBehaviour {
     {
         if(success)
         {
-            Debug.Log("Deleted classifier " + m_classifierToDelete);
+            Log.Debug("ExampleVisualRecognition", "Deleted classifier " + m_classifierToDelete);
         }
         else
         {
-            Debug.Log("Failed to delete classifier by ID!");
+            Log.Debug("ExampleVisualRecognition", "Failed to delete classifier by ID!");
         }
     }
     
@@ -110,11 +115,33 @@ public class ExampleVisualRecognition : MonoBehaviour {
     {
         if(classifier != null)
         {
-            Debug.Log("Classifier is training! " + classifier);
+            Log.Debug("ExampleVisualRecognition", "Classifier is training! " + classifier);
         }
         else
         {
-            Debug.Log("Failed to train classifier!");
+            Log.Debug("ExampleVisualRecognition", "Failed to train classifier!");
+        }
+    }
+
+    private void OnClassify(ClassifyTopLevelMultiple classify)
+    {
+        if(classify != null)
+        {
+            Log.Debug("ExampleVisualRecognition", "images processed: " + classify.images_processed);
+            foreach(ClassifyTopLevelSingle image in classify.images)
+            {
+                Log.Debug("ExampleVisualRecognition", "\tsource_url: " + image.source_url + ", resolved_url: " + image.resolved_url);
+                foreach(ClassifyPerClassifier classifier in image.classifiers)
+                {
+                    Log.Debug("ExampleVisualRecognition", "\t\tclassifier_id: " + classifier.classifier_id + ", name: " + classifier.name);
+                    foreach(ClassResult classResult in classifier.classes)
+                        Log.Debug("ExampleVisualRecognition", "\t\t\tclass: " + classResult.m_class + ", score: " + classResult.score + ", type_hierarchy: " + classResult.type_hierarchy);
+                }
+            }
+        }
+        else
+        {
+            Log.Debug("ExampleVisualRecognition", "Classification failed!");
         }
     }
 }

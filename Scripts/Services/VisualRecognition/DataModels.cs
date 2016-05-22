@@ -34,7 +34,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         public string resolved_url { get; set; }
         public string image { get; set; }
         public ErrorInfoNoCode error { get; set; }
-        public ClassifyPerClassifier classifiers { get; set; }
+        public ClassifyPerClassifier[] classifiers { get; set; }
     }
 
     [fsObject]
@@ -53,6 +53,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         public string score { get; set; }
         public string type_hierarchy { get; set; }
     }
+
     #endregion
 
     #region Detect Faces
@@ -202,6 +203,11 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         public string name { get; set; }
         public double score { get; set; }
         public string type_hierarchy { get; set; }
+    }
+
+    public class VisualRecognitionVersion
+    {
+        public const string Version = "2016-05-19";
     }
     #endregion
 }
