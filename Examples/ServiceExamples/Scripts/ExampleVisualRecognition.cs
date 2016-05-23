@@ -29,7 +29,8 @@ public class ExampleVisualRecognition : MonoBehaviour {
     private string m_version = "2016-05-19";
     private string m_imageURL = "https://upload.wikimedia.org/wikipedia/commons/e/e9/Official_portrait_of_Barack_Obama.jpg";
 	
-	void Start () {
+	void Start ()
+    {
         LogSystem.InstallDefaultReactors();
 
         Config.Instance.FindCredentials(m_VisualRecognition.GetServiceID());
@@ -66,11 +67,15 @@ public class ExampleVisualRecognition : MonoBehaviour {
 //            Log.Debug("ExampleVisualRecognition", "Classify image failed!");
 
         //  Classify post image
-        string m_imagesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/cat.jpg";
-        string[] m_owners = {"IBM", "me"};
-        string[] m_classifierIDs = {"default"};
-        if(!m_VisualRecognition.Classify(OnClassify, m_imagesPath, null, m_owners, m_classifierIDs, 0.5f))
-            Log.Debug("ExampleVisualRecognition", "Classify image failed!");
+//        string m_imagesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/fruitbowl.jpg";
+//        string[] m_owners = {"IBM", "me"};
+//        string[] m_classifierIDs = {"default"};
+//        if(!m_VisualRecognition.Classify(OnClassify, m_imagesPath, null, m_owners, m_classifierIDs, 0.5f))
+//            Log.Debug("ExampleVisualRecognition", "Classify image failed!");
+
+        //  Detect faces get
+        if(!m_VisualRecognition.DetectFaces(m_imageURL, OnDetectFaces))
+            Log.Debug("ExampleVisualRecogntiion", "Detect faces failed!");
 	}
 
     private void OnGetClassifiers (GetClassifiersTopLevelBrief classifiers)
@@ -155,6 +160,25 @@ public class ExampleVisualRecognition : MonoBehaviour {
         else
         {
             Log.Debug("ExampleVisualRecognition", "Classification failed!");
+        }
+    }
+
+    private void OnDetectFaces(FacesTopLevelMultiple multipleImages)
+    {
+        if(multipleImages != null)
+        {
+            Log.Debug("ExampleVisualRecognition", "images processed: {0}", multipleImages.images_processed);
+            foreach(FacesTopLevelSingle faces in multipleImages.images)
+            {
+                Log.Debug("ExampleVisualRecognition", "\tsource_url: {0}, resolved_url: {1}", faces.source_url, faces.resolved_url);
+                foreach(OneFaceResult face in faces.faces)
+                {
+                    Log.Debug("ExampleVisulaRecognition", "\t\tFace location: {0}, {1}, {2}, {3}", face.face_location.left, face.face_location.top, face.face_location.width, face.face_location.height);
+                    Log.Debug("ExampleVisulaRecognition", "\t\tGender: {0}, Score: {1}", face.gender.gender, face.gender.score);
+                    Log.Debug("ExampleVisulaRecognition", "\t\tAge Min: {0}, Age Max: {1}, Score: {2}", face.age.min, face.age.max, face.age.score);
+                    Log.Debug("ExampleVisulaRecognition", "\t\tName: {0}, Score: {1}, Type Heiarchy: {2}", face.identity.name, face.identity.score, face.identity.type_hierarchy);
+                }
+            }
         }
     }
 }

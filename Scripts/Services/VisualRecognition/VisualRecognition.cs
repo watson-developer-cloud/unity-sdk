@@ -63,6 +63,11 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <param name="classify"></param>
         public delegate void OnClassify(ClassifyTopLevelMultiple classify);
         /// <summary>
+        /// This callback is used by the DetectFaces() method.
+        /// </summary>
+        /// <param name="faces"></param>
+        public delegate void OnDetectFaces(FacesTopLevelMultiple faces);
+        /// <summary>
         /// The delegate for loading a file, used by TrainClassifier().
         /// </summary>
         /// <param name="filename">The filename to load.</param>
@@ -162,13 +167,14 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.AcceptLanguage = acceptLanguage;
             req.Parameters["api_key"] = mp_ApiKey;
             req.Parameters["version"] = VisualRecognitionVersion.Version;
+            req.Headers["Accept-Language"] = acceptLanguage;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             req.Forms["parameters"] = new RESTConnector.Form(tempJson);
-            req.Headers["Accept-Language"] = acceptLanguage;
 
             if(imageData != null)
             {
                 string mimeType = "";
+                string fileName = Path.GetFileName(imagePath);
                 switch(Path.GetExtension(imagePath))
                 {
                     case ".jpg":
@@ -187,9 +193,8 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                     default:
                         throw new WatsonException("Cannot classify unsupported file format " + Path.GetExtension(imagePath) + ". Please use jpg, gif, png or zip!");
                 }
-
                 if(!string.IsNullOrEmpty(mimeType))
-                    req.Forms["images_file"] = new RESTConnector.Form(imageData, Path.GetFileName(imagePath), mimeType); 
+                    req.Forms["images_file"] = new RESTConnector.Form(imageData, fileName, mimeType); 
             }
 
             return connector.Send(req);
@@ -260,6 +265,72 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         #endregion
 
         #region Detect Faces
+        public bool DetectFaces(string url, OnDetectFaces callback)
+        {
+            if(string.IsNullOrEmpty(url))
+                throw new ArgumentNullException("url");
+            if(callback == null)
+                throw new ArgumentNullException("callback");
+            if(string.IsNullOrEmpty(mp_ApiKey))
+                mp_ApiKey = Config.Instance.GetVariableValue("VISUAL_RECOGNITION_API_KEY");
+            if(string.IsNullOrEmpty(mp_ApiKey))
+                throw new WatsonException("FindClassifier - VISUAL_RECOGNITION_API_KEY needs to be defined in config.json");
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_DETECT_FACES);
+            if(connector == null)
+                return false;
+
+            DetectFacesReq req = new DetectFacesReq();
+            req.Callback = callback;
+            req.OnResponse = OnDetectFacesResp;
+            req.Parameters["api_key"] = mp_ApiKey;
+            req.Parameters["url"] = url;
+            req.Parameters["version"] = VisualRecognitionVersion.Version;
+
+            return connector.Send(req);
+        }
+
+        private class DetectFacesReq : RESTConnector.Request
+        {
+            public OnDetectFaces Callback { get; set; }
+        }
+
+        private void OnDetectFacesResp(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            FacesTopLevelMultiple faces = null;
+            if(resp.Success)
+            {
+                faces = ProcessDetectFaceResult(resp.Data);
+            }
+
+            if(((DetectFacesReq)req).Callback != null)
+                ((DetectFacesReq)req).Callback(faces);
+        }
+
+        private FacesTopLevelMultiple ProcessDetectFaceResult(byte[] json_data)
+        {
+            FacesTopLevelMultiple faces = null;
+            try
+            {
+                fsData data = null;
+                fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(json_data), out data);
+                if (!r.Succeeded)
+                    throw new WatsonException(r.FormattedMessages);
+
+                faces = new FacesTopLevelMultiple();
+
+                object obj = faces;
+                r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                if (!r.Succeeded)
+                    throw new WatsonException(r.FormattedMessages);
+            }
+            catch(Exception e)
+            {
+                Log.Error("Visual Recognition", "Detect faces exception: {0}", e.ToString());
+            }
+
+            return faces;
+        }
         #endregion
 
         #region Recognize Text

@@ -69,7 +69,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
     public class FacesTopLevelMultiple
     {
         public int images_processed { get; set; }
-        public FacesTopLevelSingle images { get; set; }
+        public FacesTopLevelSingle[] images { get; set; }
         public WarningInfo[] warnings { get; set; }
     }
 
