@@ -68,6 +68,11 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <param name="faces"></param>
         public delegate void OnDetectFaces(FacesTopLevelMultiple faces);
         /// <summary>
+        /// This callback is used by the RecognizeText() method.
+        /// </summary>
+        /// <param name="faces"></param>
+        public delegate void OnRecognizeText(TextRecogTopLevelMultiple text);
+        /// <summary>
         /// The delegate for loading a file, used by TrainClassifier().
         /// </summary>
         /// <param name="filename">The filename to load.</param>
@@ -334,6 +339,72 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         #endregion
 
         #region Recognize Text
+        public bool RecognizeText(string url, OnRecognizeText callback)
+        {
+            if(string.IsNullOrEmpty(url))
+                throw new ArgumentNullException("url");
+            if(callback == null)
+                throw new ArgumentNullException("callback");
+            if(string.IsNullOrEmpty(mp_ApiKey))
+                mp_ApiKey = Config.Instance.GetVariableValue("VISUAL_RECOGNITION_API_KEY");
+            if(string.IsNullOrEmpty(mp_ApiKey))
+                throw new WatsonException("FindClassifier - VISUAL_RECOGNITION_API_KEY needs to be defined in config.json");
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_RECOGNIZE_TEXT);
+            if(connector == null)
+                return false;
+
+            RecognizeTextReq req = new RecognizeTextReq();
+            req.Callback = callback;
+            req.OnResponse = OnRecognizeTextResp;
+            req.Parameters["api_key"] = mp_ApiKey;
+            req.Parameters["url"] = url;
+            req.Parameters["version"] = VisualRecognitionVersion.Version;
+
+            return connector.Send(req);
+        }
+
+        private class RecognizeTextReq : RESTConnector.Request
+        {
+            public OnRecognizeText Callback { get; set; }
+        }
+
+        private void OnRecognizeTextResp(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            TextRecogTopLevelMultiple text = null;
+            if(resp.Success)
+            {
+                text = ProcessRecognizeTextResult(resp.Data);
+            }
+
+            if(((RecognizeTextReq)req).Callback != null)
+                ((RecognizeTextReq)req).Callback(text);
+        }
+
+        private TextRecogTopLevelMultiple ProcessRecognizeTextResult(byte[] json_data)
+        {
+            TextRecogTopLevelMultiple text = null;
+            try
+            {
+                fsData data = null;
+                fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(json_data), out data);
+                if (!r.Succeeded)
+                    throw new WatsonException(r.FormattedMessages);
+
+                text = new TextRecogTopLevelMultiple();
+
+                object obj = text;
+                r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                if (!r.Succeeded)
+                    throw new WatsonException(r.FormattedMessages);
+            }
+            catch(Exception e)
+            {
+                Log.Error("Visual Recognition", "Detect text exception: {0}", e.ToString());
+            }
+
+            return text;
+        }
         #endregion
 
         #region Find Classifier by name

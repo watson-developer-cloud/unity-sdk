@@ -98,7 +98,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
     public class TextRecogTopLevelMultiple
     {
         public int images_processed { get; set; }
-        public TextRecogTopLevelSingle images { get; set; }
+        public TextRecogTopLevelSingle[] images { get; set; }
         public WarningInfo[] warnings { get; set; }
     }
 

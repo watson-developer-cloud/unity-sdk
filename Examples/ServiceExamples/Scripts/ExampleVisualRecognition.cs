@@ -28,6 +28,7 @@ public class ExampleVisualRecognition : MonoBehaviour {
     private string m_classifierToDelete = "unitytestclassifier2b_37849361";
     private string m_version = "2016-05-19";
     private string m_imageURL = "https://upload.wikimedia.org/wikipedia/commons/e/e9/Official_portrait_of_Barack_Obama.jpg";
+    private string m_imageTextURL = "http://i.stack.imgur.com/ZS6nH.png";
 	
 	void Start ()
     {
@@ -74,8 +75,12 @@ public class ExampleVisualRecognition : MonoBehaviour {
 //            Log.Debug("ExampleVisualRecognition", "Classify image failed!");
 
         //  Detect faces get
-        if(!m_VisualRecognition.DetectFaces(m_imageURL, OnDetectFaces))
-            Log.Debug("ExampleVisualRecogntiion", "Detect faces failed!");
+//        if(!m_VisualRecognition.DetectFaces(m_imageURL, OnDetectFaces))
+//            Log.Debug("ExampleVisualRecogntiion", "Detect faces failed!");
+
+        //  Recognize text get
+        if(!m_VisualRecognition.RecognizeText(m_imageTextURL, OnRecognizeText))
+            Log.Debug("ExampleVisualRecognition", "Recognize text failed!");
 	}
 
     private void OnGetClassifiers (GetClassifiersTopLevelBrief classifiers)
@@ -179,6 +184,33 @@ public class ExampleVisualRecognition : MonoBehaviour {
                     Log.Debug("ExampleVisulaRecognition", "\t\tName: {0}, Score: {1}, Type Heiarchy: {2}", face.identity.name, face.identity.score, face.identity.type_hierarchy);
                 }
             }
+        }
+        else
+        {
+            Log.Debug("ExampleVisualRecognition", "Detect faces failed!");
+        }
+    }
+
+    private void OnRecognizeText(TextRecogTopLevelMultiple multipleImages)
+    {
+        if(multipleImages != null)
+        {
+            Log.Debug("ExampleVisualRecognition", "images processed: {0}", multipleImages.images_processed);
+            foreach(TextRecogTopLevelSingle texts in multipleImages.images)
+            {
+                Log.Debug("ExampleVisualRecognition", "\tsource_url: {0}, resolved_url: {1}", texts.source_url, texts.resolved_url);
+                Log.Debug("ExampleVisualRecognition", "\ttext: {0}", texts.text);
+                foreach(TextRecogOneWord text in texts.words)
+                {
+                    Log.Debug("ExampleVisulaRecognition", "\t\ttext location: {0}, {1}, {2}, {3}", text.location.left, text.location.top, text.location.width, text.location.height);
+                    Log.Debug("ExampleVisulaRecognition", "\t\tLine number: {0}", text.line_number);
+                    Log.Debug("ExampleVisulaRecognition", "\t\tword: {0}, Score: {1}", text.word, text.score);
+                }
+            }
+        }
+        else
+        {
+            Log.Debug("ExampleVisualRecognition", "RecognizeText failed!");
         }
     }
 }
