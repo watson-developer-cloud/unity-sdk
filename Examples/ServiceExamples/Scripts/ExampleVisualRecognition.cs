@@ -59,9 +59,17 @@ public class ExampleVisualRecognition : MonoBehaviour {
 //        if(!m_VisualRecognition.Classify(m_imageURL, OnClassify))
 //            Log.Debug("ExampleVisualRecognition", "Classify image failed!");
 
-        //  Classify post
-        string m_imagesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/taj_positive_examples.zip";
-        if(!m_VisualRecognition.Classify(OnClassify, m_imagesPath))
+        //  Classify post URL
+//        string[] m_owners = {"IBM", "me"};
+//        string[] m_classifierIDs = {"default"};
+//        if(!m_VisualRecognition.Classify(OnClassify, null, m_imageURL, m_owners, m_classifierIDs, 0.5f))
+//            Log.Debug("ExampleVisualRecognition", "Classify image failed!");
+
+        //  Classify post image
+        string m_imagesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/cat.jpg";
+        string[] m_owners = {"IBM", "me"};
+        string[] m_classifierIDs = {"default"};
+        if(!m_VisualRecognition.Classify(OnClassify, m_imagesPath, null, m_owners, m_classifierIDs, 0.5f))
             Log.Debug("ExampleVisualRecognition", "Classify image failed!");
 	}
 

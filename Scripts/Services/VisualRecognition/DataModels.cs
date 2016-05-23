@@ -57,7 +57,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
     [fsObject]
     public class ClassifyParameters
     {
-        public string[] urls { get; set; }
+        public string url { get; set; }
         public string[] classifier_ids { get; set; }
         public string[] owners { get; set; }
         public float threshold { get; set; }

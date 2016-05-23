@@ -87,7 +87,7 @@ namespace FullSerializer {
             return result.ToString();
         }
 
-        private static void BuildCompressedString(fsData data, TextWriter stream) {
+        private static void BuildCompressedString(fsData data, TextWriter stream, bool dontAddIfNull = false) {
             switch (data.Type) {
                 case fsDataType.Null:
                     stream.Write("null");
@@ -117,6 +117,9 @@ namespace FullSerializer {
                         stream.Write('{');
                         bool comma = false;
                         foreach (var entry in data.AsDictionary) {
+                            if (dontAddIfNull && (entry.Value.Type == fsDataType.Null || (entry.Value.Type == fsDataType.String && string.IsNullOrEmpty(entry.Value.AsString))))
+                                continue;
+
                             if (comma) stream.Write(',');
                             comma = true;
                             stream.Write('"');
@@ -141,7 +144,7 @@ namespace FullSerializer {
                         break;
                     }
             }
-        }
+        } 
 
         /// <summary>
         /// Formats this data into the given builder.
@@ -255,10 +258,10 @@ namespace FullSerializer {
         /// <summary>
         /// Returns the data in a relatively compressed JSON format.
         /// </summary>
-        public static string CompressedJson(fsData data) {
+        public static string CompressedJson(fsData data, bool dontAddIfNull = false) {
             var sb = new StringBuilder();
             using (var writer = new StringWriter(sb)) {
-                BuildCompressedString(data, writer);
+                BuildCompressedString(data, writer, dontAddIfNull);
                 return sb.ToString();
             }
         }

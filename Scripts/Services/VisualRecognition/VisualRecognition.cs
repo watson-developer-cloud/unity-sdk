@@ -106,6 +106,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.Callback = callback;
             req.OnResponse = OnClassifyResp;
             req.AcceptLanguage = acceptLanguage;
+            req.Headers["Accepted-Language"] = acceptLanguage;
             req.Parameters["api_key"] = mp_ApiKey;
             req.Parameters["url"] = url;
             req.Parameters["version"] = VisualRecognitionVersion.Version;
@@ -119,7 +120,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             return connector.Send(req);
         }
 
-        public bool Classify(OnClassify callback, string imagePath = default(string), string[] urls = default(string[]), string[] owners = default(string[]), string[] classifierIDs = default(string[]), float threshold = default(float), string acceptLanguage = "en" )
+        public bool Classify(OnClassify callback, string imagePath = default(string), string url = default(string), string[] owners = default(string[]), string[] classifierIDs = default(string[]), float threshold = default(float), string acceptLanguage = "en")
         {
             if(string.IsNullOrEmpty(mp_ApiKey))
                 mp_ApiKey = Config.Instance.GetVariableValue("VISUAL_RECOGNITION_API_KEY");
@@ -127,10 +128,10 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 throw new WatsonException("FindClassifier - VISUAL_RECOGNITION_API_KEY needs to be defined in config.json");
             if(callback == null)
                 throw new ArgumentNullException("callback");
+            if(string.IsNullOrEmpty(imagePath) && url == default(string))
+                throw new ArgumentNullException("Either define an image path or image URL to classify!");
 
             byte[] imageData = null;
-            string ext = "";
-            string mimeType = "";
             if(imagePath != default(string))
             {
                 if(LoadFile != null)
@@ -143,59 +144,75 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                     imageData = File.ReadAllBytes(imagePath);
                     #endif
                 }
+            }
 
+            return Classify(callback, imagePath, imageData, url, owners, classifierIDs, threshold, acceptLanguage);
+        }
+
+        private bool Classify(OnClassify callback, string imagePath, byte[] imageData, string url = default(string), string[] owners = default(string[]), string[] classifierIDs = default(string[]), float threshold = default(float), string acceptLanguage = "en")
+        {
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_CLASSIFY);
+            if(connector == null)
+                return false;
+            string tempJson = BuildParametersJson(url, owners, classifierIDs, threshold);
+            ClassifyReq req = new ClassifyReq();
+            req.Callback = callback;
+            req.Timeout = REQUEST_TIMEOUT;
+            req.OnResponse = OnClassifyResp;
+            req.AcceptLanguage = acceptLanguage;
+            req.Parameters["api_key"] = mp_ApiKey;
+            req.Parameters["version"] = VisualRecognitionVersion.Version;
+            req.Forms = new Dictionary<string, RESTConnector.Form>();
+            req.Forms["parameters"] = new RESTConnector.Form(tempJson);
+            req.Headers["Accept-Language"] = acceptLanguage;
+
+            if(imageData != null)
+            {
+                string mimeType = "";
                 switch(Path.GetExtension(imagePath))
                 {
                     case ".jpg":
                     case ".jpeg":
-                        ext = ".jpg";
                         mimeType = "image/jpeg";
                         break;
                     case ".png":
-                        ext = ".png";
                         mimeType = "image/png";
                         break;
                     case ".gif":
-                        ext = ".gif";
                         mimeType = "image/gif";
                         break;
                     case ".zip":
-                        ext = ".zip";
                         mimeType = "application/zip";
                         break;
                     default:
                         throw new WatsonException("Cannot classify unsupported file format " + Path.GetExtension(imagePath) + ". Please use jpg, gif, png or zip!");
                 }
-            }
-                
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_CLASSIFY);
-            if(connector == null)
-                return false;
-            
-            ClassifyReq req = new ClassifyReq();
-            req.Callback = callback;
-            req.AcceptLanguage = acceptLanguage;
-            req.Parameters["api_key"] = mp_ApiKey;
-            req.Parameters["version"] = VisualRecognitionVersion.Version;
-            req.Forms = new Dictionary<string, RESTConnector.Form>();
-            req.Forms["parameters"] = new RESTConnector.Form(BuildParametersJson(urls, owners, classifierIDs, threshold));
-            if(imageData != null && !string.IsNullOrEmpty(ext) && !string.IsNullOrEmpty(mimeType))
-            {
-                req.Forms["images_file"] = new RESTConnector.Form(imageData, "images_file" + ext, mimeType); 
+
+                if(!string.IsNullOrEmpty(mimeType))
+                    req.Forms["images_file"] = new RESTConnector.Form(imageData, Path.GetFileName(imagePath), mimeType); 
             }
 
             return connector.Send(req);
         }
-
-        private string BuildParametersJson(string[] urls, string[] owners, string[] classifierIDs, float threshold)
+        
+        private string BuildParametersJson(string url, string[] owners, string[] classifierIDs, float threshold)
         {
             ClassifyParameters cParameters = new ClassifyParameters();
-            cParameters.urls = urls;
+            cParameters.url = url;
             cParameters.owners = owners;
             cParameters.classifier_ids = classifierIDs;
             cParameters.threshold = threshold;
-
-            return Json.Serialize(cParameters);
+            
+            fsData jsondata = new fsData();
+            if (sm_Serializer.TrySerialize(cParameters, out jsondata).Succeeded)
+            {
+                return fsJsonPrinter.CompressedJson(jsondata, true);
+            }
+            else
+            {
+                Log.Error("SelfWebSocket", "Error parsing to JSON!");
+                return null;
+            }
         }
 
         private class ClassifyReq : RESTConnector.Request
