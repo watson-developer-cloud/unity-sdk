@@ -79,8 +79,13 @@ public class ExampleVisualRecognition : MonoBehaviour {
 //            Log.Debug("ExampleVisualRecogntiion", "Detect faces failed!");
 
         //  Recognize text get
-        if(!m_VisualRecognition.RecognizeText(m_imageTextURL, OnRecognizeText))
-            Log.Debug("ExampleVisualRecognition", "Recognize text failed!");
+//        if(!m_VisualRecognition.RecognizeText(m_imageTextURL, OnRecognizeText))
+//            Log.Debug("ExampleVisualRecognition", "Recognize text failed!");
+
+        //  Detect faces post
+        string m_faceExamplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/obama.jpg";
+        if(!m_VisualRecognition.DetectFaces(OnDetectFaces, m_faceExamplePath))
+            Log.Debug("ExampleVisualRecognition", "Detect faces failed!");
 	}
 
     private void OnGetClassifiers (GetClassifiersTopLevelBrief classifiers)

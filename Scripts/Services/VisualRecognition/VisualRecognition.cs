@@ -156,15 +156,15 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 }
             }
 
-            return Classify(callback, imagePath, imageData, url, owners, classifierIDs, threshold, acceptLanguage);
+            return Classify(imagePath, imageData, callback, url, owners, classifierIDs, threshold, acceptLanguage);
         }
 
-        private bool Classify(OnClassify callback, string imagePath, byte[] imageData, string url = default(string), string[] owners = default(string[]), string[] classifierIDs = default(string[]), float threshold = default(float), string acceptLanguage = "en")
+        private bool Classify(string imagePath, byte[] imageData, OnClassify callback, string url = default(string), string[] owners = default(string[]), string[] classifierIDs = default(string[]), float threshold = default(float), string acceptLanguage = "en")
         {
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_CLASSIFY);
             if(connector == null)
                 return false;
-            string tempJson = BuildParametersJson(url, owners, classifierIDs, threshold);
+            string tempJson = BuildClassifyParametersJson(url, owners, classifierIDs, threshold);
             ClassifyReq req = new ClassifyReq();
             req.Callback = callback;
             req.Timeout = REQUEST_TIMEOUT;
@@ -178,34 +178,15 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
             if(imageData != null)
             {
-                string mimeType = "";
-                string fileName = Path.GetFileName(imagePath);
-                switch(Path.GetExtension(imagePath))
-                {
-                    case ".jpg":
-                    case ".jpeg":
-                        mimeType = "image/jpeg";
-                        break;
-                    case ".png":
-                        mimeType = "image/png";
-                        break;
-                    case ".gif":
-                        mimeType = "image/gif";
-                        break;
-                    case ".zip":
-                        mimeType = "application/zip";
-                        break;
-                    default:
-                        throw new WatsonException("Cannot classify unsupported file format " + Path.GetExtension(imagePath) + ". Please use jpg, gif, png or zip!");
-                }
+                string mimeType = GetMimeType(imagePath);
                 if(!string.IsNullOrEmpty(mimeType))
-                    req.Forms["images_file"] = new RESTConnector.Form(imageData, fileName, mimeType); 
+                    req.Forms["images_file"] = new RESTConnector.Form(imageData, Path.GetFileName(imagePath), mimeType); 
             }
 
             return connector.Send(req);
         }
         
-        private string BuildParametersJson(string url, string[] owners, string[] classifierIDs, float threshold)
+        private string BuildClassifyParametersJson(string url, string[] owners, string[] classifierIDs, float threshold)
         {
             ClassifyParameters cParameters = new ClassifyParameters();
             cParameters.url = url;
@@ -220,7 +201,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             }
             else
             {
-                Log.Error("SelfWebSocket", "Error parsing to JSON!");
+                Log.Error("VisualRecognition", "Error parsing to JSON!");
                 return null;
             }
         }
@@ -295,6 +276,77 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             return connector.Send(req);
         }
 
+        public bool DetectFaces(OnDetectFaces callback, string imagePath = default(string), string url = default(string))
+        {
+            if(string.IsNullOrEmpty(imagePath) && string.IsNullOrEmpty(url))
+                throw new ArgumentNullException("Either define an image path or image URL to classify!");
+            if(!string.IsNullOrEmpty(imagePath) && !string.IsNullOrEmpty(url))
+                throw new ArgumentNullException("Either define an image path OR image URL to classify!");
+            if(string.IsNullOrEmpty(mp_ApiKey))
+                mp_ApiKey = Config.Instance.GetVariableValue("VISUAL_RECOGNITION_API_KEY");
+            if(string.IsNullOrEmpty(mp_ApiKey))
+                throw new WatsonException("FindClassifier - VISUAL_RECOGNITION_API_KEY needs to be defined in config.json");
+
+            byte[] imageData = null;
+            if(imagePath != default(string))
+            {
+                if(LoadFile != null)
+                {
+                    imageData = LoadFile(imagePath);
+                }
+                else
+                {
+                    #if !UNITY_WEBPLAYER
+                    imageData = File.ReadAllBytes(imagePath);
+                    #endif
+                }
+            }
+
+            return DetectFaces(callback, imagePath, imageData, url);
+        }
+
+        private bool DetectFaces(OnDetectFaces callback, string imagePath = default(string), byte[] imageData = default(byte[]), string url = default(string))
+        {
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_DETECT_FACES);
+            if(connector == null)
+                return false;
+            string tempJson = BuildDetectFacesParametersJson(url);
+            DetectFacesReq req = new DetectFacesReq();
+            req.Callback = callback;
+            req.Timeout = REQUEST_TIMEOUT;
+            req.OnResponse = OnDetectFacesResp;
+            req.Parameters["api_key"] = mp_ApiKey;
+            req.Parameters["version"] = VisualRecognitionVersion.Version;
+            req.Forms = new Dictionary<string, RESTConnector.Form>();
+            req.Forms["parameters"] = new RESTConnector.Form(tempJson);
+
+            if(imageData != null)
+            {
+                string mimeType = GetMimeType(imagePath);
+                if(!string.IsNullOrEmpty(mimeType))
+                    req.Forms["images_file"] = new RESTConnector.Form(imageData, Path.GetFileName(imagePath), mimeType); 
+            }
+
+            return connector.Send(req);
+        }
+
+        private string BuildDetectFacesParametersJson(string url)
+        {
+            DetectFacesParameters cParameters = new DetectFacesParameters();
+            cParameters.url = url;
+
+            fsData jsondata = new fsData();
+            if (sm_Serializer.TrySerialize(cParameters, out jsondata).Succeeded)
+            {
+                return fsJsonPrinter.CompressedJson(jsondata, true);
+            }
+            else
+            {
+                Log.Error("VisualRecognition", "Error parsing to JSON!");
+                return null;
+            }
+        }
+
         private class DetectFacesReq : RESTConnector.Request
         {
             public OnDetectFaces Callback { get; set; }
@@ -367,6 +419,77 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         private class RecognizeTextReq : RESTConnector.Request
         {
             public OnRecognizeText Callback { get; set; }
+        }
+
+        public bool RecognieText(OnRecognizeText callback, string imagePath = default(string), string url = default(string))
+        {
+            if(string.IsNullOrEmpty(imagePath) && string.IsNullOrEmpty(url))
+                throw new ArgumentNullException("Either define an image path or image URL to classify!");
+            if(!string.IsNullOrEmpty(imagePath) && !string.IsNullOrEmpty(url))
+                throw new ArgumentNullException("Either define an image path OR image URL to classify!");
+            if(string.IsNullOrEmpty(mp_ApiKey))
+                mp_ApiKey = Config.Instance.GetVariableValue("VISUAL_RECOGNITION_API_KEY");
+            if(string.IsNullOrEmpty(mp_ApiKey))
+                throw new WatsonException("FindClassifier - VISUAL_RECOGNITION_API_KEY needs to be defined in config.json");
+
+            byte[] imageData = null;
+            if(imagePath != default(string))
+            {
+                if(LoadFile != null)
+                {
+                    imageData = LoadFile(imagePath);
+                }
+                else
+                {
+                    #if !UNITY_WEBPLAYER
+                    imageData = File.ReadAllBytes(imagePath);
+                    #endif
+                }
+            }
+
+            return RecognieText(callback, imagePath, imageData, url);
+        }
+
+        private bool RecognieText(OnRecognizeText callback, string imagePath = default(string), byte[] imageData = default(byte[]), string url = default(string))
+        {
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_RECOGNIZE_TEXT);
+            if(connector == null)
+                return false;
+            string tempJson = BuildRecognizeTextParametersJson(url);
+            RecognizeTextReq req = new RecognizeTextReq();
+            req.Callback = callback;
+            req.Timeout = REQUEST_TIMEOUT;
+            req.OnResponse = OnRecognizeText;
+            req.Parameters["api_key"] = mp_ApiKey;
+            req.Parameters["version"] = VisualRecognitionVersion.Version;
+            req.Forms = new Dictionary<string, RESTConnector.Form>();
+            req.Forms["parameters"] = new RESTConnector.Form(tempJson);
+
+            if(imageData != null)
+            {
+                string mimeType = GetMimeType(imagePath);
+                if(!string.IsNullOrEmpty(mimeType))
+                    req.Forms["images_file"] = new RESTConnector.Form(imageData, Path.GetFileName(imagePath), mimeType); 
+            }
+
+            return connector.Send(req);
+        }
+
+        private string BuildRecognizeTextParametersJson(string url)
+        {
+            RecognizeTextParameters cParameters = new RecognizeTextParameters();
+            cParameters.url = url;
+
+            fsData jsondata = new fsData();
+            if (sm_Serializer.TrySerialize(cParameters, out jsondata).Succeeded)
+            {
+                return fsJsonPrinter.CompressedJson(jsondata, true);
+            }
+            else
+            {
+                Log.Error("VisualRecognition", "Error parsing to JSON!");
+                return null;
+            }
         }
 
         private void OnRecognizeTextResp(RESTConnector.Request req, RESTConnector.Response resp)
@@ -626,8 +749,6 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if(connector == null)
                 return false;
 
-//            data.Name + "/" + DateTime.Now.ToString();
-
             TrainClassifierReq req = new TrainClassifierReq();
             req.Callback = callback;
             req.OnResponse = OnTrainClassifierResp;
@@ -711,6 +832,33 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         {
             if(((DeleteClassifierReq)req).Callback != null)
                 ((DeleteClassifierReq)req).Callback(resp.Success);
+        }
+        #endregion
+
+        #region private methods
+        private string GetMimeType(string imagePath)
+        {
+            string mimeType = "";
+            switch(Path.GetExtension(imagePath))
+            {
+                case ".jpg":
+                case ".jpeg":
+                    mimeType = "image/jpeg";
+                    break;
+                case ".png":
+                    mimeType = "image/png";
+                    break;
+                case ".gif":
+                    mimeType = "image/gif";
+                    break;
+                case ".zip":
+                    mimeType = "application/zip";
+                    break;
+                default:
+                    throw new WatsonException("Cannot classify unsupported file format " + Path.GetExtension(imagePath) + ". Please use jpg, gif, png or zip!");
+            }
+
+            return mimeType;
         }
         #endregion
 

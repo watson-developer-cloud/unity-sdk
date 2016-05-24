@@ -91,6 +91,12 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         public FaceLocation face_location { get; set; }
         public Identity identity { get; set; }
     }
+
+    [fsObject]
+    public class DetectFacesParameters
+    {
+        public string url { get; set; }
+    }
     #endregion
 
     #region Recognize Text
@@ -129,6 +135,12 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         public double height { get; set; }
         public double left { get; set; }
         public double top { get; set; }
+    }
+
+    [fsObject]
+    public class RecognizeTextParameters
+    {
+        public string url { get; set; }
     }
     #endregion
 
