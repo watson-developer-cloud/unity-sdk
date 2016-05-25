@@ -27,17 +27,16 @@
 #endregion
 
 using System;
-using System.Text;
 
 namespace WebSocketSharp
 {
   /// <summary>
-  /// Contains the event data associated with a <see cref="WebSocket.OnMessage"/> event.
+  /// Represents the event data for the <see cref="WebSocket.OnMessage"/> event.
   /// </summary>
   /// <remarks>
   ///   <para>
   ///   A <see cref="WebSocket.OnMessage"/> event occurs when the <see cref="WebSocket"/> receives
-  ///   a text or binary message, or a Ping if the <see cref="WebSocket.EmitOnPing"/> property is
+  ///   a text or binary message, or a ping if the <see cref="WebSocket.EmitOnPing"/> property is
   ///   set to <c>true</c>.
   ///   </para>
   ///   <para>
@@ -99,6 +98,42 @@ namespace WebSocketSharp
     }
 
     /// <summary>
+    /// Gets a value indicating whether the message type is binary.
+    /// </summary>
+    /// <value>
+    /// <c>true</c> if the message type is binary; otherwise, <c>false</c>.
+    /// </value>
+    public bool IsBinary {
+      get {
+        return _opcode == Opcode.Binary;
+      }
+    }
+
+    /// <summary>
+    /// Gets a value indicating whether the message type is ping.
+    /// </summary>
+    /// <value>
+    /// <c>true</c> if the message type is ping; otherwise, <c>false</c>.
+    /// </value>
+    public bool IsPing {
+      get {
+        return _opcode == Opcode.Ping;
+      }
+    }
+
+    /// <summary>
+    /// Gets a value indicating whether the message type is text.
+    /// </summary>
+    /// <value>
+    /// <c>true</c> if the message type is text; otherwise, <c>false</c>.
+    /// </value>
+    public bool IsText {
+      get {
+        return _opcode == Opcode.Text;
+      }
+    }
+
+    /// <summary>
     /// Gets the message data as an array of <see cref="byte"/>.
     /// </summary>
     /// <value>
@@ -111,11 +146,12 @@ namespace WebSocketSharp
     }
 
     /// <summary>
-    /// Gets the type of the message.
+    /// Gets the message type.
     /// </summary>
     /// <value>
     /// <see cref="Opcode.Text"/>, <see cref="Opcode.Binary"/>, or <see cref="Opcode.Ping"/>.
     /// </value>
+    [Obsolete ("This property will be removed. Use any of the Is properties instead.")]
     public Opcode Type {
       get {
         return _opcode;
