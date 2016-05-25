@@ -16,25 +16,25 @@
 */
 
 using UnityEngine;
-using IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1;
+using System.Collections;
+using IBM.Watson.DeveloperCloud.Services.Conversation.v1;
 
-public class ExampleNaturalLanguageClassifier : MonoBehaviour
+public class ExampleConversation : MonoBehaviour
 {
-	private NaturalLanguageClassifier m_NaturalLanguageClassifier = new NaturalLanguageClassifier();
-	private string m_ClassifierId = "3a84d1x62-nlc-768";
-	private string m_InputString = "Is it hot outside?";
+	private Conversation m_Conversation = new Conversation();
+	private string m_WorkspaceID = "car_demo_1";
+	private string m_Input = "Can you unlock the door?";
 
-	void Start ()
-	{
-		Debug.Log("Input String: " + m_InputString);
-		m_NaturalLanguageClassifier.Classify(m_ClassifierId, m_InputString, OnClassify);
+	void Start () {
+		Debug.Log("User: " + m_Input);
+		m_Conversation.Message(m_WorkspaceID, m_Input, OnMessage);
 	}
 
-	private void OnClassify(ClassifyResult result)
+	void OnMessage (DataModels.MessageResponse resp)
 	{
-		if (result != null)
-		{
-			Debug.Log("Classify Result: " + result.top_class);
-		}
+		foreach(DataModels.MessageIntent mi in resp.intents)
+			Debug.Log("intent: " + mi.intent + ", confidence: " + mi.confidence);
+		
+		Debug.Log("response: " + resp.output.text);
 	}
 }

@@ -210,6 +210,28 @@ You can use the Natural Language Classifier Editor to import and export classifi
 2. In the **Name** field, specify a name for the classifier.
 3. Click **Create**.
 
+### Conversation
+<!-- conversation description here: Change link below -->
+
+```cs
+private Conversation m_Conversation = new Conversation();
+private string m_WorkspaceID = "car_demo_1";
+private string m_Input = "Can you unlock the door?";
+
+void Start () {
+	Debug.Log("User: " + m_Input);
+	m_Conversation.Message(m_WorkspaceID, m_Input, OnMessage);
+}
+
+void OnMessage (DataModels.MessageResponse resp)
+{
+	foreach(DataModels.MessageIntent mi in resp.intents)
+		Debug.Log("intent: " + mi.intent + ", confidence: " + mi.confidence);
+
+	Debug.Log("response: " + resp.output.text);
+}
+```
+
 ## Developing a basic application in one minute
 You can quickly develop a basic application that uses the Speech to Text service and the Natural Language Classifier service by using the prefabs that come with the SDK. Ensure that you prepare the test data before you complete the the following steps:
   1. Create a new scene and drag the following prefabs from **Assets -> Watson -> Prefabs**, and drop them in the Hierarchy tab:
@@ -252,6 +274,7 @@ See [CONTRIBUTING.md](.github/CONTRIBUTING.md).
 [language_translation]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/language-translation/
 [dialog]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/dialog/
 [natural_language_classifier]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/nl-classifier/
+[conversation]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/dialog/
 
 [alchemy_language]: http://www.alchemyapi.com/products/alchemylanguage
 [sentiment_analysis]: http://www.alchemyapi.com/products/alchemylanguage/sentiment-analysis

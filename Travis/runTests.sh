@@ -8,7 +8,7 @@ if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then
   if [ $? = 0 ] ; then
     echo "Creating StreamingAssets directory COMPLETED! Exited with $?"
     echo "Attempting to decrypt config..."
-    openssl aes-256-cbc -K $encrypted_984f19857b4c_key -iv $encrypted_984f19857b4c_iv -in Config.json.enc -out Travis/UnityTestProject/Assets/StreamingAssets/Config.json -d
+    openssl aes-256-cbc -K $encrypted_91725f0df198_key -iv $encrypted_91725f0df198_iv -in Config.json.enc -out Travis/UnityTestProject/Assets/StreamingAssets/Config.json -d
     if [ $? = 0 ] ; then
       echo "Decrypting config COMPLETED! Exited with $?"
     else
