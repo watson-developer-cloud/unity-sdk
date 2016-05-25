@@ -197,14 +197,85 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 			return SERVICE_ID;
 		}
 
-		public void GetServiceStatus(ServiceStatus callback)
-		{
-			if (callback != null && callback.Target != null)
-			{
-				callback(SERVICE_ID, false);
-			}
-		}
+        /// <exclude />
+        public void GetServiceStatus(ServiceStatus callback)
+        {
+            if (Config.Instance.FindCredentials(SERVICE_ID) != null)
+                new CheckServiceStatus(this, callback);
+            else
+            {
+                if (callback != null && callback.Target != null)
+                {
+                    callback(SERVICE_ID, false);
+                }
+            }
+        }
 
+        private class CheckServiceStatus
+        {
+            private Conversation m_Service = null;
+            private ServiceStatus m_Callback = null;
+            private int m_MessageCount = 0;
+
+            public CheckServiceStatus(Conversation service, ServiceStatus callback)
+            {
+                m_Service = service;
+                m_Callback = callback;
+
+                string customServiceID = Config.Instance.GetVariableValue(SERVICE_ID + "_ID");
+
+                if(!String.IsNullOrEmpty(customServiceID))
+                {
+                    if(!m_Service.Message(customServiceID, "Hello", OnMessage))
+                        OnFailure("Failed to invoke Message()!");
+                    else
+                        m_MessageCount += 1;
+                }
+                else
+                {
+                    if(!m_Service.GetWorkspaces(OnGetWorkspaces))
+                        OnFailure("Failed to invoke GetWorkspaces()!");
+                }
+            }
+
+            private void OnGetWorkspaces(DataModels.Workspaces workspaces)
+            {
+                if (m_Callback != null)
+                {
+                    foreach (DataModels.Workspace workspace in workspaces.workspaces)
+                    {
+                        if (!m_Service.Message(workspace.workspace_id, "Hello", OnMessage))
+                            OnFailure("Failed to invoke Message().");
+                        else
+                            m_MessageCount += 1;
+                    }
+                }
+                else
+                    OnFailure("GetWorkspaces() failed.");
+            }
+    
+            private void OnMessage(DataModels.MessageResponse resp)
+            {
+                if (m_MessageCount > 0)
+                {
+                    m_MessageCount -= 1;
+                    if (resp != null)
+                    {
+                        if (m_MessageCount == 0 && m_Callback != null && m_Callback.Target != null)
+                            m_Callback(SERVICE_ID, true);
+                    }
+                    else
+                        OnFailure("MessageResponse is null.");
+                }
+            }
+
+            private void OnFailure(string msg)
+            {
+                Log.Error("Conversation", msg);
+                m_Callback(SERVICE_ID, false);
+                m_MessageCount = 0;
+            }
+        }
 		#endregion
 	}
 }
