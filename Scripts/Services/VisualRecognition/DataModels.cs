@@ -227,7 +227,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
     public class VisualRecognitionVersion
     {
-        public const string Version = "2016-05-19";
+        public const string Version = "2016-05-20";
     }
     #endregion
 }
