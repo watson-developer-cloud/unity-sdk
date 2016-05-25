@@ -62,7 +62,7 @@ namespace WebSocketSharp.Server
 
     private System.Net.IPAddress               _address;
     private AuthenticationSchemes              _authSchemes;
-    private Func<IIdentity, NetworkCredential> _credFinder;
+    private static readonly string             _defaultRealm;
     private bool                               _dnsStyle;
     private string                             _hostname;
     private TcpListener                        _listener;
@@ -76,6 +76,16 @@ namespace WebSocketSharp.Server
     private ServerSslConfiguration             _sslConfig;
     private volatile ServerState               _state;
     private object                             _sync;
+    private Func<IIdentity, NetworkCredential> _userCredFinder;
+
+    #endregion
+
+    #region Static Constructor
+
+    static WebSocketServer ()
+    {
+      _defaultRealm = "SECRET AREA";
+    }
 
     #endregion
 
@@ -393,13 +403,17 @@ namespace WebSocketSharp.Server
     /// <summary>
     /// Gets or sets the name of the realm associated with the server.
     /// </summary>
+    /// <remarks>
+    /// If this property is <see langword="null"/> or empty, <c>"SECRET AREA"</c> will be used as
+    /// the name of the realm.
+    /// </remarks>
     /// <value>
     /// A <see cref="string"/> that represents the name of the realm. The default value is
-    /// <c>"SECRET AREA"</c>.
+    /// <see langword="null"/>.
     /// </value>
     public string Realm {
       get {
-        return _realm ?? (_realm = "SECRET AREA");
+        return _realm;
       }
 
       set {
@@ -470,13 +484,13 @@ namespace WebSocketSharp.Server
     /// authenticate a client.
     /// </summary>
     /// <value>
-    /// A <c>Func&lt;<see cref="IIdentity"/>, <see cref="NetworkCredential"/>&gt;</c> delegate that
-    /// references the method(s) used to find the credentials. The default value is a function that
-    /// only returns <see langword="null"/>.
+    /// A <c>Func&lt;<see cref="IIdentity"/>, <see cref="NetworkCredential"/>&gt;</c> delegate
+    /// that references the method(s) used to find the credentials. The default value is
+    /// <see langword="null"/>.
     /// </value>
     public Func<IIdentity, NetworkCredential> UserCredentialsFinder {
       get {
-        return _credFinder ?? (_credFinder = identity => null);
+        return _userCredFinder;
       }
 
       set {
@@ -486,7 +500,7 @@ namespace WebSocketSharp.Server
           return;
         }
 
-        _credFinder = value;
+        _userCredFinder = value;
       }
     }
 
@@ -544,52 +558,17 @@ namespace WebSocketSharp.Server
       _state = ServerState.Stop;
     }
 
-    private static bool authenticate (
-      TcpListenerWebSocketContext context,
-      AuthenticationSchemes scheme,
-      string realm,
-      Func<IIdentity, NetworkCredential> credentialsFinder)
-    {
-      var chal = scheme == AuthenticationSchemes.Basic
-                 ? AuthenticationChallenge.CreateBasicChallenge (realm).ToBasicString ()
-                 : scheme == AuthenticationSchemes.Digest
-                   ? AuthenticationChallenge.CreateDigestChallenge (realm).ToDigestString ()
-                   : null;
-
-      if (chal == null) {
-        context.Close (HttpStatusCode.Forbidden);
-        return false;
-      }
-
-      var retry = -1;
-      Func<bool> auth = null;
-      auth = () => {
-        retry++;
-        if (retry > 99) {
-          context.Close (HttpStatusCode.Forbidden);
-          return false;
-        }
-
-        var user = HttpUtility.CreateUser (
-          context.Headers["Authorization"], scheme, realm, context.HttpMethod, credentialsFinder);
-
-        if (user != null && user.Identity.IsAuthenticated) {
-          context.SetUser (user);
-          return true;
-        }
-
-        context.SendAuthenticationChallenge (chal);
-        return auth ();
-      };
-
-      return auth ();
-    }
-
     private string checkIfCertificateExists ()
     {
       return _secure && (_sslConfig == null || _sslConfig.ServerCertificate == null)
              ? "The secure connection requires a server certificate."
              : null;
+    }
+
+    private string getRealm ()
+    {
+      var realm = _realm;
+      return realm != null && realm.Length > 0 ? realm : _defaultRealm;
     }
 
     private void init (string hostname, System.Net.IPAddress address, int port, bool secure)
@@ -641,8 +620,7 @@ namespace WebSocketSharp.Server
             state => {
               try {
                 var ctx = cl.GetWebSocketContext (null, _secure, _sslConfig, _logger);
-                if (_authSchemes != AuthenticationSchemes.Anonymous &&
-                    !authenticate (ctx, _authSchemes, Realm, UserCredentialsFinder))
+                if (!ctx.Authenticate (_authSchemes, getRealm (), _userCredFinder))
                   return;
 
                 processRequest (ctx);
@@ -651,7 +629,8 @@ namespace WebSocketSharp.Server
                 _logger.Fatal (ex.ToString ());
                 cl.Close ();
               }
-            });
+            }
+          );
         }
         catch (SocketException ex) {
           _logger.Warn ("Receiving has been stopped.\n  reason: " + ex.Message);

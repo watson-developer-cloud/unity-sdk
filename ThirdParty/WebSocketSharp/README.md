@@ -138,21 +138,23 @@ ws.OnMessage += (sender, e) => {
 
 `e` has passed as a `WebSocketSharp.MessageEventArgs`.
 
-`e.Type` property returns either `WebSocketSharp.Opcode.Text` or `WebSocketSharp.Opcode.Binary` that represents the type of the message. So by checking it, you can determine which item you should use.
+If you would like to get the message data, you should access `e.Data` or `e.RawData` property.
 
-If it returns `Opcode.Text`, you should use `e.Data` property that returns a `string` (represents the **Text** message).
+And you can determine which property you should access by checking `e.IsText` or `e.IsBinary` property.
 
-Or if it returns `Opcode.Binary`, you should use `e.RawData` property that returns a `byte[]` (represents the **Binary** message).
+If `e.IsText` is `true`, you should access `e.Data` that returns a `string` (represents a **text** message).
+
+Or if `e.IsBinary` is `true`, you should access `e.RawData` that returns a `byte[]` (represents a **binary** message).
 
 ```csharp
-if (e.Type == Opcode.Text) {
+if (e.IsText) {
   // Do something with e.Data.
   ...
 
   return;
 }
 
-if (e.Type == Opcode.Binary) {
+if (e.IsBinary) {
   // Do something with e.RawData.
   ...
 
@@ -160,19 +162,17 @@ if (e.Type == Opcode.Binary) {
 }
 ```
 
-And if you would like to notify that a **Ping** has been received, via this event, you should set the `WebSocket.EmitOnPing` property to `true`, such as the following.
+And if you would like to notify that a **ping** has been received, via this event, you should set the `WebSocket.EmitOnPing` property to `true`, such as the following.
 
 ```csharp
 ws.EmitOnPing = true;
 ws.OnMessage += (sender, e) => {
-  if (e.Type == Opcode.Ping) {
-    // Do something to notify that a Ping has been received.
+  if (e.IsPing) {
+    // Do something to notify that a ping has been received.
     ...
 
     return;
   }
-
-  ...
 };
 ```
 
@@ -353,7 +353,7 @@ And if you override the `WebSocketBehavior.OnOpen ()`, `WebSocketBehavior.OnErro
 
 The `WebSocketBehavior.Send` method sends data to the client on a session in the service.
 
-If you would like to access the sessions in the service, you should use the `WebSocketBehavior.Sessions` property (returns a `WebSocketSharp.Server.WebSocketSessionManager`).
+If you would like to get the sessions in the service, you should access the `WebSocketBehavior.Sessions` property (returns a `WebSocketSharp.Server.WebSocketSessionManager`).
 
 The `WebSocketBehavior.Sessions.Broadcast` method sends data to every client in the service.
 
@@ -442,13 +442,15 @@ As a WebSocket server, if you would like to ignore the extensions requested from
 ```csharp
 wssv.AddWebSocketService<Chat> (
   "/Chat",
-  () => new Chat () {
-    // To ignore the extensions requested from a client.
-    IgnoreExtensions = true
-  });
+  () =>
+    new Chat () {
+      // To ignore the extensions requested from a client.
+      IgnoreExtensions = true
+    }
+);
 ```
 
-If it's set to `true`, the server doesn't return the **Sec-WebSocket-Extensions header** in the connection response.
+If it's set to `true`, the server doesn't return the **Sec-WebSocket-Extensions** header in its response.
 
 I think this is useful when you get something error in connecting the server and exclude the extensions as a cause of the error.
 
@@ -531,7 +533,7 @@ using (var ws = new WebSocket ("ws://example.com/?name=nobita")) {
 }
 ```
 
-And if you would like to send the **Origin header** with the WebSocket connection request to the server, you should set the `WebSocket.Origin` property to an allowable value as the [Origin header] before connecting, such as the following.
+And if you would like to send the **Origin** header with the WebSocket connection request to the server, you should set the `WebSocket.Origin` property to an allowable value as the [Origin] header before connecting, such as the following.
 
 ```csharp
 ws.Origin = "http://example.com";
@@ -543,7 +545,7 @@ And also if you would like to send the **Cookies** with the WebSocket connection
 ws.SetCookie (new Cookie ("name", "nobita"));
 ```
 
-As a **WebSocket Server**, if you would like to get the **Query String** included in each WebSocket connection request, you should access the `WebSocketBehavior.Context.QueryString` property, such as the following.
+As a **WebSocket Server**, if you would like to get the **Query String** included in a WebSocket connection request, you should access the `WebSocketBehavior.Context.QueryString` property, such as the following.
 
 ```csharp
 public class Chat : WebSocketBehavior
@@ -560,7 +562,7 @@ public class Chat : WebSocketBehavior
 }
 ```
 
-And if you would like to validate the **Origin header**, **Cookies**, or both included in each WebSocket connection request, you should set each validation with your `WebSocketBehavior`, for example, by using the `AddWebSocketService<TBehavior> (string, Func<TBehavior>)` method with initializing, such as the following.
+And if you would like to validate the **Origin** header, **Cookies**, or both included in a WebSocket connection request, you should set each validation with your `WebSocketBehavior`, for example, by using the `AddWebSocketService<TBehavior> (string, Func<TBehavior>)` method with initializing, such as the following.
 
 ```csharp
 wssv.AddWebSocketService<Chat> (
@@ -650,7 +652,7 @@ And Example1 uses **[Json.NET]**.
 
 **[Example3]** starts an HTTP server that allows to accept the WebSocket connection requests.
 
-Would you access to [http://localhost:4649](http://localhost:4649) to do **WebSocket Echo Test** with your web browser after Example3 running?
+Would you access to [http://localhost:4649](http://localhost:4649) to do **WebSocket Echo Test** with your web browser while Example3 is running?
 
 ## Supported WebSocket Specifications ##
 
@@ -681,7 +683,7 @@ websocket-sharp is provided under **[The MIT License]**.
 [MonoDevelop]: http://monodevelop.com
 [NuGet Gallery]: http://www.nuget.org
 [NuGet Gallery: websocket-sharp]: http://www.nuget.org/packages/WebSocketSharp
-[Origin header]: http://tools.ietf.org/html/rfc6454#section-7
+[Origin]: http://tools.ietf.org/html/rfc6454#section-7
 [Query]: http://tools.ietf.org/html/rfc3986#section-3.4
 [Security Sandbox of the Webplayer]: http://docs.unity3d.com/Manual/SecuritySandbox.html
 [Squid]: http://www.squid-cache.org

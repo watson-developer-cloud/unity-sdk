@@ -29,7 +29,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 
 namespace WebSocketSharp
 {
@@ -40,11 +39,15 @@ namespace WebSocketSharp
     private byte[] _data;
     private long   _extDataLength;
     private long   _length;
-    private bool   _masked;
 
     #endregion
 
     #region Public Fields
+
+    /// <summary>
+    /// Represents the empty payload data.
+    /// </summary>
+    public static readonly PayloadData Empty;
 
     /// <summary>
     /// Represents the allowable max length.
@@ -52,14 +55,24 @@ namespace WebSocketSharp
     /// <remarks>
     ///   <para>
     ///   A <see cref="WebSocketException"/> will occur if the payload data length is
-    ///   greater than this.
+    ///   greater than the value of this field.
     ///   </para>
     ///   <para>
-    ///   If you would like to change this value, you must set this to a value between
+    ///   If you would like to change the value, you must set it to a value between
     ///   <c>WebSocket.FragmentLength</c> and <c>Int64.MaxValue</c> inclusive.
     ///   </para>
     /// </remarks>
-    public static readonly ulong MaxLength = Int64.MaxValue;
+    public static readonly ulong MaxLength;
+
+    #endregion
+
+    #region Static Constructor
+
+    static PayloadData ()
+    {
+      Empty = new PayloadData ();
+      MaxLength = Int64.MaxValue;
+    }
 
     #endregion
 
@@ -71,15 +84,14 @@ namespace WebSocketSharp
     }
 
     internal PayloadData (byte[] data)
-      : this (data, false)
+      : this (data, data.LongLength)
     {
     }
 
-    internal PayloadData (byte[] data, bool masked)
+    internal PayloadData (byte[] data, long length)
     {
       _data = data;
-      _masked = masked;
-      _length = data.LongLength;
+      _length = length;
     }
 
     #endregion
@@ -122,12 +134,6 @@ namespace WebSocketSharp
       }
     }
 
-    public bool IsMasked {
-      get {
-        return _masked;
-      }
-    }
-
     public ulong Length {
       get {
         return (ulong) _length;
@@ -142,8 +148,6 @@ namespace WebSocketSharp
     {
       for (long i = 0; i < _length; i++)
         _data[i] = (byte) (_data[i] ^ key[i % 4]);
-
-      _masked = !_masked;
     }
 
     #endregion
@@ -156,7 +160,7 @@ namespace WebSocketSharp
         yield return b;
     }
 
-    public byte[] ToByteArray ()
+    public byte[] ToArray ()
     {
       return _data;
     }

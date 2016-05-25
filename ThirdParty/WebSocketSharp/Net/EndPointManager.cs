@@ -8,7 +8,7 @@
  * The MIT License
  *
  * Copyright (c) 2005 Novell, Inc. (http://www.novell.com)
- * Copyright (c) 2012-2015 sta.blockhead
+ * Copyright (c) 2012-2016 sta.blockhead
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -85,10 +85,10 @@ namespace WebSocketSharp.Net
 
       var path = pref.Path;
       if (path.IndexOf ('%') != -1)
-        throw new HttpListenerException (400, "Invalid path."); // TODO: Code?
+        throw new HttpListenerException (87, "Includes an invalid path.");
 
       if (path.IndexOf ("//", StringComparison.Ordinal) != -1)
-        throw new HttpListenerException (400, "Invalid path."); // TODO: Code?
+        throw new HttpListenerException (87, "Includes an invalid path.");
 
       // Listens on all the interfaces if host name cannot be parsed by IPAddress.
       getEndPointListener (pref, listener).AddPrefix (pref, listener);
@@ -113,7 +113,8 @@ namespace WebSocketSharp.Net
     }
 
     private static EndPointListener getEndPointListener (
-      HttpListenerPrefix prefix, HttpListener listener)
+      HttpListenerPrefix prefix, HttpListener listener
+    )
     {
       var addr = convertToIPAddress (prefix.Host);
 
@@ -133,13 +134,15 @@ namespace WebSocketSharp.Net
         lsnr = eps[port];
       }
       else {
-        lsnr = new EndPointListener (
-          addr,
-          port,
-          listener.ReuseAddress,
-          prefix.IsSecure,
-          listener.CertificateFolderPath,
-          listener.SslConfiguration);
+        lsnr =
+          new EndPointListener (
+            addr,
+            port,
+            listener.ReuseAddress,
+            prefix.IsSecure,
+            listener.CertificateFolderPath,
+            listener.SslConfiguration
+          );
 
         eps[port] = lsnr;
       }
@@ -209,9 +212,10 @@ namespace WebSocketSharp.Net
 
     public static void RemoveListener (HttpListener listener)
     {
-      lock (((ICollection) _addressToEndpoints).SyncRoot)
+      lock (((ICollection) _addressToEndpoints).SyncRoot) {
         foreach (var pref in listener.Prefixes)
           removePrefix (pref, listener);
+      }
     }
 
     public static void RemovePrefix (string uriPrefix, HttpListener listener)

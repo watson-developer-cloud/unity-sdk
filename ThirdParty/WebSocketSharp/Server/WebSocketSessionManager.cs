@@ -99,7 +99,7 @@ namespace WebSocketSharp.Server
     /// </value>
     public IEnumerable<string> ActiveIDs {
       get {
-        foreach (var res in Broadping (WebSocketFrame.EmptyUnmaskPingBytes, _waitTime))
+        foreach (var res in Broadping (WebSocketFrame.EmptyPingBytes, _waitTime))
           if (res.Value)
             yield return res.Key;
       }
@@ -144,7 +144,7 @@ namespace WebSocketSharp.Server
     /// </value>
     public IEnumerable<string> InactiveIDs {
       get {
-        foreach (var res in Broadping (WebSocketFrame.EmptyUnmaskPingBytes, _waitTime))
+        foreach (var res in Broadping (WebSocketFrame.EmptyPingBytes, _waitTime))
           if (!res.Value)
             yield return res.Key;
       }
@@ -368,14 +368,14 @@ namespace WebSocketSharp.Server
       }
     }
 
-    internal void Stop (CloseEventArgs e, byte[] frameAsBytes, TimeSpan timeout)
+    internal void Stop (CloseEventArgs e, byte[] frameAsBytes, bool receive)
     {
       lock (_sync) {
         _state = ServerState.ShuttingDown;
 
         _sweepTimer.Enabled = false;
         foreach (var session in _sessions.Values.ToList ())
-          session.Context.WebSocket.Close (e, frameAsBytes, timeout);
+          session.Context.WebSocket.Close (e, frameAsBytes, receive);
 
         _state = ServerState.Stop;
       }
@@ -558,7 +558,7 @@ namespace WebSocketSharp.Server
         return null;
       }
 
-      return Broadping (WebSocketFrame.EmptyUnmaskPingBytes, _waitTime);
+      return Broadping (WebSocketFrame.EmptyPingBytes, _waitTime);
     }
 
     /// <summary>
@@ -587,7 +587,7 @@ namespace WebSocketSharp.Server
         return null;
       }
 
-      return Broadping (WebSocketFrame.CreatePingFrame (data, false).ToByteArray (), _waitTime);
+      return Broadping (WebSocketFrame.CreatePingFrame (data, false).ToArray (), _waitTime);
     }
 
     /// <summary>
