@@ -5,7 +5,7 @@ Change Log
 _2016-05-28_
 
  * New: Added Tone Analyzer v3 abstraction
- * New: Added Tradeoff Analyzer abstraction
+ * New: Added Tradeoff Analytics abstraction
  * New: Added Conversation abstraction
  * New: Added Visual Recognition v3 abstraction
  * Fix: Creating test project dynamically for Travis CL integration
