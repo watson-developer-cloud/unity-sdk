@@ -24,9 +24,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-using IBM.Watson.DeveloperCloud.Utilities;
-
-
 #endregion
 
 #region Contributors
@@ -71,7 +68,7 @@ namespace WebSocketSharp
     internal HttpRequest (string method, string uri)
       : this (method, uri, HttpVersion.Version11, new NameValueCollection ())
     {
-		Headers["User-Agent"] = Constants.String.VERSION;
+      Headers["User-Agent"] = "websocket-sharp/1.0";
     }
 
     #endregion

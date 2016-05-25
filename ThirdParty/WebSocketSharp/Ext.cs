@@ -14,7 +14,7 @@
  * Copyright (c) 2003 Ben Maurer
  * Copyright (c) 2003, 2005, 2009 Novell, Inc. (http://www.novell.com)
  * Copyright (c) 2009 Stephane Delcroix
- * Copyright (c) 2010-2015 sta.blockhead
+ * Copyright (c) 2010-2016 sta.blockhead
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -91,7 +91,7 @@ namespace WebSocketSharp
 
       stream.Position = 0;
       using (var ds = new DeflateStream (output, CompressionMode.Compress, true)) {
-        stream.CopyTo (ds);
+        stream.CopyTo (ds, 1024);
         ds.Close (); // BFINAL set to 1.
         output.Write (_last, 0, 1);
         output.Position = 0;
@@ -125,7 +125,7 @@ namespace WebSocketSharp
 
       stream.Position = 0;
       using (var ds = new DeflateStream (stream, CompressionMode.Decompress, true)) {
-        ds.CopyTo (output);
+        ds.CopyTo (output, 1024);
         output.Position = 0;
 
         return output;
@@ -152,17 +152,14 @@ namespace WebSocketSharp
 
     internal static byte[] Append (this ushort code, string reason)
     {
-      using (var buff = new MemoryStream ()) {
-        var bytes = code.InternalToByteArray (ByteOrder.Big);
-        buff.Write (bytes, 0, 2);
-        if (reason != null && reason.Length > 0) {
-          bytes = Encoding.UTF8.GetBytes (reason);
-          buff.Write (bytes, 0, bytes.Length);
-        }
-
-        buff.Close ();
-        return buff.ToArray ();
+      var ret = code.InternalToByteArray (ByteOrder.Big);
+      if (reason != null && reason.Length > 0) {
+        var buff = new List<byte> (ret);
+        buff.AddRange (Encoding.UTF8.GetBytes (reason));
+        ret = buff.ToArray ();
       }
+
+      return ret;
     }
 
     internal static string CheckIfAvailable (
@@ -215,6 +212,18 @@ namespace WebSocketSharp
     internal static string CheckIfValidWaitTime (this TimeSpan time)
     {
       return time <= TimeSpan.Zero ? "A wait time is zero or less." : null;
+    }
+
+    internal static bool CheckWaitTime (this TimeSpan time, out string message)
+    {
+      message = null;
+
+      if (time <= TimeSpan.Zero) {
+        message = "A wait time is zero or less.";
+        return false;
+      }
+
+      return true;
     }
 
     internal static void Close (this HttpListenerResponse response, HttpStatusCode code)
@@ -288,13 +297,50 @@ namespace WebSocketSharp
       return dest;
     }
 
-    internal static void CopyTo (this Stream source, Stream destination)
+    internal static void CopyTo (this Stream source, Stream destination, int bufferLength)
     {
-      var buffLen = 1024;
-      var buff = new byte[buffLen];
+      var buff = new byte[bufferLength];
       var nread = 0;
-      while ((nread = source.Read (buff, 0, buffLen)) > 0)
+      while ((nread = source.Read (buff, 0, bufferLength)) > 0)
         destination.Write (buff, 0, nread);
+    }
+
+    internal static void CopyToAsync (
+      this Stream source,
+      Stream destination,
+      int bufferLength,
+      Action completed,
+      Action<Exception> error)
+    {
+      var buff = new byte[bufferLength];
+
+      AsyncCallback callback = null;
+      callback = ar => {
+        try {
+          var nread = source.EndRead (ar);
+          if (nread <= 0) {
+            if (completed != null)
+              completed ();
+
+            return;
+          }
+
+          destination.Write (buff, 0, nread);
+          source.BeginRead (buff, 0, bufferLength, callback, null);
+        }
+        catch (Exception ex) {
+          if (error != null)
+            error (ex);
+        }
+      };
+
+      try {
+        source.BeginRead (buff, 0, bufferLength, callback, null);
+      }
+      catch (Exception ex) {
+        if (error != null)
+          error (ex);
+      }
     }
 
     internal static byte[] Decompress (this byte[] data, CompressionMethod method)
@@ -474,6 +520,26 @@ namespace WebSocketSharp
       return value.StartsWith (method.ToExtensionString ());
     }
 
+    internal static bool IsControl (this byte opcode)
+    {
+      return opcode > 0x7 && opcode < 0x10;
+    }
+
+    internal static bool IsControl (this Opcode opcode)
+    {
+      return opcode >= Opcode.Close;
+    }
+
+    internal static bool IsData (this byte opcode)
+    {
+      return opcode == 0x1 || opcode == 0x2;
+    }
+
+    internal static bool IsData (this Opcode opcode)
+    {
+      return opcode == Opcode.Text || opcode == Opcode.Binary;
+    }
+
     internal static bool IsPortNumber (this int value)
     {
       return value > 0 && value < 65536;
@@ -493,6 +559,11 @@ namespace WebSocketSharp
              code == CloseStatusCode.NoStatus ||
              code == CloseStatusCode.Abnormal ||
              code == CloseStatusCode.TlsHandshakeFailure;
+    }
+
+    internal static bool IsSupported (this byte opcode)
+    {
+      return Enum.IsDefined (typeof (Opcode), opcode);
     }
 
     internal static bool IsText (this string value)
@@ -739,7 +810,7 @@ namespace WebSocketSharp
     {
       using (var output = new MemoryStream ()) {
         stream.Position = 0;
-        stream.CopyTo (output);
+        stream.CopyTo (output, 1024);
         output.Close ();
 
         return output.ToArray ();
@@ -770,6 +841,10 @@ namespace WebSocketSharp
 
     internal static System.Net.IPAddress ToIPAddress (this string hostnameOrAddress)
     {
+      System.Net.IPAddress addr;
+      if (System.Net.IPAddress.TryParse (hostnameOrAddress, out addr))
+        return addr;
+
       try {
         return System.Net.Dns.GetHostAddresses (hostnameOrAddress)[0];
       }
@@ -895,10 +970,30 @@ namespace WebSocketSharp
       return Encoding.UTF8.GetBytes (s);
     }
 
-    internal static void WriteBytes (this Stream stream, byte[] bytes)
+    internal static void WriteBytes (this Stream stream, byte[] bytes, int bufferLength)
     {
       using (var input = new MemoryStream (bytes))
-        input.CopyTo (stream);
+        input.CopyTo (stream, bufferLength);
+    }
+
+    internal static void WriteBytesAsync (
+      this Stream stream, byte[] bytes, int bufferLength, Action completed, Action<Exception> error)
+    {
+      var input = new MemoryStream (bytes);
+      input.CopyToAsync (
+        stream,
+        bufferLength,
+        () => {
+          if (completed != null)
+            completed ();
+
+          input.Dispose ();
+        },
+        ex => {
+          input.Dispose ();
+          if (error != null)
+            error (ex);
+        });
     }
 
     #endregion
@@ -1192,10 +1287,13 @@ namespace WebSocketSharp
 
     /// <summary>
     /// Determines whether the specified <see cref="System.Net.IPAddress"/> represents
-    /// the local IP address.
+    /// a local IP address.
     /// </summary>
+    /// <remarks>
+    /// This local means NOT REMOTE for the current host.
+    /// </remarks>
     /// <returns>
-    /// <c>true</c> if <paramref name="address"/> represents the local IP address;
+    /// <c>true</c> if <paramref name="address"/> represents a local IP address;
     /// otherwise, <c>false</c>.
     /// </returns>
     /// <param name="address">
@@ -1206,14 +1304,26 @@ namespace WebSocketSharp
       if (address == null)
         return false;
 
-      if (address.Equals (System.Net.IPAddress.Any) || System.Net.IPAddress.IsLoopback (address))
+      if (address.Equals (System.Net.IPAddress.Any))
         return true;
+
+      if (address.Equals (System.Net.IPAddress.Loopback))
+        return true;
+
+      if (Socket.OSSupportsIPv6) {
+        if (address.Equals (System.Net.IPAddress.IPv6Any))
+          return true;
+
+        if (address.Equals (System.Net.IPAddress.IPv6Loopback))
+          return true;
+      }
 
       var host = System.Net.Dns.GetHostName ();
       var addrs = System.Net.Dns.GetHostAddresses (host);
-      foreach (var addr in addrs)
+      foreach (var addr in addrs) {
         if (address.Equals (addr))
           return true;
+      }
 
       return false;
     }
@@ -1558,7 +1668,7 @@ namespace WebSocketSharp
     /// An array of <see cref="byte"/> to convert.
     /// </param>
     /// <param name="sourceOrder">
-    /// One of the <see cref="ByteOrder"/> enum values, indicates the byte order of
+    /// One of the <see cref="ByteOrder"/> enum values, specifies the byte order of
     /// <paramref name="source"/>.
     /// </param>
     /// <typeparam name="T">
@@ -1612,7 +1722,7 @@ namespace WebSocketSharp
     /// A T to convert.
     /// </param>
     /// <param name="order">
-    /// One of the <see cref="ByteOrder"/> enum values, indicates the byte order of the return.
+    /// One of the <see cref="ByteOrder"/> enum values, specifies the byte order of the return.
     /// </param>
     /// <typeparam name="T">
     /// The type of <paramref name="value"/>. The T must be a value type.
@@ -1661,7 +1771,7 @@ namespace WebSocketSharp
     /// An array of <see cref="byte"/> to convert.
     /// </param>
     /// <param name="sourceOrder">
-    /// One of the <see cref="ByteOrder"/> enum values, indicates the byte order of
+    /// One of the <see cref="ByteOrder"/> enum values, specifies the byte order of
     /// <paramref name="source"/>.
     /// </param>
     /// <exception cref="ArgumentNullException">
@@ -1805,7 +1915,7 @@ namespace WebSocketSharp
       if (len <= Int32.MaxValue)
         output.Write (content, 0, (int) len);
       else
-        output.WriteBytes (content);
+        output.WriteBytes (content, 1024);
 
       output.Close ();
     }

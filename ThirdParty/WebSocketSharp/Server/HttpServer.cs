@@ -6,7 +6,7 @@
  *
  * The MIT License
  *
- * Copyright (c) 2012-2015 sta.blockhead
+ * Copyright (c) 2012-2016 sta.blockhead
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -388,9 +388,13 @@ namespace WebSocketSharp.Server
     /// <summary>
     /// Gets or sets the name of the realm associated with the server.
     /// </summary>
+    /// <remarks>
+    /// If this property is <see langword="null"/> or empty, <c>"SECRET AREA"</c> will be used as
+    /// the name of the realm.
+    /// </remarks>
     /// <value>
     /// A <see cref="string"/> that represents the name of the realm. The default value is
-    /// <c>"SECRET AREA"</c>.
+    /// <see langword="null"/>.
     /// </value>
     public string Realm {
       get {
@@ -488,9 +492,9 @@ namespace WebSocketSharp.Server
     /// authenticate a client.
     /// </summary>
     /// <value>
-    /// A <c>Func&lt;<see cref="IIdentity"/>, <see cref="NetworkCredential"/>&gt;</c> delegate that
-    /// references the method(s) used to find the credentials. The default value is a function that
-    /// only returns <see langword="null"/>.
+    /// A <c>Func&lt;<see cref="IIdentity"/>, <see cref="NetworkCredential"/>&gt;</c> delegate
+    /// that references the method(s) used to find the credentials. The default value is
+    /// <see langword="null"/>.
     /// </value>
     public Func<IIdentity, NetworkCredential> UserCredentialsFinder {
       get {
