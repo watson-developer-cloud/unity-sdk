@@ -321,29 +321,45 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.Callback = callback;
             req.Timeout = REQUEST_TIMEOUT;
             req.OnResponse = OnDetectFacesResp;
+
             req.Parameters["api_key"] = mp_ApiKey;
             req.Parameters["version"] = VisualRecognitionVersion.Version;
+
+            req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
+
+            req.Forms = new Dictionary<string, RESTConnector.Form>();
+            if(!string.IsNullOrEmpty(url))
+            {
+                string tempJson = BuildDetectFacesParametersJson(url);
+                req.Forms["parameters"] = new RESTConnector.Form(tempJson);
+            }
+
+            //            req.Forms["junk"] = new RESTConnector.Form(imageData, Path.GetFileName(imagePath), GetMimeType(imagePath));
+            //            req.Forms["images-file"] = new RESTConnector.Form(imageData, "obama.jpg", "image/jpeg");
+            //            Log.Debug("VisualRecognition", "imageData: {0}, filename: {1}, mimetype: {2}.", imageData.Length, Path.GetFileName(imagePath), GetMimeType(imagePath));
+//            if(imageData != null)
+//                req.Forms["images_file"] = new RESTConnector.Form(imageData, Path.GetFileName(imagePath), GetMimeType(imagePath));
+            if(imageData != null)
+            {
+                req.Forms["images_file"] = new RESTConnector.Form(imageData);
+//                req.Forms["Content-disposition"] = new RESTConnector.Form("form-data; name=\"images_file\"; filename=\""+Path.GetFileName(imagePath)+"\"");
+//                req.Forms["Content-Type"] = new RESTConnector.Form("application/x-www-form-urlencoded");
+            }
+
+
+            //Content-Type: application/octet-stream
+            //                        Content-disposition: form-data; name="images_file"; filename="images_file.dat"
+            //                        form.headers["Content-Type"] = "application/x-www-form-urlencoded";
+            //                        form.headers["Content-disposition"] = "application/x-www-form-urlencoded; name=\"images_file\"; filename=\"images_file.jpg\"";
 //            req.Headers["Content-Disposition"] = "form-data; name=\"images_file\"; filename=\""+Path.GetFileName(imagePath)+"\"";
 //            req.Headers["Expect"] = "100-continue";
 //            req.Headers["Connection"] = "keep-alive";
 //            req.Headers["Cache-Control"] = "no-cache";
 //            req.Headers["Content-Type"] = "multipart/form-data";
-//            req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
 //            req.Headers["Accept"] = "*/*";
 //            req.Headers["Accept-Encoding"] = "gzip, deflate";
 //            req.Headers["Accept-Language"] = "en-US";
 
-            req.Forms = new Dictionary<string, RESTConnector.Form>();
-//            if(!string.IsNullOrEmpty(url))
-//            {
-//                string tempJson = BuildDetectFacesParametersJson(url);
-//                req.Forms["parameters"] = new RESTConnector.Form(tempJson);
-//            }
-//            req.Forms["junk"] = new RESTConnector.Form(imageData, Path.GetFileName(imagePath), GetMimeType(imagePath));
-//            req.Forms["images-file"] = new RESTConnector.Form(imageData, "obama.jpg", "image/jpeg");
-//            Log.Debug("VisualRecognition", "imageData: {0}, filename: {1}, mimetype: {2}.", imageData.Length, Path.GetFileName(imagePath), GetMimeType(imagePath));
-            if(imageData != null)
-                req.Forms["images_file"] = new RESTConnector.Form(imageData, Path.GetFileName(imagePath), GetMimeType(imagePath));
 
             return connector.Send(req);
         }
