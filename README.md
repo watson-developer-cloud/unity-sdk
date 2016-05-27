@@ -11,7 +11,7 @@ Use this SDK to build Watson-powered applications in Unity. It comes with a set 
 * [IBM Watson Services](#ibm-watson-services)
   * [Speech to Text](#speech-to-text)
   * [Text to Speech](#text-to-speech)
-  * [Language Translation](#language-translation)
+  * [Language Translator](#language-translator)
   * [Dialog](#dialog)
   * [Natural Language Classifier](#natural-language-classifier)
   * [Tone Analyzer](#tone-analyzer)
@@ -123,12 +123,12 @@ private void PlayClip(AudioClip clip)
 }
 ```
 
-### Language Translation
+### Language Translator
 Select a domain, then identify or select the language of text, and then translate the text from one supported language to another.  
-Example: Ask how to get to the disco in Spanish using [Language Translation][language_translation] service.
+Example: Ask how to get to the disco in Spanish using [Language Translator][language_translator] service.
 
 ```cs
-private LanguageTranslation m_Translate = new LanguageTranslation();
+private LanguageTranslator m_Translate = new LanguageTranslator();
 private string m_PharseToTranslate = "How do I get to the disco?";
 
 void Start ()
@@ -406,7 +406,7 @@ See [CONTRIBUTING.md](.github/CONTRIBUTING.md).
 
 [speech_to_text]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/speech-to-text/
 [text_to_speech]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/text-to-speech/
-[language_translation]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/language-translation/
+[language_translator]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/language-translator/
 [dialog]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/dialog/
 [natural_language_classifier]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/nl-classifier/
 [conversation]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/dialog/
