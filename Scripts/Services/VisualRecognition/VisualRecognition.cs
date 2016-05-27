@@ -131,7 +131,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             return connector.Send(req);
         }
 
-        public bool Classify(OnClassify callback, string imagePath = default(string), string url = default(string), string[] owners = default(string[]), string[] classifierIDs = default(string[]), float threshold = default(float), string acceptLanguage = "en")
+        public bool Classify(OnClassify callback, string imagePath = default(string), string imageURL = default(string), string[] owners = default(string[]), string[] classifierIDs = default(string[]), float threshold = default(float), string acceptLanguage = "en")
         {
             if(string.IsNullOrEmpty(mp_ApiKey))
                 mp_ApiKey = Config.Instance.GetVariableValue("VISUAL_RECOGNITION_API_KEY");
@@ -139,8 +139,8 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 throw new WatsonException("FindClassifier - VISUAL_RECOGNITION_API_KEY needs to be defined in config.json");
             if(callback == null)
                 throw new ArgumentNullException("callback");
-            if(string.IsNullOrEmpty(imagePath) && url == default(string))
-                throw new ArgumentNullException("Either define an image path or image URL to classify!");
+            if(string.IsNullOrEmpty(imagePath) && imageURL == default(string))
+                throw new ArgumentNullException("Define an image path and/or image URL to classify!");
 
             byte[] imageData = null;
             if(imagePath != default(string))
@@ -160,15 +160,14 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                     Log.Error("VisualRecognition", "Failed to upload {0}!", imagePath);
             }
 
-            return Classify(imagePath, imageData, callback, url, owners, classifierIDs, threshold, acceptLanguage);
+            return Classify(imagePath, imageData, callback, imageURL, owners, classifierIDs, threshold, acceptLanguage);
         }
 
-        private bool Classify(string imagePath, byte[] imageData, OnClassify callback, string url = default(string), string[] owners = default(string[]), string[] classifierIDs = default(string[]), float threshold = default(float), string acceptLanguage = "en")
+        private bool Classify(string imagePath, byte[] imageData, OnClassify callback, string imageURL = default(string), string[] owners = default(string[]), string[] classifierIDs = default(string[]), float threshold = default(float), string acceptLanguage = "en")
         {
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_CLASSIFY);
             if(connector == null)
                 return false;
-            string tempJson = BuildClassifyParametersJson(url, owners, classifierIDs, threshold);
             ClassifyReq req = new ClassifyReq();
             req.Callback = callback;
             req.Timeout = REQUEST_TIMEOUT;
@@ -178,14 +177,12 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.Parameters["version"] = VisualRecognitionVersion.Version;
             req.Headers["Accept-Language"] = acceptLanguage;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
-            req.Forms["parameters"] = new RESTConnector.Form(tempJson);
+
+            if(!string.IsNullOrEmpty(imageURL) || owners != default(string[]) || classifierIDs != default(string[]) || threshold != default(float))
+                req.Forms["parameters"] = new RESTConnector.Form(BuildClassifyParametersJson(imageURL, owners, classifierIDs, threshold));
 
             if(imageData != null)
-            {
-                string mimeType = GetMimeType(imagePath);
-                if(!string.IsNullOrEmpty(mimeType))
-                    req.Forms["images_file"] = new RESTConnector.Form(imageData, Path.GetFileName(imagePath), mimeType); 
-            }
+                req.Forms["images_file"] = new RESTConnector.Form(imageData, Path.GetFileName(imagePath), GetMimeType(imagePath)); 
 
             return connector.Send(req);
         }
@@ -254,6 +251,61 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         }
         #endregion
 
+        /*
+        #region TEST DETECT FACES POST
+        public bool TestDetectFacesPost(OnDetectFaces callback, string imagePath = default(string), string imageURL = default(string))
+        {
+            if(string.IsNullOrEmpty(imagePath) && string.IsNullOrEmpty(imageURL))
+                throw new ArgumentNullException("Either define an image path and/or imageURL to classify!");
+            if(string.IsNullOrEmpty(mp_ApiKey))
+                mp_ApiKey = Config.Instance.GetVariableValue("VISUAL_RECOGNITION_API_KEY");
+            if(string.IsNullOrEmpty(mp_ApiKey))
+                throw new WatsonException("FindClassifier - VISUAL_RECOGNITION_API_KEY needs to be defined in config.json");
+
+            byte[] imageData = null;
+            if(!string.IsNullOrEmpty(imagePath))
+            {
+                imageData = File.ReadAllBytes(imagePath);
+
+                if(imageData == null)
+                    Log.Error("VisualRecogntiion", "Failed to get image bytes {0}!", imagePath);
+            }
+
+            return TestPostFaces(callback, imagePath, imageURL, imageData);
+        }
+
+        public bool TestPostFaces(OnDetectFaces callback, string imagePath = default(string), string imageURL = default(string), byte[] imageData = default(byte[]))
+        {
+            if(string.IsNullOrEmpty(imagePath) && string.IsNullOrEmpty(imageURL))
+                throw new ArgumentNullException("Either define an image path and/or imageURL to classify!");
+            if(imageData == null && imageURL == null)
+                throw new ArgumentNullException("imageData and imageURL");
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_DETECT_FACES);
+            if(connector == null)
+                return false;
+
+            DetectFacesReq req = new DetectFacesReq();
+            req.Callback = callback;
+            req.Timeout = REQUEST_TIMEOUT;
+            req.OnResponse = OnDetectFacesResp;
+            req.Parameters["api_key"] = mp_ApiKey;
+            req.Parameters["version"] = VisualRecognitionVersion.Version;
+            req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
+
+            req.Forms = new Dictionary<string, RESTConnector.Form>();
+
+            if(!string.IsNullOrEmpty(imageURL))
+                req.Forms["parameters"] = new RESTConnector.Form(BuildDetectFacesParametersJson(imageURL));
+
+            if(imageData != null)
+                req.Forms["images_file"] = new RESTConnector.Form(imageData, Path.GetFileName(imagePath), GetMimeType(imagePath));
+
+            return connector.Send(req);
+        }
+        #endregion
+        */
+        
         #region Detect Faces
         public bool DetectFaces(string url, OnDetectFaces callback)
         {
@@ -280,12 +332,10 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             return connector.Send(req);
         }
 
-    public bool DetectFaces(OnDetectFaces callback, string imagePath = default(string), string url = default(string))
+        public bool DetectFaces(OnDetectFaces callback, string imagePath = default(string), string imageURL = default(string))
         {
-            if(string.IsNullOrEmpty(imagePath) && string.IsNullOrEmpty(url))
-                throw new ArgumentNullException("Either define an image path or image URL to classify!");
-            if(!string.IsNullOrEmpty(imagePath) && !string.IsNullOrEmpty(url))
-                throw new ArgumentNullException("Either define an image path OR image URL to classify!");
+            if(string.IsNullOrEmpty(imagePath) && string.IsNullOrEmpty(imageURL))
+                throw new ArgumentNullException("Define an image path and/or image url to classify!");
             if(string.IsNullOrEmpty(mp_ApiKey))
                 mp_ApiKey = Config.Instance.GetVariableValue("VISUAL_RECOGNITION_API_KEY");
             if(string.IsNullOrEmpty(mp_ApiKey))
@@ -309,10 +359,40 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                     Log.Error("VisualRecognition", "Failed to upload {0}!", imagePath);
             }
 
-            return DetectFaces(callback, imagePath, imageData, url);
+            /*byte[] paramsData = null;
+            string paramsJson = default(string);
+            if(!string.IsNullOrEmpty(paramsPath))
+            {
+                if(paramsPath.StartsWith("http"))
+                {
+                    paramsJson = BuildRecognizeTextParametersJson(paramsPath);
+                    if(string.IsNullOrEmpty(paramsJson))
+                        Log.Error("VisualRecognition", "Failed to create paramsJson {0}!", paramsPath);
+                    else
+                        Log.Debug("VisualRecognition", "params json: {0}", paramsJson);
+                }
+                else
+                {
+                    if(LoadFile != null)
+                    {
+                        paramsData = LoadFile(paramsPath);
+                    }
+                    else
+                    {
+                        #if !UNITY_WEBPLAYER
+                        paramsData = File.ReadAllBytes(paramsPath);
+                        #endif
+                    }
+                    
+                    if(paramsData == null)
+                        Log.Error("VisualRecognition", "Failed to upload {0}!", paramsPath);
+                }
+            }*/
+
+            return DetectFaces(callback, imagePath, imageData, imageURL);
         }
 
-        private bool DetectFaces(OnDetectFaces callback, string imagePath, byte[] imageData, string url)
+        private bool DetectFaces(OnDetectFaces callback, string imagePath, byte[] imageData = default(byte[]), string imageURL = default(string))
         {
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_DETECT_FACES);
             if(connector == null)
@@ -325,41 +405,13 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.Parameters["api_key"] = mp_ApiKey;
             req.Parameters["version"] = VisualRecognitionVersion.Version;
 
-            req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
-
             req.Forms = new Dictionary<string, RESTConnector.Form>();
-            if(!string.IsNullOrEmpty(url))
-            {
-                string tempJson = BuildDetectFacesParametersJson(url);
-                req.Forms["parameters"] = new RESTConnector.Form(tempJson);
-            }
 
-            //            req.Forms["junk"] = new RESTConnector.Form(imageData, Path.GetFileName(imagePath), GetMimeType(imagePath));
-            //            req.Forms["images-file"] = new RESTConnector.Form(imageData, "obama.jpg", "image/jpeg");
-            //            Log.Debug("VisualRecognition", "imageData: {0}, filename: {1}, mimetype: {2}.", imageData.Length, Path.GetFileName(imagePath), GetMimeType(imagePath));
-//            if(imageData != null)
-//                req.Forms["images_file"] = new RESTConnector.Form(imageData, Path.GetFileName(imagePath), GetMimeType(imagePath));
+            if(!string.IsNullOrEmpty(imageURL))
+                req.Forms["parameters"] = new RESTConnector.Form(BuildDetectFacesParametersJson(imageURL));
+
             if(imageData != null)
-            {
-                req.Forms["images_file"] = new RESTConnector.Form(imageData);
-//                req.Forms["Content-disposition"] = new RESTConnector.Form("form-data; name=\"images_file\"; filename=\""+Path.GetFileName(imagePath)+"\"");
-//                req.Forms["Content-Type"] = new RESTConnector.Form("application/x-www-form-urlencoded");
-            }
-
-
-            //Content-Type: application/octet-stream
-            //                        Content-disposition: form-data; name="images_file"; filename="images_file.dat"
-            //                        form.headers["Content-Type"] = "application/x-www-form-urlencoded";
-            //                        form.headers["Content-disposition"] = "application/x-www-form-urlencoded; name=\"images_file\"; filename=\"images_file.jpg\"";
-//            req.Headers["Content-Disposition"] = "form-data; name=\"images_file\"; filename=\""+Path.GetFileName(imagePath)+"\"";
-//            req.Headers["Expect"] = "100-continue";
-//            req.Headers["Connection"] = "keep-alive";
-//            req.Headers["Cache-Control"] = "no-cache";
-//            req.Headers["Content-Type"] = "multipart/form-data";
-//            req.Headers["Accept"] = "*/*";
-//            req.Headers["Accept-Encoding"] = "gzip, deflate";
-//            req.Headers["Accept-Language"] = "en-US";
-
+                req.Forms["images_file"] = new RESTConnector.Form(imageData, Path.GetFileName(imagePath), GetMimeType(imagePath));
 
             return connector.Send(req);
         }
@@ -389,11 +441,6 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         private void OnDetectFacesResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
             FacesTopLevelMultiple faces = null;
-
-            //  testing - write file in request
-//            File.WriteAllBytes(Application.dataPath + "/../byteArrayTest.jpg", (req.Forms["images_file"] as RESTConnector.Form).Contents);
-//            File.WriteAllBytes(Application.dataPath + "/../byteArrayTest.txt", (req.Forms["images_file"] as RESTConnector.Form).Contents);
-//            File.WriteAllText(Application.dataPath + "/../byteArrayTest.txt", System.Text.Encoding.Unicode.GetString((req.Forms["images_file"] as RESTConnector.Form).Contents));
 
             if(resp.Success)
             {
@@ -461,12 +508,10 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             public OnRecognizeText Callback { get; set; }
         }
 
-        public bool RecognizeText(OnRecognizeText callback, string imagePath = default(string), string url = default(string))
+        public bool RecognizeText(OnRecognizeText callback, string imagePath = default(string), string imageURL = default(string))
         {
-            if(string.IsNullOrEmpty(imagePath) && string.IsNullOrEmpty(url))
-                throw new ArgumentNullException("Either define an image path or image URL to classify!");
-            if(!string.IsNullOrEmpty(imagePath) && !string.IsNullOrEmpty(url))
-                throw new ArgumentNullException("Either define an image path OR image URL to classify!");
+            if(string.IsNullOrEmpty(imagePath) && string.IsNullOrEmpty(imageURL))
+                throw new ArgumentNullException("Define an image path and/or image URL to classify!");
             if(string.IsNullOrEmpty(mp_ApiKey))
                 mp_ApiKey = Config.Instance.GetVariableValue("VISUAL_RECOGNITION_API_KEY");
             if(string.IsNullOrEmpty(mp_ApiKey))
@@ -490,15 +535,14 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                     Log.Error("VisualRecognition", "Failed to upload {0}!", imagePath);
             }
 
-            return RecognizeText(callback, imagePath, imageData, url);
+            return RecognizeText(callback, imagePath, imageData, imageURL);
         }
 
-        private bool RecognizeText(OnRecognizeText callback, string imagePath = default(string), byte[] imageData = default(byte[]), string url = default(string))
+        private bool RecognizeText(OnRecognizeText callback, string imagePath = default(string), byte[] imageData = default(byte[]), string imageURL = default(string))
         {
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_RECOGNIZE_TEXT);
             if(connector == null)
                 return false;
-            string tempJson = BuildRecognizeTextParametersJson(url);
             RecognizeTextReq req = new RecognizeTextReq();
             req.Callback = callback;
             req.Timeout = REQUEST_TIMEOUT;
@@ -506,14 +550,12 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.Parameters["api_key"] = mp_ApiKey;
             req.Parameters["version"] = VisualRecognitionVersion.Version;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
-            req.Forms["parameters"] = new RESTConnector.Form(tempJson);
+
+            if(!string.IsNullOrEmpty(imageURL))
+                req.Forms["parameters"] = new RESTConnector.Form(BuildRecognizeTextParametersJson(imageURL));
 
             if(imageData != null)
-            {
-                string mimeType = GetMimeType(imagePath);
-                if(!string.IsNullOrEmpty(mimeType))
-                    req.Forms["images_file"] = new RESTConnector.Form(imageData, Path.GetFileName(imagePath), mimeType); 
-            }
+                req.Forms["images_file"] = new RESTConnector.Form(imageData, Path.GetFileName(imagePath), GetMimeType(imagePath));
 
             return connector.Send(req);
         }

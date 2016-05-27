@@ -83,14 +83,29 @@ public class ExampleVisualRecognition : MonoBehaviour {
 //            Log.Debug("ExampleVisualRecognition", "Recognize text failed!");
 
         //  Detect faces post
-        string m_faceExamplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/obama.jpg";
-        if(!m_VisualRecognition.DetectFaces(OnDetectFaces, m_faceExamplePath))
-            Log.Debug("ExampleVisualRecognition", "Detect faces failed!");
+//        string m_faceExamplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/obama.jpg";
+//        string m_faceParamsPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/myparams.json";
+//        if(!m_VisualRecognition.DetectFaces(OnDetectFaces, null, m_imageURL))
+//            Log.Debug("ExampleVisualRecognition", "Detect faces failed!");
+
+//        if(!m_VisualRecognition.RecognizeText(OnRecognizeText, null, m_imageTextURL))
+//            Log.Debug("ExampleVisualRecognition", "Detect faces failed!");
+        
+//        string m_faceExamplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/obama.jpg";
+//        if(!m_VisualRecognition.TestCall(OnDetectFaces, m_faceExamplePath))
+//            Log.Debug("ExampleVisualRecognition", "Detect faces failed!");
 
         //  Recognize text post
 //        string m_textExamplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/from_platos_apology.png";
 //        if(!m_VisualRecognition.RecognizeText(OnRecognizeText, m_textExamplePath))
 //            Log.Debug("ExampleVisualRecognition", "Recognize text failed!");
+//        if(!m_VisualRecognition.RecognizeText(OnRecognizeText, null, m_imageTextURL))
+//            Log.Debug("ExampleVisualRecognition", "Recognize text failed!");
+
+        //  Test detect faces post
+        string m_faceExamplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/obama.jpg";
+        if(!m_VisualRecognition.DetectFaces(OnDetectFaces, m_faceExamplePath))
+            Log.Debug("ExampleVisualRecognition", "Recognize faces failed!");
 	}
 
     private void OnGetClassifiers (GetClassifiersTopLevelBrief classifiers)
