@@ -254,6 +254,25 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         }
 
         /// <summary>
+        /// Save this config to fileSystem
+        /// </summary>
+        public bool SaveConfigToFileSystem()
+        {
+            bool success = true;
+            try
+            {
+                File.WriteAllText(Application.streamingAssetsPath + Constants.Path.CONFIG_FILE, SaveConfig(true));
+            }
+            catch (Exception ex)
+            {
+                success = false;
+                Log.Error("Config", "Exception on SaveConfigToFileSystem. {0}", ex.Message);
+            }
+
+            return success;
+        }
+
+        /// <summary>
         /// Finds a variable name and returns the Variable object
         /// </summary>
         /// <param name="key">The name of the variable to find.</param>
