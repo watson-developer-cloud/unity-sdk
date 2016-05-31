@@ -14,6 +14,10 @@ Use this SDK to build Watson-powered applications in Unity. It comes with a set 
   * [Language Translation](#language-translation)
   * [Dialog](#dialog)
   * [Natural Language Classifier](#natural-language-classifier)
+  * [Tone Analyzer](#tone-analyzer)
+  * [Tradeoff Analytics](#tradeoff-analytics)
+  <!--* [Conversation](#conversation)
+  * [Visual Recognition](#visual-recognition)-->
 * [Developing a basic application in one minute](#developing-a-basic-application-in-one-minute)
 * [Documentation](#documentation)
 * [License](#license)
@@ -39,7 +43,7 @@ You will need the 'username' and 'password' credentials for each service. Servic
     1. Log in to Bluemix at https://bluemix.net.
     2. Navigate to the **Dashboard** on your Bluemix account.
     3. Click the **tile** for a service.
-    4. Click **Service Credentials**.
+    4. Click **Service Credentials**. Note: If your browser window is too narrow, the service options may be collapsed. Click on the upward facing double arrow next to "Back to Dashboard..." on the upper left to expand the sidebar.
     5. Copy the content in the **Service Credentials** field, and paste it in the credentials field in the Config Editor (**Watson -> Config Editor**) in Unity.
     6. Click **Apply Credentials**.
     7. Repeat steps 1 - 5 for each service you want to use.
@@ -48,7 +52,7 @@ You will need the 'username' and 'password' credentials for each service. Servic
     1. In the Config Editor (**Watson -> Config Editor**), click the **Configure** button beside the service to register. The service window is displayed.
     2. Under **Add Service**, type a unique name for the service instance in the Service name field. For example, type 'my-service-name'. Leave the default values for the other options.
     3. Click **Create**.
-    4. Click **Service Credentials**.
+    4. Click **Service Credentials**. Note: If your browser window is too narrow, the service options may be collapsed. Click on the upward facing double arrow next to "Back to Dashboard..." on the upper left to expand the sidebar.
     5. Copy the content in the **Service Credentials** field, and paste it in the empty credentials field in the **Config Editor** in Unity.
     6. Click **Apply Credentials**.
     7. Repeat steps 1 - 5 for each service you want to use.
@@ -210,6 +214,159 @@ You can use the Natural Language Classifier Editor to import and export classifi
 2. In the **Name** field, specify a name for the classifier.
 3. Click **Create**.
 
+### Tone Analyzer
+The [Tone Analyzer][tone_analyzer] service detects emotions, social tendencies and writing style from text input.
+
+```
+ToneAnalyzer m_ToneAnalyzer = new ToneAnalyzer();
+    string m_StringToTestTone = "This service enables people to discover and understand, and revise the impact of tone in their content. It uses linguistic analysis to detect and interpret emotional, social, and language cues found in text.";
+
+	void Start () {
+        m_ToneAnalyzer.GetToneAnalyze( OnGetToneAnalyze, m_StringToTestTone, "TEST");
+	}
+
+    private void OnGetToneAnalyze( ToneAnalyzerResponse resp , string data)
+    {
+        Debug.Log("Response: " +resp + " - " + data);
+    }
+```
+
+### Tradeoff Analytics
+The [Tradeoff Analytics][tradeoff_analytics] service helps people make better decisions when faced with multiple, sometimes conflicting, goals and alternatives.
+
+```
+void Start () {
+        Problem problemToSolve = new Problem();
+        problemToSolve.subject = "Test Subject";
+
+        List<Column> listColumn = new List<Column>();
+        Column columnPrice = new Column();
+        columnPrice.description = "Price Column to minimize";
+        columnPrice.range = new ValueRange();
+        ((ValueRange)columnPrice.range).high = 600;
+        ((ValueRange)columnPrice.range).low = 0;
+        columnPrice.type = "numeric";
+        columnPrice.key = "price";
+        columnPrice.full_name = "Price";
+        columnPrice.goal = "min";
+        columnPrice.is_objective = true;
+        columnPrice.format = "$####0.00";
+
+        Column columnWeight = new Column();
+        columnWeight.description = "Weight Column to minimize";
+        columnWeight.type = "numeric";
+        columnWeight.key = "weight";
+        columnWeight.full_name = "Weight";
+        columnWeight.goal = "min";
+        columnWeight.is_objective = true;
+        columnWeight.format = "####0 g";
+
+        Column columnBrandName = new Column();
+        columnBrandName.description = "All Brand Names";
+        columnBrandName.type = "categorical";
+        columnBrandName.key = "brand";
+        columnBrandName.full_name = "Brand";
+        columnBrandName.goal = "max";
+        columnBrandName.is_objective = true;
+        columnBrandName.preference = new string[]{"Samsung", "Apple", "HTC"};
+        columnBrandName.range = new CategoricalRange();
+        ((CategoricalRange)columnBrandName.range).keys = new string[]{"Samsung", "Apple", "HTC"};
+
+        listColumn.Add(columnPrice);
+        listColumn.Add(columnWeight);
+
+        problemToSolve.columns = listColumn.ToArray();
+
+
+        List<Option> listOption = new List<Option>();
+
+        Option option1 = new Option();
+        option1.key = "1";
+        option1.name = "Samsung Galaxy S4";
+        option1.values = new TestDataValue();
+        (option1.values as TestDataValue).weight = 130;
+        (option1.values as TestDataValue).brand = "Samsung";
+        (option1.values as TestDataValue).price = 249;
+        listOption.Add(option1);
+
+        Option option2 = new Option();
+        option2.key = "2";
+        option2.name = "Apple iPhone 5";
+        option2.values = new TestDataValue();
+        (option2.values as TestDataValue).weight = 112;
+        (option2.values as TestDataValue).brand = "Apple";
+        (option2.values as TestDataValue).price = 599;
+        listOption.Add(option2);
+
+        Option option3 = new Option();
+        option3.key = "3";
+        option3.name = "HTC One";
+        option3.values = new TestDataValue();
+        (option3.values as TestDataValue).weight = 143;
+        (option3.values as TestDataValue).brand = "HTC";
+        (option3.values as TestDataValue).price = 299;
+        listOption.Add(option3);
+
+        problemToSolve.options = listOption.ToArray();
+
+        m_TradeoffAnalytics.GetDilemma( OnGetDilemma, problemToSolve, false );
+	}
+
+    private void OnGetDilemma( DilemmasResponse resp )
+    {
+        Debug.Log("Response: " + resp);
+    }
+
+    /// <summary>
+    /// Application data value.
+    /// </summary>
+    public class TestDataValue : IBM.Watson.DeveloperCloud.Services.TradeoffAnalytics.v1.ApplicationDataValue
+    {
+        public double price { get; set; }
+        public double weight { get; set; }
+        public string brand { get; set; }
+    }
+```
+
+<!--### Conversation
+```cs
+private Conversation m_Conversation = new Conversation();
+private string m_WorkspaceID = "car_demo_1";
+private string m_Input = "Can you unlock the door?";
+
+void Start () {
+	Debug.Log("User: " + m_Input);
+	m_Conversation.Message(m_WorkspaceID, m_Input, OnMessage);
+}
+
+void OnMessage (DataModels.MessageResponse resp)
+{
+	foreach(DataModels.MessageIntent mi in resp.intents)
+		Debug.Log("intent: " + mi.intent + ", confidence: " + mi.confidence);
+
+	Debug.Log("response: " + resp.output.text);
+}
+```-->
+
+<!--### Visual Recognition
+The [Visual Recognition][visual_recognition] service uses deep learning algorithms to analyze images for scenes, objects, faces, text and other content and returns keywords about that content. You can also train custom classifiers to classify images.
+
+##### Classifying an image
+```
+```
+
+##### Creating new classifiers
+```
+```
+
+##### Detecting faces
+```
+```
+
+##### Recognizing text
+```
+```-->
+
 ## Developing a basic application in one minute
 You can quickly develop a basic application that uses the Speech to Text service and the Natural Language Classifier service by using the prefabs that come with the SDK. Ensure that you prepare the test data before you complete the the following steps:
   1. Create a new scene and drag the following prefabs from **Assets -> Watson -> Prefabs**, and drop them in the Hierarchy tab:
@@ -252,8 +409,11 @@ See [CONTRIBUTING.md](.github/CONTRIBUTING.md).
 [language_translation]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/language-translation/
 [dialog]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/dialog/
 [natural_language_classifier]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/nl-classifier/
+[conversation]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/dialog/
 
 [alchemy_language]: http://www.alchemyapi.com/products/alchemylanguage
 [sentiment_analysis]: http://www.alchemyapi.com/products/alchemylanguage/sentiment-analysis
 [tone_analyzer]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/tone-analyzer/
 [tradeoff_analytics]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/tradeoff-analytics/
+[conversation]:http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/dialog/api/v1/
+[visual_recognition]:http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/visual-recognition/
