@@ -16,8 +16,6 @@ Use this SDK to build Watson-powered applications in Unity. It comes with a set 
   * [Natural Language Classifier](#natural-language-classifier)
   * [Tone Analyzer](#tone-analyzer)
   * [Tradeoff Analytics](#tradeoff-analytics)
-  <!--* [Conversation](#conversation)
-  * [Visual Recognition](#visual-recognition)-->
 * [Developing a basic application in one minute](#developing-a-basic-application-in-one-minute)
 * [Documentation](#documentation)
 * [License](#license)
@@ -327,45 +325,6 @@ void Start () {
         public string brand { get; set; }
     }
 ```
-
-<!--### Conversation
-```cs
-private Conversation m_Conversation = new Conversation();
-private string m_WorkspaceID = "car_demo_1";
-private string m_Input = "Can you unlock the door?";
-
-void Start () {
-	Debug.Log("User: " + m_Input);
-	m_Conversation.Message(m_WorkspaceID, m_Input, OnMessage);
-}
-
-void OnMessage (DataModels.MessageResponse resp)
-{
-	foreach(DataModels.MessageIntent mi in resp.intents)
-		Debug.Log("intent: " + mi.intent + ", confidence: " + mi.confidence);
-
-	Debug.Log("response: " + resp.output.text);
-}
-```-->
-
-<!--### Visual Recognition
-The [Visual Recognition][visual_recognition] service uses deep learning algorithms to analyze images for scenes, objects, faces, text and other content and returns keywords about that content. You can also train custom classifiers to classify images.
-
-##### Classifying an image
-```
-```
-
-##### Creating new classifiers
-```
-```
-
-##### Detecting faces
-```
-```
-
-##### Recognizing text
-```
-```-->
 
 ## Developing a basic application in one minute
 You can quickly develop a basic application that uses the Speech to Text service and the Natural Language Classifier service by using the prefabs that come with the SDK. Ensure that you prepare the test data before you complete the the following steps:
