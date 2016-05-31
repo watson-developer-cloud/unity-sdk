@@ -16,8 +16,8 @@ Use this SDK to build Watson-powered applications in Unity. It comes with a set 
   * [Natural Language Classifier](#natural-language-classifier)
   * [Tone Analyzer](#tone-analyzer)
   * [Tradeoff Analytics](#tradeoff-analytics)
-  * [Conversation](#conversation)
-  * [Visual Recognition](#visual-recognition)
+  <!--* [Conversation](#conversation)
+  * [Visual Recognition](#visual-recognition)-->
 * [Developing a basic application in one minute](#developing-a-basic-application-in-one-minute)
 * [Documentation](#documentation)
 * [License](#license)
