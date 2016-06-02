@@ -199,12 +199,84 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 
 		public void GetServiceStatus(ServiceStatus callback)
 		{
-			if (callback != null && callback.Target != null)
-			{
-				callback(SERVICE_ID, false);
-			}
+            if (Config.Instance.FindCredentials(SERVICE_ID) != null)
+                new CheckServiceStatus(this, callback);
+            else
+            {
+    			if (callback != null && callback.Target != null)
+    			{
+    				callback(SERVICE_ID, false);
+    			}
+            }
 		}
 
+        private class CheckServiceStatus
+        {
+            private Conversation m_Service = null;
+            private ServiceStatus m_Callback = null;
+            private int m_ConversationCount = 0;
+
+            public CheckServiceStatus(Conversation service, ServiceStatus callback)
+            {
+                m_Service = service;
+                m_Callback = callback;
+
+                string customServiceID = Config.Instance.GetVariableValue(SERVICE_ID + "_ID");
+
+                //If custom classifierID is defined then we are using it to check the service health
+                if (!string.IsNullOrEmpty(customServiceID))
+                {
+
+                    if (!m_Service.Message(customServiceID, "Hello", OnMessage))
+                        OnFailure("Failed to invoke Converse().");
+                    else
+                        m_ConversationCount += 1;
+                }
+                else
+                {
+                    if (!m_Service.GetWorkspaces(OnGetWorkspaces))
+                        OnFailure("Failed to invoke GetDialogs().");
+                }
+            }
+
+            private void OnGetWorkspaces(DataModels.Workspaces workspaces)
+            {
+                if (m_Callback != null)
+                {
+                    foreach (DataModels.Workspace workspace in workspaces.workspaces)
+                    {
+                        if (!m_Service.Message(workspace.workspace_id, "Hello", OnMessage))
+                            OnFailure("Failed to invoke Message().");
+                        else
+                            m_ConversationCount += 1;
+                    }
+                }
+                else
+                    OnFailure("GetMessages() failed.");
+            }
+
+            private void OnMessage(DataModels.MessageResponse resp)
+            {
+                if (m_ConversationCount > 0)
+                {
+                    m_ConversationCount -= 1;
+                    if (resp != null)
+                    {
+                        if (m_ConversationCount == 0 && m_Callback != null && m_Callback.Target != null)
+                            m_Callback(SERVICE_ID, true);
+                    }
+                    else
+                        OnFailure("ConverseResponse is null.");
+                }
+            }
+
+            private void OnFailure(string msg)
+            {
+                Log.Error("Dialog", msg);
+                m_Callback(SERVICE_ID, false);
+                m_ConversationCount = 0;
+            }
+        };
 		#endregion
 	}
 }
