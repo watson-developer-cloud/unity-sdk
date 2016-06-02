@@ -34,7 +34,7 @@ public class ExampleVisualRecognition : MonoBehaviour {
     {
         LogSystem.InstallDefaultReactors();
 
-        Config.Instance.FindCredentials(m_VisualRecognition.GetServiceID());
+//        Config.Instance.FindCredentials(m_VisualRecognition.GetServiceID());
 
         //  Get all classifiers
 //        if(!m_VisualRecognition.GetClassifiers(OnGetClassifiers))
@@ -83,10 +83,10 @@ public class ExampleVisualRecognition : MonoBehaviour {
 //            Log.Debug("ExampleVisualRecognition", "Recognize text failed!");
 
         //  Detect faces post
-//        string m_faceExamplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/obama.jpg";
+        string m_faceExamplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/obama.jpg";
 //        string m_faceParamsPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/myparams.json";
-//        if(!m_VisualRecognition.DetectFaces(OnDetectFaces, null, m_imageURL))
-//            Log.Debug("ExampleVisualRecognition", "Detect faces failed!");
+        if(!m_VisualRecognition.DetectFaces(OnDetectFaces, m_faceExamplePath))
+            Log.Debug("ExampleVisualRecognition", "Detect faces failed!");
 
 //        if(!m_VisualRecognition.RecognizeText(OnRecognizeText, null, m_imageTextURL))
 //            Log.Debug("ExampleVisualRecognition", "Detect faces failed!");
