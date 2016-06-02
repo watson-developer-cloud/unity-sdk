@@ -251,61 +251,6 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         }
         #endregion
 
-        /*
-        #region TEST DETECT FACES POST
-        public bool TestDetectFacesPost(OnDetectFaces callback, string imagePath = default(string), string imageURL = default(string))
-        {
-            if(string.IsNullOrEmpty(imagePath) && string.IsNullOrEmpty(imageURL))
-                throw new ArgumentNullException("Either define an image path and/or imageURL to classify!");
-            if(string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetVariableValue("VISUAL_RECOGNITION_API_KEY");
-            if(string.IsNullOrEmpty(mp_ApiKey))
-                throw new WatsonException("FindClassifier - VISUAL_RECOGNITION_API_KEY needs to be defined in config.json");
-
-            byte[] imageData = null;
-            if(!string.IsNullOrEmpty(imagePath))
-            {
-                imageData = File.ReadAllBytes(imagePath);
-
-                if(imageData == null)
-                    Log.Error("VisualRecogntiion", "Failed to get image bytes {0}!", imagePath);
-            }
-
-            return TestPostFaces(callback, imagePath, imageURL, imageData);
-        }
-
-        public bool TestPostFaces(OnDetectFaces callback, string imagePath = default(string), string imageURL = default(string), byte[] imageData = default(byte[]))
-        {
-            if(string.IsNullOrEmpty(imagePath) && string.IsNullOrEmpty(imageURL))
-                throw new ArgumentNullException("Either define an image path and/or imageURL to classify!");
-            if(imageData == null && imageURL == null)
-                throw new ArgumentNullException("imageData and imageURL");
-
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_DETECT_FACES);
-            if(connector == null)
-                return false;
-
-            DetectFacesReq req = new DetectFacesReq();
-            req.Callback = callback;
-            req.Timeout = REQUEST_TIMEOUT;
-            req.OnResponse = OnDetectFacesResp;
-            req.Parameters["api_key"] = mp_ApiKey;
-            req.Parameters["version"] = VisualRecognitionVersion.Version;
-            req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
-
-            req.Forms = new Dictionary<string, RESTConnector.Form>();
-
-            if(!string.IsNullOrEmpty(imageURL))
-                req.Forms["parameters"] = new RESTConnector.Form(BuildDetectFacesParametersJson(imageURL));
-
-            if(imageData != null)
-                req.Forms["images_file"] = new RESTConnector.Form(imageData, Path.GetFileName(imagePath), GetMimeType(imagePath));
-
-            return connector.Send(req);
-        }
-        #endregion
-        */
-        
         #region Detect Faces
         public bool DetectFaces(string url, OnDetectFaces callback)
         {
@@ -358,36 +303,6 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 if(imageData == null)
                     Log.Error("VisualRecognition", "Failed to upload {0}!", imagePath);
             }
-
-            /*byte[] paramsData = null;
-            string paramsJson = default(string);
-            if(!string.IsNullOrEmpty(paramsPath))
-            {
-                if(paramsPath.StartsWith("http"))
-                {
-                    paramsJson = BuildRecognizeTextParametersJson(paramsPath);
-                    if(string.IsNullOrEmpty(paramsJson))
-                        Log.Error("VisualRecognition", "Failed to create paramsJson {0}!", paramsPath);
-                    else
-                        Log.Debug("VisualRecognition", "params json: {0}", paramsJson);
-                }
-                else
-                {
-                    if(LoadFile != null)
-                    {
-                        paramsData = LoadFile(paramsPath);
-                    }
-                    else
-                    {
-                        #if !UNITY_WEBPLAYER
-                        paramsData = File.ReadAllBytes(paramsPath);
-                        #endif
-                    }
-                    
-                    if(paramsData == null)
-                        Log.Error("VisualRecognition", "Failed to upload {0}!", paramsPath);
-                }
-            }*/
 
             return DetectFaces(callback, imagePath, imageData, imageURL);
         }
@@ -503,15 +418,61 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             return connector.Send(req);
         }
 
-        private class RecognizeTextReq : RESTConnector.Request
-        {
-            public OnRecognizeText Callback { get; set; }
-        }
-
-        public bool RecognizeText(OnRecognizeText callback, string imagePath = default(string), string imageURL = default(string))
+        /*public bool RecognizeText(OnRecognizeText callback, string imagePath = default(string), string imageURL = default(string))
         {
             if(string.IsNullOrEmpty(imagePath) && string.IsNullOrEmpty(imageURL))
                 throw new ArgumentNullException("Define an image path and/or image URL to classify!");
+            if(string.IsNullOrEmpty(mp_ApiKey))
+                mp_ApiKey = Config.Instance.GetVariableValue("VISUAL_RECOGNITION_API_KEY");
+            if(string.IsNullOrEmpty(mp_ApiKey))
+                throw new WatsonException("FindClassifier - VISUAL_RECOGNITION_API_KEY needs to be defined in config.json");
+            
+            byte[] imageData = null;
+            if(imagePath != default(string))
+            {
+                if(LoadFile != null)
+                {
+                    imageData = LoadFile(imagePath);
+                }
+                else
+                {
+                    #if !UNITY_WEBPLAYER
+                    imageData = File.ReadAllBytes(imagePath);
+                    #endif
+                }
+                
+                if(imageData == null)
+                    Log.Error("VisualRecognition", "Failed to upload {0}!", imagePath);
+            }
+            
+            return RecognizeText(callback, imagePath, imageData, imageURL);
+        }
+        
+        private bool RecognizeText(OnRecognizeText callback, string imagePath = default(string), byte[] imageData = default(byte[]), string imageURL = default(string))
+        {
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_RECOGNIZE_TEXT);
+            if(connector == null)
+                return false;
+            RecognizeTextReq req = new RecognizeTextReq();
+            req.Callback = callback;
+            req.Timeout = REQUEST_TIMEOUT;
+            req.OnResponse = OnRecognizeTextResp;
+            req.Parameters["api_key"] = mp_ApiKey;
+            req.Parameters["version"] = VisualRecognitionVersion.Version;
+            req.Forms = new Dictionary<string, RESTConnector.Form>();
+            
+            if(!string.IsNullOrEmpty(imageURL))
+                req.Forms["parameters"] = new RESTConnector.Form(BuildRecognizeTextParametersJson(imageURL));
+            
+            if(imageData != null)
+                req.Forms["images_file"] = new RESTConnector.Form(imageData, Path.GetFileName(imagePath), GetMimeType(imagePath));
+            
+            return connector.Send(req);
+        }*/
+        public bool RecognizeText(OnRecognizeText callback, string imagePath = default(string), string imageURL = default(string))
+        {
+            if(string.IsNullOrEmpty(imagePath) && string.IsNullOrEmpty(imageURL))
+                throw new ArgumentNullException("Define an image path and/or image url to classify!");
             if(string.IsNullOrEmpty(mp_ApiKey))
                 mp_ApiKey = Config.Instance.GetVariableValue("VISUAL_RECOGNITION_API_KEY");
             if(string.IsNullOrEmpty(mp_ApiKey))
@@ -538,7 +499,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             return RecognizeText(callback, imagePath, imageData, imageURL);
         }
 
-        private bool RecognizeText(OnRecognizeText callback, string imagePath = default(string), byte[] imageData = default(byte[]), string imageURL = default(string))
+        private bool RecognizeText(OnRecognizeText callback, string imagePath, byte[] imageData = default(byte[]), string imageURL = default(string))
         {
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_RECOGNIZE_TEXT);
             if(connector == null)
@@ -547,8 +508,10 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.Callback = callback;
             req.Timeout = REQUEST_TIMEOUT;
             req.OnResponse = OnRecognizeTextResp;
+
             req.Parameters["api_key"] = mp_ApiKey;
             req.Parameters["version"] = VisualRecognitionVersion.Version;
+
             req.Forms = new Dictionary<string, RESTConnector.Form>();
 
             if(!string.IsNullOrEmpty(imageURL))
@@ -558,6 +521,11 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 req.Forms["images_file"] = new RESTConnector.Form(imageData, Path.GetFileName(imagePath), GetMimeType(imagePath));
 
             return connector.Send(req);
+        }
+
+        private class RecognizeTextReq : RESTConnector.Request
+        {
+            public OnRecognizeText Callback { get; set; }
         }
 
         private string BuildRecognizeTextParametersJson(string url)
@@ -689,6 +657,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             GetClassifiersReq req = new GetClassifiersReq();
             req.Callback = callback;
             req.Parameters["api_key"] = mp_ApiKey;
+            req.Parameters["version"] = VisualRecognitionVersion.Version;
             req.OnResponse = OnGetClassifiersResp;
 
             return connector.Send(req);
@@ -744,6 +713,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             GetClassifierReq req = new GetClassifierReq();
             req.Callback = callback;
             req.Parameters["api_key"] = mp_ApiKey;
+            req.Parameters["version"] = VisualRecognitionVersion.Version;
             req.OnResponse = OnGetClassifierResp;
 
             return connector.Send(req);
@@ -967,40 +937,122 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
         private class CheckServiceStatus
         {
-            private VisualRecognition m_service = null;
+            private VisualRecognition m_Service = null;
             private ServiceStatus m_Callback = null;
             private int m_GetClassifierCount = 0;
             private int m_ClassifyCount = 0;
 
             public CheckServiceStatus(VisualRecognition service, ServiceStatus callback)
             {
-                m_service = service;
+                m_Service = service;
                 m_Callback = callback;
 
-                //  if classifier id
-                    //  if not get classifier with classifierid
-                        //  onfailure
-                    //  else classifierCount ++
-                //  else
-                    //  if not get classifiers
-                        //  onfailure
-                    //  else onCheckServices
-
+                if(!m_Service.GetClassifiers(OnCheckServices))
+                    OnFailure("Failed to get classifiers!");
             }
 
-            public void OnCheckServices(ClassifyTopLevelMultiple classifiers)
+            private void OnCheckServices(GetClassifiersTopLevelBrief classifiers)
             {
-
+                if (m_Callback != null)
+                {
+                    if(classifiers != null)
+                    {
+                        if(classifiers.classifiers != null)
+                        {
+                            if (classifiers.classifiers.Length > 0)
+                            {
+                                //  Check first five classifiers - too many classifiers currently!
+                                int numClassifiers = (classifiers.classifiers.Length > 5) ? 5 : classifiers.classifiers.Length;
+                                for(int i = 0; i < numClassifiers; i++)
+                                {
+                                    if(!m_Service.GetClassifier(classifiers.classifiers[i].classifier_id, OnCheckService))
+                                    {
+//                                        OnFailure("Failed to call GetClassifier()");
+                                    }
+                                    else
+                                    {
+                                        m_GetClassifierCount += 1;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (m_Callback != null && m_Callback.Target != null)
+                                {
+                                    m_Callback(SERVICE_ID, true);     // no classifiers to check, just return success then..
+                                }
+                            }
+                        }
+                        else
+                        {
+                            Log.Debug("VisualRecognition", "Classifiers.classifiers is null!");
+                        }
+                    }
+                    else
+                    {
+                        Log.Debug("VisualRecognition", "Classifiers in null!");
+                    }
+                }
+                else
+                {
+                    if (m_Callback != null && m_Callback.Target != null)
+                    {
+                        m_Callback(SERVICE_ID, false);
+                    }
+                }
             }
 
-            public void OnCheckService(ClassifyTopLevelSingle classifier)
+            private void OnCheckService(GetClassifiersPerClassifierVerbose classifier)
             {
-
+                if (m_GetClassifierCount > 0)
+                {
+                    m_GetClassifierCount -= 1;
+                    if (classifier != null)
+                    {
+                        Log.Debug("VisualRecognition", "classifier status: {0}", classifier.status);
+                        if (classifier.status == "unavailable" || classifier.status == "failed")
+                        {
+//                            OnFailure(string.Format("Status of classifier {0} came back as {1}.",
+//                                classifier.classifier_id, classifier.status));
+                        }
+                        else
+                        {
+                            // try to classify something with this classifier.
+                            if (!m_Service.Classify(OnClassify, null, "https://upload.wikimedia.org/wikipedia/commons/e/e9/Official_portrait_of_Barack_Obama.jpg"))
+                            {
+                                Log.Debug("VisualRecognition", "Failed to invoke Classify!");
+                            }
+                            else
+                            {
+                                m_ClassifyCount += 1;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        OnFailure("Failed to get classifier.");
+                    }
+                }
             }
 
-            public void OnClassify(ClassResult result)
+            private void OnClassify(ClassifyTopLevelMultiple result)
             {
-
+                if (m_ClassifyCount > 0)
+                {
+                    m_ClassifyCount -= 1;
+                    if (result != null)
+                    {
+                        // success!
+                        if (m_ClassifyCount == 0 && m_Callback != null && m_Callback.Target != null)
+                        {
+                            m_Callback(SERVICE_ID, true);
+                        }
+                    }
+                    else
+                    {
+                        OnFailure("Failed to classify.");
+                    }
+                }
             }
 
             void OnFailure(string msg)
@@ -1010,8 +1062,6 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 {
                     m_Callback(SERVICE_ID, false);
                 }
-
-                m_GetClassifierCount = m_ClassifyCount = 0;
             }
         }
 

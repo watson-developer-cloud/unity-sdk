@@ -23,8 +23,8 @@ using IBM.Watson.DeveloperCloud.Utilities;
 
 public class ExampleVisualRecognition : MonoBehaviour {
     private VisualRecognition m_VisualRecognition = new VisualRecognition();
-    private string m_classifierName = "integration-test-classifier";
-    private string m_classifierID = "integrationtestclassifier_1745947114";
+    private string m_classifierName = "Apples_OptionalParams";
+    private string m_classifierID = "Apples_OptionalParams_1213405640";
     private string m_classifierToDelete = "unitytestclassifier2b_37849361";
     private string m_version = "2016-05-19";
     private string m_imageURL = "https://upload.wikimedia.org/wikipedia/commons/e/e9/Official_portrait_of_Barack_Obama.jpg";
@@ -39,7 +39,7 @@ public class ExampleVisualRecognition : MonoBehaviour {
         //  Get all classifiers
 //        if(!m_VisualRecognition.GetClassifiers(OnGetClassifiers))
 //            Log.Debug("ExampleVisualRecognition", "Getting classifiers failed!");
-
+//
         //  Find classifier by name
 //        m_VisualRecognition.FindClassifier(m_classifierName, OnFindClassifier);
 
@@ -103,9 +103,9 @@ public class ExampleVisualRecognition : MonoBehaviour {
 //            Log.Debug("ExampleVisualRecognition", "Recognize text failed!");
 
         //  Test detect faces post
-        string m_faceExamplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/obama.jpg";
-        if(!m_VisualRecognition.DetectFaces(OnDetectFaces, m_faceExamplePath))
-            Log.Debug("ExampleVisualRecognition", "Recognize faces failed!");
+//        string m_faceExamplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/obama.jpg";
+//        if(!m_VisualRecognition.DetectFaces(OnDetectFaces, m_faceExamplePath))
+//            Log.Debug("ExampleVisualRecognition", "Recognize faces failed!");
 	}
 
     private void OnGetClassifiers (GetClassifiersTopLevelBrief classifiers)
