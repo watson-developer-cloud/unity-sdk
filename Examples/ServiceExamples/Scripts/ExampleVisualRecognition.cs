@@ -68,26 +68,35 @@ public class ExampleVisualRecognition : MonoBehaviour {
 //            Log.Debug("ExampleVisualRecognition", "Classify image failed!");
 
         //  Classify post image
-//        string m_imagesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/fruitbowl.jpg";
+//        string m_imagesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/obama.jpg";
 //        string[] m_owners = {"IBM", "me"};
 //        string[] m_classifierIDs = {"default"};
 //        if(!m_VisualRecognition.Classify(OnClassify, m_imagesPath, null, m_owners, m_classifierIDs, 0.5f))
 //            Log.Debug("ExampleVisualRecognition", "Classify image failed!");
 
+
+
         //  Detect faces get
 //        if(!m_VisualRecognition.DetectFaces(m_imageURL, OnDetectFaces))
 //            Log.Debug("ExampleVisualRecogntiion", "Detect faces failed!");
+
+        //  Detect faces post url
+//        if(!m_VisualRecognition.DetectFaces(OnDetectFaces, null, m_imageURL))
+//            Log.Debug("ExampleVisualRecognition", "Detect faces failed!");
+
+        //  Detect faces post image
+        string m_faceExamplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/obama.jpg";
+        if(!m_VisualRecognition.DetectFaces(OnDetectFaces, m_faceExamplePath))
+            Log.Debug("ExampleVisualRecognition", "Detect faces failed!");
+
+
+
 
         //  Recognize text get
 //        if(!m_VisualRecognition.RecognizeText(m_imageTextURL, OnRecognizeText))
 //            Log.Debug("ExampleVisualRecognition", "Recognize text failed!");
 
-        //  Detect faces post
-        string m_faceExamplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/obama.jpg";
-//        string m_faceParamsPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/myparams.json";
-        if(!m_VisualRecognition.DetectFaces(OnDetectFaces, m_faceExamplePath))
-            Log.Debug("ExampleVisualRecognition", "Detect faces failed!");
-
+//
 //        if(!m_VisualRecognition.RecognizeText(OnRecognizeText, null, m_imageTextURL))
 //            Log.Debug("ExampleVisualRecognition", "Detect faces failed!");
         
@@ -104,7 +113,7 @@ public class ExampleVisualRecognition : MonoBehaviour {
 
         //  Test detect faces post
 //        string m_faceExamplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/obama.jpg";
-//        if(!m_VisualRecognition.DetectFaces(OnDetectFaces, m_faceExamplePath))
+//        if(!m_VisualRecognition.TestDetectFaces(m_faceExamplePath, OnDetectFaces))
 //            Log.Debug("ExampleVisualRecognition", "Recognize faces failed!");
 	}
 
