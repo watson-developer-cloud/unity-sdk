@@ -39,7 +39,7 @@ public class ExampleVisualRecognition : MonoBehaviour {
         //  Get all classifiers
 //        if(!m_VisualRecognition.GetClassifiers(OnGetClassifiers))
 //            Log.Debug("ExampleVisualRecognition", "Getting classifiers failed!");
-//
+
         //  Find classifier by name
 //        m_VisualRecognition.FindClassifier(m_classifierName, OnFindClassifier);
 
@@ -57,6 +57,8 @@ public class ExampleVisualRecognition : MonoBehaviour {
 //        if(!m_VisualRecognition.TrainClassifier("unity-test-classifier5", "taj", m_positiveExamplesPath, m_negativeExamplesPath, OnTrainClassifier))
 //            Log.Debug("ExampleVisualRecognition", "Train classifier failed!");
 
+
+
         //  Classify get
 //        if(!m_VisualRecognition.Classify(m_imageURL, OnClassify))
 //            Log.Debug("ExampleVisualRecognition", "Classify image failed!");
@@ -71,7 +73,7 @@ public class ExampleVisualRecognition : MonoBehaviour {
 //        string m_imagesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/obama.jpg";
 //        string[] m_owners = {"IBM", "me"};
 //        string[] m_classifierIDs = {"default"};
-//        if(!m_VisualRecognition.Classify(OnClassify, m_imagesPath, null, m_owners, m_classifierIDs, 0.5f))
+//        if(!m_VisualRecognition.Classify(OnClassify, m_imagesPath, m_owners, m_classifierIDs, 0.5f))
 //            Log.Debug("ExampleVisualRecognition", "Classify image failed!");
 
 
@@ -80,15 +82,10 @@ public class ExampleVisualRecognition : MonoBehaviour {
 //        if(!m_VisualRecognition.DetectFaces(m_imageURL, OnDetectFaces))
 //            Log.Debug("ExampleVisualRecogntiion", "Detect faces failed!");
 
-        //  Detect faces post url
-//        if(!m_VisualRecognition.DetectFaces(OnDetectFaces, null, m_imageURL))
-//            Log.Debug("ExampleVisualRecognition", "Detect faces failed!");
-
         //  Detect faces post image
-        string m_faceExamplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/obama.jpg";
-        if(!m_VisualRecognition.DetectFaces(OnDetectFaces, m_faceExamplePath))
-            Log.Debug("ExampleVisualRecognition", "Detect faces failed!");
-
+//        string m_faceExamplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/obama.jpg";
+//        if(!m_VisualRecognition.DetectFaces(OnDetectFaces, m_faceExamplePath))
+//            Log.Debug("ExampleVisualRecognition", "Detect faces failed!");
 
 
 
@@ -96,25 +93,10 @@ public class ExampleVisualRecognition : MonoBehaviour {
 //        if(!m_VisualRecognition.RecognizeText(m_imageTextURL, OnRecognizeText))
 //            Log.Debug("ExampleVisualRecognition", "Recognize text failed!");
 
-//
-//        if(!m_VisualRecognition.RecognizeText(OnRecognizeText, null, m_imageTextURL))
-//            Log.Debug("ExampleVisualRecognition", "Detect faces failed!");
-        
-//        string m_faceExamplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/obama.jpg";
-//        if(!m_VisualRecognition.TestCall(OnDetectFaces, m_faceExamplePath))
-//            Log.Debug("ExampleVisualRecognition", "Detect faces failed!");
-
-        //  Recognize text post
+        //  Recognize text post image
 //        string m_textExamplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/from_platos_apology.png";
 //        if(!m_VisualRecognition.RecognizeText(OnRecognizeText, m_textExamplePath))
 //            Log.Debug("ExampleVisualRecognition", "Recognize text failed!");
-//        if(!m_VisualRecognition.RecognizeText(OnRecognizeText, null, m_imageTextURL))
-//            Log.Debug("ExampleVisualRecognition", "Recognize text failed!");
-
-        //  Test detect faces post
-//        string m_faceExamplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/obama.jpg";
-//        if(!m_VisualRecognition.TestDetectFaces(m_faceExamplePath, OnDetectFaces))
-//            Log.Debug("ExampleVisualRecognition", "Recognize faces failed!");
 	}
 
     private void OnGetClassifiers (GetClassifiersTopLevelBrief classifiers)
