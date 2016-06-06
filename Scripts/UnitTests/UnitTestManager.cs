@@ -39,7 +39,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
         /// <summary>
         /// Maximum time in seconds a test can run before we consider it timed out.
         /// </summary>
-        const float TEST_TIMEOUT = 60.0f;
+        const float TEST_TIMEOUT = 240.0f;
 
         /// <summary>
         /// Returns the instance of the UnitTestManager.

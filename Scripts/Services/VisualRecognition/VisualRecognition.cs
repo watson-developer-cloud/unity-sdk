@@ -565,7 +565,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
                 if(!bFound)
                 {
-                    Log.Error("VisualRecognition", "Failed to find classifier {0}", ClassifierName);
+                    Log.Warning("VisualRecognition", "Failed to find classifier {0}", ClassifierName);
                     Callback(null);
                 }
             }
