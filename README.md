@@ -295,7 +295,7 @@ private void OnGetClassifier(GetClassifiersPerClassifierVerbose classifier)
 }
 ```
 ##### Training classifiers
-Train a new classifier by uploading image data. Two compressed zip files containing at least two positive exampel files or one positive and one negative example file. The prefix of the positive example file is used as the classname for the new classifier ("<Class Name>_positive_examples"). Negative examples zip must be named "negative_examples". After a sucessful call, training the classifier takes a few minutes.
+Train a new classifier by uploading image data. Two compressed zip files containing at least two positive example files or one positive and one negative example file. The prefix of the positive example file is used as the classname for the new classifier ("<Class Name>_positive_examples"). Negative examples zip must be named "negative_examples". After a successful call, training the classifier takes a few minutes.
 
 ```cs
 private VisualRecognition m_VisualRecognition = new VisualRecognition();
@@ -382,7 +382,7 @@ private void OnClassify(ClassifyTopLevelMultiple classify)
         Log.Debug("ExampleVisualRecognition", "Classification failed!");
     }
 }
-``` 
+```
 
 ###### Classify an image by sending an image
 
@@ -433,7 +433,7 @@ private string m_imageURL = "https://upload.wikimedia.org/wikipedia/commons/e/e9
 void Start()
 {
 	if(!m_VisualRecognition.DetectFaces(m_imageURL, OnDetectFaces))
-        Log.Debug("ExampleVisualRecogntiion", "Detect faces failed!");
+        Log.Debug("ExampleVisualRecognition", "Detect faces failed!");
 }
 
 private void OnDetectFaces(FacesTopLevelMultiple multipleImages)
@@ -446,10 +446,10 @@ private void OnDetectFaces(FacesTopLevelMultiple multipleImages)
             Log.Debug("ExampleVisualRecognition", "\tsource_url: {0}, resolved_url: {1}", faces.source_url, faces.resolved_url);
             foreach(OneFaceResult face in faces.faces)
             {
-                Log.Debug("ExampleVisulaRecognition", "\t\tFace location: {0}, {1}, {2}, {3}", face.face_location.left, face.face_location.top, face.face_location.width, face.face_location.height);
-                Log.Debug("ExampleVisulaRecognition", "\t\tGender: {0}, Score: {1}", face.gender.gender, face.gender.score);
-                Log.Debug("ExampleVisulaRecognition", "\t\tAge Min: {0}, Age Max: {1}, Score: {2}", face.age.min, face.age.max, face.age.score);
-                Log.Debug("ExampleVisulaRecognition", "\t\tName: {0}, Score: {1}, Type Heiarchy: {2}", face.identity.name, face.identity.score, face.identity.type_hierarchy);
+                Log.Debug("ExampleVisualRecognition", "\t\tFace location: {0}, {1}, {2}, {3}", face.face_location.left, face.face_location.top, face.face_location.width, face.face_location.height);
+                Log.Debug("ExampleVisualRecognition", "\t\tGender: {0}, Score: {1}", face.gender.gender, face.gender.score);
+                Log.Debug("ExampleVisualRecognition", "\t\tAge Min: {0}, Age Max: {1}, Score: {2}", face.age.min, face.age.max, face.age.score);
+                Log.Debug("ExampleVisualRecognition", "\t\tName: {0}, Score: {1}, Type Hierarchy: {2}", face.identity.name, face.identity.score, face.identity.type_hierarchy);
             }
         }
     }
@@ -458,7 +458,7 @@ private void OnDetectFaces(FacesTopLevelMultiple multipleImages)
         Log.Debug("ExampleVisualRecognition", "Detect faces failed!");
     }
 }
-``` 
+```
 
 ###### Detect faces by sending an image
 
@@ -482,10 +482,10 @@ private void OnDetectFaces(FacesTopLevelMultiple multipleImages)
             Log.Debug("ExampleVisualRecognition", "\tsource_url: {0}, resolved_url: {1}", faces.source_url, faces.resolved_url);
             foreach(OneFaceResult face in faces.faces)
             {
-                Log.Debug("ExampleVisulaRecognition", "\t\tFace location: {0}, {1}, {2}, {3}", face.face_location.left, face.face_location.top, face.face_location.width, face.face_location.height);
-                Log.Debug("ExampleVisulaRecognition", "\t\tGender: {0}, Score: {1}", face.gender.gender, face.gender.score);
-                Log.Debug("ExampleVisulaRecognition", "\t\tAge Min: {0}, Age Max: {1}, Score: {2}", face.age.min, face.age.max, face.age.score);
-                Log.Debug("ExampleVisulaRecognition", "\t\tName: {0}, Score: {1}, Type Heiarchy: {2}", face.identity.name, face.identity.score, face.identity.type_hierarchy);
+                Log.Debug("ExampleVisualRecognition", "\t\tFace location: {0}, {1}, {2}, {3}", face.face_location.left, face.face_location.top, face.face_location.width, face.face_location.height);
+                Log.Debug("ExampleVisualRecognition", "\t\tGender: {0}, Score: {1}", face.gender.gender, face.gender.score);
+                Log.Debug("ExampleVisualRecognition", "\t\tAge Min: {0}, Age Max: {1}, Score: {2}", face.age.min, face.age.max, face.age.score);
+                Log.Debug("ExampleVisualRecognition", "\t\tName: {0}, Score: {1}, Type Hierarchy: {2}", face.identity.name, face.identity.score, face.identity.type_hierarchy);
             }
         }
     }
@@ -522,9 +522,9 @@ private void OnRecognizeText(TextRecogTopLevelMultiple multipleImages)
             Log.Debug("ExampleVisualRecognition", "\ttext: {0}", texts.text);
             foreach(TextRecogOneWord text in texts.words)
             {
-                Log.Debug("ExampleVisulaRecognition", "\t\ttext location: {0}, {1}, {2}, {3}", text.location.left, text.location.top, text.location.width, text.location.height);
-                Log.Debug("ExampleVisulaRecognition", "\t\tLine number: {0}", text.line_number);
-                Log.Debug("ExampleVisulaRecognition", "\t\tword: {0}, Score: {1}", text.word, text.score);
+                Log.Debug("ExampleVisualRecognition", "\t\ttext location: {0}, {1}, {2}, {3}", text.location.left, text.location.top, text.location.width, text.location.height);
+                Log.Debug("ExampleVisualRecognition", "\t\tLine number: {0}", text.line_number);
+                Log.Debug("ExampleVisualRecognition", "\t\tword: {0}, Score: {1}", text.word, text.score);
             }
         }
     }
@@ -533,7 +533,7 @@ private void OnRecognizeText(TextRecogTopLevelMultiple multipleImages)
         Log.Debug("ExampleVisualRecognition", "RecognizeText failed!");
     }
 }
-``` 
+```
 
 ###### Recognize text by sending an image
 
@@ -558,9 +558,9 @@ private void OnRecognizeText(TextRecogTopLevelMultiple multipleImages)
             Log.Debug("ExampleVisualRecognition", "\ttext: {0}", texts.text);
             foreach(TextRecogOneWord text in texts.words)
             {
-                Log.Debug("ExampleVisulaRecognition", "\t\ttext location: {0}, {1}, {2}, {3}", text.location.left, text.location.top, text.location.width, text.location.height);
-                Log.Debug("ExampleVisulaRecognition", "\t\tLine number: {0}", text.line_number);
-                Log.Debug("ExampleVisulaRecognition", "\t\tword: {0}, Score: {1}", text.word, text.score);
+                Log.Debug("ExampleVisualRecognition", "\t\ttext location: {0}, {1}, {2}, {3}", text.location.left, text.location.top, text.location.width, text.location.height);
+                Log.Debug("ExampleVisualRecognition", "\t\tLine number: {0}", text.line_number);
+                Log.Debug("ExampleVisualRecognition", "\t\tword: {0}, Score: {1}", text.word, text.score);
             }
         }
     }
