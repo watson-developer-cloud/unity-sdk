@@ -139,6 +139,15 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             return connector.Send(req);
         }
 
+        /// <summary>
+        /// Classifies a posted image.
+        /// </summary>
+        /// <param name="callback">Callback.</param>
+        /// <param name="imagePath">Image path.</param>
+        /// <param name="owners">Owners.</param>
+        /// <param name="classifierIDs">Classifier I ds.</param>
+        /// <param name="threshold">Threshold.</param>
+        /// <param name="acceptLanguage">Accept language.</param>
         public bool Classify(OnClassify callback, string imagePath, string[] owners = default(string[]), string[] classifierIDs = default(string[]), float threshold = default(float), string acceptLanguage = "en")
         {
             if(string.IsNullOrEmpty(mp_ApiKey))

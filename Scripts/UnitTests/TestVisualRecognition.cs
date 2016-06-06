@@ -91,14 +91,14 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 
                 //  test classify image get
                 Log.Debug("TestVisualRecognition", "Classifying image using GET!");
-                m_VisualRecognition.Classify(m_ImageURL, OnClassifyGet, m_owners, m_classifierIds, 0.5f);
+                m_VisualRecognition.Classify(m_ImageURL, OnClassifyGet, m_owners, m_classifierIds);
                 while(!m_ClassifyGETTested)
                     yield return null;
                 
                 //  test classify image post
                 Log.Debug("TestVisualRecognition", "Classifying image using POST!");
                 string m_classifyImagePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/giraffe_to_classify.jpg";
-                m_VisualRecognition.Classify(OnClassifyPost, m_classifyImagePath, m_owners, m_classifierIds, 0.5f);
+                m_VisualRecognition.Classify(OnClassifyPost, m_classifyImagePath, m_owners, m_classifierIds);
                 while(!m_ClassifyPOSTTested)
                     yield return null;
 
