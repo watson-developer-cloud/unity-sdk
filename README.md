@@ -16,6 +16,7 @@ Use this SDK to build Watson-powered applications in Unity. It comes with a set 
   * [Natural Language Classifier](#natural-language-classifier)
   * [Tone Analyzer](#tone-analyzer)
   * [Tradeoff Analytics](#tradeoff-analytics)
+  * [Conversation](#conversation)
   * [Visual Recognition](#visual-recognition)
 * [Developing a basic application in one minute](#developing-a-basic-application-in-one-minute)
 * [Documentation](#documentation)
@@ -326,6 +327,29 @@ void Start () {
         public string brand { get; set; }
     }
 ```
+
+### Conversation
+<!-- conversation description here: Change link below -->
+
+```cs
+private Conversation m_Conversation = new Conversation();
+private string m_WorkspaceID = "car_demo_1";
+private string m_Input = "Can you unlock the door?";
+
+void Start () {
+	Debug.Log("User: " + m_Input);
+	m_Conversation.Message(m_WorkspaceID, m_Input, OnMessage);
+}
+
+void OnMessage (DataModels.MessageResponse resp)
+{
+	foreach(DataModels.MessageIntent mi in resp.intents)
+		Debug.Log("intent: " + mi.intent + ", confidence: " + mi.confidence);
+
+	Debug.Log("response: " + resp.output.text);
+}
+```
+
 
 ### Visual Recognition
 Use the [Visual Recognition][visual_recognition] service to classify an image against a default or custom trained classifier. In addition, the service can detect faces and text in an image.
