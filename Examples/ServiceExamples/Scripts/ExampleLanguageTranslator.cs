@@ -16,10 +16,10 @@
 */
 
 using UnityEngine;
-using IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v1;
+using IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v1;
 
-public class ExampleLanguageTranslation : MonoBehaviour {
-	private LanguageTranslation m_Translate = new LanguageTranslation();
+public class ExampleLanguageTranslator : MonoBehaviour {
+	private LanguageTranslator m_Translate = new LanguageTranslator();
 	private string m_PharseToTranslate = "How do I get to the disco?";
 	
 	void Start ()

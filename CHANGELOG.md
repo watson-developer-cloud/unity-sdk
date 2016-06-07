@@ -9,6 +9,7 @@ _2016-05-28_
  * New: Added Conversation abstraction
  * New: Added Visual Recognition v3 abstraction
  * Fix: Creating test project dynamically for Travis CL integration
+ * Fix: Refactored Language Translation to Language Translator
 
 ## Version 0.3.0
 
