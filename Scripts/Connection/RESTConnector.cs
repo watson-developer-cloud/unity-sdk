@@ -16,7 +16,7 @@
 */
 
 // uncomment to enable debugging
-#define ENABLE_DEBUGGING
+//#define ENABLE_DEBUGGING
 
 using IBM.Watson.DeveloperCloud.Utilities;
 using IBM.Watson.DeveloperCloud.Logging;
@@ -251,7 +251,8 @@ namespace IBM.Watson.DeveloperCloud.Connection
 
             connector = new RESTConnector();
             connector.URL = cred.m_URL + function;
-            connector.Authentication = new Credentials(cred.m_User, cred.m_Password);
+            if(cred.HasCredentials())
+                connector.Authentication = new Credentials(cred.m_User, cred.m_Password);
             if (useCache)
                 sm_Connectors[connectorID] = connector;
 
@@ -322,7 +323,12 @@ namespace IBM.Watson.DeveloperCloud.Connection
         {
             // yield AFTER we increment the connection count, so the Send() function can return immediately
             m_ActiveConnections += 1;
-            yield return null;
+            #if UNITY_EDITOR
+            if (!UnityEditorInternal.InternalEditorUtility.inBatchMode)
+                yield return null;
+            #else
+                yield return null;
+            #endif
 
             while (m_Requests.Count > 0)
             {
@@ -377,19 +383,19 @@ namespace IBM.Watson.DeveloperCloud.Connection
                         WWWForm form = new WWWForm();
                         try
                         {
-                            foreach (var kp in req.Forms)
+                            foreach (var formData in req.Forms)
                             {
-                                if (kp.Value.IsBinary)
-                                    form.AddBinaryData(kp.Key, kp.Value.Contents, kp.Value.FileName, kp.Value.MimeType);
-                                else if (kp.Value.BoxedObject is string)
-                                    form.AddField(kp.Key, (string)kp.Value.BoxedObject);
-                                else if (kp.Value.BoxedObject is int)
-                                    form.AddField(kp.Key, (int)kp.Value.BoxedObject);
-                                else if (kp.Value.BoxedObject != null)
-                                    Log.Warning("RESTCOnnector", "Unsupported form field type {0}", kp.Value.BoxedObject.GetType().ToString());
+                                if (formData.Value.IsBinary)
+                                    form.AddBinaryData(formData.Key, formData.Value.Contents, formData.Value.FileName, formData.Value.MimeType);
+                                else if (formData.Value.BoxedObject is string)
+                                    form.AddField(formData.Key, (string)formData.Value.BoxedObject);
+                                else if (formData.Value.BoxedObject is int)
+                                    form.AddField(formData.Key, (int)formData.Value.BoxedObject);
+                                else if (formData.Value.BoxedObject != null)
+                                    Log.Warning("RESTCOnnector", "Unsupported form field type {0}", formData.Value.BoxedObject.GetType().ToString());
                             }
-                            foreach (var kp in form.headers)
-                                req.Headers[kp.Key] = kp.Value;
+                            foreach (var headerData in form.headers)
+                                req.Headers[headerData.Key] = headerData.Value;
                         }
                         catch (Exception e)
                         {
@@ -418,7 +424,13 @@ namespace IBM.Watson.DeveloperCloud.Connection
                             req.OnUploadProgress(www.uploadProgress);
                         if (req.OnDownloadProgress != null)
                             req.OnDownloadProgress(www.progress);
+                        
+                        #if UNITY_EDITOR
+                        if (!UnityEditorInternal.InternalEditorUtility.inBatchMode)
+                            yield return null;
+                        #else
                         yield return null;
+                        #endif
                     }
 
                     if (req.Cancel)

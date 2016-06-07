@@ -58,5 +58,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         {
             return "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(User + ":" + Password));
         }
+
+        public bool HasCredentials()
+        {
+            return !string.IsNullOrEmpty(User) && !string.IsNullOrEmpty(Password);
+        }
     };
 }
