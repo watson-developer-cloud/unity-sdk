@@ -121,7 +121,7 @@ namespace IBM.Watson.DeveloperCloud.Camera
 
         #region Event Registration
 
-        void OnEnable()
+        protected virtual void OnEnable()
         {
             EventManager.Instance.RegisterEventReceiver("OnCameraReset", ResetCameraPosition);
             EventManager.Instance.RegisterEventReceiver("OnCameraSetAntiAliasing", OnCameraSetAntiAliasing);
@@ -129,7 +129,7 @@ namespace IBM.Watson.DeveloperCloud.Camera
             EventManager.Instance.RegisterEventReceiver("OnCameraSetInteractivity", OnCameraSetTwoFingerDrag);
         }
 
-        void OnDisable()
+        protected virtual void OnDisable()
         {
             EventManager.Instance.UnregisterEventReceiver("OnCameraReset", ResetCameraPosition);
             EventManager.Instance.UnregisterEventReceiver("OnCameraSetAntiAliasing", OnCameraSetAntiAliasing);
