@@ -329,7 +329,7 @@ void Start () {
 ```
 
 ### Conversation
-<!-- conversation description here: Change link below -->
+With the IBM Watson™ [Conversation][conversation] service you can create cognitive agents - virtual agents that combine machine learning, natural language understanding, and integrated dialog scripting tools to provide outstanding customer engagements.
 
 ```cs
 private Conversation m_Conversation = new Conversation();
@@ -758,5 +758,5 @@ See [CONTRIBUTING.md](.github/CONTRIBUTING.md).
 [sentiment_analysis]: http://www.alchemyapi.com/products/alchemylanguage/sentiment-analysis
 [tone_analyzer]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/tone-analyzer/
 [tradeoff_analytics]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/tradeoff-analytics/
-[conversation]:http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/dialog/api/v1/
+[conversation]:http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/conversation/
 [visual_recognition]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/visual-recognition/api/v3/
