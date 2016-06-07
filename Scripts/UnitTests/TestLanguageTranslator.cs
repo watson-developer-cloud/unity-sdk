@@ -17,15 +17,15 @@
 
 
 using IBM.Watson.DeveloperCloud.Logging;
-using IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v1;
+using IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
 using System.Collections;
 
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
-    public class TestLanguageTranslation : UnitTest
+    public class TestLanguageTranslator : UnitTest
     {
-        private LanguageTranslation m_Translate = new LanguageTranslation();
+        private LanguageTranslator m_Translate = new LanguageTranslator();
         private bool m_GetModelTested = false;
         private bool m_GetModelsTested = false;
         private bool m_GetLanguagesTested = false;
