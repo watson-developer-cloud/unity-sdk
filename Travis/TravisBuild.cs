@@ -12,7 +12,7 @@ public static class RunTravisBuild
 		"Assets/Watson/Scenes/UnitTests/TestTextToSpeech.unity",
 		"Assets/Watson/Scenes/UnitTests/UnitTests.unity",
 		"Assets/Watson/Examples/WidgetExamples/ExampleDialog.unity",
-		"Assets/Watson/Examples/WidgetExamples/ExampleLanguageTranslation.unity"
+		"Assets/Watson/Examples/WidgetExamples/ExampleLanguageTranslator.unity"
 	};
 
 	static public void OSX()
