@@ -103,6 +103,15 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 
                 return false;
             }
+
+            /// <summary>
+            /// Determines whether this instance has credentials.
+            /// </summary>
+            /// <returns><c>true</c> if this instance has credentials; otherwise, <c>false</c>.</returns>
+            public bool HasCredentials()
+            {
+                return !string.IsNullOrEmpty(m_User) && !string.IsNullOrEmpty(m_Password);
+            }
         }
 
         #region Private Data
