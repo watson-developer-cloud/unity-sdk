@@ -274,6 +274,15 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 
         }
 
+        /// <summary>
+        /// Gets the EPOCH time in UTC time zome
+        /// </summary>
+        /// <returns>Double EPOCH in UTC</returns>
+        public static double GetEpochUTC()
+        {
+            DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            return (DateTime.UtcNow - epoch).TotalMilliseconds;
+        }
 
 
         /// <summary>
