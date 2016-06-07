@@ -19,7 +19,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using IBM.Watson.DeveloperCloud.DataTypes;
 using IBM.Watson.DeveloperCloud.Logging;
-using IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v1;
+using IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v1;
 using IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1;
 using System;
 using System.Collections.Generic;
@@ -33,7 +33,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
     /// <summary>
     /// Translation widget to handle translation service calls
     /// </summary>
-	public class LanguageTranslationWidget : Widget
+	public class LanguageTranslatorWidget : Widget
     {
         #region Inputs
         [SerializeField]
@@ -50,7 +50,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         #endregion
 
         #region Private Data
-        private LanguageTranslation m_Translate = new LanguageTranslation();
+        private LanguageTranslator m_Translate = new LanguageTranslator();
 
         [SerializeField, Tooltip("Source language, if empty language will be auto-detected.")]
         private string m_SourceLanguage = string.Empty;
@@ -131,8 +131,8 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         #region Event Handlers
         private void OnEnable()
         {
-            Log.Status("TranslationWidget", "OnEnable");
-            //UnityEngine.Debug.LogWarning("TranslationWidget - OnEnable");
+            Log.Status("TranslatorWidget", "OnEnable");
+            //UnityEngine.Debug.LogWarning("TranslatorWidget - OnEnable");
             m_Translate.GetLanguages(OnGetLanguages);
         }
 
@@ -169,7 +169,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                 if (!string.IsNullOrEmpty(TargetLanguage))
                     Translate(m_Input.text);
                 else
-                    Log.Error("TranslationWidget", "OnTranslation - Target Language should be set!");
+                    Log.Error("TranslatorWidget", "OnTranslation - Target Language should be set!");
             }
         }
 
@@ -184,7 +184,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         {
             if (languages != null && languages.languages.Length > 0)
             {
-                Log.Status("TranslationWidget", "OnGetLanguagesAndGetModelsAfter as {0}", languages.languages.Length);
+                Log.Status("TranslatorWidget", "OnGetLanguagesAndGetModelsAfter as {0}", languages.languages.Length);
                 m_LanguageIDToName.Clear();
 
                 foreach (var lang in languages.languages)
@@ -199,13 +199,13 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             }
             else
             {
-                Log.Error("TranslationWidget", "OnGetLanguages - There is no language to translate. Check the connections and service of Translation Service.");
+                Log.Error("TranslatorWidget", "OnGetLanguages - There is no language to translate. Check the connections and service of Translation Service.");
             }
         }
 
         private void OnGetModels(TranslationModels models)
         {
-            Log.Status("TranslationWidget", "OnGetModels, Count: {0}", models.models.Length);
+            Log.Status("TranslatorWidget", "OnGetModels, Count: {0}", models.models.Length);
             if (models != null && models.models.Length > 0)
             {
                 m_LanguageToTranslate.Clear();
@@ -264,10 +264,10 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 
         private class TranslateRequest
         {
-            private LanguageTranslationWidget m_Widget;
+            private LanguageTranslatorWidget m_Widget;
             private string m_Text;
 
-            public TranslateRequest(LanguageTranslationWidget widget, string text)
+            public TranslateRequest(LanguageTranslatorWidget widget, string text)
             {
                 m_Widget = widget;
                 m_Text = text;

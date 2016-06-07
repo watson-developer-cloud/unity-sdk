@@ -61,7 +61,7 @@
         ]
     },
     "DataExpanded": {
-        "temperature": false,
-        "conditions": false
+        "temperature": true,
+        "conditions": true
     }
 }

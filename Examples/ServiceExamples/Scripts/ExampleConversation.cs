@@ -16,21 +16,25 @@
 */
 
 using UnityEngine;
-using IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v1;
+using System.Collections;
+using IBM.Watson.DeveloperCloud.Services.Conversation.v1;
 
-public class ExampleLanguageTranslation : MonoBehaviour {
-	private LanguageTranslation m_Translate = new LanguageTranslation();
-	private string m_PharseToTranslate = "How do I get to the disco?";
-	
-	void Start ()
-	{
-		Debug.Log("English Phrase to translate: " + m_PharseToTranslate);
-		m_Translate.GetTranslation(m_PharseToTranslate, "en", "es", OnGetTranslation);
+public class ExampleConversation : MonoBehaviour
+{
+	private Conversation m_Conversation = new Conversation();
+	private string m_WorkspaceID = "car_demo_1";
+	private string m_Input = "Can you unlock the door?";
+
+	void Start () {
+		Debug.Log("User: " + m_Input);
+		m_Conversation.Message(m_WorkspaceID, m_Input, OnMessage);
 	}
 
-	private void OnGetTranslation(Translations translation)
+	void OnMessage (DataModels.MessageResponse resp)
 	{
-		if (translation != null && translation.translations.Length > 0)
-			Debug.Log("Spanish Translation: " + translation.translations[0].translation);
+		foreach(DataModels.MessageIntent mi in resp.intents)
+			Debug.Log("intent: " + mi.intent + ", confidence: " + mi.confidence);
+		
+		Debug.Log("response: " + resp.output.text);
 	}
 }
