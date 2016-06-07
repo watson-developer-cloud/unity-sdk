@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿#if UNITY_EDITOR
+using UnityEditor;
 using UnityEngine;
 
 public static class RunTravisBuild
@@ -29,3 +30,4 @@ public static class RunTravisBuild
 		BuildPipeline.BuildPlayer(BuildScenes, Application.dataPath + "TestBuildLinux", BuildTarget.StandaloneLinux64, BuildOptions.None);
 	}
 }
+#endif

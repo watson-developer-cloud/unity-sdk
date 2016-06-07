@@ -356,17 +356,14 @@ namespace WebSocketSharp.Server
       }
     }
 
-    internal void Stop (CloseEventArgs e, bool send, bool wait)
+    internal void Stop (CloseEventArgs e, bool send, bool receive)
     {
       lock (_sync) {
         _state = ServerState.ShuttingDown;
-        var bytes = send
-                    ? WebSocketFrame.CreateCloseFrame (e.PayloadData, false).ToByteArray ()
-                    : null;
 
-        var timeout = wait ? _waitTime : TimeSpan.Zero;
+        var bytes = send ? WebSocketFrame.CreateCloseFrame (e.PayloadData, false).ToArray () : null;
         foreach (var host in _hosts.Values)
-          host.Sessions.Stop (e, bytes, timeout);
+          host.Sessions.Stop (e, bytes, receive);
 
         _hosts.Clear ();
         _state = ServerState.Stop;
@@ -551,7 +548,7 @@ namespace WebSocketSharp.Server
         return null;
       }
 
-      return broadping (WebSocketFrame.EmptyUnmaskPingBytes, _waitTime);
+      return broadping (WebSocketFrame.EmptyPingBytes, _waitTime);
     }
 
     /// <summary>
@@ -582,7 +579,7 @@ namespace WebSocketSharp.Server
         return null;
       }
 
-      return broadping (WebSocketFrame.CreatePingFrame (data, false).ToByteArray (), _waitTime);
+      return broadping (WebSocketFrame.CreatePingFrame (data, false).ToArray (), _waitTime);
     }
 
     /// <summary>

@@ -15,26 +15,21 @@
 *
 */
 
+
 using UnityEngine;
 using System.Collections;
-using IBM.Watson.DeveloperCloud.Services.Conversation.v1;
+using IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3;
 
-public class ExampleConversation : MonoBehaviour
-{
-	private Conversation m_Conversation = new Conversation();
-	private string m_WorkspaceID = "car_demo_1";
-	private string m_Input = "Can you unlock the door?";
+public class ExampleToneAnalyzer : MonoBehaviour {
+    ToneAnalyzer m_ToneAnalyzer = new ToneAnalyzer();
+    string m_StringToTestTone = "This service enables people to discover and understand, and revise the impact of tone in their content. It uses linguistic analysis to detect and interpret emotional, social, and language cues found in text.";
 
 	void Start () {
-		Debug.Log("User: " + m_Input);
-		m_Conversation.Message(m_WorkspaceID, m_Input, OnMessage);
+        m_ToneAnalyzer.GetToneAnalyze( OnGetToneAnalyze, m_StringToTestTone, "TEST");
 	}
-
-	void OnMessage (DataModels.MessageResponse resp)
-	{
-		foreach(DataModels.MessageIntent mi in resp.intents)
-			Debug.Log("intent: " + mi.intent + ", confidence: " + mi.confidence);
-		
-		Debug.Log("response: " + resp.output.text);
-	}
+	
+    private void OnGetToneAnalyze( ToneAnalyzerResponse resp , string data)
+    {
+        Debug.Log("Response: " +resp + " - " + data);
+    }
 }
