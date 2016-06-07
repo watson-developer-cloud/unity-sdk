@@ -100,7 +100,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &473286773
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -123,7 +123,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 9
 --- !u!1 &525603453
 GameObject:
   m_ObjectHideFlags: 0
@@ -273,7 +273,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 859102722}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db0d0fc567bc64a34a5c3e405a733f6b, type: 3}
+  m_Script: {fileID: 11500000, guid: 87040e721f2394a4a9f444ecbaf9d991, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &859102724
@@ -326,7 +326,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
 --- !u!1 &1160237478
 GameObject:
   m_ObjectHideFlags: 0
@@ -416,12 +416,12 @@ GameObject:
   - 4: {fileID: 1713392459}
   - 114: {fileID: 1713392458}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: ExampleVisualRecognition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1713392458
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -444,7 +444,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 8
 --- !u!1 &1740459831
 GameObject:
   m_ObjectHideFlags: 0
