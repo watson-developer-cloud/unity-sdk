@@ -38,9 +38,9 @@ namespace IBM.Watson.DeveloperCloud.Camera
         private Vector3 m_CameraInitialLocation;
         private Quaternion m_CameraInitialRotation;
         [SerializeField]
-        private float m_PanSpeed = 0.07f;
+        protected float m_PanSpeed = 0.07f;
         [SerializeField]
-        private float m_ZoomSpeed = 20.0f;
+        protected float m_ZoomSpeed = 20.0f;
         [SerializeField]
         private float m_SpeedForCameraAnimation = 2f;
 
@@ -50,7 +50,7 @@ namespace IBM.Watson.DeveloperCloud.Camera
         private MonoBehaviour m_AntiAliasing;
         [SerializeField]
         private MonoBehaviour m_DepthOfField;
-        private bool m_DisableInteractivity = false;
+        protected bool m_DisableInteractivity = false;
 
         #endregion
 

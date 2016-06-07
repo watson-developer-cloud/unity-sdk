@@ -90,6 +90,15 @@ namespace IBM.Watson.DeveloperCloud.Logging
             m_SubSystem = subSystem;
             m_Message = string.Format(messageFmt, args);
         }
+
+        /// <summary>
+        /// Returns a <see cref="System.String"/> that represents the current <see cref="IBM.Watson.DeveloperCloud.Logging.LogRecord"/>.
+        /// </summary>
+        /// <returns>A <see cref="System.String"/> that represents the current <see cref="IBM.Watson.DeveloperCloud.Logging.LogRecord"/>.</returns>
+        public override string ToString()
+        {
+            return string.Format("[{0}][{1}][{2}] {3}", m_TimeStamp.ToString("MM/dd/yyyy HH:mm:ss"), m_SubSystem, m_Level.ToString(), m_Message);
+        }
     };
 
     /// <summary>

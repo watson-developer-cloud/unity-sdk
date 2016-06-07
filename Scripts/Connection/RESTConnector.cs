@@ -323,7 +323,12 @@ namespace IBM.Watson.DeveloperCloud.Connection
         {
             // yield AFTER we increment the connection count, so the Send() function can return immediately
             m_ActiveConnections += 1;
-            yield return null;
+            #if UNITY_EDITOR
+            if (!UnityEditorInternal.InternalEditorUtility.inBatchMode)
+                yield return null;
+            #else
+                yield return null;
+            #endif
 
             while (m_Requests.Count > 0)
             {
@@ -419,7 +424,13 @@ namespace IBM.Watson.DeveloperCloud.Connection
                             req.OnUploadProgress(www.uploadProgress);
                         if (req.OnDownloadProgress != null)
                             req.OnDownloadProgress(www.progress);
+                        
+                        #if UNITY_EDITOR
+                        if (!UnityEditorInternal.InternalEditorUtility.inBatchMode)
+                            yield return null;
+                        #else
                         yield return null;
+                        #endif
                     }
 
                     if (req.Cancel)
