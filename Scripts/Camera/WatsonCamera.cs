@@ -141,23 +141,23 @@ namespace IBM.Watson.DeveloperCloud.Camera
 
         #region Start / Update
 
-        void Awake()
+        protected virtual void Awake()
         {
             mp_Instance = this;
         }
 
-        void Start()
+        protected virtual void Start()
         {
             m_CameraInitialLocation = transform.localPosition;
             m_CameraInitialRotation = transform.rotation;
         }
 
-        void Update()
+        protected virtual void Update()
         {
             CameraPositionOnUpdate();
         }
 
-        void CameraPositionOnUpdate()
+        protected virtual void CameraPositionOnUpdate()
         {
             //For Zooming and Panning
             if (CurrentCameraTarget != null)
@@ -167,7 +167,7 @@ namespace IBM.Watson.DeveloperCloud.Camera
             }
         }
 
-        void InitializeCameraTargetList()
+        protected virtual void InitializeCameraTargetList()
         {
             if (m_ListCameraTarget == null)
                 m_ListCameraTarget = new List<CameraTarget>();
@@ -190,7 +190,7 @@ namespace IBM.Watson.DeveloperCloud.Camera
         /// Event handler to pan and zoom with two-finger dragging
         /// </summary>
         /// <param name="args">Arguments.</param>
-        public void DragTwoFinger(System.Object[] args)
+        protected virtual void DragTwoFinger(System.Object[] args)
         {
             if (m_DisableInteractivity)
                 return;
@@ -217,7 +217,7 @@ namespace IBM.Watson.DeveloperCloud.Camera
         /// Event Handler for setting Antialiasing event
         /// </summary>
         /// <param name="args">Arguments.</param>
-        public void OnCameraSetAntiAliasing(System.Object[] args)
+        protected virtual void OnCameraSetAntiAliasing(System.Object[] args)
         {
             if (args != null && args.Length > 0 && args[0] is bool)
             {
@@ -234,7 +234,7 @@ namespace IBM.Watson.DeveloperCloud.Camera
         /// Event Handler for setting Depth of Field event
         /// </summary>
         /// <param name="args">Arguments.</param>
-        public void OnCameraSetDepthOfField(System.Object[] args)
+        protected virtual void OnCameraSetDepthOfField(System.Object[] args)
         {
             if (args != null && args.Length > 0 && args[0] is bool)
             {
@@ -251,7 +251,7 @@ namespace IBM.Watson.DeveloperCloud.Camera
         /// Event Handler for Two Finger Drag
         /// </summary>
         /// <param name="args">Arguments.</param>
-        public void OnCameraSetTwoFingerDrag(System.Object[] args)
+        protected virtual void OnCameraSetTwoFingerDrag(System.Object[] args)
         {
             if (args != null && args.Length > 0 && args[0] is bool)
             {
@@ -264,7 +264,7 @@ namespace IBM.Watson.DeveloperCloud.Camera
         /// Event handler reseting the camera position.
         /// </summary>
         /// <param name="args">Arguments.</param>
-        public void ResetCameraPosition(System.Object[] args)
+        protected virtual void ResetCameraPosition(System.Object[] args)
         {
             if (m_DisableInteractivity)
                 return;
@@ -277,7 +277,7 @@ namespace IBM.Watson.DeveloperCloud.Camera
         /// Event handler moving the camera up.
         /// </summary>
         /// <param name="args">Arguments.</param>
-        public void MoveUp(System.Object[] args)
+        protected virtual void MoveUp(System.Object[] args)
         {
             if (m_DisableInteractivity)
                 return;
@@ -289,7 +289,7 @@ namespace IBM.Watson.DeveloperCloud.Camera
         /// Event handler moving the camera down.
         /// </summary>
         /// <param name="args">Arguments.</param>
-        public void MoveDown(System.Object[] args)
+        protected virtual void MoveDown(System.Object[] args)
         {
             if (m_DisableInteractivity)
                 return;
@@ -301,7 +301,7 @@ namespace IBM.Watson.DeveloperCloud.Camera
         /// Event handler moving the camera left.
         /// </summary>
         /// <param name="args">Arguments.</param>
-        public void MoveLeft(System.Object[] args)
+        protected virtual void MoveLeft(System.Object[] args)
         {
             if (m_DisableInteractivity)
                 return;
@@ -313,7 +313,7 @@ namespace IBM.Watson.DeveloperCloud.Camera
         /// Event handler moving the camera right.
         /// </summary>
         /// <param name="args">Arguments.</param>
-        public void MoveRight(System.Object[] args)
+        protected virtual void MoveRight(System.Object[] args)
         {
             if (m_DisableInteractivity)
                 return;
@@ -325,7 +325,7 @@ namespace IBM.Watson.DeveloperCloud.Camera
         /// Event handler zooming-in the camera.
         /// </summary>
         /// <param name="args">Arguments.</param>
-        public void ZoomIn(System.Object[] args)
+        protected virtual void ZoomIn(System.Object[] args)
         {
             if (m_DisableInteractivity)
                 return;
@@ -337,7 +337,7 @@ namespace IBM.Watson.DeveloperCloud.Camera
         /// Event handler zooming-out the camera.
         /// </summary>
         /// <param name="args">Arguments.</param>
-        public void ZoomOut(System.Object[] args)
+        protected virtual void ZoomOut(System.Object[] args)
         {
             if (m_DisableInteractivity)
                 return;
