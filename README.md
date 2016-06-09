@@ -352,7 +352,9 @@ void OnMessage (DataModels.MessageResponse resp)
 
 
 ### Visual Recognition
-Use the [Visual Recognition][visual_recognition] service to classify an image against a default or custom trained classifier. In addition, the service can detect faces and text in an image.
+Use the [Visual Recognition][visual_recognition] service to classify an image against a default or custom trained classifier. In addition, the service can detect faces and text in an image. Instead of credentials, the Visual Recognition key ("VISUAL\_RECOGNITION\_API\_KEY") must be set as a variable in the Advanced Mode of the Config Editor (**Watson -> Configuration Editor**).
+
+![visual-recognition0](http://g.recordit.co/O6qCnZNxg7.gif)
 
 #### Managing Classifiers
 You can train and delete classifiers by directly accessing low level Visual Recognition methods.
