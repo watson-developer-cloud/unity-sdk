@@ -69,6 +69,7 @@ AudioSource:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
+    m_RotationOrder: 4
   panLevelCustomCurve:
     serializedVersion: 2
     m_Curve:
@@ -79,6 +80,7 @@ AudioSource:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
+    m_RotationOrder: 0
   spreadCustomCurve:
     serializedVersion: 2
     m_Curve:
@@ -89,6 +91,7 @@ AudioSource:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
+    m_RotationOrder: 4
   reverbZoneMixCustomCurve:
     serializedVersion: 2
     m_Curve:
@@ -99,6 +102,7 @@ AudioSource:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
+    m_RotationOrder: 0
 --- !u!114 &11419508
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -112,12 +116,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AutoConnect: 1
   m_Speaking:
-    m_TargetObject: {fileID: 0}
-    m_TargetConnection: Microphone/Disable
+    m_Connections: []
+  m_DisableMic:
+    m_Connections: []
   m_LevelOut:
-    m_TargetObject: {fileID: 0}
-    m_TargetConnection: 
-  m_LevelOutInterval: .0500000007
+    m_Connections: []
+  m_LevelOutInterval: 0.05
   m_LevelOutputModifier: 12
   m_TextToSpeechButton: {fileID: 0}
   m_Input: {fileID: 0}
