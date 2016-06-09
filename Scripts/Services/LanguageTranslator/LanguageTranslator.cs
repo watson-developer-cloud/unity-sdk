@@ -62,7 +62,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v1
         #endregion
 
         #region Private Data
-        private const string SERVICE_ID = "TranslateV1";
+        private const string SERVICE_ID = "LanguageTranslatorV1";
         private static fsSerializer sm_Serializer = new fsSerializer();
         #endregion
 
