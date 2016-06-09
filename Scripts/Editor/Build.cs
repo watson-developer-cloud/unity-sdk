@@ -32,18 +32,18 @@ public class Build
     #region Build Options
     public static bool IsBuilding
     {
-        get { return EditorPrefs.GetInt("IsBuilding") != 0; }
-        set { EditorPrefs.SetInt("IsBuilding", value ? 1 : 0); }
+        get { return EditorPrefs.GetInt(Application.productName + "IsBuilding") != 0; }
+        set { EditorPrefs.SetInt(Application.productName + "IsBuilding", value ? 1 : 0); }
     }
     public static BuildTarget BuildTarget
     {
-        get { return (BuildTarget)EditorPrefs.GetInt("BuildTarget"); }
-        set { EditorPrefs.SetInt("BuildTarget", (int)value); }
+        get { return (BuildTarget)EditorPrefs.GetInt(Application.productName + "BuildTarget"); }
+        set { EditorPrefs.SetInt(Application.productName + "BuildTarget", (int)value); }
     }
     public static BuildOptions BuildOptions
     {
-        get { return (BuildOptions)EditorPrefs.GetInt("BuildOptions"); }
-        set { EditorPrefs.SetInt("BuildOptions", (int)value); }
+        get { return (BuildOptions)EditorPrefs.GetInt(Application.productName + "BuildOptions"); }
+        set { EditorPrefs.SetInt(Application.productName + "BuildOptions", (int)value); }
     }
     #endregion
 
