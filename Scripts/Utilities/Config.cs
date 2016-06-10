@@ -103,6 +103,15 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 
                 return false;
             }
+
+            /// <summary>
+            /// Determines whether this instance has credentials.
+            /// </summary>
+            /// <returns><c>true</c> if this instance has credentials; otherwise, <c>false</c>.</returns>
+            public bool HasCredentials()
+            {
+                return !string.IsNullOrEmpty(m_User) && !string.IsNullOrEmpty(m_Password);
+            }
         }
 
         #region Private Data
@@ -251,6 +260,25 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                 return fsJsonPrinter.PrettyJson(data);
 
             return fsJsonPrinter.CompressedJson(data);
+        }
+
+        /// <summary>
+        /// Save this config to fileSystem
+        /// </summary>
+        public bool SaveConfigToFileSystem()
+        {
+            bool success = true;
+            try
+            {
+                File.WriteAllText(Application.streamingAssetsPath + Constants.Path.CONFIG_FILE, SaveConfig(true));
+            }
+            catch (Exception ex)
+            {
+                success = false;
+                Log.Error("Config", "Exception on SaveConfigToFileSystem. {0}", ex.Message);
+            }
+
+            return success;
         }
 
         /// <summary>

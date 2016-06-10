@@ -23,6 +23,8 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 using UnityEngine;
+using System.Net.NetworkInformation;
+using System.Text.RegularExpressions;
 
 
 namespace IBM.Watson.DeveloperCloud.Utilities
@@ -33,6 +35,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
     static public class Utility
     {
         private static fsSerializer sm_Serializer = new fsSerializer();
+        private static string sm_MacAddress = null;
 
         /// <summary>
         /// This helper functions returns all Type's that inherit from the given type.
@@ -271,6 +274,43 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 
         }
 
+        /// <summary>
+        /// Gets the EPOCH time in UTC time zome
+        /// </summary>
+        /// <returns>Double EPOCH in UTC</returns>
+        public static double GetEpochUTC()
+        {
+            DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            return (DateTime.UtcNow - epoch).TotalMilliseconds;
+        }
+
+
+        /// <summary>
+        /// Returns First valid Mac address of the local machine
+        /// </summary>
+        public static string MacAddress
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(sm_MacAddress))
+                {
+                    foreach (NetworkInterface adapter in NetworkInterface.GetAllNetworkInterfaces())
+                    {
+                        string macAddress = adapter.GetPhysicalAddress().ToString();
+                        if (!string.IsNullOrEmpty(macAddress))
+                        {
+                            string regex = "(.{2})(.{2})(.{2})(.{2})(.{2})(.{2})";
+                            string replace = "$1:$2:$3:$4:$5:$6";
+                            sm_MacAddress = Regex.Replace(macAddress, regex, replace);
+
+                            break;
+                        }
+                    }
+                }
+
+                return sm_MacAddress;
+            }
+        }
 
         #region Cache Generic Deserialization
 
@@ -319,6 +359,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             return cachedObject;
         }
 
+        #endregion
+
+        #region De-Serialization
+
         /// <summary>
         /// Deserializes the response.
         /// </summary>
@@ -328,9 +372,20 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// <typeparam name="T">The 1st type parameter.</typeparam>
         public static T DeserializeResponse<T>( byte [] resp, object obj = null ) where T : class, new()
         {
-            string json = Encoding.UTF8.GetString( resp );
+            return DeserializeResponse<T>(Encoding.UTF8.GetString( resp ), obj);
+        }
+
+        /// <summary>
+        /// Deserializes the response.
+        /// </summary>
+        /// <returns>The response.</returns>
+        /// <param name="json">Json string of object</param>
+        /// <param name="obj">Object.</param>
+        /// <typeparam name="T">The 1st type parameter.</typeparam>
+        public static T DeserializeResponse<T>( string json, object obj = null ) where T : class, new()
+        {
             try
-			{
+            {
                 fsData data = null;
                 fsResult r = fsJsonParser.Parse(json, out data);
                 if (!r.Succeeded)
@@ -352,6 +407,8 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 
             return null;
         }
+
+
         #endregion
     }
 }

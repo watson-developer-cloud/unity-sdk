@@ -42,5 +42,10 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 TestFailed = true;
             }
         }
+
+        public virtual string ProjectToTest()
+        {
+            return null;
+        }
     }
 }

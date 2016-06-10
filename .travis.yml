@@ -1,0 +1,11 @@
+language: objective-c
+osx_image: xcode61
+rvm:
+- 2.1.2
+install:
+- ./Travis/installUnity.sh
+script:
+- ./Travis/createProject.sh
+- ./Travis/installSDK.sh
+- ./Travis/runTests.sh
+- ./Travis/build.sh

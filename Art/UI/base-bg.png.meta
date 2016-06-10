@@ -1,9 +1,10 @@
 fileFormatVersion: 2
 guid: 11b8cc94d1829440d972e9e699902f64
-timeCreated: 1461685450
+timeCreated: 1463006755
 licenseType: Pro
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: base-bg_0
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -38,7 +39,7 @@ TextureImporter:
   rGBM: 0
   compressionQuality: 50
   allowsAlphaSplitting: 0
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -49,7 +50,22 @@ TextureImporter:
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
-    sprites: []
+    sprites:
+    - name: base-bg_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 900
+        height: 1200
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 7, y: 7, z: 7, w: 7}
+      outline:
+      - - {x: -450, y: 600}
+        - {x: -450, y: -600}
+        - {x: 450, y: -600}
+        - {x: 450, y: 600}
     outline: []
   spritePackingTag: 
   userData: 

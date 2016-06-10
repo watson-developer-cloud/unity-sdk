@@ -62,7 +62,7 @@ namespace WebSocketSharp.Net
     private byte[]              _buffer;
     private const int           _bufferLength = 8192;
     private HttpListenerContext _context;
-    private bool                _contextBound;
+    private bool                _contextRegistered;
     private StringBuilder       _currentLine;
     private InputState          _inputState;
     private RequestStream       _inputStream;
@@ -180,7 +180,7 @@ namespace WebSocketSharp.Net
         closeSocket ();
       }
 
-      unbind ();
+      unregisterContext ();
       removeConnection ();
     }
 
@@ -294,12 +294,16 @@ namespace WebSocketSharp.Net
           var lsnr = conn._context.Listener;
           if (conn._lastListener != lsnr) {
             conn.removeConnection ();
-            lsnr.AddConnection (conn);
+            if (!lsnr.AddConnection (conn)) {
+              conn.close ();
+              return;
+            }
+
             conn._lastListener = lsnr;
           }
 
-          conn._contextBound = true;
-          lsnr.RegisterContext (conn._context);
+          if (lsnr.RegisterContext (conn._context))
+            conn._contextRegistered = true;
 
           return;
         }
@@ -396,13 +400,13 @@ namespace WebSocketSharp.Net
         _listener.RemoveConnection (this);
     }
 
-    private void unbind ()
+    private void unregisterContext ()
     {
-      if (!_contextBound)
+      if (!_contextRegistered)
         return;
 
-      _listener.UnbindContext (_context);
-      _contextBound = false;
+      _context.Unregister ();
+      _contextRegistered = false;
     }
 
     #endregion
@@ -424,7 +428,7 @@ namespace WebSocketSharp.Net
             // Don't close. Keep working.
             _reuses++;
             disposeRequestBuffer ();
-            unbind ();
+            unregisterContext ();
             init ();
             BeginReadRequest ();
 

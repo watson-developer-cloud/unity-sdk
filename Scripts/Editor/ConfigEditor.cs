@@ -54,8 +54,8 @@ namespace IBM.Watson.DeveloperCloud.Editor
                 URL ="https://console.ng.bluemix.net/catalog/text-to-speech/", ServiceID="TextToSpeechV1" },
             new ServiceSetup() { ServiceName = "Dialog", ServiceAPI = "dialog/api",
                 URL ="https://console.ng.bluemix.net/catalog/dialog/", ServiceID="DialogV1" },
-            new ServiceSetup() { ServiceName = "Translation", ServiceAPI = "language-translation/api",
-                URL ="https://console.ng.bluemix.net/catalog/language-translation/", ServiceID="TranslateV1" },
+            new ServiceSetup() { ServiceName = "Language Translator", ServiceAPI = "language-translation/api",
+                URL ="https://console.ng.bluemix.net/catalog/services/language-translation/", ServiceID="LanguageTranslatorV1" },
             new ServiceSetup() { ServiceName = "Natural Language Classifier", ServiceAPI = "natural-language-classifier/api",
 				URL ="https://console.ng.bluemix.net/catalog/natural-language-classifier/", ServiceID="NaturalLanguageClassifierV1" }
         };
