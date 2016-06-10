@@ -129,12 +129,12 @@ Example: Ask how to get to the disco in Spanish using [Language Translator][lang
 
 ```cs
 private LanguageTranslator m_Translate = new LanguageTranslator();
-private string m_PharseToTranslate = "How do I get to the disco?";
+private string m_PhraseToTranslate = "How do I get to the disco?";
 
 void Start ()
 {
-  Debug.Log("English Phrase to translate: " + m_PharseToTranslate);
-  m_Translate.GetTranslation(m_PharseToTranslate, "en", "es", OnGetTranslation);
+  Debug.Log("English Phrase to translate: " + m_PhraseToTranslate);
+  m_Translate.GetTranslation(m_PhraseToTranslate, "en", "es", OnGetTranslation);
 }
 
 private void OnGetTranslation(Translations translation)
