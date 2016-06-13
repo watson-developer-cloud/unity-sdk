@@ -26,16 +26,16 @@ using FullSerializer;
 using System.Collections;
 using System.IO;
 
-namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
+namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 {
     /// <summary>
     /// Service integration for Alchemy API
     /// </summary>
-    public class AlchemyAPI : IWatsonService
+    public class AlchemyLanguage : IWatsonService
     {
 
         #region Private Data
-        private const string SERVICE_ID = "AlchemyAPIV1";
+        private const string SERVICE_ID = "AlchemyLanguageV1";
         private static string mp_ApiKey = null;
 
         private static fsSerializer sm_Serializer = new fsSerializer();
@@ -115,7 +115,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("AlchemyAPI", "OnGetEntityExtractionResponse Exception: {0}", e.ToString());
+                    Log.Error("AlchemyLanguage", "OnGetEntityExtractionResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -197,7 +197,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("AlchemyAPI", "OnGetKeywoardExtractionResponse Exception: {0}", e.ToString());
+                    Log.Error("AlchemyLanguage", "OnGetKeywoardExtractionResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -329,7 +329,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("AlchemyAPI", "OnGetCombinedCallResponse Exception: {0}", e.ToString());
+                    Log.Error("AlchemyLanguage", "OnGetCombinedCallResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -358,10 +358,10 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
         private class CheckServiceStatus
         {
-            private AlchemyAPI m_Service = null;
+            private AlchemyLanguage m_Service = null;
             private ServiceStatus m_Callback = null;
 
-            public CheckServiceStatus(AlchemyAPI service, ServiceStatus callback)
+            public CheckServiceStatus(AlchemyLanguage service, ServiceStatus callback)
             {
                 m_Service = service;
                 m_Callback = callback;

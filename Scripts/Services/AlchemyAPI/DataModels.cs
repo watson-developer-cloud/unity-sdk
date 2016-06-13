@@ -19,7 +19,7 @@ using FullSerializer;
 using System.Text;
 using System.Collections.Generic;
 
-namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
+namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 {
 
     [fsObject]
