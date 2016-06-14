@@ -21,16 +21,218 @@ using System.Collections.Generic;
 
 namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 {
+    #region Combined Call
+    [fsObject]
+    public class CombinedCallData
+    { 
+        public string status { get; set; }
+        public string usage { get; set; }
+        public string url { get; set; }
+        public string totalTransactions { get; set; }
+        public string language { get; set; }
+        public string title { get; set; }
+        public string text { get; set; }
+        public PublicationDate publicationDate { get; set; }
+        public Authors[] authors { get; set; }
+        public DocSentiment docSentiment { get; set; }
+        public Feed feeds { get; set; }
+        public Keyword[] keywords { get; set; }
+        public Concept[] concepts { get; set; }
+        public Entity[] entities { get; set; }
+        public Relation[] relations { get; set; }
+        public Taxonomy[] taxonomy { get; set; }
+        public Date[] dates { get; set; }
+        public DocEmotions[] docEmotions { get; set; }
 
+        public bool HasData
+        {
+            get
+            {
+                return EntityCombined != null && EntityCombined.Count > 0;
+            }
+        }
+            
+        private List<string> _EntityCombined = null;
+        public List<string> EntityCombined
+        {
+            get
+            {
+                if (_EntityCombined == null)
+                {
+                    _EntityCombined = new List<string>();
+
+                    for (int i = 0; keywords != null && i < keywords.Length; i++)
+                    {
+                        if (!_EntityCombined.Contains(keywords[i].text))
+                            _EntityCombined.Add(keywords[i].text);
+                    }
+
+                    for (int i = 0; entities != null && i < entities.Length; i++)
+                    {
+                        if (!_EntityCombined.Contains(entities[i].text))
+                            _EntityCombined.Add(entities[i].text);
+                    }
+                }
+
+                return _EntityCombined;
+            }
+        }
+
+        public string EntityCombinedCommaSeperated
+        {
+            get
+            {
+                if (EntityCombined.Count > 0)
+                    return string.Join(",", EntityCombined.ToArray());
+                return "";
+            }
+        }
+
+        public string ToLongString()
+        {
+            StringBuilder stringBuilder = new StringBuilder(string.Format("[CombinedCallData: status={0}, totalTransactions={1}, language={2}, text={3}", status, totalTransactions, language, text));
+
+            stringBuilder.Append(EntityCombinedCommaSeperated);
+            for (int i = 0; dates != null && i < dates.Length; i++)
+            {
+                stringBuilder.Append(" Date: " + dates[i].DateValue.ToString());
+            }
+
+            return stringBuilder.ToString();
+        }
+
+    };
+    #endregion
+
+    #region GetAuthors
+    [fsObject]
+    public class AuthorExtractionData
+    {
+        public Authors[] Authors { get; set; }
+    }
+
+    [fsObject]
+    public class Authors
+    {
+        public string status { get; set; }
+        public string url { get; set; }
+        public string[] authors { get; set; }
+    }
+    #endregion
+
+    #region GetRankedConcepts
+    [fsObject]
+    public class ConceptsExtractionData
+    {
+        public Concepts[] Concepts { get; set; }
+    }
+
+    [fsObject]
+    public class Concepts
+    {
+        public string status { get; set; }
+        public string url { get; set; }
+        public string language { get; set; }
+        public string text { get; set; }
+        public Concept[] concepts { get; set; }
+    }
+
+    [fsObject]
+    public class Concept
+    {
+        public string text { get; set; }
+        public string relevance { get; set; }
+        public KnowledgeGraph knowledgeGraph { get; set; }
+        public string website { get; set; }
+        public string geo { get; set; }
+        public string dbpedia { get; set; }
+        public string freebase { get; set; }
+        public string yago { get; set; }
+        public string opencyc { get; set; }
+        public string ciaFactbook { get; set; }
+        public string census { get; set; }
+        public string geonames { get; set; }
+        public string musicBrainz { get; set; }
+        public string crunchbase { get; set; }
+    };
+    #endregion
+
+    #region ExtractDates
+    [fsObject]
+    public class DateData
+    {
+        public string status { get; set; }
+        public string usage { get; set; }
+        public string totalTransactions { get; set; }
+        public string language { get; set; }
+        public Date[] dates { get; set; }
+    }
+
+    [fsObject]
+    public class Date
+    {
+        public string text { get; set; }
+        public string date { get; set; }
+
+        private System.DateTime m_dateValue = default(System.DateTime);
+        public System.DateTime DateValue
+        {
+            get
+            {
+                if (m_dateValue == default(System.DateTime) && !string.IsNullOrEmpty(date) && date.Length > 8)
+                {
+                    //19840101T000000
+                    System.DateTime.TryParseExact(date.Remove(8),
+                        "yyyyddMM",
+                        System.Globalization.CultureInfo.InvariantCulture,
+                        System.Globalization.DateTimeStyles.None,
+                        out m_dateValue);
+
+                }
+                return m_dateValue;
+            }
+        }
+    };
+    #endregion
+
+    #region GetEmotion
+    [fsObject]
+    public class EmotionData
+    {
+        public string status { get; set; }
+        public string usage { get; set; }
+        public string url { get; set; }
+        public string totalTransactions { get; set; }
+        public string language { get; set; }
+        public DocEmotions docEmotions { get; set; }
+    }
+
+    [fsObject]
+    public class DocEmotions
+    {
+        public string anger { get; set; }
+        public string disgust { get; set; }
+        public string fear { get; set; }
+        public string joy { get; set; }
+        public string sadness { get; set; }
+    };
+    #endregion
+
+    #region GetRankedNamedEntities
     [fsObject]
     public class EntityExtractionData
     {
+        public Entities Entities { get; set; }
+    }
+
+    [fsObject]
+    public class Entities
+    {
         public string status { get; set; }
-        public string language { get; set; }
         public string url { get; set; }
+        public string language { get; set; }
         public string text { get; set; }
         public Entity[] entities { get; set; }
-        public KnowledgeGraph knowledgeGraph { get; set; }
 
         public bool HasData
         {
@@ -106,38 +308,94 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
     };
 
-
     [fsObject]
-    public class KeywoardExtractionData
+    public class Entity
     {
-        public string status { get; set; }
-        public string language { get; set; }
-        public string url { get; set; }
-        public string text { get; set; }
-        public Keyword[] keywords { get; set; }
+        public string type { get; set; }
+        public string relevance { get; set; }
         public KnowledgeGraph knowledgeGraph { get; set; }
+        public string count { get; set; }
+        public string text { get; set; }
+        public Disambiguated disambiguated { get; set; }
+        public Quotation[] quotations { get; set; }
+        public DocSentiment sentiment { get; set; }
 
-        public bool HasData
+        private EntityPrimaryType _EntityType = EntityPrimaryType.NONE;
+        public EntityPrimaryType EntityType
         {
             get
             {
-                return keywords != null && keywords.Length > 0;
+                if (_EntityType == EntityPrimaryType.NONE && !string.IsNullOrEmpty(type))
+                {
+                    for (int i = (int)EntityPrimaryType.NONE; i < (int)EntityPrimaryType.NAN; i++)
+                    {
+                        if (string.Compare(type, ((EntityPrimaryType)i).ToString()) == 0)
+                        {
+                            _EntityType = ((EntityPrimaryType)i);
+                            break;
+                        }
+                    }
+                }
+                return _EntityType;
             }
         }
 
         public override string ToString()
         {
             StringBuilder stringBuilder = new StringBuilder();
-            for (int indexKeyword = 0; keywords != null && indexKeyword < keywords.Length; indexKeyword++)
+            for (int indexQuatation = 0; quotations != null && indexQuatation < quotations.Length; indexQuatation++)
             {
                 stringBuilder.Append("\n\t");
-                stringBuilder.Append(keywords[indexKeyword].ToString());
+                stringBuilder.Append(quotations[indexQuatation].ToString());
             }
-            return string.Format("[KeywoardExtractionData: status={0}, language={1}, url={2}, text={3}, keywords={4}]", status, language, url, text, stringBuilder.ToString());
+
+            return string.Format("[Entity: type={0} - EntityType={8}, relevance={1}, knowledgeGraph={2}, count={3}, text={4}, disambiguated={5}, quotations={6}, sentiment={7}]", type, relevance, knowledgeGraph, count, text, disambiguated, stringBuilder.ToString(), sentiment, EntityType);
         }
 
-    };
+        public bool HasGeographicInformation
+        {
+            get
+            {
+                string geoString = null;
+                if (disambiguated != null)
+                {
+                    geoString = disambiguated.geo;
+                }
+                return !string.IsNullOrEmpty(geoString);
+            }
+        }
 
+        private PositionOnMap _GeoLocation = null;
+        public PositionOnMap GeoLocation
+        {
+            get
+            {
+                if (_GeoLocation == null)
+                {
+                    string geoString = null;
+                    if (disambiguated != null)
+                    {
+                        geoString = disambiguated.geo;
+                        if (!string.IsNullOrEmpty(geoString))
+                        {
+                            string[] geoValues = geoString.Split(' ');
+                            if (geoValues != null && geoValues.Length == 2)
+                            {
+                                double latitute = 0;
+                                double longitutde = 0;
+
+                                if (double.TryParse(geoValues[0], out latitute) && double.TryParse(geoValues[1], out longitutde))
+                                {
+                                    _GeoLocation = new PositionOnMap(latitute, longitutde, disambiguated.name);
+                                }
+                            }
+                        }
+                    }
+                }
+                return _GeoLocation;
+            }
+        }
+    };
 
     public class PositionOnMap
     {
@@ -166,8 +424,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             return string.Format("[PositionOnMap: Name: {0}, Latitude:{1}, Longitude:{2}]", PositionName, Latitude.ToString(), Longitude.ToString());
         }
     }
+    #endregion
 
-
+    #region EntityTypes
     public enum EntityPrimaryType
     {
         NONE = -1,
@@ -656,96 +915,230 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         RadioProgram,
         USState
     }
+    #endregion
+
+    #region GetFeedLinks
+    [fsObject]
+    public class FeedData
+    {
+        public string status { get; set; }
+        public string usage { get; set; }
+        public string url { get; set; }
+        public Feed feeds { get; set; }
+    }
 
     [fsObject]
-    public class Entity
+    public class Feed
     {
-        public string type { get; set; }
-        public string relevance { get; set; }
-        public KnowledgeGraph knowledgeGraph { get; set; }
-        public string count { get; set; }
-        public string text { get; set; }
-        public Disambiguated disambiguated { get; set; }
-        public Quotation[] quotations { get; set; }
-        public Sentiment sentiment { get; set; }
+        public string feed { get; set; }
+    }
+    #endregion
 
-        private EntityPrimaryType _EntityType = EntityPrimaryType.NONE;
-        public EntityPrimaryType EntityType
+    #region GetRankedKeyworkds
+    [fsObject]
+    public class KeywordExtractionData
+    {
+        public string status { get; set; }
+        public string url { get; set; }
+        public string language { get; set; }
+        public string text { get; set; }
+        public Keyword[] keywords { get; set; }
+
+        public bool HasData
         {
             get
             {
-                if (_EntityType == EntityPrimaryType.NONE && !string.IsNullOrEmpty(type))
-                {
-                    for (int i = (int)EntityPrimaryType.NONE; i < (int)EntityPrimaryType.NAN; i++)
-                    {
-                        if (string.Compare(type, ((EntityPrimaryType)i).ToString()) == 0)
-                        {
-                            _EntityType = ((EntityPrimaryType)i);
-                            break;
-                        }
-                    }
-                }
-                return _EntityType;
+                return keywords != null && keywords.Length > 0;
             }
         }
 
         public override string ToString()
         {
             StringBuilder stringBuilder = new StringBuilder();
-            for (int indexQuatation = 0; quotations != null && indexQuatation < quotations.Length; indexQuatation++)
+            for (int indexKeyword = 0; keywords != null && indexKeyword < keywords.Length; indexKeyword++)
             {
                 stringBuilder.Append("\n\t");
-                stringBuilder.Append(quotations[indexQuatation].ToString());
+                stringBuilder.Append(keywords[indexKeyword].ToString());
             }
-
-            return string.Format("[Entity: type={0} - EntityType={8}, relevance={1}, knowledgeGraph={2}, count={3}, text={4}, disambiguated={5}, quotations={6}, sentiment={7}]", type, relevance, knowledgeGraph, count, text, disambiguated, stringBuilder.ToString(), sentiment, EntityType);
+            return string.Format("[KeywordExtractionData: status={0}, language={1}, url={2}, text={3}, keywords={4}]", status, language, url, text, stringBuilder.ToString());
         }
 
-        public bool HasGeographicInformation
-        {
-            get
-            {
-                string geoString = null;
-                if (disambiguated != null)
-                {
-                    geoString = disambiguated.geo;
-                }
-                return !string.IsNullOrEmpty(geoString);
-            }
-        }
-
-        private PositionOnMap _GeoLocation = null;
-        public PositionOnMap GeoLocation
-        {
-            get
-            {
-                if (_GeoLocation == null)
-                {
-                    string geoString = null;
-                    if (disambiguated != null)
-                    {
-                        geoString = disambiguated.geo;
-                        if (!string.IsNullOrEmpty(geoString))
-                        {
-                            string[] geoValues = geoString.Split(' ');
-                            if (geoValues != null && geoValues.Length == 2)
-                            {
-                                double latitute = 0;
-                                double longitutde = 0;
-
-                                if (double.TryParse(geoValues[0], out latitute) && double.TryParse(geoValues[1], out longitutde))
-                                {
-                                    _GeoLocation = new PositionOnMap(latitute, longitutde, disambiguated.name);
-                                }
-                            }
-                        }
-                    }
-                }
-                return _GeoLocation;
-            }
-        }
     };
 
+    [fsObject]
+    public class Keywords
+    {
+        public string status { get; set; }
+        public string url { get; set; }
+        public string language { get; set; }
+        public string text { get; set; }
+        public Keyword[] keywords { get; set; }
+    }
+
+    [fsObject]
+    public class Keyword
+    {
+        public string text { get; set; }
+        public string relevance { get; set; }
+        public KnowledgeGraph knowledgeGraph { get; set; }
+        public DocSentiment sentiment { get; set; }
+    };
+    #endregion
+
+    #region GetLanguage
+    [fsObject]
+    public class LanguageExtractionData
+    {
+        public Language[] Language { get; set; }
+    }
+
+    [fsObject]
+    public class Language
+    {
+        public string status { get; set; }
+        public string url { get; set; }
+        public string language { get; set; }
+        [fsProperty("iso-639-1")]
+        public string iso_639_1 { get; set; }
+        [fsProperty("iso-639-2")]
+        public string iso_639_2 { get; set; }
+        [fsProperty("iso-639-3")]
+        public string iso_639_3 { get; set; }
+        public string ethnologue { get; set; }
+        [fsProperty("native-speakers")]
+        public double native_speakers { get; set; }
+        public string wikipedia { get; set; }
+    }
+    #endregion
+
+    #region GetMicroformatData
+    [fsObject]
+    public class MicroformatData
+    {
+        public Microformats[] Microformats { get; set; }
+    }
+
+    [fsObject]
+    public class Microformats
+    {
+        public string status { get; set; }
+        public string url { get; set; }
+        public microformat[] microformats { get; set; }
+    }
+
+    [fsObject]
+    public class microformat
+    {
+        public string fieldName { get; set; }
+        public string fieldData { get; set; }
+    }
+    #endregion
+
+    #region GetPublicationDate
+    [fsObject]
+    public class PubDateData
+    {
+        public PubDate PubDate { get; set; }
+    }
+
+    [fsObject]
+    public class PubDate
+    {
+        public string status { get; set; }
+        public string url { get; set; }
+        public PublicationDate publicationDate { get; set; }
+    }
+    #endregion
+
+    #region GetRelations
+    [fsObject]
+    public class RelationData
+    {
+        public Relations Relations { get; set; }
+    }
+
+    [fsObject]
+    public class Relations
+    {
+        public string status { get; set; }
+        public string url { get; set; }
+        public string language { get; set; }
+        public string text { get; set; }
+        public Relation[] relations { get; set; }
+    }
+
+    #endregion
+
+    #region GetSentiment
+    [fsObject]
+    public class SentimentData
+    {
+        public Sentiment Sentiment { get; set; }
+    }
+
+    [fsObject]
+    public class Sentiment
+    {
+        public string status { get; set; }
+        public string url { get; set; }
+        public string language { get; set; }
+        public string text { get; set; }
+        public DocSentiment docSentiment { get; set; }
+    }
+    #endregion
+
+    #region GetTargetedSentiment
+    [fsObject]
+    public class TargetedSentimentData
+    {
+        public string status { get; set; }
+        public string usage { get; set; }
+        public string url { get; set; }
+        public string totalTransactions { get; set; }
+        public string language { get; set; }
+        public TargetedSentiment[] results { get; set; }
+    }
+
+    [fsObject]
+    public class TargetedSentiment
+    {
+        public DocSentiment sentiment { get; set; }
+        public string text { get; set; }
+    }
+    #endregion
+
+    #region GetRankedTaxonomy
+    [fsObject]
+    public class TaxonomyData
+    {
+        public string status { get; set; }
+        public string url { get; set; }
+        public string language { get; set; }
+        public string text { get; set; }
+        public Taxonomy Taxonomy { get; set; }
+    }
+    #endregion
+
+    #region GetRawText
+    [fsObject]
+    public class Text
+    {
+        public string status { get; set; }
+        public string url { get; set; }
+        public string text { get; set; }
+    }
+    #endregion
+
+    #region GetTitle
+    public class Title
+    {
+        public string status { get; set; }
+        public string url { get; set; }
+        public string title { get; set; }
+    }
+    #endregion
+
+    #region InlineModels
     [fsObject]
     public class KnowledgeGraph
     {
@@ -755,7 +1148,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         {
             return string.Format("[KnowledgeGraph: typeHierarchy={0}]", typeHierarchy);
         }
-    };
+    }
 
     [fsObject]
     public class Disambiguated
@@ -779,8 +1172,8 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         {
             return string.Format("[Disambiguated: name={0}, subType={1}, website={2}, geo={3}, dbpedia={4}, yago={5}, opencyc={6}, umbel={7}, freebase={8}, ciaFactbook={9}, census={10}, geonames={11}, musicBrainz={12}, crunchbase={13}]", name, subType, website, geo, dbpedia, yago, opencyc, umbel, freebase, ciaFactbook, census, geonames, musicBrainz, crunchbase);
         }
-    };
-
+    }
+   
     [fsObject]
     public class Quotation
     {
@@ -790,10 +1183,10 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         {
             return string.Format("[Quotation: quotation={0}]", quotation);
         }
-    };
+    }
 
     [fsObject]
-    public class Sentiment
+    public class DocSentiment
     {
         public string type { get; set; }
         public string score { get; set; }
@@ -820,130 +1213,38 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         {
             return string.Format("[Sentiment: type={0}, score={1}, mixed={2}]", type, score, mixed);
         }
-    };
+    }
 
+
+    /*
+     * Sentiment { - GetRelations
+            type (string, optional): sentiment polarity - "positive", "negative", or "neutral" ,
+            score (number, optional): sentiment strength (0.0 == neutral) ,
+            mixed (number, optional): whether sentiment is mixed (both positive and negative) (1 == mixed)
+        }
+*/
     [fsObject]
-    public class CombinedCallData
+    public class PublicationDate
     {
-        public string status { get; set; }
-        public string totalTransactions { get; set; }
-        public string language { get; set; }
-        public string text { get; set; }
-        public Keyword[] keywords { get; set; }
-        public Entity[] entities { get; set; }
-        public Sentiment docSentiment { get; set; }
-        public Concept[] concepts { get; set; }
-        public Relation[] relations { get; set; }
-        public Taxonomy[] taxonomy { get; set; }
-        public DocEmotions[] docEmotions { get; set; }
-        public DateData[] dates { get; set; }
-
-        public bool HasData
-        {
-            get
-            {
-                return EntityCombined != null && EntityCombined.Count > 0;
-            }
-        }
-
-        private List<string> _EntityCombined = null;
-        public List<string> EntityCombined
-        {
-            get
-            {
-                if (_EntityCombined == null)
-                {
-                    _EntityCombined = new List<string>();
-
-                    for (int i = 0; keywords != null && i < keywords.Length; i++)
-                    {
-                        if (!_EntityCombined.Contains(keywords[i].text))
-                            _EntityCombined.Add(keywords[i].text);
-                    }
-
-                    for (int i = 0; entities != null && i < entities.Length; i++)
-                    {
-                        if (!_EntityCombined.Contains(entities[i].text))
-                            _EntityCombined.Add(entities[i].text);
-                    }
-                }
-
-                return _EntityCombined;
-            }
-        }
-
-        public string EntityCombinedCommaSeperated
-        {
-            get
-            {
-                if (EntityCombined.Count > 0)
-                    return string.Join(",", EntityCombined.ToArray());
-                return "";
-            }
-        }
-
-        public string ToLongString()
-        {
-            StringBuilder stringBuilder = new StringBuilder(string.Format("[CombinedCallData: status={0}, totalTransactions={1}, language={2}, text={3}", status, totalTransactions, language, text));
-
-            stringBuilder.Append(EntityCombinedCommaSeperated);
-            for (int i = 0; dates != null && i < dates.Length; i++)
-            {
-                stringBuilder.Append(" Date: " + dates[i].DateValue.ToString());
-            }
-
-            return stringBuilder.ToString();
-        }
-
-    };
-
-
-    [fsObject]
-    public class Keyword
-    {
-        public string text { get; set; }
-        public string relevance { get; set; }
-        public KnowledgeGraph knowledgeGraph { get; set; }
-        public Sentiment sentiment { get; set; }
-
-    };
-
-
-    [fsObject]
-    public class Concept
-    {
-        public string text { get; set; }
-        public string relevance { get; set; }
-        public KnowledgeGraph knowledgeGraph { get; set; }
-        public string website { get; set; }
-        public string geo { get; set; }
-        public string dbpedia { get; set; }
-        public string freebase { get; set; }
-        public string yago { get; set; }
-        public string opencyc { get; set; }
-        public string ciaFactbook { get; set; }
-        public string census { get; set; }
-        public string geonames { get; set; }
-        public string musicBrainz { get; set; }
-        public string crunchbase { get; set; }
-    };
+        public double date { get; set; }
+        public string confident { get; set; }
+    }
 
     [fsObject]
     public class Relation
     {
-        public string sentence { get; set; }
         public Subject subject { get; set; }
-        public Entity entity { get; set; }
         public Action action { get; set; }
         public ObjectData @object { get; set; }
-    };
+    }
 
     [fsObject]
     public class Subject
     {
         public string text { get; set; }
-        public Sentiment sentiment { get; set; }
-    };
+        public DocSentiment sentiment { get; set; }
+        public Entity entity { get; set; }
+    }
 
     [fsObject]
     public class Action
@@ -951,7 +1252,16 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         public string text { get; set; }
         public string lemmatized { get; set; }
         public Verb verb { get; set; }
-    };
+    }
+
+    [fsObject]
+    public class ObjectData
+    {
+        public string text { get; set; }
+        public DocSentiment sentiment { get; set; }
+        public DocSentiment sentimentFromSubject { get; set; }
+        public Entity entity { get; set; }
+    }
 
     [fsObject]
     public class Verb
@@ -959,16 +1269,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         public string text { get; set; }
         public string tense { get; set; }
         public string negated { get; set; }
-    };
-
-    [fsObject]
-    public class ObjectData
-    {
-        public string text { get; set; }
-        public Sentiment sentiment { get; set; }
-        public Sentiment sentimentFromSubject { get; set; }
-        public Entity entity { get; set; }
-    };
+    }
 
     [fsObject]
     public class Taxonomy
@@ -977,41 +1278,5 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         public string score { get; set; }
         public string confident { get; set; }
     };
-
-    [fsObject]
-    public class DocEmotions
-    {
-        public string anger { get; set; }
-        public string disgust { get; set; }
-        public string fear { get; set; }
-        public string joy { get; set; }
-        public string sadness { get; set; }
-    };
-
-    [fsObject]
-    public class DateData
-    {
-        public string text { get; set; }
-        public string date { get; set; }
-
-        private System.DateTime m_dateValue = default(System.DateTime);
-        public System.DateTime DateValue
-        {
-            get
-            {
-                if (m_dateValue == default(System.DateTime) && !string.IsNullOrEmpty(date) && date.Length > 8)
-                {
-                    //19840101T000000
-                    System.DateTime.TryParseExact(date.Remove(8),
-                        "yyyyddMM",
-                        System.Globalization.CultureInfo.InvariantCulture,
-                        System.Globalization.DateTimeStyles.None,
-                        out m_dateValue);
-
-                }
-                return m_dateValue;
-            }
-        }
-    };
-
+    #endregion
 }

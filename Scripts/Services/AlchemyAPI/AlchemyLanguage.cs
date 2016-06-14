@@ -45,7 +45,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         #region Entity Extraction
         private const string SERVICE_ENTITY_EXTRACTION = "/calls/text/TextGetRankedNamedEntities";
 
-        public delegate void OnGetEntityExtraction(EntityExtractionData entityExtractionData, string data);
+        public delegate void OnGetEntityExtraction(Entities entityExtractionData, string data);
 
         //http://access.alchemyapi.com/calls/text/TextGetRankedNamedEntities
 
@@ -98,7 +98,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
         private void OnGetEntityExtractionResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            EntityExtractionData entityExtractionData = new EntityExtractionData();
+            Entities entityExtractionData = new Entities();
             if (resp.Success)
             {
                 try
@@ -130,9 +130,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
         private const string SERVICE_KEYWOARD_EXTRACTION = "/calls/text/TextGetRankedKeywords";
 
-        public delegate void OnGetKeywoardExtraction(KeywoardExtractionData entityExtractionData, string data);
+        public delegate void OnGetKeywordExtraction(KeywordExtractionData entityExtractionData, string data);
 
-        public bool GetKeywoardExtraction(OnGetKeywoardExtraction callback, string text, string customData = null)
+        public bool GetKeywoardExtraction(OnGetKeywordExtraction callback, string text, string customData = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -175,12 +175,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         private class GetKeywoardExtractionRequest : RESTConnector.Request
         {
             public string Data { get; set; }
-            public OnGetKeywoardExtraction Callback { get; set; }
+            public OnGetKeywordExtraction Callback { get; set; }
         };
 
         private void OnGetKeywoardExtractionResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            KeywoardExtractionData keywoardExtractionData = new KeywoardExtractionData();
+            KeywordExtractionData keywoardExtractionData = new KeywordExtractionData();
             if (resp.Success)
             {
                 try
@@ -209,7 +209,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         #endregion
 
         #region Combined Call
-
+        
         private const string SERVICE_COMBINED_CALLS = "/calls/text/TextGetCombinedData";
 
         public delegate void OnGetCombinedCall(CombinedCallData combinedCallData, string data);
@@ -370,7 +370,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
                     m_Callback(SERVICE_ID, false);
             }
 
-            void OnGetEntityExtraction(EntityExtractionData entityExtractionData, string data)
+            void OnGetEntityExtraction(Entities entityExtractionData, string data)
             {
                 if (m_Callback != null)
                     m_Callback(SERVICE_ID, entityExtractionData != null);
