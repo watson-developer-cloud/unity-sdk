@@ -190,7 +190,7 @@ namespace IBM.Watson.DeveloperCloud.Camera
         /// Event handler to pan and zoom with two-finger dragging
         /// </summary>
         /// <param name="args">Arguments.</param>
-        protected virtual void DragTwoFinger(System.Object[] args)
+        public virtual void DragTwoFinger(System.Object[] args)
         {
             if (m_DisableInteractivity)
                 return;
