@@ -26,9 +26,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
     public class CombinedCallData
     { 
         public string status { get; set; }
-        public string usage { get; set; }
         public string url { get; set; }
-        public string totalTransactions { get; set; }
         public string language { get; set; }
         public string title { get; set; }
         public string text { get; set; }
@@ -118,7 +116,6 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
     public class AuthorsData
     {
         public string status { get; set; }
-        public string usage { get; set; }
         public string url { get; set; }
         public Authors authors { get; set; }
     }
@@ -132,13 +129,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
     #region GetRankedConcepts
     [fsObject]
-    public class ConceptsExtractionData
-    {
-        public Concepts[] Concepts { get; set; }
-    }
-
-    [fsObject]
-    public class Concepts
+    public class ConceptsData
     {
         public string status { get; set; }
         public string url { get; set; }

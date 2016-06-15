@@ -159,6 +159,171 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         }
         #endregion
 
+        #region GetRankedConcepts
+        private const string SERVICE_GET_RANKED_CONCEPTS_HTML = "/calls/html/HTMLGetRankedConcepts";
+        private const string SERVICE_GET_RANKED_CONCEPTS_URL = "/calls/url/URLGetRankedConcepts";
+        private const string SERVICE_GET_RANKED_CONCEPTS_TEXT = "/calls/text/TextGetRankedConcepts";
+        public delegate void OnGetRankedConcepts(ConceptsData conceptExtractionData, string data);
+
+        public bool GetRankedConceptsURL(OnGetRankedConcepts callback, string url, 
+            int maxRetrieve = 8, 
+            bool includeKnowledgeGraph = false, 
+            bool includeLinkedData = true, 
+            bool includeSourceText = false)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(url))
+                throw new WatsonException("Please provide a URL for GetRankedConcepts.");
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                mp_ApiKey = Config.Instance.GetVariableValue("ALCHEMY_API_KEY");
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                throw new WatsonException("GetCombinedCall - ALCHEMY_API_KEY needs to be defined in config.json");
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_GET_RANKED_CONCEPTS_URL);
+            if(connector == null)
+                return false;
+
+            GetRankedConceptsRequest req = new GetRankedConceptsRequest();
+            req.Callback = callback;
+            req.Data = url;
+
+            req.Parameters["apikey"] = mp_ApiKey;
+            req.Parameters["outputMode"] = "json";
+            req.Parameters["url"] = url;
+            req.Parameters["maxRetrieve"] = maxRetrieve;
+            req.Parameters["knowledgeGraph"] = Convert.ToInt32(includeKnowledgeGraph).ToString();
+            req.Parameters["linkedData"] = Convert.ToInt32(includeLinkedData).ToString();
+            req.Parameters["showSourceText"] = Convert.ToInt32(includeSourceText).ToString();
+
+            req.OnResponse = OnGetRankedConceptsResponse;
+            return connector.Send(req);
+        }
+
+        public bool GetRankedConceptsText(OnGetRankedConcepts callback, string text,
+            string url = default(string),
+            int maxRetrieve = 8, 
+            bool includeKnowledgeGraph = false, 
+            bool includeLinkedData = true, 
+            bool includeSourceText = false)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(text))
+                throw new WatsonException("Please provide text for GetRankedConcepts.");
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                mp_ApiKey = Config.Instance.GetVariableValue("ALCHEMY_API_KEY");
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                throw new WatsonException("GetCombinedCall - ALCHEMY_API_KEY needs to be defined in config.json");
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_GET_RANKED_CONCEPTS_TEXT);
+            if(connector == null)
+                return false;
+
+            GetRankedConceptsRequest req = new GetRankedConceptsRequest();
+            req.Callback = callback;
+            req.Data = text;
+
+            req.Parameters["apikey"] = mp_ApiKey;
+            req.Parameters["outputMode"] = "json";
+            req.Parameters["url"] = url;
+            req.Parameters["maxRetrieve"] = maxRetrieve;
+            req.Parameters["knowledgeGraph"] = Convert.ToInt32(includeKnowledgeGraph).ToString();
+            req.Parameters["linkedData"] = Convert.ToInt32(includeLinkedData).ToString();
+            req.Parameters["showSourceText"] = Convert.ToInt32(includeSourceText).ToString();
+
+            req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
+            req.Forms = new Dictionary<string, RESTConnector.Form>();
+            req.Forms["text"] = new RESTConnector.Form(text);
+
+            req.OnResponse = OnGetRankedConceptsResponse;
+            return connector.Send(req);
+        }
+
+        public bool GetRankedConceptsHTML(OnGetRankedConcepts callback, string htmlFilePath, 
+            string url = default(string),
+            int maxRetrieve = 8, 
+            bool includeKnowledgeGraph = false, 
+            bool includeLinkedData = true, 
+            bool includeSourceText = false)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(htmlFilePath))
+                throw new WatsonException("Please provide text for GetRankedConcepts.");
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                mp_ApiKey = Config.Instance.GetVariableValue("ALCHEMY_API_KEY");
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                throw new WatsonException("GetCombinedCall - ALCHEMY_API_KEY needs to be defined in config.json");
+
+            string htmlData = default(string);
+            htmlData = File.ReadAllText(htmlFilePath);
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_GET_RANKED_CONCEPTS_HTML);
+            if(connector == null)
+                return false;
+
+            GetRankedConceptsRequest req = new GetRankedConceptsRequest();
+            req.Callback = callback;
+            req.Data = htmlFilePath;
+
+            req.Parameters["apikey"] = mp_ApiKey;
+            req.Parameters["outputMode"] = "json";
+            req.Parameters["url"] = url;
+            req.Parameters["maxRetrieve"] = maxRetrieve;
+            req.Parameters["knowledgeGraph"] = Convert.ToInt32(includeKnowledgeGraph).ToString();
+            req.Parameters["linkedData"] = Convert.ToInt32(includeLinkedData).ToString();
+            req.Parameters["showSourceText"] = Convert.ToInt32(includeSourceText).ToString();
+
+            req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
+            req.Forms = new Dictionary<string, RESTConnector.Form>();
+            req.Forms["html"] = new RESTConnector.Form(htmlData);
+
+            req.OnResponse = OnGetRankedConceptsResponse;
+            return connector.Send(req);
+        }
+
+        public class GetRankedConceptsRequest : RESTConnector.Request
+        {
+            public string Data { get; set; }
+            public OnGetRankedConcepts Callback { get; set; }
+        }
+
+        private void OnGetRankedConceptsResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            ConceptsData conceptsData = new ConceptsData();
+            if (resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = conceptsData;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("AlchemyLanguage", "OnGetRankedConceptsResponse Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((GetRankedConceptsRequest)req).Callback != null)
+                ((GetRankedConceptsRequest)req).Callback(resp.Success ? conceptsData : null, ((GetRankedConceptsRequest)req).Data);
+        }
+        #endregion
+
+        #region ExtractDates
+        #endregion
+
+        #region GetEmotion
+        #endregion
+
         #region Entity Extraction
         private const string SERVICE_ENTITY_EXTRACTION = "/calls/text/TextGetRankedNamedEntities";
 
@@ -241,29 +406,32 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
         #endregion
 
+        #region FeedDetection
+        #endregion
+
         #region Keyword Extraction
 
         private const string SERVICE_KEYWORD_EXTRACTION = "/calls/text/TextGetRankedKeywords";
 
         public delegate void OnGetKeywordExtraction(KeywordExtractionData entityExtractionData, string data);
 
-        public bool GetKeywoardExtraction(OnGetKeywordExtraction callback, string text, string customData = null)
+        public bool GetKeywordExtraction(OnGetKeywordExtraction callback, string text, string customData = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
             if (string.IsNullOrEmpty(text))
-                throw new WatsonException("GetKeywoardExtraction needs to have some text to work.");
+                throw new WatsonException("GetKeywordExtraction needs to have some text to work.");
             if (string.IsNullOrEmpty(mp_ApiKey))
                 mp_ApiKey = Config.Instance.GetVariableValue("ALCHEMY_API_KEY");
             if (string.IsNullOrEmpty(mp_ApiKey))
-                throw new WatsonException("GetKeywoardExtraction - ALCHEMY_API_KEY needs to be defined in config.json");
+                throw new WatsonException("GetKeywordExtraction - ALCHEMY_API_KEY needs to be defined in config.json");
 
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_KEYWORD_EXTRACTION);
             if (connector == null)
                 return false;
 
-            GetKeywoardExtractionRequest req = new GetKeywoardExtractionRequest();
+            GetKeywordExtractionRequest req = new GetKeywordExtractionRequest();
             req.Callback = callback;
 
             req.Parameters["apikey"] = mp_ApiKey;
@@ -281,21 +449,21 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             //req.Parameters["baseUrl"] = "";
             req.Parameters["knowledgeGraph"] = "0";
 
-            req.OnResponse = OnGetKeywoardExtractionResponse;
+            req.OnResponse = OnGetKeywordExtractionResponse;
             req.Data = string.IsNullOrEmpty(customData) ? text : customData;
 
             return connector.Send(req);
         }
 
-        private class GetKeywoardExtractionRequest : RESTConnector.Request
+        private class GetKeywordExtractionRequest : RESTConnector.Request
         {
             public string Data { get; set; }
             public OnGetKeywordExtraction Callback { get; set; }
         };
 
-        private void OnGetKeywoardExtractionResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        private void OnGetKeywordExtractionResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            KeywordExtractionData keywoardExtractionData = new KeywordExtractionData();
+            KeywordExtractionData keywordExtractionData = new KeywordExtractionData();
             if (resp.Success)
             {
                 try
@@ -305,22 +473,52 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = keywoardExtractionData;
+                    object obj = keywordExtractionData;
                     r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
                 catch (Exception e)
                 {
-                    Log.Error("AlchemyLanguage", "OnGetKeywoardExtractionResponse Exception: {0}", e.ToString());
+                    Log.Error("AlchemyLanguage", "OnGetKeywordExtractionResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
 
-            if (((GetKeywoardExtractionRequest)req).Callback != null)
-                ((GetKeywoardExtractionRequest)req).Callback(resp.Success ? keywoardExtractionData : null, ((GetKeywoardExtractionRequest)req).Data);
+            if (((GetKeywordExtractionRequest)req).Callback != null)
+                ((GetKeywordExtractionRequest)req).Callback(resp.Success ? keywordExtractionData : null, ((GetKeywordExtractionRequest)req).Data);
         }
 
+        #endregion
+
+        #region GetLanguage
+        #endregion
+
+        #region GetMicroformat
+        #endregion
+
+        #region GetPubDate
+        #endregion
+
+        #region GetRelations
+        #endregion
+
+        #region GetTextSentiment
+        #endregion
+
+        #region GetTargetedSentiment
+        #endregion
+
+        #region GetRankedTaxonomy
+        #endregion
+
+        #region GetText
+        #endregion
+
+        #region GetRawText
+        #endregion
+
+        #region GetTitle
         #endregion
 
         #region Combined Call
