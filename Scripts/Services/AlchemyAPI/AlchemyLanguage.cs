@@ -25,6 +25,7 @@ using System.Text;
 using FullSerializer;
 using System.Collections;
 using System.IO;
+using UnityEngine;
 
 namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 {
@@ -41,13 +42,134 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         private static fsSerializer sm_Serializer = new fsSerializer();
         #endregion
 
+        #region GetAuthors
+        private const string SERVICE_GET_AUTHORS_URL = "/calls/url/URLGetAuthors";
+        private const string SERVICE_GET_AUTHORS_HTML = "/calls/html/HTMLGetAuthors";
+        public delegate void OnGetAuthors(AuthorsData authorExtractionData, string data);
+
+        public bool GetAuthors(OnGetAuthors callback, string url, bool usePost = false)
+        {
+            if(callback == null)
+                throw new ArgumentNullException("callback");
+            if(string.IsNullOrEmpty(url))
+                throw new ArgumentNullException("GetAuthors needs a URL");
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                mp_ApiKey = Config.Instance.GetVariableValue("ALCHEMY_API_KEY");
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                throw new WatsonException("GetAuthors - ALCHEMY_API_KEY needs to be defined in config.json");
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_GET_AUTHORS_URL);
+            if(connector == null)
+                return false;
+
+            GetAuthorsRequest req = new GetAuthorsRequest();
+            req.Callback = callback;
+            req.Data = url;
+            req.Parameters["apikey"] = mp_ApiKey;
+            req.Parameters["outputMode"] = "json";
+
+            if(!usePost)
+            {
+                Log.Debug("AlchemyLanguage", "Sending URL via GET");
+                req.Parameters["url"] = url;
+            }
+            else
+            {
+                req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
+                req.Forms = new Dictionary<string, RESTConnector.Form>();
+                req.Forms["url"] = new RESTConnector.Form(url);
+            }
+
+            req.OnResponse = OnGetAuthorsResponse;
+
+            return connector.Send(req);
+        }
+
+        public bool GetAuthors(string htmlFilePath, OnGetAuthors callback, string url = default(string), bool usePost = false)
+        {
+            if(callback == null)
+                throw new ArgumentNullException("callback");
+            if(string.IsNullOrEmpty(htmlFilePath))
+                throw new ArgumentNullException("GetAuthors needs a filepath");
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                mp_ApiKey = Config.Instance.GetVariableValue("ALCHEMY_API_KEY");
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                throw new WatsonException("GetAuthors - ALCHEMY_API_KEY needs to be defined in config.json");
+
+            string htmlData = default(string);
+            htmlData = WWW.EscapeURL(File.ReadAllText(htmlFilePath)).Replace("+", "%20");
+
+            return GetAuthors(htmlFilePath, callback, htmlData, url, usePost);
+        }
+
+        public bool GetAuthors(string htmlFilePath, OnGetAuthors callback, string htmlData, string url, bool usePost)
+        {
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_GET_AUTHORS_HTML);
+            if(connector == null)
+                return false;
+            
+            GetAuthorsRequest req = new GetAuthorsRequest();
+            req.Callback = callback;
+            req.Data = htmlFilePath;
+            req.Parameters["apikey"] = mp_ApiKey;
+            req.Parameters["url"] = url;
+            req.Parameters["outputMode"] = "json";
+
+            if(!usePost)
+            {
+                req.Parameters["html"] = htmlData;
+            }
+            else
+            {
+                req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
+                req.Forms = new Dictionary<string, RESTConnector.Form>();
+                req.Forms["html"] = new RESTConnector.Form(htmlData);
+            }
+
+            req.OnResponse = OnGetAuthorsResponse;
+
+            return connector.Send(req);
+        }
+
+        public class GetAuthorsRequest : RESTConnector.Request
+        {
+            public string Data { get; set; }
+            public OnGetAuthors Callback { get; set; }
+        }
+
+        private void OnGetAuthorsResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            AuthorsData authorsData = new AuthorsData();
+            if (resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = authorsData;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("AlchemyLanguage", "OnGetAuthorsResponse Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((GetAuthorsRequest)req).Callback != null)
+                ((GetAuthorsRequest)req).Callback(resp.Success ? authorsData : null, ((GetAuthorsRequest)req).Data);
+        }
+        #endregion
 
         #region Entity Extraction
         private const string SERVICE_ENTITY_EXTRACTION = "/calls/text/TextGetRankedNamedEntities";
 
         public delegate void OnGetEntityExtraction(Entities entityExtractionData, string data);
-
-        //http://access.alchemyapi.com/calls/text/TextGetRankedNamedEntities
 
         public bool GetEntityExtraction(OnGetEntityExtraction callback, string text)
         {
@@ -126,9 +248,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
         #endregion
 
-        #region Keywoard Extraction
+        #region Keyword Extraction
 
-        private const string SERVICE_KEYWOARD_EXTRACTION = "/calls/text/TextGetRankedKeywords";
+        private const string SERVICE_KEYWORD_EXTRACTION = "/calls/text/TextGetRankedKeywords";
 
         public delegate void OnGetKeywordExtraction(KeywordExtractionData entityExtractionData, string data);
 
@@ -144,7 +266,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
                 throw new WatsonException("GetKeywoardExtraction - ALCHEMY_API_KEY needs to be defined in config.json");
 
 
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_KEYWOARD_EXTRACTION);
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_KEYWORD_EXTRACTION);
             if (connector == null)
                 return false;
 
@@ -217,18 +339,20 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         //http://access.alchemyapi.com/calls/text/TextGetRankedNamedEntities
 
         public bool GetCombinedCall(OnGetCombinedCall callback, string text,
-            bool includeEntity = true,
-            bool includeKeywoard = true,
-            bool includeDate = true,
+            bool includeEntities = true,
+            bool includeKeywords = true,
+            bool includeDates = true,
             bool includeTaxonomy = false,
-            bool includeConcept = false,
-            bool includeFeed = false,
+            bool includeConcepts = false,
+            bool includeFeeds = false,
             bool includeDocEmotion = false,
-            bool includeRelation = false,
+            bool includeRelations = false,
             bool includePubDate = false,
             bool includeDocSentiment = false,
             bool includePageImage = false,
             bool includeImageKW = false,
+            bool includeAuthors = false,
+            bool includeTitle = false,
             string language = "english",
             string customData = null)
         {
@@ -240,14 +364,14 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
                 mp_ApiKey = Config.Instance.GetVariableValue("ALCHEMY_API_KEY");
             if (string.IsNullOrEmpty(mp_ApiKey))
                 throw new WatsonException("GetCombinedCall - ALCHEMY_API_KEY needs to be defined in config.json");
-            if (!includeEntity
-                && !includeKeywoard
-                && !includeDate
+            if (!includeEntities
+                && !includeKeywords
+                && !includeDates
                 && !includeTaxonomy
-                && !includeConcept
-                && !includeFeed
+                && !includeConcepts
+                && !includeFeeds
                 && !includeDocEmotion
-                && !includeRelation
+                && !includeRelations
                 && !includePubDate
                 && !includeDocSentiment
                 && !includePageImage
@@ -262,22 +386,22 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             req.Callback = callback;
 
             List<string> requestServices = new List<string>();
-            if (includeEntity)
-                requestServices.Add("entity");
-            if (includeKeywoard)
-                requestServices.Add("keyword");
-            if (includeKeywoard)
+            if (includeEntities)
+                requestServices.Add("entities");
+            if (includeKeywords)
+                requestServices.Add("keywords");
+            if (includeKeywords)
                 requestServices.Add("dates");
             if (includeTaxonomy)
                 requestServices.Add("taxonomy");
-            if (includeConcept)
-                requestServices.Add("concept");
-            if (includeFeed)
-                requestServices.Add("feed");
+            if (includeConcepts)
+                requestServices.Add("concepts");
+            if (includeFeeds)
+                requestServices.Add("feeds");
             if (includeDocEmotion)
                 requestServices.Add("doc-emotion");
-            if (includeRelation)
-                requestServices.Add("relation");
+            if (includeRelations)
+                requestServices.Add("relations");
             if (includePubDate)
                 requestServices.Add("pub-date");
             if (includeDocSentiment)

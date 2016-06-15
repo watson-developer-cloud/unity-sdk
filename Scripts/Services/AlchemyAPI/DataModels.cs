@@ -32,6 +32,8 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         public string language { get; set; }
         public string title { get; set; }
         public string text { get; set; }
+        public string image { get; set; }
+        public ImageKeyword[] imageKeywords { get; set; }
         public PublicationDate publicationDate { get; set; }
         public Authors[] authors { get; set; }
         public DocSentiment docSentiment { get; set; }
@@ -102,21 +104,29 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         }
 
     };
+
+    [fsObject]
+    public class ImageKeyword
+    {
+        public string text { get; set; }
+        public string score { get; set; }
+    }
     #endregion
 
     #region GetAuthors
     [fsObject]
-    public class AuthorExtractionData
+    public class AuthorsData
     {
-        public Authors[] Authors { get; set; }
+        public string status { get; set; }
+        public string usage { get; set; }
+        public string url { get; set; }
+        public Authors authors { get; set; }
     }
 
     [fsObject]
     public class Authors
     {
-        public string status { get; set; }
-        public string url { get; set; }
-        public string[] authors { get; set; }
+        public string[] names { get; set; }
     }
     #endregion
 
