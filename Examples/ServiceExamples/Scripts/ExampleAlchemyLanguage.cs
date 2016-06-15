@@ -36,14 +36,9 @@ public class ExampleAlchemyLanguage : MonoBehaviour {
 //            Log.Debug("ExampleAlchemyLanguage", "Failed to get authors URL GET!");
 
         //  Get Author HTML POST
-//        string exampleHTMLPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/AlchemyTest.html";
-//        if(!m_AlchemyLanguage.GetAuthors(exampleHTMLPath, OnGetAuthors, "http://www.google.com", true))
-//            Log.Debug("ExampleAlchemyLanguage", "Failed to get authors HTML POST!");
-
-        //  Get Author HTML GET
         string exampleHTMLPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/AlchemyTest.html";
-        if(!m_AlchemyLanguage.GetAuthors(exampleHTMLPath, OnGetAuthors, "http://www.cnn.com", false))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get authors HTML GET!");
+        if(!m_AlchemyLanguage.GetAuthors(exampleHTMLPath, OnGetAuthors, m_ExampleURL))
+            Log.Debug("ExampleAlchemyLanguage", "Failed to get authors HTML POST!");
 	}
 	
     private void OnGetAuthors(AuthorsData authors, string data)

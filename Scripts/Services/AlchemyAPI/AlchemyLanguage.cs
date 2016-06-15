@@ -85,7 +85,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             return connector.Send(req);
         }
 
-        public bool GetAuthors(string htmlFilePath, OnGetAuthors callback, string url = default(string), bool usePost = false)
+        public bool GetAuthors(string htmlFilePath, OnGetAuthors callback, string url = default(string))
         {
             if(callback == null)
                 throw new ArgumentNullException("callback");
@@ -97,12 +97,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
                 throw new WatsonException("GetAuthors - ALCHEMY_API_KEY needs to be defined in config.json");
 
             string htmlData = default(string);
-            htmlData = WWW.EscapeURL(File.ReadAllText(htmlFilePath)).Replace("+", "%20");
+            htmlData = File.ReadAllText(htmlFilePath);
 
-            return GetAuthors(htmlFilePath, callback, htmlData, url, usePost);
+            return GetAuthors(htmlFilePath, callback, htmlData, url);
         }
 
-        public bool GetAuthors(string htmlFilePath, OnGetAuthors callback, string htmlData, string url, bool usePost)
+        private bool GetAuthors(string htmlFilePath, OnGetAuthors callback, string htmlData, string url)
         {
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_GET_AUTHORS_HTML);
             if(connector == null)
@@ -115,17 +115,10 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             req.Parameters["url"] = url;
             req.Parameters["outputMode"] = "json";
 
-            if(!usePost)
-            {
-                req.Parameters["html"] = htmlData;
-            }
-            else
-            {
-                req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
-                req.Forms = new Dictionary<string, RESTConnector.Form>();
-                req.Forms["html"] = new RESTConnector.Form(htmlData);
-            }
-
+            req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
+            req.Forms = new Dictionary<string, RESTConnector.Form>();
+            req.Forms["html"] = new RESTConnector.Form(htmlData);
+            
             req.OnResponse = OnGetAuthorsResponse;
 
             return connector.Send(req);
