@@ -65,8 +65,20 @@ public class ExampleAlchemyLanguage : MonoBehaviour {
 //            Log.Debug("ExampleAlchemyLanguage", "Failed to get dates by text POST");
 
         //  Get Date HTML POST
-        if(!m_AlchemyLanguage.GetDatesHTML(OnGetDates, watson_beats_jeopardy_html, null, true))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get dates by HTML POST");
+//        if(!m_AlchemyLanguage.GetDatesHTML(OnGetDates, watson_beats_jeopardy_html, null, true))
+//            Log.Debug("ExampleAlchemyLanguage", "Failed to get dates by HTML POST");
+
+        //  Get Date URL POST
+//        if(!m_AlchemyLanguage.GetEmotions(OnGetEmotions, m_ExampleURL_watsonJeopardy, true))
+//            Log.Debug("ExampleAlchemyLanguage", "Failed to get dates by URL POST");
+
+        //  Get Date Text POST
+//        if(!m_AlchemyLanguage.GetEmotions(OnGetEmotions, m_ExampleText_watsonJeopardy, true))
+//            Log.Debug("ExampleAlchemyLanguage", "Failed to get dates by text POST");
+
+        //  Get Date HTML POST
+//        if(!m_AlchemyLanguage.GetEmotions(OnGetEmotions, watson_beats_jeopardy_html, true))
+//            Log.Debug("ExampleAlchemyLanguage", "Failed to get dates by HTML POST");
 	}
 	
     private void OnGetAuthors(AuthorsData authors, string data)
@@ -121,6 +133,31 @@ public class ExampleAlchemyLanguage : MonoBehaviour {
         else
         {
             Log.Debug("ExampleAlchemyLanguage", "Failed to find Dates!");
+        }
+    }
+
+    private void OnGetEmotions(EmotionData emotions, string data)
+    {
+        if(emotions != null)
+        {
+            Log.Debug("ExampleAlchemyLanguage", "status: {0}", emotions.status);
+            Log.Debug("ExampleAlchemyLanguage", "url: {0}", emotions.url);
+            Log.Debug("ExampleAlchemyLanguage", "language: {0}", emotions.language);
+            Log.Debug("ExampleAlchemyLanguage", "text: {0}", emotions.text);
+            if(emotions.docEmotions == null)
+                Log.Debug("ExampleAlchemyLanguage", "No emotions found!");
+            else
+            {
+                Log.Debug("ExampleAlchemyLanguage", "anger: {0}", emotions.docEmotions.anger);
+                Log.Debug("ExampleAlchemyLanguage", "disgust: {0}", emotions.docEmotions.disgust);
+                Log.Debug("ExampleAlchemyLanguage", "fear: {0}", emotions.docEmotions.fear);
+                Log.Debug("ExampleAlchemyLanguage", "joy: {0}", emotions.docEmotions.joy);
+                Log.Debug("ExampleAlchemyLanguage", "sadness: {0}", emotions.docEmotions.sadness);
+            }
+        }
+        else
+        {
+            Log.Debug("ExampleAlchemyLanguage", "Failed to find Emotions!");
         }
     }
 }

@@ -201,10 +201,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
     public class EmotionData
     {
         public string status { get; set; }
-        public string usage { get; set; }
         public string url { get; set; }
-        public string totalTransactions { get; set; }
         public string language { get; set; }
+        public string text { get; set; }
         public DocEmotions docEmotions { get; set; }
     }
 

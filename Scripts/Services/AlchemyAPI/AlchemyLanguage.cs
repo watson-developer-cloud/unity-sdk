@@ -57,12 +57,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         private const string SERVICE_GET_AUTHORS_HTML = "/calls/html/HTMLGetAuthors";
         public delegate void OnGetAuthors(AuthorsData authorExtractionData, string data);
 
-        public bool GetAuthorsURL(OnGetAuthors callback, string url, bool usePost = false)
+        public bool GetAuthorsURL(OnGetAuthors callback, string url)
         {
             if(callback == null)
                 throw new ArgumentNullException("callback");
             if(string.IsNullOrEmpty(url))
-                throw new ArgumentNullException("GetAuthors needs a URL");
+                throw new ArgumentNullException("GetAuthorsURL needs a URL");
             if (string.IsNullOrEmpty(mp_ApiKey))
                 SetCredentials();
 
@@ -76,17 +76,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             req.Parameters["apikey"] = mp_ApiKey;
             req.Parameters["outputMode"] = "json";
 
-            if(!usePost)
-            {
-                Log.Debug("AlchemyLanguage", "Sending URL via GET");
-                req.Parameters["url"] = url;
-            }
-            else
-            {
-                req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
-                req.Forms = new Dictionary<string, RESTConnector.Form>();
-                req.Forms["url"] = new RESTConnector.Form(url);
-            }
+            req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
+            req.Forms = new Dictionary<string, RESTConnector.Form>();
+            req.Forms["url"] = new RESTConnector.Form(url);
 
             req.OnResponse = OnGetAuthorsResponse;
 
@@ -98,22 +90,17 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             if(callback == null)
                 throw new ArgumentNullException("callback");
             if(string.IsNullOrEmpty(htmlFilePath))
-                throw new ArgumentNullException("GetAuthors needs a filepath");
+                throw new ArgumentNullException("GetAuthorsHTML needs a filepath");
             if (string.IsNullOrEmpty(mp_ApiKey))
                 SetCredentials();
 
             string htmlData = default(string);
             htmlData = File.ReadAllText(htmlFilePath);
 
-            return GetAuthorsHTML(callback, htmlFilePath, htmlData, url);
-        }
-
-        private bool GetAuthorsHTML(OnGetAuthors callback, string htmlFilePath, string htmlData, string url)
-        {
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_GET_AUTHORS_HTML);
             if(connector == null)
                 return false;
-            
+
             GetAuthorsRequest req = new GetAuthorsRequest();
             req.Callback = callback;
             req.Data = htmlFilePath;
@@ -124,7 +111,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             req.Forms["html"] = new RESTConnector.Form(htmlData);
-            
+
             req.OnResponse = OnGetAuthorsResponse;
 
             return connector.Send(req);
@@ -180,7 +167,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             if (callback == null)
                 throw new ArgumentNullException("callback");
             if (string.IsNullOrEmpty(url))
-                throw new WatsonException("Please provide a URL for GetRankedConcepts.");
+                throw new WatsonException("Please provide a URL for GetRankedConceptsURL.");
             if (string.IsNullOrEmpty(mp_ApiKey))
                 SetCredentials();
 
@@ -214,7 +201,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             if (callback == null)
                 throw new ArgumentNullException("callback");
             if (string.IsNullOrEmpty(text))
-                throw new WatsonException("Please provide text for GetRankedConcepts.");
+                throw new WatsonException("Please provide text for GetRankedConceptsText.");
             if (string.IsNullOrEmpty(mp_ApiKey))
                 SetCredentials();
 
@@ -252,7 +239,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             if (callback == null)
                 throw new ArgumentNullException("callback");
             if (string.IsNullOrEmpty(htmlFilePath))
-                throw new WatsonException("Please provide text for GetRankedConcepts.");
+                throw new WatsonException("Please provide text for GetRankedConceptsHTML.");
             if (string.IsNullOrEmpty(mp_ApiKey))
                 SetCredentials();
 
@@ -393,7 +380,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             if (callback == null)
                 throw new ArgumentNullException("callback");
             if (string.IsNullOrEmpty(htmlFilePath))
-                throw new WatsonException("Please provide text for GetRankedConcepts.");
+                throw new WatsonException("Please provide text for GetDatesHTML.");
             if (string.IsNullOrEmpty(mp_ApiKey))
                 SetCredentials();
             if(string.IsNullOrEmpty(anchorDate))
@@ -466,6 +453,182 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         #endregion
 
         #region GetEmotion
+        private const string SERVICE_GET_EMOTION_HTML = "/calls/html/HTMLGetEmotion";
+        private const string SERVICE_GET_EMOTION_URL = "/calls/url/URLGetEmotion";
+        private const string SERVICE_GET_EMOTION_TEXT = "/calls/text/TextGetEmotion";
+        public delegate void OnGetEmotions(EmotionData emotionData, string data);
+
+        public bool GetEmotions(OnGetEmotions callback, string source, bool includeSourceText = false)
+        {
+            Log.Debug("AlchemyLanguage", "source: {0}", source);
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(source))
+                throw new WatsonException("Please provide a source for GetEmotions.");
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                SetCredentials();
+
+            GetEmotionsRequest req = new GetEmotionsRequest();
+            req.Callback = callback;
+            req.Data = source;
+
+            req.Parameters["apikey"] = mp_ApiKey;
+            req.Parameters["outputMode"] = "json";
+            req.Parameters["showSourceText"] = Convert.ToInt32(includeSourceText).ToString();
+
+            req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
+            req.Forms = new Dictionary<string, RESTConnector.Form>();
+
+            string service;
+            if(source.StartsWith("http"))
+            {
+                service = SERVICE_GET_EMOTION_URL;
+                req.Forms["url"] = new RESTConnector.Form(source);
+            }
+            else if(source.EndsWith(".html"))
+            {
+                service = SERVICE_GET_EMOTION_HTML;
+                string htmlData = default(string);
+                htmlData = File.ReadAllText(source);
+                req.Forms["html"] = new RESTConnector.Form(htmlData);
+            }
+            else
+            {
+                service = SERVICE_GET_EMOTION_TEXT;
+                req.Forms["text"] = new RESTConnector.Form(source);
+            }
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, service);
+            if(connector == null)
+                return false;
+
+            req.OnResponse = OnGetEmotionsResponse;
+            return connector.Send(req);
+        }
+
+        /*public bool GetEmotionsURL(OnGetEmotions callback, string url, bool includeSourceText = false)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(url))
+                throw new WatsonException("Please provide a URL for GetEmotionsURL.");
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                SetCredentials();
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_GET_EMOTION_URL);
+            if(connector == null)
+                return false;
+
+            GetEmotionsRequest req = new GetEmotionsRequest();
+            req.Callback = callback;
+            req.Data = url;
+
+            req.Parameters["apikey"] = mp_ApiKey;
+            req.Parameters["outputMode"] = "json";
+            req.Parameters["showSourceText"] = Convert.ToInt32(includeSourceText).ToString();
+
+            req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
+            req.Forms = new Dictionary<string, RESTConnector.Form>();
+            req.Forms["url"] = new RESTConnector.Form(url);
+
+            req.OnResponse = OnGetEmotionsResponse;
+            return connector.Send(req);
+        }*/
+
+        /*public bool GetEmotionsText(OnGetEmotions callback, string text, bool includeSourceText = false)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(text))
+                throw new WatsonException("Please provide text for GetEmotionsText.");
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                SetCredentials();
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_GET_EMOTION_TEXT);
+            if(connector == null)
+                return false;
+
+            GetEmotionsRequest req = new GetEmotionsRequest();
+            req.Callback = callback;
+            req.Data = text;
+
+            req.Parameters["apikey"] = mp_ApiKey;
+            req.Parameters["outputMode"] = "json";
+            req.Parameters["showSourceText"] = Convert.ToInt32(includeSourceText).ToString();
+
+            req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
+            req.Forms = new Dictionary<string, RESTConnector.Form>();
+            req.Forms["text"] = new RESTConnector.Form(text);
+
+            req.OnResponse = OnGetEmotionsResponse;
+            return connector.Send(req);
+        }*/
+
+        /*public bool GetEmotionsHTML(OnGetEmotions callback, string htmlFilePath, bool includeSourceText = false)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(htmlFilePath))
+                throw new WatsonException("Please provide text for GetEmotionsHTML.");
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                SetCredentials();
+
+            string htmlData = default(string);
+            htmlData = File.ReadAllText(htmlFilePath);
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_GET_EMOTION_HTML);
+            if(connector == null)
+                return false;
+
+            GetEmotionsRequest req = new GetEmotionsRequest();
+            req.Callback = callback;
+            req.Data = htmlFilePath;
+
+            req.Parameters["apikey"] = mp_ApiKey;
+            req.Parameters["outputMode"] = "json";
+            req.Parameters["showSourceText"] = Convert.ToInt32(includeSourceText).ToString();
+
+            req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
+            req.Forms = new Dictionary<string, RESTConnector.Form>();
+            req.Forms["html"] = new RESTConnector.Form(htmlData);
+
+            req.OnResponse = OnGetEmotionsResponse;
+            return connector.Send(req);
+        }*/
+
+        public class GetEmotionsRequest : RESTConnector.Request
+        {
+            public string Data { get; set; }
+            public OnGetEmotions Callback { get; set; }
+        }
+
+        private void OnGetEmotionsResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            EmotionData emotionData = new EmotionData();
+            if (resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = emotionData;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("AlchemyLanguage", "OnGetEmotionsResponse Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((GetEmotionsRequest)req).Callback != null)
+                ((GetEmotionsRequest)req).Callback(resp.Success ? emotionData : null, ((GetEmotionsRequest)req).Data);
+        }
         #endregion
 
         #region Entity Extraction
