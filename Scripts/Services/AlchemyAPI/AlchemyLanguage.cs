@@ -42,21 +42,29 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         private static fsSerializer sm_Serializer = new fsSerializer();
         #endregion
 
+        #region SetCredentials
+        private void SetCredentials()
+        {
+            mp_ApiKey = Config.Instance.GetVariableValue("ALCHEMY_API_KEY");
+
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                throw new WatsonException("ALCHEMY_API_KEY needs to be defined in config.json");
+        }
+        #endregion
+
         #region GetAuthors
         private const string SERVICE_GET_AUTHORS_URL = "/calls/url/URLGetAuthors";
         private const string SERVICE_GET_AUTHORS_HTML = "/calls/html/HTMLGetAuthors";
         public delegate void OnGetAuthors(AuthorsData authorExtractionData, string data);
 
-        public bool GetAuthors(OnGetAuthors callback, string url, bool usePost = false)
+        public bool GetAuthorsURL(OnGetAuthors callback, string url, bool usePost = false)
         {
             if(callback == null)
                 throw new ArgumentNullException("callback");
             if(string.IsNullOrEmpty(url))
                 throw new ArgumentNullException("GetAuthors needs a URL");
             if (string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetVariableValue("ALCHEMY_API_KEY");
-            if (string.IsNullOrEmpty(mp_ApiKey))
-                throw new WatsonException("GetAuthors - ALCHEMY_API_KEY needs to be defined in config.json");
+                SetCredentials();
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_GET_AUTHORS_URL);
             if(connector == null)
@@ -85,24 +93,22 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             return connector.Send(req);
         }
 
-        public bool GetAuthors(string htmlFilePath, OnGetAuthors callback, string url = default(string))
+        public bool GetAuthorsHTML(OnGetAuthors callback, string htmlFilePath, string url = default(string))
         {
             if(callback == null)
                 throw new ArgumentNullException("callback");
             if(string.IsNullOrEmpty(htmlFilePath))
                 throw new ArgumentNullException("GetAuthors needs a filepath");
             if (string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetVariableValue("ALCHEMY_API_KEY");
-            if (string.IsNullOrEmpty(mp_ApiKey))
-                throw new WatsonException("GetAuthors - ALCHEMY_API_KEY needs to be defined in config.json");
+                SetCredentials();
 
             string htmlData = default(string);
             htmlData = File.ReadAllText(htmlFilePath);
 
-            return GetAuthors(htmlFilePath, callback, htmlData, url);
+            return GetAuthorsHTML(callback, htmlFilePath, htmlData, url);
         }
 
-        private bool GetAuthors(string htmlFilePath, OnGetAuthors callback, string htmlData, string url)
+        private bool GetAuthorsHTML(OnGetAuthors callback, string htmlFilePath, string htmlData, string url)
         {
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_GET_AUTHORS_HTML);
             if(connector == null)
@@ -176,9 +182,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             if (string.IsNullOrEmpty(url))
                 throw new WatsonException("Please provide a URL for GetRankedConcepts.");
             if (string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetVariableValue("ALCHEMY_API_KEY");
-            if (string.IsNullOrEmpty(mp_ApiKey))
-                throw new WatsonException("GetCombinedCall - ALCHEMY_API_KEY needs to be defined in config.json");
+                SetCredentials();
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_GET_RANKED_CONCEPTS_URL);
             if(connector == null)
@@ -212,9 +216,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             if (string.IsNullOrEmpty(text))
                 throw new WatsonException("Please provide text for GetRankedConcepts.");
             if (string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetVariableValue("ALCHEMY_API_KEY");
-            if (string.IsNullOrEmpty(mp_ApiKey))
-                throw new WatsonException("GetCombinedCall - ALCHEMY_API_KEY needs to be defined in config.json");
+                SetCredentials();
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_GET_RANKED_CONCEPTS_TEXT);
             if(connector == null)
@@ -252,9 +254,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             if (string.IsNullOrEmpty(htmlFilePath))
                 throw new WatsonException("Please provide text for GetRankedConcepts.");
             if (string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetVariableValue("ALCHEMY_API_KEY");
-            if (string.IsNullOrEmpty(mp_ApiKey))
-                throw new WatsonException("GetCombinedCall - ALCHEMY_API_KEY needs to be defined in config.json");
+                SetCredentials();
 
             string htmlData = default(string);
             htmlData = File.ReadAllText(htmlFilePath);
@@ -319,6 +319,150 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         #endregion
 
         #region ExtractDates
+        private const string SERVICE_GET_DATES_HTML = "/calls/html/HTMLExtractDates";
+        private const string SERVICE_GET_DATES_URL = "/calls/url/URLExtractDates";
+        private const string SERVICE_GET_DATES_TEXT = "/calls/text/TextExtractDates";
+        public delegate void OnGetDates(DateData dateData, string data);
+
+        public bool GetDatesURL(OnGetDates callback, string url, string anchorDate = default(string), bool includeSourceText = false)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(url))
+                throw new WatsonException("Please provide a URL for GetDatesURL.");
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                SetCredentials();
+            if(string.IsNullOrEmpty(anchorDate))
+                anchorDate = GetCurrentDatetime();
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_GET_DATES_URL);
+            if(connector == null)
+                return false;
+
+            GetDatesRequest req = new GetDatesRequest();
+            req.Callback = callback;
+            req.Data = url;
+
+            req.Parameters["apikey"] = mp_ApiKey;
+            req.Parameters["outputMode"] = "json";
+            req.Parameters["showSourceText"] = Convert.ToInt32(includeSourceText).ToString();
+
+            req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
+            req.Forms = new Dictionary<string, RESTConnector.Form>();
+            req.Forms["url"] = new RESTConnector.Form(url);
+            req.Forms["anchorDate"] = new RESTConnector.Form(anchorDate);
+
+            req.OnResponse = OnGetDatesResponse;
+            return connector.Send(req);
+        }
+
+        public bool GetDatesText(OnGetDates callback, string text, string anchorDate = default(string), bool includeSourceText = false)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(text))
+                throw new WatsonException("Please provide text for GetDatesText.");
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                SetCredentials();
+            if(string.IsNullOrEmpty(anchorDate))
+                anchorDate = GetCurrentDatetime();
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_GET_DATES_TEXT);
+            if(connector == null)
+                return false;
+
+            GetDatesRequest req = new GetDatesRequest();
+            req.Callback = callback;
+            req.Data = text;
+
+            req.Parameters["apikey"] = mp_ApiKey;
+            req.Parameters["outputMode"] = "json";
+            req.Parameters["showSourceText"] = Convert.ToInt32(includeSourceText).ToString();
+
+            req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
+            req.Forms = new Dictionary<string, RESTConnector.Form>();
+            req.Forms["text"] = new RESTConnector.Form(text);
+            req.Forms["anchorDate"] = new RESTConnector.Form(anchorDate);
+
+            req.OnResponse = OnGetDatesResponse;
+            return connector.Send(req);
+        }
+
+        public bool GetDatesHTML(OnGetDates callback, string htmlFilePath, string anchorDate = default(string), bool includeSourceText = false)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(htmlFilePath))
+                throw new WatsonException("Please provide text for GetRankedConcepts.");
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                SetCredentials();
+            if(string.IsNullOrEmpty(anchorDate))
+                anchorDate = GetCurrentDatetime();
+
+            string htmlData = default(string);
+            htmlData = File.ReadAllText(htmlFilePath);
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_GET_DATES_HTML);
+            if(connector == null)
+                return false;
+
+            GetDatesRequest req = new GetDatesRequest();
+            req.Callback = callback;
+            req.Data = htmlFilePath;
+
+            req.Parameters["apikey"] = mp_ApiKey;
+            req.Parameters["outputMode"] = "json";
+            req.Parameters["showSourceText"] = Convert.ToInt32(includeSourceText).ToString();
+
+            req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
+            req.Forms = new Dictionary<string, RESTConnector.Form>();
+            req.Forms["html"] = new RESTConnector.Form(htmlData);
+            req.Forms["anchorDate"] = new RESTConnector.Form(anchorDate);
+
+            req.OnResponse = OnGetDatesResponse;
+            return connector.Send(req);
+        }
+
+        public class GetDatesRequest : RESTConnector.Request
+        {
+            public string Data { get; set; }
+            public OnGetDates Callback { get; set; }
+        }
+
+        private void OnGetDatesResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DateData dateData = new DateData();
+            if (resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = dateData;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("AlchemyLanguage", "OnDatesResponse Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((GetDatesRequest)req).Callback != null)
+                ((GetDatesRequest)req).Callback(resp.Success ? dateData : null, ((GetDatesRequest)req).Data);
+        }
+
+        private string GetCurrentDatetime()
+        {
+            //  date format is yyyy-mm-dd hh:mm:ss
+            string dateFormat = "{0}-{1}-{2} {3}:{4}:{5}";
+            return string.Format(dateFormat, System.DateTime.Now.Year, System.DateTime.Now.Month, System.DateTime.Now.Day, System.DateTime.Now.Hour, System.DateTime.Now.Minute, System.DateTime.Now.Second);
+        }
         #endregion
 
         #region GetEmotion

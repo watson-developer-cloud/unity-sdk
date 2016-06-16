@@ -90,7 +90,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
         public string ToLongString()
         {
-            StringBuilder stringBuilder = new StringBuilder(string.Format("[CombinedCallData: status={0}, totalTransactions={1}, language={2}, text={3}", status, totalTransactions, language, text));
+            StringBuilder stringBuilder = new StringBuilder(string.Format("[CombinedCallData: status={0}, language={1}, text={2}", status, language, text));
 
             stringBuilder.Append(EntityCombinedCommaSeperated);
             for (int i = 0; dates != null && i < dates.Length; i++)
@@ -163,17 +163,17 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
     public class DateData
     {
         public string status { get; set; }
-        public string usage { get; set; }
-        public string totalTransactions { get; set; }
         public string language { get; set; }
+        public string url { get; set; }
+        public string text { get; set; }
         public Date[] dates { get; set; }
     }
 
     [fsObject]
     public class Date
     {
-        public string text { get; set; }
         public string date { get; set; }
+        public string text { get; set; }
 
         private System.DateTime m_dateValue = default(System.DateTime);
         public System.DateTime DateValue
