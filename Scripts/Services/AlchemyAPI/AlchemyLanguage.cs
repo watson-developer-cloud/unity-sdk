@@ -648,6 +648,71 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         #endregion
 
         #region FeedDetection
+        private const string SERVICE_DETECT_FEEDS_HTML = "/calls/html/HTMLGetFeedLinks";
+        private const string SERVICE_DETECT_FEEDS_URL = "/calls/url/URLGetFeedLinks";
+        public delegate void OnDetectFeeds(FeedData feedData, string data);
+
+        public bool DetectFeeds(OnDetectFeeds callback, string url)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(url))
+                throw new WatsonException("Please provide a url for GetEmotions.");
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                SetCredentials();
+
+            DetectFeedsRequest req = new DetectFeedsRequest();
+            req.Callback = callback;
+            req.Data = url;
+
+            req.Parameters["apikey"] = mp_ApiKey;
+            req.Parameters["outputMode"] = "json";
+
+            req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
+            req.Forms = new Dictionary<string, RESTConnector.Form>();
+            req.Forms["url"] = new RESTConnector.Form(url);
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_DETECT_FEEDS_URL);
+            if(connector == null)
+                return false;
+
+            req.OnResponse = OnDetectFeedsResponse;
+            return connector.Send(req);
+        }
+
+        public class DetectFeedsRequest : RESTConnector.Request
+        {
+            public string Data { get; set; }
+            public OnDetectFeeds Callback { get; set; }
+        }
+
+        private void OnDetectFeedsResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            FeedData feedData = new FeedData();
+            if (resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = feedData;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("AlchemyLanguage", "OnDetectFeedsResponse Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((DetectFeedsRequest)req).Callback != null)
+                ((DetectFeedsRequest)req).Callback(resp.Success ? feedData : null, ((DetectFeedsRequest)req).Data);
+        }
         #endregion
 
         #region Keyword Extraction

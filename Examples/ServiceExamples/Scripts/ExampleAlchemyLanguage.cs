@@ -91,6 +91,10 @@ public class ExampleAlchemyLanguage : MonoBehaviour {
         //  Extract Entities HTML POST
 //        if(!m_AlchemyLanguage.ExtractEntities(OnExtractEntities, watson_beats_jeopardy_html))
 //            Log.Debug("ExampleAlchemyLanguage", "Failed to get dates by HTML POST");
+
+        //  Detect Feeds URL POST
+        if(!m_AlchemyLanguage.DetectFeeds(OnDetectFeeds, "http://www.kotaku.com"))
+            Log.Debug("ExampleAlchemyLanguage", "Failed to get dates by URL POST");
 	}
 	
     private void OnGetAuthors(AuthorsData authors, string data)
@@ -190,6 +194,23 @@ public class ExampleAlchemyLanguage : MonoBehaviour {
         else
         {
             Log.Debug("ExampleAlchemyLanguage", "Failed to find Emotions!");
+        }
+    }
+
+    private void OnDetectFeeds(FeedData feedData, string data)
+    {
+        if(feedData != null)
+        {
+            Log.Debug("ExampleAlchemyLanguage", "status: {0}", feedData.status);
+            if(feedData == null || feedData.feeds.Length == 0)
+                Log.Debug("ExampleAlchemyLanguage", "No feeds found!");
+            else
+                foreach(Feed feed in feedData.feeds)
+                    Log.Debug("ExampleAlchemyLanguage", "text: {0}", feed.feed);
+        }
+        else
+        {
+            Log.Debug("ExampleAlchemyLanguage", "Failed to find Feeds!");
         }
     }
 }

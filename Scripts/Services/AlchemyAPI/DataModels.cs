@@ -916,9 +916,8 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
     public class FeedData
     {
         public string status { get; set; }
-        public string usage { get; set; }
         public string url { get; set; }
-        public Feed feeds { get; set; }
+        public Feed[] feeds { get; set; }
     }
 
     [fsObject]
