@@ -460,7 +460,6 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
         public bool GetEmotions(OnGetEmotions callback, string source, bool includeSourceText = false)
         {
-            Log.Debug("AlchemyLanguage", "source: {0}", source);
             if (callback == null)
                 throw new ArgumentNullException("callback");
             if (string.IsNullOrEmpty(source))
@@ -543,60 +542,85 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         #endregion
 
         #region Entity Extraction
-        private const string SERVICE_ENTITY_EXTRACTION = "/calls/text/TextGetRankedNamedEntities";
+        private const string SERVICE_GET_ENTITY_EXTRACTION_HTML = "/calls/html/HTMLGetRankedNamedEntities";
+        private const string SERVICE_GET_ENTITY_EXTRACTION_URL = "/calls/url/URLGetRankedNamedEntities";
+        private const string SERVICE_GET_ENTITY_EXTRACTION_TEXT = "/calls/text/TextGetRankedNamedEntities";
+        public delegate void OnGetEntities(EntityData entityData, string data);
 
-        public delegate void OnGetEntityExtraction(Entities entityExtractionData, string data);
-
-        public bool GetEntityExtraction(OnGetEntityExtraction callback, string text)
+        public bool ExtractEntities(OnGetEntities callback, string source, 
+            int maxRetrieve = 50, 
+            bool resolveCoreference = true, 
+            bool disambiguate = true,
+            bool includeKnowledgeGraph = false,
+            bool includeLinkedData = true,
+            bool includeQuotations = false,
+            bool analyzeSentiment = false,
+            bool showSourceText = false,
+            bool extractStructuredEntities = true)
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
-            if (string.IsNullOrEmpty(text))
-                throw new WatsonException("GetEntityExtraction needs to have some text to work.");
+            if (string.IsNullOrEmpty(source))
+                throw new WatsonException("Please provide a source for ExtractEntities.");
             if (string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetVariableValue("ALCHEMY_API_KEY");
-            if (string.IsNullOrEmpty(mp_ApiKey))
-                throw new WatsonException("GetEntityExtraction - ALCHEMY_API_KEY needs to be defined in config.json");
+                SetCredentials();
 
-
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_ENTITY_EXTRACTION);
-            if (connector == null)
-                return false;
-
-            GetEntityExtractionRequest req = new GetEntityExtractionRequest();
+            GetEntitiesRequest req = new GetEntitiesRequest();
             req.Callback = callback;
+            req.Data = source;
 
             req.Parameters["apikey"] = mp_ApiKey;
-            req.Parameters["text"] = text;
-            req.Parameters["url"] = "";
             req.Parameters["outputMode"] = "json";
-            //req.Parameters["jsonp"] = "";
-            req.Parameters["disambiguate"] = "1";
-            req.Parameters["linkedData"] = "1";
-            req.Parameters["coreference"] = "1";
-            req.Parameters["quotations"] = "0";
-            req.Parameters["sentiment"] = "0";
-            req.Parameters["showSourceText"] = "1";
-            req.Parameters["maxRetrieve"] = "50";
-            //req.Parameters["baseUrl"] = "";
-            req.Parameters["knowledgeGraph"] = "0";
-            req.Parameters["structuredEntities"] = "1";
+            req.Parameters["maxRetrieve"] = Convert.ToInt32(maxRetrieve).ToString();
+            req.Parameters["coreference"] = Convert.ToInt32(resolveCoreference).ToString();
+            req.Parameters["disambiguate"] = Convert.ToInt32(disambiguate).ToString();
+            req.Parameters["knowledgeGraph"] = Convert.ToInt32(includeKnowledgeGraph).ToString();
+            req.Parameters["linkedData"] = Convert.ToInt32(includeLinkedData).ToString();
+            req.Parameters["quotations"] = Convert.ToInt32(includeQuotations).ToString();
+            req.Parameters["sentiment"] = Convert.ToInt32(analyzeSentiment).ToString();
+            req.Parameters["showSourceText"] = Convert.ToInt32(showSourceText).ToString();
+            req.Parameters["structuredEntities"] = Convert.ToInt32(extractStructuredEntities).ToString();
 
-            req.OnResponse = OnGetEntityExtractionResponse;
-            req.Data = text;
+            req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
+            req.Forms = new Dictionary<string, RESTConnector.Form>();
 
+            string service;
+            string normalizedSource = source.Trim().ToLower();
+            if(normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
+            {
+                service = SERVICE_GET_ENTITY_EXTRACTION_URL;
+                req.Forms["url"] = new RESTConnector.Form(source);
+            }
+            else if(Path.GetExtension(normalizedSource).EndsWith(".html") && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
+            {
+                service = SERVICE_GET_ENTITY_EXTRACTION_HTML;
+                string htmlData = default(string);
+                htmlData = File.ReadAllText(source);
+                req.Forms["html"] = new RESTConnector.Form(htmlData);
+            }
+            else
+            {
+                service = SERVICE_GET_ENTITY_EXTRACTION_TEXT;
+                req.Forms["text"] = new RESTConnector.Form(source);
+            }
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, service);
+            if(connector == null)
+                return false;
+
+            req.OnResponse = OnGetEntitiesResponse;
             return connector.Send(req);
         }
 
-        private class GetEntityExtractionRequest : RESTConnector.Request
+        public class GetEntitiesRequest : RESTConnector.Request
         {
             public string Data { get; set; }
-            public OnGetEntityExtraction Callback { get; set; }
-        };
+            public OnGetEntities Callback { get; set; }
+        }
 
-        private void OnGetEntityExtractionResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        private void OnGetEntitiesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            Entities entityExtractionData = new Entities();
+            EntityData entityData = new EntityData();
             if (resp.Success)
             {
                 try
@@ -606,22 +630,21 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = entityExtractionData;
+                    object obj = entityData;
                     r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
                 catch (Exception e)
                 {
-                    Log.Error("AlchemyLanguage", "OnGetEntityExtractionResponse Exception: {0}", e.ToString());
+                    Log.Error("AlchemyLanguage", "OnGetEntitiesResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
 
-            if (((GetEntityExtractionRequest)req).Callback != null)
-                ((GetEntityExtractionRequest)req).Callback(resp.Success ? entityExtractionData : null, ((GetEntityExtractionRequest)req).Data);
+            if (((GetEntitiesRequest)req).Callback != null)
+                ((GetEntitiesRequest)req).Callback(resp.Success ? entityData : null, ((GetEntitiesRequest)req).Data);
         }
-
         #endregion
 
         #region FeedDetection
@@ -899,11 +922,11 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
                 m_Service = service;
                 m_Callback = callback;
 
-                if (!m_Service.GetEntityExtraction(OnGetEntityExtraction, "Test"))
+                if (!m_Service.ExtractEntities(OnGetEntityExtraction, "Test"))
                     m_Callback(SERVICE_ID, false);
             }
 
-            void OnGetEntityExtraction(Entities entityExtractionData, string data)
+            void OnGetEntityExtraction(EntityData entityExtractionData, string data)
             {
                 if (m_Callback != null)
                     m_Callback(SERVICE_ID, entityExtractionData != null);

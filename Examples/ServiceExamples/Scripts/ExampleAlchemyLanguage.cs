@@ -68,16 +68,28 @@ public class ExampleAlchemyLanguage : MonoBehaviour {
 //        if(!m_AlchemyLanguage.GetDatesHTML(OnGetDates, watson_beats_jeopardy_html, null, true))
 //            Log.Debug("ExampleAlchemyLanguage", "Failed to get dates by HTML POST");
 
-        //  Get Date URL POST
+        //  Get Emotions URL POST
 //        if(!m_AlchemyLanguage.GetEmotions(OnGetEmotions, m_ExampleURL_watsonJeopardy, true))
 //            Log.Debug("ExampleAlchemyLanguage", "Failed to get dates by URL POST");
 
-        //  Get Date Text POST
+        //  Get Emotions Text POST
 //        if(!m_AlchemyLanguage.GetEmotions(OnGetEmotions, m_ExampleText_watsonJeopardy, true))
 //            Log.Debug("ExampleAlchemyLanguage", "Failed to get dates by text POST");
 
-        //  Get Date HTML POST
+        //  Get Emotions HTML POST
 //        if(!m_AlchemyLanguage.GetEmotions(OnGetEmotions, watson_beats_jeopardy_html, true))
+//            Log.Debug("ExampleAlchemyLanguage", "Failed to get dates by HTML POST");
+
+        //  Extract Entities URL POST
+//        if(!m_AlchemyLanguage.ExtractEntities(OnExtractEntities, m_ExampleURL_watsonJeopardy))
+//            Log.Debug("ExampleAlchemyLanguage", "Failed to get dates by URL POST");
+
+        //  Extract Entities Text POST
+//        if(!m_AlchemyLanguage.ExtractEntities(OnExtractEntities, m_ExampleText_watsonJeopardy))
+//            Log.Debug("ExampleAlchemyLanguage", "Failed to get dates by text POST");
+
+        //  Extract Entities HTML POST
+//        if(!m_AlchemyLanguage.ExtractEntities(OnExtractEntities, watson_beats_jeopardy_html))
 //            Log.Debug("ExampleAlchemyLanguage", "Failed to get dates by HTML POST");
 	}
 	
@@ -154,6 +166,26 @@ public class ExampleAlchemyLanguage : MonoBehaviour {
                 Log.Debug("ExampleAlchemyLanguage", "joy: {0}", emotions.docEmotions.joy);
                 Log.Debug("ExampleAlchemyLanguage", "sadness: {0}", emotions.docEmotions.sadness);
             }
+        }
+        else
+        {
+            Log.Debug("ExampleAlchemyLanguage", "Failed to find Emotions!");
+        }
+    }
+
+    private void OnExtractEntities(EntityData entityData, string data)
+    {
+        if(entityData != null)
+        {
+            Log.Debug("ExampleAlchemyLanguage", "status: {0}", entityData.status);
+            Log.Debug("ExampleAlchemyLanguage", "url: {0}", entityData.url);
+            Log.Debug("ExampleAlchemyLanguage", "language: {0}", entityData.language);
+            Log.Debug("ExampleAlchemyLanguage", "text: {0}", entityData.text);
+            if(entityData == null || entityData.entities.Length == 0)
+                Log.Debug("ExampleAlchemyLanguage", "No entities found!");
+            else
+                foreach(Entity entity in entityData.entities)
+                    Log.Debug("ExampleAlchemyLanguage", "text: {0}, type: {1}", entity.text, entity.type);
         }
         else
         {

@@ -220,13 +220,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
     #region GetRankedNamedEntities
     [fsObject]
-    public class EntityExtractionData
-    {
-        public Entities Entities { get; set; }
-    }
-
-    [fsObject]
-    public class Entities
+    public class EntityData
     {
         public string status { get; set; }
         public string url { get; set; }
