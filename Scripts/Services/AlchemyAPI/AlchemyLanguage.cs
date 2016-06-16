@@ -716,60 +716,76 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         #endregion
 
         #region Keyword Extraction
+        private const string SERVICE_GET_KEYWORD_EXTRACTION_HTML = "/calls/html/HTMLGetRankedKeywords";
+        private const string SERVICE_GET_KEYWORD_EXTRACTION_URL = "/calls/url/URLGetRankedKeywords";
+        private const string SERVICE_GET_KEYWORD_EXTRACTION_TEXT = "/calls/text/TextGetRankedKeywords";
+        public delegate void OnGetKeywords(KeywordData keywordData, string data);
 
-        private const string SERVICE_KEYWORD_EXTRACTION = "/calls/text/TextGetRankedKeywords";
-
-        public delegate void OnGetKeywordExtraction(KeywordExtractionData entityExtractionData, string data);
-
-        public bool GetKeywordExtraction(OnGetKeywordExtraction callback, string text, string customData = null)
+        public bool ExtractKeywords(OnGetKeywords callback, string source, 
+            int maxRetrieve = 50, 
+            bool includeKnowledgeGraph = false,
+            bool analyzeSentiment = false,
+            bool showSourceText = false)
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
-            if (string.IsNullOrEmpty(text))
-                throw new WatsonException("GetKeywordExtraction needs to have some text to work.");
+            if (string.IsNullOrEmpty(source))
+                throw new WatsonException("Please provide a source for ExtractEntities.");
             if (string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetVariableValue("ALCHEMY_API_KEY");
-            if (string.IsNullOrEmpty(mp_ApiKey))
-                throw new WatsonException("GetKeywordExtraction - ALCHEMY_API_KEY needs to be defined in config.json");
+                SetCredentials();
 
-
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_KEYWORD_EXTRACTION);
-            if (connector == null)
-                return false;
-
-            GetKeywordExtractionRequest req = new GetKeywordExtractionRequest();
+            GetKeywordsRequest req = new GetKeywordsRequest();
             req.Callback = callback;
+            req.Data = source;
 
             req.Parameters["apikey"] = mp_ApiKey;
-            //req.Parameters["text"] = text;
+            req.Parameters["outputMode"] = "json";
+            req.Parameters["maxRetrieve"] = Convert.ToInt32(maxRetrieve).ToString();
+            req.Parameters["knowledgeGraph"] = Convert.ToInt32(includeKnowledgeGraph).ToString();
+            req.Parameters["sentiment"] = Convert.ToInt32(analyzeSentiment).ToString();
+            req.Parameters["showSourceText"] = Convert.ToInt32(showSourceText).ToString();
+            req.Parameters["keywordExtractMode"] = "strict";
+
             req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
             req.Forms = new Dictionary<string, RESTConnector.Form>();
-            req.Forms["text"] = new RESTConnector.Form(text);
 
-            req.Parameters["url"] = "";
-            req.Parameters["maxRetrieve"] = "1000";
-            req.Parameters["keywordExtractMode"] = "strict"; //strict , normal
-            req.Parameters["sentiment"] = "1";
-            req.Parameters["outputMode"] = "json";
-            req.Parameters["showSourceText"] = "1";
-            //req.Parameters["baseUrl"] = "";
-            req.Parameters["knowledgeGraph"] = "0";
+            string service;
+            string normalizedSource = source.Trim().ToLower();
+            if(normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
+            {
+                service = SERVICE_GET_KEYWORD_EXTRACTION_URL;
+                req.Forms["url"] = new RESTConnector.Form(source);
+            }
+            else if(Path.GetExtension(normalizedSource).EndsWith(".html") && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
+            {
+                service = SERVICE_GET_KEYWORD_EXTRACTION_HTML;
+                string htmlData = default(string);
+                htmlData = File.ReadAllText(source);
+                req.Forms["html"] = new RESTConnector.Form(htmlData);
+            }
+            else
+            {
+                service = SERVICE_GET_KEYWORD_EXTRACTION_TEXT;
+                req.Forms["text"] = new RESTConnector.Form(source);
+            }
 
-            req.OnResponse = OnGetKeywordExtractionResponse;
-            req.Data = string.IsNullOrEmpty(customData) ? text : customData;
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, service);
+            if(connector == null)
+                return false;
 
+            req.OnResponse = OnGetKeywordsResponse;
             return connector.Send(req);
         }
 
-        private class GetKeywordExtractionRequest : RESTConnector.Request
+        public class GetKeywordsRequest : RESTConnector.Request
         {
             public string Data { get; set; }
-            public OnGetKeywordExtraction Callback { get; set; }
-        };
+            public OnGetKeywords Callback { get; set; }
+        }
 
-        private void OnGetKeywordExtractionResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        private void OnGetKeywordsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            KeywordExtractionData keywordExtractionData = new KeywordExtractionData();
+            KeywordData keywordData = new KeywordData();
             if (resp.Success)
             {
                 try
@@ -779,22 +795,21 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = keywordExtractionData;
+                    object obj = keywordData;
                     r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
                 catch (Exception e)
                 {
-                    Log.Error("AlchemyLanguage", "OnGetKeywordExtractionResponse Exception: {0}", e.ToString());
+                    Log.Error("AlchemyLanguage", "OnGetKeywordsResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
 
-            if (((GetKeywordExtractionRequest)req).Callback != null)
-                ((GetKeywordExtractionRequest)req).Callback(resp.Success ? keywordExtractionData : null, ((GetKeywordExtractionRequest)req).Data);
+            if (((GetKeywordsRequest)req).Callback != null)
+                ((GetKeywordsRequest)req).Callback(resp.Success ? keywordData : null, ((GetKeywordsRequest)req).Data);
         }
-
         #endregion
 
         #region GetLanguage

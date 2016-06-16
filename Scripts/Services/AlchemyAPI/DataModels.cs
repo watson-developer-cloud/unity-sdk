@@ -929,7 +929,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
     #region GetRankedKeyworkds
     [fsObject]
-    public class KeywordExtractionData
+    public class KeywordData
     {
         public string status { get; set; }
         public string url { get; set; }
@@ -957,16 +957,6 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         }
 
     };
-
-    [fsObject]
-    public class Keywords
-    {
-        public string status { get; set; }
-        public string url { get; set; }
-        public string language { get; set; }
-        public string text { get; set; }
-        public Keyword[] keywords { get; set; }
-    }
 
     [fsObject]
     public class Keyword

@@ -93,8 +93,20 @@ public class ExampleAlchemyLanguage : MonoBehaviour {
 //            Log.Debug("ExampleAlchemyLanguage", "Failed to get dates by HTML POST");
 
         //  Detect Feeds URL POST
-        if(!m_AlchemyLanguage.DetectFeeds(OnDetectFeeds, "http://www.kotaku.com"))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get dates by URL POST");
+//        if(!m_AlchemyLanguage.DetectFeeds(OnDetectFeeds, "http://www.kotaku.com"))
+//            Log.Debug("ExampleAlchemyLanguage", "Failed to get dates by URL POST");
+
+        //  Extract Keywords URL POST
+//        if(!m_AlchemyLanguage.ExtractKeywords(OnExtractKeywords, m_ExampleURL_watsonJeopardy))
+//            Log.Debug("ExampleAlchemyLanguage", "Failed to get dates by URL POST");
+
+        //  Extract Keywords Text POST
+//        if(!m_AlchemyLanguage.ExtractKeywords(OnExtractKeywords, m_ExampleText_watsonJeopardy))
+//            Log.Debug("ExampleAlchemyLanguage", "Failed to get dates by text POST");
+
+        //  Extract Keywords HTML POST
+        if(!m_AlchemyLanguage.ExtractKeywords(OnExtractKeywords, watson_beats_jeopardy_html))
+            Log.Debug("ExampleAlchemyLanguage", "Failed to get dates by HTML POST");
 	}
 	
     private void OnGetAuthors(AuthorsData authors, string data)
@@ -211,6 +223,26 @@ public class ExampleAlchemyLanguage : MonoBehaviour {
         else
         {
             Log.Debug("ExampleAlchemyLanguage", "Failed to find Feeds!");
+        }
+    }
+
+    private void OnExtractKeywords(KeywordData keywordData, string data)
+    {
+        if(keywordData != null)
+        {
+            Log.Debug("ExampleAlchemyLanguage", "status: {0}", keywordData.status);
+            Log.Debug("ExampleAlchemyLanguage", "url: {0}", keywordData.url);
+            Log.Debug("ExampleAlchemyLanguage", "language: {0}", keywordData.language);
+            Log.Debug("ExampleAlchemyLanguage", "text: {0}", keywordData.text);
+            if(keywordData == null || keywordData.keywords.Length == 0)
+                Log.Debug("ExampleAlchemyLanguage", "No keywords found!");
+            else
+                foreach(Keyword keyword in keywordData.keywords)
+                    Log.Debug("ExampleAlchemyLanguage", "text: {0}, relevance: {1}", keyword.text, keyword.relevance);
+        }
+        else
+        {
+            Log.Debug("ExampleAlchemyLanguage", "Failed to find Keywords!");
         }
     }
 }
