@@ -480,12 +480,13 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             req.Forms = new Dictionary<string, RESTConnector.Form>();
 
             string service;
-            if(source.StartsWith("http"))
+            string normalizedSource = source.Trim().ToLower();
+            if(normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
             {
                 service = SERVICE_GET_EMOTION_URL;
                 req.Forms["url"] = new RESTConnector.Form(source);
             }
-            else if(source.EndsWith(".html"))
+            else if(Path.GetExtension(normalizedSource).EndsWith(".html"))
             {
                 service = SERVICE_GET_EMOTION_HTML;
                 string htmlData = default(string);
