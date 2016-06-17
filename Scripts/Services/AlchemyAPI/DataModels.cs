@@ -1067,7 +1067,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         public string url { get; set; }
         public string language { get; set; }
         public string text { get; set; }
-        public Taxonomy Taxonomy { get; set; }
+        public Taxonomy[] taxonomy { get; set; }
     }
     #endregion
 

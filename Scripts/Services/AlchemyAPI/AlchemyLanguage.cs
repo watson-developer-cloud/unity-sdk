@@ -1361,6 +1361,92 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         #endregion
 
         #region GetRankedTaxonomy
+        private const string SERVICE_GET_RANKED_TAXONOMY_HTML = "/calls/html/HTMLGetRankedTaxonomy";
+        private const string SERVICE_GET_RANKED_TAXONOMY_URL = "/calls/url/URLGetRankedTaxonomy";
+        private const string SERVICE_GET_RANKED_TAXONOMY_TEXT = "/calls/text/TextGetRankedTaxonomy";
+        public delegate void OnGetRankedTaxonomy(TaxonomyData taxonomyData, string data);
+
+        public bool GetRankedTaxonomy(OnGetRankedTaxonomy callback, string source, bool showSourceText = false)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(source))
+                throw new WatsonException("Please provide a source for GetRankedTaxonomy.");
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                SetCredentials();
+
+            GetRankedTaxomomyRequest req = new GetRankedTaxomomyRequest();
+            req.Callback = callback;
+            req.Data = source;
+
+            req.Parameters["apikey"] = mp_ApiKey;
+            req.Parameters["outputMode"] = "json";
+            req.Parameters["showSourceText"] = Convert.ToInt32(showSourceText).ToString();
+
+            req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
+            req.Forms = new Dictionary<string, RESTConnector.Form>();
+
+            string service;
+            string normalizedSource = source.Trim().ToLower();
+            if(normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
+            {
+                service = SERVICE_GET_RANKED_TAXONOMY_URL;
+                req.Forms["url"] = new RESTConnector.Form(source);
+            }
+            else if(Path.GetExtension(normalizedSource).EndsWith(".html") && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
+            {
+                service = SERVICE_GET_RANKED_TAXONOMY_HTML;
+                string htmlData = default(string);
+                htmlData = File.ReadAllText(source);
+                req.Forms["html"] = new RESTConnector.Form(htmlData);
+            }
+            else
+            {
+                service = SERVICE_GET_RANKED_TAXONOMY_TEXT;
+                req.Forms["text"] = new RESTConnector.Form(source);
+            }
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, service);
+            if(connector == null)
+                return false;
+
+            req.OnResponse = OnGetRankedTaxonomyResponse;
+            return connector.Send(req);
+        }
+
+        public class GetRankedTaxomomyRequest : RESTConnector.Request
+        {
+            public string Data { get; set; }
+            public OnGetRankedTaxonomy Callback { get; set; }
+        }
+
+        private void OnGetRankedTaxonomyResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            TaxonomyData taxonomyData = new TaxonomyData();
+            if (resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = taxonomyData;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("AlchemyLanguage", "OnGetRankedTaxonomyResponse Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((GetRankedTaxomomyRequest)req).Callback != null)
+                ((GetRankedTaxomomyRequest)req).Callback(resp.Success ? taxonomyData : null, ((GetRankedTaxomomyRequest)req).Data);
+        }
         #endregion
 
         #region GetText

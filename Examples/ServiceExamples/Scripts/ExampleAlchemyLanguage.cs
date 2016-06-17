@@ -146,7 +146,7 @@ public class ExampleAlchemyLanguage : MonoBehaviour {
 
         //  Get Sentiment URL POST
 //        if(!m_AlchemyLanguage.GetTextSentiment(OnGetTextSentiment, m_ExampleURL_watsonJeopardy))
-//                    Log.Debug("ExampleAlchemyLanguage", "Failed to get sentiment by text POST");
+//            Log.Debug("ExampleAlchemyLanguage", "Failed to get sentiment by text POST");
 
         //  Get Sentiment Text POST
 //        if(!m_AlchemyLanguage.GetTextSentiment(OnGetTextSentiment, m_ExampleText_watsonJeopardy))
@@ -167,6 +167,18 @@ public class ExampleAlchemyLanguage : MonoBehaviour {
         //  Get Sentiment HTML POST
 //        if(!m_AlchemyLanguage.GetTargetedSentiment(OnGetTargetedSentiment, watson_beats_jeopardy_html, "Jeopardy|Jennings|Watson"))
 //            Log.Debug("ExampleAlchemyLanguage", "Failed to get targeted sentiment by HTML POST");
+
+        //  Get Sentiment URL POST
+//        if(!m_AlchemyLanguage.GetRankedTaxonomy(OnGetRankedTaxonomy, m_ExampleURL_watsonJeopardy))
+//            Log.Debug("ExampleAlchemyLanguage", "Failed to get ranked taxonomy by text POST");
+
+        //  Get Sentiment Text POST
+//        if(!m_AlchemyLanguage.GetRankedTaxonomy(OnGetRankedTaxonomy, m_ExampleText_watsonJeopardy))
+//            Log.Debug("ExampleAlchemyLanguage", "Failed to get ranked taxonomy by text POST");
+
+        //  Get Sentiment HTML POST
+        if(!m_AlchemyLanguage.GetRankedTaxonomy(OnGetRankedTaxonomy, watson_beats_jeopardy_html))
+            Log.Debug("ExampleAlchemyLanguage", "Failed to get ranked taxonomy by HTML POST");
 	}
 	
     private void OnGetAuthors(AuthorsData authors, string data)
@@ -426,6 +438,29 @@ public class ExampleAlchemyLanguage : MonoBehaviour {
                 else
                     foreach(TargetedSentiment result in sentimentData.results)
                         Log.Debug("ExampleAlchemyLanguage", "text: {0}, sentiment: {1}, score: {2}", result.text, result.sentiment.score, result.sentiment.type);
+        }
+        else
+        {
+            Log.Debug("ExampleAlchemyLanguage", "Failed to find Relations!");
+        }
+    }
+
+    private void OnGetRankedTaxonomy(TaxonomyData taxonomyData, string data)
+    {
+        if(taxonomyData != null)
+        {
+            Log.Debug("ExampleAlchemyLanguage", "status: {0}", taxonomyData.status);
+            Log.Debug("ExampleAlchemyLanguage", "url: {0}", taxonomyData.url);
+            Log.Debug("ExampleAlchemyLanguage", "language: {0}", taxonomyData.language);
+            Log.Debug("ExampleAlchemyLanguage", "text: {0}", taxonomyData.text);
+            if(taxonomyData.taxonomy == null)
+                Log.Debug("ExampleAlchemyLanguage", "No taxonomy found!");
+            else
+                if(taxonomyData.taxonomy == null || taxonomyData.taxonomy.Length == 0)
+                    Log.Warning("ExampleAlchemyLanguage", "No taxonomy results!");
+                else
+                    foreach(Taxonomy taxonomy in taxonomyData.taxonomy)
+                        Log.Debug("ExampleAlchemyLanguage", "label: {0}, score: {1}", taxonomy.label, taxonomy.score);
         }
         else
         {
