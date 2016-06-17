@@ -1032,12 +1032,6 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
     [fsObject]
     public class SentimentData
     {
-        public Sentiment Sentiment { get; set; }
-    }
-
-    [fsObject]
-    public class Sentiment
-    {
         public string status { get; set; }
         public string url { get; set; }
         public string language { get; set; }
@@ -1051,9 +1045,8 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
     public class TargetedSentimentData
     {
         public string status { get; set; }
-        public string usage { get; set; }
         public string url { get; set; }
-        public string totalTransactions { get; set; }
+        public string text { get; set; }
         public string language { get; set; }
         public TargetedSentiment[] results { get; set; }
     }

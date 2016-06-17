@@ -729,7 +729,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             if (callback == null)
                 throw new ArgumentNullException("callback");
             if (string.IsNullOrEmpty(source))
-                throw new WatsonException("Please provide a source for ExtractEntities.");
+                throw new WatsonException("Please provide a source for ExtractKeywords.");
             if (string.IsNullOrEmpty(mp_ApiKey))
                 SetCredentials();
 
@@ -1090,7 +1090,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             if (callback == null)
                 throw new ArgumentNullException("callback");
             if (string.IsNullOrEmpty(source))
-                throw new WatsonException("Please provide a source for ExtractEntities.");
+                throw new WatsonException("Please provide a source for GetRelations.");
             if (string.IsNullOrEmpty(mp_ApiKey))
                 SetCredentials();
 
@@ -1180,9 +1180,184 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         #endregion
 
         #region GetTextSentiment
+        private const string SERVICE_GET_TEXT_SENTIMENT_HTML = "/calls/html/HTMLGetTextSentiment";
+        private const string SERVICE_GET_TEXT_SENTIMENT_URL = "/calls/url/URLGetTextSentiment";
+        private const string SERVICE_GET_TEXT_SENTIMENT_TEXT = "/calls/text/TextGetTextSentiment";
+        public delegate void OnGetTextSentiment(SentimentData sentimentData, string data);
+
+        public bool GetTextSentiment(OnGetTextSentiment callback, string source, bool showSourceText = false)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(source))
+                throw new WatsonException("Please provide a source for GetTextSentiment.");
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                SetCredentials();
+
+            GetTextSentimentRequest req = new GetTextSentimentRequest();
+            req.Callback = callback;
+            req.Data = source;
+
+            req.Parameters["apikey"] = mp_ApiKey;
+            req.Parameters["outputMode"] = "json";
+            req.Parameters["showSourceText"] = Convert.ToInt32(showSourceText).ToString();
+
+            req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
+            req.Forms = new Dictionary<string, RESTConnector.Form>();
+
+            string service;
+            string normalizedSource = source.Trim().ToLower();
+            if(normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
+            {
+                service = SERVICE_GET_TEXT_SENTIMENT_URL;
+                req.Forms["url"] = new RESTConnector.Form(source);
+            }
+            else if(Path.GetExtension(normalizedSource).EndsWith(".html") && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
+            {
+                service = SERVICE_GET_TEXT_SENTIMENT_HTML;
+                string htmlData = default(string);
+                htmlData = File.ReadAllText(source);
+                req.Forms["html"] = new RESTConnector.Form(htmlData);
+            }
+            else
+            {
+                service = SERVICE_GET_TEXT_SENTIMENT_TEXT;
+                req.Forms["text"] = new RESTConnector.Form(source);
+            }
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, service);
+            if(connector == null)
+                return false;
+
+            req.OnResponse = OnGetTextSentimentResponse;
+            return connector.Send(req);
+        }
+
+        public class GetTextSentimentRequest : RESTConnector.Request
+        {
+            public string Data { get; set; }
+            public OnGetTextSentiment Callback { get; set; }
+        }
+
+        private void OnGetTextSentimentResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            SentimentData sentimentData = new SentimentData();
+            if (resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = sentimentData;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("AlchemyLanguage", "OnGetTextSentimentResponse Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((GetTextSentimentRequest)req).Callback != null)
+                ((GetTextSentimentRequest)req).Callback(resp.Success ? sentimentData : null, ((GetTextSentimentRequest)req).Data);
+        }
         #endregion
 
         #region GetTargetedSentiment
+        private const string SERVICE_GET_TARGETED_SENTIMENT_HTML = "/calls/html/HTMLGetTargetedSentiment";
+        private const string SERVICE_GET_TARGETED_SENTIMENT_URL = "/calls/url/URLGetTargetedSentiment";
+        private const string SERVICE_GET_TARGETED_SENTIMENT_TEXT = "/calls/text/TextGetTargetedSentiment";
+        public delegate void OnGetTargetedSentiment(TargetedSentimentData targetedSentimentData, string data);
+
+        public bool GetTargetedSentiment(OnGetTargetedSentiment callback, string source, string targets, bool showSourceText = false)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(source))
+                throw new WatsonException("Please provide a source for GetTargetedSentiment.");
+            if(string.IsNullOrEmpty(targets))
+                throw new WatsonException("Please provide a target for GetTargetedSentiment.");
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                SetCredentials();
+
+            GetTargetedSentimentRequest req = new GetTargetedSentimentRequest();
+            req.Callback = callback;
+            req.Data = source;
+
+            req.Parameters["apikey"] = mp_ApiKey;
+            req.Parameters["outputMode"] = "json";
+            req.Parameters["showSourceText"] = Convert.ToInt32(showSourceText).ToString();
+
+            req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
+            req.Forms = new Dictionary<string, RESTConnector.Form>();
+            req.Forms["targets"] = new RESTConnector.Form(targets);
+
+            string service;
+            string normalizedSource = source.Trim().ToLower();
+            if(normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
+            {
+                service = SERVICE_GET_TARGETED_SENTIMENT_URL;
+                req.Forms["url"] = new RESTConnector.Form(source);
+            }
+            else if(Path.GetExtension(normalizedSource).EndsWith(".html") && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
+            {
+                service = SERVICE_GET_TARGETED_SENTIMENT_HTML;
+                string htmlData = default(string);
+                htmlData = File.ReadAllText(source);
+                req.Forms["html"] = new RESTConnector.Form(htmlData);
+            }
+            else
+            {
+                service = SERVICE_GET_TARGETED_SENTIMENT_TEXT;
+                req.Forms["text"] = new RESTConnector.Form(source);
+            }
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, service);
+            if(connector == null)
+                return false;
+
+            req.OnResponse = OnGetTargetedSentimentResponse;
+            return connector.Send(req);
+        }
+
+        public class GetTargetedSentimentRequest : RESTConnector.Request
+        {
+            public string Data { get; set; }
+            public OnGetTargetedSentiment Callback { get; set; }
+        }
+
+        private void OnGetTargetedSentimentResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            TargetedSentimentData sentimentData = new TargetedSentimentData();
+            if (resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = sentimentData;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("AlchemyLanguage", "OnGetTargetedSentimentResponse Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((GetTargetedSentimentRequest)req).Callback != null)
+                ((GetTargetedSentimentRequest)req).Callback(resp.Success ? sentimentData : null, ((GetTargetedSentimentRequest)req).Data);
+        }
         #endregion
 
         #region GetRankedTaxonomy
