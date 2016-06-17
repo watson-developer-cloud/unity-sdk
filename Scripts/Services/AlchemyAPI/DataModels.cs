@@ -992,22 +992,16 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
     [fsObject]
     public class MicroformatData
     {
-        public Microformats[] Microformats { get; set; }
-    }
-
-    [fsObject]
-    public class Microformats
-    {
         public string status { get; set; }
         public string url { get; set; }
-        public microformat[] microformats { get; set; }
+        public Microformat[] microformats { get; set; }
     }
 
     [fsObject]
-    public class microformat
+    public class Microformat
     {
-        public string fieldName { get; set; }
-        public string fieldData { get; set; }
+        public string field { get; set; }
+        public string data { get; set; }
     }
     #endregion
 
@@ -1015,14 +1009,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
     [fsObject]
     public class PubDateData
     {
-        public PubDate PubDate { get; set; }
-    }
-
-    [fsObject]
-    public class PubDate
-    {
         public string status { get; set; }
         public string url { get; set; }
+        public string language { get; set; }
         public PublicationDate publicationDate { get; set; }
     }
     #endregion
@@ -1192,18 +1181,10 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         }
     }
 
-
-    /*
-     * Sentiment { - GetRelations
-            type (string, optional): sentiment polarity - "positive", "negative", or "neutral" ,
-            score (number, optional): sentiment strength (0.0 == neutral) ,
-            mixed (number, optional): whether sentiment is mixed (both positive and negative) (1 == mixed)
-        }
-*/
     [fsObject]
     public class PublicationDate
     {
-        public double date { get; set; }
+        public string date { get; set; }
         public string confident { get; set; }
     }
 

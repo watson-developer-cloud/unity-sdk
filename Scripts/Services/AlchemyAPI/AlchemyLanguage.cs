@@ -901,9 +901,171 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         #endregion
 
         #region GetMicroformat
+        private const string SERVICE_GET_MICROFORMAT_URL = "/calls/url/URLGetMicroformatData";
+//        private const string SERVICE_GET_MICROFORMAT_HTML = "/calls/html/HTMLGetMicroformatData";
+        public delegate void OnGetMicroformats(MicroformatData microformatData, string data);
+
+        public bool GetMicroformats(OnGetMicroformats callback, string source)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(source))
+                throw new WatsonException("Please provide a url for GetMicroformats.");
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                SetCredentials();
+
+            GetMicroformatsRequest req = new GetMicroformatsRequest();
+            req.Callback = callback;
+            req.Data = source;
+
+            req.Parameters["apikey"] = mp_ApiKey;
+            req.Parameters["outputMode"] = "json";
+
+            req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
+            req.Forms = new Dictionary<string, RESTConnector.Form>();
+
+            string service = "";
+            string normalizedSource = source.Trim().ToLower();
+            if(normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
+            {
+                service = SERVICE_GET_MICROFORMAT_URL;
+                req.Forms["url"] = new RESTConnector.Form(source);
+            }
+            else if(Path.GetExtension(normalizedSource).EndsWith(".html") && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
+            {
+                Log.Error("AlchemyLanguage", "Microformats by HTML is not supported!");
+                return false;
+//                service = SERVICE_GET_MICROFORMAT_HTML;
+//                string htmlData = default(string);
+//                htmlData = File.ReadAllText(source);
+//                req.Forms["html"] = new RESTConnector.Form(htmlData);
+            }
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, service);
+            if(connector == null)
+                return false;
+
+            req.OnResponse = OnGetMicroformatsResponse;
+            return connector.Send(req);
+        }
+
+        public class GetMicroformatsRequest : RESTConnector.Request
+        {
+            public string Data { get; set; }
+            public OnGetMicroformats Callback { get; set; }
+        }
+
+        private void OnGetMicroformatsResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            MicroformatData microformatData = new MicroformatData();
+            if (resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = microformatData;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("AlchemyLanguage", "OnGetMicroformatsResponse Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((GetMicroformatsRequest)req).Callback != null)
+                ((GetMicroformatsRequest)req).Callback(resp.Success ? microformatData : null, ((GetMicroformatsRequest)req).Data);
+        }
         #endregion
 
         #region GetPubDate
+        private const string SERVICE_GET_PUBLICATION_DATE_URL = "/calls/url/URLGetPubDate";
+        //        private const string SERVICE_GET_PUBLICATION_DATE_HTML = "/calls/html/HTMLGetPubDate";
+        public delegate void OnGetPublicationDate(PubDateData pubDateData, string data);
+
+        public bool GetPublicationDate(OnGetPublicationDate callback, string source)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(source))
+                throw new WatsonException("Please provide a url for GetPublicationDate.");
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                SetCredentials();
+
+            GetPublicationDateRequest req = new GetPublicationDateRequest();
+            req.Callback = callback;
+            req.Data = source;
+
+            req.Parameters["apikey"] = mp_ApiKey;
+            req.Parameters["outputMode"] = "json";
+
+            req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
+            req.Forms = new Dictionary<string, RESTConnector.Form>();
+
+            string service = "";
+            string normalizedSource = source.Trim().ToLower();
+            if(normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
+            {
+                service = SERVICE_GET_PUBLICATION_DATE_URL;
+                req.Forms["url"] = new RESTConnector.Form(source);
+            }
+            else if(Path.GetExtension(normalizedSource).EndsWith(".html") && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
+            {
+                Log.Error("AlchemyLanguage", "PublicationDate by HTML is not supported!");
+                return false;
+                //                service = SERVICE_GET_PUBLICATION_DATE_HTML;
+                //                string htmlData = default(string);
+                //                htmlData = File.ReadAllText(source);
+                //                req.Forms["html"] = new RESTConnector.Form(htmlData);
+            }
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, service);
+            if(connector == null)
+                return false;
+
+            req.OnResponse = OnGetPublicationDateResponse;
+            return connector.Send(req);
+        }
+
+        public class GetPublicationDateRequest : RESTConnector.Request
+        {
+            public string Data { get; set; }
+            public OnGetPublicationDate Callback { get; set; }
+        }
+
+        private void OnGetPublicationDateResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            PubDateData pubDateData = new PubDateData();
+            if (resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = pubDateData;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("AlchemyLanguage", "OnGetPublicationDateResponse Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((GetPublicationDateRequest)req).Callback != null)
+                ((GetPublicationDateRequest)req).Callback(resp.Success ? pubDateData : null, ((GetPublicationDateRequest)req).Data);
+        }
         #endregion
 
         #region GetRelations
