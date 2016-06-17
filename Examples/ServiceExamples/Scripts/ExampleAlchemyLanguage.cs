@@ -129,8 +129,20 @@ public class ExampleAlchemyLanguage : MonoBehaviour {
 ////            Log.Debug("ExampleAlchemyLanguage", "Failed to get microformats by text POST");
 
         //  Get PublicationDate URL POST
-        if(!m_AlchemyLanguage.GetPublicationDate(OnGetPublicationDate, m_ExampleURL_watsonJeopardy))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get publication dates by text POST");
+//        if(!m_AlchemyLanguage.GetPublicationDate(OnGetPublicationDate, m_ExampleURL_watsonJeopardy))
+//            Log.Debug("ExampleAlchemyLanguage", "Failed to get publication dates by text POST");
+
+        //  Get Relations URL POST
+//        if(!m_AlchemyLanguage.GetRelations(OnGetRelations, m_ExampleURL_watsonJeopardy))
+//                Log.Debug("ExampleAlchemyLanguage", "Failed to get relations by text POST");
+
+        //  Get Relations Text POST
+//        if(!m_AlchemyLanguage.GetRelations(OnGetRelations, m_ExampleText_watsonJeopardy))
+//            Log.Debug("ExampleAlchemyLanguage", "Failed to get relations by text POST");
+
+        //  Get Relations HTML POST
+        if(!m_AlchemyLanguage.GetRelations(OnGetRelations, watson_beats_jeopardy_html))
+            Log.Debug("ExampleAlchemyLanguage", "Failed to get relations by HTML POST");
 	}
 	
     private void OnGetAuthors(AuthorsData authors, string data)
@@ -330,6 +342,27 @@ public class ExampleAlchemyLanguage : MonoBehaviour {
         else
         {
             Log.Debug("ExampleAlchemyLanguage", "Failed to find Publication Dates!");
+        }
+    }
+
+    private void OnGetRelations(RelationsData relationsData, string data)
+    {
+        if(relationsData != null)
+        {
+            Log.Debug("ExampleAlchemyLanguage", "status: {0}", relationsData.status);
+            Log.Debug("ExampleAlchemyLanguage", "url: {0}", relationsData.url);
+            Log.Debug("ExampleAlchemyLanguage", "language: {0}", relationsData.language);
+            Log.Debug("ExampleAlchemyLanguage", "text: {0}", relationsData.text);
+            if(relationsData.relations == null || relationsData.relations.Length == 0)
+                Log.Debug("ExampleAlchemyLanguage", "No relations found!");
+            else
+                foreach(Relation relation in relationsData.relations)
+                    if(relation.subject != null && !string.IsNullOrEmpty(relation.subject.text))
+                        Log.Debug("ExampleAlchemyLanguage", "Text: {0}, Date: {1}", relation.sentence, relation.subject.text);
+        }
+        else
+        {
+            Log.Debug("ExampleAlchemyLanguage", "Failed to find Relations!");
         }
     }
 }

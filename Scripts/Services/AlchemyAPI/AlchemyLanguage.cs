@@ -1069,6 +1069,114 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         #endregion
 
         #region GetRelations
+        private const string SERVICE_GET_RELATIONS_HTML = "/calls/html/HTMLGetRelations";
+        private const string SERVICE_GET_RELATIONS_URL = "/calls/url/URLGetRelations";
+        private const string SERVICE_GET_RELATIONS_TEXT = "/calls/text/TextGetRelations";
+        public delegate void OnGetRelations(RelationsData relationData, string data);
+
+        public bool GetRelations(OnGetRelations callback, string source, 
+            int maxRetrieve = 50, 
+            bool includeKeywords = false,
+            bool includeEntities = false,
+            bool requireEntities = false,
+            bool resolveCoreferences = true,
+            bool disambiguateEntities = true,
+            bool includeKnowledgeGraph = false,
+            bool includeLinkedData = true,
+            bool analyzeSentiment = false,
+            bool excludeEntitiesInSentiment = false,
+            bool showSourceText = false)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(source))
+                throw new WatsonException("Please provide a source for ExtractEntities.");
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                SetCredentials();
+
+            GetRelationsRequest req = new GetRelationsRequest();
+            req.Callback = callback;
+            req.Data = source;
+
+            req.Parameters["apikey"] = mp_ApiKey;
+            req.Parameters["outputMode"] = "json";
+            req.Parameters["maxRetrieve"] = Convert.ToInt32(maxRetrieve).ToString();
+            req.Parameters["keywords"] = Convert.ToInt32(includeKeywords).ToString();
+            req.Parameters["entities"] = Convert.ToInt32(includeEntities).ToString();
+            req.Parameters["requireEntities"] = Convert.ToInt32(requireEntities).ToString();
+            req.Parameters["coreference"] = Convert.ToInt32(resolveCoreferences).ToString();
+            req.Parameters["disambiguate"] = Convert.ToInt32(disambiguateEntities).ToString();
+            req.Parameters["knowledgeGraph"] = Convert.ToInt32(includeKnowledgeGraph).ToString();
+            req.Parameters["linkedData"] = Convert.ToInt32(includeLinkedData).ToString();
+            req.Parameters["sentiment"] = Convert.ToInt32(analyzeSentiment).ToString();
+            req.Parameters["sentimentExcludeEntities"] = Convert.ToInt32(excludeEntitiesInSentiment).ToString();
+            req.Parameters["showSourceText"] = Convert.ToInt32(showSourceText).ToString();
+            req.Parameters["keywordExtractMode"] = "strict";
+
+            req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
+            req.Forms = new Dictionary<string, RESTConnector.Form>();
+
+            string service;
+            string normalizedSource = source.Trim().ToLower();
+            if(normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
+            {
+                service = SERVICE_GET_RELATIONS_URL;
+                req.Forms["url"] = new RESTConnector.Form(source);
+            }
+            else if(Path.GetExtension(normalizedSource).EndsWith(".html") && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
+            {
+                service = SERVICE_GET_RELATIONS_HTML;
+                string htmlData = default(string);
+                htmlData = File.ReadAllText(source);
+                req.Forms["html"] = new RESTConnector.Form(htmlData);
+            }
+            else
+            {
+                service = SERVICE_GET_RELATIONS_TEXT;
+                req.Forms["text"] = new RESTConnector.Form(source);
+            }
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, service);
+            if(connector == null)
+                return false;
+
+            req.OnResponse = OnGetRelationsResponse;
+            return connector.Send(req);
+        }
+
+        public class GetRelationsRequest : RESTConnector.Request
+        {
+            public string Data { get; set; }
+            public OnGetRelations Callback { get; set; }
+        }
+
+        private void OnGetRelationsResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            RelationsData relationsData = new RelationsData();
+            if (resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = relationsData;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("AlchemyLanguage", "OnGetRelationsResponse Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((GetRelationsRequest)req).Callback != null)
+                ((GetRelationsRequest)req).Callback(resp.Success ? relationsData : null, ((GetRelationsRequest)req).Data);
+        }
         #endregion
 
         #region GetTextSentiment

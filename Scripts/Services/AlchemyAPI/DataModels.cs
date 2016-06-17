@@ -1018,13 +1018,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
     #region GetRelations
     [fsObject]
-    public class RelationData
-    {
-        public Relations Relations { get; set; }
-    }
-
-    [fsObject]
-    public class Relations
+    public class RelationsData
     {
         public string status { get; set; }
         public string url { get; set; }
@@ -1032,7 +1026,6 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         public string text { get; set; }
         public Relation[] relations { get; set; }
     }
-
     #endregion
 
     #region GetSentiment
@@ -1191,9 +1184,11 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
     [fsObject]
     public class Relation
     {
+        public string sentence { get; set; }
         public Subject subject { get; set; }
         public Action action { get; set; }
         public ObjectData @object { get; set; }
+        public Location location { get; set; }
     }
 
     [fsObject]
@@ -1201,7 +1196,8 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
     {
         public string text { get; set; }
         public DocSentiment sentiment { get; set; }
-        public Entity entity { get; set; }
+        public Entity entities { get; set; }
+        public Keyword keywords { get; set; }
     }
 
     [fsObject]
@@ -1236,5 +1232,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         public string score { get; set; }
         public string confident { get; set; }
     };
+
+    [fsObject]
+    public class Location
+    {
+        public string text { get; set; }
+        public Entity[] entities { get; set; }
+    }
     #endregion
 }
