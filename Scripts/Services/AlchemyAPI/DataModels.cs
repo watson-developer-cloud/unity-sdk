@@ -970,13 +970,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
     #region GetLanguage
     [fsObject]
-    public class LanguageExtractionData
-    {
-        public Language[] Language { get; set; }
-    }
-
-    [fsObject]
-    public class Language
+    public class LanguageData
     {
         public string status { get; set; }
         public string url { get; set; }
@@ -989,7 +983,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         public string iso_639_3 { get; set; }
         public string ethnologue { get; set; }
         [fsProperty("native-speakers")]
-        public double native_speakers { get; set; }
+        public string native_speakers { get; set; }
         public string wikipedia { get; set; }
     }
     #endregion

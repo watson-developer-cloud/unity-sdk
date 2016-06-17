@@ -70,43 +70,55 @@ public class ExampleAlchemyLanguage : MonoBehaviour {
 
         //  Get Emotions URL POST
 //        if(!m_AlchemyLanguage.GetEmotions(OnGetEmotions, m_ExampleURL_watsonJeopardy, true))
-//            Log.Debug("ExampleAlchemyLanguage", "Failed to get dates by URL POST");
+//            Log.Debug("ExampleAlchemyLanguage", "Failed to get emotions by URL POST");
 
         //  Get Emotions Text POST
 //        if(!m_AlchemyLanguage.GetEmotions(OnGetEmotions, m_ExampleText_watsonJeopardy, true))
-//            Log.Debug("ExampleAlchemyLanguage", "Failed to get dates by text POST");
+//            Log.Debug("ExampleAlchemyLanguage", "Failed to get emotions by text POST");
 
         //  Get Emotions HTML POST
 //        if(!m_AlchemyLanguage.GetEmotions(OnGetEmotions, watson_beats_jeopardy_html, true))
-//            Log.Debug("ExampleAlchemyLanguage", "Failed to get dates by HTML POST");
+//            Log.Debug("ExampleAlchemyLanguage", "Failed to get emotions by HTML POST");
 
         //  Extract Entities URL POST
 //        if(!m_AlchemyLanguage.ExtractEntities(OnExtractEntities, m_ExampleURL_watsonJeopardy))
-//            Log.Debug("ExampleAlchemyLanguage", "Failed to get dates by URL POST");
+//            Log.Debug("ExampleAlchemyLanguage", "Failed to get entities by URL POST");
 
         //  Extract Entities Text POST
 //        if(!m_AlchemyLanguage.ExtractEntities(OnExtractEntities, m_ExampleText_watsonJeopardy))
-//            Log.Debug("ExampleAlchemyLanguage", "Failed to get dates by text POST");
+//            Log.Debug("ExampleAlchemyLanguage", "Failed to get entities by text POST");
 
         //  Extract Entities HTML POST
 //        if(!m_AlchemyLanguage.ExtractEntities(OnExtractEntities, watson_beats_jeopardy_html))
-//            Log.Debug("ExampleAlchemyLanguage", "Failed to get dates by HTML POST");
+//            Log.Debug("ExampleAlchemyLanguage", "Failed to get entities by HTML POST");
 
         //  Detect Feeds URL POST
 //        if(!m_AlchemyLanguage.DetectFeeds(OnDetectFeeds, "http://www.kotaku.com"))
-//            Log.Debug("ExampleAlchemyLanguage", "Failed to get dates by URL POST");
+//            Log.Debug("ExampleAlchemyLanguage", "Failed to get feeds by URL POST");
 
         //  Extract Keywords URL POST
 //        if(!m_AlchemyLanguage.ExtractKeywords(OnExtractKeywords, m_ExampleURL_watsonJeopardy))
-//            Log.Debug("ExampleAlchemyLanguage", "Failed to get dates by URL POST");
+//            Log.Debug("ExampleAlchemyLanguage", "Failed to get keywords by URL POST");
 
         //  Extract Keywords Text POST
 //        if(!m_AlchemyLanguage.ExtractKeywords(OnExtractKeywords, m_ExampleText_watsonJeopardy))
-//            Log.Debug("ExampleAlchemyLanguage", "Failed to get dates by text POST");
+//            Log.Debug("ExampleAlchemyLanguage", "Failed to get keywords by text POST");
 
         //  Extract Keywords HTML POST
-        if(!m_AlchemyLanguage.ExtractKeywords(OnExtractKeywords, watson_beats_jeopardy_html))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get dates by HTML POST");
+//        if(!m_AlchemyLanguage.ExtractKeywords(OnExtractKeywords, watson_beats_jeopardy_html))
+//            Log.Debug("ExampleAlchemyLanguage", "Failed to get keywords by HTML POST");
+
+        //  Extract Languages URL POST
+//        if(!m_AlchemyLanguage.GetLanguages(OnGetLanguages, m_ExampleURL_watsonJeopardy))
+//            Log.Debug("ExampleAlchemyLanguage", "Failed to get languages by text POST");
+
+        //  Extract Languages Text POST
+//        if(!m_AlchemyLanguage.GetLanguages(OnGetLanguages, m_ExampleText_watsonJeopardy))
+//            Log.Debug("ExampleAlchemyLanguage", "Failed to get languages by text POST");
+
+        //  Extract Languages HTML POST
+//        if(!m_AlchemyLanguage.GetLanguages(OnGetLanguages, watson_beats_jeopardy_html))
+//            Log.Debug("ExampleAlchemyLanguage", "Failed to get languages by HTML POST");
 	}
 	
     private void OnGetAuthors(AuthorsData authors, string data)
@@ -243,6 +255,31 @@ public class ExampleAlchemyLanguage : MonoBehaviour {
         else
         {
             Log.Debug("ExampleAlchemyLanguage", "Failed to find Keywords!");
+        }
+    }
+
+    private void OnGetLanguages(LanguageData languages, string data)
+    {
+        if(languages != null)
+        {
+            if(string.IsNullOrEmpty(languages.language))
+                Log.Debug("ExampleAlchemyLanguage", "No languages detected!");
+            else
+            {
+                Log.Debug("ExampleAlchemyLanguage", "status: {0}", languages.status);
+                Log.Debug("ExampleAlchemyLanguage", "url: {0}", languages.url);
+                Log.Debug("ExampleAlchemyLanguage", "language: {0}", languages.language);
+                Log.Debug("ExampleAlchemyLanguage", "ethnologue: {0}", languages.ethnologue);
+                Log.Debug("ExampleAlchemyLanguage", "iso_639_1: {0}", languages.iso_639_1);
+                Log.Debug("ExampleAlchemyLanguage", "iso_639_2: {0}", languages.iso_639_2);
+                Log.Debug("ExampleAlchemyLanguage", "iso_639_3: {0}", languages.iso_639_3);
+                Log.Debug("ExampleAlchemyLanguage", "native_speakers: {0}", languages.native_speakers);
+                Log.Debug("ExampleAlchemyLanguage", "wikipedia: {0}", languages.wikipedia);
+            }
+        }
+        else
+        {
+            Log.Debug("ExampleAlchemyLanguage", "Failed to find Dates!");
         }
     }
 }

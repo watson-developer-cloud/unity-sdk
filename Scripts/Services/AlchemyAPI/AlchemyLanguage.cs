@@ -485,7 +485,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
                 service = SERVICE_GET_EMOTION_URL;
                 req.Forms["url"] = new RESTConnector.Form(source);
             }
-            else if(Path.GetExtension(normalizedSource).EndsWith(".html"))
+            else if(Path.GetExtension(normalizedSource).EndsWith(".html") && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
             {
                 service = SERVICE_GET_EMOTION_HTML;
                 string htmlData = default(string);
@@ -648,7 +648,6 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         #endregion
 
         #region FeedDetection
-        private const string SERVICE_DETECT_FEEDS_HTML = "/calls/html/HTMLGetFeedLinks";
         private const string SERVICE_DETECT_FEEDS_URL = "/calls/url/URLGetFeedLinks";
         public delegate void OnDetectFeeds(FeedData feedData, string data);
 
@@ -813,6 +812,92 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         #endregion
 
         #region GetLanguage
+        private const string SERVICE_GET_LANGUAGE_HTML = "/calls/html/HTMLGetLanguage";
+        private const string SERVICE_GET_LANGUAGE_URL = "/calls/url/URLGetLanguage";
+        private const string SERVICE_GET_LANGUAGE_TEXT = "/calls/text/TextGetLanguage";
+        public delegate void OnGetLanguages(LanguageData languageData, string data);
+
+        public bool GetLanguages(OnGetLanguages callback, string source, bool includeSourceText = false)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(source))
+                throw new WatsonException("Please provide a source for GetLanguages.");
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                SetCredentials();
+
+            GetLanguagesRequest req = new GetLanguagesRequest();
+            req.Callback = callback;
+            req.Data = source;
+
+            req.Parameters["apikey"] = mp_ApiKey;
+            req.Parameters["outputMode"] = "json";
+            req.Parameters["showSourceText"] = Convert.ToInt32(includeSourceText).ToString();
+
+            req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
+            req.Forms = new Dictionary<string, RESTConnector.Form>();
+
+            string service;
+            string normalizedSource = source.Trim().ToLower();
+            if(normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
+            {
+                service = SERVICE_GET_LANGUAGE_URL;
+                req.Forms["url"] = new RESTConnector.Form(source);
+            }
+            else if(Path.GetExtension(normalizedSource).EndsWith(".html") && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
+            {
+                service = SERVICE_GET_LANGUAGE_HTML;
+                string htmlData = default(string);
+                htmlData = File.ReadAllText(source);
+                req.Forms["html"] = new RESTConnector.Form(htmlData);
+            }
+            else
+            {
+                service = SERVICE_GET_LANGUAGE_TEXT;
+                req.Forms["text"] = new RESTConnector.Form(source);
+            }
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, service);
+            if(connector == null)
+                return false;
+
+            req.OnResponse = OnGetLanguagesResponse;
+            return connector.Send(req);
+        }
+
+        public class GetLanguagesRequest : RESTConnector.Request
+        {
+            public string Data { get; set; }
+            public OnGetLanguages Callback { get; set; }
+        }
+
+        private void OnGetLanguagesResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            LanguageData languageData = new LanguageData();
+            if (resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = languageData;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("AlchemyLanguage", "OnGetEmotionsResponse Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((GetLanguagesRequest)req).Callback != null)
+                ((GetLanguagesRequest)req).Callback(resp.Success ? languageData : null, ((GetLanguagesRequest)req).Data);
+        } 
         #endregion
 
         #region GetMicroformat
