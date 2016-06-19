@@ -41,13 +41,13 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             Log.Status("TestAlchemyLanguage", "Test Started");
 
             m_NumberOfTestEntityExtraction = 7;
-            m_AlchemyLanguage.GetCombinedCall(OnGetCombinedCall, "How are you Watson?");
-            m_AlchemyLanguage.GetCombinedCall(OnGetCombinedCall, "How can Watson help patients?");
-            m_AlchemyLanguage.GetCombinedCall(OnGetCombinedCall, "Where is Watson?");       //Name
-            m_AlchemyLanguage.GetCombinedCall(OnGetCombinedCall, "Where is Paris?");        //Location
-            m_AlchemyLanguage.GetCombinedCall(OnGetCombinedCall, "Which ships are close to Karratha");  //location with name
-            m_AlchemyLanguage.GetCombinedCall(OnGetCombinedCall, "Are you artifical intelligence?");
-            m_AlchemyLanguage.GetCombinedCall(OnGetCombinedCall, "What happened in NewYork in december 1913 and February 1975");
+            m_AlchemyLanguage.GetCombinedData(OnGetCombinedCall, "How are you Watson?");
+            m_AlchemyLanguage.GetCombinedData(OnGetCombinedCall, "How can Watson help patients?");
+            m_AlchemyLanguage.GetCombinedData(OnGetCombinedCall, "Where is Watson?");       //Name
+            m_AlchemyLanguage.GetCombinedData(OnGetCombinedCall, "Where is Paris?");        //Location
+            m_AlchemyLanguage.GetCombinedData(OnGetCombinedCall, "Which ships are close to Karratha");  //location with name
+            m_AlchemyLanguage.GetCombinedData(OnGetCombinedCall, "Are you artifical intelligence?");
+            m_AlchemyLanguage.GetCombinedData(OnGetCombinedCall, "What happened in NewYork in december 1913 and February 1975");
 
             while (!m_EntityExtractionTested)
                 yield return null;

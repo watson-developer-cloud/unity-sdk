@@ -1687,112 +1687,130 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         #endregion
 
         #region Combined Call
-        
-        private const string SERVICE_COMBINED_CALLS = "/calls/text/TextGetCombinedData";
+        private const string SERVICE_COMBINED_CALL_HTML = "/calls/html/HTMLGetCombinedData";
+        private const string SERVICE_COMBINED_CALL_URL = "/calls/url/URLGetCombinedData";
+        private const string SERVICE_COMBINED_CALL_TEXT = "/calls/text/TextGetCombinedData";
+        public delegate void OnGetCombinedData(CombinedCallData combinedData, string data);
 
-        public delegate void OnGetCombinedCall(CombinedCallData combinedCallData, string data);
-
-        //http://access.alchemyapi.com/calls/text/TextGetRankedNamedEntities
-
-        public bool GetCombinedCall(OnGetCombinedCall callback, string text,
-            bool includeEntities = true,
-            bool includeKeywords = true,
-            bool includeDates = true,
-            bool includeTaxonomy = false,
-            bool includeConcepts = false,
-            bool includeFeeds = false,
-            bool includeDocEmotion = false,
-            bool includeRelations = false,
-            bool includePubDate = false,
-            bool includeDocSentiment = false,
-            bool includePageImage = false,
-            bool includeImageKW = false,
-            bool includeAuthors = false,
-            bool includeTitle = false,
-            string language = "english",
-            string customData = null)
+        public bool GetCombinedData(OnGetCombinedData callback, string source, 
+            bool showSourceText = false,
+            bool extractAuthors = false,
+            bool extractConcepts = true,
+            bool extractDates = false,
+            bool extractDocEmotion = false,
+            bool extractEntities = true,
+            bool extractFeeds = false,
+            bool extractKeywords = true,
+            bool extractPubDate = false,
+            bool extractRelations = false,
+            bool extractDocSentiment = false,
+            bool extractTaxonomy = true,
+            bool extractTitle = false,
+            bool extractPageImage = false,
+            bool extractImageKeywords = false,
+            string customData = default(string))
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
-            if (string.IsNullOrEmpty(text))
-                throw new WatsonException("GetCombinedCall needs to have some text to work.");
+            if (string.IsNullOrEmpty(source))
+                throw new WatsonException("Please provide a source for GetCombinedData.");
+            if (!extractAuthors
+                && !extractConcepts
+                && !extractDates
+                && !extractDocEmotion
+                && !extractEntities
+                && !extractFeeds
+                && !extractKeywords
+                && !extractPubDate
+                && !extractRelations
+                && !extractDocSentiment
+                && !extractTaxonomy
+                && !extractTitle
+                && !extractPageImage
+                && !extractImageKeywords)
+                throw new WatsonException("GetCombinedCall - Please include one or more services.");
             if (string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetVariableValue("ALCHEMY_API_KEY");
-            if (string.IsNullOrEmpty(mp_ApiKey))
-                throw new WatsonException("GetCombinedCall - ALCHEMY_API_KEY needs to be defined in config.json");
-            if (!includeEntities
-                && !includeKeywords
-                && !includeDates
-                && !includeTaxonomy
-                && !includeConcepts
-                && !includeFeeds
-                && !includeDocEmotion
-                && !includeRelations
-                && !includePubDate
-                && !includeDocSentiment
-                && !includePageImage
-                && !includeImageKW)
-                throw new WatsonException("GetCombinedCall - There should be some service included.");
+                SetCredentials();
 
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_COMBINED_CALLS);
-            if (connector == null)
-                return false;
-
-            GetCombinedCallRequest req = new GetCombinedCallRequest();
+            CombinedCallRequest req = new CombinedCallRequest();
             req.Callback = callback;
-
-            List<string> requestServices = new List<string>();
-            if (includeEntities)
-                requestServices.Add("entities");
-            if (includeKeywords)
-                requestServices.Add("keywords");
-            if (includeKeywords)
-                requestServices.Add("dates");
-            if (includeTaxonomy)
-                requestServices.Add("taxonomy");
-            if (includeConcepts)
-                requestServices.Add("concepts");
-            if (includeFeeds)
-                requestServices.Add("feeds");
-            if (includeDocEmotion)
-                requestServices.Add("doc-emotion");
-            if (includeRelations)
-                requestServices.Add("relations");
-            if (includePubDate)
-                requestServices.Add("pub-date");
-            if (includeDocSentiment)
-                requestServices.Add("doc-sentiment");
-            if (includePageImage)
-                requestServices.Add("page-image");
-            if (includeImageKW)
-                requestServices.Add("image-kw");
+            req.Data = string.IsNullOrEmpty(customData) ? source : customData;
 
             req.Parameters["apikey"] = mp_ApiKey;
-            //req.Parameters["text"] = text;
-            req.Parameters["extract"] = string.Join(",", requestServices.ToArray());
             req.Parameters["outputMode"] = "json";
-            req.Parameters["showSourceText"] = "1";
-            req.Parameters["language"] = language;
+            req.Parameters["showSourceText"] = Convert.ToInt32(showSourceText).ToString();
+
+            List<string> requestServices = new List<string>();
+            if(extractAuthors)
+                requestServices.Add("authors");
+            if(extractConcepts)
+                requestServices.Add("concepts");
+            if(extractDates)
+                requestServices.Add("dates");
+            if(extractDocEmotion)
+                requestServices.Add("doc-emotion");
+            if(extractEntities)
+                requestServices.Add("entities");
+            if(extractFeeds)
+                requestServices.Add("feeds");
+            if(extractKeywords)
+                requestServices.Add("keywords");
+            if(extractPubDate)
+                requestServices.Add("pub-date");
+            if(extractRelations)
+                requestServices.Add("relations");
+            if(extractDocSentiment)
+                requestServices.Add("doc-sentiment");
+            if(extractTaxonomy)
+                requestServices.Add("taxonomy");
+            if(extractTitle)
+                requestServices.Add("title");
+            if(extractPageImage)
+                requestServices.Add("page-image");
+            if(extractImageKeywords)
+                requestServices.Add("image-kw");
+            req.Parameters["extract"] = string.Join(",", requestServices.ToArray());
 
             req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
             req.Forms = new Dictionary<string, RESTConnector.Form>();
-            req.Forms["text"] = new RESTConnector.Form(text);
 
-            req.OnResponse = OnGetCombinedCallResponse;
-            req.Data = string.IsNullOrEmpty(customData) ? text : customData;
+            string service;
+            string normalizedSource = source.Trim().ToLower();
+            if(normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
+            {
+                service = SERVICE_COMBINED_CALL_URL;
+                req.Forms["url"] = new RESTConnector.Form(source);
+            }
+            else if(Path.GetExtension(normalizedSource).EndsWith(".html") && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
+            {
+                service = SERVICE_COMBINED_CALL_HTML;
+                string htmlData = default(string);
+                htmlData = File.ReadAllText(source);
+                req.Forms["html"] = new RESTConnector.Form(htmlData);
+            }
+            else
+            {
+                service = SERVICE_COMBINED_CALL_TEXT;
+                req.Forms["text"] = new RESTConnector.Form(source);
+            }
 
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, service);
+            if(connector == null)
+                return false;
+
+            req.OnResponse = OnCombinedCallResponse;
             return connector.Send(req);
         }
 
-        private class GetCombinedCallRequest : RESTConnector.Request
+        public class CombinedCallRequest : RESTConnector.Request
         {
             public string Data { get; set; }
-            public OnGetCombinedCall Callback { get; set; }
-        };
+            public OnGetCombinedData Callback { get; set; }
+        }
 
-        private void OnGetCombinedCallResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        private void OnCombinedCallResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            CombinedCallData combinedCallData = new CombinedCallData();
+            CombinedCallData combinedData = new CombinedCallData();
             if (resp.Success)
             {
                 try
@@ -1802,22 +1820,21 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = combinedCallData;
+                    object obj = combinedData;
                     r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
                 catch (Exception e)
                 {
-                    Log.Error("AlchemyLanguage", "OnGetCombinedCallResponse Exception: {0}", e.ToString());
+                    Log.Error("AlchemyLanguage", "OnCombinedCallResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
 
-            if (((GetCombinedCallRequest)req).Callback != null)
-                ((GetCombinedCallRequest)req).Callback(resp.Success ? combinedCallData : null, ((GetCombinedCallRequest)req).Data);
+            if (((CombinedCallRequest)req).Callback != null)
+                ((CombinedCallRequest)req).Callback(resp.Success ? combinedData : null, ((CombinedCallRequest)req).Data);
         }
-
         #endregion
 
         #region IWatsonService interface
@@ -1857,6 +1874,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             }
 
         };
+
         #endregion
     }
 }

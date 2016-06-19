@@ -197,12 +197,24 @@ public class ExampleAlchemyLanguage : MonoBehaviour {
 //            Log.Debug("ExampleAlchemyLanguage", "Failed to get raw text by text POST");
 
         //  Get Raw Text HTML POST
-        if(!m_AlchemyLanguage.GetTitle(OnGetTitle, watson_beats_jeopardy_html))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get title by text POST");
+//        if(!m_AlchemyLanguage.GetTitle(OnGetTitle, watson_beats_jeopardy_html))
+//            Log.Debug("ExampleAlchemyLanguage", "Failed to get title by text POST");
 
         //  Get Raw Text URL POST
-        if(!m_AlchemyLanguage.GetTitle(OnGetTitle, m_ExampleURL_watsonJeopardy))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get title by text POST");
+//        if(!m_AlchemyLanguage.GetTitle(OnGetTitle, m_ExampleURL_watsonJeopardy))
+//            Log.Debug("ExampleAlchemyLanguage", "Failed to get title by text POST");
+
+        //  Get Combined Data URL POST
+//        if(!m_AlchemyLanguage.GetCombinedData(OnGetCombinedData, m_ExampleURL_watsonJeopardy, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true))
+//            Log.Debug("ExampleAlchemyLanguage", "Failed to get combined data by text POST");
+
+        //  Get Combined Data Text POST
+//            if(!m_AlchemyLanguage.GetCombinedData(OnGetCombinedData, m_ExampleText_watsonJeopardy, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true))
+//            Log.Debug("ExampleAlchemyLanguage", "Failed to get combined data by text POST");
+
+        //  Get Combined Data HTML POST
+            if(!m_AlchemyLanguage.GetCombinedData(OnGetCombinedData, watson_beats_jeopardy_html, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true))
+            Log.Debug("ExampleAlchemyLanguage", "Failed to get combined data by HTML POST");
 	}
 	
     private void OnGetAuthors(AuthorsData authors, string data)
@@ -520,5 +532,67 @@ public class ExampleAlchemyLanguage : MonoBehaviour {
             Log.Debug("ExampleAlchemyLanguage", "Failed to find title!");
         }
 
+    }
+
+    private void OnGetCombinedData(CombinedCallData combinedData, string data)
+    {
+        if(combinedData != null)
+        {
+            Log.Debug("ExampleAlchemyLanguage", "status: {0}", combinedData.status);
+            Log.Debug("ExampleAlchemyLanguage", "url: {0}", combinedData.url);
+            Log.Debug("ExampleAlchemyLanguage", "language: {0}", combinedData.language);
+            Log.Debug("ExampleAlchemyLanguage", "text: {0}", combinedData.text);
+            Log.Debug("ExampleAlchemyLanguage", "image: {0}", combinedData.image);
+
+            if(combinedData.imageKeywords != null && combinedData.imageKeywords.Length > 0)
+                foreach(ImageKeyword imageKeyword in combinedData.imageKeywords)
+                    Log.Debug("ExampleAlchemyLanguage", "ImageKeyword: {0}, Score: {1}", imageKeyword.text, imageKeyword.score);
+
+            if(combinedData.publicationDate != null)
+                Log.Debug("ExampleAlchemyLanguage", "publicationDate: {0}, Score: {1}", combinedData.publicationDate.date, combinedData.publicationDate.confident);
+
+            if(combinedData.authors != null && combinedData.authors.names.Length > 0)
+                foreach(string authors in combinedData.authors.names)
+                    Log.Debug("ExampleAlchemyLanguage", "Authors: {0}", authors);
+
+            if(combinedData.docSentiment != null)
+                Log.Debug("ExampleAlchemyLanguage", "DocSentiment: {0}, Score: {1}, Mixed: {2}", combinedData.docSentiment.type, combinedData.docSentiment.score, combinedData.docSentiment.mixed);
+
+            if(combinedData.feeds != null && combinedData.feeds.Length > 0)
+                foreach(Feed feed in combinedData.feeds)
+                    Log.Debug("ExampleAlchemyLanguage", "Feeds: {0}", feed.feed);
+
+            if(combinedData.keywords != null && combinedData.keywords.Length > 0)
+                foreach(Keyword keyword in combinedData.keywords)
+                    Log.Debug("ExampleAlchemyLanguage", "Keyword: {0}, relevance: {1}", keyword.text, keyword.relevance);
+
+            if(combinedData.concepts != null && combinedData.concepts.Length > 0)
+                foreach(Concept concept in combinedData.concepts)
+                    Log.Debug("ExampleAlchemyLanguage", "Concept: {0}, Relevance: {1}", concept.text, concept.relevance);
+
+            if(combinedData.entities != null && combinedData.entities.Length > 0)
+                foreach(Entity entity in combinedData.entities)
+                    Log.Debug("ExampleAlchemyLanguage", "Entity: {0}, Type: {1}, Relevance: {2}", entity.text, entity.type, entity.relevance);
+
+            if(combinedData.relations != null && combinedData.relations.Length > 0)
+                foreach(Relation relation in combinedData.relations)
+                    Log.Debug("ExampleAlchemyLanguage", "Relations: {0}", relation.subject.text);
+
+            if(combinedData.taxonomy != null && combinedData.taxonomy.Length > 0)
+                foreach(Taxonomy taxonomy in combinedData.taxonomy)
+                    Log.Debug("ExampleAlchemyLanguage", "Taxonomy: {0}, Score: {1}, Confident: {2}" ,taxonomy.label, taxonomy.score, taxonomy.confident);
+
+            if(combinedData.dates != null && combinedData.dates.Length > 0)
+                foreach(Date date in combinedData.dates)
+                    Log.Debug("ExampleAlchemyLanguage", "Dates", date.text, date.date);
+
+            if(combinedData.docEmotions != null && combinedData.docEmotions.Length > 0)
+                foreach(DocEmotions emotions in combinedData.docEmotions)
+                    Log.Debug("ExampleAlchemyLanguage", "Doc Emotions: anger: {0}, disgust: {1}, fear: {2}, joy: {3}, sadness: {4}", emotions.anger, emotions.disgust, emotions.fear, emotions.joy, emotions.sadness);
+        }
+        else
+        {
+            Log.Debug("ExampleAlchemyLanguage", "Failed to get combined data!");
+        }
     }
 }

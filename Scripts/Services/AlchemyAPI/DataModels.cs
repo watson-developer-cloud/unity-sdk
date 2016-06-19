@@ -33,9 +33,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         public string image { get; set; }
         public ImageKeyword[] imageKeywords { get; set; }
         public PublicationDate publicationDate { get; set; }
-        public Authors[] authors { get; set; }
+        public Authors authors { get; set; }
         public DocSentiment docSentiment { get; set; }
-        public Feed feeds { get; set; }
+        public Feed[]feeds { get; set; }
         public Keyword[] keywords { get; set; }
         public Concept[] concepts { get; set; }
         public Entity[] entities { get; set; }
@@ -123,6 +123,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
     [fsObject]
     public class Authors
     {
+        public string confident { get; set; }
         public string[] names { get; set; }
     }
     #endregion
