@@ -57,7 +57,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         private const string SERVICE_GET_AUTHORS_HTML = "/calls/html/HTMLGetAuthors";
         public delegate void OnGetAuthors(AuthorsData authorExtractionData, string data);
 
-        public bool GetAuthorsURL(OnGetAuthors callback, string url)
+        public bool GetAuthorsURL(OnGetAuthors callback, string url, string customData = default(string))
         {
             if(callback == null)
                 throw new ArgumentNullException("callback");
@@ -72,7 +72,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             GetAuthorsRequest req = new GetAuthorsRequest();
             req.Callback = callback;
-            req.Data = url;
+            req.Data = string.IsNullOrEmpty(customData) ? url : customData;
             req.Parameters["apikey"] = mp_ApiKey;
             req.Parameters["outputMode"] = "json";
 
@@ -85,7 +85,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             return connector.Send(req);
         }
 
-        public bool GetAuthorsHTML(OnGetAuthors callback, string htmlFilePath, string url = default(string))
+        public bool GetAuthorsHTML(OnGetAuthors callback, string htmlFilePath, string url = default(string), string customData = default(string))
         {
             if(callback == null)
                 throw new ArgumentNullException("callback");
@@ -103,7 +103,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             GetAuthorsRequest req = new GetAuthorsRequest();
             req.Callback = callback;
-            req.Data = htmlFilePath;
+            req.Data = string.IsNullOrEmpty(customData) ? htmlFilePath : customData;
             req.Parameters["apikey"] = mp_ApiKey;
             req.Parameters["url"] = url;
             req.Parameters["outputMode"] = "json";
@@ -162,7 +162,8 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             int maxRetrieve = 8, 
             bool includeKnowledgeGraph = false, 
             bool includeLinkedData = true, 
-            bool includeSourceText = false)
+            bool includeSourceText = false, 
+            string customData = default(string))
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -177,7 +178,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             GetRankedConceptsRequest req = new GetRankedConceptsRequest();
             req.Callback = callback;
-            req.Data = url;
+            req.Data = string.IsNullOrEmpty(customData) ? url : customData;
 
             req.Parameters["apikey"] = mp_ApiKey;
             req.Parameters["outputMode"] = "json";
@@ -196,7 +197,8 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             int maxRetrieve = 8, 
             bool includeKnowledgeGraph = false, 
             bool includeLinkedData = true, 
-            bool includeSourceText = false)
+            bool includeSourceText = false, 
+            string customData = default(string))
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -211,7 +213,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             GetRankedConceptsRequest req = new GetRankedConceptsRequest();
             req.Callback = callback;
-            req.Data = text;
+            req.Data = string.IsNullOrEmpty(customData) ? text : customData;
 
             req.Parameters["apikey"] = mp_ApiKey;
             req.Parameters["outputMode"] = "json";
@@ -234,7 +236,8 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             int maxRetrieve = 8, 
             bool includeKnowledgeGraph = false, 
             bool includeLinkedData = true, 
-            bool includeSourceText = false)
+            bool includeSourceText = false, 
+            string customData = default(string))
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -252,7 +255,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             GetRankedConceptsRequest req = new GetRankedConceptsRequest();
             req.Callback = callback;
-            req.Data = htmlFilePath;
+            req.Data = string.IsNullOrEmpty(customData) ? htmlFilePath : customData;
 
             req.Parameters["apikey"] = mp_ApiKey;
             req.Parameters["outputMode"] = "json";
@@ -311,7 +314,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         private const string SERVICE_GET_DATES_TEXT = "/calls/text/TextExtractDates";
         public delegate void OnGetDates(DateData dateData, string data);
 
-        public bool GetDatesURL(OnGetDates callback, string url, string anchorDate = default(string), bool includeSourceText = false)
+        public bool GetDatesURL(OnGetDates callback, string url, string anchorDate = default(string), bool includeSourceText = false, string customData = default(string))
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -328,7 +331,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             GetDatesRequest req = new GetDatesRequest();
             req.Callback = callback;
-            req.Data = url;
+            req.Data = string.IsNullOrEmpty(customData) ? url : customData;
 
             req.Parameters["apikey"] = mp_ApiKey;
             req.Parameters["outputMode"] = "json";
@@ -343,7 +346,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             return connector.Send(req);
         }
 
-        public bool GetDatesText(OnGetDates callback, string text, string anchorDate = default(string), bool includeSourceText = false)
+        public bool GetDatesText(OnGetDates callback, string text, string anchorDate = default(string), bool includeSourceText = false, string customData = default(string))
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -360,7 +363,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             GetDatesRequest req = new GetDatesRequest();
             req.Callback = callback;
-            req.Data = text;
+            req.Data = string.IsNullOrEmpty(customData) ? text : customData;
 
             req.Parameters["apikey"] = mp_ApiKey;
             req.Parameters["outputMode"] = "json";
@@ -375,7 +378,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             return connector.Send(req);
         }
 
-        public bool GetDatesHTML(OnGetDates callback, string htmlFilePath, string anchorDate = default(string), bool includeSourceText = false)
+        public bool GetDatesHTML(OnGetDates callback, string htmlFilePath, string anchorDate = default(string), bool includeSourceText = false, string customData = default(string))
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -395,7 +398,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             GetDatesRequest req = new GetDatesRequest();
             req.Callback = callback;
-            req.Data = htmlFilePath;
+            req.Data = string.IsNullOrEmpty(customData) ? htmlFilePath : customData;
 
             req.Parameters["apikey"] = mp_ApiKey;
             req.Parameters["outputMode"] = "json";
@@ -458,7 +461,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         private const string SERVICE_GET_EMOTION_TEXT = "/calls/text/TextGetEmotion";
         public delegate void OnGetEmotions(EmotionData emotionData, string data);
 
-        public bool GetEmotions(OnGetEmotions callback, string source, bool includeSourceText = false)
+        public bool GetEmotions(OnGetEmotions callback, string source, bool includeSourceText = false, string customData = default(string))
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -469,7 +472,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             GetEmotionsRequest req = new GetEmotionsRequest();
             req.Callback = callback;
-            req.Data = source;
+            req.Data = string.IsNullOrEmpty(customData) ? source : customData;
 
             req.Parameters["apikey"] = mp_ApiKey;
             req.Parameters["outputMode"] = "json";
@@ -556,7 +559,8 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             bool includeQuotations = false,
             bool analyzeSentiment = false,
             bool showSourceText = false,
-            bool extractStructuredEntities = true)
+            bool extractStructuredEntities = true,
+            string customData = default(string))
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -567,7 +571,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             GetEntitiesRequest req = new GetEntitiesRequest();
             req.Callback = callback;
-            req.Data = source;
+            req.Data = string.IsNullOrEmpty(customData) ? source : customData;
 
             req.Parameters["apikey"] = mp_ApiKey;
             req.Parameters["outputMode"] = "json";
@@ -651,7 +655,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         private const string SERVICE_DETECT_FEEDS_URL = "/calls/url/URLGetFeedLinks";
         public delegate void OnDetectFeeds(FeedData feedData, string data);
 
-        public bool DetectFeeds(OnDetectFeeds callback, string url)
+        public bool DetectFeeds(OnDetectFeeds callback, string url, string customData = default(string))
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -662,7 +666,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             DetectFeedsRequest req = new DetectFeedsRequest();
             req.Callback = callback;
-            req.Data = url;
+            req.Data = string.IsNullOrEmpty(customData) ? url : customData;
 
             req.Parameters["apikey"] = mp_ApiKey;
             req.Parameters["outputMode"] = "json";
@@ -724,7 +728,8 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             int maxRetrieve = 50, 
             bool includeKnowledgeGraph = false,
             bool analyzeSentiment = false,
-            bool showSourceText = false)
+            bool showSourceText = false,
+            string customData = default(string))
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -735,7 +740,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             GetKeywordsRequest req = new GetKeywordsRequest();
             req.Callback = callback;
-            req.Data = source;
+            req.Data = string.IsNullOrEmpty(customData) ? source : customData;
 
             req.Parameters["apikey"] = mp_ApiKey;
             req.Parameters["outputMode"] = "json";
@@ -817,7 +822,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         private const string SERVICE_GET_LANGUAGE_TEXT = "/calls/text/TextGetLanguage";
         public delegate void OnGetLanguages(LanguageData languageData, string data);
 
-        public bool GetLanguages(OnGetLanguages callback, string source, bool includeSourceText = false)
+        public bool GetLanguages(OnGetLanguages callback, string source, bool includeSourceText = false, string customData = default(string))
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -828,7 +833,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             GetLanguagesRequest req = new GetLanguagesRequest();
             req.Callback = callback;
-            req.Data = source;
+            req.Data = string.IsNullOrEmpty(customData) ? source : customData;
 
             req.Parameters["apikey"] = mp_ApiKey;
             req.Parameters["outputMode"] = "json";
@@ -905,7 +910,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         private const string SERVICE_GET_MICROFORMAT_HTML = "/calls/html/HTMLGetMicroformatData";
         public delegate void OnGetMicroformats(MicroformatData microformatData, string data);
 
-        public bool GetMicroformats(OnGetMicroformats callback, string source)
+        public bool GetMicroformats(OnGetMicroformats callback, string source, string customData = default(string))
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -916,7 +921,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             GetMicroformatsRequest req = new GetMicroformatsRequest();
             req.Callback = callback;
-            req.Data = source;
+            req.Data = string.IsNullOrEmpty(customData) ? source : customData;
 
             req.Parameters["apikey"] = mp_ApiKey;
             req.Parameters["outputMode"] = "json";
@@ -992,7 +997,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         //        private const string SERVICE_GET_PUBLICATION_DATE_HTML = "/calls/html/HTMLGetPubDate";
         public delegate void OnGetPublicationDate(PubDateData pubDateData, string data);
 
-        public bool GetPublicationDate(OnGetPublicationDate callback, string source)
+        public bool GetPublicationDate(OnGetPublicationDate callback, string source, string customData = default(string))
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -1003,7 +1008,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             GetPublicationDateRequest req = new GetPublicationDateRequest();
             req.Callback = callback;
-            req.Data = source;
+            req.Data = string.IsNullOrEmpty(customData) ? source : customData;
 
             req.Parameters["apikey"] = mp_ApiKey;
             req.Parameters["outputMode"] = "json";
@@ -1093,7 +1098,8 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             bool includeLinkedData = true,
             bool analyzeSentiment = false,
             bool excludeEntitiesInSentiment = false,
-            bool showSourceText = false)
+            bool showSourceText = false, 
+            string customData = default(string))
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -1104,7 +1110,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             GetRelationsRequest req = new GetRelationsRequest();
             req.Callback = callback;
-            req.Data = source;
+            req.Data = string.IsNullOrEmpty(customData) ? source : customData;
 
             req.Parameters["apikey"] = mp_ApiKey;
             req.Parameters["outputMode"] = "json";
@@ -1193,7 +1199,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         private const string SERVICE_GET_TEXT_SENTIMENT_TEXT = "/calls/text/TextGetTextSentiment";
         public delegate void OnGetTextSentiment(SentimentData sentimentData, string data);
 
-        public bool GetTextSentiment(OnGetTextSentiment callback, string source, bool showSourceText = false)
+        public bool GetTextSentiment(OnGetTextSentiment callback, string source, bool showSourceText = false, string customData = default(string))
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -1204,7 +1210,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             GetTextSentimentRequest req = new GetTextSentimentRequest();
             req.Callback = callback;
-            req.Data = source;
+            req.Data = string.IsNullOrEmpty(customData) ? source : customData;
 
             req.Parameters["apikey"] = mp_ApiKey;
             req.Parameters["outputMode"] = "json";
@@ -1282,7 +1288,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         private const string SERVICE_GET_TARGETED_SENTIMENT_TEXT = "/calls/text/TextGetTargetedSentiment";
         public delegate void OnGetTargetedSentiment(TargetedSentimentData targetedSentimentData, string data);
 
-        public bool GetTargetedSentiment(OnGetTargetedSentiment callback, string source, string targets, bool showSourceText = false)
+        public bool GetTargetedSentiment(OnGetTargetedSentiment callback, string source, string targets, bool showSourceText = false, string customData = default(string))
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -1295,7 +1301,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             GetTargetedSentimentRequest req = new GetTargetedSentimentRequest();
             req.Callback = callback;
-            req.Data = source;
+            req.Data = string.IsNullOrEmpty(customData) ? source : customData;
 
             req.Parameters["apikey"] = mp_ApiKey;
             req.Parameters["outputMode"] = "json";
@@ -1374,7 +1380,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         private const string SERVICE_GET_RANKED_TAXONOMY_TEXT = "/calls/text/TextGetRankedTaxonomy";
         public delegate void OnGetRankedTaxonomy(TaxonomyData taxonomyData, string data);
 
-        public bool GetRankedTaxonomy(OnGetRankedTaxonomy callback, string source, bool showSourceText = false)
+        public bool GetRankedTaxonomy(OnGetRankedTaxonomy callback, string source, bool showSourceText = false, string customData = default(string))
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -1385,7 +1391,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             GetRankedTaxomomyRequest req = new GetRankedTaxomomyRequest();
             req.Callback = callback;
-            req.Data = source;
+            req.Data = string.IsNullOrEmpty(customData) ? source : customData;
 
             req.Parameters["apikey"] = mp_ApiKey;
             req.Parameters["outputMode"] = "json";
@@ -1462,7 +1468,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         private const string SERVICE_GET_TEXT_URL = "/calls/url/URLGetText";
         public delegate void OnGetText(TextData textData, string data);
 
-        public bool GetText(OnGetText callback, string source, bool extractLinks = false, bool useMetadata = true)
+        public bool GetText(OnGetText callback, string source, bool extractLinks = false, bool useMetadata = true, string customData = default(string))
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -1473,7 +1479,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             GetTextRequest req = new GetTextRequest();
             req.Callback = callback;
-            req.Data = source;
+            req.Data = string.IsNullOrEmpty(customData) ? source : customData;
 
             req.Parameters["apikey"] = mp_ApiKey;
             req.Parameters["outputMode"] = "json";
@@ -1550,7 +1556,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         private const string SERVICE_GET_RAW_TEXT_HTML = "/calls/html/HTMLGetRawText";
         private const string SERVICE_GET_RAW_TEXT_URL = "/calls/url/URLGetRawText";
 
-        public bool GetRawText(OnGetText callback, string source)
+        public bool GetRawText(OnGetText callback, string source, string customData = default(string))
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -1561,7 +1567,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             GetTextRequest req = new GetTextRequest();
             req.Callback = callback;
-            req.Data = source;
+            req.Data = string.IsNullOrEmpty(customData) ? source : customData;
 
             req.Parameters["apikey"] = mp_ApiKey;
             req.Parameters["outputMode"] = "json";
@@ -1603,7 +1609,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         private const string SERVICE_GET_TITLE_URL = "/calls/url/URLGetTitle";
         public delegate void OnGetTitle(Title titleData, string data);
 
-        public bool GetTitle(OnGetTitle callback, string source, bool useMetadata = true)
+        public bool GetTitle(OnGetTitle callback, string source, bool useMetadata = true, string customData = default(string))
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -1614,7 +1620,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             GetTitleRequest req = new GetTitleRequest();
             req.Callback = callback;
-            req.Data = source;
+            req.Data = string.IsNullOrEmpty(customData) ? source : customData;
 
             req.Parameters["apikey"] = mp_ApiKey;
             req.Parameters["outputMode"] = "json";
