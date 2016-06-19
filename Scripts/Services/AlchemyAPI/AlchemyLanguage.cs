@@ -145,7 +145,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         private const string SERVICE_GET_RANKED_CONCEPTS_TEXT = "/calls/text/TextGetRankedConcepts";
         public delegate void OnGetRankedConcepts(ConceptsData conceptExtractionData, string data);
 
-        public bool GetRankedConceptsURL(OnGetRankedConcepts callback, string url, 
+        public bool GetRankedConcepts(OnGetRankedConcepts callback, string source,
             int maxRetrieve = 8, 
             bool includeKnowledgeGraph = false, 
             bool includeLinkedData = true, 
@@ -154,57 +154,17 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
-            if (string.IsNullOrEmpty(url))
-                throw new WatsonException("Please provide a URL for GetRankedConceptsURL.");
+            if (string.IsNullOrEmpty(source))
+                throw new WatsonException("Please provide a source for GetAuthors.");
             if (string.IsNullOrEmpty(mp_ApiKey))
                 SetCredentials();
 
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_GET_RANKED_CONCEPTS_URL);
-            if(connector == null)
-                return false;
-
             GetRankedConceptsRequest req = new GetRankedConceptsRequest();
             req.Callback = callback;
-            req.Data = string.IsNullOrEmpty(customData) ? url : customData;
+            req.Data = string.IsNullOrEmpty(customData) ? source : customData;
 
             req.Parameters["apikey"] = mp_ApiKey;
             req.Parameters["outputMode"] = "json";
-            req.Parameters["url"] = url;
-            req.Parameters["maxRetrieve"] = maxRetrieve;
-            req.Parameters["knowledgeGraph"] = Convert.ToInt32(includeKnowledgeGraph).ToString();
-            req.Parameters["linkedData"] = Convert.ToInt32(includeLinkedData).ToString();
-            req.Parameters["showSourceText"] = Convert.ToInt32(includeSourceText).ToString();
-
-            req.OnResponse = OnGetRankedConceptsResponse;
-            return connector.Send(req);
-        }
-
-        public bool GetRankedConceptsText(OnGetRankedConcepts callback, string text,
-            string url = default(string),
-            int maxRetrieve = 8, 
-            bool includeKnowledgeGraph = false, 
-            bool includeLinkedData = true, 
-            bool includeSourceText = false, 
-            string customData = default(string))
-        {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
-            if (string.IsNullOrEmpty(text))
-                throw new WatsonException("Please provide text for GetRankedConceptsText.");
-            if (string.IsNullOrEmpty(mp_ApiKey))
-                SetCredentials();
-
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_GET_RANKED_CONCEPTS_TEXT);
-            if(connector == null)
-                return false;
-
-            GetRankedConceptsRequest req = new GetRankedConceptsRequest();
-            req.Callback = callback;
-            req.Data = string.IsNullOrEmpty(customData) ? text : customData;
-
-            req.Parameters["apikey"] = mp_ApiKey;
-            req.Parameters["outputMode"] = "json";
-            req.Parameters["url"] = url;
             req.Parameters["maxRetrieve"] = maxRetrieve;
             req.Parameters["knowledgeGraph"] = Convert.ToInt32(includeKnowledgeGraph).ToString();
             req.Parameters["linkedData"] = Convert.ToInt32(includeLinkedData).ToString();
@@ -212,49 +172,30 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
             req.Forms = new Dictionary<string, RESTConnector.Form>();
-            req.Forms["text"] = new RESTConnector.Form(text);
 
-            req.OnResponse = OnGetRankedConceptsResponse;
-            return connector.Send(req);
-        }
+            string service;
+            string normalizedSource = source.Trim().ToLower();
+            if(normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
+            {
+                service = SERVICE_GET_RANKED_CONCEPTS_URL;
+                req.Forms["url"] = new RESTConnector.Form(source);
+            }
+            else if(Path.GetExtension(normalizedSource).EndsWith(".html") && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
+            {
+                service = SERVICE_GET_RANKED_CONCEPTS_HTML;
+                string htmlData = default(string);
+                htmlData = File.ReadAllText(source);
+                req.Forms["html"] = new RESTConnector.Form(htmlData);
+            }
+            else
+            {
+                service = SERVICE_GET_RANKED_CONCEPTS_TEXT;
+                req.Forms["text"] = new RESTConnector.Form(source);
+            }
 
-        public bool GetRankedConceptsHTML(OnGetRankedConcepts callback, string htmlFilePath, 
-            string url = default(string),
-            int maxRetrieve = 8, 
-            bool includeKnowledgeGraph = false, 
-            bool includeLinkedData = true, 
-            bool includeSourceText = false, 
-            string customData = default(string))
-        {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
-            if (string.IsNullOrEmpty(htmlFilePath))
-                throw new WatsonException("Please provide text for GetRankedConceptsHTML.");
-            if (string.IsNullOrEmpty(mp_ApiKey))
-                SetCredentials();
-
-            string htmlData = default(string);
-            htmlData = File.ReadAllText(htmlFilePath);
-
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_GET_RANKED_CONCEPTS_HTML);
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, service);
             if(connector == null)
                 return false;
-
-            GetRankedConceptsRequest req = new GetRankedConceptsRequest();
-            req.Callback = callback;
-            req.Data = string.IsNullOrEmpty(customData) ? htmlFilePath : customData;
-
-            req.Parameters["apikey"] = mp_ApiKey;
-            req.Parameters["outputMode"] = "json";
-            req.Parameters["url"] = url;
-            req.Parameters["maxRetrieve"] = maxRetrieve;
-            req.Parameters["knowledgeGraph"] = Convert.ToInt32(includeKnowledgeGraph).ToString();
-            req.Parameters["linkedData"] = Convert.ToInt32(includeLinkedData).ToString();
-            req.Parameters["showSourceText"] = Convert.ToInt32(includeSourceText).ToString();
-
-            req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
-            req.Forms = new Dictionary<string, RESTConnector.Form>();
-            req.Forms["html"] = new RESTConnector.Form(htmlData);
 
             req.OnResponse = OnGetRankedConceptsResponse;
             return connector.Send(req);

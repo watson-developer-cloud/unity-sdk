@@ -41,11 +41,15 @@ public class ExampleAlchemyLanguage : MonoBehaviour {
 //            Log.Debug("ExampleAlchemyLanguage", "Failed to get authors HTML POST!");
 
         //  Get Concepts Text POST
-//        if(!m_AlchemyLanguage.GetRankedConceptsText(OnGetConcepts, m_ExampleText_unitySDK, m_ExampleURL_unitySDK))
+//        if(!m_AlchemyLanguage.GetRankedConcepts(OnGetConcepts, m_ExampleText_unitySDK))
 //            Log.Debug("ExampleAlchemyLanguage", "Failed to get concepts Text POST!");
 
         //  Get Concepts HTML POST
-//        if(!m_AlchemyLanguage.GetRankedConceptsHTML(OnGetConcepts, exampleHTMLPath, m_ExampleURL))
+//        if(!m_AlchemyLanguage.GetRankedConcepts(OnGetConcepts, watson_beats_jeopardy_html))
+//            Log.Debug("ExampleAlchemyLanguage", "Failed to get concepts HTML POST!");
+
+        //  Get Concepts URL POST
+//        if(!m_AlchemyLanguage.GetRankedConcepts(OnGetConcepts, m_ExampleURL_watsonJeopardy))
 //            Log.Debug("ExampleAlchemyLanguage", "Failed to get concepts HTML POST!");
 
         //  Get Date URL POST
