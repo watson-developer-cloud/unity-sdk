@@ -902,7 +902,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
         #region GetMicroformat
         private const string SERVICE_GET_MICROFORMAT_URL = "/calls/url/URLGetMicroformatData";
-//        private const string SERVICE_GET_MICROFORMAT_HTML = "/calls/html/HTMLGetMicroformatData";
+        private const string SERVICE_GET_MICROFORMAT_HTML = "/calls/html/HTMLGetMicroformatData";
         public delegate void OnGetMicroformats(MicroformatData microformatData, string data);
 
         public bool GetMicroformats(OnGetMicroformats callback, string source)
@@ -933,12 +933,15 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             }
             else if(Path.GetExtension(normalizedSource).EndsWith(".html") && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
             {
-                Log.Error("AlchemyLanguage", "Microformats by HTML is not supported!");
+                service = SERVICE_GET_MICROFORMAT_HTML;
+                string htmlData = default(string);
+                htmlData = File.ReadAllText(source);
+                req.Forms["html"] = new RESTConnector.Form(htmlData);
+            }
+            else
+            {
+                Log.Error("Alchemy Language", "Either a URL or a html page source is required for GetMicroformats!");
                 return false;
-//                service = SERVICE_GET_MICROFORMAT_HTML;
-//                string htmlData = default(string);
-//                htmlData = File.ReadAllText(source);
-//                req.Forms["html"] = new RESTConnector.Form(htmlData);
             }
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, service);
@@ -1023,6 +1026,11 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
                 //                string htmlData = default(string);
                 //                htmlData = File.ReadAllText(source);
                 //                req.Forms["html"] = new RESTConnector.Form(htmlData);
+            }
+            else
+            {
+                Log.Error("Alchemy Language", "Either a URL or a html page source is required for GetPublicationDate!");
+                return false;
             }
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, service);
@@ -1450,9 +1458,144 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         #endregion
 
         #region GetText
+        private const string SERVICE_GET_TEXT_HTML = "/calls/html/HTMLGetText";
+        private const string SERVICE_GET_TEXT_URL = "/calls/url/URLGetText";
+        public delegate void OnGetText(TextData textData, string data);
+
+        public bool GetText(OnGetText callback, string source, bool extractLinks = false, bool useMetadata = true)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(source))
+                throw new WatsonException("Please provide a source for GetText.");
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                SetCredentials();
+
+            GetTextRequest req = new GetTextRequest();
+            req.Callback = callback;
+            req.Data = source;
+
+            req.Parameters["apikey"] = mp_ApiKey;
+            req.Parameters["outputMode"] = "json";
+            req.Parameters["extractLinks"] = Convert.ToInt32(extractLinks).ToString();
+            req.Parameters["useMetadata"] = Convert.ToInt32(useMetadata).ToString();
+
+            req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
+            req.Forms = new Dictionary<string, RESTConnector.Form>();
+
+            string service = "";
+            string normalizedSource = source.Trim().ToLower();
+            if(normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
+            {
+                service = SERVICE_GET_TEXT_URL;
+                req.Forms["url"] = new RESTConnector.Form(source);
+            }
+            else if(Path.GetExtension(normalizedSource).EndsWith(".html") && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
+            {
+                service = SERVICE_GET_TEXT_HTML;
+                string htmlData = default(string);
+                htmlData = File.ReadAllText(source);
+                req.Forms["html"] = new RESTConnector.Form(htmlData);
+            }
+            else
+            {
+                Log.Error("Alchemy Language", "Either a URL or a html page source is required for GetText!");
+                return false;
+            }
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, service);
+            if(connector == null)
+                return false;
+
+            req.OnResponse = OnGetTextResponse;
+            return connector.Send(req);
+        }
+
+        public class GetTextRequest : RESTConnector.Request
+        {
+            public string Data { get; set; }
+            public OnGetText Callback { get; set; }
+        }
+
+        private void OnGetTextResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            TextData textData = new TextData();
+            if (resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = textData;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("AlchemyLanguage", "OnGetTextResponse Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((GetTextRequest)req).Callback != null)
+                ((GetTextRequest)req).Callback(resp.Success ? textData : null, ((GetTextRequest)req).Data);
+        }
         #endregion
 
         #region GetRawText
+        private const string SERVICE_GET_RAW_TEXT_HTML = "/calls/html/HTMLGetRawText";
+        private const string SERVICE_GET_RAW_TEXT_URL = "/calls/url/URLGetRawText";
+
+        public bool GetRawText(OnGetText callback, string source)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(source))
+                throw new WatsonException("Please provide a source for GetRawText.");
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                SetCredentials();
+
+            GetTextRequest req = new GetTextRequest();
+            req.Callback = callback;
+            req.Data = source;
+
+            req.Parameters["apikey"] = mp_ApiKey;
+            req.Parameters["outputMode"] = "json";
+
+            req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
+            req.Forms = new Dictionary<string, RESTConnector.Form>();
+
+            string service = "";
+            string normalizedSource = source.Trim().ToLower();
+            if(normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
+            {
+                service = SERVICE_GET_TEXT_URL;
+                req.Forms["url"] = new RESTConnector.Form(source);
+            }
+            else if(Path.GetExtension(normalizedSource).EndsWith(".html") && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
+            {
+                service = SERVICE_GET_TEXT_HTML;
+                string htmlData = default(string);
+                htmlData = File.ReadAllText(source);
+                req.Forms["html"] = new RESTConnector.Form(htmlData);
+            }
+            else
+            {
+                Log.Error("Alchemy Language", "Either a URL or a html page source is required for GetText!");
+                return false;
+            }
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, service);
+            if(connector == null)
+                return false;
+
+            req.OnResponse = OnGetTextResponse;
+            return connector.Send(req);
+        }
         #endregion
 
         #region GetTitle

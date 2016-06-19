@@ -31,7 +31,7 @@ public class ExampleAlchemyLanguage : MonoBehaviour {
         LogSystem.InstallDefaultReactors();
         string unitySDK_release_html = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/unitySDK_release.html";
         string watson_beats_jeopardy_html = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/watson_beats_jeopardy.html";
-
+        string microformats_html = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/microformats.html";
         //  Get Author URL POST
 //        if(!m_AlchemyLanguage.GetAuthors(OnGetAuthors, m_ExampleURL_unitySDK, true))
 //            Log.Debug("ExampleAlchemyLanguage", "Failed to get authors URL POST!");
@@ -125,8 +125,8 @@ public class ExampleAlchemyLanguage : MonoBehaviour {
 //            Log.Debug("ExampleAlchemyLanguage", "Failed to get microformats by text POST");
 
         //  Get Microformats HTML POST
-////        if(!m_AlchemyLanguage.GetMicroformats(OnGetMicroformats, microformats_html))
-////            Log.Debug("ExampleAlchemyLanguage", "Failed to get microformats by text POST");
+//        if(!m_AlchemyLanguage.GetMicroformats(OnGetMicroformats, microformats_html))
+//            Log.Debug("ExampleAlchemyLanguage", "Failed to get microformats by text POST");
 
         //  Get PublicationDate URL POST
 //        if(!m_AlchemyLanguage.GetPublicationDate(OnGetPublicationDate, m_ExampleURL_watsonJeopardy))
@@ -156,29 +156,45 @@ public class ExampleAlchemyLanguage : MonoBehaviour {
 //        if(!m_AlchemyLanguage.GetTextSentiment(OnGetTextSentiment, watson_beats_jeopardy_html))
 //            Log.Debug("ExampleAlchemyLanguage", "Failed to get sentiment by HTML POST");
 
-        //  Get Sentiment URL POST
+        //  Get Targeted Sentiment URL POST
 //        if(!m_AlchemyLanguage.GetTargetedSentiment(OnGetTargetedSentiment, m_ExampleURL_watsonJeopardy, "Jeopardy|Jennings|Watson"))
 //            Log.Debug("ExampleAlchemyLanguage", "Failed to get targeted sentiment by text POST");
 
-        //  Get Sentiment Text POST
+        //  Get Targeted Sentiment Text POST
 //        if(!m_AlchemyLanguage.GetTargetedSentiment(OnGetTargetedSentiment, m_ExampleText_watsonJeopardy, "Jeopardy|Jennings|Watson"))
 //            Log.Debug("ExampleAlchemyLanguage", "Failed to get targeted sentiment by text POST");
 
-        //  Get Sentiment HTML POST
+        //  Get Targeted Sentiment HTML POST
 //        if(!m_AlchemyLanguage.GetTargetedSentiment(OnGetTargetedSentiment, watson_beats_jeopardy_html, "Jeopardy|Jennings|Watson"))
 //            Log.Debug("ExampleAlchemyLanguage", "Failed to get targeted sentiment by HTML POST");
 
-        //  Get Sentiment URL POST
+        //  Get Taxonomy URL POST
 //        if(!m_AlchemyLanguage.GetRankedTaxonomy(OnGetRankedTaxonomy, m_ExampleURL_watsonJeopardy))
 //            Log.Debug("ExampleAlchemyLanguage", "Failed to get ranked taxonomy by text POST");
 
-        //  Get Sentiment Text POST
+        //  Get Taxonomy Text POST
 //        if(!m_AlchemyLanguage.GetRankedTaxonomy(OnGetRankedTaxonomy, m_ExampleText_watsonJeopardy))
 //            Log.Debug("ExampleAlchemyLanguage", "Failed to get ranked taxonomy by text POST");
 
-        //  Get Sentiment HTML POST
-        if(!m_AlchemyLanguage.GetRankedTaxonomy(OnGetRankedTaxonomy, watson_beats_jeopardy_html))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get ranked taxonomy by HTML POST");
+        //  Get Taxonomy HTML POST
+//        if(!m_AlchemyLanguage.GetRankedTaxonomy(OnGetRankedTaxonomy, watson_beats_jeopardy_html))
+//            Log.Debug("ExampleAlchemyLanguage", "Failed to get ranked taxonomy by HTML POST");
+
+        //  Get Text HTML POST
+//        if(!m_AlchemyLanguage.GetText(OnGetText, watson_beats_jeopardy_html))
+//            Log.Debug("ExampleAlchemyLanguage", "Failed to get text by text POST");
+
+        //  Get Text URL POST
+//        if(!m_AlchemyLanguage.GetText(OnGetText, m_ExampleURL_watsonJeopardy))
+//            Log.Debug("ExampleAlchemyLanguage", "Failed to get text by text POST");
+
+        //  Get Raw Text HTML POST
+//        if(!m_AlchemyLanguage.GetRawText(OnGetText, watson_beats_jeopardy_html))
+//            Log.Debug("ExampleAlchemyLanguage", "Failed to get raw text by text POST");
+
+        //  Get Raw Text URL POST
+//        if(!m_AlchemyLanguage.GetRawText(OnGetText, m_ExampleURL_watsonJeopardy))
+//            Log.Debug("ExampleAlchemyLanguage", "Failed to get raw text by text POST");
 	}
 	
     private void OnGetAuthors(AuthorsData authors, string data)
@@ -466,5 +482,20 @@ public class ExampleAlchemyLanguage : MonoBehaviour {
         {
             Log.Debug("ExampleAlchemyLanguage", "Failed to find Relations!");
         }
+    }
+
+    private void OnGetText(TextData textData, string data)
+    {
+        if(textData != null)
+        {
+            Log.Debug("ExampleAlchemyLanuguage", "status: {0}", textData.status);
+            Log.Debug("ExampleAlchemyLanuguage", "url: {0}", textData.url);
+            Log.Debug("ExampleAlchemyLanuguage", "text: {0}", textData.text);
+        }
+        else
+        {
+            Log.Debug("ExampleAlchemyLanguage", "Failed to find text!");
+        }
+            
     }
 }

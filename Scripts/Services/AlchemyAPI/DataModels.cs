@@ -1073,11 +1073,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
     #region GetRawText
     [fsObject]
-    public class Text
+    public class TextData
     {
         public string status { get; set; }
         public string url { get; set; }
         public string text { get; set; }
+        public string language { get; set; }
     }
     #endregion
 
