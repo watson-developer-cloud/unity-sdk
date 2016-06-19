@@ -33,20 +33,12 @@ public class ExampleAlchemyLanguage : MonoBehaviour {
         string watson_beats_jeopardy_html = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/watson_beats_jeopardy.html";
         string microformats_html = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/microformats.html";
         //  Get Author URL POST
-//        if(!m_AlchemyLanguage.GetAuthors(OnGetAuthors, m_ExampleURL_unitySDK, true))
+//        if(!m_AlchemyLanguage.GetAuthors(OnGetAuthors, m_ExampleURL_watsonJeopardy))
 //            Log.Debug("ExampleAlchemyLanguage", "Failed to get authors URL POST!");
 
-        //  Get Author URL GET
-//        if(!m_AlchemyLanguage.GetAuthors(OnGetAuthors, m_ExampleURL_unitySDK))
-//            Log.Debug("ExampleAlchemyLanguage", "Failed to get authors URL GET!");
-
         //  Get Author HTML POST
-//        if(!m_AlchemyLanguage.GetAuthors(exampleHTMLPath, OnGetAuthors, m_ExampleURL_unitySDK))
+//        if(!m_AlchemyLanguage.GetAuthors(OnGetAuthors, watson_beats_jeopardy_html))
 //            Log.Debug("ExampleAlchemyLanguage", "Failed to get authors HTML POST!");
-
-        //  Get Concepts URL GET
-//        if(!m_AlchemyLanguage.GetRankedConceptsURL(OnGetConcepts, m_ExampleURL_unitySDK))
-//            Log.Debug("ExampleAlchemyLanguage", "Failed to get concepts URL GET!");
 
         //  Get Concepts Text POST
 //        if(!m_AlchemyLanguage.GetRankedConceptsText(OnGetConcepts, m_ExampleText_unitySDK, m_ExampleURL_unitySDK))
@@ -213,8 +205,8 @@ public class ExampleAlchemyLanguage : MonoBehaviour {
 //            Log.Debug("ExampleAlchemyLanguage", "Failed to get combined data by text POST");
 
         //  Get Combined Data HTML POST
-            if(!m_AlchemyLanguage.GetCombinedData(OnGetCombinedData, watson_beats_jeopardy_html, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get combined data by HTML POST");
+//            if(!m_AlchemyLanguage.GetCombinedData(OnGetCombinedData, watson_beats_jeopardy_html, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true))
+//            Log.Debug("ExampleAlchemyLanguage", "Failed to get combined data by HTML POST");
 	}
 	
     private void OnGetAuthors(AuthorsData authors, string data)

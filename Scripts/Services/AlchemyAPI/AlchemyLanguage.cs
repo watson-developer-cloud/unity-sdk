@@ -57,63 +57,50 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         private const string SERVICE_GET_AUTHORS_HTML = "/calls/html/HTMLGetAuthors";
         public delegate void OnGetAuthors(AuthorsData authorExtractionData, string data);
 
-        public bool GetAuthorsURL(OnGetAuthors callback, string url, string customData = default(string))
+        public bool GetAuthors(OnGetAuthors callback, string source, string customData = default(string))
         {
             if(callback == null)
                 throw new ArgumentNullException("callback");
-            if(string.IsNullOrEmpty(url))
-                throw new ArgumentNullException("GetAuthorsURL needs a URL");
+            if(string.IsNullOrEmpty(source))
+                throw new ArgumentNullException("Please provide a source for GetAuthors.");
             if (string.IsNullOrEmpty(mp_ApiKey))
                 SetCredentials();
 
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_GET_AUTHORS_URL);
-            if(connector == null)
-                return false;
-
             GetAuthorsRequest req = new GetAuthorsRequest();
             req.Callback = callback;
-            req.Data = string.IsNullOrEmpty(customData) ? url : customData;
+            req.Data = string.IsNullOrEmpty(customData) ? source : customData;
+
             req.Parameters["apikey"] = mp_ApiKey;
             req.Parameters["outputMode"] = "json";
 
             req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
             req.Forms = new Dictionary<string, RESTConnector.Form>();
-            req.Forms["url"] = new RESTConnector.Form(url);
 
-            req.OnResponse = OnGetAuthorsResponse;
+            string service;
+            string normalizedSource = source.Trim().ToLower();
+            if(normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
+            {
+                service = SERVICE_GET_AUTHORS_URL;
+                req.Forms["url"] = new RESTConnector.Form(source);
+            }
+            else if(Path.GetExtension(normalizedSource).EndsWith(".html") && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
+            {
+                service = SERVICE_GET_AUTHORS_HTML;
+                string htmlData = default(string);
+                htmlData = File.ReadAllText(source);
+                req.Forms["html"] = new RESTConnector.Form(htmlData);
+            }
+            else
+            {
+                Log.Error("Alchemy Language", "Either a URL or a html page source is required for GetAuthors!");
+                return false;
+            }
 
-            return connector.Send(req);
-        }
-
-        public bool GetAuthorsHTML(OnGetAuthors callback, string htmlFilePath, string url = default(string), string customData = default(string))
-        {
-            if(callback == null)
-                throw new ArgumentNullException("callback");
-            if(string.IsNullOrEmpty(htmlFilePath))
-                throw new ArgumentNullException("GetAuthorsHTML needs a filepath");
-            if (string.IsNullOrEmpty(mp_ApiKey))
-                SetCredentials();
-
-            string htmlData = default(string);
-            htmlData = File.ReadAllText(htmlFilePath);
-
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_GET_AUTHORS_HTML);
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, service);
             if(connector == null)
                 return false;
 
-            GetAuthorsRequest req = new GetAuthorsRequest();
-            req.Callback = callback;
-            req.Data = string.IsNullOrEmpty(customData) ? htmlFilePath : customData;
-            req.Parameters["apikey"] = mp_ApiKey;
-            req.Parameters["url"] = url;
-            req.Parameters["outputMode"] = "json";
-
-            req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
-            req.Forms = new Dictionary<string, RESTConnector.Form>();
-            req.Forms["html"] = new RESTConnector.Form(htmlData);
-
             req.OnResponse = OnGetAuthorsResponse;
-
             return connector.Send(req);
         }
 
