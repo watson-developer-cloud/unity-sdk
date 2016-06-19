@@ -1599,6 +1599,91 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         #endregion
 
         #region GetTitle
+        private const string SERVICE_GET_TITLE_HTML = "/calls/html/HTMLGetTitle";
+        private const string SERVICE_GET_TITLE_URL = "/calls/url/URLGetTitle";
+        public delegate void OnGetTitle(Title titleData, string data);
+
+        public bool GetTitle(OnGetTitle callback, string source, bool useMetadata = true)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(source))
+                throw new WatsonException("Please provide a source for GetText.");
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                SetCredentials();
+
+            GetTitleRequest req = new GetTitleRequest();
+            req.Callback = callback;
+            req.Data = source;
+
+            req.Parameters["apikey"] = mp_ApiKey;
+            req.Parameters["outputMode"] = "json";
+            req.Parameters["useMetadata"] = Convert.ToInt32(useMetadata).ToString();
+
+            req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
+            req.Forms = new Dictionary<string, RESTConnector.Form>();
+
+            string service = "";
+            string normalizedSource = source.Trim().ToLower();
+            if(normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
+            {
+                service = SERVICE_GET_TITLE_URL;
+                req.Forms["url"] = new RESTConnector.Form(source);
+            }
+            else if(Path.GetExtension(normalizedSource).EndsWith(".html") && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
+            {
+                service = SERVICE_GET_TITLE_HTML;
+                string htmlData = default(string);
+                htmlData = File.ReadAllText(source);
+                req.Forms["html"] = new RESTConnector.Form(htmlData);
+            }
+            else
+            {
+                Log.Error("Alchemy Language", "Either a URL or a html page source is required for GetTitle!");
+                return false;
+            }
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, service);
+            if(connector == null)
+                return false;
+
+            req.OnResponse = OnGetTitleResponse;
+            return connector.Send(req);
+        }
+
+        public class GetTitleRequest : RESTConnector.Request
+        {
+            public string Data { get; set; }
+            public OnGetTitle Callback { get; set; }
+        }
+
+        private void OnGetTitleResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            Title titleData = new Title();
+            if (resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = titleData;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("AlchemyLanguage", "OnGetTitleResponse Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((GetTitleRequest)req).Callback != null)
+                ((GetTitleRequest)req).Callback(resp.Success ? titleData : null, ((GetTitleRequest)req).Data);
+        }
         #endregion
 
         #region Combined Call

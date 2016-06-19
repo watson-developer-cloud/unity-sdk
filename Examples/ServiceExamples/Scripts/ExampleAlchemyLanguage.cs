@@ -195,6 +195,14 @@ public class ExampleAlchemyLanguage : MonoBehaviour {
         //  Get Raw Text URL POST
 //        if(!m_AlchemyLanguage.GetRawText(OnGetText, m_ExampleURL_watsonJeopardy))
 //            Log.Debug("ExampleAlchemyLanguage", "Failed to get raw text by text POST");
+
+        //  Get Raw Text HTML POST
+        if(!m_AlchemyLanguage.GetTitle(OnGetTitle, watson_beats_jeopardy_html))
+            Log.Debug("ExampleAlchemyLanguage", "Failed to get title by text POST");
+
+        //  Get Raw Text URL POST
+        if(!m_AlchemyLanguage.GetTitle(OnGetTitle, m_ExampleURL_watsonJeopardy))
+            Log.Debug("ExampleAlchemyLanguage", "Failed to get title by text POST");
 	}
 	
     private void OnGetAuthors(AuthorsData authors, string data)
@@ -497,5 +505,20 @@ public class ExampleAlchemyLanguage : MonoBehaviour {
             Log.Debug("ExampleAlchemyLanguage", "Failed to find text!");
         }
             
+    }
+
+    private void OnGetTitle(Title titleData, string data)
+    {
+        if(titleData != null)
+        {
+            Log.Debug("ExampleAlchemyLanuguage", "status: {0}", titleData.status);
+            Log.Debug("ExampleAlchemyLanuguage", "url: {0}", titleData.url);
+            Log.Debug("ExampleAlchemyLanuguage", "text: {0}", titleData.title);
+        }
+        else
+        {
+            Log.Debug("ExampleAlchemyLanguage", "Failed to find title!");
+        }
+
     }
 }
