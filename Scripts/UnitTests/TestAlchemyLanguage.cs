@@ -102,50 +102,50 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             string example_microformats_html = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/microformats.html";
             string example_feed_html = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/ycombinator_news.html";
 
-            m_AlchemyLanguage.GetAuthors(OnGetAuthorsURL, m_ExampleURL_article);
+            m_AlchemyLanguage.GetAuthors(OnGetAuthorsURL, m_ExampleURL_article, "OnGetAuthorsURL");
             while(!m_GetAuthorsURLTested)
                 yield return null;
 
-            m_AlchemyLanguage.GetAuthors(OnGetAuthorsHTML, example_article_html);
+            m_AlchemyLanguage.GetAuthors(OnGetAuthorsHTML, example_article_html, "OnGetAuthorsHTML");
             while(!m_GetAuthorsHTMLTested)
                 yield return null;
 
 
-            m_AlchemyLanguage.GetRankedConcepts(OnGetRankedConceptsHTML, example_article_html);
+            m_AlchemyLanguage.GetRankedConcepts(OnGetRankedConceptsHTML, example_article_html, 8, true, true, true, "OnGetRankedConceptsHTML");
             while(!m_GetRankedConceptsHTMLTested)
                 yield return null;
 
-            m_AlchemyLanguage.GetRankedConcepts(OnGetRankedConceptsURL, m_ExampleURL_article);
+            m_AlchemyLanguage.GetRankedConcepts(OnGetRankedConceptsURL, m_ExampleURL_article, 8, true, true, true, "OnGetRankedConceptsURL");
             while(!m_GetRankedConceptsHTMLTested)
                 yield return null;
 
-            m_AlchemyLanguage.GetRankedConcepts(OnGetRankedConceptsText, m_ExampleText_article);
+            m_AlchemyLanguage.GetRankedConcepts(OnGetRankedConceptsText, m_ExampleText_article, 8, true, true, true, "OnGetRankedConceptsText");
             while(!m_GetRankedConceptsHTMLTested)
                 yield return null;
 
 
-            m_AlchemyLanguage.GetDates(OnGetDatesURL, m_ExampleURL_article);
+            m_AlchemyLanguage.GetDates(OnGetDatesURL, m_ExampleURL_article, null, true, "OnGetDatesURL");
             while(!m_GetDatesURLTested)
                 yield return null;
 
-            m_AlchemyLanguage.GetDates(OnGetDatesText, m_ExampleText_article);
+            m_AlchemyLanguage.GetDates(OnGetDatesText, m_ExampleText_article, null, true, "OnGetDatesText");
             while(!m_GetDatesTextTested)
                 yield return null;
 
-            m_AlchemyLanguage.GetDates(OnGetDatesHTML, example_article_html);
+            m_AlchemyLanguage.GetDates(OnGetDatesHTML, example_article_html, null, true, "OnGetDatesHTML");
             while(!m_GetDatesHTMLTested)
                 yield return null;
 
 
-            m_AlchemyLanguage.GetEmotions(OnGetEmotionsURL, m_ExampleURL_article, true);
+            m_AlchemyLanguage.GetEmotions(OnGetEmotionsURL, m_ExampleURL_article, true, "OnGetEmotionsURL");
             while(!m_GetEmotionURLTested)
                 yield return null;
 
-            m_AlchemyLanguage.GetEmotions(OnGetEmotionsText, m_ExampleText_article, true);
+            m_AlchemyLanguage.GetEmotions(OnGetEmotionsText, m_ExampleText_article, true, "OnGetEmotionsText");
             while(!m_GetEmotionTextTested)
                 yield return null;
 
-            m_AlchemyLanguage.GetEmotions(OnGetEmotionsHTML, example_article_html, true);
+            m_AlchemyLanguage.GetEmotions(OnGetEmotionsHTML, example_article_html, true, "OnGetEmotionsHTML");
             while(!m_GetEmotionHTMLTested)
                 yield return null;
 
@@ -154,156 +154,156 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             while(!m_GetEntityExtractionURLTested)
                 yield return null;
 
-            m_AlchemyLanguage.ExtractEntities(OnExtractEntitiesText, m_ExampleText_article);
+            m_AlchemyLanguage.ExtractEntities(OnExtractEntitiesText, m_ExampleText_article, 50, true, true, true, true, true, true, true, true, "OnExtractEntitiesText");
             while(!m_GetEntityExtractionTextTested)
                 yield return null;
 
-            m_AlchemyLanguage.ExtractEntities(OnExtractEntitiesHTML, example_article_html);
+            m_AlchemyLanguage.ExtractEntities(OnExtractEntitiesHTML, example_article_html, 50, true, true, true, true, true, true, true, true, "OnExtractEntitiesHTML");
             while(!m_GetEntityExtractionHTMLTested)
                 yield return null;
             
 
-            m_AlchemyLanguage.DetectFeeds(OnDetectFeedsURL, m_ExampleURL_feed);
+            m_AlchemyLanguage.DetectFeeds(OnDetectFeedsURL, m_ExampleURL_feed, "OnDetectFeedsURL");
             while(!m_DetectFeedsURLTested)
                 yield return null;
 
-            m_AlchemyLanguage.DetectFeeds(OnDetectFeedsHTML, example_feed_html);
-            while(!m_DetectFeedsHTMLTested)
-                yield return null;
+//            m_AlchemyLanguage.DetectFeeds(OnDetectFeedsHTML, example_feed_html, "OnDetectFeedsHTML");
+//            while(!m_DetectFeedsHTMLTested)
+//                yield return null;
             
 
-            m_AlchemyLanguage.ExtractKeywords(OnExtractKeywordsURL, m_ExampleURL_article);
+            m_AlchemyLanguage.ExtractKeywords(OnExtractKeywordsURL, m_ExampleURL_article, 50, true, true, true, "OnExtractKeywordsURL");
             while(!m_GetKeywordExtractionURLTested)
                 yield return null;
 
-            m_AlchemyLanguage.ExtractKeywords(OnExtractKeywordsText, m_ExampleText_article);
+            m_AlchemyLanguage.ExtractKeywords(OnExtractKeywordsText, m_ExampleText_article, 50, true, true, true, "OnExtractKeywordsText");
             while(!m_GetKeywordExtractionTextTested)
                 yield return null;
 
-            m_AlchemyLanguage.ExtractKeywords(OnExtractKeywordsHTML, example_article_html);
+            m_AlchemyLanguage.ExtractKeywords(OnExtractKeywordsHTML, example_article_html, 50, true, true, true, "OnExtractKeywordsHTML");
             while(!m_GetKeywordExtractionHTMLTested)
                 yield return null;
             
 
-            m_AlchemyLanguage.GetLanguages(OnGetLanguagesURL, m_ExampleURL_article);
+            m_AlchemyLanguage.GetLanguages(OnGetLanguagesURL, m_ExampleURL_article, true, "OnGetLanguagesURL");
             while(!m_GetLanguageURLTested)
                 yield return null;
 
-            m_AlchemyLanguage.GetLanguages(OnGetLanguagesText, m_ExampleText_article);
+            m_AlchemyLanguage.GetLanguages(OnGetLanguagesText, m_ExampleText_article, true, "OnGetLanguagesText");
             while(!m_GetLanguageTextTested)
                 yield return null;
 
-            m_AlchemyLanguage.GetLanguages(OnGetLanguagesHTML, example_article_html);
+            m_AlchemyLanguage.GetLanguages(OnGetLanguagesHTML, example_article_html, true, "OnGetLanguagesHTML");
             while(!m_GetLanguageHTMLTested)
                 yield return null;
             
 
-            m_AlchemyLanguage.GetMicroformats(OnGetMicroformatsURL, m_ExampleURL_microformats);
+            m_AlchemyLanguage.GetMicroformats(OnGetMicroformatsURL, m_ExampleURL_microformats, "OnGetMicroformatsURL");
             while(!m_GetMicroformatURLTested)
                 yield return null;
 
-            m_AlchemyLanguage.GetMicroformats(OnGetMicroformatsHTML, example_microformats_html);
-            while(!m_GetMicroformatHTMLTested)
-                yield return null;
+//            m_AlchemyLanguage.GetMicroformats(OnGetMicroformatsHTML, example_microformats_html, "OnGetMicroformatsHTML");
+//            while(!m_GetMicroformatHTMLTested)
+//                yield return null;
             
             
-            m_AlchemyLanguage.GetPublicationDate(OnGetPublicationDateURL, m_ExampleURL_article);
+            m_AlchemyLanguage.GetPublicationDate(OnGetPublicationDateURL, m_ExampleURL_article, "OnGetPublicationDateURL");
             while(!m_GetPubDateURLTested)
                 yield return null;
 
-            m_AlchemyLanguage.GetPublicationDate(OnGetPublicationDateHTML, example_article_html);
+            m_AlchemyLanguage.GetPublicationDate(OnGetPublicationDateHTML, example_article_html, "OnGetPublicationDateHTML");
             while(!m_GetPubldateHTMLTested)
                 yield return null;
             
 
-            m_AlchemyLanguage.GetRelations(OnGetRelationsURL, m_ExampleURL_article);
+            m_AlchemyLanguage.GetRelations(OnGetRelationsURL, m_ExampleURL_article, 50, true, true, true, true, true, true, true, true, true, true, "OnGetRelationsURL");
             while(!m_GetRelationsURLTested)
                 yield return null;
 
-            m_AlchemyLanguage.GetRelations(OnGetRelationsText, m_ExampleText_article);
+            m_AlchemyLanguage.GetRelations(OnGetRelationsText, m_ExampleText_article, 50, true, true, true, true, true, true, true, true, true, true, "OnGetRelationsText");
             while(!m_GetRelationsTextTested)
                 yield return null;
 
-            m_AlchemyLanguage.GetRelations(OnGetRelationsHTML, example_article_html);
+            m_AlchemyLanguage.GetRelations(OnGetRelationsHTML, example_article_html, 50, true, true, true, true, true, true, true, true, true, true, "OnGetRelationsHTML");
             while(!m_GetRelationsHTMLTested)
                 yield return null;
             
 
-            m_AlchemyLanguage.GetTextSentiment(OnGetTextSentimentURL, m_ExampleURL_article);
+            m_AlchemyLanguage.GetTextSentiment(OnGetTextSentimentURL, m_ExampleURL_article, true, "OnGetTextSentimentURL");
             while(!m_GetTextSentimentURLTested)
                 yield return null;
 
-            m_AlchemyLanguage.GetTextSentiment(OnGetTextSentimentText, m_ExampleText_article);
+            m_AlchemyLanguage.GetTextSentiment(OnGetTextSentimentText, m_ExampleText_article, true, "OnGetTextSentimentText");
             while(!m_GetTextSentimentTextTested)
                 yield return null;
 
-            m_AlchemyLanguage.GetTextSentiment(OnGetTextSentimentHTML, example_article_html);
+            m_AlchemyLanguage.GetTextSentiment(OnGetTextSentimentHTML, example_article_html, true, "OnGetTextSentimentHTML");
             while(!m_GetTextSentimentHTMLTested)
                 yield return null;
             
 
-            m_AlchemyLanguage.GetTargetedSentiment(OnGetTargetedSentimentURL, m_ExampleURL_article, "Jeopardy|Jennings|Watson");
+            m_AlchemyLanguage.GetTargetedSentiment(OnGetTargetedSentimentURL, m_ExampleURL_article, "Jeopardy|Jennings|Watson", true, "OnGetTargetedSentimentURL");
             while(!m_GetTargetedSentimentURLTested)
                 yield return null;
 
-            m_AlchemyLanguage.GetTargetedSentiment(OnGetTargetedSentimentText, m_ExampleText_article, "Jeopardy|Jennings|Watson");
+            m_AlchemyLanguage.GetTargetedSentiment(OnGetTargetedSentimentText, m_ExampleText_article, "Jeopardy|Jennings|Watson", true, "OnGetTargetedSentimentText");
             while(!m_GetTargetedSentimentTextTested)
                 yield return null;
 
-            m_AlchemyLanguage.GetTargetedSentiment(OnGetTargetedSentimentHTML, example_article_html, "Jeopardy|Jennings|Watson");
+            m_AlchemyLanguage.GetTargetedSentiment(OnGetTargetedSentimentHTML, example_article_html, "Jeopardy|Jennings|Watson", true, "OnGetTargetedSentimentHTML");
             while(!m_GetTargetedSentimentHTMLTested)
                 yield return null;
             
 
-            m_AlchemyLanguage.GetRankedTaxonomy(OnGetRankedTaxonomyURL, m_ExampleURL_article);
+            m_AlchemyLanguage.GetRankedTaxonomy(OnGetRankedTaxonomyURL, m_ExampleURL_article, true, "OnGetRankedTaxonomyURL");
             while(!m_GetRankedTaxonomyURLTested)
                 yield return null;
 
-            m_AlchemyLanguage.GetRankedTaxonomy(OnGetRankedTaxonomyText, m_ExampleText_article);
+            m_AlchemyLanguage.GetRankedTaxonomy(OnGetRankedTaxonomyText, m_ExampleText_article, true, "OnGetRankedTaxonomyText");
             while(!m_GetRankedTaxonomyTextTested)
                 yield return null;
 
-            m_AlchemyLanguage.GetRankedTaxonomy(OnGetRankedTaxonomyHTML, example_article_html);
+            m_AlchemyLanguage.GetRankedTaxonomy(OnGetRankedTaxonomyHTML, example_article_html, true, "OnGetRankedTaxonomyHTML");
             while(!m_GetRankedTaxonomyHTMLTested)
                 yield return null;
 
 
-            m_AlchemyLanguage.GetText(OnGetTextHTML, example_article_html);
+            m_AlchemyLanguage.GetText(OnGetTextHTML, example_article_html, true, true, "OnGetTextHTML");
             while(!m_GetTextHTMLTested)
                 yield return null;
 
-            m_AlchemyLanguage.GetText(OnGetTextURL, m_ExampleURL_article);
+            m_AlchemyLanguage.GetText(OnGetTextURL, m_ExampleURL_article, true, true, "OnGetTextURL");
             while(!m_GetTextURLTested)
                 yield return null;
             
 
-            m_AlchemyLanguage.GetRawText(OnGetTextHTML, example_article_html);
+            m_AlchemyLanguage.GetRawText(OnGetRawTextHTML, example_article_html, "OnGetTextHTML");
             while(!m_GetRawTextHTMLTested)
                 yield return null;
 
-            m_AlchemyLanguage.GetRawText(OnGetTextURL, m_ExampleURL_article);
+            m_AlchemyLanguage.GetRawText(OnGetRawTextURL, m_ExampleURL_article, "OnGetTextURL");
             while(!m_GetRawTextURLTested)
                 yield return null;
 
 
-            m_AlchemyLanguage.GetTitle(OnGetTitleHTML, example_article_html);
+            m_AlchemyLanguage.GetTitle(OnGetTitleHTML, example_article_html, true, "OnGetTitleHTML");
             while(!m_GetTitleHTMLTested)
                 yield return null;
 
-            m_AlchemyLanguage.GetTitle(OnGetTitleURL, m_ExampleURL_article);
+            m_AlchemyLanguage.GetTitle(OnGetTitleURL, m_ExampleURL_article, true, "OnGetTitleURL");
             while(!m_GetTitleURLTested)
                 yield return null;
 
 
-            m_AlchemyLanguage.GetCombinedData(OnGetCombinedDataURL, m_ExampleURL_article, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true);
+            m_AlchemyLanguage.GetCombinedData(OnGetCombinedDataURL, m_ExampleURL_article, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, "OnGetCombinedDataURL");
             while(!m_GetCombinedDataURLTested)
                 yield return null;
 
-            m_AlchemyLanguage.GetCombinedData(OnGetCombinedDataText, m_ExampleText_article, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true);
+            m_AlchemyLanguage.GetCombinedData(OnGetCombinedDataText, m_ExampleText_article, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, "OnGetCombinedDataText");
             while(!m_GetCombinedDataTextTested)
                 yield return null;
 
-            m_AlchemyLanguage.GetCombinedData(OnGetCombinedDataHTML, example_article_html, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true);
+            m_AlchemyLanguage.GetCombinedData(OnGetCombinedDataHTML, example_article_html, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, "OnGetCombinedDataHTML");
             while(!m_GetCombinedDataHTMLTested)
                 yield return null;
         }
@@ -331,9 +331,9 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void LogAuthorsData(AuthorsData authors, string data)
         {
+            Log.Debug("TestAlchemyLanguage", "data: {0}", data);
             if(authors != null)
             {
-                Log.Debug("TestAlchemyLanguage", "data: {0}", data);
                 if(authors.authors.names.Length == 0)
                     Log.Debug("TestAlchemyLanguage", "No authors found!");
 
@@ -380,6 +380,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void LogConceptsData(ConceptsData concepts, string data)
         {
+            Log.Debug("TestAlchemyLanguage", "data: {0}", data);
             if(concepts != null)
             {
                 Log.Debug("TestAlchemyLanguage", "status: {0}", concepts.status);
@@ -431,6 +432,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void LogDatesData(DateData dates, string data)
         {
+            Log.Debug("TestAlchemyLanguage", "data: {0}", data);
             if(dates != null)
             {
                 Log.Debug("TestAlchemyLanguage", "status: {0}", dates.status);
@@ -482,6 +484,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void LogEmotionsData(EmotionData emotions, string data)
         {
+            Log.Debug("TestAlchemyLanguage", "data: {0}", data);
             if(emotions != null)
             {
                 Log.Debug("TestAlchemyLanguage", "status: {0}", emotions.status);
@@ -539,6 +542,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void LogEntityData(EntityData entityData, string data)
         {
+            Log.Debug("TestAlchemyLanguage", "data: {0}", data);
             if(entityData != null)
             {
                 Log.Debug("TestAlchemyLanguage", "status: {0}", entityData.status);
@@ -581,6 +585,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void LogFeedData(FeedData feedData, string data)
         {
+            Log.Debug("TestAlchemyLanguage", "data: {0}", data);
             if(feedData != null)
             {
                 Log.Debug("TestAlchemyLanguage", "status: {0}", feedData.status);
@@ -630,6 +635,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void LogKeywordData(KeywordData keywordData, string data)
         {
+            Log.Debug("TestAlchemyLanguage", "data: {0}", data);
             if(keywordData != null)
             {
                 Log.Debug("TestAlchemyLanguage", "status: {0}", keywordData.status);
@@ -682,6 +688,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void LogLanguagesData(LanguageData languages, string data)
         {
+            Log.Debug("TestAlchemyLanguage", "data: {0}", data);
             if(languages != null)
             {
                 if(string.IsNullOrEmpty(languages.language))
@@ -729,6 +736,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void LogMicroformatData(MicroformatData microformats, string data)
         {
+            Log.Debug("TestAlchemyLanguage", "data: {0}", data);
             if(microformats != null)
             {
                 Log.Debug("TestAlchemyLanguage", "status: {0}", microformats.status);
@@ -771,6 +779,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void LogPublicationDateData(PubDateData pubDates, string data)
         {
+            Log.Debug("TestAlchemyLanguage", "data: {0}", data);
             if(pubDates != null)
             {
                 Log.Debug("TestAlchemyLanguage", "status: {0}", pubDates.status);
@@ -821,6 +830,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void LogRelationsData(RelationsData relationsData, string data)
         {
+            Log.Debug("TestAlchemyLanguage", "data: {0}", data);
             if(relationsData != null)
             {
                 Log.Debug("TestAlchemyLanguage", "status: {0}", relationsData.status);
@@ -874,6 +884,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void LogTextSentiment(SentimentData sentimentData, string data)
         {
+            Log.Debug("TestAlchemyLanguage", "data: {0}", data);
             if(sentimentData != null)
             {
                 Log.Debug("TestAlchemyLanguage", "status: {0}", sentimentData.status);
@@ -926,6 +937,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void LogTargetedSentiment(TargetedSentimentData sentimentData, string data)
         {
+            Log.Debug("TestAlchemyLanguage", "data: {0}", data);
             if(sentimentData != null)
             {
                 Log.Debug("TestAlchemyLanguage", "status: {0}", sentimentData.status);
@@ -981,6 +993,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void LogRankedTaxonomy(TaxonomyData taxonomyData, string data)
         {
+            Log.Debug("TestAlchemyLanguage", "data: {0}", data);
             if(taxonomyData != null)
             {
                 Log.Debug("TestAlchemyLanguage", "status: {0}", taxonomyData.status);
@@ -1026,6 +1039,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void LogTextData(TextData textData, string data)
         {
+            Log.Debug("TestAlchemyLanguage", "data: {0}", data);
             if(textData != null)
             {
                 Log.Debug("TestAlchemyLanguage", "status: {0}", textData.status);
@@ -1063,6 +1077,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void LogRawTextData(TextData textData, string data)
         {
+            Log.Debug("TestAlchemyLanguage", "data: {0}", data);
             if(textData != null)
             {
                 Log.Debug("TestAlchemyLanguage", "status: {0}", textData.status);
@@ -1100,6 +1115,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void LogTitleData(Title titleData, string data)
         {
+            Log.Debug("TestAlchemyLanguage", "data: {0}", data);
             if(titleData != null)
             {
                 Log.Debug("TestAlchemyLanguage", "status: {0}", titleData.status);
@@ -1147,6 +1163,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void LogCombinedData(CombinedCallData combinedData, string data)
         {
+            Log.Debug("TestAlchemyLanguage", "data: {0}", data);
             if(combinedData != null)
             {
                 Log.Debug("TestAlchemyLanguage", "status: {0}", combinedData.status);
