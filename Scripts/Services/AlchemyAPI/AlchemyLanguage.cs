@@ -55,8 +55,19 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         #region GetAuthors
         private const string SERVICE_GET_AUTHORS_URL = "/calls/url/URLGetAuthors";
         private const string SERVICE_GET_AUTHORS_HTML = "/calls/html/HTMLGetAuthors";
+
+        /// <summary>
+        /// On get authors delegate.
+        /// </summary>
         public delegate void OnGetAuthors(AuthorsData authorExtractionData, string data);
 
+        /// <summary>
+        /// Extracts authors from a source.
+        /// </summary>
+        /// <returns><c>true</c>, if authors was gotten, <c>false</c> otherwise.</returns>
+        /// <param name="callback">Callback.</param>
+        /// <param name="source">URL or HTML source.</param>
+        /// <param name="customData">Custom data.</param>
         public bool GetAuthors(OnGetAuthors callback, string source, string customData = default(string))
         {
             if(callback == null)
@@ -104,6 +115,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             return connector.Send(req);
         }
 
+        /// <summary>
+        /// Get authors request.
+        /// </summary>
         public class GetAuthorsRequest : RESTConnector.Request
         {
             public string Data { get; set; }
@@ -143,8 +157,23 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         private const string SERVICE_GET_RANKED_CONCEPTS_HTML = "/calls/html/HTMLGetRankedConcepts";
         private const string SERVICE_GET_RANKED_CONCEPTS_URL = "/calls/url/URLGetRankedConcepts";
         private const string SERVICE_GET_RANKED_CONCEPTS_TEXT = "/calls/text/TextGetRankedConcepts";
+
+        /// <summary>
+        /// On get ranked concepts delegate.
+        /// </summary>
         public delegate void OnGetRankedConcepts(ConceptsData conceptExtractionData, string data);
 
+        /// <summary>
+        /// Extracts concepts from a source.
+        /// </summary>
+        /// <returns><c>true</c>, if ranked concepts was gotten, <c>false</c> otherwise.</returns>
+        /// <param name="callback">Callback.</param>
+        /// <param name="source">HTML, URL or Text Source.</param>
+        /// <param name="maxRetrieve">Maximum results retreived.</param>
+        /// <param name="includeKnowledgeGraph">If set to <c>true</c> include knowledge graph.</param>
+        /// <param name="includeLinkedData">If set to <c>true</c> include linked data.</param>
+        /// <param name="includeSourceText">If set to <c>true</c> include source text.</param>
+        /// <param name="customData">Custom data.</param>
         public bool GetRankedConcepts(OnGetRankedConcepts callback, string source,
             int maxRetrieve = 8, 
             bool includeKnowledgeGraph = false, 
@@ -201,6 +230,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             return connector.Send(req);
         }
 
+        /// <summary>
+        /// Get ranked concepts request.
+        /// </summary>
         public class GetRankedConceptsRequest : RESTConnector.Request
         {
             public string Data { get; set; }
@@ -240,8 +272,21 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         private const string SERVICE_GET_DATES_HTML = "/calls/html/HTMLExtractDates";
         private const string SERVICE_GET_DATES_URL = "/calls/url/URLExtractDates";
         private const string SERVICE_GET_DATES_TEXT = "/calls/text/TextExtractDates";
+
+        /// <summary>
+        /// On get dates delegate.
+        /// </summary>
         public delegate void OnGetDates(DateData dateData, string data);
 
+        /// <summary>
+        /// Extracts dates from a source.
+        /// </summary>
+        /// <returns><c>true</c>, if dates was gotten, <c>false</c> otherwise.</returns>
+        /// <param name="callback">Callback.</param>
+        /// <param name="source">HTML, URL or Text source.</param>
+        /// <param name="anchorDate">Anchor date in the yyyy-mm-dd hh:mm:ss format. If this is not set, anchor date is set to today's date and time.</param>
+        /// <param name="includeSourceText">If set to <c>true</c> include source text.</param>
+        /// <param name="customData">Custom data.</param>
         public bool GetDates(OnGetDates callback, string source, string anchorDate = default(string), bool includeSourceText = false, string customData = default(string))
         {
             if (callback == null)
@@ -293,6 +338,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             return connector.Send(req);
         }
 
+        /// <summary>
+        /// Get dates request.
+        /// </summary>
         public class GetDatesRequest : RESTConnector.Request
         {
             public string Data { get; set; }
@@ -339,8 +387,20 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         private const string SERVICE_GET_EMOTION_HTML = "/calls/html/HTMLGetEmotion";
         private const string SERVICE_GET_EMOTION_URL = "/calls/url/URLGetEmotion";
         private const string SERVICE_GET_EMOTION_TEXT = "/calls/text/TextGetEmotion";
+
+        /// <summary>
+        /// On get emotions delegate.
+        /// </summary>
         public delegate void OnGetEmotions(EmotionData emotionData, string data);
 
+        /// <summary>
+        /// Gets the emotions from a source.
+        /// </summary>
+        /// <returns><c>true</c>, if emotions was gotten, <c>false</c> otherwise.</returns>
+        /// <param name="callback">Callback.</param>
+        /// <param name="source">HTML, URL or Text source.</param>
+        /// <param name="includeSourceText">If set to <c>true</c> include source text.</param>
+        /// <param name="customData">Custom data.</param>
         public bool GetEmotions(OnGetEmotions callback, string source, bool includeSourceText = false, string customData = default(string))
         {
             if (callback == null)
@@ -389,6 +449,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             return connector.Send(req);
         }
 
+        /// <summary>
+        /// Get emotions request.
+        /// </summary>
         public class GetEmotionsRequest : RESTConnector.Request
         {
             public string Data { get; set; }
@@ -428,8 +491,28 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         private const string SERVICE_GET_ENTITY_EXTRACTION_HTML = "/calls/html/HTMLGetRankedNamedEntities";
         private const string SERVICE_GET_ENTITY_EXTRACTION_URL = "/calls/url/URLGetRankedNamedEntities";
         private const string SERVICE_GET_ENTITY_EXTRACTION_TEXT = "/calls/text/TextGetRankedNamedEntities";
+
+        /// <summary>
+        /// On get entities delegate.
+        /// </summary>
         public delegate void OnGetEntities(EntityData entityData, string data);
 
+        /// <summary>
+        /// Extracts the entities from a source.
+        /// </summary>
+        /// <returns><c>true</c>, if entities was extracted, <c>false</c> otherwise.</returns>
+        /// <param name="callback">Callback.</param>
+        /// <param name="source">HTML, URL or Text source.</param>
+        /// <param name="maxRetrieve">Maximum results retreived.</param>
+        /// <param name="resolveCoreference">If set to <c>true</c> resolve coreference.</param>
+        /// <param name="disambiguate">If set to <c>true</c> disambiguate.</param>
+        /// <param name="includeKnowledgeGraph">If set to <c>true</c> include knowledge graph.</param>
+        /// <param name="includeLinkedData">If set to <c>true</c> include linked data.</param>
+        /// <param name="includeQuotations">If set to <c>true</c> include quotations.</param>
+        /// <param name="analyzeSentiment">If set to <c>true</c> analyze sentiment.</param>
+        /// <param name="includeSourceText">If set to <c>true</c> include source text.</param>
+        /// <param name="extractStructuredEntities">If set to <c>true</c> extract structured entities.</param>
+        /// <param name="customData">Custom data.</param>
         public bool ExtractEntities(OnGetEntities callback, string source, 
             int maxRetrieve = 50, 
             bool resolveCoreference = true, 
@@ -496,6 +579,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             return connector.Send(req);
         }
 
+        /// <summary>
+        /// Get entities request.
+        /// </summary>
         public class GetEntitiesRequest : RESTConnector.Request
         {
             public string Data { get; set; }
@@ -534,8 +620,19 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         #region FeedDetection
         private const string SERVICE_DETECT_FEEDS_URL = "/calls/url/URLGetFeedLinks";
         private const string SERVICE_DETECT_FEEDS_HTML = "/calls/html/HTMLGetFeedLinks";
+
+        /// <summary>
+        /// On detect feeds delegate.
+        /// </summary>
         public delegate void OnDetectFeeds(FeedData feedData, string data);
 
+        /// <summary>
+        /// Detects RSS feeds in a source.
+        /// </summary>
+        /// <returns><c>true</c>, if feeds was detected, <c>false</c> otherwise.</returns>
+        /// <param name="callback">Callback.</param>
+        /// <param name="source">URL to detect feeds.</param>
+        /// <param name="customData">Custom data.</param>
         public bool DetectFeeds(OnDetectFeeds callback, string source, string customData = default(string))
         {
             if (callback == null)
@@ -585,6 +682,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             return connector.Send(req);
         }
 
+        /// <summary>
+        /// Detect feeds request.
+        /// </summary>
         public class DetectFeedsRequest : RESTConnector.Request
         {
             public string Data { get; set; }
@@ -624,8 +724,23 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         private const string SERVICE_GET_KEYWORD_EXTRACTION_HTML = "/calls/html/HTMLGetRankedKeywords";
         private const string SERVICE_GET_KEYWORD_EXTRACTION_URL = "/calls/url/URLGetRankedKeywords";
         private const string SERVICE_GET_KEYWORD_EXTRACTION_TEXT = "/calls/text/TextGetRankedKeywords";
+
+        /// <summary>
+        /// On get keywords delegate.
+        /// </summary>
         public delegate void OnGetKeywords(KeywordData keywordData, string data);
 
+        /// <summary>
+        /// Extracts the keywords from a source.
+        /// </summary>
+        /// <returns><c>true</c>, if keywords was extracted, <c>false</c> otherwise.</returns>
+        /// <param name="callback">Callback.</param>
+        /// <param name="source">HTML, URL or Text source.</param>
+        /// <param name="maxRetrieve">Maximum results retreived.</param>
+        /// <param name="includeKnowledgeGraph">If set to <c>true</c> include knowledge graph.</param>
+        /// <param name="analyzeSentiment">If set to <c>true</c> analyze sentiment.</param>
+        /// <param name="includeSourceText">If set to <c>true</c> include source text.</param>
+        /// <param name="customData">Custom data.</param>
         public bool ExtractKeywords(OnGetKeywords callback, string source, 
             int maxRetrieve = 50, 
             bool includeKnowledgeGraph = false,
@@ -683,6 +798,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             return connector.Send(req);
         }
 
+        /// <summary>
+        /// Get keywords request.
+        /// </summary>
         public class GetKeywordsRequest : RESTConnector.Request
         {
             public string Data { get; set; }
@@ -722,8 +840,20 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         private const string SERVICE_GET_LANGUAGE_HTML = "/calls/html/HTMLGetLanguage";
         private const string SERVICE_GET_LANGUAGE_URL = "/calls/url/URLGetLanguage";
         private const string SERVICE_GET_LANGUAGE_TEXT = "/calls/text/TextGetLanguage";
+
+        /// <summary>
+        /// On get languages.
+        /// </summary>
         public delegate void OnGetLanguages(LanguageData languageData, string data);
 
+        /// <summary>
+        /// Extracts the language a source is written.
+        /// </summary>
+        /// <returns><c>true</c>, if languages was gotten, <c>false</c> otherwise.</returns>
+        /// <param name="callback">Callback.</param>
+        /// <param name="source">HTML, URL or Text source.</param>
+        /// <param name="includeSourceText">If set to <c>true</c> include source text.</param>
+        /// <param name="customData">Custom data.</param>
         public bool GetLanguages(OnGetLanguages callback, string source, bool includeSourceText = false, string customData = default(string))
         {
             if (callback == null)
@@ -772,6 +902,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             return connector.Send(req);
         }
 
+        /// <summary>
+        /// Get languages request.
+        /// </summary>
         public class GetLanguagesRequest : RESTConnector.Request
         {
             public string Data { get; set; }
@@ -810,8 +943,19 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         #region GetMicroformat
         private const string SERVICE_GET_MICROFORMAT_URL = "/calls/url/URLGetMicroformatData";
         private const string SERVICE_GET_MICROFORMAT_HTML = "/calls/html/HTMLGetMicroformatData";
+
+        /// <summary>
+        /// On get microformats.
+        /// </summary>
         public delegate void OnGetMicroformats(MicroformatData microformatData, string data);
 
+        /// <summary>
+        /// Extracts microformats from a URL source.
+        /// </summary>
+        /// <returns><c>true</c>, if microformats was gotten, <c>false</c> otherwise.</returns>
+        /// <param name="callback">Callback.</param>
+        /// <param name="source">URL to extract microformats from.</param>
+        /// <param name="customData">Custom data.</param>
         public bool GetMicroformats(OnGetMicroformats callback, string source, string customData = default(string))
         {
             if (callback == null)
@@ -861,6 +1005,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             return connector.Send(req);
         }
 
+        /// <summary>
+        /// Get microformats request.
+        /// </summary>
         public class GetMicroformatsRequest : RESTConnector.Request
         {
             public string Data { get; set; }
@@ -899,8 +1046,19 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         #region GetPubDate
         private const string SERVICE_GET_PUBLICATION_DATE_URL = "/calls/url/URLGetPubDate";
         private const string SERVICE_GET_PUBLICATION_DATE_HTML = "/calls/html/HTMLGetPubDate";
+
+        /// <summary>
+        /// On get publication date delegate.
+        /// </summary>
         public delegate void OnGetPublicationDate(PubDateData pubDateData, string data);
 
+        /// <summary>
+        /// Extracts the publication date from a source.
+        /// </summary>
+        /// <returns><c>true</c>, if publication date was gotten, <c>false</c> otherwise.</returns>
+        /// <param name="callback">Callback.</param>
+        /// <param name="source">URL or HTML sources.</param>
+        /// <param name="customData">Custom data.</param>
         public bool GetPublicationDate(OnGetPublicationDate callback, string source, string customData = default(string))
         {
             if (callback == null)
@@ -948,6 +1106,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             return connector.Send(req);
         }
 
+        /// <summary>
+        /// Get publication date request.
+        /// </summary>
         public class GetPublicationDateRequest : RESTConnector.Request
         {
             public string Data { get; set; }
@@ -987,8 +1148,30 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         private const string SERVICE_GET_RELATIONS_HTML = "/calls/html/HTMLGetRelations";
         private const string SERVICE_GET_RELATIONS_URL = "/calls/url/URLGetRelations";
         private const string SERVICE_GET_RELATIONS_TEXT = "/calls/text/TextGetRelations";
+
+        /// <summary>
+        /// On get relations delegate.
+        /// </summary>
         public delegate void OnGetRelations(RelationsData relationData, string data);
 
+        /// <summary>
+        /// Extracts the relations from a source.
+        /// </summary>
+        /// <returns><c>true</c>, if relations was gotten, <c>false</c> otherwise.</returns>
+        /// <param name="callback">Callback.</param>
+        /// <param name="source">HTML, URL or Text source.</param>
+        /// <param name="maxRetrieve">Max retrieve.</param>
+        /// <param name="includeKeywords">If set to <c>true</c> include keywords.</param>
+        /// <param name="includeEntities">If set to <c>true</c> include entities.</param>
+        /// <param name="requireEntities">If set to <c>true</c> require entities.</param>
+        /// <param name="resolveCoreferences">If set to <c>true</c> resolve coreferences.</param>
+        /// <param name="disambiguateEntities">If set to <c>true</c> disambiguate entities.</param>
+        /// <param name="includeKnowledgeGraph">If set to <c>true</c> include knowledge graph.</param>
+        /// <param name="includeLinkedData">If set to <c>true</c> include linked data.</param>
+        /// <param name="analyzeSentiment">If set to <c>true</c> analyze sentiment.</param>
+        /// <param name="excludeEntitiesInSentiment">If set to <c>true</c> exclude entities in sentiment.</param>
+        /// <param name="includeSourceText">If set to <c>true</c> include source text.</param>
+        /// <param name="customData">Custom data.</param>
         public bool GetRelations(OnGetRelations callback, string source, 
             int maxRetrieve = 50, 
             bool includeKeywords = false,
@@ -1060,6 +1243,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             return connector.Send(req);
         }
 
+        /// <summary>
+        /// Get relations request.
+        /// </summary>
         public class GetRelationsRequest : RESTConnector.Request
         {
             public string Data { get; set; }
@@ -1099,8 +1285,20 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         private const string SERVICE_GET_TEXT_SENTIMENT_HTML = "/calls/html/HTMLGetTextSentiment";
         private const string SERVICE_GET_TEXT_SENTIMENT_URL = "/calls/url/URLGetTextSentiment";
         private const string SERVICE_GET_TEXT_SENTIMENT_TEXT = "/calls/text/TextGetTextSentiment";
+
+        /// <summary>
+        /// On get text sentiment delegate.
+        /// </summary>
         public delegate void OnGetTextSentiment(SentimentData sentimentData, string data);
 
+        /// <summary>
+        /// Extracts the sentiment from a source.
+        /// </summary>
+        /// <returns><c>true</c>, if text sentiment was gotten, <c>false</c> otherwise.</returns>
+        /// <param name="callback">Callback.</param>
+        /// <param name="source">HTML, URL or Text source.</param>
+        /// <param name="includeSourceText">If set to <c>true</c> include source text.</param>
+        /// <param name="customData">Custom data.</param>
         public bool GetTextSentiment(OnGetTextSentiment callback, string source, bool includeSourceText = false, string customData = default(string))
         {
             if (callback == null)
@@ -1149,6 +1347,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             return connector.Send(req);
         }
 
+        /// <summary>
+        /// Get text sentiment request.
+        /// </summary>
         public class GetTextSentimentRequest : RESTConnector.Request
         {
             public string Data { get; set; }
@@ -1188,8 +1389,21 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         private const string SERVICE_GET_TARGETED_SENTIMENT_HTML = "/calls/html/HTMLGetTargetedSentiment";
         private const string SERVICE_GET_TARGETED_SENTIMENT_URL = "/calls/url/URLGetTargetedSentiment";
         private const string SERVICE_GET_TARGETED_SENTIMENT_TEXT = "/calls/text/TextGetTargetedSentiment";
+
+        /// <summary>
+        /// On get targeted sentiment delegate.
+        /// </summary>
         public delegate void OnGetTargetedSentiment(TargetedSentimentData targetedSentimentData, string data);
 
+        /// <summary>
+        /// Extracts targeted sentiment from a source.
+        /// </summary>
+        /// <returns><c>true</c>, if targeted sentiment was gotten, <c>false</c> otherwise.</returns>
+        /// <param name="callback">Callback.</param>
+        /// <param name="source">HTML, URL or Text source.</param>
+        /// <param name="targets">Targets.</param>
+        /// <param name="includeSourceText">If set to <c>true</c> include source text.</param>
+        /// <param name="customData">Custom data.</param>
         public bool GetTargetedSentiment(OnGetTargetedSentiment callback, string source, string targets, bool includeSourceText = false, string customData = default(string))
         {
             if (callback == null)
@@ -1241,6 +1455,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             return connector.Send(req);
         }
 
+        /// <summary>
+        /// Get targeted sentiment request.
+        /// </summary>
         public class GetTargetedSentimentRequest : RESTConnector.Request
         {
             public string Data { get; set; }
@@ -1280,8 +1497,20 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         private const string SERVICE_GET_RANKED_TAXONOMY_HTML = "/calls/html/HTMLGetRankedTaxonomy";
         private const string SERVICE_GET_RANKED_TAXONOMY_URL = "/calls/url/URLGetRankedTaxonomy";
         private const string SERVICE_GET_RANKED_TAXONOMY_TEXT = "/calls/text/TextGetRankedTaxonomy";
+
+        /// <summary>
+        /// On get ranked taxonomy delegate.
+        /// </summary>
         public delegate void OnGetRankedTaxonomy(TaxonomyData taxonomyData, string data);
 
+        /// <summary>
+        /// Extracts the ranked taxonomy from a source.
+        /// </summary>
+        /// <returns><c>true</c>, if ranked taxonomy was gotten, <c>false</c> otherwise.</returns>
+        /// <param name="callback">Callback.</param>
+        /// <param name="source">HTML, URL or Text source.</param>
+        /// <param name="includeSourceText">If set to <c>true</c> include source text.</param>
+        /// <param name="customData">Custom data.</param>
         public bool GetRankedTaxonomy(OnGetRankedTaxonomy callback, string source, bool includeSourceText = false, string customData = default(string))
         {
             if (callback == null)
@@ -1330,6 +1559,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             return connector.Send(req);
         }
 
+        /// <summary>
+        /// Get ranked taxomomy request.
+        /// </summary>
         public class GetRankedTaxomomyRequest : RESTConnector.Request
         {
             public string Data { get; set; }
@@ -1368,8 +1600,21 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         #region GetText
         private const string SERVICE_GET_TEXT_HTML = "/calls/html/HTMLGetText";
         private const string SERVICE_GET_TEXT_URL = "/calls/url/URLGetText";
+
+        /// <summary>
+        /// On get text delegate.
+        /// </summary>
         public delegate void OnGetText(TextData textData, string data);
 
+        /// <summary>
+        /// Extracts text from a source.
+        /// </summary>
+        /// <returns><c>true</c>, if text was gotten, <c>false</c> otherwise.</returns>
+        /// <param name="callback">Callback.</param>
+        /// <param name="source">HTML or URL source.</param>
+        /// <param name="extractLinks">If set to <c>true</c> extract links.</param>
+        /// <param name="useMetadata">If set to <c>true</c> use metadata.</param>
+        /// <param name="customData">Custom data.</param>
         public bool GetText(OnGetText callback, string source, bool extractLinks = false, bool useMetadata = true, string customData = default(string))
         {
             if (callback == null)
@@ -1419,6 +1664,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             return connector.Send(req);
         }
 
+        /// <summary>
+        /// Get text request.
+        /// </summary>
         public class GetTextRequest : RESTConnector.Request
         {
             public string Data { get; set; }
@@ -1458,6 +1706,13 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         private const string SERVICE_GET_RAW_TEXT_HTML = "/calls/html/HTMLGetRawText";
         private const string SERVICE_GET_RAW_TEXT_URL = "/calls/url/URLGetRawText";
 
+        /// <summary>
+        /// Gets raw text from a source.
+        /// </summary>
+        /// <returns><c>true</c>, if raw text was gotten, <c>false</c> otherwise.</returns>
+        /// <param name="callback">Callback.</param>
+        /// <param name="source">HTML or URL source.</param>
+        /// <param name="customData">Custom data.</param>
         public bool GetRawText(OnGetText callback, string source, string customData = default(string))
         {
             if (callback == null)
@@ -1509,8 +1764,20 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         #region GetTitle
         private const string SERVICE_GET_TITLE_HTML = "/calls/html/HTMLGetTitle";
         private const string SERVICE_GET_TITLE_URL = "/calls/url/URLGetTitle";
+
+        /// <summary>
+        /// On get title delegate.
+        /// </summary>
         public delegate void OnGetTitle(Title titleData, string data);
 
+        /// <summary>
+        /// Extracts the title from a source.
+        /// </summary>
+        /// <returns><c>true</c>, if title was gotten, <c>false</c> otherwise.</returns>
+        /// <param name="callback">Callback.</param>
+        /// <param name="source">HTML or URL source.</param>
+        /// <param name="useMetadata">If set to <c>true</c> use metadata.</param>
+        /// <param name="customData">Custom data.</param>
         public bool GetTitle(OnGetTitle callback, string source, bool useMetadata = true, string customData = default(string))
         {
             if (callback == null)
@@ -1559,6 +1826,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             return connector.Send(req);
         }
 
+        /// <summary>
+        /// Get title request.
+        /// </summary>
         public class GetTitleRequest : RESTConnector.Request
         {
             public string Data { get; set; }
@@ -1598,8 +1868,34 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         private const string SERVICE_COMBINED_CALL_HTML = "/calls/html/HTMLGetCombinedData";
         private const string SERVICE_COMBINED_CALL_URL = "/calls/url/URLGetCombinedData";
         private const string SERVICE_COMBINED_CALL_TEXT = "/calls/text/TextGetCombinedData";
+
+        /// <summary>
+        /// On get combined data delegate.
+        /// </summary>
         public delegate void OnGetCombinedData(CombinedCallData combinedData, string data);
 
+        /// <summary>
+        /// Access multiple services in one call.
+        /// </summary>
+        /// <returns><c>true</c>, if combined data was gotten, <c>false</c> otherwise.</returns>
+        /// <param name="callback">Callback.</param>
+        /// <param name="source">HTML, URL or Text source.</param>
+        /// <param name="includeSourceText">If set to <c>true</c> include source text.</param>
+        /// <param name="extractAuthors">If set to <c>true</c> extract authors.</param>
+        /// <param name="extractConcepts">If set to <c>true</c> extract concepts.</param>
+        /// <param name="extractDates">If set to <c>true</c> extract dates.</param>
+        /// <param name="extractDocEmotion">If set to <c>true</c> extract document emotion.</param>
+        /// <param name="extractEntities">If set to <c>true</c> extract entities.</param>
+        /// <param name="extractFeeds">If set to <c>true</c> extract feeds.</param>
+        /// <param name="extractKeywords">If set to <c>true</c> extract keywords.</param>
+        /// <param name="extractPubDate">If set to <c>true</c> extract pub date.</param>
+        /// <param name="extractRelations">If set to <c>true</c> extract relations.</param>
+        /// <param name="extractDocSentiment">If set to <c>true</c> extract document sentiment.</param>
+        /// <param name="extractTaxonomy">If set to <c>true</c> extract taxonomy.</param>
+        /// <param name="extractTitle">If set to <c>true</c> extract title.</param>
+        /// <param name="extractPageImage">If set to <c>true</c> extract page image.</param>
+        /// <param name="extractImageKeywords">If set to <c>true</c> extract image keywords.</param>
+        /// <param name="customData">Custom data.</param>
         public bool GetCombinedData(OnGetCombinedData callback, string source, 
             bool includeSourceText = false,
             bool extractAuthors = false,
@@ -1710,6 +2006,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             return connector.Send(req);
         }
 
+        /// <summary>
+        /// Combined call request.
+        /// </summary>
         public class CombinedCallRequest : RESTConnector.Request
         {
             public string Data { get; set; }
