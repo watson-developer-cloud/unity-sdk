@@ -53,15 +53,15 @@ public class ExampleAlchemyLanguage : MonoBehaviour {
 //            Log.Debug("ExampleAlchemyLanguage", "Failed to get concepts HTML POST!");
 
         //  Get Date URL POST
-//        if(!m_AlchemyLanguage.GetDatesURL(OnGetDates, m_ExampleURL_watsonJeopardy, null, true))
+//        if(!m_AlchemyLanguage.GetDates(OnGetDates, m_ExampleURL_watsonJeopardy))
 //            Log.Debug("ExampleAlchemyLanguage", "Failed to get dates by URL POST");
 
         //  Get Date Text POST
-//        if(!m_AlchemyLanguage.GetDatesText(OnGetDates, m_ExampleText_watsonJeopardy, null, true))
+//        if(!m_AlchemyLanguage.GetDates(OnGetDates, m_ExampleText_watsonJeopardy))
 //            Log.Debug("ExampleAlchemyLanguage", "Failed to get dates by text POST");
 
         //  Get Date HTML POST
-//        if(!m_AlchemyLanguage.GetDatesHTML(OnGetDates, watson_beats_jeopardy_html, null, true))
+//        if(!m_AlchemyLanguage.GetDates(OnGetDates, watson_beats_jeopardy_html))
 //            Log.Debug("ExampleAlchemyLanguage", "Failed to get dates by HTML POST");
 
         //  Get Emotions URL POST

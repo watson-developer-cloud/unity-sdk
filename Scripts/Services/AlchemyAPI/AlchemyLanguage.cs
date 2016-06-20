@@ -242,24 +242,20 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         private const string SERVICE_GET_DATES_TEXT = "/calls/text/TextExtractDates";
         public delegate void OnGetDates(DateData dateData, string data);
 
-        public bool GetDatesURL(OnGetDates callback, string url, string anchorDate = default(string), bool includeSourceText = false, string customData = default(string))
+        public bool GetDates(OnGetDates callback, string source, string anchorDate = default(string), bool includeSourceText = false, string customData = default(string))
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
-            if (string.IsNullOrEmpty(url))
-                throw new WatsonException("Please provide a URL for GetDatesURL.");
+            if (string.IsNullOrEmpty(source))
+                throw new WatsonException("Please provide a source for GetAuthors.");
             if (string.IsNullOrEmpty(mp_ApiKey))
                 SetCredentials();
             if(string.IsNullOrEmpty(anchorDate))
                 anchorDate = GetCurrentDatetime();
 
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_GET_DATES_URL);
-            if(connector == null)
-                return false;
-
             GetDatesRequest req = new GetDatesRequest();
             req.Callback = callback;
-            req.Data = string.IsNullOrEmpty(customData) ? url : customData;
+            req.Data = string.IsNullOrEmpty(customData) ? source : customData;
 
             req.Parameters["apikey"] = mp_ApiKey;
             req.Parameters["outputMode"] = "json";
@@ -267,75 +263,31 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
             req.Forms = new Dictionary<string, RESTConnector.Form>();
-            req.Forms["url"] = new RESTConnector.Form(url);
             req.Forms["anchorDate"] = new RESTConnector.Form(anchorDate);
 
-            req.OnResponse = OnGetDatesResponse;
-            return connector.Send(req);
-        }
+            string service;
+            string normalizedSource = source.Trim().ToLower();
+            if(normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
+            {
+                service = SERVICE_GET_DATES_URL;
+                req.Forms["url"] = new RESTConnector.Form(source);
+            }
+            else if(Path.GetExtension(normalizedSource).EndsWith(".html") && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
+            {
+                service = SERVICE_GET_DATES_HTML;
+                string htmlData = default(string);
+                htmlData = File.ReadAllText(source);
+                req.Forms["html"] = new RESTConnector.Form(htmlData);
+            }
+            else
+            {
+                service = SERVICE_GET_DATES_TEXT;
+                req.Forms["text"] = new RESTConnector.Form(source);
+            }
 
-        public bool GetDatesText(OnGetDates callback, string text, string anchorDate = default(string), bool includeSourceText = false, string customData = default(string))
-        {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
-            if (string.IsNullOrEmpty(text))
-                throw new WatsonException("Please provide text for GetDatesText.");
-            if (string.IsNullOrEmpty(mp_ApiKey))
-                SetCredentials();
-            if(string.IsNullOrEmpty(anchorDate))
-                anchorDate = GetCurrentDatetime();
-
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_GET_DATES_TEXT);
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, service);
             if(connector == null)
                 return false;
-
-            GetDatesRequest req = new GetDatesRequest();
-            req.Callback = callback;
-            req.Data = string.IsNullOrEmpty(customData) ? text : customData;
-
-            req.Parameters["apikey"] = mp_ApiKey;
-            req.Parameters["outputMode"] = "json";
-            req.Parameters["showSourceText"] = Convert.ToInt32(includeSourceText).ToString();
-
-            req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
-            req.Forms = new Dictionary<string, RESTConnector.Form>();
-            req.Forms["text"] = new RESTConnector.Form(text);
-            req.Forms["anchorDate"] = new RESTConnector.Form(anchorDate);
-
-            req.OnResponse = OnGetDatesResponse;
-            return connector.Send(req);
-        }
-
-        public bool GetDatesHTML(OnGetDates callback, string htmlFilePath, string anchorDate = default(string), bool includeSourceText = false, string customData = default(string))
-        {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
-            if (string.IsNullOrEmpty(htmlFilePath))
-                throw new WatsonException("Please provide text for GetDatesHTML.");
-            if (string.IsNullOrEmpty(mp_ApiKey))
-                SetCredentials();
-            if(string.IsNullOrEmpty(anchorDate))
-                anchorDate = GetCurrentDatetime();
-
-            string htmlData = default(string);
-            htmlData = File.ReadAllText(htmlFilePath);
-
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_GET_DATES_HTML);
-            if(connector == null)
-                return false;
-
-            GetDatesRequest req = new GetDatesRequest();
-            req.Callback = callback;
-            req.Data = string.IsNullOrEmpty(customData) ? htmlFilePath : customData;
-
-            req.Parameters["apikey"] = mp_ApiKey;
-            req.Parameters["outputMode"] = "json";
-            req.Parameters["showSourceText"] = Convert.ToInt32(includeSourceText).ToString();
-
-            req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
-            req.Forms = new Dictionary<string, RESTConnector.Form>();
-            req.Forms["html"] = new RESTConnector.Form(htmlData);
-            req.Forms["anchorDate"] = new RESTConnector.Form(anchorDate);
 
             req.OnResponse = OnGetDatesResponse;
             return connector.Send(req);
@@ -486,7 +438,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             bool includeLinkedData = true,
             bool includeQuotations = false,
             bool analyzeSentiment = false,
-            bool showSourceText = false,
+            bool includeSourceText = false,
             bool extractStructuredEntities = true,
             string customData = default(string))
         {
@@ -510,7 +462,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             req.Parameters["linkedData"] = Convert.ToInt32(includeLinkedData).ToString();
             req.Parameters["quotations"] = Convert.ToInt32(includeQuotations).ToString();
             req.Parameters["sentiment"] = Convert.ToInt32(analyzeSentiment).ToString();
-            req.Parameters["showSourceText"] = Convert.ToInt32(showSourceText).ToString();
+            req.Parameters["showSourceText"] = Convert.ToInt32(includeSourceText).ToString();
             req.Parameters["structuredEntities"] = Convert.ToInt32(extractStructuredEntities).ToString();
 
             req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
@@ -656,7 +608,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             int maxRetrieve = 50, 
             bool includeKnowledgeGraph = false,
             bool analyzeSentiment = false,
-            bool showSourceText = false,
+            bool includeSourceText = false,
             string customData = default(string))
         {
             if (callback == null)
@@ -675,7 +627,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             req.Parameters["maxRetrieve"] = Convert.ToInt32(maxRetrieve).ToString();
             req.Parameters["knowledgeGraph"] = Convert.ToInt32(includeKnowledgeGraph).ToString();
             req.Parameters["sentiment"] = Convert.ToInt32(analyzeSentiment).ToString();
-            req.Parameters["showSourceText"] = Convert.ToInt32(showSourceText).ToString();
+            req.Parameters["showSourceText"] = Convert.ToInt32(includeSourceText).ToString();
             req.Parameters["keywordExtractMode"] = "strict";
 
             req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
@@ -1026,7 +978,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             bool includeLinkedData = true,
             bool analyzeSentiment = false,
             bool excludeEntitiesInSentiment = false,
-            bool showSourceText = false, 
+            bool includeSourceText = false, 
             string customData = default(string))
         {
             if (callback == null)
@@ -1052,7 +1004,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             req.Parameters["linkedData"] = Convert.ToInt32(includeLinkedData).ToString();
             req.Parameters["sentiment"] = Convert.ToInt32(analyzeSentiment).ToString();
             req.Parameters["sentimentExcludeEntities"] = Convert.ToInt32(excludeEntitiesInSentiment).ToString();
-            req.Parameters["showSourceText"] = Convert.ToInt32(showSourceText).ToString();
+            req.Parameters["showSourceText"] = Convert.ToInt32(includeSourceText).ToString();
             req.Parameters["keywordExtractMode"] = "strict";
 
             req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
@@ -1127,7 +1079,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         private const string SERVICE_GET_TEXT_SENTIMENT_TEXT = "/calls/text/TextGetTextSentiment";
         public delegate void OnGetTextSentiment(SentimentData sentimentData, string data);
 
-        public bool GetTextSentiment(OnGetTextSentiment callback, string source, bool showSourceText = false, string customData = default(string))
+        public bool GetTextSentiment(OnGetTextSentiment callback, string source, bool includeSourceText = false, string customData = default(string))
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -1142,7 +1094,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             req.Parameters["apikey"] = mp_ApiKey;
             req.Parameters["outputMode"] = "json";
-            req.Parameters["showSourceText"] = Convert.ToInt32(showSourceText).ToString();
+            req.Parameters["showSourceText"] = Convert.ToInt32(includeSourceText).ToString();
 
             req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
             req.Forms = new Dictionary<string, RESTConnector.Form>();
@@ -1216,7 +1168,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         private const string SERVICE_GET_TARGETED_SENTIMENT_TEXT = "/calls/text/TextGetTargetedSentiment";
         public delegate void OnGetTargetedSentiment(TargetedSentimentData targetedSentimentData, string data);
 
-        public bool GetTargetedSentiment(OnGetTargetedSentiment callback, string source, string targets, bool showSourceText = false, string customData = default(string))
+        public bool GetTargetedSentiment(OnGetTargetedSentiment callback, string source, string targets, bool includeSourceText = false, string customData = default(string))
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -1233,7 +1185,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             req.Parameters["apikey"] = mp_ApiKey;
             req.Parameters["outputMode"] = "json";
-            req.Parameters["showSourceText"] = Convert.ToInt32(showSourceText).ToString();
+            req.Parameters["showSourceText"] = Convert.ToInt32(includeSourceText).ToString();
 
             req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
             req.Forms = new Dictionary<string, RESTConnector.Form>();
@@ -1308,7 +1260,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         private const string SERVICE_GET_RANKED_TAXONOMY_TEXT = "/calls/text/TextGetRankedTaxonomy";
         public delegate void OnGetRankedTaxonomy(TaxonomyData taxonomyData, string data);
 
-        public bool GetRankedTaxonomy(OnGetRankedTaxonomy callback, string source, bool showSourceText = false, string customData = default(string))
+        public bool GetRankedTaxonomy(OnGetRankedTaxonomy callback, string source, bool includeSourceText = false, string customData = default(string))
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -1323,7 +1275,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             req.Parameters["apikey"] = mp_ApiKey;
             req.Parameters["outputMode"] = "json";
-            req.Parameters["showSourceText"] = Convert.ToInt32(showSourceText).ToString();
+            req.Parameters["showSourceText"] = Convert.ToInt32(includeSourceText).ToString();
 
             req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
             req.Forms = new Dictionary<string, RESTConnector.Form>();
@@ -1627,7 +1579,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         public delegate void OnGetCombinedData(CombinedCallData combinedData, string data);
 
         public bool GetCombinedData(OnGetCombinedData callback, string source, 
-            bool showSourceText = false,
+            bool includeSourceText = false,
             bool extractAuthors = false,
             bool extractConcepts = true,
             bool extractDates = false,
@@ -1672,7 +1624,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             req.Parameters["apikey"] = mp_ApiKey;
             req.Parameters["outputMode"] = "json";
-            req.Parameters["showSourceText"] = Convert.ToInt32(showSourceText).ToString();
+            req.Parameters["showSourceText"] = Convert.ToInt32(includeSourceText).ToString();
 
             List<string> requestServices = new List<string>();
             if(extractAuthors)
