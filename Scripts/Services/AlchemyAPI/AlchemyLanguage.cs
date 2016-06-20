@@ -533,29 +533,49 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
         #region FeedDetection
         private const string SERVICE_DETECT_FEEDS_URL = "/calls/url/URLGetFeedLinks";
+        private const string SERVICE_DETECT_FEEDS_HTML = "/calls/html/HTMLGetFeedLinks";
         public delegate void OnDetectFeeds(FeedData feedData, string data);
 
-        public bool DetectFeeds(OnDetectFeeds callback, string url, string customData = default(string))
+        public bool DetectFeeds(OnDetectFeeds callback, string source, string customData = default(string))
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
-            if (string.IsNullOrEmpty(url))
-                throw new WatsonException("Please provide a url for GetEmotions.");
+            if (string.IsNullOrEmpty(source))
+                throw new WatsonException("Please provide a source for GetEmotions.");
             if (string.IsNullOrEmpty(mp_ApiKey))
                 SetCredentials();
 
             DetectFeedsRequest req = new DetectFeedsRequest();
             req.Callback = callback;
-            req.Data = string.IsNullOrEmpty(customData) ? url : customData;
+            req.Data = string.IsNullOrEmpty(customData) ? source : customData;
 
             req.Parameters["apikey"] = mp_ApiKey;
             req.Parameters["outputMode"] = "json";
 
             req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
             req.Forms = new Dictionary<string, RESTConnector.Form>();
-            req.Forms["url"] = new RESTConnector.Form(url);
 
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_DETECT_FEEDS_URL);
+            string service;
+            string normalizedSource = source.Trim().ToLower();
+            if(normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
+            {
+                service = SERVICE_DETECT_FEEDS_URL;
+                req.Forms["url"] = new RESTConnector.Form(source);
+            }
+            else if(Path.GetExtension(normalizedSource).EndsWith(".html") && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
+            {
+                service = SERVICE_DETECT_FEEDS_HTML;
+                string htmlData = default(string);
+                htmlData = File.ReadAllText(source);
+                req.Forms["html"] = new RESTConnector.Form(htmlData);
+            }
+            else
+            {
+                Log.Error("Alchemy Language", "Either a URL or a html page source is required for DetectFeeds!");
+                return false;
+            }
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, service);
             if(connector == null)
                 return false;
 
@@ -874,7 +894,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
         #region GetPubDate
         private const string SERVICE_GET_PUBLICATION_DATE_URL = "/calls/url/URLGetPubDate";
-        //        private const string SERVICE_GET_PUBLICATION_DATE_HTML = "/calls/html/HTMLGetPubDate";
+        private const string SERVICE_GET_PUBLICATION_DATE_HTML = "/calls/html/HTMLGetPubDate";
         public delegate void OnGetPublicationDate(PubDateData pubDateData, string data);
 
         public bool GetPublicationDate(OnGetPublicationDate callback, string source, string customData = default(string))
@@ -905,12 +925,10 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             }
             else if(Path.GetExtension(normalizedSource).EndsWith(".html") && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
             {
-                Log.Error("AlchemyLanguage", "PublicationDate by HTML is not supported!");
-                return false;
-                //                service = SERVICE_GET_PUBLICATION_DATE_HTML;
-                //                string htmlData = default(string);
-                //                htmlData = File.ReadAllText(source);
-                //                req.Forms["html"] = new RESTConnector.Form(htmlData);
+                service = SERVICE_GET_PUBLICATION_DATE_HTML;
+                string htmlData = default(string);
+                htmlData = File.ReadAllText(source);
+                req.Forms["html"] = new RESTConnector.Form(htmlData);
             }
             else
             {

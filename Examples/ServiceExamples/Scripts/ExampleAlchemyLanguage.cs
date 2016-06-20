@@ -32,6 +32,7 @@ public class ExampleAlchemyLanguage : MonoBehaviour {
         string unitySDK_release_html = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/unitySDK_release.html";
         string watson_beats_jeopardy_html = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/watson_beats_jeopardy.html";
         string microformats_html = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/microformats.html";
+        string ycombindator_html = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/ycombinator_html.html";
         //  Get Author URL POST
 //        if(!m_AlchemyLanguage.GetAuthors(OnGetAuthors, m_ExampleURL_watsonJeopardy))
 //            Log.Debug("ExampleAlchemyLanguage", "Failed to get authors URL POST!");
@@ -89,7 +90,11 @@ public class ExampleAlchemyLanguage : MonoBehaviour {
 //            Log.Debug("ExampleAlchemyLanguage", "Failed to get entities by HTML POST");
 
         //  Detect Feeds URL POST
-//        if(!m_AlchemyLanguage.DetectFeeds(OnDetectFeeds, "http://www.kotaku.com"))
+//        if(!m_AlchemyLanguage.DetectFeeds(OnDetectFeeds, "http://time.com/newsfeed/"))
+//            Log.Debug("ExampleAlchemyLanguage", "Failed to get feeds by URL POST");
+
+        //  Detect Feeds HTML POST
+//        if(!m_AlchemyLanguage.DetectFeeds(OnDetectFeeds, ycombindator_html))
 //            Log.Debug("ExampleAlchemyLanguage", "Failed to get feeds by URL POST");
 
         //  Extract Keywords URL POST
@@ -125,12 +130,16 @@ public class ExampleAlchemyLanguage : MonoBehaviour {
 //            Log.Debug("ExampleAlchemyLanguage", "Failed to get microformats by text POST");
 
         //  Get PublicationDate URL POST
-//        if(!m_AlchemyLanguage.GetPublicationDate(OnGetPublicationDate, m_ExampleURL_watsonJeopardy))
-//            Log.Debug("ExampleAlchemyLanguage", "Failed to get publication dates by text POST");
+        if(!m_AlchemyLanguage.GetPublicationDate(OnGetPublicationDate, m_ExampleURL_watsonJeopardy))
+            Log.Debug("ExampleAlchemyLanguage", "Failed to get publication dates by url POST");
+
+        //  Get PublicationDate HTML POST
+        if(!m_AlchemyLanguage.GetPublicationDate(OnGetPublicationDate, watson_beats_jeopardy_html))
+            Log.Debug("ExampleAlchemyLanguage", "Failed to get publication dates by html POST");
 
         //  Get Relations URL POST
 //        if(!m_AlchemyLanguage.GetRelations(OnGetRelations, m_ExampleURL_watsonJeopardy))
-//                Log.Debug("ExampleAlchemyLanguage", "Failed to get relations by text POST");
+//            Log.Debug("ExampleAlchemyLanguage", "Failed to get relations by text POST");
 
         //  Get Relations Text POST
 //        if(!m_AlchemyLanguage.GetRelations(OnGetRelations, m_ExampleText_watsonJeopardy))
@@ -192,11 +201,11 @@ public class ExampleAlchemyLanguage : MonoBehaviour {
 //        if(!m_AlchemyLanguage.GetRawText(OnGetText, m_ExampleURL_watsonJeopardy))
 //            Log.Debug("ExampleAlchemyLanguage", "Failed to get raw text by text POST");
 
-        //  Get Raw Text HTML POST
+        //  Get Title HTML POST
 //        if(!m_AlchemyLanguage.GetTitle(OnGetTitle, watson_beats_jeopardy_html))
 //            Log.Debug("ExampleAlchemyLanguage", "Failed to get title by text POST");
 
-        //  Get Raw Text URL POST
+        //  Get Title URL POST
 //        if(!m_AlchemyLanguage.GetTitle(OnGetTitle, m_ExampleURL_watsonJeopardy))
 //            Log.Debug("ExampleAlchemyLanguage", "Failed to get title by text POST");
 
