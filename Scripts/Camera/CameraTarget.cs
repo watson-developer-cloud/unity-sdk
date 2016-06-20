@@ -33,12 +33,22 @@ namespace IBM.Watson.DeveloperCloud.Camera
         private static UnityEngine.Camera mp_CameraAttached = null;
         [SerializeField]
         private bool m_UseCustomPosition = false;
+        [SerializeField]
         private Vector3 m_CustomPosition = Vector3.zero;
+        [SerializeField]
+        private Vector3 m_OffsetPosition = Vector3.zero;
+        private Quaternion m_OffsetPositionRotation = Quaternion.identity;
         [SerializeField]
         private bool m_UseCustomRotation = false;
         private Quaternion m_CustomRotation = Quaternion.identity;
         private bool m_UseTargetObjectToRotate = false;
+        [SerializeField]
         private GameObject m_CustomTargetObjectToLookAt = null;
+
+        [SerializeField]
+        private bool m_TextEnableCamera = false;
+        [SerializeField]
+        private bool m_TestToMakeItCurrent = false;
 
         #endregion
 
@@ -57,9 +67,13 @@ namespace IBM.Watson.DeveloperCloud.Camera
                 {
                     return m_CustomPosition;
                 }
+                else if (m_OffsetPosition != Vector3.zero)
+                {
+                    return transform.position + ( Quaternion.Euler(transform.rotation.eulerAngles - m_OffsetPositionRotation.eulerAngles) * m_OffsetPosition);
+                }
                 else
                 {
-                    return transform.position;
+                    return transform.position ;
                 }
             }
             set
@@ -77,11 +91,7 @@ namespace IBM.Watson.DeveloperCloud.Camera
         {
             get
             {
-                if (m_UseCustomRotation)
-                {
-                    return m_CustomRotation;
-                }
-                else if (m_UseTargetObjectToRotate)
+                if (m_UseTargetObjectToRotate)
                 {
                     if (TargetObject != null)
                     {
@@ -102,6 +112,10 @@ namespace IBM.Watson.DeveloperCloud.Camera
                         return Quaternion.identity;
                     }
                 }
+                else if (m_UseCustomRotation)
+                {
+                    return m_CustomRotation;
+                }
                 else
                 {
                     return transform.rotation;
@@ -114,7 +128,7 @@ namespace IBM.Watson.DeveloperCloud.Camera
             }
         }
 
-        protected GameObject TargetObject
+        public GameObject TargetObject
         {
             get
             {
@@ -122,12 +136,20 @@ namespace IBM.Watson.DeveloperCloud.Camera
             }
             set
             {
-                m_UseTargetObjectToRotate = true;
-                m_CustomTargetObjectToLookAt = value;
+                if (value != null)
+                {
+                    m_UseTargetObjectToRotate = true;
+                    m_CustomTargetObjectToLookAt = value;
+                }
+                else
+                {
+                    m_UseTargetObjectToRotate = false;
+                    m_CustomTargetObjectToLookAt = null;
+                }
             }
         }
 
-        protected UnityEngine.Camera CameraAttached
+        public UnityEngine.Camera CameraAttached
         {
             get
             {
@@ -140,7 +162,7 @@ namespace IBM.Watson.DeveloperCloud.Camera
             }
         }
 
-        protected WatsonCamera WatsonCameraAttached
+        public WatsonCamera WatsonCameraAttached
         {
             get
             {
@@ -156,7 +178,7 @@ namespace IBM.Watson.DeveloperCloud.Camera
 
         #region Set Target on Camera
 
-        protected void SetCurrentTargetOnCamera(bool enable)
+        public void SetCurrentTargetOnCamera(bool enable)
         {
             if (WatsonCamera.Instance != null)
             {
@@ -167,7 +189,7 @@ namespace IBM.Watson.DeveloperCloud.Camera
             }
         }
 
-        protected void SetTargetPositionDefault()
+        public void SetTargetPositionDefault()
         {
             if (WatsonCamera.Instance != null && WatsonCamera.Instance.DefaultCameraTarget != null)
             {
@@ -175,12 +197,35 @@ namespace IBM.Watson.DeveloperCloud.Camera
             }
         }
 
-        protected void SetTargetRotationDefault()
+        public void SetTargetRotationDefault()
         {
             if (WatsonCamera.Instance != null && WatsonCamera.Instance.DefaultCameraTarget != null)
             {
                 TargetRotation = WatsonCamera.Instance.DefaultCameraTarget.TargetRotation;
             }
+        }
+
+        #endregion
+
+        #region Update
+
+        void Update()
+        {
+            if (m_TestToMakeItCurrent)
+            {
+                m_TestToMakeItCurrent = false;
+                SetCurrentTargetOnCamera(m_TextEnableCamera);
+            }
+        }
+
+        #endregion
+
+        #region public Functions
+
+        public void SetTargetPositionWithOffset(Vector3 offsetPosition)
+        {
+            m_OffsetPosition = offsetPosition;
+            m_OffsetPositionRotation = this.transform.rotation;
         }
 
         #endregion

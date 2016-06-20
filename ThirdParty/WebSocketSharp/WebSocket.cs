@@ -1125,8 +1125,11 @@ namespace WebSocketSharp
       var code = exception is WebSocketException
                  ? ((WebSocketException) exception).Code
                  : CloseStatusCode.Abnormal;
-
-      fatal (message, code);
+      
+        if(exception != null)
+            fatal (message + exception.Message + exception.StackTrace, code);
+        else
+            fatal (message, code);
     }
 
     private void fatal (string message, CloseStatusCode code)

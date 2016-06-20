@@ -174,7 +174,10 @@ namespace IBM.Watson.DeveloperCloud.Camera
 
             m_ListCameraTarget.Clear();
 
-            CameraTarget defaultCameraTarget = this.gameObject.AddComponent<CameraTarget>();
+            CameraTarget defaultCameraTarget = this.gameObject.GetComponent<CameraTarget>();
+            if(defaultCameraTarget == null)
+                defaultCameraTarget = this.gameObject.AddComponent<CameraTarget>();
+            
             defaultCameraTarget.TargetPosition = m_CameraInitialLocation;
             defaultCameraTarget.TargetRotation = m_CameraInitialRotation;
             m_ListCameraTarget.Add(defaultCameraTarget);
@@ -269,9 +272,9 @@ namespace IBM.Watson.DeveloperCloud.Camera
             if (m_DisableInteractivity)
                 return;
             //Log.Status("WatsonCamera", "Reset Camera Position");
-            DefaultCameraTarget.TargetPosition = m_CameraInitialLocation;
-            DefaultCameraTarget.TargetRotation = m_CameraInitialRotation;
+            InitializeCameraTargetList();
         }
+
 
         /// <summary>
         /// Event handler moving the camera up.
