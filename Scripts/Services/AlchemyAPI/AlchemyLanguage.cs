@@ -564,14 +564,16 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             }
             else if(Path.GetExtension(normalizedSource).EndsWith(".html") && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
             {
-                service = SERVICE_DETECT_FEEDS_HTML;
-                string htmlData = default(string);
-                htmlData = File.ReadAllText(source);
-                req.Forms["html"] = new RESTConnector.Form(htmlData);
+                Log.Error("Alchemy Language", "A URL source is required for DetectFeeds!");
+                return false;
+//                service = SERVICE_DETECT_FEEDS_HTML;
+//                string htmlData = default(string);
+//                htmlData = File.ReadAllText(source);
+//                req.Forms["html"] = new RESTConnector.Form(htmlData);
             }
             else
             {
-                Log.Error("Alchemy Language", "Either a URL or a html page source is required for DetectFeeds!");
+                Log.Error("Alchemy Language", "A URL source is required for DetectFeeds!");
                 return false;
             }
 
@@ -838,14 +840,16 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             }
             else if(Path.GetExtension(normalizedSource).EndsWith(".html") && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
             {
-                service = SERVICE_GET_MICROFORMAT_HTML;
-                string htmlData = default(string);
-                htmlData = File.ReadAllText(source);
-                req.Forms["html"] = new RESTConnector.Form(htmlData);
+                Log.Error("Alchemy Language", "A URL source is required for GetMicroformats!");
+                return false;
+//                service = SERVICE_GET_MICROFORMAT_HTML;
+//                string htmlData = default(string);
+//                htmlData = File.ReadAllText(source);
+//                req.Forms["html"] = new RESTConnector.Form(htmlData);
             }
             else
             {
-                Log.Error("Alchemy Language", "Either a URL or a html page source is required for GetMicroformats!");
+                Log.Error("Alchemy Language", "A URL source is required for GetMicroformats!");
                 return false;
             }
 
