@@ -32,7 +32,7 @@ public class ExampleAlchemyLanguage : MonoBehaviour {
         string unitySDK_release_html = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/unitySDK_release.html";
         string watson_beats_jeopardy_html = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/watson_beats_jeopardy.html";
         string microformats_html = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/microformats.html";
-        string ycombindator_html = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/ycombinator_html.html";
+        string ycombinator_html = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/ycombinator_news.html";
         //  Get Author URL POST
 //        if(!m_AlchemyLanguage.GetAuthors(OnGetAuthors, m_ExampleURL_watsonJeopardy))
 //            Log.Debug("ExampleAlchemyLanguage", "Failed to get authors URL POST!");
@@ -94,7 +94,7 @@ public class ExampleAlchemyLanguage : MonoBehaviour {
 //            Log.Debug("ExampleAlchemyLanguage", "Failed to get feeds by URL POST");
 
         //  Detect Feeds HTML POST
-//        if(!m_AlchemyLanguage.DetectFeeds(OnDetectFeeds, ycombindator_html))
+//        if(!m_AlchemyLanguage.DetectFeeds(OnDetectFeeds, ycombinator_html))
 //            Log.Debug("ExampleAlchemyLanguage", "Failed to get feeds by URL POST");
 
         //  Extract Keywords URL POST
@@ -130,12 +130,12 @@ public class ExampleAlchemyLanguage : MonoBehaviour {
 //            Log.Debug("ExampleAlchemyLanguage", "Failed to get microformats by text POST");
 
         //  Get PublicationDate URL POST
-        if(!m_AlchemyLanguage.GetPublicationDate(OnGetPublicationDate, m_ExampleURL_watsonJeopardy))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get publication dates by url POST");
+//        if(!m_AlchemyLanguage.GetPublicationDate(OnGetPublicationDate, m_ExampleURL_watsonJeopardy))
+//            Log.Debug("ExampleAlchemyLanguage", "Failed to get publication dates by url POST");
 
         //  Get PublicationDate HTML POST
-        if(!m_AlchemyLanguage.GetPublicationDate(OnGetPublicationDate, watson_beats_jeopardy_html))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get publication dates by html POST");
+//        if(!m_AlchemyLanguage.GetPublicationDate(OnGetPublicationDate, watson_beats_jeopardy_html))
+//            Log.Debug("ExampleAlchemyLanguage", "Failed to get publication dates by html POST");
 
         //  Get Relations URL POST
 //        if(!m_AlchemyLanguage.GetRelations(OnGetRelations, m_ExampleURL_watsonJeopardy))
