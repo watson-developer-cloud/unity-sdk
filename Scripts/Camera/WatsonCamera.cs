@@ -35,14 +35,14 @@ namespace IBM.Watson.DeveloperCloud.Camera
         private List<CameraTarget> m_ListCameraTarget = new List<CameraTarget>();
         private CameraTarget m_TargetCamera = null;
 
-        private Vector3 m_CameraInitialLocation;
-        private Quaternion m_CameraInitialRotation;
+        protected Vector3 m_CameraInitialLocation;
+        protected Quaternion m_CameraInitialRotation;
         [SerializeField]
         protected float m_PanSpeed = 0.07f;
         [SerializeField]
         protected float m_ZoomSpeed = 20.0f;
         [SerializeField]
-        private float m_SpeedForCameraAnimation = 2f;
+        protected float m_SpeedForCameraAnimation = 2f;
 
         private float m_CommandMovementModifier = 10.0f;
 
@@ -190,7 +190,7 @@ namespace IBM.Watson.DeveloperCloud.Camera
         /// Event handler to pan and zoom with two-finger dragging
         /// </summary>
         /// <param name="args">Arguments.</param>
-        protected virtual void DragTwoFinger(System.Object[] args)
+        public virtual void DragTwoFinger(System.Object[] args)
         {
             if (m_DisableInteractivity)
                 return;
