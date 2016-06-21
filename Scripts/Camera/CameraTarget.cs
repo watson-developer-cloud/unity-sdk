@@ -55,6 +55,40 @@ namespace IBM.Watson.DeveloperCloud.Camera
         #region Public Members
 
         /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="IBM.Watson.DeveloperCloud.Camera.CameraTarget"/> use
+        /// custom position.
+        /// </summary>
+        /// <value><c>true</c> if use custom position; otherwise, <c>false</c>.</value>
+        public bool UseCustomPosition
+        {
+            get
+            {
+                return m_UseCustomPosition;
+            }
+            set
+            {
+                m_UseCustomPosition = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="IBM.Watson.DeveloperCloud.Camera.CameraTarget"/> use
+        /// custom rotation.
+        /// </summary>
+        /// <value><c>true</c> if use custom rotation; otherwise, <c>false</c>.</value>
+        public bool UseCustomRotation
+        {
+            get
+            {
+                return m_UseCustomRotation;
+            }
+            set
+            {
+                m_UseCustomRotation = value;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the target position.
         /// </summary>
         /// <value>The target position.</value>
@@ -128,6 +162,10 @@ namespace IBM.Watson.DeveloperCloud.Camera
             }
         }
 
+        /// <summary>
+        /// Gets or sets the target object.
+        /// </summary>
+        /// <value>The target object.</value>
         public GameObject TargetObject
         {
             get
@@ -149,6 +187,10 @@ namespace IBM.Watson.DeveloperCloud.Camera
             }
         }
 
+        /// <summary>
+        /// Gets the camera attached.
+        /// </summary>
+        /// <value>The camera attached.</value>
         public UnityEngine.Camera CameraAttached
         {
             get
@@ -162,6 +204,10 @@ namespace IBM.Watson.DeveloperCloud.Camera
             }
         }
 
+        /// <summary>
+        /// Gets the watson camera attached.
+        /// </summary>
+        /// <value>The watson camera attached.</value>
         public WatsonCamera WatsonCameraAttached
         {
             get
@@ -178,6 +224,10 @@ namespace IBM.Watson.DeveloperCloud.Camera
 
         #region Set Target on Camera
 
+        /// <summary>
+        /// Sets the current target on camera.
+        /// </summary>
+        /// <param name="enable">If set to <c>true</c> enable.</param>
         public void SetCurrentTargetOnCamera(bool enable)
         {
             if (WatsonCamera.Instance != null)
@@ -189,6 +239,9 @@ namespace IBM.Watson.DeveloperCloud.Camera
             }
         }
 
+        /// <summary>
+        /// Sets the target position default.
+        /// </summary>
         public void SetTargetPositionDefault()
         {
             if (WatsonCamera.Instance != null && WatsonCamera.Instance.DefaultCameraTarget != null)
@@ -197,6 +250,9 @@ namespace IBM.Watson.DeveloperCloud.Camera
             }
         }
 
+        /// <summary>
+        /// Sets the target rotation default.
+        /// </summary>
         public void SetTargetRotationDefault()
         {
             if (WatsonCamera.Instance != null && WatsonCamera.Instance.DefaultCameraTarget != null)
