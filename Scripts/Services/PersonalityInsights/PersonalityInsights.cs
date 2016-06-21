@@ -163,15 +163,8 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v2
             {
                 m_Service = service;
                 m_Callback = callback;
-
-                DataModels.ContentListContainer contentListContainer = new DataModels.ContentListContainer();
-                DataModels.ContentItem item0 = new DataModels.ContentItem();
-                item0.content = "test0";
-                DataModels.ContentItem item1 = new DataModels.ContentItem();
-                item1.content = "test1";
-                contentListContainer.contentItems = new DataModels.ContentItem[] {item0, item1};
-
-                if (!m_Service.GetProfile(OnGetProfile, "hello"))
+                string dataPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/personalityInsights.json";
+                if(!m_Service.GetProfile(OnGetProfile, dataPath, DataModels.ContentType.TEXT_PLAIN, DataModels.Language.ENGLISH))
                     m_Callback(SERVICE_ID, false);
             }
 
