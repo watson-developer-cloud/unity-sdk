@@ -23,6 +23,7 @@ using UnityEngine;
 using System.Collections;
 using System;
 using IBM.Watson.DeveloperCloud.Logging;
+using System.IO;
 
 namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v2
 {
@@ -48,7 +49,6 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v2
         {
             if(callback == null)
                 throw new ArgumentNullException("callback");
-
             if(string.IsNullOrEmpty(source))
                 throw new ArgumentNullException("A JSON or Text source is required for GetProfile!");
 
@@ -68,11 +68,21 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v2
             req.Headers["Accept"] = accept;
             req.Headers["Accept-Language"] = acceptLanguage;
 
-            req.Send = System.Text.Encoding.UTF8.GetBytes(source);
+            string normalizedSource = source.Trim().ToLower();
+            if(Path.GetExtension(normalizedSource).EndsWith(".json"))
+            {
+                string jsonData = default(string);
+                jsonData = File.ReadAllText(source);
+                req.Send = System.Text.Encoding.UTF8.GetBytes(jsonData);
+            }
+            else
+            {
+                req.Send = System.Text.Encoding.UTF8.GetBytes(source);
+            }
 
             return connector.Send(req);
         }
-
+            
         private class GetProfileRequest:RESTConnector.Request
         {
             public string Data { get; set; }
