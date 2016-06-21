@@ -137,5 +137,123 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v2
             /// <value>The message.</value>
             public string message { get; set; }
         }
+
+        [fsObject]
+        public class ContentListContainer
+        {
+            /// <summary>
+            /// An array of content items for personality insight profile request.
+            /// </summary>
+            /// <value>The content items.</value>
+            public ContentItem[] contentItems { get; set; }
+        }
+
+        [fsObject]
+        public class ContentItem
+        {
+            /// <summary>
+            /// Unique identifier for this content item.
+            /// </summary>
+            /// <value>The identifier.</value>
+            public string id { get; set; }
+
+            /// <summary>
+            /// Unique identifier for the author of this content.
+            /// </summary>
+            /// <value>The userid.</value>
+            public string userid { get; set; }
+
+            /// <summary>
+            /// Identifier for the source of this content, for example, blog123 or twitter.
+            /// </summary>
+            /// <value>The sourceid.</value>
+            public string sourceid { get; set; }
+
+            /// <summary>
+            /// Timestamp that identifies when this content was created. Specify a value in milliseconds since the UNIX Epoch (January 1, 1970, at 0:00 UTC). Required only for results that include temporal behavior data. 
+            /// </summary>
+            /// <value>The created.</value>
+            public string created { get; set; }
+
+            /// <summary>
+            /// Timestamp that identifies when this content was last updated. Specify a value in milliseconds since the UNIX Epoch (January 1, 1970, at 0:00 UTC). Required only for results that include temporal behavior data. 
+            /// </summary>
+            /// <value>The updated.</value>
+            public string updated { get; set; }
+
+            /// <summary>
+            /// MIME type of the content, for example, text/plain (the default) or text/html. The tags are stripped from HTML content before it is analyzed; other MIME types are processed as is.
+            /// </summary>
+            /// <value>The contenttype.</value>
+            public string contenttype { get; set; }
+
+            /// <summary>
+            /// Language identifier (two-letter ISO 639-1 identifier) for the input text: ar (Arabic), en (English), es (Spanish), or ja (Japanese). The default is English. Regional variants are treated as their parent language; for example, en-US is interpreted as en. A language specified with the Content-Type header overrides the value of this parameter; any content items that specify a different language are ignored. Omit the Content-Type header to base the language on the most prevalent specification among the content items; again, content items that specify a different language are ignored. You can specify any combination of languages for the input text and the response (Accept-Language).
+            /// </summary>
+            /// <value>The language.</value>
+            public string language { get; set; }
+
+            /// <summary>
+            /// Content to be analyzed. Up to 20 MB of content is supported.
+            /// </summary>
+            /// <value>The content.</value>
+            public string content { get; set; }
+
+            /// <summary>
+            /// Unique ID of the parent content item for this item. Used to identify hierarchical relationships between posts/replies, messages/replies, and so on.
+            /// </summary>
+            /// <value>The parentid.</value>
+            public string parentid { get; set; }
+
+            /// <summary>
+            /// Indicates whether this content item is a reply to another content item.
+            /// </summary>
+            /// <value><c>true</c> if reply; otherwise, <c>false</c>.</value>
+            public bool reply { get; set; }
+
+            /// <summary>
+            /// Indicates whether this content item is a forwarded/copied version of another content item.
+            /// </summary>
+            /// <value><c>true</c> if forward; otherwise, <c>false</c>.</value>
+            public bool forward { get; set; }
+        }
+
+        public class ContentType
+        {
+            /// <summary>
+            /// Mime type for plain text.
+            /// </summary>
+            public const string TEXT_PLAIN = "text/plain";
+
+            /// <summary>
+            /// Mime type for HTML.
+            /// </summary>
+            public const string TEXT_HTML = "text/html";
+
+            /// <summary>
+            /// Mime type for json.
+            /// </summary>
+            public const string APPLICATION_JSON = "application/json";
+        }
+
+        public class Language
+        {
+            /// <summary>
+            /// English.
+            /// </summary>
+            public const string ENGLISH = "en";
+            /// <summary>
+            /// Arabic.
+            /// </summary>
+            public const string ARABIC = "ar";
+            /// <summary>
+            /// Spanish.
+            /// </summary>
+            public const string SPANISH = "es";
+            /// <summary>
+            /// Japanese
+            /// </summary>
+            public const string JAPANESE = "ja";
+        }
     }
 }
