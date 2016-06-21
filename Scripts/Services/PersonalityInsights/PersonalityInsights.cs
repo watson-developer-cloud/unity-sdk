@@ -36,8 +36,25 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v2
 
         #region Profile
         private const string SERVICE_GET_PROFILE = "/v2/profile";
+
+        /// <summary>
+        /// On get profile delegate.
+        /// </summary>
         public delegate void OnGetProfile(DataModels.Profile profile, string data);
 
+        /// <summary>
+        /// Uses Personality Insights to get the source profile.
+        /// </summary>
+        /// <returns><c>true</c>, if profile was gotten, <c>false</c> otherwise.</returns>
+        /// <param name="callback">Callback.</param>
+        /// <param name="source">Json or Text source. Json data must follow the ContentListContainer Model.</param>
+        /// <param name="contentType">Content mime type.</param>
+        /// <param name="contentLanguage">Content language.</param>
+        /// <param name="accept">Accept mime type.</param>
+        /// <param name="acceptLanguage">Accept language.</param>
+        /// <param name="includeRaw">If set to <c>true</c> include raw.</param>
+        /// <param name="headers">If set to <c>true</c> headers.</param>
+        /// <param name="data">Data.</param>
         public bool GetProfile(OnGetProfile callback, string source, 
             string contentType = DataModels.ContentType.TEXT_PLAIN, 
             string contentLanguage = DataModels.Language.ENGLISH, 
@@ -82,8 +99,11 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v2
 
             return connector.Send(req);
         }
-            
-        private class GetProfileRequest:RESTConnector.Request
+         
+        /// <summary>
+        /// Get profile request.
+        /// </summary>
+        public class GetProfileRequest:RESTConnector.Request
         {
             public string Data { get; set; }
             public OnGetProfile Callback { get; set; }
