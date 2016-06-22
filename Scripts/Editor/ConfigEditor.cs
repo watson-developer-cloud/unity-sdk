@@ -60,6 +60,8 @@ namespace IBM.Watson.DeveloperCloud.Editor
 				URL ="https://console.ng.bluemix.net/catalog/natural-language-classifier/", ServiceID="NaturalLanguageClassifierV1" },
             new ServiceSetup() { ServiceName = "Tone Analyzer", ServiceAPI = "tone-analyzer/api",
                 URL ="https://console.ng.bluemix.net/catalog/services/tone-analyzer/", ServiceID="ToneAnalyzerV3" }
+            new ServiceSetup() { ServiceName = "Tradeoff Analytics", ServiceAPI = "tradeoff-analytics/api",
+                URL ="https://console.ng.bluemix.net/catalog/services/tradeoff-analytics/", ServiceID="TradeoffAnalyticsV1" }
         };
 
         private const string TITLE = "Watson Unity SDK";
