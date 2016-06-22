@@ -141,6 +141,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 			MessageReq req = new MessageReq();
 			req.Callback = callback;
 			req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
             req.Parameters["version"] = DataModels.CONVERSATION_VERSION;
 			req.Function = "/" + workspaceId + "/message";
 			req.Send = Encoding.UTF8.GetBytes(reqString);
