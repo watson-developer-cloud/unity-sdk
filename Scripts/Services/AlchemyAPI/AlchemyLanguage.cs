@@ -53,8 +53,8 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         #endregion
 
         #region GetAuthors
-        private const string SERVICE_GET_AUTHORS_URL = "/calls/url/URLGetAuthors";
-        private const string SERVICE_GET_AUTHORS_HTML = "/calls/html/HTMLGetAuthors";
+        private const string SERVICE_GET_AUTHORS_URL = "/url/URLGetAuthors";
+        private const string SERVICE_GET_AUTHORS_HTML = "/html/HTMLGetAuthors";
 
         /// <summary>
         /// On get authors delegate.
@@ -154,9 +154,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         #endregion
 
         #region GetRankedConcepts
-        private const string SERVICE_GET_RANKED_CONCEPTS_HTML = "/calls/html/HTMLGetRankedConcepts";
-        private const string SERVICE_GET_RANKED_CONCEPTS_URL = "/calls/url/URLGetRankedConcepts";
-        private const string SERVICE_GET_RANKED_CONCEPTS_TEXT = "/calls/text/TextGetRankedConcepts";
+        private const string SERVICE_GET_RANKED_CONCEPTS_HTML = "/html/HTMLGetRankedConcepts";
+        private const string SERVICE_GET_RANKED_CONCEPTS_URL = "/url/URLGetRankedConcepts";
+        private const string SERVICE_GET_RANKED_CONCEPTS_TEXT = "/text/TextGetRankedConcepts";
 
         /// <summary>
         /// On get ranked concepts delegate.
@@ -269,9 +269,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         #endregion
 
         #region ExtractDates
-        private const string SERVICE_GET_DATES_HTML = "/calls/html/HTMLExtractDates";
-        private const string SERVICE_GET_DATES_URL = "/calls/url/URLExtractDates";
-        private const string SERVICE_GET_DATES_TEXT = "/calls/text/TextExtractDates";
+        private const string SERVICE_GET_DATES_HTML = "/html/HTMLExtractDates";
+        private const string SERVICE_GET_DATES_URL = "/url/URLExtractDates";
+        private const string SERVICE_GET_DATES_TEXT = "/text/TextExtractDates";
 
         /// <summary>
         /// On get dates delegate.
@@ -384,9 +384,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         #endregion
 
         #region GetEmotion
-        private const string SERVICE_GET_EMOTION_HTML = "/calls/html/HTMLGetEmotion";
-        private const string SERVICE_GET_EMOTION_URL = "/calls/url/URLGetEmotion";
-        private const string SERVICE_GET_EMOTION_TEXT = "/calls/text/TextGetEmotion";
+        private const string SERVICE_GET_EMOTION_HTML = "/html/HTMLGetEmotion";
+        private const string SERVICE_GET_EMOTION_URL = "/url/URLGetEmotion";
+        private const string SERVICE_GET_EMOTION_TEXT = "/text/TextGetEmotion";
 
         /// <summary>
         /// On get emotions delegate.
@@ -488,9 +488,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         #endregion
 
         #region Entity Extraction
-        private const string SERVICE_GET_ENTITY_EXTRACTION_HTML = "/calls/html/HTMLGetRankedNamedEntities";
-        private const string SERVICE_GET_ENTITY_EXTRACTION_URL = "/calls/url/URLGetRankedNamedEntities";
-        private const string SERVICE_GET_ENTITY_EXTRACTION_TEXT = "/calls/text/TextGetRankedNamedEntities";
+        private const string SERVICE_GET_ENTITY_EXTRACTION_HTML = "/html/HTMLGetRankedNamedEntities";
+        private const string SERVICE_GET_ENTITY_EXTRACTION_URL = "/url/URLGetRankedNamedEntities";
+        private const string SERVICE_GET_ENTITY_EXTRACTION_TEXT = "/text/TextGetRankedNamedEntities";
 
         /// <summary>
         /// On get entities delegate.
@@ -618,8 +618,8 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         #endregion
 
         #region FeedDetection
-        private const string SERVICE_DETECT_FEEDS_URL = "/calls/url/URLGetFeedLinks";
-        private const string SERVICE_DETECT_FEEDS_HTML = "/calls/html/HTMLGetFeedLinks";
+        private const string SERVICE_DETECT_FEEDS_URL = "/url/URLGetFeedLinks";
+        private const string SERVICE_DETECT_FEEDS_HTML = "/html/HTMLGetFeedLinks";
 
         /// <summary>
         /// On detect feeds delegate.
@@ -721,9 +721,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         #endregion
 
         #region Keyword Extraction
-        private const string SERVICE_GET_KEYWORD_EXTRACTION_HTML = "/calls/html/HTMLGetRankedKeywords";
-        private const string SERVICE_GET_KEYWORD_EXTRACTION_URL = "/calls/url/URLGetRankedKeywords";
-        private const string SERVICE_GET_KEYWORD_EXTRACTION_TEXT = "/calls/text/TextGetRankedKeywords";
+        private const string SERVICE_GET_KEYWORD_EXTRACTION_HTML = "/html/HTMLGetRankedKeywords";
+        private const string SERVICE_GET_KEYWORD_EXTRACTION_URL = "/url/URLGetRankedKeywords";
+        private const string SERVICE_GET_KEYWORD_EXTRACTION_TEXT = "/text/TextGetRankedKeywords";
 
         /// <summary>
         /// On get keywords delegate.
@@ -837,9 +837,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         #endregion
 
         #region GetLanguage
-        private const string SERVICE_GET_LANGUAGE_HTML = "/calls/html/HTMLGetLanguage";
-        private const string SERVICE_GET_LANGUAGE_URL = "/calls/url/URLGetLanguage";
-        private const string SERVICE_GET_LANGUAGE_TEXT = "/calls/text/TextGetLanguage";
+        private const string SERVICE_GET_LANGUAGE_HTML = "/html/HTMLGetLanguage";
+        private const string SERVICE_GET_LANGUAGE_URL = "/url/URLGetLanguage";
+        private const string SERVICE_GET_LANGUAGE_TEXT = "/text/TextGetLanguage";
 
         /// <summary>
         /// On get languages.
@@ -941,8 +941,8 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         #endregion
 
         #region GetMicroformat
-        private const string SERVICE_GET_MICROFORMAT_URL = "/calls/url/URLGetMicroformatData";
-        private const string SERVICE_GET_MICROFORMAT_HTML = "/calls/html/HTMLGetMicroformatData";
+        private const string SERVICE_GET_MICROFORMAT_URL = "/url/URLGetMicroformatData";
+        private const string SERVICE_GET_MICROFORMAT_HTML = "/html/HTMLGetMicroformatData";
 
         /// <summary>
         /// On get microformats.
@@ -1044,8 +1044,8 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         #endregion
 
         #region GetPubDate
-        private const string SERVICE_GET_PUBLICATION_DATE_URL = "/calls/url/URLGetPubDate";
-        private const string SERVICE_GET_PUBLICATION_DATE_HTML = "/calls/html/HTMLGetPubDate";
+        private const string SERVICE_GET_PUBLICATION_DATE_URL = "/url/URLGetPubDate";
+        private const string SERVICE_GET_PUBLICATION_DATE_HTML = "/html/HTMLGetPubDate";
 
         /// <summary>
         /// On get publication date delegate.
@@ -1145,9 +1145,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         #endregion
 
         #region GetRelations
-        private const string SERVICE_GET_RELATIONS_HTML = "/calls/html/HTMLGetRelations";
-        private const string SERVICE_GET_RELATIONS_URL = "/calls/url/URLGetRelations";
-        private const string SERVICE_GET_RELATIONS_TEXT = "/calls/text/TextGetRelations";
+        private const string SERVICE_GET_RELATIONS_HTML = "/html/HTMLGetRelations";
+        private const string SERVICE_GET_RELATIONS_URL = "/url/URLGetRelations";
+        private const string SERVICE_GET_RELATIONS_TEXT = "/text/TextGetRelations";
 
         /// <summary>
         /// On get relations delegate.
@@ -1282,9 +1282,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         #endregion
 
         #region GetTextSentiment
-        private const string SERVICE_GET_TEXT_SENTIMENT_HTML = "/calls/html/HTMLGetTextSentiment";
-        private const string SERVICE_GET_TEXT_SENTIMENT_URL = "/calls/url/URLGetTextSentiment";
-        private const string SERVICE_GET_TEXT_SENTIMENT_TEXT = "/calls/text/TextGetTextSentiment";
+        private const string SERVICE_GET_TEXT_SENTIMENT_HTML = "/html/HTMLGetTextSentiment";
+        private const string SERVICE_GET_TEXT_SENTIMENT_URL = "/url/URLGetTextSentiment";
+        private const string SERVICE_GET_TEXT_SENTIMENT_TEXT = "/text/TextGetTextSentiment";
 
         /// <summary>
         /// On get text sentiment delegate.
@@ -1386,9 +1386,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         #endregion
 
         #region GetTargetedSentiment
-        private const string SERVICE_GET_TARGETED_SENTIMENT_HTML = "/calls/html/HTMLGetTargetedSentiment";
-        private const string SERVICE_GET_TARGETED_SENTIMENT_URL = "/calls/url/URLGetTargetedSentiment";
-        private const string SERVICE_GET_TARGETED_SENTIMENT_TEXT = "/calls/text/TextGetTargetedSentiment";
+        private const string SERVICE_GET_TARGETED_SENTIMENT_HTML = "/html/HTMLGetTargetedSentiment";
+        private const string SERVICE_GET_TARGETED_SENTIMENT_URL = "/url/URLGetTargetedSentiment";
+        private const string SERVICE_GET_TARGETED_SENTIMENT_TEXT = "/text/TextGetTargetedSentiment";
 
         /// <summary>
         /// On get targeted sentiment delegate.
@@ -1494,9 +1494,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         #endregion
 
         #region GetRankedTaxonomy
-        private const string SERVICE_GET_RANKED_TAXONOMY_HTML = "/calls/html/HTMLGetRankedTaxonomy";
-        private const string SERVICE_GET_RANKED_TAXONOMY_URL = "/calls/url/URLGetRankedTaxonomy";
-        private const string SERVICE_GET_RANKED_TAXONOMY_TEXT = "/calls/text/TextGetRankedTaxonomy";
+        private const string SERVICE_GET_RANKED_TAXONOMY_HTML = "/html/HTMLGetRankedTaxonomy";
+        private const string SERVICE_GET_RANKED_TAXONOMY_URL = "/url/URLGetRankedTaxonomy";
+        private const string SERVICE_GET_RANKED_TAXONOMY_TEXT = "/text/TextGetRankedTaxonomy";
 
         /// <summary>
         /// On get ranked taxonomy delegate.
@@ -1598,8 +1598,8 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         #endregion
 
         #region GetText
-        private const string SERVICE_GET_TEXT_HTML = "/calls/html/HTMLGetText";
-        private const string SERVICE_GET_TEXT_URL = "/calls/url/URLGetText";
+        private const string SERVICE_GET_TEXT_HTML = "/html/HTMLGetText";
+        private const string SERVICE_GET_TEXT_URL = "/url/URLGetText";
 
         /// <summary>
         /// On get text delegate.
@@ -1703,8 +1703,8 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         #endregion
 
         #region GetRawText
-        private const string SERVICE_GET_RAW_TEXT_HTML = "/calls/html/HTMLGetRawText";
-        private const string SERVICE_GET_RAW_TEXT_URL = "/calls/url/URLGetRawText";
+        private const string SERVICE_GET_RAW_TEXT_HTML = "/html/HTMLGetRawText";
+        private const string SERVICE_GET_RAW_TEXT_URL = "/url/URLGetRawText";
 
         /// <summary>
         /// Gets raw text from a source.
@@ -1762,8 +1762,8 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         #endregion
 
         #region GetTitle
-        private const string SERVICE_GET_TITLE_HTML = "/calls/html/HTMLGetTitle";
-        private const string SERVICE_GET_TITLE_URL = "/calls/url/URLGetTitle";
+        private const string SERVICE_GET_TITLE_HTML = "/html/HTMLGetTitle";
+        private const string SERVICE_GET_TITLE_URL = "/url/URLGetTitle";
 
         /// <summary>
         /// On get title delegate.
@@ -1865,9 +1865,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         #endregion
 
         #region Combined Call
-        private const string SERVICE_COMBINED_CALL_HTML = "/calls/html/HTMLGetCombinedData";
-        private const string SERVICE_COMBINED_CALL_URL = "/calls/url/URLGetCombinedData";
-        private const string SERVICE_COMBINED_CALL_TEXT = "/calls/text/TextGetCombinedData";
+        private const string SERVICE_COMBINED_CALL_HTML = "/html/HTMLGetCombinedData";
+        private const string SERVICE_COMBINED_CALL_URL = "/url/URLGetCombinedData";
+        private const string SERVICE_COMBINED_CALL_TEXT = "/text/TextGetCombinedData";
 
         /// <summary>
         /// On get combined data delegate.
