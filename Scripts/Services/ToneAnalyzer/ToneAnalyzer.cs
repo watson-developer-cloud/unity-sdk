@@ -27,8 +27,8 @@ using FullSerializer;
 
 namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
 {
-    public class ToneAnalyzer : IWatsonService {
-
+    public class ToneAnalyzer : IWatsonService 
+    {
         #region Private Data
         private const string SERVICE_ID = "ToneAnalyzerV3";
         private static fsSerializer sm_Serializer = new fsSerializer();

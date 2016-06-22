@@ -19,6 +19,7 @@ Use this SDK to build Watson-powered applications in Unity. It comes with a set 
   * [Conversation](#conversation)
   * [Visual Recognition](#visual-recognition)
   * [Alchemy Language](#alchemy-language)
+  * [Personality Insights](#personality-insights)
 * [Developing a basic application in one minute](#developing-a-basic-application-in-one-minute)
 * [Documentation](#documentation)
 * [License](#license)
@@ -713,6 +714,70 @@ private void OnRecognizeText(TextRecogTopLevelMultiple multipleImages)
     }
 }
 ```
+### Personality Insights
+The IBM Watson™ [Personality Insights][personality_insights] service enables applications to derive insights from social media, enterprise data, or other digital communications. The service uses linguistic analytics to infer individuals' intrinsic personality characteristics, including Big Five, Needs, and Values, from digital communications such as email, text messages, tweets, and forum posts. The service can automatically infer, from potentially noisy social media, portraits of individuals that reflect their personality characteristics. 
+
+```cs
+PersonalityInsights m_personalityInsights = new PersonalityInsights();
+
+void Start () {
+	string dataPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/personalityInsights.json";
+	
+	if(!m_personalityInsights.GetProfile(OnGetProfile, dataPath, DataModels.ContentType.TEXT_PLAIN, DataModels.Language.ENGLISH))
+            Log.Debug("ExamplePersonalityInsights", "Failed to get profile!");
+}
+
+private void OnGetProfile(DataModels.Profile profile, string data)
+{
+    Log.Debug("ExamplePersonalityInsights", "data: {0}", data);
+    if(profile != null)
+    {
+        if(!string.IsNullOrEmpty(profile.id))
+            Log.Debug("ExamplePersonalityInsights", "id: {0}", profile.id);
+        if(!string.IsNullOrEmpty(profile.source))
+            Log.Debug("ExamplePersonalityInsights", "source: {0}", profile.source);
+        if(!string.IsNullOrEmpty(profile.processed_lang))
+            Log.Debug("ExamplePersonalityInsights", "proccessed_lang: {0}", profile.processed_lang);
+        if(!string.IsNullOrEmpty(profile.word_count))
+            Log.Debug("ExamplePersonalityInsights", "word_count: {0}", profile.word_count);
+        if(!string.IsNullOrEmpty(profile.word_count_message))
+            Log.Debug("ExamplePersonalityInsights", "word_count_message: {0}", profile.word_count_message);
+
+        if(profile.tree != null)
+        {
+            LogTraitTree(profile.tree);
+        }
+    }
+    else
+    {
+        Log.Debug("ExamplePersonalityInsights", "Failed to get profile!");
+    }
+}
+
+private void LogTraitTree(DataModels.TraitTreeNode traitTreeNode)
+{
+    if(!string.IsNullOrEmpty(traitTreeNode.id))
+        Log.Debug("ExamplePersonalityInsights", "id: {0}", traitTreeNode.id);
+    if(!string.IsNullOrEmpty(traitTreeNode.name))
+        Log.Debug("ExamplePersonalityInsights", "name: {0}", traitTreeNode.name);
+    if(!string.IsNullOrEmpty(traitTreeNode.category))
+        Log.Debug("ExamplePersonalityInsights", "category: {0}", traitTreeNode.category);
+    if(!string.IsNullOrEmpty(traitTreeNode.percentage))
+        Log.Debug("ExamplePersonalityInsights", "percentage: {0}", traitTreeNode.percentage);
+    if(!string.IsNullOrEmpty(traitTreeNode.sampling_error))
+        Log.Debug("ExamplePersonalityInsights", "sampling_error: {0}", traitTreeNode.sampling_error);
+    if(!string.IsNullOrEmpty(traitTreeNode.raw_score))
+        Log.Debug("ExamplePersonalityInsights", "raw_score: {0}", traitTreeNode.raw_score);
+    if(!string.IsNullOrEmpty(traitTreeNode.raw_sampling_error))
+        Log.Debug("ExamplePersonalityInsights", "raw_sampling_error: {0}", traitTreeNode.raw_sampling_error);
+    if(traitTreeNode.children != null && traitTreeNode.children.Length > 0)
+        foreach(DataModels.TraitTreeNode childNode in traitTreeNode.children)
+            LogTraitTree(childNode);
+}
+```
+
+
+
 
 ### Alchemy Language
 Use the [Alchemy Language][alchemy_language] service to extract semantic meta-data from content such as information on people, places, companies, topics, facts, relationships, authors and languages. Instead of credentials, the Alchemy API Key ("ALCHEMY\_API\_KEY") must be set as a variable in the Advanced Mode of the Config Editor (**Watson -> Configuration Editor**). The ServiceID (AlchemyLanguageV1) and endpoint URL (https://gateway-a.watsonplatform.net) must also be added manually.
@@ -1346,3 +1411,4 @@ See [CONTRIBUTING.md](.github/CONTRIBUTING.md).
 [tradeoff_analytics]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/tradeoff-analytics/
 [conversation]:http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/conversation/
 [visual_recognition]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/visual-recognition/api/v3/
+[personality_insights]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/personality-insights/api/v2/
