@@ -1,0 +1,833 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"  lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<meta name="generator" content="MediaWiki 1.13.2" />
+		<meta name="keywords" content="hcard,hcard,IRC,adr,buttons,date-pattern,geo,geo-brainstorming,h-card,hCard-to-do,hReview" />
+		<link rel="shortcut icon" href="/favicon.ico" />
+		<link rel="search" type="application/opensearchdescription+xml" href="/wiki/opensearch_desc.php" title="Microformats Wiki (en)" />
+		<link rel="alternate" type="application/rss+xml" title="Microformats Wiki RSS Feed" href="http://microformats.org/wiki/index.php?title=Special:RecentChanges&amp;feed=rss" />
+		<link rel="alternate" type="application/atom+xml" title="Microformats Wiki Atom Feed" href="http://microformats.org/wiki/index.php?title=Special:RecentChanges&amp;feed=atom" />
+	<link rel="stylesheet" type="text/css" href="/wiki/skins/common/shared.css" />
+	<link rel="stylesheet" type="text/css" href="/wiki/skins/Microformats/microformats.css"/>
+
+	<style type="text/css">/*<![CDATA[*/
+@import "/wiki/index.php?title=MediaWiki:Common.css&usemsgcache=yes&action=raw&ctype=text/css&smaxage=18000";
+@import "/wiki/index.php?title=MediaWiki:Microformats_Wiki.css&usemsgcache=yes&action=raw&ctype=text/css&smaxage=18000";
+@import "/wiki/index.php?title=-&action=raw&gen=css&maxage=18000&useskin=Microformats+Wiki";
+/*]]>*/</style>
+<script type= "text/javascript">/*<![CDATA[*/
+var skin = "Microformats Wiki";
+var stylepath = "/wiki/skins";
+var wgArticlePath = "/wiki/$1";
+var wgScriptPath = "/wiki";
+var wgScript = "/wiki/index.php";
+var wgVariantArticlePath = false;
+var wgActionPaths = [];
+var wgServer = "http://microformats.org";
+var wgCanonicalNamespace = "";
+var wgCanonicalSpecialPageName = false;
+var wgNamespaceNumber = 0;
+var wgPageName = "hcard";
+var wgTitle = "hcard";
+var wgAction = "view";
+var wgArticleId = "1002";
+var wgIsArticle = true;
+var wgUserName = null;
+var wgUserGroups = null;
+var wgUserLanguage = "en";
+var wgContentLanguage = "en";
+var wgBreakFrames = false;
+var wgCurRevisionId = "65346";
+var wgVersion = "1.13.2";
+var wgEnableAPI = true;
+var wgEnableWriteAPI = false;
+var wgRestrictionEdit = ["sysop"];
+var wgRestrictionMove = ["sysop"];
+/*]]>*/</script>
+
+    <script type="text/javascript" src="/wiki/skins/common/wikibits.js?164"></script>
+    		<script type="text/javascript" src="/wiki/skins/common/ajax.js?164"></script>
+<style type="text/css">/*<![CDATA[*/
+.source-html4strict {line-height: normal;}
+.source-html4strict li {line-height: normal;}
+/**
+ * GeSHi Dynamically Generated Stylesheet
+ * --------------------------------------
+ * Dynamically generated stylesheet for html4strict
+ * CSS class: source-html4strict, CSS id:
+ * GeSHi (C) 2004 - 2007 Nigel McNie, 2007 - 2008 Benny Baumann
+ * (http://qbnz.com/highlighter/ and http://geshi.org/)
+ * --------------------------------------
+ */
+.source-html4strict .de1, .source-html4strict .de2 {font-family: monospace; font-weight: normal; font-style: normal;}
+.source-html4strict .imp {font-weight: bold; color: red;}
+.source-html4strict li, .source-html4strict li.li1 {font-weight: normal;}
+.source-html4strict li.li2 {font-weight: bold;}
+.source-html4strict .kw1 {color: #b1b100;}
+.source-html4strict .kw2 {color: #000000; font-weight: bold;}
+.source-html4strict .kw3 {color: #000066;}
+.source-html4strict .coMULTI {color: #808080; font-style: italic;}
+.source-html4strict .es0 {color: #000099; font-weight: bold;}
+.source-html4strict .br0 {color: #66cc66;}
+.source-html4strict .sy0 {color: #66cc66;}
+.source-html4strict .st0 {color: #ff0000;}
+.source-html4strict .nu0 {color: #cc66cc;}
+.source-html4strict .sc0 {color: #00bbdd;}
+.source-html4strict .sc1 {color: #ddbb00;}
+.source-html4strict .sc2 {color: #009900;}
+.source-html4strict .ln-xtra, .source-html4strict li.ln-xtra, .source-html4strict div.ln-xtra {color: #cc0; background-color: #ffc;}
+
+/*]]>*/
+</style>
+<style type="text/css">/*<![CDATA[*/
+@import "/wiki/index.php?title=MediaWiki:Geshi.css&usemsgcache=yes&action=raw&ctype=text/css&smaxage=18000";
+/*]]>*/
+</style>        <script type="text/javascript" src="/wiki/index.php?title=-&amp;action=raw&amp;gen=js&amp;useskin=Microformats+Wiki"><!-- site js --></script>
+
+	<title>hCard 1.0 &middot; Microformats Wiki</title>
+
+</head>
+	<!-- TODO: Template-dervied body class: spec and draft -->
+<body class="page-hcard specification">
+
+    <div class="header">
+            <a class="logo" href="/wiki/Main_Page">
+                <img src="/wiki/skins/Microformats/images/logo.gif" alt="Microformats Wiki"/>
+            </a>
+
+        <ul class="nav">
+            <li><a href="/" title="Microformats.org Home">Blog</a></li>
+            <li class="active"><span>Wiki</span></li>
+            <li><a href="/discuss" title="Microformats discussion lists">Discuss</a></li>
+        </ul>
+
+        <form action="/wiki/Special:Search" id="search">
+            <fieldset>
+            <label for="search-text">Search</label>
+    	    <input id="search-text" name="search" type="text" title="Search Microformats Wiki [f]" accesskey="f" value="" />
+	        <input type="submit" name="go" class="searchButton" id="searchGoButton"	value="Go" title="Go to a page with this exact name if exists" />
+	        <input type="submit" name="fulltext" class="searchButton" id="mw-searchButton" value="Search" title="Search the pages for this text" />
+	        </fieldset>
+		</form>
+    </div>
+
+    <div class="content hentry">
+
+
+
+	    <h1 class="entry-title">hCard 1.0</h1>
+
+		<p class="sub-title"></p>
+
+								    <!-- TODO: Jump nav -->
+		    <div id="jump-to-nav">Jump to:		        <a href="#sidebar">navigation</a>,
+		        <a href="#search">search</a>
+		    </div>
+
+        <div class="entry-content">
+		<div style="text-indent:2em;font-weight:bold;padding:1em;background:yellow">See latest version: <a href="/wiki/h-card" title="h-card">h-card</a></div>
+<p><span class="vcard"><span class="fn"><a href="/wiki/User:Tantek" title="User:Tantek">Tantek Çelik</a></span> (<span class="role">Editor</span>, <span class="role">Author</span>)</span>, <span class="vcard"><span class="fn"><a href="/wiki/User:Brian" title="User:Brian">Brian Suda</a></span> (<span class="role">Author</span>)</span>
+</p>
+<hr />
+<p><dfn style="font-style:normal;font-weight:bold">hCard</dfn> is a simple, open format for publishing people, companies, organizations on the web, using a 1:1 representation of vCard (<a href="/wiki/rfc-2426" title="rfc-2426">RFC2426</a>) properties and values in HTML. hCard is one of several open <a href="/wiki/microformats" title="microformats">microformat</a> standards suitable for embedding data in HTML/HTML5, and Atom/RSS/XHTML or other XML.
+</p><p>Translations: <a href="/wiki/hcard-fr" title="hcard-fr"><span lang="fr">Français</span></a> • <a href="/wiki/hcard-ja" title="hcard-ja"><span lang="ja">日本語</span></a> • <a href="/wiki/hcard-ru" title="hcard-ru"><span lang="ru">Русский</span></a> • <a href="/wiki/hcard-th" title="hcard-th"><span lang="th">ภาษาไทย</span></a> • <a href="/wiki/hcard-zh" title="hcard-zh"><span lang="zh">漢語</span></a> • <span style="font-size:.8em">(<a href="/wiki/how-to-start-new-translation" class="mw-redirect" title="how-to-start-new-translation">Add your language</a>)</span><br />
+<a href="/wiki/hcard#Copyright" title="hcard">Copyright</a> and <a href="/wiki/hcard#Patents" title="hcard">patents</a> statements apply. See <a href="/wiki/hcard#Inspiration_and_Acknowledgments" title="hcard">acknowledgments</a>.
+</p>
+<a name="Example"></a><h2> <span class="mw-headline"> Example </span></h2>
+<p>hCards are most often used to represent people:
+</p>
+<div dir="ltr" style="text-align: left;"><pre class="source-html4strict"><span class="sc2"><span class="kw2">&lt;div</span> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;vcard&quot;</span><span class="kw2">&gt;</span></span>
+ <span class="sc2"><span class="kw2">&lt;a</span> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;url fn&quot;</span> <span class="kw3">href</span><span class="sy0">=</span><span class="st0">&quot;http://tantek.com/&quot;</span><span class="kw2">&gt;</span></span>Tantek Çelik<span class="sc2"><span class="kw2">&lt;/a&gt;</span></span>
+<span class="sc2"><span class="kw2">&lt;/div&gt;</span></span></pre></div>
+<p>and organizations:
+</p>
+<div dir="ltr" style="text-align: left;"><pre class="source-html4strict"><span class="sc2"><span class="kw2">&lt;div</span> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;vcard&quot;</span><span class="kw2">&gt;</span></span>
+ <span class="sc2"><span class="kw2">&lt;a</span> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;url fn org&quot;</span> <span class="kw3">href</span><span class="sy0">=</span><span class="st0">&quot;http://microformats.org/&quot;</span><span class="kw2">&gt;</span></span>microformats.org<span class="sc2"><span class="kw2">&lt;/a&gt;</span></span>
+<span class="sc2"><span class="kw2">&lt;/div&gt;</span></span></pre></div>
+<div style="float:right;background:rgb(248, 247, 236); border:2px solid rgb(225, 229, 186); margin-left:2em" class="box">
+<a name="Get_started"></a><h3> <span class="mw-headline"> Get started </span></h3>
+<p><img src="http://microformats.org/wiki/skins/Microformats/images/bullet.gif" alt="bullet.gif" /> Create a <a href="http://microformats.org/code/hcard/creator" class="external text" title="http://microformats.org/code/hcard/creator" rel="nofollow">new hCard</a><br />
+<img src="http://microformats.org/wiki/skins/Microformats/images/bullet.gif" alt="bullet.gif" /> Learn <a href="/wiki/hcard-authoring" title="hcard-authoring">hCard authoring</a>
+</p>
+</div>
+<p><br />
+The class <b><code>vcard</code></b> is a <i><a href="/wiki/hcard#Root_Class_Name" title="hcard">root class name</a></i> that indicates the presence of an hCard.
+</p><p>The classes <b><code>url</code></b>, <b><code>fn</code></b>, and <b><code>org</code></b> define  <i>properties</i> of the hCard.
+</p>
+<a name="Properties"></a><h2> <span class="mw-headline"> Properties </span></h2>
+<div style="white-space:nowrap;float:left">Common hCard properties (inside class <code><b>vcard</b></code>)
+<ul><li> <code><b>fn</b></code> - name, formatted/full. required
+</li><li> <code><b>n</b></code> - structured name, container for:
+<ul><li> <code><b>honorific-prefix</b></code> - e.g. Ms., Mr., Dr.
+</li><li> <code><b>given-name</b></code> - given (often first) name
+</li><li> <code><b>additional-name</b></code> - other/middle name
+</li><li> <code><b>family-name</b></code> - family (often last) name
+</li><li> <code><b>honorific-suffix</b></code> - e.g. Ph.D., Esq.
+</li></ul>
+</li><li> <code><b>nickname</b></code> - nickname/alias, e.g. <a href="/wiki/IRC" class="mw-redirect" title="IRC">IRC</a> <abbr title="nickname">nick</abbr>
+</li><li> <code><b>org</b></code> - company/organization
+</li><li> <code><b>photo</b></code> - photo, icon, avatar
+</li><li> <code><b>url</b></code> - home page for this contact
+</li><li> <code><b>email</b></code> - email address
+</li><li> <code><b>tel</b></code> - <a href="/wiki/phone_number" class="mw-redirect" title="phone number">telephone number</a>
+</li><li> <code><b><a href="/wiki/adr" title="adr">adr</a></b></code> - structured address, container for:
+<ul><li> <code><b>street-address</b></code> - street <abbr title="number">#</abbr>+name, <abbr title="apartment">apt</abbr>/<abbr title="suite">ste</abbr>
+</li><li> <code><b>locality</b></code> - city or village
+</li><li> <code><b>region</b></code> - state or province
+</li><li> <code><b>postal-code</b></code> - postal code, e.g. <abbr title="United States">U.S.</abbr> ZIP
+</li><li> <code><b>country-name</b></code> - country name
+</li></ul>
+</li><li> <code><b>bday</b></code> - birthday. <a href="/wiki/date-pattern" class="mw-redirect" title="date-pattern">ISO date</a>.
+</li><li> <code><b>category</b></code> - for tagging contacts
+</li><li> <code><b>note</b></code> - notes about the contact
+</li></ul>
+</div>
+<div style="margin-top:-.4em; float:left;"><span style="display:none">Example hCard of common properties:</span>
+<ul style="list-style:none"><li><code>&lt;div class="<b>vcard</b>"&gt;</code>
+<ul style="list-style:none; margin-top:-.02em">
+<li><code>&lt;span class="<b>fn</b>"&gt;Sally Ride&lt;/span&gt;</code></li>
+<li><code>(&lt;span class="<b>n</b>"&gt;</code><ul style="list-style:none">
+<li><code>&lt;span class="<b>honorific-prefix</b>"&gt;Dr.&lt;/span&gt;</code></li>
+<li><code>&lt;span class="<b>given-name</b>"&gt;Sally&lt;/span&gt;</code></li>
+<li><code>&lt;abbr class="<b>additional-name</b>"&gt;K.&lt;/abbr&gt;</code></li>
+<li><code>&lt;span class="<b>family-name</b>"&gt;Ride&lt;/span&gt;</code></li>
+<li><code>&lt;span class="<b>honorific-suffix</b>"&gt;Ph.D.&lt;/span&gt;&lt;/span&gt;),</code></li></ul></li>
+<li><code>&lt;span class="<b>nickname</b>"&gt;sallykride&lt;/span&gt; (IRC)</code></li>
+<li><code>&lt;div class="<b>org</b>"&gt;Sally Ride Science&lt;/div&gt;</code></li>
+<li><code>&lt;img class="<b>photo</b>" src="http://example.com/sk.jpg"/&gt; </code></li>
+<li><code>&lt;a class="<b>url</b>" href="http://sally.example.com"&gt;w&lt;/a&gt;,</code></li>
+<li><code>&lt;a class="<b>email</b>" href="mailto:sally@example.com"&gt;e&lt;/a&gt; </code></li>
+<li><code>&lt;div class="<b>tel</b>"&gt;+1.818.555.1212&lt;/div&gt;</code></li>
+<li><code>&lt;div class="<b>adr</b>"&gt;</code><ul style="list-style:none">
+<li><code>&lt;div class="<b>street-address</b>"&gt;123 Main st.&lt;/div&gt;</code></li>
+<li><code>&lt;span class="<b>locality</b>"&gt;Los Angeles&lt;/span&gt;, </code></li>
+<li><code>&lt;abbr class="<b>region</b>" title="California"&gt;CA&lt;/abbr&gt;, </code></li>
+<li><code>&lt;span class="<b>postal-code</b>"&gt;91316&lt;/span&gt;</code></li>
+<li><code>&lt;div class="<b>country-name</b>"&gt;U.S.A&lt;/div&gt;&lt;/div&gt;</code></li></ul></li>
+<li><code>&lt;time class="<b>bday</b>"&gt;1951-05-26&lt;/time&gt; birthday</code></li>
+<li><code>&lt;div class="<b>category</b>"&gt;physicist&lt;/div&gt;</code></li>
+<li><code>&lt;div class="<b>note</b>"&gt;1st American woman in space.&lt;/div&gt;</code></li></ul></li>
+<li><code>&lt;/div&gt;</code></li></ul>
+</div>
+<div style="clear:both; padding:1em 0 0.5em 0">See the <a href="/wiki/hcard#Property_List" title="hcard">full list of properties</a> for the complete list.
+</div>
+<table id="toc" class="toc" summary="Contents"><tr><td><div id="toctitle"><h2>Contents</h2></div>
+<ul>
+<li class="toclevel-1"><a href="#Example"><span class="tocnumber">1</span> <span class="toctext">Example</span></a>
+<ul>
+<li class="toclevel-2"><a href="#Get_started"><span class="tocnumber">1.1</span> <span class="toctext">Get started</span></a></li>
+</ul>
+</li>
+<li class="toclevel-1"><a href="#Properties"><span class="tocnumber">2</span> <span class="toctext">Properties</span></a></li>
+<li class="toclevel-1"><a href="#Status"><span class="tocnumber">3</span> <span class="toctext">Status</span></a>
+<ul>
+<li class="toclevel-2"><a href="#Errata_and_Updates"><span class="tocnumber">3.1</span> <span class="toctext">Errata and Updates</span></a></li>
+</ul>
+</li>
+<li class="toclevel-1"><a href="#Background"><span class="tocnumber">4</span> <span class="toctext">Background</span></a></li>
+<li class="toclevel-1"><a href="#Conformance"><span class="tocnumber">5</span> <span class="toctext">Conformance</span></a></li>
+<li class="toclevel-1"><a href="#Format"><span class="tocnumber">6</span> <span class="toctext">Format</span></a>
+<ul>
+<li class="toclevel-2"><a href="#In_General"><span class="tocnumber">6.1</span> <span class="toctext">In General</span></a></li>
+<li class="toclevel-2"><a href="#Root_Class_Name"><span class="tocnumber">6.2</span> <span class="toctext">Root Class Name</span></a></li>
+<li class="toclevel-2"><a href="#Properties_and_Sub-properties"><span class="tocnumber">6.3</span> <span class="toctext">Properties and Sub-properties</span></a></li>
+<li class="toclevel-2"><a href="#Property_List"><span class="tocnumber">6.4</span> <span class="toctext">Property List</span></a></li>
+<li class="toclevel-2"><a href="#Property_Notes"><span class="tocnumber">6.5</span> <span class="toctext">Property Notes</span></a></li>
+<li class="toclevel-2"><a href="#Singular_vs._Plural_Properties"><span class="tocnumber">6.6</span> <span class="toctext">Singular vs. Plural Properties</span></a></li>
+<li class="toclevel-2"><a href="#Human_vs._Machine_readable"><span class="tocnumber">6.7</span> <span class="toctext">Human vs. Machine readable</span></a></li>
+<li class="toclevel-2"><a href="#Value_excerpting"><span class="tocnumber">6.8</span> <span class="toctext">Value excerpting</span></a></li>
+<li class="toclevel-2"><a href="#Property_Exceptions"><span class="tocnumber">6.9</span> <span class="toctext">Property Exceptions</span></a></li>
+<li class="toclevel-2"><a href="#Organization_Contact_Info"><span class="tocnumber">6.10</span> <span class="toctext">Organization Contact Info</span></a></li>
+<li class="toclevel-2"><a href="#Implied_.22N.22_Optimization"><span class="tocnumber">6.11</span> <span class="toctext">Implied "N" Optimization</span></a></li>
+<li class="toclevel-2"><a href="#Implied_.22nickname.22_Optimization"><span class="tocnumber">6.12</span> <span class="toctext">Implied "nickname" Optimization</span></a></li>
+<li class="toclevel-2"><a href="#Implied_.22organization-name.22_Optimization"><span class="tocnumber">6.13</span> <span class="toctext">Implied "organization-name" Optimization</span></a></li>
+<li class="toclevel-2"><a href="#Tags_as_Categories"><span class="tocnumber">6.14</span> <span class="toctext">Tags as Categories</span></a></li>
+<li class="toclevel-2"><a href="#type_subproperty_values"><span class="tocnumber">6.15</span> <span class="toctext">type subproperty values</span></a>
+<ul>
+<li class="toclevel-3"><a href="#type_with_unspecified_value"><span class="tocnumber">6.15.1</span> <span class="toctext">type with unspecified value</span></a></li>
+<li class="toclevel-3"><a href="#adr_tel_email_types"><span class="tocnumber">6.15.2</span> <span class="toctext">adr tel email types</span></a></li>
+</ul>
+</li>
+<li class="toclevel-2"><a href="#Profile"><span class="tocnumber">6.16</span> <span class="toctext">Profile</span></a></li>
+<li class="toclevel-2"><a href="#Parsing_Details"><span class="tocnumber">6.17</span> <span class="toctext">Parsing Details</span></a></li>
+</ul>
+</li>
+<li class="toclevel-1"><a href="#Examples"><span class="tocnumber">7</span> <span class="toctext">Examples</span></a>
+<ul>
+<li class="toclevel-2"><a href="#Sample_vCard"><span class="tocnumber">7.1</span> <span class="toctext">Sample vCard</span></a></li>
+<li class="toclevel-2"><a href="#Live_example"><span class="tocnumber">7.2</span> <span class="toctext">Live example</span></a></li>
+<li class="toclevel-2"><a href="#More_Examples"><span class="tocnumber">7.3</span> <span class="toctext">More Examples</span></a></li>
+</ul>
+</li>
+<li class="toclevel-1"><a href="#Examples_in_the_wild"><span class="tocnumber">8</span> <span class="toctext">Examples in the wild</span></a></li>
+<li class="toclevel-1"><a href="#Implementations"><span class="tocnumber">9</span> <span class="toctext">Implementations</span></a></li>
+<li class="toclevel-1"><a href="#Articles"><span class="tocnumber">10</span> <span class="toctext">Articles</span></a></li>
+<li class="toclevel-1"><a href="#Buttons"><span class="tocnumber">11</span> <span class="toctext">Buttons</span></a></li>
+<li class="toclevel-1"><a href="#Copyright"><span class="tocnumber">12</span> <span class="toctext">Copyright</span></a></li>
+<li class="toclevel-1"><a href="#Patents"><span class="tocnumber">13</span> <span class="toctext">Patents</span></a></li>
+<li class="toclevel-1"><a href="#References"><span class="tocnumber">14</span> <span class="toctext">References</span></a>
+<ul>
+<li class="toclevel-2"><a href="#Normative_References"><span class="tocnumber">14.1</span> <span class="toctext">Normative References</span></a></li>
+<li class="toclevel-2"><a href="#Informative_References"><span class="tocnumber">14.2</span> <span class="toctext">Informative References</span></a>
+<ul>
+<li class="toclevel-3"><a href="#Specifications_That_Use_hCard"><span class="tocnumber">14.2.1</span> <span class="toctext">Specifications That Use hCard</span></a></li>
+<li class="toclevel-3"><a href="#Similar_Work"><span class="tocnumber">14.2.2</span> <span class="toctext">Similar Work</span></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toclevel-1"><a href="#Inspiration_and_Acknowledgments"><span class="tocnumber">15</span> <span class="toctext">Inspiration and Acknowledgments</span></a></li>
+<li class="toclevel-1"><a href="#Notes_on_derivation_from_vCard"><span class="tocnumber">16</span> <span class="toctext">Notes on derivation from vCard</span></a>
+<ul>
+<li class="toclevel-2"><a href="#More_Semantic_Equivalents"><span class="tocnumber">16.1</span> <span class="toctext">More Semantic Equivalents</span></a></li>
+<li class="toclevel-2"><a href="#Singular_and_Plural_derivations"><span class="tocnumber">16.2</span> <span class="toctext">Singular and Plural derivations</span></a>
+<ul>
+<li class="toclevel-3"><a href="#Plural_Properties_Singularized"><span class="tocnumber">16.2.1</span> <span class="toctext">Plural Properties Singularized</span></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toclevel-1"><a href="#Related_Pages"><span class="tocnumber">17</span> <span class="toctext">Related Pages</span></a></li>
+<li class="toclevel-1"><a href="#Translations"><span class="tocnumber">18</span> <span class="toctext">Translations</span></a></li>
+</ul>
+</td></tr></table><script type="text/javascript"> if (window.showTocToggle) { var tocShowText = "show"; var tocHideText = "hide"; showTocToggle(); } </script>
+<p><br />
+</p>
+<a name="Status"></a><h2> <span class="mw-headline"> Status </span></h2>
+<p>hCard 1.0 is a microformats.org specification. Public discussion on hCard takes place on <a href="/wiki/hcard-feedback" title="hcard-feedback">hcard-feedback</a>, the #microformats <a href="/wiki/irc" title="irc">irc</a> channel on irc.freenode.net, and <a href="http://microformats.org/discuss/mail/microformats-discuss/" class="external text" title="http://microformats.org/discuss/mail/microformats-discuss/" rel="nofollow">microformats-discuss mailing list</a>.
+</p>
+<a name="Errata_and_Updates"></a><h3> <span class="mw-headline"> Errata and Updates </span></h3>
+<p>Known errors and issues in this specification are corrected in <a href="/wiki/hcard-issues-resolved" title="hcard-issues-resolved">resolved</a> and <a href="/wiki/hcard-issues-closed" title="hcard-issues-closed">closed</a> issues. Please check there before reporting <a href="/wiki/hcard-issues" title="hcard-issues">issues</a>.
+</p><p>The hCard 1.0.1 update is currently under development and incorporates known errata corrections as well as the <a href="/wiki/value-class-pattern" title="value-class-pattern">value-class-pattern</a>.
+</p>
+<a name="Background"></a><h2> <span class="mw-headline"> Background </span></h2>
+<p>The vCard standard (<a href="/wiki/rfc-2426" title="rfc-2426">RFC2426</a>), has been broadly interoperably implemented (e.g. Apple's "Address Book" application built into MacOSX).
+</p><p>In addition, many bloggers identify themselves by name and discuss their friends and family.  With just a tad bit of structure, bloggers can discuss people in their blog(s) in such a way that spiders and other aggregators can retrieve this information, automatically convert them to vCards, and use them in any vCard application or service.
+</p><p>This specification introduces the <b>hCard</b> format, which uses a 1:1 representation of the properties and values of the aforementioned vCard standard, in semantic HTML.  Bloggers can both embed hCards directly in their web pages, and style them with CSS to make them appear as desired.  In addition, hCard enables applications to retrieve information directly from web pages without having to reference a separate file.
+</p><p>Use the <a href="http://microformats.org/code/hcard/creator" class="external text" title="http://microformats.org/code/hcard/creator" rel="nofollow">hCard creator</a> and copy the HTML code it generates to your blog or website to publish your contact info.
+</p>
+<a name="Conformance"></a><h2> <span class="mw-headline"> Conformance </span></h2>
+<p>The key words "<em title="MUST in &#82;FC 2119 context" style="text-transform: lowercase; font-style: italic;" class="&#82;FC2119">MUST</em>", "<em title="MUST NOT in &#82;FC 2119 context" style="text-transform: lowercase; font-style: italic;" class="&#82;FC2119">MUST NOT</em>", "<em title="REQUIRED in &#82;FC 2119 context" style="text-transform: lowercase; font-style: italic;" class="&#82;FC2119">REQUIRED</em>", "<em title="SHALL in &#82;FC 2119 context" style="text-transform: lowercase; font-style: italic;" class="&#82;FC2119">SHALL</em>", "<em title="SHALL NOT in &#82;FC 2119 context" style="text-transform: lowercase; font-style: italic;" class="&#82;FC2119">SHALL NOT</em>", "<em title="SHOULD in &#82;FC 2119 context" style="text-transform: lowercase; font-style: italic;" class="&#82;FC2119">SHOULD</em>", "<em title="SHOULD NOT in &#82;FC 2119 context" style="text-transform: lowercase; font-style: italic;" class="&#82;FC2119">SHOULD NOT</em>", "<em title="RECOMMENDED in &#82;FC 2119 context" style="text-transform: lowercase; font-style: italic;" class="&#82;FC2119">RECOMMENDED</em>", "<em title="MAY in &#82;FC 2119 context" style="text-transform: lowercase; font-style: italic;" class="&#82;FC2119">MAY</em>", and "<em title="OPTIONAL in &#82;FC 2119 context" style="text-transform: lowercase; font-style: italic;" class="&#82;FC2119">OPTIONAL</em>" in this document are to be interpreted as described in <a href="/wiki/rfc-2119" title="rfc-2119">RFC 2119</a>.
+</p>
+<a name="Format"></a><h2> <span class="mw-headline"> Format </span></h2>
+<a name="In_General"></a><h3> <span class="mw-headline"> In General </span></h3>
+<p>The vCard standard (<a href="/wiki/rfc-2426" title="rfc-2426">RFC2426</a>) forms the basis of hCard.
+</p><p>The basic format of hCard is to use vCard object/property names in lower-case for class names, and to map the nesting of vCard objects directly into nested HTML elements.
+</p>
+<a name="Root_Class_Name"></a><h3> <span class="mw-headline"> Root Class Name </span></h3>
+<p>The root class name for an hCard is "vcard".  An element with a class name of "vcard" is itself called an <i>hCard</i>.
+</p>
+<a name="Properties_and_Sub-properties"></a><h3> <span class="mw-headline"> Properties and Sub-properties </span></h3>
+<p>The properties of an hCard are represented by elements inside the hCard.  Elements with class names of the listed properties represent the values of those properties.  Some properties have sub-properties, and those are represented by elements inside the elements for properties.
+</p>
+<a name="Property_List"></a><h3> <span class="mw-headline"> Property List </span></h3>
+<p>hCard properties (sub-properties in parentheses like this)
+</p><p><b>Required:</b>
+</p>
+<ul><li> <b>fn</b>
+</li><li> <span id="property-list-n"><b>n</b><sup style="font-size:smaller"><a href="#note1" title="">1</a></sup></span>
+<ul><li> family-name
+</li><li> given-name
+</li><li> additional-name
+</li><li> honorific-prefix
+</li><li> honorific-suffix
+</li></ul>
+</li></ul>
+<p>Optional:
+</p>
+<ul><li> <a href="/wiki/adr" title="adr">adr</a>
+<ul><li> post-office-box
+</li><li> extended-address
+</li><li> street-address
+</li><li> locality
+</li><li> region
+</li><li> postal-code
+</li><li> country-name
+</li><li> type
+</li><li> value
+</li></ul>
+</li><li> agent
+</li><li> bday
+</li><li> category
+</li><li> class
+</li><li> email (type, value)
+</li><li> geo
+<ul><li> latitude
+</li><li> longitude
+</li></ul>
+</li><li> key
+</li><li> label
+</li><li> logo
+</li><li> mailer
+</li><li> nickname
+</li><li> note
+</li><li> org (organization-name, organization-unit)
+</li><li> photo
+</li><li> rev
+</li><li> role
+</li><li> sort-string
+</li><li> sound
+</li><li> <span id="property-list-tel">tel<sup style="font-size:smaller"><a href="#note2" title="">2</a></sup> (type, value)</span>
+</li><li> title
+</li><li> <span id="property-list-tz">tz<sup style="font-size:smaller"><a href="#note3" title="">3</a></sup></span>
+</li><li> uid
+</li><li> url
+</li></ul>
+<a name="Property_Notes"></a><h3> <span class="mw-headline"> Property Notes </span></h3>
+<p><span id="note1"><a href="#property-list-n" title="">1. ^</a></span>: The 'n' property is <em title="OPTIONAL in &#82;FC 2119 context" style="text-transform: lowercase; font-style: italic;" class="&#82;FC2119">OPTIONAL</em> if any <a href="/wiki/hcard#Implied_.22n.22_Optimization" title="hcard">implied 'n' optimization rules</a> are in effect.<br />
+<span id="note2"><a href="#property-list-tel" title="">2. ^</a></span>: tel - Authors <em title="MAY in &#82;FC 2119 context" style="text-transform: lowercase; font-style: italic;" class="&#82;FC2119">MAY</em> follow the <a href="http://en.wikipedia.org/wiki/E.123" class="external text" title="http://en.wikipedia.org/wiki/E.123" rel="nofollow">E.123</a> standard for writing values of telephone numbers. Letter values (e.g. +1-555-FORMATS) <em title="MUST in &#82;FC 2119 context" style="text-transform: lowercase; font-style: italic;" class="&#82;FC2119">MUST</em> be converted to numbers. Use an <code>abbr</code> to display letters and provide a numerical value simultaneously, e.g. <code>&lt;abbr title=&quot;+15553676287&quot;&gt;+1-555-FORMATS&lt;/abbr&gt;</code>.<br />
+<span id="note3"><a href="#property-list-tz" title="">3. ^</a></span>: tz - timezones are indicated with the timezone offset, e.g. <code>PST (&lt;span class="tz"&gt;-08:00&lt;/span&gt;)</code>.
+</p>
+<a name="Singular_vs._Plural_Properties"></a><h3> <span class="mw-headline"> Singular vs. Plural Properties </span></h3>
+<p>Singular properties: 'fn', 'n', 'bday', 'tz', 'geo', 'sort-string', 'uid', 'class', 'rev'.  For properties which are singular, the first descendant element with that class <em title="SHOULD in &#82;FC 2119 context" style="text-transform: lowercase; font-style: italic;" class="&#82;FC2119">SHOULD</em> take effect, any others being ignored.
+</p><p>All other properties <em title="MAY in &#82;FC 2119 context" style="text-transform: lowercase; font-style: italic;" class="&#82;FC2119">MAY</em> be plural. Each class instance of such properties creates a new instance of that property.
+</p>
+<a name="Human_vs._Machine_readable"></a><h3> <span class="mw-headline"> Human vs. Machine readable </span></h3>
+<p>The human visible text contents of an element for a property represents the value of that property, with a few exceptions:
+</p><p>If an <code>&lt;abbr&gt;</code> element is used for a property, then the '<code>title</code>' attribute (if present) of the <code>&lt;abbr&gt;</code> element is the value of the property, instead of the contents of the element, which instead provide a more human presentable version of the value.
+</p><p>If an <code>&lt;a&gt;</code> element is used for one or more properties, it <em title="MUST in &#82;FC 2119 context" style="text-transform: lowercase; font-style: italic;" class="&#82;FC2119">MUST</em> be treated as follows:
+</p>
+<ol><li> For the 'photo' property and any other property that takes a URL as its value, the <code>href="..."</code> attribute provides the property value.
+</li><li> For other properties, the element's content is the value of the property.
+</li></ol>
+<p>If an <code>&lt;img&gt;</code> element is used for one or more properties, it <em title="MUST in &#82;FC 2119 context" style="text-transform: lowercase; font-style: italic;" class="&#82;FC2119">MUST</em> be treated as follows:
+</p>
+<ol><li> For the 'photo' property and any other property that takes a URL as its value, the <code>src="..."</code> attribute provides the property value.
+</li><li> For other properties, the <code>&lt;img&gt;</code> element's '<code>alt</code>' attribute is the value of the property.
+</li></ol>
+<p>If an <code>&lt;object&gt;</code> element is used for one or more properties, it <em title="MUST in &#82;FC 2119 context" style="text-transform: lowercase; font-style: italic;" class="&#82;FC2119">MUST</em> be treated as follows:
+</p>
+<ol><li> For the 'photo' property and any other property that takes a URL as its value, the <code>data="..."</code> attribute provides the property value.
+</li><li> For other properties, the element's content is the value of the property.
+</li></ol>
+<a name="Value_excerpting"></a><h3> <span class="mw-headline"> Value excerpting </span></h3>
+<p>Sometimes only part of an element which is the equivalent for a property is used for the value of the property.  This typically occurs when a property has a subtype, like 'tel'. For this purpose, the special class name "<code>value</code>" is used to excerpt out the subset of the element that is the value of the property. E.g. here is an hCard fragment for marking up a home phone number:<br />
+</p><p>vCard:
+</p>
+<pre>
+TEL;TYPE=HOME:+1.415.555.1212
+</pre>
+<p>hCard:
+</p>
+<div dir="ltr" style="text-align: left;"><pre class="source-html4strict"><span class="sc2"><span class="kw2">&lt;span</span> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;tel&quot;</span><span class="kw2">&gt;</span></span>
+ <span class="sc2"><span class="kw2">&lt;span</span> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;type&quot;</span><span class="kw2">&gt;</span></span>home<span class="sc2"><span class="kw2">&lt;/span&gt;</span></span>:
+ <span class="sc2"><span class="kw2">&lt;span</span> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;value&quot;</span><span class="kw2">&gt;</span></span>+1.415.555.1212<span class="sc2"><span class="kw2">&lt;/span&gt;</span></span>
+<span class="sc2"><span class="kw2">&lt;/span&gt;</span></span></pre></div>
+<p>This hCard fragment could be displayed as:
+</p>
+<div style="border: thin dashed black; width: 95%; padding: .5em 1em;">
+<p><span class="tel">
+<span class="type">home</span>:
+<span class="value">+1.415.555.1212</span>
+</span>
+</p>
+</div>
+<p>You may want to customize/localize the visible punctuation and not want to include it in what machines see. Use multiple class="value" elements which are then concatenated. E.g.
+</p>
+<div dir="ltr" style="text-align: left;"><pre class="source-html4strict"><span class="sc2"><span class="kw2">&lt;span</span> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;tel&quot;</span><span class="kw2">&gt;</span></span>
+ <span class="sc2"><span class="kw2">&lt;span</span> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;type&quot;</span><span class="kw2">&gt;</span></span>home<span class="sc2"><span class="kw2">&lt;/span&gt;</span></span>:
+ <span class="sc2"><span class="kw2">&lt;span</span> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;value&quot;</span><span class="kw2">&gt;</span></span>+1<span class="sc2"><span class="kw2">&lt;/span&gt;</span></span>.<span class="sc2"><span class="kw2">&lt;span</span> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;value&quot;</span><span class="kw2">&gt;</span></span>415<span class="sc2"><span class="kw2">&lt;/span&gt;</span></span>.<span class="sc2"><span class="kw2">&lt;span</span> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;value&quot;</span><span class="kw2">&gt;</span></span>555<span class="sc2"><span class="kw2">&lt;/span&gt;</span></span>.<span class="sc2"><span class="kw2">&lt;span</span> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;value&quot;</span><span class="kw2">&gt;</span></span>1212<span class="sc2"><span class="kw2">&lt;/span&gt;</span></span><span class="sc2"><span class="kw2">&lt;/span&gt;</span></span>
+<span class="sc2"><span class="kw2">&lt;/span&gt;</span></span></pre></div>
+<p>No change in display, but the parsed hCard property value then becomes in vCard:
+</p><p>vCard:
+</p>
+<pre>
+TEL;TYPE=HOME:+14155551212
+</pre>
+<p><br />
+</p>
+<a name="Property_Exceptions"></a><h3> <span class="mw-headline"> Property Exceptions </span></h3>
+<p>vCard has several properties which either do not make sense on, or are already implied within the context of a web page.  This section explains what to (not) do with them.
+</p>
+<ol><li> vCard's <b>NAME</b>, <b>PROFILE</b>, <b>SOURCE</b>, <b>PRODID</b>, <b>VERSION</b> properties are defined in Sections 2.1.2, 2.1.3, 2.1.4, 3.6.3, 3.6.9 of <a href="/wiki/rfc-2426" title="rfc-2426">RFC2426</a>.  Content publishers <em title="MUST NOT in &#82;FC 2119 context" style="text-transform: lowercase; font-style: italic;" class="&#82;FC2119">MUST NOT</em> use these properties in their hCards, and as such, hCard consumers/parsers <em title="MUST in &#82;FC 2119 context" style="text-transform: lowercase; font-style: italic;" class="&#82;FC2119">MUST</em> IGNORE these properties if they are found within an hCard. Instead. hCard to vCard converters <em title="SHOULD in &#82;FC 2119 context" style="text-transform: lowercase; font-style: italic;" class="&#82;FC2119">SHOULD</em> use the title of the page where the hCard is found (e.g. the <code>&lt;title&gt;</code> element in HTML documents) to construct the NAME property, <em title="MAY in &#82;FC 2119 context" style="text-transform: lowercase; font-style: italic;" class="&#82;FC2119">MAY</em> output a PROFILE value of "<code>VCARD</code>" per <a href="/wiki/rfc-2426" title="rfc-2426">RFC2426</a>, <em title="SHOULD in &#82;FC 2119 context" style="text-transform: lowercase; font-style: italic;" class="&#82;FC2119">SHOULD</em> use the URL of the page where the hCard is found to construct the SOURCE property (e.g. perhaps as a parameter to a URL/service that converts hCards to vCards), for an output vCard stream (e.g. a .vcf file). Only services/applications that output actual vCards should write the PRODID property, with the product identifier for said service/application. Similarly, only such services/applications should write the VERSION property, with the value "3.0" (without quotes) per <a href="/wiki/rfc-2426" title="rfc-2426">RFC2426</a> Section 3.6.9.
+</li></ol>
+<a name="Organization_Contact_Info"></a><h3> <span class="mw-headline"> Organization Contact Info </span></h3>
+<p>If the "FN" and "ORG" (organization) properties have the exact same value (typically because they are set on the same element, e.g. class="fn org"), then the hCard represents contact information for a company, organization or place and <em title="SHOULD in &#82;FC 2119 context" style="text-transform: lowercase; font-style: italic;" class="&#82;FC2119">SHOULD</em> be treated as such. In this case the author also <em title="MUST NOT in &#82;FC 2119 context" style="text-transform: lowercase; font-style: italic;" class="&#82;FC2119">MUST NOT</em> set the "N" property, or set it (and any sub-properties) explicitly to the empty string "". Thus parsers <em title="SHOULD in &#82;FC 2119 context" style="text-transform: lowercase; font-style: italic;" class="&#82;FC2119">SHOULD</em> handle the missing "N" property, in this case by implying empty values for all the "N" sub-properties.
+</p>
+<a name="Implied_.22N.22_Optimization"></a><h3> <span class="mw-headline"> Implied "N" Optimization </span></h3>
+<p>Although vCard requires that the "N" property be present, the authors of the vCard specification (<a href="/wiki/rfc-2426" title="rfc-2426">RFC2426</a>) themselves do not include "N" properties in their vCards near the end of the spec (p.38).  This apparent contradiction can be resolved by simply allowing the "FN" property to imply "N" property values in typical cases provided in the spec. We do so explicitly in hCard.
+</p><p>If "FN" and "ORG" are not the same (see previous section), and the value of the "FN" property is exactly two words (separated by whitespace), and there is no explicit "N" property, then the "N" property is inferred from the "FN" property.  For "FN"s with either one word see below, and for three or more, the author <em title="MUST in &#82;FC 2119 context" style="text-transform: lowercase; font-style: italic;" class="&#82;FC2119">MUST</em> explicitly markup the "N", except for the organization contact info case, <a href="http://microformats.org/wiki/hcard#Organization_Contact_Info" class="external text" title="http://microformats.org/wiki/hcard#Organization_Contact_Info" rel="nofollow">see above</a> for that.
+</p>
+<ol><li> The content of "FN" is broken into two "words" separated by whitespace.
+</li><li> The <i>first</i> word of the "FN" is interpreted as the "given-name" for the "N" property.
+</li><li> The <i>second/last</i> word of the "FN" is interpreted as the "family-name" for the "N" property.
+</li><li> Exception: If the first word ends in a "," comma, then the first word (minus the comma at the end) is interpreted as the "family-name" and the second word is interpreted as the "given-name".
+</li></ol>
+<p>This allows simplification in the typical case of people stating:
+</p>
+<ul><li> given-name (space) family-name
+</li><li> family-name (comma) given-name
+</li></ul>
+<a name="Implied_.22nickname.22_Optimization"></a><h3> <span class="mw-headline"> Implied "nickname" Optimization </span></h3>
+<p>Due to the prevalence of the use of nicknames/handles/usernames in actual content published on the Web (e.g. authors of <a href="/wiki/hReview" class="mw-redirect" title="hReview">reviews</a>), hCard also has an implied "nickname" optimization to handle this.
+</p><p>Similar to the implied "n" optimization, if "FN" and "ORG" are not the same, and the value of the "FN" property is exactly one word, and there is no explicit "N" property, then:
+</p>
+<ol><li> The content of the "FN" <em title="MUST in &#82;FC 2119 context" style="text-transform: lowercase; font-style: italic;" class="&#82;FC2119">MUST</em> be treated as a "nickname" property value.
+</li><li> Parsers <em title="SHOULD in &#82;FC 2119 context" style="text-transform: lowercase; font-style: italic;" class="&#82;FC2119">SHOULD</em> handle the missing "N" property by implying empty values for all the "N" sub-properties.
+</li></ol>
+<p>Though parsers <em title="MUST in &#82;FC 2119 context" style="text-transform: lowercase; font-style: italic;" class="&#82;FC2119">MUST</em> follow the implied nickname optimization, publishers <em title="SHOULD in &#82;FC 2119 context" style="text-transform: lowercase; font-style: italic;" class="&#82;FC2119">SHOULD</em> explicitly indicate the "nickname" even in this case, e.g.:
+</p>
+<div dir="ltr" style="text-align: left;"><pre class="source-html4strict"><span class="sc2"><span class="kw2">&lt;span</span> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;vcard&quot;</span><span class="kw2">&gt;</span></span>
+ <span class="sc2"><span class="kw2">&lt;span</span> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;fn nickname&quot;</span><span class="kw2">&gt;</span></span>daveman692<span class="sc2"><span class="kw2">&lt;/span&gt;</span></span>
+<span class="sc2"><span class="kw2">&lt;/span&gt;</span></span></pre></div>
+<p>The hCard <em title="MAY in &#82;FC 2119 context" style="text-transform: lowercase; font-style: italic;" class="&#82;FC2119">MAY</em> have additional explicit "nickname" property values in addition to the implied nickname.
+</p>
+<a name="Implied_.22organization-name.22_Optimization"></a><h3> <span class="mw-headline"> Implied "organization-name" Optimization </span></h3>
+<p>The "ORG" property has two subproperties, organization-name and organization-unit. Very often authors only publish the organization-name.  Thus if an "ORG" property has no "organization-name" inside it, then its entire contents <em title="MUST in &#82;FC 2119 context" style="text-transform: lowercase; font-style: italic;" class="&#82;FC2119">MUST</em> be treated as the "organization-name".
+</p>
+<a name="Tags_as_Categories"></a><h3> <span class="mw-headline"> Tags as Categories </span></h3>
+<p>Categories in hCard <em title="MAY in &#82;FC 2119 context" style="text-transform: lowercase; font-style: italic;" class="&#82;FC2119">MAY</em> be represented by tags with <a href="/wiki/rel-tag" title="rel-tag">rel-tag</a>. When a category property is a rel-tag, the tag (as defined by rel-tag) is used for that category.
+</p>
+<a name="type_subproperty_values"></a><h3> <span class="mw-headline"> type subproperty values </span></h3>
+<p>The 'type' subproperty in particular takes different values depending on which property it is a subproperty of.  These 'type' subproperty values are case-INSENSITIVE, meaning "Home" is the same as "home", as well as multivalued, e.g. a tel can be home and preferred:
+</p><p>vCard:
+</p>
+<pre>
+TEL;TYPE=HOME,PREF:+1.415.555.1212
+</pre>
+<p>hCard:
+</p>
+<div dir="ltr" style="text-align: left;"><pre class="source-html4strict"><span class="sc2"><span class="kw2">&lt;span</span> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;tel&quot;</span><span class="kw2">&gt;</span></span><span class="sc2"><span class="kw2">&lt;span</span> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;type&quot;</span><span class="kw2">&gt;</span></span>Home<span class="sc2"><span class="kw2">&lt;/span&gt;</span></span> (<span class="sc2"><span class="kw2">&lt;span</span> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;type&quot;</span><span class="kw2">&gt;</span></span>pref<span class="sc2"><span class="kw2">&lt;/span&gt;</span></span>erred):
+ <span class="sc2"><span class="kw2">&lt;span</span> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;value&quot;</span><span class="kw2">&gt;</span></span>+1.415.555.1212<span class="sc2"><span class="kw2">&lt;/span&gt;</span></span>
+<span class="sc2"><span class="kw2">&lt;/span&gt;</span></span></pre></div>
+<p>This could be displayed as:
+</p>
+<div style="border: thin dashed black; width: 95%; padding: .5em 1em;">
+<p><span class="tel"><span class="type">Home</span> (<span class="type">pref</span>erred):
+<span class="value">+1.415.555.1212</span>
+</span>
+</p>
+</div>
+<a name="type_with_unspecified_value"></a><h4> <span class="mw-headline"> type with unspecified value </span></h4>
+<p>When the type of a property is specified, and there is no explicit value specified, then everything in the property except for the type is considered the value of the property. E.g.
+</p>
+<div dir="ltr" style="text-align: left;"><pre class="source-html4strict"><span class="sc2"><span class="kw2">&lt;span</span> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;tel&quot;</span><span class="kw2">&gt;</span></span><span class="sc2"><span class="kw2">&lt;span</span> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;type&quot;</span><span class="kw2">&gt;</span></span>Home<span class="sc2"><span class="kw2">&lt;/span&gt;</span></span> +1.415.555.1212<span class="sc2"><span class="kw2">&lt;/span&gt;</span></span></pre></div>
+<p>is equivalent to:
+</p>
+<div dir="ltr" style="text-align: left;"><pre class="source-html4strict"><span class="sc2"><span class="kw2">&lt;span</span> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;tel&quot;</span><span class="kw2">&gt;</span></span><span class="sc2"><span class="kw2">&lt;span</span> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;type&quot;</span><span class="kw2">&gt;</span></span>Home<span class="sc2"><span class="kw2">&lt;/span&gt;</span></span><span class="sc2"><span class="kw2">&lt;span</span> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;value&quot;</span><span class="kw2">&gt;</span></span> +1.415.555.1212<span class="sc2"><span class="kw2">&lt;/span&gt;</span></span><span class="sc2"><span class="kw2">&lt;/span&gt;</span></span></pre></div>
+<p>And thus the type is "home" and the value is "+1.415.555.1212".
+</p>
+<a name="adr_tel_email_types"></a><h4> <span class="mw-headline"> adr tel email types </span></h4>
+<p>The following lists are <i>informative</i>. See <a href="/wiki/rfc-2426" title="rfc-2426">RFC2426</a> sections 3.2.1 ADR, 3.3.1 TEL, and 3.3.2 EMAIL respectively for normative type values.  They are repeated here for convenience. Default type subproperty value(s) is(are) first in each list and indicated in ALL CAPS.  types may be multivalued.
+</p>
+<ul><li> adr type: INTL, POSTAL, PARCEL, WORK, dom, home, pref
+</li><li> tel type: VOICE, home, msg, work, pref, fax, cell, video, pager, bbs, modem, <a href="http://flickr.com/photos/tags/carcellphone/" class="external text" title="http://flickr.com/photos/tags/carcellphone/" rel="nofollow">car</a>, isdn, pcs
+</li><li> email type: INTERNET, x400, pref
+</li></ul>
+<a name="Profile"></a><h3> <span class="mw-headline"> Profile </span></h3>
+<p>The hCard <span id="XMDP_Profile">XMDP profile</span> is at <a href="http://microformats.org/profile/hcard" class="external free" title="http://microformats.org/profile/hcard" rel="nofollow">http://microformats.org/profile/hcard</a>
+</p><p>Content that uses hCard <em title="SHOULD in &#82;FC 2119 context" style="text-transform: lowercase; font-style: italic;" class="&#82;FC2119">SHOULD</em> reference this profile, e.g.
+</p>
+<div dir="ltr" style="text-align: left;"><pre class="source-html4strict"><span class="sc2"><span class="kw2">&lt;link</span> <span class="kw3">rel</span><span class="sy0">=</span><span class="st0">&quot;profile&quot;</span> <span class="kw3">href</span><span class="sy0">=</span><span class="st0">&quot;http://microformats.org/profile/hcard&quot;</span><span class="kw2">&gt;</span></span></pre></div>
+<p>or
+</p>
+<div dir="ltr" style="text-align: left;"><pre class="source-html4strict">This content uses <span class="sc2"><span class="kw2">&lt;a</span> <span class="kw3">rel</span><span class="sy0">=</span><span class="st0">&quot;profile&quot;</span> <span class="kw3">href</span><span class="sy0">=</span><span class="st0">&quot;http://microformats.org/profile/hcard&quot;</span><span class="kw2">&gt;</span></span>hCard<span class="sc2"><span class="kw2">&lt;/a&gt;</span></span>.</pre></div>
+<p>or
+</p>
+<div dir="ltr" style="text-align: left;"><pre class="source-html4strict"><span class="sc2"><span class="kw2">&lt;head</span> <span class="kw3">profile</span><span class="sy0">=</span><span class="st0">&quot;http://microformats.org/profile/hcard&quot;</span><span class="kw2">&gt;</span></span></pre></div>
+<p>(profile attribute is deprecated in HTML5)
+Content may combine the above methods as well.
+</p>
+<a name="Parsing_Details"></a><h3> <span class="mw-headline"> Parsing Details </span></h3>
+<p>See <a href="/wiki/hcard-parsing" title="hcard-parsing">hCard parsing</a>.
+</p>
+<a name="Examples"></a><h2> <span class="mw-headline"> Examples </span></h2>
+<p>This section is informative.
+</p>
+<a name="Sample_vCard"></a><h3> <span class="mw-headline"> Sample vCard </span></h3>
+<p>Here is a sample vCard:
+</p>
+<pre>
+BEGIN:VCARD
+VERSION:3.0
+N:Çelik;Tantek
+FN:Tantek Çelik
+URL:http://tantek.com/
+END:VCARD
+</pre>
+<p>and an equivalent in hCard with various elements optimized appropriately.  See <a href="/wiki/hcard-example1-steps" title="hcard-example1-steps"> hCard Example 1</a> for the derivation.
+</p>
+<div dir="ltr" style="text-align: left;"><pre class="source-html4strict"><span class="sc2"><span class="kw2">&lt;div</span> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;vcard&quot;</span><span class="kw2">&gt;</span></span>
+ <span class="sc2"><span class="kw2">&lt;a</span> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;url fn&quot;</span> <span class="kw3">href</span><span class="sy0">=</span><span class="st0">&quot;http://tantek.com/&quot;</span><span class="kw2">&gt;</span></span>Tantek Çelik<span class="sc2"><span class="kw2">&lt;/a&gt;</span></span>
+<span class="sc2"><span class="kw2">&lt;/div&gt;</span></span></pre></div>
+<p>This hCard might be displayed as:
+</p>
+<div style="border: thin dashed black; width: 95%; padding: .5em 1em;">
+<p><a href="http://tantek.com/" class="external text" title="http://tantek.com/" rel="nofollow">Tantek Çelik</a>
+</p>
+</div>
+<p>Note: The version information is unnecessary in hCard markup directly since the version will be defined by the profile of hCard that is used/referred to in the 'profile' attribute of the &lt;head&gt; element.
+</p>
+<a name="Live_example"></a><h3> <span class="mw-headline">Live example</span></h3>
+<p>Here is <a href="http://www.commerce.net/" class="external text" title="http://www.commerce.net/" rel="nofollow">Commercenet</a>'s contact details, as a live hCard which will be detected, on this page, by microformat parsing tools:
+</p>
+<div class="vcard">
+<div class="fn org"><b>CommerceNet</b></div>
+<div class="url"><b>http://www.commerce.net/</b></div>
+<div class="adr"><b><span class="type">Work</span>:</b>
+<div class="street-address"><b>169 University Avenue</b></div>
+<p><span class="locality"><b>Palo Alto</b></span>, <span class="region"><b>CA</b></span>&nbsp;&nbsp;<span class="postal-code"><b>94301</b></span>
+</p>
+<div class="country-name"><b>USA</b></div>
+</div>
+<div class="tel"><b><span class="type">Work</span> +1-650-289-4040</b></div>
+<div class="tel"><b><span class="type">Fax</span> +1-650-289-4041</b></div>
+<div><b>Email <span class="email">info@commerce.net</span></b></div>
+</div>
+<p>The mark-up, emboldening omitted for clarity, with the following semantic improvements:
+</p>
+<ul><li> <code>abbr</code> to expand abbreviations
+</li><li> hyperlinking the org name with the url
+</li></ul>
+<div dir="ltr" style="text-align: left;"><pre class="source-html4strict"><span class="sc2"><span class="kw2">&lt;div</span> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;vcard&quot;</span><span class="kw2">&gt;</span></span>
+  <span class="sc2"><span class="kw2">&lt;a</span> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;fn org url&quot;</span> <span class="kw3">href</span><span class="sy0">=</span><span class="st0">&quot;http://www.commerce.net/&quot;</span><span class="kw2">&gt;</span></span>CommerceNet<span class="sc2"><span class="kw2">&lt;/a&gt;</span></span>
+  <span class="sc2"><span class="kw2">&lt;div</span> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;adr&quot;</span><span class="kw2">&gt;</span></span>
+    <span class="sc2"><span class="kw2">&lt;span</span> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;type&quot;</span><span class="kw2">&gt;</span></span>Work<span class="sc2"><span class="kw2">&lt;/span&gt;</span></span>:
+    <span class="sc2"><span class="kw2">&lt;div</span> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;street-address&quot;</span><span class="kw2">&gt;</span></span>169 University Avenue<span class="sc2"><span class="kw2">&lt;/div&gt;</span></span>
+    <span class="sc2"><span class="kw2">&lt;span</span> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;locality&quot;</span><span class="kw2">&gt;</span></span>Palo Alto<span class="sc2"><span class="kw2">&lt;/span&gt;</span></span>,
+    <span class="sc2"><span class="kw2">&lt;abbr</span> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;region&quot;</span> <span class="kw3">title</span><span class="sy0">=</span><span class="st0">&quot;California&quot;</span><span class="kw2">&gt;</span></span>CA<span class="sc2"><span class="kw2">&lt;/abbr&gt;</span></span><span class="sc1">&amp;nbsp;</span><span class="sc1">&amp;nbsp;</span>
+    <span class="sc2"><span class="kw2">&lt;span</span> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;postal-code&quot;</span><span class="kw2">&gt;</span></span>94301<span class="sc2"><span class="kw2">&lt;/span&gt;</span></span>
+    <span class="sc2"><span class="kw2">&lt;div</span> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;country-name&quot;</span><span class="kw2">&gt;</span></span>USA<span class="sc2"><span class="kw2">&lt;/div&gt;</span></span>
+  <span class="sc2"><span class="kw2">&lt;/div&gt;</span></span>
+  <span class="sc2"><span class="kw2">&lt;div</span> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;tel&quot;</span><span class="kw2">&gt;</span></span>
+   <span class="sc2"><span class="kw2">&lt;span</span> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;type&quot;</span><span class="kw2">&gt;</span></span>Work<span class="sc2"><span class="kw2">&lt;/span&gt;</span></span> +1-650-289-4040
+  <span class="sc2"><span class="kw2">&lt;/div&gt;</span></span>
+  <span class="sc2"><span class="kw2">&lt;div</span> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;tel&quot;</span><span class="kw2">&gt;</span></span>
+    <span class="sc2"><span class="kw2">&lt;span</span> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;type&quot;</span><span class="kw2">&gt;</span></span>Fax<span class="sc2"><span class="kw2">&lt;/span&gt;</span></span> +1-650-289-4041
+  <span class="sc2"><span class="kw2">&lt;/div&gt;</span></span>
+  <span class="sc2"><span class="kw2">&lt;div&gt;</span></span>Email:
+   <span class="sc2"><span class="kw2">&lt;span</span> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;email&quot;</span><span class="kw2">&gt;</span></span>info@commerce.net<span class="sc2"><span class="kw2">&lt;/span&gt;</span></span>
+  <span class="sc2"><span class="kw2">&lt;/div&gt;</span></span>
+<span class="sc2"><span class="kw2">&lt;/div&gt;</span></span></pre></div>
+<a name="More_Examples"></a><h3> <span class="mw-headline"> More Examples </span></h3>
+<p>See <a href="/wiki/hcard-examples" title="hcard-examples">hCard examples</a> for more examples, including all examples from vCard <a href="/wiki/rfc-2426" title="rfc-2426">RFC2426</a> converted into hCard.
+</p>
+<a name="Examples_in_the_wild"></a><h2> <span class="mw-headline"> Examples in the wild </span></h2>
+<p>This section is <b>informative</b>. The number of hCard examples in the wild has expanded far beyond the capacity of being kept inline in this specification. They have been moved to a <a href="/wiki/hcard-examples-in-wild" title="hcard-examples-in-wild">separate page</a>.
+</p><p>See <a href="/wiki/hcard-examples-in-wild" title="hcard-examples-in-wild">hCard Examples in the wild</a>.
+</p>
+<a name="Implementations"></a><h2> <span class="mw-headline"> Implementations </span></h2>
+<p>This section is <b>informative</b>. The number of hCard implementations has also expanded beyond the capacity of keeping them inline. They have been moved to a <a href="/wiki/hcard-implementations" title="hcard-implementations">separate page</a>.
+</p><p>See <a href="/wiki/hcard-implementations" title="hcard-implementations">hCard Implementations</a>.
+</p>
+<a name="Articles"></a><h2> <span class="mw-headline"> Articles </span></h2>
+<p>This section is <strong>informative</strong>. For <span id="Further_Reading">further reading</span> on hCard see <a href="/wiki/hcard-articles" title="hcard-articles">hcard-articles</a>.
+</p>
+<a name="Buttons"></a><h2> <span class="mw-headline">Buttons</span></h2>
+<p>You can use these buttons on pages with hCards. See <a href="/wiki/buttons#hCard" title="buttons">buttons#hCard</a> for any recent additions.
+</p>
+<ul><li> <img src="http://www.crowley.nl/images/hcard.png" alt="hcard.png" /> (mirror: <img src="http://www.davidjanes.com/images/mf_hcard.png" alt="mf_hcard.png" />)
+</li><li> <img src="http://rbach.priv.at/2006/buttons/hcard.png" alt="hcard.png" />
+</li><li> <img src="http://www.boogdesign.com/images/buttons/microformat_hcard.png" alt="microformat_hcard.png" />
+</li><li> CSS-powered button, as evidenced at <a href="http://re-run.com/about/microformat-badges" class="external text" title="http://re-run.com/about/microformat-badges" rel="nofollow">microformat badges @ re-run</a>
+</li></ul>
+<a name="Copyright"></a><h2> <span class="mw-headline"> Copyright </span></h2>
+<p>Per the public domain release on the authors' user pages (<a href="/wiki/User:Tantek" title="User:Tantek">Tantek Çelik</a>, <a href="/wiki/User:Brian" title="User:Brian">Brian Suda</a>) this specification is released into the public domain.
+</p><p><strong>Public Domain Contribution Requirement</strong>. Since the author(s) released this work into the public domain, in order to maintain this work's public domain status, all contributors to this page agree to release their contributions to this page to the public domain as well. Contributors may indicate their agreement by adding the <a href="http://microformats.org/wiki/Template:public-domain-release" class="external text" title="http://microformats.org/wiki/Template:public-domain-release" rel="nofollow">public domain release template</a> to their user page per the <a href="http://microformats.org/wiki/Category:public_domain_license" class="external text" title="http://microformats.org/wiki/Category:public_domain_license" rel="nofollow">Voluntary Public Domain Declarations instructions</a>. Unreleased contributions may be reverted/removed.
+</p>
+<a name="Patents"></a><h2> <span class="mw-headline"> Patents </span></h2>
+<p>This specification is subject to a royalty free patent policy, e.g. per the <a href="http://www.w3.org/Consortium/Patent-Policy-20040205/" class="external text" title="http://www.w3.org/Consortium/Patent-Policy-20040205/" rel="nofollow">W3C Patent Policy</a>, and  IETF <a href="http://www.ietf.org/rfc/rfc3667.txt" class="external text" title="http://www.ietf.org/rfc/rfc3667.txt" rel="nofollow">RFC3667</a> &amp; <a href="http://www.ietf.org/rfc/rfc3668.txt" class="external text" title="http://www.ietf.org/rfc/rfc3668.txt" rel="nofollow">RFC3668</a>.
+</p>
+<a name="References"></a><h2> <span class="mw-headline"> References </span></h2>
+<a name="Normative_References"></a><h3> <span class="mw-headline"> Normative References </span></h3>
+<ul><li> <a href="http://www.w3.org/TR/2002/REC-xhtml1-20020801/" class="external text" title="http://www.w3.org/TR/2002/REC-xhtml1-20020801/" rel="nofollow">XHTML 1.0 SE</a>
+</li><li> <a href="http://www.ietf.org/rfc/rfc2426.txt" class="external text" title="http://www.ietf.org/rfc/rfc2426.txt" rel="nofollow">vCard RFC2426</a>
+</li><li> <a href="http://www.itu.int/rec/T-REC-E.123-200102-I/en" class="external text" title="http://www.itu.int/rec/T-REC-E.123-200102-I/en" rel="nofollow">ITU recommendation E.123</a> format of telephone numbers (chargeable document)
+</li><li> <a href="/wiki/rfc-2119" title="rfc-2119">RFC 2119</a>
+</li></ul>
+<a name="Informative_References"></a><h3> <span class="mw-headline"> Informative References </span></h3>
+<p>This section is <b>informative</b>.
+</p>
+<ul><li> <a href="/wiki/hcard-history" title="hcard-history">hCard history</a>
+<ul><li> <a href="http://wiki.oreillynet.com/foocamp04/index.cgi?SimpleSemanticFormats" class="external text" title="http://wiki.oreillynet.com/foocamp04/index.cgi?SimpleSemanticFormats" rel="nofollow">FOO Camp 2004 Simple Semantic Formats presentation, 2004-09-10</a>
+</li><li> <a href="http://tantek.com/log/2004/09.html#hcard" class="external text" title="http://tantek.com/log/2004/09.html#hcard" rel="nofollow">hCard term introduced and defined on the Web, 2004-09-30</a>
+</li><li> Contributed from <a href="http://developers.technorati.com/wiki/hCard" class="external free" title="http://developers.technorati.com/wiki/hCard" rel="nofollow">http://developers.technorati.com/wiki/hCard</a> 2005-06-20
+</li></ul>
+</li><li> <a href="http://www.dante.net/np/ds/osi/9594-6-X.520.A4.ps" class="external text" title="http://www.dante.net/np/ds/osi/9594-6-X.520.A4.ps" rel="nofollow">X.520 in Postscript</a> (<a href="http://72.14.253.104/search?q=cache:FjqzsFu4h20J:www.dante.net/np/ds/osi/9594-6-X.520.A4.ps" class="external text" title="http://72.14.253.104/search?q=cache:FjqzsFu4h20J:www.dante.net/np/ds/osi/9594-6-X.520.A4.ps" rel="nofollow">HTMLization courtesy of Google Cache</a>) - vCard refers to ROLE as being "based on the X.520 Business Category explanatory attribute".
+</li><li> <a href="http://www.w3.org/2002/12/cal/rfc2426" class="external text" title="http://www.w3.org/2002/12/cal/rfc2426" rel="nofollow">HTML reformatted version of RFC2426</a>
+</li><li> <a href="http://w3.org/TR/REC-CSS1" class="external text" title="http://w3.org/TR/REC-CSS1" rel="nofollow">CSS1</a>
+</li><li> <a href="http://www.w3.org/TR/xhtml11" class="external text" title="http://www.w3.org/TR/xhtml11" rel="nofollow">XHTML 1.1</a>
+</li><li> <a href="http://en.wikipedia.org/wiki/E.123" class="external text" title="http://en.wikipedia.org/wiki/E.123" rel="nofollow">Wikipedia summary of ITU-T Recommendation E.123</a> - for "TEL" values.
+</li><li> <a href="http://www.imc.org/pdi/" class="external text" title="http://www.imc.org/pdi/" rel="nofollow">Internet Mail Consortium Personal Data Interchange vCard and vCalendar</a>
+</li><li> <a href="/wiki/iso-8601" title="iso-8601">ISO8601</a>
+</li></ul>
+<a name="Specifications_That_Use_hCard"></a><h4> <span class="mw-headline"> Specifications That Use hCard </span></h4>
+<ul><li> <a href="/wiki/adr" title="adr">adr</a>
+</li><li> <a href="/wiki/geo" title="geo">geo</a>
+</li><li> <a href="/wiki/hcalendar" title="hcalendar">hCalendar</a>
+</li><li> <a href="/wiki/hreview" title="hreview">hReview</a>
+</li></ul>
+<a name="Similar_Work"></a><h4> <span class="mw-headline"> Similar Work </span></h4>
+<p>This section is <b>informative</b>.
+</p>
+<ul><li> <a href="http://www.intertwingly.net/wiki/pie/PaceBetterPersonElement" class="external text" title="http://www.intertwingly.net/wiki/pie/PaceBetterPersonElement" rel="nofollow">Atom PaceBetterPersonElement</a>
+</li><li> <a href="http://www.jabber.org/jeps/jep-0054.html" class="external text" title="http://www.jabber.org/jeps/jep-0054.html" rel="nofollow">JEP-0054: vcard-temp</a>
+</li></ul>
+<a name="Inspiration_and_Acknowledgments"></a><h2> <span class="mw-headline"> Inspiration and Acknowledgments </span></h2>
+<p>This section is <b>informative</b>.
+Thanks to: my good friend <a href="http://vadim.com/" class="external text" title="http://vadim.com/" rel="nofollow">Vadim</a> who introduced me to vCard <i>many</i> years ago, and if I'd only paid more attention then, perhaps I could have helped a lot of people avoid wasting a lot of time reinventing various standards wheels.
+</p>
+<a name="Notes_on_derivation_from_vCard"></a><h2> <span class="mw-headline"> Notes on derivation from vCard </span></h2>
+<p>This section is <i>informative</i>.
+</p>
+<div id="Semantic_XHTML_Design_Principles">See: <a href="/wiki/hcard-design-methodology" title="hcard-design-methodology">hcard-design-methodology</a>.</div>
+<a name="More_Semantic_Equivalents"></a><h3> <span class="mw-headline"> More Semantic Equivalents </span></h3>
+<p>For some properties there are HTML elements which better match and convey their semantics.  The following properties SHOULD be encoded with the following HTML:
+</p>
+<ul><li> <code>URL</code> in vCard becomes  <code>&lt;a class="url" href="..."&gt;...&lt;/a&gt;</code> inside the element with <code>class="vcard"</code> in hCard.
+</li><li> Similarly, <code>EMAIL</code> in vCard becomes <code>&lt;a class=&quot;email&quot; href=&quot;mailto:...&quot;&gt;...&lt;/a&gt;</code>
+</li><li> <code>PHOTO</code> in vCard becomes <code>&lt;img class="photo" src="..." alt="Photo of ..." /&gt;</code> or <code>&lt;object class="photo" data="..." type="..."&gt;Photo of ...&lt;/object&gt;</code>
+</li><li> <code>UID</code> in vCard simply becomes another semantic applied to a specific URL (or EMAIL) for an hCard.
+</li></ul>
+<a name="Singular_and_Plural_derivations"></a><h3> <span class="mw-headline"> Singular and Plural derivations </span></h3>
+<p>The <a href="/wiki/hcard#Singular_vs._Plural_Properties" title="hcard">lists of singular and plural properties</a> have been derived by analyzing the semantics of the individual properties in vCard RFC2426 and determining logically that they MUST be singular per their semantics.  See <a href="/wiki/hcard-singular-properties" title="hcard-singular-properties">hcard-singular-properties</a> for explanations.
+</p>
+<a name="Plural_Properties_Singularized"></a><h4> <span class="mw-headline"> Plural Properties Singularized </span></h4>
+<p>Since plural property names become their singular equivalents, even if the original plural property permitted only a single value with multiple components, those multiple components are represented each with their own singularly named property and the the property is effectively multivalued and subject to the above treatment of multivalued properties.
+</p>
+<a name="Related_Pages"></a><h2> <span class="mw-headline"> Related Pages </span></h2>
+<ul><li> <strong class="selflink">hCard</strong>
+</li><li> <a href="/wiki/hcard-cheatsheet" title="hcard-cheatsheet">hCard cheatsheet</a> - hCard properties
+</li><li> <a href="http://microformats.org/code/hcard/creator" class="external text" title="http://microformats.org/code/hcard/creator" rel="nofollow">hCard creator</a> (<a href="/wiki/hcard-creator-feedback" class="mw-redirect" title="hcard-creator-feedback">feedback</a>) - create your own hCard.
+</li><li> <a href="/wiki/hcard-authoring" title="hcard-authoring">hCard authoring</a> - learn how to add hCard markup to your existing contact info.
+</li><li> <a href="/wiki/hcard-examples" title="hcard-examples">hCard examples</a> - example usage of various classes within hCard.
+</li><li> <a href="/wiki/hcard-examples-in-wild" title="hcard-examples-in-wild">hCard examples in the wild</a> - an on-going list of websites which use hCards.
+</li><li> <a href="/wiki/hcard-supporting-user-profiles" title="hcard-supporting-user-profiles">hcard-supporting-user-profiles</a> - sites with user profiles marked up with hCard - a very common example.
+</li><li> <a href="/wiki/hcard-faq" title="hcard-faq">hCard FAQ</a> - if you have any questions about hCard, check here.
+</li><li> <a href="/wiki/hcard-implementations" title="hcard-implementations">hCard implementations</a> - websites or tools which either generate or parse hCards.
+</li><li> <a href="/wiki/hcard-parsing" title="hcard-parsing">hCard parsing</a> - normative details of how to parse hCards.
+</li><li> <a href="/wiki/hcards-and-pages" title="hcards-and-pages">hCards and pages</a> - semantic distinctions between different hCards on a page, and how to identify each
+</li><li> <a href="/wiki/hcard-user-interface" title="hcard-user-interface">hcard-user-interface</a> - techniques and issues surrounding user-interfaces to author, publish, and display hCards.
+</li><li> <a href="/wiki/hcard-profile" title="hcard-profile">hCard profile</a> - the XMDP profile for hCard
+</li><li> <a href="/wiki/hcard-singular-properties" title="hcard-singular-properties">hCard singular properties</a> - an explanation of the list of singular properties in hCard.
+</li><li> <a href="/wiki/hcard-tests" title="hcard-tests">hCard tests</a> - a wiki page with actual embedded hCards to try parsing.
+</li><li> <a href="/wiki/hcard-advocacy" title="hcard-advocacy">hCard advocacy</a> - encourage others to use hCard
+</li><li> <a href="/wiki/hCard-to-do" class="mw-redirect" title="hCard-to-do">hCard "to do"</a> - jobs to do
+</li></ul>
+<p>The hCard specification is a work in progress. As additional aspects are discussed, understood, and written, they will be added. These thoughts, issues, and questions are kept in separate pages.
+</p>
+<ul><li> <a href="/wiki/hcard-brainstorming" title="hcard-brainstorming">hCard brainstorming</a> - brainstorms and other explorations relating to hCard.
+<ul><li> <a href="/wiki/hcard-parsing-brainstorming" title="hcard-parsing-brainstorming">hcard-parsing-brainstorming</a> - brainstorming specific to parsing of hCard
+</li><li> <a href="/wiki/geo-brainstorming" title="geo-brainstorming">geo brainstorming</a>
+</li></ul>
+</li><li> <a href="/wiki/hcard-feedback" title="hcard-feedback">hCard feedback</a> - general feedback (as opposed to specific issues).
+</li><li> <a href="/wiki/hcard-issues" title="hcard-issues">hCard issues</a> - specific issues with the specification.
+</li><li> <a href="/wiki/vcard-errata" title="vcard-errata">vCard errata</a> - corrections to the vCard specification, which underlies hCard.
+</li><li> <a href="/wiki/vcard-suggestions" title="vcard-suggestions">vCard suggestions</a> - suggested improvements to the vCard specification.
+</li></ul>
+<a name="Translations"></a><h2> <span class="mw-headline"> Translations </span></h2>
+<p>The English version of this specification is the only normative version. Read the hCard specification in additional <span id="languages">languages</span>:
+</p>
+<ul><li> <a href="/wiki/hcard-fr" title="hcard-fr"><span lang="fr">Français</span></a>
+</li><li> <a href="/wiki/hcard-ja" title="hcard-ja"><span lang="ja">日本語</span></a>
+</li><li> <a href="/wiki/hcard-ru" title="hcard-ru"><span lang="ru">Русский</span></a>
+</li><li> <a href="/wiki/hcard-th" title="hcard-th"><span lang="th">ภาษาไทย</span></a>
+</li><li> <a href="/wiki/hcard-zh" title="hcard-zh"><span lang="zh">漢語</span></a>
+</li></ul>
+<p>Help <a href="/wiki/how-to-start-new-translation" class="mw-redirect" title="how-to-start-new-translation">translate hCard into more languages</a>.
+</p>
+<!--
+NewPP limit report
+Preprocessor node count: 417/1000000
+Post-expand include size: 9585/2097152 bytes
+Template argument size: 6/2097152 bytes
+Expensive parser function count: 0/100
+-->
+<div class="printfooter">
+Retrieved from "<a href="http://microformats.org/wiki/hcard">http://microformats.org/wiki/hcard</a>"</div>
+		</div>
+
+			        <h2>Categories</h2>
+		    <div id="category-links">
+		        <ul>
+		        		            <li><a rel="tag" href="/wiki/Category:Specifications">
+		                Specifications		            </a></li>
+		        		            <li><a rel="tag" href="/wiki/Category:hCard">
+		                hCard		            </a></li>
+		        		        </ul>
+		    </div>
+
+                    <div class="last-modified">
+                <a rel="bookmark" class="url uid" href="/wiki/index.php?title=hcard&amp;oldid=65346">hCard 1.0</a>
+                was last modified:
+                                <span class="updated">
+                    <span class="value-title" title="2015-12-11T10:10:00-0800"> </span>
+                    Friday, December 11th, 2015                </span>
+            </div>
+
+        <div id="content-controls">
+    		<h2>Views</h2>
+    		<ul>
+                		    <li id="ca-viewsource"><a href="/wiki/index.php?title=hcard&amp;action=edit" title="This page is protected.&#10;You can view its source. [e]" accesskey="e">View source</a></li>
+                		    <li id="ca-history"><a href="/wiki/index.php?title=hcard&amp;action=history" title="Past versions of this page. [h]" accesskey="h">History</a></li>
+                		</ul>
+    	</div>
+
+	</div>
+
+<div id="sidebar">
+
+
+	<div class="box" id="p-Microformats_Wiki">
+		<h3>Microformats Wiki</h3>
+		<ul class="box-inner">
+			<li id="n-Front-Page"><a href="/wiki/Main_Page">Front Page</a></li>
+			<li id="n-recentchanges"><a href="/wiki/Special:RecentChanges" title="The list of recent changes in the wiki. [r]" accesskey="r">Recent changes</a></li>
+			<li id="n-Events"><a href="/wiki/Microformats_Wiki:Current_events">Events</a></li>
+			<li id="n-help"><a href="/wiki/Help:Contents" title="The place to find out.">Help</a></li>
+		</ul>
+	</div>
+
+
+	<div class="box" id="p-tb">
+		<h3>Toolbox</h3>
+		<ul class="box-inner">
+				<li id="t-whatlinkshere"><a href="/wiki/Special:WhatLinksHere/hcard" title="List of all wiki pages that link here [j]" accesskey="j">What links here</a></li>
+				<li id="t-recentchangeslinked"><a href="/wiki/Special:RecentChangesLinked/hcard" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li>
+<li id="t-specialpages"><a href="/wiki/Special:SpecialPages" title="List of all special pages [q]" accesskey="q">Special pages</a></li>
+				<li id="t-print"><a href="/wiki/index.php?title=hcard&amp;printable=yes" title="Printable version of this page [p]" accesskey="p">Printable version</a></li>				<li id="t-permalink"><a href="/wiki/index.php?title=hcard&amp;oldid=65346" title="Permanent link to this version of the page">Permanent link</a></li>		</ul>
+	</div>
+
+
+
+	<div class="box" id="user-box">
+	    	    <h3>Hey! You're not logged in</h3>
+		<ul class="box-inner">
+        		    <li id="pt-login"><a href="/wiki/index.php?title=Special:UserLogin&amp;returnto=hcard" title="You are encouraged to log in, it is not mandatory however. [o]" accesskey="o">Log in / create account</a></li>
+
+
+
+		</ul>
+	</div>
+
+</div><!-- end of the sidebar -->
+
+<div id="footer">
+
+
+    <address class="vcard">
+        The content of this wiki is the combined effort of the
+        <a class="fn org url" href="http://microformats.org">
+            microformats community
+        </a>.
+    </address>
+
+	<ul>
+    				<li id="about"><a href="/wiki/Microformats_Wiki:About" title="Microformats Wiki:About">About Microformats Wiki</a></li>
+				<li id="disclaimer"><a href="/wiki/Microformats_Wiki:General_disclaimer" title="Microformats Wiki:General disclaimer">Disclaimers</a></li>
+        <li>Powered by <a href="http://mediawiki.org">MediaWiki</a> | <a href="http://mediatemple.net/">(mt) media temple</a></li>
+	</ul>
+</div>
+
+		<script type="text/javascript">if (window.runOnloadHook) runOnloadHook();</script>
+<!-- Served in 0.857 secs. --><script src="http://www.google-analytics.com/urchin.js" type="text/javascript"></script>
+<script type="text/javascript">
+_uacct = "UA-1889385-1";
+urchinTracker();
+</script>
+
+
+</body></html>
