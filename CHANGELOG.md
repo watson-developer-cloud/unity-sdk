@@ -1,5 +1,16 @@
 Change Log
 ==========
+## Version 0.5.0
+
+_2016-06-24_
+
+ * New: Added Alchemy Language v1 abstraction
+ * New: Added Personality Insights v2 abstraction
+ * Fix: Added Tone Analyzer to the Configuration Editor
+ * Fix: Added Tradeoff Analytics to the Configuration Editor
+ * Fix: Added Conversation to the Configuration Editor
+ * Fix: Added Personality Insights to the Configuration Editor
+
 ## Version 0.4.0
 
 _2016-06-09_
