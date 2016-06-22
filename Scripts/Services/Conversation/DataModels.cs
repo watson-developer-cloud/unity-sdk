@@ -19,6 +19,7 @@ using FullSerializer;
 namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 {
 	public class DataModels {
+        public const string CONVERSATION_VERSION = "2016-05-19";
 		#region Workspaces
 		/// <summary>
 		/// Workspaces.

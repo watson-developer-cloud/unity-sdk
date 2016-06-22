@@ -57,7 +57,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 		private const string SERVICE_ID = "ConversationV1";
 		private static fsSerializer sm_Serializer = new fsSerializer();
 		#endregion
-
+        /*
 		#region Workspaces
 		/// <summary>
 		/// Gets the available workspaces for the Conversation service
@@ -113,8 +113,9 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 				((GetWorkspacesReq)req).Callback(resp.Success ? workspaces : null);
 		}
 		#endregion
-
+           */
 		#region Message
+        private const string SERVICE_MESSAGE = "/v1/workspaces";
 		/// <summary>
 		/// Message the specified workspaceId, input and callback.
 		/// </summary>
@@ -130,7 +131,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 			if(callback == null)
 				throw new ArgumentNullException("callback");
 
-			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/v2/rest/workspaces");
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_MESSAGE);
 			if(connector == null)
 				return false;
 
@@ -140,6 +141,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 			MessageReq req = new MessageReq();
 			req.Callback = callback;
 			req.Headers["Content-Type"] = "application/json";
+            req.Parameters["version"] = DataModels.CONVERSATION_VERSION;
 			req.Function = "/" + workspaceId + "/message";
 			req.Send = Encoding.UTF8.GetBytes(reqString);
 			req.OnResponse = MessageResp;
@@ -227,18 +229,19 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
                 if (!string.IsNullOrEmpty(customServiceID))
                 {
 
-                    if (!m_Service.Message(customServiceID, "Hello", OnMessage))
+                    if (!m_Service.Message(customServiceID, "Ping", OnMessage))
                         OnFailure("Failed to invoke Converse().");
                     else
                         m_ConversationCount += 1;
                 }
                 else
                 {
-                    if (!m_Service.GetWorkspaces(OnGetWorkspaces))
-                        OnFailure("Failed to invoke GetDialogs().");
+//                    if (!m_Service.GetWorkspaces(OnGetWorkspaces))
+//                        OnFailure("Failed to invoke GetDialogs().");
+                    OnFailure("Please define a workspace variable in config.json (" + SERVICE_ID + "_ID)");
                 }
             }
-
+            /*
             private void OnGetWorkspaces(DataModels.Workspaces workspaces)
             {
                 if (m_Callback != null)
@@ -254,7 +257,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
                 else
                     OnFailure("GetMessages() failed.");
             }
-
+            */
             private void OnMessage(DataModels.MessageResponse resp)
             {
                 if (m_ConversationCount > 0)
