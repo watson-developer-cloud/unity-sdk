@@ -349,12 +349,15 @@ namespace IBM.Watson.DeveloperCloud.Editor
 
                     info.m_URL = EditorGUILayout.TextField("URL", info.m_URL);
 
-                    if(info.m_URL.StartsWith("https://gateway-a"))
-                        info.m_Apikey = EditorGUILayout.TextField("API Key", info.m_Apikey);
-                    else
+                    if(!string.IsNullOrEmpty(info.m_URL))
                     {
-                        info.m_User = EditorGUILayout.TextField("User", info.m_User);
-                        info.m_Password = EditorGUILayout.TextField("Password", info.m_Password);
+                        if(info.m_URL.StartsWith("https://gateway-a"))
+                            info.m_Apikey = EditorGUILayout.TextField("API Key", info.m_Apikey);
+                        else
+                        {
+                            info.m_User = EditorGUILayout.TextField("User", info.m_User);
+                            info.m_Password = EditorGUILayout.TextField("Password", info.m_Password);
+                        }
                     }
 
                     if (GUILayout.Button("Delete"))
