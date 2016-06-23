@@ -109,7 +109,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         public bool Classify(string url, OnClassify callback, string[] owners = default(string[]), string[] classifierIDs = default(string[]), float threshold = default(float), string acceptLanguage = "en")
         {
             if(string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetVariableValue("VISUAL_RECOGNITION_API_KEY");
+                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
             if(string.IsNullOrEmpty(mp_ApiKey))
                 throw new WatsonException("FindClassifier - VISUAL_RECOGNITION_API_KEY needs to be defined in config.json");
             if(string.IsNullOrEmpty(url))
@@ -151,7 +151,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         public bool Classify(OnClassify callback, string imagePath, string[] owners = default(string[]), string[] classifierIDs = default(string[]), float threshold = default(float), string acceptLanguage = "en")
         {
             if(string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetVariableValue("VISUAL_RECOGNITION_API_KEY");
+                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
             if(string.IsNullOrEmpty(mp_ApiKey))
                 throw new WatsonException("FindClassifier - VISUAL_RECOGNITION_API_KEY needs to be defined in config.json");
             if(callback == null)
@@ -259,7 +259,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if(callback == null)
                 throw new ArgumentNullException("callback");
             if(string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetVariableValue("VISUAL_RECOGNITION_API_KEY");
+                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
             if(string.IsNullOrEmpty(mp_ApiKey))
                 throw new WatsonException("FindClassifier - VISUAL_RECOGNITION_API_KEY needs to be defined in config.json");
 
@@ -288,7 +288,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if(string.IsNullOrEmpty(imagePath))
                 throw new ArgumentNullException("Define an image path to classify!");
             if(string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetVariableValue("VISUAL_RECOGNITION_API_KEY");
+                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
             if(string.IsNullOrEmpty(mp_ApiKey))
                 throw new WatsonException("FindClassifier - VISUAL_RECOGNITION_API_KEY needs to be defined in config.json");
 
@@ -392,7 +392,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if(callback == null)
                 throw new ArgumentNullException("callback");
             if(string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetVariableValue("VISUAL_RECOGNITION_API_KEY");
+                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
             if(string.IsNullOrEmpty(mp_ApiKey))
                 throw new WatsonException("FindClassifier - VISUAL_RECOGNITION_API_KEY needs to be defined in config.json");
 
@@ -421,7 +421,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if(string.IsNullOrEmpty(imagePath))
                 throw new ArgumentNullException("Define an image path to classify!");
             if(string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetVariableValue("VISUAL_RECOGNITION_API_KEY");
+                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
             if(string.IsNullOrEmpty(mp_ApiKey))
                 throw new WatsonException("FindClassifier - VISUAL_RECOGNITION_API_KEY needs to be defined in config.json");
 
@@ -545,7 +545,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 if(string.IsNullOrEmpty(classifierName))
                     throw new WatsonException("classifierName required");
                 if(string.IsNullOrEmpty(mp_ApiKey))
-                    mp_ApiKey = Config.Instance.GetVariableValue("VISUAL_RECOGNITION_API_KEY");
+                    mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
                 if(string.IsNullOrEmpty(mp_ApiKey))
                     throw new WatsonException("FindClassifier - VISUAL_RECOGNITION_API_KEY needs to be defined in config.json");
 
@@ -598,7 +598,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if(callback == null)
                 throw new ArgumentNullException("callback");
             if(string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetVariableValue("VISUAL_RECOGNITION_API_KEY");
+                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
             if(string.IsNullOrEmpty(mp_ApiKey))
                 throw new WatsonException("GetClassifier - VISUAL_RECOGNITION_API_KEY needs to be defined in config.json");
 
@@ -662,7 +662,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if (callback == null)
                 throw new ArgumentNullException("callback");
             if(string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetVariableValue("VISUAL_RECOGNITION_API_KEY");
+                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
             if(string.IsNullOrEmpty(mp_ApiKey))
                 throw new WatsonException("GetClassifier - VISUAL_RECOGNITION_API_KEY needs to be defined in config.json");
 
@@ -728,7 +728,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         public bool TrainClassifier(string classifierName, string className, string positiveExamplesPath, string negativeExamplesPath, OnTrainClassifier callback)
         {
             if(string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetVariableValue("VISUAL_RECOGNITION_API_KEY");
+                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
             if(string.IsNullOrEmpty(mp_ApiKey))
                 throw new WatsonException("GetClassifier - VISUAL_RECOGNITION_API_KEY needs to be defined in config.json");
             if(string.IsNullOrEmpty(classifierName))
@@ -764,7 +764,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         private bool UploadClassifier(string classifierName, string className, byte[] positiveExamplesData, byte[] negativeExamplesData, OnTrainClassifier callback)
         {
             if(string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetVariableValue("VISUAL_RECOGNITION_API_KEY");
+                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
             if(string.IsNullOrEmpty(mp_ApiKey))
                 throw new WatsonException("GetClassifier - VISUAL_RECOGNITION_API_KEY needs to be defined in config.json");
             if(string.IsNullOrEmpty(classifierName))
@@ -842,7 +842,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if(callback == null)
                 throw new ArgumentNullException("callback");
             if(string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetVariableValue("VISUAL_RECOGNITION_API_KEY");
+                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
             if(string.IsNullOrEmpty(mp_ApiKey))
                 throw new WatsonException("GetClassifier - VISUAL_RECOGNITION_API_KEY needs to be defined in config.json");
             
