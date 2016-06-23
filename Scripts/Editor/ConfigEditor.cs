@@ -348,6 +348,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
                     GUILayout.EndHorizontal();
 
                     info.m_URL = EditorGUILayout.TextField("URL", info.m_URL);
+
                     if(info.m_URL.StartsWith("https://gateway-a"))
                         info.m_Apikey = EditorGUILayout.TextField("API Key", info.m_Apikey);
                     else

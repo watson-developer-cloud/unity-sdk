@@ -24,7 +24,7 @@ using IBM.Watson.DeveloperCloud.Utilities;
 public class ExampleVisualRecognition : MonoBehaviour {
     private VisualRecognition m_VisualRecognition = new VisualRecognition();
     private string m_classifierName = "Apples_OptionalParams";
-    private string m_classifierID = "Apples_OptionalParams_1213405640";
+    private string m_classifierID = "ApplesClassifierNameWithSpaces_73100404";
     private string m_classifierToDelete = "unitytestclassifier2b_37849361";
     private string m_imageURL = "https://upload.wikimedia.org/wikipedia/commons/e/e9/Official_portrait_of_Barack_Obama.jpg";
     private string m_imageTextURL = "http://i.stack.imgur.com/ZS6nH.png";
@@ -49,9 +49,9 @@ public class ExampleVisualRecognition : MonoBehaviour {
             Log.Debug("ExampleVisualRecognition", "Deleting classifier failed!");
 
 //          Train classifier
-        string m_positiveExamplesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/taj_positive_examples.zip";
-        string m_negativeExamplesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/negative_examples.zip";
-        if(!m_VisualRecognition.TrainClassifier("unity-test-classifier5", "taj", m_positiveExamplesPath, m_negativeExamplesPath, OnTrainClassifier))
+        string m_positiveExamplesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/giraffe_positive_examples.zip";
+        string m_negativeExamplesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/negative_examples.zip";
+        if(!m_VisualRecognition.TrainClassifier("unity-test-classifier5", "giraffe", m_positiveExamplesPath, m_negativeExamplesPath, OnTrainClassifier))
             Log.Debug("ExampleVisualRecognition", "Train classifier failed!");
 
 //          Classify get
@@ -59,7 +59,7 @@ public class ExampleVisualRecognition : MonoBehaviour {
             Log.Debug("ExampleVisualRecognition", "Classify image failed!");
 
 //          Classify post image
-        string m_imagesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/obama.jpg";
+        string m_imagesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/obama.jpg";
         string[] m_owners = {"IBM", "me"};
         string[] m_classifierIDs = {"default"};
         if(!m_VisualRecognition.Classify(OnClassify, m_imagesPath, m_owners, m_classifierIDs, 0.5f))
@@ -71,7 +71,7 @@ public class ExampleVisualRecognition : MonoBehaviour {
             Log.Debug("ExampleVisualRecogntiion", "Detect faces failed!");
 
 //          Detect faces post image
-        string m_faceExamplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/obama.jpg";
+        string m_faceExamplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/obama.jpg";
         if(!m_VisualRecognition.DetectFaces(OnDetectFaces, m_faceExamplePath))
             Log.Debug("ExampleVisualRecognition", "Detect faces failed!");
 
@@ -82,7 +82,7 @@ public class ExampleVisualRecognition : MonoBehaviour {
             Log.Debug("ExampleVisualRecognition", "Recognize text failed!");
 
 //          Recognize text post image
-        string m_textExamplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/from_platos_apology.png";
+        string m_textExamplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/from_platos_apology.png";
         if(!m_VisualRecognition.RecognizeText(OnRecognizeText, m_textExamplePath))
             Log.Debug("ExampleVisualRecognition", "Recognize text failed!");
 	}

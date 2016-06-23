@@ -123,7 +123,16 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// <returns><c>true</c> if this instance has credentials; otherwise, <c>false</c>.</returns>
             public bool HasCredentials()
             {
-                return (!string.IsNullOrEmpty(m_User) && !string.IsNullOrEmpty(m_Password)) || !string.IsNullOrEmpty(m_Apikey);
+                return (!string.IsNullOrEmpty(m_User) && !string.IsNullOrEmpty(m_Password));
+            }
+
+            /// <summary>
+            /// Determines whether this instance has API key.
+            /// </summary>
+            /// <returns><c>true</c> if this instance has API key; otherwise, <c>false</c>.</returns>
+            public bool HasAPIKey()
+            {
+                return !string.IsNullOrEmpty(m_Apikey);
             }
         }
 
