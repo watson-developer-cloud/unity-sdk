@@ -65,7 +65,11 @@ namespace IBM.Watson.DeveloperCloud.Editor
             new ServiceSetup() { ServiceName = "Personality Insights", ServiceAPI = "personality-insights/api",
                 URL ="https://console.ng.bluemix.net/catalog/services/personality-insights/", ServiceID="PersonalityInsightsV2" },
             new ServiceSetup() { ServiceName = "Conversation", ServiceAPI = "conversation-experimental/api",
-                URL ="https://console.ng.bluemix.net/catalog/services/conversation/", ServiceID="ConversationV1" }
+                URL ="https://console.ng.bluemix.net/catalog/services/conversation/", ServiceID="ConversationV1" },
+            new ServiceSetup() { ServiceName = "Alchemy Language", ServiceAPI = "gateway-a.watsonplatform.net/calls",
+                URL ="https://console.ng.bluemix.net/catalog/services/alchemyapi/", ServiceID="AlchemyLanguageV1" },
+            new ServiceSetup() { ServiceName = "Visual Recognition", ServiceAPI = "visual-recognition/api",
+                URL ="https://console.ng.bluemix.net/catalog/services/visual-recognition/", ServiceID="VisualRecognitionV3" }
         };
 
         private const string TITLE = "Watson Unity SDK";
@@ -193,6 +197,20 @@ namespace IBM.Watson.DeveloperCloud.Editor
         private Vector2 m_ScrollPos = Vector2.zero;
         private string m_PastedCredentials = "\n\n\n\n\n\n\n";
 
+        private bool GetIsValid(ServiceSetup setup)
+        {
+            bool isValid = false;
+            Config cfg = Config.Instance;
+            Config.CredentialInfo info = cfg.FindCredentials( setup.ServiceID );
+            if(info != null)
+            {
+                if((!string.IsNullOrEmpty(info.m_URL) && !string.IsNullOrEmpty(info.m_Password)) || !string.IsNullOrEmpty(info.m_Apikey))
+                    isValid = true;
+            }
+
+            return isValid;
+        }
+
         private void OnGUI()
         {
             Config cfg = Config.Instance;
@@ -205,17 +223,14 @@ namespace IBM.Watson.DeveloperCloud.Editor
                 //GUILayout.Label( "Use this dialog to generate your configuration file for the Watson Unity SDK." );
                 //GUILayout.Label( "If you have never registered for Watson BlueMix services, click on the button below to begin registration." );
 
-                if ( GUILayout.Button( "Register for Watson Services" ) )
+                if(GUILayout.Button("Register for Watson Services"))
                     Application.OpenURL( BLUEMIX_REGISTRATION );
 
                 foreach( var setup in SERVICE_SETUP )
                 {
                     Config.CredentialInfo info = cfg.FindCredentials( setup.ServiceID );
 
-                    bool bValid = info != null 
-                        && !string.IsNullOrEmpty( info.m_URL )
-                        && !string.IsNullOrEmpty( info.m_User )
-                        && !string.IsNullOrEmpty( info.m_Password );
+                    bool bValid = GetIsValid(setup);
 
                     GUILayout.BeginHorizontal();
 

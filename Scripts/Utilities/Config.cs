@@ -69,6 +69,14 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// The password for these credentials.
             /// </summary>
             public string m_Password;
+            /// <summary>
+            /// The API key for this service.
+            /// </summary>
+            public string m_Apikey;
+            /// <summary>
+            /// A note for the applied service.
+            /// </summary>
+            public string m_Note;
 
             /// <summary>
             /// Generate JSON credentials.
@@ -76,7 +84,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// <returns>Returns a string of the JSON.</returns>
             public string MakeJSON()
             {
-                return "{\n\t\"credentials\": {\n\t\t\"url\": \"" + m_URL + "\",\n\t\t\"username\": \"" + m_User + "\",\n\t\t\"password\": \"" + m_Password + "\"\n\t}\n}";
+                return "{\n\t\"credentials\": {\n\t\t\"url\": \"" + m_URL + "\",\n\t\t\"username\": \"" + m_User + "\",\n\t\t\"password\": \"" + m_Password + "\",\n\t\t\"apikey\": \"" + m_Apikey + "\",\n\t\t\"note\": \"" + m_Note + "\"\n\t}\n}";
             }
 
             /// <summary>
@@ -93,6 +101,11 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                     m_URL = (string)iCredentials["url"];
                     m_User = (string)iCredentials["username"];
                     m_Password = (string)iCredentials["password"];
+                    m_Note = (string)iCredentials["note"];
+                    if(!string.IsNullOrEmpty((string)iCredentials["apikey"]))
+                        m_Apikey = (string)iCredentials["apikey"];
+                    if(!string.IsNullOrEmpty((string)iCredentials["api_key"]))
+                        m_Apikey = (string)iCredentials["api_key"];
 
                     return true;
                 }
@@ -110,7 +123,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// <returns><c>true</c> if this instance has credentials; otherwise, <c>false</c>.</returns>
             public bool HasCredentials()
             {
-                return !string.IsNullOrEmpty(m_User) && !string.IsNullOrEmpty(m_Password);
+                return (!string.IsNullOrEmpty(m_User) && !string.IsNullOrEmpty(m_Password)) || !string.IsNullOrEmpty(m_Apikey);
             }
         }
 
