@@ -35,7 +35,7 @@ Ensure that you have the following prerequisites:
 You can get the latest SDK release by clicking [here][latest_release].
 
 ### Installing the SDK source into your Unity project
-Move the `unity-sdk` directory into the Assets directory of the Unity project. **Rename the SDK directory from `unity-sdk` to 'Watson'.**
+Move the **`unity-sdk`** directory into the Assets directory of the Unity project. **Rename the SDK directory from `unity-sdk` to `Watson`.**
 
 ## Configuring your service credentials
 You will need the 'username' and 'password' credentials for each service. Service credentials are different from your Bluemix account username and password.
@@ -331,7 +331,7 @@ void Start () {
 ```
 
 ### Conversation
-With the IBM Watson™ [Conversation][conversation] service you can create cognitive agents - virtual agents that combine machine learning, natural language understanding, and integrated dialog scripting tools to provide outstanding customer engagements.
+With the IBM Watson™ [Conversation][conversation] service you can create cognitive agents - virtual agents that combine machine learning, natural language understanding, and integrated dialog scripting tools to provide outstanding customer engagements. A workspace should be created using [Conversation tooling][conversation_tooling] and a variable `ConversationV1_ID` should be set in the Config Editor with the Workspace ID.
 
 ```cs
 private Conversation m_Conversation = new Conversation();
@@ -354,7 +354,7 @@ void OnMessage (DataModels.MessageResponse resp)
 
 
 ### Visual Recognition
-Use the [Visual Recognition][visual_recognition] service to classify an image against a default or custom trained classifier. In addition, the service can detect faces and text in an image. Instead of credentials, the Visual Recognition key ("VISUAL\_RECOGNITION\_API\_KEY") must be set as a variable in the Advanced Mode of the Config Editor (**Watson -> Configuration Editor**). The ServiceID (VisualRecognitionV3) and endpoint URL (https://gateway-a.watsonplatform.net/visual-recognition/api) must also be added manually.
+Use the [Visual Recognition][visual_recognition] service to classify an image against a default or custom trained classifier. In addition, the service can detect faces and text in an image. Instead of credentials, the Visual Recognition key `VISUAL_RECOGNITION_API_KEY` must be set as a variable in the Advanced Mode of the Config Editor (**Watson -> Configuration Editor**). The ServiceID `VisualRecognitionV3` and endpoint URL `https://gateway-a.watsonplatform.net/visual-recognition/api` must also be added manually.
 
 ![visual-recognition0](http://g.recordit.co/Qke2gKfaKJ.gif)
 
@@ -439,7 +439,7 @@ private void OnGetClassifier(GetClassifiersPerClassifierVerbose classifier)
 }
 ```
 ##### Training classifiers
-Train a new classifier by uploading image data. Two compressed zip files containing at least two positive example files or one positive and one negative example file. The prefix of the positive example file is used as the classname for the new classifier ("<Class Name>_positive_examples"). Negative examples zip must be named "negative_examples". After a successful call, training the classifier takes a few minutes.
+Train a new classifier by uploading image data. Two compressed zip files containing at least two positive example files or one positive and one negative example file. The prefix of the positive example file is used as the classname for the new classifier `<Class Name>_positive_examples`. Negative examples zip must be named `negative_examples`. After a successful call, training the classifier takes a few minutes.
 
 ```cs
 private VisualRecognition m_VisualRecognition = new VisualRecognition();
@@ -780,7 +780,7 @@ private void LogTraitTree(DataModels.TraitTreeNode traitTreeNode)
 
 
 ### Alchemy Language
-Use the [Alchemy Language][alchemy_language] service to extract semantic meta-data from content such as information on people, places, companies, topics, facts, relationships, authors and languages. Instead of credentials, the Alchemy API Key ("ALCHEMY\_API\_KEY") must be set as a variable in the Advanced Mode of the Config Editor (**Watson -> Configuration Editor**). The ServiceID (AlchemyLanguageV1) and endpoint URL (https://gateway-a.watsonplatform.net) must also be added manually.
+Use the [Alchemy Language][alchemy_language] service to extract semantic meta-data from content such as information on people, places, companies, topics, facts, relationships, authors and languages. Instead of credentials, the Alchemy API Key `ALCHEMY_API_KEY` must be set as a variable in the Advanced Mode of the Config Editor (**Watson -> Configuration Editor**). The ServiceID `AlchemyLanguageV1` and endpoint URL `https://gateway-a.watsonplatform.net` must also be added manually.
 
 ![alchemy-language0](http://g.recordit.co/xkGArdMVbC.gif)
 
@@ -1364,13 +1364,16 @@ private void OnGetCombinedData(CombinedCallData combinedData, string data)
 
 ## Developing a basic application in one minute
 You can quickly develop a basic application that uses the Speech to Text service and the Natural Language Classifier service by using the prefabs that come with the SDK. Ensure that you prepare the test data before you complete the the following steps:
+
   1. Create a new scene and drag the following prefabs from **Assets -> Watson -> Prefabs**, and drop them in the Hierarchy tab:
+  
     * MicWidget
     * SpeechToTextWidget
     * Natural Language Classifier Widget
     * ClassDisplayWidget
+    
   2. Select the **Natural Language Classifier Widget**.
-  5. In the **Classifier Name** field in the Inspector tab, specify 'TestNaturalLanguageClassifier'.
+  5. In the **Classifier Name** field in the Inspector tab, specify `TestNaturalLanguageClassifier`.
   6. In the Natural Language Classifier Editor, expand the **Test Natural Language Classifier** , expand the classes, and determine which questions about the weather to ask to test the classifier.
   7. Run the application.
   8. Say your questions into the microphone to test the MicWidget, the SpeechToTextWidget, and the NaturalLanguageClassifierWidget.
@@ -1412,3 +1415,4 @@ See [CONTRIBUTING.md](.github/CONTRIBUTING.md).
 [conversation]:http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/conversation/
 [visual_recognition]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/visual-recognition/api/v3/
 [personality_insights]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/personality-insights/api/v2/
+[conversation_tooling]: https://www.ibmwatsonconversation.com

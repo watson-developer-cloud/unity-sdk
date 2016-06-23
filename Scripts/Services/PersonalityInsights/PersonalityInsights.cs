@@ -30,7 +30,7 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v2
     public class PersonalityInsights : IWatsonService 
     {
         #region Private Data
-        private const string SERVICE_ID = "PersonalityInsights_V2";
+        private const string SERVICE_ID = "PersonalityInsightsV2";
         private static fsSerializer sm_Serializer = new fsSerializer();
         #endregion
 
