@@ -354,9 +354,7 @@ void OnMessage (DataModels.MessageResponse resp)
 
 
 ### Visual Recognition
-Use the [Visual Recognition][visual_recognition] service to classify an image against a default or custom trained classifier. In addition, the service can detect faces and text in an image. Instead of credentials, the Visual Recognition key `VISUAL_RECOGNITION_API_KEY` must be set as a variable in the Advanced Mode of the Config Editor (**Watson -> Configuration Editor**). The ServiceID `VisualRecognitionV3` and endpoint URL `https://gateway-a.watsonplatform.net/visual-recognition/api` must also be added manually.
-
-![visual-recognition0](http://g.recordit.co/Qke2gKfaKJ.gif)
+Use the [Visual Recognition][visual_recognition] service to classify an image against a default or custom trained classifier. In addition, the service can detect faces and text in an image.
 
 #### Managing Classifiers
 You can train and delete classifiers by directly accessing low level Visual Recognition methods.
@@ -780,9 +778,7 @@ private void LogTraitTree(DataModels.TraitTreeNode traitTreeNode)
 
 
 ### Alchemy Language
-Use the [Alchemy Language][alchemy_language] service to extract semantic meta-data from content such as information on people, places, companies, topics, facts, relationships, authors and languages. Instead of credentials, the Alchemy API Key `ALCHEMY_API_KEY` must be set as a variable in the Advanced Mode of the Config Editor (**Watson -> Configuration Editor**). The ServiceID `AlchemyLanguageV1` and endpoint URL `https://gateway-a.watsonplatform.net` must also be added manually.
-
-![alchemy-language0](http://g.recordit.co/xkGArdMVbC.gif)
+Use the [Alchemy Language][alchemy_language] service to extract semantic meta-data from content such as information on people, places, companies, topics, facts, relationships, authors and languages. 
 
 #### Getting Authors
 You can extract Authors from a URL or HTML source.
