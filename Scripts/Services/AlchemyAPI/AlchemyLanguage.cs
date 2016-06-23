@@ -45,7 +45,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         #region SetCredentials
         private void SetCredentials()
         {
-            mp_ApiKey = Config.Instance.GetVariableValue("ALCHEMY_API_KEY");
+            mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
 
             if (string.IsNullOrEmpty(mp_ApiKey))
                 throw new WatsonException("ALCHEMY_API_KEY needs to be defined in config.json");

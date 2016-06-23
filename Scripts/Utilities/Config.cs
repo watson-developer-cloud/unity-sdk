@@ -317,6 +317,14 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             return null;
         }
 
+        public string GetAPIKey(string serviceID)
+        {
+            foreach (var info in m_Credentials)
+                if (info.m_ServiceID == serviceID)
+                    return info.m_Apikey;
+            return null;
+        }
+
         /// <summary>
         /// Gets the variable value.
         /// </summary>

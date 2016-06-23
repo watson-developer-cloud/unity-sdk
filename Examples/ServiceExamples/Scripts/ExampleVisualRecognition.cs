@@ -36,7 +36,7 @@ public class ExampleVisualRecognition : MonoBehaviour {
 //          Get all classifiers
         if(!m_VisualRecognition.GetClassifiers(OnGetClassifiers))
             Log.Debug("ExampleVisualRecognition", "Getting classifiers failed!");
-
+//
 //          Find classifier by name
         m_VisualRecognition.FindClassifier(m_classifierName, OnFindClassifier);
 
