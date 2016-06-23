@@ -163,7 +163,7 @@ namespace IBM.Watson.DeveloperCloud.Camera
             if (CurrentCameraTarget != null)
             {
                 transform.localPosition = Vector3.Lerp(transform.localPosition, CurrentCameraTarget.TargetPosition, Time.deltaTime * m_SpeedForCameraAnimation);
-                transform.rotation = Quaternion.Lerp(transform.localRotation, CurrentCameraTarget.TargetRotation, Time.deltaTime * m_SpeedForCameraAnimation);
+                transform.rotation = Quaternion.Slerp(transform.localRotation, CurrentCameraTarget.TargetRotation, Time.deltaTime * m_SpeedForCameraAnimation);
             }
         }
 
@@ -172,9 +172,17 @@ namespace IBM.Watson.DeveloperCloud.Camera
             if (m_ListCameraTarget == null)
                 m_ListCameraTarget = new List<CameraTarget>();
 
+            for (int i = 0; m_ListCameraTarget != null && i < m_ListCameraTarget.Count; i++)
+            {
+                Destroy(m_ListCameraTarget[i]);
+            }
+
             m_ListCameraTarget.Clear();
 
-            CameraTarget defaultCameraTarget = this.gameObject.AddComponent<CameraTarget>();
+            CameraTarget defaultCameraTarget = this.gameObject.GetComponent<CameraTarget>();
+            if(defaultCameraTarget == null)
+                defaultCameraTarget = this.gameObject.AddComponent<CameraTarget>();
+            
             defaultCameraTarget.TargetPosition = m_CameraInitialLocation;
             defaultCameraTarget.TargetRotation = m_CameraInitialRotation;
             m_ListCameraTarget.Add(defaultCameraTarget);
@@ -261,6 +269,18 @@ namespace IBM.Watson.DeveloperCloud.Camera
 
 
         /// <summary>
+        /// Event handler reseting the camera. Deleting all camera target and set the initial as default. 
+        /// </summary>
+        /// <param name="args">Arguments.</param>
+        protected virtual void ResetCamera(System.Object[] args)
+        {
+            if (m_DisableInteractivity)
+                return;
+            
+            InitializeCameraTargetList();
+        }
+
+        /// <summary>
         /// Event handler reseting the camera position.
         /// </summary>
         /// <param name="args">Arguments.</param>
@@ -269,9 +289,10 @@ namespace IBM.Watson.DeveloperCloud.Camera
             if (m_DisableInteractivity)
                 return;
             //Log.Status("WatsonCamera", "Reset Camera Position");
-            DefaultCameraTarget.TargetPosition = m_CameraInitialLocation;
-            DefaultCameraTarget.TargetRotation = m_CameraInitialRotation;
+            CurrentCameraTarget.TargetPosition = m_CameraInitialLocation;
+            CurrentCameraTarget.TargetRotation = m_CameraInitialRotation;
         }
+
 
         /// <summary>
         /// Event handler moving the camera up.
