@@ -22,7 +22,7 @@ using IBM.Watson.DeveloperCloud.Services.Conversation.v1;
 public class ExampleConversation : MonoBehaviour
 {
 	private Conversation m_Conversation = new Conversation();
-	private string m_WorkspaceID = "car_demo_1";
+    private string m_WorkspaceID = "25dfa8a0-0263-471b-8980-317e68c30488";
 	private string m_Input = "Can you unlock the door?";
 
 	void Start () {
@@ -32,9 +32,17 @@ public class ExampleConversation : MonoBehaviour
 
 	void OnMessage (DataModels.MessageResponse resp)
 	{
-		foreach(DataModels.MessageIntent mi in resp.intents)
-			Debug.Log("intent: " + mi.intent + ", confidence: " + mi.confidence);
-		
-		Debug.Log("response: " + resp.output.text);
+        if(resp != null)
+        {
+    		foreach(DataModels.MessageIntent mi in resp.intents)
+    			Debug.Log("intent: " + mi.intent + ", confidence: " + mi.confidence);
+    		
+            if(resp.output != null && !string.IsNullOrEmpty(resp.output.text))
+    		    Debug.Log("response: " + resp.output.text);
+        }
+        else
+        {
+            Debug.Log("Failed to invoke Message();");
+        }
 	}
 }
