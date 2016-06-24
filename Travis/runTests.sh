@@ -31,15 +31,16 @@ if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then
     -quit
   if [ $? = 0 ] ; then
     echo "UnitTest COMPLETED! Exited with $?"
+    echo 'Logs tests'
+    cat $(pwd)/integrationTests.log
     exit 0
   else
     echo "UnitTest FAILED! Exited with $?"
+    echo 'Logs tests'
+    cat $(pwd)/integrationTests.log
     exit 1
   fi
 
-  echo 'Logs tests'
-  cat $(pwd)/integrationTests.log
-  
 else
   echo '$TRAVIS_PULL_REQUEST is not false ($TRAVIS_PULL_REQUEST), skipping tests'
 fi
