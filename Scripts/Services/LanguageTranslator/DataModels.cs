@@ -29,11 +29,11 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v1
         /// <summary>
         /// String that contains the country code.
         /// </summary>
-        public string language { get; set; }        // country code of the language 
-                                                    /// <summary>
-                                                    /// The language name.
-                                                    /// </summary>
-        public string name { get; set; }        // name of the language                                    
+        public string language { get; set; }
+        /// <summary>
+        /// The language name.
+        /// </summary>
+        public string name { get; set; }                                 
     }
     /// <summary>
     /// Languages data class.

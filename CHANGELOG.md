@@ -1,13 +1,26 @@
 Change Log
 ==========
+## Version 0.5.0
+
+_2016-06-24_
+
+ * New: Added `Alchemy Language` abstraction
+ * New: Added `Personality Insights` abstraction
+ * Fix: Added `Tone Analyzer` to the Configuration Editor
+ * Fix: Added `Tradeoff Analytics` to the Configuration Editor
+ * Fix: Added `Conversation` to the Configuration Editor
+ * Fix: Added `Personality Insights` to the Configuration Editor
+ * Fix: Added `Alchemy Language` to the Configuration Editor
+ * Fix: Added `Visual Recognition` to the Configuration Editor
+
 ## Version 0.4.0
 
 _2016-06-09_
 
- * New: Added Tone Analyzer v3 abstraction
- * New: Added Tradeoff Analytics abstraction
- * New: Added Conversation abstraction
- * New: Added Visual Recognition v3 abstraction
+ * New: Added `Tone Analyzer v3` abstraction
+ * New: Added `Tradeoff Analytics` abstraction
+ * New: Added `Conversation` abstraction
+ * New: Added `Visual Recognition v3` abstraction
  * Fix: Creating test project dynamically for Travis CL integration
  * Fix: Refactored Language Translation to Language Translator
  * Fix: Widget examples sprite references were disconnected

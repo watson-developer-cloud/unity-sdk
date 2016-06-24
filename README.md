@@ -18,6 +18,8 @@ Use this SDK to build Watson-powered applications in Unity. It comes with a set 
   * [Tradeoff Analytics](#tradeoff-analytics)
   * [Conversation](#conversation)
   * [Visual Recognition](#visual-recognition)
+  * [Alchemy Language](#alchemy-language)
+  * [Personality Insights](#personality-insights)
 * [Developing a basic application in one minute](#developing-a-basic-application-in-one-minute)
 * [Documentation](#documentation)
 * [License](#license)
@@ -33,7 +35,7 @@ Ensure that you have the following prerequisites:
 You can get the latest SDK release by clicking [here][latest_release].
 
 ### Installing the SDK source into your Unity project
-Move the `unity-sdk` directory into the Assets directory of the Unity project. **Rename the SDK directory from `unity-sdk` to 'Watson'.**
+Move the **`unity-sdk`** directory into the Assets directory of the Unity project. **Rename the SDK directory from `unity-sdk` to `Watson`.**
 
 ## Configuring your service credentials
 You will need the 'username' and 'password' credentials for each service. Service credentials are different from your Bluemix account username and password.
@@ -329,7 +331,7 @@ void Start () {
 ```
 
 ### Conversation
-With the IBM Watson™ [Conversation][conversation] service you can create cognitive agents - virtual agents that combine machine learning, natural language understanding, and integrated dialog scripting tools to provide outstanding customer engagements.
+With the IBM Watson™ [Conversation][conversation] service you can create cognitive agents - virtual agents that combine machine learning, natural language understanding, and integrated dialog scripting tools to provide outstanding customer engagements. A workspace should be created using [Conversation tooling][conversation_tooling] and a variable `ConversationV1_ID` should be set in the Config Editor with the Workspace ID.
 
 ```cs
 private Conversation m_Conversation = new Conversation();
@@ -352,9 +354,7 @@ void OnMessage (DataModels.MessageResponse resp)
 
 
 ### Visual Recognition
-Use the [Visual Recognition][visual_recognition] service to classify an image against a default or custom trained classifier. In addition, the service can detect faces and text in an image. Instead of credentials, the Visual Recognition key ("VISUAL\_RECOGNITION\_API\_KEY") must be set as a variable in the Advanced Mode of the Config Editor (**Watson -> Configuration Editor**).
-
-![visual-recognition0](http://g.recordit.co/O6qCnZNxg7.gif)
+Use the [Visual Recognition][visual_recognition] service to classify an image against a default or custom trained classifier. In addition, the service can detect faces and text in an image.
 
 #### Managing Classifiers
 You can train and delete classifiers by directly accessing low level Visual Recognition methods.
@@ -437,7 +437,7 @@ private void OnGetClassifier(GetClassifiersPerClassifierVerbose classifier)
 }
 ```
 ##### Training classifiers
-Train a new classifier by uploading image data. Two compressed zip files containing at least two positive example files or one positive and one negative example file. The prefix of the positive example file is used as the classname for the new classifier ("<Class Name>_positive_examples"). Negative examples zip must be named "negative_examples". After a successful call, training the classifier takes a few minutes.
+Train a new classifier by uploading image data. Two compressed zip files containing at least two positive example files or one positive and one negative example file. The prefix of the positive example file is used as the classname for the new classifier `<Class Name>_positive_examples`. Negative examples zip must be named `negative_examples`. After a successful call, training the classifier takes a few minutes.
 
 ```cs
 private VisualRecognition m_VisualRecognition = new VisualRecognition();
@@ -712,16 +712,664 @@ private void OnRecognizeText(TextRecogTopLevelMultiple multipleImages)
     }
 }
 ```
+### Personality Insights
+The IBM Watson™ [Personality Insights][personality_insights] service enables applications to derive insights from social media, enterprise data, or other digital communications. The service uses linguistic analytics to infer individuals' intrinsic personality characteristics, including Big Five, Needs, and Values, from digital communications such as email, text messages, tweets, and forum posts. The service can automatically infer, from potentially noisy social media, portraits of individuals that reflect their personality characteristics. 
+
+```cs
+PersonalityInsights m_personalityInsights = new PersonalityInsights();
+
+void Start () {
+	string dataPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/personalityInsights.json";
+	
+	if(!m_personalityInsights.GetProfile(OnGetProfile, dataPath, DataModels.ContentType.TEXT_PLAIN, DataModels.Language.ENGLISH))
+            Log.Debug("ExamplePersonalityInsights", "Failed to get profile!");
+}
+
+private void OnGetProfile(DataModels.Profile profile, string data)
+{
+    Log.Debug("ExamplePersonalityInsights", "data: {0}", data);
+    if(profile != null)
+    {
+        if(!string.IsNullOrEmpty(profile.id))
+            Log.Debug("ExamplePersonalityInsights", "id: {0}", profile.id);
+        if(!string.IsNullOrEmpty(profile.source))
+            Log.Debug("ExamplePersonalityInsights", "source: {0}", profile.source);
+        if(!string.IsNullOrEmpty(profile.processed_lang))
+            Log.Debug("ExamplePersonalityInsights", "proccessed_lang: {0}", profile.processed_lang);
+        if(!string.IsNullOrEmpty(profile.word_count))
+            Log.Debug("ExamplePersonalityInsights", "word_count: {0}", profile.word_count);
+        if(!string.IsNullOrEmpty(profile.word_count_message))
+            Log.Debug("ExamplePersonalityInsights", "word_count_message: {0}", profile.word_count_message);
+
+        if(profile.tree != null)
+        {
+            LogTraitTree(profile.tree);
+        }
+    }
+    else
+    {
+        Log.Debug("ExamplePersonalityInsights", "Failed to get profile!");
+    }
+}
+
+private void LogTraitTree(DataModels.TraitTreeNode traitTreeNode)
+{
+    if(!string.IsNullOrEmpty(traitTreeNode.id))
+        Log.Debug("ExamplePersonalityInsights", "id: {0}", traitTreeNode.id);
+    if(!string.IsNullOrEmpty(traitTreeNode.name))
+        Log.Debug("ExamplePersonalityInsights", "name: {0}", traitTreeNode.name);
+    if(!string.IsNullOrEmpty(traitTreeNode.category))
+        Log.Debug("ExamplePersonalityInsights", "category: {0}", traitTreeNode.category);
+    if(!string.IsNullOrEmpty(traitTreeNode.percentage))
+        Log.Debug("ExamplePersonalityInsights", "percentage: {0}", traitTreeNode.percentage);
+    if(!string.IsNullOrEmpty(traitTreeNode.sampling_error))
+        Log.Debug("ExamplePersonalityInsights", "sampling_error: {0}", traitTreeNode.sampling_error);
+    if(!string.IsNullOrEmpty(traitTreeNode.raw_score))
+        Log.Debug("ExamplePersonalityInsights", "raw_score: {0}", traitTreeNode.raw_score);
+    if(!string.IsNullOrEmpty(traitTreeNode.raw_sampling_error))
+        Log.Debug("ExamplePersonalityInsights", "raw_sampling_error: {0}", traitTreeNode.raw_sampling_error);
+    if(traitTreeNode.children != null && traitTreeNode.children.Length > 0)
+        foreach(DataModels.TraitTreeNode childNode in traitTreeNode.children)
+            LogTraitTree(childNode);
+}
+```
+
+
+
+
+### Alchemy Language
+Use the [Alchemy Language][alchemy_language] service to extract semantic meta-data from content such as information on people, places, companies, topics, facts, relationships, authors and languages. 
+
+#### Getting Authors
+You can extract Authors from a URL or HTML source.
+
+```cs
+void Start()
+{
+	if(!m_AlchemyLanguage.GetAuthors(OnGetAuthors, "http://www.nytimes.com/2011/02/17/science/17jeopardy-watson.html"))
+		Log.Debug("ExampleAlchemyLanguage", "Failed to get authors URL POST!");
+}
+	
+private void OnGetAuthors(AuthorsData authors, string data)
+{
+	if(authors != null)
+	{
+		Log.Debug("ExampleAlchemyLanguage", "data: {0}", data);
+		if(authors.authors.names.Length == 0)
+			Log.Debug("ExampleAlchemyLanguage", "No authors found!");
+
+		foreach(string name in authors.authors.names)
+			Log.Debug("ExampleAlchemyLanguage", "Author " + name + " found!");
+	}
+	else
+	{
+		Log.Debug("ExampleAlchemyLanguage", "Failed to find Author!");
+	}
+}
+	
+	
+```
+#### Getting Concepts
+You can get Concepts from a URL, HTML or Text source.
+
+```cs
+void Start()
+{
+	if(!m_AlchemyLanguage.GetRankedConcepts(OnGetConcepts, "http://www.nytimes.com/2011/02/17/science/17jeopardy-watson.html"))
+		Log.Debug("ExampleAlchemyLanguage", "Failed to get concepts HTML POST!");
+}
+
+private void OnGetConcepts(ConceptsData concepts, string data)
+{
+    if(concepts != null)
+    {
+        Log.Debug("ExampleAlchemyLanguage", "status: {0}", concepts.status);
+        Log.Debug("ExampleAlchemyLanguage", "url: {0}", concepts.url);
+        Log.Debug("ExampleAlchemyLanguage", "language: {0}", concepts.language);
+        if(concepts.concepts.Length == 0)
+            Log.Debug("ExampleAlchemyLanguage", "No concepts found!");
+
+        foreach(Concept concept in concepts.concepts)
+            Log.Debug("ExampleAlchemyLanguage", "Concept: {0}, Relevance: {1}", concept.text, concept.relevance);
+    }
+    else
+    {
+        Log.Debug("ExampleAlchemyLanguage", "Failed to find Concepts!");
+    }
+}
+```
+#### Getting Dates
+You can extract Dates from a URL, HTML or Text source.
+
+```cs
+void Start()
+{
+	if(!m_AlchemyLanguage.GetDates(OnGetDates, "http://www.nytimes.com/2011/02/17/science/17jeopardy-watson.html"))
+	    Log.Debug("ExampleAlchemyLanguage", "Failed to get dates by URL POST");
+}
+
+private void OnGetDates(DateData dates, string data)
+{
+    if(dates != null)
+    {
+        Log.Debug("ExampleAlchemyLanguage", "status: {0}", dates.status);
+        Log.Debug("ExampleAlchemyLanguage", "language: {0}", dates.language);
+        Log.Debug("ExampleAlchemyLanguage", "url: {0}", dates.url);
+        if(dates.dates == null || dates.dates.Length == 0)
+            Log.Debug("ExampleAlchemyLanguage", "No dates found!");
+        else
+            foreach(Date date in dates.dates)
+                Log.Debug("ExampleAlchemyLanguage", "Text: {0}, Date: {1}", date.text, date.date);
+    }
+    else
+    {
+        Log.Debug("ExampleAlchemyLanguage", "Failed to find Dates!");
+    }
+}
+```
+#### Getting Emotions
+You can get Emotions from a URL, HTML or Text source.
+
+```cs
+void Start()
+{
+	if(!m_AlchemyLanguage.GetEmotions(OnGetEmotions, "http://www.nytimes.com/2011/02/17/science/17jeopardy-watson.html"))
+	    Log.Debug("ExampleAlchemyLanguage", "Failed to get emotions by URL POST");
+}
+
+private void OnGetEmotions(EmotionData emotions, string data)
+{
+    if(emotions != null)
+    {
+        Log.Debug("ExampleAlchemyLanguage", "status: {0}", emotions.status);
+        Log.Debug("ExampleAlchemyLanguage", "url: {0}", emotions.url);
+        Log.Debug("ExampleAlchemyLanguage", "language: {0}", emotions.language);
+        Log.Debug("ExampleAlchemyLanguage", "text: {0}", emotions.text);
+        if(emotions.docEmotions == null)
+            Log.Debug("ExampleAlchemyLanguage", "No emotions found!");
+        else
+        {
+            Log.Debug("ExampleAlchemyLanguage", "anger: {0}", emotions.docEmotions.anger);
+            Log.Debug("ExampleAlchemyLanguage", "disgust: {0}", emotions.docEmotions.disgust);
+            Log.Debug("ExampleAlchemyLanguage", "fear: {0}", emotions.docEmotions.fear);
+            Log.Debug("ExampleAlchemyLanguage", "joy: {0}", emotions.docEmotions.joy);
+            Log.Debug("ExampleAlchemyLanguage", "sadness: {0}", emotions.docEmotions.sadness);
+        }
+    }
+    else
+    {
+        Log.Debug("ExampleAlchemyLanguage", "Failed to find Emotions!");
+    }
+}
+```
+#### Extracting Entities
+You can extract Entities from a URL, HTML or Text source.
+
+```cs
+void Start()
+{
+	if(!m_AlchemyLanguage.ExtractEntities(OnExtractEntities, "http://www.nytimes.com/2011/02/17/science/17jeopardy-watson.html"))
+		Log.Debug("ExampleAlchemyLanguage", "Failed to get entities by URL POST");
+}
+
+private void OnExtractEntities(EntityData entityData, string data)
+{
+    if(entityData != null)
+    {
+        Log.Debug("ExampleAlchemyLanguage", "status: {0}", entityData.status);
+        Log.Debug("ExampleAlchemyLanguage", "url: {0}", entityData.url);
+        Log.Debug("ExampleAlchemyLanguage", "language: {0}", entityData.language);
+        Log.Debug("ExampleAlchemyLanguage", "text: {0}", entityData.text);
+        if(entityData == null || entityData.entities.Length == 0)
+            Log.Debug("ExampleAlchemyLanguage", "No entities found!");
+        else
+            foreach(Entity entity in entityData.entities)
+                Log.Debug("ExampleAlchemyLanguage", "text: {0}, type: {1}", entity.text, entity.type);
+    }
+    else
+    {
+        Log.Debug("ExampleAlchemyLanguage", "Failed to find Emotions!");
+    }
+}
+```
+#### Detecting Feeds
+You can detect RSS Feeds from a URL source.
+
+```cs
+void Start()
+{
+	if(!m_AlchemyLanguage.DetectFeeds(OnDetectFeeds, "http://time.com/newsfeed/"))
+	    Log.Debug("ExampleAlchemyLanguage", "Failed to get feeds by URL POST");
+}
+
+private void OnDetectFeeds(FeedData feedData, string data)
+{
+    if(feedData != null)
+    {
+        Log.Debug("ExampleAlchemyLanguage", "status: {0}", feedData.status);
+        if(feedData == null || feedData.feeds.Length == 0)
+            Log.Debug("ExampleAlchemyLanguage", "No feeds found!");
+        else
+            foreach(Feed feed in feedData.feeds)
+                Log.Debug("ExampleAlchemyLanguage", "text: {0}", feed.feed);
+    }
+    else
+    {
+        Log.Debug("ExampleAlchemyLanguage", "Failed to find Feeds!");
+    }
+}
+```
+#### Extracting Keywords
+You can extract Keywords form a URL, HTML or Text source.
+
+```cs
+void Start()
+{
+	if(!m_AlchemyLanguage.ExtractKeywords(OnExtractKeywords, "http://www.nytimes.com/2011/02/17/science/17jeopardy-watson.html"))
+	    Log.Debug("ExampleAlchemyLanguage", "Failed to get keywords by URL POST");
+}
+
+private void OnExtractKeywords(KeywordData keywordData, string data)
+{
+    if(keywordData != null)
+    {
+        Log.Debug("ExampleAlchemyLanguage", "status: {0}", keywordData.status);
+        Log.Debug("ExampleAlchemyLanguage", "url: {0}", keywordData.url);
+        Log.Debug("ExampleAlchemyLanguage", "language: {0}", keywordData.language);
+        Log.Debug("ExampleAlchemyLanguage", "text: {0}", keywordData.text);
+        if(keywordData == null || keywordData.keywords.Length == 0)
+            Log.Debug("ExampleAlchemyLanguage", "No keywords found!");
+        else
+            foreach(Keyword keyword in keywordData.keywords)
+                Log.Debug("ExampleAlchemyLanguage", "text: {0}, relevance: {1}", keyword.text, keyword.relevance);
+    }
+    else
+    {
+        Log.Debug("ExampleAlchemyLanguage", "Failed to find Keywords!");
+    }
+}
+```
+#### Extracting Languages
+You can extract the language of a URL, HTML or Text source.
+
+```cs
+void Start()
+{
+	if(!m_AlchemyLanguage.GetLanguages(OnGetLanguages, "http://www.nytimes.com/2011/02/17/science/17jeopardy-watson.html"))
+	    Log.Debug("ExampleAlchemyLanguage", "Failed to get languages by text POST");
+}
+
+private void OnGetLanguages(LanguageData languages, string data)
+{
+    if(languages != null)
+    {
+        if(string.IsNullOrEmpty(languages.language))
+            Log.Debug("ExampleAlchemyLanguage", "No languages detected!");
+        else
+        {
+            Log.Debug("ExampleAlchemyLanguage", "status: {0}", languages.status);
+            Log.Debug("ExampleAlchemyLanguage", "url: {0}", languages.url);
+            Log.Debug("ExampleAlchemyLanguage", "language: {0}", languages.language);
+            Log.Debug("ExampleAlchemyLanguage", "ethnologue: {0}", languages.ethnologue);
+            Log.Debug("ExampleAlchemyLanguage", "iso_639_1: {0}", languages.iso_639_1);
+            Log.Debug("ExampleAlchemyLanguage", "iso_639_2: {0}", languages.iso_639_2);
+            Log.Debug("ExampleAlchemyLanguage", "iso_639_3: {0}", languages.iso_639_3);
+            Log.Debug("ExampleAlchemyLanguage", "native_speakers: {0}", languages.native_speakers);
+            Log.Debug("ExampleAlchemyLanguage", "wikipedia: {0}", languages.wikipedia);
+        }
+    }
+    else
+    {
+        Log.Debug("ExampleAlchemyLanguage", "Failed to find Dates!");
+    }
+}
+```
+#### Getting Microformats
+You can get the Microformat of a URL source.
+
+```cs
+void Start()
+{
+	if(!m_AlchemyLanguage.GetMicroformats(OnGetMicroformats, "http://microformats.org/wiki/hcard"))
+	    Log.Debug("ExampleAlchemyLanguage", "Failed to get microformats by text POST");
+}
+
+private void OnGetMicroformats(MicroformatData microformats, string data)
+{
+    if(microformats != null)
+    {
+        Log.Debug("ExampleAlchemyLanguage", "status: {0}", microformats.status);
+        Log.Debug("ExampleAlchemyLanguage", "url: {0}", microformats.url);
+        if(microformats.microformats.Length == 0)
+            Log.Warning("ExampleAlchemyLanguage", "No microformats found!");
+        else
+        {
+            foreach(Microformat microformat in microformats.microformats)
+                Log.Debug("ExampleAlchemyLanguage", "field: {0}, data: {1}.", microformat.field, microformat.data);
+        }
+    }
+    else
+    {
+        Log.Debug("ExampleAlchemyLanguage", "Failed to find Microformats!");
+    }
+}
+```
+#### Getting Publication Dates
+You can extract the publication date from a URL or HTML source.
+
+```cs
+void Start()
+{
+	if(!m_AlchemyLanguage.GetPublicationDate(OnGetPublicationDate, "http://www.nytimes.com/2011/02/17/science/17jeopardy-watson.html"))
+	    Log.Debug("ExampleAlchemyLanguage", "Failed to get publication dates by url POST");
+}
+
+private void OnGetPublicationDate(PubDateData pubDates, string data)
+{
+    if(pubDates != null)
+    {
+        Log.Debug("ExampleAlchemyLanguage", "status: {0}", pubDates.status);
+        Log.Debug("ExampleAlchemyLanguage", "url: {0}", pubDates.url);
+        Log.Debug("ExampleAlchemyLanguage", "language: {0}", pubDates.language);
+        if(pubDates.publicationDate != null)
+            Log.Debug("ExampleAlchemyLanguage", "date: {0}, confident: {1}", pubDates.publicationDate.date, pubDates.publicationDate.confident);
+        else
+            Log.Debug("ExampleAlchemyLanguage", "Failed to find Publication Dates!");
+    }
+    else
+    {
+        Log.Debug("ExampleAlchemyLanguage", "Failed to find Publication Dates!");
+    }
+}
+```
+#### Getting Relations
+You can extract Relations from a URL, HTML or Text source.
+
+```cs
+void Start()
+{
+    if(!m_AlchemyLanguage.GetRelations(OnGetRelations, "http://www.nytimes.com/2011/02/17/science/17jeopardy-watson.html"))
+        Log.Debug("ExampleAlchemyLanguage", "Failed to get relations by text POST");
+}
+
+private void OnGetRelations(RelationsData relationsData, string data)
+{
+    if(relationsData != null)
+    {
+        Log.Debug("ExampleAlchemyLanguage", "status: {0}", relationsData.status);
+        Log.Debug("ExampleAlchemyLanguage", "url: {0}", relationsData.url);
+        Log.Debug("ExampleAlchemyLanguage", "language: {0}", relationsData.language);
+        Log.Debug("ExampleAlchemyLanguage", "text: {0}", relationsData.text);
+        if(relationsData.relations == null || relationsData.relations.Length == 0)
+            Log.Debug("ExampleAlchemyLanguage", "No relations found!");
+        else
+            foreach(Relation relation in relationsData.relations)
+                if(relation.subject != null && !string.IsNullOrEmpty(relation.subject.text))
+                    Log.Debug("ExampleAlchemyLanguage", "Text: {0}, Date: {1}", relation.sentence, relation.subject.text);
+    }
+    else
+    {
+        Log.Debug("ExampleAlchemyLanguage", "Failed to find Relations!");
+    }
+}
+```
+#### Getting Sentiment
+You can extract the Sentiment from a URL, HTML or Text source.
+
+```cs
+void Start()
+{
+	if(!m_AlchemyLanguage.GetTextSentiment(OnGetTextSentiment, "http://www.nytimes.com/2011/02/17/science/17jeopardy-watson.html"))
+	    Log.Debug("ExampleAlchemyLanguage", "Failed to get sentiment by text POST");
+}
+
+private void OnGetTextSentiment(SentimentData sentimentData, string data)
+{
+    if(sentimentData != null)
+    {
+        Log.Debug("ExampleAlchemyLanguage", "status: {0}", sentimentData.status);
+        Log.Debug("ExampleAlchemyLanguage", "url: {0}", sentimentData.url);
+        Log.Debug("ExampleAlchemyLanguage", "language: {0}", sentimentData.language);
+        Log.Debug("ExampleAlchemyLanguage", "text: {0}", sentimentData.text);
+        if(sentimentData.docSentiment == null)
+            Log.Debug("ExampleAlchemyLanguage", "No sentiment found!");
+        else
+            if(sentimentData.docSentiment != null && !string.IsNullOrEmpty(sentimentData.docSentiment.type))
+                Log.Debug("ExampleAlchemyLanguage", "Sentiment: {0}, Score: {1}", sentimentData.docSentiment.type, sentimentData.docSentiment.score);
+    }
+    else
+    {
+        Log.Debug("ExampleAlchemyLanguage", "Failed to find Relations!");
+    }
+}
+```
+#### Getting Targeted Sentiment
+You can extract a Targeted Sentiment from a URL, HTML or Text source.
+
+```cs
+void Start()
+{
+	if(!m_AlchemyLanguage.GetTargetedSentiment(OnGetTargetedSentiment, "http://www.nytimes.com/2011/02/17/science/17jeopardy-watson.html", "Jeopardy|Jennings|Watson"))
+	    Log.Debug("ExampleAlchemyLanguage", "Failed to get targeted sentiment by text POST");
+}
+
+private void OnGetTargetedSentiment(TargetedSentimentData sentimentData, string data)
+{
+    if(sentimentData != null)
+    {
+        Log.Debug("ExampleAlchemyLanguage", "status: {0}", sentimentData.status);
+        Log.Debug("ExampleAlchemyLanguage", "url: {0}", sentimentData.url);
+        Log.Debug("ExampleAlchemyLanguage", "language: {0}", sentimentData.language);
+        Log.Debug("ExampleAlchemyLanguage", "text: {0}", sentimentData.text);
+        if(sentimentData.results == null)
+            Log.Debug("ExampleAlchemyLanguage", "No sentiment found!");
+        else
+            if(sentimentData.results == null || sentimentData.results.Length == 0)
+                Log.Warning("ExampleAlchemyLanguage", "No sentiment results!");
+            else
+                foreach(TargetedSentiment result in sentimentData.results)
+                    Log.Debug("ExampleAlchemyLanguage", "text: {0}, sentiment: {1}, score: {2}", result.text, result.sentiment.score, result.sentiment.type);
+    }
+    else
+    {
+        Log.Debug("ExampleAlchemyLanguage", "Failed to find Relations!");
+    }
+}
+```
+#### Getting Taxonomy
+You can get the Taxonomy of entities from a URL, HTML or Text source.
+
+```cs
+void Start()
+{
+    if(!m_AlchemyLanguage.GetRankedTaxonomy(OnGetRankedTaxonomy, "http://www.nytimes.com/2011/02/17/science/17jeopardy-watson.html"))
+        Log.Debug("ExampleAlchemyLanguage", "Failed to get ranked taxonomy by text POST");
+}
+
+private void OnGetRankedTaxonomy(TaxonomyData taxonomyData, string data)
+{
+    if(taxonomyData != null)
+    {
+        Log.Debug("ExampleAlchemyLanguage", "status: {0}", taxonomyData.status);
+        Log.Debug("ExampleAlchemyLanguage", "url: {0}", taxonomyData.url);
+        Log.Debug("ExampleAlchemyLanguage", "language: {0}", taxonomyData.language);
+        Log.Debug("ExampleAlchemyLanguage", "text: {0}", taxonomyData.text);
+        if(taxonomyData.taxonomy == null)
+            Log.Debug("ExampleAlchemyLanguage", "No taxonomy found!");
+        else
+            if(taxonomyData.taxonomy == null || taxonomyData.taxonomy.Length == 0)
+                Log.Warning("ExampleAlchemyLanguage", "No taxonomy results!");
+            else
+                foreach(Taxonomy taxonomy in taxonomyData.taxonomy)
+                    Log.Debug("ExampleAlchemyLanguage", "label: {0}, score: {1}", taxonomy.label, taxonomy.score);
+    }
+    else
+    {
+        Log.Debug("ExampleAlchemyLanguage", "Failed to find Relations!");
+    }
+}
+```
+#### Getting Text
+You can exctract the Text from a URL or HTML source.
+
+```cs
+void Start()
+{
+	if(!m_AlchemyLanguage.GetText(OnGetText, "http://www.nytimes.com/2011/02/17/science/17jeopardy-watson.html"))
+	    Log.Debug("ExampleAlchemyLanguage", "Failed to get text by text POST");
+}
+
+private void OnGetText(TextData textData, string data)
+{
+    if(textData != null)
+    {
+        Log.Debug("ExampleAlchemyLanuguage", "status: {0}", textData.status);
+        Log.Debug("ExampleAlchemyLanuguage", "url: {0}", textData.url);
+        Log.Debug("ExampleAlchemyLanuguage", "text: {0}", textData.text);
+    }
+    else
+    {
+        Log.Debug("ExampleAlchemyLanguage", "Failed to find text!");
+    }
+        
+}
+```
+#### Getting Raw Text
+You can exctract the Raw Text from a URL or HTML source.
+
+```cs
+void Start()
+{
+	if(!m_AlchemyLanguage.GetRawText(OnGetText, "http://www.nytimes.com/2011/02/17/science/17jeopardy-watson.html"))
+	    Log.Debug("ExampleAlchemyLanguage", "Failed to get raw text by text POST");
+}
+
+private void OnGetText(TextData textData, string data)
+{
+    if(textData != null)
+    {
+        Log.Debug("ExampleAlchemyLanuguage", "status: {0}", textData.status);
+        Log.Debug("ExampleAlchemyLanuguage", "url: {0}", textData.url);
+        Log.Debug("ExampleAlchemyLanuguage", "text: {0}", textData.text);
+    }
+    else
+    {
+        Log.Debug("ExampleAlchemyLanguage", "Failed to find text!");
+    }
+        
+}
+
+```
+#### Getting Title
+You can extract the Title form a URL or HTML source.
+
+```cs
+void Start()
+{
+    if(!m_AlchemyLanguage.GetTitle(OnGetTitle, "http://www.nytimes.com/2011/02/17/science/17jeopardy-watson.html"))
+        Log.Debug("ExampleAlchemyLanguage", "Failed to get title by text POST");
+}
+
+private void OnGetTitle(Title titleData, string data)
+{
+    if(titleData != null)
+    {
+        Log.Debug("ExampleAlchemyLanuguage", "status: {0}", titleData.status);
+        Log.Debug("ExampleAlchemyLanuguage", "url: {0}", titleData.url);
+        Log.Debug("ExampleAlchemyLanuguage", "text: {0}", titleData.title);
+    }
+    else
+    {
+        Log.Debug("ExampleAlchemyLanguage", "Failed to find title!");
+    }
+
+}
+```
+#### Getting Combined Data
+You can combine multiple requests into one call using a Combined Data call from a URL, HTML or Text source. Allowed services in Combined Call are authors, concepts, dates, doc-emotion, entities, feeds, keywords, pub-dates, releations, doc-sentiment, taxonomy, title, page-image and image-keywords.
+
+```cs
+void Start()
+{
+    if(!m_AlchemyLanguage.GetCombinedData(OnGetCombinedData, "http://www.nytimes.com/2011/02/17/science/17jeopardy-watson.html"))
+        Log.Debug("ExampleAlchemyLanguage", "Failed to get combined data by text POST");
+}
+
+private void OnGetCombinedData(CombinedCallData combinedData, string data)
+{
+    if(combinedData != null)
+    {
+        Log.Debug("ExampleAlchemyLanguage", "status: {0}", combinedData.status);
+        Log.Debug("ExampleAlchemyLanguage", "url: {0}", combinedData.url);
+        Log.Debug("ExampleAlchemyLanguage", "language: {0}", combinedData.language);
+        Log.Debug("ExampleAlchemyLanguage", "text: {0}", combinedData.text);
+        Log.Debug("ExampleAlchemyLanguage", "image: {0}", combinedData.image);
+
+        if(combinedData.imageKeywords != null && combinedData.imageKeywords.Length > 0)
+            foreach(ImageKeyword imageKeyword in combinedData.imageKeywords)
+                Log.Debug("ExampleAlchemyLanguage", "ImageKeyword: {0}, Score: {1}", imageKeyword.text, imageKeyword.score);
+
+        if(combinedData.publicationDate != null)
+            Log.Debug("ExampleAlchemyLanguage", "publicationDate: {0}, Score: {1}", combinedData.publicationDate.date, combinedData.publicationDate.confident);
+
+        if(combinedData.authors != null && combinedData.authors.names.Length > 0)
+            foreach(string authors in combinedData.authors.names)
+                Log.Debug("ExampleAlchemyLanguage", "Authors: {0}", authors);
+
+        if(combinedData.docSentiment != null)
+            Log.Debug("ExampleAlchemyLanguage", "DocSentiment: {0}, Score: {1}, Mixed: {2}", combinedData.docSentiment.type, combinedData.docSentiment.score, combinedData.docSentiment.mixed);
+
+        if(combinedData.feeds != null && combinedData.feeds.Length > 0)
+            foreach(Feed feed in combinedData.feeds)
+                Log.Debug("ExampleAlchemyLanguage", "Feeds: {0}", feed.feed);
+
+        if(combinedData.keywords != null && combinedData.keywords.Length > 0)
+            foreach(Keyword keyword in combinedData.keywords)
+                Log.Debug("ExampleAlchemyLanguage", "Keyword: {0}, relevance: {1}", keyword.text, keyword.relevance);
+
+        if(combinedData.concepts != null && combinedData.concepts.Length > 0)
+            foreach(Concept concept in combinedData.concepts)
+                Log.Debug("ExampleAlchemyLanguage", "Concept: {0}, Relevance: {1}", concept.text, concept.relevance);
+
+        if(combinedData.entities != null && combinedData.entities.Length > 0)
+            foreach(Entity entity in combinedData.entities)
+                Log.Debug("ExampleAlchemyLanguage", "Entity: {0}, Type: {1}, Relevance: {2}", entity.text, entity.type, entity.relevance);
+
+        if(combinedData.relations != null && combinedData.relations.Length > 0)
+            foreach(Relation relation in combinedData.relations)
+                Log.Debug("ExampleAlchemyLanguage", "Relations: {0}", relation.subject.text);
+
+        if(combinedData.taxonomy != null && combinedData.taxonomy.Length > 0)
+            foreach(Taxonomy taxonomy in combinedData.taxonomy)
+                Log.Debug("ExampleAlchemyLanguage", "Taxonomy: {0}, Score: {1}, Confident: {2}" ,taxonomy.label, taxonomy.score, taxonomy.confident);
+
+        if(combinedData.dates != null && combinedData.dates.Length > 0)
+            foreach(Date date in combinedData.dates)
+                Log.Debug("ExampleAlchemyLanguage", "Dates", date.text, date.date);
+
+        if(combinedData.docEmotions != null && combinedData.docEmotions.Length > 0)
+            foreach(DocEmotions emotions in combinedData.docEmotions)
+                Log.Debug("ExampleAlchemyLanguage", "Doc Emotions: anger: {0}, disgust: {1}, fear: {2}, joy: {3}, sadness: {4}", emotions.anger, emotions.disgust, emotions.fear, emotions.joy, emotions.sadness);
+    }
+    else
+    {
+        Log.Debug("ExampleAlchemyLanguage", "Failed to get combined data!");
+    }
+}
+```
 
 ## Developing a basic application in one minute
 You can quickly develop a basic application that uses the Speech to Text service and the Natural Language Classifier service by using the prefabs that come with the SDK. Ensure that you prepare the test data before you complete the the following steps:
+
   1. Create a new scene and drag the following prefabs from **Assets -> Watson -> Prefabs**, and drop them in the Hierarchy tab:
+  
     * MicWidget
     * SpeechToTextWidget
     * Natural Language Classifier Widget
     * ClassDisplayWidget
+    
   2. Select the **Natural Language Classifier Widget**.
-  5. In the **Classifier Name** field in the Inspector tab, specify 'TestNaturalLanguageClassifier'.
+  5. In the **Classifier Name** field in the Inspector tab, specify `TestNaturalLanguageClassifier`.
   6. In the Natural Language Classifier Editor, expand the **Test Natural Language Classifier** , expand the classes, and determine which questions about the weather to ask to test the classifier.
   7. Run the application.
   8. Say your questions into the microphone to test the MicWidget, the SpeechToTextWidget, and the NaturalLanguageClassifierWidget.
@@ -762,3 +1410,5 @@ See [CONTRIBUTING.md](.github/CONTRIBUTING.md).
 [tradeoff_analytics]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/tradeoff-analytics/
 [conversation]:http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/conversation/
 [visual_recognition]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/visual-recognition/api/v3/
+[personality_insights]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/personality-insights/api/v2/
+[conversation_tooling]: https://www.ibmwatsonconversation.com

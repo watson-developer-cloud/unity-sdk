@@ -57,7 +57,19 @@ namespace IBM.Watson.DeveloperCloud.Editor
             new ServiceSetup() { ServiceName = "Language Translator", ServiceAPI = "language-translation/api",
                 URL ="https://console.ng.bluemix.net/catalog/services/language-translation/", ServiceID="LanguageTranslatorV1" },
             new ServiceSetup() { ServiceName = "Natural Language Classifier", ServiceAPI = "natural-language-classifier/api",
-				URL ="https://console.ng.bluemix.net/catalog/natural-language-classifier/", ServiceID="NaturalLanguageClassifierV1" }
+				URL ="https://console.ng.bluemix.net/catalog/natural-language-classifier/", ServiceID="NaturalLanguageClassifierV1" },
+            new ServiceSetup() { ServiceName = "Tone Analyzer", ServiceAPI = "tone-analyzer/api",
+                URL ="https://console.ng.bluemix.net/catalog/services/tone-analyzer/", ServiceID="ToneAnalyzerV3" },
+            new ServiceSetup() { ServiceName = "Tradeoff Analytics", ServiceAPI = "tradeoff-analytics/api",
+                URL ="https://console.ng.bluemix.net/catalog/services/tradeoff-analytics/", ServiceID="TradeoffAnalyticsV1" },
+            new ServiceSetup() { ServiceName = "Personality Insights", ServiceAPI = "personality-insights/api",
+                URL ="https://console.ng.bluemix.net/catalog/services/personality-insights/", ServiceID="PersonalityInsightsV2" },
+            new ServiceSetup() { ServiceName = "Conversation", ServiceAPI = "conversation-experimental/api",
+                URL ="https://console.ng.bluemix.net/catalog/services/conversation/", ServiceID="ConversationV1" },
+            new ServiceSetup() { ServiceName = "Alchemy Language", ServiceAPI = "gateway-a.watsonplatform.net/calls",
+                URL ="https://console.ng.bluemix.net/catalog/services/alchemyapi/", ServiceID="AlchemyLanguageV1" },
+            new ServiceSetup() { ServiceName = "Visual Recognition", ServiceAPI = "visual-recognition/api",
+                URL ="https://console.ng.bluemix.net/catalog/services/visual-recognition/", ServiceID="VisualRecognitionV3" }
         };
 
         private const string TITLE = "Watson Unity SDK";
@@ -185,6 +197,20 @@ namespace IBM.Watson.DeveloperCloud.Editor
         private Vector2 m_ScrollPos = Vector2.zero;
         private string m_PastedCredentials = "\n\n\n\n\n\n\n";
 
+        private bool GetIsValid(ServiceSetup setup)
+        {
+            bool isValid = false;
+            Config cfg = Config.Instance;
+            Config.CredentialInfo info = cfg.FindCredentials( setup.ServiceID );
+            if(info != null)
+            {
+                if((!string.IsNullOrEmpty(info.m_URL) && !string.IsNullOrEmpty(info.m_Password)) || !string.IsNullOrEmpty(info.m_Apikey))
+                    isValid = true;
+            }
+
+            return isValid;
+        }
+
         private void OnGUI()
         {
             Config cfg = Config.Instance;
@@ -197,17 +223,14 @@ namespace IBM.Watson.DeveloperCloud.Editor
                 //GUILayout.Label( "Use this dialog to generate your configuration file for the Watson Unity SDK." );
                 //GUILayout.Label( "If you have never registered for Watson BlueMix services, click on the button below to begin registration." );
 
-                if ( GUILayout.Button( "Register for Watson Services" ) )
+                if(GUILayout.Button("Register for Watson Services"))
                     Application.OpenURL( BLUEMIX_REGISTRATION );
 
                 foreach( var setup in SERVICE_SETUP )
                 {
                     Config.CredentialInfo info = cfg.FindCredentials( setup.ServiceID );
 
-                    bool bValid = info != null 
-                        && !string.IsNullOrEmpty( info.m_URL )
-                        && !string.IsNullOrEmpty( info.m_User )
-                        && !string.IsNullOrEmpty( info.m_Password );
+                    bool bValid = GetIsValid(setup);
 
                     GUILayout.BeginHorizontal();
 
@@ -325,8 +348,17 @@ namespace IBM.Watson.DeveloperCloud.Editor
                     GUILayout.EndHorizontal();
 
                     info.m_URL = EditorGUILayout.TextField("URL", info.m_URL);
-                    info.m_User = EditorGUILayout.TextField("User", info.m_User);
-                    info.m_Password = EditorGUILayout.TextField("Password", info.m_Password);
+
+                    if(!string.IsNullOrEmpty(info.m_URL))
+                    {
+                        if(info.m_URL.StartsWith("https://gateway-a"))
+                            info.m_Apikey = EditorGUILayout.TextField("API Key", info.m_Apikey);
+                        else
+                        {
+                            info.m_User = EditorGUILayout.TextField("User", info.m_User);
+                            info.m_Password = EditorGUILayout.TextField("Password", info.m_Password);
+                        }
+                    }
 
                     if (GUILayout.Button("Delete"))
                         cfg.Credentials.RemoveAt(i--);

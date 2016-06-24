@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en-US" prefix="og: http://ogp.me/ns#" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en-US" prefix="og: http://ogp.me/ns#" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en-US" prefix="og: http://ogp.me/ns#" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en-US" prefix="og: http://ogp.me/ns#" class="pn-sticky-footer no-js"> <!--<![endif]-->
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<meta name="IBM.WTMSite" content="DWNEXT"/>
+		<meta scheme="IBM_WTMCategory" name="IBM.WTMCategory" content="SOFDCDWOZZ" />
+
+<meta name=viewport content="width=device-width, initial-scale=1">
+
+<!--
+Force IE8+ into Standards mode by default (now done with http header)
+<meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+ -->
+
+<title>developerWorks Open | Game on! Introducing Watson Unity SDK</title>
+
+
+<!-- This site is optimized with the Yoast WordPress SEO plugin v2.2.1 - https://yoast.com/wordpress/plugins/seo/ -->
+<meta name="description" content="Watson Unity SDK enables the Unity community to access Watson Developer Cloud services and build a cognitive application in the Unity platform."/>
+<link rel="canonical" href="https://developer.ibm.com/open/2016/01/21/introducing-watson-unity-sdk/" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Game on! Introducing Watson Unity SDK" />
+<meta property="og:description" content="Watson Unity SDK enables the Unity community to access Watson Developer Cloud services and build a cognitive application in the Unity platform." />
+<meta property="og:url" content="https://developer.ibm.com/open/2016/01/21/introducing-watson-unity-sdk/" />
+<meta property="og:site_name" content="developerWorks Open" />
+<meta property="article:author" content="https://www.facebook.com/Faustus23" />
+<meta property="article:tag" content="SDK" />
+<meta property="article:tag" content="unity" />
+<meta property="article:tag" content="watson" />
+<meta property="article:tag" content="watson-developer-cloud" />
+<meta property="article:tag" content="watson-unity-sdk" />
+<meta property="article:section" content="Watson Developer Cloud: Unity SDK" />
+<meta property="article:published_time" content="2016-01-21T23:10:15+00:00" />
+<meta property="article:modified_time" content="2016-01-25T16:38:05+00:00" />
+<meta property="og:updated_time" content="2016-01-25T16:38:05+00:00" />
+<meta property="og:image" content="http://developer.ibm.com/open/wp-content/uploads/sites/50/2016/01/code-fb1.png" />
+<!-- / Yoast WordPress SEO plugin. -->
+
+<link rel="alternate" type="application/rss+xml" title="developerWorks Open &raquo; Feed" href="https://developer.ibm.com/open/feed/" />
+<link rel="alternate" type="application/rss+xml" title="developerWorks Open &raquo; Comments Feed" href="https://developer.ibm.com/open/comments/feed/" />
+
+<!-- JM Twitter Cards by Julien Maury 5.4.2 -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@ibmdwopen">
+<meta name="twitter:site" content="@ibmdwopen">
+<meta property="og:title" content="Game on! Introducing Watson Unity SDK">
+<meta property="og:description" content="Watson Unity SDK enables the Unity community to access Watson Developer Cloud services and build a cognitive application in the Unity platform.">
+<meta property="og:image" content="http://developer.ibm.com/open/wp-content/uploads/sites/50/2016/01/code-fb1.png">
+<meta property="og:image:width" content="280">
+<meta property="og:image:height" content="150">
+<!-- /JM Twitter Cards 5.4.2 -->
+
+<link rel="alternate" type="application/rss+xml" title="developerWorks Open &raquo; Game on! Introducing Watson Unity SDK Comments Feed" href="https://developer.ibm.com/open/2016/01/21/introducing-watson-unity-sdk/feed/" />
+<link rel='stylesheet' id='events-manager-css'  href='https://developer.ibm.com/open/wp-content/plugins/events-manager/includes/css/events_manager.css' type='text/css' media='all' />
+<link rel='stylesheet' id='tab-styles-css'  href='https://developer.ibm.com/open/wp-content/plugins/projectnext-shortcodes/tab-styles.css' type='text/css' media='all' />
+<link rel='stylesheet' id='slick_css-css'  href='https://developer.ibm.com/open/wp-content/themes/projectnext-openworks/slick/slick.css' type='text/css' media='all' />
+<link rel='stylesheet' id='slick-theme_css-css'  href='https://developer.ibm.com/open/wp-content/themes/projectnext-openworks/slick/slick-theme.css' type='text/css' media='all' />
+<link rel='stylesheet' id='pnext_common-css'  href='https://developer.ibm.com/c/css/common.css' type='text/css' media='all' />
+<link rel='stylesheet' id='pnext-css'  href='https://developer.ibm.com/open/wp-content/themes/projectnext/style.css' type='text/css' media='all' />
+<link rel='stylesheet' id='pnext.utils-css'  href='https://developer.ibm.com/open/wp-content/themes/projectnext/css/pnext-utils.css' type='text/css' media='all' />
+<link rel='stylesheet' id='pnext-child-css'  href='https://developer.ibm.com/open/wp-content/themes/projectnext-openworks/style.css' type='text/css' media='all' />
+<link rel='stylesheet' id='pnext_custom-css'  href='//developer.ibm.com/open/wp-content/uploads/sites/50/2016/04/openworks1.css' type='text/css' media='screen' />
+<link rel='stylesheet' id='genericons-css'  href='https://developer.ibm.com/open/wp-content/plugins/jetpack/_inc/genericons/genericons/genericons.css' type='text/css' media='all' />
+<link rel='stylesheet' id='jetpack_css-css'  href='https://developer.ibm.com/open/wp-content/plugins/jetpack/css/jetpack.css' type='text/css' media='all' />
+<script type='text/javascript' src='https://developer.ibm.com/open/wp-content/themes/projectnext/js/jquery-2.2.1.min.js'></script>
+<script type='text/javascript' src='https://developer.ibm.com/open/wp-includes/js/jquery/ui/core.min.js'></script>
+<script type='text/javascript' src='https://developer.ibm.com/open/wp-includes/js/jquery/ui/widget.min.js'></script>
+<script type='text/javascript' src='https://developer.ibm.com/open/wp-includes/js/jquery/ui/position.min.js'></script>
+<script type='text/javascript' src='https://developer.ibm.com/open/wp-includes/js/jquery/ui/mouse.min.js'></script>
+<script type='text/javascript' src='https://developer.ibm.com/open/wp-includes/js/jquery/ui/sortable.min.js'></script>
+<script type='text/javascript' src='https://developer.ibm.com/open/wp-includes/js/jquery/ui/datepicker.min.js'></script>
+<script type='text/javascript' src='https://developer.ibm.com/open/wp-includes/js/jquery/ui/menu.min.js'></script>
+<script type='text/javascript' src='https://developer.ibm.com/open/wp-includes/js/jquery/ui/autocomplete.min.js'></script>
+<script type='text/javascript' src='https://developer.ibm.com/open/wp-includes/js/jquery/ui/resizable.min.js'></script>
+<script type='text/javascript' src='https://developer.ibm.com/open/wp-includes/js/jquery/ui/draggable.min.js'></script>
+<script type='text/javascript' src='https://developer.ibm.com/open/wp-includes/js/jquery/ui/button.min.js'></script>
+<script type='text/javascript' src='https://developer.ibm.com/open/wp-includes/js/jquery/ui/dialog.min.js'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var EM = {"ajaxurl":"https:\/\/developer.ibm.com\/open\/wp-admin\/admin-ajax.php","locationajaxurl":"https:\/\/developer.ibm.com\/open\/wp-admin\/admin-ajax.php?action=locations_search","firstDay":"1","locale":"en","dateFormat":"dd\/mm\/yy","ui_css":"https:\/\/developer.ibm.com\/open\/wp-content\/plugins\/events-manager\/includes\/css\/ui-lightness.css","show24hours":"0","is_ssl":"1","bookingInProgress":"Please wait while the booking is being submitted.","tickets_save":"Save Ticket","bookingajaxurl":"https:\/\/developer.ibm.com\/open\/wp-admin\/admin-ajax.php","bookings_export_save":"Export Bookings","bookings_settings_save":"Save Settings","booking_delete":"Are you sure you want to delete?","bb_full":"Sold Out","bb_book":"Book Now","bb_booking":"Booking...","bb_booked":"Booking Submitted","bb_error":"Booking Error. Try again?","bb_cancel":"Cancel","bb_canceling":"Canceling...","bb_cancelled":"Cancelled","bb_cancel_error":"Cancellation Error. Try again?","txt_search":"Search","txt_searching":"Searching...","txt_loading":"Loading..."};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://developer.ibm.com/open/wp-content/plugins/events-manager/includes/js/events-manager.js'></script>
+<script type='text/javascript' src='https://developer.ibm.com/open/wp-content/plugins/projectnext-shortcodes/tab-dropdown.js'></script>
+<script type='text/javascript' src='//www.ibm.com/common/stats/ida_production.js'></script>
+<script type='text/javascript' src='https://developer.ibm.com/c/js/modernizr-production.js'></script>
+<script type='text/javascript' src='https://developer.ibm.com/open/wp-content/themes/projectnext/js/pnext.utils.js'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://developer.ibm.com/open/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://developer.ibm.com/open/wp-includes/wlwmanifest.xml" />
+<meta name="generator" content="WordPress 4.2.8" />
+<link rel='shortlink' href='https://wp.me/p6tTA3-16j' />
+<link rel='https://github.com/WP-API/WP-API' href='https://developer.ibm.com/open/wp-json' />
+<style type='text/css'>img#wpstats{display:none}</style><script src="https://developer.ibm.com/open/wp-content/themes/projectnext-openworks/typeahead.bundle.min.js"></script><style type="text/css" id="syntaxhighlighteranchor"></style>
+
+<link rel="pingback" href="https://developer.ibm.com/open/xmlrpc.php" />
+<link rel="shortcut icon" href="https://developer.ibm.com/open/wp-content/themes/projectnext/css/favicon.ico" />
+
+
+<!-- This is the CSE for a topical site. It must be loaded in head, before google search Form -->
+</head>
+
+<body class="single single-post postid-4235 single-format-standard" >
+
+	<div role="region" aria-label="Skip link">
+ <a class="visuallyhidden focusable" href="#pnext-main">Skip to main content</a>
+</div>
+<div class="pn-dw-master cf" role="banner">
+
+	<div class="fl">
+    <a href="http://www.ibm.com/developerworks/" class="pn-dw-fed-logo"><span class="pn-dw-ibm">IBM</span> <span class="pn-mast-text pn-dw-dWorks">developerWorks</span></a>
+    <span class="pn-mast-text">/</span>
+    <a class="pn-mast-text pn-dw-fed-logo" href="/centers/">Developer Centers</a>
+	</div>
+
+
+	<div class="fr">
+	  <span id="loginout_link" class="links-dw pn-login-link ">
+
+	  			<a href="https://developer.ibm.com/sso/login?d=https%3A%2F%2Fdeveloper.ibm.com%2Fopen%2F2016%2F01%2F21%2Fintroducing-watson-unity-sdk&lang=en_US">Sign In</a>
+			<span class="dw-mf-signin-spacer">|</span>
+			<a href="https://developer.ibm.com/sso/register?lang=en_US&d=https%3A%2F%2Fdeveloper.ibm.com%2Fopen%2F2016%2F01%2F21%2Fintroducing-watson-unity-sdk" style="color: #ef9700;">Register</a>
+
+	  </span>
+
+
+	  <span id="pnext-dw-tab" class="pn-dw-tab"><a href="http://www.ibm.com/developerworks/" rel="external"><img alt="dW" src="https://developer.ibm.com/open/wp-content/themes/projectnext/css/dw-tab.png"/></a></span>
+	</div>
+
+</div>
+
+<style>
+.links-top-menu a,
+.links-top-menu a:visited,
+.navbar-inner .nav-links > li > a {
+  color: #ffffff;
+}
+
+.links-top-menu a:hover,
+.links-top-menu a:focus,
+.navbar-inner .nav-links > li > a:hover,
+.navbar-inner .nav-links > li > a:focus {
+  color: #000000;
+}
+
+.link-home a,
+.link-home a:visited { color: #ffffff; }
+
+.link-home a:hover,
+.link-home a:focus {
+  color: #ffffff;
+}
+
+
+.pn-top-menu {
+	font-family: "HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue",Helvetica,Arial, sans-serif;
+  font-weight: 200;
+  border-top-color: #00b4a0;
+  background: #00b4a0; /* Old browsers */
+  background: -webkit-linear-gradient(top, #00b4a0 0%,#00b4a0 100%); /* Chrome10+,Safari5.1+ */
+  background: linear-gradient(to bottom, #00b4a0 0%, #00b4a0 100%); /* W3C */
+    border-bottom-color: #00b4a0;
+}
+
+.pn-nav-search-input {
+  border-color: #ffffff;
+
+  background: #ffffff; /* Old browsers */
+  background: transparent -webkit-linear-gradient(top, #ffffff 0,#ffffff 35px, #ffffff 150px, #ffffff 185px); /* Chrome10+,Safari5.1+ */
+  background: transparent linear-gradient(to bottom,  #ffffff 0,#ffffff 35px, #ffffff 150px, #ffffff 185px); /* W3C */
+  background-position: left top;
+  background-size: 100% 185px;
+  }
+
+.pn-nav-search-input[required] {
+  box-shadow: none;
+}
+
+.pn-nav-home,
+.pn-top-menu .menu-item {
+  line-height: 2;
+  white-space: nowrap;
+}
+
+.pn-nav-home {
+	display: block;
+	font-size: 1em;
+	text-transform: uppercase;
+	letter-spacing: 1.5px;
+	font-weight: bold;
+	text-shadow: 0 1px #333333;
+	margin-right: 2.75em;
+	margin-left: 2.2em;
+}
+
+.pn-logo-image {
+	margin: 0;
+	padding: 0;
+	display: block;
+	max-width: none !important;
+	height: auto !important;
+}
+
+.pn-top-menu .menu-item {
+  float:left; /* use float, not inlines, to avoid line-breaks between words */
+	margin-right: 2em;
+	}
+
+.pn-search {
+}
+
+.pn-btn {
+  color: #fff !important;
+}
+
+.pn-btn,
+.pn-btn-primary {
+  background-color: #2980b9;
+}
+
+.pn-btn:hover,
+.pn-btn:focus,
+.pn-btn-primary:hover,
+.pn-btn-primary:focus {
+  background-color: #3498db;
+}
+
+.pn-btn-secondary {
+  background-color: #1e9439;
+}
+
+.pn-btn-secondary:hover,
+.pn-btn-secondary:focus {
+  background-color: #3bc967;
+}
+
+
+.pn-btn-nav-menu {
+  vertical-align: middle;
+  padding-left: 1.428571429em;
+  padding-right: 1.428571429em;
+}
+</style>
+
+<div id="pnext-top-menu" class="pn-top-menu links-top-menu" role="navigation" aria-label="Main navigation">
+  <div class="flag">
+    <span class="link-home flag-img">
+      <a rel="home" class="pn-nav-home" href="https://developer.ibm.com/open"><img class="pn-logo-image" src=//developer.ibm.com/open/wp-content/uploads/sites/50/2015/07/dw_open_logo2.png alt="developerWorks Open" /></a>
+    </span>
+
+
+      <div class="pn-top-menu-container flag-bd flag-expand"><ul id="menu-main" class="menu"><li id="menu-item-51" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-51"><a href="https://developer.ibm.com/open/projects/">Projects</a></li>
+<li id="menu-item-32" class="menu-item menu-item-type-post_type menu-item-object-page current_page_parent menu-item-32"><a href="https://developer.ibm.com/open/blogs/">Blogs</a></li>
+<li id="menu-item-530" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-530"><a href="https://developer.ibm.com/open/about/">About</a></li>
+<li id="menu-item-2594" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2594"><a href="https://developer.ibm.com/open/contribute/">Contribute</a></li>
+<li id="menu-item-2800" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-2800"><a href="https://developer.ibm.com/opentech/">OpenTech</a></li>
+<li id="menu-item-2814" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-2814"><a href="https://www.ibm.com/developerworks/learn/opensource/">Tutorials</a></li>
+<li id="menu-item-5038" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-5038"><a href="https://developer.ibm.com/open/events/">Events</a></li>
+<li id="menu-item-7476" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-7476"><a href="http://developer.ibm.com/open/videos">Videos</a></li>
+</ul></div>
+
+    <div class="flag-bd">
+
+
+
+	  <div class="pn-search">
+
+		<form role="search" class="pn-search-form" method="get" id="searchbox_006696266273115712924:ft7vdfhvshq" action="https://developer.ibm.com/open/search/">
+		  <div id="bloodhound"><input value="more:nextopen " name="hq" type="hidden">
+		  <label for="pnext-search-input" class="visuallyhidden">Search</label>
+			<input placeholder="Search" required aria-required="true" id="pnext-search-input" class="typeahead pn-search-input pn-nav-search-input fl" name="visual_q" size="70" type="search" placeholder="Begin typing to search">
+		  <input id="pnext-search-input-hidden" name="q" type="hidden">
+		  <input class="pn-search-submit" type="image" src="https://developer.ibm.com/open/wp-content/themes/projectnext/css/searchicon.png" height="14" width="14" alt="Go"
+			  onclick="(function() {
+				  var search_input = $('#pnext-search-input');
+				  var search_actual = $('#pnext-search-input-hidden');
+				  search_actual.val(search_input.val()+' more:nextopen ');
+				  $('#searchbox_006696266273115712924:ft7vdfhvshq').submit();
+				  return false;
+			  })()" /></div>
+		</form>
+
+	  </div>
+
+
+    </div>
+
+  </div>
+</div>
+    <div id="pnext-main" class="mbxl pn-sticky-footer-body" role="main">
+<script type="text/javascript">
+jQuery( document ).ready( function( $ ) {
+    	// Relocate Jetpack sharing buttons down into the comments form
+    	jQuery( '#comments-hook' ).html( jQuery( '.sharedaddy' ).detach() );
+} );
+</script>
+
+	<div class="pn-pcon">
+
+		<nav class="mtm pn-nav-links cf">
+
+							<div class="fl">
+										<a href="https://developer.ibm.com/open/watson-developer-cloud-unity-sdk/">Watson Developer Cloud: Unity SDK</a> &emsp; | &emsp; <a href='https://developer.ibm.com/open/category/watson-developer-cloud-unity-sdk/'>More Watson Developer Cloud: Unity SDK posts</a>				</div>
+
+			<div class="fr">
+				<a href="https://developer.ibm.com/open/2016/01/20/internet-of-things-security-new-connections-new-threats/" rel="prev">&lt; Previous</a>				&emsp; / &emsp;
+				<a href="https://developer.ibm.com/open/2016/01/21/watson-ios-sdk-simplified-object-mapping/" rel="next">Next &gt;</a>			</div>
+
+		</nav>
+
+		<article id="post-4235" class="post-4235 post type-post status-publish format-standard hentry category-watson-developer-cloud-unity-sdk tag-sdk tag-unity tag-watson tag-watson-developer-cloud tag-watson-unity-sdk">
+
+			<div class="pn-single-post-header">
+				<header>
+					<h1 class="pn-page-title">Game on! Introducing Watson Unity SDK</h1>
+				</header>
+
+
+<footer class="pn-post-meta pn-post-data-with-avatar">
+
+	<div class="flag links-std">
+				<div class="flag-img pn-meta-avatar">
+			<span class="author-avatar">
+				<img alt='' src='//www.ibm.com/developerworks/community/profiles/photo.do?userid=3100011A5J' srcset='//www.ibm.com/developerworks/community/profiles/photo.do?userid=3100011A5J' class='avatar avatar-42 photo' height='42' width='42' />			</span>
+		</div>
+
+		<div class="flag-bd">
+			        <span class="pn-meta-author">
+          <a href="https://developer.ibm.com/open/author/rolyle/" title="Posts by rlyle" rel="author">    				RICHARD LYLE    			</a>
+        </span>
+        <span class="pn-meta-divider">/</span>
+
+
+			<span class="pn-meta-date">
+			January 21, 2016			</span>
+							<!-- span class="pn-meta-divider">/</span-->
+				<span id="comments-hook" class="pn-meta-comments">
+					<!-- remove for now (i/o) -->
+									</span>
+					</div>
+
+	</div>
+
+</footer>
+
+			</div>
+
+			<div class="pn-columns">
+
+									<div class="pn-col-6-6">
+
+						<div class="pn-copy">
+							<p>After several months of work we are happy to present the <a href="https://developer.ibm.com/open/watson-developer-cloud-unity-sdk">Watson Unity SDK</a>, an SDK to enable the Unity community to access the Watson Developer Cloud and build a cognitive application in Unity. </p>
+<p>I&#8217;ve been involved in the game industry for 22+ years now, but I can tell you in all honestly working in the Watson Innovation Labs and on this project has been the highlight of my career. This SDK really represents the first phase in what we plan to bring to the community, which in the end will be a framework for building a full cognitive application. </p>
+<p>You as a developer will find very simple C# service abstractions for accessing Dialog, Speech To Text, Text to Speech, Language Translation, and Natural Language Classification services. Additionally, we&#8217;ve implemented something we are calling a <strong>Widget</strong>, which has inputs and outputs and performs some basic function. </p>
+<p>These widgets can be connected together to form a graph for the data that&#8217;s routed for a given cognitive application. The widgets will attempt to automatically connect to each other, or you as a developer can override that behavior and manually take control of the process. We&#8217;ve implemented widgets for all of the basic services and provide a couple of example applications showing how they can work together.</p>
+<p>We plan to continue to expand and build on the Watson Unity SDK. We invite you to join us in contributing to and using the SDK, or by simply giving us your feedback. We&#8217;d love to have you on board for this ride!</p>
+<div class="sharedaddy sd-sharing-enabled"><div class="robots-nocontent sd-block sd-social sd-social-icon sd-sharing"><div class="sd-content"><ul><li class="share-twitter"><a rel="nofollow" data-shared="sharing-twitter-4235" class="share-twitter sd-button share-icon no-text" href="https://developer.ibm.com/open/2016/01/21/introducing-watson-unity-sdk/?share=twitter" target="_blank" title="Click to share on Twitter"><span></span><span class="sharing-screen-reader-text">Click to share on Twitter (Opens in new window)</span></a></li><li class="share-facebook"><a rel="nofollow" data-shared="sharing-facebook-4235" class="share-facebook sd-button share-icon no-text" href="https://developer.ibm.com/open/2016/01/21/introducing-watson-unity-sdk/?share=facebook" target="_blank" title="Share on Facebook"><span></span><span class="sharing-screen-reader-text">Share on Facebook (Opens in new window)</span></a></li><li class="share-linkedin"><a rel="nofollow" data-shared="sharing-linkedin-4235" class="share-linkedin sd-button share-icon no-text" href="https://developer.ibm.com/open/2016/01/21/introducing-watson-unity-sdk/?share=linkedin" target="_blank" title="Click to share on LinkedIn"><span></span><span class="sharing-screen-reader-text">Click to share on LinkedIn (Opens in new window)</span></a></li><li class="share-reddit"><a rel="nofollow" data-shared="" class="share-reddit sd-button share-icon no-text" href="https://developer.ibm.com/open/2016/01/21/introducing-watson-unity-sdk/?share=reddit" target="_blank" title="Click to share on Reddit"><span></span><span class="sharing-screen-reader-text">Click to share on Reddit (Opens in new window)</span></a></li><li class="share-google-plus-1"><a rel="nofollow" data-shared="sharing-google-4235" class="share-google-plus-1 sd-button share-icon no-text" href="https://developer.ibm.com/open/2016/01/21/introducing-watson-unity-sdk/?share=google-plus-1" target="_blank" title="Click to share on Google+"><span></span><span class="sharing-screen-reader-text">Click to share on Google+ (Opens in new window)</span></a></li><li class="share-end"></li></ul></div></div></div>						</div>
+
+						<div class="cf pn-post-tags-and-share">
+															<div class="fl pn-nav-links pn-tags mrm">
+									Tagged: <a href="https://developer.ibm.com/open/tag/sdk/" rel="tag">SDK</a> / <a href="https://developer.ibm.com/open/tag/unity/" rel="tag">unity</a> / <a href="https://developer.ibm.com/open/tag/watson/" rel="tag">watson</a> / <a href="https://developer.ibm.com/open/tag/watson-developer-cloud/" rel="tag">watson-developer-cloud</a> / <a href="https://developer.ibm.com/open/tag/watson-unity-sdk/" rel="tag">watson-unity-sdk</a>								</div>
+													</div>
+
+
+						<div id="comments" class="pn-post-comments">
+							<div id="respond">
+							  <div class="comments-area">
+	<h2 class="pn-h2 mbm">One Comment</h2>
+	<div class="pn-pagination cf">
+		<div class="fl"></div>
+		<div class="fr"></div>
+	</div>
+	<ol class="commentlist">
+				<li class="pingback even thread-even depth-1" id="comment-451">
+				<div id="div-comment-451" class="comment-body">
+				<div class="comment-author vcard">
+						<cite class="fn"><a href='https://developer.ibm.com/dwblog/the-two-words-that-sum-up-sxswi-2016-virtual-reality/' rel='external nofollow' class='url'>The two words that sum up SXSWi 2016: Virtual Reality</a></cite> <span class="says">says:</span>		</div>
+
+		<div class="comment-meta commentmetadata"><a href="https://developer.ibm.com/open/2016/01/21/introducing-watson-unity-sdk/#comment-451">
+			March 15, 2016 at 5:52 pm</a>		</div>
+
+		<p>[&#8230;] video game workflow is built on game engines like Unity (which now works with Watson APIs!) where developers can build amazing 3D environments and program controllers for the viewer to have [&#8230;]</p>
+
+		<div class="reply"><a class='comment-reply-link' href='/open/2016/01/21/introducing-watson-unity-sdk/?replytocom=451#respond' onclick='return addComment.moveForm( "div-comment-451", "451", "respond", "4235" )' aria-label='Reply to The two words that sum up SXSWi 2016: Virtual Reality'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+	</ol>
+	<div class="pn-pagination">
+		<div class="fl"></div>
+		<div class="fr"></div>
+	</div>
+</div>
+ <div id="comment-form" class="ptm">
+	<h2 class="pn-h2 mbm">Leave a comment</h2>
+	<div class="cancel-comment-reply">
+		<a rel="nofollow" id="cancel-comment-reply-link" href="/open/2016/01/21/introducing-watson-unity-sdk/#respond" style="display:none;">Click here to cancel reply.</a>	</div>
+		<form action="https://developer.ibm.com/open/wp-comments-post.php" method="post" id="commentform">
+				    <fieldset class="mbs">
+          <legend class="visuallyhidden">Tell us who you are</legend>
+
+          <label for="author" class="visuallyhidden">Name (required)</label>
+          <input type="text" name="author" id="author" value="Name *" size="22" class="text-input pn-input" required aria-required='true' />
+          <label for="email" class="visuallyhidden">Email (required)</label>
+          <input type="text" name="email" id="email" value="Email *" size="22" class="pn-input text-input" required aria-required='true' />
+          <!-- label for="url" class="visuallyhidden">Website (required)</label-->
+          <!-- input type="text" name="url" id="url" value="Website *" size="22" class="pn-input text-input" required aria-required='true' /-->
+		    </fieldset>
+	    			<label class="visuallyhidden" for="comment">Comment text</label>
+			<textarea name="comment" id="comment" cols="58" rows="10" class="pn-textarea pn-comment-input" placeholder="Comment"></textarea>
+	        <div class="clear"></div>
+			<input name="submit" type="submit" id="submit" value="Submit Comment" class="comment-submit pn-btn" />
+			<input type="hidden" name="redirect_to" value="/open/2016/01/21/introducing-watson-unity-sdk/" />
+			<input type='hidden' name='comment_post_ID' value='4235' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+		    <p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="0a6e1817c0" /></p><p class="comment-subscription-form"><input type="checkbox" name="subscribe_comments" id="subscribe_comments" value="subscribe" style="width: auto; -moz-appearance: checkbox; -webkit-appearance: checkbox;" /> <label class="subscribe-label" id="subscribe-label" for="subscribe_comments">Notify me of follow-up comments by email.</label></p><p class="comment-subscription-form"><input type="checkbox" name="subscribe_blog" id="subscribe_blog" value="subscribe" style="width: auto; -moz-appearance: checkbox; -webkit-appearance: checkbox;" /> <label class="subscribe-label" id="subscribe-blog-label" for="subscribe_blog">Notify me of new posts by email.</label></p><p style="display: none;"><input type="hidden" id="ak_js" name="ak_js" value="98"/></p>	</form>
+ </div>
+							</div>
+						</div>
+
+					</div>
+
+
+			</div>
+
+		</article>
+
+	</div>
+
+
+
+
+</div>  <!-- // main class from header.php (note: does not actually center) -->
+
+
+
+<div id="pnext-footer" class="pn-footer links-footer" class="mtxl" role="navigation" aria-label="Page footer">
+
+	<div class="pn-pcon">
+
+		<div class="pn-columns">
+			<div class="pn-col-6-1">
+
+
+<a class="pn-footer-social-link" href="https://developer.ibm.com/open/feed/">
+  <i class="sprite rss-footer"></i><span class="visuallyhidden">RSS Feed</span>
+</a>
+			</div>
+			<div class="pn-col-6-4">
+
+			  <div class="pn-footer-menu" role="contentinfo">
+
+          <ul id="menu-footer" class="pn-footer-menu pn-il pn-il--center"><li class='pn-footer-menu-item pn-il-item'><a href='https://developer.ibm.com/open/about/'>About</a></li><li class='pn-footer-menu-item pn-il-item'><a href='https://developer.ibm.com/open/faq/'>FAQ</a></li><li class='pn-footer-menu-item pn-il-item'><a href='https://www.ibm.com/developerworks/secure/reportabuse?referingURL=https%3A%2F%2Fdeveloper.ibm.com%2Fopen%2F2016%2F01%2F21%2Fintroducing-watson-unity-sdk'>Report Abuse</a></li><li class='pn-footer-menu-item pn-il-item'><a href='/terms-of-use/'>Terms of Use</a></li><li class='pn-footer-menu-item pn-il-item'><a href='/third-party-notice/'>Third Party Notice</a></li><li class='pn-footer-menu-item pn-il-item'><a href='http://www.ibm.com/privacy/'>IBM Privacy</a></li></ul>
+			  </div>
+
+			</div>
+
+			<div class="pn-col-6-1">
+
+			  <span class="fr">
+			  <a href="http://ibm.com"><i class="sprite ibm-smlogo"></i><span class="visuallyhidden">IBM</span></a>
+			  </span>
+
+			</div>
+		</div>
+
+
+	</div>
+
+</div>
+
+	<div style="display:none">
+	<div class="grofile-hash-map-681a4fe0f8a3769ef8850d759509996a">
+	</div>
+	</div>
+
+	<script type="text/javascript">
+		window.WPCOM_sharing_counts = {"https:\/\/developer.ibm.com\/open\/2016\/01\/21\/introducing-watson-unity-sdk\/":4235};
+		window.WPCOM_jetpack = true;
+				window.WPCOM_site_ID = 95783183;
+			</script>
+		<script type="text/javascript">
+			var windowOpen;
+		jQuery(document).on( 'ready post-load', function(){
+			jQuery( 'a.share-twitter' ).on( 'click', function() {
+				if ( 'undefined' !== typeof windowOpen ){ // If there's another sharing window open, close it.
+					windowOpen.close();
+				}
+				windowOpen = window.open( jQuery(this).attr( 'href' ), 'wpcomtwitter', 'menubar=1,resizable=1,width=600,height=350' );
+				return false;
+			});
+		});
+		</script>
+				<script type="text/javascript">
+			var windowOpen;
+		jQuery(document).on( 'ready post-load', function(){
+			jQuery( 'a.share-facebook' ).on( 'click', function() {
+				if ( 'undefined' !== typeof windowOpen ){ // If there's another sharing window open, close it.
+					windowOpen.close();
+				}
+				windowOpen = window.open( jQuery(this).attr( 'href' ), 'wpcomfacebook', 'menubar=1,resizable=1,width=600,height=400' );
+				return false;
+			});
+		});
+		</script>
+				<script type="text/javascript">
+			var windowOpen;
+		jQuery(document).on( 'ready post-load', function(){
+			jQuery( 'a.share-linkedin' ).on( 'click', function() {
+				if ( 'undefined' !== typeof windowOpen ){ // If there's another sharing window open, close it.
+					windowOpen.close();
+				}
+				windowOpen = window.open( jQuery(this).attr( 'href' ), 'wpcomlinkedin', 'menubar=1,resizable=1,width=580,height=450' );
+				return false;
+			});
+		});
+		</script>
+				<script type="text/javascript">
+			var windowOpen;
+		jQuery(document).on( 'ready post-load', function(){
+			jQuery( 'a.share-google-plus-1' ).on( 'click', function() {
+				if ( 'undefined' !== typeof windowOpen ){ // If there's another sharing window open, close it.
+					windowOpen.close();
+				}
+				windowOpen = window.open( jQuery(this).attr( 'href' ), 'wpcomgoogle-plus-1', 'menubar=1,resizable=1,width=480,height=550' );
+				return false;
+			});
+		});
+		</script>
+		<script type='text/javascript' src='https://developer.ibm.com/open/wp-content/plugins/akismet/_inc/form.js'></script>
+<script type='text/javascript' src='https://s0.wp.com/wp-content/js/devicepx-jetpack.js'></script>
+<script type='text/javascript' src='https://secure.gravatar.com/js/gprofiles.js'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var WPGroHo = {"my_hash":""};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://developer.ibm.com/open/wp-content/plugins/jetpack/modules/wpgroho.js'></script>
+<script type='text/javascript' src='https://developer.ibm.com/open/wp-content/themes/projectnext-openworks/slick/slick.min.js'></script>
+<script type='text/javascript' src='https://developer.ibm.com/open/wp-content/themes/projectnext/js/util.js'></script>
+<script type='text/javascript' src='https://developer.ibm.com/open/wp-content/themes/projectnext/js/google-analytics.js'></script>
+<script type='text/javascript' src='https://developer.ibm.com/open/wp-content/themes/projectnext/js/pnext.jquery.nav-tree.js'></script>
+<script type='text/javascript' src='https://developer.ibm.com/open/wp-includes/js/comment-reply.min.js'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var sharing_js_options = {"lang":"en","counts":"1"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://developer.ibm.com/open/wp-content/plugins/jetpack/modules/sharedaddy/sharing.js'></script>
+<script type='text/javascript' src='https://stats.wp.com/e-201624.js' async defer></script>
+<script type='text/javascript'>
+	_stq = window._stq || [];
+	_stq.push([ 'view', {v:'ext',j:'1:3.5.3',blog:'95783183',post:'4235',tz:'-4',srv:'developer.ibm.com'} ]);
+	_stq.push([ 'clickTrackerInit', '95783183', '4235' ]);
+</script>
+
+<!-- Piwik -->
+<script>
+  var _paq = _paq || [];
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  _paq.push(['setCustomVariable',1,"devCenter",'50',"visit"]);
+   _paq.push(['setCustomVariable',2,"theme",'pnext_50',"visit"]);
+
+  (function() {
+    var u="//developer.ibm.com/piwik/";
+    _paq.push(['setTrackerUrl', u+'piwik.php']);
+    _paq.push(['setSiteId', 3]);
+
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<noscript><p><img src="//developer.ibm.com/piwik/piwik.php?idsite=3&devCenter=50&theme=pnext_50" style="border:0;" alt="" /></p></noscript>
+<!-- End Piwik Code -->
+
+</body>
+</html>
