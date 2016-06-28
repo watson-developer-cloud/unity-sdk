@@ -25,8 +25,7 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
     /// Document Conversion response.
     /// </summary>
     [fsObject]
-
-    public class DocumentConversionResponse
+    public class ConvertedDocument
     {
         /// <summary>
         /// The source document ID.
@@ -58,7 +57,6 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
     /// Metadata for the doucment conversion.
     /// </summary>
     [fsObject]
-
     public class Metadata
     {
         /// <summary>
@@ -75,7 +73,6 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
     /// The units of the broken down document.
     /// </summary>
     [fsObject]
-
     public class AnswerUnit
     {
         /// <summary>
@@ -105,7 +102,6 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
     }
 
     [fsObject]
-
     public class Content
     {
         /// <summary>
@@ -122,7 +118,6 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
     /// The error response.
     /// </summary>
     [fsObject]
-
     public class Warning
     {
         /// <summary>
@@ -140,9 +135,9 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
     /// </summary>
     public class ConversionTargets
     {
-        public const string ANSWER_UNITS = "answer_units";
-        public const string NORMALIZED_HTML = "normalized_html";
-        public const string NORMALIZED_TEXT = "normalized_text";
+        public const string ANSWER_UNITS = "{\"conversion_target\": \"answer_units\"}";
+        public const string NORMALIZED_HTML = "{\"conversion_target\": \"normalized_html\"}";
+        public const string NORMALIZED_TEXT = "{\"conversion_target\": \"normalized_text\"}";
     }
 
     /// <summary>

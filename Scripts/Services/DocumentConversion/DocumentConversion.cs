@@ -37,7 +37,7 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
 
         #region ConvertDocument
         private const string FUNCTION_CONVERT_DOCUMENT = "/v1/convert_document";
-        public delegate void OnConvertDocument(DocumentConversionResponse resp, string data);
+        public delegate void OnConvertDocument(ConvertedDocument resp, string data);
         /// <summary>
         /// The delegate for loading a file, used by TrainClassifier().
         /// </summary>
@@ -89,11 +89,10 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
             if (documentData != null)
             {
                 req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
-
-                string config = string.Format("{\"conversion_target\":\"{0}\"}", conversionTarget);
+                
                 req.Forms = new Dictionary<string, RESTConnector.Form>();
                 req.Forms["file"] = new RESTConnector.Form(documentData);
-                req.Forms["config"] = new RESTConnector.Form(config);
+                req.Forms["config"] = new RESTConnector.Form(conversionTarget.ToString());
             }
 
             return connector.Send(req);
@@ -107,7 +106,7 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
 
         private void ConvertDocumentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DocumentConversionResponse response = new DocumentConversionResponse();
+            ConvertedDocument response = new ConvertedDocument();
             if (resp.Success)
             {
                 try
@@ -132,19 +131,45 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
             if (((ConvertDocumentRequest)req).Callback != null)
                 ((ConvertDocumentRequest)req).Callback(resp.Success ? response : null, ((ConvertDocumentRequest)req).Data);
         }
+        #endregion
 
         #region IWatsonService interface
         /// <exclude /> 
         public string GetServiceID()
         {
-            throw new NotImplementedException();
+            return SERVICE_ID;
         }
 
         /// <exclude />
         public void GetServiceStatus(ServiceStatus callback)
         {
-            throw new NotImplementedException();
+            if (Config.Instance.FindCredentials(SERVICE_ID) != null)
+                new CheckServiceStatus(this, callback);
+            else
+                callback(SERVICE_ID, false);
         }
+
+        private class CheckServiceStatus
+        {
+            private DocumentConversion m_Service = null;
+            private ServiceStatus m_Callback = null;
+
+            public CheckServiceStatus(DocumentConversion service, ServiceStatus callback)
+            {
+                m_Service = service;
+                m_Callback = callback;
+                string examplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/watson_beats_jeopardy.html";
+                if (!m_Service.ConvertDocument(OnConvertDocument, examplePath))
+                    m_Callback(SERVICE_ID, false);
+            }
+
+            void OnConvertDocument(ConvertedDocument documentConversionData, string data)
+            {
+                if (m_Callback != null)
+                    m_Callback(SERVICE_ID, documentConversionData != null);
+            }
+
+        };
         #endregion
     }
 }
