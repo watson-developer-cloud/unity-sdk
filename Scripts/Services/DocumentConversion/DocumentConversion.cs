@@ -49,7 +49,7 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
         /// </summary>
         public LoadFileDelegate LoadFile { get; set; }
 
-        public bool ConvertDocument(OnConvertDocument callback, string documentPath, string conversionTarget = ConversionTargets.ANSWER_UNITS, string data = null)
+        public bool ConvertDocument(OnConvertDocument callback, string documentPath, string conversionTarget = ConversionTarget.ANSWER_UNITS, string data = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -66,6 +66,7 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
             req.Callback = callback;
             req.OnResponse = ConvertDocumentResponse;
             req.Data = data;
+            req.ConversionTarget = conversionTarget;
             req.Parameters["version"] = Version.DOCUMENT_CONVERSION;
 
             byte[] documentData = null;
@@ -101,31 +102,45 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
         private class ConvertDocumentRequest : RESTConnector.Request
         {
             public string Data { get; set; }
+            public string ConversionTarget { get; set; }
             public OnConvertDocument Callback { get; set; }
         };
 
         private void ConvertDocumentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             ConvertedDocument response = new ConvertedDocument();
+
             if (resp.Success)
             {
-                try
+                if((req as ConvertDocumentRequest).ConversionTarget == ConversionTarget.ANSWER_UNITS)
                 {
+                    try
+                    {
                     fsData data = null;
                     fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = response;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
+                        object obj = response;
+                        r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                        if (!r.Succeeded)
+                            throw new WatsonException(r.FormattedMessages);
+                    }
+                    catch (Exception e)
+                    {
+                        Log.Error("DocumentConversion", "ConvertDocumentResponse Exception: {0}", e.ToString());
+                        resp.Success = false;
+                    }
                 }
-                catch (Exception e)
+                else if((req as ConvertDocumentRequest).ConversionTarget == ConversionTarget.NORMALIZED_HTML)
                 {
-                    Log.Error("DocumentConversion", "ConvertDocumentResponse Exception: {0}", e.ToString());
-                    resp.Success = false;
+                    response.htmlContent = System.Text.Encoding.Default.GetString(resp.Data);
                 }
+                else if((req as ConvertDocumentRequest).ConversionTarget == ConversionTarget.NORMALIZED_TEXT)
+                {
+                    response.textContent = System.Text.Encoding.Default.GetString(resp.Data);
+                }
+
             }
 
             if (((ConvertDocumentRequest)req).Callback != null)

@@ -51,6 +51,14 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
         /// Warnings.
         /// </summary>
         public Warning[] warnings { get; set; }
+        /// <summary>
+        /// Container for text response from ConversionTarget.NORMALIZED_TEXT
+        /// </summary>
+        public string textContent { get; set; }
+        /// <summary>
+        /// Container for HTML response from ConversionTarget.NORMALIZED_HTML
+        /// </summary>
+        public string htmlContent { get; set; }
     }
 
     /// <summary>
@@ -133,7 +141,7 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
     /// <summary>
     /// Targets for document conversion.
     /// </summary>
-    public class ConversionTargets
+    public class ConversionTarget
     {
         public const string ANSWER_UNITS = "{\"conversion_target\": \"answer_units\"}";
         public const string NORMALIZED_HTML = "{\"conversion_target\": \"normalized_html\"}";
