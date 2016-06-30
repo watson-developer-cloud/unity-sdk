@@ -27,12 +27,12 @@ using System.Collections;
 using System.IO;
 using UnityEngine;
 
-namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
+namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 {
     /// <summary>
     /// Service integration for Alchemy API
     /// </summary>
-    public class AlchemyLanguage : IWatsonService
+    public class AlchemyAPI : IWatsonService
     {
 
         #region Private Data
@@ -70,9 +70,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         /// <param name="customData">Custom data.</param>
         public bool GetAuthors(OnGetAuthors callback, string source, string customData = default(string))
         {
-            if(callback == null)
+            if (callback == null)
                 throw new ArgumentNullException("callback");
-            if(string.IsNullOrEmpty(source))
+            if (string.IsNullOrEmpty(source))
                 throw new ArgumentNullException("Please provide a source for GetAuthors.");
             if (string.IsNullOrEmpty(mp_ApiKey))
                 SetCredentials();
@@ -89,17 +89,22 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             string service;
             string normalizedSource = source.Trim().ToLower();
-            if(normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
+            if (normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
             {
                 service = SERVICE_GET_AUTHORS_URL;
                 req.Forms["url"] = new RESTConnector.Form(source);
             }
-            else if(Path.GetExtension(normalizedSource).EndsWith(".html") && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
+            else if (source.StartsWith(Application.dataPath) && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
             {
-                service = SERVICE_GET_AUTHORS_HTML;
-                string htmlData = default(string);
-                htmlData = File.ReadAllText(source);
-                req.Forms["html"] = new RESTConnector.Form(htmlData);
+                if (Path.GetExtension(normalizedSource).EndsWith(".html"))
+                {
+                    service = SERVICE_GET_AUTHORS_HTML;
+                    string htmlData = default(string);
+                    htmlData = File.ReadAllText(source);
+                    req.Forms["html"] = new RESTConnector.Form(htmlData);
+                }
+                else
+                    throw new WatsonException("An HTML source is needed for GetAuthors");
             }
             else
             {
@@ -108,7 +113,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             }
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, service);
-            if(connector == null)
+            if (connector == null)
                 return false;
 
             req.OnResponse = OnGetAuthorsResponse;
@@ -175,10 +180,10 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         /// <param name="includeSourceText">If set to <c>true</c> include source text.</param>
         /// <param name="customData">Custom data.</param>
         public bool GetRankedConcepts(OnGetRankedConcepts callback, string source,
-            int maxRetrieve = 8, 
-            bool includeKnowledgeGraph = false, 
-            bool includeLinkedData = true, 
-            bool includeSourceText = false, 
+            int maxRetrieve = 8,
+            bool includeKnowledgeGraph = false,
+            bool includeLinkedData = true,
+            bool includeSourceText = false,
             string customData = default(string))
         {
             if (callback == null)
@@ -204,17 +209,22 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             string service;
             string normalizedSource = source.Trim().ToLower();
-            if(normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
+            if (normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
             {
                 service = SERVICE_GET_RANKED_CONCEPTS_URL;
                 req.Forms["url"] = new RESTConnector.Form(source);
             }
-            else if(Path.GetExtension(normalizedSource).EndsWith(".html") && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
+            else if (!normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://") && source.StartsWith(Application.dataPath))
             {
-                service = SERVICE_GET_RANKED_CONCEPTS_HTML;
-                string htmlData = default(string);
-                htmlData = File.ReadAllText(source);
-                req.Forms["html"] = new RESTConnector.Form(htmlData);
+                if (Path.GetExtension(normalizedSource).EndsWith(".html"))
+                {
+                    service = SERVICE_GET_RANKED_CONCEPTS_HTML;
+                    string htmlData = default(string);
+                    htmlData = File.ReadAllText(source);
+                    req.Forms["html"] = new RESTConnector.Form(htmlData);
+                }
+                else
+                    throw new WatsonException("An HTML source is needed for GetRankedConcepts");
             }
             else
             {
@@ -223,7 +233,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             }
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, service);
-            if(connector == null)
+            if (connector == null)
                 return false;
 
             req.OnResponse = OnGetRankedConceptsResponse;
@@ -295,7 +305,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
                 throw new WatsonException("Please provide a source for GetAuthors.");
             if (string.IsNullOrEmpty(mp_ApiKey))
                 SetCredentials();
-            if(string.IsNullOrEmpty(anchorDate))
+            if (string.IsNullOrEmpty(anchorDate))
                 anchorDate = GetCurrentDatetime();
 
             GetDatesRequest req = new GetDatesRequest();
@@ -312,17 +322,22 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             string service;
             string normalizedSource = source.Trim().ToLower();
-            if(normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
+            if (normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
             {
                 service = SERVICE_GET_DATES_URL;
                 req.Forms["url"] = new RESTConnector.Form(source);
             }
-            else if(Path.GetExtension(normalizedSource).EndsWith(".html") && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
+            else if (source.StartsWith(Application.dataPath) && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
             {
-                service = SERVICE_GET_DATES_HTML;
-                string htmlData = default(string);
-                htmlData = File.ReadAllText(source);
-                req.Forms["html"] = new RESTConnector.Form(htmlData);
+                if (Path.GetExtension(normalizedSource).EndsWith(".html"))
+                {
+                    service = SERVICE_GET_DATES_HTML;
+                    string htmlData = default(string);
+                    htmlData = File.ReadAllText(source);
+                    req.Forms["html"] = new RESTConnector.Form(htmlData);
+                }
+                else
+                    throw new WatsonException("An HTML source is needed for ExtractDates!");
             }
             else
             {
@@ -331,7 +346,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             }
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, service);
-            if(connector == null)
+            if (connector == null)
                 return false;
 
             req.OnResponse = OnGetDatesResponse;
@@ -423,17 +438,22 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             string service;
             string normalizedSource = source.Trim().ToLower();
-            if(normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
+            if (normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
             {
                 service = SERVICE_GET_EMOTION_URL;
                 req.Forms["url"] = new RESTConnector.Form(source);
             }
-            else if(Path.GetExtension(normalizedSource).EndsWith(".html") && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
+            else if (source.StartsWith(Application.dataPath) && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
             {
-                service = SERVICE_GET_EMOTION_HTML;
-                string htmlData = default(string);
-                htmlData = File.ReadAllText(source);
-                req.Forms["html"] = new RESTConnector.Form(htmlData);
+                if (Path.GetExtension(normalizedSource).EndsWith(".html"))
+                {
+                    service = SERVICE_GET_EMOTION_HTML;
+                    string htmlData = default(string);
+                    htmlData = File.ReadAllText(source);
+                    req.Forms["html"] = new RESTConnector.Form(htmlData);
+                }
+                else
+                    throw new WatsonException("An HTML source is needed for GetEmotions!");
             }
             else
             {
@@ -442,7 +462,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             }
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, service);
-            if(connector == null)
+            if (connector == null)
                 return false;
 
             req.OnResponse = OnGetEmotionsResponse;
@@ -513,9 +533,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         /// <param name="includeSourceText">If set to <c>true</c> include source text.</param>
         /// <param name="extractStructuredEntities">If set to <c>true</c> extract structured entities.</param>
         /// <param name="customData">Custom data.</param>
-        public bool ExtractEntities(OnGetEntities callback, string source, 
-            int maxRetrieve = 50, 
-            bool resolveCoreference = true, 
+        public bool ExtractEntities(OnGetEntities callback, string source,
+            int maxRetrieve = 50,
+            bool resolveCoreference = true,
             bool disambiguate = true,
             bool includeKnowledgeGraph = false,
             bool includeLinkedData = true,
@@ -553,17 +573,22 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             string service;
             string normalizedSource = source.Trim().ToLower();
-            if(normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
+            if (normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
             {
                 service = SERVICE_GET_ENTITY_EXTRACTION_URL;
                 req.Forms["url"] = new RESTConnector.Form(source);
             }
-            else if(Path.GetExtension(normalizedSource).EndsWith(".html") && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
+            else if (source.StartsWith(Application.dataPath) && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
             {
-                service = SERVICE_GET_ENTITY_EXTRACTION_HTML;
-                string htmlData = default(string);
-                htmlData = File.ReadAllText(source);
-                req.Forms["html"] = new RESTConnector.Form(htmlData);
+                if (Path.GetExtension(normalizedSource).EndsWith(".html"))
+                {
+                    service = SERVICE_GET_ENTITY_EXTRACTION_HTML;
+                    string htmlData = default(string);
+                    htmlData = File.ReadAllText(source);
+                    req.Forms["html"] = new RESTConnector.Form(htmlData);
+                }
+                else
+                    throw new WatsonException("An HTML source is needed for ExtractEntities!");
             }
             else
             {
@@ -572,7 +597,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             }
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, service);
-            if(connector == null)
+            if (connector == null)
                 return false;
 
             req.OnResponse = OnGetEntitiesResponse;
@@ -654,19 +679,19 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             string service;
             string normalizedSource = source.Trim().ToLower();
-            if(normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
+            if (normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
             {
                 service = SERVICE_DETECT_FEEDS_URL;
                 req.Forms["url"] = new RESTConnector.Form(source);
             }
-            else if(Path.GetExtension(normalizedSource).EndsWith(".html") && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
+            else if (source.StartsWith(Application.dataPath) && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
             {
                 Log.Error("Alchemy Language", "A URL source is required for DetectFeeds!");
                 return false;
-//                service = SERVICE_DETECT_FEEDS_HTML;
-//                string htmlData = default(string);
-//                htmlData = File.ReadAllText(source);
-//                req.Forms["html"] = new RESTConnector.Form(htmlData);
+                //                service = SERVICE_DETECT_FEEDS_HTML;
+                //                string htmlData = default(string);
+                //                htmlData = File.ReadAllText(source);
+                //                req.Forms["html"] = new RESTConnector.Form(htmlData);
             }
             else
             {
@@ -675,7 +700,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             }
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, service);
-            if(connector == null)
+            if (connector == null)
                 return false;
 
             req.OnResponse = OnDetectFeedsResponse;
@@ -741,8 +766,8 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         /// <param name="analyzeSentiment">If set to <c>true</c> analyze sentiment.</param>
         /// <param name="includeSourceText">If set to <c>true</c> include source text.</param>
         /// <param name="customData">Custom data.</param>
-        public bool ExtractKeywords(OnGetKeywords callback, string source, 
-            int maxRetrieve = 50, 
+        public bool ExtractKeywords(OnGetKeywords callback, string source,
+            int maxRetrieve = 50,
             bool includeKnowledgeGraph = false,
             bool analyzeSentiment = false,
             bool includeSourceText = false,
@@ -772,17 +797,22 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             string service;
             string normalizedSource = source.Trim().ToLower();
-            if(normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
+            if (normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
             {
                 service = SERVICE_GET_KEYWORD_EXTRACTION_URL;
                 req.Forms["url"] = new RESTConnector.Form(source);
             }
-            else if(Path.GetExtension(normalizedSource).EndsWith(".html") && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
+            else if (source.StartsWith(Application.dataPath) && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
             {
-                service = SERVICE_GET_KEYWORD_EXTRACTION_HTML;
-                string htmlData = default(string);
-                htmlData = File.ReadAllText(source);
-                req.Forms["html"] = new RESTConnector.Form(htmlData);
+                if (Path.GetExtension(normalizedSource).EndsWith(".html"))
+                {
+                    service = SERVICE_GET_KEYWORD_EXTRACTION_HTML;
+                    string htmlData = default(string);
+                    htmlData = File.ReadAllText(source);
+                    req.Forms["html"] = new RESTConnector.Form(htmlData);
+                }
+                else
+                    throw new WatsonException("An HTML source is needed for Getkeywords!");
             }
             else
             {
@@ -791,7 +821,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             }
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, service);
-            if(connector == null)
+            if (connector == null)
                 return false;
 
             req.OnResponse = OnGetKeywordsResponse;
@@ -876,17 +906,22 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             string service;
             string normalizedSource = source.Trim().ToLower();
-            if(normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
+            if (normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
             {
                 service = SERVICE_GET_LANGUAGE_URL;
                 req.Forms["url"] = new RESTConnector.Form(source);
             }
-            else if(Path.GetExtension(normalizedSource).EndsWith(".html") && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
+            else if (source.StartsWith(Application.dataPath) && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
             {
-                service = SERVICE_GET_LANGUAGE_HTML;
-                string htmlData = default(string);
-                htmlData = File.ReadAllText(source);
-                req.Forms["html"] = new RESTConnector.Form(htmlData);
+                if (Path.GetExtension(normalizedSource).EndsWith(".html"))
+                {
+                    service = SERVICE_GET_LANGUAGE_HTML;
+                    string htmlData = default(string);
+                    htmlData = File.ReadAllText(source);
+                    req.Forms["html"] = new RESTConnector.Form(htmlData);
+                }
+                else
+                    throw new WatsonException("An HTML source is needed for GetLanguages!");
             }
             else
             {
@@ -895,7 +930,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             }
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, service);
-            if(connector == null)
+            if (connector == null)
                 return false;
 
             req.OnResponse = OnGetLanguagesResponse;
@@ -937,7 +972,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             if (((GetLanguagesRequest)req).Callback != null)
                 ((GetLanguagesRequest)req).Callback(resp.Success ? languageData : null, ((GetLanguagesRequest)req).Data);
-        } 
+        }
         #endregion
 
         #region GetMicroformat
@@ -977,19 +1012,19 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             string service = "";
             string normalizedSource = source.Trim().ToLower();
-            if(normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
+            if (normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
             {
                 service = SERVICE_GET_MICROFORMAT_URL;
                 req.Forms["url"] = new RESTConnector.Form(source);
             }
-            else if(Path.GetExtension(normalizedSource).EndsWith(".html") && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
+            else if (source.StartsWith(Application.dataPath) && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
             {
                 Log.Error("Alchemy Language", "A URL source is required for GetMicroformats!");
                 return false;
-//                service = SERVICE_GET_MICROFORMAT_HTML;
-//                string htmlData = default(string);
-//                htmlData = File.ReadAllText(source);
-//                req.Forms["html"] = new RESTConnector.Form(htmlData);
+                //                service = SERVICE_GET_MICROFORMAT_HTML;
+                //                string htmlData = default(string);
+                //                htmlData = File.ReadAllText(source);
+                //                req.Forms["html"] = new RESTConnector.Form(htmlData);
             }
             else
             {
@@ -998,7 +1033,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             }
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, service);
-            if(connector == null)
+            if (connector == null)
                 return false;
 
             req.OnResponse = OnGetMicroformatsResponse;
@@ -1080,17 +1115,22 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             string service = "";
             string normalizedSource = source.Trim().ToLower();
-            if(normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
+            if (normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
             {
                 service = SERVICE_GET_PUBLICATION_DATE_URL;
                 req.Forms["url"] = new RESTConnector.Form(source);
             }
-            else if(Path.GetExtension(normalizedSource).EndsWith(".html") && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
+            else if (source.StartsWith(Application.dataPath) && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
             {
-                service = SERVICE_GET_PUBLICATION_DATE_HTML;
-                string htmlData = default(string);
-                htmlData = File.ReadAllText(source);
-                req.Forms["html"] = new RESTConnector.Form(htmlData);
+                if (Path.GetExtension(normalizedSource).EndsWith(".html"))
+                {
+                    service = SERVICE_GET_PUBLICATION_DATE_HTML;
+                    string htmlData = default(string);
+                    htmlData = File.ReadAllText(source);
+                    req.Forms["html"] = new RESTConnector.Form(htmlData);
+                }
+                else
+                    throw new WatsonException("An HTML source is needed for GetPubicationDate!");
             }
             else
             {
@@ -1099,7 +1139,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             }
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, service);
-            if(connector == null)
+            if (connector == null)
                 return false;
 
             req.OnResponse = OnGetPublicationDateResponse;
@@ -1172,8 +1212,8 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         /// <param name="excludeEntitiesInSentiment">If set to <c>true</c> exclude entities in sentiment.</param>
         /// <param name="includeSourceText">If set to <c>true</c> include source text.</param>
         /// <param name="customData">Custom data.</param>
-        public bool GetRelations(OnGetRelations callback, string source, 
-            int maxRetrieve = 50, 
+        public bool GetRelations(OnGetRelations callback, string source,
+            int maxRetrieve = 50,
             bool includeKeywords = false,
             bool includeEntities = false,
             bool requireEntities = false,
@@ -1183,7 +1223,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             bool includeLinkedData = true,
             bool analyzeSentiment = false,
             bool excludeEntitiesInSentiment = false,
-            bool includeSourceText = false, 
+            bool includeSourceText = false,
             string customData = default(string))
         {
             if (callback == null)
@@ -1217,17 +1257,22 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             string service;
             string normalizedSource = source.Trim().ToLower();
-            if(normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
+            if (normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
             {
                 service = SERVICE_GET_RELATIONS_URL;
                 req.Forms["url"] = new RESTConnector.Form(source);
             }
-            else if(Path.GetExtension(normalizedSource).EndsWith(".html") && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
+            else if (source.StartsWith(Application.dataPath) && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
             {
-                service = SERVICE_GET_RELATIONS_HTML;
-                string htmlData = default(string);
-                htmlData = File.ReadAllText(source);
-                req.Forms["html"] = new RESTConnector.Form(htmlData);
+                if (Path.GetExtension(normalizedSource).EndsWith(".html"))
+                {
+                    service = SERVICE_GET_RELATIONS_HTML;
+                    string htmlData = default(string);
+                    htmlData = File.ReadAllText(source);
+                    req.Forms["html"] = new RESTConnector.Form(htmlData);
+                }
+                else
+                    throw new WatsonException("An HTML source is needed for GetRelations!");
             }
             else
             {
@@ -1236,7 +1281,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             }
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, service);
-            if(connector == null)
+            if (connector == null)
                 return false;
 
             req.OnResponse = OnGetRelationsResponse;
@@ -1321,17 +1366,22 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             string service;
             string normalizedSource = source.Trim().ToLower();
-            if(normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
+            if (normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
             {
                 service = SERVICE_GET_TEXT_SENTIMENT_URL;
                 req.Forms["url"] = new RESTConnector.Form(source);
             }
-            else if(Path.GetExtension(normalizedSource).EndsWith(".html") && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
+            else if (source.StartsWith(Application.dataPath) && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
             {
-                service = SERVICE_GET_TEXT_SENTIMENT_HTML;
-                string htmlData = default(string);
-                htmlData = File.ReadAllText(source);
-                req.Forms["html"] = new RESTConnector.Form(htmlData);
+                if (Path.GetExtension(normalizedSource).EndsWith(".html"))
+                {
+                    service = SERVICE_GET_TEXT_SENTIMENT_HTML;
+                    string htmlData = default(string);
+                    htmlData = File.ReadAllText(source);
+                    req.Forms["html"] = new RESTConnector.Form(htmlData);
+                }
+                else
+                    throw new WatsonException("An HTML source is needed for GetTextSentiment!");
             }
             else
             {
@@ -1340,7 +1390,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             }
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, service);
-            if(connector == null)
+            if (connector == null)
                 return false;
 
             req.OnResponse = OnGetTextSentimentResponse;
@@ -1410,7 +1460,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
                 throw new ArgumentNullException("callback");
             if (string.IsNullOrEmpty(source))
                 throw new WatsonException("Please provide a source for GetTargetedSentiment.");
-            if(string.IsNullOrEmpty(targets))
+            if (string.IsNullOrEmpty(targets))
                 throw new WatsonException("Please provide a target for GetTargetedSentiment.");
             if (string.IsNullOrEmpty(mp_ApiKey))
                 SetCredentials();
@@ -1429,17 +1479,22 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             string service;
             string normalizedSource = source.Trim().ToLower();
-            if(normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
+            if (normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
             {
                 service = SERVICE_GET_TARGETED_SENTIMENT_URL;
                 req.Forms["url"] = new RESTConnector.Form(source);
             }
-            else if(Path.GetExtension(normalizedSource).EndsWith(".html") && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
+            else if (source.StartsWith(Application.dataPath) && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
             {
-                service = SERVICE_GET_TARGETED_SENTIMENT_HTML;
-                string htmlData = default(string);
-                htmlData = File.ReadAllText(source);
-                req.Forms["html"] = new RESTConnector.Form(htmlData);
+                if (Path.GetExtension(normalizedSource).EndsWith(".html"))
+                {
+                    service = SERVICE_GET_TARGETED_SENTIMENT_HTML;
+                    string htmlData = default(string);
+                    htmlData = File.ReadAllText(source);
+                    req.Forms["html"] = new RESTConnector.Form(htmlData);
+                }
+                else
+                    throw new WatsonException("An HTML source is needed for GetTargetedSentiment!");
             }
             else
             {
@@ -1448,7 +1503,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             }
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, service);
-            if(connector == null)
+            if (connector == null)
                 return false;
 
             req.OnResponse = OnGetTargetedSentimentResponse;
@@ -1533,17 +1588,22 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             string service;
             string normalizedSource = source.Trim().ToLower();
-            if(normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
+            if (normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
             {
                 service = SERVICE_GET_RANKED_TAXONOMY_URL;
                 req.Forms["url"] = new RESTConnector.Form(source);
             }
-            else if(Path.GetExtension(normalizedSource).EndsWith(".html") && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
+            else if (source.StartsWith(Application.dataPath) && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
             {
-                service = SERVICE_GET_RANKED_TAXONOMY_HTML;
-                string htmlData = default(string);
-                htmlData = File.ReadAllText(source);
-                req.Forms["html"] = new RESTConnector.Form(htmlData);
+                if (Path.GetExtension(normalizedSource).EndsWith(".html"))
+                {
+                    service = SERVICE_GET_RANKED_TAXONOMY_HTML;
+                    string htmlData = default(string);
+                    htmlData = File.ReadAllText(source);
+                    req.Forms["html"] = new RESTConnector.Form(htmlData);
+                }
+                else
+                    throw new WatsonException("An HTML source is needed for GetRankedTaxonomy!");
             }
             else
             {
@@ -1552,7 +1612,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             }
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, service);
-            if(connector == null)
+            if (connector == null)
                 return false;
 
             req.OnResponse = OnGetRankedTaxonomyResponse;
@@ -1638,17 +1698,22 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             string service = "";
             string normalizedSource = source.Trim().ToLower();
-            if(normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
+            if (normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
             {
                 service = SERVICE_GET_TEXT_URL;
                 req.Forms["url"] = new RESTConnector.Form(source);
             }
-            else if(Path.GetExtension(normalizedSource).EndsWith(".html") && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
+            else if (source.StartsWith(Application.dataPath) && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
             {
-                service = SERVICE_GET_TEXT_HTML;
-                string htmlData = default(string);
-                htmlData = File.ReadAllText(source);
-                req.Forms["html"] = new RESTConnector.Form(htmlData);
+                if (Path.GetExtension(normalizedSource).EndsWith(".html"))
+                {
+                    service = SERVICE_GET_TEXT_HTML;
+                    string htmlData = default(string);
+                    htmlData = File.ReadAllText(source);
+                    req.Forms["html"] = new RESTConnector.Form(htmlData);
+                }
+                else
+                    throw new WatsonException("An HTML source is needed for GetText!");
             }
             else
             {
@@ -1657,7 +1722,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             }
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, service);
-            if(connector == null)
+            if (connector == null)
                 return false;
 
             req.OnResponse = OnGetTextResponse;
@@ -1734,26 +1799,31 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             string service = "";
             string normalizedSource = source.Trim().ToLower();
-            if(normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
+            if (normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
             {
                 service = SERVICE_GET_TEXT_URL;
                 req.Forms["url"] = new RESTConnector.Form(source);
             }
-            else if(Path.GetExtension(normalizedSource).EndsWith(".html") && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
+            else if (source.StartsWith(Application.dataPath) && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
             {
-                service = SERVICE_GET_TEXT_HTML;
-                string htmlData = default(string);
-                htmlData = File.ReadAllText(source);
-                req.Forms["html"] = new RESTConnector.Form(htmlData);
+                if (Path.GetExtension(normalizedSource).EndsWith(".html"))
+                {
+                    service = SERVICE_GET_TEXT_HTML;
+                    string htmlData = default(string);
+                    htmlData = File.ReadAllText(source);
+                    req.Forms["html"] = new RESTConnector.Form(htmlData);
+                }
+                else
+                    throw new WatsonException("An HTML source is needed for GetRawText!");
             }
             else
             {
-                Log.Error("Alchemy Language", "Either a URL or a html page source is required for GetText!");
+                Log.Error("Alchemy Language", "Either a URL or a html page source is required for GetRawText!");
                 return false;
             }
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, service);
-            if(connector == null)
+            if (connector == null)
                 return false;
 
             req.OnResponse = OnGetTextResponse;
@@ -1800,17 +1870,22 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             string service = "";
             string normalizedSource = source.Trim().ToLower();
-            if(normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
+            if (normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
             {
                 service = SERVICE_GET_TITLE_URL;
                 req.Forms["url"] = new RESTConnector.Form(source);
             }
-            else if(Path.GetExtension(normalizedSource).EndsWith(".html") && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
+            else if (source.StartsWith(Application.dataPath) && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
             {
-                service = SERVICE_GET_TITLE_HTML;
-                string htmlData = default(string);
-                htmlData = File.ReadAllText(source);
-                req.Forms["html"] = new RESTConnector.Form(htmlData);
+                if (Path.GetExtension(normalizedSource).EndsWith(".html"))
+                {
+                    service = SERVICE_GET_TITLE_HTML;
+                    string htmlData = default(string);
+                    htmlData = File.ReadAllText(source);
+                    req.Forms["html"] = new RESTConnector.Form(htmlData);
+                }
+                else
+                    throw new WatsonException("An HTML source is needed for GetTitle!");
             }
             else
             {
@@ -1819,7 +1894,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             }
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, service);
-            if(connector == null)
+            if (connector == null)
                 return false;
 
             req.OnResponse = OnGetTitleResponse;
@@ -1896,7 +1971,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         /// <param name="extractPageImage">If set to <c>true</c> extract page image.</param>
         /// <param name="extractImageKeywords">If set to <c>true</c> extract image keywords.</param>
         /// <param name="customData">Custom data.</param>
-        public bool GetCombinedData(OnGetCombinedData callback, string source, 
+        public bool GetCombinedData(OnGetCombinedData callback, string source,
             bool includeSourceText = false,
             bool extractAuthors = false,
             bool extractConcepts = true,
@@ -1945,33 +2020,33 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             req.Parameters["showSourceText"] = Convert.ToInt32(includeSourceText).ToString();
 
             List<string> requestServices = new List<string>();
-            if(extractAuthors)
+            if (extractAuthors)
                 requestServices.Add("authors");
-            if(extractConcepts)
+            if (extractConcepts)
                 requestServices.Add("concepts");
-            if(extractDates)
+            if (extractDates)
                 requestServices.Add("dates");
-            if(extractDocEmotion)
+            if (extractDocEmotion)
                 requestServices.Add("doc-emotion");
-            if(extractEntities)
+            if (extractEntities)
                 requestServices.Add("entities");
-            if(extractFeeds)
+            if (extractFeeds)
                 requestServices.Add("feeds");
-            if(extractKeywords)
+            if (extractKeywords)
                 requestServices.Add("keywords");
-            if(extractPubDate)
+            if (extractPubDate)
                 requestServices.Add("pub-date");
-            if(extractRelations)
+            if (extractRelations)
                 requestServices.Add("relations");
-            if(extractDocSentiment)
+            if (extractDocSentiment)
                 requestServices.Add("doc-sentiment");
-            if(extractTaxonomy)
+            if (extractTaxonomy)
                 requestServices.Add("taxonomy");
-            if(extractTitle)
+            if (extractTitle)
                 requestServices.Add("title");
-            if(extractPageImage)
+            if (extractPageImage)
                 requestServices.Add("page-image");
-            if(extractImageKeywords)
+            if (extractImageKeywords)
                 requestServices.Add("image-kw");
             req.Parameters["extract"] = string.Join(",", requestServices.ToArray());
 
@@ -1980,17 +2055,22 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
             string service;
             string normalizedSource = source.Trim().ToLower();
-            if(normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
+            if (normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
             {
                 service = SERVICE_COMBINED_CALL_URL;
                 req.Forms["url"] = new RESTConnector.Form(source);
             }
-            else if(Path.GetExtension(normalizedSource).EndsWith(".html") && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
+            else if (source.StartsWith(Application.dataPath) && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
             {
-                service = SERVICE_COMBINED_CALL_HTML;
-                string htmlData = default(string);
-                htmlData = File.ReadAllText(source);
-                req.Forms["html"] = new RESTConnector.Form(htmlData);
+                if (Path.GetExtension(normalizedSource).EndsWith(".html"))
+                {
+                    service = SERVICE_COMBINED_CALL_HTML;
+                    string htmlData = default(string);
+                    htmlData = File.ReadAllText(source);
+                    req.Forms["html"] = new RESTConnector.Form(htmlData);
+                }
+                else
+                    throw new WatsonException("An HTML source is needed for GetCombinedData!");
             }
             else
             {
@@ -1999,7 +2079,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
             }
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, service);
-            if(connector == null)
+            if (connector == null)
                 return false;
 
             req.OnResponse = OnCombinedCallResponse;
@@ -2062,10 +2142,10 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
         private class CheckServiceStatus
         {
-            private AlchemyLanguage m_Service = null;
+            private AlchemyAPI m_Service = null;
             private ServiceStatus m_Callback = null;
 
-            public CheckServiceStatus(AlchemyLanguage service, ServiceStatus callback)
+            public CheckServiceStatus(AlchemyAPI service, ServiceStatus callback)
             {
                 m_Service = service;
                 m_Callback = callback;

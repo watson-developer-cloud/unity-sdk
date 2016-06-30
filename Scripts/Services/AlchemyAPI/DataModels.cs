@@ -19,7 +19,7 @@ using FullSerializer;
 using System.Text;
 using System.Collections.Generic;
 
-namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
+namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 {
     #region Combined Call
     /// <summary>
@@ -675,9 +675,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         }
 
         /// <summary>
-        /// Returns a <see cref="System.String"/> that represents the current <see cref="IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1.EntityData"/>.
+        /// Returns a <see cref="System.String"/> that represents the current <see cref="IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1.EntityData"/>.
         /// </summary>
-        /// <returns>A <see cref="System.String"/> that represents the current <see cref="IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1.EntityData"/>.</returns>
+        /// <returns>A <see cref="System.String"/> that represents the current <see cref="IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1.EntityData"/>.</returns>
         public override string ToString()
         {
             StringBuilder stringBuilder = new StringBuilder();
@@ -769,9 +769,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         }
 
         /// <summary>
-        /// Returns a <see cref="System.String"/> that represents the current <see cref="IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1.Entity"/>.
+        /// Returns a <see cref="System.String"/> that represents the current <see cref="IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1.Entity"/>.
         /// </summary>
-        /// <returns>A <see cref="System.String"/> that represents the current <see cref="IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1.Entity"/>.</returns>
+        /// <returns>A <see cref="System.String"/> that represents the current <see cref="IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1.Entity"/>.</returns>
         public override string ToString()
         {
             StringBuilder stringBuilder = new StringBuilder();
@@ -871,7 +871,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
         /// <summary>
         /// Initializes a new instance of the
-        /// <see cref="IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1.PositionOnMap"/> class.
+        /// <see cref="IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1.PositionOnMap"/> class.
         /// </summary>
         /// <param name="latitude">Latitude.</param>
         /// <param name="longitude">Longitude.</param>
@@ -883,7 +883,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
 
         /// <summary>
         /// Initializes a new instance of the
-        /// <see cref="IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1.PositionOnMap"/> class.
+        /// <see cref="IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1.PositionOnMap"/> class.
         /// </summary>
         /// <param name="latitude">Latitude.</param>
         /// <param name="longitude">Longitude.</param>
@@ -896,9 +896,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         }
 
         /// <summary>
-        /// Returns a <see cref="System.String"/> that represents the current <see cref="IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1.PositionOnMap"/>.
+        /// Returns a <see cref="System.String"/> that represents the current <see cref="IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1.PositionOnMap"/>.
         /// </summary>
-        /// <returns>A <see cref="System.String"/> that represents the current <see cref="IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1.PositionOnMap"/>.</returns>
+        /// <returns>A <see cref="System.String"/> that represents the current <see cref="IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1.PositionOnMap"/>.</returns>
         public override string ToString()
         {
             return string.Format("[PositionOnMap: Name: {0}, Latitude:{1}, Longitude:{2}]", PositionName, Latitude.ToString(), Longitude.ToString());
@@ -1493,9 +1493,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         }
 
         /// <summary>
-        /// Returns a <see cref="System.String"/> that represents the current <see cref="IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1.KeywordData"/>.
+        /// Returns a <see cref="System.String"/> that represents the current <see cref="IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1.KeywordData"/>.
         /// </summary>
-        /// <returns>A <see cref="System.String"/> that represents the current <see cref="IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1.KeywordData"/>.</returns>
+        /// <returns>A <see cref="System.String"/> that represents the current <see cref="IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1.KeywordData"/>.</returns>
         public override string ToString()
         {
             StringBuilder stringBuilder = new StringBuilder();
@@ -1934,9 +1934,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         public string typeHierarchy { get; set; }
 
         /// <summary>
-        /// Returns a <see cref="System.String"/> that represents the current <see cref="IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1.KnowledgeGraph"/>.
+        /// Returns a <see cref="System.String"/> that represents the current <see cref="IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1.KnowledgeGraph"/>.
         /// </summary>
-        /// <returns>A <see cref="System.String"/> that represents the current <see cref="IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1.KnowledgeGraph"/>.</returns>
+        /// <returns>A <see cref="System.String"/> that represents the current <see cref="IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1.KnowledgeGraph"/>.</returns>
         public override string ToString()
         {
             return string.Format("[KnowledgeGraph: typeHierarchy={0}]", typeHierarchy);
@@ -2034,9 +2034,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         public string crunchbase { get; set; }
 
         /// <summary>
-        /// Returns a <see cref="System.String"/> that represents the current <see cref="IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1.Disambiguated"/>.
+        /// Returns a <see cref="System.String"/> that represents the current <see cref="IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1.Disambiguated"/>.
         /// </summary>
-        /// <returns>A <see cref="System.String"/> that represents the current <see cref="IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1.Disambiguated"/>.</returns>
+        /// <returns>A <see cref="System.String"/> that represents the current <see cref="IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1.Disambiguated"/>.</returns>
         public override string ToString()
         {
             return string.Format("[Disambiguated: name={0}, subType={1}, website={2}, geo={3}, dbpedia={4}, yago={5}, opencyc={6}, umbel={7}, freebase={8}, ciaFactbook={9}, census={10}, geonames={11}, musicBrainz={12}, crunchbase={13}]", name, subType, website, geo, dbpedia, yago, opencyc, umbel, freebase, ciaFactbook, census, geonames, musicBrainz, crunchbase);
@@ -2057,9 +2057,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         public string quotation { get; set; }
 
         /// <summary>
-        /// Returns a <see cref="System.String"/> that represents the current <see cref="IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1.Quotation"/>.
+        /// Returns a <see cref="System.String"/> that represents the current <see cref="IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1.Quotation"/>.
         /// </summary>
-        /// <returns>A <see cref="System.String"/> that represents the current <see cref="IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1.Quotation"/>.</returns>
+        /// <returns>A <see cref="System.String"/> that represents the current <see cref="IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1.Quotation"/>.</returns>
         public override string ToString()
         {
             return string.Format("[Quotation: quotation={0}]", quotation);
@@ -2112,9 +2112,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1
         }
 
         /// <summary>
-        /// Returns a <see cref="System.String"/> that represents the current <see cref="IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1.DocSentiment"/>.
+        /// Returns a <see cref="System.String"/> that represents the current <see cref="IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1.DocSentiment"/>.
         /// </summary>
-        /// <returns>A <see cref="System.String"/> that represents the current <see cref="IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1.DocSentiment"/>.</returns>
+        /// <returns>A <see cref="System.String"/> that represents the current <see cref="IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1.DocSentiment"/>.</returns>
         public override string ToString()
         {
             return string.Format("[Sentiment: type={0}, score={1}, mixed={2}]", type, score, mixed);
