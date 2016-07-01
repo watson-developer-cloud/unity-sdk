@@ -48,7 +48,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
 
             if (string.IsNullOrEmpty(mp_ApiKey))
-                throw new WatsonException("ALCHEMY_API_KEY needs to be defined in config.json");
+                throw new WatsonException("Alchemy API Key required in config.json");
         }
         #endregion
 

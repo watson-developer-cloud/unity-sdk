@@ -18,28 +18,228 @@
 using UnityEngine;
 using System.Collections;
 using FullSerializer;
+using IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1;
 
 namespace IBM.Watson.DeveloperCloud.Services.AlchemyDataNews.v1
 {
     #region GetNews
+    /// <summary>
+    /// The NewsResponse.
+    /// </summary>
     [fsObject]
     public class NewsResponse
     {
+        /// <summary>
+        ///  THe status of the request.
+        /// </summary>
         public string status { get; set; }
-        public string usage { get; set; }
-        public string totalTransactions { get; set; }
+        /// <summary>
+        /// The results.
+        /// </summary>
         public Result result { get; set; }
     }
 
+    /// <summary>
+    /// The Result data.
+    /// </summary>
     [fsObject]
     public class Result
     {
+        /// <summary>
+        /// The number of results.
+        /// </summary>
         public string count { get; set; }
+        /// <summary>
+        /// The request status.
+        /// </summary>
         public string status { get; set; }
+        /// <summary>
+        /// The docs data.
+        /// </summary>
+        public Docs[] docs { get; set; }
     }
     #endregion
 
-    #region Fields
+    #region Docs
+    /// <summary>
+    /// The Docs data.
+    /// </summary>
+    [fsObject]
+    public class Docs
+    {
+        /// <summary>
+        /// The request ID.
+        /// </summary>
+        public string id { get; set; }
+        /// <summary>
+        /// The source data.
+        /// </summary>
+        public Source source { get; set; }
+        /// <summary>
+        /// Timestamp of the request.
+        /// </summary>
+        public string timestamp { get; set; }
+    }
+    #endregion
+
+    #region Source
+    /// <summary>
+    /// The Source data.
+    /// </summary>
+    [fsObject]
+    public class Source
+    {
+        /// <summary>
+        /// Original data.
+        /// </summary>
+        public Original original { get; set; }
+    }
+    #endregion
+
+    #region Originial
+    /// <summary>
+    /// The Original data.
+    /// </summary>
+    [fsObject]
+    public class Original
+    {
+        /// <summary>
+        /// The URL.
+        /// </summary>
+        public string url { get; set; }
+    }
+    #endregion
+
+    #region Enriched
+    /// <summary>
+    /// The Enriched data.
+    /// </summary>
+    [fsObject]
+    public class Enriched
+    {
+        /// <summary>
+        /// The URL.
+        /// </summary>
+        public URL url { get; set; }
+    }
+    #endregion
+
+    #region URL
+    /// <summary>
+    /// The URL data.
+    /// </summary>
+    [fsObject]
+    public class URL
+    {
+        /// <summary>
+        /// The image data.
+        /// </summary>
+        public string image { get; set; }
+        /// <summary>
+        /// The image keywords.
+        /// </summary>
+        public ImageKeyword[] imageKeywords { get; set; }
+        /// <summary>
+        /// The RSS Feed data.
+        /// </summary>
+        public Feed[] feeds { get; set; }
+        /// <summary>
+        /// The URL.
+        /// </summary>
+        public string url { get; set; }
+        /// <summary>
+        /// The raw title.
+        /// </summary>
+        public string title { get; set; }
+        /// <summary>
+        /// The cleaned title.
+        /// </summary>
+        public string cleanedTitle { get; set; }
+        /// <summary>
+        /// Detected language.
+        /// </summary>
+        public string language { get; set; }
+        /// <summary>
+        /// The PublicationDate data.
+        /// </summary>
+        public PublicationDate publicationDate { get; set; }
+        /// <summary>
+        /// Text data.
+        /// </summary>
+        public string text { get; set; }
+        /// <summary>
+        /// /The Author data.
+        /// </summary>
+        public string author { get; set; }
+        /// <summary>
+        /// Keyword Extraction data.
+        /// </summary>
+        public Keyword[] keywords { get; set; }
+        /// <summary>
+        /// Entity extraction data.
+        /// </summary>
+        public Entity[] entities { get; set; }
+        /// <summary>
+        /// The concept data.
+        /// </summary>
+        public Concept[] concepts { get; set; }
+        /// <summary>
+        /// The relations data.
+        /// </summary>
+        public Relation relations { get; set; }
+        /// <summary>
+        /// The DocSentiment.
+        /// </summary>
+        public DocSentiment docSentiment { get; set; }
+        /// <summary>
+        /// The taxonomy data.
+        /// </summary>
+        public Taxonomy taxonomy { get; set; }
+        /// <summary>
+        /// The enriched title data.
+        /// </summary>
+        public EnrichedTitle[] enrichedTitle { get; set; }
+    }
+    #endregion
+
+    #region EnrichedTitle
+    /// <summary>
+    /// The EnrichedTitle data.
+    /// </summary>
+    [fsObject]
+    public class EnrichedTitle
+    {
+        /// <summary>
+        /// Keyword extraction data.
+        /// </summary>
+        public Keyword[] keywords { get; set; }
+        /// <summary>
+        /// Entity extraction data.
+        /// </summary>
+        public Entity[] entities { get; set; }
+        /// <summary>
+        /// The Concepts data.
+        /// </summary>
+        public Concept[] concepts { get; set; }
+        /// <summary>
+        /// Relations data.
+        /// </summary>
+        public Relation[] relations { get; set; }
+        /// <summary>
+        /// The DocSentiment.
+        /// </summary>
+        public DocSentiment docSentiment { get; set; }
+        /// <summary>
+        /// Taxonomy data.
+        /// </summary>
+        public Taxonomy[] taxonomy { get; set; }
+    }
+    #endregion
+    
+    #region AlchemyData News Fields
+    /// <summary>
+    /// All fields for querying and receiving data.
+    /// </summary>
     public class Fields
     {
         public const string ORIGINAL_URL = "original.url";

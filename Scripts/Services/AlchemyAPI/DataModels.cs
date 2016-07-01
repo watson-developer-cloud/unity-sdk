@@ -2174,8 +2174,13 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// </summary>
         /// <value>The location.</value>
         public Location location { get; set; }
-    }
 
+        /// <summary>
+        /// Gets or sets the temporal.
+        /// </summary>
+        public Temporal temporal { get; set; }
+    }
+    
     /// <summary>
     /// Subject.
     /// </summary>
@@ -2330,6 +2335,46 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// </summary>
         /// <value>The entities.</value>
         public Entity[] entities { get; set; }
+    }
+
+    /// <summary>
+    /// Temporal.
+    /// </summary>
+    [fsObject]
+    public class Temporal
+    {
+        /// <summary>
+        /// Gets or sets the text
+        /// </summary>
+        public string text { get; set; }
+        /// <summary>
+        /// Gets or sets the decoded values
+        /// </summary>
+        public Decoded decoded { get; set; }
+    }
+
+    /// <summary>
+    /// Decoded values.
+    /// </summary>
+    [fsObject]
+    public class Decoded
+    {
+        /// <summary>
+        /// Gets or sets the type.
+        /// </summary>
+        public string type { get; set; }
+        /// <summary>
+        /// Gets or sets the value.
+        /// </summary>
+        public string value { get; set; }
+        /// <summary>
+        /// Gets or sets the start time.
+        /// </summary>
+        public string start { get; set; }
+        /// <summary>
+        /// Gets or sets the end time.
+        /// </summary>
+        public string end { get; set; }
     }
     #endregion
 }
