@@ -2161,25 +2161,20 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
             GetNewsRequest req = new GetNewsRequest();
             req.Callback = callback;
-            req.Data = string.IsNullOrEmpty(customData) ? returnFields.ToString() : customData;
+            req.Data = customData;
 
             req.Parameters["apikey"] = mp_ApiKey;
             req.Parameters["outputMode"] = "json";
-
-            req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
-            req.Forms = new Dictionary<string, RESTConnector.Form>();
-            if (returnFields.Length > 0)
-                req.Forms["return"] = new RESTConnector.Form(string.Join(",", returnFields));
-            if (queryFields.Count > 0)
-                foreach (KeyValuePair<string, string> entry in queryFields)
-                    req.Forms[entry.Key] = new RESTConnector.Form("q." + entry.Value);
-            if (!string.IsNullOrEmpty(startDate))
-                req.Forms["start"] = new RESTConnector.Form(startDate);
-            if (!string.IsNullOrEmpty(endDate))
-                req.Forms["end"] = new RESTConnector.Form(endDate);
-            req.Forms["maxResults"] = new RESTConnector.Form(maxResults);
-            if (!string.IsNullOrEmpty(timeSlice))
-                req.Forms["timeSlice"] = new RESTConnector.Form(timeSlice);
+			req.Parameters["start"] = startDate;
+			req.Parameters["end"] = endDate;
+			req.Parameters["maxResults"] = maxResults;
+			if (timeSlice != default(string))
+				req.Parameters["timeSlice"] = timeSlice;
+			if (returnFields != default(string[]))
+				req.Parameters["return"] = string.Join(",", returnFields);
+			if (queryFields != null)
+				foreach (KeyValuePair<string, string> entry in queryFields)
+					req.Parameters[entry.Key] = "q." + entry.Value;
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_GET_NEWS);
             if (connector == null)
