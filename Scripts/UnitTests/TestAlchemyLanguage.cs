@@ -20,6 +20,7 @@ using IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
@@ -90,6 +91,8 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         bool m_GetCombinedDataHTMLTested = false;
         bool m_GetCombinedDataURLTested = false;
         bool m_GetCombinedDataTextTested = false;
+
+		bool m_GetNewsTested = false;
 
         private string m_ExampleURL_article = "http://www.nytimes.com/2011/02/17/science/17jeopardy-watson.html";
         private string m_ExampleURL_microformats = "http://microformats.org/wiki/hcard";
@@ -353,6 +356,16 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             m_AlchemyAPI.GetCombinedData(OnGetCombinedDataHTML, example_article_html, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, "OnGetCombinedDataHTML");
             while (!m_GetCombinedDataHTMLTested)
                 yield return null;
+
+			Log.Debug("TestAlchemyAPI", "Attempting to GetNews");
+			string[] returnFields = {Fields.ENRICHED_URL_ENTITIES, Fields.ENRICHED_URL_KEYWORDS};
+			Dictionary<string, string> queryFields = new Dictionary<string, string>();
+			queryFields.Add(Fields.ENRICHED_URL_RELATIONS_RELATION_SUBJECT_TEXT, "Obama");
+			queryFields.Add(Fields.ENRICHED_URL_CLEANEDTITLE, "Washington");
+
+			m_AlchemyAPI.GetNews(OnGetNews, returnFields, queryFields);
+			while(!m_GetNewsTested)
+				yield return null;
         }
 
         #region GetAuthors
@@ -1271,5 +1284,31 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             }
         }
         #endregion
+
+		#region GetNews
+		private void OnGetNews(NewsResponse newsData, string data)
+		{
+			Test(newsData.status == "OK");
+			if (newsData != null)
+			{
+				m_GetNewsTested = true;
+				LogNewsData(newsData, data);
+			}
+		}
+
+		private void LogNewsData(NewsResponse newsData, string data)
+		{
+			Log.Debug("TestAlchemyNews", "data: {0}", data);
+			if (newsData != null)
+			{
+				Log.Debug("TestAlchemyNews", "status: {0}", newsData.status);
+
+			}
+			else
+			{
+				Log.Debug("TestAlchemyNews", "Failed to get news data!");
+			}
+		}
+		#endregion
     }
 }

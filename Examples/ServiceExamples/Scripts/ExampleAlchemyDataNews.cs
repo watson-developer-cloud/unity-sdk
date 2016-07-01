@@ -17,6 +17,7 @@
 
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1;
 using IBM.Watson.DeveloperCloud.Logging;
 using System;
@@ -27,7 +28,12 @@ public class ExampleAlchemyDataNews : MonoBehaviour {
     void Start () {
         LogSystem.InstallDefaultReactors();
 
-		if (!m_AlchemyAPI.GetNews(OnGetNews))
+		string[] returnFields = {Fields.ENRICHED_URL_ENTITIES, Fields.ENRICHED_URL_KEYWORDS};
+		Dictionary<string, string> queryFields = new Dictionary<string, string>();
+		queryFields.Add(Fields.ENRICHED_URL_RELATIONS_RELATION_SUBJECT_TEXT, "Obama");
+		queryFields.Add(Fields.ENRICHED_URL_CLEANEDTITLE, "Washington");
+
+		if (!m_AlchemyAPI.GetNews(OnGetNews, returnFields, queryFields))
             Log.Debug("ExampleAlchemyData", "Failed to get news!");
     }
 

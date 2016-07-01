@@ -2402,9 +2402,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
     public class Result
     {
         /// <summary>
-        /// The number of results.
+        /// The next string.
         /// </summary>
-        public string count { get; set; }
+        public string next { get; set; }
         /// <summary>
         /// The request status.
         /// </summary>
@@ -2449,6 +2449,11 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// Original data.
         /// </summary>
         public Original original { get; set; }
+		/// <summary>
+		/// The enriched data.
+		/// </summary>
+		/// <value>The enriched.</value>
+		public Enriched enriched { get; set; }
     }
     #endregion
 
