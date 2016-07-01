@@ -66,8 +66,8 @@ namespace IBM.Watson.DeveloperCloud.Editor
                 URL ="https://console.ng.bluemix.net/catalog/services/personality-insights/", ServiceID="PersonalityInsightsV2" },
             new ServiceSetup() { ServiceName = "Conversation", ServiceAPI = "conversation-experimental/api",
                 URL ="https://console.ng.bluemix.net/catalog/services/conversation/", ServiceID="ConversationV1" },
-            new ServiceSetup() { ServiceName = "Alchemy Language", ServiceAPI = "gateway-a.watsonplatform.net/calls",
-                URL ="https://console.ng.bluemix.net/catalog/services/alchemyapi/", ServiceID="AlchemyLanguageV1" },
+            new ServiceSetup() { ServiceName = "Alchemy API", ServiceAPI = "gateway-a.watsonplatform.net/calls",
+                URL ="https://console.ng.bluemix.net/catalog/services/alchemyapi/", ServiceID="AlchemyAPIV1" },
             new ServiceSetup() { ServiceName = "Visual Recognition", ServiceAPI = "visual-recognition/api",
                 URL ="https://console.ng.bluemix.net/catalog/services/visual-recognition/", ServiceID="VisualRecognitionV3" }
         };

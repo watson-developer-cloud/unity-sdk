@@ -36,7 +36,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
     {
 
         #region Private Data
-        private const string SERVICE_ID = "AlchemyLanguageV1";
+        private const string SERVICE_ID = "AlchemyAPIV1";
         private static string mp_ApiKey = null;
 
         private static fsSerializer sm_Serializer = new fsSerializer();
