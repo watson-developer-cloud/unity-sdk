@@ -4,6 +4,12 @@ Change Log
 
 _2016-06-24_
 
+* New: Added `AlchemyData News` abstraction
+
+## Version 0.5.0
+
+_2016-06-24_
+
  * New: Added `Alchemy Language` abstraction
  * New: Added `Personality Insights` abstraction
  * Fix: Added `Tone Analyzer` to the Configuration Editor

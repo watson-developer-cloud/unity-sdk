@@ -19,6 +19,7 @@ Use this SDK to build Watson-powered applications in Unity. It comes with a set 
   * [Conversation](#conversation)
   * [Visual Recognition](#visual-recognition)
   * [Alchemy Language](#alchemy-language)
+  * [AlchemyData News](#alchemy-data-news)
   * [Personality Insights](#personality-insights)
 * [Developing a basic application in one minute](#developing-a-basic-application-in-one-minute)
 * [Documentation](#documentation)
@@ -1358,6 +1359,34 @@ private void OnGetCombinedData(CombinedCallData combinedData, string data)
 }
 ```
 
+### AlchemyData News
+Use the [AlchemyData News][alchemyData_news] service to provide news and blog content enriched with natural language processing to allow for highly targeted search and trend analysis. Now you can query the world's news sources and blogs like a database.
+
+#### Getting News
+AlchemyData News indexes 250k to 300k English language news and blog articles every day with historical search available for the past 60 days. You can query the News API directly with no need to acquire, enrich and store the data yourself - enabling you to go beyond simple keyword-based searches. You can request which fields to return and filter fields by string. All available fields can be accessed using Fields constants in the AlchemyData News Data Model.
+
+```
+private AlchemyAPI m_AlchemyAPI = new AlchemyAPI();
+
+void Start()
+{
+	string[] returnFields = {Fields.ENRICHED_URL_ENTITIES, Fields.ENRICHED_URL_KEYWORDS};
+	Dictionary<string, string> queryFields = new Dictionary<string, string>();
+	queryFields.Add(Fields.ENRICHED_URL_RELATIONS_RELATION_SUBJECT_TEXT, "Obama");
+	queryFields.Add(Fields.ENRICHED_URL_CLEANEDTITLE, "Washington");
+
+	if (!m_AlchemyAPI.GetNews(OnGetNews, returnFields, queryFields))
+        Log.Debug("ExampleAlchemyData", "Failed to get news!");
+}
+
+void OnGetNews(NewsResponse newsData, string data)
+{
+	//	Access requested fields
+	if(newsData != null)
+		Log.Debug("ExampleAlchemyData", "status: {0}", newsData.status);
+}
+```
+
 ## Developing a basic application in one minute
 You can quickly develop a basic application that uses the Speech to Text service and the Natural Language Classifier service by using the prefabs that come with the SDK. Ensure that you prepare the test data before you complete the the following steps:
 
@@ -1405,6 +1434,7 @@ See [CONTRIBUTING.md](.github/CONTRIBUTING.md).
 [natural_language_classifier]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/nl-classifier/
 
 [alchemy_language]: http://www.alchemyapi.com/products/alchemylanguage
+[alchemyData_news]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/alchemy-data-news.html
 [sentiment_analysis]: http://www.alchemyapi.com/products/alchemylanguage/sentiment-analysis
 [tone_analyzer]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/tone-analyzer/
 [tradeoff_analytics]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/tradeoff-analytics/
