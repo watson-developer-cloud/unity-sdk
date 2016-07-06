@@ -21,15 +21,84 @@ using IBM.Watson.DeveloperCloud.Connection;
 using IBM.Watson.DeveloperCloud.Utilities;
 using IBM.Watson.DeveloperCloud.Logging;
 using System;
+using FullSerializer;
+using System.Text;
 
 namespace IBM.Watson.DeveloperCloud.Services.RetriveAndRank.v1
 {
     public class RetriveAndRank : IWatsonService
     {
+        #region Private Data
+        private const string SERVICE_ID = "RetriveAndRankV1";
+        private static fsSerializer sm_Serializer = new fsSerializer();
+        #endregion
+
         #region GetClusters
+        private const string SERVICE_GET_CLUSTERS = "/V1/solr_clusters";
+
         /// <summary>
-        /// Gets a list of all Solr clusters.
+        /// OnGetClusters delegate.
         /// </summary>
+        /// <param name="resp"></param>
+        /// <param name="data"></param>
+        public delegate void OnGetClusters(SolrClusterListResponse resp, string data);
+
+        /// <summary>
+        /// Gets all available Solr clusters.
+        /// </summary>
+        /// <param name="callback"></param>
+        /// <param name="customData"></param>
+        /// <returns></returns>
+        public bool GetClusters(OnGetClusters callback, string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+
+            GetClustersRequest req = new GetClustersRequest();
+            req.Callback = callback;
+            req.Data = customData;
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_GET_CLUSTERS);
+            if (connector == null)
+                return false;
+
+            req.OnResponse = OnGetClustersResponse;
+            return connector.Send(req);
+        }
+
+        public class GetClustersRequest : RESTConnector.Request
+        {
+            public string Data { get; set; }
+            public OnGetClusters Callback { get; set; }
+        }
+
+        private void OnGetClustersResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            SolrClusterListResponse clustersData = new SolrClusterListResponse();
+            if (resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = clustersData;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("RetriveAndRank", "OnGetClustersResponse Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((GetClustersRequest)req).Callback != null)
+                ((GetClustersRequest)req).Callback(resp.Success ? clustersData : null, ((GetClustersRequest)req).Data);
+        }
         #endregion
 
         #region CreateClusters
