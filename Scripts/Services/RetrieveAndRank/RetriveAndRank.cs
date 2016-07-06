@@ -29,12 +29,12 @@ namespace IBM.Watson.DeveloperCloud.Services.RetriveAndRank.v1
     public class RetriveAndRank : IWatsonService
     {
         #region Private Data
-        private const string SERVICE_ID = "RetriveAndRankV1";
+        private const string SERVICE_ID = "RetrieveAndRankV1";
         private static fsSerializer sm_Serializer = new fsSerializer();
         #endregion
 
         #region GetClusters
-        private const string SERVICE_GET_CLUSTERS = "/V1/solr_clusters";
+        private const string SERVICE_GET_CLUSTERS = "/v1/solr_clusters";
 
         /// <summary>
         /// OnGetClusters delegate.
@@ -150,15 +150,41 @@ namespace IBM.Watson.DeveloperCloud.Services.RetriveAndRank.v1
         #endregion
 
         #region IWatsonService Interface
+        /// <exclude />
         public string GetServiceID()
         {
-            throw new NotImplementedException();
+            return SERVICE_ID;
         }
 
+        /// <exclude />
         public void GetServiceStatus(ServiceStatus callback)
         {
-            throw new NotImplementedException();
+            if (Config.Instance.FindCredentials(SERVICE_ID) != null)
+                new CheckServiceStatus(this, callback);
+            else
+                callback(SERVICE_ID, false);
         }
+
+        private class CheckServiceStatus
+        {
+            private RetriveAndRank m_Service = null;
+            private ServiceStatus m_Callback = null;
+
+            public CheckServiceStatus(RetriveAndRank service, ServiceStatus callback)
+            {
+                m_Service = service;
+                m_Callback = callback;
+
+                if (!m_Service.GetClusters(OnGetClusters))
+                    m_Callback(SERVICE_ID, false);
+            }
+
+            void OnGetClusters(SolrClusterListResponse clustersData, string data)
+            {
+                if (m_Callback != null)
+                    m_Callback(SERVICE_ID, clustersData != null);
+            }
+        };
         #endregion
     }
 }
