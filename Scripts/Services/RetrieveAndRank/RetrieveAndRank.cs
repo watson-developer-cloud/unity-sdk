@@ -105,8 +105,21 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         #endregion
 
         #region CreateCluster
+        /// <summary>
+        /// OnCreateCluster callback delegate.
+        /// </summary>
+        /// <param name="resp"></param>
+        /// <param name="data"></param>
         public delegate void OnCreateCluster(SolrClusterResponse resp, string data);
 
+        /// <summary>
+        /// Create a Solr cluster.
+        /// </summary>
+        /// <param name="callback"></param>
+        /// <param name="clusterName"></param>
+        /// <param name="clusterSize"></param>
+        /// <param name="customData"></param>
+        /// <returns></returns>
         public bool CreateCluster(OnCreateCluster callback, string clusterName = default(string), string clusterSize = default(string), string customData = default(string))
         {
             if (callback == null)
@@ -120,7 +133,9 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             if (connector == null)
                 return false;
 
-            string reqJson = "{\n\t\"cluster_name\": \"" + clusterName + "\",\n\t\"cluster_size\": \"" + clusterSize + "\"\n}";
+            string reqJson = "";
+            if(!string.IsNullOrEmpty(clusterName) && !string.IsNullOrEmpty(clusterSize))
+                reqJson = "{\n\t\"cluster_name\": \"" + clusterName + "\",\n\t\"cluster_size\": \"" + clusterSize + "\"\n}";
 
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
@@ -129,12 +144,20 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             return connector.Send(req);
         }
 
+        /// <summary>
+        /// The Create Cluster request.
+        /// </summary>
         public class CreateClusterRequest : RESTConnector.Request
         {
             public string Data { get; set; }
             public OnCreateCluster Callback { get; set; }
         }
 
+        /// <summary>
+        /// The Create Cluster response.
+        /// </summary>
+        /// <param name="req"></param>
+        /// <param name="resp"></param>
         private void OnCreateClusterResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             SolrClusterResponse clusterResponseData = new SolrClusterResponse();
@@ -164,7 +187,61 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         }
         #endregion
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="deleteSuccess"></param>
+        /// <param name="data"></param>
         #region DeleteClusters
+        public delegate void OnDeleteCluster(bool deleteSuccess, string data);
+
+        /// <summary>
+        /// Delete a Solr cluster.
+        /// </summary>
+        /// <param name="callback"></param>
+        /// <param name="clusterID"></param>
+        /// <param name="customData"></param>
+        /// <returns></returns>
+        public bool DeleteCluster(OnDeleteCluster callback, string clusterID, string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(clusterID))
+                throw new ArgumentNullException("ClusterID to be deleted is required!");
+
+            DeleteClusterRequest req = new DeleteClusterRequest();
+            req.Callback = callback;
+            req.ClusterID = clusterID;
+            req.Delete = true;
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_CLUSTERS + "/" + clusterID);
+            if (connector == null)
+                return false;
+
+            req.OnResponse = OnDeleteClusterResponse;
+            return connector.Send(req);
+        }
+
+        /// <summary>
+        /// The Delete Cluster request
+        /// </summary>
+        public class DeleteClusterRequest : RESTConnector.Request
+        {
+            public string Data { get; set; }
+            public string ClusterID { get; set; }
+            public OnDeleteCluster Callback { get; set; }
+        }
+
+        /// <summary>
+        /// The Delete Cluster response.
+        /// </summary>
+        /// <param name="req"></param>
+        /// <param name="resp"></param>
+        private void OnDeleteClusterResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            if (((DeleteClusterRequest)req).Callback != null)
+                ((DeleteClusterRequest)req).Callback(resp.Success, ((DeleteClusterRequest)req).Data);
+        }
         #endregion
 
         #region GetClusterInfo

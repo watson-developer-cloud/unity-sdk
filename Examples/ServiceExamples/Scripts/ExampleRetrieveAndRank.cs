@@ -29,13 +29,20 @@ public class ExampleRetrieveAndRank : MonoBehaviour
         LogSystem.InstallDefaultReactors();
 
         //  Get clusters
+        Log.Debug("ExampleRetrieveAndRank", "Attempting to get clusters!");
         if (!m_RetrieveAndRank.GetClusters(OnGetClusters))
             Log.Debug("ExampleRetrieveAndRank", "Failed to get clusters!");
 
         //  Create cluster
-        if (!m_RetrieveAndRank.CreateCluster(OnCreateCluster, "TestCluster", "1"))
-            Log.Debug("ExampleRetrieveAndRank", "Failed to create cluster!");
+        //Log.Debug("ExampleRetrieveAndRank", "Attempting to create cluster!");
+        //if (!m_RetrieveAndRank.CreateCluster(OnCreateCluster, "TestCluster", "1"))
+        //    Log.Debug("ExampleRetrieveAndRank", "Failed to create cluster!");
 
+        //  Delete cluster
+        //string clusterToDelete = "sca9444471_3321_4e8d_89a0_5705a944f01f";
+        //Log.Debug("ExampleRetrieveAndRank", "Attempting to delete cluster {0}!", clusterToDelete);
+        //if (!m_RetrieveAndRank.DeleteCluster(OnDeleteCluster, clusterToDelete))
+        //    Log.Debug("ExampleRetrieveAndRank", "Failed to delete cluster!");
     }
 
     private void OnGetClusters(SolrClusterListResponse resp, string data)
@@ -60,6 +67,18 @@ public class ExampleRetrieveAndRank : MonoBehaviour
         else
         {
             Log.Debug("ExampleRetrieveAndRank", "OnCreateClusters | Get Cluster Response is null!");
+        }
+    }
+
+    private void OnDeleteCluster(bool deleteSuccess, string data)
+    {
+        if (deleteSuccess)
+        {
+            Log.Debug("ExampleRetrieveAndRank", "OnDeleteClusters | Success!");
+        }
+        else
+        {
+            Log.Debug("ExampleRetrieveAndRank", "OnDeleteClusters | Failure!");
         }
     }
 }
