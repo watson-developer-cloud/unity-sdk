@@ -17,7 +17,7 @@
 
 using FullSerializer;
 
-namespace IBM.Watson.DeveloperCloud.Services.RetriveAndRank.v1
+namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 {
     #region Solr Clusters
     /// <summary>

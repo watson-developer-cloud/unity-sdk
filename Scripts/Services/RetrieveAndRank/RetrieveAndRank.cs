@@ -24,9 +24,9 @@ using System;
 using FullSerializer;
 using System.Text;
 
-namespace IBM.Watson.DeveloperCloud.Services.RetriveAndRank.v1
+namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 {
-    public class RetriveAndRank : IWatsonService
+    public class RetrieveAndRank : IWatsonService
     {
         #region Private Data
         private const string SERVICE_ID = "RetrieveAndRankV1";
@@ -34,7 +34,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetriveAndRank.v1
         #endregion
 
         #region GetClusters
-        private const string SERVICE_GET_CLUSTERS = "/v1/solr_clusters";
+        private const string SERVICE_CLUSTERS = "/v1/solr_clusters";
 
         /// <summary>
         /// OnGetClusters delegate.
@@ -58,7 +58,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetriveAndRank.v1
             req.Callback = callback;
             req.Data = customData;
 
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_GET_CLUSTERS);
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_CLUSTERS);
             if (connector == null)
                 return false;
 
@@ -66,6 +66,9 @@ namespace IBM.Watson.DeveloperCloud.Services.RetriveAndRank.v1
             return connector.Send(req);
         }
 
+        /// <summary>
+        /// The GetCluster request.
+        /// </summary>
         public class GetClustersRequest : RESTConnector.Request
         {
             public string Data { get; set; }
@@ -101,7 +104,64 @@ namespace IBM.Watson.DeveloperCloud.Services.RetriveAndRank.v1
         }
         #endregion
 
-        #region CreateClusters
+        #region CreateCluster
+        public delegate void OnCreateCluster(SolrClusterResponse resp, string data);
+
+        public bool CreateCluster(OnCreateCluster callback, string clusterName = default(string), string clusterSize = default(string), string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+
+            CreateClusterRequest req = new CreateClusterRequest();
+            req.Callback = callback;
+            req.Data = customData;
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_CLUSTERS);
+            if (connector == null)
+                return false;
+
+            string reqJson = "{\n\t\"cluster_name\": \"" + clusterName + "\",\n\t\"cluster_size\": \"" + clusterSize + "\"\n}";
+
+            req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
+            req.Send = Encoding.UTF8.GetBytes(reqJson);
+            req.OnResponse = OnCreateClusterResponse;
+            return connector.Send(req);
+        }
+
+        public class CreateClusterRequest : RESTConnector.Request
+        {
+            public string Data { get; set; }
+            public OnCreateCluster Callback { get; set; }
+        }
+
+        private void OnCreateClusterResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            SolrClusterResponse clusterResponseData = new SolrClusterResponse();
+            if (resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = clusterResponseData;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("RetriveAndRank", "OnCreateClusterResponse Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((CreateClusterRequest)req).Callback != null)
+                ((CreateClusterRequest)req).Callback(resp.Success ? clusterResponseData : null, ((CreateClusterRequest)req).Data);
+        }
         #endregion
 
         #region DeleteClusters
@@ -167,10 +227,10 @@ namespace IBM.Watson.DeveloperCloud.Services.RetriveAndRank.v1
 
         private class CheckServiceStatus
         {
-            private RetriveAndRank m_Service = null;
+            private RetrieveAndRank m_Service = null;
             private ServiceStatus m_Callback = null;
 
-            public CheckServiceStatus(RetriveAndRank service, ServiceStatus callback)
+            public CheckServiceStatus(RetrieveAndRank service, ServiceStatus callback)
             {
                 m_Service = service;
                 m_Callback = callback;
