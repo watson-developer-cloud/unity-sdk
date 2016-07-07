@@ -34,9 +34,9 @@ public class ExampleRetrieveAndRank : MonoBehaviour
             Log.Debug("ExampleRetrieveAndRank", "Failed to get clusters!");
 
         //  Create cluster
-        //Log.Debug("ExampleRetrieveAndRank", "Attempting to create cluster!");
-        //if (!m_RetrieveAndRank.CreateCluster(OnCreateCluster, "TestCluster", "1"))
-        //    Log.Debug("ExampleRetrieveAndRank", "Failed to create cluster!");
+        Log.Debug("ExampleRetrieveAndRank", "Attempting to create cluster!");
+        if (!m_RetrieveAndRank.CreateCluster(OnCreateCluster, "unity-test-cluster", "1"))
+            Log.Debug("ExampleRetrieveAndRank", "Failed to create cluster!");
 
         //  Delete cluster
         //string clusterToDelete = "sca9444471_3321_4e8d_89a0_5705a944f01f";

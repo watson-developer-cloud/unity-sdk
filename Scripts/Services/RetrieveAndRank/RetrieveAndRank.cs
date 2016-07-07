@@ -208,6 +208,8 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                 throw new ArgumentNullException("callback");
             if (string.IsNullOrEmpty(clusterID))
                 throw new ArgumentNullException("ClusterID to be deleted is required!");
+            if (clusterID == Config.Instance.GetVariableValue("RetrieveAndRank_IntegrationTestClusterID"))
+                throw new WatsonException("You cannot delete the example cluster!");
 
             DeleteClusterRequest req = new DeleteClusterRequest();
             req.Callback = callback;
