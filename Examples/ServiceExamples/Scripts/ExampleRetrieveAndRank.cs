@@ -19,6 +19,7 @@ using UnityEngine;
 using System.Collections;
 using IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1;
 using IBM.Watson.DeveloperCloud.Logging;
+using IBM.Watson.DeveloperCloud.Utilities;
 
 public class ExampleRetrieveAndRank : MonoBehaviour
 {
@@ -28,21 +29,33 @@ public class ExampleRetrieveAndRank : MonoBehaviour
     {
         LogSystem.InstallDefaultReactors();
 
+        string testClusterID = Config.Instance.GetVariableValue("RetrieveAndRank_IntegrationTestClusterID");
+
         //  Get clusters
-        Log.Debug("ExampleRetrieveAndRank", "Attempting to get clusters!");
-        if (!m_RetrieveAndRank.GetClusters(OnGetClusters))
-            Log.Debug("ExampleRetrieveAndRank", "Failed to get clusters!");
+        //Log.Debug("ExampleRetrieveAndRank", "Attempting to get clusters!");
+        //if (!m_RetrieveAndRank.GetClusters(OnGetClusters))
+        //    Log.Debug("ExampleRetrieveAndRank", "Failed to get clusters!");
 
         //  Create cluster
-        Log.Debug("ExampleRetrieveAndRank", "Attempting to create cluster!");
-        if (!m_RetrieveAndRank.CreateCluster(OnCreateCluster, "unity-test-cluster", "1"))
-            Log.Debug("ExampleRetrieveAndRank", "Failed to create cluster!");
+        //Log.Debug("ExampleRetrieveAndRank", "Attempting to create cluster!");
+        //if (!m_RetrieveAndRank.CreateCluster(OnCreateCluster, "unity-test-cluster", "1"))
+        //    Log.Debug("ExampleRetrieveAndRank", "Failed to create cluster!");
 
         //  Delete cluster
         //string clusterToDelete = "sca9444471_3321_4e8d_89a0_5705a944f01f";
         //Log.Debug("ExampleRetrieveAndRank", "Attempting to delete cluster {0}!", clusterToDelete);
         //if (!m_RetrieveAndRank.DeleteCluster(OnDeleteCluster, clusterToDelete))
         //    Log.Debug("ExampleRetrieveAndRank", "Failed to delete cluster!");
+
+        //  Get cluster
+        //Log.Debug("ExampleRetrieveAndRank", "Attempting to get cluster {0}!", testClusterID);
+        //if (!m_RetrieveAndRank.GetCluster(OnGetCluster, testClusterID))
+        //    Log.Debug("ExampleRetrieveAndRank", "Failed to get cluster!");
+
+        //  Get cluster configs
+        Log.Debug("ExampleRetrieveAndRank", "Attempting to get cluster {0} configs!", testClusterID);
+        if (!m_RetrieveAndRank.GetClusterConfigs(OnGetClusterConfigs, testClusterID))
+            Log.Debug("ExampleRetrieveAndRank", "Failed to get cluster configs!");
     }
 
     private void OnGetClusters(SolrClusterListResponse resp, string data)
@@ -79,6 +92,34 @@ public class ExampleRetrieveAndRank : MonoBehaviour
         else
         {
             Log.Debug("ExampleRetrieveAndRank", "OnDeleteClusters | Failure!");
+        }
+    }
+
+    private void OnGetCluster(SolrClusterResponse resp, string data)
+    {
+        if (resp != null)
+        {
+            Log.Debug("ExampleRetrieveAndRank", "OnGetClusters | name: {0}, size: {1}, ID: {2}, status: {3}.", resp.cluster_name, resp.cluster_size, resp.solr_cluster_id, resp.solr_cluster_status);
+        }
+        else
+        {
+            Log.Debug("ExampleRetrieveAndRank", "OnGetClusters | Get Cluster Response is null!");
+        }
+    }
+
+    private void OnGetClusterConfigs(SolrConfigList resp, string data)
+    {
+        if(resp != null)
+        {
+            if(resp.solr_configs.Length == 0)
+                Log.Debug("ExampleRetrieveAndRank", "OnGetClusterConfigs | no cluster configs!" );
+
+            foreach (SolrConfig config in resp.solr_configs)
+                Log.Debug("ExampleRetrieveAndRank", "OnGetClusterConfigs | config_name: " + config.config_name);
+        }
+        else
+        {
+            Log.Debug("ExampleRetrieveAndRank", "OnGetClustersConfigs | Get Cluster Configs Response is null!");
         }
     }
 }

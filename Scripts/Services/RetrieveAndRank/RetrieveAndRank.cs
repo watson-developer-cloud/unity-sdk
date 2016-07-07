@@ -31,11 +31,33 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         #region Private Data
         private const string SERVICE_ID = "RetrieveAndRankV1";
         private static fsSerializer sm_Serializer = new fsSerializer();
+
+        //  List clusters or create cluster.
+        private const string SERVICE_CLUSTERS = "/v1/solr_clusters";
+        //  Delete cluster or get cluster info.
+        private const string SERVICE_CLUSTER = "/v1/solr_clusters/{0}";
+        //  List Solr cluster configurations.
+        private const string SERVICE_CLUSTER_CONFIGS = "/v1/solr_clusters/{0}/config";
+        //  Upload, Get or Delete Solr configuration.
+        private const string SERVICE_CLUSTER_CONFIG = "/v1/solr_clusters/{0}/config/{1}";
+        //  Forward requests to Solr (Create, Delete, List).
+        private const string SERVICE_CLUSTER_COLLECTIONS = "/v1/solr_clusters/{0}/solr/admin/collections";
+        //  Index documents.
+        private const string SERVICE_CLUSTER_COLLECTION_UPDATE = "/v1/solr_clusters/{0}/solr/{1}/update";
+        //  Search Solr standard query parser.
+        private const string SERVICE_CLUSTER_COLLECTION_SELECT = "/v1/solr_clusters/{0}/solr/{1}/select";
+        //  Search Solr ranked query parser.
+        private const string SERVICE_CLUSTER_COLLECTION_FCSELECT = "/v1/solr_clusters/{0}/solr/{1}/fcselect";
+
+        //  List rankers or create ranker.
+        private const string SERVICE_RANKERS = "/v1/rankers";
+        //  Get ranker information or delete ranker.
+        private const string SERVICE_RANKER = "/v1/rankers/{0}";
+        //  Rank.
+        private const string SERVICE_RANK = "/v1/rankers/{0}/rank";
         #endregion
 
         #region GetClusters
-        private const string SERVICE_CLUSTERS = "/v1/solr_clusters";
-
         /// <summary>
         /// OnGetClusters delegate.
         /// </summary>
@@ -187,12 +209,12 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         }
         #endregion
 
+        #region DeleteClusters
         /// <summary>
-        /// 
+        /// Delete cluster callback delegate.
         /// </summary>
         /// <param name="deleteSuccess"></param>
         /// <param name="data"></param>
-        #region DeleteClusters
         public delegate void OnDeleteCluster(bool deleteSuccess, string data);
 
         /// <summary>
@@ -216,7 +238,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             req.ClusterID = clusterID;
             req.Delete = true;
 
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_CLUSTERS + "/" + clusterID);
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_CLUSTER, clusterID));
             if (connector == null)
                 return false;
 
@@ -246,10 +268,140 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         }
         #endregion
 
-        #region GetClusterInfo
+        #region GetCluster
+        /// <summary>
+        /// Get cluster info callback delegate.
+        /// </summary>
+        /// <param name="resp"></param>
+        /// <param name="data"></param>
+        public delegate void OnGetCluster(SolrClusterResponse resp, string data);
+
+        /// <summary>
+        /// Get a Solr cluster.
+        /// </summary>
+        /// <param name="callback"></param>
+        /// <param name="clusterID"></param>
+        /// <param name="customData"></param>
+        /// <returns></returns>
+        public bool GetCluster(OnGetCluster callback, string clusterID, string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(clusterID))
+                throw new ArgumentNullException("ClusterID to get is required!");
+
+            GetClusterRequest req = new GetClusterRequest();
+            req.Callback = callback;
+            req.ClusterID = clusterID;
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_CLUSTER, clusterID));
+            if (connector == null)
+                return false;
+
+            req.OnResponse = OnGetClusterResponse;
+            return connector.Send(req);
+        }
+
+        /// <summary>
+        /// The Get Cluster request
+        /// </summary>
+        public class GetClusterRequest : RESTConnector.Request
+        {
+            public string Data { get; set; }
+            public string ClusterID { get; set; }
+            public OnGetCluster Callback { get; set; }
+        }
+
+        /// <summary>
+        /// The Get Cluster response.
+        /// </summary>
+        /// <param name="req"></param>
+        /// <param name="resp"></param>
+        private void OnGetClusterResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            SolrClusterResponse clusterData = new SolrClusterResponse();
+            if (resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = clusterData;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("RetriveAndRank", "OnGetClusterResponse Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((GetClusterRequest)req).Callback != null)
+                ((GetClusterRequest)req).Callback(resp.Success ? clusterData : null, ((GetClusterRequest)req).Data);
+        }
         #endregion
 
-        #region ListClusterConfig
+        #region ListClusterConfigs
+        public delegate void OnGetClusterConfigs(SolrConfigList resp, string data);
+
+        public bool GetClusterConfigs(OnGetClusterConfigs callback, string clusterID, string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(clusterID))
+                throw new ArgumentNullException("ClusterID to get is required!");
+
+            GetClusterConfigsRequest req = new GetClusterConfigsRequest();
+            req.Callback = callback;
+            req.ClusterID = clusterID;
+            req.OnResponse = OnGetClusterConfigsResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_CLUSTER_CONFIGS, clusterID));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        public class GetClusterConfigsRequest : RESTConnector.Request
+        {
+            public string Data { get; set; }
+            public string ClusterID { get; set; }
+            public OnGetClusterConfigs Callback { get; set; }
+        }
+
+        private void OnGetClusterConfigsResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            SolrConfigList configData = new SolrConfigList();
+            if (resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = configData;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("RetriveAndRank", "OnGetClusterConfigsResponse Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((GetClusterConfigsRequest)req).Callback != null)
+                ((GetClusterConfigsRequest)req).Callback(resp.Success ? configData : null, ((GetClusterConfigsRequest)req).Data);
+        }
         #endregion
 
         #region DeleteClusterConfig
