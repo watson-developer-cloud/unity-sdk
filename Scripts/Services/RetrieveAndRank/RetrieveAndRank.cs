@@ -23,6 +23,8 @@ using IBM.Watson.DeveloperCloud.Logging;
 using System;
 using FullSerializer;
 using System.Text;
+using System.IO;
+using System.Collections.Generic;
 
 namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 {
@@ -55,6 +57,19 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         private const string SERVICE_RANKER = "/v1/rankers/{0}";
         //  Rank.
         private const string SERVICE_RANK = "/v1/rankers/{0}/rank";
+        #endregion
+
+        #region Public Types
+        /// <summary>
+        /// The delegate for loading a file, used by TrainClassifier().
+        /// </summary>
+        /// <param name="filename">The filename to load.</param>
+        /// <returns>Should return a byte array of the file contents or null of failure.</returns>
+        public delegate byte[] LoadFileDelegate(string filename);
+        /// <summary>
+        /// Set this property to overload the internal file loading of this class.
+        /// </summary>
+        public LoadFileDelegate LoadFile { get; set; }
         #endregion
 
         #region GetClusters
@@ -215,7 +230,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// </summary>
         /// <param name="deleteSuccess"></param>
         /// <param name="data"></param>
-        public delegate void OnDeleteCluster(bool deleteSuccess, string data);
+        public delegate void OnDeleteCluster(bool success, string data);
 
         /// <summary>
         /// Delete a Solr cluster.
@@ -264,7 +279,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         private void OnDeleteClusterResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             if (((DeleteClusterRequest)req).Callback != null)
-                ((DeleteClusterRequest)req).Callback(resp.Success, ((DeleteClusterRequest)req).Data);
+                ((DeleteClusterRequest)req).Callback(resp.Success, ((CreateClusterRequest)req).Data);
         }
         #endregion
 
@@ -383,7 +398,8 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                 try
                 {
                     fsData data = null;
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    string json = Encoding.UTF8.GetString(resp.Data);
+                    fsResult r = fsJsonParser.Parse(json, out data);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
@@ -405,12 +421,216 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         #endregion
 
         #region DeleteClusterConfig
+        /// <summary>
+        /// Delete cluster config callback delegate.
+        /// </summary>
+        /// <param name="deleteSuccess"></param>
+        /// <param name="data"></param>
+        public delegate void OnDeleteClusterConfig(bool success, string data);
+
+        /// <summary>
+        /// Delete a Solr cluster config.
+        /// </summary>
+        /// <param name="callback"></param>
+        /// <param name="clusterID"></param>
+        /// <param name="customData"></param>
+        /// <returns></returns>
+        public bool DeleteClusterConfig(OnDeleteClusterConfig callback, string clusterID, string configID, string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(clusterID))
+                throw new ArgumentNullException("clusterID to is required!");
+            if (string.IsNullOrEmpty(configID))
+                throw new ArgumentNullException("configID to be deleted is required!");
+            if (configID == Config.Instance.GetVariableValue("RetrieveAndRank_IntegrationTestClusterConfigID"))
+                throw new WatsonException("You cannot delete the example cluster config!");
+
+            DeleteClusterConfigRequest req = new DeleteClusterConfigRequest();
+            req.Callback = callback;
+            req.ClusterID = clusterID;
+            req.ConfigID = configID;
+            req.Delete = true;
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_CLUSTER_CONFIG, clusterID, configID));
+            if (connector == null)
+                return false;
+
+            req.OnResponse = OnDeleteClusterConfigResponse;
+            return connector.Send(req);
+        }
+
+        /// <summary>
+        /// The Delete Cluster Config request
+        /// </summary>
+        public class DeleteClusterConfigRequest : RESTConnector.Request
+        {
+            public string Data { get; set; }
+            public string ClusterID { get; set; }
+            public string ConfigID { get; set; }
+            public OnDeleteClusterConfig Callback { get; set; }
+        }
+
+        /// <summary>
+        /// The Delete Cluster Config response.
+        /// </summary>
+        /// <param name="req"></param>
+        /// <param name="resp"></param>
+        private void OnDeleteClusterConfigResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            //DeleteConfigResponse deleteConfigResponse = new DeleteConfigResponse();
+            //if (resp.Success)
+            //{
+            //    try
+            //    {
+            //        fsData data = null;
+            //        string json = Encoding.UTF8.GetString(resp.Data);
+            //        fsResult r = fsJsonParser.Parse(json, out data);
+            //        if (!r.Succeeded)
+            //            throw new WatsonException(r.FormattedMessages);
+
+            //        object obj = deleteConfigResponse;
+            //        r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+            //        if (!r.Succeeded)
+            //            throw new WatsonException(r.FormattedMessages);
+            //    }
+            //    catch (Exception e)
+            //    {
+            //        Log.Error("RetriveAndRank", "OnDeleteClusterConfigResponse Exception: {0}", e.ToString());
+            //        resp.Success = false;
+            //    }
+            //}
+
+            //if (((DeleteClusterConfigRequest)req).Callback != null)
+            //    ((DeleteClusterConfigRequest)req).Callback(resp.Success ? deleteConfigResponse : null, ((DeleteClusterConfigRequest)req).Data);
+
+            if (((DeleteClusterConfigRequest)req).Callback != null)
+                ((DeleteClusterConfigRequest)req).Callback(resp.Success, ((DeleteClusterConfigRequest)req).Data);
+        }
         #endregion
 
         #region GetClusterConfig
+        public delegate void OnGetClusterConfig(bool getSuccess, string data);
+
+        public bool GetClusterConfig(OnGetClusterConfig callback, string clusterID, string configName, string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(clusterID))
+                throw new ArgumentNullException("A clusterID is required for GetClusterConfig!");
+            if (string.IsNullOrEmpty(configName))
+                throw new ArgumentNullException("A configName is required for GetClusterConfig!");
+
+            GetClusterConfigRequest req = new GetClusterConfigRequest();
+            req.Data = customData;
+            req.Callback = callback;
+            req.ClusterID = clusterID;
+            req.ConfigName = configName;
+            req.OnResponse = GetClusterConfigResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_CLUSTER_CONFIG, clusterID, configName));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class GetClusterConfigRequest : RESTConnector.Request
+        {
+            public string Data { get; set; }
+            public string ClusterID { get; set; }
+            public string ConfigName { get; set; }
+            public OnGetClusterConfig Callback { get; set; }
+        }
+
+        private void GetClusterConfigResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            if (((GetClusterConfigRequest)req).Callback != null)
+                ((GetClusterConfigRequest)req).Callback(resp.Success, ((GetClusterConfigRequest)req).Data);
+        }
         #endregion
 
         #region UploadClusterConfig
+        public delegate void OnUploadClusterConfig(UploadResponse resp, string data);
+
+        public bool UploadClusterConfig(OnUploadClusterConfig callback, string clusterID, string configName, string configPath, string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(clusterID))
+                throw new ArgumentNullException("A clusterID is required for UploadClusterConfig!");
+            if (string.IsNullOrEmpty(configName))
+                throw new ArgumentNullException("A configName is required for UploadClusterConfig!");
+            if (string.IsNullOrEmpty(configPath))
+                throw new ArgumentNullException("A configPath is required for UploadClusterConfig!");
+
+            UploadClusterConfigRequest req = new UploadClusterConfigRequest();
+            req.Callback = callback;
+            req.ClusterID = clusterID;
+            req.ConfigName = configName;
+            req.OnResponse = UploadClusterConfigResponse;
+            
+            byte[] configData = null;
+            if (LoadFile != null)
+            {
+                configData = LoadFile(configPath);
+            }
+            else
+            {
+#if !UNITY_WEBPLAYER
+                configData = File.ReadAllBytes(configPath);
+#endif
+            }
+
+            if (configData == null)
+                Log.Error("RetrieveAndRank", "Failed to upload {0}!", configPath);
+
+            req.Headers["Content-Type"] = "application/zip";
+            //req.Forms = new Dictionary<string, RESTConnector.Form>();
+            //req.Forms["body"] = new RESTConnector.Form(configData, "config.zip", "application/zip");
+            req.Send = configData;
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_CLUSTER_CONFIG, clusterID, configName));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class UploadClusterConfigRequest : RESTConnector.Request
+        {
+            public string Data { get; set; }
+            public string ClusterID { get; set; }
+            public string ConfigName { get; set; }
+            public OnUploadClusterConfig Callback { get; set; }
+        }
+
+        private void UploadClusterConfigResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            UploadResponse uploadResponse = new UploadResponse();
+            if (resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = uploadResponse;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("RetriveAndRank", "UploadClusterConfigResponse Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((UploadClusterConfigRequest)req).Callback != null)
+                ((UploadClusterConfigRequest)req).Callback(resp.Success ? uploadResponse : null, ((UploadClusterConfigRequest)req).Data);
+        }
         #endregion
 
         #region CollectionRequest
@@ -426,6 +646,72 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         #endregion
 
         #region GetRankers
+        /// <summary>
+        /// OnGetRankers delegate.
+        /// </summary>
+        /// <param name="resp"></param>
+        /// <param name="data"></param>
+        public delegate void OnGetRankers(ListRankersPayload resp, string data);
+
+        /// <summary>
+        /// Gets all available Solr rankers.
+        /// </summary>
+        /// <param name="callback"></param>
+        /// <param name="customData"></param>
+        /// <returns></returns>
+        public bool GetRankers(OnGetRankers callback, string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+
+            GetRankersRequest req = new GetRankersRequest();
+            req.Callback = callback;
+            req.Data = customData;
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_RANKERS);
+            if (connector == null)
+                return false;
+
+            req.OnResponse = OnGetRankersResponse;
+            return connector.Send(req);
+        }
+
+        /// <summary>
+        /// The GetRanker request.
+        /// </summary>
+        public class GetRankersRequest : RESTConnector.Request
+        {
+            public string Data { get; set; }
+            public OnGetRankers Callback { get; set; }
+        }
+
+        private void OnGetRankersResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            ListRankersPayload rankersData = new ListRankersPayload();
+            if (resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = rankersData;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("RetriveAndRank", "OnGetRankersResponse Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((GetRankersRequest)req).Callback != null)
+                ((GetRankersRequest)req).Callback(resp.Success ? rankersData : null, ((GetRankersRequest)req).Data);
+        }
         #endregion
 
         #region CreateRanker

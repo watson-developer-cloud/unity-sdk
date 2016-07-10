@@ -25,11 +25,13 @@ public class ExampleRetrieveAndRank : MonoBehaviour
 {
     private RetrieveAndRank m_RetrieveAndRank = new RetrieveAndRank();
 
-    void Start ()
+    void Start()
     {
         LogSystem.InstallDefaultReactors();
 
         string testClusterID = Config.Instance.GetVariableValue("RetrieveAndRank_IntegrationTestClusterID");
+        string testClusterConfigName = "cranfield_solr_config";
+        string testClusterConfigPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/RetrieveAndRank/cranfield_solr_config.zip";
 
         //  Get clusters
         //Log.Debug("ExampleRetrieveAndRank", "Attempting to get clusters!");
@@ -42,7 +44,7 @@ public class ExampleRetrieveAndRank : MonoBehaviour
         //    Log.Debug("ExampleRetrieveAndRank", "Failed to create cluster!");
 
         //  Delete cluster
-        //string clusterToDelete = "sca9444471_3321_4e8d_89a0_5705a944f01f";
+        //string clusterToDelete = "scabeadb4c_cd5a_4745_b1b9_156c6292687c";
         //Log.Debug("ExampleRetrieveAndRank", "Attempting to delete cluster {0}!", clusterToDelete);
         //if (!m_RetrieveAndRank.DeleteCluster(OnDeleteCluster, clusterToDelete))
         //    Log.Debug("ExampleRetrieveAndRank", "Failed to delete cluster!");
@@ -52,15 +54,50 @@ public class ExampleRetrieveAndRank : MonoBehaviour
         //if (!m_RetrieveAndRank.GetCluster(OnGetCluster, testClusterID))
         //    Log.Debug("ExampleRetrieveAndRank", "Failed to get cluster!");
 
-        //  Get cluster configs
-        Log.Debug("ExampleRetrieveAndRank", "Attempting to get cluster {0} configs!", testClusterID);
-        if (!m_RetrieveAndRank.GetClusterConfigs(OnGetClusterConfigs, testClusterID))
-            Log.Debug("ExampleRetrieveAndRank", "Failed to get cluster configs!");
+        //  List cluster configs
+        //Log.Debug("ExampleRetrieveAndRank", "Attempting to get cluster configs for {0}!", testClusterID);
+        //if (!m_RetrieveAndRank.GetClusterConfigs(OnGetClusterConfigs, testClusterID))
+        //    Log.Debug("ExampleRetrieveAndRank", "Failed to get cluster configs!");
+
+        //  Delete cluster config
+        //string clusterConfigToDelete = "test-config";
+        //Log.Debug("ExampleRetrieveAndRank", "Attempting to delete cluster {0} config {1}!", testClusterID, clusterConfigToDelete);
+        //if (!m_RetrieveAndRank.DeleteClusterConfig(OnDeleteClusterConfig, testClusterID, clusterConfigToDelete))
+        //    Log.Debug("ExampleRetriveAndRank", "Failed to delete cluster config {0}", clusterConfigToDelete);
+
+        //  Get cluster config
+
+        //  Upload cluster config
+        //Log.Debug("ExampleRetrieveAndRank", "Attempting to upload cluster {0} config {1}!", testClusterID, testClusterConfigName);
+        //if (!m_RetrieveAndRank.UploadClusterConfig(OnUploadClusterConfig, testClusterID, testClusterConfigName, testClusterConfigPath))
+        //    Log.Debug("ExampleRetrieveAndRank", "Failed to upload cluster config {0}!", testClusterConfigPath);
+
+        //  Collection request
+
+        //  Index documents
+
+        //  Search
+
+        //  Ranked search
+
+        //  Get rankers
+        Log.Debug("ExampleRetrieveAndRank", "Attempting to get rankers!");
+        if (!m_RetrieveAndRank.GetRankers(OnGetRankers))
+            Log.Debug("ExampleRetrieveAndRank", "Failed to get rankers!");
+
+        //  Create ranker
+
+        //  Rank
+
+        //  Delete rankers
+
+        //  Get ranker info
+
     }
 
     private void OnGetClusters(SolrClusterListResponse resp, string data)
     {
-        if(resp != null)
+        if (resp != null)
         {
             foreach (SolrClusterResponse cluster in resp.clusters)
                 Log.Debug("ExampleRetrieveAndRank", "OnGetClusters | cluster name: {0}, size: {1}, ID: {2}, status: {3}.", cluster.cluster_name, cluster.cluster_size, cluster.solr_cluster_id, cluster.solr_cluster_status);
@@ -73,7 +110,7 @@ public class ExampleRetrieveAndRank : MonoBehaviour
 
     private void OnCreateCluster(SolrClusterResponse resp, string data)
     {
-        if(resp != null)
+        if (resp != null)
         {
             Log.Debug("ExampleRetrieveAndRank", "OnCreateClusters | name: {0}, size: {1}, ID: {2}, status: {3}.", resp.cluster_name, resp.cluster_size, resp.solr_cluster_id, resp.solr_cluster_status);
         }
@@ -83,15 +120,15 @@ public class ExampleRetrieveAndRank : MonoBehaviour
         }
     }
 
-    private void OnDeleteCluster(bool deleteSuccess, string data)
+    private void OnDeleteCluster(bool success, string data)
     {
-        if (deleteSuccess)
+        if (success)
         {
-            Log.Debug("ExampleRetrieveAndRank", "OnDeleteClusters | Success!");
+            Log.Debug("ExampleRetrieveAndRank", "OnDeleteCluster | Success!");
         }
         else
         {
-            Log.Debug("ExampleRetrieveAndRank", "OnDeleteClusters | Failure!");
+            Log.Debug("ExampleRetrieveAndRank", "OnDeleteCluster | Failure!");
         }
     }
 
@@ -109,17 +146,55 @@ public class ExampleRetrieveAndRank : MonoBehaviour
 
     private void OnGetClusterConfigs(SolrConfigList resp, string data)
     {
-        if(resp != null)
+        if (resp != null)
         {
-            if(resp.solr_configs.Length == 0)
-                Log.Debug("ExampleRetrieveAndRank", "OnGetClusterConfigs | no cluster configs!" );
+            if (resp.solr_configs.Length == 0)
+                Log.Debug("ExampleRetrieveAndRank", "OnGetClusterConfigs | no cluster configs!");
 
-            foreach (SolrConfig config in resp.solr_configs)
-                Log.Debug("ExampleRetrieveAndRank", "OnGetClusterConfigs | config_name: " + config.config_name);
+            foreach (string config in resp.solr_configs)
+                Log.Debug("ExampleRetrieveAndRank", "OnGetClusterConfigs | solr_config: " + config);
         }
         else
         {
             Log.Debug("ExampleRetrieveAndRank", "OnGetClustersConfigs | Get Cluster Configs Response is null!");
+        }
+    }
+
+    private void OnDeleteClusterConfig(bool success, string data)
+    {
+        if (success)
+        {
+            Log.Debug("ExampleRetrieveAndRank", "OnDeleteClusterConfig | Success!");
+        }
+        else
+        {
+            Log.Debug("ExampleRetrieveAndRank", "OnDeleteClusterConfig | Failure!");
+        }
+    }
+    private void OnUploadClusterConfig(UploadResponse resp, string data)
+    {
+        if (resp != null)
+        {
+            Log.Debug("ExampleRetrieveAndRank", "OnUploadClusterConfig | Success! {0}, {1}", resp.message, resp.statusCode);
+        }
+        else
+        {
+            Log.Debug("ExampleRetrieveAndRank", "OnUploadClusterConfig | Failure!");
+        }
+    }
+
+    private void OnGetRankers(ListRankersPayload resp, string data)
+    {
+        if (resp != null)
+        {
+            if (resp.rankers.Length == 0)
+                Log.Debug("ExampleRetrieveAndRank", "OnGetRankers | no ranker configs!");
+            foreach (RankerInfoPayload ranker in resp.rankers)
+                Log.Debug("ExampleRetrieveAndRank", "OnGetRankers | ranker name: {0}, ID: {1}, created: {2}, url: {3}.", ranker.name, ranker.ranker_id, ranker.created, ranker.url);
+        }
+        else
+        {
+            Log.Debug("ExampleRetrieveAndRank", "OnGetClusters | Get Ranker Response is null!");
         }
     }
 }

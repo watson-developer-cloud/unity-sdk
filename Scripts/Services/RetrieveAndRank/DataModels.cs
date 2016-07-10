@@ -65,19 +65,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// <summary>
         /// The Solr configs.
         /// </summary>
-        public SolrConfig[] solr_configs { get; set; }
-    }
-
-    /// <summary>
-    /// Solr config object.
-    /// </summary>
-    [fsObject]
-    public class SolrConfig
-    {
-        /// <summary>
-        /// The config name.
-        /// </summary>
-        public string config_name { get; set; }
+        public string[] solr_configs { get; set; }
     }
 
     /// <summary>
@@ -94,6 +82,54 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// The error code.
         /// </summary>
         public int code { get; set; }
+    }
+
+    /// <summary>
+    /// The response for uploading Solr config.
+    /// </summary>
+    [fsObject]
+    public class UploadResponse
+    {
+        /// <summary>
+        /// Status message.
+        /// </summary>
+        public string message { get; set; }
+        /// <summary>
+        /// Status code.
+        /// </summary>
+        public string statusCode { get; set; }
+    }
+
+    /// <summary>
+    /// The response for deleting Solr cluster.
+    /// </summary>
+    [fsObject]
+    public class DeleteResponse
+    {
+        /// <summary>
+        /// Status message.
+        /// </summary>
+        public string message { get; set; }
+        /// <summary>
+        /// Status code.
+        /// </summary>
+        public string statusCode { get; set; }
+    }
+
+    /// <summary>
+    /// The response for deleting Solr cluster config.
+    /// </summary>
+    [fsObject]
+    public class DeleteConfigResponse
+    {
+        /// <summary>
+        /// Status message.
+        /// </summary>
+        public string message { get; set; }
+        /// <summary>
+        /// Status code.
+        /// </summary>
+        public string statusCode { get; set; }
     }
 
     /// <summary>
