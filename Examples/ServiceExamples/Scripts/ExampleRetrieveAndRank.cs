@@ -94,14 +94,16 @@ public class ExampleRetrieveAndRank : MonoBehaviour
 		//	Log.Debug("ExampleRetrieveAndRank", "Failed to create ranker!");
 
 		//  Rank
-		Log.Debug("ExampleRetrieveAndRank", "Attempting to rank!");
-		if (!m_RetrieveAndRank.Rank(OnRank, testRankerID, testAnswerDataPath))
-			Log.Debug("ExampleRetriveAndRank", "Failed to rank!");
+		//Log.Debug("ExampleRetrieveAndRank", "Attempting to rank!");
+		//if (!m_RetrieveAndRank.Rank(OnRank, testRankerID, testAnswerDataPath))
+		//	Log.Debug("ExampleRetriveAndRank", "Failed to rank!");
 
-        //  Delete rankers
+		//  Delete rankers
 
-        //  Get ranker info
-
+		//  Get ranker info
+		Log.Debug("ExampleRetrieveAnndRank", "Attempting to get Ranker Info!");
+		if (!m_RetrieveAndRank.GetRanker(OnGetRanker, testRankerID))
+			Log.Debug("ExampleRetrieveAndRank", "Failed to get ranker!");
     }
 
     private void OnGetClusters(SolrClusterListResponse resp, string data)
@@ -239,6 +241,18 @@ public class ExampleRetrieveAndRank : MonoBehaviour
 		else
 		{
 			Log.Debug("ExampleRetrieveAndRank", "OnRank | Rank response is null!");
+		}
+	}
+
+	private void OnGetRanker(RankerStatusPayload resp, string data)
+	{
+		if(resp != null)
+		{
+			Log.Debug("ExampleRetrieveAndRank", "GetRanker | ranker_id: {0}, url: {1}, name: {2}, created: {3}, status: {4}, status_description: {5}.", resp.ranker_id, resp.url, resp.name, resp.created, resp.status, resp.status_description);
+		}
+		else
+		{
+			Log.Debug("ExampleRetrieveAndRank", "GetRanker | GetRanker response is null!");
 		}
 	}
 }

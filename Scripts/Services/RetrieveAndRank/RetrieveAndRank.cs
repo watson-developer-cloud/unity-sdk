@@ -929,9 +929,85 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 		#endregion
 
 		#region DeleteRanker
+
 		#endregion
 
 		#region GetRankerInfo
+		/// <summary>
+		/// Get ranker info callback delegate.
+		/// </summary>
+		/// <param name="resp"></param>
+		/// <param name="data"></param>
+		public delegate void OnGetRanker(RankerStatusPayload resp, string data);
+
+		/// <summary>
+		/// Get a Solr ranker.
+		/// </summary>
+		/// <param name="callback"></param>
+		/// <param name="rankerID"></param>
+		/// <param name="customData"></param>
+		/// <returns></returns>
+		public bool GetRanker(OnGetRanker callback, string rankerID, string customData = default(string))
+		{
+			if (callback == null)
+				throw new ArgumentNullException("callback");
+			if (string.IsNullOrEmpty(rankerID))
+				throw new ArgumentNullException("RankerID to get is required!");
+
+			GetRankerRequest req = new GetRankerRequest();
+			req.Callback = callback;
+			req.RankerID = rankerID;
+
+			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_RANKER, rankerID));
+			if (connector == null)
+				return false;
+
+			req.OnResponse = OnGetRankerResponse;
+			return connector.Send(req);
+		}
+
+		/// <summary>
+		/// The Get Ranker request
+		/// </summary>
+		public class GetRankerRequest : RESTConnector.Request
+		{
+			public string Data { get; set; }
+			public string RankerID { get; set; }
+			public OnGetRanker Callback { get; set; }
+		}
+
+		/// <summary>
+		/// The Get Ranker response.
+		/// </summary>
+		/// <param name="req"></param>
+		/// <param name="resp"></param>
+		private void OnGetRankerResponse(RESTConnector.Request req, RESTConnector.Response resp)
+		{
+			RankerStatusPayload rankerData = new RankerStatusPayload();
+			if (resp.Success)
+			{
+				try
+				{
+					fsData data = null;
+					fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+					if (!r.Succeeded)
+						throw new WatsonException(r.FormattedMessages);
+
+					object obj = rankerData;
+					r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+					if (!r.Succeeded)
+						throw new WatsonException(r.FormattedMessages);
+				}
+				catch (Exception e)
+				{
+					Log.Error("RetriveAndRank", "OnGetRankerResponse Exception: {0}", e.ToString());
+					resp.Success = false;
+				}
+			}
+
+			if (((GetRankerRequest)req).Callback != null)
+				((GetRankerRequest)req).Callback(resp.Success ? rankerData : null, ((GetRankerRequest)req).Data);
+		}
 		#endregion
 
 		#region IWatsonService Interface
