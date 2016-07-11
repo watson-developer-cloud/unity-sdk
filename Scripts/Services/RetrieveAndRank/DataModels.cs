@@ -143,6 +143,46 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// </summary>
         public string message { get; set; }
     }
+
+    /// <summary>
+    /// Response for listing collections.
+    /// </summary>
+    [fsObject]
+    public class CollectionsResponse
+    {
+        /// <summary>
+        /// The response header.
+        /// </summary>
+        public ResponseHeader responseHeader { get; set; }
+        /// <summary>
+        /// Array of collection names.
+        /// </summary>
+        public string[] collections { get; set; }
+        /// <summary>
+        /// Array of CollectionsResponses for each core.
+        /// </summary>
+        public CollectionsResponse[] response { get; set; }
+        /// <summary>
+        /// The core name.
+        /// </summary>
+        public string core { get; set; }
+    }
+
+    /// <summary>
+    /// Response header for collections actions.
+    /// </summary>
+    [fsObject]
+    public class ResponseHeader
+    {
+        /// <summary>
+        /// The response status.
+        /// </summary>
+        public int status { get; set; }
+        /// <summary>
+        /// The response QTime.
+        /// </summary>
+        public int QTime { get; set; }
+    }
     #endregion
 
     #region Rankers

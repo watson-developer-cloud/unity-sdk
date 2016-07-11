@@ -634,6 +634,62 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         #endregion
 
         #region CollectionRequest
+        public delegate void OnGetCollections(CollectionsResponse resp, string data);
+        public bool GetCollections(OnGetCollections callback, string clusterID, string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(clusterID))
+                throw new ArgumentNullException("A clusterID is required for GetCollections!");
+
+            GetCollectionsRequest req = new GetCollectionsRequest();
+            req.Callback = callback;
+            req.ClusterID = clusterID;
+            req.Data = customData;
+            req.Parameters["action"] = "LIST";
+            req.Parameters["wt"] = "json";
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_CLUSTER_COLLECTIONS, clusterID));
+            if (connector == null)
+                return false;
+
+            req.OnResponse = OnGetCollectionsResponse;
+            return connector.Send(req);
+        }
+
+        public class GetCollectionsRequest: RESTConnector.Request
+        {
+            public string Data { get; set; }
+            public OnGetCollections Callback { get; set; }
+            public string ClusterID { get; set; }
+        }
+
+        private void OnGetCollectionsResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            CollectionsResponse collectionsData = new CollectionsResponse();
+            if(resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = collectionsData;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("RetriveAndRank", "OnGetCollectionsResponse exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((GetCollectionsRequest)req).Callback != null)
+                ((GetCollectionsRequest)req).Callback(resp.Success ? collectionsData : null, ((GetCollectionsRequest)req).Data);
+        }
         #endregion
 
         #region IndexDocuments
