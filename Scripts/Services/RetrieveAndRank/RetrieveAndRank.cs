@@ -745,19 +745,19 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 			req.TrainingDataPath = trainingDataPath;
 			req.Data = customData;
 
-			string trainingData = default(string);
+			byte[] trainingData;// = default(string);
 			if (LoadFile != null)
 			{
-				trainingData = File.ReadAllText(trainingDataPath);
+				trainingData = File.ReadAllBytes(trainingDataPath);
 			}
 			else
 			{
 #if !UNITY_WEBPLAYER
-				trainingData = File.ReadAllText(trainingDataPath);
+				trainingData = File.ReadAllBytes(trainingDataPath);
 #endif
 			}
 
-			if (string.IsNullOrEmpty(trainingData))
+			if (trainingData == null)
 				Log.Error("RetrieveAndRank", "Failed to upload {0}!", trainingDataPath);
 		
 			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_RANKERS);
@@ -768,7 +768,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 			req.Headers["Accept"] = "*/*";
 
 			req.Forms = new Dictionary<string, RESTConnector.Form>();
-			req.Forms["training_data"] = new RESTConnector.Form(trainingData);
+			req.Forms["training_data"] = new RESTConnector.Form(trainingData, "training_data.csv", "text/csv");
 			if (!string.IsNullOrEmpty(name))
 			{
 				string reqJson = "{\n\t\"name\": \"" + name + "\"\n}";
