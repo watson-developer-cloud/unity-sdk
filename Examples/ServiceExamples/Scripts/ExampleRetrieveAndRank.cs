@@ -35,58 +35,59 @@ public class ExampleRetrieveAndRank : MonoBehaviour
 		string testRankerTrainingPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/RetrieveAndRank/ranker_training_data.csv";
 		string testAnswerDataPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/RetrieveAndRank/ranker_training_data.csv";
 		string testRankerID = "3b140ax14-rank-10010";
+		string rankerToDelete = "3b140ax14-rank-10015";
 
 		//  Get clusters
-        //Log.Debug("ExampleRetrieveAndRank", "Attempting to get clusters!");
-        //if (!m_RetrieveAndRank.GetClusters(OnGetClusters))
-        //    Log.Debug("ExampleRetrieveAndRank", "Failed to get clusters!");
+		//Log.Debug("ExampleRetrieveAndRank", "Attempting to get clusters!");
+		//if (!m_RetrieveAndRank.GetClusters(OnGetClusters))
+		//    Log.Debug("ExampleRetrieveAndRank", "Failed to get clusters!");
 
-        //  Create cluster
-        //Log.Debug("ExampleRetrieveAndRank", "Attempting to create cluster!");
-        //if (!m_RetrieveAndRank.CreateCluster(OnCreateCluster, "unity-test-cluster", "1"))
-        //    Log.Debug("ExampleRetrieveAndRank", "Failed to create cluster!");
+		//  Create cluster
+		//Log.Debug("ExampleRetrieveAndRank", "Attempting to create cluster!");
+		//if (!m_RetrieveAndRank.CreateCluster(OnCreateCluster, "unity-test-cluster", "1"))
+		//    Log.Debug("ExampleRetrieveAndRank", "Failed to create cluster!");
 
-        //  Delete cluster
-        //string clusterToDelete = "scabeadb4c_cd5a_4745_b1b9_156c6292687c";
-        //Log.Debug("ExampleRetrieveAndRank", "Attempting to delete cluster {0}!", clusterToDelete);
-        //if (!m_RetrieveAndRank.DeleteCluster(OnDeleteCluster, clusterToDelete))
-        //    Log.Debug("ExampleRetrieveAndRank", "Failed to delete cluster!");
+		//  Delete cluster
+		//string clusterToDelete = "scabeadb4c_cd5a_4745_b1b9_156c6292687c";
+		//Log.Debug("ExampleRetrieveAndRank", "Attempting to delete cluster {0}!", clusterToDelete);
+		//if (!m_RetrieveAndRank.DeleteCluster(OnDeleteCluster, clusterToDelete))
+		//    Log.Debug("ExampleRetrieveAndRank", "Failed to delete cluster!");
 
-        //  Get cluster
-        //Log.Debug("ExampleRetrieveAndRank", "Attempting to get cluster {0}!", testClusterID);
-        //if (!m_RetrieveAndRank.GetCluster(OnGetCluster, testClusterID))
-        //    Log.Debug("ExampleRetrieveAndRank", "Failed to get cluster!");
+		//  Get cluster
+		//Log.Debug("ExampleRetrieveAndRank", "Attempting to get cluster {0}!", testClusterID);
+		//if (!m_RetrieveAndRank.GetCluster(OnGetCluster, testClusterID))
+		//    Log.Debug("ExampleRetrieveAndRank", "Failed to get cluster!");
 
-        //  List cluster configs
-        //Log.Debug("ExampleRetrieveAndRank", "Attempting to get cluster configs for {0}!", testClusterID);
-        //if (!m_RetrieveAndRank.GetClusterConfigs(OnGetClusterConfigs, testClusterID))
-        //    Log.Debug("ExampleRetrieveAndRank", "Failed to get cluster configs!");
+		//  List cluster configs
+		//Log.Debug("ExampleRetrieveAndRank", "Attempting to get cluster configs for {0}!", testClusterID);
+		//if (!m_RetrieveAndRank.GetClusterConfigs(OnGetClusterConfigs, testClusterID))
+		//    Log.Debug("ExampleRetrieveAndRank", "Failed to get cluster configs!");
 
-        //  Delete cluster config
-        //string clusterConfigToDelete = "test-config";
-        //Log.Debug("ExampleRetrieveAndRank", "Attempting to delete cluster {0} config {1}!", testClusterID, clusterConfigToDelete);
-        //if (!m_RetrieveAndRank.DeleteClusterConfig(OnDeleteClusterConfig, testClusterID, clusterConfigToDelete))
-        //    Log.Debug("ExampleRetriveAndRank", "Failed to delete cluster config {0}", clusterConfigToDelete);
+		//  Delete cluster config
+		//string clusterConfigToDelete = "test-config";
+		//Log.Debug("ExampleRetrieveAndRank", "Attempting to delete cluster {0} config {1}!", testClusterID, clusterConfigToDelete);
+		//if (!m_RetrieveAndRank.DeleteClusterConfig(OnDeleteClusterConfig, testClusterID, clusterConfigToDelete))
+		//    Log.Debug("ExampleRetriveAndRank", "Failed to delete cluster config {0}", clusterConfigToDelete);
 
-        //  Get cluster config
+		//  Get cluster config
 
-        //  Upload cluster config
-        //Log.Debug("ExampleRetrieveAndRank", "Attempting to upload cluster {0} config {1}!", testClusterID, testClusterConfigName);
-        //if (!m_RetrieveAndRank.UploadClusterConfig(OnUploadClusterConfig, testClusterID, testClusterConfigName, testClusterConfigPath))
-        //    Log.Debug("ExampleRetrieveAndRank", "Failed to upload cluster config {0}!", testClusterConfigPath);
+		//  Upload cluster config
+		//Log.Debug("ExampleRetrieveAndRank", "Attempting to upload cluster {0} config {1}!", testClusterID, testClusterConfigName);
+		//if (!m_RetrieveAndRank.UploadClusterConfig(OnUploadClusterConfig, testClusterID, testClusterConfigName, testClusterConfigPath))
+		//    Log.Debug("ExampleRetrieveAndRank", "Failed to upload cluster config {0}!", testClusterConfigPath);
 
-        //  Collection request
+		//  Collection request
 
-        //  Index documents
+		//  Index documents
 
-        //  Search
+		//  Search
 
-        //  Ranked search
+		//  Ranked search
 
-        //  Get rankers
-        //Log.Debug("ExampleRetrieveAndRank", "Attempting to get rankers!");
-        //if (!m_RetrieveAndRank.GetRankers(OnGetRankers))
-        //    Log.Debug("ExampleRetrieveAndRank", "Failed to get rankers!");
+		//  Get rankers
+		//Log.Debug("ExampleRetrieveAndRank", "Attempting to get rankers!");
+		//if (!m_RetrieveAndRank.GetRankers(OnGetRankers))
+		//    Log.Debug("ExampleRetrieveAndRank", "Failed to get rankers!");
 
 		//  Create ranker
 		//Log.Debug("ExampleRetrieveAndRank", "Attempting to create rankers!");
@@ -99,14 +100,17 @@ public class ExampleRetrieveAndRank : MonoBehaviour
 		//	Log.Debug("ExampleRetriveAndRank", "Failed to rank!");
 
 		//  Delete rankers
+		Log.Debug("ExampleRetriveAndRank", "Attempting to delete ranker {0}!", rankerToDelete);
+		if (!m_RetrieveAndRank.DeleteRanker(OnDeleteRanker, rankerToDelete))
+			Log.Debug("ExampleRetrieveAndRank", "Failed to delete ranker {0}!", rankerToDelete);
 
 		//  Get ranker info
-		Log.Debug("ExampleRetrieveAnndRank", "Attempting to get Ranker Info!");
-		if (!m_RetrieveAndRank.GetRanker(OnGetRanker, testRankerID))
-			Log.Debug("ExampleRetrieveAndRank", "Failed to get ranker!");
-    }
+		//Log.Debug("ExampleRetrieveAndRank", "Attempting to get Ranker Info!");
+		//if (!m_RetrieveAndRank.GetRanker(OnGetRanker, testRankerID))
+		//	Log.Debug("ExampleRetrieveAndRank", "Failed to get ranker!");
+	}
 
-    private void OnGetClusters(SolrClusterListResponse resp, string data)
+	private void OnGetClusters(SolrClusterListResponse resp, string data)
     {
         if (resp != null)
         {
@@ -253,6 +257,18 @@ public class ExampleRetrieveAndRank : MonoBehaviour
 		else
 		{
 			Log.Debug("ExampleRetrieveAndRank", "GetRanker | GetRanker response is null!");
+		}
+	}
+
+	private void OnDeleteRanker(bool success, string data)
+	{
+		if (success)
+		{
+			Log.Debug("ExampleRetrieveAndRank", "OnDeleteRanker | Success!");
+		}
+		else
+		{
+			Log.Debug("ExampleRetrieveAndRank", "OnDeleteRanker | Failure!");
 		}
 	}
 }

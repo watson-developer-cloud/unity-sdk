@@ -929,7 +929,62 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 		#endregion
 
 		#region DeleteRanker
+		/// <summary>
+		/// Delete Ranker callback delegate.
+		/// </summary>
+		/// <param name="deleteSuccess"></param>
+		/// <param name="data"></param>
+		public delegate void OnDeleteRanker(bool success, string data);
 
+		/// <summary>
+		/// Delete a Solr cluster.
+		/// </summary>
+		/// <param name="callback"></param>
+		/// <param name="rankerID"></param>
+		/// <param name="customData"></param>
+		/// <returns></returns>
+		public bool DeleteRanker(OnDeleteRanker callback, string rankerID, string customData = default(string))
+		{
+			if (callback == null)
+				throw new ArgumentNullException("callback");
+			if (string.IsNullOrEmpty(rankerID))
+				throw new ArgumentNullException("RankerID to be deleted is required!");
+			if (rankerID == Config.Instance.GetVariableValue("RetrieveAndRank_IntegrationTestRankerID"))
+				throw new WatsonException("You cannot delete the example ranker!");
+
+			DeleteRankerRequest req = new DeleteRankerRequest();
+			req.Callback = callback;
+			req.RankerID = rankerID;
+			req.Delete = true;
+
+			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_RANKER, rankerID));
+			if (connector == null)
+				return false;
+
+			req.OnResponse = OnDeleteRankerResponse;
+			return connector.Send(req);
+		}
+
+		/// <summary>
+		/// The Delete Ranker request
+		/// </summary>
+		public class DeleteRankerRequest : RESTConnector.Request
+		{
+			public string Data { get; set; }
+			public string RankerID { get; set; }
+			public OnDeleteRanker Callback { get; set; }
+		}
+
+		/// <summary>
+		/// The Delete Cluster response.
+		/// </summary>
+		/// <param name="req"></param>
+		/// <param name="resp"></param>
+		private void OnDeleteRankerResponse(RESTConnector.Request req, RESTConnector.Response resp)
+		{
+			if (((DeleteRankerRequest)req).Callback != null)
+				((DeleteRankerRequest)req).Callback(resp.Success, ((DeleteRankerRequest)req).Data);
+		}
 		#endregion
 
 		#region GetRankerInfo
