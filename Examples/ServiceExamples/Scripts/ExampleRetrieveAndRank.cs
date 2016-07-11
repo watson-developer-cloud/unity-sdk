@@ -33,7 +33,10 @@ public class ExampleRetrieveAndRank : MonoBehaviour
         string testClusterConfigName = "cranfield_solr_config";
         string testClusterConfigPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/RetrieveAndRank/cranfield_solr_config.zip";
 		string testRankerTrainingPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/RetrieveAndRank/ranker_training_data.csv";
-        //  Get clusters
+		string testAnswerDataPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/RetrieveAndRank/ranker_training_data.csv";
+		string testRankerID = "3b140ax14-rank-10010";
+
+		//  Get clusters
         //Log.Debug("ExampleRetrieveAndRank", "Attempting to get clusters!");
         //if (!m_RetrieveAndRank.GetClusters(OnGetClusters))
         //    Log.Debug("ExampleRetrieveAndRank", "Failed to get clusters!");
@@ -86,11 +89,14 @@ public class ExampleRetrieveAndRank : MonoBehaviour
         //    Log.Debug("ExampleRetrieveAndRank", "Failed to get rankers!");
 
 		//  Create ranker
-		Log.Debug("ExampleRetrieveAndRank", "Attempting to create rankers!");
-		if (!m_RetrieveAndRank.CreateRanker(OnCreateRanker, testRankerTrainingPath, "testRanker"))
-			Log.Debug("ExampleRetrieveAndRank", "Failed to create ranker!");
+		//Log.Debug("ExampleRetrieveAndRank", "Attempting to create rankers!");
+		//if (!m_RetrieveAndRank.CreateRanker(OnCreateRanker, testRankerTrainingPath, "testRanker"))
+		//	Log.Debug("ExampleRetrieveAndRank", "Failed to create ranker!");
 
-        //  Rank
+		//  Rank
+		Log.Debug("ExampleRetrieveAndRank", "Attempting to rank!");
+		if (!m_RetrieveAndRank.Rank(OnRank, testRankerID, testAnswerDataPath))
+			Log.Debug("ExampleRetriveAndRank", "Failed to rank!");
 
         //  Delete rankers
 
@@ -211,6 +217,28 @@ public class ExampleRetrieveAndRank : MonoBehaviour
 		else
 		{
 			Log.Debug("ExampleRetrieveAndRank", "OnCreateRanker | Get Cluster Response is null!");
+		}
+	}
+
+	private void OnRank(RankerOutputPayload resp, string data)
+	{
+		if (resp != null)
+		{
+			Log.Debug("ExampleRetrieveAndRank", "OnRank | ID: {0}, url: {1}, name: {2}, top_answer: {3}.", resp.ranker_id, resp.url, resp.name, resp.top_answer);
+			if (resp.answers != null)
+				if (resp.answers.Length == 0)
+				{
+					Log.Debug("ExampleRetrieveAndRank", "\tThere are no answers!");
+				}
+				else
+				{
+					foreach (RankedAnswer answer in resp.answers)
+						Log.Debug("ExampleRetrieveAndRank", "\tOnRank | answerID: {0}, score: {1}, confidence: {2}.", answer.answer_id, answer.score, answer.confidence);
+				}
+		}
+		else
+		{
+			Log.Debug("ExampleRetrieveAndRank", "OnRank | Rank response is null!");
 		}
 	}
 }

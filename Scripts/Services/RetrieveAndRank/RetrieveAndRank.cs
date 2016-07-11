@@ -726,9 +726,9 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 		/// Create a Solr ranker.
 		/// </summary>
 		/// <param name="callback"></param>
-		/// <param name="name"></param>
 		/// <param name="trainingDataPath"></param>
-		/// <param name="rankerData"></param>
+		/// <param name="name"></param>
+		/// <param name="customData"></param>
 		/// <returns></returns>
 		public bool CreateRanker(OnCreateRanker callback, string trainingDataPath, string name = default(string), string customData = default(string))
 		{
@@ -745,7 +745,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 			req.TrainingDataPath = trainingDataPath;
 			req.Data = customData;
 
-			byte[] trainingData;// = default(string);
+			byte[] trainingData;
 			if (LoadFile != null)
 			{
 				trainingData = File.ReadAllBytes(trainingDataPath);
@@ -824,6 +824,108 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 		#endregion
 
 		#region Rank
+		/// <summary>
+		/// OnRank callback delegate.
+		/// </summary>
+		/// <param name="resp"></param>
+		/// <param name="data"></param>
+		public delegate void OnRank(RankerOutputPayload resp, string data);
+
+		/// <summary>
+		/// Rank search results.
+		/// </summary>
+		/// <param name="callback"></param>
+		/// <param name="rankerID"></param>
+		/// <param name="name"></param>
+		/// <param name="customData"></param>
+		/// <returns></returns>
+		public bool Rank(OnRank callback, string rankerID, string searchResultPath = default(string), string customData = default(string))
+		{
+			if (callback == null)
+				throw new ArgumentNullException("callback");
+			if (string.IsNullOrEmpty(rankerID))
+				throw new ArgumentNullException("A rankerID is required rank!");
+			if (string.IsNullOrEmpty(searchResultPath))
+				throw new ArgumentNullException("Search results are required to rank!");
+
+			RankRequest req = new RankRequest();
+			req.Callback = callback;
+			req.RankerID = rankerID;
+			req.SearchResultsPath = searchResultPath;
+			req.Data = customData;
+
+			byte[] searchResultData;
+			if (LoadFile != null)
+			{
+				searchResultData = File.ReadAllBytes(searchResultPath);
+			}
+			else
+			{
+#if !UNITY_WEBPLAYER
+				searchResultData = File.ReadAllBytes(searchResultPath);
+#endif
+			}
+
+			if (searchResultData == null)
+				Log.Error("RetrieveAndRank", "Failed to upload {0}!", searchResultData);
+
+			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_RANK, rankerID));
+			if (connector == null)
+				return false;
+
+			req.Headers["Content-Type"] = "multipart/form-data";
+			req.Headers["Accept"] = "*/*";
+
+			req.Forms = new Dictionary<string, RESTConnector.Form>();
+			req.Forms["body"] = new RESTConnector.Form(searchResultData, "searc_data.csv", "text/csv");
+
+			req.OnResponse = OnRankResponse;
+			return connector.Send(req);
+		}
+
+		/// <summary>
+		/// The Rank request.
+		/// </summary>
+		public class RankRequest : RESTConnector.Request
+		{
+			public string Data { get; set; }
+			public string RankerID { get; set; }
+			public string SearchResultsPath { get; set; }
+			public OnRank Callback { get; set; }
+		}
+
+		/// <summary>
+		/// Rank response.
+		/// </summary>
+		/// <param name="req"></param>
+		/// <param name="resp"></param>
+		private void OnRankResponse(RESTConnector.Request req, RESTConnector.Response resp)
+		{
+			RankerOutputPayload rankData = new RankerOutputPayload();
+			if (resp.Success)
+			{
+				try
+				{
+					fsData data = null;
+					fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+					if (!r.Succeeded)
+						throw new WatsonException(r.FormattedMessages);
+
+					object obj = rankData;
+					r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+					if (!r.Succeeded)
+						throw new WatsonException(r.FormattedMessages);
+				}
+				catch (Exception e)
+				{
+					Log.Error("RetriveAndRank", "OnRankResponse Exception: {0}", e.ToString());
+					resp.Success = false;
+				}
+			}
+
+			if (((RankRequest)req).Callback != null)
+				((RankRequest)req).Callback(resp.Success ? rankData : null, ((RankRequest)req).Data);
+		}
 		#endregion
 
 		#region DeleteRanker
