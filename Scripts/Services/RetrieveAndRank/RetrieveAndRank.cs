@@ -638,7 +638,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         }
         #endregion
 
-        #region CollectionRequest
+        #region forwardCollectionRequest
         /// <summary>
         /// The OnGetCollections delegate.
         /// </summary>
@@ -660,6 +660,8 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(action))
+                throw new ArgumentNullException("An Action is required for ForwardCollectionRequest (CREATE, DELETE or LIST)");
             if (string.IsNullOrEmpty(clusterID))
                 throw new ArgumentNullException("A clusterID is required for ForwardCollectionRequest!");
 
@@ -678,10 +680,16 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                 case CollectionsAction.LIST:
                     break;
                 case CollectionsAction.CREATE:
+                    if (string.IsNullOrEmpty(collectionName))
+                        throw new ArgumentNullException("A collectionName is required for ForwardCollectionRequest (CREATE)!");
+                    if (string.IsNullOrEmpty(configName))
+                        throw new ArgumentNullException("A configName is required for ForwardCollectionRequest (CREATE)!");
                     req.Parameters["name"] = collectionName;
                     req.Parameters["collection.configName"] = configName;
                     break;
                 case CollectionsAction.DELETE:
+                    if (string.IsNullOrEmpty(collectionName))
+                        throw new ArgumentNullException("A collectionName is required for ForwardCollectionRequest (DELETE)!");
                     req.Parameters["name"] = collectionName;
                     break;
                 default:
@@ -696,13 +704,28 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             return connector.Send(req);
         }
 
+        /// <summary>
+        /// The ForwardCollectionRequest request
+        /// </summary>
         public class CollectionRequest : RESTConnector.Request
         {
             public string Data { get; set; }
             public OnCollections Callback { get; set; }
+            /// <summary>
+            /// Cluster ID required for all actions.
+            /// </summary>
             public string ClusterID { get; set; }
+            /// <summary>
+            /// Action for the call. Either "CREATE", "LIST", or "DELETE"
+            /// </summary>
             public string Action { get; set; }
+            /// <summary>
+            /// The collectionName required for "CREATE" or "DELETE".
+            /// </summary>
             public string CollectionName { get; set; }
+            /// <summary>
+            /// The cluster configuration name to use for "CREATE".
+            /// </summary>
             public string ConfigName { get; set; }
         }
 
@@ -736,6 +759,112 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         #endregion
 
         #region IndexDocuments
+        /// <summary>
+		/// OnIndexDocuments callback delegate.
+		/// </summary>
+		/// <param name="resp"></param>
+		/// <param name="data"></param>
+		public delegate void OnIndexDocuments(IndexResponse resp, string data);
+
+        /// <summary>
+        /// Create a Solr ranker.
+        /// </summary>
+        /// <param name="callback"></param>
+        /// <param name="indexdataPath"></param>
+        /// <param name="clusterID"></param>
+        /// <param name="collectionName"></param>
+        /// <param name="customData"></param>
+        /// <returns></returns>
+        public bool IndexDocuments(OnIndexDocuments callback, string indexDataPath, string clusterID, string collectionName, string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(indexDataPath))
+                throw new ArgumentNullException("A index data json path is required to index documents!");
+            if (string.IsNullOrEmpty(clusterID))
+                throw new ArgumentNullException("A clusterID is required to index documents!");
+            if (string.IsNullOrEmpty(collectionName))
+                throw new ArgumentNullException("A collectionName is required to index documents!");
+
+            IndexDocumentsRequest req = new IndexDocumentsRequest();
+            req.Callback = callback;
+            req.IndexDataPath = indexDataPath;
+            req.ClusterID = clusterID;
+            req.CollectionName = collectionName;
+            req.Data = customData;
+
+            byte[] indexData;
+            if (LoadFile != null)
+            {
+                indexData = File.ReadAllBytes(indexDataPath);
+            }
+            else
+            {
+#if !UNITY_WEBPLAYER
+                indexData = File.ReadAllBytes(indexDataPath);
+#endif
+            }
+
+            if (indexData == null)
+                Log.Error("RetrieveAndRank", "Failed to upload {0}!", indexDataPath);
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_CLUSTER_COLLECTION_UPDATE, clusterID, collectionName));
+            if (connector == null)
+                return false;
+
+            req.Headers["Content-Type"] = "multipart/form-data";
+            req.Forms = new Dictionary<string, RESTConnector.Form>();
+            req.Forms["body"] = new RESTConnector.Form(indexData, "indexData.json", "application/json");
+            //req.Send = indexData;
+            req.OnResponse = OnIndexDocumentsResponse;
+            return connector.Send(req);
+        }
+
+        /// <summary>
+        /// The Create Ranker request.
+        /// </summary>
+        public class IndexDocumentsRequest : RESTConnector.Request
+        {
+            public string Data { get; set; }
+            public string IndexDataPath { get; set; }
+            public string ClusterID { get; set; }
+            public string CollectionName { get; set; }
+            public OnIndexDocuments Callback { get; set; }
+        }
+
+        /// <summary>
+        /// The Create Ranker response.
+        /// </summary>
+        /// <param name="req"></param>
+        /// <param name="resp"></param>
+        private void OnIndexDocumentsResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            IndexResponse indexResponseData = new IndexResponse();
+            if (resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    string json = Encoding.UTF8.GetString(resp.Data);
+                    Log.Debug("RetriveAndRank", "json: {0}", json);
+                    fsResult r = fsJsonParser.Parse(json, out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                    object obj = indexResponseData;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("RetriveAndRank", "OnIndexDocumentsResponse Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((IndexDocumentsRequest)req).Callback != null)
+                ((IndexDocumentsRequest)req).Callback(resp.Success ? indexResponseData : null, ((IndexDocumentsRequest)req).Data);
+        }
         #endregion
 
         #region Search
@@ -864,7 +993,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 				return false;
 
 			req.Headers["Content-Type"] = "multipart/form-data";
-			req.Headers["Accept"] = "*/*";
+			req.Headers["Accept"] = "*";
 
 			req.Forms = new Dictionary<string, RESTConnector.Form>();
 			req.Forms["training_data"] = new RESTConnector.Form(trainingData, "training_data.csv", "text/csv");

@@ -193,6 +193,15 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         public const string CREATE = "CREATE";
         public const string DELETE = "DELETE";
     }
+
+    /// <summary>
+    /// The response for indexing documents.
+    /// </summary>
+    [fsObject]
+    public class IndexResponse
+    {
+        public ResponseHeader responseHeader { get; set; }
+    }
     #endregion
 
     #region Rankers
@@ -258,6 +267,9 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// The Ranker status
         /// </summary>
         public string status { get; set; }
+        /// <summary>
+        /// The Ranker status description
+        /// </summary>
         public string status_description { get; set; }
     }
 

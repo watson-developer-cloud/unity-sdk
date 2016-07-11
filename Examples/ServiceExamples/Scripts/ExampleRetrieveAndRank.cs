@@ -36,6 +36,8 @@ public class ExampleRetrieveAndRank : MonoBehaviour
 		string testAnswerDataPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/RetrieveAndRank/ranker_training_data.csv";
 		string testRankerID = "3b140ax14-rank-10010";
 		string rankerToDelete = "3b140ax14-rank-10015";
+        string indexDataPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/RetrieveAndRank/cranfield_data.json";
+        string testCollectionName = "test-collection";
 
         //  Get clusters
         //Log.Debug("ExampleRetrieveAndRank", "Attempting to get clusters!");
@@ -87,11 +89,14 @@ public class ExampleRetrieveAndRank : MonoBehaviour
         //    Log.Debug("ExampleRetrieveAndRank", "Failed to create collections!");
 
         //  Delete Collection request
-        Log.Debug("ExampleRetrieveAndRank", "Attempting to delete collection!");
-        if (!m_RetrieveAndRank.ForwardCollectionRequest(OnGetCollections, testClusterID, CollectionsAction.DELETE, "TestCollectionToDelete"))
-            Log.Debug("ExampleRetrieveAndRank", "Failed to delete collections!");
+        //Log.Debug("ExampleRetrieveAndRank", "Attempting to delete collection!");
+        //if (!m_RetrieveAndRank.ForwardCollectionRequest(OnGetCollections, testClusterID, CollectionsAction.DELETE, "TestCollectionToDelete"))
+        //    Log.Debug("ExampleRetrieveAndRank", "Failed to delete collections!");
 
         //  Index documents
+        //Log.Debug("ExampleRetrieveAndRank", "Attempting to index documents!");
+        //if (!m_RetrieveAndRank.IndexDocuments(OnIndexDocuments, indexDataPath, testClusterID, testCollectionName))
+        //    Log.Debug("ExampleRetrieveAngRank", "Failed to index documents!");
 
         //  Search
 
@@ -230,6 +235,21 @@ public class ExampleRetrieveAndRank : MonoBehaviour
         else
         {
             Log.Debug("ExampleRetrieveAndRank", "OnGetCollections | GetCollections Response is null!");
+        }
+    }
+
+    private void OnIndexDocuments(IndexResponse resp, string data)
+    {
+        if(resp != null)
+        {
+            if (resp.responseHeader != null)
+                Log.Debug("ExampleRetrieveAndRank", "OnIndexDocuments | status: {0}, QTime: {1}", resp.responseHeader.status, resp.responseHeader.QTime);
+            else
+                Log.Debug("ExampleRetrieveAndRank", "OnIndexDocuments | Response header is null!");
+        }
+        else
+        {
+            Log.Debug("ExampleRetrieveAndRank", "OnIndexDocuments | response is null!");
         }
     }
 
