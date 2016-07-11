@@ -712,23 +712,129 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             if (((GetRankersRequest)req).Callback != null)
                 ((GetRankersRequest)req).Callback(resp.Success ? rankersData : null, ((GetRankersRequest)req).Data);
         }
-        #endregion
+		#endregion
 
-        #region CreateRanker
-        #endregion
+		#region CreateRanker
+		/// <summary>
+		/// OnCreateCluster callback delegate.
+		/// </summary>
+		/// <param name="resp"></param>
+		/// <param name="data"></param>
+		public delegate void OnCreateRanker(RankerStatusPayload resp, string data);
 
-        #region Rank
-        #endregion
+		/// <summary>
+		/// Create a Solr ranker.
+		/// </summary>
+		/// <param name="callback"></param>
+		/// <param name="name"></param>
+		/// <param name="trainingDataPath"></param>
+		/// <param name="rankerData"></param>
+		/// <returns></returns>
+		public bool CreateRanker(OnCreateRanker callback, string trainingDataPath, string name = default(string), string customData = default(string))
+		{
+			if (callback == null)
+				throw new ArgumentNullException("callback");
+			if (string.IsNullOrEmpty(name))
+				throw new ArgumentNullException("A ranker name is required to create a ranker!");
+			if (string.IsNullOrEmpty(trainingDataPath))
+				throw new ArgumentNullException("Training data is required to create a ranker!");
 
-        #region DeleteRanker
-        #endregion
+			CreateRankerRequest req = new CreateRankerRequest();
+			req.Callback = callback;
+			req.Name = name;
+			req.TrainingDataPath = trainingDataPath;
+			req.Data = customData;
 
-        #region GetRankerInfo
-        #endregion
+			string trainingData = default(string);
+			if (LoadFile != null)
+			{
+				trainingData = File.ReadAllText(trainingDataPath);
+			}
+			else
+			{
+#if !UNITY_WEBPLAYER
+				trainingData = File.ReadAllText(trainingDataPath);
+#endif
+			}
 
-        #region IWatsonService Interface
-        /// <exclude />
-        public string GetServiceID()
+			if (string.IsNullOrEmpty(trainingData))
+				Log.Error("RetrieveAndRank", "Failed to upload {0}!", trainingDataPath);
+		
+			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_RANKERS);
+			if (connector == null)
+				return false;
+
+			req.Headers["Content-Type"] = "multipart/form-data";
+			req.Headers["Accept"] = "*/*";
+
+			req.Forms = new Dictionary<string, RESTConnector.Form>();
+			req.Forms["training_data"] = new RESTConnector.Form(trainingData);
+			if (!string.IsNullOrEmpty(name))
+			{
+				string reqJson = "{\n\t\"name\": \"" + name + "\"\n}";
+				req.Forms["training_metadata"] = new RESTConnector.Form(reqJson);
+			}
+			req.OnResponse = OnCreateRankerResponse;
+			return connector.Send(req);
+		}
+
+		/// <summary>
+		/// The Create Ranker request.
+		/// </summary>
+		public class CreateRankerRequest : RESTConnector.Request
+		{
+			public string Data { get; set; }
+			public string Name { get; set; }
+			public string TrainingDataPath { get; set; }
+			public OnCreateRanker Callback { get; set; }
+		}
+
+		/// <summary>
+		/// The Create Ranker response.
+		/// </summary>
+		/// <param name="req"></param>
+		/// <param name="resp"></param>
+		private void OnCreateRankerResponse(RESTConnector.Request req, RESTConnector.Response resp)
+		{
+			RankerStatusPayload rankerResponseData = new RankerStatusPayload();
+			if (resp.Success)
+			{
+				try
+				{
+					fsData data = null;
+					fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+					if (!r.Succeeded)
+						throw new WatsonException(r.FormattedMessages);
+
+					object obj = rankerResponseData;
+					r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+					if (!r.Succeeded)
+						throw new WatsonException(r.FormattedMessages);
+				}
+				catch (Exception e)
+				{
+					Log.Error("RetriveAndRank", "OnCreateRankerResponse Exception: {0}", e.ToString());
+					resp.Success = false;
+				}
+			}
+
+			if (((CreateRankerRequest)req).Callback != null)
+				((CreateRankerRequest)req).Callback(resp.Success ? rankerResponseData : null, ((CreateRankerRequest)req).Data);
+		}
+		#endregion
+
+		#region Rank
+		#endregion
+
+		#region DeleteRanker
+		#endregion
+
+		#region GetRankerInfo
+		#endregion
+
+		#region IWatsonService Interface
+		/// <exclude />
+		public string GetServiceID()
         {
             return SERVICE_ID;
         }

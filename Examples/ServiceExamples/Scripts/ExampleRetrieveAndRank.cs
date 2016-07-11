@@ -32,7 +32,7 @@ public class ExampleRetrieveAndRank : MonoBehaviour
         string testClusterID = Config.Instance.GetVariableValue("RetrieveAndRank_IntegrationTestClusterID");
         string testClusterConfigName = "cranfield_solr_config";
         string testClusterConfigPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/RetrieveAndRank/cranfield_solr_config.zip";
-
+		string testRankerTrainingPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/RetrieveAndRank/ranker_training_data.csv";
         //  Get clusters
         //Log.Debug("ExampleRetrieveAndRank", "Attempting to get clusters!");
         //if (!m_RetrieveAndRank.GetClusters(OnGetClusters))
@@ -81,11 +81,14 @@ public class ExampleRetrieveAndRank : MonoBehaviour
         //  Ranked search
 
         //  Get rankers
-        Log.Debug("ExampleRetrieveAndRank", "Attempting to get rankers!");
-        if (!m_RetrieveAndRank.GetRankers(OnGetRankers))
-            Log.Debug("ExampleRetrieveAndRank", "Failed to get rankers!");
+        //Log.Debug("ExampleRetrieveAndRank", "Attempting to get rankers!");
+        //if (!m_RetrieveAndRank.GetRankers(OnGetRankers))
+        //    Log.Debug("ExampleRetrieveAndRank", "Failed to get rankers!");
 
-        //  Create ranker
+		//  Create ranker
+		Log.Debug("ExampleRetrieveAndRank", "Attempting to create rankers!");
+		if (!m_RetrieveAndRank.CreateRanker(OnCreateRanker, testRankerTrainingPath, "testRanker"))
+			Log.Debug("ExampleRetrieveAndRank", "Failed to create ranker!");
 
         //  Rank
 
@@ -171,6 +174,7 @@ public class ExampleRetrieveAndRank : MonoBehaviour
             Log.Debug("ExampleRetrieveAndRank", "OnDeleteClusterConfig | Failure!");
         }
     }
+
     private void OnUploadClusterConfig(UploadResponse resp, string data)
     {
         if (resp != null)
@@ -188,13 +192,25 @@ public class ExampleRetrieveAndRank : MonoBehaviour
         if (resp != null)
         {
             if (resp.rankers.Length == 0)
-                Log.Debug("ExampleRetrieveAndRank", "OnGetRankers | no ranker configs!");
+                Log.Debug("ExampleRetrieveAndRank", "OnGetRankers | no rankers!");
             foreach (RankerInfoPayload ranker in resp.rankers)
                 Log.Debug("ExampleRetrieveAndRank", "OnGetRankers | ranker name: {0}, ID: {1}, created: {2}, url: {3}.", ranker.name, ranker.ranker_id, ranker.created, ranker.url);
         }
         else
         {
-            Log.Debug("ExampleRetrieveAndRank", "OnGetClusters | Get Ranker Response is null!");
+            Log.Debug("ExampleRetrieveAndRank", "OnGetRankers | Get Ranker Response is null!");
         }
     }
+
+	private void OnCreateRanker(RankerStatusPayload resp, string data)
+	{
+		if (resp != null)
+		{
+			Log.Debug("ExampleRetrieveAndRank", "OnCreateRanker | ID: {0}, url: {1}, name: {2}, created: {3}, status: {4}, statusDescription: {5}.", resp.ranker_id, resp.url, resp.name, resp.created, resp.status, resp.status_description);
+		}
+		else
+		{
+			Log.Debug("ExampleRetrieveAndRank", "OnCreateRanker | Get Cluster Response is null!");
+		}
+	}
 }
