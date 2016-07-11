@@ -510,6 +510,11 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         #endregion
 
         #region GetClusterConfig
+        /// <summary>
+        /// The GetClusterConfig delegate.
+        /// </summary>
+        /// <param name="getSuccess"></param>
+        /// <param name="data"></param>
         public delegate void OnGetClusterConfig(bool getSuccess, string data);
 
         public bool GetClusterConfig(OnGetClusterConfig callback, string clusterID, string configName, string customData = default(string))
@@ -634,36 +639,74 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         #endregion
 
         #region CollectionRequest
-        public delegate void OnGetCollections(CollectionsResponse resp, string data);
-        public bool GetCollections(OnGetCollections callback, string clusterID, string customData = default(string))
+        /// <summary>
+        /// The OnGetCollections delegate.
+        /// </summary>
+        /// <param name="resp"></param>
+        /// <param name="data"></param>
+        public delegate void OnCollections(CollectionsResponse resp, string data);
+
+        /// <summary>
+        /// ForwardCollectionRequest to Solr.
+        /// </summary>
+        /// <param name="callback"></param>
+        /// <param name="clusterID">Cluster ID the collection is associated with.</param>
+        /// <param name="action">Action for the call. Either "CREATE", "LIST", or "DELETE"</param>
+        /// <param name="collectionName">The collectionName required for "CREATE" or "DELETE".</param>
+        /// <param name="configName">The cluster configuration name to use for "CREATE".</param>
+        /// <param name="customData"></param>
+        /// <returns></returns>
+        public bool ForwardCollectionRequest(OnCollections callback, string clusterID, string action, string collectionName = default(string), string configName = default(string), string customData = default(string))
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
             if (string.IsNullOrEmpty(clusterID))
-                throw new ArgumentNullException("A clusterID is required for GetCollections!");
+                throw new ArgumentNullException("A clusterID is required for ForwardCollectionRequest!");
 
-            GetCollectionsRequest req = new GetCollectionsRequest();
+            CollectionRequest req = new CollectionRequest();
             req.Callback = callback;
             req.ClusterID = clusterID;
             req.Data = customData;
-            req.Parameters["action"] = "LIST";
+            req.Action = action;
+            req.CollectionName = collectionName;
+            req.ConfigName = configName;
+            req.Parameters["action"] = action;
             req.Parameters["wt"] = "json";
+            
+            switch(action)
+            {
+                case CollectionsAction.LIST:
+                    break;
+                case CollectionsAction.CREATE:
+                    req.Parameters["name"] = collectionName;
+                    req.Parameters["collection.configName"] = configName;
+                    break;
+                case CollectionsAction.DELETE:
+                    req.Parameters["name"] = collectionName;
+                    break;
+                default:
+                    throw new WatsonException(string.Format("No case exists for action {0}!", action));
+            }
+
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_CLUSTER_COLLECTIONS, clusterID));
             if (connector == null)
                 return false;
 
-            req.OnResponse = OnGetCollectionsResponse;
+            req.OnResponse = OnForwardCollectionRequestResponse;
             return connector.Send(req);
         }
 
-        public class GetCollectionsRequest: RESTConnector.Request
+        public class CollectionRequest : RESTConnector.Request
         {
             public string Data { get; set; }
-            public OnGetCollections Callback { get; set; }
+            public OnCollections Callback { get; set; }
             public string ClusterID { get; set; }
+            public string Action { get; set; }
+            public string CollectionName { get; set; }
+            public string ConfigName { get; set; }
         }
 
-        private void OnGetCollectionsResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        private void OnForwardCollectionRequestResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             CollectionsResponse collectionsData = new CollectionsResponse();
             if(resp.Success)
@@ -682,13 +725,13 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("RetriveAndRank", "OnGetCollectionsResponse exception: {0}", e.ToString());
+                    Log.Error("RetriveAndRank", "OnForwardCollectionRequestResponse exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
 
-            if (((GetCollectionsRequest)req).Callback != null)
-                ((GetCollectionsRequest)req).Callback(resp.Success ? collectionsData : null, ((GetCollectionsRequest)req).Data);
+            if (((CollectionRequest)req).Callback != null)
+                ((CollectionRequest)req).Callback(resp.Success ? collectionsData : null, ((CollectionRequest)req).Data);
         }
         #endregion
 

@@ -76,44 +76,54 @@ public class ExampleRetrieveAndRank : MonoBehaviour
         //if (!m_RetrieveAndRank.UploadClusterConfig(OnUploadClusterConfig, testClusterID, testClusterConfigName, testClusterConfigPath))
         //    Log.Debug("ExampleRetrieveAndRank", "Failed to upload cluster config {0}!", testClusterConfigPath);
 
-        //  Collection request
-        Log.Debug("ExampleRetrieveAndRank", "Attempting to list collections!");
-        if (!m_RetrieveAndRank.GetCollections(OnGetCollections, testClusterID))
-            Log.Debug("ExampleRetrieveAndRank", "Failed to get collections!");
+        //  List Collection request
+        //Log.Debug("ExampleRetrieveAndRank", "Attempting to list collections!");
+        //if (!m_RetrieveAndRank.ForwardCollectionRequest(OnGetCollections, testClusterID, CollectionsAction.LIST))
+        //    Log.Debug("ExampleRetrieveAndRank", "Failed to get collections!");
 
-		//  Index documents
+        //  Create Collection request
+        //Log.Debug("ExampleRetrieveAndRank", "Attempting to create collection!");
+        //if (!m_RetrieveAndRank.ForwardCollectionRequest(OnGetCollections, testClusterID, CollectionsAction.CREATE, "TestCollectionToDelete", testClusterConfigName))
+        //    Log.Debug("ExampleRetrieveAndRank", "Failed to create collections!");
 
-		//  Search
+        //  Delete Collection request
+        Log.Debug("ExampleRetrieveAndRank", "Attempting to delete collection!");
+        if (!m_RetrieveAndRank.ForwardCollectionRequest(OnGetCollections, testClusterID, CollectionsAction.DELETE, "TestCollectionToDelete"))
+            Log.Debug("ExampleRetrieveAndRank", "Failed to delete collections!");
 
-		//  Ranked search
+        //  Index documents
 
-		//  Get rankers
-		//Log.Debug("ExampleRetrieveAndRank", "Attempting to get rankers!");
-		//if (!m_RetrieveAndRank.GetRankers(OnGetRankers))
-		//    Log.Debug("ExampleRetrieveAndRank", "Failed to get rankers!");
+        //  Search
 
-		//  Create ranker
-		//Log.Debug("ExampleRetrieveAndRank", "Attempting to create rankers!");
-		//if (!m_RetrieveAndRank.CreateRanker(OnCreateRanker, testRankerTrainingPath, "testRanker"))
-		//	Log.Debug("ExampleRetrieveAndRank", "Failed to create ranker!");
+        //  Ranked search
 
-		//  Rank
-		//Log.Debug("ExampleRetrieveAndRank", "Attempting to rank!");
-		//if (!m_RetrieveAndRank.Rank(OnRank, testRankerID, testAnswerDataPath))
-		//	Log.Debug("ExampleRetriveAndRank", "Failed to rank!");
+        //  Get rankers
+        //Log.Debug("ExampleRetrieveAndRank", "Attempting to get rankers!");
+        //if (!m_RetrieveAndRank.GetRankers(OnGetRankers))
+        //    Log.Debug("ExampleRetrieveAndRank", "Failed to get rankers!");
 
-		//  Delete rankers
-		//Log.Debug("ExampleRetriveAndRank", "Attempting to delete ranker {0}!", rankerToDelete);
-		//if (!m_RetrieveAndRank.DeleteRanker(OnDeleteRanker, rankerToDelete))
-		//	Log.Debug("ExampleRetrieveAndRank", "Failed to delete ranker {0}!", rankerToDelete);
+        //  Create ranker
+        //Log.Debug("ExampleRetrieveAndRank", "Attempting to create rankers!");
+        //if (!m_RetrieveAndRank.CreateRanker(OnCreateRanker, testRankerTrainingPath, "testRanker"))
+        //	Log.Debug("ExampleRetrieveAndRank", "Failed to create ranker!");
 
-		//  Get ranker info
-		//Log.Debug("ExampleRetrieveAndRank", "Attempting to get Ranker Info!");
-		//if (!m_RetrieveAndRank.GetRanker(OnGetRanker, testRankerID))
-		//	Log.Debug("ExampleRetrieveAndRank", "Failed to get ranker!");
-	}
+        //  Rank
+        //Log.Debug("ExampleRetrieveAndRank", "Attempting to rank!");
+        //if (!m_RetrieveAndRank.Rank(OnRank, testRankerID, testAnswerDataPath))
+        //	Log.Debug("ExampleRetriveAndRank", "Failed to rank!");
 
-	private void OnGetClusters(SolrClusterListResponse resp, string data)
+        //  Delete rankers
+        //Log.Debug("ExampleRetriveAndRank", "Attempting to delete ranker {0}!", rankerToDelete);
+        //if (!m_RetrieveAndRank.DeleteRanker(OnDeleteRanker, rankerToDelete))
+        //	Log.Debug("ExampleRetrieveAndRank", "Failed to delete ranker {0}!", rankerToDelete);
+
+        //  Get ranker info
+        //Log.Debug("ExampleRetrieveAndRank", "Attempting to get Ranker Info!");
+        //if (!m_RetrieveAndRank.GetRanker(OnGetRanker, testRankerID))
+        //	Log.Debug("ExampleRetrieveAndRank", "Failed to get ranker!");
+    }
+
+    private void OnGetClusters(SolrClusterListResponse resp, string data)
     {
         if (resp != null)
         {

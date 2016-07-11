@@ -183,6 +183,16 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// </summary>
         public int QTime { get; set; }
     }
+
+    /// <summary>
+    /// Collection actions for CollectionsRequest
+    /// </summary>
+    public class CollectionsAction
+    {
+        public const string LIST = "LIST";
+        public const string CREATE = "CREATE";
+        public const string DELETE = "DELETE";
+    }
     #endregion
 
     #region Rankers
