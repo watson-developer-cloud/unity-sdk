@@ -182,6 +182,11 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// The response QTime.
         /// </summary>
         public int QTime { get; set; }
+        /// <summary>
+        /// Params for Solr query
+        /// </summary>
+        [fsProperty("params")]
+        public QueryParams _params { get; set; }
     }
 
     /// <summary>
@@ -195,12 +200,54 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
     }
 
     /// <summary>
-    /// The response for indexing documents.
+    /// The response for indexing documents.]]
     /// </summary>
     [fsObject]
     public class IndexResponse
     {
         public ResponseHeader responseHeader { get; set; }
+    }
+
+    [fsObject]
+    public class QueryParams
+    {
+        /// <summary>
+        /// The query.
+        /// </summary>
+        public string q { get; set; }
+        /// <summary>
+        /// The filters.
+        /// </summary>
+        public string fl { get; set; }
+        /// <summary>
+        /// The writer type.
+        /// </summary>
+        public string wt { get; set; }
+    }
+
+    [fsObject]
+    public class SearchResponse
+    {
+        public ResponseHeader responseHeader { get; set; }
+        public Response response { get; set; }
+    }
+
+    [fsObject]
+    public class Response
+    {
+        public int numFound { get; set; }
+        public int start { get; set; }
+        public Doc[] docs { get; set; }
+    }
+
+    [fsObject]
+    public class Doc
+    {
+        public string id { get; set; }
+        public string[] body { get; set; }
+        public string[] title { get; set; }
+        public string[] author { get; set; }
+        public string[] bibliography { get; set; }
     }
     #endregion
 

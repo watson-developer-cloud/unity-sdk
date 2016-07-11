@@ -868,6 +868,79 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         #endregion
 
         #region Search
+        public delegate void OnSearch(SearchResponse resp, string data);
+
+        public bool Search(OnSearch callback, string clusterID, string collectionName, string query, string[] fl, string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(clusterID))
+                throw new ArgumentNullException("A clusterID is required to search!");
+            if (string.IsNullOrEmpty(collectionName))
+                throw new ArgumentNullException("A collectionName is required to search!");
+            if (string.IsNullOrEmpty(query))
+                throw new ArgumentNullException("A query is required to search!");
+            if (fl == default(string[]))
+                throw new ArgumentNullException("An array of filters are required to search!");
+
+            SearchRequest req = new SearchRequest();
+            req.Callback = callback;
+            req.ClusterID = clusterID;
+            req.Collectionname = collectionName;
+            req.Query = query;
+            req.Fl = fl;
+            req.Data = customData;
+
+            req.Parameters["wt"] = "json";
+            req.Parameters["q"] = query;
+            req.Parameters["fl"] = string.Join(",", fl);
+
+            req.OnResponse = OnSearchResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_CLUSTER_COLLECTION_SELECT, clusterID, collectionName));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        public class SearchRequest : RESTConnector.Request
+        {
+            public string Data { get; set; }
+            public string ClusterID { get; set; }
+            public string Collectionname { get; set; }
+            public string Query { get; set; }
+            public string[] Fl { get; set; }
+            public OnSearch Callback { get; set; }
+        }
+
+        public void OnSearchResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            SearchResponse searchData = new SearchResponse();
+            if (resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = searchData;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("RetriveAndRank", "OnSearchResponse Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((SearchRequest)req).Callback != null)
+                ((SearchRequest)req).Callback(resp.Success ? searchData : null, ((SearchRequest)req).Data);
+        }
         #endregion
 
         #region RankedSearch

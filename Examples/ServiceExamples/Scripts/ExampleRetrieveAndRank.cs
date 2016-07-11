@@ -38,6 +38,7 @@ public class ExampleRetrieveAndRank : MonoBehaviour
 		string rankerToDelete = "3b140ax14-rank-10015";
         string indexDataPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/RetrieveAndRank/cranfield_data.json";
         string testCollectionName = "test-collection";
+        string testQuery = "What is the basic mechanisim of the transonic aileron buzz";
 
         //  Get clusters
         //Log.Debug("ExampleRetrieveAndRank", "Attempting to get clusters!");
@@ -96,9 +97,13 @@ public class ExampleRetrieveAndRank : MonoBehaviour
         //  Index documents
         //Log.Debug("ExampleRetrieveAndRank", "Attempting to index documents!");
         //if (!m_RetrieveAndRank.IndexDocuments(OnIndexDocuments, indexDataPath, testClusterID, testCollectionName))
-        //    Log.Debug("ExampleRetrieveAngRank", "Failed to index documents!");
+        //    Log.Debug("ExampleRetrieveAndRank", "Failed to index documents!");
 
         //  Search
+        Log.Debug("ExampleRetrieveAndRank", "Attempting to search!");
+        string[] fl = { "title", "id", "body", "author", "bibliography" };
+        if (!m_RetrieveAndRank.Search(OnSearch, testClusterID, testCollectionName, testQuery, fl))
+            Log.Debug("ExampleRetrieveAndRank", "Failed to search!");
 
         //  Ranked search
 
@@ -325,4 +330,102 @@ public class ExampleRetrieveAndRank : MonoBehaviour
 			Log.Debug("ExampleRetrieveAndRank", "OnDeleteRanker | Failure!");
 		}
 	}
+
+    private void OnSearch(SearchResponse resp, string data)
+    {
+        if(resp != null)
+        {
+            if(resp.responseHeader != null)
+            {
+                Log.Debug("ExampleRetrieveAndRank", "Search | status: {0}, QTime: {1}.", resp.responseHeader.status, resp.responseHeader.QTime);
+                if (resp.responseHeader._params != null)
+                    Log.Debug("ExampleRetrieveAndRank", "\tSearch | params.q: {0}, params.fl: {1}, params.wt: {2}.", resp.responseHeader._params.q, resp.responseHeader._params.fl, resp.responseHeader._params.wt);
+                else
+                    Log.Debug("ExampleRetrieveAndRank", "Search | responseHeader.params is null!");
+            }
+            else
+            {
+                Log.Debug("ExampleRetrieveAndRank", "Search | response header is null!");
+            }
+
+            if (resp.response != null)
+            {
+                Log.Debug("ExampleRetrieveAndRank", "Search | numFound: {0}, start: {1}.", resp.response.numFound, resp.response.start);
+                if(resp.response.docs != null)
+                {
+                    if (resp.response.docs.Length == 0)
+                        Log.Debug("ExampleRetrieveAndRank", "Search | There are no docs!");
+                    else
+                        foreach (Doc doc in resp.response.docs)
+                        {
+                            Log.Debug("ExampleRetrieveAndRank", "\tSearch | id: {0}.", doc.id);
+
+                            if (doc.title != null)
+                            {
+                                if (doc.title.Length == 0)
+                                    Log.Debug("ExampleRetrieveAndRank", "Search | There are no title");
+                                else
+                                    foreach (string s in doc.title)
+                                        Log.Debug("ExampleRetrieveAndRank", "\tSearch | title: {0}.", s);
+                            }
+                            else
+                            {
+                                Log.Debug("ExampleRetrieveAndRank", "Search | title is null");
+                            }
+
+                            if (doc.author != null)
+                            {
+                                if (doc.author.Length == 0)
+                                    Log.Debug("ExampleRetrieveAndRank", "Search | There are no authors");
+                                else
+                                    foreach (string s in doc.author)
+                                        Log.Debug("ExampleRetrieveAndRank", "\tSearch | Author: {0}.", s);
+                            }
+                            else
+                            {
+                                Log.Debug("ExampleRetrieveAndRank", "Search | Authors is null");
+                            }
+
+                            if (doc.body != null)
+                            {
+                                if (doc.body.Length == 0)
+                                    Log.Debug("ExampleRetrieveAndRank", "Search | There are no body");
+                                else
+                                    foreach (string s in doc.body)
+                                        Log.Debug("ExampleRetrieveAndRank", "\tSearch | body: {0}.", s);
+                            }
+                            else
+                            {
+                                Log.Debug("ExampleRetrieveAndRank", "Search | Body is null");
+                            }
+
+                            if (doc.bibliography != null)
+                            {
+                                if (doc.bibliography.Length == 0)
+                                    Log.Debug("ExampleRetrieveAndRank", "Search | There are no bibliographies");
+                                else
+                                    foreach (string s in doc.bibliography)
+                                        Log.Debug("ExampleRetrieveAndRank", "\tSearch | bibliography: {0}.", s);
+                            }
+                            else
+                            {
+                                Log.Debug("ExampleRetrieveAndRank", "Search | Bibliography is null");
+                            }
+                        }
+                }
+                else
+                {
+                    Log.Debug("ExampleRetrieveAndRank", "Search | docs are null!");
+                }
+            }
+            else
+            {
+                Log.Debug("ExampleRetrieveAndRank", "Search | response is null!");
+            }
+        }
+        else
+        {
+            Log.Debug("ExampleRetrieveAndRank", "Search response is null!");
+        }
+    }
 }
