@@ -1,6 +1,6 @@
 Change Log
 ==========
-## Version 0.5.0
+## Version 0.6.0
 
 _2016-07-15_
 
