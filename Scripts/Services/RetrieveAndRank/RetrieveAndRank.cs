@@ -70,6 +70,17 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// Set this property to overload the internal file loading of this class.
         /// </summary>
         public LoadFileDelegate LoadFile { get; set; }
+        /// <summary>
+        /// The delegate for saving a file, used by DownloadDialog().
+        /// </summary>
+        /// <param name="filename">The filename to save.</param>
+        /// <param name="data">The data to save into the file.</param>
+        public delegate void SaveFileDelegate(string filename, byte[] data);
+
+        /// <summary>
+        /// Set this property to overload the internal file saving for this class.
+        /// </summary>
+        public SaveFileDelegate SaveFile { get; set; }
         #endregion
 
         #region GetClusters
@@ -515,7 +526,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// </summary>
         /// <param name="getSuccess"></param>
         /// <param name="data"></param>
-        public delegate void OnGetClusterConfig(bool getSuccess, string data);
+        public delegate void OnGetClusterConfig(byte[] resp, string data);
 
         public bool GetClusterConfig(OnGetClusterConfig callback, string clusterID, string configName, string customData = default(string))
         {
@@ -550,8 +561,43 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 
         private void GetClusterConfigResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
+            byte[] respData = null;
+
+            if(resp.Success)
+            {
+                respData = resp.Data;
+            }
+
             if (((GetClusterConfigRequest)req).Callback != null)
-                ((GetClusterConfigRequest)req).Callback(resp.Success, ((GetClusterConfigRequest)req).Data);
+                ((GetClusterConfigRequest)req).Callback(respData, ((GetClusterConfigRequest)req).Data);
+        }
+
+        public delegate void OnSaveClusterConfig(bool success, string data);
+        public void SaveConfig(OnSaveClusterConfig callback, byte[] configData, string configFileName, string customData)
+        {
+            bool success = true;
+            if(configData != null)
+            {
+                try
+                {
+                    if (SaveFile != null)
+                        SaveFile(configFileName, configData);
+                    else
+                    {
+#if !UNITY_WEBPLAYER
+                        File.WriteAllBytes(configFileName, configData);
+#endif
+                    }
+                }
+                catch (Exception e)
+                {
+                    success = false;
+                    Log.Error("RetrieveAndRank", "Caught exception: {0}", e.ToString());
+                }
+            }
+
+            if (callback != null)
+                callback(success, customData);
         }
         #endregion
 

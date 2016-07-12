@@ -20,6 +20,8 @@ using System.Collections;
 using IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
+using UnityEditor;
+using System.IO;
 
 public class ExampleRetrieveAndRank : MonoBehaviour
 {
@@ -73,6 +75,9 @@ public class ExampleRetrieveAndRank : MonoBehaviour
         //    Log.Debug("ExampleRetriveAndRank", "Failed to delete cluster config {0}", clusterConfigToDelete);
 
         //  Get cluster config
+        Log.Debug("ExampleRetrieveAndRank", "Attempting to get cluster {0} config {1}!", testClusterID, testClusterConfigName);
+        if (!m_RetrieveAndRank.GetClusterConfig(OnGetClusterConfig, testClusterID, testClusterConfigName))
+            Log.Debug("ExampleRetrieveAndRank", "Failed to get cluster config {0}!", testClusterConfigName);
 
         //  Upload cluster config
         //Log.Debug("ExampleRetrieveAndRank", "Attempting to upload cluster {0} config {1}!", testClusterID, testClusterConfigName);
@@ -106,10 +111,10 @@ public class ExampleRetrieveAndRank : MonoBehaviour
         //    Log.Debug("ExampleRetrieveAndRank", "Failed to search!");
 
         //  Ranked Search
-        Log.Debug("ExampleRetrieveAndRank", "Attempting to search!");
-        string[] fl = { "title", "id", "body", "author", "bibliography" };
-        if (!m_RetrieveAndRank.Search(OnSearch, testClusterID, testCollectionName, testQuery, fl, true))
-            Log.Debug("ExampleRetrieveAndRank", "Failed to search!");
+        //Log.Debug("ExampleRetrieveAndRank", "Attempting to search!");
+        //string[] fl = { "title", "id", "body", "author", "bibliography" };
+        //if (!m_RetrieveAndRank.Search(OnSearch, testClusterID, testCollectionName, testQuery, fl, true))
+        //    Log.Debug("ExampleRetrieveAndRank", "Failed to search!");
 
         //  Get rankers
         //Log.Debug("ExampleRetrieveAndRank", "Attempting to get rankers!");
@@ -212,6 +217,32 @@ public class ExampleRetrieveAndRank : MonoBehaviour
         {
             Log.Debug("ExampleRetrieveAndRank", "OnDeleteClusterConfig | Failure!");
         }
+    }
+
+    
+    private void OnGetClusterConfig(byte[] respData, string data)
+    {
+        if(respData != null)
+        {
+            Log.Debug("ExampleRetrieveAndRank", "OnGetClusterConfig | success!");
+            string currentDirectory = Application.dataPath;
+            var path = EditorUtility.SaveFilePanel("Save Config", currentDirectory, "config", "zip");
+            if (!string.IsNullOrEmpty(path))
+            {
+                currentDirectory = Path.GetDirectoryName(path);
+                m_RetrieveAndRank.SaveConfig(OnSaveConfig, respData, path, data);
+            }
+        }
+        else
+            Log.Debug("ExampleRetrieveAndRank", "OnGetClusterConfig | respData is null!");
+    }
+
+    private void OnSaveConfig(bool success, string data)
+    {
+        if (success)
+            Log.Debug("ExampleRetrieveAndRank", "OnSaveConfig | success!");
+        else
+            Log.Debug("ExampleRetrieveAndRank", "OnSaveConfig | fail!");
     }
 
     private void OnUploadClusterConfig(UploadResponse resp, string data)
