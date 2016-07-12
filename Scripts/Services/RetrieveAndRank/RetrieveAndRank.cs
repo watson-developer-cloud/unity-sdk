@@ -868,9 +868,25 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         #endregion
 
         #region Search
+        /// <summary>
+        /// The OnSearch callback delegate.
+        /// </summary>
+        /// <param name="resp"></param>
+        /// <param name="data"></param>
         public delegate void OnSearch(SearchResponse resp, string data);
 
-        public bool Search(OnSearch callback, string clusterID, string collectionName, string query, string[] fl, string customData = default(string))
+        /// <summary>
+        /// Search through documents
+        /// </summary>
+        /// <param name="callback">The OnSearch callback.</param>
+        /// <param name="clusterID">The Solr clusterID to use.</param>
+        /// <param name="collectionName">The Solr collectionName to use.</param>
+        /// <param name="query">The query.</param>
+        /// <param name="fl">The fields to return.</param>
+        /// <param name="isRankedSearch">Use ranked search instead of standard search.</param>
+        /// <param name="customData"></param>
+        /// <returns></returns>
+        public bool Search(OnSearch callback, string clusterID, string collectionName, string query, string[] fl, bool isRankedSearch = false, string customData = default(string))
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -897,13 +913,21 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 
             req.OnResponse = OnSearchResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_CLUSTER_COLLECTION_SELECT, clusterID, collectionName));
+            RESTConnector connector;
+            if(!isRankedSearch)
+                connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_CLUSTER_COLLECTION_SELECT, clusterID, collectionName));
+            else
+                connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_CLUSTER_COLLECTION_FCSELECT, clusterID, collectionName));
+
             if (connector == null)
                 return false;
 
             return connector.Send(req);
         }
 
+        /// <summary>
+        /// The search request.
+        /// </summary>
         public class SearchRequest : RESTConnector.Request
         {
             public string Data { get; set; }
@@ -914,6 +938,11 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             public OnSearch Callback { get; set; }
         }
 
+        /// <summary>
+        /// The search response.
+        /// </summary>
+        /// <param name="req"></param>
+        /// <param name="resp"></param>
         public void OnSearchResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             SearchResponse searchData = new SearchResponse();
@@ -942,10 +971,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                 ((SearchRequest)req).Callback(resp.Success ? searchData : null, ((SearchRequest)req).Data);
         }
         #endregion
-
-        #region RankedSearch
-        #endregion
-
+        
         #region GetRankers
         /// <summary>
         /// OnGetRankers delegate.

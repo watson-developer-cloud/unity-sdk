@@ -99,13 +99,17 @@ public class ExampleRetrieveAndRank : MonoBehaviour
         //if (!m_RetrieveAndRank.IndexDocuments(OnIndexDocuments, indexDataPath, testClusterID, testCollectionName))
         //    Log.Debug("ExampleRetrieveAndRank", "Failed to index documents!");
 
-        //  Search
+        //  Standard Search
+        //Log.Debug("ExampleRetrieveAndRank", "Attempting to search!");
+        //string[] fl = { "title", "id", "body", "author", "bibliography" };
+        //if (!m_RetrieveAndRank.Search(OnSearch, testClusterID, testCollectionName, testQuery, fl))
+        //    Log.Debug("ExampleRetrieveAndRank", "Failed to search!");
+
+        //  Ranked Search
         Log.Debug("ExampleRetrieveAndRank", "Attempting to search!");
         string[] fl = { "title", "id", "body", "author", "bibliography" };
-        if (!m_RetrieveAndRank.Search(OnSearch, testClusterID, testCollectionName, testQuery, fl))
+        if (!m_RetrieveAndRank.Search(OnSearch, testClusterID, testCollectionName, testQuery, fl, true))
             Log.Debug("ExampleRetrieveAndRank", "Failed to search!");
-
-        //  Ranked search
 
         //  Get rankers
         //Log.Debug("ExampleRetrieveAndRank", "Attempting to get rankers!");
