@@ -27,7 +27,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
     public class SolrClusterListResponse
     {
         /// <summary>
-        /// The Solr clusters.
+        /// An array of [clusters] that are available for the service instance.
         /// </summary>
         public SolrClusterResponse[] clusters { get; set; }
     }
@@ -39,19 +39,19 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
     public class SolrClusterResponse
     {
         /// <summary>
-        /// The cluster id.
+        /// Unique identifier for this cluster.
         /// </summary>
         public string solr_cluster_id { get; set; }
         /// <summary>
-        /// The cluster name.
+        /// Name that identifies the cluster.
         /// </summary>
         public string cluster_name { get; set; }
         /// <summary>
-        /// The cluster size.
+        /// Size of the cluster to create.
         /// </summary>
         public string cluster_size { get; set; }
         /// <summary>
-        /// The cluster status.
+        /// The state of the cluster: NOT_AVAILABLE or READY.
         /// </summary>
         public string solr_cluster_status { get; set; }
     }
@@ -194,17 +194,29 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
     /// </summary>
     public class CollectionsAction
     {
+        /// <summary>
+        /// List collections.
+        /// </summary>
         public const string LIST = "LIST";
+        /// <summary>
+        /// Create a collection.
+        /// </summary>
         public const string CREATE = "CREATE";
+        /// <summary>
+        /// Delete a collection.
+        /// </summary>
         public const string DELETE = "DELETE";
     }
 
     /// <summary>
-    /// The response for indexing documents.]]
+    /// The response for indexing documents.
     /// </summary>
     [fsObject]
     public class IndexResponse
     {
+        /// <summary>
+        /// The response header.
+        /// </summary>
         public ResponseHeader responseHeader { get; set; }
     }
 
@@ -225,28 +237,67 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         public string wt { get; set; }
     }
 
+    /// <summary>
+    /// The search response
+    /// </summary>
     [fsObject]
     public class SearchResponse
     {
+        /// <summary>
+        /// The response header info.
+        /// </summary>
         public ResponseHeader responseHeader { get; set; }
+        /// <summary>
+        /// The response.
+        /// </summary>
         public Response response { get; set; }
     }
 
+    /// <summary>
+    /// The response object.
+    /// </summary>
     [fsObject]
     public class Response
     {
+        /// <summary>
+        /// Number of results found.
+        /// </summary>
         public int numFound { get; set; }
+        /// <summary>
+        /// Start index.
+        /// </summary>
         public int start { get; set; }
+        /// <summary>
+        /// Array of result documents.
+        /// </summary>
         public Doc[] docs { get; set; }
     }
 
+    /// <summary>
+    /// The doucment object.
+    /// </summary>
     [fsObject]
     public class Doc
     {
+        /// <summary>
+        /// The document identifier.
+        /// </summary>
         public string id { get; set; }
+        /// <summary>
+        /// The document body.
+        /// </summary>
         public string[] body { get; set; }
+        /// <summary>
+        /// The doucument title.
+        /// </summary>
         public string[] title { get; set; }
+        /// <summary>
+        /// The document author.
+        /// </summary>
         public string[] author { get; set; }
+        /// <summary>
+        /// The bibliography info.
+        /// </summary>
         public string[] bibliography { get; set; }
     }
     #endregion
@@ -259,7 +310,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
     public class ListRankersPayload
     {
         /// <summary>
-        /// The Ranker.
+        /// An array of [rankers] that available for the service instance (http://www.ibm.com/watson/developercloud/retrieve-and-rank/api/v1/#rankerinfopayload).
         /// </summary>
         public RankerInfoPayload[] rankers { get; set; }
     }
@@ -271,19 +322,19 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
     public class RankerInfoPayload
     {
         /// <summary>
-        /// The Ranker ID.
+        /// Unique identifier for this ranker
         /// </summary>
         public string ranker_id { get; set; }
         /// <summary>
-        /// The Ranker URL.
+        /// Link to the ranker
         /// </summary>
         public string url { get; set; }
         /// <summary>
-        /// The Ranker name.
+        /// User-supplied name for the ranker
         /// </summary>
         public string name { get; set; }
         /// <summary>
-        /// The Ranker created date (UTC).
+        /// Date and time in Coordinated Universal Time that the ranker was created
         /// </summary>
         public string created { get; set; }
     }
@@ -295,27 +346,27 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
     public class RankerStatusPayload
     {
         /// <summary>
-        /// The Ranker ID.
+        /// Unique identifier for this ranker.
         /// </summary>
         public string ranker_id { get; set; }
         /// <summary>
-        /// The Ranker URL.
+        /// Link to the ranker.
         /// </summary>
         public string url { get; set; }
         /// <summary>
-        /// The Ranker name.
+        /// User-supplied name for the ranker.
         /// </summary>
         public string name { get; set; }
         /// <summary>
-        /// The Ranker created date (UTC).
+        /// Date and time in Coordinated Universal Time that the ranker was created.
         /// </summary>
         public string created { get; set; }
         /// <summary>
-        /// The Ranker status
+        /// The state of the ranker: Non_Existent, Training, Failed, Available, or Unavailable.
         /// </summary>
         public string status { get; set; }
         /// <summary>
-        /// The Ranker status description
+        /// Additional detail about the status.
         /// </summary>
         public string status_description { get; set; }
     }
@@ -359,23 +410,23 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
     public class RankerOutputPayload
     {
         /// <summary>
-        /// The Ranker ID.
+        /// Unique identifier for this ranker.
         /// </summary>
         public string ranker_id { get; set; }
         /// <summary>
-        /// The Ranker name.
+        /// Name of this ranker.
         /// </summary>
         public string name { get; set; }
         /// <summary>
-        /// The Ranker URL.
+        /// Link to the ranker.
         /// </summary>
         public string url { get; set; }
         /// <summary>
-        /// The Ranker top answer.
+        /// The answer with the highest score.
         /// </summary>
         public string top_answer { get; set; }
         /// <summary>
-        /// The Ranker answers.
+        /// An array of of up to 10 answers that are sorted in descending order of score.
         /// </summary>
         public RankedAnswer[] answers { get; set; }
     }
@@ -387,15 +438,15 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
     public class RankedAnswer
     {
         /// <summary>
-        /// The Answer ID.
+        /// Pointer to the answer in the collection.
         /// </summary>
         public string answer_id { get; set; }
         /// <summary>
-        /// The Answer score.
+        /// The rank of an answer among the candidate answers. Higher values represent higher relevance. The maximum score is the total number of candidate answers in the answer_data. You can use the score to sort the answers within the response.
         /// </summary>
         public string score { get; set; }
         /// <summary>
-        /// The Answer confidence.
+        /// A decimal percentage from 0 - 1 that represents the preference that Watson has for this answer. Higher values represent higher confidences.
         /// </summary>
         public string confidence { get; set; }
     }
