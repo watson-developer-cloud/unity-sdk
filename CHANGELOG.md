@@ -2,6 +2,12 @@ Change Log
 ==========
 ## Version 0.5.0
 
+_2016-07-15_
+
+* New: Added `Retrieve and Rank` abstraction
+
+## Version 0.5.0
+
 _2016-06-24_
 
  * New: Added `Alchemy Language` abstraction

@@ -42,104 +42,104 @@ public class ExampleRetrieveAndRank : MonoBehaviour
         string testCollectionName = "test-collection";
         string testQuery = "What is the basic mechanisim of the transonic aileron buzz";
 
-        //  Get clusters
+        ////  Get clusters
         //Log.Debug("ExampleRetrieveAndRank", "Attempting to get clusters!");
         //if (!m_RetrieveAndRank.GetClusters(OnGetClusters))
         //    Log.Debug("ExampleRetrieveAndRank", "Failed to get clusters!");
 
-        //  Create cluster
+        ////  Create cluster
         //Log.Debug("ExampleRetrieveAndRank", "Attempting to create cluster!");
         //if (!m_RetrieveAndRank.CreateCluster(OnCreateCluster, "unity-test-cluster", "1"))
         //    Log.Debug("ExampleRetrieveAndRank", "Failed to create cluster!");
 
-        //  Delete cluster
+        ////  Delete cluster
         //string clusterToDelete = "scabeadb4c_cd5a_4745_b1b9_156c6292687c";
         //Log.Debug("ExampleRetrieveAndRank", "Attempting to delete cluster {0}!", clusterToDelete);
         //if (!m_RetrieveAndRank.DeleteCluster(OnDeleteCluster, clusterToDelete))
         //    Log.Debug("ExampleRetrieveAndRank", "Failed to delete cluster!");
 
-        //  Get cluster
+        ////  Get cluster
         //Log.Debug("ExampleRetrieveAndRank", "Attempting to get cluster {0}!", testClusterID);
         //if (!m_RetrieveAndRank.GetCluster(OnGetCluster, testClusterID))
         //    Log.Debug("ExampleRetrieveAndRank", "Failed to get cluster!");
 
-        //  List cluster configs
+        ////  List cluster configs
         //Log.Debug("ExampleRetrieveAndRank", "Attempting to get cluster configs for {0}!", testClusterID);
         //if (!m_RetrieveAndRank.GetClusterConfigs(OnGetClusterConfigs, testClusterID))
         //    Log.Debug("ExampleRetrieveAndRank", "Failed to get cluster configs!");
 
-        //  Delete cluster config
+        ////  Delete cluster config
         //string clusterConfigToDelete = "test-config";
         //Log.Debug("ExampleRetrieveAndRank", "Attempting to delete cluster {0} config {1}!", testClusterID, clusterConfigToDelete);
         //if (!m_RetrieveAndRank.DeleteClusterConfig(OnDeleteClusterConfig, testClusterID, clusterConfigToDelete))
         //    Log.Debug("ExampleRetriveAndRank", "Failed to delete cluster config {0}", clusterConfigToDelete);
 
-        //  Get cluster config
-        Log.Debug("ExampleRetrieveAndRank", "Attempting to get cluster {0} config {1}!", testClusterID, testClusterConfigName);
-        if (!m_RetrieveAndRank.GetClusterConfig(OnGetClusterConfig, testClusterID, testClusterConfigName))
-            Log.Debug("ExampleRetrieveAndRank", "Failed to get cluster config {0}!", testClusterConfigName);
+        ////  Get cluster config
+        //Log.Debug("ExampleRetrieveAndRank", "Attempting to get cluster {0} config {1}!", testClusterID, testClusterConfigName);
+        //if (!m_RetrieveAndRank.GetClusterConfig(OnGetClusterConfig, testClusterID, testClusterConfigName))
+        //    Log.Debug("ExampleRetrieveAndRank", "Failed to get cluster config {0}!", testClusterConfigName);
 
-        //  Upload cluster config
+        ////  Upload cluster config
         //Log.Debug("ExampleRetrieveAndRank", "Attempting to upload cluster {0} config {1}!", testClusterID, testClusterConfigName);
         //if (!m_RetrieveAndRank.UploadClusterConfig(OnUploadClusterConfig, testClusterID, testClusterConfigName, testClusterConfigPath))
         //    Log.Debug("ExampleRetrieveAndRank", "Failed to upload cluster config {0}!", testClusterConfigPath);
 
-        //  List Collection request
+        ////  List Collection request
         //Log.Debug("ExampleRetrieveAndRank", "Attempting to list collections!");
         //if (!m_RetrieveAndRank.ForwardCollectionRequest(OnGetCollections, testClusterID, CollectionsAction.LIST))
         //    Log.Debug("ExampleRetrieveAndRank", "Failed to get collections!");
 
-        //  Create Collection request
+        ////  Create Collection request
         //Log.Debug("ExampleRetrieveAndRank", "Attempting to create collection!");
         //if (!m_RetrieveAndRank.ForwardCollectionRequest(OnGetCollections, testClusterID, CollectionsAction.CREATE, "TestCollectionToDelete", testClusterConfigName))
         //    Log.Debug("ExampleRetrieveAndRank", "Failed to create collections!");
 
-        //  Delete Collection request
+        ////  Delete Collection request
         //Log.Debug("ExampleRetrieveAndRank", "Attempting to delete collection!");
         //if (!m_RetrieveAndRank.ForwardCollectionRequest(OnGetCollections, testClusterID, CollectionsAction.DELETE, "TestCollectionToDelete"))
         //    Log.Debug("ExampleRetrieveAndRank", "Failed to delete collections!");
 
-        //  Index documents
+        ////  Index documents
         //Log.Debug("ExampleRetrieveAndRank", "Attempting to index documents!");
         //if (!m_RetrieveAndRank.IndexDocuments(OnIndexDocuments, indexDataPath, testClusterID, testCollectionName))
         //    Log.Debug("ExampleRetrieveAndRank", "Failed to index documents!");
 
-        //  Standard Search
+        ////  Standard Search
         //Log.Debug("ExampleRetrieveAndRank", "Attempting to search!");
         //string[] fl = { "title", "id", "body", "author", "bibliography" };
         //if (!m_RetrieveAndRank.Search(OnSearch, testClusterID, testCollectionName, testQuery, fl))
         //    Log.Debug("ExampleRetrieveAndRank", "Failed to search!");
 
-        //  Ranked Search
+        ////  Ranked Search
         //Log.Debug("ExampleRetrieveAndRank", "Attempting to search!");
         //string[] fl = { "title", "id", "body", "author", "bibliography" };
         //if (!m_RetrieveAndRank.Search(OnSearch, testClusterID, testCollectionName, testQuery, fl, true))
         //    Log.Debug("ExampleRetrieveAndRank", "Failed to search!");
 
-        //  Get rankers
+        ////  Get rankers
         //Log.Debug("ExampleRetrieveAndRank", "Attempting to get rankers!");
         //if (!m_RetrieveAndRank.GetRankers(OnGetRankers))
         //    Log.Debug("ExampleRetrieveAndRank", "Failed to get rankers!");
 
-        //  Create ranker
+        ////  Create ranker
         //Log.Debug("ExampleRetrieveAndRank", "Attempting to create rankers!");
         //if (!m_RetrieveAndRank.CreateRanker(OnCreateRanker, testRankerTrainingPath, "testRanker"))
-        //	Log.Debug("ExampleRetrieveAndRank", "Failed to create ranker!");
+        //    Log.Debug("ExampleRetrieveAndRank", "Failed to create ranker!");
 
-        //  Rank
+        ////  Rank
         //Log.Debug("ExampleRetrieveAndRank", "Attempting to rank!");
         //if (!m_RetrieveAndRank.Rank(OnRank, testRankerID, testAnswerDataPath))
-        //	Log.Debug("ExampleRetriveAndRank", "Failed to rank!");
+        //    Log.Debug("ExampleRetriveAndRank", "Failed to rank!");
 
-        //  Delete rankers
+        ////  Delete rankers
         //Log.Debug("ExampleRetriveAndRank", "Attempting to delete ranker {0}!", rankerToDelete);
         //if (!m_RetrieveAndRank.DeleteRanker(OnDeleteRanker, rankerToDelete))
-        //	Log.Debug("ExampleRetrieveAndRank", "Failed to delete ranker {0}!", rankerToDelete);
+        //    Log.Debug("ExampleRetrieveAndRank", "Failed to delete ranker {0}!", rankerToDelete);
 
-        //  Get ranker info
+        ////  Get ranker info
         //Log.Debug("ExampleRetrieveAndRank", "Attempting to get Ranker Info!");
         //if (!m_RetrieveAndRank.GetRanker(OnGetRanker, testRankerID))
-        //	Log.Debug("ExampleRetrieveAndRank", "Failed to get ranker!");
+        //    Log.Debug("ExampleRetrieveAndRank", "Failed to get ranker!");
     }
 
     private void OnGetClusters(SolrClusterListResponse resp, string data)
