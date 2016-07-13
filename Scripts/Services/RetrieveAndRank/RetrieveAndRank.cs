@@ -290,7 +290,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         private void OnDeleteClusterResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             if (((DeleteClusterRequest)req).Callback != null)
-                ((DeleteClusterRequest)req).Callback(resp.Success, ((CreateClusterRequest)req).Data);
+                ((DeleteClusterRequest)req).Callback(resp.Success, ((DeleteClusterRequest)req).Data);
         }
         #endregion
 

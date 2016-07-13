@@ -15,6 +15,8 @@
 *
 */
 
+//#define ENABLE_CREATE_AND_DELETE_CLUSTER
+//#define ENABLE_CREATE_AND_DELETE_RANKER
 using UnityEngine;
 using System.Collections;
 using IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1;
@@ -22,6 +24,9 @@ using System;
 using IBM.Watson.DeveloperCloud.Logging;
 using UnityEditor;
 using System.IO;
+using IBM.Watson.DeveloperCloud.Utilities;
+using System.Collections.Generic;
+
 
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
@@ -50,11 +55,13 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private string m_integrationTestClusterName = "unity-integration-test-cluster";
         private string m_integrationTestClusterID;
+        private string m_integrationTestCreatedClusterID;
         private string m_integrationTestConfigName = "unity-integration-test-config";
         private string m_integrationTestCollectionName = "unity-integration-test-collection";
         private string m_integrationTestCollectionID;
         private string m_integrationTestRankerName = "unity-integration-test-ranker";
         private string m_integrationTestRankerID;
+        private string m_integrationTestCreatedRankerID;
 
         private string m_integrationTestQuery = "What is the basic mechanisim of the transonic aileron buzz";
 
@@ -66,62 +73,92 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private string m_integrationTestIndexDataPath;
 
         private bool m_isClusterReady = false;
-
+        private bool m_isRankerReady = false;
         public override IEnumerator RunTest()
         {
             m_integrationTestClusterConfigPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/RetrieveAndRank/cranfield_solr_config.zip";
             m_integrationTestRankerTrainingPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/RetrieveAndRank/ranker_training_data.csv";
             m_integrationTestRankerAnswerDataPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/RetrieveAndRank/ranker_answer_data.csv";
             m_integrationTestIndexDataPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/RetrieveAndRank/cranfield_data.json";
-
-            //  Create cluster
-            Log.Debug("TestRetrieveAndRank", "Attempting to create cluster!");
-            m_RetrieveAndRank.CreateCluster(OnCreateCluster, m_integrationTestClusterName, "1");
-            while (!m_createClusterTested)
-                yield return null;
+            m_integrationTestClusterID = Config.Instance.GetVariableValue("RetrieveAndRank_IntegrationTestClusterID");
 
             //  Get clusters
-            Log.Debug("TestRetrieveAndRank", "Attempting to get clusters!");
+            Log.Debug("TestRetrieveAndRank", "*** Attempting to get clusters!");
             m_RetrieveAndRank.GetClusters(OnGetClusters);
             while (!m_getClustersTested)
                 yield return null;
 
+#if ENABLE_CREATE_AND_DELETE_CLUSTER
+            //  Create cluster
+            Log.Debug("TestRetrieveAndRank", "*** Attempting to create cluster!");
+            m_RetrieveAndRank.CreateCluster(OnCreateCluster, m_integrationTestClusterName, "1");
+            while (!m_createClusterTested)
+                yield return null;
+
             //  Get cluster
-            Log.Debug("TestRetrieveAndRank", "Attempting to get cluster {0}!", m_integrationTestClusterID);
-            m_RetrieveAndRank.GetCluster(OnGetCluster, m_integrationTestClusterID);
-            while (!m_getClustersTested || !m_isClusterReady)
+            Log.Debug("TestRetrieveAndRank", "*** Attempting to get cluster {0}!", m_integrationTestCreatedClusterID);
+            m_RetrieveAndRank.GetCluster(OnGetCluster, m_integrationTestCreatedClusterID);
+            while (!m_getClusterTested || !m_isClusterReady)
                 yield return null;
 
-            //  Upload cluster config
-            Log.Debug("TestRetrieveAndRank", "Attempting to upload cluster {0} config {1}!", m_integrationTestClusterID, m_integrationTestConfigName);
-            m_RetrieveAndRank.UploadClusterConfig(OnUploadClusterConfig, m_integrationTestClusterID, m_integrationTestConfigName, m_integrationTestClusterConfigPath);
-            while (!m_uploadClusterConfigTested)
-                yield return null;
-
+            
+#endif
             //  List cluster configs
-            Log.Debug("TestRetrieveAndRank", "Attempting to get cluster configs for {0}!", m_integrationTestClusterID);
+            Log.Debug("TestRetrieveAndRank", "*** Attempting to get cluster configs for {0}!", m_integrationTestClusterID);
             m_RetrieveAndRank.GetClusterConfigs(OnGetClusterConfigs, m_integrationTestClusterID);
             while (!m_listClusterConfigsTested)
                 yield return null;
 
+            //  Upload cluster config
+            Log.Debug("TestRetrieveAndRank", "*** Attempting to upload cluster {0} config {1}!", m_integrationTestClusterID, m_integrationTestConfigName);
+            m_RetrieveAndRank.UploadClusterConfig(OnUploadClusterConfig, m_integrationTestClusterID, m_integrationTestConfigName, m_integrationTestClusterConfigPath);
+            while (!m_uploadClusterConfigTested)
+                yield return null;
+
             //  Get cluster config
-            Log.Debug("TestRetrieveAndRank", "Attempting to get cluster {0} config {1}!", m_integrationTestClusterID, m_integrationTestConfigName);
+            Log.Debug("TestRetrieveAndRank", "*** Attempting to get cluster {0} config {1}!", m_integrationTestClusterID, m_integrationTestConfigName);
             m_RetrieveAndRank.GetClusterConfig(OnGetClusterConfig, m_integrationTestClusterID, m_integrationTestConfigName);
             while (!m_getClusterConfigTested)
                 yield return null;
 
-            //  List Collection request
-            Log.Debug("TestRetrieveAndRank", "Attempting to list collections!");
-            m_RetrieveAndRank.ForwardCollectionRequest(OnListCollections, m_integrationTestClusterID, CollectionsAction.LIST);
-            while (!m_listCollectionRequestTested)
-                yield return null;
-
             //  Create Collection request
-            Log.Debug("TestRetrieveAndRank", "Attempting to create collection!");
+            Log.Debug("TestRetrieveAndRank", "*** Attempting to create collection!");
             m_RetrieveAndRank.ForwardCollectionRequest(OnCreateCollections, m_integrationTestClusterID, CollectionsAction.CREATE, m_integrationTestCollectionName, m_integrationTestConfigName);
             while (!m_createCollectionRequestTested)
                 yield return null;
 
+            //  List Collections
+            Log.Debug("TestRetrieveAndRank", "*** Attempting to list collections!");
+            m_RetrieveAndRank.ForwardCollectionRequest(OnListCollections, m_integrationTestClusterID, CollectionsAction.LIST);
+            while (!m_listCollectionRequestTested)
+                yield return null;
+
+            //  Get rankers
+            Log.Debug("TestRetrieveAndRank", "Attempting to get rankers!");
+            m_RetrieveAndRank.GetRankers(OnGetRankers);
+            while (!m_getRankersTested)
+                yield return null;
+
+#if ENABLE_CREATE_AND_DELETE_RANKER
+            //  Create ranker
+            Log.Debug("TestRetrieveAndRank", "Attempting to create rankers!");
+            m_RetrieveAndRank.CreateRanker(OnCreateRanker, m_integrationTestRankerTrainingPath, m_integrationTestRankerName);
+            while (!m_createRankerTested)
+                yield return null;
+
+            //  Get ranker info
+            Log.Debug("TestRetrieveAndRank", "Attempting to get Ranker Info!");
+            m_RetrieveAndRank.GetRanker(OnGetRanker, m_integrationCreatedTestRankerID);
+            while (!m_getRankerInfoTested || !m_isRankerReady)
+                yield return null;
+#endif
+
+            //  Rank
+            Log.Debug("TestRetrieveAndRank", "Attempting to rank!");
+            m_RetrieveAndRank.Rank(OnRank, m_integrationTestRankerID, m_integrationTestRankerAnswerDataPath);
+            while (!m_rankTested)
+                yield return null;
+            
             //  Index documents
             Log.Debug("TestRetrieveAndRank", "Attempting to index documents!");
             m_RetrieveAndRank.IndexDocuments(OnIndexDocuments, m_integrationTestIndexDataPath, m_integrationTestClusterID, m_integrationTestCollectionName);
@@ -139,57 +176,37 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             m_RetrieveAndRank.Search(OnRankedSearch, m_integrationTestClusterID, m_integrationTestCollectionName, m_integrationTestQuery, fl, true);
             while (!m_rankedSearchTested)
                 yield return null;
-
-            //  Get rankers
-            Log.Debug("TestRetrieveAndRank", "Attempting to get rankers!");
-            m_RetrieveAndRank.GetRankers(OnGetRankers);
-            while (!m_getRankersTested)
-                yield return null;
-
-            //  Create ranker
-            Log.Debug("TestRetrieveAndRank", "Attempting to create rankers!");
-            m_RetrieveAndRank.CreateRanker(OnCreateRanker, m_integrationTestRankerTrainingPath, m_integrationTestRankerName);
-            while (!m_createRankerTested)
-                yield return null;
-
-            //  Rank
-            Log.Debug("TestRetrieveAndRank", "Attempting to rank!");
-            m_RetrieveAndRank.Rank(OnRank, m_integrationTestRankerID, m_integrationTestRankerAnswerDataPath);
-            while (!m_rankTested)
-                yield return null;
-
-            //  Delete rankers
+            
+#if ENABLE_CREATE_AND_DELETE_RANKER
+            ////  Delete ranker
             Log.Debug("ExampleRetriveAndRank", "Attempting to delete ranker {0}!", m_integrationTestRankerName);
             m_RetrieveAndRank.DeleteRanker(OnDeleteRanker, m_integrationTestRankerName);
             while (!m_deleteRankersTested)
                 yield return null;
-
-            //  Get ranker info
-            Log.Debug("TestRetrieveAndRank", "Attempting to get Ranker Info!");
-            m_RetrieveAndRank.GetRanker(OnGetRanker, m_integrationTestRankerName);
-            while (!m_getRankerInfoTested)
-                yield return null;
+#endif
 
             //  Delete Collection request
-            Log.Debug("TestRetrieveAndRank", "Attempting to delete collection!");
+            Log.Debug("TestRetrieveAndRank", "*** Attempting to delete collection!");
             m_RetrieveAndRank.ForwardCollectionRequest(OnDeleteCollections, m_integrationTestClusterID, CollectionsAction.DELETE, m_integrationTestCollectionName);
             while (!m_deleteCollectionRequestTested)
                 yield return null;
 
             //  Delete cluster config
-            Log.Debug("TestRetrieveAndRank", "Attempting to delete cluster {0} config {1}!", m_integrationTestClusterID, m_integrationTestConfigName);
+            Log.Debug("TestRetrieveAndRank", "** Attempting to delete cluster {0} config {1}!", m_integrationTestClusterID, m_integrationTestConfigName);
             m_RetrieveAndRank.DeleteClusterConfig(OnDeleteClusterConfig, m_integrationTestClusterID, m_integrationTestConfigName);
             while (!m_deleteClusterConfigTested)
                 yield return null;
 
+#if ENABLE_CREATE_AND_DELETE_CLUSTER
             //  Delete cluster
-            Log.Debug("TestRetrieveAndRank", "Attempting to delete cluster {0}!", m_integrationTestClusterID);
-            m_RetrieveAndRank.DeleteCluster(OnDeleteCluster, m_integrationTestClusterID);
+            Log.Debug("TestRetrieveAndRank", "*** Attempting to delete cluster {0}!", m_integrationTestCreatedClusterID);
+            m_RetrieveAndRank.DeleteCluster(OnDeleteCluster, m_integrationTestCreatedClusterID);
             while (!m_deleteClusterTested)
                 yield return null;
-
+#endif
             yield break;
         }
+
 
         private void OnGetClusters(SolrClusterListResponse resp, string data)
         {
@@ -214,15 +231,37 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             if (resp != null)
             {
-                Log.Debug("TestRetrieveAndRank", "OnCreateClusters | name: {0}, size: {1}, ID: {2}, status: {3}.", resp.cluster_name, resp.cluster_size, resp.solr_cluster_id, resp.solr_cluster_status);
-                m_integrationTestClusterID = resp.solr_cluster_id;
+                Log.Debug("TestRetrieveAndRank", "OnCreateCluster | name: {0}, size: {1}, ID: {2}, status: {3}.", resp.cluster_name, resp.cluster_size, resp.solr_cluster_id, resp.solr_cluster_status);
+                m_integrationTestCreatedClusterID = resp.solr_cluster_id;
             }
             else
             {
-                Log.Debug("TestRetrieveAndRank", "OnCreateClusters | Get Cluster Response is null!");
+                Log.Debug("TestRetrieveAndRank", "OnCreateCluster | Get Cluster Response is null!");
             }
 
             m_createClusterTested = true;
+        }
+
+        private void OnGetCluster(SolrClusterResponse resp, string data)
+        {
+            if(!m_getClusterTested)
+                Test(resp != null);
+
+            if (resp != null)
+            {
+                Log.Debug("TestRetrieveAndRank", "OnGetCluster | name: {0}, size: {1}, ID: {2}, status: {3}.", resp.cluster_name, resp.cluster_size, resp.solr_cluster_id, resp.solr_cluster_status);
+
+                if (resp.solr_cluster_status != "READY")
+                    m_RetrieveAndRank.GetCluster(OnGetCluster, m_integrationTestCreatedClusterID);
+                else
+                    m_isClusterReady = true;
+            }
+            else
+            {
+                Log.Debug("TestRetrieveAndRank", "OnGetCluster | Get Cluster Response is null!");
+            }
+
+            m_getClusterTested = true;
         }
 
         private void OnDeleteCluster(bool success, string data)
@@ -241,28 +280,6 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             m_deleteClusterTested = true;
         }
 
-        private void OnGetCluster(SolrClusterResponse resp, string data)
-        {
-            if(!m_getClusterTested)
-                Test(resp != null);
-
-            if (resp != null)
-            {
-                Log.Debug("TestRetrieveAndRank", "OnGetCluster | name: {0}, size: {1}, ID: {2}, status: {3}.", resp.cluster_name, resp.cluster_size, resp.solr_cluster_id, resp.solr_cluster_status);
-
-                if (resp.solr_cluster_status != "READY")
-                    m_RetrieveAndRank.GetCluster(OnGetCluster, m_integrationTestClusterID);
-                else
-                    m_isClusterReady = true;
-            }
-            else
-            {
-                Log.Debug("TestRetrieveAndRank", "OnGetCluster | Get Cluster Response is null!");
-            }
-
-            m_getClusterTested = true;
-        }
-
         private void OnGetClusterConfigs(SolrConfigList resp, string data)
         {
             Test(resp != null);
@@ -276,42 +293,9 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                     Log.Debug("TestRetrieveAndRank", "OnGetClusterConfigs | solr_config: " + config);
             }
             else
-            {
                 Log.Debug("TestRetrieveAndRank", "OnGetClustersConfigs | Get Cluster Configs Response is null!");
-            }
 
             m_listClusterConfigsTested = true;
-        }
-
-        private void OnDeleteClusterConfig(bool success, string data)
-        {
-            Test(success);
-
-            if (success)
-            {
-                Log.Debug("TestRetrieveAndRank", "OnDeleteClusterConfig | Success!");
-            }
-            else
-            {
-                Log.Debug("TestRetrieveAndRank", "OnDeleteClusterConfig | Failure!");
-            }
-
-            m_deleteClusterConfigTested = true;
-        }
-
-
-        private void OnGetClusterConfig(byte[] respData, string data)
-        {
-            Test(respData != null);
-
-            if (respData != null)
-            {
-                Log.Debug("TestRetrieveAndRank", "OnGetClusterConfig | success!");
-            }
-            else
-                Log.Debug("TestRetrieveAndRank", "OnGetClusterConfig | respData is null!");
-
-            m_getClusterConfigTested = true;
         }
 
         private void OnUploadClusterConfig(UploadResponse resp, string data)
@@ -330,29 +314,34 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             m_uploadClusterConfigTested = true;
         }
 
-        private void OnListCollections(CollectionsResponse resp, string data)
+        private void OnDeleteClusterConfig(bool success, string data)
         {
-            Test(resp != null);
+            Test(success);
 
-            if (resp != null)
+            if (success)
             {
-                if (resp.responseHeader != null)
-                    Log.Debug("TestRetrieveAndRank", "OnListCollections | status: {0}, QTime: {1}.", resp.responseHeader.status, resp.responseHeader.QTime);
-                if (resp.collections != null)
-                {
-                    if (resp.collections.Length == 0)
-                        Log.Debug("TestRetrieveAndRank", "OnListCollections | There are no collections!");
-                    else
-                        foreach (string collection in resp.collections)
-                            Log.Debug("TestRetrieveAndRank", "\tOnListCollections | collection: {0}", collection);
-                }
+                Log.Debug("TestRetrieveAndRank", "OnDeleteClusterConfig | Success!");
             }
             else
             {
-                Log.Debug("TestRetrieveAndRank", "OnListCollections | GetCollections Response is null!");
+                Log.Debug("TestRetrieveAndRank", "OnDeleteClusterConfig | Failure!");
             }
-            
-            m_listCollectionRequestTested = true;
+
+            m_deleteClusterConfigTested = true;
+        }
+
+        private void OnGetClusterConfig(byte[] respData, string data)
+        {
+            Test(respData != null);
+
+            if (respData != null)
+            {
+                Log.Debug("TestRetrieveAndRank", "OnGetClusterConfig | success!");
+            }
+            else
+                Log.Debug("TestRetrieveAndRank", "OnGetClusterConfig | respData is null!");
+
+            m_getClusterConfigTested = true;
         }
 
         private void OnCreateCollections(CollectionsResponse resp, string data)
@@ -380,6 +369,38 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             m_createCollectionRequestTested = true;
         }
 
+        private void OnListCollections(CollectionsResponse resp, string data)
+        {
+            Test(resp != null);
+
+            if (resp != null)
+            {
+                if (resp.responseHeader != null)
+                    Log.Debug("TestRetrieveAndRank", "OnListCollections | status: {0}, QTime: {1}.", resp.responseHeader.status, resp.responseHeader.QTime);
+                if (resp.collections != null)
+                {
+                    if (resp.collections.Length == 0)
+                        Log.Debug("TestRetrieveAndRank", "OnListCollections | There are no collections!");
+                    else
+                        foreach (string collection in resp.collections)
+                        {
+                            Log.Debug("TestRetrieveAndRank", "\tOnListCollections | collection: {0}", collection);
+
+                            if (collection == m_integrationTestCollectionName)
+                                Log.Debug("TestRetrieveAndRank", "\t\tOnListCollections | created collection found!: {0}", collection);
+                            else
+                                Log.Debug("TestRetrieveAndRank", "\t\tOnListCollections | created collection not found!: {0}", collection);
+                        }
+                }
+            }
+            else
+            {
+                Log.Debug("TestRetrieveAndRank", "OnListCollections | GetCollections Response is null!");
+            }
+
+            m_listCollectionRequestTested = true;
+        }
+
         private void OnDeleteCollections(CollectionsResponse resp, string data)
         {
             Test(resp != null);
@@ -405,25 +426,6 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             m_deleteCollectionRequestTested = true;
         }
 
-        private void OnIndexDocuments(IndexResponse resp, string data)
-        {
-            Test(resp != null);
-
-            if (resp != null)
-            {
-                if (resp.responseHeader != null)
-                    Log.Debug("TestRetrieveAndRank", "OnIndexDocuments | status: {0}, QTime: {1}", resp.responseHeader.status, resp.responseHeader.QTime);
-                else
-                    Log.Debug("TestRetrieveAndRank", "OnIndexDocuments | Response header is null!");
-            }
-            else
-            {
-                Log.Debug("TestRetrieveAndRank", "OnIndexDocuments | response is null!");
-            }
-
-            m_indexDocumentsTested = true;
-        }
-
         private void OnGetRankers(ListRankersPayload resp, string data)
         {
             Test(resp != null);
@@ -433,7 +435,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 if (resp.rankers.Length == 0)
                     Log.Debug("TestRetrieveAndRank", "OnGetRankers | no rankers!");
                 foreach (RankerInfoPayload ranker in resp.rankers)
-                    Log.Debug("TestRetrieveAndRank", "OnGetRankers | ranker name: {0}, ID: {1}, created: {2}, url: {3}.", ranker.name, ranker.ranker_id, ranker.created, ranker.url);
+                    Log.Debug("TestRetrieveAndRank", "\tOnGetRankers | ranker name: {0}, ID: {1}, created: {2}, url: {3}.", ranker.name, ranker.ranker_id, ranker.created, ranker.url);
             }
             else
             {
@@ -450,6 +452,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             if (resp != null)
             {
                 Log.Debug("TestRetrieveAndRank", "OnCreateRanker | ID: {0}, url: {1}, name: {2}, created: {3}, status: {4}, statusDescription: {5}.", resp.ranker_id, resp.url, resp.name, resp.created, resp.status, resp.status_description);
+                m_integrationTestCreatedRankerID = resp.ranker_id;
             }
             else
             {
@@ -457,6 +460,26 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             }
 
             m_createRankerTested = true;
+        }
+
+        private void OnGetRanker(RankerStatusPayload resp, string data)
+        {
+            Test(resp != null);
+
+            if (resp != null)
+            {
+                Log.Debug("TestRetrieveAndRank", "GetRanker | ranker_id: {0}, url: {1}, name: {2}, created: {3}, status: {4}, status_description: {5}.", resp.ranker_id, resp.url, resp.name, resp.created, resp.status, resp.status_description);
+                if (resp.status != "Available")
+                    m_RetrieveAndRank.GetRanker(OnGetRanker, m_integrationTestCreatedRankerID);
+                else
+                    m_isRankerReady = true;
+            }
+            else
+            {
+                Log.Debug("TestRetrieveAndRank", "GetRanker | GetRanker response is null!");
+            }
+
+            m_getRankersTested = true;
         }
 
         private void OnRank(RankerOutputPayload resp, string data)
@@ -485,22 +508,6 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             m_rankTested = true;
         }
 
-        private void OnGetRanker(RankerStatusPayload resp, string data)
-        {
-            Test(resp != null);
-
-            if (resp != null)
-            {
-                Log.Debug("TestRetrieveAndRank", "GetRanker | ranker_id: {0}, url: {1}, name: {2}, created: {3}, status: {4}, status_description: {5}.", resp.ranker_id, resp.url, resp.name, resp.created, resp.status, resp.status_description);
-            }
-            else
-            {
-                Log.Debug("TestRetrieveAndRank", "GetRanker | GetRanker response is null!");
-            }
-
-            m_getRankersTested = true;
-        }
-
         private void OnDeleteRanker(bool success, string data)
         {
             Test(success);
@@ -515,6 +522,25 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             }
 
             m_deleteRankersTested = true;
+        }
+
+        private void OnIndexDocuments(IndexResponse resp, string data)
+        {
+            Test(resp != null);
+
+            if (resp != null)
+            {
+                if (resp.responseHeader != null)
+                    Log.Debug("TestRetrieveAndRank", "OnIndexDocuments | status: {0}, QTime: {1}", resp.responseHeader.status, resp.responseHeader.QTime);
+                else
+                    Log.Debug("TestRetrieveAndRank", "OnIndexDocuments | Response header is null!");
+            }
+            else
+            {
+                Log.Debug("TestRetrieveAndRank", "OnIndexDocuments | response is null!");
+            }
+
+            m_indexDocumentsTested = true;
         }
 
         private void OnStandardSearch(SearchResponse resp, string data)
