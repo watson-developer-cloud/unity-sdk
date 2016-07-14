@@ -31,7 +31,8 @@ public class TestConversationExperimental : UnitTest
 
 	public override IEnumerator RunTest()
 	{
-        m_WorkspaceID = Config.Instance.GetVariableValue("ConversationExperimentalV1_ID");
+        m_WorkspaceID = Config.Instance.GetVariableValue("ConversationExperimentalV1_WorkspaceID");
+
 		if (Config.Instance.FindCredentials(m_Conversation.GetServiceID()) == null)
 			yield break;
 
