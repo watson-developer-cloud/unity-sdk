@@ -33,6 +33,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         #region Private Data
         private const string SERVICE_ID = "RetrieveAndRankV1";
         private static fsSerializer sm_Serializer = new fsSerializer();
+        private const float REQUEST_TIMEOUT = 10.0f * 60.0f;
 
         //  List clusters or create cluster.
         private const string SERVICE_CLUSTERS = "/v1/solr_clusters";
@@ -105,6 +106,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             GetClustersRequest req = new GetClustersRequest();
             req.Callback = callback;
             req.Data = customData;
+            req.Timeout = REQUEST_TIMEOUT;
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_CLUSTERS);
             if (connector == null)
@@ -176,6 +178,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             CreateClusterRequest req = new CreateClusterRequest();
             req.Callback = callback;
             req.Data = customData;
+            req.Timeout = REQUEST_TIMEOUT;
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_CLUSTERS);
             if (connector == null)
@@ -263,6 +266,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             req.Callback = callback;
             req.ClusterID = clusterID;
             req.Delete = true;
+            req.Timeout = REQUEST_TIMEOUT;
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_CLUSTER, clusterID));
             if (connector == null)
@@ -319,6 +323,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             GetClusterRequest req = new GetClusterRequest();
             req.Callback = callback;
             req.ClusterID = clusterID;
+            req.Timeout = REQUEST_TIMEOUT;
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_CLUSTER, clusterID));
             if (connector == null)
@@ -385,6 +390,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             GetClusterConfigsRequest req = new GetClusterConfigsRequest();
             req.Callback = callback;
             req.ClusterID = clusterID;
+            req.Timeout = REQUEST_TIMEOUT;
             req.OnResponse = OnGetClusterConfigsResponse;
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_CLUSTER_CONFIGS, clusterID));
@@ -462,6 +468,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             req.Callback = callback;
             req.ClusterID = clusterID;
             req.ConfigID = configID;
+            req.Timeout = REQUEST_TIMEOUT;
             req.Delete = true;
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_CLUSTER_CONFIG, clusterID, configID));
@@ -521,6 +528,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             req.ClusterID = clusterID;
             req.ConfigName = configName;
             req.OnResponse = GetClusterConfigResponse;
+            req.Timeout = REQUEST_TIMEOUT;
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_CLUSTER_CONFIG, clusterID, configName));
             if (connector == null)
@@ -625,7 +633,8 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             req.ClusterID = clusterID;
             req.ConfigName = configName;
             req.OnResponse = UploadClusterConfigResponse;
-            
+            req.Timeout = REQUEST_TIMEOUT;
+
             byte[] configData = null;
             if (LoadFile != null)
             {
@@ -723,8 +732,9 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             req.ConfigName = configName;
             req.Parameters["action"] = action;
             req.Parameters["wt"] = "json";
-            
-            switch(action)
+            req.Timeout = REQUEST_TIMEOUT;
+
+            switch (action)
             {
                 case CollectionsAction.LIST:
                     break;
@@ -841,6 +851,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             req.ClusterID = clusterID;
             req.CollectionName = collectionName;
             req.Data = customData;
+            req.Timeout = REQUEST_TIMEOUT;
 
             byte[] indexData;
             if (LoadFile != null)
@@ -950,6 +961,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             req.Query = query;
             req.Fl = fl;
             req.Data = customData;
+            req.Timeout = REQUEST_TIMEOUT;
 
             req.Parameters["wt"] = "json";
             req.Parameters["q"] = query;
@@ -1036,6 +1048,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             GetRankersRequest req = new GetRankersRequest();
             req.Callback = callback;
             req.Data = customData;
+            req.Timeout = REQUEST_TIMEOUT;
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_RANKERS);
             if (connector == null)
@@ -1113,8 +1126,9 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 			req.Name = name;
 			req.TrainingDataPath = trainingDataPath;
 			req.Data = customData;
+            req.Timeout = REQUEST_TIMEOUT;
 
-			byte[] trainingData;
+            byte[] trainingData;
 			if (LoadFile != null)
 			{
 				trainingData = File.ReadAllBytes(trainingDataPath);
@@ -1132,9 +1146,6 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_RANKERS);
 			if (connector == null)
 				return false;
-
-			req.Headers["Content-Type"] = "multipart/form-data";
-			req.Headers["Accept"] = "*";
 
 			req.Forms = new Dictionary<string, RESTConnector.Form>();
 			req.Forms["training_data"] = new RESTConnector.Form(trainingData, "training_data.csv", "text/csv");
@@ -1217,8 +1228,9 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 			req.RankerID = rankerID;
 			req.SearchResultsPath = searchResultPath;
 			req.Data = customData;
+            req.Timeout = REQUEST_TIMEOUT;
 
-			byte[] searchResultData;
+            byte[] searchResultData;
 			if (LoadFile != null)
 			{
 				searchResultData = File.ReadAllBytes(searchResultPath);
@@ -1237,11 +1249,11 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 			if (connector == null)
 				return false;
 
-			req.Headers["Content-Type"] = "multipart/form-data";
-			req.Headers["Accept"] = "*/*";
+			//req.Headers["Content-Type"] = "multipart/form-data";
+			//req.Headers["Accept"] = "*/*";
 
 			req.Forms = new Dictionary<string, RESTConnector.Form>();
-			req.Forms["body"] = new RESTConnector.Form(searchResultData, "searc_data.csv", "text/csv");
+			req.Forms["answer_data"] = new RESTConnector.Form(searchResultData, "searck_data.csv", "text/csv");
 
 			req.OnResponse = OnRankResponse;
 			return connector.Send(req);
@@ -1319,9 +1331,10 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 			DeleteRankerRequest req = new DeleteRankerRequest();
 			req.Callback = callback;
 			req.RankerID = rankerID;
+            req.Timeout = REQUEST_TIMEOUT;
 			req.Delete = true;
 
-			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_RANKER, rankerID));
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_RANKER, rankerID));
 			if (connector == null)
 				return false;
 
@@ -1376,8 +1389,9 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 			GetRankerRequest req = new GetRankerRequest();
 			req.Callback = callback;
 			req.RankerID = rankerID;
+            req.Timeout = REQUEST_TIMEOUT;
 
-			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_RANKER, rankerID));
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_RANKER, rankerID));
 			if (connector == null)
 				return false;
 

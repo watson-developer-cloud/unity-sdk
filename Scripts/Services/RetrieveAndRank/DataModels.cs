@@ -414,10 +414,6 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// </summary>
         public string ranker_id { get; set; }
         /// <summary>
-        /// Name of this ranker.
-        /// </summary>
-        public string name { get; set; }
-        /// <summary>
         /// Link to the ranker.
         /// </summary>
         public string url { get; set; }
@@ -444,11 +440,11 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// <summary>
         /// The rank of an answer among the candidate answers. Higher values represent higher relevance. The maximum score is the total number of candidate answers in the answer_data. You can use the score to sort the answers within the response.
         /// </summary>
-        public string score { get; set; }
+        public int score { get; set; }
         /// <summary>
         /// A decimal percentage from 0 - 1 that represents the preference that Watson has for this answer. Higher values represent higher confidences.
         /// </summary>
-        public string confidence { get; set; }
+        public double confidence { get; set; }
     }
     #endregion
 }

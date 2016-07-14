@@ -36,7 +36,7 @@ public class ExampleRetrieveAndRank : MonoBehaviour
         string testClusterConfigPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/RetrieveAndRank/cranfield_solr_config.zip";
 		string testRankerTrainingPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/RetrieveAndRank/ranker_training_data.csv";
 		string testAnswerDataPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/RetrieveAndRank/ranker_answer_data.csv";
-		string testRankerID = "3b140ax14-rank-10010";
+		string testRankerID = "3b140ax15-rank-10035";
 		string rankerToDelete = "3b140ax14-rank-10015";
         string indexDataPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/RetrieveAndRank/cranfield_data.json";
         string testCollectionName = "test-collection";
@@ -126,10 +126,10 @@ public class ExampleRetrieveAndRank : MonoBehaviour
         //if (!m_RetrieveAndRank.CreateRanker(OnCreateRanker, testRankerTrainingPath, "testRanker"))
         //    Log.Debug("ExampleRetrieveAndRank", "Failed to create ranker!");
 
-        ////  Rank
-        //Log.Debug("ExampleRetrieveAndRank", "Attempting to rank!");
-        //if (!m_RetrieveAndRank.Rank(OnRank, testRankerID, testAnswerDataPath))
-        //    Log.Debug("ExampleRetriveAndRank", "Failed to rank!");
+        //  Rank
+        Log.Debug("ExampleRetrieveAndRank", "Attempting to rank!");
+        if (!m_RetrieveAndRank.Rank(OnRank, testRankerID, testAnswerDataPath))
+            Log.Debug("ExampleRetriveAndRank", "Failed to rank!");
 
         ////  Delete rankers
         //Log.Debug("ExampleRetriveAndRank", "Attempting to delete ranker {0}!", rankerToDelete);
@@ -324,7 +324,7 @@ public class ExampleRetrieveAndRank : MonoBehaviour
 	{
 		if (resp != null)
 		{
-			Log.Debug("ExampleRetrieveAndRank", "OnRank | ID: {0}, url: {1}, name: {2}, top_answer: {3}.", resp.ranker_id, resp.url, resp.name, resp.top_answer);
+			Log.Debug("ExampleRetrieveAndRank", "OnRank | ID: {0}, url: {1}, top_answer: {2}.", resp.ranker_id, resp.url, resp.top_answer);
 			if (resp.answers != null)
 				if (resp.answers.Length == 0)
 				{
