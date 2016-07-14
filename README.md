@@ -27,9 +27,10 @@ Use this SDK to build Watson-powered applications in Unity. It comes with a set 
 
 ## Before you begin
 Ensure that you have the following prerequisites:
+
 * An IBM Bluemix account. If you don't have one, [sign up][bluemix_registration].
 * [Unity][get_unity]. You win! You can use the **free** Personal edition.
-* Change the build settings in Unity (**File > Build Settings**) to PC, Mac & Linux Standalone. Click PC, Mac & Linux Standalone and click the Switch Platform button.
+* Change the build settings in Unity (**File > Build Settings**) to any platform except for web player. The Watson Developer Cloud Unity SDK does not support Unity Web Player.
 
 ## Getting the Watson SDK and adding it to Unity
 You can get the latest SDK release by clicking [here][latest_release].
