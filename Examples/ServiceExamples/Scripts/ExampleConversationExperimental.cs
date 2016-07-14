@@ -23,7 +23,7 @@ using IBM.Watson.DeveloperCloud.Utilities;
 
 public class ExampleConversationExperimental : MonoBehaviour
 {
-	private Conversation m_Conversation = new Conversation();
+	private ConversationExperimental m_Conversation = new ConversationExperimental();
     private string m_WorkspaceID;
 	private string m_Input = "Can you unlock the door?";
 

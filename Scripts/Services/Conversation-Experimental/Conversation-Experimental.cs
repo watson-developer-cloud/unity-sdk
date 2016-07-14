@@ -30,7 +30,7 @@ namespace IBM.Watson.DeveloperCloud.Services.ConversationExperimental.v1
 	/// This class wraps the Watson Conversation service. 
 	/// <a href="http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/conversation.html">Conversation Service</a>
 	/// </summary>
-	public class Conversation : IWatsonService
+	public class ConversationExperimental : IWatsonService
 	{
 		#region Public Types
 		/// <summary>
@@ -150,11 +150,11 @@ namespace IBM.Watson.DeveloperCloud.Services.ConversationExperimental.v1
 
         private class CheckServiceStatus
         {
-            private Conversation m_Service = null;
+            private ConversationExperimental m_Service = null;
             private ServiceStatus m_Callback = null;
             private int m_ConversationCount = 0;
 
-            public CheckServiceStatus(Conversation service, ServiceStatus callback)
+            public CheckServiceStatus(ConversationExperimental service, ServiceStatus callback)
             {
                 m_Service = service;
                 m_Callback = callback;
