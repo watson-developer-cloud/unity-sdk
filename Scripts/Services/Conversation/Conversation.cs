@@ -237,28 +237,10 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
                 }
                 else
                 {
-//                    if (!m_Service.GetWorkspaces(OnGetWorkspaces))
-//                        OnFailure("Failed to invoke GetDialogs().");
                     OnFailure("Please define a workspace variable in config.json (" + SERVICE_ID + "_ID)");
                 }
             }
-            /*
-            private void OnGetWorkspaces(DataModels.Workspaces workspaces)
-            {
-                if (m_Callback != null)
-                {
-                    foreach (DataModels.Workspace workspace in workspaces.workspaces)
-                    {
-                        if (!m_Service.Message(workspace.workspace_id, "Hello", OnMessage))
-                            OnFailure("Failed to invoke Message().");
-                        else
-                            m_ConversationCount += 1;
-                    }
-                }
-                else
-                    OnFailure("GetMessages() failed.");
-            }
-            */
+           
             private void OnMessage(MessageResponse resp)
             {
                 if (m_ConversationCount > 0)
