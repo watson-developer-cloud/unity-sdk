@@ -22,38 +22,38 @@ using IBM.Watson.DeveloperCloud.Services.ConversationExperimental.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
 using IBM.Watson.DeveloperCloud.Logging;
 
-public class TestConversationExperimental : UnitTest
+public class TestConversationExperimental// : UnitTest  //  Commented out integration test
 {
 	private ConversationExperimental m_Conversation = new ConversationExperimental();
 	private string m_WorkspaceID;
 	private string m_Input = "Can you unlock the door?";
 	private bool m_MessageTested = false;
 
-	public override IEnumerator RunTest()
-	{
-        m_WorkspaceID = Config.Instance.GetVariableValue("ConversationExperimentalV1_WorkspaceID");
+	//public override IEnumerator RunTest()
+	//{
+ //       m_WorkspaceID = Config.Instance.GetVariableValue("ConversationExperimentalV1_WorkspaceID");
 
-		if (Config.Instance.FindCredentials(m_Conversation.GetServiceID()) == null)
-			yield break;
+	//	if (Config.Instance.FindCredentials(m_Conversation.GetServiceID()) == null)
+	//		yield break;
 
-		if(!m_MessageTested)
-		{
-			m_Conversation.Message(m_WorkspaceID, m_Input, OnMessage);
-			while(!m_MessageTested)
-				yield return null;
-		}
-	}
+	//	if(!m_MessageTested)
+	//	{
+	//		m_Conversation.Message(m_WorkspaceID, m_Input, OnMessage);
+	//		while(!m_MessageTested)
+	//			yield return null;
+	//	}
+	//}
 
-	private void OnMessage(MessageResponse resp)
-	{
-		Test(resp != null);
-		if(resp != null)
-		{
-			foreach(MessageIntent mi in resp.intents)
-				Log.Debug("TestConversation", "intent: " + mi.intent + ", confidence: " + mi.confidence);
-			Log.Debug("TestConversation", "response: " + resp.output.text);
-		}
+	//private void OnMessage(MessageResponse resp)
+	//{
+	//	Test(resp != null);
+	//	if(resp != null)
+	//	{
+	//		foreach(MessageIntent mi in resp.intents)
+	//			Log.Debug("TestConversation", "intent: " + mi.intent + ", confidence: " + mi.confidence);
+	//		Log.Debug("TestConversation", "response: " + resp.output.text);
+	//	}
 
-		m_MessageTested = true;
-	}
+	//	m_MessageTested = true;
+	//}
 }
