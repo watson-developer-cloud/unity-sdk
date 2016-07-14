@@ -28,8 +28,8 @@ using FullSerializer;
 namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v1
 {
     /// <summary>
-    /// This class wraps the Language Translator service.
-    /// <a href="http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/language-translator.html">Language Translator Service</a>
+    /// This class wraps the Language Translation service.
+    /// <a href="http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/language-translation.html">Language Translation Service</a>
     /// </summary>
     public class LanguageTranslation : IWatsonService
     {
@@ -62,7 +62,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v1
         #endregion
 
         #region Private Data
-        private const string SERVICE_ID = "LanguageTranslatorV1";
+        private const string SERVICE_ID = "LanguageTranslationV1";
         private static fsSerializer sm_Serializer = new fsSerializer();
         #endregion
 
@@ -437,10 +437,10 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v1
 
         private class CheckServiceStatus
         {
-            private LanguageTranslator m_Service = null;
+            private LanguageTranslation m_Service = null;
             private ServiceStatus m_Callback = null;
 
-            public CheckServiceStatus(LanguageTranslator service, ServiceStatus callback)
+            public CheckServiceStatus(LanguageTranslation service, ServiceStatus callback)
             {
                 m_Service = service;
                 m_Callback = callback;
