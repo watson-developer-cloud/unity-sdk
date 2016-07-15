@@ -16,7 +16,7 @@
 */
 
 // uncomment to enable debugging
-//#define ENABLE_DEBUGGING
+#define ENABLE_DEBUGGING
 
 using IBM.Watson.DeveloperCloud.Utilities;
 using IBM.Watson.DeveloperCloud.Logging;
@@ -392,7 +392,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
                                 else if (formData.Value.BoxedObject is int)
                                     form.AddField(formData.Key, (int)formData.Value.BoxedObject);
                                 else if (formData.Value.BoxedObject != null)
-                                    Log.Warning("RESTCOnnector", "Unsupported form field type {0}", formData.Value.BoxedObject.GetType().ToString());
+                                    Log.Warning("RESTConnector", "Unsupported form field type {0}", formData.Value.BoxedObject.GetType().ToString());
                             }
                             foreach (var headerData in form.headers)
                                 req.Headers[headerData.Key] = headerData.Value;
@@ -409,7 +409,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
                         www = new WWW(url, req.Send, req.Headers);
 
 #if ENABLE_DEBUGGING
-                    Log.Debug("RESTCOnnector", "URL: {0}", url);
+                    Log.Debug("RESTConnector", "URL: {0}", url);
 #endif
 
                     // wait for the request to complete.
