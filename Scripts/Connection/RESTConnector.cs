@@ -16,7 +16,7 @@
 */
 
 // uncomment to enable debugging
-//#define ENABLE_DEBUGGING
+#define ENABLE_DEBUGGING
 
 using IBM.Watson.DeveloperCloud.Utilities;
 using IBM.Watson.DeveloperCloud.Logging;
@@ -489,6 +489,11 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 }
                 else
                 {
+
+#if ENABLE_DEBUGGING
+                    Log.Debug("RESTConnector", "Delete Request URL: {0}", url);
+#endif
+
 #if UNITY_EDITOR
                     float timeout = Mathf.Max(Config.Instance.TimeOut, req.Timeout);
 
@@ -507,6 +512,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
                         continue;
 
                     resp.Success = deleteReq.Success;
+
 #else
                     Log.Warning( "RESTConnector", "DELETE method is supported in the editor only." );
                     resp.Success = false;
@@ -530,8 +536,13 @@ namespace IBM.Watson.DeveloperCloud.Connection
             public bool IsComplete { get; set; }
             public bool Success { get; set; }
 
+            private Thread m_Thread = null;
+
             public bool Send(string url, Dictionary<string, string> headers)
             {
+#if ENABLE_DEBUGGING
+                Log.Debug("RESTConnector", "DeleteRequest, Send: {0}, m_Thread:{1}", url, m_Thread);
+#endif
                 if (m_Thread != null && m_Thread.IsAlive)
                     return false;
 
@@ -544,24 +555,37 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 }
 
                 m_Thread = new Thread(ProcessRequest);
+
                 m_Thread.Start();
                 return true;
             }
-
-            private Thread m_Thread = null;
-
+            
             private void ProcessRequest()
             {
                 // This fixes the exception thrown by self-signed certificates.
                 ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(delegate { return true; });
 
+#if ENABLE_DEBUGGING
+                Log.Debug("RESTConnector", "DeleteRequest, ProcessRequest {0}", URL);
+#endif
+
                 WebRequest deleteReq = WebRequest.Create(URL);
+
                 foreach (var kp in Headers)
                     deleteReq.Headers.Add(kp.Key, kp.Value);
                 deleteReq.Method = "DELETE";
 
+#if ENABLE_DEBUGGING
+                Log.Debug("RESTConnector", "DeleteRequest, sending deletereq {0}", deleteReq);
+#endif
                 HttpWebResponse deleteResp = deleteReq.GetResponse() as HttpWebResponse;
+#if ENABLE_DEBUGGING
+                Log.Debug("RESTConnector", "DELETE Request SENT: {0}", URL);
+#endif
                 Success = deleteResp.StatusCode == HttpStatusCode.OK;
+#if ENABLE_DEBUGGING
+                Log.Debug("RESTConnector", "DELETE Request COMPLETE: {0}", URL);
+#endif
                 IsComplete = true;
             }
         };
