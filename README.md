@@ -19,9 +19,9 @@ Use this SDK to build Watson-powered applications in Unity. It comes with a set 
   * [Conversation](#conversation)
   * [Visual Recognition](#visual-recognition)
   * [Alchemy Language](#alchemy-language)
-  * [AlchemyData News](#alchemy-data-news)
   * [Personality Insights](#personality-insights)
   * [Document Conversion](#document-conversion)
+  * [AlchemyData News](#alchemy-data-news)
   * [Retrieve and Rank](#retrieve-and-rank)
 * [Developing a basic application in one minute](#developing-a-basic-application-in-one-minute)
 * [Documentation](#documentation)
@@ -716,69 +716,6 @@ private void OnRecognizeText(TextRecogTopLevelMultiple multipleImages)
     }
 }
 ```
-### Personality Insights
-The IBM Watson™ [Personality Insights][personality_insights] service enables applications to derive insights from social media, enterprise data, or other digital communications. The service uses linguistic analytics to infer individuals' intrinsic personality characteristics, including Big Five, Needs, and Values, from digital communications such as email, text messages, tweets, and forum posts. The service can automatically infer, from potentially noisy social media, portraits of individuals that reflect their personality characteristics. 
-
-```cs
-PersonalityInsights m_personalityInsights = new PersonalityInsights();
-
-void Start () {
-	string dataPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/personalityInsights.json";
-	
-	if(!m_personalityInsights.GetProfile(OnGetProfile, dataPath, DataModels.ContentType.TEXT_PLAIN, DataModels.Language.ENGLISH))
-            Log.Debug("ExamplePersonalityInsights", "Failed to get profile!");
-}
-
-private void OnGetProfile(DataModels.Profile profile, string data)
-{
-    Log.Debug("ExamplePersonalityInsights", "data: {0}", data);
-    if(profile != null)
-    {
-        if(!string.IsNullOrEmpty(profile.id))
-            Log.Debug("ExamplePersonalityInsights", "id: {0}", profile.id);
-        if(!string.IsNullOrEmpty(profile.source))
-            Log.Debug("ExamplePersonalityInsights", "source: {0}", profile.source);
-        if(!string.IsNullOrEmpty(profile.processed_lang))
-            Log.Debug("ExamplePersonalityInsights", "proccessed_lang: {0}", profile.processed_lang);
-        if(!string.IsNullOrEmpty(profile.word_count))
-            Log.Debug("ExamplePersonalityInsights", "word_count: {0}", profile.word_count);
-        if(!string.IsNullOrEmpty(profile.word_count_message))
-            Log.Debug("ExamplePersonalityInsights", "word_count_message: {0}", profile.word_count_message);
-
-        if(profile.tree != null)
-        {
-            LogTraitTree(profile.tree);
-        }
-    }
-    else
-    {
-        Log.Debug("ExamplePersonalityInsights", "Failed to get profile!");
-    }
-}
-
-private void LogTraitTree(DataModels.TraitTreeNode traitTreeNode)
-{
-    if(!string.IsNullOrEmpty(traitTreeNode.id))
-        Log.Debug("ExamplePersonalityInsights", "id: {0}", traitTreeNode.id);
-    if(!string.IsNullOrEmpty(traitTreeNode.name))
-        Log.Debug("ExamplePersonalityInsights", "name: {0}", traitTreeNode.name);
-    if(!string.IsNullOrEmpty(traitTreeNode.category))
-        Log.Debug("ExamplePersonalityInsights", "category: {0}", traitTreeNode.category);
-    if(!string.IsNullOrEmpty(traitTreeNode.percentage))
-        Log.Debug("ExamplePersonalityInsights", "percentage: {0}", traitTreeNode.percentage);
-    if(!string.IsNullOrEmpty(traitTreeNode.sampling_error))
-        Log.Debug("ExamplePersonalityInsights", "sampling_error: {0}", traitTreeNode.sampling_error);
-    if(!string.IsNullOrEmpty(traitTreeNode.raw_score))
-        Log.Debug("ExamplePersonalityInsights", "raw_score: {0}", traitTreeNode.raw_score);
-    if(!string.IsNullOrEmpty(traitTreeNode.raw_sampling_error))
-        Log.Debug("ExamplePersonalityInsights", "raw_sampling_error: {0}", traitTreeNode.raw_sampling_error);
-    if(traitTreeNode.children != null && traitTreeNode.children.Length > 0)
-        foreach(DataModels.TraitTreeNode childNode in traitTreeNode.children)
-            LogTraitTree(childNode);
-}
-```
-
-
 
 
 ### Alchemy Language
@@ -813,6 +750,7 @@ private void OnGetAuthors(AuthorsData authors, string data)
 	
 	
 ```
+
 #### Getting Concepts
 You can get Concepts from a URL, HTML or Text source.
 
@@ -1362,6 +1300,151 @@ private void OnGetCombinedData(CombinedCallData combinedData, string data)
 }
 ```
 
+
+### Personality Insights
+The IBM Watson™ [Personality Insights][personality_insights] service enables applications to derive insights from social media, enterprise data, or other digital communications. The service uses linguistic analytics to infer individuals' intrinsic personality characteristics, including Big Five, Needs, and Values, from digital communications such as email, text messages, tweets, and forum posts. The service can automatically infer, from potentially noisy social media, portraits of individuals that reflect their personality characteristics. 
+
+```cs
+PersonalityInsights m_personalityInsights = new PersonalityInsights();
+
+void Start () {
+	string dataPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/personalityInsights.json";
+	
+	if(!m_personalityInsights.GetProfile(OnGetProfile, dataPath, DataModels.ContentType.TEXT_PLAIN, DataModels.Language.ENGLISH))
+            Log.Debug("ExamplePersonalityInsights", "Failed to get profile!");
+}
+
+private void OnGetProfile(DataModels.Profile profile, string data)
+{
+    Log.Debug("ExamplePersonalityInsights", "data: {0}", data);
+    if(profile != null)
+    {
+        if(!string.IsNullOrEmpty(profile.id))
+            Log.Debug("ExamplePersonalityInsights", "id: {0}", profile.id);
+        if(!string.IsNullOrEmpty(profile.source))
+            Log.Debug("ExamplePersonalityInsights", "source: {0}", profile.source);
+        if(!string.IsNullOrEmpty(profile.processed_lang))
+            Log.Debug("ExamplePersonalityInsights", "proccessed_lang: {0}", profile.processed_lang);
+        if(!string.IsNullOrEmpty(profile.word_count))
+            Log.Debug("ExamplePersonalityInsights", "word_count: {0}", profile.word_count);
+        if(!string.IsNullOrEmpty(profile.word_count_message))
+            Log.Debug("ExamplePersonalityInsights", "word_count_message: {0}", profile.word_count_message);
+
+        if(profile.tree != null)
+        {
+            LogTraitTree(profile.tree);
+        }
+    }
+    else
+    {
+        Log.Debug("ExamplePersonalityInsights", "Failed to get profile!");
+    }
+}
+
+private void LogTraitTree(DataModels.TraitTreeNode traitTreeNode)
+{
+    if(!string.IsNullOrEmpty(traitTreeNode.id))
+        Log.Debug("ExamplePersonalityInsights", "id: {0}", traitTreeNode.id);
+    if(!string.IsNullOrEmpty(traitTreeNode.name))
+        Log.Debug("ExamplePersonalityInsights", "name: {0}", traitTreeNode.name);
+    if(!string.IsNullOrEmpty(traitTreeNode.category))
+        Log.Debug("ExamplePersonalityInsights", "category: {0}", traitTreeNode.category);
+    if(!string.IsNullOrEmpty(traitTreeNode.percentage))
+        Log.Debug("ExamplePersonalityInsights", "percentage: {0}", traitTreeNode.percentage);
+    if(!string.IsNullOrEmpty(traitTreeNode.sampling_error))
+        Log.Debug("ExamplePersonalityInsights", "sampling_error: {0}", traitTreeNode.sampling_error);
+    if(!string.IsNullOrEmpty(traitTreeNode.raw_score))
+        Log.Debug("ExamplePersonalityInsights", "raw_score: {0}", traitTreeNode.raw_score);
+    if(!string.IsNullOrEmpty(traitTreeNode.raw_sampling_error))
+        Log.Debug("ExamplePersonalityInsights", "raw_sampling_error: {0}", traitTreeNode.raw_sampling_error);
+    if(traitTreeNode.children != null && traitTreeNode.children.Length > 0)
+        foreach(DataModels.TraitTreeNode childNode in traitTreeNode.children)
+            LogTraitTree(childNode);
+}
+```
+
+### Document Conversion
+The IBM Watson™ [Document conversion][document_conversion] service converts a single HTML, PDF, or Microsoft Word™ document into a normalized HTML, plain text, or a set of JSON-formatted Answer units that can be used with other Watson services. Carefully inspect output to make sure that it contains all elements and metadata required by the security standards of you or your organization.
+
+#### Converting Documents
+Convert a single document
+
+```cs
+private DocumentConversion m_DocumentConversion = new DocumentConversion();
+	
+	void Start ()
+    {
+        LogSystem.InstallDefaultReactors(); LogSystem.InstallDefaultReactors();
+        string examplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/watson_beats_jeopardy.html";
+
+        if (!m_DocumentConversion.ConvertDocument(OnConvertDocument, examplePath, ConversionTarget.NORMALIZED_TEXT))
+            Log.Debug("ExampleDocumentConversion", "Document conversion failed!");
+    }
+
+    private void OnConvertDocument(ConvertedDocument documentConversionResponse, string data)
+    {
+        if (documentConversionResponse != null)
+        {
+            if(!string.IsNullOrEmpty(documentConversionResponse.media_type_detected))
+                Log.Debug("ExampleDocumentConversion", "mediaTypeDetected: {0}", documentConversionResponse.media_type_detected);
+            if (!string.IsNullOrEmpty(documentConversionResponse.source_document_id))
+                Log.Debug("ExampleDocumentConversion", "mediaTypeDetected: {0}", documentConversionResponse.source_document_id);
+            if(!string.IsNullOrEmpty(documentConversionResponse.timestamp))
+                Log.Debug("ExampleDocumentConversion", "mediaTypeDetected: {0}", documentConversionResponse.timestamp);
+            if (documentConversionResponse.metadata != null && documentConversionResponse.metadata.Length > 0)
+            {
+                Log.Debug("ExampleDocumentConversion", "mediaTypeDetected: {0}", documentConversionResponse.metadata.Length);
+                foreach (Metadata metadata in documentConversionResponse.metadata)
+                    Log.Debug("ExampleDocumentConversion", "metadata | name: {0}, content: {1}", metadata.name, metadata.content);
+            }
+            if (documentConversionResponse.answer_units != null && documentConversionResponse.answer_units.Length > 0)
+            {
+                Log.Debug("ExampleDocumentConversion", "mediaTypeDetected: {0}", documentConversionResponse.answer_units.Length);
+                foreach (AnswerUnit answerUnit in documentConversionResponse.answer_units)
+                {
+                Log.Debug("ExampleDocumentConversion", "answerUnit | type: {0}, title: {1}, parent_id: {2}, id: {3}, direction: {4}", answerUnit.type, answerUnit.title, answerUnit.parent_id, answerUnit.id, answerUnit.direction);
+                    if (answerUnit.content != null && answerUnit.content.Length > 0)
+                        foreach (Content content in answerUnit.content)
+                            Log.Debug("ExampleDocumentConversion", "content | mediaType: {0}, text: {1}", content.media_type, content.text);
+                }
+            }
+
+            if (!string.IsNullOrEmpty(documentConversionResponse.htmlContent))
+                Log.Debug("ExampleDocumentConversion", "HTMLContent: {0}", documentConversionResponse.htmlContent);
+            if (!string.IsNullOrEmpty(documentConversionResponse.textContent))
+                Log.Debug("ExampleDocumentConversion", "TextContent: {0}", documentConversionResponse.textContent);
+        }
+    }
+```
+
+
+### AlchemyData News
+Use the [AlchemyData News][alchemyData_news] service to provide news and blog content enriched with natural language processing to allow for highly targeted search and trend analysis. Now you can query the world's news sources and blogs like a database.
+
+#### Getting News
+AlchemyData News indexes 250k to 300k English language news and blog articles every day with historical search available for the past 60 days. You can query the News API directly with no need to acquire, enrich and store the data yourself - enabling you to go beyond simple keyword-based searches. You can request which fields to return and filter fields by string. All available fields can be accessed using Fields constants in the AlchemyData News Data Model.
+
+```
+private AlchemyAPI m_AlchemyAPI = new AlchemyAPI();
+
+void Start()
+{
+	string[] returnFields = {Fields.ENRICHED_URL_ENTITIES, Fields.ENRICHED_URL_KEYWORDS};
+	Dictionary<string, string> queryFields = new Dictionary<string, string>();
+	queryFields.Add(Fields.ENRICHED_URL_RELATIONS_RELATION_SUBJECT_TEXT, "Obama");
+	queryFields.Add(Fields.ENRICHED_URL_CLEANEDTITLE, "Washington");
+
+	if (!m_AlchemyAPI.GetNews(OnGetNews, returnFields, queryFields))
+        Log.Debug("ExampleAlchemyData", "Failed to get news!");
+}
+
+void OnGetNews(NewsResponse newsData, string data)
+{
+	//	Access requested fields
+	if(newsData != null)
+		Log.Debug("ExampleAlchemyData", "status: {0}", newsData.status);
+}
+```
 
 ### Retrieve and Rank
 The IBM Watson™ [Retrieve and Rank][retrieve_and_rank] service combines two information retrieval components in a single service: the power of Apache Solr and a sophisticated machine learning capability. This combination provides users with more relevant results by automatically reranking them by using these machine learning algorithms.
@@ -1961,7 +2044,6 @@ private void OnGetRanker(RankerStatusPayload resp, string data)
 	}
 }
 ```
-
 
 
 ## Developing a basic application in one minute
