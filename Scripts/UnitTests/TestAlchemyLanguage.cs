@@ -16,16 +16,17 @@
 */
 
 using System.Collections;
-using IBM.Watson.DeveloperCloud.Services.AlchemyLanguage.v1;
+using IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
-    public class TestAlchemyLanguage : UnitTest
+    public class TestAlchemyAPI : UnitTest
     {
-        AlchemyLanguage m_AlchemyLanguage = new AlchemyLanguage();
+        AlchemyAPI m_AlchemyAPI = new AlchemyAPI();
         bool m_GetAuthorsURLTested = false;
         bool m_GetAuthorsHTMLTested = false;
 
@@ -91,6 +92,8 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         bool m_GetCombinedDataURLTested = false;
         bool m_GetCombinedDataTextTested = false;
 
+		bool m_GetNewsTested = false;
+
         private string m_ExampleURL_article = "http://www.nytimes.com/2011/02/17/science/17jeopardy-watson.html";
         private string m_ExampleURL_microformats = "http://microformats.org/wiki/hcard";
         private string m_ExampleURL_feed = "https://news.ycombinator.com/";
@@ -102,264 +105,274 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             string example_microformats_html = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/microformats.html";
             string example_feed_html = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/ycombinator_news.html";
 
-            Log.Debug("TestAlchemyLanguage", "Attempting GetAuthors URL");
-            m_AlchemyLanguage.GetAuthors(OnGetAuthorsURL, m_ExampleURL_article, "OnGetAuthorsURL");
-            while(!m_GetAuthorsURLTested)
+            Log.Debug("TestAlchemyAPI", "Attempting GetAuthors URL");
+            m_AlchemyAPI.GetAuthors(OnGetAuthorsURL, m_ExampleURL_article, "OnGetAuthorsURL");
+            while (!m_GetAuthorsURLTested)
                 yield return null;
 
-            Log.Debug("TestAlchemyLanguage", "Attempting GetAuthors HTML");
-            m_AlchemyLanguage.GetAuthors(OnGetAuthorsHTML, example_article_html, "OnGetAuthorsHTML");
-            while(!m_GetAuthorsHTMLTested)
-                yield return null;
-
-
-            Log.Debug("TestAlchemyLanguage", "Attempting GetRankedConcepts HTML");
-            m_AlchemyLanguage.GetRankedConcepts(OnGetRankedConceptsHTML, example_article_html, 8, true, true, true, "OnGetRankedConceptsHTML");
-            while(!m_GetRankedConceptsHTMLTested)
-                yield return null;
-
-            Log.Debug("TestAlchemyLanguage", "Attempting GetRankedConcepts URL");
-            m_AlchemyLanguage.GetRankedConcepts(OnGetRankedConceptsURL, m_ExampleURL_article, 8, true, true, true, "OnGetRankedConceptsURL");
-            while(!m_GetRankedConceptsHTMLTested)
-                yield return null;
-
-            Log.Debug("TestAlchemyLanguage", "Attempting GetRankedConcepts Text");
-            m_AlchemyLanguage.GetRankedConcepts(OnGetRankedConceptsText, m_ExampleText_article, 8, true, true, true, "OnGetRankedConceptsText");
-            while(!m_GetRankedConceptsHTMLTested)
+            Log.Debug("TestAlchemyAPI", "Attempting GetAuthors HTML");
+            m_AlchemyAPI.GetAuthors(OnGetAuthorsHTML, example_article_html, "OnGetAuthorsHTML");
+            while (!m_GetAuthorsHTMLTested)
                 yield return null;
 
 
-            Log.Debug("TestAlchemyLanguage", "Attempting GetDates URL");
-            m_AlchemyLanguage.GetDates(OnGetDatesURL, m_ExampleURL_article, null, true, "OnGetDatesURL");
-            while(!m_GetDatesURLTested)
+            Log.Debug("TestAlchemyAPI", "Attempting GetRankedConcepts HTML");
+            m_AlchemyAPI.GetRankedConcepts(OnGetRankedConceptsHTML, example_article_html, 8, true, true, true, "OnGetRankedConceptsHTML");
+            while (!m_GetRankedConceptsHTMLTested)
                 yield return null;
 
-            Log.Debug("TestAlchemyLanguage", "Attempting GetDates Text");
-            m_AlchemyLanguage.GetDates(OnGetDatesText, m_ExampleText_article, null, true, "OnGetDatesText");
-            while(!m_GetDatesTextTested)
+            Log.Debug("TestAlchemyAPI", "Attempting GetRankedConcepts URL");
+            m_AlchemyAPI.GetRankedConcepts(OnGetRankedConceptsURL, m_ExampleURL_article, 8, true, true, true, "OnGetRankedConceptsURL");
+            while (!m_GetRankedConceptsHTMLTested)
                 yield return null;
 
-            Log.Debug("TestAlchemyLanguage", "Attempting GetDates HTML");
-            m_AlchemyLanguage.GetDates(OnGetDatesHTML, example_article_html, null, true, "OnGetDatesHTML");
-            while(!m_GetDatesHTMLTested)
-                yield return null;
-
-
-            Log.Debug("TestAlchemyLanguage", "Attempting GetDates URL");
-            m_AlchemyLanguage.GetEmotions(OnGetEmotionsURL, m_ExampleURL_article, true, "OnGetEmotionsURL");
-            while(!m_GetEmotionURLTested)
-                yield return null;
-
-            Log.Debug("TestAlchemyLanguage", "Attempting GetDates Text");
-            m_AlchemyLanguage.GetEmotions(OnGetEmotionsText, m_ExampleText_article, true, "OnGetEmotionsText");
-            while(!m_GetEmotionTextTested)
-                yield return null;
-
-            Log.Debug("TestAlchemyLanguage", "Attempting GetDates HTML");
-            m_AlchemyLanguage.GetEmotions(OnGetEmotionsHTML, example_article_html, true, "OnGetEmotionsHTML");
-            while(!m_GetEmotionHTMLTested)
+            Log.Debug("TestAlchemyAPI", "Attempting GetRankedConcepts Text");
+            m_AlchemyAPI.GetRankedConcepts(OnGetRankedConceptsText, m_ExampleText_article, 8, true, true, true, "OnGetRankedConceptsText");
+            while (!m_GetRankedConceptsHTMLTested)
                 yield return null;
 
 
-            Log.Debug("TestAlchemyLanguage", "Attempting ExtractEntities URL");
-            m_AlchemyLanguage.ExtractEntities(OnExtractEntitiesURL, m_ExampleURL_article);
-            while(!m_GetEntityExtractionURLTested)
+            Log.Debug("TestAlchemyAPI", "Attempting GetDates URL");
+            m_AlchemyAPI.GetDates(OnGetDatesURL, m_ExampleURL_article, null, true, "OnGetDatesURL");
+            while (!m_GetDatesURLTested)
                 yield return null;
 
-            Log.Debug("TestAlchemyLanguage", "Attempting ExtractEntities Text");
-            m_AlchemyLanguage.ExtractEntities(OnExtractEntitiesText, m_ExampleText_article, 50, true, true, true, true, true, true, true, true, "OnExtractEntitiesText");
-            while(!m_GetEntityExtractionTextTested)
+            Log.Debug("TestAlchemyAPI", "Attempting GetDates Text");
+            m_AlchemyAPI.GetDates(OnGetDatesText, m_ExampleText_article, null, true, "OnGetDatesText");
+            while (!m_GetDatesTextTested)
                 yield return null;
 
-            Log.Debug("TestAlchemyLanguage", "Attempting ExtractEntities HTML");
-            m_AlchemyLanguage.ExtractEntities(OnExtractEntitiesHTML, example_article_html, 50, true, true, true, true, true, true, true, true, "OnExtractEntitiesHTML");
-            while(!m_GetEntityExtractionHTMLTested)
-                yield return null;
-            
-
-            Log.Debug("TestAlchemyLanguage", "Attempting DetectFeeds URL");
-            m_AlchemyLanguage.DetectFeeds(OnDetectFeedsURL, m_ExampleURL_feed, "OnDetectFeedsURL");
-            while(!m_DetectFeedsURLTested)
-                yield return null;
-
-//            Log.Debug("TestAlchemyLanguage", "Attempting DetectFeeds HTML");
-//            m_AlchemyLanguage.DetectFeeds(OnDetectFeedsHTML, example_feed_html, "OnDetectFeedsHTML");
-//            while(!m_DetectFeedsHTMLTested)
-//                yield return null;
-            
-
-            Log.Debug("TestAlchemyLanguage", "Attempting ExtractKeywords URL");
-            m_AlchemyLanguage.ExtractKeywords(OnExtractKeywordsURL, m_ExampleURL_article, 50, true, true, true, "OnExtractKeywordsURL");
-            while(!m_GetKeywordExtractionURLTested)
-                yield return null;
-
-            Log.Debug("TestAlchemyLanguage", "Attempting ExtractKeywords Text");
-            m_AlchemyLanguage.ExtractKeywords(OnExtractKeywordsText, m_ExampleText_article, 50, true, true, true, "OnExtractKeywordsText");
-            while(!m_GetKeywordExtractionTextTested)
-                yield return null;
-
-            Log.Debug("TestAlchemyLanguage", "Attempting ExtractKeywords HTML");
-            m_AlchemyLanguage.ExtractKeywords(OnExtractKeywordsHTML, example_article_html, 50, true, true, true, "OnExtractKeywordsHTML");
-            while(!m_GetKeywordExtractionHTMLTested)
-                yield return null;
-            
-
-            Log.Debug("TestAlchemyLanguage", "Attempting GetLanguages URL");
-            m_AlchemyLanguage.GetLanguages(OnGetLanguagesURL, m_ExampleURL_article, true, "OnGetLanguagesURL");
-            while(!m_GetLanguageURLTested)
-                yield return null;
-
-            Log.Debug("TestAlchemyLanguage", "Attempting GetLanguages Text");
-            m_AlchemyLanguage.GetLanguages(OnGetLanguagesText, m_ExampleText_article, true, "OnGetLanguagesText");
-            while(!m_GetLanguageTextTested)
-                yield return null;
-
-            Log.Debug("TestAlchemyLanguage", "Attempting GetLanguages HTML");
-            m_AlchemyLanguage.GetLanguages(OnGetLanguagesHTML, example_article_html, true, "OnGetLanguagesHTML");
-            while(!m_GetLanguageHTMLTested)
-                yield return null;
-            
-
-            Log.Debug("TestAlchemyLanguage", "Attempting GetMicroformats URL");
-            m_AlchemyLanguage.GetMicroformats(OnGetMicroformatsURL, m_ExampleURL_microformats, "OnGetMicroformatsURL");
-            while(!m_GetMicroformatURLTested)
-                yield return null;
-
-//            Log.Debug("TestAlchemyLanguage", "Attempting GetMicroformats HTML");
-//            m_AlchemyLanguage.GetMicroformats(OnGetMicroformatsHTML, example_microformats_html, "OnGetMicroformatsHTML");
-//            while(!m_GetMicroformatHTMLTested)
-//                yield return null;
-            
-            
-            Log.Debug("TestAlchemyLanguage", "Attempting GetPublicationDate URL");
-            m_AlchemyLanguage.GetPublicationDate(OnGetPublicationDateURL, m_ExampleURL_article, "OnGetPublicationDateURL");
-            while(!m_GetPubDateURLTested)
-                yield return null;
-
-            Log.Debug("TestAlchemyLanguage", "Attempting GetPublicationDate HTML");
-            m_AlchemyLanguage.GetPublicationDate(OnGetPublicationDateHTML, example_article_html, "OnGetPublicationDateHTML");
-            while(!m_GetPubldateHTMLTested)
-                yield return null;
-            
-
-            Log.Debug("TestAlchemyLanguage", "Attempting GetRelations URL");
-            m_AlchemyLanguage.GetRelations(OnGetRelationsURL, m_ExampleURL_article, 50, true, true, true, true, true, true, true, true, true, true, "OnGetRelationsURL");
-            while(!m_GetRelationsURLTested)
-                yield return null;
-
-            Log.Debug("TestAlchemyLanguage", "Attempting GetRelations Text");
-            m_AlchemyLanguage.GetRelations(OnGetRelationsText, m_ExampleText_article, 50, true, true, true, true, true, true, true, true, true, true, "OnGetRelationsText");
-            while(!m_GetRelationsTextTested)
-                yield return null;
-
-            Log.Debug("TestAlchemyLanguage", "Attempting GetRelations HTML");
-            m_AlchemyLanguage.GetRelations(OnGetRelationsHTML, example_article_html, 50, true, true, true, true, true, true, true, true, true, true, "OnGetRelationsHTML");
-            while(!m_GetRelationsHTMLTested)
-                yield return null;
-            
-
-            Log.Debug("TestAlchemyLanguage", "Attempting GetTextSentiment URL");
-            m_AlchemyLanguage.GetTextSentiment(OnGetTextSentimentURL, m_ExampleURL_article, true, "OnGetTextSentimentURL");
-            while(!m_GetTextSentimentURLTested)
-                yield return null;
-
-            Log.Debug("TestAlchemyLanguage", "Attempting GetTextSentiment Text");
-            m_AlchemyLanguage.GetTextSentiment(OnGetTextSentimentText, m_ExampleText_article, true, "OnGetTextSentimentText");
-            while(!m_GetTextSentimentTextTested)
-                yield return null;
-
-            Log.Debug("TestAlchemyLanguage", "Attempting GetTextSentiment HTML");
-            m_AlchemyLanguage.GetTextSentiment(OnGetTextSentimentHTML, example_article_html, true, "OnGetTextSentimentHTML");
-            while(!m_GetTextSentimentHTMLTested)
-                yield return null;
-            
-
-            Log.Debug("TestAlchemyLanguage", "Attempting GetTargetedSentiment URL");
-            m_AlchemyLanguage.GetTargetedSentiment(OnGetTargetedSentimentURL, m_ExampleURL_article, "Jeopardy|Jennings|Watson", true, "OnGetTargetedSentimentURL");
-            while(!m_GetTargetedSentimentURLTested)
-                yield return null;
-
-            Log.Debug("TestAlchemyLanguage", "Attempting GetTargetedSentiment Text");
-            m_AlchemyLanguage.GetTargetedSentiment(OnGetTargetedSentimentText, m_ExampleText_article, "Jeopardy|Jennings|Watson", true, "OnGetTargetedSentimentText");
-            while(!m_GetTargetedSentimentTextTested)
-                yield return null;
-
-            Log.Debug("TestAlchemyLanguage", "Attempting GetTargetedSentiment HTML");
-            m_AlchemyLanguage.GetTargetedSentiment(OnGetTargetedSentimentHTML, example_article_html, "Jeopardy|Jennings|Watson", true, "OnGetTargetedSentimentHTML");
-            while(!m_GetTargetedSentimentHTMLTested)
-                yield return null;
-            
-
-            Log.Debug("TestAlchemyLanguage", "Attempting GetRankedTaxonomy URL");
-            m_AlchemyLanguage.GetRankedTaxonomy(OnGetRankedTaxonomyURL, m_ExampleURL_article, true, "OnGetRankedTaxonomyURL");
-            while(!m_GetRankedTaxonomyURLTested)
-                yield return null;
-
-            Log.Debug("TestAlchemyLanguage", "Attempting GetRankedTaxonomy Text");
-            m_AlchemyLanguage.GetRankedTaxonomy(OnGetRankedTaxonomyText, m_ExampleText_article, true, "OnGetRankedTaxonomyText");
-            while(!m_GetRankedTaxonomyTextTested)
-                yield return null;
-
-            Log.Debug("TestAlchemyLanguage", "Attempting GetRankedTaxonomy HTML");
-            m_AlchemyLanguage.GetRankedTaxonomy(OnGetRankedTaxonomyHTML, example_article_html, true, "OnGetRankedTaxonomyHTML");
-            while(!m_GetRankedTaxonomyHTMLTested)
+            Log.Debug("TestAlchemyAPI", "Attempting GetDates HTML");
+            m_AlchemyAPI.GetDates(OnGetDatesHTML, example_article_html, null, true, "OnGetDatesHTML");
+            while (!m_GetDatesHTMLTested)
                 yield return null;
 
 
-            Log.Debug("TestAlchemyLanguage", "Attempting GetText HTML");
-            m_AlchemyLanguage.GetText(OnGetTextHTML, example_article_html, true, true, "OnGetTextHTML");
-            while(!m_GetTextHTMLTested)
+            Log.Debug("TestAlchemyAPI", "Attempting GetDates URL");
+            m_AlchemyAPI.GetEmotions(OnGetEmotionsURL, m_ExampleURL_article, true, "OnGetEmotionsURL");
+            while (!m_GetEmotionURLTested)
                 yield return null;
 
-            Log.Debug("TestAlchemyLanguage", "Attempting GetText URL");
-            m_AlchemyLanguage.GetText(OnGetTextURL, m_ExampleURL_article, true, true, "OnGetTextURL");
-            while(!m_GetTextURLTested)
-                yield return null;
-            
-
-            Log.Debug("TestAlchemyLanguage", "Attempting GetRawText HTML");
-            m_AlchemyLanguage.GetRawText(OnGetRawTextHTML, example_article_html, "OnGetTextHTML");
-            while(!m_GetRawTextHTMLTested)
+            Log.Debug("TestAlchemyAPI", "Attempting GetDates Text");
+            m_AlchemyAPI.GetEmotions(OnGetEmotionsText, m_ExampleText_article, true, "OnGetEmotionsText");
+            while (!m_GetEmotionTextTested)
                 yield return null;
 
-            Log.Debug("TestAlchemyLanguage", "Attempting GetRawText URL");
-            m_AlchemyLanguage.GetRawText(OnGetRawTextURL, m_ExampleURL_article, "OnGetTextURL");
-            while(!m_GetRawTextURLTested)
+            Log.Debug("TestAlchemyAPI", "Attempting GetDates HTML");
+            m_AlchemyAPI.GetEmotions(OnGetEmotionsHTML, example_article_html, true, "OnGetEmotionsHTML");
+            while (!m_GetEmotionHTMLTested)
                 yield return null;
 
 
-            Log.Debug("TestAlchemyLanguage", "Attempting GetTitle HTML");
-            m_AlchemyLanguage.GetTitle(OnGetTitleHTML, example_article_html, true, "OnGetTitleHTML");
-            while(!m_GetTitleHTMLTested)
+            Log.Debug("TestAlchemyAPI", "Attempting ExtractEntities URL");
+            m_AlchemyAPI.ExtractEntities(OnExtractEntitiesURL, m_ExampleURL_article);
+            while (!m_GetEntityExtractionURLTested)
                 yield return null;
 
-            Log.Debug("TestAlchemyLanguage", "Attempting GetTitle URL");
-            m_AlchemyLanguage.GetTitle(OnGetTitleURL, m_ExampleURL_article, true, "OnGetTitleURL");
-            while(!m_GetTitleURLTested)
+            Log.Debug("TestAlchemyAPI", "Attempting ExtractEntities Text");
+            m_AlchemyAPI.ExtractEntities(OnExtractEntitiesText, m_ExampleText_article, 50, true, true, true, true, true, true, true, true, "OnExtractEntitiesText");
+            while (!m_GetEntityExtractionTextTested)
+                yield return null;
+
+            Log.Debug("TestAlchemyAPI", "Attempting ExtractEntities HTML");
+            m_AlchemyAPI.ExtractEntities(OnExtractEntitiesHTML, example_article_html, 50, true, true, true, true, true, true, true, true, "OnExtractEntitiesHTML");
+            while (!m_GetEntityExtractionHTMLTested)
                 yield return null;
 
 
-            Log.Debug("TestAlchemyLanguage", "Attempting GetCombinedData URL");
-            m_AlchemyLanguage.GetCombinedData(OnGetCombinedDataURL, m_ExampleURL_article, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, "OnGetCombinedDataURL");
-            while(!m_GetCombinedDataURLTested)
+            Log.Debug("TestAlchemyAPI", "Attempting DetectFeeds URL");
+            m_AlchemyAPI.DetectFeeds(OnDetectFeedsURL, m_ExampleURL_feed, "OnDetectFeedsURL");
+            while (!m_DetectFeedsURLTested)
                 yield return null;
 
-            Log.Debug("TestAlchemyLanguage", "Attempting GetCombinedData Text");
-            m_AlchemyLanguage.GetCombinedData(OnGetCombinedDataText, m_ExampleText_article, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, "OnGetCombinedDataText");
-            while(!m_GetCombinedDataTextTested)
+            //            Log.Debug("TestAlchemyAPI", "Attempting DetectFeeds HTML");
+            //            m_AlchemyLanguage.DetectFeeds(OnDetectFeedsHTML, example_feed_html, "OnDetectFeedsHTML");
+            //            while(!m_DetectFeedsHTMLTested)
+            //                yield return null;
+
+
+            Log.Debug("TestAlchemyAPI", "Attempting ExtractKeywords URL");
+            m_AlchemyAPI.ExtractKeywords(OnExtractKeywordsURL, m_ExampleURL_article, 50, true, true, true, "OnExtractKeywordsURL");
+            while (!m_GetKeywordExtractionURLTested)
                 yield return null;
 
-            Log.Debug("TestAlchemyLanguage", "Attempting GetCombinedData HTML");
-            m_AlchemyLanguage.GetCombinedData(OnGetCombinedDataHTML, example_article_html, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, "OnGetCombinedDataHTML");
-            while(!m_GetCombinedDataHTMLTested)
+            Log.Debug("TestAlchemyAPI", "Attempting ExtractKeywords Text");
+            m_AlchemyAPI.ExtractKeywords(OnExtractKeywordsText, m_ExampleText_article, 50, true, true, true, "OnExtractKeywordsText");
+            while (!m_GetKeywordExtractionTextTested)
                 yield return null;
+
+            Log.Debug("TestAlchemyAPI", "Attempting ExtractKeywords HTML");
+            m_AlchemyAPI.ExtractKeywords(OnExtractKeywordsHTML, example_article_html, 50, true, true, true, "OnExtractKeywordsHTML");
+            while (!m_GetKeywordExtractionHTMLTested)
+                yield return null;
+
+
+            Log.Debug("TestAlchemyAPI", "Attempting GetLanguages URL");
+            m_AlchemyAPI.GetLanguages(OnGetLanguagesURL, m_ExampleURL_article, true, "OnGetLanguagesURL");
+            while (!m_GetLanguageURLTested)
+                yield return null;
+
+            Log.Debug("TestAlchemyAPI", "Attempting GetLanguages Text");
+            m_AlchemyAPI.GetLanguages(OnGetLanguagesText, m_ExampleText_article, true, "OnGetLanguagesText");
+            while (!m_GetLanguageTextTested)
+                yield return null;
+
+            Log.Debug("TestAlchemyAPI", "Attempting GetLanguages HTML");
+            m_AlchemyAPI.GetLanguages(OnGetLanguagesHTML, example_article_html, true, "OnGetLanguagesHTML");
+            while (!m_GetLanguageHTMLTested)
+                yield return null;
+
+
+            Log.Debug("TestAlchemyAPI", "Attempting GetMicroformats URL");
+            m_AlchemyAPI.GetMicroformats(OnGetMicroformatsURL, m_ExampleURL_microformats, "OnGetMicroformatsURL");
+            while (!m_GetMicroformatURLTested)
+                yield return null;
+
+            //            Log.Debug("TestAlchemyAPI", "Attempting GetMicroformats HTML");
+            //            m_AlchemyLanguage.GetMicroformats(OnGetMicroformatsHTML, example_microformats_html, "OnGetMicroformatsHTML");
+            //            while(!m_GetMicroformatHTMLTested)
+            //                yield return null;
+
+
+            Log.Debug("TestAlchemyAPI", "Attempting GetPublicationDate URL");
+            m_AlchemyAPI.GetPublicationDate(OnGetPublicationDateURL, m_ExampleURL_article, "OnGetPublicationDateURL");
+            while (!m_GetPubDateURLTested)
+                yield return null;
+
+            Log.Debug("TestAlchemyAPI", "Attempting GetPublicationDate HTML");
+            m_AlchemyAPI.GetPublicationDate(OnGetPublicationDateHTML, example_article_html, "OnGetPublicationDateHTML");
+            while (!m_GetPubldateHTMLTested)
+                yield return null;
+
+
+            Log.Debug("TestAlchemyAPI", "Attempting GetRelations URL");
+            m_AlchemyAPI.GetRelations(OnGetRelationsURL, m_ExampleURL_article, 50, true, true, true, true, true, true, true, true, true, true, "OnGetRelationsURL");
+            while (!m_GetRelationsURLTested)
+                yield return null;
+
+            Log.Debug("TestAlchemyAPI", "Attempting GetRelations Text");
+            m_AlchemyAPI.GetRelations(OnGetRelationsText, m_ExampleText_article, 50, true, true, true, true, true, true, true, true, true, true, "OnGetRelationsText");
+            while (!m_GetRelationsTextTested)
+                yield return null;
+
+            Log.Debug("TestAlchemyAPI", "Attempting GetRelations HTML");
+            m_AlchemyAPI.GetRelations(OnGetRelationsHTML, example_article_html, 50, true, true, true, true, true, true, true, true, true, true, "OnGetRelationsHTML");
+            while (!m_GetRelationsHTMLTested)
+                yield return null;
+
+
+            Log.Debug("TestAlchemyAPI", "Attempting GetTextSentiment URL");
+            m_AlchemyAPI.GetTextSentiment(OnGetTextSentimentURL, m_ExampleURL_article, true, "OnGetTextSentimentURL");
+            while (!m_GetTextSentimentURLTested)
+                yield return null;
+
+            Log.Debug("TestAlchemyAPI", "Attempting GetTextSentiment Text");
+            m_AlchemyAPI.GetTextSentiment(OnGetTextSentimentText, m_ExampleText_article, true, "OnGetTextSentimentText");
+            while (!m_GetTextSentimentTextTested)
+                yield return null;
+
+            Log.Debug("TestAlchemyAPI", "Attempting GetTextSentiment HTML");
+            m_AlchemyAPI.GetTextSentiment(OnGetTextSentimentHTML, example_article_html, true, "OnGetTextSentimentHTML");
+            while (!m_GetTextSentimentHTMLTested)
+                yield return null;
+
+
+            Log.Debug("TestAlchemyAPI", "Attempting GetTargetedSentiment URL");
+            m_AlchemyAPI.GetTargetedSentiment(OnGetTargetedSentimentURL, m_ExampleURL_article, "Jeopardy|Jennings|Watson", true, "OnGetTargetedSentimentURL");
+            while (!m_GetTargetedSentimentURLTested)
+                yield return null;
+
+            Log.Debug("TestAlchemyAPI", "Attempting GetTargetedSentiment Text");
+            m_AlchemyAPI.GetTargetedSentiment(OnGetTargetedSentimentText, m_ExampleText_article, "Jeopardy|Jennings|Watson", true, "OnGetTargetedSentimentText");
+            while (!m_GetTargetedSentimentTextTested)
+                yield return null;
+
+            Log.Debug("TestAlchemyAPI", "Attempting GetTargetedSentiment HTML");
+            m_AlchemyAPI.GetTargetedSentiment(OnGetTargetedSentimentHTML, example_article_html, "Jeopardy|Jennings|Watson", true, "OnGetTargetedSentimentHTML");
+            while (!m_GetTargetedSentimentHTMLTested)
+                yield return null;
+
+
+            Log.Debug("TestAlchemyAPI", "Attempting GetRankedTaxonomy URL");
+            m_AlchemyAPI.GetRankedTaxonomy(OnGetRankedTaxonomyURL, m_ExampleURL_article, true, "OnGetRankedTaxonomyURL");
+            while (!m_GetRankedTaxonomyURLTested)
+                yield return null;
+
+            Log.Debug("TestAlchemyAPI", "Attempting GetRankedTaxonomy Text");
+            m_AlchemyAPI.GetRankedTaxonomy(OnGetRankedTaxonomyText, m_ExampleText_article, true, "OnGetRankedTaxonomyText");
+            while (!m_GetRankedTaxonomyTextTested)
+                yield return null;
+
+            Log.Debug("TestAlchemyAPI", "Attempting GetRankedTaxonomy HTML");
+            m_AlchemyAPI.GetRankedTaxonomy(OnGetRankedTaxonomyHTML, example_article_html, true, "OnGetRankedTaxonomyHTML");
+            while (!m_GetRankedTaxonomyHTMLTested)
+                yield return null;
+
+
+            Log.Debug("TestAlchemyAPI", "Attempting GetText HTML");
+            m_AlchemyAPI.GetText(OnGetTextHTML, example_article_html, true, true, "OnGetTextHTML");
+            while (!m_GetTextHTMLTested)
+                yield return null;
+
+            Log.Debug("TestAlchemyAPI", "Attempting GetText URL");
+            m_AlchemyAPI.GetText(OnGetTextURL, m_ExampleURL_article, true, true, "OnGetTextURL");
+            while (!m_GetTextURLTested)
+                yield return null;
+
+
+            Log.Debug("TestAlchemyAPI", "Attempting GetRawText HTML");
+            m_AlchemyAPI.GetRawText(OnGetRawTextHTML, example_article_html, "OnGetTextHTML");
+            while (!m_GetRawTextHTMLTested)
+                yield return null;
+
+            Log.Debug("TestAlchemyAPI", "Attempting GetRawText URL");
+            m_AlchemyAPI.GetRawText(OnGetRawTextURL, m_ExampleURL_article, "OnGetTextURL");
+            while (!m_GetRawTextURLTested)
+                yield return null;
+
+
+            Log.Debug("TestAlchemyAPI", "Attempting GetTitle HTML");
+            m_AlchemyAPI.GetTitle(OnGetTitleHTML, example_article_html, true, "OnGetTitleHTML");
+            while (!m_GetTitleHTMLTested)
+                yield return null;
+
+            Log.Debug("TestAlchemyAPI", "Attempting GetTitle URL");
+            m_AlchemyAPI.GetTitle(OnGetTitleURL, m_ExampleURL_article, true, "OnGetTitleURL");
+            while (!m_GetTitleURLTested)
+                yield return null;
+
+
+            Log.Debug("TestAlchemyAPI", "Attempting GetCombinedData URL");
+            m_AlchemyAPI.GetCombinedData(OnGetCombinedDataURL, m_ExampleURL_article, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, "OnGetCombinedDataURL");
+            while (!m_GetCombinedDataURLTested)
+                yield return null;
+
+            Log.Debug("TestAlchemyAPI", "Attempting GetCombinedData Text");
+            m_AlchemyAPI.GetCombinedData(OnGetCombinedDataText, m_ExampleText_article, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, "OnGetCombinedDataText");
+            while (!m_GetCombinedDataTextTested)
+                yield return null;
+
+            Log.Debug("TestAlchemyAPI", "Attempting GetCombinedData HTML");
+            m_AlchemyAPI.GetCombinedData(OnGetCombinedDataHTML, example_article_html, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, "OnGetCombinedDataHTML");
+            while (!m_GetCombinedDataHTMLTested)
+                yield return null;
+
+			Log.Debug("TestAlchemyAPI", "Attempting to GetNews");
+			string[] returnFields = {Fields.ENRICHED_URL_ENTITIES, Fields.ENRICHED_URL_KEYWORDS};
+			Dictionary<string, string> queryFields = new Dictionary<string, string>();
+			queryFields.Add(Fields.ENRICHED_URL_RELATIONS_RELATION_SUBJECT_TEXT, "Obama");
+			queryFields.Add(Fields.ENRICHED_URL_CLEANEDTITLE, "Washington");
+
+			m_AlchemyAPI.GetNews(OnGetNews, returnFields, queryFields);
+			while(!m_GetNewsTested)
+				yield return null;
         }
 
         #region GetAuthors
         private void OnGetAuthorsURL(AuthorsData authors, string data)
         {
             Test(authors.status == "OK");
-            if(authors != null)
+            if (authors != null)
             {
                 m_GetAuthorsURLTested = true;
                 LogAuthorsData(authors, data);
@@ -369,7 +382,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnGetAuthorsHTML(AuthorsData authors, string data)
         {
             Test(authors.status == "OK");
-            if(authors != null)
+            if (authors != null)
             {
                 m_GetAuthorsHTMLTested = true;
                 LogAuthorsData(authors, data);
@@ -378,18 +391,18 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void LogAuthorsData(AuthorsData authors, string data)
         {
-            Log.Debug("TestAlchemyLanguage", "data: {0}", data);
-            if(authors != null)
+            Log.Debug("TestAlchemyAPI", "data: {0}", data);
+            if (authors != null)
             {
-                if(authors.authors.names.Length == 0)
-                    Log.Debug("TestAlchemyLanguage", "No authors found!");
+                if (authors.authors.names.Length == 0)
+                    Log.Debug("TestAlchemyAPI", "No authors found!");
 
-                foreach(string name in authors.authors.names)
-                    Log.Debug("TestAlchemyLanguage", "Author " + name + " found!");
+                foreach (string name in authors.authors.names)
+                    Log.Debug("TestAlchemyAPI", "Author " + name + " found!");
             }
             else
             {
-                Log.Debug("TestAlchemyLanguage", "Failed to find Author!");
+                Log.Debug("TestAlchemyAPI", "Failed to find Author!");
             }
         }
         #endregion
@@ -398,7 +411,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnGetRankedConceptsURL(ConceptsData concepts, string data)
         {
             Test(concepts.status == "OK");
-            if(concepts != null)
+            if (concepts != null)
             {
                 m_GetRankedConceptsURLTested = true;
                 LogConceptsData(concepts, data);
@@ -408,7 +421,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnGetRankedConceptsHTML(ConceptsData concepts, string data)
         {
             Test(concepts.status == "OK");
-            if(concepts != null)
+            if (concepts != null)
             {
                 m_GetRankedConceptsHTMLTested = true;
                 LogConceptsData(concepts, data);
@@ -418,7 +431,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnGetRankedConceptsText(ConceptsData concepts, string data)
         {
             Test(concepts.status == "OK");
-            if(concepts != null)
+            if (concepts != null)
             {
                 m_GetRankedConceptsTextTested = true;
                 LogConceptsData(concepts, data);
@@ -427,30 +440,30 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void LogConceptsData(ConceptsData concepts, string data)
         {
-            Log.Debug("TestAlchemyLanguage", "data: {0}", data);
-            if(concepts != null)
+            Log.Debug("TestAlchemyAPI", "data: {0}", data);
+            if (concepts != null)
             {
-                Log.Debug("TestAlchemyLanguage", "status: {0}", concepts.status);
-                Log.Debug("TestAlchemyLanguage", "url: {0}", concepts.url);
-                Log.Debug("TestAlchemyLanguage", "language: {0}", concepts.language);
-                if(concepts.concepts.Length == 0)
-                    Log.Debug("TestAlchemyLanguage", "No concepts found!");
+                Log.Debug("TestAlchemyAPI", "status: {0}", concepts.status);
+                Log.Debug("TestAlchemyAPI", "url: {0}", concepts.url);
+                Log.Debug("TestAlchemyAPI", "language: {0}", concepts.language);
+                if (concepts.concepts.Length == 0)
+                    Log.Debug("TestAlchemyAPI", "No concepts found!");
 
-                foreach(Concept concept in concepts.concepts)
-                    Log.Debug("TestAlchemyLanguage", "Concept: {0}, Relevance: {1}", concept.text, concept.relevance);
+                foreach (Concept concept in concepts.concepts)
+                    Log.Debug("TestAlchemyAPI", "Concept: {0}, Relevance: {1}", concept.text, concept.relevance);
             }
             else
             {
-                Log.Debug("TestAlchemyLanguage", "Failed to find Concepts!");
+                Log.Debug("TestAlchemyAPI", "Failed to find Concepts!");
             }
         }
         #endregion
-       
+
         #region GetDates
         private void OnGetDatesURL(DateData dates, string data)
         {
             Test(dates.status == "OK");
-            if(dates != null)
+            if (dates != null)
             {
                 m_GetDatesURLTested = true;
                 LogDatesData(dates, data);
@@ -460,7 +473,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnGetDatesHTML(DateData dates, string data)
         {
             Test(dates.status == "OK");
-            if(dates != null)
+            if (dates != null)
             {
                 m_GetDatesHTMLTested = true;
                 LogDatesData(dates, data);
@@ -470,7 +483,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnGetDatesText(DateData dates, string data)
         {
             Test(dates.status == "OK");
-            if(dates != null)
+            if (dates != null)
             {
                 m_GetDatesTextTested = true;
                 LogDatesData(dates, data);
@@ -479,21 +492,21 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void LogDatesData(DateData dates, string data)
         {
-            Log.Debug("TestAlchemyLanguage", "data: {0}", data);
-            if(dates != null)
+            Log.Debug("TestAlchemyAPI", "data: {0}", data);
+            if (dates != null)
             {
-                Log.Debug("TestAlchemyLanguage", "status: {0}", dates.status);
-                Log.Debug("TestAlchemyLanguage", "language: {0}", dates.language);
-                Log.Debug("TestAlchemyLanguage", "url: {0}", dates.url);
-                if(dates.dates == null || dates.dates.Length == 0)
-                    Log.Debug("TestAlchemyLanguage", "No dates found!");
+                Log.Debug("TestAlchemyAPI", "status: {0}", dates.status);
+                Log.Debug("TestAlchemyAPI", "language: {0}", dates.language);
+                Log.Debug("TestAlchemyAPI", "url: {0}", dates.url);
+                if (dates.dates == null || dates.dates.Length == 0)
+                    Log.Debug("TestAlchemyAPI", "No dates found!");
                 else
-                    foreach(Date date in dates.dates)
-                        Log.Debug("TestAlchemyLanguage", "Text: {0}, Date: {1}", date.text, date.date);
+                    foreach (Date date in dates.dates)
+                        Log.Debug("TestAlchemyAPI", "Text: {0}, Date: {1}", date.text, date.date);
             }
             else
             {
-                Log.Debug("TestAlchemyLanguage", "Failed to find Dates!");
+                Log.Debug("TestAlchemyAPI", "Failed to find Dates!");
             }
         }
         #endregion
@@ -502,7 +515,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnGetEmotionsURL(EmotionData emotions, string data)
         {
             Test(emotions.status == "OK");
-            if(emotions != null)
+            if (emotions != null)
             {
                 m_GetEmotionURLTested = true;
                 LogEmotionsData(emotions, data);
@@ -512,7 +525,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnGetEmotionsHTML(EmotionData emotions, string data)
         {
             Test(emotions.status == "OK");
-            if(emotions != null)
+            if (emotions != null)
             {
                 m_GetEmotionHTMLTested = true;
                 LogEmotionsData(emotions, data);
@@ -522,7 +535,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnGetEmotionsText(EmotionData emotions, string data)
         {
             Test(emotions.status == "OK");
-            if(emotions != null)
+            if (emotions != null)
             {
                 m_GetEmotionTextTested = true;
                 LogEmotionsData(emotions, data);
@@ -531,27 +544,27 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void LogEmotionsData(EmotionData emotions, string data)
         {
-            Log.Debug("TestAlchemyLanguage", "data: {0}", data);
-            if(emotions != null)
+            Log.Debug("TestAlchemyAPI", "data: {0}", data);
+            if (emotions != null)
             {
-                Log.Debug("TestAlchemyLanguage", "status: {0}", emotions.status);
-                Log.Debug("TestAlchemyLanguage", "url: {0}", emotions.url);
-                Log.Debug("TestAlchemyLanguage", "language: {0}", emotions.language);
-                Log.Debug("TestAlchemyLanguage", "text: {0}", emotions.text);
-                if(emotions.docEmotions == null)
-                    Log.Debug("TestAlchemyLanguage", "No emotions found!");
+                Log.Debug("TestAlchemyAPI", "status: {0}", emotions.status);
+                Log.Debug("TestAlchemyAPI", "url: {0}", emotions.url);
+                Log.Debug("TestAlchemyAPI", "language: {0}", emotions.language);
+                Log.Debug("TestAlchemyAPI", "text: {0}", emotions.text);
+                if (emotions.docEmotions == null)
+                    Log.Debug("TestAlchemyAPI", "No emotions found!");
                 else
                 {
-                    Log.Debug("TestAlchemyLanguage", "anger: {0}", emotions.docEmotions.anger);
-                    Log.Debug("TestAlchemyLanguage", "disgust: {0}", emotions.docEmotions.disgust);
-                    Log.Debug("TestAlchemyLanguage", "fear: {0}", emotions.docEmotions.fear);
-                    Log.Debug("TestAlchemyLanguage", "joy: {0}", emotions.docEmotions.joy);
-                    Log.Debug("TestAlchemyLanguage", "sadness: {0}", emotions.docEmotions.sadness);
+                    Log.Debug("TestAlchemyAPI", "anger: {0}", emotions.docEmotions.anger);
+                    Log.Debug("TestAlchemyAPI", "disgust: {0}", emotions.docEmotions.disgust);
+                    Log.Debug("TestAlchemyAPI", "fear: {0}", emotions.docEmotions.fear);
+                    Log.Debug("TestAlchemyAPI", "joy: {0}", emotions.docEmotions.joy);
+                    Log.Debug("TestAlchemyAPI", "sadness: {0}", emotions.docEmotions.sadness);
                 }
             }
             else
             {
-                Log.Debug("TestAlchemyLanguage", "Failed to find Emotions!");
+                Log.Debug("TestAlchemyAPI", "Failed to find Emotions!");
             }
         }
         #endregion
@@ -560,7 +573,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnExtractEntitiesURL(EntityData entityData, string data)
         {
             Test(entityData.status == "OK");
-            if(entityData != null)
+            if (entityData != null)
             {
                 m_GetEntityExtractionURLTested = true;
                 LogEntityData(entityData, data);
@@ -570,7 +583,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnExtractEntitiesHTML(EntityData entityData, string data)
         {
             Test(entityData.status == "OK");
-            if(entityData != null)
+            if (entityData != null)
             {
                 m_GetEntityExtractionHTMLTested = true;
                 LogEntityData(entityData, data);
@@ -580,7 +593,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnExtractEntitiesText(EntityData entityData, string data)
         {
             Test(entityData.status == "OK");
-            if(entityData != null)
+            if (entityData != null)
             {
                 m_GetEntityExtractionTextTested = true;
                 LogEntityData(entityData, data);
@@ -589,22 +602,22 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void LogEntityData(EntityData entityData, string data)
         {
-            Log.Debug("TestAlchemyLanguage", "data: {0}", data);
-            if(entityData != null)
+            Log.Debug("TestAlchemyAPI", "data: {0}", data);
+            if (entityData != null)
             {
-                Log.Debug("TestAlchemyLanguage", "status: {0}", entityData.status);
-                Log.Debug("TestAlchemyLanguage", "url: {0}", entityData.url);
-                Log.Debug("TestAlchemyLanguage", "language: {0}", entityData.language);
-                Log.Debug("TestAlchemyLanguage", "text: {0}", entityData.text);
-                if(entityData == null || entityData.entities.Length == 0)
-                    Log.Debug("TestAlchemyLanguage", "No entities found!");
+                Log.Debug("TestAlchemyAPI", "status: {0}", entityData.status);
+                Log.Debug("TestAlchemyAPI", "url: {0}", entityData.url);
+                Log.Debug("TestAlchemyAPI", "language: {0}", entityData.language);
+                Log.Debug("TestAlchemyAPI", "text: {0}", entityData.text);
+                if (entityData == null || entityData.entities.Length == 0)
+                    Log.Debug("TestAlchemyAPI", "No entities found!");
                 else
-                    foreach(Entity entity in entityData.entities)
-                        Log.Debug("TestAlchemyLanguage", "text: {0}, type: {1}", entity.text, entity.type);
+                    foreach (Entity entity in entityData.entities)
+                        Log.Debug("TestAlchemyAPI", "text: {0}, type: {1}", entity.text, entity.type);
             }
             else
             {
-                Log.Debug("TestAlchemyLanguage", "Failed to find Emotions!");
+                Log.Debug("TestAlchemyAPI", "Failed to find Emotions!");
             }
         }
         #endregion
@@ -613,7 +626,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnDetectFeedsURL(FeedData feedData, string data)
         {
             Test(feedData.status == "OK");
-            if(feedData != null)
+            if (feedData != null)
             {
                 m_DetectFeedsURLTested = true;
                 LogFeedData(feedData, data);
@@ -623,7 +636,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnDetectFeedsHTML(FeedData feedData, string data)
         {
             Test(feedData.status == "OK");
-            if(feedData != null)
+            if (feedData != null)
             {
                 m_DetectFeedsHTMLTested = true;
                 LogFeedData(feedData, data);
@@ -632,19 +645,19 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void LogFeedData(FeedData feedData, string data)
         {
-            Log.Debug("TestAlchemyLanguage", "data: {0}", data);
-            if(feedData != null)
+            Log.Debug("TestAlchemyAPI", "data: {0}", data);
+            if (feedData != null)
             {
-                Log.Debug("TestAlchemyLanguage", "status: {0}", feedData.status);
-                if(feedData == null || feedData.feeds.Length == 0)
-                    Log.Debug("TestAlchemyLanguage", "No feeds found!");
+                Log.Debug("TestAlchemyAPI", "status: {0}", feedData.status);
+                if (feedData == null || feedData.feeds.Length == 0)
+                    Log.Debug("TestAlchemyAPI", "No feeds found!");
                 else
-                    foreach(Feed feed in feedData.feeds)
-                        Log.Debug("TestAlchemyLanguage", "text: {0}", feed.feed);
+                    foreach (Feed feed in feedData.feeds)
+                        Log.Debug("TestAlchemyAPI", "text: {0}", feed.feed);
             }
             else
             {
-                Log.Debug("TestAlchemyLanguage", "Failed to find Feeds!");
+                Log.Debug("TestAlchemyAPI", "Failed to find Feeds!");
             }
         }
         #endregion
@@ -653,7 +666,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnExtractKeywordsURL(KeywordData keywordData, string data)
         {
             Test(keywordData.status == "OK");
-            if(keywordData != null)
+            if (keywordData != null)
             {
                 m_GetKeywordExtractionURLTested = true;
                 LogKeywordData(keywordData, data);
@@ -663,7 +676,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnExtractKeywordsHTML(KeywordData keywordData, string data)
         {
             Test(keywordData.status == "OK");
-            if(keywordData != null)
+            if (keywordData != null)
             {
                 m_GetKeywordExtractionHTMLTested = true;
                 LogKeywordData(keywordData, data);
@@ -673,7 +686,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnExtractKeywordsText(KeywordData keywordData, string data)
         {
             Test(keywordData.status == "OK");
-            if(keywordData != null)
+            if (keywordData != null)
             {
                 m_GetKeywordExtractionTextTested = true;
                 LogKeywordData(keywordData, data);
@@ -682,22 +695,22 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void LogKeywordData(KeywordData keywordData, string data)
         {
-            Log.Debug("TestAlchemyLanguage", "data: {0}", data);
-            if(keywordData != null)
+            Log.Debug("TestAlchemyAPI", "data: {0}", data);
+            if (keywordData != null)
             {
-                Log.Debug("TestAlchemyLanguage", "status: {0}", keywordData.status);
-                Log.Debug("TestAlchemyLanguage", "url: {0}", keywordData.url);
-                Log.Debug("TestAlchemyLanguage", "language: {0}", keywordData.language);
-                Log.Debug("TestAlchemyLanguage", "text: {0}", keywordData.text);
-                if(keywordData == null || keywordData.keywords.Length == 0)
-                    Log.Debug("TestAlchemyLanguage", "No keywords found!");
+                Log.Debug("TestAlchemyAPI", "status: {0}", keywordData.status);
+                Log.Debug("TestAlchemyAPI", "url: {0}", keywordData.url);
+                Log.Debug("TestAlchemyAPI", "language: {0}", keywordData.language);
+                Log.Debug("TestAlchemyAPI", "text: {0}", keywordData.text);
+                if (keywordData == null || keywordData.keywords.Length == 0)
+                    Log.Debug("TestAlchemyAPI", "No keywords found!");
                 else
-                    foreach(Keyword keyword in keywordData.keywords)
-                        Log.Debug("TestAlchemyLanguage", "text: {0}, relevance: {1}", keyword.text, keyword.relevance);
+                    foreach (Keyword keyword in keywordData.keywords)
+                        Log.Debug("TestAlchemyAPI", "text: {0}, relevance: {1}", keyword.text, keyword.relevance);
             }
             else
             {
-                Log.Debug("TestAlchemyLanguage", "Failed to find Keywords!");
+                Log.Debug("TestAlchemyAPI", "Failed to find Keywords!");
             }
         }
         #endregion
@@ -706,7 +719,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnGetLanguagesURL(LanguageData languages, string data)
         {
             Test(languages.status == "OK");
-            if(languages != null)
+            if (languages != null)
             {
                 m_GetLanguageURLTested = true;
                 LogLanguagesData(languages, data);
@@ -716,7 +729,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnGetLanguagesHTML(LanguageData languages, string data)
         {
             Test(languages.status == "OK");
-            if(languages != null)
+            if (languages != null)
             {
                 m_GetLanguageHTMLTested = true;
                 LogLanguagesData(languages, data);
@@ -726,7 +739,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnGetLanguagesText(LanguageData languages, string data)
         {
             Test(languages.status == "OK");
-            if(languages != null)
+            if (languages != null)
             {
                 m_GetLanguageTextTested = true;
                 LogLanguagesData(languages, data);
@@ -735,27 +748,27 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void LogLanguagesData(LanguageData languages, string data)
         {
-            Log.Debug("TestAlchemyLanguage", "data: {0}", data);
-            if(languages != null)
+            Log.Debug("TestAlchemyAPI", "data: {0}", data);
+            if (languages != null)
             {
-                if(string.IsNullOrEmpty(languages.language))
-                    Log.Debug("TestAlchemyLanguage", "No languages detected!");
+                if (string.IsNullOrEmpty(languages.language))
+                    Log.Debug("TestAlchemyAPI", "No languages detected!");
                 else
                 {
-                    Log.Debug("TestAlchemyLanguage", "status: {0}", languages.status);
-                    Log.Debug("TestAlchemyLanguage", "url: {0}", languages.url);
-                    Log.Debug("TestAlchemyLanguage", "language: {0}", languages.language);
-                    Log.Debug("TestAlchemyLanguage", "ethnologue: {0}", languages.ethnologue);
-                    Log.Debug("TestAlchemyLanguage", "iso_639_1: {0}", languages.iso_639_1);
-                    Log.Debug("TestAlchemyLanguage", "iso_639_2: {0}", languages.iso_639_2);
-                    Log.Debug("TestAlchemyLanguage", "iso_639_3: {0}", languages.iso_639_3);
-                    Log.Debug("TestAlchemyLanguage", "native_speakers: {0}", languages.native_speakers);
-                    Log.Debug("TestAlchemyLanguage", "wikipedia: {0}", languages.wikipedia);
+                    Log.Debug("TestAlchemyAPI", "status: {0}", languages.status);
+                    Log.Debug("TestAlchemyAPI", "url: {0}", languages.url);
+                    Log.Debug("TestAlchemyAPI", "language: {0}", languages.language);
+                    Log.Debug("TestAlchemyAPI", "ethnologue: {0}", languages.ethnologue);
+                    Log.Debug("TestAlchemyAPI", "iso_639_1: {0}", languages.iso_639_1);
+                    Log.Debug("TestAlchemyAPI", "iso_639_2: {0}", languages.iso_639_2);
+                    Log.Debug("TestAlchemyAPI", "iso_639_3: {0}", languages.iso_639_3);
+                    Log.Debug("TestAlchemyAPI", "native_speakers: {0}", languages.native_speakers);
+                    Log.Debug("TestAlchemyAPI", "wikipedia: {0}", languages.wikipedia);
                 }
             }
             else
             {
-                Log.Debug("TestAlchemyLanguage", "Failed to find Dates!");
+                Log.Debug("TestAlchemyAPI", "Failed to find Dates!");
             }
         }
         #endregion
@@ -764,7 +777,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnGetMicroformatsURL(MicroformatData microformats, string data)
         {
             Test(microformats.status == "OK");
-            if(microformats != null)
+            if (microformats != null)
             {
                 m_GetMicroformatURLTested = true;
                 LogMicroformatData(microformats, data);
@@ -774,7 +787,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnGetMicroformatsHTML(MicroformatData microformats, string data)
         {
             Test(microformats.status == "OK");
-            if(microformats != null)
+            if (microformats != null)
             {
                 m_GetMicroformatHTMLTested = true;
                 LogMicroformatData(microformats, data);
@@ -783,22 +796,22 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void LogMicroformatData(MicroformatData microformats, string data)
         {
-            Log.Debug("TestAlchemyLanguage", "data: {0}", data);
-            if(microformats != null)
+            Log.Debug("TestAlchemyAPI", "data: {0}", data);
+            if (microformats != null)
             {
-                Log.Debug("TestAlchemyLanguage", "status: {0}", microformats.status);
-                Log.Debug("TestAlchemyLanguage", "url: {0}", microformats.url);
-                if(microformats.microformats.Length == 0)
-                    Log.Warning("TestAlchemyLanguage", "No microformats found!");
+                Log.Debug("TestAlchemyAPI", "status: {0}", microformats.status);
+                Log.Debug("TestAlchemyAPI", "url: {0}", microformats.url);
+                if (microformats.microformats.Length == 0)
+                    Log.Warning("TestAlchemyAPI", "No microformats found!");
                 else
                 {
-                    foreach(Microformat microformat in microformats.microformats)
-                        Log.Debug("TestAlchemyLanguage", "field: {0}, data: {1}.", microformat.field, microformat.data);
+                    foreach (Microformat microformat in microformats.microformats)
+                        Log.Debug("TestAlchemyAPI", "field: {0}, data: {1}.", microformat.field, microformat.data);
                 }
             }
             else
             {
-                Log.Debug("TestAlchemyLanguage", "Failed to find Microformats!");
+                Log.Debug("TestAlchemyAPI", "Failed to find Microformats!");
             }
         }
         #endregion
@@ -807,7 +820,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnGetPublicationDateURL(PubDateData pubDates, string data)
         {
             Test(pubDates.status == "OK");
-            if(pubDates != null)
+            if (pubDates != null)
             {
                 m_GetPubDateURLTested = true;
                 LogPublicationDateData(pubDates, data);
@@ -817,7 +830,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnGetPublicationDateHTML(PubDateData pubDates, string data)
         {
             Test(pubDates.status == "OK");
-            if(pubDates != null)
+            if (pubDates != null)
             {
                 m_GetPubldateHTMLTested = true;
                 LogPublicationDateData(pubDates, data);
@@ -826,20 +839,20 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void LogPublicationDateData(PubDateData pubDates, string data)
         {
-            Log.Debug("TestAlchemyLanguage", "data: {0}", data);
-            if(pubDates != null)
+            Log.Debug("TestAlchemyAPI", "data: {0}", data);
+            if (pubDates != null)
             {
-                Log.Debug("TestAlchemyLanguage", "status: {0}", pubDates.status);
-                Log.Debug("TestAlchemyLanguage", "url: {0}", pubDates.url);
-                Log.Debug("TestAlchemyLanguage", "language: {0}", pubDates.language);
-                if(pubDates.publicationDate != null)
-                    Log.Debug("TestAlchemyLanguage", "date: {0}, confident: {1}", pubDates.publicationDate.date, pubDates.publicationDate.confident);
+                Log.Debug("TestAlchemyAPI", "status: {0}", pubDates.status);
+                Log.Debug("TestAlchemyAPI", "url: {0}", pubDates.url);
+                Log.Debug("TestAlchemyAPI", "language: {0}", pubDates.language);
+                if (pubDates.publicationDate != null)
+                    Log.Debug("TestAlchemyAPI", "date: {0}, confident: {1}", pubDates.publicationDate.date, pubDates.publicationDate.confident);
                 else
-                    Log.Debug("TestAlchemyLanguage", "Failed to find Publication Dates!");
+                    Log.Debug("TestAlchemyAPI", "Failed to find Publication Dates!");
             }
             else
             {
-                Log.Debug("TestAlchemyLanguage", "Failed to find Publication Dates!");
+                Log.Debug("TestAlchemyAPI", "Failed to find Publication Dates!");
             }
         }
         #endregion
@@ -848,7 +861,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnGetRelationsURL(RelationsData relationsData, string data)
         {
             Test(relationsData.status == "OK");
-            if(relationsData != null)
+            if (relationsData != null)
             {
                 m_GetRelationsURLTested = true;
                 LogRelationsData(relationsData, data);
@@ -858,7 +871,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnGetRelationsHTML(RelationsData relationsData, string data)
         {
             Test(relationsData.status == "OK");
-            if(relationsData != null)
+            if (relationsData != null)
             {
                 m_GetRelationsHTMLTested = true;
                 LogRelationsData(relationsData, data);
@@ -868,7 +881,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnGetRelationsText(RelationsData relationsData, string data)
         {
             Test(relationsData.status == "OK");
-            if(relationsData != null)
+            if (relationsData != null)
             {
                 m_GetRelationsTextTested = true;
                 LogRelationsData(relationsData, data);
@@ -877,23 +890,23 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void LogRelationsData(RelationsData relationsData, string data)
         {
-            Log.Debug("TestAlchemyLanguage", "data: {0}", data);
-            if(relationsData != null)
+            Log.Debug("TestAlchemyAPI", "data: {0}", data);
+            if (relationsData != null)
             {
-                Log.Debug("TestAlchemyLanguage", "status: {0}", relationsData.status);
-                Log.Debug("TestAlchemyLanguage", "url: {0}", relationsData.url);
-                Log.Debug("TestAlchemyLanguage", "language: {0}", relationsData.language);
-                Log.Debug("TestAlchemyLanguage", "text: {0}", relationsData.text);
-                if(relationsData.relations == null || relationsData.relations.Length == 0)
-                    Log.Debug("TestAlchemyLanguage", "No relations found!");
+                Log.Debug("TestAlchemyAPI", "status: {0}", relationsData.status);
+                Log.Debug("TestAlchemyAPI", "url: {0}", relationsData.url);
+                Log.Debug("TestAlchemyAPI", "language: {0}", relationsData.language);
+                Log.Debug("TestAlchemyAPI", "text: {0}", relationsData.text);
+                if (relationsData.relations == null || relationsData.relations.Length == 0)
+                    Log.Debug("TestAlchemyAPI", "No relations found!");
                 else
-                    foreach(Relation relation in relationsData.relations)
-                        if(relation.subject != null && !string.IsNullOrEmpty(relation.subject.text))
-                            Log.Debug("TestAlchemyLanguage", "Text: {0}, Date: {1}", relation.sentence, relation.subject.text);
+                    foreach (Relation relation in relationsData.relations)
+                        if (relation.subject != null && !string.IsNullOrEmpty(relation.subject.text))
+                            Log.Debug("TestAlchemyAPI", "Text: {0}, Date: {1}", relation.sentence, relation.subject.text);
             }
             else
             {
-                Log.Debug("TestAlchemyLanguage", "Failed to find Relations!");
+                Log.Debug("TestAlchemyAPI", "Failed to find Relations!");
             }
         }
         #endregion
@@ -902,7 +915,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnGetTextSentimentURL(SentimentData sentimentData, string data)
         {
             Test(sentimentData.status == "OK");
-            if(sentimentData != null)
+            if (sentimentData != null)
             {
                 m_GetTextSentimentURLTested = true;
                 LogTextSentiment(sentimentData, data);
@@ -912,7 +925,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnGetTextSentimentHTML(SentimentData sentimentData, string data)
         {
             Test(sentimentData.status == "OK");
-            if(sentimentData != null)
+            if (sentimentData != null)
             {
                 m_GetTextSentimentHTMLTested = true;
                 LogTextSentiment(sentimentData, data);
@@ -922,7 +935,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnGetTextSentimentText(SentimentData sentimentData, string data)
         {
             Test(sentimentData.status == "OK");
-            if(sentimentData != null)
+            if (sentimentData != null)
             {
                 m_GetTextSentimentTextTested = true;
                 LogTextSentiment(sentimentData, data);
@@ -931,22 +944,22 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void LogTextSentiment(SentimentData sentimentData, string data)
         {
-            Log.Debug("TestAlchemyLanguage", "data: {0}", data);
-            if(sentimentData != null)
+            Log.Debug("TestAlchemyAPI", "data: {0}", data);
+            if (sentimentData != null)
             {
-                Log.Debug("TestAlchemyLanguage", "status: {0}", sentimentData.status);
-                Log.Debug("TestAlchemyLanguage", "url: {0}", sentimentData.url);
-                Log.Debug("TestAlchemyLanguage", "language: {0}", sentimentData.language);
-                Log.Debug("TestAlchemyLanguage", "text: {0}", sentimentData.text);
-                if(sentimentData.docSentiment == null)
-                    Log.Debug("TestAlchemyLanguage", "No sentiment found!");
+                Log.Debug("TestAlchemyAPI", "status: {0}", sentimentData.status);
+                Log.Debug("TestAlchemyAPI", "url: {0}", sentimentData.url);
+                Log.Debug("TestAlchemyAPI", "language: {0}", sentimentData.language);
+                Log.Debug("TestAlchemyAPI", "text: {0}", sentimentData.text);
+                if (sentimentData.docSentiment == null)
+                    Log.Debug("TestAlchemyAPI", "No sentiment found!");
                 else
-                    if(sentimentData.docSentiment != null && !string.IsNullOrEmpty(sentimentData.docSentiment.type))
-                        Log.Debug("TestAlchemyLanguage", "Sentiment: {0}, Score: {1}", sentimentData.docSentiment.type, sentimentData.docSentiment.score);
+                    if (sentimentData.docSentiment != null && !string.IsNullOrEmpty(sentimentData.docSentiment.type))
+                    Log.Debug("TestAlchemyAPI", "Sentiment: {0}, Score: {1}", sentimentData.docSentiment.type, sentimentData.docSentiment.score);
             }
             else
             {
-                Log.Debug("TestAlchemyLanguage", "Failed to find Relations!");
+                Log.Debug("TestAlchemyAPI", "Failed to find Relations!");
             }
         }
         #endregion
@@ -955,7 +968,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnGetTargetedSentimentURL(TargetedSentimentData sentimentData, string data)
         {
             Test(sentimentData.status == "OK");
-            if(sentimentData != null)
+            if (sentimentData != null)
             {
                 m_GetTargetedSentimentURLTested = true;
                 LogTargetedSentiment(sentimentData, data);
@@ -965,7 +978,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnGetTargetedSentimentHTML(TargetedSentimentData sentimentData, string data)
         {
             Test(sentimentData.status == "OK");
-            if(sentimentData != null)
+            if (sentimentData != null)
             {
                 m_GetTargetedSentimentHTMLTested = true;
                 LogTargetedSentiment(sentimentData, data);
@@ -975,7 +988,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnGetTargetedSentimentText(TargetedSentimentData sentimentData, string data)
         {
             Test(sentimentData.status == "OK");
-            if(sentimentData != null)
+            if (sentimentData != null)
             {
                 m_GetTargetedSentimentTextTested = true;
                 LogTargetedSentiment(sentimentData, data);
@@ -984,25 +997,25 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void LogTargetedSentiment(TargetedSentimentData sentimentData, string data)
         {
-            Log.Debug("TestAlchemyLanguage", "data: {0}", data);
-            if(sentimentData != null)
+            Log.Debug("TestAlchemyAPI", "data: {0}", data);
+            if (sentimentData != null)
             {
-                Log.Debug("TestAlchemyLanguage", "status: {0}", sentimentData.status);
-                Log.Debug("TestAlchemyLanguage", "url: {0}", sentimentData.url);
-                Log.Debug("TestAlchemyLanguage", "language: {0}", sentimentData.language);
-                Log.Debug("TestAlchemyLanguage", "text: {0}", sentimentData.text);
-                if(sentimentData.results == null)
-                    Log.Debug("TestAlchemyLanguage", "No sentiment found!");
+                Log.Debug("TestAlchemyAPI", "status: {0}", sentimentData.status);
+                Log.Debug("TestAlchemyAPI", "url: {0}", sentimentData.url);
+                Log.Debug("TestAlchemyAPI", "language: {0}", sentimentData.language);
+                Log.Debug("TestAlchemyAPI", "text: {0}", sentimentData.text);
+                if (sentimentData.results == null)
+                    Log.Debug("TestAlchemyAPI", "No sentiment found!");
                 else
-                    if(sentimentData.results == null || sentimentData.results.Length == 0)
-                        Log.Warning("TestAlchemyLanguage", "No sentiment results!");
-                    else
-                        foreach(TargetedSentiment result in sentimentData.results)
-                            Log.Debug("TestAlchemyLanguage", "text: {0}, sentiment: {1}, score: {2}", result.text, result.sentiment.score, result.sentiment.type);
+                    if (sentimentData.results == null || sentimentData.results.Length == 0)
+                    Log.Warning("TestAlchemyAPI", "No sentiment results!");
+                else
+                    foreach (TargetedSentiment result in sentimentData.results)
+                        Log.Debug("TestAlchemyAPI", "text: {0}, sentiment: {1}, score: {2}", result.text, result.sentiment.score, result.sentiment.type);
             }
             else
             {
-                Log.Debug("TestAlchemyLanguage", "Failed to find Relations!");
+                Log.Debug("TestAlchemyAPI", "Failed to find Relations!");
             }
         }
         #endregion
@@ -1011,7 +1024,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnGetRankedTaxonomyURL(TaxonomyData taxonomyData, string data)
         {
             Test(taxonomyData.status == "OK");
-            if(taxonomyData != null)
+            if (taxonomyData != null)
             {
                 m_GetRankedTaxonomyURLTested = true;
                 LogRankedTaxonomy(taxonomyData, data);
@@ -1021,7 +1034,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnGetRankedTaxonomyHTML(TaxonomyData taxonomyData, string data)
         {
             Test(taxonomyData.status == "OK");
-            if(taxonomyData != null)
+            if (taxonomyData != null)
             {
                 m_GetRankedTaxonomyHTMLTested = true;
                 LogRankedTaxonomy(taxonomyData, data);
@@ -1031,7 +1044,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnGetRankedTaxonomyText(TaxonomyData taxonomyData, string data)
         {
             Test(taxonomyData.status == "OK");
-            if(taxonomyData != null)
+            if (taxonomyData != null)
             {
                 m_GetRankedTaxonomyTextTested = true;
                 LogRankedTaxonomy(taxonomyData, data);
@@ -1040,25 +1053,25 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void LogRankedTaxonomy(TaxonomyData taxonomyData, string data)
         {
-            Log.Debug("TestAlchemyLanguage", "data: {0}", data);
-            if(taxonomyData != null)
+            Log.Debug("TestAlchemyAPI", "data: {0}", data);
+            if (taxonomyData != null)
             {
-                Log.Debug("TestAlchemyLanguage", "status: {0}", taxonomyData.status);
-                Log.Debug("TestAlchemyLanguage", "url: {0}", taxonomyData.url);
-                Log.Debug("TestAlchemyLanguage", "language: {0}", taxonomyData.language);
-                Log.Debug("TestAlchemyLanguage", "text: {0}", taxonomyData.text);
-                if(taxonomyData.taxonomy == null)
-                    Log.Debug("TestAlchemyLanguage", "No taxonomy found!");
+                Log.Debug("TestAlchemyAPI", "status: {0}", taxonomyData.status);
+                Log.Debug("TestAlchemyAPI", "url: {0}", taxonomyData.url);
+                Log.Debug("TestAlchemyAPI", "language: {0}", taxonomyData.language);
+                Log.Debug("TestAlchemyAPI", "text: {0}", taxonomyData.text);
+                if (taxonomyData.taxonomy == null)
+                    Log.Debug("TestAlchemyAPI", "No taxonomy found!");
                 else
-                    if(taxonomyData.taxonomy == null || taxonomyData.taxonomy.Length == 0)
-                        Log.Warning("TestAlchemyLanguage", "No taxonomy results!");
-                    else
-                        foreach(Taxonomy taxonomy in taxonomyData.taxonomy)
-                            Log.Debug("TestAlchemyLanguage", "label: {0}, score: {1}", taxonomy.label, taxonomy.score);
+                    if (taxonomyData.taxonomy == null || taxonomyData.taxonomy.Length == 0)
+                    Log.Warning("TestAlchemyAPI", "No taxonomy results!");
+                else
+                    foreach (Taxonomy taxonomy in taxonomyData.taxonomy)
+                        Log.Debug("TestAlchemyAPI", "label: {0}, score: {1}", taxonomy.label, taxonomy.score);
             }
             else
             {
-                Log.Debug("TestAlchemyLanguage", "Failed to find Relations!");
+                Log.Debug("TestAlchemyAPI", "Failed to find Relations!");
             }
         }
         #endregion
@@ -1067,7 +1080,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnGetTextURL(TextData textData, string data)
         {
             Test(textData.status == "OK");
-            if(textData != null)
+            if (textData != null)
             {
                 m_GetTextURLTested = true;
                 LogTextData(textData, data);
@@ -1077,7 +1090,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnGetTextHTML(TextData textData, string data)
         {
             Test(textData.status == "OK");
-            if(textData != null)
+            if (textData != null)
             {
                 m_GetTextHTMLTested = true;
                 LogTextData(textData, data);
@@ -1086,16 +1099,16 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void LogTextData(TextData textData, string data)
         {
-            Log.Debug("TestAlchemyLanguage", "data: {0}", data);
-            if(textData != null)
+            Log.Debug("TestAlchemyAPI", "data: {0}", data);
+            if (textData != null)
             {
-                Log.Debug("TestAlchemyLanguage", "status: {0}", textData.status);
-                Log.Debug("TestAlchemyLanguage", "url: {0}", textData.url);
-                Log.Debug("TestAlchemyLanguage", "text: {0}", textData.text);
+                Log.Debug("TestAlchemyAPI", "status: {0}", textData.status);
+                Log.Debug("TestAlchemyAPI", "url: {0}", textData.url);
+                Log.Debug("TestAlchemyAPI", "text: {0}", textData.text);
             }
             else
             {
-                Log.Debug("TestAlchemyLanguage", "Failed to find text!");
+                Log.Debug("TestAlchemyAPI", "Failed to find text!");
             }
 
         }
@@ -1105,7 +1118,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnGetRawTextURL(TextData textData, string data)
         {
             Test(textData.status == "OK");
-            if(textData != null)
+            if (textData != null)
             {
                 m_GetRawTextURLTested = true;
                 LogRawTextData(textData, data);
@@ -1115,7 +1128,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnGetRawTextHTML(TextData textData, string data)
         {
             Test(textData.status == "OK");
-            if(textData != null)
+            if (textData != null)
             {
                 m_GetRawTextHTMLTested = true;
                 LogRawTextData(textData, data);
@@ -1124,16 +1137,16 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void LogRawTextData(TextData textData, string data)
         {
-            Log.Debug("TestAlchemyLanguage", "data: {0}", data);
-            if(textData != null)
+            Log.Debug("TestAlchemyAPI", "data: {0}", data);
+            if (textData != null)
             {
-                Log.Debug("TestAlchemyLanguage", "status: {0}", textData.status);
-                Log.Debug("TestAlchemyLanguage", "url: {0}", textData.url);
-                Log.Debug("TestAlchemyLanguage", "text: {0}", textData.text);
+                Log.Debug("TestAlchemyAPI", "status: {0}", textData.status);
+                Log.Debug("TestAlchemyAPI", "url: {0}", textData.url);
+                Log.Debug("TestAlchemyAPI", "text: {0}", textData.text);
             }
             else
             {
-                Log.Debug("TestAlchemyLanguage", "Failed to find text!");
+                Log.Debug("TestAlchemyAPI", "Failed to find text!");
             }
 
         }
@@ -1143,7 +1156,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnGetTitleURL(Title titleData, string data)
         {
             Test(titleData.status == "OK");
-            if(titleData != null)
+            if (titleData != null)
             {
                 m_GetTitleURLTested = true;
                 LogTitleData(titleData, data);
@@ -1153,7 +1166,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnGetTitleHTML(Title titleData, string data)
         {
             Test(titleData.status == "OK");
-            if(titleData != null)
+            if (titleData != null)
             {
                 m_GetTitleHTMLTested = true;
                 LogTitleData(titleData, data);
@@ -1162,16 +1175,16 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void LogTitleData(Title titleData, string data)
         {
-            Log.Debug("TestAlchemyLanguage", "data: {0}", data);
-            if(titleData != null)
+            Log.Debug("TestAlchemyAPI", "data: {0}", data);
+            if (titleData != null)
             {
-                Log.Debug("TestAlchemyLanguage", "status: {0}", titleData.status);
-                Log.Debug("TestAlchemyLanguage", "url: {0}", titleData.url);
-                Log.Debug("TestAlchemyLanguage", "text: {0}", titleData.title);
+                Log.Debug("TestAlchemyAPI", "status: {0}", titleData.status);
+                Log.Debug("TestAlchemyAPI", "url: {0}", titleData.url);
+                Log.Debug("TestAlchemyAPI", "text: {0}", titleData.title);
             }
             else
             {
-                Log.Debug("TestAlchemyLanguage", "Failed to find title!");
+                Log.Debug("TestAlchemyAPI", "Failed to find title!");
             }
 
         }
@@ -1181,7 +1194,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnGetCombinedDataURL(CombinedCallData combinedData, string data)
         {
             Test(combinedData.status == "OK");
-            if(combinedData != null)
+            if (combinedData != null)
             {
                 m_GetCombinedDataURLTested = true;
                 LogCombinedData(combinedData, data);
@@ -1191,7 +1204,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnGetCombinedDataHTML(CombinedCallData combinedData, string data)
         {
             Test(combinedData.status == "OK");
-            if(combinedData != null)
+            if (combinedData != null)
             {
                 m_GetCombinedDataHTMLTested = true;
                 LogCombinedData(combinedData, data);
@@ -1201,7 +1214,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnGetCombinedDataText(CombinedCallData combinedData, string data)
         {
             Test(combinedData.status == "OK");
-            if(combinedData != null)
+            if (combinedData != null)
             {
                 m_GetCombinedDataTextTested = true;
                 LogCombinedData(combinedData, data);
@@ -1210,67 +1223,92 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void LogCombinedData(CombinedCallData combinedData, string data)
         {
-            Log.Debug("TestAlchemyLanguage", "data: {0}", data);
-            if(combinedData != null)
+            Log.Debug("TestAlchemyAPI", "data: {0}", data);
+            if (combinedData != null)
             {
-                Log.Debug("TestAlchemyLanguage", "status: {0}", combinedData.status);
-                Log.Debug("TestAlchemyLanguage", "url: {0}", combinedData.url);
-                Log.Debug("TestAlchemyLanguage", "language: {0}", combinedData.language);
-                Log.Debug("TestAlchemyLanguage", "text: {0}", combinedData.text);
-                Log.Debug("TestAlchemyLanguage", "image: {0}", combinedData.image);
+                Log.Debug("TestAlchemyAPI", "status: {0}", combinedData.status);
+                Log.Debug("TestAlchemyAPI", "url: {0}", combinedData.url);
+                Log.Debug("TestAlchemyAPI", "language: {0}", combinedData.language);
+                Log.Debug("TestAlchemyAPI", "text: {0}", combinedData.text);
+                Log.Debug("TestAlchemyAPI", "image: {0}", combinedData.image);
 
-                if(combinedData.imageKeywords != null && combinedData.imageKeywords.Length > 0)
-                    foreach(ImageKeyword imageKeyword in combinedData.imageKeywords)
-                        Log.Debug("TestAlchemyLanguage", "ImageKeyword: {0}, Score: {1}", imageKeyword.text, imageKeyword.score);
+                if (combinedData.imageKeywords != null && combinedData.imageKeywords.Length > 0)
+                    foreach (ImageKeyword imageKeyword in combinedData.imageKeywords)
+                        Log.Debug("TestAlchemyAPI", "ImageKeyword: {0}, Score: {1}", imageKeyword.text, imageKeyword.score);
 
-                if(combinedData.publicationDate != null)
-                    Log.Debug("TestAlchemyLanguage", "publicationDate: {0}, Score: {1}", combinedData.publicationDate.date, combinedData.publicationDate.confident);
+                if (combinedData.publicationDate != null)
+                    Log.Debug("TestAlchemyAPI", "publicationDate: {0}, Score: {1}", combinedData.publicationDate.date, combinedData.publicationDate.confident);
 
-                if(combinedData.authors != null && combinedData.authors.names.Length > 0)
-                    foreach(string authors in combinedData.authors.names)
-                        Log.Debug("TestAlchemyLanguage", "Authors: {0}", authors);
+                if (combinedData.authors != null && combinedData.authors.names.Length > 0)
+                    foreach (string authors in combinedData.authors.names)
+                        Log.Debug("TestAlchemyAPI", "Authors: {0}", authors);
 
-                if(combinedData.docSentiment != null)
-                    Log.Debug("TestAlchemyLanguage", "DocSentiment: {0}, Score: {1}, Mixed: {2}", combinedData.docSentiment.type, combinedData.docSentiment.score, combinedData.docSentiment.mixed);
+                if (combinedData.docSentiment != null)
+                    Log.Debug("TestAlchemyAPI", "DocSentiment: {0}, Score: {1}, Mixed: {2}", combinedData.docSentiment.type, combinedData.docSentiment.score, combinedData.docSentiment.mixed);
 
-                if(combinedData.feeds != null && combinedData.feeds.Length > 0)
-                    foreach(Feed feed in combinedData.feeds)
-                        Log.Debug("TestAlchemyLanguage", "Feeds: {0}", feed.feed);
+                if (combinedData.feeds != null && combinedData.feeds.Length > 0)
+                    foreach (Feed feed in combinedData.feeds)
+                        Log.Debug("TestAlchemyAPI", "Feeds: {0}", feed.feed);
 
-                if(combinedData.keywords != null && combinedData.keywords.Length > 0)
-                    foreach(Keyword keyword in combinedData.keywords)
-                        Log.Debug("TestAlchemyLanguage", "Keyword: {0}, relevance: {1}", keyword.text, keyword.relevance);
+                if (combinedData.keywords != null && combinedData.keywords.Length > 0)
+                    foreach (Keyword keyword in combinedData.keywords)
+                        Log.Debug("TestAlchemyAPI", "Keyword: {0}, relevance: {1}", keyword.text, keyword.relevance);
 
-                if(combinedData.concepts != null && combinedData.concepts.Length > 0)
-                    foreach(Concept concept in combinedData.concepts)
-                        Log.Debug("TestAlchemyLanguage", "Concept: {0}, Relevance: {1}", concept.text, concept.relevance);
+                if (combinedData.concepts != null && combinedData.concepts.Length > 0)
+                    foreach (Concept concept in combinedData.concepts)
+                        Log.Debug("TestAlchemyAPI", "Concept: {0}, Relevance: {1}", concept.text, concept.relevance);
 
-                if(combinedData.entities != null && combinedData.entities.Length > 0)
-                    foreach(Entity entity in combinedData.entities)
-                        Log.Debug("TestAlchemyLanguage", "Entity: {0}, Type: {1}, Relevance: {2}", entity.text, entity.type, entity.relevance);
+                if (combinedData.entities != null && combinedData.entities.Length > 0)
+                    foreach (Entity entity in combinedData.entities)
+                        Log.Debug("TestAlchemyAPI", "Entity: {0}, Type: {1}, Relevance: {2}", entity.text, entity.type, entity.relevance);
 
-                if(combinedData.relations != null && combinedData.relations.Length > 0)
-                    foreach(Relation relation in combinedData.relations)
-                        Log.Debug("TestAlchemyLanguage", "Relations: {0}", relation.subject.text);
+                if (combinedData.relations != null && combinedData.relations.Length > 0)
+                    foreach (Relation relation in combinedData.relations)
+                        Log.Debug("TestAlchemyAPI", "Relations: {0}", relation.subject.text);
 
-                if(combinedData.taxonomy != null && combinedData.taxonomy.Length > 0)
-                    foreach(Taxonomy taxonomy in combinedData.taxonomy)
-                        Log.Debug("TestAlchemyLanguage", "Taxonomy: {0}, Score: {1}, Confident: {2}" ,taxonomy.label, taxonomy.score, taxonomy.confident);
+                if (combinedData.taxonomy != null && combinedData.taxonomy.Length > 0)
+                    foreach (Taxonomy taxonomy in combinedData.taxonomy)
+                        Log.Debug("TestAlchemyAPI", "Taxonomy: {0}, Score: {1}, Confident: {2}", taxonomy.label, taxonomy.score, taxonomy.confident);
 
-                if(combinedData.dates != null && combinedData.dates.Length > 0)
-                    foreach(Date date in combinedData.dates)
-                        Log.Debug("TestAlchemyLanguage", "Dates", date.text, date.date);
+                if (combinedData.dates != null && combinedData.dates.Length > 0)
+                    foreach (Date date in combinedData.dates)
+                        Log.Debug("TestAlchemyAPI", "Dates", date.text, date.date);
 
-                if(combinedData.docEmotions != null && combinedData.docEmotions.Length > 0)
-                    foreach(DocEmotions emotions in combinedData.docEmotions)
-                        Log.Debug("TestAlchemyLanguage", "Doc Emotions: anger: {0}, disgust: {1}, fear: {2}, joy: {3}, sadness: {4}", emotions.anger, emotions.disgust, emotions.fear, emotions.joy, emotions.sadness);
+                if (combinedData.docEmotions != null && combinedData.docEmotions.Length > 0)
+                    foreach (DocEmotions emotions in combinedData.docEmotions)
+                        Log.Debug("TestAlchemyAPI", "Doc Emotions: anger: {0}, disgust: {1}, fear: {2}, joy: {3}, sadness: {4}", emotions.anger, emotions.disgust, emotions.fear, emotions.joy, emotions.sadness);
             }
             else
             {
-                Log.Debug("TestAlchemyLanguage", "Failed to get combined data!");
+                Log.Debug("TestAlchemyAPI", "Failed to get combined data!");
             }
         }
         #endregion
+
+		#region GetNews
+		private void OnGetNews(NewsResponse newsData, string data)
+		{
+			Test(newsData.status == "OK");
+			if (newsData != null)
+			{
+				m_GetNewsTested = true;
+				LogNewsData(newsData, data);
+			}
+		}
+
+		private void LogNewsData(NewsResponse newsData, string data)
+		{
+			Log.Debug("TestAlchemyNews", "data: {0}", data);
+			if (newsData != null)
+			{
+				Log.Debug("TestAlchemyNews", "status: {0}", newsData.status);
+
+			}
+			else
+			{
+				Log.Debug("TestAlchemyNews", "Failed to get news data!");
+			}
+		}
+		#endregion
     }
 }
-  
