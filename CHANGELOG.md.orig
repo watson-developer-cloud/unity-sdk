@@ -1,7 +1,12 @@
 Change Log
 ==========
 ## Version 0.6.0
+<<<<<<< HEAD
 
+_2016-07-15_
+
+* New: Added `Retrieve and Rank` abstraction
+=======
 _2016-07-15_
 
 * New: Added `Document Conversion` abstraction
@@ -11,7 +16,7 @@ _2016-07-15_
 _2016-06-24_
 
 * New: Added `AlchemyData News` abstraction
-* New: Added `Retrieve and Rank` abstraction
+>>>>>>> develop
 
 ## Version 0.5.0
 
