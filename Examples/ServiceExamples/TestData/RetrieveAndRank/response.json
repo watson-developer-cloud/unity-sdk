@@ -1,0 +1,60 @@
+{
+	"query": " work on flow in channels at low reynolds numbers .",
+	"num_solr_results": 1000,
+	"solr_results": [{
+		"answerId": "941",
+		"score": 2.8800564,
+		"confidence": 0.0,
+		"title": "viscous compressible and incompressible flow in slender channels .",
+		"body": "viscous compressible and incompressible flow in slender channels .   an analytical study is made of viscous flow in slender channels .  similar solutions to the approximate equations of motion, valid for flow at moderate or high reynolds numbers in slender channels, are found for incompressible two-dimensional and axisymmetric flows and for compressible flows through two-dimensional channels with adiabatic walls .  a study of compressible flows in convergent-divergent channels yields results regarding the effect of viscosity on the location of the sonic line, on the pressure ratio at the geometric throat and on the discharge coefficient for such channels .",
+		"solrRank": 2,
+		"finalRank": 6,
+		"relevance": 3
+	}, {
+		"answerId": "270",
+		"score": 2.6158342,
+		"confidence": 0.0,
+		"title": "on combined free and forced convection laminar magnetohydrodynamic flow and heat transfer in channels with transverse magnetic field .",
+		"body": "on combined free and forced convection laminar magnetohydrodynamic flow and heat transfer in channels with transverse magnetic field .   combined free and forced convective heat transfer in vertical channels has been studied by many researchers .  due to the need for engineering design information there have been many papers concerning cases of fully developed flow with varying wall temperature .  forced flows in a channel of electrically conducting fluid with a transverse magnetic field have been studied and the large effects of a magnetic field on the flow pattern have been established .   flows of combined free and forced convection in electrically conducting fluids in vertical channels with a transverse magnetic field are expected to attract attention in future engineering applications, for example, in a magneto-hydrodynamic generator or in plasma studies .  however, except for a report by gershuni and zhukhovitskii (1) concerning a particular case, no general study has been published .   this paper is a general treatment of fully developed, free and forced convective, laminar, magneto-hydrodynamic flow in a vertical channel with a transverse magnetic field .  it includes combined free and forced convective flows in channels without a magnetic field reported by ostrach (2), tao (3), etc. as special cases .  hartmann flow (4) is included in the other limit .",
+		"solrRank": 3,
+		"finalRank": 2,
+		"relevance": 2
+	}, {
+		"answerId": "34",
+		"score": 2.5172596,
+		"confidence": 0.0,
+		"title": "constant-temperature magneto-gasdynamic channel flow .",
+		"body": "constant-temperature magneto-gasdynamic channel flow . in the course of investigating boundary-layer flow in continuous plasma accelerators with crossed electric and magnetic fields, it was found advantageous to have at hand simple closed-form solutions for the magneto-gasdynamic flow in the duct which could serve as free-stream conditions for the boundary layers .  nontrivial solutions of this sort are not available at present, and in fact, as in the work of resler and sears, the variation of conditions along the flow axis must be obtained through numerical integration .   consequently, some simple solutions of magneto-gasdynamic channel flow were sought, possessing sufficient algebraic simplicity to serve as free-stream boundary conditions for analytic investigations of the boundary layer in a physically reasonable accelerator . in particular, since the cooling of the accelerator tube is likely to be an important physical problem because of the high gas temperatures required to provide sufficient gaseous conductivity, channel flow with constant temperature appears interesting . some simple algebraic solutions for the case of a constant temperature plasma are developed in the following paragraphs .",
+		"solrRank": 4,
+		"finalRank": 8,
+		"relevance": 0
+	}],
+	"ranked_results": [{
+		"answerId": "1082",
+		"score": 1.0,
+		"confidence": 0.0,
+		"title": "the flow past pitot tube at low reynolds numbers, part 1-dash the numerical solution of the navier-stokes equations for steady viscous axisymmetric flow, part 2-dash the effects of viscosity and orifice size on a pitot tube at low reynolds numbers .",
+		"body": "the flow past pitot tube at low reynolds numbers, part 1-dash the numerical solution of the navier-stokes equations for steady viscous axisymmetric flow, part 2-dash the effects of viscosity and orifice size on a pitot tube at low reynolds numbers . in this report numerical methods used to solve the navier-stokes equations for steady viscous two-dimensional flow are extended to include the case of axial symmetry . the equations and their finite difference approximations are derived working in cylindrical polar co-ordinates with the stokes' stream function and the vorticity as variables . a new method of dealing with the boundary conditions is given . the effects of viscosity and orlfice size on a blunt-nosed pitot tube have been theoretically investigated up to a reynolds number of ten, where the reynolds number has been based on the radius of the tube . results are expressed in terms of a pressure coefficient where p is the pressure measured in the tube, p the density of the fluid, and p  and u the static pressure and velocity in an undisturbed flow at the position of the tube . the values of c for a blunt-nosed tube are found to be less than those for tubes with hemispheroidal heads, but always greater than unity in the range considered . the effect of the orifice size is to decrease c as the orifice size increases, this decrease is very small but increases  with the reynolds number . at a reynolds number of ten the decrease is at most five per cent of the value of c when there is no orifice . it is suggested that the decrease of c below unity found in some experimental investigations at a higher reynolds number could be due to the effects of orifice size .",
+		"solrRank": 5,
+		"finalRank": 2,
+		"relevance": 3
+	}, {
+		"answerId": "270",
+		"score": 0.6718964,
+		"confidence": 0.0,
+		"title": "on combined free and forced convection laminar magnetohydrodynamic flow and heat transfer in channels with transverse magnetic field .",
+		"body": "on combined free and forced convection laminar magnetohydrodynamic flow and heat transfer in channels with transverse magnetic field .   combined free and forced convective heat transfer in vertical channels has been studied by many researchers .  due to the need for engineering design information there have been many papers concerning cases of fully developed flow with varying wall temperature .  forced flows in a channel of electrically conducting fluid with a transverse magnetic field have been studied and the large effects of a magnetic field on the flow pattern have been established .   flows of combined free and forced convection in electrically conducting fluids in vertical channels with a transverse magnetic field are expected to attract attention in future engineering applications, for example, in a magneto-hydrodynamic generator or in plasma studies .  however, except for a report by gershuni and zhukhovitskii (1) concerning a particular case, no general study has been published .   this paper is a general treatment of fully developed, free and forced convective, laminar, magneto-hydrodynamic flow in a vertical channel with a transverse magnetic field .  it includes combined free and forced convective flows in channels without a magnetic field reported by ostrach (2), tao (3), etc. as special cases .  hartmann flow (4) is included in the other limit .",
+		"solrRank": 2,
+		"finalRank": 3,
+		"relevance": 2
+	}, {
+		"answerId": "1222",
+		"score": 0.6024447,
+		"confidence": 0.0,
+		"title": "axisymmetric magnetohydrodynamic channel flow .",
+		"body": "axisymmetric magnetohydrodynamic channel flow .   the axisymmetric subsonic and supersonic flow fields, and the skin friction and heat transfer of an electrically conducting compressible fluid flowing in a channel of constant circular area through a magnetic field are investigated when the magnetic reynolds number is small .  the inviscid-flow field for flow through a dipole field is solved by the method of characteristics in the supersonic case .  for the subsonic case, linearized equations are derived for small values of the magnetic interaction parameter .  numerical results are obtained by the relaxation method .   the inviscid-flow-field solutions are used as boundary conditions for the laminar boundary layer along the wall, in which axial pressure gradients form an important feature .  the exact continuum-flow equations are reduced by an order-of-magnitude analysis to the boundary-layer equations, which are solved numerically by an integral method using a fourth-degree velocity profile and a fifth-degree stagnation-enthalpy profile .   pressure, temperature, and heat-transfer measurements are made with a shock tube under supersonic-flow conditions closely approaching those used in the numerical computations . general agreement is found between the theoretical and the experimental results .",
+		"solrRank": 6,
+		"finalRank": 4,
+		"relevance": 0
+	}]
+}

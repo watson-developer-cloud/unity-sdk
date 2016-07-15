@@ -332,6 +332,8 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 11
+<<<<<<< HEAD
+=======
 --- !u!1 &859102722
 GameObject:
   m_ObjectHideFlags: 0
@@ -412,6 +414,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 12
+>>>>>>> develop
 --- !u!1 &1073418922
 GameObject:
   m_ObjectHideFlags: 0
