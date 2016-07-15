@@ -50,6 +50,8 @@ LICENSE.meta
 CHANGELOG.md.meta
 README.md.meta
 Travis.meta
+exclude-filter.txt
+exclude-filter.txt.meta
 /Travis/UnityTestProject/Assets/StreamingAssets/Config.json
 /Travis/UnityTestProject/Assets/StreamingAssets/Config.json.meta
 /Travis/UnityTestProject/Assets/StreamingAssets/Config.json.enc.meta
