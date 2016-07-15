@@ -201,12 +201,15 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             m_RetrieveAndRank.DeleteClusterConfig(OnDeleteClusterConfig, IsFullTest ? m_CreatedClusterID : m_ExampleClusterID, m_ConfigToCreateName);
             while (!m_DeleteClusterConfigTested)
                 yield return null;
-            
+
+            yield return new WaitForSeconds(10f);
+
             //  Delete cluster
             Log.Debug("TestRetrieveAndRank", "*** Attempting to delete cluster {0}!", m_CreatedClusterID);
             m_RetrieveAndRank.DeleteCluster(OnDeleteCluster, m_CreatedClusterID);
             while (!m_DeleteClusterTested)
                 yield return null;
+
             yield break;
         }
 
