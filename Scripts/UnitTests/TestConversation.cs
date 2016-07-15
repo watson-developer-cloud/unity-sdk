@@ -25,12 +25,14 @@ using IBM.Watson.DeveloperCloud.Logging;
 public class TestConversation : UnitTest
 {
 	private Conversation m_Conversation = new Conversation();
-	private string m_WorkspaceID = "car_demo_1";
+	private string m_WorkspaceID;
 	private string m_Input = "Can you unlock the door?";
 	private bool m_MessageTested = false;
 
 	public override IEnumerator RunTest()
 	{
+        m_WorkspaceID = Config.Instance.GetVariableValue("ConversationV1_ID");
+
 		if (Config.Instance.FindCredentials(m_Conversation.GetServiceID()) == null)
 			yield break;
 
@@ -42,12 +44,12 @@ public class TestConversation : UnitTest
 		}
 	}
 
-	private void OnMessage(DataModels.MessageResponse resp)
+	private void OnMessage(MessageResponse resp)
 	{
 		Test(resp != null);
 		if(resp != null)
 		{
-			foreach(DataModels.MessageIntent mi in resp.intents)
+			foreach(MessageIntent mi in resp.intents)
 				Log.Debug("TestConversation", "intent: " + mi.intent + ", confidence: " + mi.confidence);
 			Log.Debug("TestConversation", "response: " + resp.output.text);
 		}

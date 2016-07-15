@@ -17,20 +17,20 @@
 
 using UnityEngine;
 using System.Collections;
-using IBM.Watson.DeveloperCloud.Services.Conversation.v1;
-using IBM.Watson.DeveloperCloud.Utilities;
+using IBM.Watson.DeveloperCloud.Services.ConversationExperimental.v1;
 using IBM.Watson.DeveloperCloud.Logging;
+using IBM.Watson.DeveloperCloud.Utilities;
 
-public class ExampleConversation : MonoBehaviour
+public class ExampleConversationExperimental : MonoBehaviour
 {
-	private Conversation m_Conversation = new Conversation();
+	private ConversationExperimental m_Conversation = new ConversationExperimental();
     private string m_WorkspaceID;
 	private string m_Input = "Can you unlock the door?";
 
 	void Start () {
         LogSystem.InstallDefaultReactors();
-        m_WorkspaceID = Config.Instance.GetVariableValue("ConversationV1_WorkspaceID");
-        Debug.Log("User: " + m_Input);
+        m_WorkspaceID = Config.Instance.GetVariableValue("ConversationExperimentalV1_ID");
+		Debug.Log("User: " + m_Input);
 
         m_Conversation.Message(m_WorkspaceID, m_Input, OnMessage);
 	}
