@@ -64,12 +64,18 @@ namespace IBM.Watson.DeveloperCloud.Editor
                 URL ="https://console.ng.bluemix.net/catalog/services/tradeoff-analytics/", ServiceID="TradeoffAnalyticsV1" },
             new ServiceSetup() { ServiceName = "Personality Insights", ServiceAPI = "personality-insights/api",
                 URL ="https://console.ng.bluemix.net/catalog/services/personality-insights/", ServiceID="PersonalityInsightsV2" },
-            new ServiceSetup() { ServiceName = "Conversation", ServiceAPI = "conversation-experimental/api",
+            //new ServiceSetup() { ServiceName = "Conversation (Experimental)", ServiceAPI = "conversation-experimental/api",
+            //    URL ="https://console.ng.bluemix.net/catalog/services/conversation/", ServiceID="ConversationExperimentalV1" },
+            new ServiceSetup() { ServiceName = "Conversation", ServiceAPI = "conversation/api",
                 URL ="https://console.ng.bluemix.net/catalog/services/conversation/", ServiceID="ConversationV1" },
-            new ServiceSetup() { ServiceName = "Alchemy Language", ServiceAPI = "gateway-a.watsonplatform.net/calls",
-                URL ="https://console.ng.bluemix.net/catalog/services/alchemyapi/", ServiceID="AlchemyLanguageV1" },
+            new ServiceSetup() { ServiceName = "RetrieveAndRank", ServiceAPI = "retrieve-and-rank/api",
+                URL ="https://console.ng.bluemix.net/catalog/services/retrieve-and-rank/", ServiceID="RetrieveAndRankV1" },
+            new ServiceSetup() { ServiceName = "Alchemy API", ServiceAPI = "gateway-a.watsonplatform.net/calls",
+                URL ="https://console.ng.bluemix.net/catalog/services/alchemyapi/", ServiceID="AlchemyAPIV1" },
             new ServiceSetup() { ServiceName = "Visual Recognition", ServiceAPI = "visual-recognition/api",
-                URL ="https://console.ng.bluemix.net/catalog/services/visual-recognition/", ServiceID="VisualRecognitionV3" }
+                URL ="https://console.ng.bluemix.net/catalog/services/visual-recognition/", ServiceID="VisualRecognitionV3" },
+            new ServiceSetup() { ServiceName = "Document Conversion", ServiceAPI = "document-conversion/api",
+                URL ="https://console.ng.bluemix.net/catalog/services/document-conversion/", ServiceID="DocumentConversionV1" }
         };
 
         private const string TITLE = "Watson Unity SDK";
@@ -96,7 +102,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
                 }
             }
         }
-                                                        
+
         private void OnEnable()
         {
 #if UNITY_5
@@ -245,7 +251,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
                         GUILayout.Label( m_StatusUnknown, GUILayout.Width( 20 ) );
 
                     GUIStyle labelStyle = new GUIStyle(GUI.skin.label);
-                    labelStyle.normal.textColor = bValid ? Color.green : Color.grey; 
+                    labelStyle.normal.textColor = bValid ? Color.green : Color.grey;
 
                     GUILayout.Label( string.Format( "Service {0} {1}.", setup.ServiceName, bValid ? "CONFIGURED" : "NOT CONFIGURED" ), labelStyle );
 
@@ -259,7 +265,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
 
                 GUILayout.Label( "PASTE CREDENTIALS BELOW:" );
                 m_PastedCredentials = EditorGUILayout.TextArea( m_PastedCredentials );
-                    
+
                 GUI.SetNextControlName("Apply");
                 if ( GUILayout.Button( "Apply Credentials" ) )
                 {
@@ -281,7 +287,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
                                     {
                                         bAdd = false;
 
-                                        if ( EditorUtility.DisplayDialog( "Confirm", 
+                                        if ( EditorUtility.DisplayDialog( "Confirm",
                                             string.Format("Replace existing service credentials for {0}?", setup.ServiceName),
                                             YES, NO ) )
                                         {
@@ -301,7 +307,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
                     if ( bParsed )
                     {
                         m_CheckServicesNow = true;
-                        
+
                         EditorUtility.DisplayDialog( "Complete", "Credentials applied.", OK );
                         m_PastedCredentials = "\n\n\n\n\n\n\n";
                         GUI.FocusControl("Apply");
@@ -320,7 +326,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
                     m_WizardMode = false;
                     PlayerPrefs.SetInt( "WizardMode", 0 );
                 }
-            } 
+            }
             else
             {
                 cfg.ClassifierDirectory = EditorGUILayout.TextField("Classifier Directory", cfg.ClassifierDirectory );

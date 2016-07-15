@@ -16,7 +16,7 @@
 */
 using FullSerializer;
 
-namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
+namespace IBM.Watson.DeveloperCloud.Services.ConversationExperimental.v1
 {
 	#region Workspaces
 	/// <summary>
@@ -392,12 +392,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 		/// <value><c>true</c> if m return; otherwise, <c>false</c>.</value>
 		public bool m_return { get; set; }
 	}
-#endregion
+    #endregion
 
     #region Version
     public class Version
     {
-        public const string VERSION = "2016-07-11";
+        public const string VERSION = "2016-05-19";
     }
     #endregion
 }

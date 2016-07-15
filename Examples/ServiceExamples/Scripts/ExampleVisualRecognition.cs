@@ -21,77 +21,78 @@ using IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
 
-public class ExampleVisualRecognition : MonoBehaviour {
+public class ExampleVisualRecognition : MonoBehaviour
+{
     private VisualRecognition m_VisualRecognition = new VisualRecognition();
     private string m_classifierName = "Apples_OptionalParams";
     private string m_classifierID = "ApplesClassifierNameWithSpaces_73100404";
     private string m_classifierToDelete = "unitytestclassifier2b_37849361";
     private string m_imageURL = "https://upload.wikimedia.org/wikipedia/commons/e/e9/Official_portrait_of_Barack_Obama.jpg";
     private string m_imageTextURL = "http://i.stack.imgur.com/ZS6nH.png";
-	
-	void Start ()
+
+    void Start()
     {
         LogSystem.InstallDefaultReactors();
 
-//          Get all classifiers
-        if(!m_VisualRecognition.GetClassifiers(OnGetClassifiers))
+        //          Get all classifiers
+        if (!m_VisualRecognition.GetClassifiers(OnGetClassifiers))
             Log.Debug("ExampleVisualRecognition", "Getting classifiers failed!");
-//
-//          Find classifier by name
+        //
+        //          Find classifier by name
         m_VisualRecognition.FindClassifier(m_classifierName, OnFindClassifier);
 
-//          Find classifier by ID
-        if(!m_VisualRecognition.GetClassifier(m_classifierID, OnGetClassifier))
+        //          Find classifier by ID
+        if (!m_VisualRecognition.GetClassifier(m_classifierID, OnGetClassifier))
             Log.Debug("ExampleVisualRecognition", "Getting classifier failed!");
 
-//          Delete classifier by ID
-        if(!m_VisualRecognition.DeleteClassifier(m_classifierToDelete, OnDeleteClassifier))
+        //          Delete classifier by ID
+        if (!m_VisualRecognition.DeleteClassifier(m_classifierToDelete, OnDeleteClassifier))
             Log.Debug("ExampleVisualRecognition", "Deleting classifier failed!");
 
-//          Train classifier
+        //          Train classifier
         string m_positiveExamplesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/giraffe_positive_examples.zip";
         string m_negativeExamplesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/negative_examples.zip";
-        if(!m_VisualRecognition.TrainClassifier("unity-test-classifier5", "giraffe", m_positiveExamplesPath, m_negativeExamplesPath, OnTrainClassifier))
+        if (!m_VisualRecognition.TrainClassifier("unity-test-classifier5", "giraffe", m_positiveExamplesPath, m_negativeExamplesPath, OnTrainClassifier))
             Log.Debug("ExampleVisualRecognition", "Train classifier failed!");
 
-//          Classify get
-        if(!m_VisualRecognition.Classify(m_imageURL, OnClassify))
+        //          Classify get
+        if (!m_VisualRecognition.Classify(m_imageURL, OnClassify))
             Log.Debug("ExampleVisualRecognition", "Classify image failed!");
 
-//          Classify post image
+        //          Classify post image
         string m_imagesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/obama.jpg";
-        string[] m_owners = {"IBM", "me"};
-        string[] m_classifierIDs = {"default"};
-        if(!m_VisualRecognition.Classify(OnClassify, m_imagesPath, m_owners, m_classifierIDs, 0.5f))
+        string[] m_owners = { "IBM", "me" };
+        string[] m_classifierIDs = { "default" };
+        if (!m_VisualRecognition.Classify(OnClassify, m_imagesPath, m_owners, m_classifierIDs, 0.5f))
             Log.Debug("ExampleVisualRecognition", "Classify image failed!");
 
 
-//          Detect faces get
-        if(!m_VisualRecognition.DetectFaces(m_imageURL, OnDetectFaces))
+        //          Detect faces get
+        if (!m_VisualRecognition.DetectFaces(m_imageURL, OnDetectFaces))
             Log.Debug("ExampleVisualRecogntiion", "Detect faces failed!");
 
-//          Detect faces post image
+        //          Detect faces post image
         string m_faceExamplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/obama.jpg";
-        if(!m_VisualRecognition.DetectFaces(OnDetectFaces, m_faceExamplePath))
+        if (!m_VisualRecognition.DetectFaces(OnDetectFaces, m_faceExamplePath))
             Log.Debug("ExampleVisualRecognition", "Detect faces failed!");
 
 
 
-//          Recognize text get
-        if(!m_VisualRecognition.RecognizeText(m_imageTextURL, OnRecognizeText))
+        //          Recognize text get
+        if (!m_VisualRecognition.RecognizeText(m_imageTextURL, OnRecognizeText))
             Log.Debug("ExampleVisualRecognition", "Recognize text failed!");
 
-//          Recognize text post image
+        //          Recognize text post image
         string m_textExamplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/from_platos_apology.png";
-        if(!m_VisualRecognition.RecognizeText(OnRecognizeText, m_textExamplePath))
+        if (!m_VisualRecognition.RecognizeText(OnRecognizeText, m_textExamplePath))
             Log.Debug("ExampleVisualRecognition", "Recognize text failed!");
-	}
+    }
 
-    private void OnGetClassifiers (GetClassifiersTopLevelBrief classifiers)
+    private void OnGetClassifiers(GetClassifiersTopLevelBrief classifiers)
     {
-        if(classifiers != null && classifiers.classifiers.Length > 0)
+        if (classifiers != null && classifiers.classifiers.Length > 0)
         {
-            foreach(GetClassifiersPerClassifierBrief classifier in classifiers.classifiers)
+            foreach (GetClassifiersPerClassifierBrief classifier in classifiers.classifiers)
             {
                 Log.Debug("ExampleVisualRecognition", "Classifier: " + classifier.name + ", " + classifier.classifier_id);
             }
@@ -104,7 +105,7 @@ public class ExampleVisualRecognition : MonoBehaviour {
 
     private void OnFindClassifier(GetClassifiersPerClassifierVerbose classifier)
     {
-        if(classifier != null)
+        if (classifier != null)
         {
             Log.Debug("ExampleVisualRecognition", "Classifier " + m_classifierName + " found! ClassifierID: " + classifier.classifier_id);
         }
@@ -116,7 +117,7 @@ public class ExampleVisualRecognition : MonoBehaviour {
 
     private void OnGetClassifier(GetClassifiersPerClassifierVerbose classifier)
     {
-        if(classifier != null)
+        if (classifier != null)
         {
             Log.Debug("ExampleVisualRecognition", "Classifier " + m_classifierID + " found! Classifier name: " + classifier.name);
         }
@@ -128,7 +129,7 @@ public class ExampleVisualRecognition : MonoBehaviour {
 
     private void OnDeleteClassifier(bool success)
     {
-        if(success)
+        if (success)
         {
             Log.Debug("ExampleVisualRecognition", "Deleted classifier " + m_classifierToDelete);
         }
@@ -137,10 +138,10 @@ public class ExampleVisualRecognition : MonoBehaviour {
             Log.Debug("ExampleVisualRecognition", "Failed to delete classifier by ID!");
         }
     }
-    
+
     private void OnTrainClassifier(GetClassifiersPerClassifierVerbose classifier)
     {
-        if(classifier != null)
+        if (classifier != null)
         {
             Log.Debug("ExampleVisualRecognition", "Classifier is training! " + classifier);
         }
@@ -152,16 +153,16 @@ public class ExampleVisualRecognition : MonoBehaviour {
 
     private void OnClassify(ClassifyTopLevelMultiple classify)
     {
-        if(classify != null)
+        if (classify != null)
         {
             Log.Debug("ExampleVisualRecognition", "images processed: " + classify.images_processed);
-            foreach(ClassifyTopLevelSingle image in classify.images)
+            foreach (ClassifyTopLevelSingle image in classify.images)
             {
                 Log.Debug("ExampleVisualRecognition", "\tsource_url: " + image.source_url + ", resolved_url: " + image.resolved_url);
-                foreach(ClassifyPerClassifier classifier in image.classifiers)
+                foreach (ClassifyPerClassifier classifier in image.classifiers)
                 {
                     Log.Debug("ExampleVisualRecognition", "\t\tclassifier_id: " + classifier.classifier_id + ", name: " + classifier.name);
-                    foreach(ClassResult classResult in classifier.classes)
+                    foreach (ClassResult classResult in classifier.classes)
                         Log.Debug("ExampleVisualRecognition", "\t\t\tclass: " + classResult.m_class + ", score: " + classResult.score + ", type_hierarchy: " + classResult.type_hierarchy);
                 }
             }
@@ -174,13 +175,13 @@ public class ExampleVisualRecognition : MonoBehaviour {
 
     private void OnDetectFaces(FacesTopLevelMultiple multipleImages)
     {
-        if(multipleImages != null)
+        if (multipleImages != null)
         {
             Log.Debug("ExampleVisualRecognition", "images processed: {0}", multipleImages.images_processed);
-            foreach(FacesTopLevelSingle faces in multipleImages.images)
+            foreach (FacesTopLevelSingle faces in multipleImages.images)
             {
                 Log.Debug("ExampleVisualRecognition", "\tsource_url: {0}, resolved_url: {1}", faces.source_url, faces.resolved_url);
-                foreach(OneFaceResult face in faces.faces)
+                foreach (OneFaceResult face in faces.faces)
                 {
                     Log.Debug("ExampleVisulaRecognition", "\t\tFace location: {0}, {1}, {2}, {3}", face.face_location.left, face.face_location.top, face.face_location.width, face.face_location.height);
                     Log.Debug("ExampleVisulaRecognition", "\t\tGender: {0}, Score: {1}", face.gender.gender, face.gender.score);
@@ -197,14 +198,14 @@ public class ExampleVisualRecognition : MonoBehaviour {
 
     private void OnRecognizeText(TextRecogTopLevelMultiple multipleImages)
     {
-        if(multipleImages != null)
+        if (multipleImages != null)
         {
             Log.Debug("ExampleVisualRecognition", "images processed: {0}", multipleImages.images_processed);
-            foreach(TextRecogTopLevelSingle texts in multipleImages.images)
+            foreach (TextRecogTopLevelSingle texts in multipleImages.images)
             {
                 Log.Debug("ExampleVisualRecognition", "\tsource_url: {0}, resolved_url: {1}", texts.source_url, texts.resolved_url);
                 Log.Debug("ExampleVisualRecognition", "\ttext: {0}", texts.text);
-                foreach(TextRecogOneWord text in texts.words)
+                foreach (TextRecogOneWord text in texts.words)
                 {
                     Log.Debug("ExampleVisulaRecognition", "\t\ttext location: {0}, {1}, {2}, {3}", text.location.left, text.location.top, text.location.width, text.location.height);
                     Log.Debug("ExampleVisulaRecognition", "\t\tLine number: {0}", text.line_number);
