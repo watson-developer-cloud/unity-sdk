@@ -14,7 +14,7 @@
     <Name>Documentation</Name>
     <!-- SHFB properties -->
     <FrameworkVersion>.NET Framework 3.5</FrameworkVersion>
-    <OutputPath>..\Assets\Watson\Editor\Help\</OutputPath>
+    <OutputPath>..\Scripts\Editor\Help\</OutputPath>
     <HtmlHelpName>WatsonUnitySDK</HtmlHelpName>
     <Language>en-US</Language>
     <ComponentPath>
@@ -25,7 +25,7 @@
     <KeepLogFile>False</KeepLogFile>
     <DisableCodeBlockComponent>False</DisableCodeBlockComponent>
     <CleanIntermediates>True</CleanIntermediates>
-    <HelpFileVersion>1.0.0.0</HelpFileVersion>
+    <HelpFileVersion>1.1.0.0</HelpFileVersion>
     <MaximumGroupParts>2</MaximumGroupParts>
     <NamespaceGrouping>False</NamespaceGrouping>
     <SyntaxFilters>C#</SyntaxFilters>
@@ -37,53 +37,48 @@
     <HelpTitle>Watson Unity SDK</HelpTitle>
     <ContentPlacement>AboveNamespaces</ContentPlacement>
     <DocumentationSources>
-      <DocumentationSource sourceFile="..\Temp\UnityVS_bin\Debug\Assembly-CSharp.dll" />
-      <DocumentationSource sourceFile="..\Temp\UnityVS_bin\Debug\Assembly-CSharp.xml" />
+      <DocumentationSource sourceFile="..\..\..\Temp\UnityVS_bin\Debug\Assembly-CSharp.dll" />
+      <DocumentationSource sourceFile="..\..\..\Temp\UnityVS_bin\Debug\Assembly-CSharp.xml" />
     </DocumentationSources>
     <NamespaceSummaries>
       <NamespaceSummaryItem name="DentedPixel.LTEditor" isDocumented="False" />
-<NamespaceSummaryItem name="FullSerializer" isDocumented="False" />
-<NamespaceSummaryItem name="FullSerializer.Internal" isDocumented="False" />
-<NamespaceSummaryItem name="FullSerializer.Internal.DirectConverters" isDocumented="False" />
-<NamespaceSummaryItem name="MiniJSON" isDocumented="False" />
-<NamespaceSummaryItem name="TouchScript.Examples" isDocumented="False" />
-<NamespaceSummaryItem name="TouchScript.Examples.CameraControl" isDocumented="False" />
-<NamespaceSummaryItem name="TouchScript.Examples.Checkers" isDocumented="False" />
-<NamespaceSummaryItem name="TouchScript.Examples.Colors" isDocumented="False" />
-<NamespaceSummaryItem name="TouchScript.Examples.Input" isDocumented="False" />
-<NamespaceSummaryItem name="TouchScript.Examples.Multiuser" isDocumented="False" />
-<NamespaceSummaryItem name="TouchScript.Examples.Photos" isDocumented="False" />
-<NamespaceSummaryItem name="TouchScript.Examples.Portal" isDocumented="False" />
-<NamespaceSummaryItem name="TouchScript.Examples.Tap" isDocumented="False" />
-<NamespaceSummaryItem name="TouchScript.Examples.UI" isDocumented="False" />
-<NamespaceSummaryItem name="UnityStandardAssets.ImageEffects" isDocumented="False" />
-<NamespaceSummaryItem name="UnityStandardAssets.Utility" isDocumented="False" />
-<NamespaceSummaryItem name="WebSocketSharp" isDocumented="False" />
-<NamespaceSummaryItem name="WebSocketSharp.Net" isDocumented="False" />
-<NamespaceSummaryItem name="WebSocketSharp.Net.WebSockets" isDocumented="False" />
-<NamespaceSummaryItem name="WebSocketSharp.Server" isDocumented="False" />
-<NamespaceSummaryItem name="(global)" isDocumented="False" />
-<NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Camera" isDocumented="True">Watson Unity SDK camera controls and touch interfaces.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Connection" isDocumented="True">Connection classes.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.DataModels" isDocumented="True">Data models for all services.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.DataTypes" isDocumented="True">Data types for Widget communications.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Debug" isDocumented="True">Debugging classes.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Logging" isDocumented="True">Logging subsystem.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.v1" isDocumented="True">Version 1.0 of all services.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Utilities" isDocumented="True">Various utility classes.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Widgets" isDocumented="True">Widget classes.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services" isDocumented="True">Watson service classes.</NamespaceSummaryItem></NamespaceSummaries>
+      <NamespaceSummaryItem name="FullSerializer" isDocumented="False" />
+      <NamespaceSummaryItem name="FullSerializer.Internal" isDocumented="False" />
+      <NamespaceSummaryItem name="FullSerializer.Internal.DirectConverters" isDocumented="False" />
+      <NamespaceSummaryItem name="MiniJSON" isDocumented="False" />
+      <NamespaceSummaryItem name="TouchScript.Examples" isDocumented="False" />
+      <NamespaceSummaryItem name="TouchScript.Examples.CameraControl" isDocumented="False" />
+      <NamespaceSummaryItem name="TouchScript.Examples.Checkers" isDocumented="False" />
+      <NamespaceSummaryItem name="TouchScript.Examples.Colors" isDocumented="False" />
+      <NamespaceSummaryItem name="TouchScript.Examples.Input" isDocumented="False" />
+      <NamespaceSummaryItem name="TouchScript.Examples.Multiuser" isDocumented="False" />
+      <NamespaceSummaryItem name="TouchScript.Examples.Photos" isDocumented="False" />
+      <NamespaceSummaryItem name="TouchScript.Examples.Portal" isDocumented="False" />
+      <NamespaceSummaryItem name="TouchScript.Examples.Tap" isDocumented="False" />
+      <NamespaceSummaryItem name="TouchScript.Examples.UI" isDocumented="False" />
+      <NamespaceSummaryItem name="UnityStandardAssets.ImageEffects" isDocumented="False" />
+      <NamespaceSummaryItem name="UnityStandardAssets.Utility" isDocumented="False" />
+      <NamespaceSummaryItem name="WebSocketSharp" isDocumented="False" />
+      <NamespaceSummaryItem name="WebSocketSharp.Net" isDocumented="False" />
+      <NamespaceSummaryItem name="WebSocketSharp.Net.WebSockets" isDocumented="False" />
+      <NamespaceSummaryItem name="WebSocketSharp.Server" isDocumented="False" />
+      <NamespaceSummaryItem name="(global)" isDocumented="False" />
+      <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Camera" isDocumented="True">Watson Unity SDK camera controls and touch interfaces.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Connection" isDocumented="True">Connection classes.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.DataModels" isDocumented="True">Data models for all services.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.DataTypes" isDocumented="True">Data types for Widget communications.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Debug" isDocumented="True">Debugging classes.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Logging" isDocumented="True">Logging subsystem.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.v1" isDocumented="True">Version 1.0 of all services.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Utilities" isDocumented="True">Various utility classes.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Widgets" isDocumented="True">Widget classes.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services" isDocumented="True">Watson service classes.</NamespaceSummaryItem>
+    </NamespaceSummaries>
     <ApiFilter>
       <Filter entryType="Namespace" fullName="" isExposed="False" />
       <Filter entryType="Namespace" fullName="FullSerializer" isExposed="False" />
       <Filter entryType="Namespace" fullName="FullSerializer.Internal" isExposed="False" />
       <Filter entryType="Namespace" fullName="FullSerializer.Internal.DirectConverters" isExposed="False" />
-      <Filter entryType="Namespace" fullName="FullSerializer.Speedup" isExposed="False" />
-      <Filter entryType="Namespace" fullName="IBM.Watson.DeveloperCloud.DataModels" isExposed="True">
-        <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.DataModels.SpeechResultList" filterName="SpeechResultList" isExposed="True">
-          <Filter entryType="Constructor" fullName="IBM.Watson.DeveloperCloud.DataModels.SpeechResultList.#ctor" filterName=".ctor" isExposed="False" />
-        </Filter>
-      </Filter>
       <Filter entryType="Namespace" fullName="IBM.Watson.DeveloperCloud.DataTypes" isExposed="True">
         <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.DataTypes.AudioData" filterName="AudioData" isExposed="True">
           <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.DataTypes.AudioData.Finalize" filterName="Finalize" isExposed="False" />
@@ -96,32 +91,9 @@
         </Filter>
       </Filter>
       <Filter entryType="Namespace" fullName="IBM.Watson.DeveloperCloud.Editor" isExposed="False" />
-      <Filter entryType="Namespace" fullName="IBM.Watson.DeveloperCloud.Services.v1" isExposed="True">
-        <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.Services.v1.Dialog" filterName="Dialog" isExposed="True">
-          <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Services.v1.Dialog.GetServiceID" filterName="GetServiceID" isExposed="False" />
-          <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Services.v1.Dialog.GetServiceStatus" filterName="GetServiceStatus" isExposed="False" />
-        </Filter>
-        <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.Services.v1.LanguageClassifier" filterName="LanguageClassifier" isExposed="True">
-          <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Services.v1.LanguageClassifier.GetServiceID" filterName="GetServiceID" isExposed="False" />
-          <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Services.v1.LanguageClassifier.GetServiceStatus" filterName="GetServiceStatus" isExposed="False" />
-        </Filter>
-        <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.Services.v1.SpeechToText" filterName="SpeechToText" isExposed="True">
-          <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Services.v1.SpeechToText.GetServiceID" filterName="GetServiceID" isExposed="False" />
-          <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Services.v1.SpeechToText.GetServiceStatus" filterName="GetServiceStatus" isExposed="False" />
-        </Filter>
-        <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.Services.v1.TextToSpeech" filterName="TextToSpeech" isExposed="True">
-          <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Services.v1.TextToSpeech.GetServiceID" filterName="GetServiceID" isExposed="False" />
-          <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Services.v1.TextToSpeech.GetServiceStatus" filterName="GetServiceStatus" isExposed="False" />
-        </Filter>
-        <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.Services.v1.Translate" filterName="Translate" isExposed="True">
-          <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Services.v1.Translate.GetServiceID" filterName="GetServiceID" isExposed="False" />
-          <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Services.v1.Translate.GetServiceStatus" filterName="GetServiceStatus" isExposed="False" />
-        </Filter>
-      </Filter>
       <Filter entryType="Namespace" fullName="IBM.Watson.DeveloperCloud.UnitTests" isExposed="False" />
       <Filter entryType="Namespace" fullName="IBM.Watson.DeveloperCloud.Utilities" isExposed="True">
         <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.Utilities.Constants.String" filterName="Constants.String" isExposed="True">
-          <Filter entryType="Field" fullName="IBM.Watson.DeveloperCloud.Utilities.Constants.String.DEBUG_DISPLAY_AVATAR_MOOD" filterName="DEBUG_DISPLAY_AVATAR_MOOD" isExposed="False" />
           <Filter entryType="Field" fullName="IBM.Watson.DeveloperCloud.Utilities.Constants.String.DEBUG_DISPLAY_QUALITY" filterName="DEBUG_DISPLAY_QUALITY" isExposed="False" />
         </Filter>
       </Filter>
@@ -148,10 +120,6 @@
           <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.MicrophoneWidget.GetName" filterName="GetName" isExposed="False" />
           <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.MicrophoneWidget.Start" filterName="Start" isExposed="False" />
         </Filter>
-        <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.Widgets.NlcWidget" filterName="NlcWidget" isExposed="True">
-          <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.NlcWidget.GetName" filterName="GetName" isExposed="False" />
-          <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.NlcWidget.Start" filterName="Start" isExposed="False" />
-        </Filter>
         <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.Widgets.SpeechDisplayWidget" filterName="SpeechDisplayWidget" isExposed="True">
           <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.SpeechDisplayWidget.GetName" filterName="GetName" isExposed="False" />
         </Filter>
@@ -166,11 +134,6 @@
         <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.Widgets.TouchWidget" filterName="TouchWidget" isExposed="True">
           <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.TouchWidget.GetName" filterName="GetName" isExposed="False" />
         </Filter>
-        <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.Widgets.TranslateWidget" filterName="TranslateWidget" isExposed="True">
-          <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.TranslateWidget.Awake" filterName="Awake" isExposed="False" />
-          <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.TranslateWidget.GetName" filterName="GetName" isExposed="False" />
-          <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.TranslateWidget.Start" filterName="Start" isExposed="False" />
-        </Filter>
         <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.Widgets.Widget" filterName="Widget" isExposed="True">
           <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.Widget.Awake" filterName="Awake" isExposed="False" />
           <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.Widget.Start" filterName="Start" isExposed="False" />
@@ -183,18 +146,22 @@
         </Filter>
       </Filter>
       <Filter entryType="Namespace" fullName="MiniJSON" isExposed="False" />
-      <Filter entryType="Namespace" fullName="TouchScript.Examples" isExposed="False" />
-      <Filter entryType="Namespace" fullName="TouchScript.Examples.CameraControl" isExposed="False" />
-      <Filter entryType="Namespace" fullName="TouchScript.Examples.Checkers" isExposed="False" />
-      <Filter entryType="Namespace" fullName="TouchScript.Examples.Colors" isExposed="False" />
-      <Filter entryType="Namespace" fullName="TouchScript.Examples.Input" isExposed="False" />
-      <Filter entryType="Namespace" fullName="TouchScript.Examples.Multiuser" isExposed="False" />
-      <Filter entryType="Namespace" fullName="TouchScript.Examples.Photos" isExposed="False" />
-      <Filter entryType="Namespace" fullName="TouchScript.Examples.Portal" isExposed="False" />
-      <Filter entryType="Namespace" fullName="TouchScript.Examples.Tap" isExposed="False" />
-      <Filter entryType="Namespace" fullName="TouchScript.Examples.UI" isExposed="False" />
-      <Filter entryType="Namespace" fullName="UnityStandardAssets.ImageEffects" isExposed="False" />
-      <Filter entryType="Namespace" fullName="UnityStandardAssets.Utility" isExposed="False" />
+      <Filter entryType="Namespace" fullName="TouchScript" isExposed="False" />
+      <Filter entryType="Namespace" fullName="TouchScript.Behaviors" isExposed="False" />
+      <Filter entryType="Namespace" fullName="TouchScript.Behaviors.Visualizer" isExposed="False" />
+      <Filter entryType="Namespace" fullName="TouchScript.Clusters" isExposed="False" />
+      <Filter entryType="Namespace" fullName="TouchScript.Devices.Display" isExposed="False" />
+      <Filter entryType="Namespace" fullName="TouchScript.Gestures" isExposed="False" />
+      <Filter entryType="Namespace" fullName="TouchScript.Gestures.Base" isExposed="False" />
+      <Filter entryType="Namespace" fullName="TouchScript.Gestures.Clustered" isExposed="False" />
+      <Filter entryType="Namespace" fullName="TouchScript.Gestures.UI" isExposed="False" />
+      <Filter entryType="Namespace" fullName="TouchScript.Hit" isExposed="False" />
+      <Filter entryType="Namespace" fullName="TouchScript.InputSources" isExposed="False" />
+      <Filter entryType="Namespace" fullName="TouchScript.InputSources.InputHandlers" isExposed="False" />
+      <Filter entryType="Namespace" fullName="TouchScript.Layers" isExposed="False" />
+      <Filter entryType="Namespace" fullName="TouchScript.Utils" isExposed="False" />
+      <Filter entryType="Namespace" fullName="TouchScript.Utils.Attributes" isExposed="False" />
+      <Filter entryType="Namespace" fullName="TouchScript.Utils.Geom" isExposed="False" />
       <Filter entryType="Namespace" fullName="WebSocketSharp" isExposed="False" />
       <Filter entryType="Namespace" fullName="WebSocketSharp.Net" isExposed="False" />
       <Filter entryType="Namespace" fullName="WebSocketSharp.Net.WebSockets" isExposed="False" />
@@ -203,6 +170,9 @@
     <VisibleItems>Protected, ProtectedInternalAsProtected</VisibleItems>
     <RootNamespaceTitle>IBM.Watson</RootNamespaceTitle>
     <MissingTags>Summary, Parameter, Returns, AutoDocumentCtors, Namespace, TypeParameter, AutoDocumentDispose</MissingTags>
+    <HtmlHelp1xCompilerPath>
+    </HtmlHelp1xCompilerPath>
+    <SaveComponentCacheCapacity>100</SaveComponentCacheCapacity>
   </PropertyGroup>
   <!-- There are no properties for these groups.  AnyCPU needs to appear in order for Visual Studio to perform
 			 the build.  The others are optional common platform types that may appear. -->
