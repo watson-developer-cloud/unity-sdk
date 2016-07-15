@@ -18,23 +18,28 @@
 using UnityEngine;
 using System.Collections;
 using IBM.Watson.DeveloperCloud.Services.Conversation.v1;
+using IBM.Watson.DeveloperCloud.Utilities;
+using IBM.Watson.DeveloperCloud.Logging;
 
 public class ExampleConversation : MonoBehaviour
 {
 	private Conversation m_Conversation = new Conversation();
-    private string m_WorkspaceID = "25dfa8a0-0263-471b-8980-317e68c30488";
+    private string m_WorkspaceID;
 	private string m_Input = "Can you unlock the door?";
 
 	void Start () {
-		Debug.Log("User: " + m_Input);
-		m_Conversation.Message(m_WorkspaceID, m_Input, OnMessage);
+        LogSystem.InstallDefaultReactors();
+        m_WorkspaceID = Config.Instance.GetVariableValue("ConversationV1_WorkspaceID");
+        Debug.Log("User: " + m_Input);
+
+        m_Conversation.Message(m_WorkspaceID, m_Input, OnMessage);
 	}
 
-	void OnMessage (DataModels.MessageResponse resp)
+	void OnMessage (MessageResponse resp)
 	{
         if(resp != null)
         {
-    		foreach(DataModels.MessageIntent mi in resp.intents)
+    		foreach(MessageIntent mi in resp.intents)
     			Debug.Log("intent: " + mi.intent + ", confidence: " + mi.confidence);
     		
             if(resp.output != null && !string.IsNullOrEmpty(resp.output.text))
