@@ -1,5 +1,15 @@
 Change Log
 ==========
+## Version 0.6.0
+
+_2016-07-15_
+
+* New: Added `Document Conversion` abstraction
+* New: Added `AlchemyData News` abstraction
+* New: Added `Retrieve and Rank` abstraction
+* New: Added `Conversation` abstraction
+* Fix: Added `LanguageTranslation` and `LanguageTranslator`
+
 ## Version 0.5.0
 
 _2016-06-24_

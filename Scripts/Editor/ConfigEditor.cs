@@ -66,12 +66,18 @@ namespace IBM.Watson.DeveloperCloud.Editor
                 URL ="https://console.ng.bluemix.net/catalog/services/tradeoff-analytics/", ServiceID="TradeoffAnalyticsV1" },
             new ServiceSetup() { ServiceName = "Personality Insights", ServiceAPI = "personality-insights/api",
                 URL ="https://console.ng.bluemix.net/catalog/services/personality-insights/", ServiceID="PersonalityInsightsV2" },
-            new ServiceSetup() { ServiceName = "Conversation", ServiceAPI = "conversation-experimental/api",
+            //new ServiceSetup() { ServiceName = "Conversation (Experimental)", ServiceAPI = "conversation-experimental/api",
+            //    URL ="https://console.ng.bluemix.net/catalog/services/conversation/", ServiceID="ConversationExperimentalV1" },
+            new ServiceSetup() { ServiceName = "Conversation", ServiceAPI = "conversation/api",
                 URL ="https://console.ng.bluemix.net/catalog/services/conversation/", ServiceID="ConversationV1" },
-            new ServiceSetup() { ServiceName = "Alchemy Language", ServiceAPI = "gateway-a.watsonplatform.net/calls",
-                URL ="https://console.ng.bluemix.net/catalog/services/alchemyapi/", ServiceID="AlchemyLanguageV1" },
+            new ServiceSetup() { ServiceName = "RetrieveAndRank", ServiceAPI = "retrieve-and-rank/api",
+                URL ="https://console.ng.bluemix.net/catalog/services/retrieve-and-rank/", ServiceID="RetrieveAndRankV1" },
+            new ServiceSetup() { ServiceName = "Alchemy API", ServiceAPI = "gateway-a.watsonplatform.net/calls",
+                URL ="https://console.ng.bluemix.net/catalog/services/alchemyapi/", ServiceID="AlchemyAPIV1" },
             new ServiceSetup() { ServiceName = "Visual Recognition", ServiceAPI = "visual-recognition/api",
-                URL ="https://console.ng.bluemix.net/catalog/services/visual-recognition/", ServiceID="VisualRecognitionV3" }
+                URL ="https://console.ng.bluemix.net/catalog/services/visual-recognition/", ServiceID="VisualRecognitionV3" },
+            new ServiceSetup() { ServiceName = "Document Conversion", ServiceAPI = "document-conversion/api",
+                URL ="https://console.ng.bluemix.net/catalog/services/document-conversion/", ServiceID="DocumentConversionV1" }
         };
 
         private const string TITLE = "Watson Unity SDK";
