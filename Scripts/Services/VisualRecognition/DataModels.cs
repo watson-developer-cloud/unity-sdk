@@ -19,6 +19,9 @@ using FullSerializer;
 namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 {
     #region Classify
+	/// <summary>
+	/// Holds multiple classifications.
+	/// </summary>
     [fsObject]
     public class ClassifyTopLevelMultiple
     {
@@ -27,6 +30,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         public WarningInfo[] warnings { get; set; }
     }
 
+	/// <summary>
+	/// One classification.
+	/// </summary>
     [fsObject]
     public class ClassifyTopLevelSingle
     {
@@ -37,6 +43,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         public ClassifyPerClassifier[] classifiers { get; set; }
     }
 
+	/// <summary>
+	/// One classifier.
+	/// </summary>
     [fsObject]
     public class ClassifyPerClassifier
     {
@@ -45,6 +54,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         public ClassResult[] classes { get; set; }
     }
 
+	/// <summary>
+	/// One class result.
+	/// </summary>
     [fsObject]
     public class ClassResult
     {
@@ -54,6 +66,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         public string type_hierarchy { get; set; }
     }
 
+	/// <summary>
+	/// The classify parameters.
+	/// </summary>
     [fsObject]
     public class ClassifyParameters
     {
@@ -65,6 +80,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
     #endregion
 
     #region Detect Faces
+	/// <summary>
+	/// Multiple faces.
+	/// </summary>
     [fsObject]
     public class FacesTopLevelMultiple
     {
@@ -73,6 +91,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         public WarningInfo[] warnings { get; set; }
     }
 
+	/// <summary>
+	/// One face classification.
+	/// </summary>
     [fsObject]
     public class FacesTopLevelSingle
     {
@@ -83,6 +104,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         public OneFaceResult[] faces { get; set; }
     }
 
+	/// <summary>
+	/// One face result.
+	/// </summary>
     [fsObject]
     public class OneFaceResult
     {
@@ -92,6 +116,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         public Identity identity { get; set; }
     }
 
+	/// <summary>
+	/// Detect faces parameters.
+	/// </summary>
     [fsObject]
     public class DetectFacesParameters
     {
@@ -100,6 +127,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
     #endregion
 
     #region Recognize Text
+	/// <summary>
+	/// Mulitple text pages.
+	/// </summary>
     [fsObject]
     public class TextRecogTopLevelMultiple
     {
@@ -108,6 +138,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         public WarningInfo[] warnings { get; set; }
     }
 
+	/// <summary>
+	/// One text page.
+	/// </summary>
     [fsObject]
     public class TextRecogTopLevelSingle
     {
@@ -119,6 +152,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         public TextRecogOneWord[] words { get; set; }
     }
 
+	/// <summary>
+	/// One word.
+	/// </summary>
     [fsObject]
     public class TextRecogOneWord
     {
@@ -128,6 +164,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         public double line_number { get; set; }
     }
 
+	/// <summary>
+	/// Word location.
+	/// </summary>
     [fsObject]
     public class Location
     {
@@ -137,6 +176,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         public double top { get; set; }
     }
 
+	/// <summary>
+	/// Recognize text parameters.
+	/// </summary>
     [fsObject]
     public class RecognizeTextParameters
     {
@@ -145,12 +187,18 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
     #endregion
 
     #region Classifiers
+	/// <summary>
+	/// Classifiers breif.
+	/// </summary>
     [fsObject]
     public class GetClassifiersTopLevelBrief
     {
         public GetClassifiersPerClassifierBrief[] classifiers { get; set; }
     }
 
+	/// <summary>
+	/// Classifier breif.
+	/// </summary>
     [fsObject]
     public class GetClassifiersPerClassifierBrief
     {
@@ -158,6 +206,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         public string name { get; set; }
     }
 
+	/// <summary>
+	/// Classifier verbose.
+	/// </summary>
     [fsObject]
     public class GetClassifiersPerClassifierVerbose
     {
@@ -170,6 +221,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         public Class[] classes { get; set; }
     }
 
+	/// <summary>
+	/// The class.
+	/// </summary>
     [fsObject]
     public class Class
     {

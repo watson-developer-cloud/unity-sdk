@@ -394,6 +394,9 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 	}
 #endregion
 
+	/// <summary>
+	/// The conversation service version.
+	/// </summary>
     #region Version
     public class Version
     {

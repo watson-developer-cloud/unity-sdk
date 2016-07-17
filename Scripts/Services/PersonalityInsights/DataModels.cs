@@ -21,6 +21,9 @@ using System.Collections;
 
 namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v2
 {
+	/// <summary>
+	/// The profile result from Personality Insights.
+	/// </summary>
     [fsObject]
     public class Profile
     {
@@ -67,6 +70,9 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v2
         public Warning[] warnings { get; set; }
     }
 
+	/// <summary>
+	/// The trait tree node of the trait tree.
+	/// </summary>
     [fsObject]
     public class TraitTreeNode
     {
@@ -119,6 +125,9 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v2
         public TraitTreeNode[] children { get; set; }
     }
 
+	/// <summary>
+	/// The warning object.
+	/// </summary>
     [fsObject]
     public class Warning
     {
@@ -129,12 +138,15 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v2
         public string id { get; set; }
 
         /// <summary>
-        /// The message associated with the id. For WORD_COUNT_MESSAGE, "There were <number> words in the input. We need a minimum of 3,500, preferably 6,000 or more, to compute statistically significant estimates"; for JSON_AS_TEXT, "Request input was processed as text/plain as indicated, however detected a JSON input. Did you mean application/json?".
+        /// The message associated with the id. For WORD_COUNT_MESSAGE, "There were [number] words in the input. We need a minimum of 3,500, preferably 6,000 or more, to compute statistically significant estimates"; for JSON_AS_TEXT, "Request input was processed as text/plain as indicated, however detected a JSON input. Did you mean application/json?".
         /// </summary>
         /// <value>The message.</value>
         public string message { get; set; }
     }
 
+	/// <summary>
+	/// Holder for content items.
+	/// </summary>
     [fsObject]
     public class ContentListContainer
     {
@@ -145,6 +157,9 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v2
         public ContentItem[] contentItems { get; set; }
     }
 
+	/// <summary>
+	/// The content item.
+	/// </summary>
     [fsObject]
     public class ContentItem
     {
@@ -215,6 +230,9 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v2
         public bool forward { get; set; }
     }
 
+	/// <summary>
+	/// The content type. Either text, html or json.
+	/// </summary>
     public class ContentType
     {
         /// <summary>
@@ -233,6 +251,9 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v2
         public const string APPLICATION_JSON = "application/json";
     }
 
+	/// <summary>
+	/// The content language. Either English, Arabic, Spanish or Japanese.
+	/// </summary>
     public class Language
     {
         /// <summary>

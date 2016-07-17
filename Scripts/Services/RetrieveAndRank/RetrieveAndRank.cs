@@ -405,6 +405,9 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             return connector.Send(req);
         }
 
+		/// <summary>
+		/// The GetClusterConfigs request.
+		/// </summary>
         public class GetClusterConfigsRequest : RESTConnector.Request
         {
             public string Data { get; set; }
@@ -412,6 +415,11 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             public OnGetClusterConfigs Callback { get; set; }
         }
 
+		/// <summary>
+		/// The OnGetClusterConfigs response.
+		/// </summary>
+		/// <param name="req"></param>
+		/// <param name="resp"></param>
         private void OnGetClusterConfigsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             SolrConfigList configData = new SolrConfigList();

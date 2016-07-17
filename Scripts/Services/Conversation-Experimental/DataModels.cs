@@ -392,10 +392,13 @@ namespace IBM.Watson.DeveloperCloud.Services.ConversationExperimental.v1
 		/// <value><c>true</c> if m return; otherwise, <c>false</c>.</value>
 		public bool m_return { get; set; }
 	}
-    #endregion
+	#endregion
 
-    #region Version
-    public class Version
+	/// <summary>
+	/// The conversation service version.
+	/// </summary>
+	#region Version
+	public class Version
     {
         public const string VERSION = "2016-05-19";
     }
