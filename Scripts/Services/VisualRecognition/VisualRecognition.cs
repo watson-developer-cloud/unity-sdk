@@ -614,6 +614,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.Callback = callback;
             req.Parameters["api_key"] = mp_ApiKey;
             req.Parameters["version"] = VisualRecognitionVersion.Version;
+            req.Timeout = 10.0f * 60.0f;
             req.OnResponse = OnGetClassifiersResp;
 
             return connector.Send(req);

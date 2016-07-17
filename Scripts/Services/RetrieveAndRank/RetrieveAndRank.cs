@@ -271,12 +271,12 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             req.ClusterID = clusterID;
             req.Delete = true;
             req.Timeout = REQUEST_TIMEOUT;
-
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_CLUSTER, clusterID));
+            req.OnResponse = OnDeleteClusterResponse;
+            string service = string.Format(SERVICE_CLUSTER, clusterID);
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, service);
             if (connector == null)
                 return false;
-
-            req.OnResponse = OnDeleteClusterResponse;
+            
             return connector.Send(req);
         }
 
@@ -297,6 +297,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// <param name="resp"></param>
         private void OnDeleteClusterResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
+            Log.Debug("RetrieveAndRank", "OnDeleteClusterResponse!!");
             if (((DeleteClusterRequest)req).Callback != null)
                 ((DeleteClusterRequest)req).Callback(resp.Success, ((DeleteClusterRequest)req).Data);
         }
