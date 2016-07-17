@@ -26,11 +26,11 @@ using FullSerializer;
 
 namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
 {
-    /// <summary>
-    /// This class wraps the Natural Language Classifier service.
-	/// <a href="http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/nl-classifier.html">Natural Language Classifier Service</a>
-    /// </summary>
-    public class NaturalLanguageClassifier : IWatsonService
+	/// <summary>
+	/// This class wraps the Natural Language Classifier service.
+	/// <a href="http://www.ibm.com/watson/developercloud/nl-classifier.html">Natural Language Classifier Service</a>
+	/// </summary>
+	public class NaturalLanguageClassifier : IWatsonService
     {
         #region Public Types
         /// <summary>

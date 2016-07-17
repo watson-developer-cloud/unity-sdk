@@ -27,7 +27,7 @@ using System.Text;
 namespace IBM.Watson.DeveloperCloud.Services.DeepQA.v1
 {
     /// <summary>
-    /// The DeepQA provides an abstraction for the deepQa/ services of Watson.
+    /// The DeepQA provides an abstraction for the DeepQA services of Watson.
     /// </summary>
     public class DeepQA : IWatsonService
     {
@@ -73,7 +73,7 @@ namespace IBM.Watson.DeveloperCloud.Services.DeepQA.v1
         }
 
         /// <summary>
-        /// 
+        /// Find a question in the question cache.
         /// </summary>
         /// <param name="questionId"></param>
         /// <returns></returns>

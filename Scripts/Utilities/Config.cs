@@ -317,6 +317,11 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             return null;
         }
 
+		/// <summary>
+		/// Gets an API key by service ID if it exists.
+		/// </summary>
+		/// <param name="serviceID"></param>
+		/// <returns></returns>
         public string GetAPIKey(string serviceID)
         {
             foreach (var info in m_Credentials)

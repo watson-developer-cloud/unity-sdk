@@ -51,7 +51,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             yield break;
         }
 
-        private void OnGetProfileText(DataModels.Profile profile, string data)
+        private void OnGetProfileText(Profile profile, string data)
         {
             Test(profile != null);
 
@@ -77,7 +77,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             }
         }
 
-        private void OnGetProfileJson(DataModels.Profile profile, string data)
+        private void OnGetProfileJson(Profile profile, string data)
         {
             Test(profile != null);
 
@@ -103,7 +103,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             }
         }
 
-        private void LogTraitTree(DataModels.TraitTreeNode traitTreeNode)
+        private void LogTraitTree(TraitTreeNode traitTreeNode)
         {
             if(!string.IsNullOrEmpty(traitTreeNode.id))
                 Log.Debug("ExamplePersonalityInsights", "id: {0}", traitTreeNode.id);
@@ -120,7 +120,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             if(!string.IsNullOrEmpty(traitTreeNode.raw_sampling_error))
                 Log.Debug("ExamplePersonalityInsights", "raw_sampling_error: {0}", traitTreeNode.raw_sampling_error);
             if(traitTreeNode.children != null && traitTreeNode.children.Length > 0)
-                foreach(DataModels.TraitTreeNode childNode in traitTreeNode.children)
+                foreach(TraitTreeNode childNode in traitTreeNode.children)
                     LogTraitTree(childNode);
         }
     }
