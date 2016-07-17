@@ -278,6 +278,10 @@ namespace IBM.Watson.DeveloperCloud.Camera
 
         #region public Functions
 
+		/// <summary>
+		/// Sets the target position with offset.
+		/// </summary>
+		/// <param name="offsetPosition"></param>
         public void SetTargetPositionWithOffset(Vector3 offsetPosition)
         {
             m_OffsetPosition = offsetPosition;

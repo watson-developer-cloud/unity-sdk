@@ -56,6 +56,9 @@ namespace IBM.Watson.DeveloperCloud.Camera
 
         #region Public Variable
 
+		/// <summary>
+		/// Instance of WatsonCamera.
+		/// </summary>
         public static WatsonCamera Instance
         {
             get
@@ -64,6 +67,9 @@ namespace IBM.Watson.DeveloperCloud.Camera
             }
         }
 
+		/// <summary>
+		/// The camera's current target.
+		/// </summary>
         public CameraTarget CurrentCameraTarget
         {
             get
@@ -106,6 +112,9 @@ namespace IBM.Watson.DeveloperCloud.Camera
             }
         }
 
+		/// <summary>
+		/// The camera's default target.
+		/// </summary>
         public CameraTarget DefaultCameraTarget
         {
             get
