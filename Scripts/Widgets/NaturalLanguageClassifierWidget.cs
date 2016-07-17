@@ -104,7 +104,11 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                 PlayerPrefs.Save();
             }
         }
-        public float IgnoreWordConfidenceDelta
+		/// <summary>
+		/// Gets or sets the value of ignore word confidence delta.
+		/// </summary>
+		/// <value>The ignore word confidence delta.</value>
+		public float IgnoreWordConfidenceDelta
         {
             get { return m_IgnoreWordConfidenceDelta; }
             set
@@ -135,7 +139,12 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                 PlayerPrefs.Save();
             }
         }
-        public float MinWordConfidenceDelta
+
+		/// <summary>
+		/// Gets or sets the minimum value of word confidence delta.
+		/// </summary>
+		/// <value>The minimum word confidence delta.</value>
+		public float MinWordConfidenceDelta
         {
             get { return m_MinWordConfidenceDelta; }
             set
@@ -163,7 +172,12 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                 PlayerPrefs.Save();
             }
         }
-        public float MinClassEventConfidenceDelta
+
+		/// <summary>
+		/// Gets or sets the minimum value of class event confidence delta.
+		/// </summary>
+		/// <value>The minimum class event confidence delta.</value>
+		public float MinClassEventConfidenceDelta
         {
             get { return m_MinClassEventConfidenceDelta; }
             set

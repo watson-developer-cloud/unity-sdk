@@ -27,7 +27,11 @@ using FullSerializer;
 
 namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
 {
-    public class ToneAnalyzer : IWatsonService 
+	/// <summary>
+	/// This class wraps the Tone Analyzer service.
+	/// <a href="http://www.ibm.com/watson/developercloud/tone-analyzer.html">Tone Analyzer Service</a>
+	/// </summary>
+	public class ToneAnalyzer : IWatsonService 
     {
         #region Private Data
         private const string SERVICE_ID = "ToneAnalyzerV3";
@@ -36,6 +40,12 @@ namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
 
         #region Get Tone
         private const string FUNCTION_TONE = "/v3/tone";
+
+		/// <summary>
+		/// The Get Tone Analyzed callback delegate.
+		/// </summary>
+		/// <param name="resp"></param>
+		/// <param name="data"></param>
         public delegate void OnGetToneAnalyzed( ToneAnalyzerResponse resp, string data );
 
         /// <summary>

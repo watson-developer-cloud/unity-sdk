@@ -131,10 +131,15 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             /// The delegate to the receiver function, this is set when Start() is called on this input.
             /// </summary>
             public OnReceiveData DataReceiver { get; private set; }
-            #endregion
+			#endregion
 
-            #region Public Functions
-            public bool AddOutput(Output output)
+			#region Public Functions
+			/// <summary>
+			/// Add output to input.
+			/// </summary>
+			/// <param name="output"></param>
+			/// <returns></returns>
+			public bool AddOutput(Output output)
             {
                 if (!AllowMany && m_Connections.Count > 0)
                     return false;
@@ -143,7 +148,12 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                 m_Connections.Add(output);
                 return true;
             }
-            public bool RemoveOutput(Output output)
+			/// <summary>
+			/// Remove the output.
+			/// </summary>
+			/// <param name="output"></param>
+			/// <returns></returns>
+			public bool RemoveOutput(Output output)
             {
                 return m_Connections.Remove(output);
             }
@@ -190,6 +200,9 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         [Serializable]
         public class Output
         {
+			/// <summary>
+			/// The connection between widgets.
+			/// </summary>
             #region Public Types
             [Serializable]
             public class Connection
@@ -244,6 +257,10 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                 #endregion
 
                 #region Public Functions
+				/// <summary>
+				/// Resolve the target input.
+				/// </summary>
+				/// <returns></returns>
                 public bool ResolveTargetInput()
                 {
                     if (!m_TargetInputResolved)
@@ -293,6 +310,10 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                     return m_TargetInput != null;
                 }
 
+				/// <summary>
+				/// Start ouput.
+				/// </summary>
+				/// <param name="owner"></param>
                 public void Start(Output owner)
                 {
                     m_Owner = owner;
@@ -336,6 +357,10 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                     return false;
                 }
             }
+
+			/// <summary>
+			/// Connections between widgets.
+			/// </summary>
             public Connection[] Connections { get { return m_Connections.ToArray(); } }
             /// <summary>
             /// Returns a reference to the Widget owner, this is set when the Widget initializes.
@@ -432,6 +457,11 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                 return true;
             }
 
+			/// <summary>
+			/// Remove the connection between widgets.
+			/// </summary>
+			/// <param name="c"></param>
+			/// <returns></returns>
             public bool RemoveConnection(Connection c)
             {
                 return m_Connections.Remove(c);

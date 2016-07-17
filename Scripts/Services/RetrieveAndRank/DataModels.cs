@@ -220,6 +220,9 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         public ResponseHeader responseHeader { get; set; }
     }
 
+	/// <summary>
+	/// The query parameters.
+	/// </summary>
     [fsObject]
     public class QueryParams
     {

@@ -129,6 +129,11 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             return null;
         }
 
+		/// <summary>
+		/// Is the data cached?
+		/// </summary>
+		/// <param name="id"></param>
+		/// <returns></returns>
         public bool IsCached(string id)
         {
             bool isCached = false;

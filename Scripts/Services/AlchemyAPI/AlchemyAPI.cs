@@ -29,10 +29,12 @@ using UnityEngine;
 
 namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 {
-    /// <summary>
-    /// Service integration for Alchemy API
-    /// </summary>
-    public class AlchemyAPI : IWatsonService
+	/// <summary>
+	/// This class wraps the Alchemy API Services.
+	/// <a href="http://www.ibm.com/watson/developercloud/alchemy-language.html">Alchemy Language</a>
+	/// <a href="http://www.ibm.com/watson/developercloud/alchemy-data-news.html">AlchemyData News</a>
+	/// </summary>
+	public class AlchemyAPI : IWatsonService
     {
 
         #region Private Data
@@ -125,7 +127,13 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// </summary>
         public class GetAuthorsRequest : RESTConnector.Request
         {
+			/// <summary>
+			/// Custom data.
+			/// </summary>
             public string Data { get; set; }
+			/// <summary>
+			/// The callback.
+			/// </summary>
             public OnGetAuthors Callback { get; set; }
         }
 
@@ -245,7 +253,13 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// </summary>
         public class GetRankedConceptsRequest : RESTConnector.Request
         {
+			/// <summary>
+			/// Custom data.
+			/// </summary>
             public string Data { get; set; }
+			/// <summary>
+			/// The callback.
+			/// </summary>
             public OnGetRankedConcepts Callback { get; set; }
         }
 
@@ -358,7 +372,13 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// </summary>
         public class GetDatesRequest : RESTConnector.Request
         {
+			/// <summary>
+			/// Custom data.
+			/// </summary>
             public string Data { get; set; }
+			/// <summary>
+			/// The callback.
+			/// </summary>
             public OnGetDates Callback { get; set; }
         }
 
@@ -474,7 +494,13 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// </summary>
         public class GetEmotionsRequest : RESTConnector.Request
         {
+			/// <summary>
+			/// Custom data.
+			/// </summary>
             public string Data { get; set; }
+			/// <summary>
+			/// The callback.
+			/// </summary>
             public OnGetEmotions Callback { get; set; }
         }
 
@@ -609,7 +635,13 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// </summary>
         public class GetEntitiesRequest : RESTConnector.Request
         {
+			/// <summary>
+			/// Custom data.
+			/// </summary>
             public string Data { get; set; }
+			/// <summary>
+			/// The callback.
+			/// </summary>
             public OnGetEntities Callback { get; set; }
         }
 
@@ -712,7 +744,13 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// </summary>
         public class DetectFeedsRequest : RESTConnector.Request
         {
+			/// <summary>
+			/// Custom data.
+			/// </summary>
             public string Data { get; set; }
+			/// <summary>
+			/// The callback.
+			/// </summary>
             public OnDetectFeeds Callback { get; set; }
         }
 
@@ -833,7 +871,13 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// </summary>
         public class GetKeywordsRequest : RESTConnector.Request
         {
+			/// <summary>
+			/// Custom data.
+			/// </summary>
             public string Data { get; set; }
+			/// <summary>
+			/// The callback.
+			/// </summary>
             public OnGetKeywords Callback { get; set; }
         }
 
@@ -942,7 +986,13 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// </summary>
         public class GetLanguagesRequest : RESTConnector.Request
         {
+			/// <summary>
+			/// Custom data.
+			/// </summary>
             public string Data { get; set; }
+			/// <summary>
+			/// The callback.
+			/// </summary>
             public OnGetLanguages Callback { get; set; }
         }
 
@@ -1045,7 +1095,13 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// </summary>
         public class GetMicroformatsRequest : RESTConnector.Request
         {
+			/// <summary>
+			/// Custom data.
+			/// </summary>
             public string Data { get; set; }
+			/// <summary>
+			/// The callback.
+			/// </summary>
             public OnGetMicroformats Callback { get; set; }
         }
 
@@ -1151,7 +1207,13 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// </summary>
         public class GetPublicationDateRequest : RESTConnector.Request
         {
+			/// <summary>
+			/// Custom data.
+			/// </summary>
             public string Data { get; set; }
+			/// <summary>
+			/// The callback.
+			/// </summary>
             public OnGetPublicationDate Callback { get; set; }
         }
 
@@ -1293,8 +1355,14 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// </summary>
         public class GetRelationsRequest : RESTConnector.Request
         {
-            public string Data { get; set; }
-            public OnGetRelations Callback { get; set; }
+			/// <summary>
+			/// Custom data.
+			/// </summary>
+			public string Data { get; set; }
+			/// <summary>
+			/// The callback.
+			/// </summary>
+			public OnGetRelations Callback { get; set; }
         }
 
         private void OnGetRelationsResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -1402,8 +1470,14 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// </summary>
         public class GetTextSentimentRequest : RESTConnector.Request
         {
-            public string Data { get; set; }
-            public OnGetTextSentiment Callback { get; set; }
+			/// <summary>
+			/// Custom data.
+			/// </summary>
+			public string Data { get; set; }
+			/// <summary>
+			/// The callback.
+			/// </summary>
+			public OnGetTextSentiment Callback { get; set; }
         }
 
         private void OnGetTextSentimentResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -1515,8 +1589,14 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// </summary>
         public class GetTargetedSentimentRequest : RESTConnector.Request
         {
-            public string Data { get; set; }
-            public OnGetTargetedSentiment Callback { get; set; }
+			/// <summary>
+			/// Custom data.
+			/// </summary>
+			public string Data { get; set; }
+			/// <summary>
+			/// The callback.
+			/// </summary>
+			public OnGetTargetedSentiment Callback { get; set; }
         }
 
         private void OnGetTargetedSentimentResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -1624,8 +1704,14 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// </summary>
         public class GetRankedTaxomomyRequest : RESTConnector.Request
         {
-            public string Data { get; set; }
-            public OnGetRankedTaxonomy Callback { get; set; }
+			/// <summary>
+			/// Custom data.
+			/// </summary>
+			public string Data { get; set; }
+			/// <summary>
+			/// The callback.
+			/// </summary>
+			public OnGetRankedTaxonomy Callback { get; set; }
         }
 
         private void OnGetRankedTaxonomyResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -1734,8 +1820,14 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// </summary>
         public class GetTextRequest : RESTConnector.Request
         {
-            public string Data { get; set; }
-            public OnGetText Callback { get; set; }
+			/// <summary>
+			/// Custom data.
+			/// </summary>
+			public string Data { get; set; }
+			/// <summary>
+			/// The callback.
+			/// </summary>
+			public OnGetText Callback { get; set; }
         }
 
         private void OnGetTextResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -1906,8 +1998,14 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// </summary>
         public class GetTitleRequest : RESTConnector.Request
         {
-            public string Data { get; set; }
-            public OnGetTitle Callback { get; set; }
+			/// <summary>
+			/// Custom data.
+			/// </summary>
+			public string Data { get; set; }
+			/// <summary>
+			/// The callback.
+			/// </summary>
+			public OnGetTitle Callback { get; set; }
         }
 
         private void OnGetTitleResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -2091,7 +2189,13 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// </summary>
         public class CombinedCallRequest : RESTConnector.Request
         {
+			/// <summary>
+			/// Custom data.
+			/// </summary>
             public string Data { get; set; }
+			/// <summary>
+			/// The callback.
+			/// </summary>
             public OnGetCombinedData Callback { get; set; }
         }
 
@@ -2189,7 +2293,13 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// </summary>
         public class GetNewsRequest : RESTConnector.Request
         {
+			/// <summary>
+			/// Custom data.
+			/// </summary>
             public string Data { get; set; }
+			/// <summary>
+			/// The callback.
+			/// </summary>
             public OnGetNews Callback { get; set; }
         }
 

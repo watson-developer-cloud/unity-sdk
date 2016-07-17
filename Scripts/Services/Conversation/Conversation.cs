@@ -28,7 +28,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 {
 	/// <summary>
 	/// This class wraps the Watson Conversation service. 
-	/// <a href="http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/conversation.html">Conversation Service</a>
+	/// <a href="http://www.ibm.com/watson/developercloud/conversation.html">Conversation Service</a>
 	/// </summary>
 	public class Conversation : IWatsonService
 	{
@@ -194,12 +194,13 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 		#endregion
 
 		#region IWatsonService implementation
-
+		/// <exclude />
 		public string GetServiceID()
 		{
 			return SERVICE_ID;
 		}
 
+		/// <exclude />
 		public void GetServiceStatus(ServiceStatus callback)
 		{
             if (Config.Instance.FindCredentials(SERVICE_ID) != null)
