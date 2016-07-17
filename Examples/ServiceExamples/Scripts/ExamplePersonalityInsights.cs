@@ -29,11 +29,11 @@ public class ExamplePersonalityInsights : MonoBehaviour {
         LogSystem.InstallDefaultReactors();
         string dataPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/personalityInsights.json";
 
-        if(!m_personalityInsights.GetProfile(OnGetProfile, dataPath, DataModels.ContentType.TEXT_PLAIN, DataModels.Language.ENGLISH))
+        if(!m_personalityInsights.GetProfile(OnGetProfile, dataPath, ContentType.TEXT_PLAIN, Language.ENGLISH))
             Log.Debug("ExamplePersonalityInsights", "Failed to get profile!");
 	}
 
-    private void OnGetProfile(DataModels.Profile profile, string data)
+    private void OnGetProfile(Profile profile, string data)
     {
         Log.Debug("ExamplePersonalityInsights", "data: {0}", data);
         if(profile != null)
@@ -60,7 +60,7 @@ public class ExamplePersonalityInsights : MonoBehaviour {
         }
     }
 
-    private void LogTraitTree(DataModels.TraitTreeNode traitTreeNode)
+    private void LogTraitTree(TraitTreeNode traitTreeNode)
     {
         if(!string.IsNullOrEmpty(traitTreeNode.id))
             Log.Debug("ExamplePersonalityInsights", "id: {0}", traitTreeNode.id);
@@ -77,7 +77,7 @@ public class ExamplePersonalityInsights : MonoBehaviour {
         if(!string.IsNullOrEmpty(traitTreeNode.raw_sampling_error))
             Log.Debug("ExamplePersonalityInsights", "raw_sampling_error: {0}", traitTreeNode.raw_sampling_error);
         if(traitTreeNode.children != null && traitTreeNode.children.Length > 0)
-            foreach(DataModels.TraitTreeNode childNode in traitTreeNode.children)
+            foreach(TraitTreeNode childNode in traitTreeNode.children)
                 LogTraitTree(childNode);
     }
 }

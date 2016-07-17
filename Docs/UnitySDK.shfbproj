@@ -87,99 +87,101 @@
 <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1" isDocumented="True">Text to Speech version 1 service abstraction.</NamespaceSummaryItem>
 <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3" isDocumented="True">Tone Analyzer version 3 service abstraction.</NamespaceSummaryItem>
 <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.TradeoffAnalytics.v1" isDocumented="True">Tradeoff Analytics version 1 service abstraction.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3" isDocumented="True">Visual Recognitionr version 3 service abstraction.</NamespaceSummaryItem></NamespaceSummaries>
+<NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3" isDocumented="True">Visual Recognitionr version 3 service abstraction.</NamespaceSummaryItem>
+<NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v1" isDocumented="True">Language Translation version 1 service abstraction.</NamespaceSummaryItem></NamespaceSummaries>
     <ApiFilter>
       <Filter entryType="Namespace" fullName="" isExposed="False" />
-<Filter entryType="Namespace" fullName="FullSerializer" isExposed="False" />
-<Filter entryType="Namespace" fullName="FullSerializer.Internal" isExposed="False" />
-<Filter entryType="Namespace" fullName="FullSerializer.Internal.DirectConverters" isExposed="False" />
-<Filter entryType="Namespace" fullName="IBM.Watson.DeveloperCloud.DataTypes" isExposed="True">
-  <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.DataTypes.AudioData" filterName="AudioData" isExposed="True">
-    <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.DataTypes.AudioData.Finalize" filterName="Finalize" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.DataTypes.LanguageData" filterName="LanguageData" isExposed="True">
-    <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.DataTypes.LanguageData.GetName" filterName="GetName" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.DataTypes.VoiceData" filterName="VoiceData" isExposed="True">
-    <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.DataTypes.VoiceData.GetName" filterName="GetName" isExposed="False" />
-  </Filter>
-</Filter>
-<Filter entryType="Namespace" fullName="IBM.Watson.DeveloperCloud.Editor" isExposed="False" />
-<Filter entryType="Namespace" fullName="IBM.Watson.DeveloperCloud.UnitTests" isExposed="False" />
-<Filter entryType="Namespace" fullName="IBM.Watson.DeveloperCloud.Utilities" isExposed="True">
-  <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.Utilities.Constants.String" filterName="Constants.String" isExposed="True">
-    <Filter entryType="Field" fullName="IBM.Watson.DeveloperCloud.Utilities.Constants.String.DEBUG_DISPLAY_QUALITY" filterName="DEBUG_DISPLAY_QUALITY" isExposed="False" />
-  </Filter>
-</Filter>
-<Filter entryType="Namespace" fullName="IBM.Watson.DeveloperCloud.Widgets" isExposed="True">
-  <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.Widgets.ActivateWidget" filterName="ActivateWidget" isExposed="True">
-    <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.ActivateWidget.GetName" filterName="GetName" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.Widgets.ClassDisplayWidget" filterName="ClassDisplayWidget" isExposed="True">
-    <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.ClassDisplayWidget.GetName" filterName="GetName" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.Widgets.ClassifierWidget" filterName="ClassifierWidget" isExposed="True">
-    <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.ClassifierWidget.GetName" filterName="GetName" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.Widgets.DialogWidget" filterName="DialogWidget" isExposed="True">
-    <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.DialogWidget.GetName" filterName="GetName" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.Widgets.EventWidget" filterName="EventWidget" isExposed="True">
-    <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.EventWidget.GetName" filterName="GetName" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.Widgets.KeyboardWidget" filterName="KeyboardWidget" isExposed="True">
-    <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.KeyboardWidget.GetName" filterName="GetName" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.Widgets.MicrophoneWidget" filterName="MicrophoneWidget" isExposed="True">
-    <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.MicrophoneWidget.GetName" filterName="GetName" isExposed="False" />
-    <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.MicrophoneWidget.Start" filterName="Start" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.Widgets.SpeechDisplayWidget" filterName="SpeechDisplayWidget" isExposed="True">
-    <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.SpeechDisplayWidget.GetName" filterName="GetName" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.Widgets.SpeechToTextWidget" filterName="SpeechToTextWidget" isExposed="True">
-    <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.SpeechToTextWidget.GetName" filterName="GetName" isExposed="False" />
-    <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.SpeechToTextWidget.Start" filterName="Start" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.Widgets.TextToSpeechWidget" filterName="TextToSpeechWidget" isExposed="True">
-    <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.TextToSpeechWidget.GetName" filterName="GetName" isExposed="False" />
-    <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.TextToSpeechWidget.Start" filterName="Start" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.Widgets.TouchWidget" filterName="TouchWidget" isExposed="True">
-    <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.TouchWidget.GetName" filterName="GetName" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.Widgets.Widget" filterName="Widget" isExposed="True">
-    <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.Widget.Awake" filterName="Awake" isExposed="False" />
-    <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.Widget.Start" filterName="Start" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.Widgets.Widget.Input" filterName="Widget.Input" isExposed="True">
-    <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.Widget.Input.ToString" filterName="ToString" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.Widgets.Widget.Output" filterName="Widget.Output" isExposed="True">
-    <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.Widget.Output.ToString" filterName="ToString" isExposed="False" />
-  </Filter>
-</Filter>
-<Filter entryType="Namespace" fullName="MiniJSON" isExposed="False" />
-<Filter entryType="Namespace" fullName="TouchScript" isExposed="False" />
-<Filter entryType="Namespace" fullName="TouchScript.Behaviors" isExposed="False" />
-<Filter entryType="Namespace" fullName="TouchScript.Behaviors.Visualizer" isExposed="False" />
-<Filter entryType="Namespace" fullName="TouchScript.Clusters" isExposed="False" />
-<Filter entryType="Namespace" fullName="TouchScript.Devices.Display" isExposed="False" />
-<Filter entryType="Namespace" fullName="TouchScript.Gestures" isExposed="False" />
-<Filter entryType="Namespace" fullName="TouchScript.Gestures.Base" isExposed="False" />
-<Filter entryType="Namespace" fullName="TouchScript.Gestures.Clustered" isExposed="False" />
-<Filter entryType="Namespace" fullName="TouchScript.Gestures.UI" isExposed="False" />
-<Filter entryType="Namespace" fullName="TouchScript.Hit" isExposed="False" />
-<Filter entryType="Namespace" fullName="TouchScript.InputSources" isExposed="False" />
-<Filter entryType="Namespace" fullName="TouchScript.InputSources.InputHandlers" isExposed="False" />
-<Filter entryType="Namespace" fullName="TouchScript.Layers" isExposed="False" />
-<Filter entryType="Namespace" fullName="TouchScript.Utils" isExposed="False" />
-<Filter entryType="Namespace" fullName="TouchScript.Utils.Attributes" isExposed="False" />
-<Filter entryType="Namespace" fullName="TouchScript.Utils.Geom" isExposed="False" />
-<Filter entryType="Namespace" fullName="WebSocketSharp" isExposed="False" />
-<Filter entryType="Namespace" fullName="WebSocketSharp.Net" isExposed="False" />
-<Filter entryType="Namespace" fullName="WebSocketSharp.Net.WebSockets" isExposed="False" />
-<Filter entryType="Namespace" fullName="WebSocketSharp.Server" isExposed="False" /></ApiFilter>
+      <Filter entryType="Namespace" fullName="FullSerializer" isExposed="False" />
+      <Filter entryType="Namespace" fullName="FullSerializer.Internal" isExposed="False" />
+      <Filter entryType="Namespace" fullName="FullSerializer.Internal.DirectConverters" isExposed="False" />
+      <Filter entryType="Namespace" fullName="IBM.Watson.DeveloperCloud.DataTypes" isExposed="True">
+        <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.DataTypes.AudioData" filterName="AudioData" isExposed="True">
+          <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.DataTypes.AudioData.Finalize" filterName="Finalize" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.DataTypes.LanguageData" filterName="LanguageData" isExposed="True">
+          <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.DataTypes.LanguageData.GetName" filterName="GetName" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.DataTypes.VoiceData" filterName="VoiceData" isExposed="True">
+          <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.DataTypes.VoiceData.GetName" filterName="GetName" isExposed="False" />
+        </Filter>
+      </Filter>
+      <Filter entryType="Namespace" fullName="IBM.Watson.DeveloperCloud.Editor" isExposed="False" />
+      <Filter entryType="Namespace" fullName="IBM.Watson.DeveloperCloud.UnitTests" isExposed="False" />
+      <Filter entryType="Namespace" fullName="IBM.Watson.DeveloperCloud.Utilities" isExposed="True">
+        <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.Utilities.Constants.String" filterName="Constants.String" isExposed="True">
+          <Filter entryType="Field" fullName="IBM.Watson.DeveloperCloud.Utilities.Constants.String.DEBUG_DISPLAY_QUALITY" filterName="DEBUG_DISPLAY_QUALITY" isExposed="False" />
+        </Filter>
+      </Filter>
+      <Filter entryType="Namespace" fullName="IBM.Watson.DeveloperCloud.Widgets" isExposed="True">
+        <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.Widgets.ActivateWidget" filterName="ActivateWidget" isExposed="True">
+          <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.ActivateWidget.GetName" filterName="GetName" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.Widgets.ClassDisplayWidget" filterName="ClassDisplayWidget" isExposed="True">
+          <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.ClassDisplayWidget.GetName" filterName="GetName" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.Widgets.ClassifierWidget" filterName="ClassifierWidget" isExposed="True">
+          <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.ClassifierWidget.GetName" filterName="GetName" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.Widgets.DialogWidget" filterName="DialogWidget" isExposed="True">
+          <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.DialogWidget.GetName" filterName="GetName" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.Widgets.EventWidget" filterName="EventWidget" isExposed="True">
+          <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.EventWidget.GetName" filterName="GetName" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.Widgets.KeyboardWidget" filterName="KeyboardWidget" isExposed="True">
+          <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.KeyboardWidget.GetName" filterName="GetName" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.Widgets.MicrophoneWidget" filterName="MicrophoneWidget" isExposed="True">
+          <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.MicrophoneWidget.GetName" filterName="GetName" isExposed="False" />
+          <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.MicrophoneWidget.Start" filterName="Start" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.Widgets.SpeechDisplayWidget" filterName="SpeechDisplayWidget" isExposed="True">
+          <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.SpeechDisplayWidget.GetName" filterName="GetName" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.Widgets.SpeechToTextWidget" filterName="SpeechToTextWidget" isExposed="True">
+          <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.SpeechToTextWidget.GetName" filterName="GetName" isExposed="False" />
+          <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.SpeechToTextWidget.Start" filterName="Start" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.Widgets.TextToSpeechWidget" filterName="TextToSpeechWidget" isExposed="True">
+          <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.TextToSpeechWidget.GetName" filterName="GetName" isExposed="False" />
+          <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.TextToSpeechWidget.Start" filterName="Start" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.Widgets.TouchWidget" filterName="TouchWidget" isExposed="True">
+          <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.TouchWidget.GetName" filterName="GetName" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.Widgets.Widget" filterName="Widget" isExposed="True">
+          <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.Widget.Awake" filterName="Awake" isExposed="False" />
+          <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.Widget.Start" filterName="Start" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.Widgets.Widget.Input" filterName="Widget.Input" isExposed="True">
+          <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.Widget.Input.ToString" filterName="ToString" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="IBM.Watson.DeveloperCloud.Widgets.Widget.Output" filterName="Widget.Output" isExposed="True">
+          <Filter entryType="Method" fullName="IBM.Watson.DeveloperCloud.Widgets.Widget.Output.ToString" filterName="ToString" isExposed="False" />
+        </Filter>
+      </Filter>
+      <Filter entryType="Namespace" fullName="MiniJSON" isExposed="False" />
+      <Filter entryType="Namespace" fullName="TouchScript" isExposed="False" />
+      <Filter entryType="Namespace" fullName="TouchScript.Behaviors" isExposed="False" />
+      <Filter entryType="Namespace" fullName="TouchScript.Behaviors.Visualizer" isExposed="False" />
+      <Filter entryType="Namespace" fullName="TouchScript.Clusters" isExposed="False" />
+      <Filter entryType="Namespace" fullName="TouchScript.Devices.Display" isExposed="False" />
+      <Filter entryType="Namespace" fullName="TouchScript.Gestures" isExposed="False" />
+      <Filter entryType="Namespace" fullName="TouchScript.Gestures.Base" isExposed="False" />
+      <Filter entryType="Namespace" fullName="TouchScript.Gestures.Clustered" isExposed="False" />
+      <Filter entryType="Namespace" fullName="TouchScript.Gestures.UI" isExposed="False" />
+      <Filter entryType="Namespace" fullName="TouchScript.Hit" isExposed="False" />
+      <Filter entryType="Namespace" fullName="TouchScript.InputSources" isExposed="False" />
+      <Filter entryType="Namespace" fullName="TouchScript.InputSources.InputHandlers" isExposed="False" />
+      <Filter entryType="Namespace" fullName="TouchScript.Layers" isExposed="False" />
+      <Filter entryType="Namespace" fullName="TouchScript.Utils" isExposed="False" />
+      <Filter entryType="Namespace" fullName="TouchScript.Utils.Attributes" isExposed="False" />
+      <Filter entryType="Namespace" fullName="TouchScript.Utils.Geom" isExposed="False" />
+      <Filter entryType="Namespace" fullName="WebSocketSharp" isExposed="False" />
+      <Filter entryType="Namespace" fullName="WebSocketSharp.Net" isExposed="False" />
+      <Filter entryType="Namespace" fullName="WebSocketSharp.Net.WebSockets" isExposed="False" />
+      <Filter entryType="Namespace" fullName="WebSocketSharp.Server" isExposed="False" />
+    </ApiFilter>
     <VisibleItems>ProtectedInternalAsProtected</VisibleItems>
     <RootNamespaceTitle>IBM.Watson</RootNamespaceTitle>
     <MissingTags>Summary, Parameter, Returns, AutoDocumentCtors, Namespace, TypeParameter, AutoDocumentDispose</MissingTags>

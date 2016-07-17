@@ -20,12 +20,18 @@ using System.Collections.Generic;
 
 namespace IBM.Watson.DeveloperCloud.Services.DeepQA.v1
 {
+	/// <summary>
+	/// The returned value.
+	/// </summary>
     [fsObject]
     public class Value
     {
         public string value { get; set; }
     };
 
+	/// <summary>
+	/// The metadata of the answer.
+	/// </summary>
     [fsObject]
     public class MetaDataMap
     {
@@ -37,6 +43,9 @@ namespace IBM.Watson.DeveloperCloud.Services.DeepQA.v1
         public string CorpusPlusDocno { get; set; }
     };
 
+	/// <summary>
+	/// The evidence of the answer.
+	/// </summary>
     [fsObject]
     public class Evidence
     {
@@ -50,6 +59,9 @@ namespace IBM.Watson.DeveloperCloud.Services.DeepQA.v1
         public MetaDataMap metadataMap { get; set; }
     };
 
+	/// <summary>
+	/// Synonym of an answer.
+	/// </summary>
     [fsObject]
     public class Synonym
     {
@@ -58,6 +70,9 @@ namespace IBM.Watson.DeveloperCloud.Services.DeepQA.v1
         public double weight { get; set; }
     };
 
+	/// <summary>
+	/// Synonym set.
+	/// </summary>
     [fsObject]
     public class SynSet
     {
@@ -65,6 +80,9 @@ namespace IBM.Watson.DeveloperCloud.Services.DeepQA.v1
         public Synonym[] synSet { get; set; }
     };
 
+	/// <summary>
+	/// Synonym list.
+	/// </summary>
     [fsObject]
     public class SynonymList
     {
@@ -74,6 +92,9 @@ namespace IBM.Watson.DeveloperCloud.Services.DeepQA.v1
         public SynSet[] synSet { get; set; }
     };
 
+	/// <summary>
+	/// The evidence request.
+	/// </summary>
     [fsObject]
     public class EvidenceRequest
     {
@@ -81,6 +102,9 @@ namespace IBM.Watson.DeveloperCloud.Services.DeepQA.v1
         public string profile { get; set; }
     };
 
+	/// <summary>
+	/// The answer.
+	/// </summary>
     [fsObject]
     public class Answer
     {
@@ -101,6 +125,9 @@ namespace IBM.Watson.DeveloperCloud.Services.DeepQA.v1
             return text.Trim(new char[] { '\n', '\r', '\t', ' ' });
         }
 
+		/// <summary>
+		/// Answer cell.
+		/// </summary>
         [fsObject]
         public class Cell
         {
@@ -108,12 +135,19 @@ namespace IBM.Watson.DeveloperCloud.Services.DeepQA.v1
             public int ColSpan { get; set; }            // how many colums does this cell span, by default just 1..
             public bool Highlighted { get; set; }
         };
+
+		/// <summary>
+		/// Answer row.
+		/// </summary>
         [fsObject]
         public class Row
         {
             public Cell[] columns { get; set; }
         };
 
+		/// <summary>
+		/// Answer table.
+		/// </summary>
         [fsObject]
         public class Table
         {
@@ -180,6 +214,10 @@ namespace IBM.Watson.DeveloperCloud.Services.DeepQA.v1
             return null;
         }
     };
+
+	/// <summary>
+	/// The word slots.
+	/// </summary>
     [fsObject]
     public class Slots
     {
@@ -188,6 +226,10 @@ namespace IBM.Watson.DeveloperCloud.Services.DeepQA.v1
         public string objprep { get; set; }
         public string psubj { get; set; }
     };
+
+	/// <summary>
+	/// The word.
+	/// </summary>
     [fsObject]
     public class Word
     {
@@ -206,12 +248,19 @@ namespace IBM.Watson.DeveloperCloud.Services.DeepQA.v1
         public Word[] lmods { get; set; }
         public Word[] rmods { get; set; }
     };
+
+	/// <summary>
+	/// The parse tree.
+	/// </summary>
     [fsObject]
     public class ParseTree : Word
     {
         public string parseScore { get; set; }
     };
 
+	/// <summary>
+	/// The question.
+	/// </summary>
     [fsObject]
     public class Question
     {
@@ -238,6 +287,10 @@ namespace IBM.Watson.DeveloperCloud.Services.DeepQA.v1
 
         public string questionId { get; set; }      // local cache ID
     };
+
+	/// <summary>
+	/// The question class.
+	/// </summary>
     [fsObject]
     public class QuestionClass
     {

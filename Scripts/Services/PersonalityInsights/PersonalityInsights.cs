@@ -44,7 +44,7 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v2
         /// <summary>
         /// On get profile delegate.
         /// </summary>
-        public delegate void OnGetProfile(DataModels.Profile profile, string data);
+        public delegate void OnGetProfile(Profile profile, string data);
 
         /// <summary>
         /// Uses Personality Insights to get the source profile.
@@ -60,10 +60,10 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v2
         /// <param name="headers">If set to <c>true</c> headers.</param>
         /// <param name="data">Data.</param>
         public bool GetProfile(OnGetProfile callback, string source, 
-            string contentType = DataModels.ContentType.TEXT_PLAIN, 
-            string contentLanguage = DataModels.Language.ENGLISH, 
-            string accept = DataModels.ContentType.APPLICATION_JSON, 
-            string acceptLanguage = DataModels.Language.ENGLISH, 
+            string contentType = ContentType.TEXT_PLAIN, 
+            string contentLanguage = Language.ENGLISH, 
+            string accept = ContentType.APPLICATION_JSON, 
+            string acceptLanguage = Language.ENGLISH, 
             bool includeRaw = false, 
             bool headers = false, 
             string data = default(string))
@@ -115,7 +115,7 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v2
 
         private void GetProfileResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DataModels.Profile response = new DataModels.Profile();
+            Profile response = new Profile();
             if (resp.Success)
             {
                 try
@@ -168,11 +168,11 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v2
                 m_Service = service;
                 m_Callback = callback;
                 string dataPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/personalityInsights.json";
-                if(!m_Service.GetProfile(OnGetProfile, dataPath, DataModels.ContentType.TEXT_PLAIN, DataModels.Language.ENGLISH))
+                if(!m_Service.GetProfile(OnGetProfile, dataPath, ContentType.TEXT_PLAIN, Language.ENGLISH))
                     m_Callback(SERVICE_ID, false);
             }
 
-            private void OnGetProfile(DataModels.Profile resp , string data)
+            private void OnGetProfile(Profile resp , string data)
             {
                 if(m_Callback != null )
                     m_Callback(SERVICE_ID, resp != null);
