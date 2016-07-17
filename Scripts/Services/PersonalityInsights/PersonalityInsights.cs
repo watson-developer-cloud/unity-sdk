@@ -109,7 +109,13 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v2
         /// </summary>
         public class GetProfileRequest:RESTConnector.Request
         {
+			/// <summary>
+			/// Custom data.
+			/// </summary>
             public string Data { get; set; }
+			/// <summary>
+			/// The callback.
+			/// </summary>
             public OnGetProfile Callback { get; set; }
         }
 

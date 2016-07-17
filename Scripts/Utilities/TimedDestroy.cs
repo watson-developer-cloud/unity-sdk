@@ -94,6 +94,9 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             }
         }
 
+		/// <summary>
+		/// Resets the timer.
+		/// </summary>
         public void ResetTimer()
         {
             m_ElapsedTime = 0.0f;

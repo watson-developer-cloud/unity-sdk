@@ -40,6 +40,12 @@ namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
 
         #region Get Tone
         private const string FUNCTION_TONE = "/v3/tone";
+
+		/// <summary>
+		/// The Get Tone Analyzed callback delegate.
+		/// </summary>
+		/// <param name="resp"></param>
+		/// <param name="data"></param>
         public delegate void OnGetToneAnalyzed( ToneAnalyzerResponse resp, string data );
 
         /// <summary>

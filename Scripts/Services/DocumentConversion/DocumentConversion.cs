@@ -41,18 +41,33 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
 
         #region ConvertDocument
         private const string FUNCTION_CONVERT_DOCUMENT = "/v1/convert_document";
+		/// <summary>
+		/// The OnConvertDocument callback.
+		/// </summary>
+		/// <param name="resp"></param>
+		/// <param name="data"></param>
         public delegate void OnConvertDocument(ConvertedDocument resp, string data);
+
         /// <summary>
         /// The delegate for loading a file, used by TrainClassifier().
         /// </summary>
         /// <param name="filename">The filename to load.</param>
         /// <returns>Should return a byte array of the file contents or null of failure.</returns>
         public delegate byte[] LoadFileDelegate(string filename);
+
         /// <summary>
         /// Set this property to overload the internal file loading of this class.
         /// </summary>
         public LoadFileDelegate LoadFile { get; set; }
 
+		/// <summary>
+		/// Convert document to use in other Watson services.
+		/// </summary>
+		/// <param name="callback"></param>
+		/// <param name="documentPath"></param>
+		/// <param name="conversionTarget"></param>
+		/// <param name="data"></param>
+		/// <returns></returns>
         public bool ConvertDocument(OnConvertDocument callback, string documentPath, string conversionTarget = ConversionTarget.ANSWER_UNITS, string data = null)
         {
             if (callback == null)

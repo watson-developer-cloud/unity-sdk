@@ -146,8 +146,17 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
     /// </summary>
     public class ConversionTarget
     {
+		/// <summary>
+		/// Answer units conversion target.
+		/// </summary>
         public const string ANSWER_UNITS = "{\"conversion_target\": \"answer_units\"}";
+		/// <summary>
+		/// Normalized html conversion target.
+		/// </summary>
         public const string NORMALIZED_HTML = "{\"conversion_target\": \"normalized_html\"}";
+		/// <summary>
+		/// Normalized text conversion target.
+		/// </summary>
         public const string NORMALIZED_TEXT = "{\"conversion_target\": \"normalized_text\"}";
     }
 
@@ -156,6 +165,9 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
     /// </summary>
     public class Version
     {
+		/// <summary>
+		/// The version.
+		/// </summary>
         public const string DOCUMENT_CONVERSION = "2015-12-15";
     }
 }

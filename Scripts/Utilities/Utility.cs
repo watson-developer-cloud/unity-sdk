@@ -313,7 +313,17 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         }
 
         #region Cache Generic Deserialization
-
+		/// <summary>
+		/// Save value to data cache.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="dictionaryCache"></param>
+		/// <param name="cacheDirectoryId"></param>
+		/// <param name="cacheId"></param>
+		/// <param name="objectToCache"></param>
+		/// <param name="prefix"></param>
+		/// <param name="maxCacheSize"></param>
+		/// <param name="maxCacheAge"></param>
         public static void SaveToCache<T>(Dictionary<string,DataCache> dictionaryCache, string cacheDirectoryId, string cacheId, T objectToCache, string prefix="", long maxCacheSize = 1024 * 1024 * 50, double maxCacheAge = 24 * 7) where T : class, new()
         {
             if (objectToCache != null)
@@ -335,6 +345,15 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             }
         }
 
+		/// <summary>
+		/// Get value from the data cache.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="dictionaryCache"></param>
+		/// <param name="cacheDirectoryId"></param>
+		/// <param name="cacheId"></param>
+		/// <param name="prefix"></param>
+		/// <returns></returns>
         public static T GetFromCache<T>(Dictionary<string,DataCache> dictionaryCache, string cacheDirectoryId, string cacheId, string prefix="") where T : class, new()
         {
             T cachedObject = null;

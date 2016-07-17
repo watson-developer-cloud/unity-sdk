@@ -125,7 +125,13 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// </summary>
         public class GetClustersRequest : RESTConnector.Request
         {
+			/// <summary>
+			/// Custom data.
+			/// </summary>
             public string Data { get; set; }
+			/// <summary>
+			/// The callback.
+			/// </summary>
             public OnGetClusters Callback { get; set; }
         }
 
@@ -204,7 +210,13 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// </summary>
         public class CreateClusterRequest : RESTConnector.Request
         {
+			/// <summary>
+			/// Custom data.
+			/// </summary>
             public string Data { get; set; }
+			/// <summary>
+			/// The callback.
+			/// </summary>
             public OnCreateCluster Callback { get; set; }
         }
 
@@ -285,8 +297,17 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// </summary>
         public class DeleteClusterRequest : RESTConnector.Request
         {
+			/// <summary>
+			/// Custom data.
+			/// </summary>
             public string Data { get; set; }
+			/// <summary>
+			/// The cluster identifier.
+			/// </summary>
             public string ClusterID { get; set; }
+			/// <summary>
+			/// The callback.
+			/// </summary>
             public OnDeleteCluster Callback { get; set; }
         }
 
@@ -343,8 +364,17 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// </summary>
         public class GetClusterRequest : RESTConnector.Request
         {
+			/// <summary>
+			/// Custom data.
+			/// </summary>
             public string Data { get; set; }
+			/// <summary>
+			/// The cluster identifier.
+			/// </summary>
             public string ClusterID { get; set; }
+			/// <summary>
+			/// The callback.
+			/// </summary>
             public OnGetCluster Callback { get; set; }
         }
 
@@ -383,9 +413,21 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         #endregion
 
         #region ListClusterConfigs
+		/// <summary>
+		/// Get Cluster Configs callback delegate.
+		/// </summary>
+		/// <param name="resp"></param>
+		/// <param name="data"></param>
         public delegate void OnGetClusterConfigs(SolrConfigList resp, string data);
 
-        public bool GetClusterConfigs(OnGetClusterConfigs callback, string clusterID, string customData = default(string))
+		/// <summary>
+		/// Returns a configuration .zip file for a cluster.
+		/// </summary>
+		/// <param name="callback"></param>
+		/// <param name="clusterID"></param>
+		/// <param name="customData"></param>
+		/// <returns></returns>
+		public bool GetClusterConfigs(OnGetClusterConfigs callback, string clusterID, string customData = default(string))
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -410,8 +452,17 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 		/// </summary>
         public class GetClusterConfigsRequest : RESTConnector.Request
         {
+			/// <summary>
+			/// Custom data.
+			/// </summary>
             public string Data { get; set; }
-            public string ClusterID { get; set; }
+			/// <summary>
+			/// The cluster identifier.
+			/// </summary>
+			public string ClusterID { get; set; }
+			/// <summary>
+			/// The callback.
+			/// </summary>
             public OnGetClusterConfigs Callback { get; set; }
         }
 
@@ -497,9 +548,21 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// </summary>
         public class DeleteClusterConfigRequest : RESTConnector.Request
         {
+			/// <summary>
+			/// Custom data.
+			/// </summary>
             public string Data { get; set; }
+			/// <summary>
+			/// The cluster identifier.
+			/// </summary>
             public string ClusterID { get; set; }
+			/// <summary>
+			/// The config identifier.
+			/// </summary>
             public string ConfigID { get; set; }
+			/// <summary>
+			/// The callback.
+			/// </summary>
             public OnDeleteClusterConfig Callback { get; set; }
         }
 
@@ -552,9 +615,21 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 
         private class GetClusterConfigRequest : RESTConnector.Request
         {
+			/// <summary>
+			/// Custom data.
+			/// </summary>
             public string Data { get; set; }
+			/// <summary>
+			/// The cluster identifier.
+			/// </summary>
             public string ClusterID { get; set; }
+			/// <summary>
+			/// The confguration name.
+			/// </summary>
             public string ConfigName { get; set; }
+			/// <summary>
+			/// The callback.
+			/// </summary>
             public OnGetClusterConfig Callback { get; set; }
         }
 
@@ -674,9 +749,21 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 
         private class UploadClusterConfigRequest : RESTConnector.Request
         {
+			/// <summary>
+			/// Custom data.
+			/// </summary>
             public string Data { get; set; }
+			/// <summary>
+			/// The cluster identifier.
+			/// </summary>
             public string ClusterID { get; set; }
+			/// <summary>
+			/// The configuration name.
+			/// </summary>
             public string ConfigName { get; set; }
+			/// <summary>
+			/// The callback.
+			/// </summary>
             public OnUploadClusterConfig Callback { get; set; }
         }
 
@@ -781,7 +868,13 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// </summary>
         public class CollectionRequest : RESTConnector.Request
         {
+			/// <summary>
+			/// Custom data.
+			/// </summary>
             public string Data { get; set; }
+			/// <summary>
+			/// The callback.
+			/// </summary>
             public OnCollections Callback { get; set; }
             /// <summary>
             /// Cluster ID required for all actions.
@@ -897,10 +990,25 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// </summary>
         public class IndexDocumentsRequest : RESTConnector.Request
         {
+			/// <summary>
+			/// Custom data.
+			/// </summary>
             public string Data { get; set; }
+			/// <summary>
+			/// The index data path.
+			/// </summary>
             public string IndexDataPath { get; set; }
+			/// <summary>
+			/// The cluster identifier to use.
+			/// </summary>
             public string ClusterID { get; set; }
+			/// <summary>
+			/// The collection name to use.
+			/// </summary>
             public string CollectionName { get; set; }
+			/// <summary>
+			/// The callback.
+			/// </summary>
             public OnIndexDocuments Callback { get; set; }
         }
 
@@ -970,7 +1078,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             SearchRequest req = new SearchRequest();
             req.Callback = callback;
             req.ClusterID = clusterID;
-            req.Collectionname = collectionName;
+            req.CollectionName = collectionName;
             req.Query = query;
             req.Fl = fl;
             req.Data = customData;
@@ -1002,11 +1110,29 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// </summary>
         public class SearchRequest : RESTConnector.Request
         {
+			/// <summary>
+			/// Custom data.
+			/// </summary>
             public string Data { get; set; }
+			/// <summary>
+			/// The cluster identifier to use.
+			/// </summary>
             public string ClusterID { get; set; }
-            public string Collectionname { get; set; }
+			/// <summary>
+			/// The collectionName to use.
+			/// </summary>
+            public string CollectionName { get; set; }
+			/// <summary>
+			/// The query.
+			/// </summary>
             public string Query { get; set; }
+			/// <summary>
+			/// The query fields to use.
+			/// </summary>
             public string[] Fl { get; set; }
+			/// <summary>
+			/// The callback.
+			/// </summary>
             public OnSearch Callback { get; set; }
         }
 
@@ -1076,7 +1202,13 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// </summary>
         public class GetRankersRequest : RESTConnector.Request
         {
+			/// <summary>
+			/// Custom data.
+			/// </summary>
             public string Data { get; set; }
+			/// <summary>
+			/// The callback.
+			/// </summary>
             public OnGetRankers Callback { get; set; }
         }
 
@@ -1176,9 +1308,21 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 		/// </summary>
 		public class CreateRankerRequest : RESTConnector.Request
 		{
+			/// <summary>
+			/// Custom data.
+			/// </summary>
 			public string Data { get; set; }
+			/// <summary>
+			/// The ranker name.
+			/// </summary>
 			public string Name { get; set; }
+			/// <summary>
+			/// The ranker training data path.
+			/// </summary>
 			public string TrainingDataPath { get; set; }
+			/// <summary>
+			/// The callback.
+			/// </summary>
 			public OnCreateRanker Callback { get; set; }
 		}
 
@@ -1277,9 +1421,21 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 		/// </summary>
 		public class RankRequest : RESTConnector.Request
 		{
+			/// <summary>
+			/// Custom data.
+			/// </summary>
 			public string Data { get; set; }
+			/// <summary>
+			/// The ranker identifier.
+			/// </summary>
 			public string RankerID { get; set; }
+			/// <summary>
+			/// The search results path.
+			/// </summary>
 			public string SearchResultsPath { get; set; }
+			/// <summary>
+			/// The callback.
+			/// </summary>
 			public OnRank Callback { get; set; }
 		}
 
@@ -1360,8 +1516,17 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 		/// </summary>
 		public class DeleteRankerRequest : RESTConnector.Request
 		{
+			/// <summary>
+			/// Custom data.
+			/// </summary>
 			public string Data { get; set; }
+			/// <summary>
+			/// The ranker identifier.
+			/// </summary>
 			public string RankerID { get; set; }
+			/// <summary>
+			/// The callback.
+			/// </summary>
 			public OnDeleteRanker Callback { get; set; }
 		}
 
@@ -1417,8 +1582,17 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 		/// </summary>
 		public class GetRankerRequest : RESTConnector.Request
 		{
+			/// <summary>
+			/// Custom data.
+			/// </summary>
 			public string Data { get; set; }
+			/// <summary>
+			/// The ranker identifier.
+			/// </summary>
 			public string RankerID { get; set; }
+			/// <summary>
+			/// The callback.
+			/// </summary>
 			public OnGetRanker Callback { get; set; }
 		}
 

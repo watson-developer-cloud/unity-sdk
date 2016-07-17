@@ -400,6 +400,9 @@ namespace IBM.Watson.DeveloperCloud.Services.ConversationExperimental.v1
 	#region Version
 	public class Version
     {
+		/// <summary>
+		/// The version.
+		/// </summary>
         public const string VERSION = "2016-05-19";
     }
     #endregion

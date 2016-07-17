@@ -73,7 +73,7 @@ namespace IBM.Watson.DeveloperCloud.Services.DeepQA.v1
         }
 
         /// <summary>
-        /// 
+        /// Find a question in the question cache.
         /// </summary>
         /// <param name="questionId"></param>
         /// <returns></returns>

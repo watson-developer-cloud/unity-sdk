@@ -194,12 +194,13 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 		#endregion
 
 		#region IWatsonService implementation
-
+		/// <exclude />
 		public string GetServiceID()
 		{
 			return SERVICE_ID;
 		}
 
+		/// <exclude />
 		public void GetServiceStatus(ServiceStatus callback)
 		{
             if (Config.Instance.FindCredentials(SERVICE_ID) != null)

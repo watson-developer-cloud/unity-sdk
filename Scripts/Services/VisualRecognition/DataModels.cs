@@ -25,8 +25,17 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
     [fsObject]
     public class ClassifyTopLevelMultiple
     {
+		/// <summary>
+		/// The number of images processed.
+		/// </summary>
         public int images_processed { get; set; }
+		/// <summary>
+		/// Array of classified images.
+		/// </summary>
         public ClassifyTopLevelSingle[] images { get; set; }
+		/// <summary>
+		/// Array of warnings.
+		/// </summary>
         public WarningInfo[] warnings { get; set; }
     }
 
@@ -36,10 +45,25 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
     [fsObject]
     public class ClassifyTopLevelSingle
     {
+		/// <summary>
+		/// The source URL.
+		/// </summary>
         public string source_url { get; set; }
+		/// <summary>
+		/// The resolved URL.
+		/// </summary>
         public string resolved_url { get; set; }
+		/// <summary>
+		/// The Image.
+		/// </summary>
         public string image { get; set; }
+		/// <summary>
+		/// The error.
+		/// </summary>
         public ErrorInfoNoCode error { get; set; }
+		/// <summary>
+		/// The classification results.
+		/// </summary>
         public ClassifyPerClassifier[] classifiers { get; set; }
     }
 
@@ -49,8 +73,17 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
     [fsObject]
     public class ClassifyPerClassifier
     {
+		/// <summary>
+		/// The name.
+		/// </summary>
         public string name { get; set; }
+		/// <summary>
+		/// The classifier identifier.
+		/// </summary>
         public string classifier_id { get; set; }
+		/// <summary>
+		/// Array of classification results.
+		/// </summary>
         public ClassResult[] classes { get; set; }
     }
 
@@ -60,9 +93,18 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
     [fsObject]
     public class ClassResult
     {
+		/// <summary>
+		/// The class result.
+		/// </summary>
         [fsProperty("class")]
         public string m_class { get; set; }
+		/// <summary>
+		/// The score.
+		/// </summary>
         public string score { get; set; }
+		/// <summary>
+		/// The type hierarchy.
+		/// </summary>
         public string type_hierarchy { get; set; }
     }
 
@@ -72,9 +114,21 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
     [fsObject]
     public class ClassifyParameters
     {
+		/// <summary>
+		/// The URL.
+		/// </summary>
         public string url { get; set; }
+		/// <summary>
+		/// The clasifier identifiers.
+		/// </summary>
         public string[] classifier_ids { get; set; }
+		/// <summary>
+		/// The owners.
+		/// </summary>
         public string[] owners { get; set; }
+		/// <summary>
+		/// The classification threshold.
+		/// </summary>
         public float threshold { get; set; }
     }
     #endregion
@@ -86,8 +140,17 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
     [fsObject]
     public class FacesTopLevelMultiple
     {
+		/// <summary>
+		/// Number of images processed.
+		/// </summary>
         public int images_processed { get; set; }
+		/// <summary>
+		/// Array of face classifications.
+		/// </summary>
         public FacesTopLevelSingle[] images { get; set; }
+		/// <summary>
+		/// Warning info.
+		/// </summary>
         public WarningInfo[] warnings { get; set; }
     }
 
@@ -97,10 +160,25 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
     [fsObject]
     public class FacesTopLevelSingle
     {
+		/// <summary>
+		/// The source URL.
+		/// </summary>
         public string source_url { get; set; }
+		/// <summary>
+		/// The resolved URL.
+		/// </summary>
         public string resolved_url { get; set; }
+		/// <summary>
+		/// The image.
+		/// </summary>
         public string image { get; set; }
+		/// <summary>
+		/// The error.
+		/// </summary>
         public ErrorInfoNoCode error { get; set; }
+		/// <summary>
+		/// The face results.
+		/// </summary>
         public OneFaceResult[] faces { get; set; }
     }
 
@@ -110,9 +188,21 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
     [fsObject]
     public class OneFaceResult
     {
+		/// <summary>
+		/// The face age.
+		/// </summary>
         public Age age { get; set; }
+		/// <summary>
+		/// The face gender.
+		/// </summary>
         public Gender gender { get; set; }
+		/// <summary>
+		/// The face location in pixels.
+		/// </summary>
         public FaceLocation face_location { get; set; }
+		/// <summary>
+		/// The face identity.
+		/// </summary>
         public Identity identity { get; set; }
     }
 
@@ -122,6 +212,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
     [fsObject]
     public class DetectFacesParameters
     {
+		/// <summary>
+		/// The face URL.
+		/// </summary>
         public string url { get; set; }
     }
     #endregion
@@ -133,8 +226,17 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
     [fsObject]
     public class TextRecogTopLevelMultiple
     {
+		/// <summary>
+		/// Number of images processed.
+		/// </summary>
         public int images_processed { get; set; }
+		/// <summary>
+		/// Array of text image classifications.
+		/// </summary>
         public TextRecogTopLevelSingle[] images { get; set; }
+		/// <summary>
+		/// The warnings.
+		/// </summary>
         public WarningInfo[] warnings { get; set; }
     }
 
@@ -144,11 +246,29 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
     [fsObject]
     public class TextRecogTopLevelSingle
     {
+		/// <summary>
+		/// The source URL.
+		/// </summary>
         public string source_url { get; set; }
+		/// <summary>
+		/// The resolved URL.
+		/// </summary>
         public string resolved_url { get; set; }
+		/// <summary>
+		/// The image.
+		/// </summary>
         public string image { get; set; }
+		/// <summary>
+		/// The error.
+		/// </summary>
         public ErrorInfoNoCode error { get; set; }
+		/// <summary>
+		/// The text.
+		/// </summary>
         public string text { get; set; }
+		/// <summary>
+		/// The words.
+		/// </summary>
         public TextRecogOneWord[] words { get; set; }
     }
 
@@ -158,9 +278,21 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
     [fsObject]
     public class TextRecogOneWord
     {
+		/// <summary>
+		/// The word.
+		/// </summary>
         public string word { get; set; }
+		/// <summary>
+		/// The word location in pixels.
+		/// </summary>
         public Location location { get; set; }
+		/// <summary>
+		/// The classification score.
+		/// </summary>
         public double score { get; set; }
+		/// <summary>
+		/// The line number.
+		/// </summary>
         public double line_number { get; set; }
     }
 
@@ -170,9 +302,21 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
     [fsObject]
     public class Location
     {
+		/// <summary>
+		/// The location width.
+		/// </summary>
         public double width { get; set; }
+		/// <summary>
+		/// The location height.
+		/// </summary>
         public double height { get; set; }
+		/// <summary>
+		/// The location left.
+		/// </summary>
         public double left { get; set; }
+		/// <summary>
+		/// The loction top.
+		/// </summary>
         public double top { get; set; }
     }
 
@@ -182,6 +326,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
     [fsObject]
     public class RecognizeTextParameters
     {
+		/// <summary>
+		/// The URL.
+		/// </summary>
         public string url { get; set; }
     }
     #endregion
@@ -193,6 +340,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
     [fsObject]
     public class GetClassifiersTopLevelBrief
     {
+		/// <summary>
+		/// Array of classifiers.
+		/// </summary>
         public GetClassifiersPerClassifierBrief[] classifiers { get; set; }
     }
 
@@ -202,7 +352,13 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
     [fsObject]
     public class GetClassifiersPerClassifierBrief
     {
+		/// <summary>
+		/// The classifier identifier.
+		/// </summary>
         public string classifier_id { get; set; }
+		/// <summary>
+		/// The classifier name.
+		/// </summary>
         public string name { get; set; }
     }
 
@@ -212,12 +368,33 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
     [fsObject]
     public class GetClassifiersPerClassifierVerbose
     {
+		/// <summary>
+		/// The classifier identifier.
+		/// </summary>
         public string classifier_id { get; set; }
+		/// <summary>
+		/// The classifier name.
+		/// </summary>
         public string name { get; set; }
+		/// <summary>
+		/// The classifier owner.
+		/// </summary>
         public string owner { get; set; }
+		/// <summary>
+		/// The classifier status.
+		/// </summary>
         public string status { get; set; }
+		/// <summary>
+		/// The classifier explanation.
+		/// </summary>
         public string explanation { get; set; }
+		/// <summary>
+		/// The classifier created.
+		/// </summary>
         public string created { get; set; }
+		/// <summary>
+		/// Array of classes.
+		/// </summary>
         public Class[] classes { get; set; }
     }
 
@@ -227,60 +404,135 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
     [fsObject]
     public class Class
     {
+		/// <summary>
+		/// The class.
+		/// </summary>
         [fsProperty("class")]
         public string m_Class { get; set; }
     }
     #endregion
 
     #region Common
+	/// <summary>
+	/// Warning info.
+	/// </summary>
     [fsObject]
     public class WarningInfo
     {
+		/// <summary>
+		/// The warning identifier.
+		/// </summary>
         public string warning_id { get; set; }
+		/// <summary>
+		/// The warning description.
+		/// </summary>
         public string description { get; set; }
     }
 
+	/// <summary>
+	/// Error info.
+	/// </summary>
     [fsObject]
     public class ErrorInfoNoCode
     {
+		/// <summary>
+		/// The error identifier.
+		/// </summary>
         public string error_id { get; set; }
+		/// <summary>
+		/// The error description.
+		/// </summary>
         public string description { get; set; }
     }
 
+	/// <summary>
+	/// Age of the face.
+	/// </summary>
     [fsObject]
     public class Age
     {
+		/// <summary>
+		/// The minimum age.
+		/// </summary>
         public int min { get; set; }
+		/// <summary>
+		/// The maximum age.
+		/// </summary>
         public int max { get; set; }
+		/// <summary>
+		/// The age classification score.
+		/// </summary>
         public double score { get; set; }
     }
 
+	/// <summary>
+	/// Gender of the face.
+	/// </summary>
     [fsObject]
     public class Gender
     {
+		/// <summary>
+		/// The gener.
+		/// </summary>
         public string gender { get; set; }
+		/// <summary>
+		/// The gender classification score.
+		/// </summary>
         public double score { get; set; }
     }
 
+	/// <summary>
+	/// Location of the face.
+	/// </summary>
     [fsObject]
     public class FaceLocation
     {
+		/// <summary>
+		/// The face location width.
+		/// </summary>
         public double width { get; set; }
+		/// <summary>
+		/// The face location height.
+		/// </summary>
         public double height { get; set; }
+		/// <summary>
+		/// The face location left.
+		/// </summary>
         public double left { get; set; }
+		/// <summary>
+		/// The face location top.
+		/// </summary>
         public double top { get; set; }
     }
 
+	/// <summary>
+	/// Identity of the face.
+	/// </summary>
     [fsObject]
     public class Identity
     {
+		/// <summary>
+		/// The name.
+		/// </summary>
         public string name { get; set; }
+		/// <summary>
+		/// The identity classification score.
+		/// </summary>
         public double score { get; set; }
+		/// <summary>
+		/// The identity classification type hierarchy.
+		/// </summary>
         public string type_hierarchy { get; set; }
     }
 
+	/// <summary>
+	/// The Visual Recognition version.
+	/// </summary>
     public class VisualRecognitionVersion
     {
+		/// <summary>
+		/// The version.
+		/// </summary>
         public const string Version = "2016-05-20";
     }
     #endregion

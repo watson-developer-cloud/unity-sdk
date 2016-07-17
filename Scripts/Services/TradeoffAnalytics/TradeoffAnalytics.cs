@@ -41,6 +41,10 @@ namespace IBM.Watson.DeveloperCloud.Services.TradeoffAnalytics.v1
 
         #region Dilemmas
         private const string FUNCTION_DILEMMA = "/v1/dilemmas";
+		/// <summary>
+		/// The On Dilemma callback delegate.
+		/// </summary>
+		/// <param name="resp"></param>
         public delegate void OnDilemma( DilemmasResponse resp );
 
         public bool GetDilemma(OnDilemma callback, Problem problem, Boolean generateVisualization)
