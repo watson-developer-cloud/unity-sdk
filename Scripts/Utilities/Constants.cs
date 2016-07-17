@@ -38,11 +38,11 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// <summary>
             /// Cache folder to customize a parent folder for cache directory
             /// </summary>
-            public static string CACHE_FOLDER = "";   //It needs to start with / 
+            public static string CACHE_FOLDER = "";   //It needs to start with /
             /// <summary>
             /// Log folder to customize a parent folder for logs
             /// </summary>
-            public static string LOG_FOLDER = "";    //It needs to start with / 
+            public static string LOG_FOLDER = "";    //It needs to start with /
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         public static class String
         {
             /// <exclude />
-            public const string VERSION = "watson-developer-cloud-unity-sdk-0.6.0";
+            public const string VERSION = "watson-developer-cloud-unity-sdk-0.6.1";
             /// <exclude />
             public const string DEBUG_DISPLAY_QUALITY = "Quality: {0}";
         }
