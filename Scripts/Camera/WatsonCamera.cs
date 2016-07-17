@@ -57,7 +57,7 @@ namespace IBM.Watson.DeveloperCloud.Camera
         #region Public Variable
 
 		/// <summary>
-		/// Instance of WatsonCamera.
+		/// Static instance of WatsonCamera.
 		/// </summary>
         public static WatsonCamera Instance
         {

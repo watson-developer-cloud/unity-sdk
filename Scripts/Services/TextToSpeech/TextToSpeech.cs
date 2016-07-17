@@ -27,11 +27,11 @@ using FullSerializer;
 
 namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 {
-    /// <summary>
-    /// This class wraps the TextToSpeech service.
-    /// <a href="http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/text-to-speech.html">TextToSpeech Service</a>
-    /// </summary>
-    public class TextToSpeech : IWatsonService
+	/// <summary>
+	/// This class wraps the Text to Speech service.
+	/// <a href="http://www.ibm.com/watson/developercloud/text-to-speech.html">Text to Speech Service</a>
+	/// </summary>
+	public class TextToSpeech : IWatsonService
     {
         #region Public Types
 

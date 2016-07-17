@@ -27,8 +27,8 @@ using IBM.Watson.DeveloperCloud.Logging;
 namespace IBM.Watson.DeveloperCloud.Services.ConversationExperimental.v1
 {
 	/// <summary>
-	/// This class wraps the Watson Conversation service. 
-	/// <a href="http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/conversation.html">Conversation Service</a>
+	/// This class wraps the Watson Experimental Conversation service. 
+	/// <a href="http://www.ibm.com/watson/developercloud/conversation.html">Experimental Conversation Service</a>
 	/// </summary>
 	public class ConversationExperimental : IWatsonService
 	{

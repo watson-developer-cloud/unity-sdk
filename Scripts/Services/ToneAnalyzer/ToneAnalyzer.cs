@@ -27,7 +27,11 @@ using FullSerializer;
 
 namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
 {
-    public class ToneAnalyzer : IWatsonService 
+	/// <summary>
+	/// This class wraps the Tone Analyzer service.
+	/// <a href="http://www.ibm.com/watson/developercloud/tone-analyzer.html">Tone Analyzer Service</a>
+	/// </summary>
+	public class ToneAnalyzer : IWatsonService 
     {
         #region Private Data
         private const string SERVICE_ID = "ToneAnalyzerV3";

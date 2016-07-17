@@ -28,7 +28,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 {
 	/// <summary>
 	/// This class wraps the Watson Conversation service. 
-	/// <a href="http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/conversation.html">Conversation Service</a>
+	/// <a href="http://www.ibm.com/watson/developercloud/conversation.html">Conversation Service</a>
 	/// </summary>
 	public class Conversation : IWatsonService
 	{

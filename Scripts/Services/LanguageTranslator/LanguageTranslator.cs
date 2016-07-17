@@ -27,11 +27,11 @@ using FullSerializer;
 
 namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v1
 {
-    /// <summary>
-    /// This class wraps the Language Translator service.
-    /// <a href="http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/language-translator.html">Language Translator Service</a>
-    /// </summary>
-    public class LanguageTranslator : IWatsonService
+	/// <summary>
+	/// This class wraps the Language Translator service.
+	/// <a href="http://www.ibm.com/watson/developercloud/language-translator.html">Language Translator Service</a>
+	/// </summary>
+	public class LanguageTranslator : IWatsonService
     {
         #region Public Types
         /// <summary>

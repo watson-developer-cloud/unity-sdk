@@ -29,10 +29,12 @@ using UnityEngine;
 
 namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 {
-    /// <summary>
-    /// Service integration for Alchemy API
-    /// </summary>
-    public class AlchemyAPI : IWatsonService
+	/// <summary>
+	/// This class wraps the Alchemy API Services.
+	/// <a href="http://www.ibm.com/watson/developercloud/alchemy-language.html">Alchemy Language</a>
+	/// <a href="http://www.ibm.com/watson/developercloud/alchemy-data-news.html">AlchemyData News</a>
+	/// </summary>
+	public class AlchemyAPI : IWatsonService
     {
 
         #region Private Data

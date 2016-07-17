@@ -30,7 +30,11 @@ using System.Collections;
 
 namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 {
-    public class VisualRecognition : IWatsonService
+	/// <summary>
+	/// This class wraps the Visual Recognition service.
+	/// <a href="http://www.ibm.com/watson/developercloud/visual-recognition.html">Visual Recognition Service</a>
+	/// </summary>
+	public class VisualRecognition : IWatsonService
     {
         #region Public Types
         /// <summary>

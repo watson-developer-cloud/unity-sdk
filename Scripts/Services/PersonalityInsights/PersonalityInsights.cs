@@ -27,7 +27,11 @@ using System.IO;
 
 namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v2
 {
-    public class PersonalityInsights : IWatsonService 
+	/// <summary>
+	/// This class wraps the Personality Insights service.
+	/// <a href="http://www.ibm.com/watson/developercloud/personality-insights.html">Personality Insights Service</a>
+	/// </summary>
+	public class PersonalityInsights : IWatsonService 
     {
         #region Private Data
         private const string SERVICE_ID = "PersonalityInsightsV2";

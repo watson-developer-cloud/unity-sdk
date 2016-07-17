@@ -109,6 +109,9 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
         public Content[] content { get; set; }
     }
 
+	/// <summary>
+	/// Document content.
+	/// </summary>
     [fsObject]
     public class Content
     {

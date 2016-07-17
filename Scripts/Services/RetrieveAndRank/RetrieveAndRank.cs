@@ -28,7 +28,11 @@ using System.Collections.Generic;
 
 namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 {
-    public class RetrieveAndRank : IWatsonService
+	/// <summary>
+	/// This class wraps the Retrieve and Rank service.
+	/// <a href="http://www.ibm.com/watson/developercloud/retrieve-rank.html">Retrieve and Rank Service</a>
+	/// </summary>
+	public class RetrieveAndRank : IWatsonService
     {
         #region Private Data
         private const string SERVICE_ID = "RetrieveAndRankV1";

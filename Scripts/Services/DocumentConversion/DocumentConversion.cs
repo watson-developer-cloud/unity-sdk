@@ -28,7 +28,11 @@ using System.IO;
 
 namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
 {
-    public class DocumentConversion : IWatsonService
+	/// <summary>
+	/// This class wraps the Document Conversion service.
+	/// <a href="http://www.ibm.com/watson/developercloud/document-conversion.html">Document Conversion Service</a>
+	/// </summary>
+	public class DocumentConversion : IWatsonService
     {
         #region Private Data
         private const string SERVICE_ID = "DocumentConversionV1";
