@@ -28,11 +28,11 @@ using System.IO;
 
 namespace IBM.Watson.DeveloperCloud.Services.Dialog.v1
 {
-    /// <summary>
-    /// This class wraps the Watson Dialog service. 
-    /// <a href="http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/dialog.html">Dialog Service</a>
-    /// </summary>
-    public class Dialog : IWatsonService
+	/// <summary>
+	/// This class wraps the Watson Dialog service. 
+	/// <a href="http://www.ibm.com/watson/developercloud/dialog.html">Dialog Service</a>
+	/// </summary>
+	public class Dialog : IWatsonService
     {
         #region Public Types
         /// <summary>

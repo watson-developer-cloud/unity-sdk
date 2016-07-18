@@ -30,11 +30,11 @@ using System.Text;
 
 namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 {
-    /// <summary>
-    /// This class wraps the Watson SpeechToText service.
-    /// <a href="http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/speech-to-text.html">SpeechToText Service</a>
-    /// </summary>
-    public class SpeechToText : IWatsonService
+	/// <summary>
+	/// This class wraps the Watson Speech to Text service.
+	/// <a href="http://www.ibm.com/watson/developercloud/speech-to-text.html">Speech to Text Service</a>
+	/// </summary>
+	public class SpeechToText : IWatsonService
     {
         #region Constants
         /// <summary>

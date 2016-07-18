@@ -27,11 +27,11 @@ using FullSerializer;
 
 namespace IBM.Watson.DeveloperCloud.Services.TradeoffAnalytics.v1
 {
-    /// <summary>
-    /// This class wraps the TradeOff Analytics service.
-    /// <a href="https://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/tradeoff-analytics/">TradeOff Analytics Service</a>
-    /// </summary>
-    public class TradeoffAnalytics : IWatsonService
+	/// <summary>
+	/// This class wraps the TradeOff Analytics service.
+	/// <a href="http://www.ibm.com/watson/developercloud/tradeoff-analytics.html">TradeOff Analytics Service</a>
+	/// </summary>
+	public class TradeoffAnalytics : IWatsonService
     {
 
         #region Private Data
@@ -41,6 +41,10 @@ namespace IBM.Watson.DeveloperCloud.Services.TradeoffAnalytics.v1
 
         #region Dilemmas
         private const string FUNCTION_DILEMMA = "/v1/dilemmas";
+		/// <summary>
+		/// The On Dilemma callback delegate.
+		/// </summary>
+		/// <param name="resp"></param>
         public delegate void OnDilemma( DilemmasResponse resp );
 
         public bool GetDilemma(OnDilemma callback, Problem problem, Boolean generateVisualization)

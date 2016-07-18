@@ -20,6 +20,9 @@ using UnityEngine.UI;
 
 namespace IBM.Watson.DeveloperCloud.Utilities
 {
+	/// <summary>
+	/// Displays the frame rate of the application.
+	/// </summary>
     public class FrameRateCounter : MonoBehaviour
     {
         const float FPS_INTERVAL = 0.5f;

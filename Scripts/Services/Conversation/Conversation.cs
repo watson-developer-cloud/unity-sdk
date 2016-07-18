@@ -28,7 +28,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 {
 	/// <summary>
 	/// This class wraps the Watson Conversation service. 
-	/// <a href="http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/conversation.html">Conversation Service</a>
+	/// <a href="http://www.ibm.com/watson/developercloud/conversation.html">Conversation Service</a>
 	/// </summary>
 	public class Conversation : IWatsonService
 	{
@@ -36,7 +36,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 		/// <summary>
 		/// The callback for GetWorkspaces().
 		/// </summary>
-		public delegate void OnGetWorkspaces(DataModels.Workspaces workspaces);
+		public delegate void OnGetWorkspaces(Workspaces workspaces);
 		/// <summary>
 		/// The callback for Message().
 		/// </summary>
@@ -46,7 +46,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 		/// The callback delegate for the Converse() function.
 		/// </summary>
 		/// <param name="resp">The response object to a call to Converse().</param>
-		public delegate void OnMessage(DataModels.MessageResponse resp);
+		public delegate void OnMessage(MessageResponse resp);
 
 		#endregion
 
@@ -142,7 +142,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 			req.Callback = callback;
 			req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            req.Parameters["version"] = DataModels.CONVERSATION_VERSION;
+            req.Parameters["version"] = Version.VERSION;
 			req.Function = "/" + workspaceId + "/message";
 			req.Send = Encoding.UTF8.GetBytes(reqString);
 			req.OnResponse = MessageResp;
@@ -157,7 +157,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 
 		private void MessageResp(RESTConnector.Request req, RESTConnector.Response resp)
 		{
-			DataModels.MessageResponse response = new DataModels.MessageResponse();
+			MessageResponse response = new MessageResponse();
 			if (resp.Success)
 			{
 				try
@@ -194,12 +194,13 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 		#endregion
 
 		#region IWatsonService implementation
-
+		/// <exclude />
 		public string GetServiceID()
 		{
 			return SERVICE_ID;
 		}
 
+		/// <exclude />
 		public void GetServiceStatus(ServiceStatus callback)
 		{
             if (Config.Instance.FindCredentials(SERVICE_ID) != null)
@@ -237,29 +238,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
                 }
                 else
                 {
-//                    if (!m_Service.GetWorkspaces(OnGetWorkspaces))
-//                        OnFailure("Failed to invoke GetDialogs().");
                     OnFailure("Please define a workspace variable in config.json (" + SERVICE_ID + "_ID)");
                 }
             }
-            /*
-            private void OnGetWorkspaces(DataModels.Workspaces workspaces)
-            {
-                if (m_Callback != null)
-                {
-                    foreach (DataModels.Workspace workspace in workspaces.workspaces)
-                    {
-                        if (!m_Service.Message(workspace.workspace_id, "Hello", OnMessage))
-                            OnFailure("Failed to invoke Message().");
-                        else
-                            m_ConversationCount += 1;
-                    }
-                }
-                else
-                    OnFailure("GetMessages() failed.");
-            }
-            */
-            private void OnMessage(DataModels.MessageResponse resp)
+           
+            private void OnMessage(MessageResponse resp)
             {
                 if (m_ConversationCount > 0)
                 {

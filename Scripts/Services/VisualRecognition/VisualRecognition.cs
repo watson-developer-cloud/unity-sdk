@@ -30,7 +30,11 @@ using System.Collections;
 
 namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 {
-    public class VisualRecognition : IWatsonService
+	/// <summary>
+	/// This class wraps the Visual Recognition service.
+	/// <a href="http://www.ibm.com/watson/developercloud/visual-recognition.html">Visual Recognition Service</a>
+	/// </summary>
+	public class VisualRecognition : IWatsonService
     {
         #region Public Types
         /// <summary>
@@ -610,6 +614,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.Callback = callback;
             req.Parameters["api_key"] = mp_ApiKey;
             req.Parameters["version"] = VisualRecognitionVersion.Version;
+            req.Timeout = 10.0f * 60.0f;
             req.OnResponse = OnGetClassifiersResp;
 
             return connector.Send(req);
@@ -899,16 +904,16 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
             return mimeType;
         }
-        #endregion
+		#endregion
 
-        #region IWatsonService implementation
-
-        public string GetServiceID()
+		#region IWatsonService implementation
+		/// <exclude />
+		public string GetServiceID()
         {
             return SERVICE_ID;
         }
-
-        public void GetServiceStatus(ServiceStatus callback)
+		/// <exclude />
+		public void GetServiceStatus(ServiceStatus callback)
         {
             if (Config.Instance.FindCredentials(SERVICE_ID) != null)
                 new CheckServiceStatus(this, callback);
