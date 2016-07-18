@@ -42,7 +42,9 @@ public class TestConversation : UnitTest
 			while(!m_MessageTested)
 				yield return null;
 		}
-	}
+
+        yield break;
+    }
 
 	private void OnMessage(MessageResponse resp)
 	{

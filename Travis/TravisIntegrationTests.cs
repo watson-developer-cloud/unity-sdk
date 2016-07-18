@@ -31,7 +31,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
     {
         public static void RunTests()
         {
-            System.Console.WriteLine("***** Running Integration tests!");
+            Log.Debug("TravisIntegrationTests", "***** Running Integration tests!");
 
 #if UNITY_EDITOR
             Runnable.EnableRunnableInEditor();
@@ -53,7 +53,6 @@ namespace IBM.Watson.DeveloperCloud.Editor
                         {
                             ProjectToTest = kv.Length > 1 ? kv[1] : "";
                             Log.Status("RunUnitTest", "AutoLunchOptions ProjectToTest:{0}", ProjectToTest);
-                            System.Console.WriteLine(string.Format("AutoLunchOptions ProjectToTest:{0}", ProjectToTest));
                             break;
                         }
                     }
@@ -68,7 +67,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
         }
         static void OnTravisIntegrationTestsComplete()
         {
-            System.Console.WriteLine("***** Integration tests complete!");
+            Log.Debug("TravisIntegrationTests", " ***** Integration tests complete!");
         }
     }
 }
