@@ -39,7 +39,12 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             if (!condition)
             {
                 Log.Error("UnitTest", "UnitTest {0} has failed, Stack:\n{1}", GetType().Name, StackTraceUtility.ExtractStackTrace());
+                System.Console.WriteLine(string.Format("**********UnitTest {0} has failed, Stack:\n{1}", GetType().Name, StackTraceUtility.ExtractStackTrace()));
                 TestFailed = true;
+            }
+            else
+            {
+                System.Console.WriteLine(string.Format("**********UnitTest {0} has passed.", GetType().Name));
             }
         }
 
