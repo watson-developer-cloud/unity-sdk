@@ -274,6 +274,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             DetectFacesReq req = new DetectFacesReq();
             req.Callback = callback;
             req.OnResponse = OnDetectFacesResp;
+            req.Timeout = REQUEST_TIMEOUT;
             req.Parameters["api_key"] = mp_ApiKey;
             req.Parameters["url"] = url;
             req.Parameters["version"] = VisualRecognitionVersion.Version;
@@ -407,6 +408,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             RecognizeTextReq req = new RecognizeTextReq();
             req.Callback = callback;
             req.OnResponse = OnRecognizeTextResp;
+            req.Timeout = REQUEST_TIMEOUT;
             req.Parameters["api_key"] = mp_ApiKey;
             req.Parameters["url"] = url;
             req.Parameters["version"] = VisualRecognitionVersion.Version;
@@ -614,7 +616,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.Callback = callback;
             req.Parameters["api_key"] = mp_ApiKey;
             req.Parameters["version"] = VisualRecognitionVersion.Version;
-            req.Timeout = 10.0f * 60.0f;
+            req.Timeout = 20.0f * 60.0f;
             req.OnResponse = OnGetClassifiersResp;
 
             return connector.Send(req);
@@ -677,6 +679,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
             GetClassifierReq req = new GetClassifierReq();
             req.Callback = callback;
+            req.Timeout = REQUEST_TIMEOUT;
             req.Parameters["api_key"] = mp_ApiKey;
             req.Parameters["version"] = VisualRecognitionVersion.Version;
             req.OnResponse = OnGetClassifierResp;

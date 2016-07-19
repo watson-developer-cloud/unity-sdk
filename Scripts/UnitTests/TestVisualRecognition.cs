@@ -53,16 +53,16 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             //  test get classifiers
             Log.Debug("TestVisualRecognition", "Getting all classifiers!");
             m_VisualRecognition.GetClassifiers(OnGetClassifiers);
-            while(!m_GetClassifiersTested)
+            while (!m_GetClassifiersTested)
                 yield return null;
-            
+
             //  test find classifier
             Log.Debug("TestVisualRecognition", "Finding classifier {0}!", m_ClassifierName);
             m_VisualRecognition.FindClassifier(m_ClassifierName, OnFindClassifier);
-            while(!m_FindClassifierTested)
+            while (!m_FindClassifierTested)
                 yield return null;
-            
-            if(m_TrainClassifier)
+
+            if (m_TrainClassifier)
             {
                 //  test train classifier
                 Log.Debug("TestVisualRecognition", "Training classifier!");
@@ -364,6 +364,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         {
             if(success)
             {
+                Log.Debug("TestVisualRecognition", "Classifier deleted!");
                 m_VisualRecognition.FindClassifier(m_ClassifierName, OnDeleteClassifierFinal);
             }
 
