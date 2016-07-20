@@ -82,6 +82,8 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private bool m_IsClusterReady = false;
         private bool m_IsRankerReady = false;
+
+		private bool m_IsDoneWaiting = false;
         public override IEnumerator RunTest()
         {
             m_IntegrationTestClusterConfigPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/RetrieveAndRank/cranfield_solr_config.zip";
@@ -94,14 +96,14 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             m_ExampleRankerID = Config.Instance.GetVariableValue("RetrieveAndRank_IntegrationTestRankerID");
             m_ExampleCollectionName = Config.Instance.GetVariableValue("RetrieveAndRank_IntegrationTestCollectionName");
 
-            //  Get clusters
-            Log.Debug("TestRetrieveAndRank", "*** Attempting to get clusters!");
-            m_RetrieveAndRank.GetClusters(OnGetClusters);
-            while (!m_GetClustersTested)
-                yield return null;
-            
-            //  Create cluster
-            Log.Debug("TestRetrieveAndRank", "*** Attempting to create cluster!");
+			//  Get clusters
+			Log.Debug("TestRetrieveAndRank", "*** Attempting to get clusters!");
+			m_RetrieveAndRank.GetClusters(OnGetClusters);
+			while (!m_GetClustersTested)
+				yield return null;
+
+			//  Create cluster
+			Log.Debug("TestRetrieveAndRank", "*** Attempting to create cluster!");
             m_RetrieveAndRank.CreateCluster(OnCreateCluster, m_ClusterToCreateName, "1");
             while (!m_CreateClusterTested)
                 yield return null;
@@ -202,19 +204,27 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             while (!m_DeleteClusterConfigTested)
                 yield return null;
 
-            yield return new WaitForSeconds(10f);
+			//	Wait before deleting cluster
+			Runnable.Run(WaitUp(5f));
+			while (!m_IsDoneWaiting)
+				yield return null;
 
-            //  Delete cluster
-            Log.Debug("TestRetrieveAndRank", "*** Attempting to delete cluster {0}!", m_CreatedClusterID);
+			//  Delete cluster
+			Log.Debug("TestRetrieveAndRank", "*** Attempting to delete cluster {0}!", m_CreatedClusterID);
             m_RetrieveAndRank.DeleteCluster(OnDeleteCluster, m_CreatedClusterID);
             while (!m_DeleteClusterTested)
                 yield return null;
+			
+			yield break;
+		}
 
-            yield break;
-        }
+		private IEnumerator WaitUp(float waitTime)
+		{
+			yield return new WaitForSeconds(waitTime);
+			m_IsDoneWaiting = true;
+		}
 
-
-        private void OnGetClusters(SolrClusterListResponse resp, string data)
+		private void OnGetClusters(SolrClusterListResponse resp, string data)
         {
             Test(resp != null);
 
