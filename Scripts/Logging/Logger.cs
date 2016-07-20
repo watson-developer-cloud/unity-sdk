@@ -214,8 +214,7 @@ namespace IBM.Watson.DeveloperCloud.Logging
         public static void Debug(string subSystem, string messageFmt, params object[] args)
         {
             LogSystem.Instance.ProcessLog(new LogRecord(LogLevel.DEBUG, subSystem, messageFmt, args));
-            if (UnityEditorInternal.InternalEditorUtility.inBatchMode)
-                System.Console.WriteLine("[{0}][{1}]: {2}", LogLevel.DEBUG, subSystem, string.Format(messageFmt, args));
+            System.Console.WriteLine("[{0}][{1}]: {2}", LogLevel.DEBUG, subSystem, string.Format(messageFmt, args));
         }
 #else
         // We compile out Log.Debug() functions in release builds.
@@ -232,8 +231,7 @@ namespace IBM.Watson.DeveloperCloud.Logging
         public static void Status(string subSystem, string messageFmt, params object[] args)
         {
             LogSystem.Instance.ProcessLog(new LogRecord(LogLevel.STATUS, subSystem, messageFmt, args));
-            if (UnityEditorInternal.InternalEditorUtility.inBatchMode)
-                System.Console.WriteLine("[{0}][{1}]: {2}", LogLevel.STATUS, subSystem, string.Format(messageFmt, args));
+            System.Console.WriteLine("[{0}][{1}]: {2}", LogLevel.STATUS, subSystem, string.Format(messageFmt, args));
         }
         /// <summary>
         /// Log a WARNING level message.
@@ -244,7 +242,6 @@ namespace IBM.Watson.DeveloperCloud.Logging
         public static void Warning(string subSystem, string messageFmt, params object[] args)
         {
             LogSystem.Instance.ProcessLog(new LogRecord(LogLevel.WARNING, subSystem, messageFmt, args));
-            if (UnityEditorInternal.InternalEditorUtility.inBatchMode)
                 System.Console.WriteLine("[{0}][{1}]: {2}", LogLevel.WARNING, subSystem, string.Format(messageFmt, args));
         }
         /// <summary>
@@ -256,8 +253,7 @@ namespace IBM.Watson.DeveloperCloud.Logging
         public static void Error(string subSystem, string messageFmt, params object[] args)
         {
             LogSystem.Instance.ProcessLog(new LogRecord(LogLevel.ERROR, subSystem, messageFmt, args));
-            if (UnityEditorInternal.InternalEditorUtility.inBatchMode)
-                System.Console.WriteLine("[{0}][{1}]: {2}", LogLevel.ERROR, subSystem, string.Format(messageFmt, args));
+            System.Console.WriteLine("[{0}][{1}]: {2}", LogLevel.ERROR, subSystem, string.Format(messageFmt, args));
         }
         /// <summary>
         /// Log a CRITICAL level message.
@@ -268,8 +264,7 @@ namespace IBM.Watson.DeveloperCloud.Logging
         public static void Critical(string subSystem, string messageFmt, params object[] args)
         {
             LogSystem.Instance.ProcessLog(new LogRecord(LogLevel.CRITICAL, subSystem, messageFmt, args));
-            if (UnityEditorInternal.InternalEditorUtility.inBatchMode)
-                System.Console.WriteLine("[{0}][{1}]: {2}", LogLevel.CRITICAL, subSystem, string.Format(messageFmt, args));
+            System.Console.WriteLine("[{0}][{1}]: {2}", LogLevel.CRITICAL, subSystem, string.Format(messageFmt, args));
         }
     }
 }
