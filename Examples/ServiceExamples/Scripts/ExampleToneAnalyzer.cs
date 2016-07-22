@@ -15,7 +15,6 @@
 *
 */
 
-
 using UnityEngine;
 using System.Collections;
 using IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3;
