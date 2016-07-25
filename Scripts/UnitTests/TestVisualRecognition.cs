@@ -17,6 +17,7 @@
 
 using System.Collections;
 using IBM.Watson.DeveloperCloud.Logging;
+using System.Collections.Generic;
 using IBM.Watson.DeveloperCloud.Utilities;
 using System.IO;
 using UnityEngine;
@@ -68,7 +69,9 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 Log.Debug("TestVisualRecognition", "Training classifier!");
                 string m_positiveExamplesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/giraffe_positive_examples.zip";
                 string m_negativeExamplesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/negative_examples.zip";
-                Test(m_VisualRecognition.TrainClassifier(OnTrainClassifier, m_ClassifierName, "giraffe", m_positiveExamplesPath, m_negativeExamplesPath));
+                Dictionary<string, string> positiveExamples = new Dictionary<string, string>();
+                positiveExamples.Add("giraffe", m_positiveExamplesPath);
+                Test(m_VisualRecognition.TrainClassifier(OnTrainClassifier, m_ClassifierName, positiveExamples, m_negativeExamplesPath));
                 while(!m_TrainClasifierTested)
                     yield return null;
 
