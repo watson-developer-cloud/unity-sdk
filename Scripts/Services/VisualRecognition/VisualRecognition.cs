@@ -146,7 +146,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         }
 
         /// <summary>
-        /// Classifies a posted image.
+        /// Classifies an image from the file system.
         /// </summary>
         /// <param name="callback">Callback.</param>
         /// <param name="imagePath">Image path.</param>
@@ -155,7 +155,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <param name="threshold">Threshold.</param>
         /// <param name="acceptLanguage">Accept language.</param>
         /// <param name="customData">Custom data.</param>
-        public bool Classify(OnClassify callback, string imagePath, string[] owners = default(string[]), string[] classifierIDs = default(string[]), float threshold = default(float), string acceptLanguage = "en", string customData = default(string))
+        public bool Classify(string imagePath, OnClassify callback, string[] owners = default(string[]), string[] classifierIDs = default(string[]), float threshold = default(float), string acceptLanguage = "en", string customData = default(string))
         {
             if(string.IsNullOrEmpty(mp_ApiKey))
                 mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
@@ -184,10 +184,21 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                     Log.Error("VisualRecognition", "Failed to upload {0}!", imagePath);
             }
 
-            return Classify(callback, imagePath, imageData, owners, classifierIDs, threshold, acceptLanguage);
+            return Classify(callback, imageData, owners, classifierIDs, threshold, acceptLanguage);
         }
 
-        private bool Classify(OnClassify callback, string imagePath, byte[] imageData, string[] owners = default(string[]), string[] classifierIDs = default(string[]), float threshold = default(float), string acceptLanguage = "en", string customData = default(string))
+        /// <summary>
+        /// Classifies an image using byte data.
+        /// </summary>
+        /// <param name="callback">Callback.</param>
+        /// <param name="imageData">Byte array of image data.</param>
+        /// <param name="owners">Owners.</param>
+        /// <param name="classifierIDs">An array of classifier identifiers.</param>
+        /// <param name="threshold">Threshold.</param>
+        /// <param name="acceptLanguage">Accepted language.</param>
+        /// <param name="customData">Custom data.</param>
+        /// <returns></returns>
+        public bool Classify(OnClassify callback, byte[] imageData, string[] owners = default(string[]), string[] classifierIDs = default(string[]), float threshold = default(float), string acceptLanguage = "en", string customData = default(string))
         {
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_CLASSIFY);
             if(connector == null)
@@ -299,7 +310,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <param name="callback">Callback.</param>
         /// <param name="imagePath">Image path.</param>
         /// <param name="customData">Custom data.</param>
-        public bool DetectFaces(OnDetectFaces callback, string imagePath, string customData = default(string))
+        public bool DetectFaces(string imagePath, OnDetectFaces callback, string customData = default(string))
         {
             if(string.IsNullOrEmpty(imagePath))
                 throw new ArgumentNullException("Define an image path to classify!");
@@ -326,10 +337,17 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                     Log.Error("VisualRecognition", "Failed to upload {0}!", imagePath);
             }
 
-            return DetectFaces(callback, imagePath, imageData, customData);
+            return DetectFaces(callback, imageData, customData);
         }
 
-        private bool DetectFaces(OnDetectFaces callback, string imagePath, byte[] imageData = default(byte[]), string customData = default(string))
+        /// <summary>
+        /// Detect faces in an image's byteData.
+        /// </summary>
+        /// <param name="callback">Callback.</param>
+        /// <param name="imageData">ByteArray of image data.</param>
+        /// <param name="customData">Custom data.</param>
+        /// <returns></returns>
+        public bool DetectFaces(OnDetectFaces callback, byte[] imageData = default(byte[]), string customData = default(string))
         {
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_DETECT_FACES);
             if(connector == null)
@@ -438,9 +456,11 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <param name="callback">Callback.</param>
         /// <param name="imagePath">Image path.</param>
         /// <param name="customData">Custom data.</param>
-        public bool RecognizeText(OnRecognizeText callback, string imagePath, string customData = default(string))
+        public bool RecognizeText(string imagePath, OnRecognizeText callback, string customData = default(string))
         {
-            if(string.IsNullOrEmpty(imagePath))
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(imagePath))
                 throw new ArgumentNullException("Define an image path to classify!");
             if(string.IsNullOrEmpty(mp_ApiKey))
                 mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
@@ -465,10 +485,17 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                     Log.Error("VisualRecognition", "Failed to upload {0}!", imagePath);
             }
 
-            return RecognizeText(callback, imagePath, imageData, customData);
+            return RecognizeText(callback, imageData, customData);
         }
 
-        private bool RecognizeText(OnRecognizeText callback, string imagePath, byte[] imageData = default(byte[]), string customData = default(string))
+        /// <summary>
+        /// Recognizes text in image bytedata.
+        /// </summary>
+        /// <param name="callback">Callback.</param>
+        /// <param name="imageData">Image's byte array data.</param>
+        /// <param name="customData">Custom data.</param>
+        /// <returns></returns>
+        public bool RecognizeText(OnRecognizeText callback, byte[] imageData = default(byte[]), string customData = default(string))
         {
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_RECOGNIZE_TEXT);
             if(connector == null)
@@ -499,23 +526,6 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             /// </summary>
             public OnRecognizeText Callback { get; set; }
         }
-
-        //private string BuildRecognizeTextParametersJson(string url)
-        //{
-        //    RecognizeTextParameters cParameters = new RecognizeTextParameters();
-        //    cParameters.url = url;
-
-        //    fsData jsondata = new fsData();
-        //    if (sm_Serializer.TrySerialize(cParameters, out jsondata).Succeeded)
-        //    {
-        //        return fsJsonPrinter.CompressedJson(jsondata, true);
-        //    }
-        //    else
-        //    {
-        //        Log.Error("VisualRecognition", "Error parsing to JSON!");
-        //        return null;
-        //    }
-        //}
 
         private void OnRecognizeTextResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
@@ -1031,7 +1041,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                     OnFailure("Failed to get classifiers!");
             }
 
-            private void OnCheckServices(GetClassifiersTopLevelBrief classifiers)
+            private void OnCheckServices(GetClassifiersTopLevelBrief classifiers, string customData)
             {
                 if (m_Callback != null)
                 {
@@ -1045,7 +1055,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                                 int numClassifiers = (classifiers.classifiers.Length > 5) ? 5 : classifiers.classifiers.Length;
                                 for(int i = 0; i < numClassifiers; i++)
                                 {
-                                    if(!m_Service.GetClassifier(classifiers.classifiers[i].classifier_id, OnCheckService))
+                                    if(!m_Service.GetClassifier(OnCheckService, classifiers.classifiers[i].classifier_id))
                                     {
                                         Log.Debug("VisualRecognition", "Failed to call GetClassifier()");
                                     }
@@ -1082,7 +1092,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 }
             }
 
-            private void OnCheckService(GetClassifiersPerClassifierVerbose classifier)
+            private void OnCheckService(GetClassifiersPerClassifierVerbose classifier, string customData)
             {
                 if (m_GetClassifierCount > 0)
                 {
@@ -1097,7 +1107,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                         else
                         {
                             // try to classify something with this classifier.
-                            if (!m_Service.Classify("https://upload.wikimedia.org/wikipedia/commons/e/e9/Official_portrait_of_Barack_Obama.jpg", OnClassify))
+                            if (!m_Service.Classify(OnClassify, "https://upload.wikimedia.org/wikipedia/commons/e/e9/Official_portrait_of_Barack_Obama.jpg"))
                             {
                                 Log.Debug("VisualRecognition", "Failed to invoke Classify!");
                             }
@@ -1114,7 +1124,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 }
             }
 
-            private void OnClassify(ClassifyTopLevelMultiple result)
+            private void OnClassify(ClassifyTopLevelMultiple result, string customData)
             {
                 if (m_ClassifyCount > 0)
                 {
