@@ -20,11 +20,9 @@ using System.Collections;
 using IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1;
 using System;
 using IBM.Watson.DeveloperCloud.Logging;
-using UnityEditor;
 using System.IO;
 using IBM.Watson.DeveloperCloud.Utilities;
 using System.Collections.Generic;
-
 
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {

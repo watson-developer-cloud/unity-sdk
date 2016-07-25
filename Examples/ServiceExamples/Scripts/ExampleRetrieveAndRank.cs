@@ -20,8 +20,10 @@ using System.Collections;
 using IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
-using UnityEditor;
 using System.IO;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class ExampleRetrieveAndRank : MonoBehaviour
 {
@@ -222,7 +224,8 @@ public class ExampleRetrieveAndRank : MonoBehaviour
     
     private void OnGetClusterConfig(byte[] respData, string data)
     {
-        if(respData != null)
+#if UNITY_EDITOR
+		if (respData != null)
         {
             Log.Debug("ExampleRetrieveAndRank", "OnGetClusterConfig | success!");
             string currentDirectory = Application.dataPath;
@@ -235,7 +238,10 @@ public class ExampleRetrieveAndRank : MonoBehaviour
         }
         else
             Log.Debug("ExampleRetrieveAndRank", "OnGetClusterConfig | respData is null!");
-    }
+#else
+		Log.Debug("ExampleRetrieveAndRank", "Not in editor - skipping download.");
+#endif
+	}
 
     private void OnSaveConfig(bool success, string data)
     {
