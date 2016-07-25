@@ -34,58 +34,59 @@ public class ExampleVisualRecognition : MonoBehaviour
     {
         LogSystem.InstallDefaultReactors();
 
-        //          Get all classifiers
-        if (!m_VisualRecognition.GetClassifiers(OnGetClassifiers))
-            Log.Debug("ExampleVisualRecognition", "Getting classifiers failed!");
-        //
-        //          Find classifier by name
-        m_VisualRecognition.FindClassifier(m_classifierName, OnFindClassifier);
+        ////          Get all classifiers
+        //if (!m_VisualRecognition.GetClassifiers(OnGetClassifiers))
+        //    Log.Debug("ExampleVisualRecognition", "Getting classifiers failed!");
+        ////
+        ////          Find classifier by name
+        //m_VisualRecognition.FindClassifier(m_classifierName, OnFindClassifier);
 
-        //          Find classifier by ID
-        if (!m_VisualRecognition.GetClassifier(m_classifierID, OnGetClassifier))
-            Log.Debug("ExampleVisualRecognition", "Getting classifier failed!");
+        ////          Find classifier by ID
+        //if (!m_VisualRecognition.GetClassifier(m_classifierID, OnGetClassifier))
+        //    Log.Debug("ExampleVisualRecognition", "Getting classifier failed!");
 
-        //          Delete classifier by ID
-        if (!m_VisualRecognition.DeleteClassifier(m_classifierToDelete, OnDeleteClassifier))
-            Log.Debug("ExampleVisualRecognition", "Deleting classifier failed!");
+        ////          Delete classifier by ID
+        //if (!m_VisualRecognition.DeleteClassifier(m_classifierToDelete, OnDeleteClassifier))
+        //    Log.Debug("ExampleVisualRecognition", "Deleting classifier failed!");
 
-        //          Train classifier
-        string m_positiveExamplesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/giraffe_positive_examples.zip";
-        string m_negativeExamplesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/negative_examples.zip";
-        if (!m_VisualRecognition.TrainClassifier("unity-test-classifier5", "giraffe", m_positiveExamplesPath, m_negativeExamplesPath, OnTrainClassifier))
-            Log.Debug("ExampleVisualRecognition", "Train classifier failed!");
+        ////          Train classifier
+        //string m_positiveExamplesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/giraffe_positive_examples.zip";
+        //string m_negativeExamplesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/negative_examples.zip";
+        //if (!m_VisualRecognition.TrainClassifier("unity-test-classifier5", "giraffe", m_positiveExamplesPath, m_negativeExamplesPath, OnTrainClassifier))
+        //    Log.Debug("ExampleVisualRecognition", "Train classifier failed!");
 
-        //          Classify get
-        if (!m_VisualRecognition.Classify(m_imageURL, OnClassify))
-            Log.Debug("ExampleVisualRecognition", "Classify image failed!");
+        ////          Classify get
+        //if (!m_VisualRecognition.Classify(m_imageURL, OnClassify))
+        //    Log.Debug("ExampleVisualRecognition", "Classify image failed!");
 
-        //          Classify post image
-        string m_imagesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/obama.jpg";
-        string[] m_owners = { "IBM", "me" };
-        string[] m_classifierIDs = { "default" };
-        if (!m_VisualRecognition.Classify(OnClassify, m_imagesPath, m_owners, m_classifierIDs, 0.5f))
-            Log.Debug("ExampleVisualRecognition", "Classify image failed!");
-
-
-        //          Detect faces get
-        if (!m_VisualRecognition.DetectFaces(m_imageURL, OnDetectFaces))
-            Log.Debug("ExampleVisualRecogntiion", "Detect faces failed!");
-
-        //          Detect faces post image
-        string m_faceExamplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/obama.jpg";
-        if (!m_VisualRecognition.DetectFaces(OnDetectFaces, m_faceExamplePath))
-            Log.Debug("ExampleVisualRecognition", "Detect faces failed!");
+        ////          Classify post image
+        //string m_imagesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/obama.jpg";
+        //string[] m_owners = { "IBM", "me" };
+        //string[] m_classifierIDs = { "default" };
+        //if (!m_VisualRecognition.Classify(OnClassify, m_imagesPath, m_owners, m_classifierIDs, 0.5f))
+        //    Log.Debug("ExampleVisualRecognition", "Classify image failed!");
 
 
+        ////          Detect faces get
+        //if (!m_VisualRecognition.DetectFaces(m_imageURL, OnDetectFaces))
+        //    Log.Debug("ExampleVisualRecogntiion", "Detect faces failed!");
 
-        //          Recognize text get
-        if (!m_VisualRecognition.RecognizeText(m_imageTextURL, OnRecognizeText))
-            Log.Debug("ExampleVisualRecognition", "Recognize text failed!");
+        ////          Detect faces post image
+        //string m_faceExamplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/obama.jpg";
+        //if (!m_VisualRecognition.DetectFaces(OnDetectFaces, m_faceExamplePath))
+        //    Log.Debug("ExampleVisualRecognition", "Detect faces failed!");
 
-        //          Recognize text post image
-        string m_textExamplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/from_platos_apology.png";
-        if (!m_VisualRecognition.RecognizeText(OnRecognizeText, m_textExamplePath))
-            Log.Debug("ExampleVisualRecognition", "Recognize text failed!");
+        ////          Recognize text get
+        //if (!m_VisualRecognition.RecognizeText(m_imageTextURL, OnRecognizeText))
+        //    Log.Debug("ExampleVisualRecognition", "Recognize text failed!");
+
+        ////          Recognize text post image
+        //string m_textExamplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/from_platos_apology.png";
+        //if (!m_VisualRecognition.RecognizeText(OnRecognizeText, m_textExamplePath))
+        //    Log.Debug("ExampleVisualRecognition", "Recognize text failed!");
+
+        ////          Retrain classifier
+        //if(!m_VisualRecognition.)
     }
 
     private void OnGetClassifiers(GetClassifiersTopLevelBrief classifiers)

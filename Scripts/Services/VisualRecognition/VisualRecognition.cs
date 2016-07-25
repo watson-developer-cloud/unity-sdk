@@ -41,42 +41,42 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// Callback used by FindClassifier().
         /// </summary>
         /// <param name="classifier">The classifer found by name.</param>
-        public delegate void OnFindClassifier(GetClassifiersPerClassifierVerbose classifier);
+        public delegate void OnFindClassifier(GetClassifiersPerClassifierVerbose classifier, string data);
         /// <summary>
         /// The callback used by the GetClassifiers() method.
         /// </summary>
         /// <param name="classifiers"></param>
-        public delegate void OnGetClassifiers(GetClassifiersTopLevelBrief classifiers);
+        public delegate void OnGetClassifiers(GetClassifiersTopLevelBrief classifiers, string data);
         /// <summary>
         /// Callback used by the GetClassifier() method.
         /// </summary>
         /// <param name="classifier">The classifier found by ID.</param>
-        public delegate void OnGetClassifier(GetClassifiersPerClassifierVerbose classifier);
+        public delegate void OnGetClassifier(GetClassifiersPerClassifierVerbose classifier, string data);
         /// <summary>
         /// This callback is used by the DeleteClassifier() method.
         /// </summary>
         /// <param name="success"></param>
-        public delegate void OnDeleteClassifier(bool success);
+        public delegate void OnDeleteClassifier(bool success, string data);
         /// <summary>
         /// Callback used by the TrainClassifier() method.
         /// </summary>
         /// <param name="classifier">The classifier created.</param>
-        public delegate void OnTrainClassifier(GetClassifiersPerClassifierVerbose classifier);
+        public delegate void OnTrainClassifier(GetClassifiersPerClassifierVerbose classifier, string data);
         /// <summary>
         /// This callback is used by the Classify() method.
         /// </summary>
         /// <param name="classify"></param>
-        public delegate void OnClassify(ClassifyTopLevelMultiple classify);
+        public delegate void OnClassify(ClassifyTopLevelMultiple classify, string data);
         /// <summary>
         /// This callback is used by the DetectFaces() method.
         /// </summary>
         /// <param name="faces"></param>
-        public delegate void OnDetectFaces(FacesTopLevelMultiple faces);
+        public delegate void OnDetectFaces(FacesTopLevelMultiple faces, string data);
         /// <summary>
         /// This callback is used by the RecognizeText() method.
         /// </summary>
         /// <param name="faces"></param>
-        public delegate void OnRecognizeText(TextRecogTopLevelMultiple text);
+        public delegate void OnRecognizeText(TextRecogTopLevelMultiple text, string data);
         /// <summary>
         /// The delegate for loading a file, used by TrainClassifier().
         /// </summary>
@@ -110,7 +110,8 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <param name="classifierIDs">Classifier IDs to be classified against.</param>
         /// <param name="threshold">Threshold.</param>
         /// <param name="acceptLanguage">Accept language.</param>
-        public bool Classify(string url, OnClassify callback, string[] owners = default(string[]), string[] classifierIDs = default(string[]), float threshold = default(float), string acceptLanguage = "en")
+        /// <param name="customData">Custom data.</param>
+        public bool Classify(OnClassify callback, string url, string[] owners = default(string[]), string[] classifierIDs = default(string[]), float threshold = default(float), string acceptLanguage = "en", string customData = default(string))
         {
             if(string.IsNullOrEmpty(mp_ApiKey))
                 mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
@@ -127,6 +128,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
             ClassifyReq req = new ClassifyReq();
             req.Callback = callback;
+            req.Data = customData;
             req.OnResponse = OnClassifyResp;
             req.AcceptLanguage = acceptLanguage;
             req.Headers["Accepted-Language"] = acceptLanguage;
@@ -152,7 +154,8 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <param name="classifierIDs">Classifier I ds.</param>
         /// <param name="threshold">Threshold.</param>
         /// <param name="acceptLanguage">Accept language.</param>
-        public bool Classify(OnClassify callback, string imagePath, string[] owners = default(string[]), string[] classifierIDs = default(string[]), float threshold = default(float), string acceptLanguage = "en")
+        /// <param name="customData">Custom data.</param>
+        public bool Classify(OnClassify callback, string imagePath, string[] owners = default(string[]), string[] classifierIDs = default(string[]), float threshold = default(float), string acceptLanguage = "en", string customData = default(string))
         {
             if(string.IsNullOrEmpty(mp_ApiKey))
                 mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
@@ -181,16 +184,17 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                     Log.Error("VisualRecognition", "Failed to upload {0}!", imagePath);
             }
 
-            return Classify(imagePath, imageData, callback, owners, classifierIDs, threshold, acceptLanguage);
+            return Classify(callback, imagePath, imageData, owners, classifierIDs, threshold, acceptLanguage);
         }
 
-        private bool Classify(string imagePath, byte[] imageData, OnClassify callback, string[] owners = default(string[]), string[] classifierIDs = default(string[]), float threshold = default(float), string acceptLanguage = "en")
+        private bool Classify(OnClassify callback, string imagePath, byte[] imageData, string[] owners = default(string[]), string[] classifierIDs = default(string[]), float threshold = default(float), string acceptLanguage = "en", string customData = default(string))
         {
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_CLASSIFY);
             if(connector == null)
                 return false;
             ClassifyReq req = new ClassifyReq();
             req.Callback = callback;
+            req.Data = customData;
             req.Timeout = REQUEST_TIMEOUT;
             req.OnResponse = OnClassifyResp;
             req.AcceptLanguage = acceptLanguage;
@@ -205,9 +209,22 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             return connector.Send(req);
         }
 
-        private class ClassifyReq : RESTConnector.Request
+        /// <summary>
+        /// The Classify request
+        /// </summary>
+        public class ClassifyReq : RESTConnector.Request
         {
+            /// <summary>
+			/// Custom data.
+			/// </summary>
+            public string Data { get; set; }
+            /// <summary>
+            /// The OnClasify callback delegate.
+            /// </summary>
             public OnClassify Callback { get; set; }
+            /// <summary>
+            /// Accept language string.
+            /// </summary>
             public string AcceptLanguage { get; set; }
         }
 
@@ -216,36 +233,28 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             ClassifyTopLevelMultiple classify = null;
             if(resp.Success)
             {
-                classify = ProcessClassifyResult(resp.Data);
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    classify = new ClassifyTopLevelMultiple();
+
+                    object obj = classify;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Visual Recognition", "Classify exception: {0}", e.ToString());
+                }
             }
 
             if(((ClassifyReq)req).Callback != null)
-                ((ClassifyReq)req).Callback(classify);
-        }
-
-        private ClassifyTopLevelMultiple ProcessClassifyResult(byte[] json_data)
-        {
-            ClassifyTopLevelMultiple classify = null;
-            try
-            {
-                fsData data = null;
-                fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(json_data), out data);
-                if (!r.Succeeded)
-                    throw new WatsonException(r.FormattedMessages);
-
-                classify = new ClassifyTopLevelMultiple();
-
-                object obj = classify;
-                r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                if (!r.Succeeded)
-                    throw new WatsonException(r.FormattedMessages);
-            }
-            catch(Exception e)
-            {
-                Log.Error("Visual Recognition", "Classify exception: {0}", e.ToString());
-            }
-
-            return classify;
+                ((ClassifyReq)req).Callback(resp.Success ? classify : null, ((ClassifyReq)req).Data);
         }
         #endregion
 
@@ -256,7 +265,8 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <returns><c>true</c>, if faces was detected, <c>false</c> otherwise.</returns>
         /// <param name="url">URL.</param>
         /// <param name="callback">Callback.</param>
-        public bool DetectFaces(string url, OnDetectFaces callback)
+        /// <param name="customData">Custom data.</param>
+        public bool DetectFaces(OnDetectFaces callback, string url, string customData = default(string))
         {
             if(string.IsNullOrEmpty(url))
                 throw new ArgumentNullException("url");
@@ -273,6 +283,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
             DetectFacesReq req = new DetectFacesReq();
             req.Callback = callback;
+            req.Data = customData;
             req.OnResponse = OnDetectFacesResp;
             req.Parameters["api_key"] = mp_ApiKey;
             req.Parameters["url"] = url;
@@ -287,7 +298,8 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <returns><c>true</c>, if faces was detected, <c>false</c> otherwise.</returns>
         /// <param name="callback">Callback.</param>
         /// <param name="imagePath">Image path.</param>
-        public bool DetectFaces(OnDetectFaces callback, string imagePath)
+        /// <param name="customData">Custom data.</param>
+        public bool DetectFaces(OnDetectFaces callback, string imagePath, string customData = default(string))
         {
             if(string.IsNullOrEmpty(imagePath))
                 throw new ArgumentNullException("Define an image path to classify!");
@@ -314,16 +326,17 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                     Log.Error("VisualRecognition", "Failed to upload {0}!", imagePath);
             }
 
-            return DetectFaces(callback, imagePath, imageData);
+            return DetectFaces(callback, imagePath, imageData, customData);
         }
 
-        private bool DetectFaces(OnDetectFaces callback, string imagePath, byte[] imageData = default(byte[]))
+        private bool DetectFaces(OnDetectFaces callback, string imagePath, byte[] imageData = default(byte[]), string customData = default(string))
         {
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_DETECT_FACES);
             if(connector == null)
                 return false;
             DetectFacesReq req = new DetectFacesReq();
             req.Callback = callback;
+            req.Data = customData;
             req.Timeout = REQUEST_TIMEOUT;
             req.OnResponse = OnDetectFacesResp;
             req.Parameters["api_key"] = mp_ApiKey;
@@ -338,8 +351,18 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             return connector.Send(req);
         }
 
-        private class DetectFacesReq : RESTConnector.Request
+        /// <summary>
+        /// The DetectFaces request
+        /// </summary>
+        public class DetectFacesReq : RESTConnector.Request
         {
+            /// <summary>
+			/// Custom data.
+			/// </summary>
+            public string Data { get; set; }
+            /// <summary>
+            /// The OnDetectFaces callback delegate.
+            /// </summary>
             public OnDetectFaces Callback { get; set; }
         }
             
@@ -349,36 +372,28 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
             if(resp.Success)
             {
-                faces = ProcessDetectFaceResult(resp.Data);
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    faces = new FacesTopLevelMultiple();
+
+                    object obj = faces;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Visual Recognition", "Detect faces exception: {0}", e.ToString());
+                }
             }
 
             if(((DetectFacesReq)req).Callback != null)
-                ((DetectFacesReq)req).Callback(faces);
-        }
-
-        private FacesTopLevelMultiple ProcessDetectFaceResult(byte[] json_data)
-        {
-            FacesTopLevelMultiple faces = null;
-            try
-            {
-                fsData data = null;
-                fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(json_data), out data);
-                if (!r.Succeeded)
-                    throw new WatsonException(r.FormattedMessages);
-
-                faces = new FacesTopLevelMultiple();
-
-                object obj = faces;
-                r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                if (!r.Succeeded)
-                    throw new WatsonException(r.FormattedMessages);
-            }
-            catch(Exception e)
-            {
-                Log.Error("Visual Recognition", "Detect faces exception: {0}", e.ToString());
-            }
-
-            return faces;
+                ((DetectFacesReq)req).Callback(resp.Success ? faces : null, ((DetectFacesReq)req).Data);
         }
         #endregion
 
@@ -389,7 +404,8 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <returns><c>true</c>, if text was recognized, <c>false</c> otherwise.</returns>
         /// <param name="url">URL.</param>
         /// <param name="callback">Callback.</param>
-        public bool RecognizeText(string url, OnRecognizeText callback)
+        /// <param name="customData">Custom data.</param>
+        public bool RecognizeText(OnRecognizeText callback, string url, string customData = default(string))
         {
             if(string.IsNullOrEmpty(url))
                 throw new ArgumentNullException("url");
@@ -406,6 +422,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
             RecognizeTextReq req = new RecognizeTextReq();
             req.Callback = callback;
+            req.Data = customData;
             req.OnResponse = OnRecognizeTextResp;
             req.Parameters["api_key"] = mp_ApiKey;
             req.Parameters["url"] = url;
@@ -420,7 +437,8 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <returns><c>true</c>, if text was recognized, <c>false</c> otherwise.</returns>
         /// <param name="callback">Callback.</param>
         /// <param name="imagePath">Image path.</param>
-        public bool RecognizeText(OnRecognizeText callback, string imagePath)
+        /// <param name="customData">Custom data.</param>
+        public bool RecognizeText(OnRecognizeText callback, string imagePath, string customData = default(string))
         {
             if(string.IsNullOrEmpty(imagePath))
                 throw new ArgumentNullException("Define an image path to classify!");
@@ -447,16 +465,17 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                     Log.Error("VisualRecognition", "Failed to upload {0}!", imagePath);
             }
 
-            return RecognizeText(callback, imagePath, imageData);
+            return RecognizeText(callback, imagePath, imageData, customData);
         }
 
-        private bool RecognizeText(OnRecognizeText callback, string imagePath, byte[] imageData = default(byte[]))
+        private bool RecognizeText(OnRecognizeText callback, string imagePath, byte[] imageData = default(byte[]), string customData = default(string))
         {
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_RECOGNIZE_TEXT);
             if(connector == null)
                 return false;
             RecognizeTextReq req = new RecognizeTextReq();
             req.Callback = callback;
+            req.Data = customData;
             req.Timeout = REQUEST_TIMEOUT;
             req.OnResponse = OnRecognizeTextResp;
 
@@ -469,63 +488,62 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             return connector.Send(req);
         }
 
-        private class RecognizeTextReq : RESTConnector.Request
+        public class RecognizeTextReq : RESTConnector.Request
         {
+            /// <summary>
+			/// Custom data.
+			/// </summary>
+            public string Data { get; set; }
+            /// <summary>
+            /// The OnRecognizeText callback delegate.
+            /// </summary>
             public OnRecognizeText Callback { get; set; }
         }
 
-        private string BuildRecognizeTextParametersJson(string url)
-        {
-            RecognizeTextParameters cParameters = new RecognizeTextParameters();
-            cParameters.url = url;
+        //private string BuildRecognizeTextParametersJson(string url)
+        //{
+        //    RecognizeTextParameters cParameters = new RecognizeTextParameters();
+        //    cParameters.url = url;
 
-            fsData jsondata = new fsData();
-            if (sm_Serializer.TrySerialize(cParameters, out jsondata).Succeeded)
-            {
-                return fsJsonPrinter.CompressedJson(jsondata, true);
-            }
-            else
-            {
-                Log.Error("VisualRecognition", "Error parsing to JSON!");
-                return null;
-            }
-        }
+        //    fsData jsondata = new fsData();
+        //    if (sm_Serializer.TrySerialize(cParameters, out jsondata).Succeeded)
+        //    {
+        //        return fsJsonPrinter.CompressedJson(jsondata, true);
+        //    }
+        //    else
+        //    {
+        //        Log.Error("VisualRecognition", "Error parsing to JSON!");
+        //        return null;
+        //    }
+        //}
 
         private void OnRecognizeTextResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
             TextRecogTopLevelMultiple text = null;
             if(resp.Success)
             {
-                text = ProcessRecognizeTextResult(resp.Data);
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    text = new TextRecogTopLevelMultiple();
+
+                    object obj = text;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Visual Recognition", "Detect text exception: {0}", e.ToString());
+                }
             }
 
             if(((RecognizeTextReq)req).Callback != null)
-                ((RecognizeTextReq)req).Callback(text);
-        }
-
-        private TextRecogTopLevelMultiple ProcessRecognizeTextResult(byte[] json_data)
-        {
-            TextRecogTopLevelMultiple text = null;
-            try
-            {
-                fsData data = null;
-                fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(json_data), out data);
-                if (!r.Succeeded)
-                    throw new WatsonException(r.FormattedMessages);
-
-                text = new TextRecogTopLevelMultiple();
-
-                object obj = text;
-                r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                if (!r.Succeeded)
-                    throw new WatsonException(r.FormattedMessages);
-            }
-            catch(Exception e)
-            {
-                Log.Error("Visual Recognition", "Detect text exception: {0}", e.ToString());
-            }
-
-            return text;
+                ((RecognizeTextReq)req).Callback(resp.Success ? text : null, ((RecognizeTextReq)req).Data);
         }
         #endregion
 
@@ -535,14 +553,15 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// </summary>
         /// <param name="classifierName">Classifier name.</param>
         /// <param name="callback">Callback.</param>
-        public void FindClassifier(string classifierName, OnFindClassifier callback)
+        /// <param name="customData">Custom data.</param>
+        public void FindClassifier(OnFindClassifier callback, string classifierName, string customData = default(string))
         {
-            new FindClassifierReq(this, classifierName, callback);
+            new FindClassifierReq(callback, this, classifierName, customData);
         }
 
         private class FindClassifierReq
         {
-            public FindClassifierReq(VisualRecognition service, string classifierName, OnFindClassifier callback)
+            public FindClassifierReq(OnFindClassifier callback, VisualRecognition service, string classifierName, string customData = default(string))
             {
                 if(callback == null)
                     throw new ArgumentNullException("callback");
@@ -557,21 +576,21 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 ClassifierName = classifierName;
                 Callback = callback;
 
-                Service.GetClassifiers(OnGetClassifiers);
+                Service.GetClassifiers(OnGetClassifiers, customData);
             }
 
             public VisualRecognition Service { get; set; }
             public string ClassifierName { get; set; }
             public OnFindClassifier Callback { get; set; }
 
-            private void OnGetClassifiers(GetClassifiersTopLevelBrief classifiers)
+            private void OnGetClassifiers(GetClassifiersTopLevelBrief classifiers, string customData)
             {
                 bool bFound = false;
                 foreach(var c in classifiers.classifiers)
                 {
                     if(c.name.ToLower().StartsWith(ClassifierName.ToLower()))
                     {
-                        bFound = Service.GetClassifier(c.classifier_id, OnGetClassifier);
+                        bFound = Service.GetClassifier(OnGetClassifier, c.classifier_id);
                         break;
                     }
                 }
@@ -579,14 +598,14 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 if(!bFound)
                 {
                     Log.Warning("VisualRecognition", "Failed to find classifier {0}", ClassifierName);
-                    Callback(null);
+                    Callback(null, customData);
                 }
             }
 
-            private void OnGetClassifier(GetClassifiersPerClassifierVerbose classifier)
+            private void OnGetClassifier(GetClassifiersPerClassifierVerbose classifier, string customData)
             {
                 if(Callback != null)
-                    Callback(classifier);
+                    Callback(classifier, customData);
             }
         }
         #endregion
@@ -597,7 +616,8 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// </summary>
         /// <returns><c>true</c>, if classifiers was gotten, <c>false</c> otherwise.</returns>
         /// <param name="callback">Callback.</param>
-        public bool GetClassifiers(OnGetClassifiers callback)
+        /// <param name="customData">CustomData.</param>
+        public bool GetClassifiers(OnGetClassifiers callback, string customData = default(string))
         {
             if(callback == null)
                 throw new ArgumentNullException("callback");
@@ -612,6 +632,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
             GetClassifiersReq req = new GetClassifiersReq();
             req.Callback = callback;
+            req.Data = customData;
             req.Parameters["api_key"] = mp_ApiKey;
             req.Parameters["version"] = VisualRecognitionVersion.Version;
             req.Timeout = 10.0f * 60.0f;
@@ -620,8 +641,18 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             return connector.Send(req);
         }
 
-        private class GetClassifiersReq : RESTConnector.Request
+        /// <summary>
+        /// The GetClassifier request.
+        /// </summary>
+        public class GetClassifiersReq : RESTConnector.Request
         {
+            /// <summary>
+			/// Custom data.
+			/// </summary>
+            public string Data { get; set; }
+            /// <summary>
+            /// The OnGetClassifier callback delegate.
+            /// </summary>
             public OnGetClassifiers Callback { get; set; }
         }
 
@@ -649,7 +680,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             }
 
             if(((GetClassifiersReq)req).Callback != null)
-                ((GetClassifiersReq)req).Callback(resp.Success ? classifiers : null);
+                ((GetClassifiersReq)req).Callback(resp.Success ? classifiers : null, ((GetClassifierReq)req).Data);
         }
         #endregion
 
@@ -660,7 +691,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <returns><c>true</c>, if classifier was gotten, <c>false</c> otherwise.</returns>
         /// <param name="classifierId">Classifier identifier.</param>
         /// <param name="callback">Callback.</param>
-        public bool GetClassifier(string classifierId, OnGetClassifier callback)
+        public bool GetClassifier(OnGetClassifier callback, string classifierId, string customData = default(string))
         {
             if (string.IsNullOrEmpty(classifierId))
                 throw new ArgumentNullException("classifierId");
@@ -677,6 +708,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
             GetClassifierReq req = new GetClassifierReq();
             req.Callback = callback;
+            req.Data = customData;
             req.Parameters["api_key"] = mp_ApiKey;
             req.Parameters["version"] = VisualRecognitionVersion.Version;
             req.OnResponse = OnGetClassifierResp;
@@ -684,8 +716,15 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             return connector.Send(req);
         }
 
-        private class GetClassifierReq : RESTConnector.Request
+        public class GetClassifierReq : RESTConnector.Request
         {
+            /// <summary>
+			/// Custom data.
+			/// </summary>
+            public string Data { get; set; }
+            /// <summary>
+            /// OnGetClassifier callback delegate
+            /// </summary>
             public OnGetClassifier Callback { get; set; }
         }
 
@@ -714,10 +753,11 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             }
 
             if (((GetClassifierReq)req).Callback != null)
-                ((GetClassifierReq)req).Callback(resp.Success ? classifier : null);
+                ((GetClassifierReq)req).Callback(resp.Success ? classifier : null, ((GetClassifierReq)req).Data);
         }
         #endregion
 
+        /*
         #region Create Classifier
         /// <summary>
         /// Trains a classifier. Training requires a zip file of 10 positive examples and a zip file of 10 negative examples.
@@ -829,7 +869,53 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             }
 
             if (((TrainClassifierReq)req).Callback != null)
-                ((TrainClassifierReq)req).Callback(resp.Success ? classifier : null);
+                ((TrainClassifierReq)req).Callback(resp.Success ? classifier : null, ((TrainClassifierReq)req).Data);
+        }
+        #endregion
+        */
+
+        #region TrainClassifier
+        /// <summary>
+        /// The TrainClassifier request.
+        /// </summary>
+        public class TrainClassifierReq : RESTConnector.Request
+        {
+            /// <summary>
+			/// Custom data.
+			/// </summary>
+            public string Data { get; set; }
+            /// <summary>
+            /// The OnTrainClassifier callback delegate.
+            /// </summary>
+            public OnTrainClassifier Callback { get; set; }
+        }
+
+        private void OnTrainClassifierResp(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            GetClassifiersPerClassifierVerbose classifier = new GetClassifiersPerClassifierVerbose();
+            if (resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = classifier;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Natural Language Classifier", "GetClassifiers Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((TrainClassifierReq)req).Callback != null)
+                ((TrainClassifierReq)req).Callback(resp.Success ? classifier : null, ((TrainClassifierReq)req).Data);
         }
         #endregion
 
@@ -840,7 +926,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <returns><c>true</c>, if classifier was deleted, <c>false</c> otherwise.</returns>
         /// <param name="classifierId">Classifier identifier.</param>
         /// <param name="callback">Callback.</param>
-        public bool DeleteClassifier(string classifierId, OnDeleteClassifier callback)
+        public bool DeleteClassifier(string classifierId, OnDeleteClassifier callback, string customData = default(string))
         {
             if(string.IsNullOrEmpty(classifierId))
                 throw new ArgumentNullException("classifierId");
@@ -858,6 +944,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
             DeleteClassifierReq req = new DeleteClassifierReq();
             req.Callback = callback;
+            req.Data = customData;
             req.Timeout = REQUEST_TIMEOUT;
             req.Parameters["api_key"] = mp_ApiKey;
             req.Parameters["version"] = VisualRecognitionVersion.Version;
@@ -867,15 +954,22 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             return connector.Send(req);
         }
 
-        private class DeleteClassifierReq : RESTConnector.Request
+        public class DeleteClassifierReq : RESTConnector.Request
         {
+            /// <summary>
+			/// Custom data.
+			/// </summary>
+            public string Data { get; set; }
+            /// <summary>
+            /// The OnDeleteClassifier callback delegate.
+            /// </summary>
             public OnDeleteClassifier Callback { get; set; }
         }
 
         private void OnDeleteClassifierResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
             if(((DeleteClassifierReq)req).Callback != null)
-                ((DeleteClassifierReq)req).Callback(resp.Success);
+                ((DeleteClassifierReq)req).Callback(resp.Success, ((DeleteClassifierReq)req).Data);
         }
         #endregion
 
