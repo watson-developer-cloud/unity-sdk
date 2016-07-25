@@ -16,7 +16,7 @@
 */
 
 // uncomment to enable debugging
-#define ENABLE_DEBUGGING
+//#define ENABLE_DEBUGGING
 
 using UnityEngine;
 using UnityEngine.UI;
@@ -515,7 +515,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                             foreach (RaycastResult itemRaycastResult in raycastResultListFor2DEventSystem)
                             {
 
-                                isHitOnLayer2DEventSystem = kp.Value.Exists(element => (element.GameObjectAttached != null && element.GameObjectAttached.layer == itemRaycastResult.gameObject.layer));
+                                isHitOnLayer2DEventSystem = kp.Value.Exists(element => (element.GameObjectAttached != null && element.GameObjectAttached.activeSelf && element.GameObjectAttached.layer == itemRaycastResult.gameObject.layer));
                                 if (isHitOnLayer2DEventSystem)
                                 {
                                     hitTransform2DEventSystem = itemRaycastResult.gameObject.transform;
