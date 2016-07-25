@@ -936,7 +936,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <returns><c>true</c>, if classifier was deleted, <c>false</c> otherwise.</returns>
         /// <param name="classifierId">Classifier identifier.</param>
         /// <param name="callback">Callback.</param>
-        public bool DeleteClassifier(string classifierId, OnDeleteClassifier callback, string customData = default(string))
+        public bool DeleteClassifier(OnDeleteClassifier callback, string classifierId,string customData = default(string))
         {
             if(string.IsNullOrEmpty(classifierId))
                 throw new ArgumentNullException("classifierId");

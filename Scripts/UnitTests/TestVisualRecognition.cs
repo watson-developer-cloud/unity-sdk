@@ -58,7 +58,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             
             //  test find classifier
             Log.Debug("TestVisualRecognition", "Finding classifier {0}!", m_ClassifierName);
-            m_VisualRecognition.FindClassifier(m_ClassifierName, OnFindClassifier);
+            m_VisualRecognition.FindClassifier(OnFindClassifier, m_ClassifierName);
             while(!m_FindClassifierTested)
                 yield return null;
             
@@ -68,7 +68,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 Log.Debug("TestVisualRecognition", "Training classifier!");
                 string m_positiveExamplesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/giraffe_positive_examples.zip";
                 string m_negativeExamplesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/negative_examples.zip";
-                Test(m_VisualRecognition.TrainClassifier(m_ClassifierName, "giraffe", m_positiveExamplesPath, m_negativeExamplesPath, OnTrainClassifier));
+                Test(m_VisualRecognition.TrainClassifier(OnTrainClassifier, m_ClassifierName, "giraffe", m_positiveExamplesPath, m_negativeExamplesPath));
                 while(!m_TrainClasifierTested)
                     yield return null;
 
@@ -82,7 +82,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             {
                 //  test get classifier
                 Log.Debug("TestVisualRecognition", "Getting classifier {0}!", m_ClassifierId);
-                m_VisualRecognition.GetClassifier(m_ClassifierId, OnGetClassifier);
+                m_VisualRecognition.GetClassifier(OnGetClassifier, m_ClassifierId);
                 while(!m_GetClassifierTested)
                     yield return null;
                 
@@ -132,14 +132,14 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             //  test delete classifier
             Log.Debug("TestVisualRecognition", "Deleting classifier {0}!", m_ClassifierId);
-            m_VisualRecognition.DeleteClassifier(m_ClassifierId, OnDeleteClassifier);
+            m_VisualRecognition.DeleteClassifier(OnDeleteClassifier, m_ClassifierId);
             while(!m_DeleteTested)
                 yield return null;
 
             yield break;
         }
             
-        private void OnFindClassifier(GetClassifiersPerClassifierVerbose classifier)
+        private void OnFindClassifier(GetClassifiersPerClassifierVerbose classifier, string customData)
         {
             if (classifier != null)
             {
@@ -163,7 +163,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             m_FindClassifierTested = true;
         }
 
-        private void OnTrainClassifier(GetClassifiersPerClassifierVerbose classifier)
+        private void OnTrainClassifier(GetClassifiersPerClassifierVerbose classifier, string customData)
         {
             Test(classifier != null);
             if (classifier != null)
@@ -176,7 +176,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             m_TrainClasifierTested = true;
         }
 
-        private void OnGetClassifiers (GetClassifiersTopLevelBrief classifiers)
+        private void OnGetClassifiers (GetClassifiersTopLevelBrief classifiers, string customData)
         {
             Test(classifiers != null);
             if(classifiers != null && classifiers.classifiers.Length > 0)
@@ -195,7 +195,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             m_GetClassifiersTested = true;
         }
 
-        private void OnGetClassifier(GetClassifiersPerClassifierVerbose classifier)
+        private void OnGetClassifier(GetClassifiersPerClassifierVerbose classifier, string customData)
         {
             Test(classifier != null);
             if(classifier != null)
@@ -206,7 +206,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             m_GetClassifierTested = true;
         }
 
-        private void OnClassifyGet(ClassifyTopLevelMultiple classify)
+        private void OnClassifyGet(ClassifyTopLevelMultiple classify, string customData)
         {
             Test(classify != null);
             if(classify != null)
@@ -231,7 +231,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             }
         }
 
-        private void OnClassifyPost(ClassifyTopLevelMultiple classify)
+        private void OnClassifyPost(ClassifyTopLevelMultiple classify, string customData)
         {
             Test(classify != null);
             if(classify != null)
@@ -256,7 +256,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             }
         }
 
-        private void OnDetectFacesGet(FacesTopLevelMultiple multipleImages)
+        private void OnDetectFacesGet(FacesTopLevelMultiple multipleImages, string customData)
         {
             Test(multipleImages != null);
             if(multipleImages != null)
@@ -282,7 +282,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             }
         }
 
-        private void OnDetectFacesPost(FacesTopLevelMultiple multipleImages)
+        private void OnDetectFacesPost(FacesTopLevelMultiple multipleImages, string customData)
         {
             Test(multipleImages != null);
             if(multipleImages != null)
@@ -308,7 +308,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             }
         }
 
-        private void OnRecognizeTextGet(TextRecogTopLevelMultiple multipleImages)
+        private void OnRecognizeTextGet(TextRecogTopLevelMultiple multipleImages, string customData)
         {
             Test(multipleImages != null);
             if(multipleImages != null)
@@ -334,7 +334,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             }
         }
 
-        private void OnRecognizeTextPost(TextRecogTopLevelMultiple multipleImages)
+        private void OnRecognizeTextPost(TextRecogTopLevelMultiple multipleImages, string customData)
         {
             Test(multipleImages != null);
             if(multipleImages != null)
@@ -360,24 +360,24 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             }
         }
 
-        private void OnDeleteClassifier(bool success)
+        private void OnDeleteClassifier(bool success, string customData)
         {
             if(success)
             {
-                m_VisualRecognition.FindClassifier(m_ClassifierName, OnDeleteClassifierFinal);
+                m_VisualRecognition.FindClassifier(OnDeleteClassifierFinal, m_ClassifierName);
             }
 
             m_DeleteTested = true;
             Test(success);
         }
 
-        private void CheckClassifierStatus(VisualRecognition.OnGetClassifier callback)
+        private void CheckClassifierStatus(VisualRecognition.OnGetClassifier callback, string customData = default(string))
         {
-            if(!m_VisualRecognition.GetClassifier(m_ClassifierId, callback))
+            if(!m_VisualRecognition.GetClassifier(callback, m_ClassifierId))
                 Log.Debug("TestVisualRecognition", "Get classifier failed!");
         }
 
-        private void OnCheckClassifierStatus(GetClassifiersPerClassifierVerbose classifier)
+        private void OnCheckClassifierStatus(GetClassifiersPerClassifierVerbose classifier, string customData)
         {
             Log.Debug("TestVisualRecognition", "classifier {0} is {1}!", classifier.classifier_id, classifier.status);
 
@@ -385,7 +385,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             {
                 Log.Debug("TestVisualRecognition", "Deleting classifier!");
                 //  classifier failed - delete!
-                if(!m_VisualRecognition.DeleteClassifier(classifier.classifier_id, OnCheckClassifierStatusDelete))
+                if(!m_VisualRecognition.DeleteClassifier(OnCheckClassifierStatusDelete, classifier.classifier_id))
                     Log.Debug("TestVisualRecognition", "Failed to delete classifier {0}!", m_ClassifierId);
 
             }
@@ -400,7 +400,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             }
         }
 
-        private void OnCheckClassifierStatusDelete(bool success)
+        private void OnCheckClassifierStatusDelete(bool success, string customData)
         {
             if(success)
             {
@@ -410,7 +410,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             }
         }
 
-        private void OnDeleteClassifierFinal(GetClassifiersPerClassifierVerbose classifier)
+        private void OnDeleteClassifierFinal(GetClassifiersPerClassifierVerbose classifier, string customData)
         {
             if(classifier == null)
             {
