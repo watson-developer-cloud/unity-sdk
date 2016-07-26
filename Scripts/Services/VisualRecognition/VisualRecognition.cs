@@ -690,7 +690,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             }
 
             if(((GetClassifiersReq)req).Callback != null)
-                ((GetClassifiersReq)req).Callback(resp.Success ? classifiers : null, ((GetClassifierReq)req).Data);
+                ((GetClassifiersReq)req).Callback(resp.Success ? classifiers : null, ((GetClassifiersReq)req).Data);
         }
         #endregion
 

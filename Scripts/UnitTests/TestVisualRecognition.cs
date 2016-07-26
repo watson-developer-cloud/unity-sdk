@@ -94,14 +94,14 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 
                 //  test classify image get
                 Log.Debug("TestVisualRecognition", "Classifying image using GET!");
-                m_VisualRecognition.Classify(m_ImageURL, OnClassifyGet, m_owners, m_classifierIds);
+                m_VisualRecognition.Classify(OnClassifyGet, m_ImageURL, m_owners, m_classifierIds);
                 while(!m_ClassifyGETTested)
                     yield return null;
                 
                 //  test classify image post
                 Log.Debug("TestVisualRecognition", "Classifying image using POST!");
                 string m_classifyImagePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/giraffe_to_classify.jpg";
-                m_VisualRecognition.Classify(OnClassifyPost, m_classifyImagePath, m_owners, m_classifierIds);
+                m_VisualRecognition.Classify(m_classifyImagePath, OnClassifyPost, m_owners, m_classifierIds);
                 while(!m_ClassifyPOSTTested)
                     yield return null;
 
@@ -109,27 +109,27 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             //  test detect faces get
             Log.Debug("TestVisualRecognition", "Detecting face image using GET!");
-            m_VisualRecognition.DetectFaces(m_ImageFaceURL, OnDetectFacesGet);
+            m_VisualRecognition.DetectFaces(OnDetectFacesGet, m_ImageFaceURL);
             while(!m_DetectFacesGETTested)
                 yield return null;
 
             //  test detect faces post
             Log.Debug("TestVisualRecognition", "Detecting face image using POST!");
             string m_detectFaceImagePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/obama.jpg";
-            m_VisualRecognition.DetectFaces(OnDetectFacesPost, m_detectFaceImagePath);
+            m_VisualRecognition.DetectFaces(m_detectFaceImagePath, OnDetectFacesPost);
             while(!m_DetectFacesPOSTTested)
                 yield return null;
 
             //  test recognize text get
             Log.Debug("TestVisualRecognition", "Recognizing text image using GET!");
-            m_VisualRecognition.RecognizeText(m_ImageTextURL, OnRecognizeTextGet);
+            m_VisualRecognition.RecognizeText(OnRecognizeTextGet, m_ImageTextURL);
             while(!m_RecognizeTextGETTested)
                 yield return null;
 
             //  test recognize text post
             Log.Debug("TestVisualRecognition", "Recognizing text image using POST!");
             string m_recognizeTextImagePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/from_platos_apology.png";
-            m_VisualRecognition.RecognizeText(OnRecognizeTextPost, m_recognizeTextImagePath);
+            m_VisualRecognition.RecognizeText(m_recognizeTextImagePath, OnRecognizeTextPost);
             while(!m_RecognizeTextPOSTTested)
                 yield return null;
 
