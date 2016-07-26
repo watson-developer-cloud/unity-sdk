@@ -722,6 +722,11 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
             GetClassifierReq req = new GetClassifierReq();
             req.Callback = callback;
+<<<<<<< HEAD
+            req.Timeout = REQUEST_TIMEOUT;
+=======
+            req.Data = customData;
+>>>>>>> feature-106-visualRecognitionRetraining
             req.Parameters["api_key"] = mp_ApiKey;
             req.Parameters["version"] = VisualRecognitionVersion.Version;
             req.OnResponse = OnGetClassifierResp;

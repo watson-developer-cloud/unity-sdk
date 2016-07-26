@@ -39,7 +39,11 @@ namespace IBM.Watson.DeveloperCloud.Editor
         /// <summary>
         /// Maximum time in seconds a test can run before we consider it timed out.
         /// </summary>
+<<<<<<< HEAD
         const float TEST_TIMEOUT = 30.0f * 60.0f;
+=======
+        const float TEST_TIMEOUT = 10.0f * 60.0f;
+>>>>>>> feature-106-visualRecognitionRetraining
 
         /// <summary>
         /// Returns the instance of the UnitTestManager.
@@ -182,7 +186,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
             {
                 Log.Status("UnitTestManager", "Tests Completed: {0}, Tests Failed: {1}", TestsComplete, TestsFailed);
             }
-           
+
 #if UNITY_EDITOR
             if (QuitOnTestsComplete)
                 EditorApplication.Exit(TestsFailed > 0 ? 1 : 0);
