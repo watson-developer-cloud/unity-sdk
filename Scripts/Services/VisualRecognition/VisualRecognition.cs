@@ -130,6 +130,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.Callback = callback;
             req.Data = customData;
             req.OnResponse = OnClassifyResp;
+            req.Timeout = REQUEST_TIMEOUT;
             req.AcceptLanguage = acceptLanguage;
             req.Headers["Accepted-Language"] = acceptLanguage;
             req.Parameters["api_key"] = mp_ApiKey;
@@ -441,6 +442,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             RecognizeTextReq req = new RecognizeTextReq();
             req.Callback = callback;
             req.Data = customData;
+            req.Timeout = REQUEST_TIMEOUT;
             req.OnResponse = OnRecognizeTextResp;
             req.Parameters["api_key"] = mp_ApiKey;
             req.Parameters["url"] = url;
@@ -767,123 +769,6 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         }
         #endregion
 
-        /*
-        #region Create Classifier
-        /// <summary>
-        /// Trains a classifier. Training requires a zip file of 10 positive examples and a zip file of 10 negative examples.
-        /// The name of the positive examples shoud be prepended with the class name (ie className_positive_examples).
-        /// Negative examples should be named negative_examples.
-        /// </summary>
-        /// <returns><c>true</c>, if classifier was trained, <c>false</c> otherwise.</returns>
-        /// <param name="classifierName">Classifier name.</param>
-        /// <param name="className">Class name.</param>
-        /// <param name="positiveExamplesPath">Positive examples path.</param>
-        /// <param name="negativeExamplesPath">Negative examples path.</param>
-        /// <param name="callback">Callback.</param>
-        public bool TrainClassifier(string classifierName, string className, string positiveExamplesPath, string negativeExamplesPath, OnTrainClassifier callback)
-        {
-            if(string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
-            if(string.IsNullOrEmpty(mp_ApiKey))
-                throw new WatsonException("GetClassifier - APIKEY needs to be defined in config.json");
-            if(string.IsNullOrEmpty(classifierName))
-                throw new ArgumentNullException("ClassifierName");
-            if(string.IsNullOrEmpty(positiveExamplesPath))
-                throw new ArgumentNullException("positiveExamplesPath");
-            if(string.IsNullOrEmpty(negativeExamplesPath))
-                throw new ArgumentNullException("negativeExamplesPath");
-            if(callback == null)
-                throw new ArgumentNullException("callback");
-
-            byte[] positiveExamplesData = null;
-            byte[] negativeExamplesData = null;
-            if(LoadFile != null)
-            {
-                positiveExamplesData = LoadFile(positiveExamplesPath);
-                negativeExamplesData = LoadFile(negativeExamplesPath);
-            }
-            else
-            {
-                #if !UNITY_WEBPLAYER
-                positiveExamplesData = File.ReadAllBytes(positiveExamplesPath);
-                negativeExamplesData = File.ReadAllBytes(negativeExamplesPath);
-                #endif
-            }
-
-            if(positiveExamplesData == null || negativeExamplesData == null)
-                Log.Error("VisualRecognition", "Failed to upload {0} or {1}!", positiveExamplesPath, negativeExamplesPath);
-
-            return UploadClassifier(classifierName, className, positiveExamplesData, negativeExamplesData, callback);
-        }
-
-        private bool UploadClassifier(string classifierName, string className, byte[] positiveExamplesData, byte[] negativeExamplesData, OnTrainClassifier callback)
-        {
-            if(string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
-            if(string.IsNullOrEmpty(mp_ApiKey))
-                throw new WatsonException("GetClassifier - APIKEY needs to be defined in config.json");
-            if(string.IsNullOrEmpty(classifierName))
-                throw new ArgumentNullException("ClassifierName");
-            if(positiveExamplesData == null)
-                throw new ArgumentNullException("positiveExamplesData");
-            if(negativeExamplesData == null)
-                throw new ArgumentNullException("negativeExamplesData");
-            if(callback == null)
-                throw new ArgumentNullException("callback");
-
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_CLASSIFIERS);
-            if(connector == null)
-                return false;
-
-            TrainClassifierReq req = new TrainClassifierReq();
-            req.Callback = callback;
-            req.OnResponse = OnTrainClassifierResp;
-            req.Timeout = REQUEST_TIMEOUT;
-            req.Parameters["api_key"] = mp_ApiKey;
-            req.Parameters["version"] = VisualRecognitionVersion.Version;
-            req.Forms = new Dictionary<string, RESTConnector.Form>();
-            req.Forms["name"] = new RESTConnector.Form(classifierName);
-            req.Forms[className + "_positive_examples"] = new RESTConnector.Form(positiveExamplesData, className + "_positive_examples.zip", "application/zip");
-            req.Forms["negative_examples"] = new RESTConnector.Form(negativeExamplesData, "negative_examples.zip", "application/zip");
-
-            return connector.Send(req);
-        }
-
-        private class TrainClassifierReq:RESTConnector.Request
-        {
-            public OnTrainClassifier Callback {get; set;}
-        }
-
-        private void OnTrainClassifierResp(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            GetClassifiersPerClassifierVerbose classifier = new GetClassifiersPerClassifierVerbose();
-            if (resp.Success)
-            {
-                try
-                {
-                    fsData data = null;
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = classifier;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("Natural Language Classifier", "GetClassifiers Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
-            if (((TrainClassifierReq)req).Callback != null)
-                ((TrainClassifierReq)req).Callback(resp.Success ? classifier : null, ((TrainClassifierReq)req).Data);
-        }
-        #endregion
-        */
-
         #region TrainClassifier
         /// <summary>
         /// Trains a classifier. Training requires a total of at least two zip files: Two positive example zips with 
@@ -1037,7 +922,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 throw new WatsonException("GetClassifier - APIKEY needs to be defined in config.json");
             if (string.IsNullOrEmpty(classifierName))
                 throw new ArgumentNullException("ClassifierName");
-            if (positiveExamples == null && string.IsNullOrEmpty(negativeExamplesPath))
+            if (positiveExamples.Count == 0 && string.IsNullOrEmpty(negativeExamplesPath))
                 throw new ArgumentNullException("Need at least one positive example or one negative example!");
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -1049,18 +934,22 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             {
                 foreach (KeyValuePair<string, string> kv in positiveExamples)
                     positiveExamplesData.Add(kv.Key, LoadFile(kv.Value));
-                negativeExamplesData = LoadFile(negativeExamplesPath);
+
+                if (!string.IsNullOrEmpty(negativeExamplesPath))
+                    negativeExamplesData = LoadFile(negativeExamplesPath);
             }
             else
             {
 #if !UNITY_WEBPLAYER
                 foreach (KeyValuePair<string, string> kv in positiveExamples)
                     positiveExamplesData.Add(kv.Key, File.ReadAllBytes(kv.Value));
-                negativeExamplesData = File.ReadAllBytes(negativeExamplesPath);
+
+                if(!string.IsNullOrEmpty(negativeExamplesPath))
+                    negativeExamplesData = File.ReadAllBytes(negativeExamplesPath);
 #endif
             }
 
-            if (positiveExamplesData.Count == 0 || negativeExamplesData == null)
+            if (positiveExamplesData.Count == 0 && negativeExamplesData == null)
                 Log.Error("VisualRecognition", "Failed to upload positive or negative examples!");
 
             return UpdateClassifier(callback, classifierID, classifierName, positiveExamplesData, negativeExamplesData, customData);
@@ -1083,8 +972,8 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 throw new WatsonException("GetClassifier - APIKEY needs to be defined in config.json");
             if (string.IsNullOrEmpty(classifierName))
                 throw new ArgumentNullException("ClassifierName");
-            if (positiveExamplesData.Count < 2 && negativeExamplesData == null)
-                throw new ArgumentNullException("At least two positive example zips or one positive example zip and one negative example zip are required to train a classifier!");
+            if (positiveExamplesData.Count == 0 && negativeExamplesData == null)
+                throw new ArgumentNullException("Need at least one positive example or one negative example!");
             if (callback == null)
                 throw new ArgumentNullException("callback");
 
