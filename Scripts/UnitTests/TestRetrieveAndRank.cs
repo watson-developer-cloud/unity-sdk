@@ -362,37 +362,52 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void OnDeleteExistingCollection(CollectionsResponse resp, string data)
         {
+            Test(resp != null);
+
             if(resp != null)
                 m_NumExistingCollectionsProcessed--;
+
+            m_DeleteCollectionRequestTested = true;
         }
 
         private void OnDeleteExistingConfig(bool success, string data)
         {
+            Test(success);
+
             if(success)
                 m_NumExistingConfigsProcessed--;
+
+            m_DeleteClusterConfigTested = true;
         }
 
         private void OnDeleteExistingCluster(bool success, string data)
         {
+            Test(success);
+
             if (success)
             {
                 Log.Debug("TestRetrieveAndRank", "Deleted existing cluster!");
                 m_NumExistingClusters--;
+                m_DeleteClusterTested = true;
             }
         }
 
         private void OnDeleteExistingRanker(bool success, string data)
         {
+            Test(success);
             if (success)
             {
                 Log.Debug("TestRetrieveAndRank", "Deleted existing ranker!");
                 //m_NumExistingRankers--;
+                m_DeleteRankersTested = true;
             }
         }
 
         private void OnGetExistingClusters(SolrClusterListResponse resp, string data)
-        {   
-            if(resp != null)
+        {
+            Test(resp != null);
+
+            if (resp != null)
             {
                 foreach (SolrClusterResponse cluster in resp.clusters)
                 {
@@ -413,6 +428,8 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void OnGetExistingConfigs(SolrConfigList resp, string data)
         {
+            Test(resp != null);
+
             if (resp != null)
             {
                 foreach (ClusterInfo cluster in m_ExistingClusterInfo)
@@ -431,6 +448,8 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void OnGetExistingCollections(CollectionsResponse resp, string data)
         {
+            Test(resp != null);
+
             if (resp != null)
             {
                 foreach (ClusterInfo cluster in m_ExistingClusterInfo)
@@ -449,6 +468,8 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void OnGetExistingRankers(ListRankersPayload resp, string data)
         {
+            Test(resp != null);
+
             if (resp != null)
             {
                 m_ExistingRankers = resp.rankers;
