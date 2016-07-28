@@ -382,7 +382,8 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void OnDeleteExistingCluster(bool success, string data)
         {
-            Test(success);
+            
+            Log.Debug("TestRetrieveAndRank", "OnDeleteExistingCluster Success = {0}!", success);
 
             if (success)
             {
