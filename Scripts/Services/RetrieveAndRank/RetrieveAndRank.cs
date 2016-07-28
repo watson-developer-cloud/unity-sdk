@@ -319,7 +319,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// <param name="resp"></param>
         private void OnDeleteClusterResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            Log.Debug("RetrieveAndRank", "OnDeleteClusterResponse!!");
+            Log.Debug("RetrieveAndRank", "OnDeleteClusterResponse success: {0}", resp.Success);
             if (((DeleteClusterRequest)req).Callback != null)
                 ((DeleteClusterRequest)req).Callback(resp.Success, ((DeleteClusterRequest)req).Data);
         }

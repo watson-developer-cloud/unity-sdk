@@ -387,8 +387,8 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             if (success)
             {
                 Log.Debug("TestRetrieveAndRank", "Deleted existing cluster!");
-                m_NumExistingClusters--;
                 m_DeleteClusterTested = true;
+                m_NumExistingClusters--;
             }
         }
 
