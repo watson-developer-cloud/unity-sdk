@@ -133,6 +133,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             foreach (ClusterInfo cluster in m_ExistingClusterInfo)
             {
                 //  Delete collections
+                Log.Debug("TestRetriveAndRank", "Attempting to delete extra collections!");
                 if (cluster.Collections != null && cluster.Collections.Length > 0)
                     foreach (string collection in cluster.Collections)
                     {
@@ -140,6 +141,11 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                         {
                             Log.Debug("TestRetrieveAndRank", "Deleting collection {0}.", collection);
                             m_RetrieveAndRank.ForwardCollectionRequest(OnDeleteExistingCollection, cluster.Cluster.solr_cluster_id, CollectionsAction.DELETE, collection);
+                            //	Wait before deleting cluster
+                            Runnable.Run(WaitUp(5f));
+                            while (!m_IsDoneWaiting)
+                                yield return null;
+                            m_IsDoneWaiting = false;
                         }
                     }
 
@@ -147,6 +153,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 //    yield return null;
 
                 //  Delete config
+                Log.Debug("TestRetriveAndRank", "Attempting to delete extra configs!");
                 if (cluster.Configs != null && cluster.Configs.Length > 0)
                     foreach (string config in cluster.Configs)
                     {
@@ -154,6 +161,11 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                         {
                             Log.Debug("TestRetrieveAndRank", "Deleting config {0}.", config);
                             m_RetrieveAndRank.DeleteClusterConfig(OnDeleteExistingConfig, cluster.Cluster.solr_cluster_id, config);
+                            //	Wait before deleting cluster
+                            Runnable.Run(WaitUp(5f));
+                            while (!m_IsDoneWaiting)
+                                yield return null;
+                            m_IsDoneWaiting = false;
                         }
                     }
 
@@ -161,15 +173,21 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 //    yield return null;
 
                 //  Delete cluster
+                Log.Debug("TestRetriveAndRank", "Attempting to delete extra clusters!");
                 if (cluster.Cluster.cluster_name == m_ClusterToCreateName)
                 {
                     Log.Debug("TestRetrieveAndRank", "Deleting cluster {0}.", cluster.Cluster.solr_cluster_id);
                     m_RetrieveAndRank.DeleteCluster(OnDeleteExistingCluster, cluster.Cluster.solr_cluster_id);
+                    //	Wait before deleting cluster
+                    Runnable.Run(WaitUp(5f));
+                    while (!m_IsDoneWaiting)
+                        yield return null;
+                    m_IsDoneWaiting = false;
                 }
-
-                while (m_NumExistingClusters > 0)
-                    yield return null;
             }
+
+            while (m_NumExistingClusters > 0)
+                yield return null;
 
             //  Delete rankers
             foreach (RankerInfoPayload ranker in m_ExistingRankers)
@@ -178,6 +196,11 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 {
                     Log.Debug("TestRetrieveAndRank", "Deleting ranker {0}.", ranker.ranker_id);
                     m_RetrieveAndRank.DeleteRanker(OnDeleteExistingRanker, ranker.ranker_id);
+                    //	Wait before deleting cluster
+                    Runnable.Run(WaitUp(5f));
+                    while (!m_IsDoneWaiting)
+                        yield return null;
+                    m_IsDoneWaiting = false;
                 }
             }
 
@@ -272,16 +295,28 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 yield return null;
             
             //  Delete ranker
-            Log.Debug("ExampleRetriveAndRank", "*** Attempting to delete ranker {0}!", m_RankerToCreateName);
+            Log.Debug("ExampleRetriveAndRank", "*** Attempting to delete ranker {0}, {1}!", m_RankerToCreateName, m_CreatedRankerID);
             m_RetrieveAndRank.DeleteRanker(OnDeleteRanker, m_CreatedRankerID);
             while (!m_DeleteRankersTested)
                 yield return null;
+
+            //	Wait before deleting cluster
+            Runnable.Run(WaitUp(5f));
+            while (!m_IsDoneWaiting)
+                yield return null;
+            m_IsDoneWaiting = false;
 
             //  Delete Collection request
             Log.Debug("TestRetrieveAndRank", "*** Attempting to delete collection!");
             m_RetrieveAndRank.ForwardCollectionRequest(OnDeleteCollections, IsFullTest ? m_CreatedClusterID : m_ExampleClusterID, CollectionsAction.DELETE, m_CollectionToCreateName);
             while (!m_DeleteCollectionRequestTested)
                 yield return null;
+
+            //	Wait before deleting cluster
+            Runnable.Run(WaitUp(5f));
+            while (!m_IsDoneWaiting)
+                yield return null;
+            m_IsDoneWaiting = false;
 
             //  Delete cluster config
             Log.Debug("TestRetrieveAndRank", "** Attempting to delete config {1} from cluster {0}!", IsFullTest ? m_CreatedClusterID : m_ExampleClusterID, m_ConfigToCreateName);
@@ -293,6 +328,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 			Runnable.Run(WaitUp(5f));
 			while (!m_IsDoneWaiting)
 				yield return null;
+            m_IsDoneWaiting = false;
 
 			//  Delete cluster
 			Log.Debug("TestRetrieveAndRank", "*** Attempting to delete cluster {0}!", m_CreatedClusterID);
