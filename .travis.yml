@@ -7,5 +7,5 @@ install:
 script:
 - ./Travis/createProject.sh
 - ./Travis/installSDK.sh
-- ./Travis/runTests.sh
+- travis_wait ./Travis/runTests.sh
 - ./Travis/build.sh
