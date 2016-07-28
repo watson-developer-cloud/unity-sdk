@@ -4,8 +4,8 @@ rvm:
 - 2.1.2
 install:
 - ./Travis/installUnity.sh
-script: travis_wait 30
+script:
 - ./Travis/createProject.sh
 - ./Travis/installSDK.sh
-- ./Travis/runTests.sh
+- travis_wait 30 ./Travis/runTests.sh
 - ./Travis/build.sh
