@@ -21,7 +21,7 @@ if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then
   fi
 
   echo "Attempting to run UnitySDK integration Tests..."
-  travis_wait /Applications/Unity/Unity.app/Contents/MacOS/Unity \
+  /Applications/Unity/Unity.app/Contents/MacOS/Unity \
     -batchmode \
     -nographics \
     -silent-crashes \
