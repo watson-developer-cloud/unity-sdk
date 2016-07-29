@@ -17,6 +17,7 @@
 
 using System.Collections;
 using IBM.Watson.DeveloperCloud.Logging;
+using System.Collections.Generic;
 using IBM.Watson.DeveloperCloud.Utilities;
 using System.IO;
 using UnityEngine;
@@ -32,6 +33,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         bool m_GetClassifiersTested = false;
         bool m_FindClassifierTested = false;
         bool m_GetClassifierTested = false;
+        bool m_UpdateClassifierTested = false;
         bool m_ClassifyGETTested = false;
         bool m_ClassifyPOSTTested = false;
         bool m_DetectFacesGETTested = false;
@@ -42,8 +44,12 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         
         bool m_TrainClassifier = false;
         bool m_IsClassifierReady = false;
+        bool m_HasUpdatedClassifier = false;
+        bool m_IsUpdatedClassifierReady = false;
         string m_ClassifierId = null;
-        string m_ClassifierName = "unity-integration-test-classifier-giraffe";
+        string m_ClassifierName = "unity-integration-test-classifier";
+        string m_ClassName_Giraffe = "giraffe";
+        string m_ClassName_Turtle = "turtle";
         private string m_ImageURL = "https://c2.staticflickr.com/2/1226/1173659064_8810a06fef_b.jpg";   //  giraffe image
         private string m_ImageFaceURL = "https://upload.wikimedia.org/wikipedia/commons/e/e9/Official_portrait_of_Barack_Obama.jpg";    //  Obama image
         private string m_ImageTextURL = "http://i.stack.imgur.com/ZS6nH.png";   //  image with text
@@ -58,7 +64,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             
             //  test find classifier
             Log.Debug("TestVisualRecognition", "Finding classifier {0}!", m_ClassifierName);
-            m_VisualRecognition.FindClassifier(m_ClassifierName, OnFindClassifier);
+            m_VisualRecognition.FindClassifier(OnFindClassifier, m_ClassifierName);
             while(!m_FindClassifierTested)
                 yield return null;
             
@@ -68,78 +74,98 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 Log.Debug("TestVisualRecognition", "Training classifier!");
                 string m_positiveExamplesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/giraffe_positive_examples.zip";
                 string m_negativeExamplesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/negative_examples.zip";
-                Test(m_VisualRecognition.TrainClassifier(m_ClassifierName, "giraffe", m_positiveExamplesPath, m_negativeExamplesPath, OnTrainClassifier));
+                Dictionary<string, string> positiveExamples = new Dictionary<string, string>();
+                positiveExamples.Add(m_ClassName_Giraffe, m_positiveExamplesPath);
+                Test(m_VisualRecognition.TrainClassifier(OnTrainClassifier, m_ClassifierName, positiveExamples, m_negativeExamplesPath));
                 while(!m_TrainClasifierTested)
-                    yield return null;
-
-                Log.Debug("TestVisualRecognition", "Checking classifier {0} status!", m_ClassifierId);
-                CheckClassifierStatus(OnCheckClassifierStatus);
-                while(!m_IsClassifierReady)
                     yield return null;
             }
 
+            //  Wait until classifier is ready
+            if(!m_IsClassifierReady)
+            {
+                Log.Debug("TestVisualRecognition", "Checking classifier {0} status!", m_ClassifierId);
+                CheckClassifierStatus(OnCheckClassifierStatus);
+                while (!m_IsClassifierReady)
+                    yield return null;
+            }
+            
             if(!string.IsNullOrEmpty(m_ClassifierId))
             {
                 //  test get classifier
                 Log.Debug("TestVisualRecognition", "Getting classifier {0}!", m_ClassifierId);
-                m_VisualRecognition.GetClassifier(m_ClassifierId, OnGetClassifier);
+                m_VisualRecognition.GetClassifier(OnGetClassifier, m_ClassifierId);
                 while(!m_GetClassifierTested)
                     yield return null;
-                
+
+                //  Update classifier
+                Log.Debug("TestVisualRecognition", "Updating classifier {0}", m_ClassifierId);
+                string m_positiveUpdated = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/turtle_positive_examples.zip";
+                Dictionary<string, string> positiveUpdatedExamples = new Dictionary<string, string>();
+                positiveUpdatedExamples.Add(m_ClassName_Turtle, m_positiveUpdated);
+                m_VisualRecognition.UpdateClassifier(OnUpdateClassifier, m_ClassifierId, m_ClassifierName, positiveUpdatedExamples);
+                while (!m_UpdateClassifierTested)
+                    yield return null;
+
+                //  Wait for updated classifier to be ready.
+                Log.Debug("TestVisualRecognition", "Checking updated classifier {0} status!", m_ClassifierId);
+                CheckClassifierStatus(OnCheckUpdatedClassifierStatus);
+                while (!m_IsUpdatedClassifierReady)
+                    yield return null;
+
                 string[] m_owners = {"IBM", "me"};
                 string[] m_classifierIds = {"default", m_ClassifierId};
                 
                 //  test classify image get
                 Log.Debug("TestVisualRecognition", "Classifying image using GET!");
-                m_VisualRecognition.Classify(m_ImageURL, OnClassifyGet, m_owners, m_classifierIds);
+                m_VisualRecognition.Classify(OnClassifyGet, m_ImageURL, m_owners, m_classifierIds);
                 while(!m_ClassifyGETTested)
                     yield return null;
                 
                 //  test classify image post
                 Log.Debug("TestVisualRecognition", "Classifying image using POST!");
                 string m_classifyImagePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/giraffe_to_classify.jpg";
-                m_VisualRecognition.Classify(OnClassifyPost, m_classifyImagePath, m_owners, m_classifierIds);
+                m_VisualRecognition.Classify(m_classifyImagePath, OnClassifyPost, m_owners, m_classifierIds);
                 while(!m_ClassifyPOSTTested)
                     yield return null;
-
             }
 
             //  test detect faces get
             Log.Debug("TestVisualRecognition", "Detecting face image using GET!");
-            m_VisualRecognition.DetectFaces(m_ImageFaceURL, OnDetectFacesGet);
+            m_VisualRecognition.DetectFaces(OnDetectFacesGet, m_ImageFaceURL);
             while(!m_DetectFacesGETTested)
                 yield return null;
 
             //  test detect faces post
             Log.Debug("TestVisualRecognition", "Detecting face image using POST!");
             string m_detectFaceImagePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/obama.jpg";
-            m_VisualRecognition.DetectFaces(OnDetectFacesPost, m_detectFaceImagePath);
+            m_VisualRecognition.DetectFaces(m_detectFaceImagePath, OnDetectFacesPost);
             while(!m_DetectFacesPOSTTested)
                 yield return null;
 
             //  test recognize text get
             Log.Debug("TestVisualRecognition", "Recognizing text image using GET!");
-            m_VisualRecognition.RecognizeText(m_ImageTextURL, OnRecognizeTextGet);
+            m_VisualRecognition.RecognizeText(OnRecognizeTextGet, m_ImageTextURL);
             while(!m_RecognizeTextGETTested)
                 yield return null;
 
             //  test recognize text post
             Log.Debug("TestVisualRecognition", "Recognizing text image using POST!");
             string m_recognizeTextImagePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/from_platos_apology.png";
-            m_VisualRecognition.RecognizeText(OnRecognizeTextPost, m_recognizeTextImagePath);
+            m_VisualRecognition.RecognizeText(m_recognizeTextImagePath, OnRecognizeTextPost);
             while(!m_RecognizeTextPOSTTested)
                 yield return null;
 
             //  test delete classifier
             Log.Debug("TestVisualRecognition", "Deleting classifier {0}!", m_ClassifierId);
-            m_VisualRecognition.DeleteClassifier(m_ClassifierId, OnDeleteClassifier);
+            m_VisualRecognition.DeleteClassifier(OnDeleteClassifier, m_ClassifierId);
             while(!m_DeleteTested)
                 yield return null;
 
             yield break;
         }
             
-        private void OnFindClassifier(GetClassifiersPerClassifierVerbose classifier)
+        private void OnFindClassifier(GetClassifiersPerClassifierVerbose classifier, string customData)
         {
             if (classifier != null)
             {
@@ -163,7 +189,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             m_FindClassifierTested = true;
         }
 
-        private void OnTrainClassifier(GetClassifiersPerClassifierVerbose classifier)
+        private void OnTrainClassifier(GetClassifiersPerClassifierVerbose classifier, string customData)
         {
             Test(classifier != null);
             if (classifier != null)
@@ -176,7 +202,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             m_TrainClasifierTested = true;
         }
 
-        private void OnGetClassifiers (GetClassifiersTopLevelBrief classifiers)
+        private void OnGetClassifiers (GetClassifiersTopLevelBrief classifiers, string customData)
         {
             Test(classifiers != null);
             if(classifiers != null && classifiers.classifiers.Length > 0)
@@ -195,18 +221,36 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             m_GetClassifiersTested = true;
         }
 
-        private void OnGetClassifier(GetClassifiersPerClassifierVerbose classifier)
+        private void OnGetClassifier(GetClassifiersPerClassifierVerbose classifier, string customData)
         {
             Test(classifier != null);
             if(classifier != null)
             {
                 Log.Debug("TestVisualRecognition", "Classifier {0} found! Classifier name: {1}", classifier.classifier_id, classifier.name);
+                foreach (Class classifierClass in classifier.classes)
+                    if (classifierClass.m_Class == m_ClassName_Turtle)
+                        m_HasUpdatedClassifier = true;
             }
 
             m_GetClassifierTested = true;
         }
 
-        private void OnClassifyGet(ClassifyTopLevelMultiple classify)
+        private void OnUpdateClassifier(GetClassifiersPerClassifierVerbose classifier, string customData)
+        {
+            if (classifier != null)
+            {
+                Log.Status("TestVisualRecognition", "Classifier ID: {0}, Classifier name: {1}, Status: {2}", classifier.classifier_id, classifier.name, classifier.status);
+                foreach (Class classifierClass in classifier.classes)
+                    if (classifierClass.m_Class == m_ClassName_Turtle)
+                        m_HasUpdatedClassifier = true;
+                //  store classifier id
+                //m_ClassifierId = classifier.classifier_id;
+            }
+
+            m_UpdateClassifierTested = true;
+        }
+
+        private void OnClassifyGet(ClassifyTopLevelMultiple classify, string customData)
         {
             Test(classify != null);
             if(classify != null)
@@ -231,7 +275,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             }
         }
 
-        private void OnClassifyPost(ClassifyTopLevelMultiple classify)
+        private void OnClassifyPost(ClassifyTopLevelMultiple classify, string customData)
         {
             Test(classify != null);
             if(classify != null)
@@ -256,7 +300,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             }
         }
 
-        private void OnDetectFacesGet(FacesTopLevelMultiple multipleImages)
+        private void OnDetectFacesGet(FacesTopLevelMultiple multipleImages, string customData)
         {
             Test(multipleImages != null);
             if(multipleImages != null)
@@ -282,7 +326,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             }
         }
 
-        private void OnDetectFacesPost(FacesTopLevelMultiple multipleImages)
+        private void OnDetectFacesPost(FacesTopLevelMultiple multipleImages, string customData)
         {
             Test(multipleImages != null);
             if(multipleImages != null)
@@ -308,7 +352,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             }
         }
 
-        private void OnRecognizeTextGet(TextRecogTopLevelMultiple multipleImages)
+        private void OnRecognizeTextGet(TextRecogTopLevelMultiple multipleImages, string customData)
         {
             Test(multipleImages != null);
             if(multipleImages != null)
@@ -334,7 +378,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             }
         }
 
-        private void OnRecognizeTextPost(TextRecogTopLevelMultiple multipleImages)
+        private void OnRecognizeTextPost(TextRecogTopLevelMultiple multipleImages, string customData)
         {
             Test(multipleImages != null);
             if(multipleImages != null)
@@ -360,24 +404,24 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             }
         }
 
-        private void OnDeleteClassifier(bool success)
+        private void OnDeleteClassifier(bool success, string customData)
         {
             if(success)
             {
-                m_VisualRecognition.FindClassifier(m_ClassifierName, OnDeleteClassifierFinal);
+                m_VisualRecognition.FindClassifier(OnDeleteClassifierFinal, m_ClassifierName);
             }
 
             m_DeleteTested = true;
             Test(success);
         }
 
-        private void CheckClassifierStatus(VisualRecognition.OnGetClassifier callback)
+        private void CheckClassifierStatus(VisualRecognition.OnGetClassifier callback, string customData = default(string))
         {
-            if(!m_VisualRecognition.GetClassifier(m_ClassifierId, callback))
+            if(!m_VisualRecognition.GetClassifier(callback, m_ClassifierId))
                 Log.Debug("TestVisualRecognition", "Get classifier failed!");
         }
 
-        private void OnCheckClassifierStatus(GetClassifiersPerClassifierVerbose classifier)
+        private void OnCheckClassifierStatus(GetClassifiersPerClassifierVerbose classifier, string customData)
         {
             Log.Debug("TestVisualRecognition", "classifier {0} is {1}!", classifier.classifier_id, classifier.status);
 
@@ -385,7 +429,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             {
                 Log.Debug("TestVisualRecognition", "Deleting classifier!");
                 //  classifier failed - delete!
-                if(!m_VisualRecognition.DeleteClassifier(classifier.classifier_id, OnCheckClassifierStatusDelete))
+                if(!m_VisualRecognition.DeleteClassifier(OnCheckClassifierStatusDelete, classifier.classifier_id))
                     Log.Debug("TestVisualRecognition", "Failed to delete classifier {0}!", m_ClassifierId);
 
             }
@@ -400,17 +444,30 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             }
         }
 
-        private void OnCheckClassifierStatusDelete(bool success)
+        private void OnCheckUpdatedClassifierStatus(GetClassifiersPerClassifierVerbose classifier, string customData = default(string))
+        {
+            Log.Debug("TestVisualRecognition", "classifier {0} is {1}!", classifier.classifier_id, classifier.status);
+
+            if (classifier.status == "retraining")
+            {
+                CheckClassifierStatus(OnCheckUpdatedClassifierStatus);
+            }
+            else if (classifier.status == "ready")
+            {
+                m_IsUpdatedClassifierReady = true;
+            }
+        }
+
+        private void OnCheckClassifierStatusDelete(bool success, string customData)
         {
             if(success)
             {
                 //  train classifier again!
                 m_TrainClasifierTested = false;
-
             }
         }
 
-        private void OnDeleteClassifierFinal(GetClassifiersPerClassifierVerbose classifier)
+        private void OnDeleteClassifierFinal(GetClassifiersPerClassifierVerbose classifier, string customData)
         {
             if(classifier == null)
             {

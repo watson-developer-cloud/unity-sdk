@@ -1,5 +1,13 @@
 Change Log
 ==========
+## Version 0.7.0
+_2016-07-29_
+
+* New: Visual Recognition: Added retraining functionality.
+* New: Visual Recognition: Use byteArray data to classify, detect faces and recognize text.
+* Fix: Updated integration testing.
+
+
 ## Version 0.6.1
 _2016-07-17_
 
