@@ -144,6 +144,12 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                         }
                 }
 
+                //	Wait before deleting config
+                m_IsDoneWaiting = false;
+                Runnable.Run(WaitUp(5f));
+                while (!m_IsDoneWaiting)
+                    yield return null;
+
                 //  Delete config
                 Log.Debug("TestRetriveAndRank", "Attempting to delete extra configs!");
                 if (cluster.Configs != null && cluster.Configs.Length > 0)
