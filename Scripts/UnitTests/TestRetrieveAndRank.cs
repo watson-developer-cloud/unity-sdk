@@ -45,31 +45,35 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         //private RankerInfoPayload[] m_ExistingRankers;
 
         private bool m_GetClustersTested = false;
-        private bool m_CreateClusterTested = false;
-        private bool m_DeleteClusterTested = false;
         private bool m_GetClusterTested = false;
         private bool m_ListClusterConfigsTested = false;
-        private bool m_DeleteClusterConfigTested = false;
         private bool m_GetClusterConfigTested = false;
-        private bool m_UploadClusterConfigTested = false;
         private bool m_ListCollectionRequestTested = false;
-        private bool m_CreateCollectionRequestTested = false;
-        private bool m_DeleteCollectionRequestTested = false;
-        private bool m_IndexDocumentsTested = false;
         private bool m_StandardSearchTested = false;
         private bool m_RankedSearchTested = false;
         private bool m_GetRankersTested = false;
-        private bool m_CreateRankerTested = false;
         private bool m_RankTested = false;
-        private bool m_DeleteRankersTested = false;
         private bool m_GetRankerInfoTested = false;
 
-        private string m_ClusterToCreateName = "unity-integration-test-cluster";
-        private string m_CreatedClusterID;
         private string m_ConfigToCreateName = "unity-integration-test-config";
         private string m_CollectionToCreateName = "unity-integration-test-collection";
-        private string m_RankerToCreateName = "unity-integration-test-ranker";
         private string m_CreatedRankerID;
+        private string m_CreatedClusterID;
+
+#if TEST_CREATE_DELETE
+        private bool m_DeleteClusterTested = false;
+        private bool m_CreateClusterTested = false;
+        private bool m_DeleteClusterConfigTested = false;
+        private bool m_UploadClusterConfigTested = false;
+        private bool m_CreateCollectionRequestTested = false;
+        private bool m_DeleteCollectionRequestTested = false;
+        private bool m_IndexDocumentsTested = false;
+        private bool m_CreateRankerTested = false;
+        private bool m_DeleteRankersTested = false;
+        private string m_ClusterToCreateName = "unity-integration-test-cluster";
+        private string m_RankerToCreateName = "unity-integration-test-ranker";
+        private bool m_IsDoneWaiting = false;
+#endif
 
         //  from config variables
         private string m_ExampleClusterID;
@@ -90,7 +94,6 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private bool m_IsClusterReady = false;
         private bool m_IsRankerReady = false;
 
-		private bool m_IsDoneWaiting = false;
         public override IEnumerator RunTest()
         {
             m_IntegrationTestClusterConfigPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/RetrieveAndRank/cranfield_solr_config.zip";
@@ -103,7 +106,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             m_ExampleRankerID = Config.Instance.GetVariableValue("RetrieveAndRank_IntegrationTestRankerID");
             m_ExampleCollectionName = Config.Instance.GetVariableValue("RetrieveAndRank_IntegrationTestCollectionName");
 
-            #region delete existing
+#region delete existing
             ////  Get existing cluster data.
             //Log.Debug("TestRetrieveAndRank", "Getting existing clusters.");
             //m_RetrieveAndRank.GetClusters(OnGetExistingClusters);
@@ -200,7 +203,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             //        m_RetrieveAndRank.DeleteRanker(OnDeleteExistingRanker, ranker.ranker_id);
             //    }
             //}
-            #endregion
+#endregion
 
             //  Get clusters
             Log.Debug("TestRetrieveAndRank", "*** Attempting to get clusters!");
@@ -369,11 +372,13 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 			yield break;
 		}
 
+#if TEST_CREATE_DELETE
 		private IEnumerator WaitUp(float waitTime)
 		{
 			yield return new WaitForSeconds(waitTime);
 			m_IsDoneWaiting = true;
 		}
+#endif
 
 #region delete existing handlers
         //private void OnDeleteExistingCollection(CollectionsResponse resp, string data)
@@ -510,6 +515,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             m_GetClustersTested = true;
         }
 
+#if TEST_CREATE_DELETE
         private void OnCreateCluster(SolrClusterResponse resp, string data)
         {
             Test(resp != null);
@@ -524,6 +530,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             m_CreateClusterTested = true;
         }
+#endif
 
         private void OnGetCluster(SolrClusterResponse resp, string data)
         {
@@ -544,6 +551,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             m_GetClusterTested = true;
         }
 
+#if TEST_CREATE_DELETE
         private void OnDeleteCluster(bool success, string data)
         {
             Test(success);
@@ -555,6 +563,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             m_DeleteClusterTested = true;
         }
+#endif
 
         private void OnGetClusterConfigs(SolrConfigList resp, string data)
         {
@@ -574,6 +583,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             m_ListClusterConfigsTested = true;
         }
 
+#if TEST_CREATE_DELETE
         private void OnUploadClusterConfig(UploadResponse resp, string data)
         {
             Test(resp != null);
@@ -597,6 +607,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             m_DeleteClusterConfigTested = true;
         }
+#endif
 
         private void OnGetClusterConfig(byte[] respData, string data)
         {
@@ -612,6 +623,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             m_GetClusterConfigTested = true;
         }
 
+#if TEST_CREATE_DELETE
         private void OnCreateCollections(CollectionsResponse resp, string data)
         {
             Test(resp != null);
@@ -634,6 +646,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             m_CreateCollectionRequestTested = true;
         }
+#endif
 
         private void OnListCollections(CollectionsResponse resp, string data)
         {
@@ -665,6 +678,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             m_ListCollectionRequestTested = true;
         }
 
+#if TEST_CREATE_DELETE
         private void OnDeleteCollections(CollectionsResponse resp, string data)
         {
             Test(resp != null);
@@ -687,6 +701,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             m_DeleteCollectionRequestTested = true;
         }
+#endif
 
         private void OnGetRankers(ListRankersPayload resp, string data)
         {
@@ -705,6 +720,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             m_GetRankersTested = true;
         }
 
+#if TEST_CREATE_DELETE
         private void OnCreateRanker(RankerStatusPayload resp, string data)
         {
             Test(resp != null);
@@ -719,6 +735,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             m_CreateRankerTested = true;
         }
+#endif
 
         private void OnGetRanker(RankerStatusPayload resp, string data)
         {
@@ -758,6 +775,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             m_RankTested = true;
         }
 
+#if TEST_CREATE_DELETE
         private void OnDeleteRanker(bool success, string data)
         {
             Test(success);
@@ -792,6 +810,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             m_IndexDocumentsTested = true;
         }
+#endif
 
         private void OnStandardSearch(SearchResponse resp, string data)
         {
