@@ -280,6 +280,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 
             DeleteClusterRequest req = new DeleteClusterRequest();
             req.Callback = callback;
+            req.Data = customData;
             req.ClusterID = clusterID;
             req.Delete = true;
             req.Timeout = REQUEST_TIMEOUT;
@@ -318,7 +319,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// <param name="resp"></param>
         private void OnDeleteClusterResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            Log.Debug("RetrieveAndRank", "OnDeleteClusterResponse!!");
+            Log.Debug("RetrieveAndRank", "OnDeleteClusterResponse success: {0}", resp.Success);
             if (((DeleteClusterRequest)req).Callback != null)
                 ((DeleteClusterRequest)req).Callback(resp.Success, ((DeleteClusterRequest)req).Data);
         }
@@ -348,6 +349,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 
             GetClusterRequest req = new GetClusterRequest();
             req.Callback = callback;
+            req.Data = customData;
             req.ClusterID = clusterID;
             req.Timeout = REQUEST_TIMEOUT;
 
@@ -437,6 +439,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             GetClusterConfigsRequest req = new GetClusterConfigsRequest();
             req.Callback = callback;
             req.ClusterID = clusterID;
+            req.Data = customData;
             req.Timeout = REQUEST_TIMEOUT;
             req.OnResponse = OnGetClusterConfigsResponse;
 
@@ -530,6 +533,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 
             DeleteClusterConfigRequest req = new DeleteClusterConfigRequest();
             req.Callback = callback;
+            req.Data = customData;
             req.ClusterID = clusterID;
             req.ConfigID = configID;
             req.Timeout = REQUEST_TIMEOUT;
@@ -718,6 +722,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 
             UploadClusterConfigRequest req = new UploadClusterConfigRequest();
             req.Callback = callback;
+            req.Data = customData;
             req.ClusterID = clusterID;
             req.ConfigName = configName;
             req.OnResponse = UploadClusterConfigResponse;
@@ -1499,6 +1504,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 
 			DeleteRankerRequest req = new DeleteRankerRequest();
 			req.Callback = callback;
+            req.Data = customData;
 			req.RankerID = rankerID;
             req.Timeout = REQUEST_TIMEOUT;
 			req.Delete = true;
@@ -1566,6 +1572,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 
 			GetRankerRequest req = new GetRankerRequest();
 			req.Callback = callback;
+            req.Data = customData;
 			req.RankerID = rankerID;
             req.Timeout = REQUEST_TIMEOUT;
 

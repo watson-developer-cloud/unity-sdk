@@ -59,7 +59,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             //  test get classifiers
             Log.Debug("TestVisualRecognition", "Getting all classifiers!");
             m_VisualRecognition.GetClassifiers(OnGetClassifiers);
-            while(!m_GetClassifiersTested)
+            while (!m_GetClassifiersTested)
                 yield return null;
             
             //  test find classifier

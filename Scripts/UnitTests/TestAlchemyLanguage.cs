@@ -366,6 +366,8 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 			m_AlchemyAPI.GetNews(OnGetNews, returnFields, queryFields);
 			while(!m_GetNewsTested)
 				yield return null;
+
+            yield break;
         }
 
         #region GetAuthors
