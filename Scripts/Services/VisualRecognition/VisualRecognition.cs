@@ -41,42 +41,42 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// Callback used by FindClassifier().
         /// </summary>
         /// <param name="classifier">The classifer found by name.</param>
-        public delegate void OnFindClassifier(GetClassifiersPerClassifierVerbose classifier);
+        public delegate void OnFindClassifier(GetClassifiersPerClassifierVerbose classifier, string data);
         /// <summary>
         /// The callback used by the GetClassifiers() method.
         /// </summary>
         /// <param name="classifiers"></param>
-        public delegate void OnGetClassifiers(GetClassifiersTopLevelBrief classifiers);
+        public delegate void OnGetClassifiers(GetClassifiersTopLevelBrief classifiers, string data);
         /// <summary>
         /// Callback used by the GetClassifier() method.
         /// </summary>
         /// <param name="classifier">The classifier found by ID.</param>
-        public delegate void OnGetClassifier(GetClassifiersPerClassifierVerbose classifier);
+        public delegate void OnGetClassifier(GetClassifiersPerClassifierVerbose classifier, string data);
         /// <summary>
         /// This callback is used by the DeleteClassifier() method.
         /// </summary>
         /// <param name="success"></param>
-        public delegate void OnDeleteClassifier(bool success);
+        public delegate void OnDeleteClassifier(bool success, string data);
         /// <summary>
         /// Callback used by the TrainClassifier() method.
         /// </summary>
         /// <param name="classifier">The classifier created.</param>
-        public delegate void OnTrainClassifier(GetClassifiersPerClassifierVerbose classifier);
+        public delegate void OnTrainClassifier(GetClassifiersPerClassifierVerbose classifier, string data);
         /// <summary>
         /// This callback is used by the Classify() method.
         /// </summary>
         /// <param name="classify"></param>
-        public delegate void OnClassify(ClassifyTopLevelMultiple classify);
+        public delegate void OnClassify(ClassifyTopLevelMultiple classify, string data);
         /// <summary>
         /// This callback is used by the DetectFaces() method.
         /// </summary>
         /// <param name="faces"></param>
-        public delegate void OnDetectFaces(FacesTopLevelMultiple faces);
+        public delegate void OnDetectFaces(FacesTopLevelMultiple faces, string data);
         /// <summary>
         /// This callback is used by the RecognizeText() method.
         /// </summary>
         /// <param name="faces"></param>
-        public delegate void OnRecognizeText(TextRecogTopLevelMultiple text);
+        public delegate void OnRecognizeText(TextRecogTopLevelMultiple text, string data);
         /// <summary>
         /// The delegate for loading a file, used by TrainClassifier().
         /// </summary>
@@ -110,12 +110,13 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <param name="classifierIDs">Classifier IDs to be classified against.</param>
         /// <param name="threshold">Threshold.</param>
         /// <param name="acceptLanguage">Accept language.</param>
-        public bool Classify(string url, OnClassify callback, string[] owners = default(string[]), string[] classifierIDs = default(string[]), float threshold = default(float), string acceptLanguage = "en")
+        /// <param name="customData">Custom data.</param>
+        public bool Classify(OnClassify callback, string url, string[] owners = default(string[]), string[] classifierIDs = default(string[]), float threshold = default(float), string acceptLanguage = "en", string customData = default(string))
         {
             if(string.IsNullOrEmpty(mp_ApiKey))
                 mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
             if(string.IsNullOrEmpty(mp_ApiKey))
-                throw new WatsonException("FindClassifier - VISUAL_RECOGNITION_API_KEY needs to be defined in config.json");
+                throw new WatsonException("FindClassifier - APIKEY needs to be defined in config.json");
             if(string.IsNullOrEmpty(url))
                 throw new ArgumentNullException("url");
             if(callback == null)
@@ -127,7 +128,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
             ClassifyReq req = new ClassifyReq();
             req.Callback = callback;
+            req.Data = customData;
             req.OnResponse = OnClassifyResp;
+            req.Timeout = REQUEST_TIMEOUT;
             req.AcceptLanguage = acceptLanguage;
             req.Headers["Accepted-Language"] = acceptLanguage;
             req.Parameters["api_key"] = mp_ApiKey;
@@ -144,7 +147,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         }
 
         /// <summary>
-        /// Classifies a posted image.
+        /// Classifies an image from the file system.
         /// </summary>
         /// <param name="callback">Callback.</param>
         /// <param name="imagePath">Image path.</param>
@@ -152,12 +155,13 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <param name="classifierIDs">Classifier I ds.</param>
         /// <param name="threshold">Threshold.</param>
         /// <param name="acceptLanguage">Accept language.</param>
-        public bool Classify(OnClassify callback, string imagePath, string[] owners = default(string[]), string[] classifierIDs = default(string[]), float threshold = default(float), string acceptLanguage = "en")
+        /// <param name="customData">Custom data.</param>
+        public bool Classify(string imagePath, OnClassify callback, string[] owners = default(string[]), string[] classifierIDs = default(string[]), float threshold = default(float), string acceptLanguage = "en", string customData = default(string))
         {
             if(string.IsNullOrEmpty(mp_ApiKey))
                 mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
             if(string.IsNullOrEmpty(mp_ApiKey))
-                throw new WatsonException("FindClassifier - VISUAL_RECOGNITION_API_KEY needs to be defined in config.json");
+                throw new WatsonException("FindClassifier - APIKEY needs to be defined in config.json");
             if(callback == null)
                 throw new ArgumentNullException("callback");
             if(string.IsNullOrEmpty(imagePath))
@@ -181,16 +185,28 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                     Log.Error("VisualRecognition", "Failed to upload {0}!", imagePath);
             }
 
-            return Classify(imagePath, imageData, callback, owners, classifierIDs, threshold, acceptLanguage);
+            return Classify(callback, imageData, owners, classifierIDs, threshold, acceptLanguage);
         }
 
-        private bool Classify(string imagePath, byte[] imageData, OnClassify callback, string[] owners = default(string[]), string[] classifierIDs = default(string[]), float threshold = default(float), string acceptLanguage = "en")
+        /// <summary>
+        /// Classifies an image using byte data.
+        /// </summary>
+        /// <param name="callback">Callback.</param>
+        /// <param name="imageData">Byte array of image data.</param>
+        /// <param name="owners">Owners.</param>
+        /// <param name="classifierIDs">An array of classifier identifiers.</param>
+        /// <param name="threshold">Threshold.</param>
+        /// <param name="acceptLanguage">Accepted language.</param>
+        /// <param name="customData">Custom data.</param>
+        /// <returns></returns>
+        public bool Classify(OnClassify callback, byte[] imageData, string[] owners = default(string[]), string[] classifierIDs = default(string[]), float threshold = default(float), string acceptLanguage = "en", string customData = default(string))
         {
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_CLASSIFY);
             if(connector == null)
                 return false;
             ClassifyReq req = new ClassifyReq();
             req.Callback = callback;
+            req.Data = customData;
             req.Timeout = REQUEST_TIMEOUT;
             req.OnResponse = OnClassifyResp;
             req.AcceptLanguage = acceptLanguage;
@@ -205,9 +221,22 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             return connector.Send(req);
         }
 
-        private class ClassifyReq : RESTConnector.Request
+        /// <summary>
+        /// The Classify request
+        /// </summary>
+        public class ClassifyReq : RESTConnector.Request
         {
+            /// <summary>
+			/// Custom data.
+			/// </summary>
+            public string Data { get; set; }
+            /// <summary>
+            /// The OnClasify callback delegate.
+            /// </summary>
             public OnClassify Callback { get; set; }
+            /// <summary>
+            /// Accept language string.
+            /// </summary>
             public string AcceptLanguage { get; set; }
         }
 
@@ -216,36 +245,28 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             ClassifyTopLevelMultiple classify = null;
             if(resp.Success)
             {
-                classify = ProcessClassifyResult(resp.Data);
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    classify = new ClassifyTopLevelMultiple();
+
+                    object obj = classify;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Visual Recognition", "Classify exception: {0}", e.ToString());
+                }
             }
 
             if(((ClassifyReq)req).Callback != null)
-                ((ClassifyReq)req).Callback(classify);
-        }
-
-        private ClassifyTopLevelMultiple ProcessClassifyResult(byte[] json_data)
-        {
-            ClassifyTopLevelMultiple classify = null;
-            try
-            {
-                fsData data = null;
-                fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(json_data), out data);
-                if (!r.Succeeded)
-                    throw new WatsonException(r.FormattedMessages);
-
-                classify = new ClassifyTopLevelMultiple();
-
-                object obj = classify;
-                r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                if (!r.Succeeded)
-                    throw new WatsonException(r.FormattedMessages);
-            }
-            catch(Exception e)
-            {
-                Log.Error("Visual Recognition", "Classify exception: {0}", e.ToString());
-            }
-
-            return classify;
+                ((ClassifyReq)req).Callback(resp.Success ? classify : null, ((ClassifyReq)req).Data);
         }
         #endregion
 
@@ -256,7 +277,8 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <returns><c>true</c>, if faces was detected, <c>false</c> otherwise.</returns>
         /// <param name="url">URL.</param>
         /// <param name="callback">Callback.</param>
-        public bool DetectFaces(string url, OnDetectFaces callback)
+        /// <param name="customData">Custom data.</param>
+        public bool DetectFaces(OnDetectFaces callback, string url, string customData = default(string))
         {
             if(string.IsNullOrEmpty(url))
                 throw new ArgumentNullException("url");
@@ -265,7 +287,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if(string.IsNullOrEmpty(mp_ApiKey))
                 mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
             if(string.IsNullOrEmpty(mp_ApiKey))
-                throw new WatsonException("FindClassifier - VISUAL_RECOGNITION_API_KEY needs to be defined in config.json");
+                throw new WatsonException("FindClassifier - APIKEY needs to be defined in config.json");
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_DETECT_FACES);
             if(connector == null)
@@ -273,7 +295,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
             DetectFacesReq req = new DetectFacesReq();
             req.Callback = callback;
+            req.Data = customData;
             req.OnResponse = OnDetectFacesResp;
+            req.Timeout = REQUEST_TIMEOUT;
             req.Parameters["api_key"] = mp_ApiKey;
             req.Parameters["url"] = url;
             req.Parameters["version"] = VisualRecognitionVersion.Version;
@@ -287,14 +311,15 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <returns><c>true</c>, if faces was detected, <c>false</c> otherwise.</returns>
         /// <param name="callback">Callback.</param>
         /// <param name="imagePath">Image path.</param>
-        public bool DetectFaces(OnDetectFaces callback, string imagePath)
+        /// <param name="customData">Custom data.</param>
+        public bool DetectFaces(string imagePath, OnDetectFaces callback, string customData = default(string))
         {
             if(string.IsNullOrEmpty(imagePath))
                 throw new ArgumentNullException("Define an image path to classify!");
             if(string.IsNullOrEmpty(mp_ApiKey))
                 mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
             if(string.IsNullOrEmpty(mp_ApiKey))
-                throw new WatsonException("FindClassifier - VISUAL_RECOGNITION_API_KEY needs to be defined in config.json");
+                throw new WatsonException("FindClassifier - APIKEY needs to be defined in config.json");
 
             byte[] imageData = null;
             if(imagePath != default(string))
@@ -314,16 +339,24 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                     Log.Error("VisualRecognition", "Failed to upload {0}!", imagePath);
             }
 
-            return DetectFaces(callback, imagePath, imageData);
+            return DetectFaces(callback, imageData, customData);
         }
 
-        private bool DetectFaces(OnDetectFaces callback, string imagePath, byte[] imageData = default(byte[]))
+        /// <summary>
+        /// Detect faces in an image's byteData.
+        /// </summary>
+        /// <param name="callback">Callback.</param>
+        /// <param name="imageData">ByteArray of image data.</param>
+        /// <param name="customData">Custom data.</param>
+        /// <returns></returns>
+        public bool DetectFaces(OnDetectFaces callback, byte[] imageData = default(byte[]), string customData = default(string))
         {
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_DETECT_FACES);
             if(connector == null)
                 return false;
             DetectFacesReq req = new DetectFacesReq();
             req.Callback = callback;
+            req.Data = customData;
             req.Timeout = REQUEST_TIMEOUT;
             req.OnResponse = OnDetectFacesResp;
             req.Parameters["api_key"] = mp_ApiKey;
@@ -338,8 +371,18 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             return connector.Send(req);
         }
 
-        private class DetectFacesReq : RESTConnector.Request
+        /// <summary>
+        /// The DetectFaces request
+        /// </summary>
+        public class DetectFacesReq : RESTConnector.Request
         {
+            /// <summary>
+			/// Custom data.
+			/// </summary>
+            public string Data { get; set; }
+            /// <summary>
+            /// The OnDetectFaces callback delegate.
+            /// </summary>
             public OnDetectFaces Callback { get; set; }
         }
             
@@ -349,36 +392,28 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
             if(resp.Success)
             {
-                faces = ProcessDetectFaceResult(resp.Data);
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    faces = new FacesTopLevelMultiple();
+
+                    object obj = faces;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Visual Recognition", "Detect faces exception: {0}", e.ToString());
+                }
             }
 
             if(((DetectFacesReq)req).Callback != null)
-                ((DetectFacesReq)req).Callback(faces);
-        }
-
-        private FacesTopLevelMultiple ProcessDetectFaceResult(byte[] json_data)
-        {
-            FacesTopLevelMultiple faces = null;
-            try
-            {
-                fsData data = null;
-                fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(json_data), out data);
-                if (!r.Succeeded)
-                    throw new WatsonException(r.FormattedMessages);
-
-                faces = new FacesTopLevelMultiple();
-
-                object obj = faces;
-                r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                if (!r.Succeeded)
-                    throw new WatsonException(r.FormattedMessages);
-            }
-            catch(Exception e)
-            {
-                Log.Error("Visual Recognition", "Detect faces exception: {0}", e.ToString());
-            }
-
-            return faces;
+                ((DetectFacesReq)req).Callback(resp.Success ? faces : null, ((DetectFacesReq)req).Data);
         }
         #endregion
 
@@ -389,7 +424,8 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <returns><c>true</c>, if text was recognized, <c>false</c> otherwise.</returns>
         /// <param name="url">URL.</param>
         /// <param name="callback">Callback.</param>
-        public bool RecognizeText(string url, OnRecognizeText callback)
+        /// <param name="customData">Custom data.</param>
+        public bool RecognizeText(OnRecognizeText callback, string url, string customData = default(string))
         {
             if(string.IsNullOrEmpty(url))
                 throw new ArgumentNullException("url");
@@ -398,7 +434,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if(string.IsNullOrEmpty(mp_ApiKey))
                 mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
             if(string.IsNullOrEmpty(mp_ApiKey))
-                throw new WatsonException("FindClassifier - VISUAL_RECOGNITION_API_KEY needs to be defined in config.json");
+                throw new WatsonException("FindClassifier - APIKEY needs to be defined in config.json");
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_RECOGNIZE_TEXT);
             if(connector == null)
@@ -406,7 +442,10 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
             RecognizeTextReq req = new RecognizeTextReq();
             req.Callback = callback;
+            req.Data = customData;
+            req.Timeout = REQUEST_TIMEOUT;
             req.OnResponse = OnRecognizeTextResp;
+            req.Timeout = REQUEST_TIMEOUT;
             req.Parameters["api_key"] = mp_ApiKey;
             req.Parameters["url"] = url;
             req.Parameters["version"] = VisualRecognitionVersion.Version;
@@ -420,14 +459,17 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <returns><c>true</c>, if text was recognized, <c>false</c> otherwise.</returns>
         /// <param name="callback">Callback.</param>
         /// <param name="imagePath">Image path.</param>
-        public bool RecognizeText(OnRecognizeText callback, string imagePath)
+        /// <param name="customData">Custom data.</param>
+        public bool RecognizeText(string imagePath, OnRecognizeText callback, string customData = default(string))
         {
-            if(string.IsNullOrEmpty(imagePath))
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(imagePath))
                 throw new ArgumentNullException("Define an image path to classify!");
             if(string.IsNullOrEmpty(mp_ApiKey))
                 mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
             if(string.IsNullOrEmpty(mp_ApiKey))
-                throw new WatsonException("FindClassifier - VISUAL_RECOGNITION_API_KEY needs to be defined in config.json");
+                throw new WatsonException("FindClassifier - APIKEY needs to be defined in config.json");
 
             byte[] imageData = null;
             if(imagePath != default(string))
@@ -447,16 +489,24 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                     Log.Error("VisualRecognition", "Failed to upload {0}!", imagePath);
             }
 
-            return RecognizeText(callback, imagePath, imageData);
+            return RecognizeText(callback, imageData, customData);
         }
 
-        private bool RecognizeText(OnRecognizeText callback, string imagePath, byte[] imageData = default(byte[]))
+        /// <summary>
+        /// Recognizes text in image bytedata.
+        /// </summary>
+        /// <param name="callback">Callback.</param>
+        /// <param name="imageData">Image's byte array data.</param>
+        /// <param name="customData">Custom data.</param>
+        /// <returns></returns>
+        public bool RecognizeText(OnRecognizeText callback, byte[] imageData = default(byte[]), string customData = default(string))
         {
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_RECOGNIZE_TEXT);
             if(connector == null)
                 return false;
             RecognizeTextReq req = new RecognizeTextReq();
             req.Callback = callback;
+            req.Data = customData;
             req.Timeout = REQUEST_TIMEOUT;
             req.OnResponse = OnRecognizeTextResp;
 
@@ -469,26 +519,16 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             return connector.Send(req);
         }
 
-        private class RecognizeTextReq : RESTConnector.Request
+        public class RecognizeTextReq : RESTConnector.Request
         {
+            /// <summary>
+			/// Custom data.
+			/// </summary>
+            public string Data { get; set; }
+            /// <summary>
+            /// The OnRecognizeText callback delegate.
+            /// </summary>
             public OnRecognizeText Callback { get; set; }
-        }
-
-        private string BuildRecognizeTextParametersJson(string url)
-        {
-            RecognizeTextParameters cParameters = new RecognizeTextParameters();
-            cParameters.url = url;
-
-            fsData jsondata = new fsData();
-            if (sm_Serializer.TrySerialize(cParameters, out jsondata).Succeeded)
-            {
-                return fsJsonPrinter.CompressedJson(jsondata, true);
-            }
-            else
-            {
-                Log.Error("VisualRecognition", "Error parsing to JSON!");
-                return null;
-            }
         }
 
         private void OnRecognizeTextResp(RESTConnector.Request req, RESTConnector.Response resp)
@@ -496,36 +536,28 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             TextRecogTopLevelMultiple text = null;
             if(resp.Success)
             {
-                text = ProcessRecognizeTextResult(resp.Data);
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    text = new TextRecogTopLevelMultiple();
+
+                    object obj = text;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Visual Recognition", "Detect text exception: {0}", e.ToString());
+                }
             }
 
             if(((RecognizeTextReq)req).Callback != null)
-                ((RecognizeTextReq)req).Callback(text);
-        }
-
-        private TextRecogTopLevelMultiple ProcessRecognizeTextResult(byte[] json_data)
-        {
-            TextRecogTopLevelMultiple text = null;
-            try
-            {
-                fsData data = null;
-                fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(json_data), out data);
-                if (!r.Succeeded)
-                    throw new WatsonException(r.FormattedMessages);
-
-                text = new TextRecogTopLevelMultiple();
-
-                object obj = text;
-                r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                if (!r.Succeeded)
-                    throw new WatsonException(r.FormattedMessages);
-            }
-            catch(Exception e)
-            {
-                Log.Error("Visual Recognition", "Detect text exception: {0}", e.ToString());
-            }
-
-            return text;
+                ((RecognizeTextReq)req).Callback(resp.Success ? text : null, ((RecognizeTextReq)req).Data);
         }
         #endregion
 
@@ -535,14 +567,15 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// </summary>
         /// <param name="classifierName">Classifier name.</param>
         /// <param name="callback">Callback.</param>
-        public void FindClassifier(string classifierName, OnFindClassifier callback)
+        /// <param name="customData">Custom data.</param>
+        public void FindClassifier(OnFindClassifier callback, string classifierName, string customData = default(string))
         {
-            new FindClassifierReq(this, classifierName, callback);
+            new FindClassifierReq(callback, this, classifierName, customData);
         }
 
         private class FindClassifierReq
         {
-            public FindClassifierReq(VisualRecognition service, string classifierName, OnFindClassifier callback)
+            public FindClassifierReq(OnFindClassifier callback, VisualRecognition service, string classifierName, string customData = default(string))
             {
                 if(callback == null)
                     throw new ArgumentNullException("callback");
@@ -551,27 +584,27 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 if(string.IsNullOrEmpty(mp_ApiKey))
                     mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
                 if(string.IsNullOrEmpty(mp_ApiKey))
-                    throw new WatsonException("FindClassifier - VISUAL_RECOGNITION_API_KEY needs to be defined in config.json");
+                    throw new WatsonException("FindClassifier - APIKEY needs to be defined in config.json");
 
                 Service = service;
                 ClassifierName = classifierName;
                 Callback = callback;
 
-                Service.GetClassifiers(OnGetClassifiers);
+                Service.GetClassifiers(OnGetClassifiers, customData);
             }
 
             public VisualRecognition Service { get; set; }
             public string ClassifierName { get; set; }
             public OnFindClassifier Callback { get; set; }
 
-            private void OnGetClassifiers(GetClassifiersTopLevelBrief classifiers)
+            private void OnGetClassifiers(GetClassifiersTopLevelBrief classifiers, string customData)
             {
                 bool bFound = false;
                 foreach(var c in classifiers.classifiers)
                 {
                     if(c.name.ToLower().StartsWith(ClassifierName.ToLower()))
                     {
-                        bFound = Service.GetClassifier(c.classifier_id, OnGetClassifier);
+                        bFound = Service.GetClassifier(OnGetClassifier, c.classifier_id);
                         break;
                     }
                 }
@@ -579,14 +612,14 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 if(!bFound)
                 {
                     Log.Warning("VisualRecognition", "Failed to find classifier {0}", ClassifierName);
-                    Callback(null);
+                    Callback(null, customData);
                 }
             }
 
-            private void OnGetClassifier(GetClassifiersPerClassifierVerbose classifier)
+            private void OnGetClassifier(GetClassifiersPerClassifierVerbose classifier, string customData)
             {
                 if(Callback != null)
-                    Callback(classifier);
+                    Callback(classifier, customData);
             }
         }
         #endregion
@@ -597,14 +630,15 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// </summary>
         /// <returns><c>true</c>, if classifiers was gotten, <c>false</c> otherwise.</returns>
         /// <param name="callback">Callback.</param>
-        public bool GetClassifiers(OnGetClassifiers callback)
+        /// <param name="customData">CustomData.</param>
+        public bool GetClassifiers(OnGetClassifiers callback, string customData = default(string))
         {
             if(callback == null)
                 throw new ArgumentNullException("callback");
             if(string.IsNullOrEmpty(mp_ApiKey))
                 mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
             if(string.IsNullOrEmpty(mp_ApiKey))
-                throw new WatsonException("GetClassifier - VISUAL_RECOGNITION_API_KEY needs to be defined in config.json");
+                throw new WatsonException("GetClassifier - APIKEY needs to be defined in config.json");
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_CLASSIFIERS);
             if(connector == null)
@@ -612,16 +646,27 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
             GetClassifiersReq req = new GetClassifiersReq();
             req.Callback = callback;
+            req.Data = customData;
             req.Parameters["api_key"] = mp_ApiKey;
             req.Parameters["version"] = VisualRecognitionVersion.Version;
-            req.Timeout = 10.0f * 60.0f;
+            req.Timeout = 20.0f * 60.0f;
             req.OnResponse = OnGetClassifiersResp;
 
             return connector.Send(req);
         }
 
-        private class GetClassifiersReq : RESTConnector.Request
+        /// <summary>
+        /// The GetClassifier request.
+        /// </summary>
+        public class GetClassifiersReq : RESTConnector.Request
         {
+            /// <summary>
+			/// Custom data.
+			/// </summary>
+            public string Data { get; set; }
+            /// <summary>
+            /// The OnGetClassifier callback delegate.
+            /// </summary>
             public OnGetClassifiers Callback { get; set; }
         }
 
@@ -649,7 +694,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             }
 
             if(((GetClassifiersReq)req).Callback != null)
-                ((GetClassifiersReq)req).Callback(resp.Success ? classifiers : null);
+                ((GetClassifiersReq)req).Callback(resp.Success ? classifiers : null, ((GetClassifiersReq)req).Data);
         }
         #endregion
 
@@ -660,7 +705,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <returns><c>true</c>, if classifier was gotten, <c>false</c> otherwise.</returns>
         /// <param name="classifierId">Classifier identifier.</param>
         /// <param name="callback">Callback.</param>
-        public bool GetClassifier(string classifierId, OnGetClassifier callback)
+        public bool GetClassifier(OnGetClassifier callback, string classifierId, string customData = default(string))
         {
             if (string.IsNullOrEmpty(classifierId))
                 throw new ArgumentNullException("classifierId");
@@ -669,7 +714,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if(string.IsNullOrEmpty(mp_ApiKey))
                 mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
             if(string.IsNullOrEmpty(mp_ApiKey))
-                throw new WatsonException("GetClassifier - VISUAL_RECOGNITION_API_KEY needs to be defined in config.json");
+                throw new WatsonException("GetClassifier - APIKEY needs to be defined in config.json");
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_CLASSIFIERS + "/" + classifierId);
             if (connector == null)
@@ -684,8 +729,15 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             return connector.Send(req);
         }
 
-        private class GetClassifierReq : RESTConnector.Request
+        public class GetClassifierReq : RESTConnector.Request
         {
+            /// <summary>
+			/// Custom data.
+			/// </summary>
+            public string Data { get; set; }
+            /// <summary>
+            /// OnGetClassifier callback delegate
+            /// </summary>
             public OnGetClassifier Callback { get; set; }
         }
 
@@ -714,75 +766,83 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             }
 
             if (((GetClassifierReq)req).Callback != null)
-                ((GetClassifierReq)req).Callback(resp.Success ? classifier : null);
+                ((GetClassifierReq)req).Callback(resp.Success ? classifier : null, ((GetClassifierReq)req).Data);
         }
         #endregion
 
-        #region Create Classifier
+        #region TrainClassifier
         /// <summary>
-        /// Trains a classifier. Training requires a zip file of 10 positive examples and a zip file of 10 negative examples.
-        /// The name of the positive examples shoud be prepended with the class name (ie className_positive_examples).
-        /// Negative examples should be named negative_examples.
+        /// Trains a classifier. Training requires a total of at least two zip files: Two positive example zips with 
+        /// at least 10 positive examples each or one zip file of 10 positive examples and a zip file of 10 negative examples.
+        /// The total size of all files must be below 256mb. Additional training can be done by using UpdateClassifier.
         /// </summary>
         /// <returns><c>true</c>, if classifier was trained, <c>false</c> otherwise.</returns>
-        /// <param name="classifierName">Classifier name.</param>
-        /// <param name="className">Class name.</param>
-        /// <param name="positiveExamplesPath">Positive examples path.</param>
-        /// <param name="negativeExamplesPath">Negative examples path.</param>
         /// <param name="callback">Callback.</param>
-        public bool TrainClassifier(string classifierName, string className, string positiveExamplesPath, string negativeExamplesPath, OnTrainClassifier callback)
+        /// <param name="classifierName">Classifier name.</param>
+        /// <param name="positiveExamples">Dictionary of class name and positive example paths.</param>
+        /// <param name="negativeExamplesPath">Negative example file path.</param>
+        public bool TrainClassifier(OnTrainClassifier callback, string classifierName, Dictionary<string, string> positiveExamples, string negativeExamplesPath = default(string), string customData = default(string))
         {
-            if(string.IsNullOrEmpty(mp_ApiKey))
+            if (string.IsNullOrEmpty(mp_ApiKey))
                 mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
-            if(string.IsNullOrEmpty(mp_ApiKey))
-                throw new WatsonException("GetClassifier - VISUAL_RECOGNITION_API_KEY needs to be defined in config.json");
-            if(string.IsNullOrEmpty(classifierName))
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                throw new WatsonException("GetClassifier - APIKEY needs to be defined in config.json");
+            if (string.IsNullOrEmpty(classifierName))
                 throw new ArgumentNullException("ClassifierName");
-            if(string.IsNullOrEmpty(positiveExamplesPath))
-                throw new ArgumentNullException("positiveExamplesPath");
-            if(string.IsNullOrEmpty(negativeExamplesPath))
-                throw new ArgumentNullException("negativeExamplesPath");
-            if(callback == null)
+            if (positiveExamples == null)
+                throw new ArgumentNullException("Need at least one positive example!");
+            if (positiveExamples.Count < 2 && string.IsNullOrEmpty(negativeExamplesPath))
+                throw new ArgumentNullException("At least two positive example zips or one positive example zip and one negative example zip are required to train a classifier!");
+            if (callback == null)
                 throw new ArgumentNullException("callback");
 
-            byte[] positiveExamplesData = null;
+            Dictionary<string, byte[]> positiveExamplesData = new Dictionary<string, byte[]>();
             byte[] negativeExamplesData = null;
-            if(LoadFile != null)
+
+            if (LoadFile != null)
             {
-                positiveExamplesData = LoadFile(positiveExamplesPath);
+                foreach (KeyValuePair<string, string> kv in positiveExamples)
+                    positiveExamplesData.Add(kv.Key, LoadFile(kv.Value));
                 negativeExamplesData = LoadFile(negativeExamplesPath);
             }
             else
             {
-                #if !UNITY_WEBPLAYER
-                positiveExamplesData = File.ReadAllBytes(positiveExamplesPath);
+#if !UNITY_WEBPLAYER
+                foreach (KeyValuePair<string, string> kv in positiveExamples)
+                    positiveExamplesData.Add(kv.Key, File.ReadAllBytes(kv.Value));
                 negativeExamplesData = File.ReadAllBytes(negativeExamplesPath);
-                #endif
+#endif
             }
 
-            if(positiveExamplesData == null || negativeExamplesData == null)
-                Log.Error("VisualRecognition", "Failed to upload {0} or {1}!", positiveExamplesPath, negativeExamplesPath);
+            if (positiveExamplesData.Count == 0 || negativeExamplesData == null)
+                Log.Error("VisualRecognition", "Failed to upload positive or negative examples!");
 
-            return UploadClassifier(classifierName, className, positiveExamplesData, negativeExamplesData, callback);
+            return TrainClassifier(callback, classifierName, positiveExamplesData, negativeExamplesData, customData);
         }
 
-        private bool UploadClassifier(string classifierName, string className, byte[] positiveExamplesData, byte[] negativeExamplesData, OnTrainClassifier callback)
+        /// <summary>
+        /// Trains a classifier  
+        /// </summary>
+        /// <param name="callback">Callback.</param>
+        /// <param name="classifierName">Classifier name.</param>
+        /// <param name="positiveExamplesData">Dictionary of class name and class training zip byte data.</param>
+        /// <param name="negativeExamplesData">Negative examples zip byte data.</param>
+        /// <returns></returns>
+        public bool TrainClassifier(OnTrainClassifier callback, string classifierName, Dictionary<string, byte[]> positiveExamplesData, byte[] negativeExamplesData = null, string customData = default(string))
         {
-            if(string.IsNullOrEmpty(mp_ApiKey))
+            if (string.IsNullOrEmpty(mp_ApiKey))
                 mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
-            if(string.IsNullOrEmpty(mp_ApiKey))
-                throw new WatsonException("GetClassifier - VISUAL_RECOGNITION_API_KEY needs to be defined in config.json");
-            if(string.IsNullOrEmpty(classifierName))
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                throw new WatsonException("GetClassifier - APIKEY needs to be defined in config.json");
+            if (string.IsNullOrEmpty(classifierName))
                 throw new ArgumentNullException("ClassifierName");
-            if(positiveExamplesData == null)
-                throw new ArgumentNullException("positiveExamplesData");
-            if(negativeExamplesData == null)
-                throw new ArgumentNullException("negativeExamplesData");
-            if(callback == null)
+            if (positiveExamplesData.Count < 2 && negativeExamplesData == null)
+                throw new ArgumentNullException("At least two positive example zips or one positive example zip and one negative example zip are required to train a classifier!");
+            if (callback == null)
                 throw new ArgumentNullException("callback");
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_CLASSIFIERS);
-            if(connector == null)
+            if (connector == null)
                 return false;
 
             TrainClassifierReq req = new TrainClassifierReq();
@@ -793,15 +853,27 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.Parameters["version"] = VisualRecognitionVersion.Version;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             req.Forms["name"] = new RESTConnector.Form(classifierName);
-            req.Forms[className + "_positive_examples"] = new RESTConnector.Form(positiveExamplesData, className + "_positive_examples.zip", "application/zip");
-            req.Forms["negative_examples"] = new RESTConnector.Form(negativeExamplesData, "negative_examples.zip", "application/zip");
+            foreach (KeyValuePair<string, byte[]> kv in positiveExamplesData)
+                req.Forms[kv.Key + "_positive_examples"] = new RESTConnector.Form(kv.Value, kv.Key + "_positive_examples.zip", "application/zip");
+            if(negativeExamplesData != null)
+                req.Forms["negative_examples"] = new RESTConnector.Form(negativeExamplesData, "negative_examples.zip", "application/zip");
 
             return connector.Send(req);
         }
-
-        private class TrainClassifierReq:RESTConnector.Request
+        
+        /// <summary>
+        /// The TrainClassifier request.
+        /// </summary>
+        public class TrainClassifierReq : RESTConnector.Request
         {
-            public OnTrainClassifier Callback {get; set;}
+            /// <summary>
+			/// Custom data.
+			/// </summary>
+            public string Data { get; set; }
+            /// <summary>
+            /// The OnTrainClassifier callback delegate.
+            /// </summary>
+            public OnTrainClassifier Callback { get; set; }
         }
 
         private void OnTrainClassifierResp(RESTConnector.Request req, RESTConnector.Response resp)
@@ -823,13 +895,107 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Natural Language Classifier", "GetClassifiers Exception: {0}", e.ToString());
+                    Log.Error("VisualRecognition", "TrainClassifiers Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
 
             if (((TrainClassifierReq)req).Callback != null)
-                ((TrainClassifierReq)req).Callback(resp.Success ? classifier : null);
+                ((TrainClassifierReq)req).Callback(resp.Success ? classifier : null, ((TrainClassifierReq)req).Data);
+        }
+        #endregion
+
+        #region UpdateClassifier
+        /// <summary>
+        /// Updates a trained classifier. The total size of all files must be below 256mb.
+        /// </summary>
+        /// <returns><c>true</c>, if classifier was updated, <c>false</c> otherwise.</returns>
+        /// <param name="callback">Callback.</param>
+        /// <param name="classifierID">Classifier identifier.</param>
+        /// <param name="classifierName">Classifier name.</param>
+        /// <param name="positiveExamples">Dictionary of class name and positive example paths.</param>
+        /// <param name="negativeExamplesPath">Negative example file path.</param>
+        public bool UpdateClassifier(OnTrainClassifier callback, string classifierID, string classifierName, Dictionary<string, string> positiveExamples, string negativeExamplesPath = default(string), string customData = default(string))
+        {
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                throw new WatsonException("GetClassifier - APIKEY needs to be defined in config.json");
+            if (string.IsNullOrEmpty(classifierName))
+                throw new ArgumentNullException("ClassifierName");
+            if (positiveExamples.Count == 0 && string.IsNullOrEmpty(negativeExamplesPath))
+                throw new ArgumentNullException("Need at least one positive example or one negative example!");
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+
+            Dictionary<string, byte[]> positiveExamplesData = new Dictionary<string, byte[]>();
+            byte[] negativeExamplesData = null;
+
+            if (LoadFile != null)
+            {
+                foreach (KeyValuePair<string, string> kv in positiveExamples)
+                    positiveExamplesData.Add(kv.Key, LoadFile(kv.Value));
+
+                if (!string.IsNullOrEmpty(negativeExamplesPath))
+                    negativeExamplesData = LoadFile(negativeExamplesPath);
+            }
+            else
+            {
+#if !UNITY_WEBPLAYER
+                foreach (KeyValuePair<string, string> kv in positiveExamples)
+                    positiveExamplesData.Add(kv.Key, File.ReadAllBytes(kv.Value));
+
+                if(!string.IsNullOrEmpty(negativeExamplesPath))
+                    negativeExamplesData = File.ReadAllBytes(negativeExamplesPath);
+#endif
+            }
+
+            if (positiveExamplesData.Count == 0 && negativeExamplesData == null)
+                Log.Error("VisualRecognition", "Failed to upload positive or negative examples!");
+
+            return UpdateClassifier(callback, classifierID, classifierName, positiveExamplesData, negativeExamplesData, customData);
+        }
+
+        /// <summary>
+        /// Updates a classifier using byte data.
+        /// </summary>
+        /// <param name="callback">Callback.</param>
+        /// <param name="classifierID">Classifier identifier.</param>
+        /// <param name="classifierName">Classifier name.</param>
+        /// <param name="positiveExamplesData">Dictionary of class name and class training zip byte data.</param>
+        /// <param name="negativeExamplesData">Negative examples zip byte data.</param>
+        /// <returns></returns>
+        public bool UpdateClassifier(OnTrainClassifier callback, string classifierID, string classifierName, Dictionary<string, byte[]> positiveExamplesData, byte[] negativeExamplesData = null, string customData = default(string))
+        {
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                throw new WatsonException("GetClassifier - APIKEY needs to be defined in config.json");
+            if (string.IsNullOrEmpty(classifierName))
+                throw new ArgumentNullException("ClassifierName");
+            if (positiveExamplesData.Count == 0 && negativeExamplesData == null)
+                throw new ArgumentNullException("Need at least one positive example or one negative example!");
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_CLASSIFIERS + "/" + classifierID);
+            if (connector == null)
+                return false;
+
+            TrainClassifierReq req = new TrainClassifierReq();
+            req.Callback = callback;
+            req.OnResponse = OnTrainClassifierResp;
+            req.Timeout = REQUEST_TIMEOUT;
+            req.Parameters["api_key"] = mp_ApiKey;
+            req.Parameters["version"] = VisualRecognitionVersion.Version;
+            req.Forms = new Dictionary<string, RESTConnector.Form>();
+            req.Forms["name"] = new RESTConnector.Form(classifierName);
+            foreach (KeyValuePair<string, byte[]> kv in positiveExamplesData)
+                req.Forms[kv.Key + "_positive_examples"] = new RESTConnector.Form(kv.Value, kv.Key + "_positive_examples.zip", "application/zip");
+            if (negativeExamplesData != null)
+                req.Forms["negative_examples"] = new RESTConnector.Form(negativeExamplesData, "negative_examples.zip", "application/zip");
+
+            return connector.Send(req);
         }
         #endregion
 
@@ -840,7 +1006,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <returns><c>true</c>, if classifier was deleted, <c>false</c> otherwise.</returns>
         /// <param name="classifierId">Classifier identifier.</param>
         /// <param name="callback">Callback.</param>
-        public bool DeleteClassifier(string classifierId, OnDeleteClassifier callback)
+        public bool DeleteClassifier(OnDeleteClassifier callback, string classifierId,string customData = default(string))
         {
             if(string.IsNullOrEmpty(classifierId))
                 throw new ArgumentNullException("classifierId");
@@ -849,7 +1015,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if(string.IsNullOrEmpty(mp_ApiKey))
                 mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
             if(string.IsNullOrEmpty(mp_ApiKey))
-                throw new WatsonException("GetClassifier - VISUAL_RECOGNITION_API_KEY needs to be defined in config.json");
+                throw new WatsonException("GetClassifier - APIKEY needs to be defined in config.json");
             
             Log.Debug("VisualRecognition", "Attempting to delete classifier {0}", classifierId);
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_CLASSIFIERS + "/" + classifierId);
@@ -858,6 +1024,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
             DeleteClassifierReq req = new DeleteClassifierReq();
             req.Callback = callback;
+            req.Data = customData;
             req.Timeout = REQUEST_TIMEOUT;
             req.Parameters["api_key"] = mp_ApiKey;
             req.Parameters["version"] = VisualRecognitionVersion.Version;
@@ -867,15 +1034,22 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             return connector.Send(req);
         }
 
-        private class DeleteClassifierReq : RESTConnector.Request
+        public class DeleteClassifierReq : RESTConnector.Request
         {
+            /// <summary>
+			/// Custom data.
+			/// </summary>
+            public string Data { get; set; }
+            /// <summary>
+            /// The OnDeleteClassifier callback delegate.
+            /// </summary>
             public OnDeleteClassifier Callback { get; set; }
         }
 
         private void OnDeleteClassifierResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
             if(((DeleteClassifierReq)req).Callback != null)
-                ((DeleteClassifierReq)req).Callback(resp.Success);
+                ((DeleteClassifierReq)req).Callback(resp.Success, ((DeleteClassifierReq)req).Data);
         }
         #endregion
 
@@ -937,7 +1111,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                     OnFailure("Failed to get classifiers!");
             }
 
-            private void OnCheckServices(GetClassifiersTopLevelBrief classifiers)
+            private void OnCheckServices(GetClassifiersTopLevelBrief classifiers, string customData)
             {
                 if (m_Callback != null)
                 {
@@ -951,7 +1125,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                                 int numClassifiers = (classifiers.classifiers.Length > 5) ? 5 : classifiers.classifiers.Length;
                                 for(int i = 0; i < numClassifiers; i++)
                                 {
-                                    if(!m_Service.GetClassifier(classifiers.classifiers[i].classifier_id, OnCheckService))
+                                    if(!m_Service.GetClassifier(OnCheckService, classifiers.classifiers[i].classifier_id))
                                     {
                                         Log.Debug("VisualRecognition", "Failed to call GetClassifier()");
                                     }
@@ -988,7 +1162,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 }
             }
 
-            private void OnCheckService(GetClassifiersPerClassifierVerbose classifier)
+            private void OnCheckService(GetClassifiersPerClassifierVerbose classifier, string customData)
             {
                 if (m_GetClassifierCount > 0)
                 {
@@ -1003,7 +1177,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                         else
                         {
                             // try to classify something with this classifier.
-                            if (!m_Service.Classify("https://upload.wikimedia.org/wikipedia/commons/e/e9/Official_portrait_of_Barack_Obama.jpg", OnClassify))
+                            if (!m_Service.Classify(OnClassify, "https://upload.wikimedia.org/wikipedia/commons/e/e9/Official_portrait_of_Barack_Obama.jpg"))
                             {
                                 Log.Debug("VisualRecognition", "Failed to invoke Classify!");
                             }
@@ -1020,7 +1194,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 }
             }
 
-            private void OnClassify(ClassifyTopLevelMultiple result)
+            private void OnClassify(ClassifyTopLevelMultiple result, string customData)
             {
                 if (m_ClassifyCount > 0)
                 {

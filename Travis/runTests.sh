@@ -27,7 +27,7 @@ if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then
     -silent-crashes \
     -logFile $(pwd)/integrationTests.log \
     -projectPath $(pwd)/Travis/UnityTestProject \
-    -executemethod RunUnitTest.All \
+    -executemethod IBM.Watson.DeveloperCloud.Editor.TravisIntegrationTests.RunTests \
     -quit
   if [ $? = 0 ] ; then
     echo "UnitTest COMPLETED! Exited with $?"

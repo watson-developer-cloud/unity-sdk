@@ -41,6 +41,10 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 Log.Error("UnitTest", "UnitTest {0} has failed, Stack:\n{1}", GetType().Name, StackTraceUtility.ExtractStackTrace());
                 TestFailed = true;
             }
+            else
+            {
+                Log.Status("UnitTest", "UnitTest {0} has passed.", GetType().Name);
+            }
         }
 
         public virtual string ProjectToTest()

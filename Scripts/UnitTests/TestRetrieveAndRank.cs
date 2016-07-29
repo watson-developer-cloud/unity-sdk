@@ -14,17 +14,16 @@
 * limitations under the License.
 *
 */
+//#define TEST_CREATE_DELETE
 
 using UnityEngine;
 using System.Collections;
 using IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1;
 using System;
 using IBM.Watson.DeveloperCloud.Logging;
-using UnityEditor;
 using System.IO;
 using IBM.Watson.DeveloperCloud.Utilities;
 using System.Collections.Generic;
-
 
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
@@ -36,33 +35,45 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         /// Enables full test of newly created configs and rankers.
         /// </summary>
         public bool IsFullTest = false;
+        
+        //private bool m_ExistingClusterDataRetrieved = false;
+        //private bool m_ExistingRankerDataRetrieved = false;
+        //private int m_NumExistingClusters = 0;
+        //private int m_NumExistingConfigsProcessed = 0;
+        //private int m_NumExistingCollectionsProcessed = 0;
+        //private List<ClusterInfo> m_ExistingClusterInfo = new List<ClusterInfo>();
+        //private RankerInfoPayload[] m_ExistingRankers;
 
         private bool m_GetClustersTested = false;
-        private bool m_CreateClusterTested = false;
-        private bool m_DeleteClusterTested = false;
         private bool m_GetClusterTested = false;
         private bool m_ListClusterConfigsTested = false;
-        private bool m_DeleteClusterConfigTested = false;
         private bool m_GetClusterConfigTested = false;
-        private bool m_UploadClusterConfigTested = false;
         private bool m_ListCollectionRequestTested = false;
-        private bool m_CreateCollectionRequestTested = false;
-        private bool m_DeleteCollectionRequestTested = false;
-        private bool m_IndexDocumentsTested = false;
         private bool m_StandardSearchTested = false;
         private bool m_RankedSearchTested = false;
         private bool m_GetRankersTested = false;
-        private bool m_CreateRankerTested = false;
         private bool m_RankTested = false;
-        private bool m_DeleteRankersTested = false;
         private bool m_GetRankerInfoTested = false;
 
-        private string m_ClusterToCreateName = "unity-integration-test-cluster";
-        private string m_CreatedClusterID;
         private string m_ConfigToCreateName = "unity-integration-test-config";
         private string m_CollectionToCreateName = "unity-integration-test-collection";
-        private string m_RankerToCreateName = "unity-integration-test-ranker";
         private string m_CreatedRankerID;
+        private string m_CreatedClusterID;
+
+#if TEST_CREATE_DELETE
+        private bool m_DeleteClusterTested = false;
+        private bool m_CreateClusterTested = false;
+        private bool m_DeleteClusterConfigTested = false;
+        private bool m_UploadClusterConfigTested = false;
+        private bool m_CreateCollectionRequestTested = false;
+        private bool m_DeleteCollectionRequestTested = false;
+        private bool m_IndexDocumentsTested = false;
+        private bool m_CreateRankerTested = false;
+        private bool m_DeleteRankersTested = false;
+        private string m_ClusterToCreateName = "unity-integration-test-cluster";
+        private string m_RankerToCreateName = "unity-integration-test-ranker";
+        private bool m_IsDoneWaiting = false;
+#endif
 
         //  from config variables
         private string m_ExampleClusterID;
@@ -82,6 +93,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private bool m_IsClusterReady = false;
         private bool m_IsRankerReady = false;
+
         public override IEnumerator RunTest()
         {
             m_IntegrationTestClusterConfigPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/RetrieveAndRank/cranfield_solr_config.zip";
@@ -94,18 +106,118 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             m_ExampleRankerID = Config.Instance.GetVariableValue("RetrieveAndRank_IntegrationTestRankerID");
             m_ExampleCollectionName = Config.Instance.GetVariableValue("RetrieveAndRank_IntegrationTestCollectionName");
 
+#region delete existing
+            ////  Get existing cluster data.
+            //Log.Debug("TestRetrieveAndRank", "Getting existing clusters.");
+            //m_RetrieveAndRank.GetClusters(OnGetExistingClusters);
+            //while (!m_ExistingClusterDataRetrieved)
+            //    yield return null;
+
+            ////  get existing config data.
+            //Log.Debug("TestRetrieveAndRank", "Getting existing configs.");
+            //foreach (ClusterInfo cluster in m_ExistingClusterInfo)
+            //    m_RetrieveAndRank.GetClusterConfigs(OnGetExistingConfigs, cluster.Cluster.solr_cluster_id, cluster.Cluster.solr_cluster_id);
+            //while (m_NumExistingConfigsProcessed < m_ExistingClusterInfo.Count)
+            //    yield return null;
+
+            ////  get existing collection data.
+            //Log.Debug("TestRetrieveAndRank", "Getting existing collections.");
+            //foreach (ClusterInfo cluster in m_ExistingClusterInfo)
+            //    m_RetrieveAndRank.ForwardCollectionRequest(OnGetExistingCollections, cluster.Cluster.solr_cluster_id, CollectionsAction.LIST, null, null, cluster.Cluster.solr_cluster_id);
+            //while (m_NumExistingCollectionsProcessed < m_ExistingClusterInfo.Count)
+            //    yield return null;
+
+            ////  get existing ranker data.
+            //Log.Debug("TestRetrieveAndRank", "Getting existing rankers.");
+            //m_RetrieveAndRank.GetRankers(OnGetExistingRankers);
+            //while (!m_ExistingRankerDataRetrieved)
+            //    yield return null;
+
+            ////  Cleanup old data
+            //Log.Debug("TestRetrieveAndRank", "Cleaning existing data.");
+            //foreach (ClusterInfo cluster in m_ExistingClusterInfo)
+            //{
+            //    //  Delete collections
+            //    Log.Debug("TestRetriveAndRank", "Attempting to delete extra collections!");
+            //    if (cluster.Collections != null && cluster.Collections.Length > 0)
+            //        foreach (string collection in cluster.Collections)
+            //        {
+            //            if (collection == m_CollectionToCreateName)
+            //            {
+            //                Log.Debug("TestRetrieveAndRank", "Deleting collection {0}.", collection);
+            //                m_RetrieveAndRank.ForwardCollectionRequest(OnDeleteExistingCollection, cluster.Cluster.solr_cluster_id, CollectionsAction.DELETE, collection);
+            //            }
+            //    }
+
+            //    //	Wait before deleting config
+            //    m_IsDoneWaiting = false;
+            //    Runnable.Run(WaitUp(5f));
+            //    while (!m_IsDoneWaiting)
+            //        yield return null;
+
+            //    //  Delete config
+            //    Log.Debug("TestRetriveAndRank", "Attempting to delete extra configs!");
+            //    if (cluster.Configs != null && cluster.Configs.Length > 0)
+            //        foreach (string config in cluster.Configs)
+            //        {
+            //            if (config == m_ConfigToCreateName)
+            //            {
+            //                Log.Debug("TestRetrieveAndRank", "Deleting config {0}.", config);
+            //                m_RetrieveAndRank.DeleteClusterConfig(OnDeleteExistingConfig, cluster.Cluster.solr_cluster_id, config);
+            //            }
+            //        }
+
+            //    //while (m_NumExistingConfigsProcessed > 0)
+            //    //    yield return null;
+
+            //    //	Wait before deleting cluster
+            //    m_IsDoneWaiting = false;
+            //    Runnable.Run(WaitUp(5f));
+            //    while (!m_IsDoneWaiting)
+            //        yield return null;
+
+            //    //  Delete cluster
+            //    Log.Debug("TestRetriveAndRank", "Attempting to delete extra clusters!");
+            //    if (cluster.Cluster.cluster_name == m_ClusterToCreateName)
+            //    {
+            //        Log.Debug("TestRetrieveAndRank", "Deleting cluster {0}.", cluster.Cluster.solr_cluster_id);
+            //        m_RetrieveAndRank.DeleteCluster(OnDeleteExistingCluster, cluster.Cluster.solr_cluster_id);
+            //    }
+            //}
+
+            //while (m_NumExistingClusters > 0)
+            //    yield return null;
+
+            ////	Wait before deleting ranker
+            //m_IsDoneWaiting = false;
+            //Runnable.Run(WaitUp(5f));
+            //while (!m_IsDoneWaiting)
+            //    yield return null;
+
+            ////  Delete rankers
+            //foreach (RankerInfoPayload ranker in m_ExistingRankers)
+            //{
+            //    if (ranker.name == m_RankerToCreateName)
+            //    {
+            //        Log.Debug("TestRetrieveAndRank", "Deleting ranker {0}.", ranker.ranker_id);
+            //        m_RetrieveAndRank.DeleteRanker(OnDeleteExistingRanker, ranker.ranker_id);
+            //    }
+            //}
+#endregion
+
             //  Get clusters
             Log.Debug("TestRetrieveAndRank", "*** Attempting to get clusters!");
-            m_RetrieveAndRank.GetClusters(OnGetClusters);
-            while (!m_GetClustersTested)
-                yield return null;
-            
+			m_RetrieveAndRank.GetClusters(OnGetClusters);
+			while (!m_GetClustersTested)
+				yield return null;
+
+#if TEST_CREATE_DELETE
             //  Create cluster
             Log.Debug("TestRetrieveAndRank", "*** Attempting to create cluster!");
             m_RetrieveAndRank.CreateCluster(OnCreateCluster, m_ClusterToCreateName, "1");
             while (!m_CreateClusterTested)
                 yield return null;
-            
+#endif
             //  Get created cluster
             Log.Debug("TestRetrieveAndRank", "*** Attempting to get created cluster {0}!", IsFullTest ? m_CreatedClusterID : m_ExampleClusterID);
             m_RetrieveAndRank.GetCluster(OnGetCluster, IsFullTest ? m_CreatedClusterID : m_ExampleClusterID);
@@ -113,53 +225,66 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 yield return null;
 
             //  List cluster configs
-            Log.Debug("TestRetrieveAndRank", "*** Attempting to get cluster configs for {0}!", IsFullTest ? m_CreatedClusterID : m_ExampleClusterID);
-            m_RetrieveAndRank.GetClusterConfigs(OnGetClusterConfigs, IsFullTest ? m_CreatedClusterID : m_ExampleClusterID);
-            while (!m_ListClusterConfigsTested)
-                yield return null;
+            if (!m_ListClusterConfigsTested)
+            {
+                Log.Debug("TestRetrieveAndRank", "*** Attempting to get cluster configs for {0}!", IsFullTest ? m_CreatedClusterID : m_ExampleClusterID);
+                m_RetrieveAndRank.GetClusterConfigs(OnGetClusterConfigs, IsFullTest ? m_CreatedClusterID : m_ExampleClusterID);
+                while (!m_ListClusterConfigsTested)
+                    yield return null;
+            }
 
+#if TEST_CREATE_DELETE
             //  Upload cluster config
             Log.Debug("TestRetrieveAndRank", "*** Attempting to upload cluster {0} config {1}!", IsFullTest ? m_CreatedClusterID : m_ExampleClusterID, m_ConfigToCreateName);
             m_RetrieveAndRank.UploadClusterConfig(OnUploadClusterConfig, IsFullTest ? m_CreatedClusterID : m_ExampleClusterID, m_ConfigToCreateName, m_IntegrationTestClusterConfigPath);
             while (!m_UploadClusterConfigTested)
                 yield return null;
-
+#endif
             //  Get cluster config
             Log.Debug("TestRetrieveAndRank", "*** Attempting to get cluster {0} config {1}!", IsFullTest ? m_CreatedClusterID : m_ExampleClusterID, IsFullTest ? m_ConfigToCreateName : m_ExampleConfigName);
             m_RetrieveAndRank.GetClusterConfig(OnGetClusterConfig, IsFullTest ? m_CreatedClusterID : m_ExampleClusterID, IsFullTest ? m_ConfigToCreateName : m_ExampleConfigName);
             while (!m_GetClusterConfigTested)
                 yield return null;
-
+#if TEST_CREATE_DELETE
             //  Create Collection
             Log.Debug("TestRetrieveAndRank", "*** Attempting to create collection!");
             m_RetrieveAndRank.ForwardCollectionRequest(OnCreateCollections, IsFullTest ? m_CreatedClusterID : m_ExampleClusterID, CollectionsAction.CREATE, m_CollectionToCreateName, IsFullTest ? m_ConfigToCreateName : m_ExampleConfigName);
             while (!m_CreateCollectionRequestTested)
                 yield return null;
-
+#endif
             //  List Collections
             Log.Debug("TestRetrieveAndRank", "*** Attempting to list collections!");
-            m_RetrieveAndRank.ForwardCollectionRequest(OnListCollections, IsFullTest ? m_CreatedClusterID : m_ExampleClusterID, CollectionsAction.LIST);
-            while (!m_ListCollectionRequestTested)
-                yield return null;
+            if (!m_ListCollectionRequestTested)
+            {
+                m_RetrieveAndRank.ForwardCollectionRequest(OnListCollections, IsFullTest ? m_CreatedClusterID : m_ExampleClusterID, CollectionsAction.LIST);
+                while (!m_ListCollectionRequestTested)
+                    yield return null;
+            }
 
+#if TEST_CREATE_DELETE
             //  Index documents
             Log.Debug("TestRetrieveAndRank", "*** Attempting to index documents!");
             m_RetrieveAndRank.IndexDocuments(OnIndexDocuments, m_IntegrationTestIndexDataPath, IsFullTest ? m_CreatedClusterID : m_ExampleClusterID, m_CollectionToCreateName);
             while (!m_IndexDocumentsTested)
                 yield return null;
+#endif
 
             //  Get rankers
-            Log.Debug("TestRetrieveAndRank", "*** Attempting to get rankers!");
-            m_RetrieveAndRank.GetRankers(OnGetRankers);
-            while (!m_GetRankersTested)
-                yield return null;
-            
+            if (!m_GetRankersTested)
+            {
+                Log.Debug("TestRetrieveAndRank", "*** Attempting to get rankers!");
+                m_RetrieveAndRank.GetRankers(OnGetRankers);
+                while (!m_GetRankersTested)
+                    yield return null;
+            }
+
+#if TEST_CREATE_DELETE
             //  Create ranker
             Log.Debug("TestRetrieveAndRank", "*** Attempting to create rankers!");
             m_RetrieveAndRank.CreateRanker(OnCreateRanker, m_IntegrationTestRankerTrainingPath, m_RankerToCreateName);
             while (!m_CreateRankerTested)
                 yield return null;
-
+#endif
             //  Get ranker info
             Log.Debug("TestRetrieveAndRank", "*** Attempting to get Ranker Info!");
             m_RetrieveAndRank.GetRanker(OnGetRanker, IsFullTest ? m_CreatedRankerID : m_ExampleRankerID);
@@ -183,36 +308,199 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             m_RetrieveAndRank.Search(OnRankedSearch, IsFullTest ? m_CreatedClusterID : m_ExampleClusterID, IsFullTest ? m_CollectionToCreateName : m_ExampleCollectionName, m_IntegrationTestQuery, m_Fl, true, m_ExampleRankerID);
             while (!m_RankedSearchTested)
                 yield return null;
-            
+
+#if TEST_CREATE_DELETE
+            //	Wait before deleting ranker
+            Runnable.Run(WaitUp(5f));
+            while (!m_IsDoneWaiting)
+                yield return null;
+
             //  Delete ranker
-            Log.Debug("ExampleRetriveAndRank", "*** Attempting to delete ranker {0}!", m_RankerToCreateName);
-            m_RetrieveAndRank.DeleteRanker(OnDeleteRanker, m_CreatedRankerID);
-            while (!m_DeleteRankersTested)
+            if (!m_DeleteRankersTested)
+            {
+                Log.Debug("ExampleRetriveAndRank", "*** Attempting to delete ranker {0}, {1}!", m_RankerToCreateName, m_CreatedRankerID);
+                m_RetrieveAndRank.DeleteRanker(OnDeleteRanker, m_CreatedRankerID);
+                while (!m_DeleteRankersTested)
+                    yield return null;
+            }
+
+            //	Wait before deleting collection
+            m_IsDoneWaiting = false;
+            Runnable.Run(WaitUp(5f));
+            while (!m_IsDoneWaiting)
                 yield return null;
 
             //  Delete Collection request
-            Log.Debug("TestRetrieveAndRank", "*** Attempting to delete collection!");
-            m_RetrieveAndRank.ForwardCollectionRequest(OnDeleteCollections, IsFullTest ? m_CreatedClusterID : m_ExampleClusterID, CollectionsAction.DELETE, m_CollectionToCreateName);
-            while (!m_DeleteCollectionRequestTested)
+            if (!m_DeleteCollectionRequestTested)
+            {
+                Log.Debug("TestRetrieveAndRank", "*** Attempting to delete collection!");
+                m_RetrieveAndRank.ForwardCollectionRequest(OnDeleteCollections, IsFullTest ? m_CreatedClusterID : m_ExampleClusterID, CollectionsAction.DELETE, m_CollectionToCreateName);
+                while (!m_DeleteCollectionRequestTested)
+                    yield return null;
+            }
+
+            //	Wait before deleting config
+            m_IsDoneWaiting = false;
+            Runnable.Run(WaitUp(5f));
+            while (!m_IsDoneWaiting)
                 yield return null;
 
             //  Delete cluster config
-            Log.Debug("TestRetrieveAndRank", "** Attempting to delete config {1} from cluster {0}!", IsFullTest ? m_CreatedClusterID : m_ExampleClusterID, m_ConfigToCreateName);
-            m_RetrieveAndRank.DeleteClusterConfig(OnDeleteClusterConfig, IsFullTest ? m_CreatedClusterID : m_ExampleClusterID, m_ConfigToCreateName);
-            while (!m_DeleteClusterConfigTested)
-                yield return null;
+            if (!m_DeleteClusterConfigTested)
+            {
+                Log.Debug("TestRetrieveAndRank", "** Attempting to delete config {1} from cluster {0}!", IsFullTest ? m_CreatedClusterID : m_ExampleClusterID, m_ConfigToCreateName);
+                m_RetrieveAndRank.DeleteClusterConfig(OnDeleteClusterConfig, IsFullTest ? m_CreatedClusterID : m_ExampleClusterID, m_ConfigToCreateName);
+                while (!m_DeleteClusterConfigTested)
+                    yield return null;
+            }
 
-            yield return new WaitForSeconds(10f);
+			//	Wait before deleting cluster
+            m_IsDoneWaiting = false;
+			Runnable.Run(WaitUp(5f));
+			while (!m_IsDoneWaiting)
+				yield return null;
 
             //  Delete cluster
-            Log.Debug("TestRetrieveAndRank", "*** Attempting to delete cluster {0}!", m_CreatedClusterID);
-            m_RetrieveAndRank.DeleteCluster(OnDeleteCluster, m_CreatedClusterID);
-            while (!m_DeleteClusterTested)
-                yield return null;
+            if (!m_DeleteClusterTested)
+            {
+                Log.Debug("TestRetrieveAndRank", "*** Attempting to delete cluster {0}!", m_CreatedClusterID);
+                m_RetrieveAndRank.DeleteCluster(OnDeleteCluster, m_CreatedClusterID);
+                while (!m_DeleteClusterTested)
+                    yield return null;
+            }
+#endif
+			yield break;
+		}
 
-            yield break;
-        }
+#if TEST_CREATE_DELETE
+		private IEnumerator WaitUp(float waitTime)
+		{
+			yield return new WaitForSeconds(waitTime);
+			m_IsDoneWaiting = true;
+		}
+#endif
 
+#region delete existing handlers
+        //private void OnDeleteExistingCollection(CollectionsResponse resp, string data)
+        //{
+        //    Test(resp != null);
+
+        //    if(resp != null)
+        //        m_NumExistingCollectionsProcessed--;
+
+        //    m_DeleteCollectionRequestTested = true;
+        //}
+
+        //private void OnDeleteExistingConfig(bool success, string data)
+        //{
+        //    Test(success);
+
+        //    if(success)
+        //        m_NumExistingConfigsProcessed--;
+
+        //    m_DeleteClusterConfigTested = true;
+        //}
+
+        //private void OnDeleteExistingCluster(bool success, string data)
+        //{
+
+        //    Log.Debug("TestRetrieveAndRank", "OnDeleteExistingCluster Success = {0}!", success);
+
+        //    if (success)
+        //    {
+        //        Log.Debug("TestRetrieveAndRank", "Deleted existing cluster!");
+        //        m_DeleteClusterTested = true;
+        //        m_NumExistingClusters--;
+        //    }
+        //}
+
+        //private void OnDeleteExistingRanker(bool success, string data)
+        //{
+        //    Test(success);
+        //    if (success)
+        //    {
+        //        Log.Debug("TestRetrieveAndRank", "Deleted existing ranker!");
+        //        //m_NumExistingRankers--;
+        //        m_DeleteRankersTested = true;
+        //    }
+        //}
+
+        //private void OnGetExistingClusters(SolrClusterListResponse resp, string data)
+        //{
+        //    Test(resp != null);
+
+        //    if (resp != null)
+        //    {
+        //        foreach (SolrClusterResponse cluster in resp.clusters)
+        //        {
+        //                Log.Debug("TestRetriveAndRank", "Adding existing cluster {0}.", cluster.cluster_name);
+        //                ClusterInfo clusterInfo = new ClusterInfo();
+        //                clusterInfo.Cluster = cluster;
+        //                m_ExistingClusterInfo.Add(clusterInfo);
+        //            if (cluster.cluster_name == m_ClusterToCreateName)
+        //            {
+        //                m_NumExistingClusters++;
+        //            }
+        //        }
+        //    }
+
+        //    m_ExistingClusterDataRetrieved = true;
+        //    m_GetClustersTested = true;
+        //}
+
+        //private void OnGetExistingConfigs(SolrConfigList resp, string data)
+        //{
+        //    Test(resp != null);
+
+        //    if (resp != null)
+        //    {
+        //        foreach (ClusterInfo cluster in m_ExistingClusterInfo)
+        //            if (cluster.Cluster.solr_cluster_id == data)
+        //            {
+        //                foreach (string config in resp.solr_configs)
+        //                    Log.Debug("TestRetriveAndRank", "Adding config {0} to cluster {0}.", config, cluster.Cluster.solr_cluster_id);
+
+        //                cluster.Configs = resp.solr_configs;
+        //            }
+        //    }
+
+        //    m_NumExistingConfigsProcessed++;
+        //    m_ListClusterConfigsTested = true;
+        //}
+
+        //private void OnGetExistingCollections(CollectionsResponse resp, string data)
+        //{
+        //    Test(resp != null);
+
+        //    if (resp != null)
+        //    {
+        //        foreach (ClusterInfo cluster in m_ExistingClusterInfo)
+        //            if (cluster.Cluster.solr_cluster_id == data)
+        //            {
+        //                foreach (string collection in resp.collections)
+        //                    Log.Debug("TestRetriveAndRank", "Adding collection {0} to cluster {0}.", collection, cluster.Cluster.solr_cluster_id);
+
+        //                cluster.Collections = resp.collections;
+        //            }
+        //    }
+
+        //    m_NumExistingCollectionsProcessed++;
+        //    m_ListCollectionRequestTested = true;
+        //}
+
+        //private void OnGetExistingRankers(ListRankersPayload resp, string data)
+        //{
+        //    Test(resp != null);
+
+        //    if (resp != null)
+        //    {
+        //        m_ExistingRankers = resp.rankers;
+        //    }
+
+        //    m_ExistingRankerDataRetrieved = true;
+        //    m_GetRankersTested = true;
+        //}
+#endregion
 
         private void OnGetClusters(SolrClusterListResponse resp, string data)
         {
@@ -227,6 +515,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             m_GetClustersTested = true;
         }
 
+#if TEST_CREATE_DELETE
         private void OnCreateCluster(SolrClusterResponse resp, string data)
         {
             Test(resp != null);
@@ -241,6 +530,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             m_CreateClusterTested = true;
         }
+#endif
 
         private void OnGetCluster(SolrClusterResponse resp, string data)
         {
@@ -261,6 +551,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             m_GetClusterTested = true;
         }
 
+#if TEST_CREATE_DELETE
         private void OnDeleteCluster(bool success, string data)
         {
             Test(success);
@@ -272,6 +563,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             m_DeleteClusterTested = true;
         }
+#endif
 
         private void OnGetClusterConfigs(SolrConfigList resp, string data)
         {
@@ -291,6 +583,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             m_ListClusterConfigsTested = true;
         }
 
+#if TEST_CREATE_DELETE
         private void OnUploadClusterConfig(UploadResponse resp, string data)
         {
             Test(resp != null);
@@ -314,6 +607,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             m_DeleteClusterConfigTested = true;
         }
+#endif
 
         private void OnGetClusterConfig(byte[] respData, string data)
         {
@@ -329,6 +623,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             m_GetClusterConfigTested = true;
         }
 
+#if TEST_CREATE_DELETE
         private void OnCreateCollections(CollectionsResponse resp, string data)
         {
             Test(resp != null);
@@ -351,6 +646,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             m_CreateCollectionRequestTested = true;
         }
+#endif
 
         private void OnListCollections(CollectionsResponse resp, string data)
         {
@@ -382,6 +678,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             m_ListCollectionRequestTested = true;
         }
 
+#if TEST_CREATE_DELETE
         private void OnDeleteCollections(CollectionsResponse resp, string data)
         {
             Test(resp != null);
@@ -404,6 +701,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             m_DeleteCollectionRequestTested = true;
         }
+#endif
 
         private void OnGetRankers(ListRankersPayload resp, string data)
         {
@@ -422,6 +720,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             m_GetRankersTested = true;
         }
 
+#if TEST_CREATE_DELETE
         private void OnCreateRanker(RankerStatusPayload resp, string data)
         {
             Test(resp != null);
@@ -436,6 +735,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             m_CreateRankerTested = true;
         }
+#endif
 
         private void OnGetRanker(RankerStatusPayload resp, string data)
         {
@@ -475,6 +775,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             m_RankTested = true;
         }
 
+#if TEST_CREATE_DELETE
         private void OnDeleteRanker(bool success, string data)
         {
             Test(success);
@@ -509,6 +810,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             m_IndexDocumentsTested = true;
         }
+#endif
 
         private void OnStandardSearch(SearchResponse resp, string data)
         {

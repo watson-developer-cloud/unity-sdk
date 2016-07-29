@@ -303,6 +303,25 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// </summary>
         public string[] bibliography { get; set; }
     }
+
+    /// <summary>
+    /// Cluster object containing it's associated configs and collections.
+    /// </summary>
+    public class ClusterInfo
+    {
+        /// <summary>
+        /// The Cluster's info.
+        /// </summary>
+        public SolrClusterResponse Cluster { get; set; }
+        /// <summary>
+        /// Cluster's configs.
+        /// </summary>
+        public string[] Configs { get; set; }
+        /// <summary>
+        /// Cluster's collections.
+        /// </summary>
+        public string[] Collections { get; set; }
+    }
     #endregion
 
     #region Rankers

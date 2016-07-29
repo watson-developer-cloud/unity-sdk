@@ -440,6 +440,7 @@ private void OnGetClassifier(GetClassifiersPerClassifierVerbose classifier)
     }
 }
 ```
+
 ##### Training classifiers
 Train a new classifier by uploading image data. Two compressed zip files containing at least two positive example files or one positive and one negative example file. The prefix of the positive example file is used as the classname for the new classifier `<Class Name>_positive_examples`. Negative examples zip must be named `negative_examples`. After a successful call, training the classifier takes a few minutes.
 
@@ -466,6 +467,36 @@ private void OnTrainClassifier(GetClassifiersPerClassifierVerbose classifier)
     }
 }
 ```
+
+##### Updating a classifier
+Update an existing classifier by adding new classes, or by adding new images to existing classes. To update the existing classifier, use several compressed `.zip` files, including files containing positive or negative images `.jpg` or `.png`. You must supply at least one compressed file, with additional positive or negative examples.
+
+Compressed files containing positive examples are used to add or create `classes` that define the updated classifier. The prefix that you specify for each positive example parameter is used as the class name within the classifier. The `_positive_examples` suffix is required. There is no limit on the number of positive example files you can upload in a single call.
+The compressed file containing negative examples is not used to create a class within the created classifier, but does define what the new classifier is not. Negative example files should contain images that do not depict the subject of any of the positive examples. You can only specify one negative example file in a single call.
+
+```cs
+private VisualRecognition m_VisualRecognition = new VisualRecognition();
+
+void Start()
+{
+	string m_positiveExamplesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/<Class Name>_positive_examples.zip";
+   if(!m_VisualRecognition.UpdateClassifier(OnUpdateClassifier, "<ClassifierID>", "<Classifier Name>", "<Class Name>", m_positiveExamplesPath))
+        Log.Debug("ExampleVisualRecognition", "Update classifier failed!");
+}
+
+private void OnUpdateClassifier(GetClassifiersPerClassifierVerbose classifier)
+{
+    if(classifier != null)
+    {
+        Log.Debug("ExampleVisualRecognition", "Classifier is retraining! " + classifier);
+    }
+    else
+    {
+        Log.Debug("ExampleVisualRecognition", "Failed to update classifier!");
+    }
+}
+```
+
 ##### Deleting classifiers
 Delete a classifier by Classifier ID
 
