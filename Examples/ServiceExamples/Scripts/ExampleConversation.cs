@@ -29,13 +29,20 @@ public class ExampleConversation : MonoBehaviour
 
 	void Start () {
         LogSystem.InstallDefaultReactors();
-        m_WorkspaceID = Config.Instance.GetVariableValue("ConversationV1_WorkspaceID");
+        m_WorkspaceID = Config.Instance.GetVariableValue("ConversationV1_ID");
         Debug.Log("User: " + m_Input);
 
-        m_Conversation.Message(m_WorkspaceID, m_Input, OnMessage);
+
+        //m_Conversation.Message(OnMessage, m_WorkspaceID, m_Input);
+
+        MessageRequest mRequest = new MessageRequest();
+        InputData inputData = new InputData();
+        inputData.text = "m_Input";
+        mRequest.input = inputData;
+        m_Conversation.Message(OnMessage, m_WorkspaceID, mRequest);
 	}
 
-	void OnMessage (MessageResponse resp)
+	void OnMessage (MessageResponse resp, string customData)
 	{
         if(resp != null)
         {

@@ -209,7 +209,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
                 if (!string.IsNullOrEmpty(customServiceID))
                 {
 
-                    if (!m_Service.Message(customServiceID, "Ping", OnMessage))
+                    if (!m_Service.Message(OnMessage, customServiceID, "Ping"))
                         OnFailure("Failed to invoke Converse().");
                     else
                         m_ConversationCount += 1;
@@ -220,7 +220,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
                 }
             }
            
-            private void OnMessage(MessageResponse resp)
+            private void OnMessage(MessageResponse resp, string customData)
             {
                 if (m_ConversationCount > 0)
                 {

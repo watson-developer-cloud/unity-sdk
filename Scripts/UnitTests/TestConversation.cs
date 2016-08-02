@@ -38,7 +38,7 @@ public class TestConversation : UnitTest
 
 		if(!m_MessageTested)
 		{
-			m_Conversation.Message(m_WorkspaceID, m_Input, OnMessage);
+			m_Conversation.Message(OnMessage, m_WorkspaceID, m_Input);
 			while(!m_MessageTested)
 				yield return null;
 		}
@@ -46,7 +46,7 @@ public class TestConversation : UnitTest
         yield break;
     }
 
-	private void OnMessage(MessageResponse resp)
+	private void OnMessage(MessageResponse resp, string customData)
 	{
 		Test(resp != null);
 		if(resp != null)
