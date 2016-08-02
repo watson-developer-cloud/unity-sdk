@@ -370,33 +370,102 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 		public string text { get; set; }
 	}
 
-	/// <summary>
-	/// Go to.
-	/// </summary>
-	[fsObject]
-	public class GoTo
-	{
-		/// <summary>
-		/// Gets or sets the dialog node.
-		/// </summary>
-		/// <value>The dialog node.</value>
-		public string dialog_node { get; set; }
-		/// <summary>
-		/// Gets or sets the selector.
-		/// </summary>
-		/// <value>The selector.</value>
-		public string selector { get; set; }
-		/// <summary>
-		/// Gets or sets a value indicating whether this returns.
-		/// </summary>
-		/// <value><c>true</c> if m return; otherwise, <c>false</c>.</value>
-		public bool m_return { get; set; }
-	}
-#endregion
+    /// <summary>
+    /// Go to.
+    /// </summary>
+    [fsObject]
+    public class GoTo
+    {
+        /// <summary>
+        /// Gets or sets the dialog node.
+        /// </summary>
+        /// <value>The dialog node.</value>
+        public string dialog_node { get; set; }
+        /// <summary>
+        /// Gets or sets the selector.
+        /// </summary>
+        /// <value>The selector.</value>
+        public string selector { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether this returns.
+        /// </summary>
+        /// <value><c>true</c> if m return; otherwise, <c>false</c>.</value>
+        public bool m_return { get; set; }
+    }
+    #endregion
 
-	/// <summary>
-	/// The conversation service version.
-	/// </summary>
+    #region Message Request
+    /// <summary>
+    /// The user's input, with optional intents, entities, and other properties from the response.
+    /// </summary>
+    [fsObject]
+    public class MessageRequest
+    {
+        /// <summary>
+        /// The input text. 
+        /// </summary>
+        public InputData input { get; set; }
+        /// <summary>
+        /// Whether to return more than one intent. Set to true to return all matching intents.
+        /// </summary>
+        public bool alternate_intents { get; set; }
+        /// <summary>
+        /// State information about the conversation.
+        /// </summary>
+        public Context context { get; set; }
+    }
+
+    /// <summary>
+    /// The input text.
+    /// </summary>
+    [fsObject]
+    public class InputData
+    {
+        /// <summary>
+        /// The user's input.
+        /// </summary>
+        public string text { get; set; }
+    }
+
+    /// <summary>
+    /// Information about the conversation.
+    /// </summary>
+    [fsObject]
+    public class Context
+    {
+        /// <summary>
+        /// The unique identifier of the conversation. 
+        /// </summary>
+        public string conversation_id { get; set; }
+        /// <summary>
+        /// Information about the dialog
+        /// </summary>
+        public SystemResponse system { get; set; }
+    }
+
+    /// <summary>
+    /// Dialog information.
+    /// </summary>
+    [fsObject]
+    public class SystemResponse
+    {
+        /// <summary>
+        /// An array of dialog node IDs that are in focus in the conversation.
+        /// </summary>
+        public string[] dialog_stack { get; set; }
+        /// <summary>
+        /// The number of cycles of user input and response in this conversation.
+        /// </summary>
+        public int dialog_turn_counter { get; set; }
+        /// <summary>
+        /// The number of inputs in this conversation. This counter might be higher than the dialog_turn_counter counter when multiple inputs are needed before a response can be returned.
+        /// </summary>
+        public int dialog_request_counter { get; set; }
+    }
+    #endregion
+    /// <summary>
+    /// The conversation service version.
+    /// </summary>
     #region Version
     public class Version
     {

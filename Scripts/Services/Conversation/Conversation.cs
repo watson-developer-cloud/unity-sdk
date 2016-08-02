@@ -33,21 +33,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 	public class Conversation : IWatsonService
 	{
 		#region Public Types
-		/// <summary>
-		/// The callback for GetWorkspaces().
-		/// </summary>
-		public delegate void OnGetWorkspaces(Workspaces workspaces);
-		/// <summary>
-		/// The callback for Message().
-		/// </summary>
-		/// <param name="success"></param>
-		public delegate void OnMessageCallback(bool success);
-		/// <summary>
-		/// The callback delegate for the Converse() function.
-		/// </summary>
-		/// <param name="resp">The response object to a call to Converse().</param>
-		public delegate void OnMessage(MessageResponse resp);
-
 		#endregion
 
 		#region Public Properties
@@ -55,76 +40,27 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 
 		#region Private Data
 		private const string SERVICE_ID = "ConversationV1";
-		private static fsSerializer sm_Serializer = new fsSerializer();
-		#endregion
-        /*
-		#region Workspaces
-		/// <summary>
-		/// Gets the available workspaces for the Conversation service
-		/// </summary>
-		/// <returns>Returns true if request has been sent.</returns>
-		/// <param name="callback">Callback.</param>
-		public bool GetWorkspaces(OnGetWorkspaces callback)
-		{
-			if(callback == null)
-				throw new ArgumentNullException("callback");
-
-			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/v2/rest/workspaces");
-			if(connector == null)
-				return false;
-
-			GetWorkspacesReq req = new GetWorkspacesReq();
-			req.Callback = callback;
-			req.OnResponse = OnGetWorkspacesResp;
-
-			return connector.Send(req);
-		}
-
-		private class GetWorkspacesReq : RESTConnector.Request
-		{
-			public OnGetWorkspaces Callback { get; set; }
-		}
-
-		private void OnGetWorkspacesResp(RESTConnector.Request req, RESTConnector.Response resp)
-		{
-			DataModels.Workspaces workspaces= new DataModels.Workspaces();
-			if (resp.Success)
-			{
-				try
-				{
-					fsData data = null;
-					fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-					if (!r.Succeeded)
-						throw new WatsonException(r.FormattedMessages);
-
-					object obj = workspaces;
-					r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
-					if (!r.Succeeded)
-						throw new WatsonException(r.FormattedMessages);
-				}
-				catch (Exception e)
-				{
-					Log.Error("Conversation", "GetWorkspaces Exception: {0}", e.ToString());
-					resp.Success = false;
-				}
-			}
-
-			if (((GetWorkspacesReq)req).Callback != null)
-				((GetWorkspacesReq)req).Callback(resp.Success ? workspaces : null);
-		}
-		#endregion
-           */
-		#region Message
         private const string SERVICE_MESSAGE = "/v1/workspaces";
-		/// <summary>
-		/// Message the specified workspaceId, input and callback.
-		/// </summary>
-		/// <param name="workspaceId">Workspace identifier.</param>
-		/// <param name="input">Input.</param>
-		/// <param name="callback">Callback.</param>
-		public bool Message(string workspaceId, string input, OnMessage callback)
+		private static fsSerializer sm_Serializer = new fsSerializer();
+        #endregion
+
+        #region Message
+        /// <summary>
+        /// The callback delegate for the Message() function.
+        /// </summary>
+        /// <param name="resp">The response object to a call to Message().</param>
+        public delegate void OnMessage(MessageResponse resp, string customData);
+
+        /// <summary>
+        /// Message the specified workspaceId, input and callback.
+        /// </summary>
+        /// <param name="workspaceID">Workspace identifier.</param>
+        /// <param name="input">Input.</param>
+        /// <param name="callback">Callback.</param>
+        /// <param name="customData">Custom data.</param>
+        public bool Message(OnMessage callback, string workspaceID, string input, string customData = default(string))
 		{
-			if(string.IsNullOrEmpty(workspaceId))
+			if(string.IsNullOrEmpty(workspaceID))
 				throw new ArgumentNullException("workspaceId");
 			if(string.IsNullOrEmpty(input))
 				throw new ArgumentNullException("input");
@@ -143,16 +79,58 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 			req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
             req.Parameters["version"] = Version.VERSION;
-			req.Function = "/" + workspaceId + "/message";
+			req.Function = "/" + workspaceID + "/message";
+            req.Data = customData;
 			req.Send = Encoding.UTF8.GetBytes(reqString);
 			req.OnResponse = MessageResp;
 
 			return connector.Send(req);
 		}
 
+        /// <summary>
+        /// Message the specified workspaceId, input and callback.
+        /// </summary>
+        /// <param name="callback">Callback.</param>
+        /// <param name="workspaceID">Workspace identifier.</param>
+        /// <param name="messageRequest">Message request object.</param>
+        /// <param name="customData">Custom data.</param>
+        /// <returns></returns>
+        public bool Message(OnMessage callback, string workspaceID, MessageRequest messageRequest, string customData = default(string))
+        {
+            if (string.IsNullOrEmpty(workspaceID))
+                throw new ArgumentNullException("workspaceId");
+            if(string.IsNullOrEmpty(messageRequest.input.text))
+                throw new ArgumentNullException("(messageRequest.input.text");
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_MESSAGE);
+            if (connector == null)
+                return false;
+
+            fsData data;
+            sm_Serializer.TrySerialize(messageRequest.GetType(), messageRequest, out data).AssertSuccessWithoutWarnings();
+            string reqString = fsJsonPrinter.CompressedJson(data);
+
+            MessageReq req = new MessageReq();
+            req.Callback = callback;
+            req.MessageRequest = messageRequest;
+            req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
+            req.Parameters["version"] = Version.VERSION;
+            req.Function = "/" + workspaceID + "/message";
+            req.Data = customData;
+            req.Send = Encoding.UTF8.GetBytes(reqString);
+            req.OnResponse = MessageResp;
+
+            return connector.Send(req);
+        }
+
 		private class MessageReq : RESTConnector.Request
 		{
 			public OnMessage Callback { get; set; }
+            public MessageRequest MessageRequest { get; set; }
+            public string Data { get; set; }
 		}
 
 		private void MessageResp(RESTConnector.Request req, RESTConnector.Response resp)
@@ -180,7 +158,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 			}
 
 			if (((MessageReq)req).Callback != null)
-				((MessageReq)req).Callback(resp.Success ? response : null);
+				((MessageReq)req).Callback(resp.Success ? response : null, ((MessageReq)req).Data);
 		}
 		#endregion
 
