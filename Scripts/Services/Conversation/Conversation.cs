@@ -100,9 +100,46 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
             if (string.IsNullOrEmpty(workspaceID))
                 throw new ArgumentNullException("workspaceId");
             if(string.IsNullOrEmpty(messageRequest.input.text))
-                throw new ArgumentNullException("(messageRequest.input.text");
+                throw new ArgumentNullException("messageRequest.input.text");
             if (callback == null)
                 throw new ArgumentNullException("callback");
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_MESSAGE);
+            if (connector == null)
+                return false;
+
+            fsData data;
+            sm_Serializer.TrySerialize(messageRequest.GetType(), messageRequest, out data).AssertSuccessWithoutWarnings();
+            string reqString = fsJsonPrinter.CompressedJson(data);
+
+            MessageReq req = new MessageReq();
+            req.Callback = callback;
+            req.MessageRequest = messageRequest;
+            req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
+            req.Parameters["version"] = Version.VERSION;
+            req.Function = "/" + workspaceID + "/message";
+            req.Data = customData;
+            req.Send = Encoding.UTF8.GetBytes(reqString);
+            req.OnResponse = MessageResp;
+
+            return connector.Send(req);
+        }
+
+        public bool Message(OnMessage callback, string workspaceID, string input, bool useAlternateIntents, string conversationID = default(string), string customData = default(string))
+        {
+            if (string.IsNullOrEmpty(workspaceID))
+                throw new ArgumentNullException("workspaceId");
+            if (string.IsNullOrEmpty(input))
+                throw new ArgumentNullException("input");
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+
+            MessageRequest messageRequest = new MessageRequest();
+            messageRequest.inputText = input;
+            messageRequest.alternate_intents = useAlternateIntents;
+            if (conversationID != default(string))
+                messageRequest.conversationID = conversationID;
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_MESSAGE);
             if (connector == null)
@@ -209,7 +246,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
                 if (!string.IsNullOrEmpty(customServiceID))
                 {
 
-                    if (!m_Service.Message(OnMessage, customServiceID, "Ping"))
+                    if (!m_Service.Message(OnMessage, customServiceID, "Ping", "Ping"))
                         OnFailure("Failed to invoke Converse().");
                     else
                         m_ConversationCount += 1;
