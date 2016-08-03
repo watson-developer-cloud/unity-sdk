@@ -413,6 +413,36 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
         /// State information about the conversation.
         /// </summary>
         public Context context { get; set; }
+
+        public string inputText
+        {
+            get { return input != null ? input.text : null; }
+            set
+            {
+                if (input == null)
+                    input = new InputData();
+
+                input.text = value;
+            }
+        }
+
+        public string conversationID
+        {
+            get { return context != null ? context.conversation_id : null;  }
+            set
+            {
+                if (context == null)
+                    context = new Context();
+
+                context.conversation_id = value;
+            }
+        }
+
+        //public MessageRequest()
+        //{
+        //    this.input = new InputData();
+        //    this.context = new Context();
+        //}
     }
 
     /// <summary>
@@ -441,6 +471,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
         /// Information about the dialog
         /// </summary>
         public SystemResponse system { get; set; }
+
+        //public Context()
+        //{
+        //    this.system = new SystemResponse();
+        //}
     }
 
     /// <summary>
@@ -463,10 +498,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
         public int dialog_request_counter { get; set; }
     }
     #endregion
+
+    #region Version
     /// <summary>
     /// The conversation service version.
     /// </summary>
-    #region Version
     public class Version
     {
 		/// <summary>

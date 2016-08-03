@@ -35,11 +35,9 @@ public class ExampleConversation : MonoBehaviour
 
         //m_Conversation.Message(OnMessage, m_WorkspaceID, m_Input);
 
-        MessageRequest mRequest = new MessageRequest();
-        InputData inputData = new InputData();
-        inputData.text = "m_Input";
-        mRequest.input = inputData;
-        m_Conversation.Message(OnMessage, m_WorkspaceID, mRequest);
+        MessageRequest messageRequest = new MessageRequest();
+        messageRequest.inputText = m_Input;
+        m_Conversation.Message(OnMessage, m_WorkspaceID, messageRequest);
 	}
 
 	void OnMessage (MessageResponse resp, string customData)
