@@ -21,12 +21,13 @@ using IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1;
 public class ExampleTextToSpeech : MonoBehaviour
 {
 	TextToSpeech m_TextToSpeech = new TextToSpeech();
-	string m_TestString = "Hello! This is Text to Speech!";
+	string m_TestString = "<speak version=\"1.0\"><say-as interpret-as=\"letters\">I'm sorry</say-as>. <prosody pitch=\"150Hz\">This is Text to Speech!</prosody></express-as><express-as type=\"GoodNews\">I'm sorry. This is Text to Speech!</express-as></speak>";
 
-	void Start ()
+
+    void Start ()
 	{
-		m_TextToSpeech.Voice = VoiceType.en_GB_Kate;
-		m_TextToSpeech.ToSpeech(m_TestString, HandleToSpeechCallback);
+		m_TextToSpeech.Voice = VoiceType.en_US_Allison;
+		m_TextToSpeech.ToSpeech(m_TestString, HandleToSpeechCallback, true);
 	}
 
 	void HandleToSpeechCallback (AudioClip clip)
