@@ -1,5 +1,11 @@
 Change Log
 ==========
+## Version 0.8.0
+_2016-08-12_
+
+* Fixed: Removed tag stripping from `ToSpeech()` method of the `TextToSpeech` service.
+* New: The `Conversation` service now accepts full conversation payload in overloaded `Message()` method.
+
 ## Version 0.7.0
 _2016-07-29_
 
