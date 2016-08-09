@@ -132,7 +132,10 @@ namespace IBM.Watson.DeveloperCloud.Camera
                         if (CameraAttached != null)
                         {
                             Vector3 relativePos = TargetObject.transform.position - CameraAttached.transform.position;
-                            return Quaternion.LookRotation(relativePos);
+                            if (relativePos != Vector3.zero)
+                                return Quaternion.LookRotation(relativePos);
+                            else
+                                return Quaternion.identity;
                         }
                         else
                         {
