@@ -193,7 +193,15 @@ namespace IBM.Watson.DeveloperCloud.Camera
                 defaultCameraTarget = this.gameObject.AddComponent<CameraTarget>();
             
             defaultCameraTarget.TargetPosition = m_CameraInitialLocation;
-            defaultCameraTarget.TargetRotation = m_CameraInitialRotation;
+            if (defaultCameraTarget.TargetObject == null)
+            {
+                defaultCameraTarget.TargetRotation = m_CameraInitialRotation;
+            }
+            else
+            {
+                defaultCameraTarget.TargetObject = defaultCameraTarget.TargetObject;
+            }
+
             m_ListCameraTarget.Add(defaultCameraTarget);
 
             m_TargetCamera = m_ListCameraTarget[0];

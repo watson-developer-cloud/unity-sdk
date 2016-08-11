@@ -29,8 +29,8 @@ namespace IBM.Watson.DeveloperCloud.Camera
 
         #region Private Members
 
-        private static WatsonCamera mp_WatsonCamera = null;
-        private static UnityEngine.Camera mp_CameraAttached = null;
+        private WatsonCamera mp_WatsonCamera = null;
+        private UnityEngine.Camera mp_CameraAttached = null;
         [SerializeField]
         private bool m_UseCustomPosition = false;
         [SerializeField]
@@ -214,7 +214,13 @@ namespace IBM.Watson.DeveloperCloud.Camera
             {
                 if (mp_WatsonCamera == null)
                 {
-                    mp_WatsonCamera = GameObject.FindObjectOfType<WatsonCamera>();
+                    //Check if is there any local camera attached
+                    mp_WatsonCamera = this.gameObject.GetComponent<WatsonCamera>();
+
+                    if (mp_WatsonCamera == null)
+                    {
+                        mp_WatsonCamera = GameObject.FindObjectOfType<WatsonCamera>();
+                    }
                 }
                 return mp_WatsonCamera;
             }
