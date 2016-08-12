@@ -16,7 +16,6 @@
  */
 
 using UnityEngine;
-using UnityEditor;
 using IBM.Watson.DeveloperCloud.Utilities;
 using System;
 using IBM.Watson.DeveloperCloud.UnitTests;
