@@ -5,6 +5,9 @@ _2016-08-12_
 
 * Fixed: Removed tag stripping from `ToSpeech()` method of the `TextToSpeech` service.
 * New: The `Conversation` service now accepts full conversation payload in overloaded `Message()` method.
+* Fixed: Removed `SetLastWriteTime()` for Android platform  in the data cache because of a known android issue. 
+```https://code.google.com/p/android/issues/detail?id=15480```
+
 
 ## Version 0.7.0
 _2016-07-29_
