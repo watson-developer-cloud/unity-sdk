@@ -113,9 +113,11 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                 CacheItem item = null;
                 if (m_Cache.TryGetValue(id, out item))
                 {
+#if !UNITY_ANDROID
                     item.Time = DateTime.Now;
 
                     File.SetLastWriteTime(item.Path, item.Time);
+#endif
 
                     if (item.Data == null)
                     {
