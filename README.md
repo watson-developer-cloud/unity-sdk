@@ -96,16 +96,20 @@ void HandleOnRecognize (SpeechResultList result)
 ```
 
 ### Text to Speech
-Use the [Text to Speech][text_to_speech] service to get the available voices to synthesize.
+Use the [Text to Speech][text_to_speech] service to get the available voices to synthesize. The Text to Speech service also supports Speech Synthesis Markup Language ([SSML][ssml]). In addition, the service supports a service-specific [expressive SSML][expressive_ssml] element.
 
 ```cs
 TextToSpeech m_TextToSpeech = new TextToSpeech();
 string m_TestString = "Hello! This is Text to Speech!";
+string m_ExpressiveText = "<speak version=\"1.0\"><prosody pitch=\"150Hz\">Hello! This is the </prosody><say-as interpret-as=\"letters\">IBM</say-as> Watson <express-as type=\"GoodNews\">Unity</express-as></prosody><say-as interpret-as=\"letters\">SDK</say-as>!</speak>";
 
 void Start ()
 {
   m_TextToSpeech.Voice = VoiceType.en_GB_Kate;
   m_TextToSpeech.ToSpeech(m_TestString, HandleToSpeechCallback);
+  
+  m_TextToSpeech.Voice = VoiceType.en_US_Allison;
+  m_TextToSpeech.ToSpeech(m_ExpressiveText, HandleToSpeechCallback);
 }
 
 void HandleToSpeechCallback (AudioClip clip)
@@ -335,7 +339,7 @@ void Start () {
 ```
 
 ### Conversation
-With the IBM Watson™ [Conversation][conversation] service you can create cognitive agents - virtual agents that combine machine learning, natural language understanding, and integrated dialog scripting tools to provide outstanding customer engagements. A workspace should be created using [Conversation tooling][conversation_tooling] and a variable `ConversationV1_ID` should be set in the Config Editor with the Workspace ID.
+With the IBM Watson™ [Conversation][conversation] service you can create cognitive agents - virtual agents that combine machine learning, natural language understanding, and integrated dialog scripting tools to provide outstanding customer engagements. A workspace should be created using [Conversation tooling][conversation_tooling] and a variable `ConversationV1_ID` should be set in the Config Editor with the Workspace ID. This is required for the service status check in the `Config Editor`.
 
 ```cs
 private Conversation m_Conversation = new Conversation();
@@ -344,7 +348,7 @@ private string m_Input = "Can you unlock the door?";
 
 void Start () {
 	Debug.Log("User: " + m_Input);
-	m_Conversation.Message(m_WorkspaceID, m_Input, OnMessage);
+	m_Conversation.Message(OnMessage, m_WorkspaceID, m_Input);
 }
 
 void OnMessage (DataModels.MessageResponse resp)
@@ -2134,3 +2138,5 @@ See [CONTRIBUTING.md](.github/CONTRIBUTING.md).
 [conversation_tooling]: https://www.ibmwatsonconversation.com
 [retrieve_and_rank]: http://www.ibm.com/watson/developercloud/retrieve-and-rank/api/v1/
 [document_conversion]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/document-conversion/api/v1/
+[expressive_ssml]: http://www.ibm.com/watson/developercloud/doc/text-to-speech/http.shtml#expressive
+[ssml]: http://www.ibm.com/watson/developercloud/doc/text-to-speech/SSML.shtml

@@ -194,8 +194,6 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
                 return false;
             }
 
-            text = Utility.RemoveTags(text);
-
             string textId = Utility.GetMD5(text);
             if (!DisableCache)
             {
