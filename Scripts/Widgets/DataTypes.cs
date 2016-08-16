@@ -266,6 +266,38 @@ namespace IBM.Watson.DeveloperCloud.DataTypes
     }
 
     /// <summary>
+    /// Boolean state for disabling the camera input.
+    /// </summary>
+    public class DisableCameraData : Widget.Data
+    {
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public DisableCameraData()
+        { }
+        /// <summary>
+        /// Data constructor.
+        /// </summary>
+        /// <param name="b">Disable camera state.</param>
+        public DisableCameraData(bool b)
+        {
+            Boolean = b;
+        }
+        /// <summary>
+        /// Name of this data type.
+        /// </summary>
+        /// <returns>The readable name.</returns>
+        public override string GetName()
+        {
+            return "DisableCamera";
+        }
+        /// <summary>
+        /// Disable camera state, true for disabled, false for not.
+        /// </summary>
+        public bool Boolean { get; set; }
+    }
+
+    /// <summary>
     /// Boolean state for disabling the CloseCaption output.
     /// </summary>
     public class DisableCloseCaptionData : Widget.Data
