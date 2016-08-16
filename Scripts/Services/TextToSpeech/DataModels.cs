@@ -115,6 +115,14 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
         /// The URL of the voice model.
         /// </summary>
         public string url { get; set; }
+		/// <summary>
+		/// Textual description of the voice.
+		/// </summary>
+		public string description { get; set; }
+		/// <summary>
+		/// If true, the voice can be customized; if false, the voice cannot be customized.
+		/// </summary>
+		public bool customizable { get; set; }
     };
 
     /// <summary>

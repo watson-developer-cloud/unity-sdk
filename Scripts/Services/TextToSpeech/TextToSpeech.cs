@@ -45,6 +45,11 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
         /// </summary>
         /// <param name="voices">The Voices object.</param>
         public delegate void GetVoicesCallback(Voices voices);
+		/// <summary>
+		/// This callback is used by the GetPronunciation() function.
+		/// </summary>
+		/// <param name="pronunciation">The pronunciation strting.</param>
+		public delegate void GetPronunciationCallback(string pronunciation);
 
         #endregion
 
@@ -271,11 +276,90 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
             Log.Error("TextToSpeech", "Unsupported audio format: {0}", m_AudioFormat.ToString());
             return null;
         }
-        #endregion
+		#endregion
 
-        #region IWatsonService interface
-        /// <exclude />
-        public string GetServiceID()
+		#region GetPronunciation
+		/// <summary>
+		/// Returns the phonetic pronunciation for the word specified by the text parameter. You can request 
+		/// the pronunciation for a specific format. You can also request the pronunciation for a specific
+		/// voice to see the default translation for the language of that voice or for a specific custom voice
+		/// model to see the translation for that voice model.
+		/// Note: This method is currently a beta release that supports US English only.
+		/// </summary>
+		/// <param name="callback">The GetPronunciationCallback</param>
+		/// <param name="text">The text string to pronounce.</param>
+		/// <param name="voice">Specify a voice to obtain the pronunciation for the specified word in the language of that voice. All voices for the same language (for example, en-US) return the same translation. Do not specify both a voice and a customization_id. Retrieve available voices with the GET /v1/voices method.</param>
+		/// <param name="format">Specify the phoneme set in which to return the pronunciation. Omit the parameter to obtain the pronunciation in the default format. Either ipa or spr.</param>
+		/// <param name="customization_id">GUID of a custom voice model for which the pronunciation is to be returned. You must make the request with the service credentials of the model's owner. If the word is not defined in the specified voice model, the service returns the default translation for the model's language. Omit the parameter to see the translation for the specified voice with no customization. Do not specify both a voice and a customization_id.</param>
+		/// <returns></returns>
+		public bool GetPronunciation(GetPronunciationCallback callback, string text, string voice = "en-US_MichaelVoice", string format = "ipa", string customization_id = default(string))
+		{
+			if (callback == null)
+				throw new ArgumentNullException("callback");
+			if (string.IsNullOrEmpty(text))
+				throw new ArgumentNullException("text");
+
+			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/v1/pronunciation");
+			if (connector == null)
+				return false;
+
+			GetPronunciationReq req = new GetPronunciationReq();
+			req.Callback = callback;
+			req.Text = text;
+			req.Voice = voice;
+			req.Format = format;
+			req.Customization_ID = customization_id;
+			req.Parameters["text"] = text;
+			req.Parameters["voice"] = voice;
+			req.Parameters["format"] = format;
+			if(!string.IsNullOrEmpty(customization_id))
+				req.Parameters["customization_id"] = customization_id;
+			req.OnResponse = OnGetPronunciationResp;
+
+			return connector.Send(req);
+		}
+
+		private class GetPronunciationReq:RESTConnector.Request
+		{
+			public GetPronunciationCallback Callback { get; set; }
+			public string Text { get; set; }
+			public string Voice { get; set; }
+			public string Format { get; set; }
+			public string Customization_ID { get; set; }
+		}
+
+		private void OnGetPronunciationResp(RESTConnector.Request req, RESTConnector.Response resp)
+		{
+			string pronunciation = default(string);
+			if (resp.Success)
+			{
+				try
+				{
+					fsData data = null;
+					fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+					if (!r.Succeeded)
+						throw new WatsonException(r.FormattedMessages);
+
+					object obj = pronunciation;
+					r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+					if (!r.Succeeded)
+						throw new WatsonException(r.FormattedMessages);
+				}
+				catch (Exception e)
+				{
+					Log.Error("Text To Speech", "GetPronunciation Exception: {0}", e.ToString());
+					resp.Success = false;
+				}
+			}
+
+			if (((GetPronunciationReq)req).Callback != null)
+				((GetPronunciationReq)req).Callback(resp.Success ? pronunciation : null);
+		}
+		#endregion
+
+		#region IWatsonService interface
+		/// <exclude />
+		public string GetServiceID()
         {
             return SERVICE_ID;
         }
