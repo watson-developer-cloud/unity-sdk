@@ -29,21 +29,31 @@ public class ExampleConversation : MonoBehaviour
 
 	void Start () {
         LogSystem.InstallDefaultReactors();
-        m_WorkspaceID = Config.Instance.GetVariableValue("ConversationV1_WorkspaceID");
+        m_WorkspaceID = Config.Instance.GetVariableValue("ConversationV1_ID");
         Debug.Log("User: " + m_Input);
 
-        m_Conversation.Message(m_WorkspaceID, m_Input, OnMessage);
+        //  Message with input only
+        //m_Conversation.Message(OnMessage, m_WorkspaceID, m_Input);
+
+        //  Message by creating message request
+        //MessageRequest messageRequest = new MessageRequest();
+        //messageRequest.inputText = m_Input;
+        //m_Conversation.Message(OnMessage, m_WorkspaceID, messageRequest);
+
+        //  Message by passing input, alternate intents and conversationID
+        m_Conversation.Message(OnMessage, m_WorkspaceID, m_Input, false, null);
 	}
 
-	void OnMessage (MessageResponse resp)
+	void OnMessage (MessageResponse resp, string customData)
 	{
         if(resp != null)
         {
-    		foreach(MessageIntent mi in resp.intents)
+    		foreach(Intent mi in resp.intents)
     			Debug.Log("intent: " + mi.intent + ", confidence: " + mi.confidence);
     		
-            if(resp.output != null && !string.IsNullOrEmpty(resp.output.text))
-    		    Debug.Log("response: " + resp.output.text);
+            if(resp.output != null && resp.output.text.Length > 0)
+                foreach(string txt in resp.output.text)
+    		        Debug.Log("output: " + txt);
         }
         else
         {
