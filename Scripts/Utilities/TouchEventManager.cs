@@ -1374,6 +1374,8 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                         {
                             LayerMask layerMaskOfItem = 1 << itemRaycastResult.gameObject.layer;
                             isHitOnLayer2DEventSystem = ((layerMaskOfItem.value & kp.Key) == layerMaskOfItem.value);
+                            hit2DEventSystem = itemRaycastResult;
+
                             if (isHitOnLayer2DEventSystem)
                             {
                                 hitTransform2DEventSystem = itemRaycastResult.gameObject.transform;
