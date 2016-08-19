@@ -23,7 +23,9 @@ public class TestWebCamera : MonoBehaviour
 
     void Start()
     {
-        m_WebCamTexture = new WebCamTexture(); ;
+        Application.RequestUserAuthorization(UserAuthorization.WebCam);
+
+        m_WebCamTexture = new WebCamTexture(800, 400, 60);
         m_WebCams = WebCamTexture.devices;
 
         foreach (WebCamDevice cam in m_WebCams)
@@ -53,6 +55,7 @@ public class TestWebCamera : MonoBehaviour
         {
             m_WebCamTexture.Stop();
             m_WebCamTexture.deviceName = (m_WebCamTexture.deviceName == m_WebCams[0].name) ? m_WebCams[1].name : m_WebCams[0].name;
+            
             m_WebCamTexture.Play();
         }
         else
