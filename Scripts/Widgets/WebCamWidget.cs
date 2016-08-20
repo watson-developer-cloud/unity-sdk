@@ -20,6 +20,7 @@ using System.Collections;
 using System;
 using IBM.Watson.DeveloperCloud.DataTypes;
 using IBM.Watson.DeveloperCloud.Logging;
+using IBM.Watson.DeveloperCloud.Utilities;
 
 #pragma warning disable 414
 
@@ -49,12 +50,30 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         private int m_RequestedFPS;
         [SerializeField]
         private float m_SendInterval;
-        
+
         #endregion
 
         #region Public Properties
         /// <summary>
-        /// True if microphone is disabled, false if enabled.
+        /// True if WebCamera is active, false if inactive.
+        /// </summary>
+        public bool Active
+        {
+            get { return m_Active; }
+            set
+            {
+                if (m_Active != value)
+                {
+                    m_Active = value;
+                    if (m_Active && !m_Disabled)
+                        StartRecording();
+                    else
+                        StopRecording();
+                }
+            }
+        }
+        /// <summary>
+        /// True if WebCamera is disabled, false if enabled.
         /// </summary>
         public bool Disable
         {
@@ -72,12 +91,41 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             }
         }
 
+        /// <summary>
+        /// Returns all available WebCameras.
+        /// </summary>
         public WebCamDevice[] Devices
         {
             get { return WebCamTexture.devices; }
         }
+        #endregion
+
+        #region Public Funtions
+        /// <summary>
+        /// Activates the WebCam.
+        /// </summary>
+        public void ActivateWebCam()
+        {
+            Active = true;
+        }
+
+        /// <summary>
+        /// Deactivates the WebCam.
+        /// </summary>
+        public void DeactivateWebCam()
+        {
+            Active = false;
+        }
+
+        public void SwitchWebCam(int index)
+        {
+            WebCamDevice[] devices = Devices;
+
+            if (index < devices.Length)
+                throw new WatsonException(string.Format("Requested WebCam index {0} does not exist! There are {1} available WebCams.", index, devices.Length));
 
 
+        }
         #endregion
 
         #region EventHandlers

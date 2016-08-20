@@ -25,7 +25,7 @@ public class TestWebCamera : MonoBehaviour
     {
         Application.RequestUserAuthorization(UserAuthorization.WebCam);
 
-        m_WebCamTexture = new WebCamTexture(800, 400, 60);
+        m_WebCamTexture = new WebCamTexture(800, 600, 60);
         m_WebCams = WebCamTexture.devices;
 
         foreach (WebCamDevice cam in m_WebCams)
