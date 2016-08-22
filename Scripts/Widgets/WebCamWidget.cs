@@ -21,11 +21,15 @@ using System;
 using IBM.Watson.DeveloperCloud.DataTypes;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
+using UnityEngine.UI;
 
 #pragma warning disable 414
 
 namespace IBM.Watson.DeveloperCloud.Widgets
 {
+	/// <summary>
+	/// This widget gets video from the WebCam.
+	/// </summary>
     public class WebCamWidget : Widget
     {
         #region Inputs
@@ -36,28 +40,36 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         #region Outputs
         [SerializeField]
         private Output m_WebCamTextureOutput = new Output(typeof(WebCamTextureData));
-        #endregion
+		[SerializeField]
+		private Output m_ActivateOutput = new Output(typeof(BooleanData));
+		#endregion
 
-        #region Private Data
-        private bool m_Active = false;
+		#region Private Data
+		private bool m_Active = false;
         private bool m_Disabled = false;
+		private bool m_Failure = false;
+		private DateTime m_LastFailure = DateTime.Now;
 
+		[SerializeField]
+        private int m_RequestedWidth = 320;
         [SerializeField]
-        private int m_RequestedWidth;
+        private int m_RequestedHeight = 240;
         [SerializeField]
-        private int m_RequestedHeight;
-        [SerializeField]
-        private int m_RequestedFPS;
-        [SerializeField]
-        private float m_SendInterval;
+        private int m_RequestedFPS = 60;
+        //[SerializeField]
+        //private float m_SendInterval;
+		[SerializeField]
+		private Text m_StatusText = null;
 
-        #endregion
+		private int m_RecordingRoutine = 0;                      // ID of our co-routine when recording, 0 if not recording currently.
+		private WebCamTexture m_WebCamTexture;
+		#endregion
 
-        #region Public Properties
-        /// <summary>
-        /// True if microphone is active, false if inactive.
-        /// </summary>
-        public bool Active
+		#region Public Properties
+		/// <summary>
+		/// True if microphone is active, false if inactive.
+		/// </summary>
+		public bool Active
         {
             get { return m_Active; }
             set
@@ -90,11 +102,27 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                 }
             }
         }
-
-        /// <summary>
-        /// Returns all available WebCameras.
-        /// </summary>
-        public WebCamDevice[] Devices
+		/// <summary>
+		/// This is set to true when the WebCam fails, the update will continue to try to start
+		/// the microphone so long as it's active.
+		/// </summary>
+		public bool Failure
+		{
+			get { return m_Failure; }
+			private set
+			{
+				if (m_Failure != value)
+				{
+					m_Failure = value;
+					if (m_Failure)
+						m_LastFailure = DateTime.Now;
+				}
+			}
+		}
+		/// <summary>
+		/// Returns all available WebCameras.
+		/// </summary>
+		public WebCamDevice[] Devices
         {
             get { return WebCamTexture.devices; }
         }
@@ -122,44 +150,88 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             WebCamDevice[] devices = Devices;
 
             if (index < devices.Length)
-                throw new WatsonException(string.Format("Requested WebCam index {0} does not exist! There are {1} available WebCams.", index, devices.Length);
+                throw new WatsonException(string.Format("Requested WebCam index {0} does not exist! There are {1} available WebCams.", index, devices.Length));
 
-            //  WebCamTexture.stop();
-            //  WebCamTexture.deviceName = Devices[index];
-            //  WebCamTexture.Start();
-        }
-        #endregion
+			m_WebCamTexture.Stop();
+			m_WebCamTexture.deviceName = devices[index].name;
+			Log.Status("WebCamWidget", "Switched to WebCam {0}, name: {1}, isFontFacing: {2}.", index, devices[index].name, devices[index].isFrontFacing);
+			m_WebCamTexture.Play();
+		}
+		#endregion
 
-        #region EventHandlers
-        protected override void Start()
+		#region EventHandlers
+		protected override void Start()
         {
             base.Start();
-            Application.RequestUserAuthorization(UserAuthorization.WebCam);
         }
 
         private void OnDisableInput(Data data)
         {
             Disable = ((DisableWebCamData)data).Boolean;
         }
-        #endregion
+		#endregion
 
-        #region Widget Interface
-        protected override string GetName()
-        {
-            return "WebCam";
-        }
-        #endregion
+		#region Widget Interface
+		protected override string GetName()
+		{
+			return "WebCam";
+		}
+		#endregion
 
-        #region Recording Functions
-        private void StartRecording()
+		#region Recording Functions
+		private void StartRecording()
         {
             Log.Debug("WebCamWidget", "StartRecording();");
+			if(m_RecordingRoutine == 0)
+			{
+				UnityObjectUtil.StartDestroyQueue();
+
+				m_RecordingRoutine = Runnable.Run(RecordingHandler());
+				m_ActivateOutput.SendData(new BooleanData(true));
+
+				if (m_StatusText != null)
+					m_StatusText.text = "RECORDING";
+			}
         }
 
         private void StopRecording()
         {
             Log.Debug("WebCamWidget", "StopRecording();");
+			if(m_RecordingRoutine != 0)
+			{
+				Runnable.Stop(m_RecordingRoutine);
+				m_RecordingRoutine = 0;
+
+				m_ActivateOutput.SendData(new BooleanData(false));
+
+				m_WebCamTexture.Stop();
+
+				if (m_StatusText != null)
+					m_StatusText.text = "STOPPED";
+			}
         }
-        #endregion
-    }
+
+		private IEnumerator RecordingHandler()
+		{
+			Failure = false;
+
+#if !UNITY_EDITOR
+			yield return Application.RequestUserAuthorization(UserAuthorization.WebCam);
+#endif
+			m_WebCamTexture = new WebCamTexture(m_RequestedWidth, m_RequestedHeight, m_RequestedFPS);
+			yield return null;
+
+			if(m_WebCamTexture == null)
+			{
+				Failure = true;
+				StopRecording();
+				yield break;
+			}
+
+			WebCamTextureData camData = new WebCamTextureData(m_WebCamTexture);
+			m_WebCamTextureOutput.SendData(camData);
+			m_WebCamTexture.Play();
+		}
+		#endregion
+	}
 }
