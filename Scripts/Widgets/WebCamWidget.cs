@@ -34,8 +34,8 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         #endregion
 
         #region Outputs
-        //  Byte[]
-        //  WebCamTexture
+        [SerializeField]
+        private Output m_WebCamTextureOutput = new Output(typeof(WebCamTextureData));
         #endregion
 
         #region Private Data
@@ -55,7 +55,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 
         #region Public Properties
         /// <summary>
-        /// True if WebCamera is active, false if inactive.
+        /// True if microphone is active, false if inactive.
         /// </summary>
         public bool Active
         {
@@ -122,9 +122,11 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             WebCamDevice[] devices = Devices;
 
             if (index < devices.Length)
-                throw new WatsonException(string.Format("Requested WebCam index {0} does not exist! There are {1} available WebCams.", index, devices.Length));
+                throw new WatsonException(string.Format("Requested WebCam index {0} does not exist! There are {1} available WebCams.", index, devices.Length);
 
-
+            //  WebCamTexture.stop();
+            //  WebCamTexture.deviceName = Devices[index];
+            //  WebCamTexture.Start();
         }
         #endregion
 

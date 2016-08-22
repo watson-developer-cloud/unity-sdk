@@ -167,6 +167,43 @@ namespace IBM.Watson.DeveloperCloud.DataTypes
 
     };
 
+    public class WebCamTextureData : Widget.Data
+    {
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public WebCamTextureData()
+        { }
+
+        /// <exclude />
+        ~WebCamTextureData()
+        {
+            UnityObjectUtil.DestroyUnityObject(CamTexture);
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="camTexture">The WebCamTexture.</param>
+        public WebCamTextureData(WebCamTexture camTexture)
+        {
+            CamTexture = camTexture;
+        }
+
+        /// <summary>
+        /// Name of this data type.
+        /// </summary>
+        /// <returns>The readable name.</returns>
+        public override string GetName()
+        {
+            return "WebCamTexture";
+        }
+
+        /// <summary>
+        /// The WebCamTexture
+        /// </summary>
+        public WebCamTexture CamTexture { get; set; }
+    }
     /// <summary>
     /// This class holds a boolean value.
     /// </summary>
@@ -328,7 +365,6 @@ namespace IBM.Watson.DeveloperCloud.DataTypes
         /// </summary>
         public bool Boolean { get; set; }
     }
-
 
     /// <summary>
     /// This class is for audio level data.
