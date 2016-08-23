@@ -46,10 +46,15 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
         /// <param name="voices">The Voices object.</param>
         public delegate void GetVoicesCallback(Voices voices);
 		/// <summary>
+		/// This callback is used by the GetVoice() function.
+		/// </summary>
+		/// <param name="voice">The Voice object.</param>
+		public delegate void GetVoiceCallback(Voice voice);
+		/// <summary>
 		/// This callback is used by the GetPronunciation() function.
 		/// </summary>
 		/// <param name="pronunciation">The pronunciation strting.</param>
-		public delegate void GetPronunciationCallback(string pronunciation);
+		public delegate void GetPronunciationCallback(Pronunciation pronunciation);
 
         #endregion
 
@@ -160,14 +165,70 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
             if (((GetVoicesReq)req).Callback != null)
                 ((GetVoicesReq)req).Callback(resp.Success ? voices : null);
         }
-        #endregion
+		#endregion
 
-        #region ToSpeech Functions
+		#region GetVoice 
+		/// <summary>
+		/// Return specific voice.
+		/// </summary>
+		/// <param name="callback">The callback to invoke with the voice.</param>
+		/// <param name="voice">The name of the voice you would like to get.</param>
+		/// <returns>Returns ture if the request was submitted.</returns>
+		public bool GetVoice(GetVoiceCallback callback, string voice)
+		{
+			if (callback == null)
+				throw new ArgumentNullException("callback");
 
-        /// <summary>
-        /// Private Request object that holds data specific to the ToSpeech request.
-        /// </summary>
-        private class ToSpeechRequest : RESTConnector.Request
+			string service = "/v1/voices/{0}";
+			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(service, voice));
+			if (connector == null)
+				return false;
+
+			GetVoiceReq req = new GetVoiceReq();
+			req.Callback = callback;
+			req.OnResponse = OnGetVoiceResp;
+
+			return connector.Send(req);
+		}
+		private class GetVoiceReq : RESTConnector.Request
+		{
+			public GetVoiceCallback Callback { get; set; }
+		};
+		private void OnGetVoiceResp(RESTConnector.Request req, RESTConnector.Response resp)
+		{
+			Voice voice = new Voice();
+			if (resp.Success)
+			{
+				try
+				{
+					fsData data = null;
+					fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+					if (!r.Succeeded)
+						throw new WatsonException(r.FormattedMessages);
+
+					object obj = voice;
+					r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+					if (!r.Succeeded)
+						throw new WatsonException(r.FormattedMessages);
+				}
+				catch (Exception e)
+				{
+					Log.Error("TextToSpeech", "GetVoice Exception: {0}", e.ToString());
+					resp.Success = false;
+				}
+			}
+
+			if (((GetVoiceReq)req).Callback != null)
+				((GetVoiceReq)req).Callback(resp.Success ? voice : null);
+		}
+		#endregion
+
+		#region ToSpeech Functions
+
+		/// <summary>
+		/// Private Request object that holds data specific to the ToSpeech request.
+		/// </summary>
+		private class ToSpeechRequest : RESTConnector.Request
         {
             public string TextId { get; set; }
             public string Text { get; set; }
@@ -330,7 +391,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 
 		private void OnGetPronunciationResp(RESTConnector.Request req, RESTConnector.Response resp)
 		{
-			string pronunciation = default(string);
+			Pronunciation pronunciation = new Pronunciation();
 			if (resp.Success)
 			{
 				try

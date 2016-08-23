@@ -136,4 +136,16 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
         /// </summary>
         public Voice[] voices { get; set; }
     };
+
+	/// <summary>
+	/// This object contains the pronunciation.
+	/// </summary>
+	[fsObject]
+	public class Pronunciation
+	{
+		/// <summary>
+		/// The pronunciation.
+		/// </summary>
+		public string pronunciation { get; set; }
+	}
 }

@@ -17,6 +17,7 @@
 
 using UnityEngine;
 using IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1;
+using IBM.Watson.DeveloperCloud.Logging;
 
 public class ExampleTextToSpeech : MonoBehaviour
 {
@@ -26,8 +27,26 @@ public class ExampleTextToSpeech : MonoBehaviour
 
     void Start ()
 	{
-		m_TextToSpeech.Voice = VoiceType.en_US_Allison;
-		m_TextToSpeech.ToSpeech(m_TestString, HandleToSpeechCallback, true);
+		LogSystem.InstallDefaultReactors();
+		//	Get Voices
+		Log.Debug("ExampleTextToSpeech", "Attempting to get voices.");
+		m_TextToSpeech.GetVoices(OnGetVoices);
+
+		//	Get Voice
+		string selectedVoice = "en-US_AllisonVoice";
+		Log.Debug("ExampleTextToSpeech", "Attempting to get voice {0}.", selectedVoice);
+		m_TextToSpeech.GetVoice(OnGetVoice, selectedVoice);
+
+		//	Get Pronunciation
+		string testWord = "Watson";
+		Log.Debug("ExampleTextToSpeech", "Attempting to get pronunciation of {0}", testWord);
+		m_TextToSpeech.GetPronunciation(OnGetPronunciation, testWord, selectedVoice);
+
+
+
+		//m_TextToSpeech.Voice = VoiceType.en_US_Allison;
+		//m_TextToSpeech.ToSpeech(m_TestString, HandleToSpeechCallback, true);
+
 	}
 
 	void HandleToSpeechCallback (AudioClip clip)
@@ -48,5 +67,27 @@ public class ExampleTextToSpeech : MonoBehaviour
 
 			GameObject.Destroy(audioObject, clip.length);
 		}
+	}
+
+	private void OnGetVoices(Voices voices)
+	{
+		Log.Debug("ExampleTextToSpeech", "-----OnGetVoices-----");
+		foreach (Voice voice in voices.voices)
+			Log.Debug("ExampleTextToSpeech", "Voice | name: {0} | gender: {1} | language: {2} | customizable: {3} | description: {4}.", voice.name, voice.gender, voice.language, voice.customizable, voice.description);
+		Log.Debug("ExampleTextToSpeech", "\n");
+	}
+
+	private void OnGetVoice(Voice voice)
+	{
+		Log.Debug("ExampleTextToSpeech", "-----OnGetVoice-----");
+		Log.Debug("ExampleTextToSpeech", "Voice | name: {0} | gender: {1} | language: {2} | customizable: {3} | description: {4}", voice.name, voice.gender, voice.language, voice.customizable, voice.description);
+		Log.Debug("ExampleTextToSpeech", "\n");
+	}
+
+	private void OnGetPronunciation(Pronunciation pronunciation)
+	{
+		Log.Debug("ExampleTextToSpeech", "-----OnGetPronunciation-----");
+		Log.Debug("ExampleTextToSpeech", "Pronunciation: {0}.", pronunciation.pronunciation);
+		Log.Debug("ExampleTextToSpeech", "\n");
 	}
 }
