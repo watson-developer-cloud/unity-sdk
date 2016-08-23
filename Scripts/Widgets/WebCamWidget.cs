@@ -174,27 +174,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 			Disable = ((DisableWebCamData)data).Boolean;
 		}
 		#endregion
-
-		//private void StartWebCam()
-		//{
-		//	Application.RequestUserAuthorization(UserAuthorization.WebCam);
-		//	Log.Debug("WebCamWidget", "width: {0} | height: {1} | fps: {2}", m_RequestedWidth, m_RequestedHeight, m_RequestedFPS);
-		//	m_WebCamTexture = new WebCamTexture(m_RequestedWidth, m_RequestedHeight, m_RequestedFPS);
-
-
-		//	if (m_RawImage != null)
-		//	{
-		//		m_RawImage.texture = m_WebCamTexture;
-		//		m_RawImage.material.mainTexture = m_WebCamTexture;
-		//	}
-
-		//	if (m_Material != null)
-		//		m_Material.mainTexture = m_WebCamTexture;
-
-		//	m_WebCamTexture.Play();
-		//}
-
-
+		
 		#region Widget Interface
 		protected override string GetName()
 		{
@@ -203,47 +183,12 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 		#endregion
 
 		#region Recording Functions
-		//private void StartWebCam()
-		//{
-		//	Application.RequestUserAuthorization(UserAuthorization.WebCam);
-
-		//	m_WebCamTexture = new WebCamTexture(m_RequestedWidth, m_RequestedHeight, m_RequestedFPS);
-		//	yield return null;
-
-		//	if (m_WebCamTexture == null)
-		//	{
-		//		Failure = true;
-		//		StopRecording();
-		//		return;
-		//		//yield break;
-		//	}
-
-		//	//WebCamTextureData camData = new WebCamTextureData(m_WebCamTexture);
-		//	//m_WebCamTextureOutput.SendData(camData);
-		//	//m_WebCamTexture.Play();
-
-		//	Log.Debug("WebCamDisplayWidget", "OnWebCamTexture()");
-		//	if (m_Material == null && m_RawImage == null)
-		//		throw new ArgumentNullException("A Material or RawImage is required to display WebCamTexture");
-
-		//	if (m_Material != null)
-		//		m_Material.mainTexture = m_WebCamTexture;
-
-		//	if (m_RawImage != null)
-		//	{
-		//		m_RawImage.texture = m_WebCamTexture;
-		//		m_RawImage.material.mainTexture = m_WebCamTexture;
-		//	}
-
-		//	m_WebCamTexture.Play();
-		//}
-
 		private void StartRecording()
 		{
 			Log.Debug("WebCamWidget", "StartRecording(); m_RecordingRoutine: {0}", m_RecordingRoutine);
 			if (m_RecordingRoutine == 0)
 			{
-				UnityObjectUtil.StartDestroyQueue();
+				//UnityObjectUtil.StartDestroyQueue();
 
 				m_RecordingRoutine = Runnable.Run(RecordingHandler());
 				m_ActivateOutput.SendData(new BooleanData(true));
@@ -278,8 +223,6 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 			yield return Application.RequestUserAuthorization(UserAuthorization.WebCam);
 #endif
 
-			Application.RequestUserAuthorization(UserAuthorization.WebCam);
-
 			m_WebCamTexture = new WebCamTexture(m_RequestedWidth, m_RequestedHeight, m_RequestedFPS);
 			yield return null;
 
@@ -292,26 +235,6 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 
 			WebCamTextureData camData = new WebCamTextureData(m_WebCamTexture, m_RequestedWidth, m_RequestedHeight, m_RequestedFPS);
 			m_WebCamTextureOutput.SendData(camData);
-
-			//Log.Debug("WebCamDisplayWidget", "OnWebCamTexture()");
-			//if (m_m_RequestedFPSMaterial == null && m_RawImage == null)
-			//	throw new ArgumentNullException("A Material or RawImage is required to display WebCamTexture");
-
-			//if (m_Material != null)
-			//	m_Material.mainTexture = m_WebCamTexture;
-
-			//if (m_RawImage != null)
-			//{
-			//	m_RawImage.texture = m_WebCamTexture;
-			//	m_RawImage.material.mainTexture = m_WebCamTexture;
-			//}
-
-			m_WebCamTexture.Play();
-		}
-
-		void OnEnable()
-		{
-			RecordingHandler();
 		}
 		#endregion
 	}

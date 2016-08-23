@@ -2023,8 +2023,8 @@ MonoBehaviour:
   m_ActivateOutput:
     m_Connections: []
   m_ActivateOnStart: 1
-  m_RequestedWidth: 640
-  m_RequestedHeight: 480
+  m_RequestedWidth: 800
+  m_RequestedHeight: 600
   m_RequestedFPS: 60
   m_StatusText: {fileID: 1073830811}
 --- !u!4 &1709986710
@@ -2144,7 +2144,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 300, y: 250}
+  m_SizeDelta: {x: 640, y: 480}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1789449178
 MonoBehaviour:

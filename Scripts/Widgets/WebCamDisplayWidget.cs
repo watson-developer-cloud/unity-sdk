@@ -29,7 +29,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 	public class WebCamDisplayWidget : Widget
 	{
 		#region Inputs
-		//[SerializeField]
+		[SerializeField]
 		private Input m_WebCamTextureInput = new Input("WebCamTexture", typeof(WebCamTextureData), "OnWebCamTexture");
 		#endregion
 
@@ -77,8 +77,8 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 				m_RawImage.texture = m_WebCamTexture;
 				m_RawImage.material.mainTexture = m_WebCamTexture;
 			}
-
-			m_WebCamTexture.Play();
+			if(!m_WebCamTexture.isPlaying)
+				m_WebCamTexture.Play();
 		}
 		#endregion
 	}

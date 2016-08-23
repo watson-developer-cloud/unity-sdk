@@ -179,10 +179,10 @@ namespace IBM.Watson.DeveloperCloud.DataTypes
 		{ }
 
 		/// <exclude />
-		~WebCamTextureData()
-		{
-			UnityObjectUtil.DestroyUnityObject(CamTexture);
-		}
+		//~WebCamTextureData()
+		//{
+		//	UnityObjectUtil.DestroyUnityObject(CamTexture);
+		//}
 
 		/// <summary>
 		/// Constructor.
