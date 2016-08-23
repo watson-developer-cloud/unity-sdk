@@ -1,11 +1,16 @@
 Change Log
 ==========
+## Version 0.9.0
+_2016-08-26_
+* Deprecated: Retired `Dialog` service.
+* Fixed: `ExampleLanguageTranslation` now is using `LanguageTranslator` before `LanguageTranslation` service goes live.
+
 ## Version 0.8.0
 _2016-08-12_
 
 * Fixed: Removed tag stripping from `ToSpeech()` method of the `TextToSpeech` service.
 * New: The `Conversation` service now accepts full conversation payload in overloaded `Message()` method.
-* Fixed: Removed `SetLastWriteTime()` for Android platform  in the data cache because of a known android issue. 
+* Fixed: Removed `SetLastWriteTime()` for Android platform  in the data cache because of a known android issue.
 ```https://code.google.com/p/android/issues/detail?id=15480```
 
 
