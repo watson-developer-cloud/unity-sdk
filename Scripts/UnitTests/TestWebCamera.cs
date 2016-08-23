@@ -34,11 +34,11 @@ public class TestWebCamera : MonoBehaviour
 
         if (rawimage != null)
         {
-            rawimage.texture = m_WebCamTexture;
-            rawimage.material.mainTexture = m_WebCamTexture;
-        }
+			rawimage.texture = m_WebCamTexture;
+			rawimage.material.mainTexture = m_WebCamTexture;
+		}
 
-        if(material3D != null)
+		if (material3D != null)
             material3D.mainTexture = m_WebCamTexture;
 
         m_WebCamTexture.Play();

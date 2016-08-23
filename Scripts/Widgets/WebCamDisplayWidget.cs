@@ -1,8 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-using IBM.Watson.DeveloperCloud.DataTypes;
-
-/**
+﻿/**
 * Copyright 2015 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,6 +14,13 @@ using IBM.Watson.DeveloperCloud.DataTypes;
 * limitations under the License.
 *
 */
+
+using UnityEngine;
+using IBM.Watson.DeveloperCloud.DataTypes;
+using System;
+using UnityEngine.UI;
+using IBM.Watson.DeveloperCloud.Logging;
+
 namespace IBM.Watson.DeveloperCloud.Widgets
 {
 	/// <summary>
@@ -26,14 +29,20 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 	public class WebCamDisplayWidget : Widget
 	{
 		#region Inputs
-		[SerializeField]
-		private Input m_WebCamTextureInput = new Input("WebCamTexture", typeof(WebCamTextureData), "OnWebCamTexture");
+		//[SerializeField]
+		//private Input m_WebCamTextureInput = new Input("WebCamTexture", typeof(WebCamTextureData), "OnWebCamTexture");
 		#endregion
 
 		#region Outputs
 		#endregion
 
 		#region Private Data
+		[SerializeField]
+		private RawImage m_RawImage = null;
+		[SerializeField]
+		private Material m_Material = null;
+
+		private WebCamTexture m_WebCamTexture;
 		#endregion
 
 		#region Constants
@@ -53,6 +62,24 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 		#endregion
 
 		#region Event Handlers
+		private void OnWebCamTexture(Data data)
+		{
+			//Log.Debug("WebCamDisplayWidget", "OnWebCamTexture()");
+			//if (m_Material == null && m_RawImage == null)
+			//	throw new ArgumentNullException("A Material or RawImage is required to display WebCamTexture");
+
+			//m_WebCamTexture = ((WebCamTextureData)data).CamTexture;
+			//if (m_Material != null)
+			//	m_Material.mainTexture = m_WebCamTexture;
+
+			//if (m_RawImage != null)
+			//{
+			//	m_RawImage.texture = m_WebCamTexture;
+			//	m_RawImage.material.mainTexture = m_WebCamTexture;
+			//}
+
+			//m_WebCamTexture.Play();
+		}
 		#endregion
 	}
 }

@@ -38,8 +38,8 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         #endregion
 
         #region Outputs
-        [SerializeField]
-        private Output m_WebCamTextureOutput = new Output(typeof(WebCamTextureData));
+        //[SerializeField]
+        //private Output m_WebCamTextureOutput = new Output(typeof(WebCamTextureData));
 		[SerializeField]
 		private Output m_ActivateOutput = new Output(typeof(BooleanData));
 		#endregion
@@ -51,15 +51,19 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 		private DateTime m_LastFailure = DateTime.Now;
 
 		[SerializeField]
+		private bool m_ActivateOnStart = true;
+		[SerializeField]
         private int m_RequestedWidth = 320;
         [SerializeField]
         private int m_RequestedHeight = 240;
         [SerializeField]
         private int m_RequestedFPS = 60;
-        //[SerializeField]
-        //private float m_SendInterval;
 		[SerializeField]
 		private Text m_StatusText = null;
+		[SerializeField]
+		private RawImage m_RawImage = null;
+		[SerializeField]
+		private Material m_Material = null;
 
 		private int m_RecordingRoutine = 0;                      // ID of our co-routine when recording, 0 if not recording currently.
 		private WebCamTexture m_WebCamTexture;
@@ -74,13 +78,14 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             get { return m_Active; }
             set
             {
+				Log.Debug("WebCamWidget", "SetActive");
                 if (m_Active != value)
                 {
                     m_Active = value;
                     if (m_Active && !m_Disabled)
-                        StartRecording();
-                    else
-                        StopRecording();
+                        RecordingHandler();
+                    //else
+                    //    StopRecording();
                 }
             }
         }
@@ -96,9 +101,9 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                 {
                     m_Disabled = value;
                     if (m_Active && !m_Disabled)
-                        StartRecording();
-                    else
-                        StopRecording();
+						RecordingHandler();
+                    //else
+                    //    StopRecording();
                 }
             }
         }
@@ -163,7 +168,12 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 		protected override void Start()
         {
             base.Start();
-        }
+			LogSystem.InstallDefaultReactors();
+			Log.Debug("WebCamWidget", "WebCamWidget.Start();");
+			//if (m_ActivateOnStart)
+			//	Active = true;
+			//RecordingHandler();
+		}
 
         private void OnDisableInput(Data data)
         {
@@ -179,59 +189,84 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 		#endregion
 
 		#region Recording Functions
-		private void StartRecording()
-        {
-            Log.Debug("WebCamWidget", "StartRecording();");
-			if(m_RecordingRoutine == 0)
-			{
-				UnityObjectUtil.StartDestroyQueue();
+		//private void StartRecording()
+  //      {
+  //          Log.Debug("WebCamWidget", "StartRecording();");
+		//	if(m_RecordingRoutine == 0)
+		//	{
+		//		UnityObjectUtil.StartDestroyQueue();
+		//		RecordingHandler();
+		//		//m_RecordingRoutine = Runnable.Run(RecordingHandler());
+		//		m_ActivateOutput.SendData(new BooleanData(true));
 
-				m_RecordingRoutine = Runnable.Run(RecordingHandler());
-				m_ActivateOutput.SendData(new BooleanData(true));
+		//		if (m_StatusText != null)
+		//			m_StatusText.text = "RECORDING";
+		//	}
+  //      }
 
-				if (m_StatusText != null)
-					m_StatusText.text = "RECORDING";
-			}
-        }
+   //     private void StopRecording()
+   //     {
+   //         Log.Debug("WebCamWidget", "StopRecording();");
+			//if(m_RecordingRoutine != 0)
+			//{
+			//	Runnable.Stop(m_RecordingRoutine);
+			//	m_RecordingRoutine = 0;
 
-        private void StopRecording()
-        {
-            Log.Debug("WebCamWidget", "StopRecording();");
-			if(m_RecordingRoutine != 0)
-			{
-				Runnable.Stop(m_RecordingRoutine);
-				m_RecordingRoutine = 0;
+			//	m_ActivateOutput.SendData(new BooleanData(false));
 
-				m_ActivateOutput.SendData(new BooleanData(false));
+			//	m_WebCamTexture.Stop();
 
-				m_WebCamTexture.Stop();
+			//	if (m_StatusText != null)
+			//		m_StatusText.text = "STOPPED";
+			//}
+   //     }
 
-				if (m_StatusText != null)
-					m_StatusText.text = "STOPPED";
-			}
-        }
-
-		private IEnumerator RecordingHandler()
+		private void RecordingHandler()
 		{
 			Failure = false;
 
 #if !UNITY_EDITOR
-			yield return Application.RequestUserAuthorization(UserAuthorization.WebCam);
+			//yield return Application.RequestUserAuthorization(UserAuthorization.WebCam);
 #endif
-			m_WebCamTexture = new WebCamTexture(m_RequestedWidth, m_RequestedHeight, m_RequestedFPS);
-			yield return null;
 
-			if(m_WebCamTexture == null)
+			Application.RequestUserAuthorization(UserAuthorization.WebCam);
+
+			m_WebCamTexture = new WebCamTexture(m_RequestedWidth, m_RequestedHeight, m_RequestedFPS);
+			//yield return null;
+
+			//if(m_WebCamTexture == null)
+			//{
+			//	Failure = true;
+			//	StopRecording();
+			//	return;
+			//	//yield break;
+			//}
+
+			//WebCamTextureData camData = new WebCamTextureData(m_WebCamTexture);
+			//m_WebCamTextureOutput.SendData(camData);
+			//m_WebCamTexture.Play();
+
+			Log.Debug("WebCamDisplayWidget", "OnWebCamTexture()");
+			if (m_Material == null && m_RawImage == null)
+				throw new ArgumentNullException("A Material or RawImage is required to display WebCamTexture");
+
+			if (m_Material != null)
+				m_Material.mainTexture = m_WebCamTexture;
+
+			if (m_RawImage != null)
 			{
-				Failure = true;
-				StopRecording();
-				yield break;
+				m_RawImage.texture = m_WebCamTexture;
+				m_RawImage.material.mainTexture = m_WebCamTexture;
 			}
 
-			WebCamTextureData camData = new WebCamTextureData(m_WebCamTexture);
-			m_WebCamTextureOutput.SendData(camData);
 			m_WebCamTexture.Play();
+		}
+
+		void OnEnable()
+		{
+			RecordingHandler();
 		}
 		#endregion
 	}
+
 }
