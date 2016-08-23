@@ -275,6 +275,22 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 		public Word[] words { get; set; }
 	}
 
+	/// <summary>
+	/// Words object.
+	/// </summary>
+	[fsObject]
+	public class Words
+	{
+		/// <summary>
+		/// An array of Words.
+		/// </summary>
+		public Word[] words { get; set; }
+	}
+	
+	/// <summary>
+	/// The Word object.
+	/// </summary>
+	[fsObject]
 	public class Word
 	{
 		/// <summary>
@@ -305,6 +321,11 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 		/// List of words and their translations to be added to or updated in the custom voice model. Send an empty array to make no additions or updates.
 		/// </summary>
 		public Word[] words { get; set; }
+
+		public bool HasData()
+		{
+			return words != null && words.Length > 0;
+		}
 	}
 
 	/// <summary>

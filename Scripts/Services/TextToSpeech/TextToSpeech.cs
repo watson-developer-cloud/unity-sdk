@@ -61,13 +61,14 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
         };
         private const string SERVICE_ID = "TextToSpeechV1";
         private static fsSerializer sm_Serializer = new fsSerializer();
-        #endregion
+        private const float REQUEST_TIMEOUT = 10.0f * 60.0f;
+		#endregion
 
-        #region Public Properties
-        /// <summary>
-        /// Disable the local cache.
-        /// </summary>
-        public bool DisableCache { get; set; }
+		#region Public Properties
+		/// <summary>
+		/// Disable the local cache.
+		/// </summary>
+		public bool DisableCache { get; set; }
         /// <summary>
         /// This property allows the user to set the AudioFormat to use. Currently, only WAV is supported.
         /// </summary>
@@ -585,19 +586,267 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 			if (((CreateCustomizationRequest)req).Callback != null)
 				((CreateCustomizationRequest)req).Callback(resp.Success ? customizationID : null, ((CreateCustomizationRequest)req).Data);
 		}
-
 		#endregion
 
 		#region Delete Customization
+		/// <summary>
+		/// This callback is used by the DeleteCustomization() function.
+		/// </summary>
+		/// <param name="success"></param>
+		/// <param name="data"></param>
+		public delegate void OnDeleteCustomizationCallback(bool success, string data);
+		/// <summary>
+		/// Deletes the custom voice model with the specified `customization_id`. Only the owner of a custom voice model can use this method to delete the model.
+		/// Note: This method is currently a beta release that supports US English only.
+		/// </summary>
+		/// <param name="callback">The callback.</param>
+		/// <param name="customizationID">The voice model to be deleted's identifier.</param>
+		/// <param name="customData">Optional custom data.</param>
+		/// <returns></returns>
+		public bool DeleteCustomization(OnDeleteCustomizationCallback callback, string customizationID, string customData = default(string))
+		{
+			if (callback == null)
+				throw new ArgumentNullException("callback");
+			if (string.IsNullOrEmpty(customizationID))
+				throw new ArgumentNullException("A customizationID to delete is required for DeleteCustomization");
+
+			DeleteCustomizationRequest req = new DeleteCustomizationRequest();
+			req.Callback = callback;
+			req.CustomizationID = customizationID;
+			req.Data = customData;
+			req.Timeout = REQUEST_TIMEOUT;
+			req.Delete = true;
+			req.OnResponse = OnDeleteCustomizationResp;
+
+			string service = "/v1/customizations/{0}";
+			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(service, customizationID));
+			if (connector == null)
+				return false;
+
+			return connector.Send(req);
+		}
+
+		private class DeleteCustomizationRequest : RESTConnector.Request
+		{
+			public OnDeleteCustomizationCallback Callback { get; set; }
+			public string CustomizationID { get; set; }
+			public string Data { get; set; }
+		}
+
+		private void OnDeleteCustomizationResp(RESTConnector.Request req, RESTConnector.Response resp)
+		{
+			if (((DeleteCustomizationRequest)req).Callback != null)
+				((DeleteCustomizationRequest)req).Callback(resp.Success, ((DeleteCustomizationRequest)req).Data);
+		}
 		#endregion
 
 		#region Get Customization
+		/// <summary>
+		/// This callback is used by the GetCusomization() function.
+		/// </summary>
+		/// <param name="customization"></param>
+		/// <param name="data"></param>
+		public delegate void GetCustomizationCallback(Customization customization, string data);
+		/// <summary>
+		/// Lists all information about the custom voice model with the specified `customization_id`. In addition to metadata such as the name and description of the voice model, the output includes the words in the model and their translations as defined in the model. To see just the metadata for a voice model, use the GET `/v1/customizations` method. Only the owner of a custom voice model can use this method to query information about the model.
+		/// Note: This method is currently a beta release that supports US English only.
+		/// </summary>
+		/// <param name="callback">The callback.</param>
+		/// <param name="customizationID">The requested custom voice model's identifier.</param>
+		/// <param name="customData">Optional custom data.</param>
+		/// <returns></returns>
+		public bool GetCustomization(GetCustomizationCallback callback, string customizationID, string customData = default(string))
+		{
+			if (callback == null)
+				throw new ArgumentNullException("callback");
+			if (string.IsNullOrEmpty(customizationID))
+				throw new ArgumentNullException("A name is customizationID to get a custom voice model.");
+
+			GetCustomizationRequest req = new GetCustomizationRequest();
+			req.Callback = callback;
+			req.CustomizationID = customizationID;
+			req.Data = customData;
+			req.OnResponse = OnGetCustomizationResp;
+
+			string service = "/v1/customizations/{0}";
+			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(service, customizationID));
+			if (connector == null)
+				return false;
+
+			return connector.Send(req);
+		}
+
+		private class GetCustomizationRequest : RESTConnector.Request
+		{
+			public GetCustomizationCallback Callback { get; set; }
+			public string CustomizationID { get; set; }
+			public string Data { get; set; }
+		}
+
+		private void OnGetCustomizationResp(RESTConnector.Request req, RESTConnector.Response resp)
+		{
+			Customization customization = new Customization();
+			if (resp.Success)
+			{
+				try
+				{
+					fsData data = null;
+					fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+					if (!r.Succeeded)
+						throw new WatsonException(r.FormattedMessages);
+
+					object obj = customization;
+					r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+					if (!r.Succeeded)
+						throw new WatsonException(r.FormattedMessages);
+				}
+				catch (Exception e)
+				{
+					Log.Error("Text To Speech", "CreateCustomization Exception: {0}", e.ToString());
+					resp.Success = false;
+				}
+			}
+
+			if (((GetCustomizationRequest)req).Callback != null)
+				((GetCustomizationRequest)req).Callback(resp.Success ? customization : null, ((GetCustomizationRequest)req).Data);
+		}
 		#endregion
 
 		#region Update Customization
+		/// <summary>
+		/// This callback is used by the UpdateCustomization() function.
+		/// </summary>
+		/// <param name="success">Success</param>
+		/// <param name="data">Optional custom data.</param>
+		public delegate void UpdateCustomizationCallback(bool success, string data);
+
+		/// <summary>
+		/// Updates information for the custom voice model with the specified `customization_id`. You can update the metadata such as the name and description of the voice model. You can also update the words in the model and their translations. A custom model can contain no more than 20,000 entries. Only the owner of a custom voice model can use this method to update the model.
+		/// Note: This method is currently a beta release that supports US English only.
+		/// </summary>
+		/// <param name="callback">The callback.</param>
+		/// <param name="customizationID">The identifier of the custom voice model to be updated.</param>
+		/// <param name="customVoiceUpdate">Custom voice model update data.</param>
+		/// <param name="customData">Optional custom data.</param>
+		/// <returns></returns>
+		public bool UpdateCustomization(UpdateCustomizationCallback callback, string customizationID, CustomVoiceUpdate customVoiceUpdate, string customData = default(string))
+		{
+			if (callback == null)
+				throw new ArgumentNullException("callback");
+			if (string.IsNullOrEmpty(customizationID))
+				throw new ArgumentNullException("customizationID");
+			if (!customVoiceUpdate.HasData())
+				throw new ArgumentNullException("Custom voice update data is required to update a custom voice model.");
+
+			fsData data;
+			sm_Serializer.TrySerialize(customVoiceUpdate.GetType(), customVoiceUpdate, out data).AssertSuccessWithoutWarnings();
+			string customizationJson = fsJsonPrinter.CompressedJson(data);
+
+			UpdateCustomizationRequest req = new UpdateCustomizationRequest();
+			req.Callback = callback;
+			req.CustomVoiceUpdate = customVoiceUpdate;
+			req.CustomizationID = customizationID;
+			req.Data = customData;
+			req.Headers["Content-Type"] = "application/json";
+			req.Headers["Accept"] = "application/json";
+			req.Send = Encoding.UTF8.GetBytes(customizationJson);
+			req.OnResponse = OnUpdateCustomizationResp;
+
+			string service = "/v1/customizations/{0}";
+			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(service, customizationID));
+			if (connector == null)
+				return false;
+
+			return connector.Send(req);
+		}
+
+		//	TODO add UpdateCustomization overload using path to json file.
+
+		private class UpdateCustomizationRequest : RESTConnector.Request
+		{
+			public UpdateCustomizationCallback Callback { get; set; }
+			public string CustomizationID { get; set; }
+			public CustomVoiceUpdate CustomVoiceUpdate { get; set; }
+			public string Data { get; set; }
+		}
+
+		private void OnUpdateCustomizationResp(RESTConnector.Request req, RESTConnector.Response resp)
+		{
+			if (((UpdateCustomizationRequest)req).Callback != null)
+				((UpdateCustomizationRequest)req).Callback(resp.Success, ((UpdateCustomizationRequest)req).Data);
+		}
 		#endregion
 
 		#region Get Customization Words
+		/// <summary>
+		/// This callback is used by the GetCusomizationWords() function.
+		/// </summary>
+		/// <param name="customization"></param>
+		/// <param name="data"></param>
+		public delegate void GetCustomizationWordsCallback(Words words, string data);
+		/// <summary>
+		/// Lists all of the words and their translations for the custom voice model with the specified `customization_id`. The output shows the translations as they are defined in the model. Only the owner of a custom voice model can use this method to query information about the model's words.
+		/// Note: This method is currently a beta release that supports US English only.
+		/// </summary>
+		/// <param name="callback">The callback.</param>
+		/// <param name="customizationID">The requested custom voice model's identifier.</param>
+		/// <param name="customData">Optional custom data.</param>
+		/// <returns></returns>
+		public bool GetCustomizationWords(GetCustomizationWordsCallback callback, string customizationID, string customData = default(string))
+		{
+			if (callback == null)
+				throw new ArgumentNullException("callback");
+			if (string.IsNullOrEmpty(customizationID))
+				throw new ArgumentNullException("A name is customizationID to get a custom voice model's words.");
+
+			GetCustomizationWordsRequest req = new GetCustomizationWordsRequest();
+			req.Callback = callback;
+			req.CustomizationID = customizationID;
+			req.Data = customData;
+			req.OnResponse = OnGetCustomizationWordsResp;
+
+			string service = "/v1/customizations/{0}/words";
+			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(service, customizationID));
+			if (connector == null)
+				return false;
+
+			return connector.Send(req);
+		}
+
+		private class GetCustomizationWordsRequest : RESTConnector.Request
+		{
+			public GetCustomizationWordsCallback Callback { get; set; }
+			public string CustomizationID { get; set; }
+			public string Data { get; set; }
+		}
+
+		private void OnGetCustomizationWordsResp(RESTConnector.Request req, RESTConnector.Response resp)
+		{
+			Words words = new Words();
+			if (resp.Success)
+			{
+				try
+				{
+					fsData data = null;
+					fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+					if (!r.Succeeded)
+						throw new WatsonException(r.FormattedMessages);
+
+					object obj = words;
+					r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+					if (!r.Succeeded)
+						throw new WatsonException(r.FormattedMessages);
+				}
+				catch (Exception e)
+				{
+					Log.Error("Text To Speech", "GetCustomizationWords Exception: {0}", e.ToString());
+					resp.Success = false;
+				}
+			}
+
+			if (((GetCustomizationWordsRequest)req).Callback != null)
+				((GetCustomizationWordsRequest)req).Callback(resp.Success ? words : null, ((GetCustomizationWordsRequest)req).Data);
+		}
 		#endregion
 
 		#region Add Customization Words
