@@ -91,6 +91,10 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
         /// Japanese female voice.
         /// </summary>
         ja_JP_Emi,
+		/// <summary>
+		/// Brazilian Portugese female voice.
+		/// </summary>
+		pt_BR_Isabela,
     };
 
     /// <summary>

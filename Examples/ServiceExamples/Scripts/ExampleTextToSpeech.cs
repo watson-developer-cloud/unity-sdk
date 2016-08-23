@@ -33,14 +33,14 @@ public class ExampleTextToSpeech : MonoBehaviour
 		m_TextToSpeech.GetVoices(OnGetVoices);
 
 		//	Get Voice
-		string selectedVoice = "en-US_AllisonVoice";
-		Log.Debug("ExampleTextToSpeech", "Attempting to get voice {0}.", selectedVoice);
-		m_TextToSpeech.GetVoice(OnGetVoice, selectedVoice);
+		//string selectedVoice = "en-US_AllisonVoice";
+		Log.Debug("ExampleTextToSpeech", "Attempting to get voice {0}.", VoiceType.en_US_Allison);
+		m_TextToSpeech.GetVoice(OnGetVoice, VoiceType.en_US_Allison);
 
 		//	Get Pronunciation
 		string testWord = "Watson";
 		Log.Debug("ExampleTextToSpeech", "Attempting to get pronunciation of {0}", testWord);
-		m_TextToSpeech.GetPronunciation(OnGetPronunciation, testWord, selectedVoice);
+		m_TextToSpeech.GetPronunciation(OnGetPronunciation, testWord, VoiceType.en_US_Allison);
 
 
 

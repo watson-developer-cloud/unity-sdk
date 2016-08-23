@@ -33,31 +33,6 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 	/// </summary>
 	public class TextToSpeech : IWatsonService
     {
-        #region Public Types
-
-        /// <summary>
-        /// This callback is passed into the ToSpeech() method.
-        /// </summary>
-        /// <param name="clip">The AudioClip containing the audio to play.</param>
-        public delegate void ToSpeechCallback(AudioClip clip);
-        /// <summary>
-        /// This callback is used by the GetVoices() function.
-        /// </summary>
-        /// <param name="voices">The Voices object.</param>
-        public delegate void GetVoicesCallback(Voices voices);
-		/// <summary>
-		/// This callback is used by the GetVoice() function.
-		/// </summary>
-		/// <param name="voice">The Voice object.</param>
-		public delegate void GetVoiceCallback(Voice voice);
-		/// <summary>
-		/// This callback is used by the GetPronunciation() function.
-		/// </summary>
-		/// <param name="pronunciation">The pronunciation strting.</param>
-		public delegate void GetPronunciationCallback(Pronunciation pronunciation);
-
-        #endregion
-
         #region Private Data
         private DataCache m_SpeechCache = null;
         private VoiceType m_Voice = VoiceType.en_US_Michael;
@@ -76,6 +51,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
             { VoiceType.fr_FR_Renee, "fr-FR_ReneeVoice" },
             { VoiceType.it_IT_Francesca, "it-IT_FrancescaVoice" },
             { VoiceType.ja_JP_Emi, "ja-JP_EmiVoice" },
+			{ VoiceType.pt_BR_Isabela, "pt-BR_IsabelaVoice"},
         };
         private Dictionary<AudioFormatType, string> m_AudioFormats = new Dictionary<AudioFormatType, string>()
         {
@@ -111,15 +87,20 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
                 }
             }
         }
-        #endregion
+		#endregion
 
-        #region GetVoices 
-        /// <summary>
-        /// Returns all available voices that can be used.
-        /// </summary>
-        /// <param name="callback">The callback to invoke with the list of available voices.</param>
-        /// <returns>Returns ture if the request was submitted.</returns>
-        public bool GetVoices(GetVoicesCallback callback)
+		#region GetVoices 
+		/// <summary>
+		/// This callback is used by the GetVoices() function.
+		/// </summary>
+		/// <param name="voices">The Voices object.</param>
+		public delegate void GetVoicesCallback(Voices voices);
+		/// <summary>
+		/// Returns all available voices that can be used.
+		/// </summary>
+		/// <param name="callback">The callback to invoke with the list of available voices.</param>
+		/// <returns>Returns ture if the request was submitted.</returns>
+		public bool GetVoices(GetVoicesCallback callback)
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -169,18 +150,25 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 
 		#region GetVoice 
 		/// <summary>
+		/// This callback is used by the GetVoice() function.
+		/// </summary>
+		/// <param name="voice">The Voice object.</param>
+		public delegate void GetVoiceCallback(Voice voice);
+		/// <summary>
 		/// Return specific voice.
 		/// </summary>
 		/// <param name="callback">The callback to invoke with the voice.</param>
 		/// <param name="voice">The name of the voice you would like to get.</param>
 		/// <returns>Returns ture if the request was submitted.</returns>
-		public bool GetVoice(GetVoiceCallback callback, string voice)
+		public bool GetVoice(GetVoiceCallback callback, VoiceType? voice = null)
 		{
 			if (callback == null)
 				throw new ArgumentNullException("callback");
+			if (voice == null)
+				voice = m_Voice;
 
 			string service = "/v1/voices/{0}";
-			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(service, voice));
+			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(service, GetVoiceType((VoiceType)voice)));
 			if (connector == null)
 				return false;
 
@@ -224,7 +212,11 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 		#endregion
 
 		#region ToSpeech Functions
-
+		/// <summary>
+		/// This callback is passed into the ToSpeech() method.
+		/// </summary>
+		/// <param name="clip">The AudioClip containing the audio to play.</param>
+		public delegate void ToSpeechCallback(AudioClip clip);
 		/// <summary>
 		/// Private Request object that holds data specific to the ToSpeech request.
 		/// </summary>
@@ -341,6 +333,11 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 
 		#region GetPronunciation
 		/// <summary>
+		/// This callback is used by the GetPronunciation() function.
+		/// </summary>
+		/// <param name="pronunciation">The pronunciation strting.</param>
+		public delegate void GetPronunciationCallback(Pronunciation pronunciation);
+		/// <summary>
 		/// Returns the phonetic pronunciation for the word specified by the text parameter. You can request 
 		/// the pronunciation for a specific format. You can also request the pronunciation for a specific
 		/// voice to see the default translation for the language of that voice or for a specific custom voice
@@ -353,12 +350,14 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 		/// <param name="format">Specify the phoneme set in which to return the pronunciation. Omit the parameter to obtain the pronunciation in the default format. Either ipa or spr.</param>
 		/// <param name="customization_id">GUID of a custom voice model for which the pronunciation is to be returned. You must make the request with the service credentials of the model's owner. If the word is not defined in the specified voice model, the service returns the default translation for the model's language. Omit the parameter to see the translation for the specified voice with no customization. Do not specify both a voice and a customization_id.</param>
 		/// <returns></returns>
-		public bool GetPronunciation(GetPronunciationCallback callback, string text, string voice = "en-US_MichaelVoice", string format = "ipa", string customization_id = default(string))
+		public bool GetPronunciation(GetPronunciationCallback callback, string text, VoiceType? voice = null, string format = "ipa", string customization_id = default(string))
 		{
 			if (callback == null)
 				throw new ArgumentNullException("callback");
 			if (string.IsNullOrEmpty(text))
 				throw new ArgumentNullException("text");
+			if (voice == null)
+				voice = m_Voice;
 
 			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/v1/pronunciation");
 			if (connector == null)
@@ -367,11 +366,11 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 			GetPronunciationReq req = new GetPronunciationReq();
 			req.Callback = callback;
 			req.Text = text;
-			req.Voice = voice;
+			req.Voice = (VoiceType)voice;
 			req.Format = format;
 			req.Customization_ID = customization_id;
 			req.Parameters["text"] = text;
-			req.Parameters["voice"] = voice;
+			req.Parameters["voice"] = GetVoiceType((VoiceType)voice);
 			req.Parameters["format"] = format;
 			if(!string.IsNullOrEmpty(customization_id))
 				req.Parameters["customization_id"] = customization_id;
@@ -384,7 +383,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 		{
 			public GetPronunciationCallback Callback { get; set; }
 			public string Text { get; set; }
-			public string Voice { get; set; }
+			public VoiceType Voice { get; set; }
 			public string Format { get; set; }
 			public string Customization_ID { get; set; }
 		}
@@ -418,6 +417,22 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 		}
 		#endregion
 
+		#region GetVoiceType
+		public string GetVoiceType(VoiceType voiceType)
+		{
+			if (m_VoiceTypes.ContainsKey(voiceType))
+			{
+				string voiceName = "";
+				m_VoiceTypes.TryGetValue(voiceType, out voiceName);
+				return voiceName;
+			}
+			else
+			{
+				Log.Warning("TextToSpeech", "There is no voicetype for {0}!", voiceType);
+				return null;
+			}
+		}
+		#endregion
 		#region IWatsonService interface
 		/// <exclude />
 		public string GetServiceID()
