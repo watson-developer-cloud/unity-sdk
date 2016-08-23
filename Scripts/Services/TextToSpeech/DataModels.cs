@@ -38,10 +38,11 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
         FLAC
     };
 
-    /// <summary>
-    /// The available voices for synthesized speech.
-    /// </summary>
-    public enum VoiceType
+	#region Voices
+	/// <summary>
+	/// The available voices for synthesized speech.
+	/// </summary>
+	public enum VoiceType
     {
         /// <summary>
         /// US male voice.
@@ -96,11 +97,11 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 		/// </summary>
 		pt_BR_Isabela,
     };
-
-    /// <summary>
-    /// A voice model object for TextToSpeech.
-    /// </summary>
-    [fsObject]
+	
+	/// <summary>
+	/// A voice model object for TextToSpeech.
+	/// </summary>
+	[fsObject]
     public class Voice
     {
         /// <summary>
@@ -140,7 +141,9 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
         /// </summary>
         public Voice[] voices { get; set; }
     };
+	#endregion
 
+	#region Pronunciation
 	/// <summary>
 	/// This object contains the pronunciation.
 	/// </summary>
@@ -152,4 +155,178 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 		/// </summary>
 		public string pronunciation { get; set; }
 	}
+	#endregion
+
+	#region Customization
+	/// <summary>
+	/// Customizations for voice models.
+	/// </summary>
+	[fsObject]
+	public class Customizations
+	{
+		/// <summary>
+		/// A list of voice model customizations.
+		/// </summary>
+		public Customization[] customizations { get; set; }
+	}
+
+	/// <summary>
+	/// A single voice model customization.
+	/// </summary>
+	[fsObject]
+	public class Customization
+	{
+		/// <summary>
+		/// GUID of the custom voice model
+		/// </summary>
+		public string customization_id { get; set; }
+		/// <summary>
+		/// Name of the custom voice model
+		/// </summary>
+		public string name { get; set; }
+		/// <summary>
+		/// Language of the custom voice model. = ['de-DE', 'en-US', 'en-GB', 'es-ES', 'es-US', 'fr-FR', 'it-IT', 'ja-JP', 'pt-BR'].
+		/// </summary>
+		public string language { get; set; }
+		/// <summary>
+		/// GUID of the service credentials for the owner of the custom voice model.
+		/// </summary>
+		public string owner { get; set; }
+		/// <summary>
+		/// UNIX timestamp that indicates when the custom voice model was created. The timestamp is a count of seconds since the UNIX Epoch of January 1, 1970 Coordinated Universal Time (UTC).
+		/// </summary>
+		public int created { get; set; }
+		/// <summary>
+		/// UNIX timestamp that indicates when the custom voice model was last modified. Equals `created` when a new voice model is first added but has yet to be changed.
+		/// </summary>
+		public int last_modified { get; set; }
+		/// <summary>
+		/// Description of the custom voice model.
+		/// </summary>
+		public string description { get; set; }
+	}
+
+	/// <summary>
+	/// A data object that contains data to create a new empty custom voice mode3l.
+	/// </summary>
+	[fsObject]
+	public class CustomVoice
+	{
+		/// <summary>
+		/// Name of the new custom voice model.
+		/// </summary>
+		public string name { get; set; }
+		/// <summary>
+		/// Language of the new custom voice model. Omit the parameter to use the default language, en-US. = ['de-DE', 'en-US', 'en-GB', 'es-ES', 'es-US', 'fr-FR', 'it-IT', 'ja-JP', 'pt-BR'].
+		/// </summary>
+		public string language { get; set; }
+		/// <summary>
+		/// Description of the new custom voice model.
+		/// </summary>
+		public string description { get; set; }
+	}
+
+	[fsObject]
+	public class CustomizationWords
+	{
+		/// <summary>
+		/// GUID of the custom voice model.
+		/// </summary>
+		public string customization_id { get; set; }
+		/// <summary>
+		/// Name of the custom voice model
+		/// </summary>
+		public string name { get; set; }
+		/// <summary>
+		/// Language of the custom voice model. = ['de-DE', 'en-US', 'en-GB', 'es-ES', 'es-US', 'fr-FR', 'it-IT', 'ja-JP', 'pt-BR'].
+		/// </summary>
+		public string language { get; set; }
+		/// <summary>
+		/// GUID of the service credentials for the owner of the custom voice model.
+		/// </summary>
+		public string owner { get; set; }
+		/// <summary>
+		/// UNIX timestamp that indicates when the custom voice model was created. The timestamp is a count of seconds since the UNIX Epoch of January 1, 1970 Coordinated Universal Time (UTC).
+		/// </summary>
+		public int created { get; set; }
+		/// <summary>
+		/// UNIX timestamp that indicates when the custom voice model was last modified. Equals created when the new voice model is first added but has yet to be changed.
+		/// </summary>
+		public int last_modified { get; set; }
+		/// <summary>
+		/// Description of the custom voice model.
+		/// </summary>
+		public string description { get; set; }
+		/// <summary>
+		/// List of words and their translations from the custom voice model.
+		/// </summary>
+		public Word[] words { get; set; }
+	}
+
+	public class Word
+	{
+		/// <summary>
+		/// Word from the custom voice model.
+		/// </summary>
+		public string word { get; set; }
+		/// <summary>
+		/// Phonetic or sounds-like translation for the word. A phonetic translation is based on the SSML format for representing the phonetic string of a word either as an IPA or IBM SPR translation. A sounds-like translation consists of one or more words that, when combined, sound like the word.
+		/// </summary>
+		public string translation { get; set; }
+	}
+
+	/// <summary>
+	/// Update information for a custom voice model.
+	/// </summary>
+	[fsObject]
+	public class CustomVoiceUpdate
+	{
+		/// <summary>
+		/// Name of the new custom voice model.
+		/// </summary>
+		public string name { get; set; }
+		/// <summary>
+		/// Description of the new custom voice model.
+		/// </summary>
+		public string description { get; set; }
+		/// <summary>
+		/// List of words and their translations to be added to or updated in the custom voice model. Send an empty array to make no additions or updates.
+		/// </summary>
+		public Word[] words { get; set; }
+	}
+
+	/// <summary>
+	/// Single word translation for a custom voice model.
+	/// </summary>
+	[fsObject]
+	public class Translation
+	{
+		/// <summary>
+		/// Phonetic or sounds-like translation for the word. A phonetic translation is based on the SSML format for representing the phonetic string of a word either as an IPA translation or as an IBM SPR translation. A sounds-like is one or more words that, when combined, sound like the word.
+		/// </summary>
+		public string translation { get; set; }
+	}
+	#endregion
+
+	#region Errors
+	/// <summary>
+	/// The error response.
+	/// </summary>
+	[fsObject]
+	public class ErrorModel
+	{
+		/// <summary>
+		/// Description of the problem.
+		/// </summary>
+		public string error { get; set; }
+		/// <summary>
+		/// HTTP response code.
+		/// </summary>
+		public int code { get; set; }
+		/// <summary>
+		/// The response message.
+		/// </summary>
+		public string code_description { get; set; }
+	}
+	#endregion
 }
