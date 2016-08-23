@@ -158,7 +158,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 		/// Return specific voice.
 		/// </summary>
 		/// <param name="callback">The callback to invoke with the voice.</param>
-		/// <param name="voice">The name of the voice you would like to get.</param>
+		/// <param name="voice">The name of the voice you would like to get. If this is null, TextToSpeech will default to the set voice.</param>
 		/// <returns>Returns ture if the request was submitted.</returns>
 		public bool GetVoice(GetVoiceCallback callback, VoiceType? voice = null)
 		{
@@ -346,7 +346,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 		/// </summary>
 		/// <param name="callback">The GetPronunciationCallback</param>
 		/// <param name="text">The text string to pronounce.</param>
-		/// <param name="voice">Specify a voice to obtain the pronunciation for the specified word in the language of that voice. All voices for the same language (for example, en-US) return the same translation. Do not specify both a voice and a customization_id. Retrieve available voices with the GET /v1/voices method.</param>
+		/// <param name="voice">Specify a voice to obtain the pronunciation for the specified word in the language of that voice. All voices for the same language (for example, en-US) return the same translation. Do not specify both a voice and a customization_id. Retrieve available voices with the GET /v1/voices method. If this is null, TextToSpeech will default to the set voice.</param>
 		/// <param name="format">Specify the phoneme set in which to return the pronunciation. Omit the parameter to obtain the pronunciation in the default format. Either ipa or spr.</param>
 		/// <param name="customization_id">GUID of a custom voice model for which the pronunciation is to be returned. You must make the request with the service credentials of the model's owner. If the word is not defined in the specified voice model, the service returns the default translation for the model's language. Omit the parameter to see the translation for the specified voice with no customization. Do not specify both a voice and a customization_id.</param>
 		/// <returns></returns>
