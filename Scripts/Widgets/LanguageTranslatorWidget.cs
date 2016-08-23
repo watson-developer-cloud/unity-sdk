@@ -19,7 +19,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using IBM.Watson.DeveloperCloud.DataTypes;
 using IBM.Watson.DeveloperCloud.Logging;
-using IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v1;
+using IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v1;
 using IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1;
 using System;
 using System.Collections.Generic;
@@ -50,7 +50,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         #endregion
 
         #region Private Data
-        private LanguageTranslator m_Translate = new LanguageTranslator();
+        private LanguageTranslation m_Translate = new LanguageTranslation();
 
         [SerializeField, Tooltip("Source language, if empty language will be auto-detected.")]
         private string m_SourceLanguage = string.Empty;
