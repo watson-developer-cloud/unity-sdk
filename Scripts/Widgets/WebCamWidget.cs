@@ -23,47 +23,42 @@ using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
 using UnityEngine.UI;
 
-#pragma warning disable 414
-
 namespace IBM.Watson.DeveloperCloud.Widgets
 {
 	/// <summary>
-	/// This widget gets video from the WebCam.
+	/// This widget gets video from the WebCam. Note: there are issues with WebCamTexture. Do not
+	/// start the WebCamTexture at too low resolution!
 	/// </summary>
     public class WebCamWidget : Widget
     {
         #region Inputs
         [SerializeField]
         private Input m_DisableInput = new Input("Disable", typeof(DisableWebCamData), "OnDisableInput");
-        #endregion
+		#endregion
 
-        #region Outputs
-        //[SerializeField]
-        //private Output m_WebCamTextureOutput = new Output(typeof(WebCamTextureData));
+		#region Outputs
+		[SerializeField]
+		private Output m_WebCamTextureOutput = new Output(typeof(WebCamTextureData));
 		[SerializeField]
 		private Output m_ActivateOutput = new Output(typeof(BooleanData));
 		#endregion
 
 		#region Private Data
 		private bool m_Active = false;
-        private bool m_Disabled = false;
+		private bool m_Disabled = false;
 		private bool m_Failure = false;
 		private DateTime m_LastFailure = DateTime.Now;
 
 		[SerializeField]
 		private bool m_ActivateOnStart = true;
 		[SerializeField]
-        private int m_RequestedWidth = 320;
+        private int m_RequestedWidth = 640;
         [SerializeField]
-        private int m_RequestedHeight = 240;
+        private int m_RequestedHeight = 480;
         [SerializeField]
         private int m_RequestedFPS = 60;
 		[SerializeField]
 		private Text m_StatusText = null;
-		[SerializeField]
-		private RawImage m_RawImage = null;
-		[SerializeField]
-		private Material m_Material = null;
 
 		private int m_RecordingRoutine = 0;                      // ID of our co-routine when recording, 0 if not recording currently.
 		private WebCamTexture m_WebCamTexture;
@@ -71,42 +66,41 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 
 		#region Public Properties
 		/// <summary>
-		/// True if microphone is active, false if inactive.
+		/// True if WebCam is active, false if inactive.
 		/// </summary>
 		public bool Active
-        {
-            get { return m_Active; }
-            set
-            {
-				Log.Debug("WebCamWidget", "SetActive");
-                if (m_Active != value)
-                {
-                    m_Active = value;
-                    if (m_Active && !m_Disabled)
-                        RecordingHandler();
-                    //else
-                    //    StopRecording();
-                }
-            }
-        }
-        /// <summary>
-        /// True if WebCamera is disabled, false if enabled.
-        /// </summary>
-        public bool Disable
-        {
-            get { return m_Disabled; }
-            set
-            {
-                if (m_Disabled != value)
-                {
-                    m_Disabled = value;
-                    if (m_Active && !m_Disabled)
-						RecordingHandler();
-                    //else
-                    //    StopRecording();
-                }
-            }
-        }
+		{
+			get { return m_Active; }
+			set
+			{
+				if (m_Active != value)
+				{
+					m_Active = value;
+					if (m_Active && !m_Disabled)
+						StartRecording();
+					else
+						StopRecording();
+				}
+			}
+		}
+		/// <summary>
+		/// True if WebCamera is disabled, false if enabled.
+		/// </summary>
+		public bool Disable
+		{
+			get { return m_Disabled; }
+			set
+			{
+				if (m_Disabled != value)
+				{
+					m_Disabled = value;
+					if (m_Active && !m_Disabled)
+						StartRecording();
+					else
+						StopRecording();
+				}
+			}
+		}
 		/// <summary>
 		/// This is set to true when the WebCam fails, the update will continue to try to start
 		/// the microphone so long as it's active.
@@ -131,26 +125,26 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         {
             get { return WebCamTexture.devices; }
         }
-        #endregion
+		#endregion
 
-        #region Public Funtions
-        /// <summary>
-        /// Activates the WebCam.
-        /// </summary>
-        public void ActivateWebCam()
-        {
-            Active = true;
-        }
+		#region Public Funtions
+		/// <summary>
+		/// Activates the WebCam.
+		/// </summary>
+		public void ActivateWebCam()
+		{
+			Active = true;
+		}
 
-        /// <summary>
-        /// Deactivates the WebCam.
-        /// </summary>
-        public void DeactivateWebCam()
-        {
-            Active = false;
-        }
+		/// <summary>
+		/// Deactivates the WebCam.
+		/// </summary>
+		public void DeactivateWebCam()
+		{
+			Active = false;
+		}
 
-        public void SwitchWebCam(int index)
+		public void SwitchWebCam(int index)
         {
             WebCamDevice[] devices = Devices;
 
@@ -170,16 +164,36 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             base.Start();
 			LogSystem.InstallDefaultReactors();
 			Log.Debug("WebCamWidget", "WebCamWidget.Start();");
-			//if (m_ActivateOnStart)
-			//	Active = true;
-			//RecordingHandler();
+			
+			if (m_ActivateOnStart)
+				Active = true;
 		}
 
-        private void OnDisableInput(Data data)
-        {
-            Disable = ((DisableWebCamData)data).Boolean;
-        }
+		private void OnDisableInput(Data data)
+		{
+			Disable = ((DisableWebCamData)data).Boolean;
+		}
 		#endregion
+
+		//private void StartWebCam()
+		//{
+		//	Application.RequestUserAuthorization(UserAuthorization.WebCam);
+		//	Log.Debug("WebCamWidget", "width: {0} | height: {1} | fps: {2}", m_RequestedWidth, m_RequestedHeight, m_RequestedFPS);
+		//	m_WebCamTexture = new WebCamTexture(m_RequestedWidth, m_RequestedHeight, m_RequestedFPS);
+
+
+		//	if (m_RawImage != null)
+		//	{
+		//		m_RawImage.texture = m_WebCamTexture;
+		//		m_RawImage.material.mainTexture = m_WebCamTexture;
+		//	}
+
+		//	if (m_Material != null)
+		//		m_Material.mainTexture = m_WebCamTexture;
+
+		//	m_WebCamTexture.Play();
+		//}
+
 
 		#region Widget Interface
 		protected override string GetName()
@@ -189,75 +203,108 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 		#endregion
 
 		#region Recording Functions
-		//private void StartRecording()
-  //      {
-  //          Log.Debug("WebCamWidget", "StartRecording();");
-		//	if(m_RecordingRoutine == 0)
+		//private void StartWebCam()
+		//{
+		//	Application.RequestUserAuthorization(UserAuthorization.WebCam);
+
+		//	m_WebCamTexture = new WebCamTexture(m_RequestedWidth, m_RequestedHeight, m_RequestedFPS);
+		//	yield return null;
+
+		//	if (m_WebCamTexture == null)
 		//	{
-		//		UnityObjectUtil.StartDestroyQueue();
-		//		RecordingHandler();
-		//		//m_RecordingRoutine = Runnable.Run(RecordingHandler());
-		//		m_ActivateOutput.SendData(new BooleanData(true));
-
-		//		if (m_StatusText != null)
-		//			m_StatusText.text = "RECORDING";
+		//		Failure = true;
+		//		StopRecording();
+		//		return;
+		//		//yield break;
 		//	}
-  //      }
 
-   //     private void StopRecording()
-   //     {
-   //         Log.Debug("WebCamWidget", "StopRecording();");
-			//if(m_RecordingRoutine != 0)
-			//{
-			//	Runnable.Stop(m_RecordingRoutine);
-			//	m_RecordingRoutine = 0;
+		//	//WebCamTextureData camData = new WebCamTextureData(m_WebCamTexture);
+		//	//m_WebCamTextureOutput.SendData(camData);
+		//	//m_WebCamTexture.Play();
 
-			//	m_ActivateOutput.SendData(new BooleanData(false));
+		//	Log.Debug("WebCamDisplayWidget", "OnWebCamTexture()");
+		//	if (m_Material == null && m_RawImage == null)
+		//		throw new ArgumentNullException("A Material or RawImage is required to display WebCamTexture");
 
-			//	m_WebCamTexture.Stop();
+		//	if (m_Material != null)
+		//		m_Material.mainTexture = m_WebCamTexture;
 
-			//	if (m_StatusText != null)
-			//		m_StatusText.text = "STOPPED";
-			//}
-   //     }
+		//	if (m_RawImage != null)
+		//	{
+		//		m_RawImage.texture = m_WebCamTexture;
+		//		m_RawImage.material.mainTexture = m_WebCamTexture;
+		//	}
 
-		private void RecordingHandler()
+		//	m_WebCamTexture.Play();
+		//}
+
+		private void StartRecording()
+		{
+			Log.Debug("WebCamWidget", "StartRecording(); m_RecordingRoutine: {0}", m_RecordingRoutine);
+			if (m_RecordingRoutine == 0)
+			{
+				UnityObjectUtil.StartDestroyQueue();
+
+				m_RecordingRoutine = Runnable.Run(RecordingHandler());
+				m_ActivateOutput.SendData(new BooleanData(true));
+
+				if (m_StatusText != null)
+					m_StatusText.text = "RECORDING";
+			}
+		}
+
+		private void StopRecording()
+		{
+			Log.Debug("WebCamWidget", "StopRecording();");
+			if (m_RecordingRoutine != 0)
+			{
+				Runnable.Stop(m_RecordingRoutine);
+				m_RecordingRoutine = 0;
+
+				m_ActivateOutput.SendData(new BooleanData(false));
+
+				m_WebCamTexture.Stop();
+
+				if (m_StatusText != null)
+					m_StatusText.text = "STOPPED";
+			}
+		}
+
+		private IEnumerator RecordingHandler()
 		{
 			Failure = false;
 
 #if !UNITY_EDITOR
-			//yield return Application.RequestUserAuthorization(UserAuthorization.WebCam);
+			yield return Application.RequestUserAuthorization(UserAuthorization.WebCam);
 #endif
 
 			Application.RequestUserAuthorization(UserAuthorization.WebCam);
 
 			m_WebCamTexture = new WebCamTexture(m_RequestedWidth, m_RequestedHeight, m_RequestedFPS);
-			//yield return null;
+			yield return null;
 
-			//if(m_WebCamTexture == null)
-			//{
-			//	Failure = true;
-			//	StopRecording();
-			//	return;
-			//	//yield break;
-			//}
-
-			//WebCamTextureData camData = new WebCamTextureData(m_WebCamTexture);
-			//m_WebCamTextureOutput.SendData(camData);
-			//m_WebCamTexture.Play();
-
-			Log.Debug("WebCamDisplayWidget", "OnWebCamTexture()");
-			if (m_Material == null && m_RawImage == null)
-				throw new ArgumentNullException("A Material or RawImage is required to display WebCamTexture");
-
-			if (m_Material != null)
-				m_Material.mainTexture = m_WebCamTexture;
-
-			if (m_RawImage != null)
+			if (m_WebCamTexture == null)
 			{
-				m_RawImage.texture = m_WebCamTexture;
-				m_RawImage.material.mainTexture = m_WebCamTexture;
+				Failure = true;
+				StopRecording();
+				yield break;
 			}
+
+			WebCamTextureData camData = new WebCamTextureData(m_WebCamTexture, m_RequestedWidth, m_RequestedHeight, m_RequestedFPS);
+			m_WebCamTextureOutput.SendData(camData);
+
+			//Log.Debug("WebCamDisplayWidget", "OnWebCamTexture()");
+			//if (m_m_RequestedFPSMaterial == null && m_RawImage == null)
+			//	throw new ArgumentNullException("A Material or RawImage is required to display WebCamTexture");
+
+			//if (m_Material != null)
+			//	m_Material.mainTexture = m_WebCamTexture;
+
+			//if (m_RawImage != null)
+			//{
+			//	m_RawImage.texture = m_WebCamTexture;
+			//	m_RawImage.material.mainTexture = m_WebCamTexture;
+			//}
 
 			m_WebCamTexture.Play();
 		}
