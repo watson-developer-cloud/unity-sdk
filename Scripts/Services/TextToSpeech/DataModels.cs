@@ -195,15 +195,27 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 		/// <summary>
 		/// UNIX timestamp that indicates when the custom voice model was created. The timestamp is a count of seconds since the UNIX Epoch of January 1, 1970 Coordinated Universal Time (UTC).
 		/// </summary>
-		public int created { get; set; }
+		public double created { get; set; }
 		/// <summary>
 		/// UNIX timestamp that indicates when the custom voice model was last modified. Equals `created` when a new voice model is first added but has yet to be changed.
 		/// </summary>
-		public int last_modified { get; set; }
+		public double last_modified { get; set; }
 		/// <summary>
 		/// Description of the custom voice model.
 		/// </summary>
 		public string description { get; set; }
+	}
+
+	/// <summary>
+	/// A data object containing a customization ID when creating a new voice model.
+	/// </summary>
+	[fsObject]
+	public class CustomizationID
+	{
+		/// <summary>
+		/// GUID of the new custom voice model.
+		/// </summary>
+		public string customization_id { get; set; }
 	}
 
 	/// <summary>
@@ -248,11 +260,11 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 		/// <summary>
 		/// UNIX timestamp that indicates when the custom voice model was created. The timestamp is a count of seconds since the UNIX Epoch of January 1, 1970 Coordinated Universal Time (UTC).
 		/// </summary>
-		public int created { get; set; }
+		public double created { get; set; }
 		/// <summary>
 		/// UNIX timestamp that indicates when the custom voice model was last modified. Equals created when the new voice model is first added but has yet to be changed.
 		/// </summary>
-		public int last_modified { get; set; }
+		public double last_modified { get; set; }
 		/// <summary>
 		/// Description of the custom voice model.
 		/// </summary>

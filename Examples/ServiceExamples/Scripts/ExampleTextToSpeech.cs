@@ -28,20 +28,31 @@ public class ExampleTextToSpeech : MonoBehaviour
     void Start ()
 	{
 		LogSystem.InstallDefaultReactors();
-		//	Get Voices
-		Log.Debug("ExampleTextToSpeech", "Attempting to get voices.");
-		m_TextToSpeech.GetVoices(OnGetVoices);
 
-		//	Get Voice
-		//string selectedVoice = "en-US_AllisonVoice";
-		Log.Debug("ExampleTextToSpeech", "Attempting to get voice {0}.", VoiceType.en_US_Allison);
-		m_TextToSpeech.GetVoice(OnGetVoice, VoiceType.en_US_Allison);
+		////	Get Voices
+		//Log.Debug("ExampleTextToSpeech", "Attempting to get voices.");
+		//m_TextToSpeech.GetVoices(OnGetVoices);
 
-		//	Get Pronunciation
-		string testWord = "Watson";
-		Log.Debug("ExampleTextToSpeech", "Attempting to get pronunciation of {0}", testWord);
-		m_TextToSpeech.GetPronunciation(OnGetPronunciation, testWord, VoiceType.en_US_Allison);
+		////	Get Voice
+		////string selectedVoice = "en-US_AllisonVoice";
+		//Log.Debug("ExampleTextToSpeech", "Attempting to get voice {0}.", VoiceType.en_US_Allison);
+		//m_TextToSpeech.GetVoice(OnGetVoice, VoiceType.en_US_Allison);
 
+		////	Get Pronunciation
+		//string testWord = "Watson";
+		//Log.Debug("ExampleTextToSpeech", "Attempting to get pronunciation of {0}", testWord);
+		//m_TextToSpeech.GetPronunciation(OnGetPronunciation, testWord, VoiceType.en_US_Allison);
+
+		// Get Customizations
+		//Log.Debug("ExampleTextToSpeech", "Attempting to get a list of customizations");
+		//m_TextToSpeech.GetCustomizations(OnGetCustomizations);
+
+		//	Create Customization
+		Log.Debug("ExampleTextToSpeech", "Attempting to create a customization");
+		string customizationName = "unity-example-customization";
+		string customizationLanguage = "en-US";
+		string customizationDescription = "A text to speech voice customization created within Unity.";
+		m_TextToSpeech.CreateCustomization(OnCreateCustomization, customizationName, customizationLanguage, customizationDescription);
 
 
 		//m_TextToSpeech.Voice = VoiceType.en_US_Allison;
@@ -88,6 +99,25 @@ public class ExampleTextToSpeech : MonoBehaviour
 	{
 		Log.Debug("ExampleTextToSpeech", "-----OnGetPronunciation-----");
 		Log.Debug("ExampleTextToSpeech", "Pronunciation: {0}.", pronunciation.pronunciation);
+		Log.Debug("ExampleTextToSpeech", "\n");
+	}
+
+	private void OnGetCustomizations(Customizations customizations, string data)
+	{
+		Log.Debug("ExampleTextToSpeech", "-----OnGetCustomizations-----");
+		if(data != default(string))
+			Log.Debug("ExampleTextToSpeech", "data: {0}", data);
+		foreach (Customization customization in customizations.customizations)
+			Log.Debug("ExampleTextToSpeech", "Customization: name: {0} | customization_id: {1} | language: {2} | description: {3} | owner: {4} | created: {5} | last modified: {6}", customization.name, customization.customization_id, customization.language, customization.description, customization.owner, customization.created, customization.last_modified);
+		Log.Debug("ExampleTextToSpeech", "\n");
+	}
+
+	private void OnCreateCustomization(CustomizationID customizationID, string data)
+	{
+		Log.Debug("ExampleTextToSpeech", "-----OnCreateCustomization-----");
+		if (data != default(string))
+			Log.Debug("ExampleTextToSpeech", "data: {0}", data);
+		Log.Debug("ExampleTextToSpeech", "CustomizationID: id: {0}.", customizationID.customization_id);
 		Log.Debug("ExampleTextToSpeech", "\n");
 	}
 }
