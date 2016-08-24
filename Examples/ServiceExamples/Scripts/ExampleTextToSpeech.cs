@@ -29,114 +29,114 @@ public class ExampleTextToSpeech : MonoBehaviour
 	{
 		LogSystem.InstallDefaultReactors();
 
-		////	Get Voices
-		//Log.Debug("ExampleTextToSpeech", "Attempting to get voices.");
-		//m_TextToSpeech.GetVoices(OnGetVoices);
+        ////	Get Voices
+        //Log.Debug("ExampleTextToSpeech", "Attempting to get voices.");
+        //m_TextToSpeech.GetVoices(OnGetVoices);
 
-		////	Get Voice
-		////string selectedVoice = "en-US_AllisonVoice";
-		//Log.Debug("ExampleTextToSpeech", "Attempting to get voice {0}.", VoiceType.en_US_Allison);
-		//m_TextToSpeech.GetVoice(OnGetVoice, VoiceType.en_US_Allison);
+        ////	Get Voice
+        ////string selectedVoice = "en-US_AllisonVoice";
+        //Log.Debug("ExampleTextToSpeech", "Attempting to get voice {0}.", VoiceType.en_US_Allison);
+        //m_TextToSpeech.GetVoice(OnGetVoice, VoiceType.en_US_Allison);
 
-		////	Get Pronunciation
-		//string testWord = "Watson";
-		//Log.Debug("ExampleTextToSpeech", "Attempting to get pronunciation of {0}", testWord);
-		//m_TextToSpeech.GetPronunciation(OnGetPronunciation, testWord, VoiceType.en_US_Allison);
+        ////	Get Pronunciation
+        //string testWord = "Watson";
+        //Log.Debug("ExampleTextToSpeech", "Attempting to get pronunciation of {0}", testWord);
+        //m_TextToSpeech.GetPronunciation(OnGetPronunciation, testWord, VoiceType.en_US_Allison);
 
-		// Get Customizations
-		//Log.Debug("ExampleTextToSpeech", "Attempting to get a list of customizations");
-		//m_TextToSpeech.GetCustomizations(OnGetCustomizations);
+        // Get Customizations
+        //Log.Debug("ExampleTextToSpeech", "Attempting to get a list of customizations");
+        //m_TextToSpeech.GetCustomizations(OnGetCustomizations);
 
-		//	Create Customization
-		//Log.Debug("ExampleTextToSpeech", "Attempting to create a customization");
-		//string customizationName = "unity-example-customization";
-		//string customizationLanguage = "en-US";
-		//string customizationDescription = "A text to speech voice customization created within Unity.";
-		//m_TextToSpeech.CreateCustomization(OnCreateCustomization, customizationName, customizationLanguage, customizationDescription);
+        //	Create Customization
+        //Log.Debug("ExampleTextToSpeech", "Attempting to create a customization");
+        //string customizationName = "unity-example-customization";
+        //string customizationLanguage = "en-US";
+        //string customizationDescription = "A text to speech voice customization created within Unity.";
+        //m_TextToSpeech.CreateCustomization(OnCreateCustomization, customizationName, customizationLanguage, customizationDescription);
 
-		//	Delete Customization
-		//Log.Debug("ExampleTextToSpeech", "Attempting to delete a customization");
-		//string customizationIdentifierToDelete = "1476ea80-5355-4911-ac99-ba39162a2d34";
-		//if (!m_TextToSpeech.DeleteCustomization(OnDeleteCustomization, customizationIdentifierToDelete))
-		//	Log.Debug("ExampleTextToSpeech", "Failed to delete custom voice model!");
+        //	Delete Customization
+        //Log.Debug("ExampleTextToSpeech", "Attempting to delete a customization");
+        //string customizationIdentifierToDelete = "1476ea80-5355-4911-ac99-ba39162a2d34";
+        //if (!m_TextToSpeech.DeleteCustomization(OnDeleteCustomization, customizationIdentifierToDelete))
+        //	Log.Debug("ExampleTextToSpeech", "Failed to delete custom voice model!");
 
-		//	Get Customization
-		//Log.Debug("ExampleTextToSpeech", "Attempting to get a customization");
-		//string customizationIdentifierToGet = "1476ea80-5355-4911-ac99-ba39162a2d34";
-		//if (!m_TextToSpeech.GetCustomization(OnGetCustomization, customizationIdentifierToGet))
-		//	Log.Debug("ExampleTextToSpeech", "Failed to get custom voice model!");
+        //	Get Customization
+        //Log.Debug("ExampleTextToSpeech", "Attempting to get a customization");
+        //string customizationIdentifierToGet = "1476ea80-5355-4911-ac99-ba39162a2d34";
+        //if (!m_TextToSpeech.GetCustomization(OnGetCustomization, customizationIdentifierToGet))
+        //	Log.Debug("ExampleTextToSpeech", "Failed to get custom voice model!");
 
-		//	Update Customization
-		//Log.Debug("ExampleTextToSpeech", "Attempting to update a customization");
-		//Word word0 = new Word();
-		//word0.word = "hello";
-		//word0.translation = "hullo";
-		//Word word1 = new Word();
-		//word1.word = "goodbye";
-		//word1.translation = "gbye";
-		//Word word2 = new Word();
-		//word2.word = "hi";
-		//word2.translation = "ohiooo";
-		//Word[] words = { word0, word1, word2 };
-		//CustomVoiceUpdate customVoiceUpdate = new CustomVoiceUpdate();
-		//customVoiceUpdate.words = words;
-		//customVoiceUpdate.description = "My updated description";
-		//customVoiceUpdate.name = "My updated name";
-		//string customizationIdToUpdate = "1476ea80-5355-4911-ac99-ba39162a2d34";
-		//if (!m_TextToSpeech.UpdateCustomization(OnUpdateCustomization, customizationIdToUpdate, customVoiceUpdate))
-		//	Log.Debug("ExampleTextToSpeech", "Failed to update customization!");
+        //	Update Customization
+        Log.Debug("ExampleTextToSpeech", "Attempting to update a customization");
+        Word word0 = new Word();
+        word0.word = "hello";
+        word0.translation = "hullo";
+        Word word1 = new Word();
+        word1.word = "goodbye";
+        word1.translation = "gbye";
+        Word word2 = new Word();
+        word2.word = "hi";
+        word2.translation = "ohiooo";
+        Word[] words = { word0, word1, word2 };
+        CustomVoiceUpdate customVoiceUpdate = new CustomVoiceUpdate();
+        customVoiceUpdate.words = words;
+        customVoiceUpdate.description = "My updated description";
+        customVoiceUpdate.name = "My updated name";
+        string customizationIdToUpdate = "1476ea80-5355-4911-ac99-ba39162a2d34";
+        if (!m_TextToSpeech.UpdateCustomization(OnUpdateCustomization, customizationIdToUpdate, customVoiceUpdate))
+            Log.Debug("ExampleTextToSpeech", "Failed to update customization!");
 
-		//	Get Customization Words
-		//Log.Debug("ExampleTextToSpeech", "Attempting to get a customization's words");
-		//string customIdentifierToGetWords = "1476ea80-5355-4911-ac99-ba39162a2d34";
-		//if (!m_TextToSpeech.GetCustomizationWords(OnGetCustomizationWords, customIdentifierToGetWords))
-		//	Log.Debug("ExampleTextToSpeech", "Failed to get {0} words!", customIdentifierToGetWords);
+        //	Get Customization Words
+        //Log.Debug("ExampleTextToSpeech", "Attempting to get a customization's words");
+        //string customIdentifierToGetWords = "1476ea80-5355-4911-ac99-ba39162a2d34";
+        //if (!m_TextToSpeech.GetCustomizationWords(OnGetCustomizationWords, customIdentifierToGetWords))
+        //	Log.Debug("ExampleTextToSpeech", "Failed to get {0} words!", customIdentifierToGetWords);
 
-		//	Add Customization Words
-		//Log.Debug("ExampleTextToSpeech", "Attempting to add words to a customization");
-		//string customIdentifierToAddWords = "1476ea80-5355-4911-ac99-ba39162a2d34";
-		//Words words = new Words();
-		//Word word0 = new Word();
-		//word0.word = "bananna";
-		//word0.translation = "bunanna";
-		//Word word1 = new Word();
-		//word1.word = "orange";
-		//word1.translation = "arange";
-		//Word word2 = new Word();
-		//word2.word = "tomato";
-		//word2.translation = "tomahto";
-		//Word[] wordArray = { word0, word1, word2 };
-		//words.words = wordArray;
-		//if (!m_TextToSpeech.AddCustomizationWords(OnAddCustomizationWords, customIdentifierToAddWords, words))
-		//	Log.Debug("ExampleTextToSpeech", "Failed to add words to {0}!", customIdentifierToAddWords);
+        //	Add Customization Words
+        //Log.Debug("ExampleTextToSpeech", "Attempting to add words to a customization");
+        //string customIdentifierToAddWords = "1476ea80-5355-4911-ac99-ba39162a2d34";
+        //Words words = new Words();
+        //Word word0 = new Word();
+        //word0.word = "bananna";
+        //word0.translation = "bunanna";
+        //Word word1 = new Word();
+        //word1.word = "orange";
+        //word1.translation = "arange";
+        //Word word2 = new Word();
+        //word2.word = "tomato";
+        //word2.translation = "tomahto";
+        //Word[] wordArray = { word0, word1, word2 };
+        //words.words = wordArray;
+        //if (!m_TextToSpeech.AddCustomizationWords(OnAddCustomizationWords, customIdentifierToAddWords, words))
+        //	Log.Debug("ExampleTextToSpeech", "Failed to add words to {0}!", customIdentifierToAddWords);
 
-		//	Delete Customization Word
-		//Log.Debug("ExampleTextToSpeech", "Attempting to delete customization word from custom voice model.");
-		//string customIdentifierToDeleteWord = "1476ea80-5355-4911-ac99-ba39162a2d34";
-		//string wordToDelete = "goodbye";
-		//if (!m_TextToSpeech.DeleteCustomizationWord(OnDeleteCustomizationWord, customIdentifierToDeleteWord, wordToDelete))
-		//	Log.Debug("ExampleTextToSpeech", "Failed to delete {0} from {1}!", wordToDelete, customIdentifierToDeleteWord);
+        //	Delete Customization Word
+        //Log.Debug("ExampleTextToSpeech", "Attempting to delete customization word from custom voice model.");
+        //string customIdentifierToDeleteWord = "1476ea80-5355-4911-ac99-ba39162a2d34";
+        //string wordToDelete = "goodbye";
+        //if (!m_TextToSpeech.DeleteCustomizationWord(OnDeleteCustomizationWord, customIdentifierToDeleteWord, wordToDelete))
+        //	Log.Debug("ExampleTextToSpeech", "Failed to delete {0} from {1}!", wordToDelete, customIdentifierToDeleteWord);
 
-		//	Get Customization Word
-		//Log.Debug("ExampleTextToSpeech", "Attempting to get the translation of a custom voice model's word.");
-		//string customIdentifierToGetWord = "1476ea80-5355-4911-ac99-ba39162a2d34";
-		//string customIdentifierWord = "hello";
-		//if (!m_TextToSpeech.GetCustomizationWord(OnGetCustomizationWord, customIdentifierToGetWord, customIdentifierWord))
-		//	Log.Debug("ExampleTextToSpeech", "Failed to get the translation of {0} from {1}!", customIdentifierWord, customIdentifierToGetWord);
+        //	Get Customization Word
+        //Log.Debug("ExampleTextToSpeech", "Attempting to get the translation of a custom voice model's word.");
+        //string customIdentifierToGetWord = "1476ea80-5355-4911-ac99-ba39162a2d34";
+        //string customIdentifierWord = "hello";
+        //if (!m_TextToSpeech.GetCustomizationWord(OnGetCustomizationWord, customIdentifierToGetWord, customIdentifierWord))
+        //	Log.Debug("ExampleTextToSpeech", "Failed to get the translation of {0} from {1}!", customIdentifierWord, customIdentifierToGetWord);
 
-		//	Add Customization Word - This is not working. The PUT method is not supported by Unity.
-		//Log.Debug("ExampleTextToSpeech", "Attempting to add a single word and translation to a custom voice model.");
-		//string customIdentifierToAddWordAndTranslation = "1476ea80-5355-4911-ac99-ba39162a2d34";
-		//string word = "grasshopper";
-		//string translation = "guhrasshoppe";
-		//if (!m_TextToSpeech.AddCustomizationWord(OnAddCustomizationWord, customIdentifierToAddWordAndTranslation, word, translation))
-		//	Log.Debug("ExampleTextToSpeech", "Failed to add {0}/{1} to {2}!", word, translation, customIdentifierToAddWordAndTranslation);
+        //	Add Customization Word - This is not working. The PUT method is not supported by Unity.
+        //Log.Debug("ExampleTextToSpeech", "Attempting to add a single word and translation to a custom voice model.");
+        //string customIdentifierToAddWordAndTranslation = "1476ea80-5355-4911-ac99-ba39162a2d34";
+        //string word = "grasshopper";
+        //string translation = "guhrasshoppe";
+        //if (!m_TextToSpeech.AddCustomizationWord(OnAddCustomizationWord, customIdentifierToAddWordAndTranslation, word, translation))
+        //	Log.Debug("ExampleTextToSpeech", "Failed to add {0}/{1} to {2}!", word, translation, customIdentifierToAddWordAndTranslation);
 
 
-		//m_TextToSpeech.Voice = VoiceType.en_US_Allison;
-		//m_TextToSpeech.ToSpeech(m_TestString, HandleToSpeechCallback, true);
+        //m_TextToSpeech.Voice = VoiceType.en_US_Allison;
+        //m_TextToSpeech.ToSpeech(m_TestString, HandleToSpeechCallback, true);
 
-	}
+    }
 
 	void HandleToSpeechCallback (AudioClip clip)
 	{

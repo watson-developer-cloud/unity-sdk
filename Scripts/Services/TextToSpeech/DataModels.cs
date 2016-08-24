@@ -140,6 +140,15 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
         /// The array of Voice objects.
         /// </summary>
         public Voice[] voices { get; set; }
+
+        /// <summary>
+        /// Check to see if object has data.
+        /// </summary>
+        /// <returns>True if has voices, False if no voices.</returns>
+        public bool HasData()
+        {
+            return voices != null && voices.Length > 0;
+        }
     };
 	#endregion
 
@@ -168,6 +177,11 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 		/// A list of voice model customizations.
 		/// </summary>
 		public Customization[] customizations { get; set; }
+
+        public bool HasData()
+        {
+            return customizations != null && customizations.Length > 0;
+        }
 	}
 
 	/// <summary>
@@ -204,6 +218,11 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 		/// Description of the custom voice model.
 		/// </summary>
 		public string description { get; set; }
+
+        public bool HasData()
+        {
+            return !string.IsNullOrEmpty(customization_id);
+        }
 	}
 
 	/// <summary>

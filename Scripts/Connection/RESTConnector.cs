@@ -442,7 +442,18 @@ namespace IBM.Watson.DeveloperCloud.Connection
                         int nErrorCode = -1;
                         int nSeperator = www.error.IndexOf(' ');
                         if (nSeperator > 0 && int.TryParse(www.error.Substring(0, nSeperator).Trim(), out nErrorCode))
-                            bError = nErrorCode != 200;
+                        {
+                            switch (nErrorCode)
+                            {
+                                case 200:
+                                case 201:
+                                    bError = false;
+                                    break;
+                                default:
+                                    bError = true;
+                                    break;
+                            }
+                        }
 
                         if (bError)
                             Log.Error("RESTConnector", "URL: {0}, ErrorCode: {1}, Error: {2}, Response: {3}", url, nErrorCode, www.error,
@@ -456,11 +467,11 @@ namespace IBM.Watson.DeveloperCloud.Connection
                         Log.Error("RESTConnector", "Request timed out for URL: {0}", url);
                         bError = true;
                     }
-                    if (!bError && (www.bytes == null || www.bytes.Length == 0))
+                    /*if (!bError && (www.bytes == null || www.bytes.Length == 0))
                     {
                         Log.Warning("RESTConnector", "No data recevied for URL: {0}", url);
                         bError = true;
-                    }
+                    }*/
 
 
                     // generate the Response object now..
