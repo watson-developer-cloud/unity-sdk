@@ -582,7 +582,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
 #if ENABLE_DEBUGGING
                 Log.Debug("RESTConnector", "DELETE Request SENT: {0}", URL);
 #endif
-                Success = deleteResp.StatusCode == HttpStatusCode.OK;
+                Success = deleteResp.StatusCode == HttpStatusCode.OK || deleteResp.StatusCode == HttpStatusCode.NoContent;
 #if ENABLE_DEBUGGING
                 Log.Debug("RESTConnector", "DELETE Request COMPLETE: {0}", URL);
 #endif

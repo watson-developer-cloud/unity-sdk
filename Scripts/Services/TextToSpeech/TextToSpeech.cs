@@ -850,9 +850,125 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 		#endregion
 
 		#region Add Customization Words
+		/// <summary>
+		/// This callback is used by the AddCustomizationWords() function.
+		/// </summary>
+		/// <param name="success">Success</param>
+		/// <param name="data">Optional custom data.</param>
+		public delegate void AddCustomizationWordsCallback(bool success, string data);
+
+		/// <summary>
+		/// Adds one or more words and their translations to the custom voice model with the specified `customization_id`. A custom model can contain no more than 20,000 entries. Only the owner of a custom voice model can use this method to add words to the model.
+		/// Note: This method is currently a beta release that supports US English only.
+		/// </summary>
+		/// <param name="callback">The callback.</param>
+		/// <param name="customizationID">The identifier of the custom voice model to be updated.</param>
+		/// <param name="words">Words object to add to custom voice model.</param>
+		/// <param name="customData">Optional custom data.</param>
+		/// <returns></returns>
+		public bool AddCustomizationWords(AddCustomizationWordsCallback callback, string customizationID, Words words, string customData = default(string))
+		{
+			if (callback == null)
+				throw new ArgumentNullException("callback");
+			if (string.IsNullOrEmpty(customizationID))
+				throw new ArgumentNullException("customizationID");
+			if (!words.HasData())
+				throw new ArgumentNullException("Words data is required to add words to a custom voice model.");
+
+			fsData data;
+			sm_Serializer.TrySerialize(words.GetType(), words, out data).AssertSuccessWithoutWarnings();
+			string customizationJson = fsJsonPrinter.CompressedJson(data);
+
+			AddCustomizationWordsRequest req = new AddCustomizationWordsRequest();
+			req.Callback = callback;
+			req.Words = words;
+			req.CustomizationID = customizationID;
+			req.Data = customData;
+			req.Headers["Content-Type"] = "application/json";
+			req.Headers["Accept"] = "application/json";
+			req.Send = Encoding.UTF8.GetBytes(customizationJson);
+			req.OnResponse = OnAddCustomizationWordsResp;
+
+			string service = "/v1/customizations/{0}/words";
+			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(service, customizationID));
+			if (connector == null)
+				return false;
+
+			return connector.Send(req);
+		}
+
+		//	TODO add AddCustomizationWords overload using path to json file.
+
+		private class AddCustomizationWordsRequest : RESTConnector.Request
+		{
+			public AddCustomizationWordsCallback Callback { get; set; }
+			public string CustomizationID { get; set; }
+			public Words Words { get; set; }
+			public string Data { get; set; }
+		}
+
+		private void OnAddCustomizationWordsResp(RESTConnector.Request req, RESTConnector.Response resp)
+		{
+			if (((AddCustomizationWordsRequest)req).Callback != null)
+				((AddCustomizationWordsRequest)req).Callback(resp.Success, ((AddCustomizationWordsRequest)req).Data);
+		}
 		#endregion
 
 		#region Delete Customization Word
+		/// <summary>
+		/// This callback is used by the DeleteCustomizationWord() function.
+		/// </summary>
+		/// <param name="success"></param>
+		/// <param name="data"></param>
+		public delegate void OnDeleteCustomizationWordCallback(bool success, string data);
+		/// <summary>
+		/// Deletes a single word from the custom voice model with the specified customization_id. Only the owner of a custom voice model can use this method to delete a word from the model.
+		/// Note: This method is currently a beta release that supports US English only.
+		/// </summary>
+		/// <param name="callback">The callback.</param>
+		/// <param name="customizationID">The voice model's identifier.</param>
+		/// <param name="word">The word to be deleted.</param>
+		/// <param name="customData">Optional custom data.</param>
+		/// <returns></returns>
+		public bool DeleteCustomizationWord(OnDeleteCustomizationWordCallback callback, string customizationID, string word, string customData = default(string))
+		{
+			if (callback == null)
+				throw new ArgumentNullException("callback");
+			if (string.IsNullOrEmpty(customizationID))
+				throw new ArgumentNullException("A customizationID is required for DeleteCustomizationWord");
+			if (string.IsNullOrEmpty(word))
+				throw new ArgumentNullException("A word to delete is required for DeleteCustomizationWord");
+
+			DeleteCustomizationWordRequest req = new DeleteCustomizationWordRequest();
+			req.Callback = callback;
+			req.CustomizationID = customizationID;
+			req.Word = word;
+			req.Data = customData;
+			req.Timeout = REQUEST_TIMEOUT;
+			req.Delete = true;
+			req.OnResponse = OnDeleteCustomizationWordResp;
+
+			string service = "/v1/customizations/{0}/words/{1}";
+			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(service, customizationID, word));
+			if (connector == null)
+				return false;
+
+			return connector.Send(req);
+		}
+
+		private class DeleteCustomizationWordRequest : RESTConnector.Request
+		{
+			public OnDeleteCustomizationWordCallback Callback { get; set; }
+			public string CustomizationID { get; set; }
+			public string Word { get; set; }
+			public string Data { get; set; }
+		}
+
+		private void OnDeleteCustomizationWordResp(RESTConnector.Request req, RESTConnector.Response resp)
+		{
+			if (((DeleteCustomizationWordRequest)req).Callback != null)
+				((DeleteCustomizationWordRequest)req).Callback(resp.Success, ((DeleteCustomizationWordRequest)req).Data);
+		}
 		#endregion
 
 		#region Get Customization Word

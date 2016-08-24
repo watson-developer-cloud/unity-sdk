@@ -87,11 +87,36 @@ public class ExampleTextToSpeech : MonoBehaviour
 		//	Log.Debug("ExampleTextToSpeech", "Failed to update customization!");
 
 		//	Get Customization Words
-		Log.Debug("ExampleTextToSpeech", "Attempting to get a customization's words");
-		string customIdentifierToGetWords = "1476ea80-5355-4911-ac99-ba39162a2d34";
-		if (!m_TextToSpeech.GetCustomizationWords(OnGetCustomizationWords, customIdentifierToGetWords))
-			Log.Debug("ExampleTextToSpeech", "Failed to get {0} words!", customIdentifierToGetWords);
+		//Log.Debug("ExampleTextToSpeech", "Attempting to get a customization's words");
+		//string customIdentifierToGetWords = "1476ea80-5355-4911-ac99-ba39162a2d34";
+		//if (!m_TextToSpeech.GetCustomizationWords(OnGetCustomizationWords, customIdentifierToGetWords))
+		//	Log.Debug("ExampleTextToSpeech", "Failed to get {0} words!", customIdentifierToGetWords);
 
+		//	Add Customization Words
+		//Log.Debug("ExampleTextToSpeech", "Attempting to add words to a customization");
+		//string customIdentifierToAddWords = "1476ea80-5355-4911-ac99-ba39162a2d34";
+		//Words words = new Words();
+		//Word word0 = new Word();
+		//word0.word = "bananna";
+		//word0.translation = "bunanna";
+		//Word word1 = new Word();
+		//word1.word = "orange";
+		//word1.translation = "arange";
+		//Word word2 = new Word();
+		//word2.word = "tomato";
+		//word2.translation = "tomahto";
+		//Word[] wordArray = { word0, word1, word2 };
+		//words.words = wordArray;
+		//if (!m_TextToSpeech.AddCustomizationWords(OnAddCustomizationWords, customIdentifierToAddWords, words))
+		//	Log.Debug("ExampleTextToSpeech", "Failed to add words to {0}!", customIdentifierToAddWords);
+
+		//	Delete Customization Word
+		Log.Debug("ExampleTextToSpeech", "Attempting to delete customization word from custom voice model.");
+		string customIdentifierToDeleteWord = "1476ea80-5355-4911-ac99-ba39162a2d34";
+		string wordToDelete = "goodbye";
+		if (!m_TextToSpeech.DeleteCustomizationWord(OnDeleteCustomizationWord, customIdentifierToDeleteWord, wordToDelete))
+			Log.Debug("ExampleTextToSpeech", "Failed to delete {0} from {1}!", wordToDelete, customIdentifierToDeleteWord);
+			
 		//m_TextToSpeech.Voice = VoiceType.en_US_Allison;
 		//m_TextToSpeech.ToSpeech(m_TestString, HandleToSpeechCallback, true);
 
@@ -193,5 +218,23 @@ public class ExampleTextToSpeech : MonoBehaviour
 		foreach (Word word in words.words)
 			Log.Debug("ExampleTextToSpeech", "Word: {0} | Translation: {1}.", word.word, word.translation);
 		Log.Debug("ExampleTextToSpeech", "-----OnGetCustomizationWords-----");
+	}
+
+	private void OnAddCustomizationWords(bool success, string data)
+	{
+		Log.Debug("ExampleTextToSpeech", "-----OnAddCustomizationWords-----");
+		if (data != default(string))
+			Log.Debug("ExampleTextToSpeech", "data: {0}", data);
+		Log.Debug("ExampleTextToSpeech", "Success: {0}.", success);
+		Log.Debug("ExampleTextToSpeech", "-----OnAddCustomizationWords-----");
+	}
+
+	private void OnDeleteCustomizationWord(bool success, string data)
+	{
+		Log.Debug("ExampleTextToSpeech", "-----OnDeleteCustomizationWord-----");
+		if (data != default(string))
+			Log.Debug("ExampleTextToSpeech", "data: {0}", data);
+		Log.Debug("ExampleTextToSpeech", "Success: {0}.", success);
+		Log.Debug("ExampleTextToSpeech", "-----OnDeleteCustomizationWord-----");
 	}
 }

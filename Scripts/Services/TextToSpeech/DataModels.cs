@@ -285,6 +285,15 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 		/// An array of Words.
 		/// </summary>
 		public Word[] words { get; set; }
+
+		/// <summary>
+		/// Check to see if there are any words.
+		/// </summary>
+		/// <returns>True if there are words, false if there ar no words.</returns>
+		public bool HasData()
+		{
+			return words != null && words.Length > 0;
+		}
 	}
 	
 	/// <summary>
@@ -322,6 +331,10 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 		/// </summary>
 		public Word[] words { get; set; }
 
+		/// <summary>
+		/// Check to see if there are any words to update.
+		/// </summary>
+		/// <returns>True if there are words, false if there are none.</returns>
 		public bool HasData()
 		{
 			return words != null && words.Length > 0;
