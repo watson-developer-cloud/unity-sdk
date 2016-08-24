@@ -96,7 +96,7 @@ void HandleOnRecognize (SpeechResultList result)
 ```
 
 ### Text to Speech
-Use the [Text to Speech][text_to_speech] service to get the available voices to synthesize. The Text to Speech service also supports Speech Synthesis Markup Language ([SSML][ssml]). In addition, the service supports a service-specific [expressive SSML][expressive_ssml] element.
+Use the [Text to Speech][text_to_speech] service to get the available voices to synthesize. The Text to Speech service also supports Speech Synthesis Markup Language ([SSML][ssml]). In addition, the service supports a service-specific [expressive SSML][expressive_ssml] element. See Text To Speech service examples for examples on how to create custom Text to Speech voice models.
 
 ```cs
 TextToSpeech m_TextToSpeech = new TextToSpeech();
