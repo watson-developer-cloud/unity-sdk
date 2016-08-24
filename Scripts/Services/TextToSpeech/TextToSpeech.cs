@@ -1049,6 +1049,69 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 		#endregion
 
 		#region Add Customization Word
+		/// <summary>
+		/// This callback is used by the AddCustomizationWord() function.
+		/// </summary>
+		/// <param name="success">Success</param>
+		/// <param name="data">Optional custom data.</param>
+		public delegate void AddCustomizationWordCallback(bool success, string data);
+
+		/// <summary>
+		/// Adds a single word and its translation to the custom voice model with the specified `customization_id`. A custom model can contain no more than 20,000 entries. Only the owner of a custom voice model can use this method to add a word to the model.
+		/// Note: This method is currently a beta release that supports US English only.
+		/// </summary>
+		/// <param name="callback">The callback.</param>
+		/// <param name="customizationID">The identifier of the custom voice model to be updated.</param>
+		/// <param name="words">Words object to add to custom voice model.</param>
+		/// <param name="customData">Optional custom data.</param>
+		/// <returns></returns>
+		public bool AddCustomizationWord(AddCustomizationWordCallback callback, string customizationID, string word, string translation, string customData = default(string))
+		{
+			if (callback == null)
+				throw new ArgumentNullException("callback");
+			if (string.IsNullOrEmpty(customizationID))
+				throw new ArgumentNullException("customizationID");
+			if (string.IsNullOrEmpty(word))
+				throw new ArgumentNullException("word");
+			if (string.IsNullOrEmpty(translation))
+				throw new ArgumentNullException("translation");
+
+			string json = "{\n\t\"translation\":\"" + translation + "\"\n}";
+
+			AddCustomizationWordRequest req = new AddCustomizationWordRequest();
+			req.Callback = callback;
+			req.CustomizationID = customizationID;
+			req.Word = word;
+			req.Translation = translation;
+			req.Data = customData;
+			req.Headers["Content-Type"] = "application/json";
+			req.Headers["Accept"] = "application/json";
+			req.Headers["X-HTTP-Method-Override"] = "PUT";
+			req.Send = Encoding.UTF8.GetBytes(json);
+			req.OnResponse = OnAddCustomizationWordResp;
+
+			string service = "/v1/customizations/{0}/words/{1}";
+			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(service, customizationID, word));
+			if (connector == null)
+				return false;
+
+			return connector.Send(req);
+		}
+
+		private class AddCustomizationWordRequest : RESTConnector.Request
+		{
+			public AddCustomizationWordCallback Callback { get; set; }
+			public string CustomizationID { get; set; }
+			public string Word { get; set; }
+			public string Translation { get; set; }
+			public string Data { get; set; }
+		}
+
+		private void OnAddCustomizationWordResp(RESTConnector.Request req, RESTConnector.Response resp)
+		{
+			if (((AddCustomizationWordRequest)req).Callback != null)
+				((AddCustomizationWordRequest)req).Callback(resp.Success, ((AddCustomizationWordRequest)req).Data);
+		}
 		#endregion
 
 		#region IWatsonService interface
