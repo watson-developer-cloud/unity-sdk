@@ -111,12 +111,19 @@ public class ExampleTextToSpeech : MonoBehaviour
 		//	Log.Debug("ExampleTextToSpeech", "Failed to add words to {0}!", customIdentifierToAddWords);
 
 		//	Delete Customization Word
-		Log.Debug("ExampleTextToSpeech", "Attempting to delete customization word from custom voice model.");
-		string customIdentifierToDeleteWord = "1476ea80-5355-4911-ac99-ba39162a2d34";
-		string wordToDelete = "goodbye";
-		if (!m_TextToSpeech.DeleteCustomizationWord(OnDeleteCustomizationWord, customIdentifierToDeleteWord, wordToDelete))
-			Log.Debug("ExampleTextToSpeech", "Failed to delete {0} from {1}!", wordToDelete, customIdentifierToDeleteWord);
-			
+		//Log.Debug("ExampleTextToSpeech", "Attempting to delete customization word from custom voice model.");
+		//string customIdentifierToDeleteWord = "1476ea80-5355-4911-ac99-ba39162a2d34";
+		//string wordToDelete = "goodbye";
+		//if (!m_TextToSpeech.DeleteCustomizationWord(OnDeleteCustomizationWord, customIdentifierToDeleteWord, wordToDelete))
+		//	Log.Debug("ExampleTextToSpeech", "Failed to delete {0} from {1}!", wordToDelete, customIdentifierToDeleteWord);
+
+		//	Get Customization Word
+		Log.Debug("ExampleTextToSpeech", "Attempting to get the translation of a custom voice model's word.");
+		string customIdentifierToGetWord = "1476ea80-5355-4911-ac99-ba39162a2d34";
+		string customIdentifierWord = "hello";
+		if (!m_TextToSpeech.GetCustomizationWord(OnGetCustomizationWord, customIdentifierToGetWord, customIdentifierWord))
+			Log.Debug("ExampleTextToSpeech", "Failed to get the translation of {0} from {1}!", customIdentifierWord, customIdentifierToGetWord);
+
 		//m_TextToSpeech.Voice = VoiceType.en_US_Allison;
 		//m_TextToSpeech.ToSpeech(m_TestString, HandleToSpeechCallback, true);
 
@@ -236,5 +243,14 @@ public class ExampleTextToSpeech : MonoBehaviour
 			Log.Debug("ExampleTextToSpeech", "data: {0}", data);
 		Log.Debug("ExampleTextToSpeech", "Success: {0}.", success);
 		Log.Debug("ExampleTextToSpeech", "-----OnDeleteCustomizationWord-----");
+	}
+
+	private void OnGetCustomizationWord(Translation translation, string data)
+	{
+		Log.Debug("ExampleTextToSpeech", "-----OnGetCustomizationWord-----");
+		if (data != default(string))
+			Log.Debug("ExampleTextToSpeech", "data: {0}", data);
+		Log.Debug("ExampleTextToSpeech", "Translation: {0}.", translation.translation);
+		Log.Debug("ExampleTextToSpeech", "-----OnGetCustomizationWord-----");
 	}
 }

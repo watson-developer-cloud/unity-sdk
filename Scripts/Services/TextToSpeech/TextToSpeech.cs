@@ -797,7 +797,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 			if (callback == null)
 				throw new ArgumentNullException("callback");
 			if (string.IsNullOrEmpty(customizationID))
-				throw new ArgumentNullException("A name is customizationID to get a custom voice model's words.");
+				throw new ArgumentNullException("A customizationID is required to get a custom voice model's words.");
 
 			GetCustomizationWordsRequest req = new GetCustomizationWordsRequest();
 			req.Callback = callback;
@@ -972,6 +972,80 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 		#endregion
 
 		#region Get Customization Word
+		/// <summary>
+		/// This callback is used by the GetCusomizationWord() function.
+		/// </summary>
+		/// <param name="translation">Translation of the requested word.</param>
+		/// <param name="data">optional custom data.</param>
+		public delegate void GetCustomizationWordCallback(Translation translation, string data);
+		/// <summary>
+		/// Returns the translation for a single word from the custom model with the specified `customization_id`. The output shows the translation as it is defined in the model. Only the owner of a custom voice model can use this method to query information about a word from the model.
+		/// Note: This method is currently a beta release that supports US English only.
+		/// </summary>
+		/// <param name="callback">The callback.</param>
+		/// <param name="customizationID">The requested custom voice model's identifier.</param>
+		/// <param name="word">The requested word.</param>
+		/// <param name="customData">Optional custom data.</param>
+		/// <returns></returns>
+		public bool GetCustomizationWord(GetCustomizationWordCallback callback, string customizationID, string word, string customData = default(string))
+		{
+			if (callback == null)
+				throw new ArgumentNullException("callback");
+			if (string.IsNullOrEmpty(customizationID))
+				throw new ArgumentNullException("A customizationID is required to get a custom voice model's words.");
+			if (string.IsNullOrEmpty(word))
+				throw new ArgumentNullException("A word is requrred to get a translation.");
+
+			GetCustomizationWordRequest req = new GetCustomizationWordRequest();
+			req.Callback = callback;
+			req.CustomizationID = customizationID;
+			req.Word = word;
+			req.Data = customData;
+			req.OnResponse = OnGetCustomizationWordResp;
+
+			string service = "/v1/customizations/{0}/words/{1}";
+			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(service, customizationID, word));
+			if (connector == null)
+				return false;
+
+			return connector.Send(req);
+		}
+
+		private class GetCustomizationWordRequest : RESTConnector.Request
+		{
+			public GetCustomizationWordCallback Callback { get; set; }
+			public string CustomizationID { get; set; }
+			public string Word { get; set; }
+			public string Data { get; set; }
+		}
+
+		private void OnGetCustomizationWordResp(RESTConnector.Request req, RESTConnector.Response resp)
+		{
+			Translation translation = new Translation();
+			if (resp.Success)
+			{
+				try
+				{
+					fsData data = null;
+					fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+					if (!r.Succeeded)
+						throw new WatsonException(r.FormattedMessages);
+
+					object obj = translation;
+					r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+					if (!r.Succeeded)
+						throw new WatsonException(r.FormattedMessages);
+				}
+				catch (Exception e)
+				{
+					Log.Error("Text To Speech", "GetCustomizationWord Exception: {0}", e.ToString());
+					resp.Success = false;
+				}
+			}
+
+			if (((GetCustomizationWordRequest)req).Callback != null)
+				((GetCustomizationWordRequest)req).Callback(resp.Success ? translation : null, ((GetCustomizationWordRequest)req).Data);
+		}
 		#endregion
 
 		#region Add Customization Word
