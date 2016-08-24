@@ -124,13 +124,13 @@ public class ExampleTextToSpeech : MonoBehaviour
 		//if (!m_TextToSpeech.GetCustomizationWord(OnGetCustomizationWord, customIdentifierToGetWord, customIdentifierWord))
 		//	Log.Debug("ExampleTextToSpeech", "Failed to get the translation of {0} from {1}!", customIdentifierWord, customIdentifierToGetWord);
 
-		//	Add Customization Word
-		Log.Debug("ExampleTextToSpeech", "Attempting to add a single word and translation to a custom voice model.");
-		string customIdentifierToAddWordAndTranslation = "1476ea80-5355-4911-ac99-ba39162a2d34";
-		string word = "grasshopper";
-		string translation = "guhrasshoppe";
-		if (!m_TextToSpeech.AddCustomizationWord(OnAddCustomizationWord, customIdentifierToAddWordAndTranslation, word, translation))
-			Log.Debug("ExampleTextToSpeech", "Failed to add {0}/{1} to {2}!", word, translation, customIdentifierToAddWordAndTranslation);
+		//	Add Customization Word - This is not working. The PUT method is not supported by Unity.
+		//Log.Debug("ExampleTextToSpeech", "Attempting to add a single word and translation to a custom voice model.");
+		//string customIdentifierToAddWordAndTranslation = "1476ea80-5355-4911-ac99-ba39162a2d34";
+		//string word = "grasshopper";
+		//string translation = "guhrasshoppe";
+		//if (!m_TextToSpeech.AddCustomizationWord(OnAddCustomizationWord, customIdentifierToAddWordAndTranslation, word, translation))
+		//	Log.Debug("ExampleTextToSpeech", "Failed to add {0}/{1} to {2}!", word, translation, customIdentifierToAddWordAndTranslation);
 
 
 		//m_TextToSpeech.Voice = VoiceType.en_US_Allison;

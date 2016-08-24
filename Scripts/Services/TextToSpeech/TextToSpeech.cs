@@ -1067,6 +1067,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 		/// <returns></returns>
 		public bool AddCustomizationWord(AddCustomizationWordCallback callback, string customizationID, string word, string translation, string customData = default(string))
 		{
+			Log.Error("TextToSpeech", "AddCustomizationWord is not supported. Unity WWW does not support PUT method! Use AddCustomizationWords() instead!")
 			if (callback == null)
 				throw new ArgumentNullException("callback");
 			if (string.IsNullOrEmpty(customizationID))
