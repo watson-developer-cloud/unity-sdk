@@ -194,7 +194,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 				m_ActivateOutput.SendData(new BooleanData(true));
 
 				if (m_StatusText != null)
-					m_StatusText.text = "RECORDING";
+					m_StatusText.text = "WEB CAMERA ON";
 			}
 		}
 
@@ -211,7 +211,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 				m_WebCamTexture.Stop();
 
 				if (m_StatusText != null)
-					m_StatusText.text = "STOPPED";
+					m_StatusText.text = "WEB CAMERA OFF";
 			}
 		}
 
