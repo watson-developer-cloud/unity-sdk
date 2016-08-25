@@ -62,6 +62,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 
 		private int m_RecordingRoutine = 0;                      // ID of our co-routine when recording, 0 if not recording currently.
 		private WebCamTexture m_WebCamTexture;
+		private int m_WebCamIndex = 0;
 		#endregion
 
 		#region Public Properties
@@ -144,17 +145,59 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 			Active = false;
 		}
 
+		/// <summary>
+		/// Switches WebCamDevice to the next device.
+		/// </summary>
+		public void SwitchWebCam()
+		{
+			WebCamDevice[] devices = Devices;
+
+			if (devices.Length == 0)
+				throw new WatsonException(string.Format("There are no WebCam devices!"));
+			if (devices.Length == 1)
+			{
+				Log.Warning("WebCamWidget", "There is only one WebCam device!");
+				return;
+			}
+
+			m_WebCamTexture.Stop();
+			int requestedIndex;
+			if (m_WebCamIndex == devices.Length - 1)
+				requestedIndex = 0;
+			else
+				requestedIndex = m_WebCamIndex + 1;
+			m_WebCamTexture.deviceName = devices[requestedIndex].name;
+			m_WebCamIndex = requestedIndex;
+			Log.Status("WebCamWidget", "Switched to WebCam {0}, name: {1}, isFontFacing: {2}.", m_WebCamIndex, devices[m_WebCamIndex].name, devices[m_WebCamIndex].isFrontFacing);
+			m_WebCamTexture.Play();
+		}
+
+		/// <summary>
+		/// Switches the WebCam device based on index.
+		/// </summary>
+		/// <param name="index">The WebCam index.</param>
 		public void SwitchWebCam(int index)
         {
             WebCamDevice[] devices = Devices;
 
-            if (index < devices.Length)
-                throw new WatsonException(string.Format("Requested WebCam index {0} does not exist! There are {1} available WebCams.", index, devices.Length));
+			if (index < devices.Length)
+			{
+				throw new WatsonException(string.Format("Requested WebCam index {0} does not exist! There are {1} available WebCams.", index, devices.Length));
+			}
 
 			m_WebCamTexture.Stop();
 			m_WebCamTexture.deviceName = devices[index].name;
-			Log.Status("WebCamWidget", "Switched to WebCam {0}, name: {1}, isFontFacing: {2}.", index, devices[index].name, devices[index].isFrontFacing);
+			m_WebCamIndex = index;
+			Log.Status("WebCamWidget", "Switched to WebCam {0}, name: {1}, isFontFacing: {2}.", m_WebCamIndex, devices[m_WebCamIndex].name, devices[m_WebCamIndex].isFrontFacing);
 			m_WebCamTexture.Play();
+		}
+
+		/// <summary>
+		/// Toggles between Active and Inactive states.
+		/// </summary>
+		public void ToggleActive()
+		{
+			Active = !Active;
 		}
 		#endregion
 
@@ -194,7 +237,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 				m_ActivateOutput.SendData(new BooleanData(true));
 
 				if (m_StatusText != null)
-					m_StatusText.text = "RECORDING";
+					m_StatusText.text = "WEB CAMERA ON";
 			}
 		}
 
@@ -211,7 +254,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 				m_WebCamTexture.Stop();
 
 				if (m_StatusText != null)
-					m_StatusText.text = "STOPPED";
+					m_StatusText.text = "WEB CAMERA OFF";
 			}
 		}
 
