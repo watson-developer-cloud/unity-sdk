@@ -111,7 +111,25 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Config", "Caught Exception: {0}", e.ToString());
+					try
+					{
+						IDictionary iParse = Json.Deserialize(json) as IDictionary;
+						m_URL = (string)iParse["url"];
+						m_User = (string)iParse["username"];
+						m_Password = (string)iParse["password"];
+						m_Note = (string)iParse["note"];
+						if (!string.IsNullOrEmpty((string)iParse["apikey"]))
+							m_Apikey = (string)iParse["apikey"];
+						if (!string.IsNullOrEmpty((string)iParse["api_key"]))
+							m_Apikey = (string)iParse["api_key"];
+
+						return true;
+					}
+					catch
+					{
+						Log.Error("Config", "Caught Exception: {0}", e.ToString());
+					}
+					Log.Error("Config", "Caught Exception: {0}", e.ToString());
                 }
 
                 return false;
