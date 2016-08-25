@@ -18,6 +18,7 @@
 
 using UnityEngine;
 using IBM.Watson.DeveloperCloud.Logging;
+using System.Collections.Generic;
 
 namespace IBM.Watson.DeveloperCloud.Camera
 {
@@ -44,6 +45,15 @@ namespace IBM.Watson.DeveloperCloud.Camera
         private bool m_UseTargetObjectToRotate = false;
         [SerializeField]
         private GameObject m_CustomTargetObjectToLookAt = null;
+        [SerializeField]
+        private GameObject m_CameraPathRootObject = null;
+        [SerializeField]
+        private float m_RatioAtCameraPath = 0.0f;
+        [SerializeField]
+        private Vector3 m_DistanceFromCamera = Vector3.zero;
+        [SerializeField]
+        private SplineInterpolator m_SplineInterpolator;
+        private Transform[] m_PathTransforms;
 
         [SerializeField]
         private bool m_TextEnableCamera = false;
@@ -89,6 +99,74 @@ namespace IBM.Watson.DeveloperCloud.Camera
         }
 
         /// <summary>
+        /// Gets or sets the ratio at camera path. It is used if there is path root object assigned to the system
+        /// </summary>
+        /// <value>The ratio at camera path.</value>
+        public float RatioAtCameraPath
+        {
+            get
+            {
+                return m_RatioAtCameraPath;
+            }
+            set
+            {
+                m_RatioAtCameraPath = Mathf.Repeat(value, 1.0f);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the camera path root object.
+        /// </summary>
+        /// <value>The camera path root object.</value>
+        public GameObject CameraPathRootObject
+        {
+            get
+            {
+                return m_CameraPathRootObject;
+            }
+            set
+            {
+                m_CameraPathRootObject = value;
+            }
+        }
+
+        public Vector3 OffsetPosition
+        {
+            get
+            {
+                return m_OffsetPosition;
+            }
+            set
+            {
+                m_OffsetPosition = value;
+            }
+        }
+
+        public Vector3 DistanceFromCamera
+        {
+            get
+            {
+                return m_DistanceFromCamera;
+            }
+            set
+            {
+                m_DistanceFromCamera = value;
+            }
+        }
+
+        public Quaternion OffsetPositionRotation
+        {
+            get
+            {
+                return m_OffsetPositionRotation;
+            }
+            set
+            {
+                m_OffsetPositionRotation = value;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the target position.
         /// </summary>
         /// <value>The target position.</value>
@@ -96,8 +174,41 @@ namespace IBM.Watson.DeveloperCloud.Camera
         {
             get
             {
+                if (m_CameraPathRootObject != null)
+                {
+                    if (m_PathTransforms == null)
+                    {
+                        List<Transform> childrenTransforms = new List<Transform>(m_CameraPathRootObject.GetComponentsInChildren<Transform>());
 
-                if (m_UseCustomPosition)
+                        childrenTransforms.Remove(m_CameraPathRootObject.transform);
+                        childrenTransforms.Sort(delegate(Transform t1, Transform t2)
+                            {
+                                return t1.name.CompareTo(t2.name);
+                            });
+
+                        m_PathTransforms = childrenTransforms.ToArray();
+
+                        if (m_SplineInterpolator == null)
+                        {
+                            m_SplineInterpolator = this.gameObject.GetComponent<SplineInterpolator>();
+                            if (m_SplineInterpolator == null)
+                                m_SplineInterpolator = this.gameObject.AddComponent<SplineInterpolator>();
+                        }
+
+                        m_SplineInterpolator.SetupSplineInterpolator(m_PathTransforms);
+                    }
+
+                    if (m_OffsetPosition != Vector3.zero)
+                    {
+                        return m_SplineInterpolator.GetHermiteAtTime(m_RatioAtCameraPath) + (TargetRotation * m_OffsetPosition);
+                    }
+                    else
+                    {
+                        return m_SplineInterpolator.GetHermiteAtTime(m_RatioAtCameraPath);
+                    }
+
+                }
+                else if (m_UseCustomPosition)
                 {
                     return m_CustomPosition;
                 }
@@ -298,6 +409,42 @@ namespace IBM.Watson.DeveloperCloud.Camera
         }
 
         #endregion
+
+        void OnDrawGizmos()
+        {
+            if (m_CameraPathRootObject != null)
+            {
+                List<Transform> childrenTransforms = new List<Transform>(m_CameraPathRootObject.GetComponentsInChildren<Transform>());
+
+                childrenTransforms.Remove(m_CameraPathRootObject.transform);
+                childrenTransforms.Sort(delegate(Transform t1, Transform t2)
+                    {
+                        return t1.name.CompareTo(t2.name);
+                    });
+
+                m_PathTransforms = childrenTransforms.ToArray();
+
+                if (m_SplineInterpolator == null)
+                {
+                    m_SplineInterpolator = this.gameObject.GetComponent<SplineInterpolator>();
+                    if (m_SplineInterpolator == null)
+                        m_SplineInterpolator = this.gameObject.AddComponent<SplineInterpolator>();
+                }
+
+                m_SplineInterpolator.SetupSplineInterpolator(m_PathTransforms);
+
+                Vector3 prevPos = m_PathTransforms[0].position;
+                for (int c = 1; c <= 100; c++)
+                {
+                    float currTime = c * 1.0f / 100;
+                    Vector3 currPos = m_SplineInterpolator.GetHermiteAtTime(currTime);
+                    float mag = (currPos - prevPos).magnitude * 2;
+                    Gizmos.color = new Color(mag, 0, 0, 1);
+                    Gizmos.DrawLine(prevPos, currPos);
+                    prevPos = currPos;
+                }
+            }
+        }
     }
 
 }
