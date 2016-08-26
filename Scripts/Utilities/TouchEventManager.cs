@@ -518,6 +518,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                                 isHitOnLayer2DEventSystem = kp.Value.Exists(element => (element.GameObjectAttached != null && element.GameObjectAttached.activeSelf && element.GameObjectAttached.layer == itemRaycastResult.gameObject.layer));
                                 if (isHitOnLayer2DEventSystem)
                                 {
+                                    hit2DEventSystem = itemRaycastResult;
                                     hitTransform2DEventSystem = itemRaycastResult.gameObject.transform;
                                     break;
                                 }
@@ -838,6 +839,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                                 isHitOnLayer2DEventSystem = kp.Value.Exists(element => (element.GameObjectAttached != null && element.GameObjectAttached.layer == itemRaycastResult.gameObject.layer));
                                 if (isHitOnLayer2DEventSystem)
                                 {
+                                    hit2DEventSystem = itemRaycastResult;
                                     hitTransform2DEventSystem = itemRaycastResult.gameObject.transform;
                                     break;
                                 }
@@ -1374,8 +1376,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                         {
                             LayerMask layerMaskOfItem = 1 << itemRaycastResult.gameObject.layer;
                             isHitOnLayer2DEventSystem = ((layerMaskOfItem.value & kp.Key) == layerMaskOfItem.value);
+
                             if (isHitOnLayer2DEventSystem)
                             {
+                                hit2DEventSystem = itemRaycastResult;
                                 hitTransform2DEventSystem = itemRaycastResult.gameObject.transform;
                                 break;
                             }
@@ -1910,6 +1914,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                             isHitOnLayer2DEventSystem = ((layerMaskOfItem.value & kp.Key) == layerMaskOfItem.value);
                             if (isHitOnLayer2DEventSystem)
                             {
+                                hit2DEventSystem = itemRaycastResult;
                                 hitTransform2DEventSystem = itemRaycastResult.gameObject.transform;
                                 break;
                             }

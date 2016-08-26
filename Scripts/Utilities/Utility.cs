@@ -284,6 +284,19 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             return (DateTime.UtcNow - epoch).TotalMilliseconds;
         }
 
+        /// <summary>
+        /// Gets the date time from epoch.
+        /// </summary>
+        /// <returns>The date time from epoch.</returns>
+        /// <param name="epochTime">Epoch time.</param>
+        /// <param name="kind">Kind.</param>
+        public static DateTime GetLocalDateTimeFromEpoch(double epochTime)
+        {
+            DateTime dateTime = new DateTime(1970,1,1,0,0,0,0,System.DateTimeKind.Utc);
+            dateTime = dateTime.AddMilliseconds(epochTime).ToLocalTime();
+            return dateTime;
+        }
+
 
         /// <summary>
         /// Returns First valid Mac address of the local machine
