@@ -22,6 +22,9 @@ using IBM.Watson.DeveloperCloud.Utilities;
 using IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3;
 using IBM.Watson.DeveloperCloud.Logging;
 
+/// <summary>
+/// This is an example class showing how to use Visual Recognition with the WebCam.
+/// </summary>
 public class WebCamRecognition : MonoBehaviour
 {
     #region Private Data
@@ -85,6 +88,8 @@ public class WebCamRecognition : MonoBehaviour
         image.Apply();
 
         File.WriteAllBytes(filePath + fileName, image.EncodeToPNG());
+
+        Log.Debug("WebCamRecognition", "File writeen to {0}{1}", filePath, fileName);
     }
 
     private IEnumerator ClassifyImage()
@@ -160,10 +165,15 @@ public class WebCamRecognition : MonoBehaviour
                 Log.Debug("WebCamRecognition", "\tsource_url: {0}, resolved_url: {1}", faces.source_url, faces.resolved_url);
                 foreach (OneFaceResult face in faces.faces)
                 {
-                    Log.Debug("WebCamRecognition", "\t\tFace location: {0}, {1}, {2}, {3}", face.face_location.left, face.face_location.top, face.face_location.width, face.face_location.height);
-                    Log.Debug("WebCamRecognition", "\t\tGender: {0}, Score: {1}", face.gender.gender, face.gender.score);
-                    Log.Debug("WebCamRecognition", "\t\tAge Min: {0}, Age Max: {1}, Score: {2}", face.age.min, face.age.max, face.age.score);
-                    Log.Debug("WebCamRecognition", "\t\tName: {0}, Score: {1}, Type Heiarchy: {2}", face.identity.name, face.identity.score, face.identity.type_hierarchy);
+                    if(face.face_location != null)
+                        Log.Debug("WebCamRecognition", "\t\tFace location: {0}, {1}, {2}, {3}", face.face_location.left, face.face_location.top, face.face_location.width, face.face_location.height);
+                    if(face.gender != null)
+                        Log.Debug("WebCamRecognition", "\t\tGender: {0}, Score: {1}", face.gender.gender, face.gender.score);
+                    if(face.age != null)
+                        Log.Debug("WebCamRecognition", "\t\tAge Min: {0}, Age Max: {1}, Score: {2}", face.age.min, face.age.max, face.age.score);
+
+                    if(face.identity != null)
+                        Log.Debug("WebCamRecognition", "\t\tName: {0}, Score: {1}, Type Heiarchy: {2}", face.identity.name, face.identity.score, face.identity.type_hierarchy);
                 }
             }
         }
