@@ -126,6 +126,35 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         {
             get { return WebCamTexture.devices; }
         }
+        /// <summary>
+        /// The curent WebCamTexture
+        /// </summary>
+        public WebCamTexture WebCamTexture
+        {
+            get { return m_WebCamTexture; }
+        }
+        /// <summary>
+        /// The requested width of the WebCamTexture.
+        /// </summary>
+        public int RequestedWidth
+        {
+           get { return m_RequestedWidth; }
+        }
+        /// <summary>
+        /// The requested height of the WebCamTexture.
+        /// </summary>
+        public int RequestedHeight
+        {
+            get { return m_RequestedHeight; }
+        }
+
+        /// <summary>
+        /// The requested frame rate of the WebCamTexture.
+        /// </summary>
+        public int RequestedFPS
+        {
+            get { return m_RequestedFPS; }
+        }
 		#endregion
 
 		#region Public Funtions

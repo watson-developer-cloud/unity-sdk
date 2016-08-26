@@ -25,7 +25,7 @@ using System.Text;
 using UnityEngine;
 using System.Net.NetworkInformation;
 using System.Text.RegularExpressions;
-
+using System.Runtime.InteropServices;
 
 namespace IBM.Watson.DeveloperCloud.Utilities
 {
@@ -325,18 +325,48 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             }
         }
 
+        /// <summary>
+        /// Converts Color32 array to Byte array.
+        /// </summary>
+        /// <param name="colors">Color32 array of the image.</param>
+        /// <returns></returns>
+        public static byte[] Color32ArrayToByteArray(Color32[] colors)
+        {
+            if (colors == null || colors.Length == 0)
+                return null;
+
+            int lengthOfColor32 = Marshal.SizeOf(typeof(Color32));
+            int length = lengthOfColor32 * colors.Length;
+            byte[] bytes = new byte[length];
+
+            GCHandle handle = default(GCHandle);
+            try
+            {
+                handle = GCHandle.Alloc(colors, GCHandleType.Pinned);
+                IntPtr ptr = handle.AddrOfPinnedObject();
+                Marshal.Copy(ptr, bytes, 0, length);
+            }
+            finally
+            {
+                if (handle != default(GCHandle))
+                    handle.Free();
+            }
+
+            return bytes;
+        }
+
         #region Cache Generic Deserialization
-		/// <summary>
-		/// Save value to data cache.
-		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <param name="dictionaryCache"></param>
-		/// <param name="cacheDirectoryId"></param>
-		/// <param name="cacheId"></param>
-		/// <param name="objectToCache"></param>
-		/// <param name="prefix"></param>
-		/// <param name="maxCacheSize"></param>
-		/// <param name="maxCacheAge"></param>
+        /// <summary>
+        /// Save value to data cache.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="dictionaryCache"></param>
+        /// <param name="cacheDirectoryId"></param>
+        /// <param name="cacheId"></param>
+        /// <param name="objectToCache"></param>
+        /// <param name="prefix"></param>
+        /// <param name="maxCacheSize"></param>
+        /// <param name="maxCacheAge"></param>
         public static void SaveToCache<T>(Dictionary<string,DataCache> dictionaryCache, string cacheDirectoryId, string cacheId, T objectToCache, string prefix="", long maxCacheSize = 1024 * 1024 * 50, double maxCacheAge = 24 * 7) where T : class, new()
         {
             if (objectToCache != null)

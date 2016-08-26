@@ -37,7 +37,15 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 		#endregion
 
 		#region Private Data
+        [SerializeField]
+        private RawImage m_RawImage;
+        [SerializeField]
+        private Material m_Material;
+
 		private WebCamTexture m_WebCamTexture;
+        private int m_RequestedWidth;
+        private int m_RequestedHeight;
+        private int m_RequestedFPS;
         #endregion
 
         #region Constants
@@ -47,11 +55,17 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         /// <summary>
         /// The Raw Image displaying the WebCam stream in UI.
         /// </summary>
-        public RawImage RawImage;
+        public RawImage RawImage
+        {
+            get { return m_RawImage; }
+        }
         /// <summary>
         /// The Material displaying the WebCam stream on Geometry.
         /// </summary>
-		public Material Material;
+		public Material Material
+        {
+            get { return m_Material; }
+        }
 		#endregion
 
 		#region Public Functions
@@ -62,25 +76,35 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 		{
 			return "WebCamDisplay";
 		}
-		#endregion
+        #endregion
 
-		#region Event Handlers
-		private void OnWebCamTexture(Data data)
-		{
-  				throw new ArgumentNullException("A Material or RawImage is required to display WebCamTexture");
+        #region Private Functions
+        #endregion
 
-			m_WebCamTexture = ((WebCamTextureData)data).CamTexture;
-			if (Material != null)
-				Material.mainTexture = m_WebCamTexture;
+        #region Event Handlers
+        private void OnWebCamTexture(Data data)
+        {
+            Log.Debug("WebCamDisplayWidget", "OnWebCamTexture()");
+            if (Material == null && RawImage == null)
+                throw new ArgumentNullException("A Material or RawImage is required to display WebCamTexture");
 
-			if (RawImage != null)
-			{
-				RawImage.texture = m_WebCamTexture;
-				RawImage.material.mainTexture = m_WebCamTexture;
-			}
-			if(!m_WebCamTexture.isPlaying)
-				m_WebCamTexture.Play();
-		}
-		#endregion
-	}
+            WebCamTextureData webCamTextureData = (WebCamTextureData)data;
+            m_WebCamTexture = webCamTextureData.CamTexture;
+            m_RequestedWidth = webCamTextureData.RequestedWidth;
+            m_RequestedHeight = webCamTextureData.RequestedHeight;
+            m_RequestedFPS = webCamTextureData.RequestedFPS;
+
+            if (Material != null)
+                Material.mainTexture = m_WebCamTexture;
+
+            if (RawImage != null)
+            {
+                RawImage.texture = m_WebCamTexture;
+                RawImage.material.mainTexture = m_WebCamTexture;
+            }
+            if (!m_WebCamTexture.isPlaying)
+                m_WebCamTexture.Play();
+        }
+        #endregion
+    }
 }
