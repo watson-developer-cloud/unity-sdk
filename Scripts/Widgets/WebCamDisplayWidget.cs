@@ -37,18 +37,21 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 		#endregion
 
 		#region Private Data
-		[SerializeField]
-		private RawImage m_RawImage = null;
-		[SerializeField]
-		private Material m_Material = null;
-
 		private WebCamTexture m_WebCamTexture;
-		#endregion
+        #endregion
 
-		#region Constants
-		#endregion
+        #region Constants
+        #endregion
 
-		#region Public Properties
+        #region Public Properties
+        /// <summary>
+        /// The Raw Image displaying the WebCam stream in UI.
+        /// </summary>
+        public RawImage RawImage;
+        /// <summary>
+        /// The Material displaying the WebCam stream on Geometry.
+        /// </summary>
+		public Material Material;
 		#endregion
 
 		#region Public Functions
@@ -64,18 +67,16 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 		#region Event Handlers
 		private void OnWebCamTexture(Data data)
 		{
-			Log.Debug("WebCamDisplayWidget", "OnWebCamTexture()");
-			if (m_Material == null && m_RawImage == null)
-				throw new ArgumentNullException("A Material or RawImage is required to display WebCamTexture");
+  				throw new ArgumentNullException("A Material or RawImage is required to display WebCamTexture");
 
 			m_WebCamTexture = ((WebCamTextureData)data).CamTexture;
-			if (m_Material != null)
-				m_Material.mainTexture = m_WebCamTexture;
+			if (Material != null)
+				Material.mainTexture = m_WebCamTexture;
 
-			if (m_RawImage != null)
+			if (RawImage != null)
 			{
-				m_RawImage.texture = m_WebCamTexture;
-				m_RawImage.material.mainTexture = m_WebCamTexture;
+				RawImage.texture = m_WebCamTexture;
+				RawImage.material.mainTexture = m_WebCamTexture;
 			}
 			if(!m_WebCamTexture.isPlaying)
 				m_WebCamTexture.Play();
