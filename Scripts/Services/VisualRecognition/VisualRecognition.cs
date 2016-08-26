@@ -116,7 +116,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if(string.IsNullOrEmpty(mp_ApiKey))
                 mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
             if(string.IsNullOrEmpty(mp_ApiKey))
-                throw new WatsonException("FindClassifier - APIKEY needs to be defined in config.json");
+                throw new WatsonException("No API Key was found!");
             if(string.IsNullOrEmpty(url))
                 throw new ArgumentNullException("url");
             if(callback == null)
@@ -161,7 +161,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if(string.IsNullOrEmpty(mp_ApiKey))
                 mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
             if(string.IsNullOrEmpty(mp_ApiKey))
-                throw new WatsonException("FindClassifier - APIKEY needs to be defined in config.json");
+                throw new WatsonException("No API Key was found!");
             if(callback == null)
                 throw new ArgumentNullException("callback");
             if(string.IsNullOrEmpty(imagePath))
@@ -201,6 +201,15 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <returns></returns>
         public bool Classify(OnClassify callback, byte[] imageData, string[] owners = default(string[]), string[] classifierIDs = default(string[]), float threshold = default(float), string acceptLanguage = "en", string customData = default(string))
         {
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                throw new WatsonException("No API Key was found!");
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (imageData == null)
+                throw new ArgumentNullException("Image data is required to classify!");
+
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_CLASSIFY);
             if(connector == null)
                 return false;
@@ -287,7 +296,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if(string.IsNullOrEmpty(mp_ApiKey))
                 mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
             if(string.IsNullOrEmpty(mp_ApiKey))
-                throw new WatsonException("FindClassifier - APIKEY needs to be defined in config.json");
+                throw new WatsonException("No API Key was found!");
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_DETECT_FACES);
             if(connector == null)
@@ -319,7 +328,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if(string.IsNullOrEmpty(mp_ApiKey))
                 mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
             if(string.IsNullOrEmpty(mp_ApiKey))
-                throw new WatsonException("FindClassifier - APIKEY needs to be defined in config.json");
+                throw new WatsonException("No API Key was found!");
 
             byte[] imageData = null;
             if(imagePath != default(string))
@@ -351,6 +360,15 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <returns></returns>
         public bool DetectFaces(OnDetectFaces callback, byte[] imageData = default(byte[]), string customData = default(string))
         {
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                throw new WatsonException("No API Key was found!");
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (imageData == null)
+                throw new ArgumentNullException("Image data is required to DetectFaces!");
+
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_DETECT_FACES);
             if(connector == null)
                 return false;
@@ -434,7 +452,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if(string.IsNullOrEmpty(mp_ApiKey))
                 mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
             if(string.IsNullOrEmpty(mp_ApiKey))
-                throw new WatsonException("FindClassifier - APIKEY needs to be defined in config.json");
+                throw new WatsonException("No API Key was found!");
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_RECOGNIZE_TEXT);
             if(connector == null)
@@ -469,7 +487,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if(string.IsNullOrEmpty(mp_ApiKey))
                 mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
             if(string.IsNullOrEmpty(mp_ApiKey))
-                throw new WatsonException("FindClassifier - APIKEY needs to be defined in config.json");
+                throw new WatsonException("No API KEy was found!");
 
             byte[] imageData = null;
             if(imagePath != default(string))
@@ -501,6 +519,15 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <returns></returns>
         public bool RecognizeText(OnRecognizeText callback, byte[] imageData = default(byte[]), string customData = default(string))
         {
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                throw new WatsonException("No API Key was found!");
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (imageData == null)
+                throw new ArgumentNullException("Image data is required to RecognizeText!");
+
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_RECOGNIZE_TEXT);
             if(connector == null)
                 return false;
@@ -584,7 +611,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 if(string.IsNullOrEmpty(mp_ApiKey))
                     mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
                 if(string.IsNullOrEmpty(mp_ApiKey))
-                    throw new WatsonException("FindClassifier - APIKEY needs to be defined in config.json");
+                    throw new WatsonException("No API Key was found!");
 
                 Service = service;
                 ClassifierName = classifierName;
@@ -638,7 +665,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if(string.IsNullOrEmpty(mp_ApiKey))
                 mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
             if(string.IsNullOrEmpty(mp_ApiKey))
-                throw new WatsonException("GetClassifier - APIKEY needs to be defined in config.json");
+                throw new WatsonException("No API Key was found!");
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_CLASSIFIERS);
             if(connector == null)
@@ -714,7 +741,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if(string.IsNullOrEmpty(mp_ApiKey))
                 mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
             if(string.IsNullOrEmpty(mp_ApiKey))
-                throw new WatsonException("GetClassifier - APIKEY needs to be defined in config.json");
+                throw new WatsonException("No API Key was found!");
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_CLASSIFIERS + "/" + classifierId);
             if (connector == null)
@@ -786,7 +813,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if (string.IsNullOrEmpty(mp_ApiKey))
                 mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
             if (string.IsNullOrEmpty(mp_ApiKey))
-                throw new WatsonException("GetClassifier - APIKEY needs to be defined in config.json");
+                throw new WatsonException("No API Key was found!");
             if (string.IsNullOrEmpty(classifierName))
                 throw new ArgumentNullException("ClassifierName");
             if (positiveExamples == null)
@@ -833,7 +860,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if (string.IsNullOrEmpty(mp_ApiKey))
                 mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
             if (string.IsNullOrEmpty(mp_ApiKey))
-                throw new WatsonException("GetClassifier - APIKEY needs to be defined in config.json");
+                throw new WatsonException("No API Key was found!");
             if (string.IsNullOrEmpty(classifierName))
                 throw new ArgumentNullException("ClassifierName");
             if (positiveExamplesData.Count < 2 && negativeExamplesData == null)
@@ -920,7 +947,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if (string.IsNullOrEmpty(mp_ApiKey))
                 mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
             if (string.IsNullOrEmpty(mp_ApiKey))
-                throw new WatsonException("GetClassifier - APIKEY needs to be defined in config.json");
+                throw new WatsonException("No API Key was found!");
             if (string.IsNullOrEmpty(classifierName))
                 throw new ArgumentNullException("ClassifierName");
             if (positiveExamples.Count == 0 && string.IsNullOrEmpty(negativeExamplesPath))
@@ -970,7 +997,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if (string.IsNullOrEmpty(mp_ApiKey))
                 mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
             if (string.IsNullOrEmpty(mp_ApiKey))
-                throw new WatsonException("GetClassifier - APIKEY needs to be defined in config.json");
+                throw new WatsonException("No API Key was found!");
             if (string.IsNullOrEmpty(classifierName))
                 throw new ArgumentNullException("ClassifierName");
             if (positiveExamplesData.Count == 0 && negativeExamplesData == null)
@@ -1015,7 +1042,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if(string.IsNullOrEmpty(mp_ApiKey))
                 mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
             if(string.IsNullOrEmpty(mp_ApiKey))
-                throw new WatsonException("GetClassifier - APIKEY needs to be defined in config.json");
+                throw new WatsonException("No API Key was found!");
             
             Log.Debug("VisualRecognition", "Attempting to delete classifier {0}", classifierId);
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_CLASSIFIERS + "/" + classifierId);

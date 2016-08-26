@@ -96,7 +96,7 @@ void HandleOnRecognize (SpeechResultList result)
 ```
 
 ### Text to Speech
-Use the [Text to Speech][text_to_speech] service to get the available voices to synthesize. The Text to Speech service also supports Speech Synthesis Markup Language ([SSML][ssml]). In addition, the service supports a service-specific [expressive SSML][expressive_ssml] element.
+Use the [Text to Speech][text_to_speech] service to get the available voices to synthesize. The Text to Speech service also supports Speech Synthesis Markup Language ([SSML][ssml]). In addition, the service supports a service-specific [expressive SSML][expressive_ssml] element. See Text To Speech service examples for examples on how to create custom Text to Speech voice models.
 
 ```cs
 TextToSpeech m_TextToSpeech = new TextToSpeech();
@@ -107,7 +107,7 @@ void Start ()
 {
   m_TextToSpeech.Voice = VoiceType.en_GB_Kate;
   m_TextToSpeech.ToSpeech(m_TestString, HandleToSpeechCallback);
-  
+
   m_TextToSpeech.Voice = VoiceType.en_US_Allison;
   m_TextToSpeech.ToSpeech(m_ExpressiveText, HandleToSpeechCallback);
 }
@@ -155,30 +155,7 @@ private void OnGetTranslation(Translations translation)
 ```
 
 ### Dialog
-Converse with Watson using the [Dialog][dialog] service. Upload a dialog by following instructions on [Uploading Dialogs](#uploading-dialogs) and replace the DialogID in m_DialogID below with the uploaded dialog's DialogID.
-
-```cs
-private Dialog m_Dialog = new Dialog();
-private string m_DialogID = <DialogID>;
-
-void Start ()
-{
-  Debug.Log("User: 'Hello'");
-  m_Dialog.Converse(m_DialogID, "Hello", OnConverse);
-}
-
-private void OnConverse(ConverseResponse resp)
-{
-  foreach (string r in resp.response)
-    Debug.Log("Watson: " + r);
-}
-```
-#### Uploading dialogs
-You can upload dialogs by using the Dialog Editor.
-  1. Click **Watson -> Dialog Editor**. The Dialog Editor window is displayed.
-  2. Specify a **unique** name for the dialog in the **Name** field.
-  3. Click **Upload**.
-  4. Navigate to the dialog file to be uploaded, and click **Open**.
+The [Dialog service][dialog_service] was deprecated on August 15, 2016, existing instances of the service will continue to function until August 9, 2017. Users of the Dialog service should migrate their applications to use the Conversation service. See the [migration documentation][dialog_migration] to learn how to migrate your dialogs to the [Conversation service][conversation_service].
 
 ### Natural Language Classifier
 Use [Natural Language Classifier][natural_language_classifier] service to create a classifier instance by providing a set of representative strings and a set of one or more correct classes for each as training. Then use the trained classifier to classify your new question for best matching answers or to retrieve next actions for your application.
@@ -754,7 +731,7 @@ private void OnRecognizeText(TextRecogTopLevelMultiple multipleImages)
 
 
 ### Alchemy Language
-Use the [Alchemy Language][alchemy_language] service to extract semantic meta-data from content such as information on people, places, companies, topics, facts, relationships, authors and languages. 
+Use the [Alchemy Language][alchemy_language] service to extract semantic meta-data from content such as information on people, places, companies, topics, facts, relationships, authors and languages.
 
 #### Getting Authors
 You can extract Authors from a URL or HTML source.
@@ -765,7 +742,7 @@ void Start()
 	if(!m_AlchemyLanguage.GetAuthors(OnGetAuthors, "http://www.nytimes.com/2011/02/17/science/17jeopardy-watson.html"))
 		Log.Debug("ExampleAlchemyLanguage", "Failed to get authors URL POST!");
 }
-	
+
 private void OnGetAuthors(AuthorsData authors, string data)
 {
 	if(authors != null)
@@ -782,8 +759,8 @@ private void OnGetAuthors(AuthorsData authors, string data)
 		Log.Debug("ExampleAlchemyLanguage", "Failed to find Author!");
 	}
 }
-	
-	
+
+
 ```
 
 #### Getting Concepts
@@ -1208,7 +1185,7 @@ private void OnGetText(TextData textData, string data)
     {
         Log.Debug("ExampleAlchemyLanguage", "Failed to find text!");
     }
-        
+
 }
 ```
 #### Getting Raw Text
@@ -1233,7 +1210,7 @@ private void OnGetText(TextData textData, string data)
     {
         Log.Debug("ExampleAlchemyLanguage", "Failed to find text!");
     }
-        
+
 }
 
 ```
@@ -1337,14 +1314,14 @@ private void OnGetCombinedData(CombinedCallData combinedData, string data)
 
 
 ### Personality Insights
-The IBM Watson™ [Personality Insights][personality_insights] service enables applications to derive insights from social media, enterprise data, or other digital communications. The service uses linguistic analytics to infer individuals' intrinsic personality characteristics, including Big Five, Needs, and Values, from digital communications such as email, text messages, tweets, and forum posts. The service can automatically infer, from potentially noisy social media, portraits of individuals that reflect their personality characteristics. 
+The IBM Watson™ [Personality Insights][personality_insights] service enables applications to derive insights from social media, enterprise data, or other digital communications. The service uses linguistic analytics to infer individuals' intrinsic personality characteristics, including Big Five, Needs, and Values, from digital communications such as email, text messages, tweets, and forum posts. The service can automatically infer, from potentially noisy social media, portraits of individuals that reflect their personality characteristics.
 
 ```cs
 PersonalityInsights m_personalityInsights = new PersonalityInsights();
 
 void Start () {
 	string dataPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/personalityInsights.json";
-	
+
 	if(!m_personalityInsights.GetProfile(OnGetProfile, dataPath, DataModels.ContentType.TEXT_PLAIN, DataModels.Language.ENGLISH))
             Log.Debug("ExamplePersonalityInsights", "Failed to get profile!");
 }
@@ -1406,7 +1383,7 @@ Convert a single document
 
 ```cs
 private DocumentConversion m_DocumentConversion = new DocumentConversion();
-	
+
 	void Start ()
     {
         LogSystem.InstallDefaultReactors(); LogSystem.InstallDefaultReactors();
@@ -1799,7 +1776,7 @@ private void OnGetCollections(CollectionsResponse resp, string data)
 ####  Index documents
 Adds content to a Solr index so you can search it.
 
-An example of a method that forwards to Solr. For more information about indexing, see [Indexing and Basic Data Operations](https://cwiki.apache.org/confluence/display/solr/Indexing+and+Basic+Data+Operations) in the Apache Solr Reference. 
+An example of a method that forwards to Solr. For more information about indexing, see [Indexing and Basic Data Operations](https://cwiki.apache.org/confluence/display/solr/Indexing+and+Basic+Data+Operations) in the Apache Solr Reference.
 
 You must commit your documents to the index to search for them. For more information about when to commit, see [UpdateHandlers in SolrConfig](https://cwiki.apache.org/confluence/display/solr/UpdateHandlers+in+SolrConfig) in the Solr Reference.
 
@@ -1971,7 +1948,7 @@ private void OnGetRankers(ListRankersPayload resp, string data)
 ```
 
 ####  Creating a ranker
-Sends data to create and train a ranker and returns information about the new ranker. 
+Sends data to create and train a ranker and returns information about the new ranker.
 
 When the operation is successful, the status of the ranker is set to Training. The status must be Available before you can use the ranker.
 
@@ -1997,7 +1974,7 @@ private void OnCreateRanker(RankerStatusPayload resp, string data)
 ```
 
 ####  Rank
-Returns the top answer and a list of ranked answers with their ranked scores and confidence values. Use the [Get information about a ranker](http://www.ibm.com/watson/developercloud/retrieve-and-rank/api/v1/#get_status) method to retrieve the status. 
+Returns the top answer and a list of ranked answers with their ranked scores and confidence values. Use the [Get information about a ranker](http://www.ibm.com/watson/developercloud/retrieve-and-rank/api/v1/#get_status) method to retrieve the status.
 
 Use this method to return answers when you train the ranker with custom features. However, in most cases, you can use the [Search and rank](http://www.ibm.com/watson/developercloud/retrieve-and-rank/api/v1/#query_ranker) method.
 
@@ -2085,12 +2062,12 @@ private void OnGetRanker(RankerStatusPayload resp, string data)
 You can quickly develop a basic application that uses the Speech to Text service and the Natural Language Classifier service by using the prefabs that come with the SDK. Ensure that you prepare the test data before you complete the the following steps:
 
   1. Create a new scene and drag the following prefabs from **Assets -> Watson -> Prefabs**, and drop them in the Hierarchy tab:
-  
+
     * MicWidget
     * SpeechToTextWidget
     * Natural Language Classifier Widget
     * ClassDisplayWidget
-    
+
   2. Select the **Natural Language Classifier Widget**.
   5. In the **Classifier Name** field in the Inspector tab, specify `TestNaturalLanguageClassifier`.
   6. In the Natural Language Classifier Editor, expand the **Test Natural Language Classifier** , expand the classes, and determine which questions about the weather to ask to test the classifier.
@@ -2140,3 +2117,7 @@ See [CONTRIBUTING.md](.github/CONTRIBUTING.md).
 [document_conversion]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/document-conversion/api/v1/
 [expressive_ssml]: http://www.ibm.com/watson/developercloud/doc/text-to-speech/http.shtml#expressive
 [ssml]: http://www.ibm.com/watson/developercloud/doc/text-to-speech/SSML.shtml
+
+[dialog_service]: http://www.ibm.com/watson/developercloud/doc/dialog/
+[dialog_migration]: https://www.ibm.com/watson/developercloud/doc/conversation/migration.shtml
+[conversation_service]: https://www.ibm.com/watson/developercloud/doc/conversation/

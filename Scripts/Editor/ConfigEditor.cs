@@ -66,8 +66,6 @@ namespace IBM.Watson.DeveloperCloud.Editor
                 URL ="https://console.ng.bluemix.net/catalog/services/tradeoff-analytics/", ServiceID="TradeoffAnalyticsV1" },
             new ServiceSetup() { ServiceName = "Personality Insights", ServiceAPI = "personality-insights/api",
                 URL ="https://console.ng.bluemix.net/catalog/services/personality-insights/", ServiceID="PersonalityInsightsV2" },
-            //new ServiceSetup() { ServiceName = "Conversation (Experimental)", ServiceAPI = "conversation-experimental/api",
-            //    URL ="https://console.ng.bluemix.net/catalog/services/conversation/", ServiceID="ConversationExperimentalV1" },
             new ServiceSetup() { ServiceName = "Conversation", ServiceAPI = "conversation/api",
                 URL ="https://console.ng.bluemix.net/catalog/services/conversation/", ServiceID="ConversationV1" },
             new ServiceSetup() { ServiceName = "RetrieveAndRank", ServiceAPI = "retrieve-and-rank/api",
