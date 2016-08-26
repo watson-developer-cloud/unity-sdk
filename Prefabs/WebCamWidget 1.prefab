@@ -9,30 +9,30 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 1000014086069008}
+  m_RootGameObject: {fileID: 1000013058677738}
   m_IsPrefabParent: 1
---- !u!1 &1000014086069008
+--- !u!1 &1000013058677738
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 4
   m_Component:
-  - 4: {fileID: 4000012758706612}
-  - 114: {fileID: 114000011671462084}
+  - 4: {fileID: 4000013758432936}
+  - 114: {fileID: 114000011833453778}
   m_Layer: 0
-  m_Name: WebCamWidget
+  m_Name: WebCamWidget 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4000012758706612
+--- !u!4 &4000013758432936
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000014086069008}
+  m_GameObject: {fileID: 1000013058677738}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -40,12 +40,12 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!114 &114000011671462084
+--- !u!114 &114000011833453778
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000014086069008}
+  m_GameObject: {fileID: 1000013058677738}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 146a1d9b1f7eaac4e8e7f3af772fc8ca, type: 3}

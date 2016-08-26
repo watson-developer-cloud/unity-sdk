@@ -304,10 +304,10 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 yield return null;
 
             //  Ranked Search
-            Log.Debug("TestRetrieveAndRank", "*** Attempting to search!");
-            m_RetrieveAndRank.Search(OnRankedSearch, IsFullTest ? m_CreatedClusterID : m_ExampleClusterID, IsFullTest ? m_CollectionToCreateName : m_ExampleCollectionName, m_IntegrationTestQuery, m_Fl, true, m_ExampleRankerID);
-            while (!m_RankedSearchTested)
-                yield return null;
+            //Log.Debug("TestRetrieveAndRank", "*** Attempting to search!");
+            //m_RetrieveAndRank.Search(OnRankedSearch, IsFullTest ? m_CreatedClusterID : m_ExampleClusterID, IsFullTest ? m_CollectionToCreateName : m_ExampleCollectionName, m_IntegrationTestQuery, m_Fl, true, m_ExampleRankerID);
+            //while (!m_RankedSearchTested)
+            //    yield return null;
 
 #if TEST_CREATE_DELETE
             //	Wait before deleting ranker
