@@ -200,11 +200,11 @@ namespace IBM.Watson.DeveloperCloud.Camera
 
                     if (m_OffsetPosition != Vector3.zero)
                     {
-                        return m_SplineInterpolator.GetHermiteAtTime(m_RatioAtCameraPath) + (TargetRotation * m_OffsetPosition);
+                        return m_SplineInterpolator.GetHermiteAtTime(m_RatioAtCameraPath) + (TargetRotation * m_OffsetPosition) + DistanceFromCamera;
                     }
                     else
                     {
-                        return m_SplineInterpolator.GetHermiteAtTime(m_RatioAtCameraPath);
+                        return m_SplineInterpolator.GetHermiteAtTime(m_RatioAtCameraPath) + DistanceFromCamera;
                     }
 
                 }
