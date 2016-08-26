@@ -8,6 +8,7 @@ _2016-08-26_
 * Fix: Abstracted custom voice model methods in `Text to Speech` service.
 * Fix: Error when pasting credentials from the new Bluemix site into the `Config Editor`.
 * New: Added `CameraWidget` and `CameraDisplayWidget` to get video from device camera.
+* New: Added test scene for using the device camera with the `Visual Recognition` service.
 
 ## Version 0.8.0
 _2016-08-12_
