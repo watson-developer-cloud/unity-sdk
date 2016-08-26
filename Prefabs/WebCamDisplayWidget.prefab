@@ -21,7 +21,7 @@ GameObject:
   - 4: {fileID: 4000014032264336}
   - 114: {fileID: 114000013182010210}
   m_Layer: 0
-  m_Name: WebCamDisplayWidget 1
+  m_Name: WebCamDisplayWidget
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
