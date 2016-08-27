@@ -69,12 +69,12 @@ public class ExampleVisualRecognition : MonoBehaviour
         //    Log.Debug("ExampleVisualRecognition", "Classify image failed!");
 
         ////          Classify post image
-        //Log.Debug("ExampleVisualRecognition", "Attempting to classify via image on file system");
-        //string imagesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/obama.jpg";
-        //string[] owners = { "IBM", "me" };
-        //string[] classifierIDs = { "default" };
-        //if (!m_VisualRecognition.Classify(OnClassify, imagesPath, owners, classifierIDs, 0.5f))
-        //    Log.Debug("ExampleVisualRecognition", "Classify image failed!");
+        Log.Debug("ExampleVisualRecognition", "Attempting to classify via image on file system");
+        string imagesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/obama.jpg";
+        string[] owners = { "IBM", "me" };
+        string[] classifierIDs = { "default" };
+        if (!m_VisualRecognition.Classify(imagesPath, OnClassify,owners, classifierIDs, 0.5f))
+            Log.Debug("ExampleVisualRecognition", "Classify image failed!");
 
         ////          Detect faces get
         //Log.Debug("ExampleVisualRecognition", "Attempting to detect faces via URL");
@@ -170,11 +170,14 @@ public class ExampleVisualRecognition : MonoBehaviour
             foreach (ClassifyTopLevelSingle image in classify.images)
             {
                 Log.Debug("ExampleVisualRecognition", "\tsource_url: " + image.source_url + ", resolved_url: " + image.resolved_url);
-                foreach (ClassifyPerClassifier classifier in image.classifiers)
+                if (image.classifiers != null && image.classifiers.Length > 0)
                 {
-                    Log.Debug("ExampleVisualRecognition", "\t\tclassifier_id: " + classifier.classifier_id + ", name: " + classifier.name);
-                    foreach (ClassResult classResult in classifier.classes)
-                        Log.Debug("ExampleVisualRecognition", "\t\t\tclass: " + classResult.m_class + ", score: " + classResult.score + ", type_hierarchy: " + classResult.type_hierarchy);
+                    foreach (ClassifyPerClassifier classifier in image.classifiers)
+                    {
+                        Log.Debug("ExampleVisualRecognition", "\t\tclassifier_id: " + classifier.classifier_id + ", name: " + classifier.name);
+                        foreach (ClassResult classResult in classifier.classes)
+                            Log.Debug("ExampleVisualRecognition", "\t\t\tclass: " + classResult.m_class + ", score: " + classResult.score + ", type_hierarchy: " + classResult.type_hierarchy);
+                    }
                 }
             }
         }
