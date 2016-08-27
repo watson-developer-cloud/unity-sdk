@@ -101,7 +101,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 		/// <summary>
 		/// The score.
 		/// </summary>
-        public string score { get; set; }
+        public double score { get; set; }
 		/// <summary>
 		/// The type hierarchy.
 		/// </summary>
