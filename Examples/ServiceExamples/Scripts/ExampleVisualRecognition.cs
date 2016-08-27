@@ -25,9 +25,9 @@ using IBM.Watson.DeveloperCloud.Utilities;
 public class ExampleVisualRecognition : MonoBehaviour
 {
     private VisualRecognition m_VisualRecognition = new VisualRecognition();
-    private string m_classifierName = "Apples_OptionalParams";
-    private string m_classifierID = "ApplesClassifierNameWithSpaces_73100404";
-    private string m_classifierToDelete = "unitytestclassifier2b_37849361";
+    private string m_classifierName = "unity-test-classifier-example";
+    private string m_classifierID = "unitytestclassifierexample_487365485";
+    private string m_classifierToDelete = "unitytestclassifierexample_263072401";
     private string m_imageURL = "https://upload.wikimedia.org/wikipedia/commons/e/e9/Official_portrait_of_Barack_Obama.jpg";
     private string m_imageTextURL = "http://i.stack.imgur.com/ZS6nH.png";
 
@@ -65,37 +65,37 @@ public class ExampleVisualRecognition : MonoBehaviour
 
         ////          Classify get
         //Log.Debug("ExampleVisualRecognition", "Attempting to get classify via URL");
-        //if (!m_VisualRecognition.Classify(m_imageURL, OnClassify))
+        //if (!m_VisualRecognition.Classify(OnClassify, m_imageURL))
         //    Log.Debug("ExampleVisualRecognition", "Classify image failed!");
 
         ////          Classify post image
-        Log.Debug("ExampleVisualRecognition", "Attempting to classify via image on file system");
-        string imagesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/obama.jpg";
-        string[] owners = { "IBM", "me" };
-        string[] classifierIDs = { "default" };
-        if (!m_VisualRecognition.Classify(imagesPath, OnClassify,owners, classifierIDs, 0.5f))
-            Log.Debug("ExampleVisualRecognition", "Classify image failed!");
+        //Log.Debug("ExampleVisualRecognition", "Attempting to classify via image on file system");
+        //string imagesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/obama.jpg";
+        //string[] owners = { "IBM", "me" };
+        //string[] classifierIDs = { "default" };
+        //if (!m_VisualRecognition.Classify(imagesPath, OnClassify, owners, classifierIDs, 0.5f))
+        //    Log.Debug("ExampleVisualRecognition", "Classify image failed!");
 
         ////          Detect faces get
         //Log.Debug("ExampleVisualRecognition", "Attempting to detect faces via URL");
-        //if (!m_VisualRecognition.DetectFaces(m_imageURL, OnDetectFaces))
+        //if (!m_VisualRecognition.DetectFaces(OnDetectFaces, m_imageURL))
         //    Log.Debug("ExampleVisualRecogntiion", "Detect faces failed!");
 
         ////          Detect faces post image
         //Log.Debug("ExampleVisualRecognition", "Attempting to detect faces via image");
         //string faceExamplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/obama.jpg";
-        //if (!m_VisualRecognition.DetectFaces(OnDetectFaces, faceExamplePath))
+        //if (!m_VisualRecognition.DetectFaces(faceExamplePath, OnDetectFaces))
         //    Log.Debug("ExampleVisualRecognition", "Detect faces failed!");
 
         ////          Recognize text get
         //Log.Debug("ExampleVisualRecognition", "Attempting to recognizeText via URL");
-        //if (!m_VisualRecognition.RecognizeText(m_imageTextURL, OnRecognizeText))
+        //if (!m_VisualRecognition.RecognizeText(OnRecognizeText, m_imageTextURL))
         //    Log.Debug("ExampleVisualRecognition", "Recognize text failed!");
 
         ////          Recognize text post image
         //Log.Debug("ExampleVisualRecognition", "Attempting to recognizeText via image");
         //string textExamplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/from_platos_apology.png";
-        //if (!m_VisualRecognition.RecognizeText(OnRecognizeText, textExamplePath))
+        //if (!m_VisualRecognition.RecognizeText(textExamplePath, OnRecognizeText))
         //    Log.Debug("ExampleVisualRecognition", "Recognize text failed!");
     }
 
