@@ -224,7 +224,14 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
             req.Headers["Accept-Language"] = acceptLanguage;
 
-            if(imageData != null)
+            if (owners != default(string[]))
+                req.Parameters["owners"] = string.Join(",", owners);
+            if (classifierIDs != default(string[]))
+                req.Parameters["classifier_ids"] = string.Join(",", classifierIDs);
+            if (threshold != default(float))
+                req.Parameters["threshold"] = threshold;
+
+            if (imageData != null)
                 req.Send = imageData; 
 
             return connector.Send(req);

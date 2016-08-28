@@ -69,12 +69,12 @@ public class ExampleVisualRecognition : MonoBehaviour
         //    Log.Debug("ExampleVisualRecognition", "Classify image failed!");
 
         ////          Classify post image
-        //Log.Debug("ExampleVisualRecognition", "Attempting to classify via image on file system");
-        //string imagesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/obama.jpg";
-        //string[] owners = { "IBM", "me" };
-        //string[] classifierIDs = { "default" };
-        //if (!m_VisualRecognition.Classify(imagesPath, OnClassify, owners, classifierIDs, 0.5f))
-        //    Log.Debug("ExampleVisualRecognition", "Classify image failed!");
+        Log.Debug("ExampleVisualRecognition", "Attempting to classify via image on file system");
+        string imagesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/giraffe_to_classify.jpg";
+        string[] owners = { "IBM", "me" };
+        string[] classifierIDs = { "default", m_classifierID };
+        if (!m_VisualRecognition.Classify(imagesPath, OnClassify, owners, classifierIDs, 0.5f))
+            Log.Debug("ExampleVisualRecognition", "Classify image failed!");
 
         ////          Detect faces get
         //Log.Debug("ExampleVisualRecognition", "Attempting to detect faces via URL");
