@@ -383,7 +383,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         {
             get
             {
-                if (m_mainCamera == null)
+                if (m_mainCamera == null || !m_mainCamera.transform.CompareTag("MainCamera"))
                     m_mainCamera = UnityEngine.Camera.main;
 
                 return m_mainCamera;
