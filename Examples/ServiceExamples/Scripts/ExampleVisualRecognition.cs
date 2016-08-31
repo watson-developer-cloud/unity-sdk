@@ -22,6 +22,8 @@ using IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
 
+#pragma warning disable 0414
+
 public class ExampleVisualRecognition : MonoBehaviour
 {
     private VisualRecognition m_VisualRecognition = new VisualRecognition();

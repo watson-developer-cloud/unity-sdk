@@ -21,6 +21,8 @@ using System;
 using UnityEngine.UI;
 using IBM.Watson.DeveloperCloud.Logging;
 
+#pragma warning disable 0414
+
 namespace IBM.Watson.DeveloperCloud.Widgets
 {
 	/// <summary>

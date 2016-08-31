@@ -24,6 +24,8 @@ using UnityEngine;
 using System;
 using IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3;
 
+#pragma warning disable 0414
+
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
     public class TestVisualRecognition : UnitTest
