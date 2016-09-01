@@ -25,6 +25,9 @@ using System.IO;
 using IBM.Watson.DeveloperCloud.Utilities;
 using System.Collections.Generic;
 
+#pragma warning disable 0649
+#pragma warning disable 0414
+
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
     public class TestRetrieveAndRank : UnitTest

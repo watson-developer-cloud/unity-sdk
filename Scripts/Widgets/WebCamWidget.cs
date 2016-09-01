@@ -22,7 +22,7 @@ using IBM.Watson.DeveloperCloud.DataTypes;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
 using UnityEngine.UI;
-
+#pragma warning disable 0414
 namespace IBM.Watson.DeveloperCloud.Widgets
 {
     /// <summary>

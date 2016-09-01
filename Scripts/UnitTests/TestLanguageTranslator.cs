@@ -20,7 +20,7 @@ using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
 using System.Collections;
-
+#pragma warning disable 0414
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
     public class TestLanguageTranslator// : UnitTest   //  commented out UnitTest unitl LanguageTranslator goes live
