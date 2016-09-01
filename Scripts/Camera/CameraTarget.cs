@@ -15,6 +15,7 @@
 *
 */
 
+//#define SPLINE_INTERPOLATOR
 
 using UnityEngine;
 using IBM.Watson.DeveloperCloud.Logging;
@@ -51,8 +52,10 @@ namespace IBM.Watson.DeveloperCloud.Camera
         private float m_RatioAtCameraPath = 0.0f;
         [SerializeField]
         private Vector3 m_DistanceFromCamera = Vector3.zero;
+        #if SPLINE_INTERPOLATOR
         [SerializeField]
         private SplineInterpolator m_SplineInterpolator;
+        #endif
         private Transform[] m_PathTransforms;
 
         [SerializeField]
@@ -174,6 +177,7 @@ namespace IBM.Watson.DeveloperCloud.Camera
         {
             get
             {
+                #if SPLINE_INTERPOLATOR
                 if (m_CameraPathRootObject != null)
                 {
                     if (m_PathTransforms == null)
@@ -208,7 +212,9 @@ namespace IBM.Watson.DeveloperCloud.Camera
                     }
 
                 }
-                else if (m_UseCustomPosition)
+                else 
+                #endif
+                if (m_UseCustomPosition)
                 {
                     return m_CustomPosition;
                 }
@@ -410,6 +416,8 @@ namespace IBM.Watson.DeveloperCloud.Camera
 
         #endregion
 
+        #if SPLINE_INTERPOLATOR
+
         void OnDrawGizmos()
         {
             if (m_CameraPathRootObject != null)
@@ -445,6 +453,8 @@ namespace IBM.Watson.DeveloperCloud.Camera
                 }
             }
         }
+
+        #endif
     }
 
 }
