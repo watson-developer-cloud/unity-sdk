@@ -275,6 +275,15 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                 return base.GetHashCode();
             }
 
+            /// <summary>
+            /// Returns a <see cref="System.String"/> that represents the current <see cref="IBM.Watson.DeveloperCloud.Utilities.TouchEventManager+TouchEventData"/>.
+            /// </summary>
+            /// <returns>A <see cref="System.String"/> that represents the current <see cref="IBM.Watson.DeveloperCloud.Utilities.TouchEventManager+TouchEventData"/>.</returns>
+            public override string ToString()
+            {
+                return string.Format("[TouchEventData: GameObjectAttached={0}, Collider={1}, Collider2D={2}, RectTransform={3}, ColliderList={4}, ColliderList2D={5}, RectTransformList={6}, IsInside={7}, TapCallback={8}, DragCallback={9}, SortingLayer={10}, CanDragObject={11}]", GameObjectAttached, Collider, Collider2D, RectTransform, ColliderList, ColliderList2D, RectTransformList, IsInside, TapCallback, DragCallback, SortingLayer, CanDragObject);
+            }
+
         }
 
         #region Private Data
@@ -1154,7 +1163,9 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                     }
                     else
                     {
-                        Log.Warning("TouchEventManager", "There is no 3D collider of given gameobjectToTouch");
+                        #if ENABLE_DEBUGGING
+                        Log.Debug("TouchEventManager", "There is no 3D collider of given gameobjectToTouch");
+                        #endif
                     }
 
                     if (!success)
@@ -1182,7 +1193,9 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                             success = true;
                         } else
                         {
-                            Log.Warning ("TouchEventManager", "There is no 2D collider of given gameobjectToTouch");
+                            #if ENABLE_DEBUGGING
+                            Log.Debug ("TouchEventManager", "There is no 2D collider of given gameobjectToTouch");
+                            #endif
                         }
                     }
                     #if UNITY_4_6 || UNITY_5 || UNITY_5_3_OR_NEWER
@@ -1211,7 +1224,9 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                             success = true;
                         } else
                         {
-                            Log.Warning ("TouchEventManager", "There is no Rect Transform of given gameobjectToTouch");
+                            #if ENABLE_DEBUGGING
+                            Log.Debug ("TouchEventManager", "There is no Rect Transform of given gameobjectToTouch");
+                            #endif
                         }
                     }
                     #endif
@@ -1258,14 +1273,18 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                             foreach (Collider itemCollider in colliderList)
                             {
                                 int numberOfRemovedCallbacks = m_TapEvents[layerMaskAsKey].RemoveAll(
-                                    e => 
-                                    e.Collider == itemCollider && 
-                                    e.TapCallback == callback  &&
-                                    e.SortingLayer == SortingLayer &&
-                                    e.IsInside == isTapInside);
+                                                                   e => 
+                                    e.Collider == itemCollider &&
+                                                                   e.TapCallback == callback &&
+                                                                   e.SortingLayer == SortingLayer &&
+                                                                   e.IsInside == isTapInside);
 
                                 success &= (numberOfRemovedCallbacks > 0);
                             }
+                        }
+                        else
+                        {
+                            success = false;
                         }
 
                         if (!success)
@@ -1286,7 +1305,13 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                                     success &= (numberOfRemovedCallbacks > 0);
                                 }
                             }
+                            else
+                            {
+                                success = false;
+                            }
                         }
+
+
                         #if UNITY_4_6 || UNITY_5 || UNITY_5_3_OR_NEWER
                         if (!success)
                         {
@@ -1305,6 +1330,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 
                                     success &= (numberOfRemovedCallbacks > 0);
                                 }
+                            }
+                            else
+                            {
+                                success = false;
                             }
                         }
                         #endif
@@ -1392,16 +1421,16 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                     {
                         TouchEventData tapEventData = kp.Value[i];
 
-                        if (kp.Value[i].Collider == null && kp.Value[i].Collider2D == null && kp.Value[i].RectTransform == null )
+                        if (kp.Value[i].Collider == null && kp.Value[i].Collider2D == null && kp.Value[i].RectTransform == null && kp.Value[i].RectTransformList == null )
                         {
-                            Log.Warning("TouchEventManager", "Removing invalid collider event receiver from TapEventList");
+                            Log.Warning("TouchEventManager", "Removing invalid collider event receiver from TapEventList from {0}", kp.Value[i].ToString());
                             kp.Value.RemoveAt(i--);
                             continue;
                         }
 
                         if (string.IsNullOrEmpty(tapEventData.TapCallback))
                         {
-                            Log.Warning("TouchEventManager", "Removing invalid event receiver from TapEventList");
+                            Log.Warning("TouchEventManager", "Removing invalid event receiver from TapEventList {0}", kp.Value[i]);
                             kp.Value.RemoveAt(i--);
                             continue;
                         }
@@ -1801,6 +1830,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                                 success &= (numberOfRemovedCallbacks > 0);
                             }
                         }
+                        else
+                        {
+                            success = false;
+                        }
 
                         if (!success)
                         {
@@ -1820,6 +1853,11 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                                     success &= (numberOfRemovedCallbacks > 0);
                                 }
                             }
+                            else
+                            {
+                                success = false;
+                            }
+
                         }
                         #if UNITY_4_6 || UNITY_5 || UNITY_5_3_OR_NEWER
                         if (!success)
@@ -1839,6 +1877,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 
                                     success &= (numberOfRemovedCallbacks > 0);
                                 }
+                            }
+                            else
+                            {
+                                success = false;
                             }
                         }
                         #endif
@@ -1927,7 +1969,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                     {
                         TouchEventData tapEventData = kp.Value[i];
 
-                        if (kp.Value[i].Collider == null && kp.Value[i].Collider2D == null && kp.Value[i].RectTransform == null )
+                        if (kp.Value[i].Collider == null && kp.Value[i].Collider2D == null && kp.Value[i].RectTransform == null && kp.Value[i].RectTransformList == null)
                         {
                             Log.Warning("TouchEventManager", "Removing invalid collider event receiver from DoubleTapEventList");
                             kp.Value.RemoveAt(i--);
