@@ -278,10 +278,20 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// Gets the EPOCH time in UTC time zome
         /// </summary>
         /// <returns>Double EPOCH in UTC</returns>
-        public static double GetEpochUTC()
+        public static double GetEpochUTCMilliseconds()
         {
             DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             return (DateTime.UtcNow - epoch).TotalMilliseconds;
+        }
+
+        /// <summary>
+        /// Gets the epoch UTC seconds.
+        /// </summary>
+        /// <returns>The epoch UTC seconds.</returns>
+        public static double GetEpochUTCSeconds()
+        {
+            DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            return (DateTime.UtcNow - epoch).TotalSeconds;
         }
 
         /// <summary>
@@ -293,7 +303,16 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         public static DateTime GetLocalDateTimeFromEpoch(double epochTime)
         {
             DateTime dateTime = new DateTime(1970,1,1,0,0,0,0,System.DateTimeKind.Utc);
-            dateTime = dateTime.AddMilliseconds(epochTime).ToLocalTime();
+            try
+            {
+                dateTime = dateTime.AddSeconds(epochTime).ToLocalTime();
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                Log.Debug("Utility", "Time conversion assuming time is in Milliseconds: {0}, {1}", epochTime, ex.Message);
+                dateTime = dateTime.AddMilliseconds(epochTime).ToLocalTime();
+            }
+
             return dateTime;
         }
 
