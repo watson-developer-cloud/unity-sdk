@@ -1,11 +1,21 @@
 Change Log
 ==========
+## Version 0.9.0
+_2016-08-26_
+
+* Deprecated: Retired `Dialog` service.
+* Fix: `ExampleLanguageTranslation` now is using `LanguageTranslator` before `LanguageTranslation` service goes live.
+* Fix: Abstracted custom voice model methods in `Text to Speech` service.
+* Fix: Error when pasting credentials from the new Bluemix site into the `Config Editor`.
+* New: Added `CameraWidget` and `CameraDisplayWidget` to get video from device camera.
+* New: Added test scene for using the device camera with the `Visual Recognition` service.
+
 ## Version 0.8.0
 _2016-08-12_
 
-* Fixed: Removed tag stripping from `ToSpeech()` method of the `TextToSpeech` service.
+* Fix: Removed tag stripping from `ToSpeech()` method of the `TextToSpeech` service.
 * New: The `Conversation` service now accepts full conversation payload in overloaded `Message()` method.
-* Fixed: Removed `SetLastWriteTime()` for Android platform  in the data cache because of a known android issue. 
+* Fix: Removed `SetLastWriteTime()` for Android platform  in the data cache because of a known android issue.
 ```https://code.google.com/p/android/issues/detail?id=15480```
 
 

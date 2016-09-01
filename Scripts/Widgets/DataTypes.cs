@@ -167,10 +167,66 @@ namespace IBM.Watson.DeveloperCloud.DataTypes
 
     };
 
-    /// <summary>
-    /// This class holds a boolean value.
-    /// </summary>
-    public class BooleanData : Widget.Data
+	/// <summary>
+	/// This class holds a reference to WebCamTexture.
+	/// </summary>
+	public class WebCamTextureData : Widget.Data
+	{
+		/// <summary>
+		/// Default constructor.
+		/// </summary>
+		public WebCamTextureData()
+		{ }
+
+		/// <exclude />
+		//~WebCamTextureData()
+		//{
+		//	UnityObjectUtil.DestroyUnityObject(CamTexture);
+		//}
+
+		/// <summary>
+		/// Constructor.
+		/// </summary>
+		/// <param name="camTexture">The WebCamTexture.</param>
+		public WebCamTextureData(WebCamTexture camTexture, int requestedWidth = 640, int requestedHeight = 480, int requestedFPS = 60)
+		{
+			CamTexture = camTexture;
+			RequestedWidth = requestedWidth;
+			RequestedHeight = requestedHeight;
+			RequestedFPS = requestedFPS;
+		}
+
+		/// <summary>
+		/// Name of this data type.
+		/// </summary>
+		/// <returns>The readable name.</returns>
+		public override string GetName()
+		{
+			return "WebCamTexture";
+		}
+
+		/// <summary>
+		/// The WebCamTexture.
+		/// </summary>
+		public WebCamTexture CamTexture { get; set; }
+		/// <summary>
+		/// The Requested Width of the WebCamTexture
+		/// </summary>
+		public int RequestedWidth { get; set; }
+		/// <summary>
+		/// The Requested Height of the WebCamTexture.
+		/// </summary>
+		public int RequestedHeight { get; set; }
+		/// <summary>
+		/// The Requested FPS of the WebCamTexture.
+		/// </summary>
+		public int RequestedFPS { get; set; }
+
+	}
+	/// <summary>
+	/// This class holds a boolean value.
+	/// </summary>
+	public class BooleanData : Widget.Data
     {
         /// <summary>
         /// Default constructor.
@@ -266,6 +322,38 @@ namespace IBM.Watson.DeveloperCloud.DataTypes
     }
 
     /// <summary>
+    /// Boolean state for disabling the WebCam input.
+    /// </summary>
+    public class DisableWebCamData : Widget.Data
+    {
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public DisableWebCamData()
+        { }
+        /// <summary>
+        /// Data constructor.
+        /// </summary>
+        /// <param name="b">Disable WebCam state.</param>
+        public DisableWebCamData(bool b)
+        {
+            Boolean = b;
+        }
+        /// <summary>
+        /// Name of this data type.
+        /// </summary>
+        /// <returns>The readable name.</returns>
+        public override string GetName()
+        {
+            return "DisableWebCam";
+        }
+        /// <summary>
+        /// Disable WebCam state, true for disabled, false for not.
+        /// </summary>
+        public bool Boolean { get; set; }
+    }
+
+    /// <summary>
     /// Boolean state for disabling the CloseCaption output.
     /// </summary>
     public class DisableCloseCaptionData : Widget.Data
@@ -296,7 +384,6 @@ namespace IBM.Watson.DeveloperCloud.DataTypes
         /// </summary>
         public bool Boolean { get; set; }
     }
-
 
     /// <summary>
     /// This class is for audio level data.
