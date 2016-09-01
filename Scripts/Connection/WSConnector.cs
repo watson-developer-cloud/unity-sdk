@@ -25,6 +25,8 @@ using System.Collections.Generic;
 using System.Threading;
 using WebSocketSharp;
 
+#pragma warning disable 0618
+
 namespace IBM.Watson.DeveloperCloud.Connection
 {
     /// <summary>

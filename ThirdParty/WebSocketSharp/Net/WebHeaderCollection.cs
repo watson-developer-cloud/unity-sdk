@@ -49,6 +49,8 @@ using System.Runtime.Serialization;
 using System.Security.Permissions;
 using System.Text;
 
+#pragma warning disable 0618
+
 namespace WebSocketSharp.Net
 {
   /// <summary>
