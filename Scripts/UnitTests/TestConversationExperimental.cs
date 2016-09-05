@@ -22,6 +22,8 @@ using IBM.Watson.DeveloperCloud.Services.ConversationExperimental.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
 using IBM.Watson.DeveloperCloud.Logging;
 
+#pragma warning disable 0169
+#pragma warning disable 0414
 public class TestConversationExperimental// : UnitTest  //  Commented out integration test
 {
 	private ConversationExperimental m_Conversation = new ConversationExperimental();

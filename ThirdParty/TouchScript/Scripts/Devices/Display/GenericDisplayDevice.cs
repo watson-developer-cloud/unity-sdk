@@ -5,6 +5,8 @@
 using System.Text.RegularExpressions;
 using UnityEngine;
 
+#pragma warning disable 0618
+
 namespace TouchScript.Devices.Display
 {
     /// <summary>

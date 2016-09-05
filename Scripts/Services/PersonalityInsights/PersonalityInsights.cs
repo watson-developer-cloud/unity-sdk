@@ -88,8 +88,7 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v2
             req.Headers["Content-Language"] = contentLanguage;
             req.Headers["Accept"] = accept;
             req.Headers["Accept-Language"] = acceptLanguage;
-
-            string normalizedSource = source.Trim().ToLower();
+            
             if (source.StartsWith(Application.dataPath))
             {
                 string jsonData = default(string);

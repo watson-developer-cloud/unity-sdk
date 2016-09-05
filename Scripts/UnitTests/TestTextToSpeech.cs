@@ -21,6 +21,7 @@ using IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
 
+#pragma warning disable 0414
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
     public class TestTextToSpeech : UnitTest

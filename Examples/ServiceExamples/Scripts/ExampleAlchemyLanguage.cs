@@ -20,6 +20,8 @@ using System.Collections;
 using IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1;
 using IBM.Watson.DeveloperCloud.Logging;
 
+#pragma warning disable 0219
+#pragma warning disable 0414
 public class ExampleAlchemyLanguage : MonoBehaviour
 {
     private AlchemyAPI m_AlchemyAPI = new AlchemyAPI();
@@ -52,7 +54,7 @@ public class ExampleAlchemyLanguage : MonoBehaviour
         //    Log.Debug("ExampleAlchemyLanguage", "Failed to get concepts HTML POST!");
 
         ////Get Concepts URL POST
-        //if (!m_AlchemyAPI.GetRankedConcepts(OnGetConcepts, m_ExampleURL_watsonJeopardy))
+        //if (!m_AlchemyAPI.GetRankedConcepts(OnGetCzoncepts, m_ExampleURL_watsonJeopardy))
         //    Log.Debug("ExampleAlchemyLanguage", "Failed to get concepts HTML POST!");
 
         ////Get Date URL POST

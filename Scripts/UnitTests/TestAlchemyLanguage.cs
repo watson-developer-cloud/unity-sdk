@@ -22,6 +22,9 @@ using IBM.Watson.DeveloperCloud.Utilities;
 using UnityEngine;
 using System.Collections.Generic;
 
+#pragma warning disable 219
+#pragma warning disable 0414
+
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
     public class TestAlchemyAPI : UnitTest
