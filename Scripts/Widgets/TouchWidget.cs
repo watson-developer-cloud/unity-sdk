@@ -40,7 +40,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 
         #region Private Data
         [Serializable]
-        private class TapEventMapping
+        public class TapEventMapping
         {
             public GameObject m_TapObject = null;
             public bool m_TapOnObject = true;
@@ -50,7 +50,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         };
 
         [Serializable]
-        private class FullScreenDragEventMapping
+        public class FullScreenDragEventMapping
         {
 			[Tooltip("If there is no drag layer object set, it uses FullScreen")]
 			public GameObject m_DragLayerObject = null;
@@ -65,6 +65,42 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 
         [SerializeField]
         private List<FullScreenDragEventMapping> m_FullScreenDragMappings = new List<FullScreenDragEventMapping>();
+        #endregion
+
+        #region Public Members
+
+        /// <summary>
+        /// Gets or sets the tap mappings.
+        /// </summary>
+        /// <value>The tap mappings.</value>
+        public List<TapEventMapping> TapMappings
+        {
+            get
+            {
+                return m_TapMappings;
+            }
+            set
+            {
+                m_TapMappings = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the full screen drag mappings.
+        /// </summary>
+        /// <value>The full screen drag mappings.</value>
+        public List<FullScreenDragEventMapping> FullScreenDragMappings
+        {
+            get
+            {
+                return m_FullScreenDragMappings;
+            }
+            set
+            {
+                m_FullScreenDragMappings = value;
+            }
+        }
+
         #endregion
 
         #region Event Handlers
