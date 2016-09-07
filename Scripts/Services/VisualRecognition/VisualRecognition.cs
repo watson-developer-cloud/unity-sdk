@@ -815,7 +815,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <param name="classifierName">Classifier name.</param>
         /// <param name="positiveExamples">Dictionary of class name and positive example paths.</param>
         /// <param name="negativeExamplesPath">Negative example file path.</param>
-        public bool TrainClassifier(OnTrainClassifier callback, string classifierName, Dictionary<string, string> positiveExamples, string negativeExamplesPath = default(string), string customData = default(string))
+        public bool TrainClassifier(OnTrainClassifier callback, string classifierName, Dictionary<string, string> positiveExamples, string negativeExamplesPath = default(string), string mimeType = "application/zip", string customData = default(string))
         {
             if (string.IsNullOrEmpty(mp_ApiKey))
                 mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
@@ -851,7 +851,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if (positiveExamplesData.Count == 0 || negativeExamplesData == null)
                 Log.Error("VisualRecognition", "Failed to upload positive or negative examples!");
 
-            return TrainClassifier(callback, classifierName, positiveExamplesData, negativeExamplesData, customData);
+            return TrainClassifier(callback, classifierName, positiveExamplesData, negativeExamplesData, mimeType, customData);
         }
 
         /// <summary>
@@ -862,7 +862,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <param name="positiveExamplesData">Dictionary of class name and class training zip byte data.</param>
         /// <param name="negativeExamplesData">Negative examples zip byte data.</param>
         /// <returns></returns>
-        public bool TrainClassifier(OnTrainClassifier callback, string classifierName, Dictionary<string, byte[]> positiveExamplesData, byte[] negativeExamplesData = null, string customData = default(string))
+        public bool TrainClassifier(OnTrainClassifier callback, string classifierName, Dictionary<string, byte[]> positiveExamplesData, byte[] negativeExamplesData = null, string mimeType = "application/zip", string customData = default(string))
         {
             if (string.IsNullOrEmpty(mp_ApiKey))
                 mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
@@ -887,10 +887,11 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.Parameters["version"] = VisualRecognitionVersion.Version;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             req.Forms["name"] = new RESTConnector.Form(classifierName);
+
             foreach (KeyValuePair<string, byte[]> kv in positiveExamplesData)
-                req.Forms[kv.Key + "_positive_examples"] = new RESTConnector.Form(kv.Value, kv.Key + "_positive_examples.zip", "application/zip");
+                req.Forms[kv.Key + "_positive_examples"] = new RESTConnector.Form(kv.Value, kv.Key + "_positive_examples" + GetExtension(mimeType), mimeType);
             if(negativeExamplesData != null)
-                req.Forms["negative_examples"] = new RESTConnector.Form(negativeExamplesData, "negative_examples.zip", "application/zip");
+                req.Forms["negative_examples"] = new RESTConnector.Form(negativeExamplesData, "negative_examples" + GetExtension(mimeType), mimeType);
 
             return connector.Send(req);
         }
@@ -904,6 +905,10 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 			/// Custom data.
 			/// </summary>
             public string Data { get; set; }
+            /// <summary>
+            /// Are the training files zip files or image files
+            /// </summary>
+            public bool IsZip { get; set; }
             /// <summary>
             /// The OnTrainClassifier callback delegate.
             /// </summary>
@@ -949,7 +954,8 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <param name="classifierName">Classifier name.</param>
         /// <param name="positiveExamples">Dictionary of class name and positive example paths.</param>
         /// <param name="negativeExamplesPath">Negative example file path.</param>
-        public bool UpdateClassifier(OnTrainClassifier callback, string classifierID, string classifierName, Dictionary<string, string> positiveExamples, string negativeExamplesPath = default(string), string customData = default(string))
+        /// <param name="mimeType">Mimetype of the file. Use GetMimeType to get Mimetype from filename.</param>
+        public bool UpdateClassifier(OnTrainClassifier callback, string classifierID, string classifierName, Dictionary<string, string> positiveExamples, string negativeExamplesPath = default(string), string mimeType = "application/zip",  string customData = default(string))
         {
             if (string.IsNullOrEmpty(mp_ApiKey))
                 mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
@@ -987,7 +993,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if (positiveExamplesData.Count == 0 && negativeExamplesData == null)
                 Log.Error("VisualRecognition", "Failed to upload positive or negative examples!");
 
-            return UpdateClassifier(callback, classifierID, classifierName, positiveExamplesData, negativeExamplesData, customData);
+            return UpdateClassifier(callback, classifierID, classifierName, positiveExamplesData, negativeExamplesData, mimeType, customData);
         }
 
         /// <summary>
@@ -998,8 +1004,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <param name="classifierName">Classifier name.</param>
         /// <param name="positiveExamplesData">Dictionary of class name and class training zip byte data.</param>
         /// <param name="negativeExamplesData">Negative examples zip byte data.</param>
+        /// <param name="mimeType">Mimetype of the file. Use GetMimeType to get Mimetype from filename.</param>
         /// <returns></returns>
-        public bool UpdateClassifier(OnTrainClassifier callback, string classifierID, string classifierName, Dictionary<string, byte[]> positiveExamplesData, byte[] negativeExamplesData = null, string customData = default(string))
+        public bool UpdateClassifier(OnTrainClassifier callback, string classifierID, string classifierName, Dictionary<string, byte[]> positiveExamplesData, byte[] negativeExamplesData = null, string mimeType = "application/zip", string customData = default(string))
         {
             if (string.IsNullOrEmpty(mp_ApiKey))
                 mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
@@ -1024,10 +1031,11 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.Parameters["version"] = VisualRecognitionVersion.Version;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             req.Forms["name"] = new RESTConnector.Form(classifierName);
+
             foreach (KeyValuePair<string, byte[]> kv in positiveExamplesData)
-                req.Forms[kv.Key + "_positive_examples"] = new RESTConnector.Form(kv.Value, kv.Key + "_positive_examples.zip", "application/zip");
+                req.Forms[kv.Key + "_positive_examples"] = new RESTConnector.Form(kv.Value, kv.Key + "_positive_examples" + GetExtension(mimeType), mimeType);
             if (negativeExamplesData != null)
-                req.Forms["negative_examples"] = new RESTConnector.Form(negativeExamplesData, "negative_examples.zip", "application/zip");
+                req.Forms["negative_examples"] = new RESTConnector.Form(negativeExamplesData, "negative_examples" + GetExtension(mimeType), mimeType);
 
             return connector.Send(req);
         }
@@ -1112,11 +1120,35 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
             return mimeType;
         }
-		#endregion
 
-		#region IWatsonService implementation
-		/// <exclude />
-		public string GetServiceID()
+        private string GetExtension(string mimeType)
+        {
+            string extension = "";
+            switch (mimeType)
+            {
+                case "image/jpeg":
+                    extension = ".jpg";
+                    break;
+                case "image/png":
+                    extension = ".png";
+                    break;
+                case "image/gif":
+                    extension = ".gif";
+                    break;
+                case "application/zip":
+                    extension = ".zip";
+                    break;
+                default:
+                    throw new WatsonException("Cannot classify unsupported mime type " + mimeType);
+            }
+
+            return extension;
+        }
+        #endregion
+
+        #region IWatsonService implementation
+        /// <exclude />
+        public string GetServiceID()
         {
             return SERVICE_ID;
         }
