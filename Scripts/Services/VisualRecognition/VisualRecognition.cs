@@ -815,6 +815,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <param name="classifierName">Classifier name.</param>
         /// <param name="positiveExamples">Dictionary of class name and positive example paths.</param>
         /// <param name="negativeExamplesPath">Negative example file path.</param>
+        /// <param name="mimeType">Mime type of the positive examples and negative examples data. Use GetMimeType to get Mimetype from filename.</param>
         public bool TrainClassifier(OnTrainClassifier callback, string classifierName, Dictionary<string, string> positiveExamples, string negativeExamplesPath = default(string), string mimeType = "application/zip", string customData = default(string))
         {
             if (string.IsNullOrEmpty(mp_ApiKey))
@@ -859,8 +860,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// </summary>
         /// <param name="callback">Callback.</param>
         /// <param name="classifierName">Classifier name.</param>
-        /// <param name="positiveExamplesData">Dictionary of class name and class training zip byte data.</param>
-        /// <param name="negativeExamplesData">Negative examples zip byte data.</param>
+        /// <param name="positiveExamplesData">Dictionary of class name and class training zip or image byte data.</param>
+        /// <param name="negativeExamplesData">Negative examples zip or image byte data.</param>
+        /// <param name="mimeType">Mime type of the positive examples and negative examples data.</param>
         /// <returns></returns>
         public bool TrainClassifier(OnTrainClassifier callback, string classifierName, Dictionary<string, byte[]> positiveExamplesData, byte[] negativeExamplesData = null, string mimeType = "application/zip", string customData = default(string))
         {
@@ -905,10 +907,6 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 			/// Custom data.
 			/// </summary>
             public string Data { get; set; }
-            /// <summary>
-            /// Are the training files zip files or image files
-            /// </summary>
-            public bool IsZip { get; set; }
             /// <summary>
             /// The OnTrainClassifier callback delegate.
             /// </summary>
@@ -1002,8 +1000,8 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <param name="callback">Callback.</param>
         /// <param name="classifierID">Classifier identifier.</param>
         /// <param name="classifierName">Classifier name.</param>
-        /// <param name="positiveExamplesData">Dictionary of class name and class training zip byte data.</param>
-        /// <param name="negativeExamplesData">Negative examples zip byte data.</param>
+        /// <param name="positiveExamplesData">Dictionary of class name and class training zip or image byte data.</param>
+        /// <param name="negativeExamplesData">Negative examples zip or image byte data.</param>
         /// <param name="mimeType">Mimetype of the file. Use GetMimeType to get Mimetype from filename.</param>
         /// <returns></returns>
         public bool UpdateClassifier(OnTrainClassifier callback, string classifierID, string classifierName, Dictionary<string, byte[]> positiveExamplesData, byte[] negativeExamplesData = null, string mimeType = "application/zip", string customData = default(string))
