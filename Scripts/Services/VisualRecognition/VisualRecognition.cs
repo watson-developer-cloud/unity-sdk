@@ -1215,6 +1215,10 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                     else
                     {
                         Log.Debug("VisualRecognition", "Classifiers in null!");
+                        if (m_Callback != null && m_Callback.Target != null)
+                        {
+                            m_Callback(SERVICE_ID, false);
+                        }
                     }
                 }
                 else
