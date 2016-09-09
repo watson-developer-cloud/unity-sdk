@@ -174,7 +174,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// Returns true if the configuration is loaded or not.
         /// </summary>
         [fsIgnore]
-        public bool ConfigLoaded { get; private set; }
+        public bool ConfigLoaded { get; set; }
         /// <summary>
         /// Returns the singleton instance.
         /// </summary>

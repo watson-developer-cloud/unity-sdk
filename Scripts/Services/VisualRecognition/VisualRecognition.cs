@@ -100,6 +100,13 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         private const float REQUEST_TIMEOUT = 10.0f * 60.0f;
         #endregion
 
+        #region Public Functions
+        public static void ClearApiKey()
+        {
+            mp_ApiKey = default(string);
+        }
+        #endregion
+
         #region Classify Image
         /// <summary>
         /// Classifies image specified by URL.
