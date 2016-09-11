@@ -303,14 +303,14 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
             if (usePost)
             {
                 Dictionary<string, string> upload = new Dictionary<string, string>();
-                upload["text"] = "\"" + text + "\"";
+                upload["text"] = text;
 
                 req.Send = Encoding.UTF8.GetBytes(Json.Serialize(upload));
                 req.Headers["Content-Type"] = "application/json";
             }
             else
             {
-                req.Parameters["text"] = "\"" + text + "\"";
+                req.Parameters["text"] = text;
             }
 
             return connector.Send(req);
