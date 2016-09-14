@@ -1212,7 +1212,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             public string Data { get; set; }
         }
 
-        private void OnGetCollectionsRest(RESTConnector.Request req, RESTConnector.Response resp)
+        private void OnGetCollectionsResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
             GetCollections collections = new GetCollections();
             if(resp.Success)
@@ -1241,8 +1241,86 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         #endregion
 
         #region Create collection
-        //Create a new collection of images to search. You can create a maximum of 5 collections.
-        
+        /// <summary>
+        /// Create a new collection of images to search. You can create a maximum of 5 collections.
+        /// </summary>
+        /// <param name="callback">The callback.</param>
+        /// <param name="name">The name of the created collection.</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns></returns>
+        public bool CreateCollection(OnCreateCollection callback, string name, string customData = null)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException("name");
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                throw new WatsonException("No API Key was found!");
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_COLLECTIONS);
+            if (connector == null)
+                return false;
+
+            CreateCollectionReq req = new CreateCollectionReq();
+            req.Callback = callback;
+            req.Name = name;
+            req.Data = customData;
+            req.Parameters["api_key"] = mp_ApiKey;
+            req.Parameters["version"] = VisualRecognitionVersion.Version;
+            req.Parameters["name"] = name;
+            req.Forms = new Dictionary<string, RESTConnector.Form>();
+            req.Forms["disregard"] = new RESTConnector.Form("empty");
+
+            req.Timeout = 20.0f * 60.0f;
+            req.OnResponse = OnGetClassifiersResp;
+
+            return connector.Send(req);
+        }
+
+        private class CreateCollectionReq : RESTConnector.Request
+        {
+            /// <summary>
+            /// OnCreateCollection callback.
+            /// </summary>
+            public OnCreateCollection Callback { get; set; }
+            /// <summary>
+            /// Name of the collection to create.
+            /// </summary>
+            public string Name { get; set; }
+            /// <summary>
+            /// Optional data.
+            /// </summary>
+            public string Data { get; set; }
+        }
+
+        private void OnCreateCollectionResp(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            CreateCollection collection = new CreateCollection();
+            if (resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+
+                    object obj = collection;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("VisualRecognition", "OnCreateCollectionResp Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((CreateCollectionReq)req).Callback != null)
+                ((CreateCollectionReq)req).Callback(resp.Success ? collection : null, ((CreateCollectionReq)req).Data);
+        }
         #endregion
 
         #region Delete Collection
