@@ -1174,7 +1174,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// </summary>
         /// <param name="callback">The callback.</param>
         /// <param name="customData">Custom data.</param>
-        /// <returns></returns>
+        /// <returns>Returns true if succeess, false if failure.</returns>
         public bool GetCollections(OnGetCollections callback, string customData = default(string))
         {
             if (callback == null)
@@ -1195,7 +1195,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.Parameters["api_key"] = mp_ApiKey;
             req.Parameters["version"] = VisualRecognitionVersion.Version;
             req.Timeout = 20.0f * 60.0f;
-            req.OnResponse = OnGetClassifiersResp;
+            req.OnResponse = OnGetCollectionsResp;
 
             return connector.Send(req);
         }
@@ -1247,7 +1247,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <param name="callback">The callback.</param>
         /// <param name="name">The name of the created collection.</param>
         /// <param name="customData">Optional custom data.</param>
-        /// <returns></returns>
+        /// <returns>Returns true if succeess, false if failure.</returns>
         public bool CreateCollection(OnCreateCollection callback, string name, string customData = null)
         {
             if (callback == null)
@@ -1269,12 +1269,12 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.Data = customData;
             req.Parameters["api_key"] = mp_ApiKey;
             req.Parameters["version"] = VisualRecognitionVersion.Version;
-            req.Parameters["name"] = name;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
+            req.Forms["name"] = new RESTConnector.Form(name);
             req.Forms["disregard"] = new RESTConnector.Form("empty");
 
             req.Timeout = 20.0f * 60.0f;
-            req.OnResponse = OnGetClassifiersResp;
+            req.OnResponse = OnCreateCollectionResp;
 
             return connector.Send(req);
         }
@@ -1324,7 +1324,62 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         #endregion
 
         #region Delete Collection
-        //Deletes a collection.
+        /// <summary>
+        /// Deletes a collection.
+        /// </summary>
+        /// <param name="callback">The OnDeleteCollection callback.</param>
+        /// <param name="collectionID">The collection identifier to delete.</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns>Returns true if succeess, false if failure.</returns>
+        public bool DeleteCollection(OnDeleteCollection callback, string collectionID, string customData = null)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(collectionID))
+                throw new ArgumentNullException("collectionID");
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                throw new WatsonException("No API Key was found!");
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_COLLECTION, collectionID));
+            if (connector == null)
+                return false;
+
+            DeleteCollectionReq req = new DeleteCollectionReq();
+            req.Callback = callback;
+            req.CollectionID = collectionID;
+            req.Data = customData;
+            req.Parameters["api_key"] = mp_ApiKey;
+            req.Parameters["version"] = VisualRecognitionVersion.Version;
+
+            req.Timeout = 20.0f * 60.0f;
+            req.OnResponse = OnDeleteCollectionResp;
+            req.Delete = true;
+            return connector.Send(req);
+        }
+
+        private class DeleteCollectionReq : RESTConnector.Request
+        {
+            /// <summary>
+            /// OnDeleteCollection callback.
+            /// </summary>
+            public OnDeleteCollection Callback { get; set; }
+            /// <summary>
+            /// Collection identifier of the collection to be deleted.
+            /// </summary>
+            public string CollectionID { get; set; }
+            /// <summary>
+            /// Optional data.
+            /// </summary>
+            public string Data { get; set; }
+        }
+
+        private void OnDeleteCollectionResp(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            if (((DeleteCollectionReq)req).Callback != null)
+                ((DeleteCollectionReq)req).Callback(resp.Success, ((DeleteCollectionReq)req).Data);
+        }
         #endregion
 
         #region Get Collection
