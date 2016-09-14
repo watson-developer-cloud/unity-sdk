@@ -41,42 +41,117 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// Callback used by FindClassifier().
         /// </summary>
         /// <param name="classifier">The classifer found by name.</param>
+        /// <param name="data">Optional data</param>
         public delegate void OnFindClassifier(GetClassifiersPerClassifierVerbose classifier, string data);
         /// <summary>
         /// The callback used by the GetClassifiers() method.
         /// </summary>
-        /// <param name="classifiers"></param>
+        /// <param name="classifiers">A brief description of classifiers.</param>
+        /// <param name="data">Optional data</param>
         public delegate void OnGetClassifiers(GetClassifiersTopLevelBrief classifiers, string data);
         /// <summary>
         /// Callback used by the GetClassifier() method.
         /// </summary>
         /// <param name="classifier">The classifier found by ID.</param>
+        /// <param name="data">Optional data</param>
         public delegate void OnGetClassifier(GetClassifiersPerClassifierVerbose classifier, string data);
         /// <summary>
         /// This callback is used by the DeleteClassifier() method.
         /// </summary>
-        /// <param name="success"></param>
+        /// <param name="success">Success or failure of the delete call.</param>
+        /// <param name="data">Optional data</param>
         public delegate void OnDeleteClassifier(bool success, string data);
         /// <summary>
         /// Callback used by the TrainClassifier() method.
         /// </summary>
         /// <param name="classifier">The classifier created.</param>
+        /// <param name="data">Optional data</param>
         public delegate void OnTrainClassifier(GetClassifiersPerClassifierVerbose classifier, string data);
         /// <summary>
         /// This callback is used by the Classify() method.
         /// </summary>
-        /// <param name="classify"></param>
+        /// <param name="classify">Returned classification.</param>
+        /// <param name="data">Optional data</param>
         public delegate void OnClassify(ClassifyTopLevelMultiple classify, string data);
         /// <summary>
         /// This callback is used by the DetectFaces() method.
         /// </summary>
-        /// <param name="faces"></param>
+        /// <param name="faces">Faces Detected.</param>
+        /// <param name="data">Optional data</param>
         public delegate void OnDetectFaces(FacesTopLevelMultiple faces, string data);
         /// <summary>
         /// This callback is used by the RecognizeText() method.
         /// </summary>
-        /// <param name="faces"></param>
+        /// <param name="text">Text Recognized.</param>
+        /// <param name="data">Optional data</param>
         public delegate void OnRecognizeText(TextRecogTopLevelMultiple text, string data);
+        /// <summary>
+        /// This callback is used by the GetCollections() method.
+        /// </summary>
+        /// <param name="collections">Collections.</param>
+        /// <param name="data">Optional data</param>
+        public delegate void OnGetCollections(GetCollections collections, string data);
+        /// <summary>
+        /// This callback is used by the CreateCollection() method.
+        /// </summary>
+        /// <param name="collection">The created collection.</param>
+        /// <param name="data">Optional data</param>
+        public delegate void OnCreateCollection(CreateCollection collection, string data);
+        /// <summary>
+        /// This callback is used by the DeleteCollection() method.
+        /// </summary>
+        /// <param name="success">Success of the delete call.</param>
+        /// <param name="data">Optional data</param>
+        public delegate void OnDeleteCollection(bool success, string data);
+        /// <summary>
+        /// This callback is used y the GetCollection() method.
+        /// </summary>
+        /// <param name="collection">The collection.</param>
+        /// <param name="data">Optional data</param>
+        public delegate void OnGetCollection(CreateCollection collection, string data);
+        /// <summary>
+        /// This callback is used by the GetCollectionImages() method.
+        /// </summary>
+        /// <param name="images">Collection images.</param>
+        /// <param name="data">Optional data</param>
+        public delegate void OnGetCollectionImages(GetCollectionImages images, string data);
+        /// <summary>
+        /// This callback is used by the AddCollectionImage() method.
+        /// </summary>
+        /// <param name="config">The collection config.</param>
+        /// <param name="data">Optional data</param>
+        public delegate void OnAddCollectionimages(CollectionsConfig config, string data);
+        /// <summary>
+        /// This callback is used by the DeleteCollectionImage() method.
+        /// </summary>
+        /// <param name="success">Success or failure of deleting collection image.</param>
+        /// <param name="data">Optional data</param>
+        public delegate void OnDeleteCollectionImage(bool success, string data);
+        /// <summary>
+        /// This callback is used by the GetImageDetails() method.
+        /// </summary>
+        /// <param name="image">The image details.</param>
+        /// <param name="data">Optional data</param>
+        public delegate void OnGetImageDetails(GetCollectionsBrief image, string data);
+        /// <summary>
+        /// This callback is used by the DeleteImageMetadata() method.
+        /// </summary>
+        /// <param name="success">Success of the delete call.</param>
+        /// <param name="data">Optional data</param>
+        public delegate void OnDeleteImageMetadata(bool success, string data);
+        /// <summary>
+        /// This callback is used by the GetImageMetadata() method.
+        /// </summary>
+        /// <param name="metadata"></param>
+        /// <param name="data">Optional data</param>
+        public delegate void OnGetImageMetadata(object metadata, string data);
+        /// <summary>
+        /// This callback is used by the FindSimilar() method.
+        /// </summary>
+        /// <param name="similarImages"></param>
+        /// <param name="data">Optional data</param>
+        public delegate void OnFindSimilar(SimilarImagesConfig similarImages, string data);
+
         /// <summary>
         /// The delegate for loading a file, used by TrainClassifier().
         /// </summary>
@@ -1095,6 +1170,10 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
         #region Get Collections
         //Get all collections.
+        //public bool GetCollections()
+        //{
+
+        //}
         #endregion
 
         #region Create collection
