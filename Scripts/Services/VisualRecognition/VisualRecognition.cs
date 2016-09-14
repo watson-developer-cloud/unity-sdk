@@ -1093,6 +1093,50 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         }
         #endregion
 
+        #region Get Collections
+        //Get all collections.
+        #endregion
+
+        #region Create collection
+        //Create a new collection of images to search. You can create a maximum of 5 collections.
+        #endregion
+
+        #region Delete Collection
+        //Deletes a collection.
+        #endregion
+
+        #region Get Collection
+        //Retrieve information about a specific collection. Only user-created collections can be specified.
+        #endregion
+
+        #region Get Collection Images
+        //List 100 images in a collection
+        #endregion
+
+        #region Add Collection Images
+        //Add images to a collection
+        #endregion
+
+        #region Delete Image
+        //Delete an image
+        #endregion
+
+        #region Get Image
+        //List image details 
+        #endregion
+
+        #region Delete Image Metadata
+        //Delete image metadata
+        #endregion
+
+        #region List Image Metadata
+        //List image metadata.
+        #endregion
+
+        #region Find Similar Images
+        //Find Similar Images
+        #endregion
+
         #region private methods
         private string GetMimeType(string imagePath)
         {
