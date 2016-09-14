@@ -95,6 +95,12 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         private const string SERVICE_DETECT_FACES = "/v3/detect_faces";
         private const string SERVICE_RECOGNIZE_TEXT = "/v3/recognize_text";
         private const string SERVICE_CLASSIFIERS = "/v3/classifiers";
+        private const string SERVICE_COLLECTIONS = "/v3/collections";
+        private const string SERVICE_COLLECTION = "/v3/collections/{0}";
+        private const string SERVICE_COLLECTION_IMAGES = "/v3/collections/{0}/images";
+        private const string SERVICE_COLLECTION_IMAGE = "/v3/collections/{0}/images/{1}";
+        private const string SERVICE_COLLECTION_IMAGE_METADATA = "/v3/collections/{0}/images/{1}/metadata";
+        private const string SERVICE_COLLECTION_FIND_SIMILAR = "/v3/collections/{0}/find_similar";
         private static string mp_ApiKey = null;
         private static fsSerializer sm_Serializer = new fsSerializer();
         private const float REQUEST_TIMEOUT = 10.0f * 60.0f;
