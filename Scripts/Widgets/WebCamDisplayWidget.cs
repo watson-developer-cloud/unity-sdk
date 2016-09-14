@@ -60,6 +60,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         public RawImage RawImage
         {
             get { return m_RawImage; }
+			set { m_RawImage = RawImage; }
         }
         /// <summary>
         /// The Material displaying the WebCam stream on Geometry.
