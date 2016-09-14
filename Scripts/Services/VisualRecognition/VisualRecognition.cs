@@ -1352,10 +1352,10 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.Data = customData;
             req.Parameters["api_key"] = mp_ApiKey;
             req.Parameters["version"] = VisualRecognitionVersion.Version;
-
+            req.Delete = true;
             req.Timeout = 20.0f * 60.0f;
             req.OnResponse = OnDeleteCollectionResp;
-            req.Delete = true;
+
             return connector.Send(req);
         }
 
@@ -1383,7 +1383,82 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         #endregion
 
         #region Get Collection
-        //Retrieve information about a specific collection. Only user-created collections can be specified.
+        /// <summary>
+        /// Retrieve information about a specific collection. Only user-created collections can be specified.
+        /// </summary>
+        /// <param name="callback">The callback.</param>
+        /// <param name="collectionID">The requested collection identifier.</param>
+        /// <param name="customData">Custom data.</param>
+        /// <returns>Returns true if succeess, false if failure.</returns>
+        public bool GetCollection(OnGetCollection callback, string collectionID, string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(collectionID))
+                throw new ArgumentNullException(collectionID);
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                throw new WatsonException("No API Key was found!");
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_COLLECTION, collectionID));
+            if (connector == null)
+                return false;
+
+            GetCollectionReq req = new GetCollectionReq();
+            req.Callback = callback;
+            req.Data = customData;
+            req.CollectionID = collectionID;
+            req.Parameters["api_key"] = mp_ApiKey;
+            req.Parameters["version"] = VisualRecognitionVersion.Version;
+            req.Timeout = 20.0f * 60.0f;
+            req.OnResponse = OnGetCollectionResp;
+
+            return connector.Send(req);
+        }
+
+        private class GetCollectionReq : RESTConnector.Request
+        {
+            /// <summary>
+            /// OnGetCollections callback.
+            /// </summary>
+            public OnGetCollection Callback { get; set; }
+            /// <summary>
+            /// Collection identifier of the requested collection.
+            /// </summary>
+            public string CollectionID { get; set; }
+            /// <summary>
+            /// Optional data.
+            /// </summary>
+            public string Data { get; set; }
+        }
+
+        private void OnGetCollectionResp(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            CreateCollection collection = new CreateCollection();
+            if(resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+
+                    object obj = collection;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch(Exception e)
+                {
+                    Log.Error("VisualRecognition", "GetCollection Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((GetCollectionReq)req).Callback != null)
+                ((GetCollectionReq)req).Callback(resp.Success ? collection : null, ((GetCollectionReq)req).Data);
+        }
         #endregion
 
         #region Get Collection Images
