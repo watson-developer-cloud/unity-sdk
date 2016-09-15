@@ -120,7 +120,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// </summary>
         /// <param name="config">The collection config.</param>
         /// <param name="data">Optional data</param>
-        public delegate void OnAddCollectionimages(CollectionsConfig config, string data);
+        public delegate void OnAddCollectionImage(CollectionsConfig config, string data);
         /// <summary>
         /// This callback is used by the DeleteCollectionImage() method.
         /// </summary>
@@ -1462,11 +1462,275 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         #endregion
 
         #region Get Collection Images
-        //List 100 images in a collection
+        /// <summary>
+        /// List 100 images in a collection
+        /// </summary>
+        /// <param name="callback">The callback.</param>
+        /// <param name="collectionID">The requested collection identifier.</param>
+        /// <param name="customData">Custom data.</param>
+        /// <returns>Returns true if succeess, false if failure.</returns>
+        public bool GetCollectionImages(OnGetCollectionImages callback, string collectionID, string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(collectionID))
+                throw new ArgumentNullException(collectionID);
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                throw new WatsonException("No API Key was found!");
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_COLLECTION_IMAGES, collectionID));
+            if (connector == null)
+                return false;
+
+            GetCollectionImagesReq req = new GetCollectionImagesReq();
+            req.Callback = callback;
+            req.Data = customData;
+            req.CollectionID = collectionID;
+            req.Parameters["api_key"] = mp_ApiKey;
+            req.Parameters["version"] = VisualRecognitionVersion.Version;
+            req.Timeout = 20.0f * 60.0f;
+            req.OnResponse = OnGetCollectionImagesResp;
+
+            return connector.Send(req);
+        }
+
+        private class GetCollectionImagesReq : RESTConnector.Request
+        {
+            /// <summary>
+            /// OnGetCollections callback.
+            /// </summary>
+            public OnGetCollectionImages Callback { get; set; }
+            /// <summary>
+            /// Collection identifier of the requested collection.
+            /// </summary>
+            public string CollectionID { get; set; }
+            /// <summary>
+            /// Optional data.
+            /// </summary>
+            public string Data { get; set; }
+        }
+
+        private void OnGetCollectionImagesResp(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            GetCollectionImages collectionImages = new GetCollectionImages();
+            if (resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+
+                    object obj = collectionImages;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("VisualRecognition", "GetCollectionImages Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((GetCollectionImagesReq)req).Callback != null)
+                ((GetCollectionImagesReq)req).Callback(resp.Success ? collectionImages : null, ((GetCollectionImagesReq)req).Data);
+        }
         #endregion
 
         #region Add Collection Images
-        //Add images to a collection
+        /// <summary>
+        /// Add an image to a collection via image path on file system and metadata as dictionary.
+        /// </summary>
+        /// <param name="callback">The callback.</param>
+        /// <param name="collectionID">The identifier of the collection to add images to.</param>
+        /// <param name="imagePath">The path in the filesystem of the image to add.</param>
+        /// <param name="metadata">Optional Dictionary key value pairs of metadata associated with the specified image.</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns>Returns true if succeess, false if failure.</returns>
+        public bool AddCollectionImage(OnAddCollectionImage callback, string collectionID, string imagePath, Dictionary<string, string> metadata = null, string customData = null)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(collectionID))
+                throw new ArgumentNullException("collectionID");
+            if (string.IsNullOrEmpty(imagePath))
+                throw new ArgumentNullException("imagePath");
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                throw new WatsonException("No API Key was found!");
+
+            byte[] imageData = null;
+            if (!string.IsNullOrEmpty(imagePath))
+            {
+                if (LoadFile != null)
+                {
+                    imageData = LoadFile(imagePath);
+                }
+                else
+                {
+#if !UNITY_WEBPLAYER
+                    imageData = File.ReadAllBytes(imagePath);
+#endif
+                }
+
+                if (imageData == null)
+                    Log.Error("VisualRecognition", "Failed to upload {0}!", imagePath);
+            }
+
+            return AddCollectionImage(callback, collectionID, imageData, GetMetadataJson(metadata), customData);
+        }
+
+        /// <summary>
+        /// Add an image to a collection via image path on file system and metadata path on file system.
+        /// </summary>
+        /// <param name="callback">The callback.</param>
+        /// <param name="collectionID">The identifier of the collection to add images to.</param>
+        /// <param name="imagePath">The path in the filesystem of the image to add.</param>
+        /// <param name="metadataPath">Optional path to metadata json associated with the specified image.</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns>Returns true if succeess, false if failure.</returns>
+        public bool AddCollectionImage(OnAddCollectionImage callback, string collectionID, string imagePath, string metadataPath = null, string customData = null)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(collectionID))
+                throw new ArgumentNullException("collectionID");
+            if (string.IsNullOrEmpty(imagePath))
+                throw new ArgumentNullException("imagePath");
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                throw new WatsonException("No API Key was found!");
+
+            byte[] imageData = null;
+            if (!string.IsNullOrEmpty(imagePath))
+            {
+                if (LoadFile != null)
+                {
+                    imageData = LoadFile(imagePath);
+                }
+                else
+                {
+#if !UNITY_WEBPLAYER
+                    imageData = File.ReadAllBytes(imagePath);
+#endif
+                }
+
+                if (imageData == null)
+                    Log.Error("VisualRecognition", "Failed to upload {0}!", imagePath);
+            }
+
+            string metadata = null;
+            if (!string.IsNullOrEmpty(metadataPath))
+            {
+                metadata = File.ReadAllText(metadataPath);
+
+                if (string.IsNullOrEmpty(metadata))
+                    Log.Error("VisualRecognition", "Failed to read {0}!", imagePath);
+            }
+
+            return AddCollectionImage(callback, collectionID, imageData, metadata, customData);
+        }
+
+        /// <summary>
+        /// Add an image to a collection.
+        /// </summary>
+        /// <param name="callback">The callback.</param>
+        /// <param name="collectionID">The identifier of the collection to add images to.</param>
+        /// <param name="imageData">The byte[] data of the image to add.</param>
+        /// <param name="metadata">Optional json metadata associated with the specified image.</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns></returns>
+        public bool AddCollectionImage(OnAddCollectionImage callback, string collectionID, byte[] imageData, string metadata = null, string customData = null)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(collectionID))
+                throw new ArgumentNullException("collectionID");
+            if (imageData == default(byte[]))
+                throw new WatsonException("Image data is required!");
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                throw new WatsonException("No API Key was found!");
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_COLLECTION_IMAGES, collectionID));
+            if (connector == null)
+                return false;
+
+            AddCollectionImageReq req = new AddCollectionImageReq();
+            req.Callback = callback;
+            req.CollectionID = collectionID;
+            req.ImageData = imageData;
+            req.Metadata = metadata;
+            req.Data = customData;
+
+            req.Parameters["api_key"] = mp_ApiKey;
+            req.Parameters["version"] = VisualRecognitionVersion.Version;
+            req.Forms = new Dictionary<string, RESTConnector.Form>();
+            req.Forms["image_file"] = new RESTConnector.Form(imageData);
+            req.Forms["metadata"] = new RESTConnector.Form(metadata);
+
+            req.Timeout = 20.0f * 60.0f;
+            req.OnResponse = OnAddCollectionImageResp;
+
+            return connector.Send(req);
+        }
+
+        private class AddCollectionImageReq : RESTConnector.Request
+        {
+            /// <summary>
+            /// OnCreateCollection callback.
+            /// </summary>
+            public OnAddCollectionImage Callback { get; set; }
+            /// <summary>
+            /// The collection identifier to add images to.
+            /// </summary>
+            public string CollectionID { get; set; }
+            /// <summary>
+            /// Byte array of Image Data to add to the collection.
+            /// </summary>
+            public byte[] ImageData { get; set; }
+            /// <summary>
+            /// Json metadata associated with this image.
+            /// </summary>
+            public string Metadata { get; set; }
+            /// <summary>
+            /// Optional data.
+            /// </summary>
+            public string Data { get; set; }
+        }
+
+        private void OnAddCollectionImageResp(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            CollectionsConfig collectionsConfig = new CollectionsConfig();
+            if (resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+
+                    object obj = collectionsConfig;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("VisualRecognition", "OnCreateCollectionResp Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((AddCollectionImageReq)req).Callback != null)
+                ((AddCollectionImageReq)req).Callback(resp.Success ? collectionsConfig : null, ((AddCollectionImageReq)req).Data);
+        }
         #endregion
 
         #region Delete Image
@@ -1513,6 +1777,21 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             }
 
             return mimeType;
+        }
+
+        private string GetMetadataJson(Dictionary<string, string> metadata)
+        {
+            string json = "{";
+            string metadataItem = "\n\t\"{0}\":\"{1}\"";
+
+            foreach(KeyValuePair<string, string> kv in metadata)
+            {
+                json += string.Format(metadataItem, kv.Key, kv.Value);
+            }
+
+            json += "\n}";
+
+            return json;
         }
 		#endregion
 
