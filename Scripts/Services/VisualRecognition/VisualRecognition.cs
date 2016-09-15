@@ -1821,7 +1821,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if (string.IsNullOrEmpty(mp_ApiKey))
                 throw new WatsonException("No API Key was found!");
 
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_COLLECTION_IMAGES, collectionID));
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_COLLECTION_IMAGE, collectionID, imageID));
             if (connector == null)
                 return false;
 
@@ -1954,7 +1954,90 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         #endregion
 
         #region List Image Metadata
-        //List image metadata.
+        /// <summary>
+        /// List image metadata..
+        /// </summary>
+        /// <param name="callback">The callback.</param>
+        /// <param name="collectionID">The requested collection identifier.</param>
+        /// <param name="imageID">The requested image identifier.</param>
+        /// <param name="customData">Custom data.</param>
+        /// <returns>Returns true if succeess, false if failure.</returns>
+        public bool GetMetadata(OnGetImageMetadata callback, string collectionID, string imageID, string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(collectionID))
+                throw new ArgumentNullException(collectionID);
+            if (string.IsNullOrEmpty(imageID))
+                throw new ArgumentNullException(imageID);
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                throw new WatsonException("No API Key was found!");
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_COLLECTION_IMAGE_METADATA, collectionID, imageID));
+            if (connector == null)
+                return false;
+
+            GetCollectionImageMetadataReq req = new GetCollectionImageMetadataReq();
+            req.Callback = callback;
+            req.Data = customData;
+            req.CollectionID = collectionID;
+            req.ImageID = imageID;
+            req.Parameters["api_key"] = mp_ApiKey;
+            req.Parameters["version"] = VisualRecognitionVersion.Version;
+            req.Timeout = 20.0f * 60.0f;
+            req.OnResponse = OnGetCollectionImageMetadataResp;
+
+            return connector.Send(req);
+        }
+
+        private class GetCollectionImageMetadataReq : RESTConnector.Request
+        {
+            /// <summary>
+            /// OnGetCollections callback.
+            /// </summary>
+            public OnGetImageMetadata Callback { get; set; }
+            /// <summary>
+            /// Collection identifier of the requested metadata.
+            /// </summary>
+            public string CollectionID { get; set; }
+            /// <summary>
+            /// Image identifier for the requested metadata.
+            /// </summary>
+            public string ImageID { get; set; }
+            /// <summary>
+            /// Optional data.
+            /// </summary>
+            public string Data { get; set; }
+        }
+
+        private void OnGetCollectionImageMetadataResp(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            GetCollectionsBrief image = new GetCollectionsBrief();
+            if (resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+
+                    object obj = image;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("VisualRecognition", "GetCollectionImage Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((GetCollectionImageReq)req).Callback != null)
+                ((GetCollectionImageReq)req).Callback(resp.Success ? image : null, ((GetCollectionImageReq)req).Data);
+        }
         #endregion
 
         #region Find Similar Images
