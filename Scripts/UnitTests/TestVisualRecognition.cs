@@ -582,6 +582,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 				Log.Debug("TestVisualRecognition", "Get Collections failed!");
 			}
 
+			m_ListCollectionsTested = true;
 			Test(collections != null);
         }
 
@@ -599,6 +600,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 				Log.Debug("TestVisualRecognition", "Create Collection failed!");
 			}
 
+			m_CreateCollectionTested = true;
 			Test(collection != null);
         }
 
@@ -609,6 +611,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 			else
 				Log.Debug("TestVisualRecognition", "Delete Collection failed!");
 
+			m_DeleteCollectionTested = true;
 			Test(success);
         }
 
@@ -625,6 +628,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
 			}
 
+			m_RetrieveCollectionDetailsTested = true;
 			Test(collection != null);
         }
 
@@ -641,6 +645,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 				Log.Debug("TestVisualRecognition", "Get Collections failed!");
 			}
 
+			m_ListCollectionsTested = true;
 			Test(collections != null);
         }
 
@@ -658,31 +663,68 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 			{
 				Log.Debug("TestVisualRecognition", "Add image to collection failed!");
 			}
+
+			Test(images != null);
 		}
 
         private void OnDeleteCollectionImage(bool success, string customData)
         {
+			if (success)
+				Log.Debug("TestVisualRecognition", "Delete collection image succeeded!");
+			else
+				Log.Debug("TestVisualRecognition", "Delete collection image failed!");
 
-        }
+			Test(success);
+		}
 
         private void OnGetImage(GetCollectionsBrief image, string customData)
         {
+			if(image != null)
+			{
+				Log.Debug("TestVisualRecognition", "GetImage succeeded!");
+				Log.Debug("TestVisualRecognition", "imageID: {0} | created: {1} | image_file: {2} | metadata: {3}", image.image_id, image.created, image.image_file, image.metadata);
+			}
+			else
+			{
+				Log.Debug("TestVisualRecognition", "GetImage failed!");
+			}
 
+			Test(image != null);
         }
 
         private void OnDeleteMetadata(bool success, string customData)
         {
+			if (success)
+				Log.Debug("TestVisualRecognition", "Delete image metadata succeeded!");
+			else
+				Log.Debug("TestVisualRecognition", "Delete image metadata failed!");
 
-        }
+			Test(success);
+		}
 
         private void OnGetMetadata(object responseObject, string customData)
         {
-            Log.Debug("TestVisualRecognition", "ResponseObject: {0}", responseObject);
+			if(responseObject != null)
+				Log.Debug("TestVisualRecognition", "ResponseObject: {0}", responseObject);
+
+			Test(responseObject != null);
         }
 
         private void OnFindSimilar(SimilarImagesConfig images, string customData)
         {
+			if(images != null)
+			{
+				Log.Debug("TestVisualRecognition", "GetSimilar succeeded!");
+				Log.Debug("TestVisualRecognition", "images processed: {0}", images.images_processed);
+				foreach (SimilarImageConfig image in images.similar_images)
+					Log.Debug("TestVisualRecognition", "image ID: {0} | image file: {1} | score: {2} | metadata: {3}", image.image_id, image.image_file, image.score, image.metadata.ToString());
+			}
+			else
+			{
+				Log.Debug("TestVisualRecognition", "GetSimilar failed!");
+			}
 
+			Test(images != null);
         }
     }
 }
