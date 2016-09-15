@@ -512,7 +512,6 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnCheckClassifierStatus(GetClassifiersPerClassifierVerbose classifier, string customData)
         {
             Log.Debug("TestVisualRecognition", "classifier {0} is {1}!", classifier.classifier_id, classifier.status);
-
             if (classifier.status == "unavailable" || classifier.status == "failed")
             {
                 Log.Debug("TestVisualRecognition", "Deleting classifier!");
@@ -565,38 +564,101 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             {
                 Log.Debug("TestVisualRecognition", "Classifier {0} found! Delete failed!", classifier.name);
             }
+			Test(classifier == null);
         }
 
         private void OnGetCollections(GetCollections collections, string customData)
         {
+			if(collections != null)
+			{
+				Log.Debug("TestVisualRecognition", "Get Collections succeeded!");
+				foreach (CreateCollection collection in collections.collections)
+				{
+					Log.Debug("TestVisualRecognition", "collectionID: {0} | collection name: {1} | number of images: {2}", collection.collection_id, collection.name, collection.images);
+				}
+			}
+			else
+			{
+				Log.Debug("TestVisualRecognition", "Get Collections failed!");
+			}
 
+			Test(collections != null);
         }
 
         private void OnCreateCollection(CreateCollection collection, string customData)
         {
-            m_CreatedCollectionID = collection.collection_id;
+			if(collection != null)
+			{
+				Log.Debug("TestVisualRecognition", "Create Collection succeeded!");
+				Log.Debug("TestVisualRecognition", "collectionID: {0} | collection name: {1} | collection images: {2}", collection.collection_id, collection.name, collection.images);
 
+				m_CreatedCollectionID = collection.collection_id;
+			}
+			else
+			{
+				Log.Debug("TestVisualRecognition", "Create Collection failed!");
+			}
+
+			Test(collection != null);
         }
 
         private void OnDeleteCollection(bool success, string customData)
         {
+			if(success)
+				Log.Debug("TestVisualRecognition", "Delete Collection succeeded!");
+			else
+				Log.Debug("TestVisualRecognition", "Delete Collection failed!");
 
+			Test(success);
         }
 
         private void OnGetCollection(CreateCollection collection, string customData)
         {
+			if (collection != null)
+			{
+				Log.Debug("TestVisualRecognition", "Get Collection succeded!");
+				Log.Debug("TestVisualRecognition", "collectionID: {0} | collection name: {1} | collection images: {2}", collection.collection_id, collection.name, collection.images);
+			}
+			else
+			{
+				Log.Debug("TestVisualRecognition", "Get Collection failed!");
 
+			}
+
+			Test(collection != null);
         }
 
         private void OnGetCollections(GetCollectionImages collections, string customData)
         {
+			if(collections != null)
+			{
+				Log.Debug("TestVisualRecognition", "Get Collections succeded!");
+				foreach(GetCollectionsBrief collection in collections.images)
+					Log.Debug("TestVisualRecognition", "imageID: {0} | image file: {1} | image metadataOnGetCollections: {2}", collection.image_id, collection.image_file, collection.metadata.ToString());
+			}
+			else
+			{
+				Log.Debug("TestVisualRecognition", "Get Collections failed!");
+			}
 
+			Test(collections != null);
         }
 
         private void OnAddImageToCollection(CollectionsConfig images, string customData)
         {
-            m_CreatedCollectionImage = images.images[0].image_id;
-        }
+			if(images != null)
+			{
+				Log.Debug("TestVisualRecognition", "Add image to collection succeeded!");
+				m_CreatedCollectionImage = images.images[0].image_id;
+				Log.Debug("TestVisualRecognition", "images processed: {0}", images.images_processed);
+				foreach (CollectionImagesConfig image in images.images)
+					Log.Debug("TestVisualRecognition", "imageID: {0} | image_file: {1} | image metadata: {1}", image.image_id, image.image_file, image.metadata.ToString());
+			}
+			else
+			{
+				Log.Debug("TestVisualRecognition", "Add image to collection failed!");
+			}
+		}
 
         private void OnDeleteCollectionImage(bool success, string customData)
         {
