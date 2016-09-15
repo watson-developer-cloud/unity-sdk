@@ -2041,7 +2041,143 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         #endregion
 
         #region Find Similar Images
-        //Find Similar Images
+        /// <summary>
+        /// Find Similar Images by image path.
+        /// </summary>
+        /// <param name="callback">The callback.</param>
+        /// <param name="collectionID">The identifier of the collection to add images to.</param>
+        /// <param name="imagePath">The path in the filesystem of the image to query.</param>
+        /// <param name="limit">The number of similar results you want returned. Default limit is 10 results, you can specify a maximum limit of 100 results.</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns>Returns true if succeess, false if failure.</returns>
+        public bool FindSimilar(OnFindSimilar callback, string collectionID, string imagePath, int limit = 10, string customData = null)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(collectionID))
+                throw new ArgumentNullException("collectionID");
+            if (string.IsNullOrEmpty(imagePath))
+                throw new ArgumentNullException("imagePath");
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                throw new WatsonException("No API Key was found!");
+
+            byte[] imageData = null;
+            if (!string.IsNullOrEmpty(imagePath))
+            {
+                if (LoadFile != null)
+                {
+                    imageData = LoadFile(imagePath);
+                }
+                else
+                {
+#if !UNITY_WEBPLAYER
+                    imageData = File.ReadAllBytes(imagePath);
+#endif
+                }
+
+                if (imageData == null)
+                    Log.Error("VisualRecognition", "Failed to upload {0}!", imagePath);
+            }
+
+            return FindSimilar(callback, collectionID, imageData, limit, customData);
+        }
+
+        /// <summary>
+        /// Find Similar Images by byte[].
+        /// </summary>
+        /// <param name="callback">The callback.</param>
+        /// <param name="collectionID">The identifier of the collection to add images to.</param>
+        /// <param name="imageData">The byte[] data of the image to query.</param>
+        /// <param name="limit">The number of similar results you want returned. Default limit is 10 results, you can specify a maximum limit of 100 results.</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns></returns>
+        public bool FindSimilar(OnFindSimilar callback, string collectionID, byte[] imageData, int limit = 10, string customData = null)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(collectionID))
+                throw new ArgumentNullException("collectionID");
+            if (imageData == default(byte[]))
+                throw new WatsonException("Image data is required!");
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                throw new WatsonException("No API Key was found!");
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_COLLECTION_FIND_SIMILAR, collectionID));
+            if (connector == null)
+                return false;
+
+            FindSimilarReq req = new FindSimilarReq();
+            req.Callback = callback;
+            req.CollectionID = collectionID;
+            req.ImageData = imageData;
+            req.Limit = limit;
+            req.Data = customData;
+
+            req.Parameters["api_key"] = mp_ApiKey;
+            req.Parameters["version"] = VisualRecognitionVersion.Version;
+            req.Forms = new Dictionary<string, RESTConnector.Form>();
+            req.Forms["image_file"] = new RESTConnector.Form(imageData);
+
+            req.Timeout = 20.0f * 60.0f;
+            req.OnResponse = OnFindSimilarResp;
+
+            return connector.Send(req);
+        }
+
+        private class FindSimilarReq : RESTConnector.Request
+        {
+            /// <summary>
+            /// OnCreateCollection callback.
+            /// </summary>
+            public OnFindSimilar Callback { get; set; }
+            /// <summary>
+            /// The collection identifier to add images to.
+            /// </summary>
+            public string CollectionID { get; set; }
+            /// <summary>
+            /// Byte array of Image Data to add to the collection.
+            /// </summary>
+            public byte[] ImageData { get; set; }
+            /// <summary>
+            /// Json metadata associated with this image.
+            /// </summary>
+            public int Limit { get; set; }
+            /// <summary>
+            /// Optional data.
+            /// </summary>
+            public string Data { get; set; }
+        }
+
+        private void OnFindSimilarResp(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            SimilarImagesConfig config = new SimilarImagesConfig();
+            if (resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+
+                    object obj = config;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("VisualRecognition", "OnCreateCollectionResp Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((FindSimilarReq)req).Callback != null)
+                ((FindSimilarReq)req).Callback(resp.Success ? config : null, ((FindSimilarReq)req).Data);
+        }
         #endregion
 
         #region private methods
