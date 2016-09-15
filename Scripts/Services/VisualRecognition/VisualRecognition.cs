@@ -1895,7 +1895,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <param name="imageID">The identifier of the image metadata to delete.</param>
         /// <param name="customData">Optional custom data.</param>
         /// <returns>Returns true if succeess, false if failure.</returns>
-        public bool DeleteCollectionImage(OnDeleteImageMetadata callback, string collectionID, string imageID, string customData = null)
+        public bool DeleteCollectionImageMetadata(OnDeleteImageMetadata callback, string collectionID, string imageID, string customData = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
