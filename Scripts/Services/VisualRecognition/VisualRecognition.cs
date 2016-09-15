@@ -1734,7 +1734,70 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         #endregion
 
         #region Delete Image
-        //Delete an image
+        /// <summary>
+        /// Deletes an image from a collection.
+        /// </summary>
+        /// <param name="callback">The OnDeleteCollection callback.</param>
+        /// <param name="collectionID">The collection identifier holding the image to delete.</param>
+        /// <param name="imageID">The identifier of the image to delete.</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns>Returns true if succeess, false if failure.</returns>
+        public bool DeleteCollectionImage(OnDeleteCollectionImage callback, string collectionID, string imageID, string customData = null)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(collectionID))
+                throw new ArgumentNullException("collectionID");
+            if (string.IsNullOrEmpty(imageID))
+                throw new ArgumentNullException("imageID");
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
+            if (string.IsNullOrEmpty(mp_ApiKey))
+                throw new WatsonException("No API Key was found!");
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_COLLECTION_IMAGE, collectionID, imageID));
+            if (connector == null)
+                return false;
+
+            DeleteCollectionImageReq req = new DeleteCollectionImageReq();
+            req.Callback = callback;
+            req.CollectionID = collectionID;
+            req.ImageID = imageID;
+            req.Data = customData;
+            req.Parameters["api_key"] = mp_ApiKey;
+            req.Parameters["version"] = VisualRecognitionVersion.Version;
+            req.Delete = true;
+            req.Timeout = 20.0f * 60.0f;
+            req.OnResponse = OnDeleteCollectionImageResp;
+
+            return connector.Send(req);
+        }
+
+        private class DeleteCollectionImageReq : RESTConnector.Request
+        {
+            /// <summary>
+            /// OnDeleteCollection callback.
+            /// </summary>
+            public OnDeleteCollectionImage Callback { get; set; }
+            /// <summary>
+            /// Collection identifier containing the image to be deleted.
+            /// </summary>
+            public string CollectionID { get; set; }
+            /// <summary>
+            /// The identifier of the image to be deleted.
+            /// </summary>
+            public string ImageID { get; set; }
+            /// <summary>
+            /// Optional data.
+            /// </summary>
+            public string Data { get; set; }
+        }
+
+        private void OnDeleteCollectionImageResp(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            if (((DeleteCollectionImageReq)req).Callback != null)
+                ((DeleteCollectionImageReq)req).Callback(resp.Success, ((DeleteCollectionImageReq)req).Data);
+        }
         #endregion
 
         #region Get Image
