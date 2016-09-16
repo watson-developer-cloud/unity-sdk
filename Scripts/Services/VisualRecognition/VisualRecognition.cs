@@ -1271,7 +1271,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.Parameters["version"] = VisualRecognitionVersion.Version;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             req.Forms["name"] = new RESTConnector.Form(name);
-            req.Forms["disregard"] = new RESTConnector.Form("empty");
+            req.Forms["disregard"] = new RESTConnector.Form(new byte[4]);
 
             req.Timeout = 20.0f * 60.0f;
             req.OnResponse = OnCreateCollectionResp;
@@ -1581,7 +1581,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                     Log.Error("VisualRecognition", "Failed to upload {0}!", imagePath);
             }
 
-            return AddCollectionImage(callback, collectionID, imageData, GetMetadataJson(metadata), customData);
+            return AddCollectionImage(callback, collectionID, imageData, Path.GetFileName(imagePath), GetMetadataJson(metadata), customData);
         }
 
         /// <summary>
@@ -1633,7 +1633,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                     Log.Error("VisualRecognition", "Failed to read {0}!", imagePath);
             }
 
-            return AddCollectionImage(callback, collectionID, imageData, metadata, customData);
+            return AddCollectionImage(callback, collectionID, imageData, Path.GetFileName(imagePath), metadata, customData);
         }
 
         /// <summary>
@@ -1645,7 +1645,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <param name="metadata">Optional json metadata associated with the specified image.</param>
         /// <param name="customData">Optional custom data.</param>
         /// <returns></returns>
-        public bool AddCollectionImage(OnAddCollectionImage callback, string collectionID, byte[] imageData, string metadata = null, string customData = null)
+        public bool AddCollectionImage(OnAddCollectionImage callback, string collectionID, byte[] imageData, string filename, string metadata = null, string customData = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -1672,14 +1672,14 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.Parameters["api_key"] = mp_ApiKey;
             req.Parameters["version"] = VisualRecognitionVersion.Version;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
-            req.Forms["image_file"] = new RESTConnector.Form(imageData);
-            req.Forms["metadata"] = new RESTConnector.Form(metadata);
+            req.Forms["image_file"] = new RESTConnector.Form(imageData, filename, GetMimeType(filename));
+            req.Forms["metadata"] = new RESTConnector.Form(Encoding.UTF8.GetBytes(metadata), "application/json");
 
             req.Timeout = 20.0f * 60.0f;
             req.OnResponse = OnAddCollectionImageResp;
 
             return connector.Send(req);
-        }
+		}
 
         private class AddCollectionImageReq : RESTConnector.Request
         {
@@ -2035,8 +2035,8 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 }
             }
 
-            if (((GetCollectionImageReq)req).Callback != null)
-                ((GetCollectionImageReq)req).Callback(resp.Success ? image : null, ((GetCollectionImageReq)req).Data);
+            if (((GetCollectionImageMetadataReq)req).Callback != null)
+                ((GetCollectionImageMetadataReq)req).Callback(resp.Success ? image : null, ((GetCollectionImageMetadataReq)req).Data);
         }
         #endregion
 
@@ -2211,12 +2211,22 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             string json = "{";
             string metadataItem = "\n\t\"{0}\":\"{1}\"";
 
-            foreach(KeyValuePair<string, string> kv in metadata)
-            {
-                json += string.Format(metadataItem, kv.Key, kv.Value);
-            }
+			int i = 0;
+			foreach (KeyValuePair<string, string> kv in metadata)
+			{
+				i++;
+				string comma = i < metadata.Count ? "," : "";
+				json += string.Format(metadataItem, kv.Key, kv.Value) + comma;
+			}
 
-            json += "\n}";
+			//for(int i = 0; i < metadata.Count; i++)
+			//{
+			//	KeyValuePair<string, string> kv = metadata.;
+			//	string comma = i < metadata.Count - 1 ? "," : "";
+			//	json += string.Format(metadataItem, kv.Key, kv.Value) + comma;
+			//}
+
+			json += "\n}";
 
             return json;
         }
