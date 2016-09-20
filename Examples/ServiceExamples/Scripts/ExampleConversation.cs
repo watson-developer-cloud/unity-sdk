@@ -20,12 +20,14 @@ using System.Collections;
 using IBM.Watson.DeveloperCloud.Services.Conversation.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
 using IBM.Watson.DeveloperCloud.Logging;
+using System;
 
 public class ExampleConversation : MonoBehaviour
 {
 	private Conversation m_Conversation = new Conversation();
     private string m_WorkspaceID;
 	private string m_Input = "Can you unlock the door?";
+    private string m_ConversationID;
 
 	void Start () {
         LogSystem.InstallDefaultReactors();
@@ -42,7 +44,9 @@ public class ExampleConversation : MonoBehaviour
 
         //  Message by passing input, alternate intents and conversationID
         m_Conversation.Message(OnMessage, m_WorkspaceID, m_Input, false, null);
-	}
+
+        Converse("is there traffic today?");
+    }
 
 	void OnMessage (MessageResponse resp, string customData)
 	{
@@ -54,10 +58,21 @@ public class ExampleConversation : MonoBehaviour
             if(resp.output != null && resp.output.text.Length > 0)
                 foreach(string txt in resp.output.text)
     		        Debug.Log("output: " + txt);
+
+            m_ConversationID = resp.context.conversation_id;
+            
         }
         else
         {
             Debug.Log("Failed to invoke Message();");
         }
 	}
+
+    private void Converse(string input)
+    {
+        if (string.IsNullOrEmpty(input))
+            throw new ArgumentNullException("input");
+
+        m_Conversation.Message(OnMessage, m_WorkspaceID, input, true, m_ConversationID);
+    }
 }

@@ -135,29 +135,20 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
             if (callback == null)
                 throw new ArgumentNullException("callback");
 
-            MessageRequest messageRequest = new MessageRequest();
-            messageRequest.inputText = input;
-            messageRequest.alternate_intents = useAlternateIntents;
-            if (conversationID != default(string))
-                messageRequest.conversationID = conversationID;
-
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_MESSAGE);
             if (connector == null)
                 return false;
 
-            fsData data;
-            sm_Serializer.TrySerialize(messageRequest.GetType(), messageRequest, out data).AssertSuccessWithoutWarnings();
-            string reqString = fsJsonPrinter.CompressedJson(data);
+            string reqJson = "{\"input\":{\"text\":\"" + input + "\"},\"alternate_intents\":" + useAlternateIntents.ToString().ToLower() + ",\"context\":{\"conversation_id\":\"" + conversationID + "\"}}";
 
             MessageReq req = new MessageReq();
             req.Callback = callback;
-            req.MessageRequest = messageRequest;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
             req.Parameters["version"] = Version.VERSION;
             req.Function = "/" + workspaceID + "/message";
             req.Data = customData;
-            req.Send = Encoding.UTF8.GetBytes(reqString);
+            req.Send = Encoding.UTF8.GetBytes(reqJson);
             req.OnResponse = MessageResp;
 
             return connector.Send(req);
