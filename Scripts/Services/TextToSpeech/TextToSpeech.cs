@@ -660,7 +660,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 			if (callback == null)
 				throw new ArgumentNullException("callback");
 			if (string.IsNullOrEmpty(customizationID))
-				throw new ArgumentNullException("A name is customizationID to get a custom voice model.");
+				throw new ArgumentNullException("A customizationID to get a custom voice model.");
 
 			GetCustomizationRequest req = new GetCustomizationRequest();
 			req.Callback = callback;

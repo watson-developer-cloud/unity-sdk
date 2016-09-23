@@ -29,7 +29,6 @@ public class TestConversation : UnitTest
 	private string m_Input = "Can you unlock the door?";
 	private bool m_MessageInputTested = false;
     private bool m_MessageObjectTested = false;
-    private bool m_MessageTested = false;
 
 	public override IEnumerator RunTest()
 	{
@@ -48,19 +47,12 @@ public class TestConversation : UnitTest
         if (!m_MessageObjectTested)
         {
             MessageRequest messageRequest = new MessageRequest();
-            messageRequest.inputText = m_Input;
+            messageRequest.InputText = m_Input;
             m_Conversation.Message(OnMessageObject, m_WorkspaceID, messageRequest);
             while (!m_MessageObjectTested)
                 yield return null;
         }
-
-        if (!m_MessageTested)
-        {
-            m_Conversation.Message(OnMessage, m_WorkspaceID, m_Input, false);
-            while (!m_MessageTested)
-                yield return null;
-        }
-
+		
         yield break;
     }
 
@@ -92,20 +84,5 @@ public class TestConversation : UnitTest
         }
 
         m_MessageObjectTested = true;
-    }
-
-    private void OnMessage(MessageResponse resp, string customData)
-    {
-        Test(resp != null);
-        if (resp != null)
-        {
-            foreach (Intent mi in resp.intents)
-                Log.Debug("TestConversation", "intent: " + mi.intent + ", confidence: " + mi.confidence);
-            if (resp.output != null && resp.output.text.Length > 0)
-                foreach (string txt in resp.output.text)
-                    Debug.Log("output: " + txt);
-        }
-
-        m_MessageTested = true;
     }
 }
