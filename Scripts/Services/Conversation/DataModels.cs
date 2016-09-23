@@ -127,6 +127,15 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
     [fsObject]
     public class MessageRequest
     {
+		///// <summary>
+		///// Default constructor.
+		///// </summary>
+		//public MessageRequest()
+		//{
+		//	input = new InputData();
+		//	context = new Context();
+		//}
+
         /// <summary>
         /// The input text. 
         /// </summary>
@@ -143,9 +152,19 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
         /// <summary>
         /// Creates the input object and sets the InputText.
         /// </summary>
-        public string inputText
+        public string InputText
         {
-            get { return input != null ? input.text : null; }
+            get {
+				if (input == null)
+				{
+					input = new InputData();
+					return "";
+				}
+				else
+				{
+					return input.text;
+				}
+			}
             set
             {
                 if (input == null)
@@ -154,6 +173,21 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
                 input.text = value;
             }
         }
+
+		/// <summary>
+		/// Gets and sets the input value and creates the InputData object if it hasn't been created.
+		/// </summary>
+		public InputData InputData
+		{
+			get { return input != null ? input : input = new InputData(); }
+			set
+			{
+				if (input == null)
+					input = new InputData();
+
+				input = value;
+			}
+		}
 
         /// <summary>
         /// Creates the Context object and sets the conversation_id.
@@ -169,6 +203,21 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
                 context.conversation_id = value;
             }
         }
+
+		/// <summary>
+		/// Gets and sets the context value and creates the Context object if it hasn't been created.
+		/// </summary>
+		public Context ContextData
+		{
+			get { return context != null ? context : context = new Context(); }
+			set
+			{
+				if (context == null)
+					context = new Context();
+
+				context = value;
+			}
+		}
     }
     #endregion
 
@@ -191,6 +240,13 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
     [fsObject]
     public class Context
     {
+		///// <summary>
+		///// Default constructor.
+		///// </summary>
+		//public Context()
+		//{
+		//	system = new SystemResponse();
+		//}
         /// <summary>
         /// The unique identifier of the conversation. 
         /// </summary>
@@ -199,7 +255,22 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
         /// Information about the dialog
         /// </summary>
         public SystemResponse system { get; set; }
-    }
+
+		/// <summary>
+		/// Creates the SystemResponse object and sets it.
+		/// </summary>
+		public SystemResponse SystemResponse
+		{
+			get { return system != null ? system : system = new SystemResponse(); }
+			set
+			{
+				if (system == null)
+					system = new SystemResponse();
+
+				system = value;
+			}
+		}
+	}
 
     /// <summary>
     /// Dialog information.
