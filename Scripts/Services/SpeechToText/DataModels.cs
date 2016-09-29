@@ -207,7 +207,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 	}
 	#endregion
 
-	#region Sessions
+	#region Sessions and Sessionless
 	/// <summary>
 	/// This data class holds the Session data.
 	/// </summary>
@@ -416,13 +416,84 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 		/// </summary>
 		public string recognizeWS { get; set; }
 	}
-
-	#endregion
-
-	#region Sessionless
 	#endregion
 
 	#region Asynchronous
+	/// <summary>
+	/// This data class contains information about the register callback status.
+	/// </summary>
+	public class RegisterStatus
+	{
+		/// <summary>
+		/// The current status of the job: created if the callback URL was successfully white-listed as a result of the call or already created if the URL was already white-listed. 
+		/// </summary>
+		public string status { get; set; }
+		/// <summary>
+		/// The callback URL that is successfully registered
+		/// </summary>
+		public string url { get; set; }
+	}
+
+	/// <summary>
+	/// This data class contains information about the Jobs
+	/// </summary>
+	public class JobsStatusList
+	{
+		/// <summary>
+		/// The current status of the job: created if the callback URL was successfully white-listed as a result of the call or already created if the URL was already white-listed. 
+		/// </summary>
+		public JobStatus[] recognitions { get; set; }
+	}
+
+	/// <summary>
+	/// This data class contains information about the job status.
+	/// </summary>
+	public class JobStatus
+	{
+		/// <summary>
+		/// The ID of the job. 
+		/// </summary>
+		public string id { get; set; }
+		/// <summary>
+		/// The date and time in Coordinated Universal Time (UTC) at which the job was created. The value is provided in full ISO 8601 format (YYYY-MM-DDThh:mm:ss.sTZD).  
+		/// </summary>
+		public string created { get; set; }
+		/// <summary>
+		/// The date and time in Coordinated Universal Time (UTC) at which the job was last updated by the service. The value is provided in full ISO 8601 format (YYYY-MM-DDThh:mm:ss.sTZD). 
+		/// </summary>
+		public string updated { get; set; }
+		/// <summary>
+		/// The current status of the job. waiting: The service is preparing the job for processing; the service always returns this status when the job is initially created or when it is waiting for capacity to process the job. processing: The service is actively processing the job. completed: The service has finished processing the job; if the job specified a callback URL and the event recognitions.completed_with_results, the service sent the results with the callback notification; otherwise, use the GET /v1/recognitions/{id} method to retrieve the results. failed: The job failed. 
+		/// </summary>
+		public string status { get; set; }
+		/// <summary>
+		/// The user token associated with a job that was created with a callback URL and a user token.
+		/// </summary>
+		public string user_token { get; set; }
+	}
+
+	/// <summary>
+	/// This data class contains information about a newly created recognition job.
+	/// </summary>
+	public class JobStatusNew
+	{
+		/// <summary>
+		/// The date and time in Coordinated Universal Time (UTC) at which the job was created. The value is provided in full ISO 8601 format (YYYY-MM-DDThh:mm:ss.sTZD). 
+		/// </summary>
+		public string created { get; set; }
+		/// <summary>
+		/// The ID of the job.
+		/// </summary>
+		public string id { get; set; }
+		/// <summary>
+		/// The URL to use to request information about the job with the GET /v1/recognitions/{id} method.
+		/// </summary>
+		public string url { get; set; }
+		/// <summary>
+		/// The current status of the job. waiting: The service is preparing the job for processing; the service always returns this status when the job is initially created or when it is waiting for capacity to process the job. processing: The service is actively processing the job. completed: The service has finished processing the job; if the job specified a callback URL and the event recognitions.completed_with_results, the service sent the results with the callback notification; otherwise, use the GET /v1/recognitions/{id} method to retrieve the results. failed: The job failed.
+		/// </summary>
+		public string status { get; set; }
+	}
 	#endregion
 
 	#region Custom Models
