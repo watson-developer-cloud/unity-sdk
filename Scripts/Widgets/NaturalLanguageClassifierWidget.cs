@@ -271,11 +271,11 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 
         private void OnRecognize(Data data)
         {
-            SpeechResultList result = ((SpeechToTextData)data).Results;
+            SpeechRecognitionEvent result = ((SpeechToTextData)data).Results;
             if (result.HasFinalResult())
             {
-                string text = result.Results[0].Alternatives[0].Transcript;
-                double textConfidence = result.Results[0].Alternatives[0].Confidence;
+                string text = result.results[0].alternatives[0].transcript;
+                double textConfidence = result.results[0].alternatives[0].confidence;
 
                 Log.Debug("NaturalLanguageClassifierWidget", "OnRecognize: {0} ({1:0.00})", text, textConfidence);
                 EventManager.Instance.SendEvent("OnDebugMessage", string.Format("{0} ({1:0.00})", text, textConfidence));

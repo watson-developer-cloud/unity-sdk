@@ -21,131 +21,6 @@ using FullSerializer;
 
 namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 {
-	/// <summary>
-	/// This data class holds the confidence value for a given recognized word.
-	/// </summary>
-	[fsObject]
-	public class WordConfidence
-	{
-		/// <summary>
-		/// The word as a string.
-		/// </summary>
-		public string Word { get; set; }
-		/// <summary>
-		/// The confidence value for this word.
-		/// </summary>
-		public double Confidence { get; set; }
-	};
-	/// <summary>
-	/// This data class holds the start and stop times for a word.
-	/// </summary>
-	[fsObject]
-	public class TimeStamp
-	{
-		/// <summary>
-		/// The word.
-		/// </summary>
-		public string Word { get; set; }
-		/// <summary>
-		/// The start time.
-		/// </summary>
-		public double Start { get; set; }
-		/// <summary>
-		/// The stop time.
-		/// </summary>
-		public double End { get; set; }
-	};
-	/// <summary>
-	/// This data class holds the actual transcript for the text generated from speech audio data.
-	/// </summary>
-	[fsObject]
-	public class SpeechAlt
-	{
-		/// <summary>
-		/// The transcript of what was understood.
-		/// </summary>
-		public string Transcript { get; set; }
-		/// <summary>
-		/// The confidence in this transcript of the audio data.
-		/// </summary>
-		public double Confidence { get; set; }
-		/// <summary>
-		/// A optional array of timestamps objects.
-		/// </summary>
-		public TimeStamp[] Timestamps { get; set; }
-		/// <summary>
-		/// A option array of word confidence values.
-		/// </summary>
-		public WordConfidence[] WordConfidence { get; set; }
-	};
-	/// <summary>
-	/// A Result object that is returned by the Recognize() method.
-	/// </summary>
-	[fsObject]
-	public class SpeechResult
-	{
-		/// <summary>
-		/// If true, then this is the final result and no more results will be sent for the given audio data.
-		/// </summary>
-		public bool Final { get; set; }
-		/// <summary>
-		/// A array of alternatives speech to text results, this is controlled by the MaxAlternatives property.
-		/// </summary>
-		public SpeechAlt[] Alternatives { get; set; }
-	};
-	/// <summary>
-	/// This data class holds a list of Result objects returned by the Recognize() method.
-	/// </summary>
-	[fsObject]
-	public class SpeechResultList
-	{
-		/// <summary>
-		/// The array of Result objects.
-		/// </summary>
-		public SpeechResult[] Results { get; set; }
-
-		/// <exclude />
-		public SpeechResultList(SpeechResult[] results)
-		{
-			Results = results;
-		}
-
-		/// <summary>
-		/// Check if our result list has atleast one valid result.
-		/// </summary>
-		/// <returns>Returns true if a result is found.</returns>
-		public bool HasResult()
-		{
-			return Results != null && Results.Length > 0
-				&& Results[0].Alternatives != null && Results[0].Alternatives.Length > 0;
-		}
-
-		/// <summary>
-		/// Returns true if we have a final result.
-		/// </summary>
-		/// <returns></returns>
-		public bool HasFinalResult()
-		{
-			return HasResult() && Results[0].Final;
-		}
-	};
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	#region Models
 	/// <summary>
 	/// This data class holds multiple speech models.
@@ -254,6 +129,31 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 		/// An array of warning messages about invalid query parameters or JSON fields included with the request. Each warning includes a descriptive message and a list of invalid argument strings. For example, a message such as "Unknown arguments:" or "Unknown url query arguments:" followed by a list of the form "invalid_arg_1, invalid_arg_2." The request succeeds despite the warnings.
 		/// </summary>
 		public string[] warnings { get; set; }
+
+		/// <exclude />
+		public SpeechRecognitionEvent(SpeechRecognitionResult[] _results)
+		{
+			results = _results;
+		}
+
+		/// <summary>
+		/// Check if our result list has atleast one valid result.
+		/// </summary>
+		/// <returns>Returns true if a result is found.</returns>
+		public bool HasResult()
+		{
+			return results != null && results.Length > 0
+				&& results[0].alternatives != null && results[0].alternatives.Length > 0;
+		}
+
+		/// <summary>
+		/// Returns true if we have a final result.
+		/// </summary>
+		/// <returns></returns>
+		public bool HasFinalResult()
+		{
+			return HasResult() && results[0].final;
+		}
 	}
 
 	/// <summary>
@@ -303,6 +203,14 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 		/// Confidence score for each word of the transcript as a list of lists. Each inner list consists of two elements: the word and its confidence score in the range of 0 to 1. Example: [["hello",0.95],["world",0.866]]. Available only for the best alternative and only in results marked as final.
 		/// </summary>
 		public string[] word_confidence { get; set; }
+		/// <summary>
+		/// A optional array of timestamps objects.
+		/// </summary>
+		public TimeStamp[] Timestamps { get; set; }
+		/// <summary>
+		/// A option array of word confidence values.
+		/// </summary>
+		public WordConfidence[] WordConfidence { get; set; }
 	}
 
 	/// <summary>
@@ -416,6 +324,41 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 		/// </summary>
 		public string recognizeWS { get; set; }
 	}
+
+	/// <summary>
+	/// This data class holds the confidence value for a given recognized word.
+	/// </summary>
+	[fsObject]
+	public class WordConfidence
+	{
+		/// <summary>
+		/// The word as a string.
+		/// </summary>
+		public string Word { get; set; }
+		/// <summary>
+		/// The confidence value for this word.
+		/// </summary>
+		public double Confidence { get; set; }
+	};
+	/// <summary>
+	/// This data class holds the start and stop times for a word.
+	/// </summary>
+	[fsObject]
+	public class TimeStamp
+	{
+		/// <summary>
+		/// The word.
+		/// </summary>
+		public string Word { get; set; }
+		/// <summary>
+		/// The start time.
+		/// </summary>
+		public double Start { get; set; }
+		/// <summary>
+		/// The stop time.
+		/// </summary>
+		public double End { get; set; }
+	};
 	#endregion
 
 	#region Asynchronous

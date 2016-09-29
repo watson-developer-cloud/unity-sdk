@@ -256,7 +256,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// This callback object is used by the Recognize() and StartListening() methods.
         /// </summary>
         /// <param name="results">The ResultList object containing the results.</param>
-        public delegate void OnRecognize(SpeechResultList results);
+        public delegate void OnRecognize(SpeechRecognitionEvent results);
 
         /// <summary>
         /// This starts the service listening and it will invoke the callback for any recognized speech.
@@ -457,7 +457,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                 {
                     if (json.Contains("results"))
                     {
-                        SpeechResultList results = ParseRecognizeResponse(json);
+                        SpeechRecognitionEvent results = ParseRecognizeResponse(json);
                         if (results != null)
                         {
                             // when we get results, start listening for the next block ..
@@ -591,7 +591,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             if (recognizeReq == null)
                 throw new WatsonException("Unexpected request type.");
 
-            SpeechResultList result = null;
+            SpeechRecognitionEvent result = null;
             if (resp.Success)
             {
                 result = ParseRecognizeResponse(resp.Data);
@@ -603,7 +603,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                 else
                 {
                     Log.Status("SpeechToText", "Received Recognize Response, Elapsed Time: {0}, Results: {1}",
-                        resp.ElapsedTime, result.Results.Length);
+                        resp.ElapsedTime, result.results.Length);
                 }
             }
             else
@@ -615,7 +615,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                 recognizeReq.Callback(result);
         }
 
-        private SpeechResultList ParseRecognizeResponse(byte[] json)
+        private SpeechRecognitionEvent ParseRecognizeResponse(byte[] json)
         {
             string jsonString = Encoding.UTF8.GetString(json);
             if (jsonString == null)
@@ -628,14 +628,14 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             return ParseRecognizeResponse(resp);
         }
 
-        private SpeechResultList ParseRecognizeResponse(IDictionary resp)
+        private SpeechRecognitionEvent ParseRecognizeResponse(IDictionary resp)
         {
             if (resp == null)
                 return null;
 
             try
             {
-                List<SpeechResult> results = new List<SpeechResult>();
+                List<SpeechRecognitionResult> results = new List<SpeechRecognitionResult>();
                 IList iresults = resp["results"] as IList;
                 if (iresults == null)
                     return null;
@@ -646,24 +646,24 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                     if (iresults == null)
                         continue;
 
-                    SpeechResult result = new SpeechResult();
-                    result.Final = (bool)iresult["final"];
+                    SpeechRecognitionResult result = new SpeechRecognitionResult();
+                    result.final = (bool)iresult["final"];
 
                     IList ialternatives = iresult["alternatives"] as IList;
                     if (ialternatives == null)
                         continue;
 
-                    List<SpeechAlt> alternatives = new List<SpeechAlt>();
+                    List<SpeechRecognitionAlternative> alternatives = new List<SpeechRecognitionAlternative>();
                     foreach (var a in ialternatives)
                     {
                         IDictionary ialternative = a as IDictionary;
                         if (ialternative == null)
                             continue;
 
-                        SpeechAlt alternative = new SpeechAlt();
-                        alternative.Transcript = (string)ialternative["transcript"];
+                        SpeechRecognitionAlternative alternative = new SpeechRecognitionAlternative();
+                        alternative.transcript = (string)ialternative["transcript"];
                         if (ialternative.Contains("confidence"))
-                            alternative.Confidence = (double)ialternative["confidence"];
+                            alternative.confidence = (double)ialternative["confidence"];
 
                         if (ialternative.Contains("timestamps"))
                         {
@@ -707,11 +707,11 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 
                         alternatives.Add(alternative);
                     }
-                    result.Alternatives = alternatives.ToArray();
+                    result.alternatives = alternatives.ToArray();
                     results.Add(result);
                 }
 
-                return new SpeechResultList(results.ToArray());
+                return new SpeechRecognitionEvent(results.ToArray());
             }
             catch (Exception e)
             {

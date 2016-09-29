@@ -29,16 +29,16 @@ public class ExampleSpeechToText : MonoBehaviour
 		m_SpeechToText.Recognize(m_AudioClip, HandleOnRecognize);
     }
 
-	void HandleOnRecognize (SpeechResultList result)
+	void HandleOnRecognize (SpeechRecognitionEvent result)
 	{
-		if (result != null && result.Results.Length > 0)
+		if (result != null && result.results.Length > 0)
 		{
-			foreach( var res in result.Results )
+			foreach( var res in result.results )
 			{
-				foreach( var alt in res.Alternatives )
+				foreach( var alt in res.alternatives )
 				{
-					string text = alt.Transcript;
-					Debug.Log(string.Format( "{0} ({1}, {2:0.00})\n", text, res.Final ? "Final" : "Interim", alt.Confidence));
+					string text = alt.transcript;
+					Debug.Log(string.Format( "{0} ({1}, {2:0.00})\n", text, res.final ? "Final" : "Interim", alt.confidence));
 				}
 			}
 		}
