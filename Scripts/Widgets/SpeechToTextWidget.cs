@@ -172,8 +172,8 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                 Model bestModel = null;
                 foreach( var model in models )
                 {
-                    if ( model.Language.StartsWith( m_Language )
-                        && (bestModel == null || model.Rate > bestModel.Rate) )
+                    if ( model.language.StartsWith( m_Language )
+                        && (bestModel == null || model.rate > bestModel.rate) )
                     {
                         bestModel = model;
                     }
@@ -181,8 +181,8 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 
                 if ( bestModel != null )
                 {
-                    Log.Status( "SpeechToTextWidget", "Selecting Recognize Model: {0} ", bestModel.Name );
-                    m_SpeechToText.RecognizeModel = bestModel.Name;
+                    Log.Status( "SpeechToTextWidget", "Selecting Recognize Model: {0} ", bestModel.name );
+                    m_SpeechToText.RecognizeModel = bestModel.name;
                 }
             }
         }

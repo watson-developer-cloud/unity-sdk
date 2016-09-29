@@ -497,6 +497,74 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 	#endregion
 
 	#region Custom Models
+	/// <summary>
+	/// This data class contains information about the speech to text model customizations.
+	/// </summary>
+	public class Customizations
+	{
+		/// <summary>
+		/// Information about each available custom model. The array is empty if the user owns no custom models (if no language is specified) or owns no custom models for the specified language.
+		/// </summary>
+		public Customizations[] customizations { get; set; }
+	}
+
+	/// <summary>
+	/// This data class contains information about the Speech to Text model customizations.
+	/// </summary>
+	public class Customization
+	{
+		/// <summary>
+		/// The GUID of the custom language model. 
+		/// </summary>
+		public string customization_id { get; set; }
+		/// <summary>
+		/// The date and time in Coordinated Universal Time (UTC) at which the custom language model was created. The value is provided in full ISO 8601 format (YYYY-MM-DDThh:mm:ss.sTZD).
+		/// </summary>
+		public string created { get; set; }
+		/// <summary>
+		/// The language of the custom language model. Currently, only en-US is supported. 
+		/// </summary>
+		public string language { get; set; }
+		/// <summary>
+		/// The GUID of the service credentials for the owner of the custom language model.
+		/// </summary>
+		public string owner { get; set; }
+		/// <summary>
+		/// The name of the custom language model. 
+		/// </summary>
+		public string name { get; set; }
+		/// <summary>
+		/// The description of the custom language model.
+		/// </summary>
+		public string description { get; set; }
+		/// <summary>
+		/// The name of the base language model for which the custom language model was created. = ['en-US_BroadbandModel', 'en-US_NarrowbandModel'].
+		/// </summary>
+		public string base_model_name { get; set; }
+		/// <summary>
+		/// The current status of the custom language model: pending indicates that the model was created but is waiting either for training data to be added or for the service to finish analyzing added data. ready indicates that the model contains data and is ready to be trained. training indicates that the model is currently being trained. For this beta release, the status field continues to be ready while the model is being trained; the field does not currently report a status of training. available indicates that the model is trained and ready to use. failed indicates that training of the model failed. = ['pending', 'ready', 'training', 'available', 'failed'].
+		/// </summary>
+		public string status { get; set; }
+		/// <summary>
+		/// A percentage that indicates the progress of the model's current training. A value of 100 means that the model is fully trained. For this beta release, the progress field does not reflect the current progress of the training; the field changes from 0 to 100 when training is complete. 
+		/// </summary>
+		public int progress { get; set; }
+		/// <summary>
+		/// If the request included unknown query parameters, the following message: Unexpected query parameter(s) ['parameters'] detected, where parameters is a list that includes a quoted string for each unknown parameter.
+		/// </summary>
+		public string warnings { get; set; }
+	}
+
+	/// <summary>
+	/// This data class contains information about the language model customization identifier.
+	/// </summary>
+	public class CustomizationID
+	{
+		/// <summary>
+		/// The GUID of the new custom language model.
+		/// </summary>
+		public string customization_id { get; set; }
+	}
 	#endregion
 
 	#region Custom Corpora

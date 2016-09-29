@@ -228,11 +228,11 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                         throw new Exception("Expected IDictionary");
 
                     Model model = new Model();
-                    model.Name = (string)imodel["name"];
-                    model.Rate = (long)imodel["rate"];
-                    model.Language = (string)imodel["language"];
-                    model.Description = (string)imodel["description"];
-                    model.URL = (string)imodel["url"];
+                    model.name = (string)imodel["name"];
+                    model.rate = (long)imodel["rate"];
+                    model.language = (string)imodel["language"];
+                    model.description = (string)imodel["description"];
+                    model.url = (string)imodel["url"];
 
                     models.Add(model);
                 }
