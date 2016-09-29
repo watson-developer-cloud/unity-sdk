@@ -25,7 +25,6 @@ public class ExampleConversation : MonoBehaviour
 {
 	private Conversation m_Conversation = new Conversation();
     private string m_WorkspaceID;
-	private string m_ConversationID;
 	private bool m_UseAlternateIntents = true;
 	private string[] questionArray = { "can you turn up the AC", "can you turn on the wipers", "can you turn off the wipers", "can you turn down the ac", "can you unlock the door"};
 
@@ -56,8 +55,6 @@ public class ExampleConversation : MonoBehaviour
 			if (resp.output != null && resp.output.text.Length > 0)
 				foreach (string txt in resp.output.text)
 					Debug.Log("output: " + txt);
-
-			m_ConversationID = resp.context.conversation_id;
 
 			string questionStr = questionArray[UnityEngine.Random.Range(0, questionArray.Length - 1)];
 			Debug.Log(string.Format("**********User: {0}", questionStr));
