@@ -165,11 +165,11 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             }
         }
 
-        private void OnGetModels( SpeechModel [] models )
+        private void OnGetModels( Model [] models )
         {
             if ( models != null )
             {
-                SpeechModel bestModel = null;
+                Model bestModel = null;
                 foreach( var model in models )
                 {
                     if ( model.Language.StartsWith( m_Language )

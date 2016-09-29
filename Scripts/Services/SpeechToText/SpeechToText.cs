@@ -62,16 +62,6 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 
         #region Public Types
         /// <summary>
-        /// This callback object is used by the Recognize() and StartListening() methods.
-        /// </summary>
-        /// <param name="results">The ResultList object containing the results.</param>
-        public delegate void OnRecognize(SpeechResultList results);
-        /// <summary>
-        /// This callback object is used by the GetModels() method.
-        /// </summary>
-        /// <param name="models"></param>
-        public delegate void OnGetModels(SpeechModel[] models);
-        /// <summary>
         /// This callback is used to return errors through the OnError property.
         /// </summary>
         /// <param name="error">A string containing the error message.</param>
@@ -79,21 +69,21 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         #endregion
 
         #region Private Data
-        private OnRecognize m_ListenCallback = null;        // Callback is set by StartListening()                                                             
-        private WSConnector m_ListenSocket = null;          // WebSocket object used when StartListening() is invoked  
+        private OnRecognize m_ListenCallback = null;				// Callback is set by StartListening()                                                             
+        private WSConnector m_ListenSocket = null;					// WebSocket object used when StartListening() is invoked  
         private bool m_ListenActive = false;
         private bool m_AudioSent = false;
         private bool m_IsListening = false;
         private Queue<AudioData> m_ListenRecordings = new Queue<AudioData>();
-        private int m_KeepAliveRoutine = 0;                      // ID of the keep alive co-routine
+        private int m_KeepAliveRoutine = 0;							// ID of the keep alive co-routine
         private DateTime m_LastKeepAlive = DateTime.Now;
         private DateTime m_LastStartSent = DateTime.Now;
-        private string m_RecognizeModel = "en-US_BroadbandModel";    // ID of the model to use.
-        private int m_MaxAlternatives = 1;                  // maximum number of alternatives to return.
+        private string m_RecognizeModel = "en-US_BroadbandModel";   // ID of the model to use.
+        private int m_MaxAlternatives = 1;							// maximum number of alternatives to return.
         private bool m_Timestamps = false;
         private bool m_WordConfidence = false;
-        private bool m_DetectSilence = true;                // If true, then we will try not to record silence.
-        private float m_SilenceThreshold = 0.03f;           // If the audio level is below this value, then it's considered silent.
+        private bool m_DetectSilence = true;						// If true, then we will try not to record silence.
+        private float m_SilenceThreshold = 0.03f;					// If the audio level is below this value, then it's considered silent.
         private int m_RecordingHZ = -1;
         #endregion
 
@@ -158,7 +148,115 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         public float SilenceThreshold { get { return m_SilenceThreshold; } set { m_SilenceThreshold = value; } }
         #endregion
 
-        #region Listening Functions
+        #region Models
+        /// <summary>
+        /// This callback object is used by the GetModels() method.
+        /// </summary>
+        /// <param name="models"></param>
+        public delegate void OnGetModels(Model[] models);
+
+        /// <summary>
+        /// This function retrieves all the language models that the user may use by setting the RecognizeModel 
+        /// public property.
+        /// </summary>
+        /// <param name="callback">This callback is invoked with an array of all available models. The callback will
+        /// be invoked with null on error.</param>
+        /// <returns>Returns true if request has been made.</returns>
+        public bool GetModels(OnGetModels callback)
+        {
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/v1/models");
+            if (connector == null)
+                return false;
+
+            GetModelsRequest req = new GetModelsRequest();
+            req.Callback = callback;
+            req.OnResponse = OnGetModelsResponse;
+
+            return connector.Send(req);
+        }
+
+        private class GetModelsRequest : RESTConnector.Request
+        {
+            public OnGetModels Callback { get; set; }
+        };
+
+        private void OnGetModelsResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            GetModelsRequest gmr = req as GetModelsRequest;
+            if (gmr == null)
+                throw new WatsonException("Unexpected request type.");
+
+            Model[] models = null;
+            if (resp.Success)
+            {
+                models = ParseGetModelsResponse(resp.Data);
+                if (models == null)
+                    Log.Error("SpeechToText", "Failed to parse GetModels response.");
+            }
+            if (gmr.Callback != null)
+                gmr.Callback(models);
+        }
+
+        private Model[] ParseGetModelsResponse(byte[] data)
+        {
+            string jsonString = Encoding.UTF8.GetString(data);
+            if (jsonString == null)
+            {
+                Log.Error("SpeechToText", "Failed to get JSON string from response.");
+                return null;
+            }
+
+            IDictionary json = (IDictionary)Json.Deserialize(jsonString);
+            if (json == null)
+            {
+                Log.Error("SpechToText", "Failed to parse JSON: {0}", jsonString);
+                return null;
+            }
+
+            try
+            {
+                List<Model> models = new List<Model>();
+
+                IList imodels = json["models"] as IList;
+                if (imodels == null)
+                    throw new Exception("Expected IList");
+
+                foreach (var m in imodels)
+                {
+                    IDictionary imodel = m as IDictionary;
+                    if (imodel == null)
+                        throw new Exception("Expected IDictionary");
+
+                    Model model = new Model();
+                    model.Name = (string)imodel["name"];
+                    model.Rate = (long)imodel["rate"];
+                    model.Language = (string)imodel["language"];
+                    model.Description = (string)imodel["description"];
+                    model.URL = (string)imodel["url"];
+
+                    models.Add(model);
+                }
+
+                return models.ToArray();
+            }
+            catch (Exception e)
+            {
+                Log.Error("SpeechToText", "Caught exception {0} when parsing GetModels() response: {1}", e.ToString(), jsonString);
+            }
+
+            return null;
+        }
+        #endregion
+
+        #region Sessions
+        #endregion
+
+        #region Sessionless - Streaming
+        /// <summary>
+        /// This callback object is used by the Recognize() and StartListening() methods.
+        /// </summary>
+        /// <param name="results">The ResultList object containing the results.</param>
+        public delegate void OnRecognize(SpeechResultList results);
 
         /// <summary>
         /// This starts the service listening and it will invoke the callback for any recognized speech.
@@ -438,104 +536,9 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                     OnError("Disconnected from server.");
             }
         }
-
         #endregion
 
-        #region GetModels Functions
-        /// <summary>
-        /// This function retrieves all the language models that the user may use by setting the RecognizeModel 
-        /// public property.
-        /// </summary>
-        /// <param name="callback">This callback is invoked with an array of all available models. The callback will
-        /// be invoked with null on error.</param>
-        /// <returns>Returns true if request has been made.</returns>
-        public bool GetModels(OnGetModels callback)
-        {
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/v1/models");
-            if (connector == null)
-                return false;
-
-            GetModelsRequest req = new GetModelsRequest();
-            req.Callback = callback;
-            req.OnResponse = OnGetModelsResponse;
-
-            return connector.Send(req);
-        }
-
-        private class GetModelsRequest : RESTConnector.Request
-        {
-            public OnGetModels Callback { get; set; }
-        };
-
-        private void OnGetModelsResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            GetModelsRequest gmr = req as GetModelsRequest;
-            if (gmr == null)
-                throw new WatsonException("Unexpected request type.");
-
-            SpeechModel[] models = null;
-            if (resp.Success)
-            {
-                models = ParseGetModelsResponse(resp.Data);
-                if (models == null)
-                    Log.Error("SpeechToText", "Failed to parse GetModels response.");
-            }
-            if (gmr.Callback != null)
-                gmr.Callback(models);
-        }
-
-        private SpeechModel[] ParseGetModelsResponse(byte[] data)
-        {
-            string jsonString = Encoding.UTF8.GetString(data);
-            if (jsonString == null)
-            {
-                Log.Error("SpeechToText", "Failed to get JSON string from response.");
-                return null;
-            }
-
-            IDictionary json = (IDictionary)Json.Deserialize(jsonString);
-            if (json == null)
-            {
-                Log.Error("SpechToText", "Failed to parse JSON: {0}", jsonString);
-                return null;
-            }
-
-            try
-            {
-                List<SpeechModel> models = new List<SpeechModel>();
-
-                IList imodels = json["models"] as IList;
-                if (imodels == null)
-                    throw new Exception("Expected IList");
-
-                foreach (var m in imodels)
-                {
-                    IDictionary imodel = m as IDictionary;
-                    if (imodel == null)
-                        throw new Exception("Expected IDictionary");
-
-                    SpeechModel model = new SpeechModel();
-                    model.Name = (string)imodel["name"];
-                    model.Rate = (long)imodel["rate"];
-                    model.Language = (string)imodel["language"];
-                    model.Description = (string)imodel["description"];
-                    model.URL = (string)imodel["url"];
-
-                    models.Add(model);
-                }
-
-                return models.ToArray();
-            }
-            catch (Exception e)
-            {
-                Log.Error("SpeechToText", "Caught exception {0} when parsing GetModels() response: {1}", e.ToString(), jsonString);
-            }
-
-            return null;
-        }
-        #endregion
-
-        #region Recognize Functions
+        #region Sessionless Non-Streaming
         /// <summary>
         /// This function POSTs the given audio clip the recognize function and convert speech into text. This function should be used
         /// only on AudioClips under 4MB once they have been converted into WAV format. Use the StartListening() for continuous
@@ -718,6 +721,17 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         }
         #endregion
 
+        #region Asynchronous
+        #endregion
+
+        #region Custom Models
+        #endregion
+
+        #region Custom Corpora
+        #endregion
+
+        #region Custom Words
+        #endregion
         #region IWatsonService interface
         /// <exclude />
         public string GetServiceID()
@@ -748,7 +762,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                     m_Callback(SERVICE_ID, false);
             }
 
-            private void OnCheckService(SpeechModel[] models)
+            private void OnCheckService(Model[] models)
             {
                 if (m_Callback != null && m_Callback.Target != null)
                     m_Callback(SERVICE_ID, models != null);

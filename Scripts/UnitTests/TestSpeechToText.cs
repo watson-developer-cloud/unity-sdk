@@ -41,7 +41,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             yield break;
         }
 
-        private void OnGetModels(SpeechModel[] models)
+        private void OnGetModels(Model[] models)
         {
             Test(models != null);
             if (models != null)
