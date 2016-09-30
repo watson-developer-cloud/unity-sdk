@@ -29,7 +29,12 @@ public class ExampleSpeechToText : MonoBehaviour
     {
 		//m_SpeechToText.Recognize(m_AudioClip, HandleOnRecognize);
 		LogSystem.InstallDefaultReactors();
-		TestGetModels();
+
+		//	test GetModels and GetModel
+		//TestGetModels();
+
+		//	test CreateSession
+		TestCreateSession("en-US_BroadbandModel");
     }
 
 	private void TestGetModels()
@@ -42,6 +47,12 @@ public class ExampleSpeechToText : MonoBehaviour
 	{
 		Log.Debug("Examp[leSpeechToText", "Attempting to get model {0}", modelID);
 		m_SpeechToText.GetModel(HandleGetModel, modelID);
+	}
+
+	private void TestCreateSession(string model)
+	{
+		Log.Debug("ExampleSpeechToText", "Attempting to create session with model {0}", model);
+		m_SpeechToText.CreateSession(HandleCreateSession, model);
 	}
 
 	private void HandleGetModels(Model[] models)
@@ -96,6 +107,22 @@ public class ExampleSpeechToText : MonoBehaviour
 					Debug.Log(string.Format( "{0} ({1}, {2:0.00})\n", text, res.final ? "Final" : "Interim", alt.confidence));
 				}
 			}
+		}
+	}
+
+	private void HandleCreateSession(Session session, string customData)
+	{
+		if(session != null)
+		{
+			if (!string.IsNullOrEmpty(customData))
+				Log.Debug("ExampleSpeechToText", "custom data: {0}", customData);
+
+			Log.Debug("ExampleSpeechToText", "Session - sessionID: {0} | new_session_url: {1} | observeResult: {2} | recognize: {3} | recognizeWS: {4}", 
+				session.session_id, session.new_session_uri, session.observe_result, session.recognize, session.recognizeWS);
+		}
+		else
+		{
+			Log.Debug("ExampleSpeechToText", "Failed to create session!");
 		}
 	}
 }

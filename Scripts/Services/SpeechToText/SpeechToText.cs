@@ -254,17 +254,21 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 		/// <summary>
 		/// This callback object is used by the GetModel() method.
 		/// </summary>
-		/// <param name="model"></param>
+		/// <param name="model">The resultant model.</param>
 		public delegate void OnGetModel(Model model);
 
 		/// <summary>
 		/// This function retrieves a specified languageModel.
 		/// </summary>
-		/// <param name="callback">This callback is invoked with an array of all available models. The callback will
+		/// <param name="callback">This callback is invoked with the requested model. The callback will
 		/// be invoked with null on error.</param>
+		/// <param name="modelID">The name of the model to get.</param>
 		/// <returns>Returns true if request has been made.</returns>
 		public bool GetModel(OnGetModel callback, string modelID)
 		{
+			if (string.IsNullOrEmpty(modelID))
+				throw new ArgumentNullException("modelID");
+
 			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/v1/models/" + modelID);
 			if (connector == null)
 				return false;
@@ -315,6 +319,76 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 		#endregion
 
 		#region Sessions
+		/// <summary>
+		/// This callback object is used by the CreateSession() method.
+		/// </summary>
+		/// <param name="session">The session data.</param>
+		/// <param name="customData">Optional custom data.</param>
+		public delegate void OnCreateSession(Session session, string customData);
+
+		/// <summary>
+		/// This function creates a speech to text session.
+		/// </summary>
+		/// <param name="callback">This callback is invoked with the sesion data. The callback will be invoked with null on error.</param>
+		/// <param name="modelName">The model name to create the session using.</param>
+		/// <param name="customData">Optional custom data.</param>
+		/// <returns></returns>
+		public bool CreateSession(OnCreateSession callback, string modelName, string customData = null)
+		{
+			if (string.IsNullOrEmpty(modelName))
+				throw new ArgumentNullException("modelName");
+
+			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/v1/sessions");
+			if (connector == null)
+				return false;
+
+			CreateSessionReq req = new CreateSessionReq();
+			req.Callback = callback;
+			req.ModelName = modelName;
+			req.Data = customData;
+			req.Parameters["model"] = modelName;
+			req.Headers["Content-Type"] = "application/json";
+			req.Headers["Accept"] = "application/json";
+			req.Send = Encoding.UTF8.GetBytes("{}");
+			req.OnResponse = CreateSessionResponse;
+
+			return connector.Send(req);
+		}
+
+		private class CreateSessionReq : RESTConnector.Request
+		{
+			public OnCreateSession Callback { get; set; }
+			public string ModelName { get; set; }
+			public string Data { get; set; }
+		}
+
+		private void CreateSessionResponse(RESTConnector.Request req, RESTConnector.Response resp)
+		{
+			Session response = new Session();
+			if (resp.Success)
+			{
+				try
+				{
+					fsData data = null;
+					fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+					if (!r.Succeeded)
+						throw new WatsonException(r.FormattedMessages);
+
+					object obj = response;
+					r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+					if (!r.Succeeded)
+						throw new WatsonException(r.FormattedMessages);
+				}
+				catch (Exception e)
+				{
+					Log.Error("SpeechToText", "CreateSessionResponse Exception: {0}", e.ToString());
+					resp.Success = false;
+				}
+			}
+
+			if (((CreateSessionReq)req).Callback != null)
+				((CreateSessionReq)req).Callback(resp.Success ? response : null, ((CreateSessionReq)req).Data);
+		}
 		#endregion
 
 		#region Sessionless - Streaming
