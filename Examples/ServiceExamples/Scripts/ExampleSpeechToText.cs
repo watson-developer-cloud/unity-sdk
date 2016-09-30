@@ -25,7 +25,10 @@ public class ExampleSpeechToText : MonoBehaviour
 	private AudioClip m_AudioClip = new AudioClip(); 
 	private SpeechToText m_SpeechToText = new SpeechToText();
 
-    void Start()
+	private string m_SessionIDToDelete = "7ccb52d188f695e380bc0edf19040cb3";
+	//482bb56bea58429c26d0d8a2f0290e42
+
+	void Start()
     {
 		//m_SpeechToText.Recognize(m_AudioClip, HandleOnRecognize);
 		LogSystem.InstallDefaultReactors();
@@ -34,18 +37,21 @@ public class ExampleSpeechToText : MonoBehaviour
 		//TestGetModels();
 
 		//	test CreateSession
-		TestCreateSession("en-US_BroadbandModel");
+		//TestCreateSession("en-US_BroadbandModel");
+
+		//	test DeleteSesion
+		TestDeleteSession(m_SessionIDToDelete);
     }
 
 	private void TestGetModels()
 	{
-		Log.Debug("Examp[leSpeechToText", "Attempting to get models");
+		Log.Debug("ExampleSpeechToText", "Attempting to get models");
 		m_SpeechToText.GetModels(HandleGetModels);
 	}
 
 	private void TestGetModel(string modelID)
 	{
-		Log.Debug("Examp[leSpeechToText", "Attempting to get model {0}", modelID);
+		Log.Debug("ExampleSpeechToText", "Attempting to get model {0}", modelID);
 		m_SpeechToText.GetModel(HandleGetModel, modelID);
 	}
 
@@ -53,6 +59,12 @@ public class ExampleSpeechToText : MonoBehaviour
 	{
 		Log.Debug("ExampleSpeechToText", "Attempting to create session with model {0}", model);
 		m_SpeechToText.CreateSession(HandleCreateSession, model);
+	}
+
+	private void TestDeleteSession(string sessionID)
+	{
+		Log.Debug("ExampleSpeechToText", "Attempting to delete session session with model {0}", sessionID);
+		m_SpeechToText.DeleteSession(HandleDeleteSession, sessionID);
 	}
 
 	private void HandleGetModels(Model[] models)
@@ -123,6 +135,18 @@ public class ExampleSpeechToText : MonoBehaviour
 		else
 		{
 			Log.Debug("ExampleSpeechToText", "Failed to create session!");
+		}
+	}
+
+	private void HandleDeleteSession(bool success, string data)
+	{
+		if (success)
+		{
+			Log.Debug("ExampleSpeechToText", "Deleted session!");
+		}
+		else
+		{
+			Log.Debug("ExampleSpeechToText", "Failed to delete session!");
 		}
 	}
 }

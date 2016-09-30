@@ -318,7 +318,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 		}
 		#endregion
 
-		#region Sessions
+		#region Create Session
 		/// <summary>
 		/// This callback object is used by the CreateSession() method.
 		/// </summary>
@@ -331,9 +331,9 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 		/// </summary>
 		/// <param name="callback">This callback is invoked with the sesion data. The callback will be invoked with null on error.</param>
 		/// <param name="modelName">The model name to create the session using.</param>
-		/// <param name="customData">Optional custom data.</param>
+		/// <param name="customData">Optional custom data.vc  </param>
 		/// <returns></returns>
-		public bool CreateSession(OnCreateSession callback, string modelName, string customData = null)
+		public bool CreateSession(OnCreateSession callback, string modelName, string customData = default(string))
 		{
 			if (string.IsNullOrEmpty(modelName))
 				throw new ArgumentNullException("modelName");
@@ -388,6 +388,56 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 
 			if (((CreateSessionReq)req).Callback != null)
 				((CreateSessionReq)req).Callback(resp.Success ? response : null, ((CreateSessionReq)req).Data);
+		}
+		#endregion
+
+		#region Delete Session
+		/// <summary>
+		/// This callback is used by the DeleteSession() function.
+		/// </summary>
+		/// <param name="success"></param>
+		/// <param name="data"></param>
+		public delegate void OnDeleteSessionCallback(bool success, string data);
+		/// <summary>
+		/// Deletes an existing session and its engine. You cannot send requests to a session after it is deleted.
+		/// </summary>
+		/// <param name="callback">The callback.</param>
+		/// <param name="sessionID">The ID of the session to be deleted.</param>
+		/// <param name="customData">Optional custom data.</param>
+		/// <returns></returns>
+		public bool DeleteSession(OnDeleteSessionCallback callback, string sessionID, string customData = default(string))
+		{
+			if (callback == null)
+				throw new ArgumentNullException("callback");
+			if (string.IsNullOrEmpty(sessionID))
+				throw new ArgumentNullException("A sessionID to delete is required for DeleteSession");
+
+			DeleteSessionRequest req = new DeleteSessionRequest();
+			req.Callback = callback;
+			req.SessionID = sessionID;
+			req.Data = customData;
+			req.Delete = true;
+			req.OnResponse = OnDeleteSessionResp;
+
+			string service = "/v1/sessions/{0}";
+			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(service, sessionID));
+			if (connector == null)
+				return false;
+
+			return connector.Send(req);
+		}
+
+		private class DeleteSessionRequest : RESTConnector.Request
+		{
+			public OnDeleteSessionCallback Callback { get; set; }
+			public string SessionID { get; set; }
+			public string Data { get; set; }
+		}
+
+		private void OnDeleteSessionResp(RESTConnector.Request req, RESTConnector.Response resp)
+		{
+			if (((DeleteSessionRequest)req).Callback != null)
+				((DeleteSessionRequest)req).Callback(resp.Success, ((DeleteSessionRequest)req).Data);
 		}
 		#endregion
 
