@@ -17,6 +17,7 @@
 
 using UnityEngine;
 using IBM.Watson.DeveloperCloud.Services.SpeechToText.v1;
+using IBM.Watson.DeveloperCloud.Logging;
 
 public class ExampleSpeechToText : MonoBehaviour
 {
@@ -26,10 +27,64 @@ public class ExampleSpeechToText : MonoBehaviour
 
     void Start()
     {
-		m_SpeechToText.Recognize(m_AudioClip, HandleOnRecognize);
+		//m_SpeechToText.Recognize(m_AudioClip, HandleOnRecognize);
+		LogSystem.InstallDefaultReactors();
+		TestGetModels();
     }
 
-	void HandleOnRecognize (SpeechRecognitionEvent result)
+	private void TestGetModels()
+	{
+		Log.Debug("Examp[leSpeechToText", "Attempting to get models");
+		m_SpeechToText.GetModels(HandleGetModels);
+	}
+
+	private void TestGetModel(string modelID)
+	{
+		Log.Debug("Examp[leSpeechToText", "Attempting to get model {0}", modelID);
+		m_SpeechToText.GetModel(HandleGetModel, modelID);
+	}
+
+	private void HandleGetModels(Model[] models)
+	{
+		if (models != null)
+		{
+			if (models != null)
+			{
+				if (models.Length == 0)
+				{
+					Log.Warning("ExampleSpeedchToText", "There are no custom models!");
+				}
+				else
+				{
+					foreach (Model model in models)
+					{
+						Log.Debug("ExampleSpeechToText", "Model: {0}", model.name);
+					}
+
+					TestGetModel((models[Random.Range(0, models.Length - 1)] as Model).name);
+				}
+			}
+		}
+		else
+		{
+			Log.Warning("ExampleSpeechToText", "Failed to get models!");
+		}
+	}
+
+	private void HandleGetModel(Model model)
+	{
+		if(model != null)
+		{
+			Log.Debug("ExampleSpeechToText", "Model - name: {0} | description: {1} | language:{2} | rate: {3} | sessions: {4} | url: {5} | customLanguageModel: {6}", 
+				model.name, model.description, model.language, model.rate, model.sessions, model.url, model.supported_features.custom_language_model);
+		}
+		else
+		{
+			Log.Warning("ExampleSpeechToText", "Failed to get model!");
+		}
+	}
+
+	private void HandleOnRecognize (SpeechRecognitionEvent result)
 	{
 		if (result != null && result.results.Length > 0)
 		{

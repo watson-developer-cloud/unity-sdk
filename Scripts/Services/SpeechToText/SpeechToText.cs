@@ -27,6 +27,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Text;
+using FullSerializer;
 
 namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 {
@@ -85,13 +86,14 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         private bool m_DetectSilence = true;						// If true, then we will try not to record silence.
         private float m_SilenceThreshold = 0.03f;					// If the audio level is below this value, then it's considered silent.
         private int m_RecordingHZ = -1;
-        #endregion
+		private static fsSerializer sm_Serializer = new fsSerializer();
+		#endregion
 
-        #region Public Properties
-        /// <summary>
-        /// True if StartListening() has been called.
-        /// </summary>
-        public bool IsListening { get { return m_IsListening; } private set { m_IsListening = value; } }
+		#region Public Properties
+		/// <summary>
+		/// True if StartListening() has been called.
+		/// </summary>
+		public bool IsListening { get { return m_IsListening; } private set { m_IsListening = value; } }
         /// <summary>
         /// True if AudioData has been sent and we are recognizing speech.
         /// </summary>
@@ -148,7 +150,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         public float SilenceThreshold { get { return m_SilenceThreshold; } set { m_SilenceThreshold = value; } }
         #endregion
 
-        #region Models
+        #region Get Models
         /// <summary>
         /// This callback object is used by the GetModels() method.
         /// </summary>
@@ -246,17 +248,81 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 
             return null;
         }
-        #endregion
+		#endregion
 
-        #region Sessions
-        #endregion
+		#region Get Model
+		/// <summary>
+		/// This callback object is used by the GetModel() method.
+		/// </summary>
+		/// <param name="model"></param>
+		public delegate void OnGetModel(Model model);
 
-        #region Sessionless - Streaming
-        /// <summary>
-        /// This callback object is used by the Recognize() and StartListening() methods.
-        /// </summary>
-        /// <param name="results">The ResultList object containing the results.</param>
-        public delegate void OnRecognize(SpeechRecognitionEvent results);
+		/// <summary>
+		/// This function retrieves a specified languageModel.
+		/// </summary>
+		/// <param name="callback">This callback is invoked with an array of all available models. The callback will
+		/// be invoked with null on error.</param>
+		/// <returns>Returns true if request has been made.</returns>
+		public bool GetModel(OnGetModel callback, string modelID)
+		{
+			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/v1/models/" + modelID);
+			if (connector == null)
+				return false;
+
+			GetModelRequest req = new GetModelRequest();
+			req.Callback = callback;
+			req.ModelID = modelID;
+			req.OnResponse = OnGetModelResponse;
+
+			return connector.Send(req);
+		}
+
+		private class GetModelRequest : RESTConnector.Request
+		{
+			public OnGetModel Callback { get; set; }
+			public string ModelID { get; set; }
+		};
+
+		private void OnGetModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
+		{
+			Model response = new Model();
+			if (resp.Success)
+			{
+				try
+				{
+					fsData data = null;
+					fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+					if (!r.Succeeded)
+						throw new WatsonException(r.FormattedMessages);
+
+					object obj = response;
+					r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+					if (!r.Succeeded)
+						throw new WatsonException(r.FormattedMessages);
+				}
+				catch(Exception e)
+				{
+					Log.Error("SpeechToText", "Caught exception {0} when parsing GetModel() response: {1}", e.ToString(), Encoding.UTF8.GetString(resp.Data));
+				}
+
+				if (resp == null)
+					Log.Error("SpeechToText", "Failed to parse GetModel response.");
+			}
+
+			if (((GetModelRequest)req).Callback != null)
+				((GetModelRequest)req).Callback(resp.Success ? response :null);
+		}
+		#endregion
+
+		#region Sessions
+		#endregion
+
+		#region Sessionless - Streaming
+		/// <summary>
+		/// This callback object is used by the Recognize() and StartListening() methods.
+		/// </summary>
+		/// <param name="results">The ResultList object containing the results.</param>
+		public delegate void OnRecognize(SpeechRecognitionEvent results);
 
         /// <summary>
         /// This starts the service listening and it will invoke the callback for any recognized speech.
