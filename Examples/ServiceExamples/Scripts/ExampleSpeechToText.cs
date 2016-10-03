@@ -25,8 +25,7 @@ public class ExampleSpeechToText : MonoBehaviour
 	private AudioClip m_AudioClip = new AudioClip(); 
 	private SpeechToText m_SpeechToText = new SpeechToText();
 
-	private string m_SessionIDToDelete = "7ccb52d188f695e380bc0edf19040cb3";
-	//482bb56bea58429c26d0d8a2f0290e42
+	private string m_CreatedSessionID = "7ccb52d188f695e380bc0edf19040cb3";
 
 	void Start()
     {
@@ -37,10 +36,7 @@ public class ExampleSpeechToText : MonoBehaviour
 		//TestGetModels();
 
 		//	test CreateSession
-		//TestCreateSession("en-US_BroadbandModel");
-
-		//	test DeleteSesion
-		TestDeleteSession(m_SessionIDToDelete);
+		TestCreateSession("en-US_BroadbandModel");
     }
 
 	private void TestGetModels()
@@ -131,6 +127,16 @@ public class ExampleSpeechToText : MonoBehaviour
 
 			Log.Debug("ExampleSpeechToText", "Session - sessionID: {0} | new_session_url: {1} | observeResult: {2} | recognize: {3} | recognizeWS: {4}", 
 				session.session_id, session.new_session_uri, session.observe_result, session.recognize, session.recognizeWS);
+
+			if (!string.IsNullOrEmpty(session.session_id))
+			{
+				m_CreatedSessionID = session.session_id;
+
+				//	test DeleteSesion
+				TestDeleteSession(m_CreatedSessionID);
+			}
+			else
+				Log.Warning("ExampleSpeechToText", "session_id is null!");
 		}
 		else
 		{
@@ -142,7 +148,8 @@ public class ExampleSpeechToText : MonoBehaviour
 	{
 		if (success)
 		{
-			Log.Debug("ExampleSpeechToText", "Deleted session!");
+			Log.Debug("ExampleSpeechToText", "Deleted session {0}!", m_CreatedSessionID);
+			m_CreatedSessionID = default(string);
 		}
 		else
 		{
