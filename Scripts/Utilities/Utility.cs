@@ -564,24 +564,25 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 			var dict = new Dictionary<string, string>();
 			if (str != null)
 			{
-				var pairs = Regex.Split(str, "; *");
-				foreach (var pair in pairs)
+				string[] pairs = Regex.Split(str, "; *");
+				foreach (string pair in pairs)
 				{
-					var eqIdx = pair.IndexOf('=');
-					if (eqIdx == -1)
+					int equalIndex = pair.IndexOf('=');
+					if (equalIndex == -1)
 					{
 						continue;
 					}
-					var key = pair.Substring(0, eqIdx).Trim();
+					string key = pair.Substring(0, equalIndex).Trim();
 					if (dict.ContainsKey(key))
 					{
 						continue;
 					}
-					var val = pair.Substring(eqIdx + 1).Trim();
+					string val = pair.Substring(equalIndex + 1).Trim();
 					if (val[0] == '"')
 					{
 						val = val.Substring(1, val.Length - 2);
 					}
+					
 					dict[key] = WWW.UnEscapeURL(val);
 				}
 			}

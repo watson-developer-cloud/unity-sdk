@@ -75,6 +75,10 @@ namespace IBM.Watson.DeveloperCloud.Connection
             /// The amount of time in seconds it took to get this response from the server.
             /// </summary>
             public float ElapsedTime { get; set; }
+			/// <summary>
+			/// The response headers.
+			/// </summary>
+			public Dictionary<string, string> ResponseHeaders { get; set; }
             #endregion
         };
 
@@ -479,7 +483,14 @@ namespace IBM.Watson.DeveloperCloud.Connection
                     {
                         resp.Success = true;
                         resp.Data = www.bytes;
-                    }
+						resp.ResponseHeaders = Utility.ParseCookies(www);
+
+						foreach (KeyValuePair<string, string> kv in resp.ResponseHeaders)
+						{
+							Log.Debug("Util", "key: {0} | value: {1}", kv.Key, kv.Value);
+						}
+						//resp.ResponseHeaders = Utility.GetCookieRequestHeader(Utility.ParseCookies(www));
+					}
                     else
                     {
                         resp.Success = false;
