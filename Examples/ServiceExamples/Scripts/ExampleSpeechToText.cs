@@ -25,7 +25,8 @@ public class ExampleSpeechToText : MonoBehaviour
 	private AudioClip m_AudioClip = new AudioClip(); 
 	private SpeechToText m_SpeechToText = new SpeechToText();
 
-	private string m_CreatedSessionID = "7ccb52d188f695e380bc0edf19040cb3";
+	private string m_CreatedSessionID;
+	private string m_CreatedSessionCookie;
 
 	void Start()
     {
@@ -57,10 +58,10 @@ public class ExampleSpeechToText : MonoBehaviour
 		m_SpeechToText.CreateSession(HandleCreateSession, model);
 	}
 
-	private void TestDeleteSession(string sessionID)
+	private void TestDeleteSession(string sessionID, string session_cookie)
 	{
-		Log.Debug("ExampleSpeechToText", "Attempting to delete session session with model {0}", sessionID);
-		m_SpeechToText.DeleteSession(HandleDeleteSession, sessionID);
+		Log.Debug("ExampleSpeechToText", "Attempting to delete session session with model {0} with cookie {1}", sessionID, session_cookie);
+		m_SpeechToText.DeleteSession(HandleDeleteSession, sessionID, session_cookie);
 	}
 
 	private void HandleGetModels(Model[] models)
@@ -131,9 +132,10 @@ public class ExampleSpeechToText : MonoBehaviour
 			if (!string.IsNullOrEmpty(session.session_id))
 			{
 				m_CreatedSessionID = session.session_id;
+				m_CreatedSessionCookie = session.session_cookie;
 
 				//	test DeleteSesion
-				TestDeleteSession(m_CreatedSessionID);
+				TestDeleteSession(m_CreatedSessionID, m_CreatedSessionCookie);
 			}
 			else
 				Log.Warning("ExampleSpeechToText", "session_id is null!");

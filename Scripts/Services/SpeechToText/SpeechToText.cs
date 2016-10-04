@@ -376,6 +376,13 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 
 					object obj = response;
 					r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+
+					string cookie;
+					if (resp.ResponseHeaders.TryGetValue("Watson-DPAT", out cookie))
+						response.session_cookie = cookie;
+					else
+						Log.Warning("SpeechToText", "Failed to get session cookie!");
+
 					if (!r.Succeeded)
 						throw new WatsonException(r.FormattedMessages);
 				}
@@ -405,7 +412,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 		/// <param name="sessionID">The ID of the session to be deleted.</param>
 		/// <param name="customData">Optional custom data.</param>
 		/// <returns></returns>
-		public bool DeleteSession(OnDeleteSessionCallback callback, string sessionID, string customData = default(string))
+		public bool DeleteSession(OnDeleteSessionCallback callback, string sessionID, string session_cookie, string customData = default(string))
 		{
 			if (callback == null)
 				throw new ArgumentNullException("callback");
@@ -415,10 +422,12 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 			DeleteSessionRequest req = new DeleteSessionRequest();
 			req.Callback = callback;
 			req.SessionID = sessionID;
+			req.SessionCookie = session_cookie;
 			req.Data = customData;
 			req.Delete = true;
 			req.OnResponse = OnDeleteSessionResp;
-
+			req.Headers["Cookie"] = session_cookie;
+			
 			string service = "/v1/sessions/{0}";
 			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(service, sessionID));
 			if (connector == null)
@@ -431,6 +440,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 		{
 			public OnDeleteSessionCallback Callback { get; set; }
 			public string SessionID { get; set; }
+			public string SessionCookie { get; set; }
 			public string Data { get; set; }
 		}
 
@@ -922,6 +932,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 
         #region Custom Words
         #endregion
+
         #region IWatsonService interface
         /// <exclude />
         public string GetServiceID()
