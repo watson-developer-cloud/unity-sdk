@@ -452,7 +452,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 		/// <summary>
 		/// Information about each available custom model. The array is empty if the user owns no custom models (if no language is specified) or owns no custom models for the specified language.
 		/// </summary>
-		public Customizations[] customizations { get; set; }
+		public Customization[] customizations { get; set; }
 	}
 
 	/// <summary>
@@ -511,6 +511,26 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 		/// The GUID of the new custom language model.
 		/// </summary>
 		public string customization_id { get; set; }
+	}
+
+	/// <summary>
+	/// A data object that contains data to create a new empty custom language mode3l.
+	/// </summary>
+	[fsObject]
+	public class CustomLanguage
+	{
+		/// <summary>
+		/// Name of the new custom language model.
+		/// </summary>
+		public string name { get; set; }
+		/// <summary>
+		/// The base model name - Currently only en-US_BroadbandModel is supported.
+		/// </summary>
+		public string base_model_name { get; set; }
+		/// <summary>
+		/// Description of the new custom voice model.
+		/// </summary>
+		public string description { get; set; }
 	}
 	#endregion
 

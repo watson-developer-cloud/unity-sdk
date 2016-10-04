@@ -919,23 +919,240 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                 return null;
             }
         }
-        #endregion
+		#endregion
 
-        #region Asynchronous
-        #endregion
+		#region Asynchronous
+		#endregion
 
-        #region Custom Models
-        #endregion
+		#region Get Custom Models
+		/// <summary>
+		/// This callback is used by the GetCustomizations() function.
+		/// </summary>
+		/// <param name="customizations">The customizations</param>
+		/// <param name="data">Optional custom data.</param>
+		public delegate void GetCustomizationsCallback(Customizations customizations, string data);
 
-        #region Custom Corpora
-        #endregion
+		/// <summary>
+		/// Lists information about all custom language models that are owned by the calling user. Use the language query parameter to see all custom models for the specified language; omit the parameter to see all custom models for all languages.
+		/// Note: This method is currently a beta release that is available for US English only.
+		/// </summary>
+		/// <param name="callback">The callback.</param>
+		/// <param name="language">The language for which custom models are to be returned. Currently, only en-US (the default) is supported.</param>
+		/// <param name="customData">Optional custom data.</param>
+		/// <returns></returns>
+		public bool GetCustomizations(GetCustomizationsCallback callback, string language = "en-US", string customData = default(string))
+		{
+			if (callback == null)
+				throw new ArgumentNullException("callback");
 
-        #region Custom Words
-        #endregion
+			GetCustomizationsReq req = new GetCustomizationsReq();
+			req.Callback = callback;
+			req.Data = customData;
+			req.Language = language;
+			req.Parameters["language"] = language;
+			req.OnResponse = OnGetCustomizationsResp;
 
-        #region IWatsonService interface
-        /// <exclude />
-        public string GetServiceID()
+			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/v1/customizations");
+			if (connector == null)
+				return false;
+
+			return connector.Send(req);
+		}
+
+		private class GetCustomizationsReq : RESTConnector.Request
+		{
+			public GetCustomizationsCallback Callback { get; set; }
+			public string Language { get; set; }
+			public string Data { get; set; }
+		}
+
+		private void OnGetCustomizationsResp(RESTConnector.Request req, RESTConnector.Response resp)
+		{
+			Customizations customizations = new Customizations();
+			if (resp.Success)
+			{
+				try
+				{
+					fsData data = null;
+					fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+					if (!r.Succeeded)
+						throw new WatsonException(r.FormattedMessages);
+
+					object obj = customizations;
+					r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+					if (!r.Succeeded)
+						throw new WatsonException(r.FormattedMessages);
+				}
+				catch (Exception e)
+				{
+					Log.Error("Speech To Text", "GetCustomizations Exception: {0}", e.ToString());
+					resp.Success = false;
+				}
+			}
+
+			if (((GetCustomizationsReq)req).Callback != null)
+				((GetCustomizationsReq)req).Callback(resp.Success ? customizations : null, ((GetCustomizationsReq)req).Data);
+		}
+		#endregion
+
+		#region Create Custom Model
+		/// <summary>
+		/// Thid callback is used by the CreateCustomization() function.
+		/// </summary>
+		/// <param name="customizationID">The customizationID.</param>
+		/// <param name="data">Optional custom data.</param>
+		public delegate void CreateCustomizationCallback(CustomizationID customizationID, string data);
+
+		/// <summary>
+		/// Creates a new custom language model for a specified base language model. The custom language model can be used only with the base language model for which it is created. The new model is owned by the individual whose service credentials are used to create it.
+		/// Note: This method is currently a beta release that is available for US English only.
+		/// </summary>
+		/// <param name="callback">The callback.</param>
+		/// <param name="name">The custom model name.</param>
+		/// <param name="base_model_name">The base model name - only en-US_BroadbandModel is currently supported.</param>
+		/// <param name="description">Descripotion of the custom model.</param>
+		/// <param name="customData">Optional custom data.</param>
+		/// <returns></returns>
+		public bool CreateCustomization(CreateCustomizationCallback callback, string name, string base_model_name = "en-US_BroadbandModel", string description = default(string), string customData = default(string))
+		{
+			if (callback == null)
+				throw new ArgumentNullException("callback");
+			if (string.IsNullOrEmpty(name))
+				throw new ArgumentNullException("A name is required to create a custom language model.");
+
+			CustomLanguage customLanguage = new CustomLanguage();
+			customLanguage.name = name;
+			customLanguage.base_model_name = base_model_name;
+			customLanguage.description = description;
+
+			fsData data;
+			sm_Serializer.TrySerialize(customLanguage.GetType(), customLanguage, out data).AssertSuccessWithoutWarnings();
+			string customizationJson = fsJsonPrinter.CompressedJson(data);
+
+			CreateCustomizationRequest req = new CreateCustomizationRequest();
+			req.Callback = callback;
+			req.CustomLanguage = customLanguage;
+			req.Data = customData;
+			req.Headers["Content-Type"] = "application/json";
+			req.Headers["Accept"] = "application/json";
+			req.Send = Encoding.UTF8.GetBytes(customizationJson);
+			req.OnResponse = OnCreateCustomizationResp;
+
+			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/v1/customizations");
+			if (connector == null)
+				return false;
+
+			return connector.Send(req);
+		}
+
+		private class CreateCustomizationRequest : RESTConnector.Request
+		{
+			public CreateCustomizationCallback Callback { get; set; }
+			public CustomLanguage CustomLanguage { get; set; }
+			public string Data { get; set; }
+		}
+
+		private void OnCreateCustomizationResp(RESTConnector.Request req, RESTConnector.Response resp)
+		{
+			CustomizationID customizationID = new CustomizationID();
+			if (resp.Success)
+			{
+				try
+				{
+					fsData data = null;
+					fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+					if (!r.Succeeded)
+						throw new WatsonException(r.FormattedMessages);
+
+					object obj = customizationID;
+					r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+					if (!r.Succeeded)
+						throw new WatsonException(r.FormattedMessages);
+				}
+				catch (Exception e)
+				{
+					Log.Error("Speech To Text", "CreateCustomization Exception: {0}", e.ToString());
+					resp.Success = false;
+				}
+			}
+
+			if (((CreateCustomizationRequest)req).Callback != null)
+				((CreateCustomizationRequest)req).Callback(resp.Success ? customizationID : null, ((CreateCustomizationRequest)req).Data);
+		}
+		#endregion
+
+		#region Delete Custom Model
+		/// <summary>
+		/// This callback is used by the DeleteCustomization() function.
+		/// </summary>
+		/// <param name="success"></param>
+		/// <param name="data"></param>
+		public delegate void OnDeleteCustomizationCallback(bool success, string data);
+		/// <summary>
+		/// Deletes an existing custom language model. Only the owner of a custom model can use this method to delete the model.
+		/// Note: This method is currently a beta release that is available for US English only.
+		/// </summary>
+		/// <param name="callback">The callback.</param>
+		/// <param name="customizationID">The customization ID to be deleted.</param>
+		/// <param name="customData">Optional customization data.</param>
+		/// <returns></returns>
+		public bool DeleteCustomization(OnDeleteCustomizationCallback callback, string customizationID, string customData = default(string))
+		{
+			if (callback == null)
+				throw new ArgumentNullException("callback");
+			if (string.IsNullOrEmpty(customizationID))
+				throw new ArgumentNullException("A customizationID to delete is required for DeleteCustomization");
+
+			DeleteCustomizationRequest req = new DeleteCustomizationRequest();
+			req.Callback = callback;
+			req.CustomizationID = customizationID;
+			req.Data = customData;
+			req.Delete = true;
+			req.OnResponse = OnDeleteCustomizationResp;
+
+			string service = "/v1/customizations/{0}";
+			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(service, customizationID));
+			if (connector == null)
+				return false;
+
+			return connector.Send(req);
+		}
+
+		private class DeleteCustomizationRequest : RESTConnector.Request
+		{
+			public OnDeleteCustomizationCallback Callback { get; set; }
+			public string CustomizationID { get; set; }
+			public string Data { get; set; }
+		}
+
+		private void OnDeleteCustomizationResp(RESTConnector.Request req, RESTConnector.Response resp)
+		{
+			if (((DeleteCustomizationRequest)req).Callback != null)
+				((DeleteCustomizationRequest)req).Callback(resp.Success, ((DeleteCustomizationRequest)req).Data);
+		}
+		#endregion
+
+		#region Get Custom Model
+		#endregion
+
+		#region Train Custom Model
+		#endregion
+
+		#region Reset Custom Model
+		#endregion
+
+		#region Upgrade Custom Model
+		#endregion
+
+		#region Custom Corpora
+		#endregion
+
+		#region Custom Words
+		#endregion
+
+		#region IWatsonService interface
+		/// <exclude />
+		public string GetServiceID()
         {
             return SERVICE_ID;
         }

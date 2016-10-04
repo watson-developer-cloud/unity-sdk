@@ -28,6 +28,8 @@ public class ExampleSpeechToText : MonoBehaviour
 	private string m_CreatedSessionID;
 	private string m_CreatedSessionCookie;
 
+	private string m_CreatedCustomizationID;
+
 	void Start()
     {
 		//m_SpeechToText.Recognize(m_AudioClip, HandleOnRecognize);
@@ -37,7 +39,13 @@ public class ExampleSpeechToText : MonoBehaviour
 		//TestGetModels();
 
 		//	test CreateSession
-		TestCreateSession("en-US_BroadbandModel");
+		//TestCreateSession("en-US_BroadbandModel");
+
+		//	test GetCustomizations
+		TestGetCustomizations();
+
+		//	test create and delete customizations
+		TestCreateCustomization();
     }
 
 	private void TestGetModels()
@@ -62,6 +70,24 @@ public class ExampleSpeechToText : MonoBehaviour
 	{
 		Log.Debug("ExampleSpeechToText", "Attempting to delete session session with model {0} with cookie {1}", sessionID, session_cookie);
 		m_SpeechToText.DeleteSession(HandleDeleteSession, sessionID, session_cookie);
+	}
+
+	private void TestGetCustomizations()
+	{
+		Log.Debug("ExampleSpeechToText", "Attempting to get customizations");
+		m_SpeechToText.GetCustomizations(HandleGetCustomizations);
+	}
+
+	private void TestCreateCustomization()
+	{
+		Log.Debug("ExampleSpeechToText", "Attempting create customization");
+		m_SpeechToText.CreateCustomization(HandleCreateCustomization, "unity-test-customization", "en-US_BroadbandModel", "Testing customization unity");
+	}
+
+	private void TestDeleteCustomization(string customizationID)
+	{
+		Log.Debug("ExampleSpeechToText", "Attempting to delete customization {0}", customizationID);
+		m_SpeechToText.DeleteCustomization(HandleDeleteCustomization, customizationID);
 	}
 
 	private void HandleGetModels(Model[] models)
@@ -121,11 +147,11 @@ public class ExampleSpeechToText : MonoBehaviour
 
 	private void HandleCreateSession(Session session, string customData)
 	{
+		if (!string.IsNullOrEmpty(customData))
+			Log.Debug("ExampleSpeechToText", "custom data: {0}", customData);
+
 		if(session != null)
 		{
-			if (!string.IsNullOrEmpty(customData))
-				Log.Debug("ExampleSpeechToText", "custom data: {0}", customData);
-
 			Log.Debug("ExampleSpeechToText", "Session - sessionID: {0} | new_session_url: {1} | observeResult: {2} | recognize: {3} | recognizeWS: {4}", 
 				session.session_id, session.new_session_uri, session.observe_result, session.recognize, session.recognizeWS);
 
@@ -146,7 +172,7 @@ public class ExampleSpeechToText : MonoBehaviour
 		}
 	}
 
-	private void HandleDeleteSession(bool success, string data)
+	private void HandleDeleteSession(bool success, string customData)
 	{
 		if (success)
 		{
@@ -156,6 +182,57 @@ public class ExampleSpeechToText : MonoBehaviour
 		else
 		{
 			Log.Debug("ExampleSpeechToText", "Failed to delete session!");
+		}
+	}
+
+	private void HandleGetCustomizations(Customizations customizations, string customData)
+	{
+		if (!string.IsNullOrEmpty(customData))
+			Log.Debug("ExampleSpeechToText", "custom data: {0}", customData);
+
+		if (customizations != null)
+		{
+			if(customizations.customizations.Length > 0)
+			{
+				foreach (Customization customization in customizations.customizations)
+					Log.Debug("ExampleSpeechToText", "Customization - name: {0} | description: {1} | status: {2}", customization.name, customization.description, customization.status);
+			}
+			else
+			{
+				Log.Debug("ExampleSpeechToText", "There are no customizations!");
+			}
+		}
+		else
+		{
+			Log.Debug("ExampleSpeechToText", "Failed to get customizations!");
+		}
+	}
+
+	private void HandleCreateCustomization(CustomizationID customizationID, string customData)
+	{
+		if(customizationID != null)
+		{
+			Log.Debug("ExampleSpeechToText", "Customization created: {0}", customizationID.customization_id);
+
+			m_CreatedCustomizationID = customizationID.customization_id;
+			TestDeleteCustomization(m_CreatedCustomizationID);
+		}
+		else
+		{
+			Log.Debug("ExampleSpeechToText", "Failed to create customization!");
+		}
+	}
+
+	private void HandleDeleteCustomization(bool success, string customData)
+	{
+		if (success)
+		{
+			Log.Debug("ExampleSpeechToText", "Deleted customization {0}!", m_CreatedCustomizationID);
+			m_CreatedCustomizationID = default(string);
+		}
+		else
+		{
+			Log.Debug("ExampleSpeechToText", "Failed to delete customization!");
 		}
 	}
 }
