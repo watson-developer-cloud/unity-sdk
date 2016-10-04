@@ -18,6 +18,7 @@
 using UnityEngine;
 using IBM.Watson.DeveloperCloud.Services.SpeechToText.v1;
 using IBM.Watson.DeveloperCloud.Logging;
+#pragma warning disable 0414
 
 public class ExampleSpeechToText : MonoBehaviour
 {
@@ -26,7 +27,6 @@ public class ExampleSpeechToText : MonoBehaviour
 	private SpeechToText m_SpeechToText = new SpeechToText();
 
 	private string m_CreatedSessionID;
-	private string m_CreatedSessionCookie;
 
 	private string m_CreatedCustomizationID;
 
@@ -58,18 +58,6 @@ public class ExampleSpeechToText : MonoBehaviour
 	{
 		Log.Debug("ExampleSpeechToText", "Attempting to get model {0}", modelID);
 		m_SpeechToText.GetModel(HandleGetModel, modelID);
-	}
-
-	private void TestCreateSession(string model)
-	{
-		Log.Debug("ExampleSpeechToText", "Attempting to create session with model {0}", model);
-		m_SpeechToText.CreateSession(HandleCreateSession, model);
-	}
-
-	private void TestDeleteSession(string sessionID, string session_cookie)
-	{
-		Log.Debug("ExampleSpeechToText", "Attempting to delete session session with model {0} with cookie {1}", sessionID, session_cookie);
-		m_SpeechToText.DeleteSession(HandleDeleteSession, sessionID, session_cookie);
 	}
 
 	private void TestGetCustomizations()
@@ -166,46 +154,6 @@ public class ExampleSpeechToText : MonoBehaviour
 					Debug.Log(string.Format( "{0} ({1}, {2:0.00})\n", text, res.final ? "Final" : "Interim", alt.confidence));
 				}
 			}
-		}
-	}
-
-	private void HandleCreateSession(Session session, string customData)
-	{
-		if (!string.IsNullOrEmpty(customData))
-			Log.Debug("ExampleSpeechToText", "custom data: {0}", customData);
-
-		if(session != null)
-		{
-			Log.Debug("ExampleSpeechToText", "Session - sessionID: {0} | new_session_url: {1} | observeResult: {2} | recognize: {3} | recognizeWS: {4}", 
-				session.session_id, session.new_session_uri, session.observe_result, session.recognize, session.recognizeWS);
-
-			if (!string.IsNullOrEmpty(session.session_id))
-			{
-				m_CreatedSessionID = session.session_id;
-				m_CreatedSessionCookie = session.session_cookie;
-
-				//	test DeleteSesion
-				TestDeleteSession(m_CreatedSessionID, m_CreatedSessionCookie);
-			}
-			else
-				Log.Warning("ExampleSpeechToText", "session_id is null!");
-		}
-		else
-		{
-			Log.Debug("ExampleSpeechToText", "Failed to create session!");
-		}
-	}
-
-	private void HandleDeleteSession(bool success, string customData)
-	{
-		if (success)
-		{
-			Log.Debug("ExampleSpeechToText", "Deleted session {0}!", m_CreatedSessionID);
-			m_CreatedSessionID = default(string);
-		}
-		else
-		{
-			Log.Debug("ExampleSpeechToText", "Failed to delete session!");
 		}
 	}
 

@@ -109,10 +109,6 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 		/// URI for WebSocket recognition requests. Needed only for working with the WebSocket interface.
 		/// </summary>
 		public string recognizeWS { get; set; }
-		/// <summary>
-		/// The cookie for this session.
-		/// </summary>
-		public string session_cookie { get; set; }
 	}
 
 	/// <summary>
