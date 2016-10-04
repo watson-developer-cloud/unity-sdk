@@ -1239,10 +1239,95 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 		}
 		#endregion
 
-		#region Custom Corpora
+		#region Get Custom Corpora
+		/// <summary>
+		/// This callback is used by the GetCustomCorpora() function.
+		/// </summary>
+		/// <param name="corpora">The corpora</param>
+		/// <param name="data">Optional custom data.</param>
+		public delegate void GetCustomCorporaCallback(Corpora corpora, string data);
+
+		/// <summary>
+		/// Lists information about all corpora that have been added to the specified custom language model. The information includes the total number of words and out-of-vocabulary (OOV) words, name, and status of each corpus. Only the owner of a custom model can use this method to list the model's corpora.
+		/// Note: This method is currently a beta release that is available for US English only.
+		/// </summary>
+		/// <param name="callback">The callback.</param>
+		/// <param name="language">The language for which custom models are to be returned. Currently, only en-US (the default) is supported.</param>
+		/// <param name="customData">Optional custom data.</param>
+		/// <returns></returns>
+		public bool GetCustomCorpora(GetCustomCorporaCallback callback, string customizationID, string customData = default(string))
+		{
+			if (callback == null)
+				throw new ArgumentNullException("callback");
+			if (string.IsNullOrEmpty(customizationID))
+				throw new ArgumentNullException("A customizationID is required to GetCustomCorpora");
+
+			GetCustomCorporaReq req = new GetCustomCorporaReq();
+			req.Callback = callback;
+			req.Data = customData;
+			req.CustomizationID = customizationID;
+			req.OnResponse = OnGetCustomCorporaResp;
+
+			string service = "/v1/customizations/{0}/corpora";
+			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(service, customizationID));
+			if (connector == null)
+				return false;
+
+			return connector.Send(req);
+		}
+
+		private class GetCustomCorporaReq : RESTConnector.Request
+		{
+			public GetCustomCorporaCallback Callback { get; set; }
+			public string CustomizationID { get; set; }
+			public string Data { get; set; }
+		}
+
+		private void OnGetCustomCorporaResp(RESTConnector.Request req, RESTConnector.Response resp)
+		{
+			Corpora corpora = new Corpora();
+			if (resp.Success)
+			{
+				try
+				{
+					fsData data = null;
+					fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+					if (!r.Succeeded)
+						throw new WatsonException(r.FormattedMessages);
+
+					object obj = corpora;
+					r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+					if (!r.Succeeded)
+						throw new WatsonException(r.FormattedMessages);
+				}
+				catch (Exception e)
+				{
+					Log.Error("Speech To Text", "OnGetCustomCorporaResp Exception: {0}", e.ToString());
+					resp.Success = false;
+				}
+			}
+
+			if (((GetCustomCorporaReq)req).Callback != null)
+				((GetCustomCorporaReq)req).Callback(resp.Success ? corpora : null, ((GetCustomCorporaReq)req).Data);
+		}
 		#endregion
 
-		#region Custom Words
+		#region Delete Custom Corpora
+		#endregion
+
+		#region Add Custom Corpora
+		#endregion
+
+		#region Get Custom Words
+		#endregion
+
+		#region Add Custom Words
+		#endregion
+
+		#region Delete Custom Words
+		#endregion
+
+		#region Get Custom Word
 		#endregion
 
 		#region IWatsonService interface

@@ -26,8 +26,6 @@ public class ExampleSpeechToText : MonoBehaviour
 	private AudioClip m_AudioClip = new AudioClip(); 
 	private SpeechToText m_SpeechToText = new SpeechToText();
 
-	private string m_CreatedSessionID;
-
 	private string m_CreatedCustomizationID;
 
 	void Start()
@@ -100,6 +98,12 @@ public class ExampleSpeechToText : MonoBehaviour
 	{
 		Log.Debug("ExampleSpeechToText", "Attempting to reset customization {0}", customizationID);
 		m_SpeechToText.ResetCustomization(HandleResetCustomization, customizationID);
+	}
+
+	private void TestGetCustomCorpora(string customizationID)
+	{
+		Log.Debug("ExampleSpeechToText", "Attempting to get custom corpora for {0}", customizationID);
+		m_SpeechToText.GetCustomCorpora(HandleGetCustopmCorpora, customizationID);
 	}
 
 	private void HandleGetModels(Model[] models)
@@ -221,7 +225,9 @@ public class ExampleSpeechToText : MonoBehaviour
 		{
 			Log.Debug("ExampleSpeechToText", "Customization - name: {0} | description: {1} | status: {2}", customization.name, customization.description, customization.status);
 			Log.Debug("ExampleSpeechToText", "GetCustomization() succeeded!");
-			TestDeleteCustomization(m_CreatedCustomizationID);
+
+			//	test get custom corpora
+			TestGetCustomCorpora(m_CreatedCustomizationID);
 		}
 		else
 		{
@@ -274,6 +280,33 @@ public class ExampleSpeechToText : MonoBehaviour
 		else
 		{
 			Log.Debug("ExampleSpeechToText", "Failed to reset customization!");
+		}
+	}
+
+	private void HandleGetCustopmCorpora(Corpora corpora, string customData)
+	{
+		if (!string.IsNullOrEmpty(customData))
+			Log.Debug("ExampleSpeechToText", "CustomData: {0}", customData);
+
+		if(corpora != null)
+		{
+			if(corpora.corpora.Length > 0)
+			{
+				foreach (Corpus corpus in corpora.corpora)
+					Log.Debug("ExampleSpeechToText", "Corpus - name: {0} | total_words: {1} | out_of_vocabulary_words: {2} | staus: {3}", 
+						corpus.name, corpus.total_words, corpus.out_of_vocabulary_words, corpus.status);
+			}
+			else
+			{
+				Log.Debug("ExampleSpeechToText", "There are no custom corpora!");
+			}
+
+			Log.Debug("ExampleSpeechToText", "GetCustomCorpora() succeeded!");
+			TestDeleteCustomization(m_CreatedCustomizationID);
+		}
+		else
+		{
+			Log.Debug("ExampleSpeechToText", "Failed to get custom corpora!");
 		}
 	}
 }

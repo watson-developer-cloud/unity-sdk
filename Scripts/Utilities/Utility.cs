@@ -26,7 +26,6 @@ using UnityEngine;
 using System.Net.NetworkInformation;
 using System.Text.RegularExpressions;
 using System.Runtime.InteropServices;
-using System.Reflection;
 
 namespace IBM.Watson.DeveloperCloud.Utilities
 {
