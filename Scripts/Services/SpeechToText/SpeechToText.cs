@@ -1152,7 +1152,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 			if (callback == null)
 				throw new ArgumentNullException("callback");
 			if (string.IsNullOrEmpty(customizationID))
-				throw new ArgumentNullException("A customizationID to get a custom voice model.");
+				throw new ArgumentNullException("A customizationID to get a custom language model.");
 
 			GetCustomizationRequest req = new GetCustomizationRequest();
 			req.Callback = callback;
@@ -1194,7 +1194,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 				}
 				catch (Exception e)
 				{
-					Log.Error("Text To Speech", "CreateCustomization Exception: {0}", e.ToString());
+					Log.Error("Speech To Text", "GetCustomization Exception: {0}", e.ToString());
 					resp.Success = false;
 				}
 			}
@@ -1205,12 +1205,171 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 		#endregion
 
 		#region Train Custom Model
+		/// <summary>
+		/// This callback is used by the TrainCustomization() function.
+		/// </summary>
+		/// <param name="success">The success of the call.</param>
+		/// <param name="data">Optional custom data.</param>
+		public delegate void TrainCustomizationCallback(bool success, string data);
+		/// <summary>
+		/// Initiates the training of a custom language model with new corpora, words, or both.After adding training data to the custom model with the corpora or words methods, use this method to begin the actual training of the model on the new data.You can specify whether the custom model is to be trained with all words from its words resources or only with words that were added or modified by the user.Only the owner of a custom model can use this method to train the model.
+		/// This method is asynchronous and can take on the order of minutes to complete depending on the amount of data on which the service is being trained and the current load on the service.The method returns an HTTP 200 response code to indicate that the training process has begun.
+		/// You can monitor the status of the training by using the GET /v1/customizations/{customization_id} method to poll the model's status. Use a loop to check the status every 10 seconds. The method returns a Customization object that includes status and progress fields. A status of available means that the custom model is trained and ready to use. If training is in progress, the progress field indicates the progress of the training as a percentage complete.
+		/// Note: For this beta release, the progress field does not reflect the current progress of the training. The field changes from 0 to 100 when training is complete.
+		/// Training can fail to start for the following reasons:
+		/// No training data (corpora or words) have been added to the custom model.
+		/// Pre-processing of corpora to generate a list of out-of-vocabulary (OOV) words is not complete.
+		/// Pre-processing of words to validate or auto-generate sounds-like pronunciations is not complete.
+		/// One or more words that were added to the custom model have invalid sounds-like pronunciations that you must fix.
+		/// Note: This method is currently a beta release that is available for US English only.
+		/// </summary>
+		/// <param name="callback">The callback.</param>
+		/// <param name="customizationID">The requested custom language model's identifier.</param>
+		/// <param name="customData">Optional custom data.</param>
+		/// <returns></returns>
+		public bool TrainCustomization(TrainCustomizationCallback callback, string customizationID, string wordTypeToAdd = WordTypeToAdd.ALL, string customData = default(string))
+		{
+			if (callback == null)
+				throw new ArgumentNullException("callback");
+			if (string.IsNullOrEmpty(customizationID))
+				throw new ArgumentNullException("A customizationID to train a custom language model.");
+
+			TrainCustomizationRequest req = new TrainCustomizationRequest();
+			req.Callback = callback;
+			req.CustomizationID = customizationID;
+			req.Data = customData;
+			req.Parameters["word_type_to_add"] = wordTypeToAdd;
+			req.Headers["Content-Type"] = "application/json";
+			req.Headers["Accept"] = "application/json";
+			req.Send = Encoding.UTF8.GetBytes("{}");
+			req.OnResponse = OnTrainCustomizationResp;
+
+			string service = "/v1/customizations/{0}/train";
+			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(service, customizationID));
+			if (connector == null)
+				return false;
+
+			return connector.Send(req);
+		}
+
+		private class TrainCustomizationRequest : RESTConnector.Request
+		{
+			public TrainCustomizationCallback Callback { get; set; }
+			public string CustomizationID { get; set; }
+			public string Data { get; set; }
+		}
+
+		private void OnTrainCustomizationResp(RESTConnector.Request req, RESTConnector.Response resp)
+		{
+			if (((TrainCustomizationRequest)req).Callback != null)
+				((TrainCustomizationRequest)req).Callback(resp.Success, ((TrainCustomizationRequest)req).Data);
+		}
 		#endregion
 
 		#region Reset Custom Model
+		/// <summary>
+		/// This callback is used by the ResetCustomization() function.
+		/// </summary>
+		/// <param name="success">The success of the call.</param>
+		/// <param name="data">Optional custom data.</param>
+		public delegate void ResetCustomizationCallback(bool success, string data);
+		/// <summary>
+		/// Resets a custom language model by removing all corpora and words from the model.Resetting a custom model initializes the model to its state when it was first created. Metadata such as the name and language of the model are preserved.Only the owner of a custom model can use this method to reset the model.
+		/// Note: This method is currently a beta release that is available for US English only.
+		/// </summary>
+		/// <param name="callback">The callback.</param>
+		/// <param name="customizationID">The requested custom language model's identifier.</param>
+		/// <param name="customData">Optional custom data.</param>
+		/// <returns></returns>
+		public bool ResetCustomization(ResetCustomizationCallback callback, string customizationID, string customData = default(string))
+		{
+			if (callback == null)
+				throw new ArgumentNullException("callback");
+			if (string.IsNullOrEmpty(customizationID))
+				throw new ArgumentNullException("A customizationID to train a reset language model.");
+
+			ResetCustomizationRequest req = new ResetCustomizationRequest();
+			req.Callback = callback;
+			req.CustomizationID = customizationID;
+			req.Data = customData;
+			req.Headers["Content-Type"] = "application/json";
+			req.Headers["Accept"] = "application/json";
+			req.Send = Encoding.UTF8.GetBytes("{}");
+			req.OnResponse = OnResetCustomizationResp;
+
+			string service = "/v1/customizations/{0}/reset";
+			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(service, customizationID));
+			if (connector == null)
+				return false;
+
+			return connector.Send(req);
+		}
+
+		private class ResetCustomizationRequest : RESTConnector.Request
+		{
+			public ResetCustomizationCallback Callback { get; set; }
+			public string CustomizationID { get; set; }
+			public string Data { get; set; }
+		}
+
+		private void OnResetCustomizationResp(RESTConnector.Request req, RESTConnector.Response resp)
+		{
+			if (((ResetCustomizationRequest)req).Callback != null)
+				((ResetCustomizationRequest)req).Callback(resp.Success, ((ResetCustomizationRequest)req).Data);
+		}
 		#endregion
 
 		#region Upgrade Custom Model
+		/// <summary>
+		/// This callback is used by the UpgradeCustomization() function.
+		/// </summary>
+		/// <param name="success">The success of the call.</param>
+		/// <param name="data">Optional custom data.</param>
+		public delegate void UpgradeCustomizationCallback(bool success, string data);
+		/// <summary>
+		/// Upgrades a custom language model to the latest release level of the Speech to Text service. The method bases the upgrade on the latest trained data stored for the custom model. If the corpora or words for the model have changed since the model was last trained, you must use the POST /v1/customizations/{customization_id}/train method to train the model on the new data. Only the owner of a custom model can use this method to upgrade the model.
+		/// Note: This method is not currently implemented.It will be added for a future release of the API.
+		/// </summary>
+		/// <param name="callback">The callback.</param>
+		/// <param name="customizationID">The requested custom language model's identifier.</param>
+		/// <param name="customData">Optional custom data.</param>
+		/// <returns></returns>
+		public bool UpgradeCustomization(UpgradeCustomizationCallback callback, string customizationID, string customData = default(string))
+		{
+			if (callback == null)
+				throw new ArgumentNullException("callback");
+			if (string.IsNullOrEmpty(customizationID))
+				throw new ArgumentNullException("A customizationID to upgrade a custom language model.");
+
+			UpgradeCustomizationRequest req = new UpgradeCustomizationRequest();
+			req.Callback = callback;
+			req.CustomizationID = customizationID;
+			req.Data = customData;
+			req.Headers["Content-Type"] = "application/json";
+			req.Headers["Accept"] = "application/json";
+			req.Send = Encoding.UTF8.GetBytes("{}");
+			req.OnResponse = OnResetCustomizationResp;
+
+			string service = "/v1/customizations/{0}/upgrade";
+			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(service, customizationID));
+			if (connector == null)
+				return false;
+
+			return connector.Send(req);
+		}
+
+		private class UpgradeCustomizationRequest : RESTConnector.Request
+		{
+			public UpgradeCustomizationCallback Callback { get; set; }
+			public string CustomizationID { get; set; }
+			public string Data { get; set; }
+		}
+
+		private void OnUpgradeCustomizationResp(RESTConnector.Request req, RESTConnector.Response resp)
+		{
+			if (((UpgradeCustomizationRequest)req).Callback != null)
+				((UpgradeCustomizationRequest)req).Callback(resp.Success, ((UpgradeCustomizationRequest)req).Data);
+		}
 		#endregion
 
 		#region Custom Corpora

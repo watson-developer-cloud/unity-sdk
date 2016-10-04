@@ -532,6 +532,21 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 		/// </summary>
 		public string description { get; set; }
 	}
+
+	/// <summary>
+	/// The type of words from the custom model's words resource on which to train the model: all (the default) trains the model on all new words, regardless of whether they were extracted from corpora or were added or modified by the user. user trains the model only on new words that were added or modified by the user; the model is not trained on new words extracted from corpora.
+	/// </summary>
+	public class WordTypeToAdd
+	{
+		/// <summary>
+		/// All word types.
+		/// </summary>
+		public const string ALL = "all";
+		/// <summary>
+		/// User word types.
+		/// </summary>
+		public const string USER = "user";
+	}
 	#endregion
 
 	#region Custom Corpora

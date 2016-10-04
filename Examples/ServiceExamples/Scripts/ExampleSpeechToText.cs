@@ -96,6 +96,24 @@ public class ExampleSpeechToText : MonoBehaviour
 		m_SpeechToText.GetCustomization(HandleGetCustomization, customizationID);
 	}
 
+	private void TestTrainCustomization(string customizationID)
+	{
+		Log.Debug("ExampleSpeechToText", "Attempting to train customization {0}", customizationID);
+		m_SpeechToText.TrainCustomization(HandleTrainCustomization, customizationID);
+	}
+
+	private void TestUpgradeCustomization(string customizationID)
+	{
+		Log.Debug("ExampleSpeechToText", "Attempting to upgrade customization {0}", customizationID);
+		m_SpeechToText.UpgradeCustomization(HandleUpgradeCustomization, customizationID);
+	}
+
+	private void TestResetCustomization(string customizationID)
+	{
+		Log.Debug("ExampleSpeechToText", "Attempting to reset customization {0}", customizationID);
+		m_SpeechToText.ResetCustomization(HandleResetCustomization, customizationID);
+	}
+
 	private void HandleGetModels(Model[] models)
 	{
 		if (models != null)
@@ -260,6 +278,54 @@ public class ExampleSpeechToText : MonoBehaviour
 		else
 		{
 			Log.Debug("ExampleSpeechToText", "Failed to get customization {0}!", m_CreatedCustomizationID);
+		}
+	}
+
+	private void HandleTrainCustomization(bool success, string customData)
+	{
+		if (!string.IsNullOrEmpty(customData))
+			Log.Debug("ExampleSpeechToText", "custom data: {0}", customData);
+
+		if (success)
+		{
+			Log.Debug("ExampleSpeechToText", "Train customization {0}!", m_CreatedCustomizationID);
+			Log.Debug("ExampleSpeechToText", "TrainCustomization() succeeded!");
+		}
+		else
+		{
+			Log.Debug("ExampleSpeechToText", "Failed to train customization!");
+		}
+	}
+
+	private void HandleUpgradeCustomization(bool success, string customData)
+	{
+		if (!string.IsNullOrEmpty(customData))
+			Log.Debug("ExampleSpeechToText", "custom data: {0}", customData);
+
+		if (success)
+		{
+			Log.Debug("ExampleSpeechToText", "Upgrade customization {0}!", m_CreatedCustomizationID);
+			Log.Debug("ExampleSpeechToText", "UpgradeCustomization() succeeded!");
+		}
+		else
+		{
+			Log.Debug("ExampleSpeechToText", "Failed to upgrade customization!");
+		}
+	}
+
+	private void HandleResetCustomization(bool success, string customData)
+	{
+		if (!string.IsNullOrEmpty(customData))
+			Log.Debug("ExampleSpeechToText", "custom data: {0}", customData);
+
+		if (success)
+		{
+			Log.Debug("ExampleSpeechToText", "Reset customization {0}!", m_CreatedCustomizationID);
+			Log.Debug("ExampleSpeechToText", "ResetCustomization() succeeded!");
+		}
+		else
+		{
+			Log.Debug("ExampleSpeechToText", "Failed to reset customization!");
 		}
 	}
 }
