@@ -702,7 +702,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 				}
 				catch (Exception e)
 				{
-					Log.Error("Text To Speech", "CreateCustomization Exception: {0}", e.ToString());
+					Log.Error("Text To Speech", "GetCustomization Exception: {0}", e.ToString());
 					resp.Success = false;
 				}
 			}

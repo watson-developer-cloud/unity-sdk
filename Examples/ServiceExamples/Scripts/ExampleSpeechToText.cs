@@ -44,7 +44,7 @@ public class ExampleSpeechToText : MonoBehaviour
 		//	test GetCustomizations
 		TestGetCustomizations();
 
-		//	test create and delete customizations
+		//	test create, get and delete customizations
 		TestCreateCustomization();
     }
 
@@ -88,6 +88,12 @@ public class ExampleSpeechToText : MonoBehaviour
 	{
 		Log.Debug("ExampleSpeechToText", "Attempting to delete customization {0}", customizationID);
 		m_SpeechToText.DeleteCustomization(HandleDeleteCustomization, customizationID);
+	}
+
+	private void TestGetCustomization(string customizationID)
+	{
+		Log.Debug("ExampleSpeechToText", "Attempting to get customization {0}", customizationID);
+		m_SpeechToText.GetCustomization(HandleGetCustomization, customizationID);
 	}
 
 	private void HandleGetModels(Model[] models)
@@ -196,6 +202,8 @@ public class ExampleSpeechToText : MonoBehaviour
 			{
 				foreach (Customization customization in customizations.customizations)
 					Log.Debug("ExampleSpeechToText", "Customization - name: {0} | description: {1} | status: {2}", customization.name, customization.description, customization.status);
+
+				Log.Debug("ExampleSpeechToText", "GetCustomizations() succeeded!");
 			}
 			else
 			{
@@ -213,9 +221,10 @@ public class ExampleSpeechToText : MonoBehaviour
 		if(customizationID != null)
 		{
 			Log.Debug("ExampleSpeechToText", "Customization created: {0}", customizationID.customization_id);
+			Log.Debug("ExampleSpeechToText", "CreateCustomization() succeeded!");
 
 			m_CreatedCustomizationID = customizationID.customization_id;
-			TestDeleteCustomization(m_CreatedCustomizationID);
+			TestGetCustomization(m_CreatedCustomizationID);
 		}
 		else
 		{
@@ -228,11 +237,29 @@ public class ExampleSpeechToText : MonoBehaviour
 		if (success)
 		{
 			Log.Debug("ExampleSpeechToText", "Deleted customization {0}!", m_CreatedCustomizationID);
+			Log.Debug("ExampleSpeechToText", "DeletedCustomization() succeeded!");
 			m_CreatedCustomizationID = default(string);
 		}
 		else
 		{
 			Log.Debug("ExampleSpeechToText", "Failed to delete customization!");
+		}
+	}
+
+	private void HandleGetCustomization(Customization customization, string customData)
+	{
+		if (!string.IsNullOrEmpty(customData))
+			Log.Debug("ExampleSpeechToText", "custom data: {0}", customData);
+
+		if(customization != null)
+		{
+			Log.Debug("ExampleSpeechToText", "Customization - name: {0} | description: {1} | status: {2}", customization.name, customization.description, customization.status);
+			Log.Debug("ExampleSpeechToText", "GetCustomization() succeeded!");
+			TestDeleteCustomization(m_CreatedCustomizationID);
+		}
+		else
+		{
+			Log.Debug("ExampleSpeechToText", "Failed to get customization {0}!", m_CreatedCustomizationID);
 		}
 	}
 }

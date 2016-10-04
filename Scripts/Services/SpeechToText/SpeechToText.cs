@@ -1133,6 +1133,75 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 		#endregion
 
 		#region Get Custom Model
+		/// <summary>
+		/// This callback is used by the GetCusomization() function.
+		/// </summary>
+		/// <param name="customization"></param>
+		/// <param name="data"></param>
+		public delegate void GetCustomizationCallback(Customization customization, string data);
+		/// <summary>
+		/// Lists information about a custom language model. Only the owner of a custom model can use this method to query information about the model.
+		///	Note: This method is currently a beta release that is available for US English only.
+		/// </summary>
+		/// <param name="callback">The callback.</param>
+		/// <param name="customizationID">The requested custom language model's identifier.</param>
+		/// <param name="customData">Optional custom data.</param>
+		/// <returns></returns>
+		public bool GetCustomization(GetCustomizationCallback callback, string customizationID, string customData = default(string))
+		{
+			if (callback == null)
+				throw new ArgumentNullException("callback");
+			if (string.IsNullOrEmpty(customizationID))
+				throw new ArgumentNullException("A customizationID to get a custom voice model.");
+
+			GetCustomizationRequest req = new GetCustomizationRequest();
+			req.Callback = callback;
+			req.CustomizationID = customizationID;
+			req.Data = customData;
+			req.OnResponse = OnGetCustomizationResp;
+
+			string service = "/v1/customizations/{0}";
+			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(service, customizationID));
+			if (connector == null)
+				return false;
+
+			return connector.Send(req);
+		}
+
+		private class GetCustomizationRequest : RESTConnector.Request
+		{
+			public GetCustomizationCallback Callback { get; set; }
+			public string CustomizationID { get; set; }
+			public string Data { get; set; }
+		}
+
+		private void OnGetCustomizationResp(RESTConnector.Request req, RESTConnector.Response resp)
+		{
+			Customization customization = new Customization();
+			if (resp.Success)
+			{
+				try
+				{
+					fsData data = null;
+					fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+					if (!r.Succeeded)
+						throw new WatsonException(r.FormattedMessages);
+
+					object obj = customization;
+					r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+					if (!r.Succeeded)
+						throw new WatsonException(r.FormattedMessages);
+				}
+				catch (Exception e)
+				{
+					Log.Error("Text To Speech", "CreateCustomization Exception: {0}", e.ToString());
+					resp.Success = false;
+				}
+			}
+
+			if (((GetCustomizationRequest)req).Callback != null)
+				((GetCustomizationRequest)req).Callback(resp.Success ? customization : null, ((GetCustomizationRequest)req).Data);
+		}
 		#endregion
 
 		#region Train Custom Model
