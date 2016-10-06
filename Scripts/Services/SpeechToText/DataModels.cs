@@ -589,18 +589,20 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 	/// <summary>
 	/// This data class contains information about multiple custom words.
 	/// </summary>
+	[fsObject]
 	public class WordsList
 	{
 		/// <summary>
 		/// Information about each word in the custom model's words resource. The array is empty if the custom model has no words.
 		/// </summary>
-		public WordsData words { get; set; }
+		public WordData words { get; set; }
 	}
 
 	/// <summary>
 	/// This data class contains information about the custom word data.
 	/// </summary>
-	public class WordsData
+	[fsObject]
+	public class WordData
 	{
 		/// <summary>
 		/// A custom word from the custom model. The spelling of the word is used to train the model. 
@@ -622,6 +624,57 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 		/// If the service discovered a problem with the custom word's definition that you need to correct, a message that describes the problem, for example: Numbers are not allowed in sounds-like. You must correct the error before you can train the model.
 		/// </summary>
 		public string error { get; set; }
+	}
+
+	/// <summary>
+	/// The type of words to be listed from the custom language model's words resource: all (the default) shows all words. user shows only custom words that were added or modified by the user. corpora shows only OOV that were extracted from corpora.
+	/// </summary>
+	public class WordType
+	{
+		/// <summary>
+		///	All words.
+		/// </summary>
+		public const string ALL = "all";
+		/// <summary>
+		/// User words.
+		/// </summary>
+		public const string USER = "user";
+		/// <summary>
+		/// Corpora words.
+		/// </summary>
+		public const string CORPORA = "corpora";
+	}
+
+	/// <summary>
+	/// Words object for adding words to a customization.
+	/// </summary>
+	[fsObject]
+	public class Words
+	{
+		/// <summary>
+		/// The words to add to a customization.
+		/// </summary>
+		public Word[] words { get; set; }
+	}
+
+	/// <summary>
+	/// A word to add to a customization.
+	/// </summary>
+	[fsObject]
+	public class Word
+	{
+		/// <summary>
+		/// The word.
+		/// </summary>
+		public string word { get; set; }
+		/// <summary>
+		/// What the word sounds like.
+		/// </summary>
+		public string sounds_like { get; set; }
+		/// <summary>
+		/// How the word is displayed.
+		/// </summary>
+		public string display_as { get; set; }
 	}
 	#endregion
 }

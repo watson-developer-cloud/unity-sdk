@@ -69,7 +69,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// <param name="error">A string containing the error message.</param>
         public delegate void ErrorEvent(string error);
 		/// <summary>
-		/// The delegate for loading a file, used by TrainClassifier().
+		/// The delegate for loading a file.
 		/// </summary>
 		/// <param name="filename">The filename to load.</param>
 		/// <returns>Should return a byte array of the file contents or null of failure.</returns>
@@ -1487,7 +1487,6 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 			req.Parameters["allow_overwrite"] = allowOverwrite;
 			req.Forms = new Dictionary<string, RESTConnector.Form>();
 			req.Forms["body"] = new RESTConnector.Form(trainingData, "trainingData.txt", "text/plain");
-			//req.Send = Encoding.UTF8.GetBytes(reqString);
 			req.OnResponse = OnAddCustomCorpusResp;
 
 			string service = "/v1/customizations/{0}/corpora/{1}";
@@ -1516,15 +1515,310 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 		#endregion
 
 		#region Get Custom Words
+		/// <summary>
+		/// This callback is used by the GetCustomWords() function.
+		/// </summary>
+		/// <param name="wordList">The custom words</param>
+		/// <param name="data">Optional custom data.</param>
+		public delegate void GetCustomWordsCallback(WordsList wordList, string data);
+
+		/// <summary>
+		/// Lists information about all custom words from a custom language model. You can list all words from the custom model's words resource, only custom words that were added or modified by the user, or only OOV words that were extracted from corpora. Only the owner of a custom model can use this method to query the words from the model.
+		/// Note: This method is currently a beta release that is available for US English only.
+		/// </summary>
+		/// <param name="callback">The callback.</param>
+		/// <param name="language">The language for which custom models are to be returned. Currently, only en-US (the default) is supported.</param>
+		/// <param name="customData">Optional custom data.</param>
+		/// <returns></returns>
+		public bool GetCustomWords(GetCustomWordsCallback callback, string customizationID, string wordType = WordType.ALL, string customData = default(string))
+		{
+			if (callback == null)
+				throw new ArgumentNullException("callback");
+			if (string.IsNullOrEmpty(customizationID))
+				throw new ArgumentNullException("customizationID");
+
+			GetCustomWordsReq req = new GetCustomWordsReq();
+			req.Callback = callback;
+			req.CustomizationID = customizationID;
+			req.WordType = wordType;
+			req.Data = customData;
+			req.Parameters["word_type"] = wordType.ToString();
+			req.OnResponse = OnGetCustomWordsResp;
+
+			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format("/v1/customizations/{0}/words", customizationID));
+			if (connector == null)
+				return false;
+
+			return connector.Send(req);
+		}
+
+		private class GetCustomWordsReq : RESTConnector.Request
+		{
+			public GetCustomWordsCallback Callback { get; set; }
+			public string CustomizationID { get; set; }
+			public string WordType { get; set; }
+			public string Data { get; set; }
+		}
+
+		private void OnGetCustomWordsResp(RESTConnector.Request req, RESTConnector.Response resp)
+		{
+			WordsList wordsList = new WordsList();
+			if (resp.Success)
+			{
+				try
+				{
+					fsData data = null;
+					fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+					if (!r.Succeeded)
+						throw new WatsonException(r.FormattedMessages);
+
+					object obj = wordsList;
+					r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+					if (!r.Succeeded)
+						throw new WatsonException(r.FormattedMessages);
+				}
+				catch (Exception e)
+				{
+					Log.Error("Speech To Text", "OnGetCustomWordsResp Exception: {0}", e.ToString());
+					resp.Success = false;
+				}
+			}
+
+			if (((GetCustomWordsReq)req).Callback != null)
+				((GetCustomWordsReq)req).Callback(resp.Success ? wordsList : null, ((GetCustomWordsReq)req).Data);
+		}
 		#endregion
 
 		#region Add Custom Words
+		/// <summary>
+		/// This callback is used by the AddCustomWords() function.
+		/// </summary>
+		/// <param name="success">The success of the call.</param>
+		/// <param name="data">Optional custom data.</param>
+		public delegate void AddCustomWordsCallback(bool success, string data);
+		/// <summary>
+		/// Adds one or more custom words to a custom language model.The service populates the words resource for a custom model with out-of-vocabulary(OOV) words found in each corpus added to the model.You can use this method to add additional words or to modify existing words in the words resource.Only the owner of a custom model can use this method to add or modify custom words associated with the model.Adding or modifying custom words does not affect the custom model until you train the model for the new data by using the POST /v1/customizations/{customization_id}/train method.
+		/// You add custom words by providing a Words object, which is an array of Word objects, one per word.You must use the object's word parameter to identify the word that is to be added. You can also provide one or both of the optional sounds_like and display_as fields for each word.
+		/// The sounds_like field provides an array of one or more pronunciations for the word. Use the parameter to specify how the word can be pronounced by users.Use the parameter for words that are difficult to pronounce, foreign words, acronyms, and so on.For example, you might specify that the word IEEE can sound like i triple e.You can specify a maximum of five sounds-like pronunciations for a word, and each pronunciation must adhere to the following rules:
+		/// Use English alphabetic characters: a-z and A-Z.
+		/// To pronounce a single letter, use the letter followed by a period, for example, N.C.A.A. for the word NCAA.
+		/// Use real or made-up words that are pronounceable in the native language, for example, shuchensnie for the word Sczcesny.
+		/// Substitute equivalent English letters for non-English letters, for example, s for ç or ny for ñ.
+		/// Substitute non-accented letters for accented letters, for example a for à or e for è.
+		/// Use the spelling of numbers, for example, seventy-five for 75.
+		/// You can include multiple words separated by spaces, but the service enforces a maximum of 40 total characters not including spaces.
+		/// The display_as field provides a different way of spelling the word in a transcript. Use the parameter when you want the word to appear different from its usual representation or from its spelling in corpora training data.For example, you might indicate that the word IBM(trademark) is to be displayed as IBM™.
+		/// If you add a custom word that already exists in the words resource for the custom model, the new definition overrides the existing data for the word.If the service encounters an error with the input data, it returns a failure code and does not add any of the words to the words resource.
+		/// The call returns an HTTP 201 response code if the input data is valid.It then asynchronously pre-processes the words to add them to the model's words resource. The time that it takes for the analysis to complete depends on the number of new words that you add but is generally faster than adding a corpus or training a model.
+		/// You can use the GET /v1/customizations/{ customization_id}/words or GET /v1/customizations/{customization_id}/words/{word_name} method to review the words that you add.Words with an invalid sounds_like field include an error field that describes the problem.You can use other words methods to correct errors, eliminate typos, and modify how words are pronounced as needed.
+		/// Note: This method is currently a beta release that is available for US English only.
+		/// </summary>
+		/// <param name="callback">The callback.</param>
+		/// <param name="customizationID">The requested custom language model's identifier.</param>
+		/// <param name="useDataPath">A boolean used to differentiate overloads with identical input types..</param>
+		/// <param name="wordsJsonPath">A path to a json file to train.</param>
+		/// <param name="customData">Optional custom data.</param>
+		/// <returns></returns>
+		public bool AddCustomWords(AddCustomWordsCallback callback, string customizationID, bool useDataPath, string wordsJsonPath, string customData = default(string))
+		{
+			if (callback == null)
+				throw new ArgumentNullException("callback");
+			if (string.IsNullOrEmpty(customizationID))
+				throw new ArgumentNullException("A customizationID to add words to a custom language model.");
+			if (string.IsNullOrEmpty(wordsJsonPath))
+				throw new ArgumentNullException("A wordsJsonPath is required to add words to a custom language model.");
+
+			return AddCustomWords(callback, customizationID, File.ReadAllText(wordsJsonPath));
+		}
+
+		public bool AddCustomWords(AddCustomWordsCallback callback, string customizationID, Words words, string customData = default(string))
+		{
+			if (callback == null)
+				throw new ArgumentNullException("callback");
+			if (string.IsNullOrEmpty(customizationID))
+				throw new ArgumentNullException("A customizationID to add words to a custom language model.");
+			if (words == null || words.words == null || words.words.Length == 0)
+				throw new WatsonException("Custom words are required to add words to a custom language model.");
+
+			fsData data;
+			sm_Serializer.TrySerialize(words.GetType(), words, out data).AssertSuccessWithoutWarnings();
+			string wordsJson = fsJsonPrinter.CompressedJson(data);
+
+			return AddCustomWords(callback, customizationID, wordsJson, customData);
+		}
+
+		public bool AddCustomWords(AddCustomWordsCallback callback, string customizationID, string wordsJson, string customData = default(string))
+		{
+			if (callback == null)
+				throw new ArgumentNullException("callback");
+			if (string.IsNullOrEmpty(customizationID))
+				throw new ArgumentNullException("A customizationID to add words to a custom language model.");
+			if (string.IsNullOrEmpty(wordsJson))
+				throw new ArgumentNullException("A wordsJsonPath is required to add words to a custom language model.");
+
+			AddCustomWordsRequest req = new AddCustomWordsRequest();
+			req.Callback = callback;
+			req.CustomizationID = customizationID;
+			req.WordsJson = wordsJson;
+			req.Data = customData;
+			req.Headers["Content-Type"] = "application/json";
+			req.Headers["Accept"] = "application/json";
+			req.Send = Encoding.UTF8.GetBytes(wordsJson);
+			req.OnResponse = OnAddCustomWordsResp;
+
+			string service = "/v1/customizations/{0}/words";
+			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(service, customizationID));
+			if (connector == null)
+				return false;
+
+			return connector.Send(req);
+		}
+
+		private class AddCustomWordsRequest : RESTConnector.Request
+		{
+			public AddCustomWordsCallback Callback { get; set; }
+			public string CustomizationID { get; set; }
+			public string WordsJson { get; set; }
+			public string Data { get; set; }
+		}
+
+		private void OnAddCustomWordsResp(RESTConnector.Request req, RESTConnector.Response resp)
+		{
+			if (((AddCustomWordsRequest)req).Callback != null)
+				((AddCustomWordsRequest)req).Callback(resp.Success, ((AddCustomWordsRequest)req).Data);
+		}
 		#endregion
 
 		#region Delete Custom Words
+		/// <summary>
+		/// This callback is used by the DeleteCustomWord() function.
+		/// </summary>
+		/// <param name="success"></param>
+		/// <param name="data"></param>
+		public delegate void OnDeleteCustomWordCallback(bool success, string data);
+		/// <summary>
+		/// Deletes a custom word from a custom language model. You can remove any word that you added to the custom model's words resource via any means. However, if the word also exists in the service's base vocabulary, the service removes only the custom pronunciation for the word; the word remains in the base vocabulary.
+		/// Removing a custom word does not affect the custom model until you train the model with the POST /v1/customizations/{customization_id}/train method.Only the owner of a custom model can use this method to delete a word from the model.
+		/// Note: This method is currently a beta release that is available for US English only.
+		/// </summary>
+		/// <param name="callback">The callback.</param>
+		/// <param name="customizationID">The customization ID to be deleted.</param>
+		/// <param name="customData">Optional customization data.</param>
+		/// <returns></returns>
+		public bool DeleteCustomWord(OnDeleteCustomWordCallback callback, string customizationID, string word, string customData = default(string))
+		{
+			if (callback == null)
+				throw new ArgumentNullException("callback");
+			if (string.IsNullOrEmpty(customizationID))
+				throw new ArgumentNullException("A customizationID is required for DeleteCustomWord");
+			if (string.IsNullOrEmpty(word))
+				throw new ArgumentNullException("A word to delete is requried for DeleteCustomWord");
+
+			DeleteCustomWordRequest req = new DeleteCustomWordRequest();req.Callback = callback;
+			req.CustomizationID = customizationID;
+			req.Word = word;
+			req.Data = customData;
+			req.Delete = true;
+			req.OnResponse = OnDeleteCustomWordResp;
+
+			string service = "/v1/customizations/{0}/words/{1}";
+			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(service, customizationID, word));
+			if (connector == null)
+				return false;
+
+			return connector.Send(req);
+		}
+
+		private class DeleteCustomWordRequest : RESTConnector.Request
+		{
+			public OnDeleteCustomWordCallback Callback { get; set; }
+			public string CustomizationID { get; set; }
+			public string Word { get; set; }
+			public string Data { get; set; }
+		}
+
+		private void OnDeleteCustomWordResp(RESTConnector.Request req, RESTConnector.Response resp)
+		{
+			if (((DeleteCustomWordRequest)req).Callback != null)
+				((DeleteCustomWordRequest)req).Callback(resp.Success, ((DeleteCustomWordRequest)req).Data);
+		}
 		#endregion
 
 		#region Get Custom Word
+		/// <summary>
+		/// This callback is used by the GetCustomWord() function.
+		/// </summary>
+		/// <param name="word">The word</param>
+		/// <param name="data">Optional custom data.</param>
+		public delegate void GetCustomWordCallback(WordData word, string data);
+
+		/// <summary>
+		/// Lists information about a custom word from a custom language model. Only the owner of a custom model can use this method to query a word from the model.
+		/// Note: This method is currently a beta release that is available for US English only.
+		/// </summary>
+		/// <param name="callback">The callback.</param>
+		/// <param name="language">The language for which custom models are to be returned. Currently, only en-US (the default) is supported.</param>
+		/// <param name="customData">Optional custom data.</param>
+		/// <returns></returns>
+		public bool GetCustomWord(GetCustomWordCallback callback, string customizationID, string word, string customData = default(string))
+		{
+			if (callback == null)
+				throw new ArgumentNullException("callback");
+			if (string.IsNullOrEmpty(customizationID))
+				throw new ArgumentNullException("A customizationID is required to GetCustomWord");
+			if (string.IsNullOrEmpty(word))
+				throw new ArgumentNullException("A word is required to GetCustomWord");
+
+			GetCustomWordReq req = new GetCustomWordReq();
+			req.Callback = callback;
+			req.CustomizationID = customizationID;
+			req.Word = word;
+			req.Data = customData;
+			req.OnResponse = OnGetCustomWordResp;
+
+			string service = "/v1/customizations/{0}/words/{1}";
+			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(service, customizationID, word));
+			if (connector == null)
+				return false;
+
+			return connector.Send(req);
+		}
+
+		private class GetCustomWordReq : RESTConnector.Request
+		{
+			public GetCustomWordCallback Callback { get; set; }
+			public string CustomizationID { get; set; }
+			public string Word { get; set; }
+			public string Data { get; set; }
+		}
+
+		private void OnGetCustomWordResp(RESTConnector.Request req, RESTConnector.Response resp)
+		{
+			WordData word = new WordData();
+			if (resp.Success)
+			{
+				try
+				{
+					fsData data = null;
+					fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+					if (!r.Succeeded)
+						throw new WatsonException(r.FormattedMessages);
+
+					object obj = word;
+					r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+					if (!r.Succeeded)
+						throw new WatsonException(r.FormattedMessages);
+				}
+				catch (Exception e)
+				{
+					Log.Error("Speech To Text", "OnGetCustomWordResp Exception: {0}", e.ToString());
+					resp.Success = false;
+				}
+			}
+
+			if (((GetCustomWordReq)req).Callback != null)
+				((GetCustomWordReq)req).Callback(resp.Success ? word : null, ((GetCustomWordReq)req).Data);
+		}
 		#endregion
 
 		#region IWatsonService interface
