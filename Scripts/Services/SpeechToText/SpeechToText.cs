@@ -1313,6 +1313,59 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 		#endregion
 
 		#region Delete Custom Corpora
+		/// <summary>
+		/// This callback is used by the DeleteCustomCorpora() function.
+		/// </summary>
+		/// <param name="success"></param>
+		/// <param name="data"></param>
+		public delegate void OnDeleteCustomCorporaCallback(bool success, string data);
+		/// <summary>
+		/// Deletes an existing corpus from a custom language model. The service removes any out-of-vocabulary (OOV) words associated with the corpus from the custom model's words resource unless they were also added by another corpus or they have been modified in some way with the POST /v1/customizations/{customization_id}/words or PUT /v1/customizations/{customization_id}/words/{word_name} method. Removing a corpus does not affect the custom model until you train the model with the POST /v1/customizations/{customization_id}/train method. Only the owner of a custom model can use this method to delete a corpus from the model.
+		/// Note: This method is currently a beta release that is available for US English only.
+		/// </summary>
+		/// <param name="callback">The callback.</param>
+		/// <param name="customizationID">The customization ID with the corpus to be deleted.</param>
+		/// <param name="corpusName">The corpus name to be deleted.</param>
+		/// <param name="customData">Optional customization data.</param>
+		/// <returns></returns>
+		public bool DeleteCustomCorpora(OnDeleteCustomCorporaCallback callback, string customizationID, string corpusName, string customData = default(string))
+		{
+			if (callback == null)
+				throw new ArgumentNullException("callback");
+			if (string.IsNullOrEmpty(customizationID))
+				throw new ArgumentNullException("A customizationID is required for DeleteCustomCorpora.");
+			if (string.IsNullOrEmpty(corpusName))
+				throw new ArgumentNullException("A corpusName to delete is required to DeleteCustomCorpora.");
+
+			DeleteCustomCorporaRequest req = new DeleteCustomCorporaRequest();
+			req.Callback = callback;
+			req.CustomizationID = customizationID;
+			req.CorpusName = corpusName;
+			req.Data = customData;
+			req.Delete = true;
+			req.OnResponse = OnDeleteCustomizationResp;
+
+			string service = "/v1/customizations/{0}/corpora/{1}";
+			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(service, customizationID, corpusName));
+			if (connector == null)
+				return false;
+
+			return connector.Send(req);
+		}
+
+		private class DeleteCustomCorporaRequest : RESTConnector.Request
+		{
+			public OnDeleteCustomCorporaCallback Callback { get; set; }
+			public string CustomizationID { get; set; }
+			public string CorpusName { get; set; }
+			public string Data { get; set; }
+		}
+
+		private void OnDeleteCustomCorpraResp(RESTConnector.Request req, RESTConnector.Response resp)
+		{
+			if (((DeleteCustomCorporaRequest)req).Callback != null)
+				((DeleteCustomCorporaRequest)req).Callback(resp.Success, ((DeleteCustomCorporaRequest)req).Data);
+		}
 		#endregion
 
 		#region Add Custom Corpora

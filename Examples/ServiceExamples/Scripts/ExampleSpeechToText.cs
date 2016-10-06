@@ -106,6 +106,12 @@ public class ExampleSpeechToText : MonoBehaviour
 		m_SpeechToText.GetCustomCorpora(HandleGetCustopmCorpora, customizationID);
 	}
 
+	private void TestDeleteCustomCorpora(string customizationID, string corpusName)
+	{
+		Log.Debug("ExampleSpeechToText", "Attempting to delete custom corpora {1} in customization {0}", customizationID, corpusName);
+		m_SpeechToText.DeleteCustomCorpora(HandleDeleteCustomCorpora, customizationID, corpusName);
+	}
+
 	private void HandleGetModels(Model[] models)
 	{
 		if (models != null)
@@ -307,6 +313,21 @@ public class ExampleSpeechToText : MonoBehaviour
 		else
 		{
 			Log.Debug("ExampleSpeechToText", "Failed to get custom corpora!");
+		}
+	}
+
+	private void HandleDeleteCustomCorpora(bool success, string customData)
+	{
+		if (!string.IsNullOrEmpty(customData))
+			Log.Debug("ExampleSpeechToText", "custom data: {0}", customData);
+
+		if (success)
+		{
+			Log.Debug("ExampleSpeechToText", "DeleteCustomCorpora() succeeded!");
+		}
+		else
+		{
+			Log.Debug("ExampleSpeechToText", "Failed to delete custom corpora!");
 		}
 	}
 }
