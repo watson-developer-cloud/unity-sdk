@@ -28,6 +28,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Text;
 using FullSerializer;
+using System.IO;
 
 namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 {
@@ -67,10 +68,20 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// </summary>
         /// <param name="error">A string containing the error message.</param>
         public delegate void ErrorEvent(string error);
-        #endregion
+		/// <summary>
+		/// The delegate for loading a file, used by TrainClassifier().
+		/// </summary>
+		/// <param name="filename">The filename to load.</param>
+		/// <returns>Should return a byte array of the file contents or null of failure.</returns>
+		public delegate byte[] LoadFileDelegate(string filename);
+		/// <summary>
+		/// Set this property to overload the internal file loading of this class.
+		/// </summary>
+		public LoadFileDelegate LoadFile { get; set; }
+		#endregion
 
-        #region Private Data
-        private OnRecognize m_ListenCallback = null;				// Callback is set by StartListening()                                                             
+		#region Private Data
+		private OnRecognize m_ListenCallback = null;				// Callback is set by StartListening()                                                             
         private WSConnector m_ListenSocket = null;					// WebSocket object used when StartListening() is invoked  
         private bool m_ListenActive = false;
         private bool m_AudioSent = false;
@@ -1312,13 +1323,13 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 		}
 		#endregion
 
-		#region Delete Custom Corpora
+		#region Delete Custom Corpus
 		/// <summary>
-		/// This callback is used by the DeleteCustomCorpora() function.
+		/// This callback is used by the DeleteCustomCorpus() function.
 		/// </summary>
 		/// <param name="success"></param>
 		/// <param name="data"></param>
-		public delegate void OnDeleteCustomCorporaCallback(bool success, string data);
+		public delegate void OnDeleteCustomCorpusCallback(bool success, string data);
 		/// <summary>
 		/// Deletes an existing corpus from a custom language model. The service removes any out-of-vocabulary (OOV) words associated with the corpus from the custom model's words resource unless they were also added by another corpus or they have been modified in some way with the POST /v1/customizations/{customization_id}/words or PUT /v1/customizations/{customization_id}/words/{word_name} method. Removing a corpus does not affect the custom model until you train the model with the POST /v1/customizations/{customization_id}/train method. Only the owner of a custom model can use this method to delete a corpus from the model.
 		/// Note: This method is currently a beta release that is available for US English only.
@@ -1328,7 +1339,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 		/// <param name="corpusName">The corpus name to be deleted.</param>
 		/// <param name="customData">Optional customization data.</param>
 		/// <returns></returns>
-		public bool DeleteCustomCorpora(OnDeleteCustomCorporaCallback callback, string customizationID, string corpusName, string customData = default(string))
+		public bool DeleteCustomCorpus(OnDeleteCustomCorpusCallback callback, string customizationID, string corpusName, string customData = default(string))
 		{
 			if (callback == null)
 				throw new ArgumentNullException("callback");
@@ -1337,13 +1348,13 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 			if (string.IsNullOrEmpty(corpusName))
 				throw new ArgumentNullException("A corpusName to delete is required to DeleteCustomCorpora.");
 
-			DeleteCustomCorporaRequest req = new DeleteCustomCorporaRequest();
+			DeleteCustomCorpusRequest req = new DeleteCustomCorpusRequest();
 			req.Callback = callback;
 			req.CustomizationID = customizationID;
 			req.CorpusName = corpusName;
 			req.Data = customData;
 			req.Delete = true;
-			req.OnResponse = OnDeleteCustomizationResp;
+			req.OnResponse = OnDeleteCustomCorpusResp;
 
 			string service = "/v1/customizations/{0}/corpora/{1}";
 			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(service, customizationID, corpusName));
@@ -1353,22 +1364,155 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 			return connector.Send(req);
 		}
 
-		private class DeleteCustomCorporaRequest : RESTConnector.Request
+		private class DeleteCustomCorpusRequest : RESTConnector.Request
 		{
-			public OnDeleteCustomCorporaCallback Callback { get; set; }
+			public OnDeleteCustomCorpusCallback Callback { get; set; }
 			public string CustomizationID { get; set; }
 			public string CorpusName { get; set; }
 			public string Data { get; set; }
 		}
 
-		private void OnDeleteCustomCorpraResp(RESTConnector.Request req, RESTConnector.Response resp)
+		private void OnDeleteCustomCorpusResp(RESTConnector.Request req, RESTConnector.Response resp)
 		{
-			if (((DeleteCustomCorporaRequest)req).Callback != null)
-				((DeleteCustomCorporaRequest)req).Callback(resp.Success, ((DeleteCustomCorporaRequest)req).Data);
+			if (((DeleteCustomCorpusRequest)req).Callback != null)
+				((DeleteCustomCorpusRequest)req).Callback(resp.Success, ((DeleteCustomCorpusRequest)req).Data);
 		}
 		#endregion
 
-		#region Add Custom Corpora
+		#region Add Custom Coprpus
+		/// <summary>
+		/// This callback is used by the AddCustomCorpus() function.
+		/// </summary>
+		/// <param name="success"></param>
+		/// <param name="data"></param>
+		public delegate void OnAddCustomCorpusCallback(bool success, string data);
+		/// <summary>
+		/// Adds a single corpus text file of new training data to the custom language model. Use multiple requests to submit multiple corpus text files. Only the owner of a custom model can use this method to add a corpus to the model.
+		/// Submit a plain text file that contains sample sentences from the domain of interest to enable the service to extract words in context.The more sentences you add that represent the context in which speakers use words from the domain, the better the service's recognition accuracy. Adding a corpus does not affect the custom model until you train the model for the new data by using the POST /v1/customizations/{customization_id}/train method.
+		/// Use the following guidelines to prepare a corpus text file:
+		/// - Provide a plain text file that is encoded in UTF-8 if it contains non-ASCII characters.The service assumes UTF-8 encoding if it encounters such characters.
+		/// - Include each sentence of the corpus on its own line, terminating each line with a carriage return. Including multiple sentences on the same line can degrade accuracy.
+		/// - Use consistent capitalization for words in the corpus. The words resource is case-sensitive; mix upper- and lowercase letters and use capitalization only when intended. 
+		/// - Beware of typographical errors.The service assumes that typos are new words; unless you correct them before training the model, the service adds them to the model's vocabulary.
+		/// The service automatically does the following:
+		/// - Converts numbers to their equivalent words.For example:
+		///		500 becomes five hundred
+		///		and
+		///		0.15 becomes zero point fifteen
+		///	- Removes the following punctuation and special characters:
+		///		! @ # $ % ^ & * - + = ~ _ . , ; : ( ) < > [ ] { }
+		///	- Ignores phrases enclosed in ( ) (parentheses), < > (angle brackets), [] (square brackets), and { } (curly braces).
+		///	- Converts tokens that include certain symbols to meaningful strings.For example, the service converts a $ (dollar sign) followed by a number to its string representation:
+		///		$100 becomes one hundred dollars
+		///		and it converts a % (percent sign) preceded by a number to its string representation:
+		///		100% becomes one hundred percent
+		///		This list is not exhaustive; the service makes similar adjustments for other characters as needed.
+		///	
+		/// The call returns an HTTP 201 response code if the corpus is valid.It then asynchronously pre-processes the contents of the corpus and automatically extracts new words that it finds.This can take on the order of a minute or two to complete depending on the total number of words and the number of new words in the corpus, as well as the current load on the service.You cannot submit requests to add additional corpora or words to the custom model, or to train the model, until the service's analysis of the corpus for the current request completes. Use the GET /v1/customizations/{customization_id}/corpora method to check the status of the analysis.
+		/// 
+		/// The service auto-populates the model's words resource with any word that is not found in its base vocabulary; these are referred to as out-of-vocabulary (OOV) words. You can use the GET /v1/customizations/{customization_id}/words method to examine the words resource, using other words method to eliminate typos and modify how words are pronounced as needed.
+		/// 
+		/// To add a corpus file that has the same name as an existing corpus, set the allow_overwrite query parameter to true; otherwise, the request fails.Overwriting an existing corpus causes the service to process the corpus text file and extract OOV words anew.Before doing so, it removes any OOV words associated with the existing corpus from the model's words resource unless they were also added by another corpus or they have been modified in some way with the POST /v1/customizations/{customization_id}/words or PUT /v1/customizations/{customization_id}/words/{word_name} method.
+		/// 
+		/// The service limits the overall amount of data that you can add to a custom model to a maximum of 10 million total words from all corpora combined.Also, you can add no more than 30 thousand new words to a model; this includes words that the service extracts from corpora and words that you add directly.
+		/// Note: This method is currently a beta release that is available for US English only
+		/// </summary>
+		/// <param name="callback">The callback.</param>
+		/// <param name="customizationID">The customization ID with the corpus to be deleted.</param>
+		/// <param name="corpusName">The corpus name to be deleted.</param>
+		/// <param name="allowOverwrite">Allow overwriting of corpus data.</param>
+		/// <param name="trainingData">A file path to plain text training data.</param>
+		/// <param name="customData">Optional customization data.</param>
+		/// <returns></returns>
+		public bool AddCustomCorpus(OnAddCustomCorpusCallback callback, string customizationID, string corpusName, bool allowOverwrite, string trainingPath, string customData = default(string))
+		{
+			if (callback == null)
+				throw new ArgumentNullException("callback");
+			if (string.IsNullOrEmpty(customizationID))
+				throw new ArgumentNullException("A customizationID is required for AddCustomCorpus.");
+			if (string.IsNullOrEmpty(corpusName))
+				throw new ArgumentNullException("A corpusName is required to AddCustomCorpus.");
+			if (string.IsNullOrEmpty(trainingPath))
+				throw new ArgumentNullException("A path to training data is required to AddCustomCorpus");
+
+			byte[] trainingDataBytes = null;
+
+			if (!string.IsNullOrEmpty(trainingPath))
+			{
+				if (LoadFile != null)
+				{
+					trainingDataBytes = LoadFile(trainingPath);
+				}
+				else
+				{
+#if !UNITY_WEBPLAYER
+					trainingDataBytes = File.ReadAllBytes(trainingPath);
+#endif
+				}
+
+				if (trainingDataBytes == null)
+					Log.Error("SpeechToText", "Failed to upload {0}!", trainingPath);
+			}
+
+			return AddCustomCorpus(callback, customizationID, corpusName, allowOverwrite, trainingDataBytes);
+		}
+
+		/// <summary>
+		/// Overload method for AddCustomCorpus that takes byteArray training data.
+		/// </summary>
+		/// <param name="callback">The callback.</param>
+		/// <param name="customizationID">The customization ID with the corpus to be deleted.</param>
+		/// <param name="corpusName">The corpus name to be deleted.</param>
+		/// <param name="allowOverwrite">Allow overwriting of corpus data.</param>
+		/// <param name="trainingData">ByteArray data for training data.</param>
+		/// <param name="customData">Optional customization data.</param>
+		public bool AddCustomCorpus(OnAddCustomCorpusCallback callback, string customizationID, string corpusName, bool allowOverwrite, byte[] trainingData, string customData = default(string))
+		{
+			if (callback == null)
+				throw new ArgumentNullException("callback");
+			if (string.IsNullOrEmpty(customizationID))
+				throw new ArgumentNullException("A customizationID is required for AddCustomCorpus.");
+			if (string.IsNullOrEmpty(corpusName))
+				throw new ArgumentNullException("A corpusName is requried for AddCustomCorpus.");
+			if (trainingData == default(byte[]))
+				throw new ArgumentNullException("Training data is required for AddCustomCorpus.");
+
+			AddCustomCorpusRequest req = new AddCustomCorpusRequest();
+			req.Callback = callback;
+			req.CustomizationID = customizationID;
+			req.CorpusName = corpusName;
+			req.Data = customData;
+			req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
+			req.Headers["Accept"] = "application/json";
+			req.Parameters["allow_overwrite"] = allowOverwrite;
+			req.Forms = new Dictionary<string, RESTConnector.Form>();
+			req.Forms["body"] = new RESTConnector.Form(trainingData, "trainingData.txt", "text/plain");
+			//req.Send = Encoding.UTF8.GetBytes(reqString);
+			req.OnResponse = OnAddCustomCorpusResp;
+
+			string service = "/v1/customizations/{0}/corpora/{1}";
+			RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(service, customizationID, corpusName));
+			if (connector == null)
+				return false;
+
+			return connector.Send(req);
+		}
+
+		private class AddCustomCorpusRequest : RESTConnector.Request
+		{
+			public OnAddCustomCorpusCallback Callback { get; set; }
+			public string CustomizationID { get; set; }
+			public string CorpusName { get; set; }
+			public bool AllowOverwrite { get; set; }
+			public byte[] TrainingData { get; set; }
+			public string Data { get; set; }
+		}
+
+		private void OnAddCustomCorpusResp(RESTConnector.Request req, RESTConnector.Response resp)
+		{
+			if (((AddCustomCorpusRequest)req).Callback != null)
+				((AddCustomCorpusRequest)req).Callback(resp.Success, ((AddCustomCorpusRequest)req).Data);
+		}
 		#endregion
 
 		#region Get Custom Words
