@@ -479,7 +479,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
                     {
                         resp.Success = true;
                         resp.Data = www.bytes;
-                    }
+					}
                     else
                     {
                         resp.Success = false;

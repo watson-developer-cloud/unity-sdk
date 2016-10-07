@@ -440,7 +440,7 @@ namespace IBM.Watson.DeveloperCloud.DataTypes
         /// Data constructor.
         /// </summary>
         /// <param name="result">The SpeechToText results.</param>
-        public SpeechToTextData(SpeechResultList result)
+        public SpeechToTextData(SpeechRecognitionEvent result)
         {
             Results = result;
         }
@@ -455,7 +455,7 @@ namespace IBM.Watson.DeveloperCloud.DataTypes
         /// <summary>
         /// The Result object.
         /// </summary>
-        public SpeechResultList Results { get; set; }
+        public SpeechRecognitionEvent Results { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether the result text is final.
@@ -465,9 +465,9 @@ namespace IBM.Watson.DeveloperCloud.DataTypes
         {
             get{
                 bool isFinal = false;
-                if (Results != null && Results.Results.Length > 0)
+                if (Results != null && Results.results.Length > 0)
                 {
-                    isFinal = Results.Results[0].Final;
+                    isFinal = Results.results[0].final;
                 }
 
                 return isFinal;
@@ -484,12 +484,12 @@ namespace IBM.Watson.DeveloperCloud.DataTypes
             get{
                 if (string.IsNullOrEmpty(_Text))
                 {
-                    if (Results != null && Results.Results.Length > 0)
+                    if (Results != null && Results.results.Length > 0)
                     {
-                        SpeechResult speechResult = Results.Results[0];
-                        if (speechResult.Alternatives != null && speechResult.Alternatives.Length > 0)
+						SpeechRecognitionResult speechResult = Results.results[0];
+                        if (speechResult.alternatives != null && speechResult.alternatives.Length > 0)
                         {
-                            _Text = speechResult.Alternatives[0].Transcript;
+                            _Text = speechResult.alternatives[0].transcript;
                         }
                     }
                 }
