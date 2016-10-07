@@ -729,6 +729,251 @@ private void OnRecognizeText(TextRecogTopLevelMultiple multipleImages)
 }
 ```
 
+#### Similarity Search
+Beta. You can create and add images to a collection and then search that collection with your own image to find similar images.
+
+##### List Collections
+Beta. List all custom collections.
+
+```cs
+void Start()
+{
+  m_VisualRecognition.GetCollections(OnGetCollections);
+}
+
+private void OnGetCollections(GetCollections collections, string customData)
+{
+  if(collections != null)
+  {
+    foreach (CreateCollection collection in collections.collections)
+    {
+      Log.Debug("VisualRecognitionExample", "collectionID: {0} | collection name: {1} | number of images: {2}", collection.collection_id, collection.name, collection.images);
+    }
+  }
+  else
+  {
+    Log.Debug("VisualRecognitionExample", "Get Collections failed!");
+  }
+}
+```
+
+##### Create Collection
+Beta. Create a new collection of images to search. You can create a maximum of 5 collections.
+
+```cs
+void Start()
+{
+  m_VisualRecognition.CreateCollection(OnCreateCollection, "unity-integration-test-collection");
+}
+
+private void OnCreateCollection(CreateCollection collection, string customData)
+{
+  if(collection != null)
+  {
+    Log.Debug("VisualRecognitionExample", "Create Collection succeeded!");
+    Log.Debug("VisualRecognitionExample", "collectionID: {0} | collection name: {1} | collection images: {2}", collection.collection_id, collection.name, collection.images);
+  }
+  else
+  {
+    Log.Debug("VisualRecognitionExample", "Create Collection failed!");
+  }
+}
+```
+
+##### Get collection details
+Beta. Retrieve information about a specific collection.
+
+```cs
+void Start()
+{
+  m_VisualRecognition.GetCollection(OnGetCollection, m_CreatedCollectionID);
+}
+
+private void OnGetCollection(CreateCollection collection, string customData)
+{
+  if (collection != null)
+  {
+    Log.Debug("VisualRecognitionExample", "Get Collection succeded!");
+    Log.Debug("VisualRecognitionExample", "collectionID: {0} | collection name: {1} | collection images: {2}", collection.collection_id, collection.name, collection.images);
+  }
+  else
+  {
+    Log.Debug("VisualRecognitionExample", "Get Collection failed!");
+
+  }
+}
+```
+
+##### Add images to a collection
+Beta. Add images to a collection. Each collection can contain 1000000 images.
+
+```cs
+void Start()
+{
+  string m_collectionImagePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/giraffe_to_classify.jpg";
+  Dictionary<string, string> imageMetadata = new Dictionary<string, string>();
+  imageMetadata.Add("key1", "value1");
+  imageMetadata.Add("key2", "value2");
+  imageMetadata.Add("key3", "value3");
+  m_VisualRecognition.AddCollectionImage(OnAddImageToCollection, m_CreatedCollectionID, m_collectionImagePath, imageMetadata);
+}
+private void OnAddImageToCollection(CollectionsConfig images, string customData)
+{
+  if(images != null)
+  {
+    Log.Debug("VisualRecognitionExample", "Add image to collection succeeded!");
+    m_CreatedCollectionImage = images.images[0].image_id;
+    Log.Debug("VisualRecognitionExample", "images processed: {0}", images.images_processed);
+    foreach (CollectionImagesConfig image in images.images)
+    Log.Debug("VisualRecognitionExample", "imageID: {0} | image_file: {1} | image metadata: {1}", image.image_id, image.image_file, image.metadata.ToString());
+  }
+  else
+  {
+    Log.Debug("VisualRecognitionExample", "Add image to collection failed!");
+  }
+}
+```
+
+##### List images in a collection
+Beta. List the first 100 images in a collection. Each collection can contain 1000000 images.
+
+```cs
+void Start()
+{
+  m_VisualRecognition.GetCollectionImages(OnGetCollectionImages, m_CreatedCollectionID);
+}
+
+private void OnGetCollectionImages(GetCollectionImages collections, string customData)
+{
+  if(collections != null)
+  {
+    Log.Debug("VisualRecognitionExample", "Get Collections succeded!");
+    foreach(GetCollectionsBrief collection in collections.images)
+    Log.Debug("VisualRecognitionExample", "imageID: {0} | image file: {1} | image metadataOnGetCollections: {2}", collection.image_id, collection.image_file, collection.metadata.ToString());
+  }
+  else
+  {
+    Log.Debug("VisualRecognitionExample", "Get Collections failed!");
+  }
+}
+```
+
+##### List image details
+Beta. List details about a specific image in a collection.
+```cs
+void Start()
+{
+  m_VisualRecognition.GetImage(OnGetImage, m_CreatedCollectionID, m_CreatedCollectionImage);
+}
+
+private void OnGetImage(GetCollectionsBrief image, string customData)
+{
+  if(image != null)
+  {
+    Log.Debug("VisualRecognitionExample", "GetImage succeeded!");
+    Log.Debug("VisualRecognitionExample", "imageID: {0} | created: {1} | image_file: {2} | metadata: {3}", image.image_id, image.created, image.image_file, image.metadata);
+  }
+  else
+  {
+    Log.Debug("VisualRecognitionExample", "GetImage failed!");
+  }
+}
+```
+
+##### List image metadata
+Beta. View the metadata for a specific image in a collection.
+
+```cs
+void Start()
+{
+  m_VisualRecognition.GetMetadata(OnGetMetadata, m_CreatedCollectionID, m_CreatedCollectionImage);
+}
+
+private void OnGetMetadata(object responseObject, string customData)
+{
+  if(responseObject != null)
+    Log.Debug("VisualRecognitionExample", "ResponseObject: {0}", responseObject);
+}
+```
+
+##### Find similar images
+Beta. Upload an image to find similar images in your custom collection.
+
+```cs
+void Start()
+{
+  m_VisualRecognition.FindSimilar(OnFindSimilar, m_CreatedCollectionID, m_collectionImagePath);
+}
+
+private void OnFindSimilar(SimilarImagesConfig images, string customData)
+{
+  if(images != null)
+  {
+    Log.Debug("VisualRecognitionExample", "GetSimilar succeeded!");
+    Log.Debug("VisualRecognitionExample", "images processed: {0}", images.images_processed);
+    foreach (SimilarImageConfig image in images.similar_images)
+      Log.Debug("VisualRecognitionExample", "image ID: {0} | image file: {1} | score: {2} | metadata: {3}", image.image_id, image.image_file, image.score, image.metadata.ToString());
+  }
+  else
+  {
+    Log.Debug("VisualRecognitionExample", "GetSimilar failed!");
+  }
+}
+```
+
+##### Delete image metadata
+Beta. Delete all metadata associated with an image.
+
+```cs
+void Start()
+{
+  m_VisualRecognition.DeleteCollectionImageMetadata(OnDeleteMetadata, m_CreatedCollectionID, m_CreatedCollectionImage);
+}
+
+private void OnDeleteMetadata(bool success, string customData)
+{
+  if (success)
+    Log.Debug("VisualRecognitionExample", "Delete image metadata succeeded!");
+  else
+    Log.Debug("VisualRecognitionExample", "Delete image metadata failed!");
+}
+```
+
+##### Delete an image
+Beta. Delete an image from a collection.
+
+```cs
+void Start()
+{
+  m_VisualRecognition.DeleteCollectionImage(OnDeleteCollectionImage, m_CreatedCollectionID, m_CreatedCollectionImage);
+}
+
+private void OnDeleteCollectionImage(bool success, string customData)
+{
+  if (success)
+    Log.Debug("VisualRecognitionExample", "Delete collection image succeeded!");
+  else
+    Log.Debug("VisualRecognitionExample", "Delete collection image failed!");
+}
+```
+
+##### Delete a collection
+Beta. Delete a user created collection.
+
+```cs
+void Start()
+{
+  m_VisualRecognition.DeleteCollection(OnDeleteCollection, m_CreatedCollectionID);
+}
+
+private void OnDeleteCollection(bool success, string customData)
+{
+  if(success)
+    Log.Debug("VisualRecognitionExample", "Delete Collection succeeded!");
+  else
+    Log.Debug("VisualRecognitionExample", "Delete Collection failed!");
+}
+```
 
 ### Alchemy Language
 Use the [Alchemy Language][alchemy_language] service to extract semantic meta-data from content such as information on people, places, companies, topics, facts, relationships, authors and languages.

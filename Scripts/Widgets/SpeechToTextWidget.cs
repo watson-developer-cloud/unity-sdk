@@ -165,15 +165,15 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             }
         }
 
-        private void OnGetModels( SpeechModel [] models )
+        private void OnGetModels( Model [] models )
         {
             if ( models != null )
             {
-                SpeechModel bestModel = null;
+                Model bestModel = null;
                 foreach( var model in models )
                 {
-                    if ( model.Language.StartsWith( m_Language )
-                        && (bestModel == null || model.Rate > bestModel.Rate) )
+                    if ( model.language.StartsWith( m_Language )
+                        && (bestModel == null || model.rate > bestModel.rate) )
                     {
                         bestModel = model;
                     }
@@ -181,30 +181,30 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 
                 if ( bestModel != null )
                 {
-                    Log.Status( "SpeechToTextWidget", "Selecting Recognize Model: {0} ", bestModel.Name );
-                    m_SpeechToText.RecognizeModel = bestModel.Name;
+                    Log.Status( "SpeechToTextWidget", "Selecting Recognize Model: {0} ", bestModel.name );
+                    m_SpeechToText.RecognizeModel = bestModel.name;
                 }
             }
         }
 
-	    private void OnRecognize(SpeechResultList result)
+	    private void OnRecognize(SpeechRecognitionEvent result)
 	    {
             m_ResultOutput.SendData( new SpeechToTextData( result ) );
 
-            if (result != null && result.Results.Length > 0)
+            if (result != null && result.results.Length > 0)
             {
                 if ( m_Transcript != null )
                     m_Transcript.text = "";
 
-                foreach( var res in result.Results )
+                foreach( var res in result.results )
                 {
-                    foreach( var alt in res.Alternatives )
+                    foreach( var alt in res.alternatives )
                     {
-                        string text = alt.Transcript;
+                        string text = alt.transcript;
 
                         if ( m_Transcript != null )
                             m_Transcript.text += string.Format( "{0} ({1}, {2:0.00})\n",
-                                text, res.Final ? "Final" : "Interim", alt.Confidence );
+                                text, res.final ? "Final" : "Interim", alt.confidence );
                     }
                 }
             }

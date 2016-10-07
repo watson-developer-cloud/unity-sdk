@@ -67,8 +67,8 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         {
             if (m_Output != null || m_OutputAsInputField != null)
             {
-                SpeechResultList result = ((SpeechToTextData)data).Results;
-                if (result != null && result.Results.Length > 0)
+                SpeechRecognitionEvent result = ((SpeechToTextData)data).Results;
+                if (result != null && result.results.Length > 0)
                 {
                     string outputTextWithStatus = "";
                     string outputText = "";
@@ -87,30 +87,30 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                     if (m_OutputAsInputField != null && m_ContinuousText)
                         outputText = m_PreviousOutputText;
 
-                    foreach (var res in result.Results)
+                    foreach (var res in result.results)
                     {
-                        foreach (var alt in res.Alternatives)
+                        foreach (var alt in res.alternatives)
                         {
-                            string text = alt.Transcript;
+                            string text = alt.transcript;
                             if (m_Output != null)
                             {
-                                m_Output.text = string.Concat(outputTextWithStatus, string.Format("{0} ({1}, {2:0.00})\n", text, res.Final ? "Final" : "Interim", alt.Confidence));
+                                m_Output.text = string.Concat(outputTextWithStatus, string.Format("{0} ({1}, {2:0.00})\n", text, res.final ? "Final" : "Interim", alt.confidence));
                             }
 
                             if (m_OutputAsInputField != null)
                             {
-                                if (!res.Final || alt.Confidence > m_MinConfidenceToShow)
+                                if (!res.final || alt.confidence > m_MinConfidenceToShow)
                                 {
                                     m_OutputAsInputField.text = string.Concat(outputText, " ", text);
 
                                     if (m_OutputStatus != null)
                                     {
-                                        m_OutputStatus.text = string.Format("{0}, {1:0.00}", res.Final ? "Final" : "Interim", alt.Confidence);
+                                        m_OutputStatus.text = string.Format("{0}, {1:0.00}", res.final ? "Final" : "Interim", alt.confidence);
                                     }
                                 }
                             }
 
-                            if (!res.Final)
+                            if (!res.final)
                                 m_TimeAtLastInterim = Time.time;
 
                         }

@@ -1,5 +1,18 @@
 Change Log
 ==========
+## Version 0.11.0
+_2016_10_27_
+* New: Abstracted `Speech to Text` customization methods.
+
+## Version 0.10.0
+_2016_09_23_
+
+* New: Added `similarity search` to the `Visual Recognition` service.
+* Fix: `Touch Widget` improvmements.
+* Fix: Disabled 3rd Party plugin warnings.
+* Fix: Removed `Conversation` Message overload method that takes only input and conversationID.
+* Fix: Rewrote `Conversation` example script to show how to create MessageRequest object.
+
 ## Version 0.9.0
 _2016-08-26_
 

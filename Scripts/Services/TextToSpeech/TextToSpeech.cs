@@ -303,14 +303,14 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
             if (usePost)
             {
                 Dictionary<string, string> upload = new Dictionary<string, string>();
-                upload["text"] = "\"" + text + "\"";
+                upload["text"] = text;
 
                 req.Send = Encoding.UTF8.GetBytes(Json.Serialize(upload));
                 req.Headers["Content-Type"] = "application/json";
             }
             else
             {
-                req.Parameters["text"] = "\"" + text + "\"";
+                req.Parameters["text"] = text;
             }
 
             return connector.Send(req);
@@ -660,7 +660,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 			if (callback == null)
 				throw new ArgumentNullException("callback");
 			if (string.IsNullOrEmpty(customizationID))
-				throw new ArgumentNullException("A name is customizationID to get a custom voice model.");
+				throw new ArgumentNullException("A customizationID to get a custom voice model.");
 
 			GetCustomizationRequest req = new GetCustomizationRequest();
 			req.Callback = callback;
@@ -702,7 +702,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 				}
 				catch (Exception e)
 				{
-					Log.Error("Text To Speech", "CreateCustomization Exception: {0}", e.ToString());
+					Log.Error("Text To Speech", "GetCustomization Exception: {0}", e.ToString());
 					resp.Success = false;
 				}
 			}

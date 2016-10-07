@@ -1,0 +1,25 @@
+{
+  "words": [
+    {
+      "word": "watson",
+      "sounds_like": [
+        "wat son"
+      ],
+      "display_as": "Watson"
+    },
+    {
+      "word": "unity",
+      "sounds_like": [
+        "you ni tee"
+      ],
+      "display_as": "Unity"
+    },
+    {
+      "word": "sdk",
+      "sounds_like": [
+        "S.D.K."
+      ],
+      "display_as": "SDK"
+    }
+  ]
+}

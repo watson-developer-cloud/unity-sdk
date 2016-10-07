@@ -488,8 +488,6 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 
             return null;
         }
-
-
-        #endregion
-    }
+		#endregion
+	}
 }
