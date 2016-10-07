@@ -177,7 +177,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         {
             SpeechToTextData speech = data as SpeechToTextData;
             if (speech != null && speech.Results.HasFinalResult())
-                Translate(speech.Results.Results[0].Alternatives[0].Transcript);
+                Translate(speech.Results.results[0].alternatives[0].transcript);
         }
 
         private void OnGetLanguages(Languages languages)

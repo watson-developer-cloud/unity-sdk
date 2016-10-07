@@ -1,0 +1,58 @@
+Adds a single corpus text file of new training data to the custom language model. 
+Use multiple requests to submit multiple corpus text files. 
+Only the owner of a custom model can use this method to add a corpus to the model.
+
+Submit a plain text file that contains sample sentences from the domain of interest to enable the service to extract words in context. 
+The more sentences you add that represent the context in which speakers use words from the domain, the better the service's recognition accuracy. 
+Adding a corpus does not affect the custom model until you train the model for the new data by using the Train a custom model method.
+
+Use the following guidelines to prepare a corpus text file:
+
+Provide a plain text file that is encoded in UTF-8 if it contains non-ASCII characters. 
+The service assumes UTF-8 encoding if it encounters such characters.
+
+Include each sentence of the corpus on its own line, terminating each line with a carriage return. 
+Including multiple sentences on the same line can degrade accuracy.
+
+Use consistent capitalization for words in the corpus. 
+The words resource is case-sensitive; mix upper- and lowercase letters and use capitalization only when intended.
+
+Beware of typographical errors. 
+The service assumes that typos are new words; unless you correct them before training the model, the service adds them to the model's vocabulary.
+
+The service automatically does the following:
+
+Converts numbers to their equivalent words. 
+For example, 500 becomes five hundred, and 0.15 becomes zero point fifteen.
+
+Removes the following punctuation and special characters:
+
+! @ # $ % ^ & * - + = ~ _ . , ; : ( ) < > [ ] { }
+
+Ignores phrases enclosed in ( ) (parentheses), < > (angle brackets), [ ] (square brackets), and { } (curly braces).
+
+Converts tokens that include certain symbols to meaningful strings. 
+For example, the service
+
+Converts a $ (dollar sign) followed by a number to its string representation.
+For example, $100 becomes one hundred dollars.
+
+Converts a % (percent sign) preceded by a number to its string representation. 
+For example, 100% becomes one hundred percent.
+
+This list is not exhaustive; the service makes similar adjustments for other characters as needed.
+
+The call returns an HTTP 201 response code if the corpus is valid. It then asynchronously pre-processes the contents of the corpus and automatically extracts new words that it finds. 
+This can take on the order of a minute or two to complete depending on the total number of words and the number of new words in the corpus, as well as the current load on the service. 
+You cannot submit requests to add additional corpora or words to the custom model, or to train the model, until the service's analysis of the corpus for the current request completes. 
+Use the List corpora method to check the status of the analysis.
+
+The service auto-populates the model's words resource with any word that is not found in its base vocabulary; these are referred to as out-of-vocabulary (OOV) words. 
+You can use the List custom words method to examine the words resource, using other words method to eliminate typos and modify how words are pronounced as needed.
+
+To add a corpus file that has the same name as an existing corpus, set the allow_overwrite query parameter to true; otherwise, the request fails. 
+Overwriting an existing corpus causes the service to process the corpus text file and extract OOV words anew. 
+Before doing so, it removes any OOV words associated with the existing corpus from the model's words resource unless they were also added by another corpus or they have been modified in some way with the Add custom words or Add a custom word method.
+
+The service limits the overall amount of data that you can add to a custom model to a maximum of 10 million total words from all corpora combined. 
+Also, you can add no more than 30 thousand new words to a model; this includes words that the service extracts from corpora and words that you add directly.
