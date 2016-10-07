@@ -202,6 +202,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 			while (!m_ResetCustomizationTested)
 				yield return null;
 
+			//	The customization is always pending after reset for some reason!
 			//Runnable.Run(CheckCustomizationStatus(m_CreatedCustomizationID));
 			//while (m_IsCustomizationBusy)
 			//	yield return null;
