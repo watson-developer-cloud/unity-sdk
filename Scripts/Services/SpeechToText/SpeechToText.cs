@@ -901,7 +901,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 			CustomLanguage customLanguage = new CustomLanguage();
 			customLanguage.name = name;
 			customLanguage.base_model_name = base_model_name;
-			customLanguage.description = description;
+			customLanguage.description = string.IsNullOrEmpty(description) ? name : description;
 
 			fsData data;
 			sm_Serializer.TrySerialize(customLanguage.GetType(), customLanguage, out data).AssertSuccessWithoutWarnings();
@@ -1484,7 +1484,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 			req.Data = customData;
 			req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
 			req.Headers["Accept"] = "application/json";
-			req.Parameters["allow_overwrite"] = allowOverwrite;
+			req.Parameters["allow_overwrite"] = allowOverwrite.ToString();
 			req.Forms = new Dictionary<string, RESTConnector.Form>();
 			req.Forms["body"] = new RESTConnector.Form(trainingData, "trainingData.txt", "text/plain");
 			req.OnResponse = OnAddCustomCorpusResp;
@@ -1628,7 +1628,9 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 			if (string.IsNullOrEmpty(wordsJsonPath))
 				throw new ArgumentNullException("A wordsJsonPath is required to add words to a custom language model.");
 
-			return AddCustomWords(callback, customizationID, File.ReadAllText(wordsJsonPath));
+			string wordsJson = File.ReadAllText(wordsJsonPath);
+
+			return AddCustomWords(callback, customizationID, wordsJson);
 		}
 
 		public bool AddCustomWords(AddCustomWordsCallback callback, string customizationID, Words words, string customData = default(string))

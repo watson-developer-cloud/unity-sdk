@@ -44,10 +44,10 @@ public class ExampleSpeechToText : MonoBehaviour
 		//TestCreateSession("en-US_BroadbandModel");
 
 		//	test GetCustomizations
-		TestGetCustomizations();
+		//TestGetCustomizations();
 
 		//	test create, get and delete customizations
-		TestCreateCustomization();
+		//TestCreateCustomization();
     }
 
 	private void TestGetModels()
@@ -125,31 +125,31 @@ public class ExampleSpeechToText : MonoBehaviour
 	private void TestGetCustomWords()
 	{
 		Log.Debug("ExampleSpeechToText", "Attempting to get custom words.");
-		m_SpeechToText.GetCustomWords(OnGetCustomWords, m_CreatedCustomizationID);
+		m_SpeechToText.GetCustomWords(HandleGetCustomWords, m_CreatedCustomizationID);
 	}
 
 	private void TestAddCustomWordsPath(string customizationID, string wordsJsonPath)
 	{
 		Log.Debug("ExampleSpeechToText", "Attempting to add custom words in customization {0} using Words json path {1}", customizationID, wordsJsonPath);
-		m_SpeechToText.AddCustomWords(OnAddCustomWords, customizationID, wordsJsonPath);
+		m_SpeechToText.AddCustomWords(HandleAddCustomWords, customizationID, wordsJsonPath);
 	}
 
 	private void TestAddCustomWordsWordsObject(string customizationID, Words words)
 	{
 		Log.Debug("ExampleSpeechToText", "Attempting to add custom words in customization {0} using Words object", customizationID);
-		m_SpeechToText.AddCustomWords(OnAddCustomWords, customizationID, words);
+		m_SpeechToText.AddCustomWords(HandleAddCustomWords, customizationID, words);
 	}
 
 	private void TestDeleteCustomWord(string customizationID, string word)
 	{
 		Log.Debug("ExampleSpeechToText", "Attempting to delete custom word {1} in customization {0}", customizationID, word);
-		m_SpeechToText.DeleteCustomWord(OnDeleteCustomWord, customizationID, word);
+		m_SpeechToText.DeleteCustomWord(HandleDeleteCustomWord, customizationID, word);
 	}
 
 	private void TestGetCustomWord(string customizationID, string word)
 	{
 		Log.Debug("ExampleSpeechToText", "Attempting to get custom word {1} in customization {0}", customizationID, word);
-		m_SpeechToText.GetCustomWord(OnGetCustomWord, customizationID, word);
+		m_SpeechToText.GetCustomWord(HandleGetCustomWord, customizationID, word);
 	}
 
 
@@ -203,7 +203,7 @@ public class ExampleSpeechToText : MonoBehaviour
 				foreach( var alt in res.alternatives )
 				{
 					string text = alt.transcript;
-					Debug.Log(string.Format( "{0} ({1}, {2:0.00})\n", text, res.final ? "Final" : "Interim", alt.confidence));
+					Log.Debug("ExampleSpeechToText", string.Format( "{0} ({1}, {2:0.00})\n", text, res.final ? "Final" : "Interim", alt.confidence));
 				}
 			}
 		}
@@ -402,7 +402,7 @@ public class ExampleSpeechToText : MonoBehaviour
 		}
 	}
 
-	private void OnGetCustomWords(WordsList wordList, string customData)
+	private void HandleGetCustomWords(WordsList wordList, string customData)
 	{
 		if (!string.IsNullOrEmpty(customData))
 			Log.Debug("ExampleSpeechToText", "custom data: {0}", customData);
@@ -425,7 +425,7 @@ public class ExampleSpeechToText : MonoBehaviour
 		}
 	}
 
-	private void OnAddCustomWords(bool success, string customData)
+	private void HandleAddCustomWords(bool success, string customData)
 	{
 		if (!string.IsNullOrEmpty(customData))
 			Log.Debug("ExampleSpeechToText", "custom data: {0}", customData);
@@ -441,7 +441,7 @@ public class ExampleSpeechToText : MonoBehaviour
 		}
 	}
 
-	private void OnDeleteCustomWord(bool success, string customData)
+	private void HandleDeleteCustomWord(bool success, string customData)
 	{
 		if (!string.IsNullOrEmpty(customData))
 			Log.Debug("ExampleSpeechToText", "custom data: {0}", customData);
@@ -457,7 +457,7 @@ public class ExampleSpeechToText : MonoBehaviour
 		}
 	}
 
-	private void OnGetCustomWord(WordData word, string customData)
+	private void HandleGetCustomWord(WordData word, string customData)
 	{
 		if (!string.IsNullOrEmpty(customData))
 			Log.Debug("ExampleSpeechToText", "custom data: {0}", customData);

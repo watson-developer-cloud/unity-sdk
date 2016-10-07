@@ -670,7 +670,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 		/// <summary>
 		/// What the word sounds like.
 		/// </summary>
-		public string sounds_like { get; set; }
+		public string[] sounds_like { get; set; }
 		/// <summary>
 		/// How the word is displayed.
 		/// </summary>
