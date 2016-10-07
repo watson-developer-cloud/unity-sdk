@@ -122,6 +122,38 @@ public class ExampleSpeechToText : MonoBehaviour
 		m_SpeechToText.AddCustomCorpus(HandleAddCustomCorpus, customizationID, corpusName, allowOverwrite, trainingDataPath);
 	}
 
+	private void TestGetCustomWords()
+	{
+		Log.Debug("ExampleSpeechToText", "Attempting to get custom words.");
+		m_SpeechToText.GetCustomWords(OnGetCustomWords, m_CreatedCustomizationID);
+	}
+
+	private void TestAddCustomWordsPath(string customizationID, string wordsJsonPath)
+	{
+		Log.Debug("ExampleSpeechToText", "Attempting to add custom words in customization {0} using Words json path {1}", customizationID, wordsJsonPath);
+		m_SpeechToText.AddCustomWords(OnAddCustomWords, customizationID, wordsJsonPath);
+	}
+
+	private void TestAddCustomWordsWordsObject(string customizationID, Words words)
+	{
+		Log.Debug("ExampleSpeechToText", "Attempting to add custom words in customization {0} using Words object", customizationID);
+		m_SpeechToText.AddCustomWords(OnAddCustomWords, customizationID, words);
+	}
+
+	private void TestDeleteCustomWord(string customizationID, string word)
+	{
+		Log.Debug("ExampleSpeechToText", "Attempting to delete custom word {1} in customization {0}", customizationID, word);
+		m_SpeechToText.DeleteCustomWord(OnDeleteCustomWord, customizationID, word);
+	}
+
+	private void TestGetCustomWord(string customizationID, string word)
+	{
+		Log.Debug("ExampleSpeechToText", "Attempting to get custom word {1} in customization {0}", customizationID, word);
+		m_SpeechToText.GetCustomWord(OnGetCustomWord, customizationID, word);
+	}
+
+
+
 	private void HandleGetModels(Model[] models)
 	{
 		if (models != null)
@@ -368,5 +400,69 @@ public class ExampleSpeechToText : MonoBehaviour
 		{
 			Log.Debug("ExampleSpeechToText", "Failed to delete custom corpus!");
 		}
+	}
+
+	private void OnGetCustomWords(WordsList wordList, string customData)
+	{
+		if (!string.IsNullOrEmpty(customData))
+			Log.Debug("ExampleSpeechToText", "custom data: {0}", customData);
+
+		if(wordList != null)
+		{
+			if (wordList.words != null && wordList.words.Length > 0)
+			{
+				foreach (WordData word in wordList.words)
+					Log.Debug("ExampleSpeechToText", "WordData - word: {0} | sounds like: {1} | display as: {2}", word.word, word.sounds_like, word.display_as);
+			}
+			else
+			{
+				Log.Debug("ExampleSpeechToText", "No custom words found!");
+			}
+		}
+		else
+		{
+			Log.Debug("ExampleSpeechToText", "Failed to get custom words!");
+		}
+	}
+
+	private void OnAddCustomWords(bool success, string customData)
+	{
+		if (!string.IsNullOrEmpty(customData))
+			Log.Debug("ExampleSpeechToText", "custom data: {0}", customData);
+
+		if (success)
+		{
+			Log.Debug("ExampleSpeechToText", "AddCustomWOrds() succeeded!");
+
+		}
+		else
+		{
+			Log.Debug("ExampleSpeechToText", "Failed to add custom words!");
+		}
+	}
+
+	private void OnDeleteCustomWord(bool success, string customData)
+	{
+		if (!string.IsNullOrEmpty(customData))
+			Log.Debug("ExampleSpeechToText", "custom data: {0}", customData);
+
+		if (success)
+		{
+			Log.Debug("ExampleSpeechToText", "DeleteCustomWord() succeeded!");
+
+		}
+		else
+		{
+			Log.Debug("ExampleSpeechToText", "Failed to delete custom word!");
+		}
+	}
+
+	private void OnGetCustomWord(WordData word, string customData)
+	{
+		if (!string.IsNullOrEmpty(customData))
+			Log.Debug("ExampleSpeechToText", "custom data: {0}", customData);
+
+		if(word != null)
+			Log.Debug("ExampleSpeechToText", "WordData - word: {0} | sounds like: {1} | display as: {2}", word.word, word.sounds_like, word.display_as);
 	}
 }

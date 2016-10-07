@@ -595,7 +595,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 		/// <summary>
 		/// Information about each word in the custom model's words resource. The array is empty if the custom model has no words.
 		/// </summary>
-		public WordData words { get; set; }
+		public WordData[] words { get; set; }
 	}
 
 	/// <summary>

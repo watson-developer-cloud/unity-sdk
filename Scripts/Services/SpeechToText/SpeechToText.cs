@@ -1689,7 +1689,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 		}
 		#endregion
 
-		#region Delete Custom Words
+		#region Delete Custom Word
 		/// <summary>
 		/// This callback is used by the DeleteCustomWord() function.
 		/// </summary>
