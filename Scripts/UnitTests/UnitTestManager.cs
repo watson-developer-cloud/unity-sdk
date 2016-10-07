@@ -63,6 +63,8 @@ namespace IBM.Watson.DeveloperCloud.Editor
         /// </summary>
         public OnTestsComplete OnTestCompleteCallback { get; set; }
 
+        [SerializeField]
+        private string m_ProjectNameToTest = "";
         public static string ProjectToTest = null;
 
         /// <summary>
@@ -207,7 +209,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
                     string sButtonLabel = "Run " + t.Name;
 					if (GUILayout.Button(sButtonLabel,GUILayout.MinWidth(Screen.width * 0.4f), GUILayout.MinHeight(Screen.height * 0.04f)))
                     {
-                        IBM.Watson.DeveloperCloud.Editor.UnitTestManager.ProjectToTest = Config.Instance.GetVariableValue("PACKAGE_PREFIX");
+                        IBM.Watson.DeveloperCloud.Editor.UnitTestManager.ProjectToTest = m_ProjectNameToTest;
                         QueueTest(t, true);
                     }
                 }
