@@ -139,6 +139,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         public int RequestedWidth
         {
             get { return m_RequestedWidth; }
+            set { m_RequestedWidth = value; }
         }
         /// <summary>
         /// The requested height of the WebCamTexture.
@@ -146,6 +147,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         public int RequestedHeight
         {
             get { return m_RequestedHeight; }
+            set { m_RequestedHeight = value; }
         }
 
         /// <summary>
@@ -154,6 +156,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         public int RequestedFPS
         {
             get { return m_RequestedFPS; }
+            set { m_RequestedFPS = value; }
         }
         #endregion
 
