@@ -59,7 +59,7 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3
 		/// information about the distribution of the content over the days of the week and 
 		/// the hours of the day.
 		/// </summary>
-		public TraitTreeNode[] behavior { get; set; }
+		public BehaviorNode[] behavior { get; set; }
 		/// <summary>
 		/// If the consumption_preferences query parameter is true, detailed results for 
 		/// each category of `consumption preferences`. Each element of the array provides
@@ -163,7 +163,7 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3
 		/// Detailed results inferred from the input text for the individual preferences of
 		/// the category.
 		/// </summary>
-		public ConsumptionPreferencesCategoryNode[] consumption_preferences { get; set; }
+		public ConsumptionPreferencesNode[] consumption_preferences { get; set; }
 	}
 
 	/// <summary>
@@ -213,5 +213,60 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3
 		/// results inferred from the input text, not a normalized percentile.
 		/// </summary>
 		public double score { get; set; }
+	}
+
+	/// <summary>
+	/// The content type. Either text, html or json.
+	/// </summary>
+	public class ContentType
+	{
+		/// <summary>
+		/// Mime type for plain text.
+		/// </summary>
+		public const string TEXT_PLAIN = "text/plain";
+
+		/// <summary>
+		/// Mime type for HTML.
+		/// </summary>
+		public const string TEXT_HTML = "text/html";
+
+		/// <summary>
+		/// Mime type for json.
+		/// </summary>
+		public const string APPLICATION_JSON = "application/json";
+	}
+
+	/// <summary>
+	/// The content language. Either English, Arabic, Spanish or Japanese.
+	/// </summary>
+	public class Language
+	{
+		/// <summary>
+		/// English.
+		/// </summary>
+		public const string ENGLISH = "en";
+		/// <summary>
+		/// Arabic.
+		/// </summary>
+		public const string ARABIC = "ar";
+		/// <summary>
+		/// Spanish.
+		/// </summary>
+		public const string SPANISH = "es";
+		/// <summary>
+		/// Japanese
+		/// </summary>
+		public const string JAPANESE = "ja";
+	}
+
+	/// <summary>
+	/// The Personality Insights version.
+	/// </summary>
+	public class PersonalityInsightsVersion
+	{
+		/// <summary>
+		/// The version.
+		/// </summary>
+		public const string Version = "2016-10-20";
 	}
 }

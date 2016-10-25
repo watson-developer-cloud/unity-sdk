@@ -20,7 +20,6 @@ using IBM.Watson.DeveloperCloud.Connection;
 using System.Text;
 using IBM.Watson.DeveloperCloud.Utilities;
 using UnityEngine;
-using System.Collections;
 using System;
 using IBM.Watson.DeveloperCloud.Logging;
 using System.IO;
