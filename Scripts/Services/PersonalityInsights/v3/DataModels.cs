@@ -239,7 +239,7 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3
 	/// <summary>
 	/// The content language. Either English, Arabic, Spanish or Japanese.
 	/// </summary>
-	public class Language
+	public class ContentLanguage
 	{
 		/// <summary>
 		/// English.
@@ -257,6 +257,57 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3
 		/// Japanese
 		/// </summary>
 		public const string JAPANESE = "ja";
+	}
+
+	/// <summary>
+	/// The content language.
+	/// </summary>
+	public class AcceptLanguage
+	{
+		/// <summary>
+		/// English.
+		/// </summary>
+		public const string ENGLISH = "en";
+		/// <summary>
+		/// Arabic.
+		/// </summary>
+		public const string ARABIC = "ar";
+		/// <summary>
+		/// Spanish.
+		/// </summary>
+		public const string SPANISH = "es";
+		/// <summary>
+		/// Japanese.
+		/// </summary>
+		public const string JAPANESE = "ja";
+		/// <summary>
+		/// German.
+		/// </summary>
+		public const string GERMAN = "de";
+		/// <summary>
+		/// French.
+		/// </summary>
+		public const string FRENCH = "fr";
+		/// <summary>
+		/// Italian.
+		/// </summary>
+		public const string ITALIAN = "it";
+		/// <summary>
+		/// Korean.
+		/// </summary>
+		public const string KOREAN = "ko";
+		/// <summary>
+		/// Brazilian Portuguese.
+		/// </summary>
+		public const string BRAZILIAN_PORTUGUESE = "pt-br";
+		/// <summary>
+		/// Simplified Chinese.
+		/// </summary>
+		public const string SIMPLIFIED_CHINESE = "zh-cn";
+		/// <summary>
+		/// Traditional Chinese.
+		/// </summary>
+		public const string TRADITIONAL_CHINESE = "zh-tw";
 	}
 
 	/// <summary>
