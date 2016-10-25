@@ -44,9 +44,9 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3
 
 		public bool GetProfile(OnGetProfile callback, string source,
 			string contentType = ContentType.TEXT_PLAIN,
-			string contentLanguage = Language.ENGLISH,
+			string contentLanguage =  ContentLanguage.ENGLISH,
 			string accept = ContentType.APPLICATION_JSON,
-			string acceptLanguage = Language.ENGLISH,
+			string acceptLanguage = AcceptLanguage.ENGLISH,
 			bool raw_scores = false,
 			bool csv_headers = false,
 			bool consumption_preferences = false,
@@ -164,7 +164,7 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3
 				m_Service = service;
 				m_Callback = callback;
 				string dataPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/personalityInsights.json";
-				if (!m_Service.GetProfile(OnGetProfile, dataPath, ContentType.TEXT_PLAIN, Language.ENGLISH))
+				if (!m_Service.GetProfile(OnGetProfile, dataPath, ContentType.TEXT_PLAIN, ContentLanguage.ENGLISH))
 					m_Callback(SERVICE_ID, false);
 			}
 

@@ -1564,16 +1564,17 @@ The IBM Watson™ [Personality Insights][personality_insights] service enables a
 ```cs
 PersonalityInsights m_personalityInsights = new PersonalityInsights();
 	private string testString = "<text-here>"";
+  private string dataPath;
 
 	void Start () {
 		LogSystem.InstallDefaultReactors();
 
-		string dataPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/personalityInsights.json";
+		dataPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/personalityInsights.json";
 
-		if(!m_personalityInsights.GetProfile(OnGetProfileJson, dataPath, ContentType.TEXT_HTML, Language.ENGLISH, ContentType.APPLICATION_JSON, Language.ENGLISH, true, true, true))
+		if(!m_personalityInsights.GetProfile(OnGetProfileJson, dataPath, ContentType.TEXT_HTML, ContentLanguage.ENGLISH, ContentType.APPLICATION_JSON, AcceptLanguage.ENGLISH, true, true, true))
 			Log.Debug("ExamplePersonalityInsights", "Failed to get profile!");
 
-		if (!m_personalityInsights.GetProfile(OnGetProfileText, testString, ContentType.TEXT_HTML, Language.ENGLISH, ContentType.APPLICATION_JSON, Language.ENGLISH, true, true, true))
+		if (!m_personalityInsights.GetProfile(OnGetProfileText, testString, ContentType.TEXT_HTML, ContentLanguage.ENGLISH, ContentType.APPLICATION_JSON, AcceptLanguage.ENGLISH, true, true, true))
 			Log.Debug("ExamplePersonalityInsights", "Failed to get profile!");
 	}
 	private void OnGetProfileText(Profile profile, string data)

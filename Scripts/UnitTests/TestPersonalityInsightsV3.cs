@@ -39,12 +39,12 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 yield break;
 
             Log.Debug("TestPersonalityInsightsV3", "Attempting GetProfile using Text!");
-            m_personalityInsights.GetProfile(OnGetProfileText, testString, ContentType.TEXT_HTML, Language.ENGLISH, ContentType.APPLICATION_JSON, Language.ENGLISH, true, true, true);
+            m_personalityInsights.GetProfile(OnGetProfileText, testString, ContentType.TEXT_HTML, ContentLanguage.ENGLISH, ContentType.APPLICATION_JSON, AcceptLanguage.ENGLISH, true, true, true);
             while(!m_GetProfileTextTested)
                 yield return null;
 
             Log.Debug("TestPersonalityInsightsV3", "Attempting GetProfile using Json!");
-            m_personalityInsights.GetProfile(OnGetProfileJson, dataPath, ContentType.TEXT_HTML, Language.ENGLISH, ContentType.APPLICATION_JSON, Language.ENGLISH, true, true, true);
+            m_personalityInsights.GetProfile(OnGetProfileJson, dataPath, ContentType.TEXT_HTML, ContentLanguage.ENGLISH, ContentType.APPLICATION_JSON, AcceptLanguage.ENGLISH, true, true, true);
             while(!m_GetProfileJsonTested)
                 yield return null;
 
