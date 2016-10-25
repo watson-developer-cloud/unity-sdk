@@ -22,7 +22,7 @@ using IBM.Watson.DeveloperCloud.Logging;
 public class ExamplePersonalityInsightsV3 : MonoBehaviour
 {
 	PersonalityInsights m_personalityInsights = new PersonalityInsights();
-	private string testString = "<insert text to be analyzed here>";
+	private string testString = "<text-here>";
 	private string dataPath;
 
 	void Start () {

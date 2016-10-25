@@ -1563,7 +1563,7 @@ The IBM Watson™ [Personality Insights][personality_insights] service enables a
 
 ```cs
 PersonalityInsights m_personalityInsights = new PersonalityInsights();
-	private string testString = <insert text to be analyzed here>;
+	private string testString = "<text-here>"";
 
 	void Start () {
 		LogSystem.InstallDefaultReactors();
