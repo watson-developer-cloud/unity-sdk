@@ -1,5 +1,10 @@
 Change Log
 ==========
+## Version 0.12.0
+_2016_10_27_
+* New: Added streaming `SpeechToText` example.
+* New: Abstraction for `Personality Insights V3`
+
 ## Version 0.11.0
 _2016_10_27_
 * New: Abstracted `Speech to Text` customization methods.

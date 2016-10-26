@@ -16,11 +16,11 @@
 */
 
 using UnityEngine;
-using System.Collections;
 using IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v2;
 using IBM.Watson.DeveloperCloud.Logging;
 
-public class ExamplePersonalityInsights : MonoBehaviour {
+public class ExamplePersonalityInsightsV2 : MonoBehaviour
+{
     PersonalityInsights m_personalityInsights = new PersonalityInsights();
 
     void Start () 
