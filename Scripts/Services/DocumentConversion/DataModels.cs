@@ -21,153 +21,153 @@ using FullSerializer;
 
 namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
 {
+  /// <summary>
+  /// Document Conversion response.
+  /// </summary>
+  [fsObject]
+  public class ConvertedDocument
+  {
     /// <summary>
-    /// Document Conversion response.
+    /// The source document ID.
     /// </summary>
-    [fsObject]
-    public class ConvertedDocument
-    {
-        /// <summary>
-        /// The source document ID.
-        /// </summary>
-        public string source_document_id { get; set; }
-        /// <summary>
-        /// The timestamp.
-        /// </summary>
-        public string timestamp { get; set; }
-        /// <summary>
-        /// The detected media type.
-        /// </summary>
-        public string media_type_detected { get; set; }
-        /// <summary>
-        /// Array of document metadata.
-        /// </summary>
-        public Metadata[] metadata { get; set; }
-        /// <summary>
-        /// Answer Units.
-        /// </summary>
-        public AnswerUnit[] answer_units { get; set; }
-        /// <summary>
-        /// Warnings.
-        /// </summary>
-        public Warning[] warnings { get; set; }
-        /// <summary>
-        /// Container for text response from ConversionTarget.NORMALIZED_TEXT
-        /// </summary>
-        public string textContent { get; set; }
-        /// <summary>
-        /// Container for HTML response from ConversionTarget.NORMALIZED_HTML
-        /// </summary>
-        public string htmlContent { get; set; }
-    }
-
+    public string source_document_id { get; set; }
     /// <summary>
-    /// Metadata for the doucment conversion.
+    /// The timestamp.
     /// </summary>
-    [fsObject]
-    public class Metadata
-    {
-        /// <summary>
-        /// Metadata name.
-        /// </summary>
-        public string name { get; set; }
-        /// <summary>
-        /// Metadata content.
-        /// </summary>
-        public string content { get; set; }
-    }
-
+    public string timestamp { get; set; }
     /// <summary>
-    /// The units of the broken down document.
+    /// The detected media type.
     /// </summary>
-    [fsObject]
-    public class AnswerUnit
-    {
-        /// <summary>
-        /// The AnswerUnit ID.
-        /// </summary>
-        public string id { get; set; }
-        /// <summary>
-        /// The AnswerUnit type.
-        /// </summary>
-        public string type { get; set; }
-        /// <summary>
-        /// The AnswerUnit parent ID.
-        /// </summary>
-        public string parent_id { get; set; }
-        /// <summary>
-        /// The AnswerUnit title.
-        /// </summary>
-        public string title { get; set; }
-        /// <summary>
-        /// The AnswerUnit direction.
-        /// </summary>
-        public string direction { get; set; }
-        /// <summary>
-        /// The AnswerUnit content.
-        /// </summary>
-        public Content[] content { get; set; }
-    }
-
-	/// <summary>
-	/// Document content.
-	/// </summary>
-    [fsObject]
-    public class Content
-    {
-        /// <summary>
-        /// The content media type.
-        /// </summary>
-        public string media_type { get; set; }
-        /// <summary>
-        /// The content text.
-        /// </summary>
-        public string text { get; set; }
-    }
-
+    public string media_type_detected { get; set; }
     /// <summary>
-    /// The error response.
+    /// Array of document metadata.
     /// </summary>
-    [fsObject]
-    public class Warning
-    {
-        /// <summary>
-        /// The warning code.
-        /// </summary>
-        public string code { get; set; }
-        /// <summary>
-        /// The warning error text.
-        /// </summary>
-        public string error { get; set; }
-    }
-
+    public Metadata[] metadata { get; set; }
     /// <summary>
-    /// Targets for document conversion.
+    /// Answer Units.
     /// </summary>
-    public class ConversionTarget
-    {
-		/// <summary>
-		/// Answer units conversion target.
-		/// </summary>
-        public const string ANSWER_UNITS = "{\"conversion_target\": \"answer_units\"}";
-		/// <summary>
-		/// Normalized html conversion target.
-		/// </summary>
-        public const string NORMALIZED_HTML = "{\"conversion_target\": \"normalized_html\"}";
-		/// <summary>
-		/// Normalized text conversion target.
-		/// </summary>
-        public const string NORMALIZED_TEXT = "{\"conversion_target\": \"normalized_text\"}";
-    }
-
+    public AnswerUnit[] answer_units { get; set; }
     /// <summary>
-    /// The Document Conversion service version.
+    /// Warnings.
     /// </summary>
-    public class Version
-    {
-		/// <summary>
-		/// The version.
-		/// </summary>
-        public const string DOCUMENT_CONVERSION = "2015-12-15";
-    }
+    public Warning[] warnings { get; set; }
+    /// <summary>
+    /// Container for text response from ConversionTarget.NORMALIZED_TEXT
+    /// </summary>
+    public string textContent { get; set; }
+    /// <summary>
+    /// Container for HTML response from ConversionTarget.NORMALIZED_HTML
+    /// </summary>
+    public string htmlContent { get; set; }
+  }
+
+  /// <summary>
+  /// Metadata for the doucment conversion.
+  /// </summary>
+  [fsObject]
+  public class Metadata
+  {
+    /// <summary>
+    /// Metadata name.
+    /// </summary>
+    public string name { get; set; }
+    /// <summary>
+    /// Metadata content.
+    /// </summary>
+    public string content { get; set; }
+  }
+
+  /// <summary>
+  /// The units of the broken down document.
+  /// </summary>
+  [fsObject]
+  public class AnswerUnit
+  {
+    /// <summary>
+    /// The AnswerUnit ID.
+    /// </summary>
+    public string id { get; set; }
+    /// <summary>
+    /// The AnswerUnit type.
+    /// </summary>
+    public string type { get; set; }
+    /// <summary>
+    /// The AnswerUnit parent ID.
+    /// </summary>
+    public string parent_id { get; set; }
+    /// <summary>
+    /// The AnswerUnit title.
+    /// </summary>
+    public string title { get; set; }
+    /// <summary>
+    /// The AnswerUnit direction.
+    /// </summary>
+    public string direction { get; set; }
+    /// <summary>
+    /// The AnswerUnit content.
+    /// </summary>
+    public Content[] content { get; set; }
+  }
+
+  /// <summary>
+  /// Document content.
+  /// </summary>
+  [fsObject]
+  public class Content
+  {
+    /// <summary>
+    /// The content media type.
+    /// </summary>
+    public string media_type { get; set; }
+    /// <summary>
+    /// The content text.
+    /// </summary>
+    public string text { get; set; }
+  }
+
+  /// <summary>
+  /// The error response.
+  /// </summary>
+  [fsObject]
+  public class Warning
+  {
+    /// <summary>
+    /// The warning code.
+    /// </summary>
+    public string code { get; set; }
+    /// <summary>
+    /// The warning error text.
+    /// </summary>
+    public string error { get; set; }
+  }
+
+  /// <summary>
+  /// Targets for document conversion.
+  /// </summary>
+  public class ConversionTarget
+  {
+    /// <summary>
+    /// Answer units conversion target.
+    /// </summary>
+    public const string ANSWER_UNITS = "{\"conversion_target\": \"answer_units\"}";
+    /// <summary>
+    /// Normalized html conversion target.
+    /// </summary>
+    public const string NORMALIZED_HTML = "{\"conversion_target\": \"normalized_html\"}";
+    /// <summary>
+    /// Normalized text conversion target.
+    /// </summary>
+    public const string NORMALIZED_TEXT = "{\"conversion_target\": \"normalized_text\"}";
+  }
+
+  /// <summary>
+  /// The Document Conversion service version.
+  /// </summary>
+  public class Version
+  {
+    /// <summary>
+    /// The version.
+    /// </summary>
+    public const string DOCUMENT_CONVERSION = "2015-12-15";
+  }
 }
