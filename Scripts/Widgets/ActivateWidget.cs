@@ -20,37 +20,37 @@ using UnityEngine;
 
 namespace IBM.Watson.DeveloperCloud.Widgets
 {
-    /// <summary>
-    /// Simple widget class for connecting a UI button to an activation input on a widget.
-    /// </summary>
-    public class ActivateWidget : Widget
+  /// <summary>
+  /// Simple widget class for connecting a UI button to an activation input on a widget.
+  /// </summary>
+  public class ActivateWidget : Widget
+  {
+    #region Outputs
+    [SerializeField]
+    private Output m_ActivateOutput = new Output(typeof(BooleanData), true);
+    #endregion
+
+    #region Private Data
+    [SerializeField]
+    private bool m_SendValue = true;
+    #endregion
+
+    #region Widget interface
+    /// <exclude />
+    protected override string GetName()
     {
-        #region Outputs
-        [SerializeField]
-        private Output m_ActivateOutput = new Output(typeof(BooleanData), true);
-        #endregion
-
-        #region Private Data
-        [SerializeField]
-        private bool m_SendValue = true;
-        #endregion
-
-        #region Widget interface
-        /// <exclude />
-        protected override string GetName()
-        {
-            return "Activate";
-        }
-        #endregion
-
-        #region Event Handlers
-        /// <summary>
-        /// Button event handler.
-        /// </summary>
-        public void OnButton()
-        {
-            m_ActivateOutput.SendData(new BooleanData(m_SendValue));
-        }
-        #endregion
+      return "Activate";
     }
+    #endregion
+
+    #region Event Handlers
+    /// <summary>
+    /// Button event handler.
+    /// </summary>
+    public void OnButton()
+    {
+      m_ActivateOutput.SendData(new BooleanData(m_SendValue));
+    }
+    #endregion
+  }
 }
