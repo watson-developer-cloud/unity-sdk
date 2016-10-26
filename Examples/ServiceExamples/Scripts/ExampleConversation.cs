@@ -23,59 +23,60 @@ using System;
 
 public class ExampleConversation : MonoBehaviour
 {
-	private Conversation m_Conversation = new Conversation();
-    private string m_WorkspaceID;
-	private bool m_UseAlternateIntents = true;
-	private string[] questionArray = { "can you turn up the AC", "can you turn on the wipers", "can you turn off the wipers", "can you turn down the ac", "can you unlock the door"};
+  private Conversation m_Conversation = new Conversation();
+  private string m_WorkspaceID;
+  private bool m_UseAlternateIntents = true;
+  private string[] questionArray = { "can you turn up the AC", "can you turn on the wipers", "can you turn off the wipers", "can you turn down the ac", "can you unlock the door" };
 
-	void Start () {
-        LogSystem.InstallDefaultReactors();
-        m_WorkspaceID = Config.Instance.GetVariableValue("ConversationV1_ID");
+  void Start()
+  {
+    LogSystem.InstallDefaultReactors();
+    m_WorkspaceID = Config.Instance.GetVariableValue("ConversationV1_ID");
 
-        Debug.Log("**********User: Hello!");
-		MessageWithOnlyInput("Hello!");
+    Debug.Log("**********User: Hello!");
+    MessageWithOnlyInput("Hello!");
+  }
+
+  private void MessageWithOnlyInput(string input)
+  {
+    if (string.IsNullOrEmpty(input))
+      throw new ArgumentNullException("input");
+
+    m_Conversation.Message(OnMessageWithOnlyInput, m_WorkspaceID, input);
+  }
+
+
+  private void OnMessageWithOnlyInput(MessageResponse resp, string customData)
+  {
+    if (resp != null)
+    {
+      foreach (Intent mi in resp.intents)
+        Debug.Log("intent: " + mi.intent + ", confidence: " + mi.confidence);
+
+      if (resp.output != null && resp.output.text.Length > 0)
+        foreach (string txt in resp.output.text)
+          Debug.Log("output: " + txt);
+
+      string questionStr = questionArray[UnityEngine.Random.Range(0, questionArray.Length - 1)];
+      Debug.Log(string.Format("**********User: {0}", questionStr));
+
+      MessageRequest messageRequest = new MessageRequest();
+      messageRequest.InputText = questionStr;
+      messageRequest.alternate_intents = m_UseAlternateIntents;
+      messageRequest.ContextData = resp.context;
+
+      MessageWithFullMessageRequest(messageRequest);
     }
+    else
+    {
+      Debug.Log("Failed to invoke Message();");
+    }
+  }
 
-	private void MessageWithOnlyInput(string input)
-	{
-		if (string.IsNullOrEmpty(input))
-			throw new ArgumentNullException("input");
-
-		m_Conversation.Message(OnMessageWithOnlyInput, m_WorkspaceID, input);
-	}
-	
-	
-	private void OnMessageWithOnlyInput(MessageResponse resp, string customData)
-	{
-		if (resp != null)
-		{
-			foreach (Intent mi in resp.intents)
-				Debug.Log("intent: " + mi.intent + ", confidence: " + mi.confidence);
-
-			if (resp.output != null && resp.output.text.Length > 0)
-				foreach (string txt in resp.output.text)
-					Debug.Log("output: " + txt);
-
-			string questionStr = questionArray[UnityEngine.Random.Range(0, questionArray.Length - 1)];
-			Debug.Log(string.Format("**********User: {0}", questionStr));
-
-			MessageRequest messageRequest = new MessageRequest();
-			messageRequest.InputText = questionStr;
-			messageRequest.alternate_intents = m_UseAlternateIntents;
-			messageRequest.ContextData = resp.context;
-
-			MessageWithFullMessageRequest(messageRequest);
-		}
-		else
-		{
-			Debug.Log("Failed to invoke Message();");
-		}
-	}
-
-	private void MessageWithFullMessageRequest(MessageRequest messageRequest)
-	{
-		if (messageRequest == null)
-			throw new ArgumentNullException("messageRequest");
-		m_Conversation.Message(OnMessageWithOnlyInput, m_WorkspaceID, messageRequest);
-	}
+  private void MessageWithFullMessageRequest(MessageRequest messageRequest)
+  {
+    if (messageRequest == null)
+      throw new ArgumentNullException("messageRequest");
+    m_Conversation.Message(OnMessageWithOnlyInput, m_WorkspaceID, messageRequest);
+  }
 }

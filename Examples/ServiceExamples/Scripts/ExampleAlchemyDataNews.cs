@@ -16,30 +16,31 @@
 */
 
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1;
 using IBM.Watson.DeveloperCloud.Logging;
 using System;
 
-public class ExampleAlchemyDataNews : MonoBehaviour {
-    private AlchemyAPI m_AlchemyAPI = new AlchemyAPI();
-    
-    void Start () {
-        LogSystem.InstallDefaultReactors();
+public class ExampleAlchemyDataNews : MonoBehaviour
+{
+  private AlchemyAPI m_AlchemyAPI = new AlchemyAPI();
 
-		string[] returnFields = {Fields.ENRICHED_URL_ENTITIES, Fields.ENRICHED_URL_KEYWORDS};
-		Dictionary<string, string> queryFields = new Dictionary<string, string>();
-		queryFields.Add(Fields.ENRICHED_URL_RELATIONS_RELATION_SUBJECT_TEXT, "Obama");
-		queryFields.Add(Fields.ENRICHED_URL_CLEANEDTITLE, "Washington");
+  void Start()
+  {
+    LogSystem.InstallDefaultReactors();
 
-		if (!m_AlchemyAPI.GetNews(OnGetNews, returnFields, queryFields))
-            Log.Debug("ExampleAlchemyData", "Failed to get news!");
-    }
+    string[] returnFields = { Fields.ENRICHED_URL_ENTITIES, Fields.ENRICHED_URL_KEYWORDS };
+    Dictionary<string, string> queryFields = new Dictionary<string, string>();
+    queryFields.Add(Fields.ENRICHED_URL_RELATIONS_RELATION_SUBJECT_TEXT, "Obama");
+    queryFields.Add(Fields.ENRICHED_URL_CLEANEDTITLE, "Washington");
 
-    private void OnGetNews(NewsResponse newsData, string data)
-    {
-        if(newsData != null)
-            Log.Debug("ExampleAlchemyData", "status: {0}", newsData.status);
-    }
+    if (!m_AlchemyAPI.GetNews(OnGetNews, returnFields, queryFields))
+      Log.Debug("ExampleAlchemyData", "Failed to get news!");
+  }
+
+  private void OnGetNews(NewsResponse newsData, string data)
+  {
+    if (newsData != null)
+      Log.Debug("ExampleAlchemyData", "status: {0}", newsData.status);
+  }
 }
