@@ -18,19 +18,20 @@
 using UnityEngine;
 using IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v1;
 
-public class ExampleLanguageTranslator : MonoBehaviour {
-	private LanguageTranslator m_Translate = new LanguageTranslator();
-	private string m_PharseToTranslate = "How do I get to the disco?";
-	
-	void Start ()
-	{
-		Debug.Log("English Phrase to translate: " + m_PharseToTranslate);
-		m_Translate.GetTranslation(m_PharseToTranslate, "en", "es", OnGetTranslation);
-	}
+public class ExampleLanguageTranslator : MonoBehaviour
+{
+  private LanguageTranslator m_Translate = new LanguageTranslator();
+  private string m_PharseToTranslate = "How do I get to the disco?";
 
-	private void OnGetTranslation(Translations translation)
-	{
-		if (translation != null && translation.translations.Length > 0)
-			Debug.Log("Spanish Translation: " + translation.translations[0].translation);
-	}
+  void Start()
+  {
+    Debug.Log("English Phrase to translate: " + m_PharseToTranslate);
+    m_Translate.GetTranslation(m_PharseToTranslate, "en", "es", OnGetTranslation);
+  }
+
+  private void OnGetTranslation(Translations translation)
+  {
+    if (translation != null && translation.translations.Length > 0)
+      Debug.Log("Spanish Translation: " + translation.translations[0].translation);
+  }
 }

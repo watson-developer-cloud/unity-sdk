@@ -24,65 +24,65 @@ using IBM.Watson.DeveloperCloud.Logging;
 
 public class TestConversation : UnitTest
 {
-	private Conversation m_Conversation = new Conversation();
-	private string m_WorkspaceID;
-	private string m_Input = "Can you unlock the door?";
-	private bool m_MessageInputTested = false;
-    private bool m_MessageObjectTested = false;
+  private Conversation m_Conversation = new Conversation();
+  private string m_WorkspaceID;
+  private string m_Input = "Can you unlock the door?";
+  private bool m_MessageInputTested = false;
+  private bool m_MessageObjectTested = false;
 
-	public override IEnumerator RunTest()
-	{
-        m_WorkspaceID = Config.Instance.GetVariableValue("ConversationV1_ID");
+  public override IEnumerator RunTest()
+  {
+    m_WorkspaceID = Config.Instance.GetVariableValue("ConversationV1_ID");
 
-		if (Config.Instance.FindCredentials(m_Conversation.GetServiceID()) == null)
-			yield break;
+    if (Config.Instance.FindCredentials(m_Conversation.GetServiceID()) == null)
+      yield break;
 
-		if(!m_MessageInputTested)
-		{
-            m_Conversation.Message(OnMessageInput, m_WorkspaceID, m_Input);
-			while(!m_MessageInputTested)
-				yield return null;
-		}
-
-        if (!m_MessageObjectTested)
-        {
-            MessageRequest messageRequest = new MessageRequest();
-            messageRequest.InputText = m_Input;
-            m_Conversation.Message(OnMessageObject, m_WorkspaceID, messageRequest);
-            while (!m_MessageObjectTested)
-                yield return null;
-        }
-		
-        yield break;
-    }
-
-	private void OnMessageInput(MessageResponse resp, string customData)
-	{
-		Test(resp != null);
-		if(resp != null)
-		{
-			foreach(Intent mi in resp.intents)
-				Log.Debug("TestConversation", "input intent: " + mi.intent + ", confidence: " + mi.confidence);
-            if (resp.output != null && resp.output.text.Length > 0)
-                foreach (string txt in resp.output.text)
-                    Debug.Log("output: " + txt);
-        }
-
-        m_MessageInputTested = true;
-	}
-
-    private void OnMessageObject(MessageResponse resp, string customData)
+    if (!m_MessageInputTested)
     {
-        Test(resp != null);
-        if (resp != null)
-        {
-            foreach (Intent mi in resp.intents)
-                Log.Debug("TestConversation", "object intent: " + mi.intent + ", confidence: " + mi.confidence);
-            if (resp.output != null && resp.output.text.Length > 0)
-                foreach (string txt in resp.output.text)
-                    Debug.Log("output: " + txt);
-        }
-
-        m_MessageObjectTested = true;
+      m_Conversation.Message(OnMessageInput, m_WorkspaceID, m_Input);
+      while (!m_MessageInputTested)
+        yield return null;
     }
+
+    if (!m_MessageObjectTested)
+    {
+      MessageRequest messageRequest = new MessageRequest();
+      messageRequest.InputText = m_Input;
+      m_Conversation.Message(OnMessageObject, m_WorkspaceID, messageRequest);
+      while (!m_MessageObjectTested)
+        yield return null;
+    }
+
+    yield break;
+  }
+
+  private void OnMessageInput(MessageResponse resp, string customData)
+  {
+    Test(resp != null);
+    if (resp != null)
+    {
+      foreach (Intent mi in resp.intents)
+        Log.Debug("TestConversation", "input intent: " + mi.intent + ", confidence: " + mi.confidence);
+      if (resp.output != null && resp.output.text.Length > 0)
+        foreach (string txt in resp.output.text)
+          Debug.Log("output: " + txt);
+    }
+
+    m_MessageInputTested = true;
+  }
+
+  private void OnMessageObject(MessageResponse resp, string customData)
+  {
+    Test(resp != null);
+    if (resp != null)
+    {
+      foreach (Intent mi in resp.intents)
+        Log.Debug("TestConversation", "object intent: " + mi.intent + ", confidence: " + mi.confidence);
+      if (resp.output != null && resp.output.text.Length > 0)
+        foreach (string txt in resp.output.text)
+          Debug.Log("output: " + txt);
+    }
+
+    m_MessageObjectTested = true;
+  }
 }
