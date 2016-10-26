@@ -19,27 +19,27 @@ using UnityEngine;
 
 namespace IBM.Watson.DeveloperCloud.Logging
 {
+  /// <summary>
+  /// Helper class to install default Log Reactor on Awawke
+  /// </summary>
+  public class LogSystemInitilization : MonoBehaviour
+  {
+
     /// <summary>
-    /// Helper class to install default Log Reactor on Awawke
+    /// Days of Log store on file system
     /// </summary>
-    public class LogSystemInitilization : MonoBehaviour
+    [SerializeField]
+    private int m_LogHistory = 2;
+
+    /// <summary>
+    /// Log level definition to store on file. 
+    /// </summary>
+    [SerializeField]
+    private LogLevel m_LogLevelOnFile = LogLevel.STATUS;
+
+    void Awake()
     {
-
-        /// <summary>
-        /// Days of Log store on file system
-        /// </summary>
-        [SerializeField]
-        private int m_LogHistory = 2;
-
-        /// <summary>
-        /// Log level definition to store on file. 
-        /// </summary>
-        [SerializeField]
-        private LogLevel m_LogLevelOnFile = LogLevel.STATUS;
-
-        void Awake()
-        {
-            LogSystem.InstallDefaultReactors(m_LogHistory, m_LogLevelOnFile);
-        }
+      LogSystem.InstallDefaultReactors(m_LogHistory, m_LogLevelOnFile);
     }
+  }
 }
