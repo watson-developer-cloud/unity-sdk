@@ -20,52 +20,52 @@ using System.Text;
 
 namespace IBM.Watson.DeveloperCloud.Utilities
 {
+  /// <summary>
+  /// Helper class for holding a user and password, used by both the WSCOnnector and RESTConnector.
+  /// </summary>
+  public class Credentials
+  {
     /// <summary>
-    /// Helper class for holding a user and password, used by both the WSCOnnector and RESTConnector.
+    /// Default constructor.
     /// </summary>
-    public class Credentials
+    public Credentials()
+    { }
+    /// <summary>
+    /// Constructor that takes the user name and password.
+    /// </summary>
+    /// <param name="user">The string containing the user name.</param>
+    /// <param name="password">A string containing the password.</param>
+    public Credentials(string user, string password)
     {
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public Credentials()
-        { }
-        /// <summary>
-        /// Constructor that takes the user name and password.
-        /// </summary>
-        /// <param name="user">The string containing the user name.</param>
-        /// <param name="password">A string containing the password.</param>
-        public Credentials(string user, string password)
-        {
-            User = user;
-            Password = password;
-        }
+      User = user;
+      Password = password;
+    }
 
-        /// <summary>
-        /// The user name.
-        /// </summary>
-        public string User { get; set; }
-        /// <summary>
-        /// The password.
-        /// </summary>
-        public string Password { get; set; }
+    /// <summary>
+    /// The user name.
+    /// </summary>
+    public string User { get; set; }
+    /// <summary>
+    /// The password.
+    /// </summary>
+    public string Password { get; set; }
 
-        /// <summary>
-        /// Create basic authentication header data for REST requests.
-        /// </summary>
-        /// <returns>The authentication data base64 encoded.</returns>
-        public string CreateAuthorization()
-        {
-            return "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(User + ":" + Password));
-        }
+    /// <summary>
+    /// Create basic authentication header data for REST requests.
+    /// </summary>
+    /// <returns>The authentication data base64 encoded.</returns>
+    public string CreateAuthorization()
+    {
+      return "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(User + ":" + Password));
+    }
 
-		/// <summary>
-		/// Do we have credentials?
-		/// </summary>
-		/// <returns></returns>
-        public bool HasCredentials()
-        {
-            return !string.IsNullOrEmpty(User) && !string.IsNullOrEmpty(Password);
-        }
-    };
+    /// <summary>
+    /// Do we have credentials?
+    /// </summary>
+    /// <returns></returns>
+    public bool HasCredentials()
+    {
+      return !string.IsNullOrEmpty(User) && !string.IsNullOrEmpty(Password);
+    }
+  };
 }

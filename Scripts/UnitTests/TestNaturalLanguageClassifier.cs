@@ -27,41 +27,41 @@ using System;
 
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
-    public class TestNaturalLanguageClassifier : UnitTest
-    {
-        NaturalLanguageClassifier m_NaturalLanguageClassifier = new NaturalLanguageClassifier();
-        bool m_FindClassifierTested = false;
-        bool m_TrainClasifierTested = false;
-        bool m_TrainClassifier = false;
+  public class TestNaturalLanguageClassifier : UnitTest
+  {
+    NaturalLanguageClassifier m_NaturalLanguageClassifier = new NaturalLanguageClassifier();
+    bool m_FindClassifierTested = false;
+    bool m_TrainClasifierTested = false;
+    bool m_TrainClassifier = false;
 #if TEST_DELETE
         bool m_DeleteTested = false;
 #endif
-        string m_ClassifierId = null;
-        bool m_ClassifyTested = false;
+    string m_ClassifierId = null;
+    bool m_ClassifyTested = false;
 
-        public override IEnumerator RunTest()
-        {
-            if (Config.Instance.FindCredentials(m_NaturalLanguageClassifier.GetServiceID()) == null)
-                yield break;
+    public override IEnumerator RunTest()
+    {
+      if (Config.Instance.FindCredentials(m_NaturalLanguageClassifier.GetServiceID()) == null)
+        yield break;
 
-            m_NaturalLanguageClassifier.FindClassifier("TestNaturalLanguageClassifier/", OnFindClassifier);
-            while (!m_FindClassifierTested)
-                yield return null;
+      m_NaturalLanguageClassifier.FindClassifier("TestNaturalLanguageClassifier/", OnFindClassifier);
+      while (!m_FindClassifierTested)
+        yield return null;
 
-            if (m_TrainClassifier)
-            {
-                string trainingData = File.ReadAllText(Application.dataPath + "/Watson/Scripts/Editor/TestData/weather_data_train.csv");
+      if (m_TrainClassifier)
+      {
+        string trainingData = File.ReadAllText(Application.dataPath + "/Watson/Scripts/Editor/TestData/weather_data_train.csv");
 
-                Test(m_NaturalLanguageClassifier.TrainClassifier("TestNaturalLanguageClassifier/" + DateTime.Now.ToString(), "en", trainingData, OnTrainClassifier));
-                while (!m_TrainClasifierTested)
-                    yield return null;
-            }
-            else if (!string.IsNullOrEmpty(m_ClassifierId))
-            {
-                Test(m_NaturalLanguageClassifier.Classify(m_ClassifierId, "Is it hot outside", OnClassify));
-                while (!m_ClassifyTested)
-                    yield return null;
-            }
+        Test(m_NaturalLanguageClassifier.TrainClassifier("TestNaturalLanguageClassifier/" + DateTime.Now.ToString(), "en", trainingData, OnTrainClassifier));
+        while (!m_TrainClasifierTested)
+          yield return null;
+      }
+      else if (!string.IsNullOrEmpty(m_ClassifierId))
+      {
+        Test(m_NaturalLanguageClassifier.Classify(m_ClassifierId, "Is it hot outside", OnClassify));
+        while (!m_ClassifyTested)
+          yield return null;
+      }
 
 #if TEST_DELETE
             if ( !string.IsNullOrEmpty( m_ClassifierId ) )
@@ -72,8 +72,8 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             }
 #endif
 
-            yield break;
-        }
+      yield break;
+    }
 
 #if TEST_DELETE
         private void OnDeleteClassifier( bool success )
@@ -83,42 +83,42 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         }
 #endif
 
-        private void OnFindClassifier(Classifier find)
-        {
-            if (find != null)
-            {
-                Log.Status("TestNaturalLanguageClassifier", "Find Result, Classifier ID: {0}, Status: {1}", find.classifier_id, find.status);
+    private void OnFindClassifier(Classifier find)
+    {
+      if (find != null)
+      {
+        Log.Status("TestNaturalLanguageClassifier", "Find Result, Classifier ID: {0}, Status: {1}", find.classifier_id, find.status);
 
-                m_TrainClassifier = false;
-                if (find.status == "Available")
-                    m_ClassifierId = find.classifier_id;
-            }
-            else
-            {
-                m_TrainClassifier = true;
-            }
-            m_FindClassifierTested = true;
-        }
-
-        private void OnClassify(ClassifyResult result)
-        {
-            Test(result != null);
-            if (result != null)
-            {
-                Log.Status("TestNaturalLanguageClassifier", "Classify Result: {0}", result.top_class);
-                Test(result.top_class == "temperature");
-            }
-            m_ClassifyTested = true;
-        }
-
-        private void OnTrainClassifier(Classifier classifier)
-        {
-            Test(classifier != null);
-            if (classifier != null)
-                Log.Status("TestNaturalLanguageClassifier", "Classifier ID: {0}, Status: {1}", classifier.classifier_id, classifier.status);
-
-            m_TrainClasifierTested = true;
-        }
+        m_TrainClassifier = false;
+        if (find.status == "Available")
+          m_ClassifierId = find.classifier_id;
+      }
+      else
+      {
+        m_TrainClassifier = true;
+      }
+      m_FindClassifierTested = true;
     }
+
+    private void OnClassify(ClassifyResult result)
+    {
+      Test(result != null);
+      if (result != null)
+      {
+        Log.Status("TestNaturalLanguageClassifier", "Classify Result: {0}", result.top_class);
+        Test(result.top_class == "temperature");
+      }
+      m_ClassifyTested = true;
+    }
+
+    private void OnTrainClassifier(Classifier classifier)
+    {
+      Test(classifier != null);
+      if (classifier != null)
+        Log.Status("TestNaturalLanguageClassifier", "Classifier ID: {0}, Status: {1}", classifier.classifier_id, classifier.status);
+
+      m_TrainClasifierTested = true;
+    }
+  }
 }
 

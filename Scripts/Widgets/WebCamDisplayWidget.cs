@@ -25,88 +25,89 @@ using IBM.Watson.DeveloperCloud.Logging;
 
 namespace IBM.Watson.DeveloperCloud.Widgets
 {
-	/// <summary>
-	/// This widget displays WebCam video.
-	/// </summary>
-	public class WebCamDisplayWidget : Widget
-	{
-		#region Inputs
-		[SerializeField]
-		private Input m_WebCamTextureInput = new Input("WebCamTexture", typeof(WebCamTextureData), "OnWebCamTexture");
-		#endregion
+  /// <summary>
+  /// This widget displays WebCam video.
+  /// </summary>
+  public class WebCamDisplayWidget : Widget
+  {
+    #region Inputs
+    [SerializeField]
+    private Input m_WebCamTextureInput = new Input("WebCamTexture", typeof(WebCamTextureData), "OnWebCamTexture");
+    #endregion
 
-		#region Outputs
-		#endregion
+    #region Outputs
+    #endregion
 
-		#region Private Data
-        [SerializeField]
-        private RawImage m_RawImage;
-        [SerializeField]
-        private Material m_Material;
+    #region Private Data
+    [SerializeField]
+    private RawImage m_RawImage;
+    [SerializeField]
+    private Material m_Material;
 
-		private WebCamTexture m_WebCamTexture;
-        private int m_RequestedWidth;
-        private int m_RequestedHeight;
-        private int m_RequestedFPS;
-        #endregion
+    private WebCamTexture m_WebCamTexture;
+    private int m_RequestedWidth;
+    private int m_RequestedHeight;
+    private int m_RequestedFPS;
+    #endregion
 
-        #region Constants
-        #endregion
+    #region Constants
+    #endregion
 
-        #region Public Properties
-        /// <summary>
-        /// The Raw Image displaying the WebCam stream in UI.
-        /// </summary>
-        public RawImage RawImage
-        {
-            get { return m_RawImage; }
-        }
-        /// <summary>
-        /// The Material displaying the WebCam stream on Geometry.
-        /// </summary>
-		public Material Material
-        {
-            get { return m_Material; }
-        }
-		#endregion
-
-		#region Public Functions
-		#endregion
-
-		#region Widget Interface
-		protected override string GetName()
-		{
-			return "WebCamDisplay";
-		}
-        #endregion
-
-        #region Private Functions
-        #endregion
-
-        #region Event Handlers
-        private void OnWebCamTexture(Data data)
-        {
-            Log.Debug("WebCamDisplayWidget", "OnWebCamTexture()");
-            if (Material == null && RawImage == null)
-                throw new ArgumentNullException("A Material or RawImage is required to display WebCamTexture");
-
-            WebCamTextureData webCamTextureData = (WebCamTextureData)data;
-            m_WebCamTexture = webCamTextureData.CamTexture;
-            m_RequestedWidth = webCamTextureData.RequestedWidth;
-            m_RequestedHeight = webCamTextureData.RequestedHeight;
-            m_RequestedFPS = webCamTextureData.RequestedFPS;
-
-            if (Material != null)
-                Material.mainTexture = m_WebCamTexture;
-
-            if (RawImage != null)
-            {
-                RawImage.texture = m_WebCamTexture;
-                RawImage.material.mainTexture = m_WebCamTexture;
-            }
-            if (!m_WebCamTexture.isPlaying)
-                m_WebCamTexture.Play();
-        }
-        #endregion
+    #region Public Properties
+    /// <summary>
+    /// The Raw Image displaying the WebCam stream in UI.
+    /// </summary>
+    public RawImage RawImage
+    {
+      get { return m_RawImage; }
+      set { m_RawImage = value; }
     }
+    /// <summary>
+    /// The Material displaying the WebCam stream on Geometry.
+    /// </summary>
+    public Material Material
+    {
+      get { return m_Material; }
+    }
+    #endregion
+
+    #region Public Functions
+    #endregion
+
+    #region Widget Interface
+    protected override string GetName()
+    {
+      return "WebCamDisplay";
+    }
+    #endregion
+
+    #region Private Functions
+    #endregion
+
+    #region Event Handlers
+    private void OnWebCamTexture(Data data)
+    {
+      Log.Debug("WebCamDisplayWidget", "OnWebCamTexture()");
+      if (Material == null && RawImage == null)
+        throw new ArgumentNullException("A Material or RawImage is required to display WebCamTexture");
+
+      WebCamTextureData webCamTextureData = (WebCamTextureData)data;
+      m_WebCamTexture = webCamTextureData.CamTexture;
+      m_RequestedWidth = webCamTextureData.RequestedWidth;
+      m_RequestedHeight = webCamTextureData.RequestedHeight;
+      m_RequestedFPS = webCamTextureData.RequestedFPS;
+
+      if (Material != null)
+        Material.mainTexture = m_WebCamTexture;
+
+      if (RawImage != null)
+      {
+        RawImage.texture = m_WebCamTexture;
+        RawImage.material.mainTexture = m_WebCamTexture;
+      }
+      if (!m_WebCamTexture.isPlaying)
+        m_WebCamTexture.Play();
+    }
+    #endregion
+  }
 }

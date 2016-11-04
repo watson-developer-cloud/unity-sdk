@@ -19,16 +19,18 @@ using UnityEngine;
 using System.Collections;
 using IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3;
 
-public class ExampleToneAnalyzer : MonoBehaviour {
-    ToneAnalyzer m_ToneAnalyzer = new ToneAnalyzer();
-    string m_StringToTestTone = "This service enables people to discover and understand, and revise the impact of tone in their content. It uses linguistic analysis to detect and interpret emotional, social, and language cues found in text.";
+public class ExampleToneAnalyzer : MonoBehaviour
+{
+  ToneAnalyzer m_ToneAnalyzer = new ToneAnalyzer();
+  string m_StringToTestTone = "This service enables people to discover and understand, and revise the impact of tone in their content. It uses linguistic analysis to detect and interpret emotional, social, and language cues found in text.";
 
-	void Start () {
-        m_ToneAnalyzer.GetToneAnalyze( OnGetToneAnalyze, m_StringToTestTone, "TEST");
-	}
-	
-    private void OnGetToneAnalyze( ToneAnalyzerResponse resp , string data)
-    {
-        Debug.Log("Response: " +resp + " - " + data);
-    }
+  void Start()
+  {
+    m_ToneAnalyzer.GetToneAnalyze(OnGetToneAnalyze, m_StringToTestTone, "TEST");
+  }
+
+  private void OnGetToneAnalyze(ToneAnalyzerResponse resp, string data)
+  {
+    Debug.Log("Response: " + resp + " - " + data);
+  }
 }

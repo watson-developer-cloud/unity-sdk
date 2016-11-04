@@ -1,14 +1,19 @@
 Change Log
 ==========
+## Version 0.12.0
+_2016-11-4_
+* New: Added streaming `SpeechToText` example.
+* New: Abstraction for `Personality Insights V3`
+
 ## Version 0.11.0
-_2016_10_27_
+_2016-10-27_
 * New: Abstracted `Speech to Text` customization methods.
 
 ## Version 0.10.0
-_2016_09_23_
+_2016-09-23_
 
 * New: Added `similarity search` to the `Visual Recognition` service.
-* Fix: `Touch Widget` improvmements.
+* Fix: `Touch Widget` improvements.
 * Fix: Disabled 3rd Party plugin warnings.
 * Fix: Removed `Conversation` Message overload method that takes only input and conversationID.
 * Fix: Rewrote `Conversation` example script to show how to create MessageRequest object.
