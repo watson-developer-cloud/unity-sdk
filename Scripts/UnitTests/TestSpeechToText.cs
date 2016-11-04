@@ -208,10 +208,10 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
       //	yield return null;
 
       //	DeleteCustomization
-      Log.Debug("TestSpeechToText", "**********  Attempting to to delete customization {0}", m_CreatedCustomizationID);
-      m_SpeechToText.DeleteCustomization(HandleDeleteCustomization, m_CreatedCustomizationID);
-      while (!m_DeleteCustomizationTested)
-        yield return null;
+      //Log.Debug("TestSpeechToText", "**********  Attempting to to delete customization {0}", m_CreatedCustomizationID);
+      //m_SpeechToText.DeleteCustomization(HandleDeleteCustomization, m_CreatedCustomizationID);
+      //while (!m_DeleteCustomizationTested)
+      //  yield return null;
 
       yield break;
     }

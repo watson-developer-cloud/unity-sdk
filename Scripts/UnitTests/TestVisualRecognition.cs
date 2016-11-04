@@ -399,10 +399,14 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
           Log.Debug("TestVisualRecognition", "\tDetectFaces GET  source_url: {0}, resolved_url: {1}", faces.source_url, faces.resolved_url);
           foreach (OneFaceResult face in faces.faces)
           {
-            Log.Debug("TestVisualRecognition", "\t\tDetectFaces GET Face location: {0}, {1}, {2}, {3}", face.face_location.left, face.face_location.top, face.face_location.width, face.face_location.height);
-            Log.Debug("TestVisualRecognition", "\t\tDetectFaces GET Gender: {0}, Score: {1}", face.gender.gender, face.gender.score);
-            Log.Debug("TestVisualRecognition", "\t\tDetectFaces GET Age Min: {0}, Age Max: {1}, Score: {2}", face.age.min, face.age.max, face.age.score);
-            Log.Debug("TestVisualRecognition", "\t\tDetectFaces GET Name: {0}, Score: {1}, Type Heiarchy: {2}", face.identity.name, face.identity.score, face.identity.type_hierarchy);
+            if(face.face_location != null)
+              Log.Debug("TestVisualRecognition", "\t\tDetectFaces GET Face location: {0}, {1}, {2}, {3}", face.face_location.left, face.face_location.top, face.face_location.width, face.face_location.height);
+            if(face.gender != null)
+              Log.Debug("TestVisualRecognition", "\t\tDetectFaces GET Gender: {0}, Score: {1}", face.gender.gender, face.gender.score);
+            if(face.age != null)
+              Log.Debug("TestVisualRecognition", "\t\tDetectFaces GET Age Min: {0}, Age Max: {1}, Score: {2}", face.age.min, face.age.max, face.age.score);
+            if (face.identity != null)
+              Log.Debug("TestVisualRecognition", "\t\tDetectFaces GET Name: {0}, Score: {1}, Type Heiarchy: {2}", face.identity.name, face.identity.score, face.identity.type_hierarchy);
           }
         }
 
@@ -425,10 +429,14 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
           Log.Debug("TestVisualRecognition", "\tDetectFaces POST  source_url: {0}, resolved_url: {1}", faces.source_url, faces.resolved_url);
           foreach (OneFaceResult face in faces.faces)
           {
-            Log.Debug("TestVisualRecognition", "\t\tDetectFaces POST Face location: {0}, {1}, {2}, {3}", face.face_location.left, face.face_location.top, face.face_location.width, face.face_location.height);
-            Log.Debug("TestVisualRecognition", "\t\tDetectFaces POST Gender: {0}, Score: {1}", face.gender.gender, face.gender.score);
-            Log.Debug("TestVisualRecognition", "\t\tDetectFaces POST Age Min: {0}, Age Max: {1}, Score: {2}", face.age.min, face.age.max, face.age.score);
-            Log.Debug("TestVisualRecognition", "\t\tDetectFaces POST Name: {0}, Score: {1}, Type Heiarchy: {2}", face.identity.name, face.identity.score, face.identity.type_hierarchy);
+            if (face.face_location != null)
+              Log.Debug("TestVisualRecognition", "\t\tDetectFaces POST Face location: {0}, {1}, {2}, {3}", face.face_location.left, face.face_location.top, face.face_location.width, face.face_location.height);
+            if (face.gender != null)
+              Log.Debug("TestVisualRecognition", "\t\tDetectFaces POST Gender: {0}, Score: {1}", face.gender.gender, face.gender.score);
+            if (face.age != null)
+              Log.Debug("TestVisualRecognition", "\t\tDetectFaces POST Age Min: {0}, Age Max: {1}, Score: {2}", face.age.min, face.age.max, face.age.score);
+            if(face.identity != null)
+              Log.Debug("TestVisualRecognition", "\t\tDetectFaces POST Name: {0}, Score: {1}, Type Heiarchy: {2}", face.identity.name, face.identity.score, face.identity.type_hierarchy);
           }
         }
 
