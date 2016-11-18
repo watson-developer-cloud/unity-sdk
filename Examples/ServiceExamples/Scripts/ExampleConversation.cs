@@ -51,11 +51,11 @@ public class ExampleConversation : MonoBehaviour
     if (resp != null)
     {
       foreach (Intent mi in resp.intents)
-        Debug.Log("intent: " + mi.intent + ", confidence: " + mi.confidence);
+        Debug.Log("Message Only intent: " + mi.intent + ", confidence: " + mi.confidence);
 
       if (resp.output != null && resp.output.text.Length > 0)
         foreach (string txt in resp.output.text)
-          Debug.Log("output: " + txt);
+          Debug.Log("Message Only output: " + txt);
 
       string questionStr = questionArray[UnityEngine.Random.Range(0, questionArray.Length - 1)];
       Debug.Log(string.Format("**********User: {0}", questionStr));
@@ -69,7 +69,7 @@ public class ExampleConversation : MonoBehaviour
     }
     else
     {
-      Debug.Log("Failed to invoke Message();");
+      Debug.Log("Message Only: Failed to invoke Message();");
     }
   }
 
@@ -77,6 +77,31 @@ public class ExampleConversation : MonoBehaviour
   {
     if (messageRequest == null)
       throw new ArgumentNullException("messageRequest");
-    m_Conversation.Message(OnMessageWithOnlyInput, m_WorkspaceID, messageRequest);
+    m_Conversation.Message(OnMessageWithFullRequest, m_WorkspaceID, messageRequest);
+  }
+
+  private void OnMessageWithFullRequest(MessageResponse resp, string customData)
+  {
+    if (resp != null)
+    {
+      foreach (Intent mi in resp.intents)
+        Debug.Log("Full Request intent: " + mi.intent + ", confidence: " + mi.confidence);
+
+      if (resp.output != null && resp.output.text.Length > 0)
+        foreach (string txt in resp.output.text)
+          Debug.Log("Full Request output: " + txt);
+
+      string questionStr = questionArray[UnityEngine.Random.Range(0, questionArray.Length - 1)];
+      Debug.Log(string.Format("**********User: {0}", questionStr));
+
+      MessageRequest messageRequest = new MessageRequest();
+      messageRequest.InputText = questionStr;
+      messageRequest.alternate_intents = m_UseAlternateIntents;
+      messageRequest.ContextData = resp.context;
+    }
+    else
+    {
+      Debug.Log("Full Request: Failed to invoke Message();");
+    }
   }
 }

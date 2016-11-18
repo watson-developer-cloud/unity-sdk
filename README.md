@@ -316,7 +316,7 @@ void Start () {
 ```
 
 ### Conversation
-With the IBM Watson™ [Conversation][conversation] service you can create cognitive agents - virtual agents that combine machine learning, natural language understanding, and integrated dialog scripting tools to provide outstanding customer engagements. A workspace should be created using [Conversation tooling][conversation_tooling] and a variable `ConversationV1_ID` should be set in the Config Editor with the Workspace ID. This is required for the service status check in the `Config Editor`.
+With the IBM Watson™ [Conversation][conversation] service you can create cognitive agents - virtual agents that combine machine learning, natural language understanding, and integrated dialog scripting tools to provide outstanding customer engagements. A workspace should be created using [Conversation tooling][conversation_tooling] and a variable `ConversationV1_ID` should be set in the Config Editor with the Workspace ID (In the Config Editor, click `Advanced Mode` and click `Add Variable`). This is required for the service status check in the `Config Editor`.
 
 ```cs
 private Conversation m_Conversation = new Conversation();
