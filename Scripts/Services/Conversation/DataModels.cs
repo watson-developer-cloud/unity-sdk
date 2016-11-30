@@ -303,7 +303,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
     /// <summary>
     /// The version.
     /// </summary>
-    public const string VERSION = "2016-07-11";
+	public const string VERSION = "2016-09-20";
   }
   #endregion
 }
