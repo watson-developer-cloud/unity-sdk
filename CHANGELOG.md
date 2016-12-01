@@ -1,12 +1,20 @@
 Change Log
 ==========
+## Version 0.13.0
+_2016-12-2_
+
+* Fix: Increased conversation version.
+* Fix: Fixed infinite loop in Conversation service example.
+ 
 ## Version 0.12.0
 _2016-11-4_
+
 * New: Added streaming `SpeechToText` example.
 * New: Abstraction for `Personality Insights V3`
 
 ## Version 0.11.0
 _2016-10-27_
+
 * New: Abstracted `Speech to Text` customization methods.
 
 ## Version 0.10.0
