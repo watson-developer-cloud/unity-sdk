@@ -67,7 +67,7 @@ You will need the 'username' and 'password' credentials for each service. Servic
 
 ## IBM Watson Services
 ### Speech to Text
-Use the [Speech to Text][speech_to_text] service to recognize the text from a .wav file. Assign the .wav file to the script in the Unity Editor. Speech to text can also be used to convert an audio stream into text.
+Use the [Speech to Text][speech_to_text] service to recognize the text from a .wav file. Assign the .wav file to the script in the Unity Editor. Speech to text can also be used to convert an audio stream into text. When using the Microphone Widget and publishing to iOS, the XCode project plist must be updated with a `NSMicrophoneUsageDescription` or the application will crash silently.
 
 ```cs
 [SerializeField]
