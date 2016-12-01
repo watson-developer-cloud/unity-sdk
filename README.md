@@ -43,8 +43,8 @@ Move the **`unity-sdk`** directory into the Assets directory of the Unity projec
 
 ## Configuring your service credentials
 You will need the 'username' and 'password' credentials for each service. Service credentials are different from your Bluemix account username and password.
-1. Determine which services to configure.
 
+1. Determine which services to configure.
 2. If you have configured the services already, complete the following steps. Otherwise, go to step 3.
     1. Log in to Bluemix at https://bluemix.net.
     2. Navigate to the **Dashboard** on your Bluemix account.
@@ -64,6 +64,8 @@ You will need the 'username' and 'password' credentials for each service. Servic
     7. Repeat steps 1 - 5 for each service you want to use.
     ![services-1](http://g.recordit.co/zyL5RZYXqa.gif)
 4. Click **Save**, and close the Config Editor.
+
+Note: The Config.json file is saved as plain text in the StreamingAssets directory. It is the user's responsibility to secure the credentials.
 
 ## IBM Watson Services
 ### Speech to Text
