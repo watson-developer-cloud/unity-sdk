@@ -328,12 +328,12 @@ void Start () {
 	m_Conversation.Message(OnMessage, m_WorkspaceID, m_Input);
 }
 
-void OnMessage (DataModels.MessageResponse resp)
+void OnMessage (MessageResponse resp)
 {
-	foreach(DataModels.MessageIntent mi in resp.intents)
-		Debug.Log("intent: " + mi.intent + ", confidence: " + mi.confidence);
+   foreach(Intent mi in resp.intents)
+       Debug.Log("intent: " + mi.intent + ", confidence: " + mi.confidence);
 
-	Debug.Log("response: " + resp.output.text);
+   Debug.Log("response: " + resp.output.text);
 }
 ```
 
