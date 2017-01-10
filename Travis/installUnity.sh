@@ -19,8 +19,9 @@ download() {
 install() {
  package=$1
  filename=`basename "$package"`
- packagePath = "/Unity/$filename"
+ packagePath="Unity/$filename"
  if [ ! -f $packagePath ] ; then
+   echo "$packagePath not found. downloading `basename "$packagePath"`"
    download "$package"
  fi
 
@@ -34,4 +35,6 @@ fi
 
 install "MacEditorInstaller/Unity-$VERSION.pkg"
 install "MacEditorTargetInstaller/UnitySetup-Windows-Support-for-Editor-$VERSION.pkg"
-install "MacEditorTargetInstaller/UnitySetup-Mac-Support-for-Editor-$VERSION.pkg"
+
+#"Mac Target Support - now part of Editor as default player instead of web player"
+#install "MacEditorTargetInstaller/UnitySetup-Mac-Support-for-Editor-$VERSION.pkg"
