@@ -2,8 +2,8 @@
 project="unity-sdk-travis"
 
 BASE_URL=http://netstorage.unity3d.com/unity
-HASH=fdbb5133b820
-VERSION=5.3.4f1
+HASH=38b4efef76f0
+VERSION=5.5.0f3
 
 download() {
   file=$1
