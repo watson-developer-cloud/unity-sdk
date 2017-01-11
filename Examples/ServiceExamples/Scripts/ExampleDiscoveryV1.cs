@@ -20,16 +20,22 @@ using UnityEngine;
 
 public class ExampleDiscoveryV1 : MonoBehaviour
 {
-    Discovery m_Discovery = new Discovery();
+    private Discovery m_Discovery = new Discovery();
 
     private void Start()
     {
         LogSystem.InstallDefaultReactors();
 
         //  Get Environments
-        Log.Debug("ExampleDiscovery", "Attempting to get environments!");
+        Log.Debug("ExampleDiscoveryV1", "Attempting to get environments");
         if (!m_Discovery.GetEnvironments(OnGetEnvironments))
-            Log.Debug("ExampleDiscovery", "Failed to get environments!");
+            Log.Debug("ExampleDiscoveryV1", "Failed to get environments");
+
+        //  GetEnvironment
+        Log.Debug("ExampleDiscoveryV1", "Attempting to get environment");
+        if(!m_Discovery.GetEnvironment(OnGetEnvironment, "6c8647b7-9dd4-42c8-9cb0-117b40b14517"))
+            Log.Debug("ExampleDiscoveryV1", "Failed to get environment");
+
     }
 
     private void OnGetEnvironments(GetEnvironmentsResponse resp, string data)
@@ -37,7 +43,19 @@ public class ExampleDiscoveryV1 : MonoBehaviour
         if(resp != null)
         {
             foreach (Environment environment in resp.environments)
-                Log.Debug("ExampleDiscovery", "environment_id: {0}", environment.environment_id);
+                Log.Debug("ExampleDiscoveryV1", "environment_id: {0}", environment.environment_id);
+        }
+        else
+        {
+            Log.Debug("ExampleDiscoveryV1", "resp is null");
+        }
+    }
+
+    private void OnGetEnvironment(Environment resp, string data)
+    {
+        if (resp != null)
+        {
+            Log.Debug("ExampleDiscoveryV1", "environment_name: {0}", resp.name);
         }
         else
         {

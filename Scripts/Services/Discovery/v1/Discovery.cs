@@ -126,6 +126,66 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         }
         #endregion
 
+        #region GetEnvironment
+        public delegate void OnGetEnvironment(Environment resp, string customData);
+
+        public bool GetEnvironment(OnGetEnvironment callback, string environmentID, string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+
+            GetEnvironmentRequest req = new GetEnvironmentRequest();
+            req.Callback = callback;
+            req.EnvironmentID = environmentID;
+            req.Data = customData;
+            req.Parameters["version"] = DiscoveryVersion.Version;
+            req.OnResponse = OnGetEnvironmentResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_ENVIRONMENT, environmentID));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class GetEnvironmentRequest : RESTConnector.Request
+        {
+            public string Data { get; set; }
+            public string EnvironmentID { get; set; }
+            public OnGetEnvironment Callback { get; set; }
+        }
+
+        private void OnGetEnvironmentResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            Environment environmentData = new Environment();
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = environmentData;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Discovery", "OnGetEnvironmentResponse Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((GetEnvironmentRequest)req).Callback != null)
+                ((GetEnvironmentRequest)req).Callback(resp.Success ? environmentData : null, ((GetEnvironmentRequest)req).Data);
+
+        }
+        #endregion
         #region IWatsonService Interface
         public string GetServiceID()
         {
