@@ -15,6 +15,10 @@ using TouchScript.Utils.Debug;
 #endif
 using UnityEngine;
 
+#if UNITY_5_4_OR_NEWER
+using UnityEngine.SceneManagement;
+#endif
+
 namespace TouchScript
 {
     /// <summary>
@@ -39,38 +43,38 @@ namespace TouchScript
         }
 
         /// <inheritdoc />
-        public event EventHandler<TouchEventArgs> TouchBegan
+        public event EventHandler<TouchEventArgs> TouchesBegan
         {
-            add { touchBeganInvoker += value; }
-            remove { touchBeganInvoker -= value; }
+            add { touchesBeganInvoker += value; }
+            remove { touchesBeganInvoker -= value; }
         }
 
         /// <inheritdoc />
-        public event EventHandler<TouchEventArgs> TouchMoved
+        public event EventHandler<TouchEventArgs> TouchesMoved
         {
-            add { touchMovedInvoker += value; }
-            remove { touchMovedInvoker -= value; }
+            add { touchesMovedInvoker += value; }
+            remove { touchesMovedInvoker -= value; }
         }
 
         /// <inheritdoc />
-        public event EventHandler<TouchEventArgs> TouchEnded
+        public event EventHandler<TouchEventArgs> TouchesEnded
         {
-            add { touchEndedInvoker += value; }
-            remove { touchEndedInvoker -= value; }
+            add { touchesEndedInvoker += value; }
+            remove { touchesEndedInvoker -= value; }
         }
 
         /// <inheritdoc />
-        public event EventHandler<TouchEventArgs> TouchCancelled
+        public event EventHandler<TouchEventArgs> TouchesCancelled
         {
-            add { touchCancelledInvoker += value; }
-            remove { touchCancelledInvoker -= value; }
+            add { touchesCancelledInvoker += value; }
+            remove { touchesCancelledInvoker -= value; }
         }
 
         // Needed to overcome iOS AOT limitations
-        private EventHandler<TouchEventArgs> touchBeganInvoker,
-                                             touchMovedInvoker,
-                                             touchEndedInvoker,
-                                             touchCancelledInvoker;
+        private EventHandler<TouchEventArgs> touchesBeganInvoker,
+                                             touchesMovedInvoker,
+                                             touchesEndedInvoker,
+                                             touchesCancelledInvoker;
 
         private EventHandler frameStartedInvoker, frameFinishedInvoker;
 
@@ -221,13 +225,7 @@ namespace TouchScript
         #region Public methods
 
         /// <inheritdoc />
-        public bool AddLayer(TouchLayer layer)
-        {
-            return AddLayer(layer, 0);
-        }
-
-        /// <inheritdoc />
-        public bool AddLayer(TouchLayer layer, int index, bool addIfExists = true)
+        public bool AddLayer(TouchLayer layer, int index = -1, bool addIfExists = true)
         {
             if (layer == null) return false;
 
@@ -238,13 +236,13 @@ namespace TouchScript
                 layers.RemoveAt(i);
                 layerCount--;
             }
-            if (index <= 0)
+            if (index == 0)
             {
                 layers.Insert(0, layer);
                 layerCount++;
                 return i == -1;
             }
-            if (index >= layerCount)
+            if (index == -1 || index >= layerCount)
             {
                 layers.Add(layer);
                 layerCount++;
@@ -494,6 +492,10 @@ namespace TouchScript
                 return;
             }
 
+#if UNITY_5_4_OR_NEWER
+            SceneManager.sceneLoaded += LevelWasLoaded;
+#endif
+
             gameObject.hideFlags = HideFlags.HideInHierarchy;
             DontDestroyOnLoad(gameObject);
 
@@ -510,11 +512,19 @@ namespace TouchScript
 #endif
         }
 
+#if UNITY_5_4_OR_NEWER
+        private void LevelWasLoaded(Scene scene, LoadSceneMode mode)
+        {
+            StopAllCoroutines();
+            StartCoroutine(lateAwake());
+        }
+#else
         private void OnLevelWasLoaded(int value)
         {
             StopAllCoroutines();
             StartCoroutine(lateAwake());
         }
+#endif
 
         private IEnumerator lateAwake()
         {
@@ -600,31 +610,35 @@ namespace TouchScript
         private void updateBegan(List<TouchPoint> points)
         {
             var count = points.Count;
+            var list = touchPointListPool.Get();
             for (var i = 0; i < count; i++)
             {
                 var touch = points[i];
+                list.Add(touch);
                 touches.Add(touch);
                 idToTouch.Add(touch.Id, touch);
 
                 for (var j = 0; j < layerCount; j++)
                 {
                     var touchLayer = layers[j];
-                    if (touchLayer == null) continue;
+                    if (touchLayer == null || !touchLayer.enabled) continue;
                     if (touchLayer.INTERNAL_BeginTouch(touch)) break;
                 }
 
 #if TOUCHSCRIPT_DEBUG
                 addDebugFigureForTouch(touch);
 #endif
-
-                if (touchBeganInvoker != null)
-                    touchBeganInvoker.InvokeHandleExceptions(this, TouchEventArgs.GetCachedEventArgs(touch));
             }
+
+            if (touchesBeganInvoker != null)
+                touchesBeganInvoker.InvokeHandleExceptions(this, TouchEventArgs.GetCachedEventArgs(list));
+            touchPointListPool.Release(list);
         }
 
         private void updateUpdated(List<int> points)
         {
             var updatedCount = points.Count;
+            var list = touchPointListPool.Get();
             // Need to loop through all touches to reset those which did not move
             var count = touches.Count;
             for (var i = 0; i < count; i++)
@@ -643,20 +657,23 @@ namespace TouchScript
 #endif
                     continue;
                 }
+                list.Add(touch);
                 if (touch.Layer != null) touch.Layer.INTERNAL_UpdateTouch(touch);
 
 #if TOUCHSCRIPT_DEBUG
                 addDebugFigureForTouch(touch);
 #endif
-
-                if (touchMovedInvoker != null)
-                    touchMovedInvoker.InvokeHandleExceptions(this, TouchEventArgs.GetCachedEventArgs(touch));
             }
+
+            if (touchesMovedInvoker != null)
+                touchesMovedInvoker.InvokeHandleExceptions(this, TouchEventArgs.GetCachedEventArgs(list));
+            touchPointListPool.Release(list);
         }
 
         private void updateEnded(List<int> points)
         {
             var endedCount = points.Count;
+            var list = touchPointListPool.Get();
             for (var i = 0; i < endedCount; i++)
             {
                 var id = points[i];
@@ -670,21 +687,25 @@ namespace TouchScript
                 }
                 idToTouch.Remove(id);
                 touches.Remove(touch);
+                list.Add(touch);
                 if (touch.Layer != null) touch.Layer.INTERNAL_EndTouch(touch);
 
 #if TOUCHSCRIPT_DEBUG
                 removeDebugFigureForTouch(touch);
 #endif
-
-                if (touchEndedInvoker != null)
-                    touchEndedInvoker.InvokeHandleExceptions(this, TouchEventArgs.GetCachedEventArgs(touch));
-                touchPointPool.Release(touch);
             }
+
+            if (touchesEndedInvoker != null)
+                touchesEndedInvoker.InvokeHandleExceptions(this, TouchEventArgs.GetCachedEventArgs(list));
+
+            for (var i = 0; i < endedCount; i++) touchPointPool.Release(list[i]);
+            touchPointListPool.Release(list);
         }
 
         private void updateCancelled(List<int> points)
         {
             var cancelledCount = points.Count;
+            var list = touchPointListPool.Get();
             for (var i = 0; i < cancelledCount; i++)
             {
                 var id = points[i];
@@ -699,16 +720,19 @@ namespace TouchScript
                 }
                 idToTouch.Remove(id);
                 touches.Remove(touch);
+                list.Add(touch);
                 if (touch.Layer != null) touch.Layer.INTERNAL_CancelTouch(touch);
 
 #if TOUCHSCRIPT_DEBUG
                 removeDebugFigureForTouch(touch);
 #endif
-
-                if (touchCancelledInvoker != null)
-                    touchCancelledInvoker.InvokeHandleExceptions(this, TouchEventArgs.GetCachedEventArgs(touch));
-                touchPointPool.Release(touch);
             }
+
+            if (touchesCancelledInvoker != null)
+                touchesCancelledInvoker.InvokeHandleExceptions(this, TouchEventArgs.GetCachedEventArgs(list));
+
+            for (var i = 0; i < cancelledCount; i++) touchPointPool.Release(list[i]);
+            touchPointListPool.Release(list);
         }
 
         private void updateTouches()
@@ -788,6 +812,5 @@ namespace TouchScript
 #endif
 
         #endregion
-
     }
 }

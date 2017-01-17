@@ -3,6 +3,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using TouchScript.Utils;
 using TouchScript.Utils.Attributes;
 using UnityEngine;
@@ -14,7 +15,7 @@ namespace TouchScript.Gestures
     /// Works with any gesture unless a Delegate is set.
     /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Release Gesture")]
-    [HelpURL("http://touchscript.github.io/docs/Index.html?topic=html/T_TouchScript_Gestures_ReleaseGesture.htm")]
+    [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Gestures_ReleaseGesture.htm")]
     public class ReleaseGesture : Gesture
     {
         #region Constants
@@ -91,9 +92,9 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override void touchEnded(TouchPoint touch)
+        protected override void touchesEnded(IList<TouchPoint> touches)
         {
-            base.touchEnded(touch);
+            base.touchesEnded(touches);
 
             if (touchesNumState == TouchesNumState.PassedMinThreshold) setState(GestureState.Recognized);
         }

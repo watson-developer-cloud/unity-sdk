@@ -16,16 +16,29 @@ namespace TouchScript.Layers
     /// Touch layer which handles Unity UI and interface objects in a Canvas.
     /// </summary>
     [AddComponentMenu("TouchScript/Layers/UI Layer")]
-    [HelpURL("http://touchscript.github.io/docs/Index.html?topic=html/T_TouchScript_Layers_UILayer.htm")]
+    [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Layers_UILayer.htm")]
     public class UILayer : TouchLayer
     {
         #region Public properties
+
+        /// <summary>
+        /// Gets or sets the layer mask which is used to select layers which should be touchable from this layer.
+        /// </summary>
+        /// <value>A mask to include/exclude objects from possibly touchable list.</value>
+        public LayerMask LayerMask
+        {
+          get { return layerMask; }
+          set { layerMask = value; }
+        }
 
         #endregion
 
         #region Private variables
 
         private static UILayer instance;
+
+        [SerializeField]
+        private LayerMask layerMask = -1;
 
         [NonSerialized]
         private List<RaycastResult> raycastResultCache = new List<RaycastResult>(20);
@@ -157,6 +170,9 @@ namespace TouchScript.Layers
             if (!(raycastHit.module is GraphicRaycaster)) return HitTest.ObjectHitResult.Miss;
             var go = raycastHit.gameObject;
             if (go == null) return HitTest.ObjectHitResult.Miss;
+
+            if (((1 << go.layer) & LayerMask) == 0) return HitTest.ObjectHitResult.Miss;
+
             go.GetComponents(tmpHitTestList);
             var count = tmpHitTestList.Count;
             if (count == 0) return HitTest.ObjectHitResult.Hit;
