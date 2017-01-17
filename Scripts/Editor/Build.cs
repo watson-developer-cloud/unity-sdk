@@ -15,6 +15,7 @@
 *
 */
 
+
 #if UNITY_EDITOR
 
 using UnityEngine;
@@ -45,6 +46,13 @@ public class Build
         get { return (BuildOptions)EditorPrefs.GetInt(Application.productName + "BuildOptions"); }
         set { EditorPrefs.SetInt(Application.productName + "BuildOptions", (int)value); }
     }
+
+    public static string[] BuildScenes
+    {
+        get { return string.IsNullOrEmpty( EditorPrefs.GetString(Application.productName + "BuildScenes"))? null :  EditorPrefs.GetString(Application.productName + "BuildScenes").Split('|'); }
+        set { if (value == null || value.Length == 0) EditorPrefs.SetString(Application.productName + "BuildScenes", null); else EditorPrefs.SetString(Application.productName + "BuildScenes",string.Join("|", value)); }
+    }
+
     #endregion
 
     [UnityEditor.Callbacks.DidReloadScripts]
@@ -60,15 +68,23 @@ public class Build
 
     private static string[] GetBuildScenes()
     {
-        List<string> scenes = new List<string>();
-        foreach (EditorBuildSettingsScene scene in EditorBuildSettings.scenes)
+        if (BuildScenes != null && BuildScenes.Length > 0)
         {
-            if (scene == null || !scene.enabled)
-                continue;
-            scenes.Add(scene.path);
+            return BuildScenes;
+        }
+        else
+        {
+            List<string> scenes = new List<string>();
+            foreach (EditorBuildSettingsScene scene in EditorBuildSettings.scenes)
+            {
+                if (scene == null || !scene.enabled)
+                    continue;
+                scenes.Add(scene.path);
+            }
+
+            return scenes.ToArray();
         }
 
-        return scenes.ToArray();
     }
 
     /// <summary>

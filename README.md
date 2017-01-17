@@ -2432,29 +2432,29 @@ This library is licensed under Apache 2.0. Full license text is available in [LI
 ## Contributing
 See [CONTRIBUTING.md](.github/CONTRIBUTING.md).
 
-[wdc]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/
+[wdc]: http://www.ibm.com/watson/developercloud/
 [wdc_unity_sdk]: https://github.com/watson-developer-cloud/unity-sdk
 [latest_release]: https://github.com/watson-developer-cloud/unity-sdk/releases/latest
 [bluemix_registration]: http://bluemix.net/registration
 [get_unity]: https://unity3d.com/get-unity
 
-[speech_to_text]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/speech-to-text/
-[text_to_speech]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/text-to-speech/
-[language_translator]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/language-translator/
-[dialog]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/dialog/
-[natural_language_classifier]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/nl-classifier/
+[speech_to_text]: http://www.ibm.com/watson/developercloud/doc/speech-to-text/
+[text_to_speech]: http://www.ibm.com/watson/developercloud/doc/text-to-speech/
+[language_translator]: http://www.ibm.com/watson/developercloud/doc/language-translator/
+[dialog]: http://www.ibm.com/watson/developercloud/doc/dialog/
+[natural_language_classifier]: http://www.ibm.com/watson/developercloud/doc/nl-classifier/
 
 [alchemy_language]: http://www.alchemyapi.com/products/alchemylanguage
-[alchemyData_news]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/alchemy-data-news.html
+[alchemyData_news]: http://www.ibm.com/watson/developercloud/alchemy-data-news.html
 [sentiment_analysis]: http://www.alchemyapi.com/products/alchemylanguage/sentiment-analysis
-[tone_analyzer]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/tone-analyzer/
-[tradeoff_analytics]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/tradeoff-analytics/
-[conversation]:http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/conversation/
-[visual_recognition]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/visual-recognition/api/v3/
-[personality_insights]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/personality-insights/api/v2/
+[tone_analyzer]: http://www.ibm.com/watson/developercloud/doc/tone-analyzer/
+[tradeoff_analytics]: http://www.ibm.com/watson/developercloud/doc/tradeoff-analytics/
+[conversation]:http://www.ibm.com/watson/developercloud/doc/conversation/
+[visual_recognition]: http://www.ibm.com/watson/developercloud/visual-recognition/api/v3/
+[personality_insights]: http://www.ibm.com/watson/developercloud/personality-insights/api/v2/
 [conversation_tooling]: https://www.ibmwatsonconversation.com
 [retrieve_and_rank]: http://www.ibm.com/watson/developercloud/retrieve-and-rank/api/v1/
-[document_conversion]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/document-conversion/api/v1/
+[document_conversion]: http://www.ibm.com/watson/developercloud/document-conversion/api/v1/
 [expressive_ssml]: http://www.ibm.com/watson/developercloud/doc/text-to-speech/http.shtml#expressive
 [ssml]: http://www.ibm.com/watson/developercloud/doc/text-to-speech/SSML.shtml
 
