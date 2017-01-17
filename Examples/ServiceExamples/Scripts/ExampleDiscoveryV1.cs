@@ -21,6 +21,7 @@ using UnityEngine;
 public class ExampleDiscoveryV1 : MonoBehaviour
 {
     private Discovery m_Discovery = new Discovery();
+    private string m_EnvironmentID;
 
     private void Start()
     {
@@ -36,10 +37,18 @@ public class ExampleDiscoveryV1 : MonoBehaviour
         //if(!m_Discovery.GetEnvironment(OnGetEnvironment, "6c8647b7-9dd4-42c8-9cb0-117b40b14517"))
         //    Log.Debug("ExampleDiscoveryV1", "Failed to get environment");
 
-        //  AddEnvironment using string
+        //  AddEnvironment using
         Log.Debug("ExampleDiscoveryV1", "Attempting to add environment");
         if (!m_Discovery.AddEnvironment(OnAddEnvironment, "unity-testing-AddEnvironment", "Testing addEnvironment in Unity SDK", 0))
             Log.Debug("ExampleDiscoveryV1", "Failed to add environment");
+        
+    }
+
+    private void TestDeleteEnvironment()
+    {
+        Log.Debug("ExampleDiscoveryV1", "Attempting to delete environment");
+        if (!m_Discovery.DeleteEnvironment(OnDeleteEnvironment, m_EnvironmentID))
+            Log.Debug("ExampleDiscoveryV1", "Failed to delete environment");
     }
 
     private void OnGetEnvironments(GetEnvironmentsResponse resp, string data)
@@ -72,10 +81,18 @@ public class ExampleDiscoveryV1 : MonoBehaviour
         if(resp != null)
         {
             Log.Debug("ExampleDiscoveryV1", "Added {0}", resp.environment_id, data);
+            m_EnvironmentID = resp.environment_id;
+
+            TestDeleteEnvironment();
         }
         else
         {
             Log.Debug("ExampleDiscoveryV1", "resp is null, {0}", data);
         }
+    }
+
+    private void OnDeleteEnvironment(bool successs, string data)
+    {
+        Log.Debug("ExampleDiscoveryV1", "Delete success: {0}", successs);
     }
 }

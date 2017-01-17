@@ -100,7 +100,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         {
             GetEnvironmentsResponse environmentsData = new GetEnvironmentsResponse();
 
-            if(resp.Success)
+            if (resp.Success)
             {
                 try
                 {
@@ -115,7 +115,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Log.Error("Discovery", "OnGetEnvironmentsResponse Exception: {0}", e.ToString());
                     resp.Success = false;
@@ -135,7 +135,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
-            
+
             Dictionary<string, object> addEnvironmentData = new Dictionary<string, object>();
             addEnvironmentData["name"] = name;
             addEnvironmentData["description"] = description;
@@ -217,6 +217,9 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             if (callback == null)
                 throw new ArgumentNullException("callback");
 
+            if (string.IsNullOrEmpty(environmentID))
+                throw new ArgumentNullException("environmentID");
+
             GetEnvironmentRequest req = new GetEnvironmentRequest();
             req.Callback = callback;
             req.EnvironmentID = environmentID;
@@ -267,6 +270,46 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             if (((GetEnvironmentRequest)req).Callback != null)
                 ((GetEnvironmentRequest)req).Callback(resp.Success ? environmentData : null, ((GetEnvironmentRequest)req).Data);
 
+        }
+        #endregion
+
+        #region Delete Environment
+        public delegate void OnDeleteEnvironment(bool success, string customData);
+
+        public bool DeleteEnvironment(OnDeleteEnvironment callback, string environmentID, string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+
+            if (string.IsNullOrEmpty(environmentID))
+                throw new ArgumentNullException("environmentID");
+
+            DeleteEnvironmentRequest req = new DeleteEnvironmentRequest();
+            req.Callback = callback;
+            req.EnvironmentID = environmentID;
+            req.Data = customData;
+            req.Parameters["version"] = DiscoveryVersion.Version;
+            req.OnResponse = OnDeleteEnvironmentResponse;
+            req.Delete = true;
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_ENVIRONMENT, environmentID));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class DeleteEnvironmentRequest : RESTConnector.Request
+        {
+            public string Data { get; set; }
+            public string EnvironmentID { get; set; }
+            public OnDeleteEnvironment Callback { get; set; }
+        }
+
+        private void OnDeleteEnvironmentResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            if (((DeleteEnvironmentRequest)req).Callback != null)
+                ((DeleteEnvironmentRequest)req).Callback(resp.Success, ((DeleteEnvironmentRequest)req).Data);
         }
         #endregion
 
