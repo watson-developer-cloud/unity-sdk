@@ -378,7 +378,72 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
             if (((GetConfigurationsRequest)req).Callback != null)
                 ((GetConfigurationsRequest)req).Callback(resp.Success ? configurations : null, ((GetConfigurationsRequest)req).Data);
+        }
+        #endregion
 
+        #region Get Configuration
+        public delegate void OnGetConfiguration(Configuration resp, string customData);
+
+        public bool GetConfiguration(OnGetConfiguration callback, string environmentID, string configurationID, string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(environmentID))
+                throw new ArgumentNullException("environmentID");
+            if (string.IsNullOrEmpty(configurationID))
+                throw new ArgumentNullException("configurationID");
+
+            GetConfigurationRequest req = new GetConfigurationRequest();
+            req.Callback = callback;
+            req.Data = customData;
+            req.EnvironmentID = environmentID;
+            req.ConfigurationID = configurationID;
+            req.Parameters["version"] = DiscoveryVersion.Version;
+            req.OnResponse = OnGetConfigurationResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_ENVIRONMENT_CONFIGURATION, environmentID, configurationID));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class GetConfigurationRequest : RESTConnector.Request
+        {
+            public string Data { get; set; }
+            public string EnvironmentID { get; set; }
+            public string ConfigurationID { get; set; }
+            public OnGetConfiguration Callback { get; set; }
+        }
+
+        private void OnGetConfigurationResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            Configuration configuration = new Configuration();
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = configuration;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Discovery", "OnGetConfigurationResponse Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((GetConfigurationRequest)req).Callback != null)
+                ((GetConfigurationRequest)req).Callback(resp.Success ? configuration : null, ((GetConfigurationRequest)req).Data);
         }
         #endregion
 

@@ -23,6 +23,7 @@ public class ExampleDiscoveryV1 : MonoBehaviour
     private Discovery m_Discovery = new Discovery();
     private string m_EnvironmentID;
     private string m_DefaultEnvironmentID = "6c8647b7-9dd4-42c8-9cb0-117b40b14517";
+    private string m_DefaultConfigurationID = "662a2032-9e2c-472b-9eaa-1a2fa098c22e";
 
     private void Start()
     {
@@ -43,10 +44,15 @@ public class ExampleDiscoveryV1 : MonoBehaviour
         //if (!m_Discovery.AddEnvironment(OnAddEnvironment, "unity-testing-AddEnvironment", "Testing addEnvironment in Unity SDK", 0))
         //    Log.Debug("ExampleDiscoveryV1", "Failed to add environment");
 
-        //  Get Configurations
-        Log.Debug("ExampleDiscoveryV1", "Attempting to get configurations");
-        if(!m_Discovery.GetConfigurations(OnGetConfigurations, m_DefaultEnvironmentID))
-            Log.Debug("ExampleDiscoveryV1", "Failed to get configurations");
+        ////  Get Configurations
+        //Log.Debug("ExampleDiscoveryV1", "Attempting to get configurations");
+        //if(!m_Discovery.GetConfigurations(OnGetConfigurations, m_DefaultEnvironmentID))
+        //    Log.Debug("ExampleDiscoveryV1", "Failed to get configurations");
+
+        //  Get Configuration
+        Log.Debug("ExampleDiscoveryV1", "Attempting to get configuration");
+        if (!m_Discovery.GetConfiguration(OnGetConfiguration, m_DefaultEnvironmentID, m_DefaultConfigurationID))
+            Log.Debug("ExampleDiscoveryV1", "Failed to get configuration");
     }
 
     private void TestDeleteEnvironment()
@@ -59,7 +65,7 @@ public class ExampleDiscoveryV1 : MonoBehaviour
 
     private void OnGetEnvironments(GetEnvironmentsResponse resp, string data)
     {
-        if(resp != null)
+        if (resp != null)
         {
             foreach (Environment environment in resp.environments)
                 Log.Debug("ExampleDiscoveryV1", "environment_id: {0}", environment.environment_id);
@@ -84,7 +90,7 @@ public class ExampleDiscoveryV1 : MonoBehaviour
 
     private void OnAddEnvironment(Environment resp, string data)
     {
-        if(resp != null)
+        if (resp != null)
         {
             Log.Debug("ExampleDiscoveryV1", "Added {0}", resp.environment_id, data);
             m_EnvironmentID = resp.environment_id;
@@ -104,7 +110,7 @@ public class ExampleDiscoveryV1 : MonoBehaviour
 
     private void OnGetConfigurations(GetConfigurationsResponse resp, string data)
     {
-        if(resp != null)
+        if (resp != null)
         {
             if (resp.configurations != null && resp.configurations.Length > 0)
             {
@@ -117,6 +123,18 @@ public class ExampleDiscoveryV1 : MonoBehaviour
             {
                 Log.Debug("ExampleDiscoveryV1", "There are no configurations for this environment.");
             }
+        }
+        else
+        {
+            Log.Debug("ExampleDiscoveryV1", "resp is null, {0}", data);
+        }
+    }
+
+    private void OnGetConfiguration(Configuration resp, string data)
+    {
+        if (resp != null)
+        {
+            Log.Debug("ExampleDiscoveryV1", "Configuration: {0}, {1}", resp.configuration_id, resp.name);
         }
         else
         {
