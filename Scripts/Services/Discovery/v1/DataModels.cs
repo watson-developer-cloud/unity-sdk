@@ -36,7 +36,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         public string updated { get; set; }
         public string status { get; set; }
         public bool read_only { get; set; }
-        public double size { get; set; }
         public IndexCapacity index_capacity { get; set; }
     }
 
@@ -50,8 +49,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
     [fsObject]
     public class DiskUsage
     {
-        public int used_bytes { get; set; }
-        public int total_bytes { get; set; }
+        public uint used_bytes { get; set; }
+        public uint total_bytes { get; set; }
         public string used { get; set; }
         public string total { get; set; }
         public double percent_used { get; set; }
@@ -60,8 +59,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
     [fsObject]
     public class MemoryUsage
     {
-        public int used_bytes { get; set; }
-        public int total_bytes { get; set; }
+        public uint used_bytes { get; set; }
+        public uint total_bytes { get; set; }
         public string used { get; set; }
         public string total { get; set; }
         public double percent_used { get; set; }

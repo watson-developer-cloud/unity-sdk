@@ -26,16 +26,20 @@ public class ExampleDiscoveryV1 : MonoBehaviour
     {
         LogSystem.InstallDefaultReactors();
 
-        //  Get Environments
-        Log.Debug("ExampleDiscoveryV1", "Attempting to get environments");
-        if (!m_Discovery.GetEnvironments(OnGetEnvironments))
-            Log.Debug("ExampleDiscoveryV1", "Failed to get environments");
+        ////  Get Environments
+        //Log.Debug("ExampleDiscoveryV1", "Attempting to get environments");
+        //if (!m_Discovery.GetEnvironments(OnGetEnvironments))
+        //    Log.Debug("ExampleDiscoveryV1", "Failed to get environments");
 
-        //  GetEnvironment
-        Log.Debug("ExampleDiscoveryV1", "Attempting to get environment");
-        if(!m_Discovery.GetEnvironment(OnGetEnvironment, "6c8647b7-9dd4-42c8-9cb0-117b40b14517"))
-            Log.Debug("ExampleDiscoveryV1", "Failed to get environment");
+        ////  GetEnvironment
+        //Log.Debug("ExampleDiscoveryV1", "Attempting to get environment");
+        //if(!m_Discovery.GetEnvironment(OnGetEnvironment, "6c8647b7-9dd4-42c8-9cb0-117b40b14517"))
+        //    Log.Debug("ExampleDiscoveryV1", "Failed to get environment");
 
+        //  AddEnvironment using string
+        Log.Debug("ExampleDiscoveryV1", "Attempting to add environment");
+        if (!m_Discovery.AddEnvironment(OnAddEnvironment, "unity-testing-AddEnvironment", "Testing addEnvironment in Unity SDK", 0))
+            Log.Debug("ExampleDiscoveryV1", "Failed to add environment");
     }
 
     private void OnGetEnvironments(GetEnvironmentsResponse resp, string data)
@@ -60,6 +64,18 @@ public class ExampleDiscoveryV1 : MonoBehaviour
         else
         {
             Log.Debug("ExampleDiscoveryV1", "resp is null");
+        }
+    }
+
+    private void OnAddEnvironment(Environment resp, string data)
+    {
+        if(resp != null)
+        {
+            Log.Debug("ExampleDiscoveryV1", "Added {0}", resp.environment_id, data);
+        }
+        else
+        {
+            Log.Debug("ExampleDiscoveryV1", "resp is null, {0}", data);
         }
     }
 }

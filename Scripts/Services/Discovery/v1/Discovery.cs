@@ -19,7 +19,9 @@ using FullSerializer;
 using IBM.Watson.DeveloperCloud.Connection;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
+using MiniJSON;
 using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
@@ -126,6 +128,87 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         }
         #endregion
 
+        #region Add Environment
+        public delegate void OnAddEnvironment(Environment resp, string customData);
+
+        public bool AddEnvironment(OnAddEnvironment callback, string name = default(string), string description = default(string), int size = 0, string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            
+            Dictionary<string, object> addEnvironmentData = new Dictionary<string, object>();
+            addEnvironmentData["name"] = name;
+            addEnvironmentData["description"] = description;
+            addEnvironmentData["size"] = size;
+
+            return AddEnvironment(callback, addEnvironmentData, customData);
+        }
+
+        public bool AddEnvironment(OnAddEnvironment callback, Dictionary<string, object> addEnvironmentData, string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (addEnvironmentData == null)
+                throw new ArgumentNullException("addEnvironmentData");
+
+            AddEnvironmentRequest req = new AddEnvironmentRequest();
+            req.Callback = callback;
+            req.AddEnvironmentData = addEnvironmentData;
+            req.Data = customData;
+            req.Parameters["version"] = DiscoveryVersion.Version;
+            req.OnResponse = OnAddEnvironmentResponse;
+
+            req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
+            string sendjson = Json.Serialize(addEnvironmentData);
+            req.Send = Encoding.UTF8.GetBytes(sendjson);
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_ENVIRONMENTS);
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class AddEnvironmentRequest : RESTConnector.Request
+        {
+            public string Data { get; set; }
+            public Dictionary<string, object> AddEnvironmentData { get; set; }
+            public OnAddEnvironment Callback { get; set; }
+        }
+
+        private void OnAddEnvironmentResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            Environment environmentData = new Environment();
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = environmentData;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Discovery", "OnAddEnvironmentResponse Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((AddEnvironmentRequest)req).Callback != null)
+                ((AddEnvironmentRequest)req).Callback(resp.Success ? environmentData : null, ((AddEnvironmentRequest)req).Data);
+
+        }
+        #endregion
+
         #region GetEnvironment
         public delegate void OnGetEnvironment(Environment resp, string customData);
 
@@ -186,6 +269,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         }
         #endregion
+
         #region IWatsonService Interface
         public string GetServiceID()
         {
