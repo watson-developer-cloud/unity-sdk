@@ -313,6 +313,103 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         }
         #endregion
 
+        #region Get Configurations
+        public delegate void OnGetConfigurations(GetConfigurationsResponse resp, string customData);
+
+        public bool GetConfigurations(OnGetConfigurations callback, string environmentID, string name = default(string), string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(environmentID))
+                throw new ArgumentNullException("environmentID");
+
+            GetConfigurationsRequest req = new GetConfigurationsRequest();
+            req.Callback = callback;
+            req.Data = customData;
+            req.EnvironmentID = environmentID;
+            req.Parameters["version"] = DiscoveryVersion.Version;
+            if (!string.IsNullOrEmpty(name))
+            {
+                req.Name = name;
+                req.Parameters["name"] = name;
+            }
+            req.OnResponse = OnGetConfigurationsResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_ENVIRONMENT_CONFIGURATIONS, environmentID));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class GetConfigurationsRequest : RESTConnector.Request
+        {
+            public string Data { get; set; }
+            public string EnvironmentID { get; set; }
+            public string Name { get; set; }
+            public OnGetConfigurations Callback { get; set; }
+        }
+
+        private void OnGetConfigurationsResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            GetConfigurationsResponse configurations = new GetConfigurationsResponse();
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = configurations;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Discovery", "OnGetConfigurationsResponse Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((GetConfigurationsRequest)req).Callback != null)
+                ((GetConfigurationsRequest)req).Callback(resp.Success ? configurations : null, ((GetConfigurationsRequest)req).Data);
+
+        }
+        #endregion
+
+        //#region Test Configuration
+        //public delegate void OnTestConfiguration(TestDocument resp, string customData);
+
+        //public bool TestConfiguration(OnTestConfiguration callback, string environmentID, string configurationID, string filePath, string metadata)
+        //{
+        //    if (callback == null)
+        //        throw new ArgumentNullException("callback");
+
+        //    if (string.IsNullOrEmpty(environmentID))
+        //        throw new ArgumentNullException("environmentID");
+
+        //    if (string.IsNullOrEmpty(configurationID))
+        //        throw new ArgumentNullException("configurationID");
+
+
+        //}
+
+        //private class TestConfigurationRequest : RESTConnector.Request
+        //{
+
+        //}
+
+        //private void OnTestConfigurationResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        //{
+
+        //}
+        //#endregion
+
         #region IWatsonService Interface
         public string GetServiceID()
         {

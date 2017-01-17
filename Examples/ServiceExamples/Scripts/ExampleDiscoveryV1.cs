@@ -22,6 +22,7 @@ public class ExampleDiscoveryV1 : MonoBehaviour
 {
     private Discovery m_Discovery = new Discovery();
     private string m_EnvironmentID;
+    private string m_DefaultEnvironmentID = "6c8647b7-9dd4-42c8-9cb0-117b40b14517";
 
     private void Start()
     {
@@ -37,15 +38,20 @@ public class ExampleDiscoveryV1 : MonoBehaviour
         //if(!m_Discovery.GetEnvironment(OnGetEnvironment, "6c8647b7-9dd4-42c8-9cb0-117b40b14517"))
         //    Log.Debug("ExampleDiscoveryV1", "Failed to get environment");
 
-        //  AddEnvironment using
-        Log.Debug("ExampleDiscoveryV1", "Attempting to add environment");
-        if (!m_Discovery.AddEnvironment(OnAddEnvironment, "unity-testing-AddEnvironment", "Testing addEnvironment in Unity SDK", 0))
-            Log.Debug("ExampleDiscoveryV1", "Failed to add environment");
-        
+        ////  AddEnvironment
+        //Log.Debug("ExampleDiscoveryV1", "Attempting to add environment");
+        //if (!m_Discovery.AddEnvironment(OnAddEnvironment, "unity-testing-AddEnvironment", "Testing addEnvironment in Unity SDK", 0))
+        //    Log.Debug("ExampleDiscoveryV1", "Failed to add environment");
+
+        //  Get Configurations
+        Log.Debug("ExampleDiscoveryV1", "Attempting to get configurations");
+        if(!m_Discovery.GetConfigurations(OnGetConfigurations, m_DefaultEnvironmentID))
+            Log.Debug("ExampleDiscoveryV1", "Failed to get configurations");
     }
 
     private void TestDeleteEnvironment()
     {
+        //  DeleteEnvironment
         Log.Debug("ExampleDiscoveryV1", "Attempting to delete environment");
         if (!m_Discovery.DeleteEnvironment(OnDeleteEnvironment, m_EnvironmentID))
             Log.Debug("ExampleDiscoveryV1", "Failed to delete environment");
@@ -94,5 +100,27 @@ public class ExampleDiscoveryV1 : MonoBehaviour
     private void OnDeleteEnvironment(bool successs, string data)
     {
         Log.Debug("ExampleDiscoveryV1", "Delete success: {0}", successs);
+    }
+
+    private void OnGetConfigurations(GetConfigurationsResponse resp, string data)
+    {
+        if(resp != null)
+        {
+            if (resp.configurations != null && resp.configurations.Length > 0)
+            {
+                foreach (ConfigurationRef configuration in resp.configurations)
+                {
+                    Log.Debug("ExampleDiscoveryV1", "Configuration: {0}, {1}", configuration.configuration_id, configuration.name);
+                }
+            }
+            else
+            {
+                Log.Debug("ExampleDiscoveryV1", "There are no configurations for this environment.");
+            }
+        }
+        else
+        {
+            Log.Debug("ExampleDiscoveryV1", "resp is null, {0}", data);
+        }
     }
 }
