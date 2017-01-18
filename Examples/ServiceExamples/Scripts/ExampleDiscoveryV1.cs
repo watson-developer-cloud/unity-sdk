@@ -26,12 +26,15 @@ public class ExampleDiscoveryV1 : MonoBehaviour
     private string m_DefaultConfigurationID = "662a2032-9e2c-472b-9eaa-1a2fa098c22e";
     private string m_ConfigurationJsonPath;
     private string m_CreatedConfigurationID;
+    private string m_FilePathToIngest;
+    private string m_Metadata = "{\n\t\"Creator\": \"Unity SDK Integration Test\",\n\t\"Subject\": \"Discovery service\"\n}";
 
     private void Start()
     {
         LogSystem.InstallDefaultReactors();
 
         m_ConfigurationJsonPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/Discovery/exampleConfigurationData.json";
+        m_FilePathToIngest = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/watson_beats_jeopardy.html";
 
         ////  Get Environments
         //Log.Debug("ExampleDiscoveryV1", "Attempting to get environments");
@@ -45,7 +48,7 @@ public class ExampleDiscoveryV1 : MonoBehaviour
 
         //  AddEnvironment
         Log.Debug("ExampleDiscoveryV1", "Attempting to add environment");
-        if (!m_Discovery.AddEnvironment(OnAddEnvironment, "unity-testing-AddEnvironment", "Testing addEnvironment in Unity SDK", 0))
+        if (!m_Discovery.AddEnvironment(OnAddEnvironment, "unity-testing-AddEnvironment-please-delete", "Testing addEnvironment in Unity SDK", 0))
             Log.Debug("ExampleDiscoveryV1", "Failed to add environment");
 
         ////  Get Configurations
@@ -57,6 +60,13 @@ public class ExampleDiscoveryV1 : MonoBehaviour
         //Log.Debug("ExampleDiscoveryV1", "Attempting to get configuration");
         //if (!m_Discovery.GetConfiguration(OnGetConfiguration, m_DefaultEnvironmentID, m_DefaultConfigurationID))
         //    Log.Debug("ExampleDiscoveryV1", "Failed to get configuration");
+    }
+
+    private void TestPreviewConfiguration()
+    {
+        Log.Debug("ExampleDiscoveryV1", "Attempting to preview configuration");
+        if (!m_Discovery.PreviewConfiguration(OnPreviewConfiguration, m_CreatedEnvironmentID, m_CreatedConfigurationID, null, m_FilePathToIngest, m_Metadata))
+            Log.Debug("ExampleDiscoveryV1", "Failed to preview configuration");
     }
 
     private void TestDeleteConfiguration()
@@ -174,7 +184,7 @@ public class ExampleDiscoveryV1 : MonoBehaviour
             Log.Debug("ExampleDiscoveryV1", "Configuration: {0}, {1}", resp.configuration_id, resp.name);
             m_CreatedConfigurationID = resp.configuration_id;
 
-            TestDeleteConfiguration();
+            TestPreviewConfiguration();
         }
         else
         {
@@ -193,5 +203,19 @@ public class ExampleDiscoveryV1 : MonoBehaviour
         }
         else
             Log.Debug("ExampleDiscoveryV1", "Delete configuration failed");
+    }
+
+    private void OnPreviewConfiguration(TestDocument resp, string data)
+    {
+        if(resp != null)
+        {
+            Log.Debug("ExampleDiscoveryV1", "Preview succeeded: {0}", resp.status);
+
+            TestDeleteConfiguration();
+        }
+        else
+        {
+            Log.Debug("ExampleDiscoveryV1", "Failed to preview configuration");
+        }
     }
 }

@@ -186,7 +186,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
             if (((AddEnvironmentRequest)req).Callback != null)
                 ((AddEnvironmentRequest)req).Callback(resp.Success ? environmentData : null, ((AddEnvironmentRequest)req).Data);
-
         }
         #endregion
 
@@ -567,33 +566,142 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         #endregion
         #endregion
 
-        //#region Test Configuration
-        //public delegate void OnTestConfiguration(TestDocument resp, string customData);
+        #region Preview Configuration
+        public delegate void OnPreviewConfiguration(TestDocument resp, string customData);
 
-        //public bool TestConfiguration(OnTestConfiguration callback, string environmentID, string configurationID, string filePath, string metadata)
-        //{
-        //    if (callback == null)
-        //        throw new ArgumentNullException("callback");
+        public bool PreviewConfiguration(OnPreviewConfiguration callback, string environmentID, string configurationID, string configurationFilePath, string contentFilePath, string metadata = default(string), string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
 
-        //    if (string.IsNullOrEmpty(environmentID))
-        //        throw new ArgumentNullException("environmentID");
+            if (string.IsNullOrEmpty(environmentID))
+                throw new ArgumentNullException("environmentID");
 
-        //    if (string.IsNullOrEmpty(configurationID))
-        //        throw new ArgumentNullException("configurationID");
+            if (string.IsNullOrEmpty(configurationID) && string.IsNullOrEmpty(configurationFilePath))
+                throw new ArgumentNullException("configurationID or configurationFilePath");
 
+            if (!string.IsNullOrEmpty(configurationID) && !string.IsNullOrEmpty(configurationFilePath))
+                throw new WatsonException("Use either a configurationID OR designate a test configuration file path - not both");
 
-        //}
+            if (string.IsNullOrEmpty(contentFilePath))
+                throw new ArgumentNullException("contentFilePath");
 
-        //private class TestConfigurationRequest : RESTConnector.Request
-        //{
+            byte[] contentData;
+            try
+            {
+                contentData = File.ReadAllBytes(contentFilePath);
+            }
+            catch(Exception e)
+            {
+                throw new WatsonException(string.Format("Failed to load content: {0}", e.Message));
+            }
 
-        //}
+            string contentMimeType = Utility.GetMimeType(Path.GetExtension(contentFilePath));
 
-        //private void OnTestConfigurationResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        //{
+            return PreviewConfiguration(callback, environmentID, configurationID, configurationFilePath, contentData, contentMimeType, customData);
+        }
 
-        //}
-        //#endregion
+        public bool PreviewConfiguration(OnPreviewConfiguration callback, string environmentID, string configurationID, string configurationFilePath, byte[] contentData, string contentMimeType, string metadata = default(string), string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+
+            if (string.IsNullOrEmpty(environmentID))
+                throw new ArgumentNullException("environmentID");
+
+            if (string.IsNullOrEmpty(configurationID) && string.IsNullOrEmpty(configurationFilePath))
+                throw new ArgumentNullException("configurationID or configurationFilePath");
+
+            if (!string.IsNullOrEmpty(configurationID) && !string.IsNullOrEmpty(configurationFilePath))
+                throw new WatsonException("Use either a configurationID OR designate a test configuration file path - not both");
+
+            if (contentData == null)
+                throw new ArgumentNullException("contentData");
+
+            PreviewConfigurationRequest req = new PreviewConfigurationRequest();
+            req.Callback = callback;
+            req.EnvironmentID = environmentID;
+            req.ConfigurationID = configurationID;
+            req.ConfigurationFilePath = configurationFilePath;
+            req.ContentData = contentData;
+            req.Metadata = metadata;
+            req.Data = customData;
+            req.Parameters["version"] = DiscoveryVersion.Version;
+            req.OnResponse = OnPreviewConfigurationResponse;
+
+            req.Forms = new Dictionary<string, RESTConnector.Form>();
+            req.Forms["file"] = new RESTConnector.Form(contentData, "contentData", contentMimeType);
+            req.Forms["metadata"] = new RESTConnector.Form(metadata);
+
+            if (!string.IsNullOrEmpty(configurationFilePath))
+            {
+                string configJson;
+
+                try
+                {
+                    configJson = File.ReadAllText(configurationFilePath);
+                }
+                catch (Exception e)
+                {
+                    throw new WatsonException(string.Format("Failed to load configuration json: {0}", e.Message));
+                }
+
+                req.Forms["configuration"] = new RESTConnector.Form(configJson);
+            }
+            else if (!string.IsNullOrEmpty(configurationID))
+            {
+                req.Parameters["configuration_id"] = configurationID;
+            }
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_ENVIRONMENT_PREVIEW, environmentID));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class PreviewConfigurationRequest : RESTConnector.Request
+        {
+            public string Data { get; set; }
+            public string EnvironmentID { get; set; }
+            public string ConfigurationID { get; set; }
+            public string ConfigurationFilePath { get; set; }
+            public byte[] ContentData { get; set; }
+            public string Metadata { get; set; }
+            public OnPreviewConfiguration Callback { get; set; }
+        }
+
+        private void OnPreviewConfigurationResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            TestDocument testDocument = new TestDocument();
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = testDocument;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Discovery", "OnPreviewConfigurationResponse Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((PreviewConfigurationRequest)req).Callback != null)
+                ((PreviewConfigurationRequest)req).Callback(resp.Success ? testDocument : null, ((PreviewConfigurationRequest)req).Data);
+
+        }
+        #endregion
 
         #region Collections
         #endregion
