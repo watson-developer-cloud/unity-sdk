@@ -14,7 +14,7 @@ namespace TouchScript.Behaviors
     /// It works without any layers or gestures but can be used with for examle a CameraLayer and BoxColliders on UI elements to attach gestures to them.
     /// </summary>
     [AddComponentMenu("TouchScript/TouchScript Input Module")]
-    [HelpURL("http://touchscript.github.io/docs/Index.html?topic=html/T_TouchScript_Behaviors_TouchScriptInputModule.htm")]
+    [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Behaviors_TouchScriptInputModule.htm")]
     public class TouchScriptInputModule : BaseInputModule
     {
         #region Public properties
@@ -132,10 +132,10 @@ namespace TouchScript.Behaviors
             var touchManager = TouchManager.Instance;
             if (touchManager != null)
             {
-                touchManager.TouchBegan += touchBeganHandler;
-                touchManager.TouchMoved += touchMovedHandler;
-                touchManager.TouchEnded += touchEndedHandler;
-                touchManager.TouchCancelled += touchCancelledHandler;
+                touchManager.TouchesBegan += touchesBeganHandler;
+                touchManager.TouchesMoved += touchesMovedHandler;
+                touchManager.TouchesEnded += touchesEndedHandler;
+                touchManager.TouchesCancelled += touchesCancelledHandler;
             }
 
             var toSelect = eventSystem.currentSelectedGameObject;
@@ -153,10 +153,10 @@ namespace TouchScript.Behaviors
             var touchManager = TouchManager.Instance;
             if (touchManager != null)
             {
-                touchManager.TouchBegan -= touchBeganHandler;
-                touchManager.TouchMoved -= touchMovedHandler;
-                touchManager.TouchEnded -= touchEndedHandler;
-                touchManager.TouchCancelled -= touchCancelledHandler;
+                touchManager.TouchesBegan -= touchesBeganHandler;
+                touchManager.TouchesMoved -= touchesMovedHandler;
+                touchManager.TouchesEnded -= touchesEndedHandler;
+                touchManager.TouchesCancelled -= touchesCancelledHandler;
             }
 
             clearSelection();
@@ -561,24 +561,28 @@ namespace TouchScript.Behaviors
 
         #region Touch event callbacks
 
-        private void touchBeganHandler(object sender, TouchEventArgs touchEventArgs)
+        private void touchesBeganHandler(object sender, TouchEventArgs touchEventArgs)
         {
-            processBegan(touchEventArgs.Touch);
+            var touches = touchEventArgs.Touches;
+            for (var i = 0; i < touches.Count; i++) processBegan(touches[i]);
         }
 
-        private void touchMovedHandler(object sender, TouchEventArgs touchEventArgs)
+        private void touchesMovedHandler(object sender, TouchEventArgs touchEventArgs)
         {
-            processMove(touchEventArgs.Touch);
+            var touches = touchEventArgs.Touches;
+            for (var i = 0; i < touches.Count; i++) processMove(touches[i]);
         }
 
-        private void touchEndedHandler(object sender, TouchEventArgs touchEventArgs)
+        private void touchesEndedHandler(object sender, TouchEventArgs touchEventArgs)
         {
-            processEnded(touchEventArgs.Touch);
+            var touches = touchEventArgs.Touches;
+            for (var i = 0; i < touches.Count; i++) processEnded(touches[i]);
         }
 
-        private void touchCancelledHandler(object sender, TouchEventArgs touchEventArgs)
+        private void touchesCancelledHandler(object sender, TouchEventArgs touchEventArgs)
         {
-            processEnded(touchEventArgs.Touch);
+            var touches = touchEventArgs.Touches;
+            for (var i = 0; i < touches.Count; i++) processEnded(touches[i]);
         }
 
         #endregion
