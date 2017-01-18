@@ -47,29 +47,9 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         #endregion
 
         #region Public Types
-        /// <summary>
-        /// The delegate for loading a file, used by TrainClassifier().
-        /// </summary>
-        /// <param name="filename">The filename to load.</param>
-        /// <returns>Should return a byte array of the file contents or null of failure.</returns>
-        public delegate byte[] LoadFileDelegate(string filename);
-        /// <summary>
-        /// Set this property to overload the internal file loading of this class.
-        /// </summary>
-        public LoadFileDelegate LoadFile { get; set; }
-        /// <summary>
-        /// The delegate for saving a file, used by DownloadDialog().
-        /// </summary>
-        /// <param name="filename">The filename to save.</param>
-        /// <param name="data">The data to save into the file.</param>
-        public delegate void SaveFileDelegate(string filename, byte[] data);
-
-        /// <summary>
-        /// Set this property to overload the internal file saving for this class.
-        /// </summary>
-        public SaveFileDelegate SaveFile { get; set; }
         #endregion
 
+        #region Environments
         #region GetEnvironments
         public delegate void OnGetEnvironments(GetEnvironmentsResponse resp, string customData);
 
@@ -313,7 +293,9 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 ((DeleteEnvironmentRequest)req).Callback(resp.Success, ((DeleteEnvironmentRequest)req).Data);
         }
         #endregion
+        #endregion
 
+        #region Configurations
         #region Get Configurations
         public delegate void OnGetConfigurations(GetConfigurationsResponse resp, string customData);
 
@@ -379,72 +361,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
             if (((GetConfigurationsRequest)req).Callback != null)
                 ((GetConfigurationsRequest)req).Callback(resp.Success ? configurations : null, ((GetConfigurationsRequest)req).Data);
-        }
-        #endregion
-
-        #region Get Configuration
-        public delegate void OnGetConfiguration(Configuration resp, string customData);
-
-        public bool GetConfiguration(OnGetConfiguration callback, string environmentID, string configurationID, string customData = default(string))
-        {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
-            if (string.IsNullOrEmpty(environmentID))
-                throw new ArgumentNullException("environmentID");
-            if (string.IsNullOrEmpty(configurationID))
-                throw new ArgumentNullException("configurationID");
-
-            GetConfigurationRequest req = new GetConfigurationRequest();
-            req.Callback = callback;
-            req.Data = customData;
-            req.EnvironmentID = environmentID;
-            req.ConfigurationID = configurationID;
-            req.Parameters["version"] = DiscoveryVersion.Version;
-            req.OnResponse = OnGetConfigurationResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_ENVIRONMENT_CONFIGURATION, environmentID, configurationID));
-            if (connector == null)
-                return false;
-
-            return connector.Send(req);
-        }
-
-        private class GetConfigurationRequest : RESTConnector.Request
-        {
-            public string Data { get; set; }
-            public string EnvironmentID { get; set; }
-            public string ConfigurationID { get; set; }
-            public OnGetConfiguration Callback { get; set; }
-        }
-
-        private void OnGetConfigurationResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            Configuration configuration = new Configuration();
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsData data = null;
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = configuration;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("Discovery", "OnGetConfigurationResponse Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
-            if (((GetConfigurationRequest)req).Callback != null)
-                ((GetConfigurationRequest)req).Callback(resp.Success ? configuration : null, ((GetConfigurationRequest)req).Data);
         }
         #endregion
 
@@ -539,6 +455,118 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         }
         #endregion
 
+        #region Get Configuration
+        public delegate void OnGetConfiguration(Configuration resp, string customData);
+
+        public bool GetConfiguration(OnGetConfiguration callback, string environmentID, string configurationID, string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(environmentID))
+                throw new ArgumentNullException("environmentID");
+            if (string.IsNullOrEmpty(configurationID))
+                throw new ArgumentNullException("configurationID");
+
+            GetConfigurationRequest req = new GetConfigurationRequest();
+            req.Callback = callback;
+            req.Data = customData;
+            req.EnvironmentID = environmentID;
+            req.ConfigurationID = configurationID;
+            req.Parameters["version"] = DiscoveryVersion.Version;
+            req.OnResponse = OnGetConfigurationResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_ENVIRONMENT_CONFIGURATION, environmentID, configurationID));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class GetConfigurationRequest : RESTConnector.Request
+        {
+            public string Data { get; set; }
+            public string EnvironmentID { get; set; }
+            public string ConfigurationID { get; set; }
+            public OnGetConfiguration Callback { get; set; }
+        }
+
+        private void OnGetConfigurationResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            Configuration configuration = new Configuration();
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = configuration;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Discovery", "OnGetConfigurationResponse Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((GetConfigurationRequest)req).Callback != null)
+                ((GetConfigurationRequest)req).Callback(resp.Success ? configuration : null, ((GetConfigurationRequest)req).Data);
+        }
+        #endregion
+
+        #region Delete Configuration
+        public delegate void OnDeleteConfiguration(bool success, string customData);
+
+        public bool DeleteConfiguration(OnDeleteConfiguration callback, string environmentID, string configurationID, string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+
+            if (string.IsNullOrEmpty(environmentID))
+                throw new ArgumentNullException("environmentID");
+
+            if (string.IsNullOrEmpty(configurationID))
+                throw new ArgumentNullException("configurationID");
+
+            DeleteConfigurationRequest req = new DeleteConfigurationRequest();
+            req.Callback = callback;
+            req.EnvironmentID = environmentID;
+            req.ConfigurationID = configurationID;
+            req.Data = customData;
+            req.Parameters["version"] = DiscoveryVersion.Version;
+            req.OnResponse = OnDeleteConfigurationResponse;
+            req.Delete = true;
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_ENVIRONMENT_CONFIGURATION, environmentID, configurationID));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class DeleteConfigurationRequest : RESTConnector.Request
+        {
+            public string Data { get; set; }
+            public string EnvironmentID { get; set; }
+            public string ConfigurationID { get; set; }
+            public OnDeleteConfiguration Callback { get; set; }
+        }
+
+        private void OnDeleteConfigurationResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            if (((DeleteConfigurationRequest)req).Callback != null)
+                ((DeleteConfigurationRequest)req).Callback(resp.Success, ((DeleteConfigurationRequest)req).Data);
+        }
+        #endregion
+        #endregion
+
         //#region Test Configuration
         //public delegate void OnTestConfiguration(TestDocument resp, string customData);
 
@@ -566,6 +594,15 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         //}
         //#endregion
+
+        #region Collections
+        #endregion
+
+        #region Documents
+        #endregion
+
+        #region Queries
+        #endregion
 
         #region IWatsonService Interface
         public string GetServiceID()

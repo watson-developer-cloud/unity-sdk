@@ -25,6 +25,7 @@ public class ExampleDiscoveryV1 : MonoBehaviour
     private string m_DefaultEnvironmentID = "6c8647b7-9dd4-42c8-9cb0-117b40b14517";
     private string m_DefaultConfigurationID = "662a2032-9e2c-472b-9eaa-1a2fa098c22e";
     private string m_ConfigurationJsonPath;
+    private string m_CreatedConfigurationID;
 
     private void Start()
     {
@@ -56,6 +57,14 @@ public class ExampleDiscoveryV1 : MonoBehaviour
         //Log.Debug("ExampleDiscoveryV1", "Attempting to get configuration");
         //if (!m_Discovery.GetConfiguration(OnGetConfiguration, m_DefaultEnvironmentID, m_DefaultConfigurationID))
         //    Log.Debug("ExampleDiscoveryV1", "Failed to get configuration");
+    }
+
+    private void TestDeleteConfiguration()
+    {
+        //  DeleteEnvironment
+        Log.Debug("ExampleDiscoveryV1", "Attempting to delete configuration");
+        if (!m_Discovery.DeleteConfiguration(OnDeleteConfiguration, m_CreatedEnvironmentID, m_CreatedConfigurationID))
+            Log.Debug("ExampleDiscoveryV1", "Failed to delete configuration");
     }
 
     private void TestDeleteEnvironment()
@@ -105,7 +114,6 @@ public class ExampleDiscoveryV1 : MonoBehaviour
             Log.Debug("ExampleDiscoveryV1", "Added {0}", resp.environment_id, data);
             m_CreatedEnvironmentID = resp.environment_id;
 
-            //TestDeleteEnvironment();
             TestAddConfiguration();
         }
         else
@@ -114,9 +122,15 @@ public class ExampleDiscoveryV1 : MonoBehaviour
         }
     }
 
-    private void OnDeleteEnvironment(bool successs, string data)
+    private void OnDeleteEnvironment(bool success, string data)
     {
-        Log.Debug("ExampleDiscoveryV1", "Delete success: {0}", successs);
+        if (success)
+        {
+            Log.Debug("ExampleDiscoveryV1", "Delete environment successful");
+            m_CreatedEnvironmentID = default(string);
+        }
+        else
+            Log.Debug("ExampleDiscoveryV1", "Delete environment failed");
     }
 
     private void OnGetConfigurations(GetConfigurationsResponse resp, string data)
@@ -155,13 +169,29 @@ public class ExampleDiscoveryV1 : MonoBehaviour
 
     private void OnAddConfiguration(Configuration resp, string data)
     {
-        if(resp != null)
+        if (resp != null)
         {
             Log.Debug("ExampleDiscoveryV1", "Configuration: {0}, {1}", resp.configuration_id, resp.name);
+            m_CreatedConfigurationID = resp.configuration_id;
+
+            TestDeleteConfiguration();
         }
         else
         {
             Log.Debug("ExampleDiscoveryV1", "resp is null, {0}", data);
         }
+    }
+
+    private void OnDeleteConfiguration(bool success, string data)
+    {
+        if (success)
+        {
+            Log.Debug("ExampleDiscoveryV1", "Delete configuration successful");
+            m_CreatedConfigurationID = default(string);
+
+            TestDeleteEnvironment();
+        }
+        else
+            Log.Debug("ExampleDiscoveryV1", "Delete configuration failed");
     }
 }
