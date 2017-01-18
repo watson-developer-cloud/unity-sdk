@@ -2,6 +2,7 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using System.Collections.Generic;
 using TouchScript.Utils;
 using UnityEngine;
 
@@ -12,7 +13,7 @@ namespace TouchScript.Gestures.Clustered
     /// Should be used for large touch surfaces.
     /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Clustered/Transform Gesture (Clustered)")]
-    [HelpURL("http://touchscript.github.io/docs/Index.html?topic=html/T_TouchScript_Gestures_Clustered_ClusteredTransformGesture.htm")]
+    [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Gestures_Clustered_ClusteredTransformGesture.htm")]
     public class ClusteredTransformGesture : TransformGesture
     {
         #region Private variables
@@ -24,27 +25,27 @@ namespace TouchScript.Gestures.Clustered
         #region Gesture callbacks
 
         /// <inheritdoc />
-        protected override void touchBegan(TouchPoint touch)
+        protected override void touchesBegan(IList<TouchPoint> touches)
         {
-            clusters.AddPoint(touch);
+            clusters.AddPoints(touches);
 
-            base.touchBegan(touch);
+            base.touchesBegan(touches);
         }
 
         /// <inheritdoc />
-        protected override void touchMoved(TouchPoint touch)
+        protected override void touchesMoved(IList<TouchPoint> touches)
         {
             clusters.Invalidate();
 
-            base.touchMoved(touch);
+            base.touchesMoved(touches);
         }
 
         /// <inheritdoc />
-        protected override void touchEnded(TouchPoint touch)
+        protected override void touchesEnded(IList<TouchPoint> touches)
         {
-            clusters.RemovePoint(touch);
+            clusters.RemovePoints(touches);
 
-            base.touchEnded(touch);
+            base.touchesEnded(touches);
         }
 
         /// <inheritdoc />
@@ -68,13 +69,13 @@ namespace TouchScript.Gestures.Clustered
         }
 
         /// <inheritdoc />
-        protected override bool relevantTouches1()
+        protected override bool relevantTouches1(IList<TouchPoint> touches)
         {
             return true;
         }
 
         /// <inheritdoc />
-        protected override bool relevantTouches2()
+        protected override bool relevantTouches2(IList<TouchPoint> touches)
         {
             return true;
         }
