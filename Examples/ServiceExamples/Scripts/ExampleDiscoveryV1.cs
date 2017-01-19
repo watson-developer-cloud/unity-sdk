@@ -16,6 +16,8 @@
 */
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Services.Discovery.v1;
+using IBM.Watson.DeveloperCloud.Utilities;
+using System.Collections;
 using UnityEngine;
 
 public class ExampleDiscoveryV1 : MonoBehaviour
@@ -24,11 +26,14 @@ public class ExampleDiscoveryV1 : MonoBehaviour
     private string m_CreatedEnvironmentID;
     private string m_DefaultEnvironmentID = "6c8647b7-9dd4-42c8-9cb0-117b40b14517";
     private string m_DefaultConfigurationID = "662a2032-9e2c-472b-9eaa-1a2fa098c22e";
+    private string m_DefaultCollectionID = "336f2f0e-e771-424e-a7b4-331240c8f136";
     private string m_ConfigurationJsonPath;
     private string m_CreatedConfigurationID;
     private string m_FilePathToIngest;
     private string m_Metadata = "{\n\t\"Creator\": \"Unity SDK Integration Test\",\n\t\"Subject\": \"Discovery service\"\n}";
-
+    private string m_CreatedCollectionID;
+    private string m_CreatedCollectionName = "Unity SDK Created Collection";
+    private string m_CreatedCollectionDescription = "A collection created by the Unity SDK. Please delete me.";
     private void Start()
     {
         LogSystem.InstallDefaultReactors();
@@ -48,7 +53,7 @@ public class ExampleDiscoveryV1 : MonoBehaviour
 
         //  AddEnvironment
         Log.Debug("ExampleDiscoveryV1", "Attempting to add environment");
-        if (!m_Discovery.AddEnvironment(OnAddEnvironment, "unity-testing-AddEnvironment-please-delete", "Testing addEnvironment in Unity SDK", 0))
+        if (!m_Discovery.AddEnvironment(OnAddEnvironment, "unity-testing-AddEnvironment-do-not-delete-until-active", "Testing addEnvironment in Unity SDK. Please do not delete this environment until the status is 'active'", 0))
             Log.Debug("ExampleDiscoveryV1", "Failed to add environment");
 
         ////  Get Configurations
@@ -60,6 +65,39 @@ public class ExampleDiscoveryV1 : MonoBehaviour
         //Log.Debug("ExampleDiscoveryV1", "Attempting to get configuration");
         //if (!m_Discovery.GetConfiguration(OnGetConfiguration, m_DefaultEnvironmentID, m_DefaultConfigurationID))
         //    Log.Debug("ExampleDiscoveryV1", "Failed to get configuration");
+
+        ////  Get Collections
+        //Log.Debug("ExampleDiscoveryV1", "Attempting to get collections");
+        //if (!m_Discovery.GetCollections(OnGetCollections, m_DefaultEnvironmentID))
+        //    Log.Debug("ExampleDiscovery", "Failed to get collections");
+    }
+
+    private bool isEnvironmentReady = false;
+
+    private void CheckState()
+    {
+        Log.Debug("ExampleDiscoveryV1", "Attempting to get environment state");
+        try
+        {
+            m_Discovery.GetEnvironment(HandleCheckEnvironmentState, m_CreatedEnvironmentID);
+        }
+        catch(System.Exception e)
+        {
+            Log.Debug("ExampleDiscoveryV1", string.Format("Failed to get environment state: {0}", e.Message));
+            CheckState();
+        }
+    }
+
+    private void HandleCheckEnvironmentState(Environment resp, string data)
+    {
+        Log.Debug("ExampleDiscoveryV1", "Environment {0} is {1}", resp.environment_id, resp.status);
+
+        if (resp.status == "active")
+            isEnvironmentReady = true;
+        else
+        {
+            Invoke("CheckState", 10f);
+        }
     }
 
     private void TestPreviewConfiguration()
@@ -92,6 +130,31 @@ public class ExampleDiscoveryV1 : MonoBehaviour
         if (!m_Discovery.AddConfiguration(OnAddConfiguration, m_CreatedEnvironmentID, m_ConfigurationJsonPath))
             Log.Debug("ExampleDiscoveryV1", "Failed to add configuration");
     }
+
+    private void TestAddCollection()
+    {
+        //  Add Collection
+        Log.Debug("ExampleDiscoveryV1", "Attempting to add collection");
+        if (!m_Discovery.AddCollection(OnAddCollection, m_CreatedEnvironmentID, m_CreatedCollectionName, m_CreatedCollectionDescription, m_CreatedConfigurationID))
+            Log.Debug("ExampleDiscovery", "Failed to add collection");
+    }
+
+    private void TestGetCollection()
+    {
+        //  Get Collection
+        Log.Debug("ExampleDiscoveryV1", "Attempting to get collection");
+        if (!m_Discovery.GetCollection(OnGetCollection, m_CreatedEnvironmentID, m_CreatedCollectionID))
+            Log.Debug("ExampleDiscovery", "Failed to get collection");
+    }
+
+    private void TestDeleteCollection()
+    {
+        //  Delete Collection
+        Log.Debug("ExampleDiscoveryV1", "Attempting to delete collection");
+        if (!m_Discovery.DeleteCollection(OnDeleteCollection, m_CreatedEnvironmentID, m_CreatedCollectionID))
+            Log.Debug("ExampleDiscovery", "Failed to add collection");
+    }
+
     private void OnGetEnvironments(GetEnvironmentsResponse resp, string data)
     {
         if (resp != null)
@@ -207,15 +270,77 @@ public class ExampleDiscoveryV1 : MonoBehaviour
 
     private void OnPreviewConfiguration(TestDocument resp, string data)
     {
-        if(resp != null)
+        if (resp != null)
         {
             Log.Debug("ExampleDiscoveryV1", "Preview succeeded: {0}", resp.status);
 
-            TestDeleteConfiguration();
+            CheckState();
         }
         else
         {
             Log.Debug("ExampleDiscoveryV1", "Failed to preview configuration");
         }
+    }
+
+    private void OnGetCollections(GetCollectionsResponse resp, string customData)
+    {
+        if (resp != null)
+        {
+            if (resp.collections != null && resp.collections.Length > 0)
+            {
+                foreach (CollectionRef collection in resp.collections)
+                    Log.Debug("ExampleDiscoveryV1", "Collection: {0}, {1}", collection.collection_id, collection.name);
+            }
+            else
+            {
+                Log.Debug("ExampleDiscoveryV1", "There are no collections");
+            }
+        }
+        else
+        {
+            Log.Debug("ExampleDiscoveryV1", "Failed to get collections");
+        }
+    }
+
+    private void OnGetCollection(Collection resp, string data)
+    {
+        if (resp != null)
+        {
+            Log.Debug("ExampleDiscoveryV1", "Collection: {0}, {1}", resp.collection_id, resp.name);
+
+            TestDeleteCollection();
+        }
+        else
+        {
+            Log.Debug("ExampleDiscoveryV1", "Failed to get collections");
+        }
+    }
+
+    private void OnAddCollection(CollectionRef resp, string data)
+    {
+        if (resp != null)
+        {
+            Log.Debug("ExampleDiscoveryV1", "Collection: {0}, {1}", resp.collection_id, resp.name);
+            m_CreatedCollectionID = resp.collection_id;
+
+            TestGetCollection();
+        }
+        else
+        {
+            Log.Debug("ExampleDiscoveryV1", "resp is null, {0}", data);
+        }
+    }
+
+    private void OnDeleteCollection(bool success, string data)
+    {
+        if (success)
+        {
+            Log.Debug("ExampleDiscoveryV1", "Delete collection successful");
+            m_CreatedCollectionID = default(string);
+
+            TestDeleteConfiguration();
+        }
+        else
+            Log.Debug("ExampleDiscoveryV1", "Delete collection failed");
     }
 }
