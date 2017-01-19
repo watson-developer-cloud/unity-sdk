@@ -704,6 +704,270 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         #endregion
 
         #region Collections
+        #region Get Collections
+        public delegate void OnGetCollections(GetCollectionsResponse resp, string customData);
+
+        public bool GetCollections(OnGetCollections callback, string environmentID, string name = default(string), string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(environmentID))
+                throw new ArgumentNullException("environmentID");
+
+            GetCollectionsRequest req = new GetCollectionsRequest();
+            req.Callback = callback;
+            req.Data = customData;
+            req.EnvironmentID = environmentID;
+            req.Parameters["version"] = DiscoveryVersion.Version;
+            if (!string.IsNullOrEmpty(name))
+            {
+                req.Name = name;
+                req.Parameters["name"] = name;
+            }
+            req.OnResponse = OnGetCollectionsResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_ENVIRONMENT_COLLECTIONS, environmentID));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class GetCollectionsRequest : RESTConnector.Request
+        {
+            public string Data { get; set; }
+            public string EnvironmentID { get; set; }
+            public string Name { get; set; }
+            public OnGetCollections Callback { get; set; }
+        }
+
+        private void OnGetCollectionsResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            GetCollectionsResponse collections = new GetCollectionsResponse();
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = collections;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Discovery", "OnGetCollectionsResponse Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((GetCollectionsRequest)req).Callback != null)
+                ((GetCollectionsRequest)req).Callback(resp.Success ? collections : null, ((GetCollectionsRequest)req).Data);
+        }
+        #endregion
+
+        #region Add Collection
+        public delegate void OnAddCollection(CollectionRef resp, string customData);
+
+        public bool AddCollection(OnAddCollection callback, string environmentID, string name, string description = default(string), string configurationID = default(string), string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(environmentID))
+                throw new ArgumentNullException("environmentID");
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException("name");
+
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+            parameters["name"] = name;
+            parameters["description"] = description;
+            parameters["configuration_id"] = configurationID;
+
+            return AddCollection(callback, environmentID, Json.Serialize(parameters), customData);
+        }
+
+        public bool AddCollection(OnAddCollection callback, string environmentID, byte[] collectionData, string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(environmentID))
+                throw new ArgumentNullException("environmentID");
+            if (collectionData == null)
+                throw new ArgumentNullException("collectionData");
+
+            AddCollectionRequest req = new AddCollectionRequest();
+            req.Callback = callback;
+            req.Data = customData;
+            req.EnvironmentID = environmentID;
+            req.CollectionJsonData = collectionData;
+            req.Parameters["version"] = DiscoveryVersion.Version;
+            req.OnResponse = OnAddCollectionResponse;
+            req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
+            req.Send = collectionData;
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_ENVIRONMENT_COLLECTIONS, environmentID));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        public class AddCollectionRequest : RESTConnector.Request
+        {
+            public OnAddCollection Callback { get; set; }
+            public string EnvironmentID { get; set; }
+            public byte[] CollectionJsonData { get; set; }
+            public string Data { get; set; }
+        }
+
+        private void OnAddCollectionResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            CollectionRef collection = new CollectionRef();
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = collection;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Discovery", "OnGetConfigurationResponse Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((AddCollectionRequest)req).Callback != null)
+                ((AddCollectionRequest)req).Callback(resp.Success ? collection : null, ((AddCollectionRequest)req).Data);
+        }
+        #endregion
+
+        #region Get Collection
+        public delegate void OnGetCollection(Collection resp, string customData);
+
+        public bool GetCollection(OnGetCollection callback, string environmentID, string collectionID, string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(environmentID))
+                throw new ArgumentNullException("environmentID");
+            if (string.IsNullOrEmpty(collectionID))
+                throw new ArgumentNullException("collectionID");
+
+            GetCollectionRequest req = new GetCollectionRequest();
+            req.Callback = callback;
+            req.Data = customData;
+            req.EnvironmentID = environmentID;
+            req.CollectionID = collectionID;
+            req.Parameters["version"] = DiscoveryVersion.Version;
+            req.OnResponse = OnGetCollectionResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_ENVIRONMENT_COLLECTION, environmentID, collectionID));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class GetCollectionRequest : RESTConnector.Request
+        {
+            public string Data { get; set; }
+            public string EnvironmentID { get; set; }
+            public string CollectionID { get; set; }
+            public OnGetCollection Callback { get; set; }
+        }
+
+        private void OnGetCollectionResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            Collection collection = new Collection();
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = collection;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Discovery", "OnGetCollectionResponse Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((GetCollectionRequest)req).Callback != null)
+                ((GetCollectionRequest)req).Callback(resp.Success ? collection : null, ((GetCollectionRequest)req).Data);
+        }
+        #endregion
+
+        #region Delete Collection
+        public delegate void OnDeleteCollection(bool success, string customData);
+
+        public bool DeleteCollection(OnDeleteCollection callback, string environmentID, string collectionID, string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+
+            if (string.IsNullOrEmpty(environmentID))
+                throw new ArgumentNullException("environmentID");
+
+            if (string.IsNullOrEmpty(collectionID))
+                throw new ArgumentNullException("collectionID");
+
+            DeleteCollectionRequest req = new DeleteCollectionRequest();
+            req.Callback = callback;
+            req.EnvironmentID = environmentID;
+            req.CollectionID = collectionID;
+            req.Data = customData;
+            req.Parameters["version"] = DiscoveryVersion.Version;
+            req.OnResponse = OnDeleteCollectionResponse;
+            req.Delete = true;
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_ENVIRONMENT_COLLECTION, environmentID, collectionID));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class DeleteCollectionRequest : RESTConnector.Request
+        {
+            public string Data { get; set; }
+            public string EnvironmentID { get; set; }
+            public string CollectionID { get; set; }
+            public OnDeleteCollection Callback { get; set; }
+        }
+
+        private void OnDeleteCollectionResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            if (((DeleteCollectionRequest)req).Callback != null)
+                ((DeleteCollectionRequest)req).Callback(resp.Success, ((DeleteCollectionRequest)req).Data);
+        }
+        #endregion
         #endregion
 
         #region Documents
