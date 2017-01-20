@@ -1588,6 +1588,104 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         #endregion
 
         #region Queries
+        public delegate void OnQuery(QueryResponse resp, string customData);
+
+        public bool Query(OnQuery callback, string environmentID, string collectionID, string filter, string query, string aggregation, int count, string _return, int offset, string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(environmentID))
+                throw new ArgumentNullException("environmentID");
+            if (string.IsNullOrEmpty(collectionID))
+                throw new ArgumentNullException("collectionID");
+            if(string.IsNullOrEmpty(filter))
+                throw new ArgumentNullException("filter");
+            if (string.IsNullOrEmpty(query))
+                throw new ArgumentNullException("query");
+            if (string.IsNullOrEmpty(aggregation))
+                throw new ArgumentNullException("aggregation");
+            if (string.IsNullOrEmpty(_return))
+                throw new ArgumentNullException("_return");
+
+            QueryRequest req = new QueryRequest();
+            req.Callback = callback;
+            req.Data = customData;
+            req.EnvironmentID = environmentID;
+            req.CollectionID = collectionID;
+            req.Filter = filter;
+            req.Query = query;
+            req.Aggregation = aggregation;
+            req.Count = count;
+            req.Return = _return;
+            req.Offset = offset;
+
+            if (!string.IsNullOrEmpty(filter))
+                req.Parameters["filter"] = filter;
+
+            if (!string.IsNullOrEmpty(query))
+                req.Parameters["query"] = query;
+
+            if (!string.IsNullOrEmpty(aggregation))
+                req.Parameters["aggregation"] = aggregation;
+
+            if (!string.IsNullOrEmpty(_return))
+                req.Parameters["_return"] = _return;
+
+            req.Parameters["offset"] = offset;
+            req.Parameters["count"] = count;
+            req.Parameters["version"] = DiscoveryVersion.Version;
+            req.OnResponse = OnQueryResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_ENVIRONMENT_COLLECTION_QUERY, environmentID, collectionID));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class QueryRequest : RESTConnector.Request
+        {
+            public string Data { get; set; }
+            public string EnvironmentID { get; set; }
+            public string CollectionID { get; set; }
+            public string Filter { get; set; }
+            public string Query { get; set; }
+            public string Aggregation { get; set; }
+            public int Count { get; set; }
+            public string Return { get; set; }
+            public int Offset { get; set; }
+            public OnQuery Callback { get; set; }
+        }
+
+        private void OnQueryResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            QueryResponse queryResponse = new QueryResponse();
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = queryResponse;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Discovery", "OnQueryResponse Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((QueryRequest)req).Callback != null)
+                ((QueryRequest)req).Callback(resp.Success ? queryResponse : null, ((QueryRequest)req).Data);
+        }
         #endregion
 
         #region IWatsonService Interface
