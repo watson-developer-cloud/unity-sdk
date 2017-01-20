@@ -591,7 +591,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             {
                 contentData = File.ReadAllBytes(contentFilePath);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw new WatsonException(string.Format("Failed to load content: {0}", e.Message));
             }
@@ -1036,12 +1036,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         }
         #endregion
         #endregion
-        /*
+
         #region Documents
         #region Add Document
         public delegate void OnAddDocument(DocumentAccepted resp, string customData);
 
-        public bool AddDocument(OnAddDocument callback, string environmentID, string configurationID, string configurationFilePath, string contentFilePath, string metadata = default(string), string customData = default(string))
+        public bool AddDocument(OnAddDocument callback, string environmentID, string contentFilePath, string configurationID = default(string), string configurationFilePath = default(string), string metadata = default(string), string customData = default(string))
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -1049,31 +1049,40 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             if (string.IsNullOrEmpty(environmentID))
                 throw new ArgumentNullException("environmentID");
 
-            if (string.IsNullOrEmpty(configurationID) && string.IsNullOrEmpty(configurationFilePath))
-                throw new ArgumentNullException("configurationID or configurationFilePath");
-
-            if (!string.IsNullOrEmpty(configurationID) && !string.IsNullOrEmpty(configurationFilePath))
-                throw new WatsonException("Use either a configurationID OR designate a test configuration file path - not both");
-
             if (string.IsNullOrEmpty(contentFilePath))
                 throw new ArgumentNullException("contentFilePath");
 
-            byte[] contentData;
+            if (string.IsNullOrEmpty(configurationID) && string.IsNullOrEmpty(configurationFilePath))
+                throw new ArgumentNullException("Set either a configurationID or configurationFilePath");
+
+            if (!string.IsNullOrEmpty(configurationID) && !string.IsNullOrEmpty(configurationFilePath))
+                throw new WatsonException("Use either a configurationID OR designate a configurationFilePath - not both");
+
+            byte[] contentData = null;
+            string contentMimeType = default(string);
+
             try
             {
                 contentData = File.ReadAllBytes(contentFilePath);
+                contentMimeType = Utility.GetMimeType(Path.GetExtension(contentFilePath));
             }
             catch (Exception e)
             {
                 throw new WatsonException(string.Format("Failed to load content: {0}", e.Message));
             }
 
-            string contentMimeType = Utility.GetMimeType(Path.GetExtension(contentFilePath));
+            if (contentData == null || string.IsNullOrEmpty(contentMimeType))
+                throw new WatsonException("Failed to load content");
 
-            return PreviewConfiguration(callback, environmentID, configurationID, configurationFilePath, contentData, contentMimeType, customData);
+            if (!string.IsNullOrEmpty(configurationID))
+                return AddDocumentUsingConfigID(callback, environmentID, contentData, contentMimeType, configurationID, metadata, customData);
+            else if (!string.IsNullOrEmpty(configurationFilePath))
+                return AddDocumentUsingConfigFile(callback, environmentID, contentData, contentMimeType, configurationFilePath, metadata, customData);
+            else
+                throw new WatsonException("A configurationID or configuration file path is required");
         }
 
-        public bool AddDocument(OnAddDocument callback, string environmentID, string configurationID, string configurationFilePath, byte[] contentData, string contentMimeType, string metadata = default(string), string customData = default(string))
+        public bool AddDocumentUsingConfigID(OnAddDocument callback, string environmentID, byte[] contentData, string contentMimeType, string configurationID, string metadata = default(string), string customData = default(string))
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -1081,21 +1090,79 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             if (string.IsNullOrEmpty(environmentID))
                 throw new ArgumentNullException("environmentID");
 
-            if (string.IsNullOrEmpty(configurationID) && string.IsNullOrEmpty(configurationFilePath))
-                throw new ArgumentNullException("configurationID or configurationFilePath");
+            if (contentData == null)
+                throw new ArgumentNullException("contentData");
 
-            if (!string.IsNullOrEmpty(configurationID) && !string.IsNullOrEmpty(configurationFilePath))
-                throw new WatsonException("Use either a configurationID OR designate a test configuration file path - not both");
+            if (string.IsNullOrEmpty(contentMimeType))
+                throw new ArgumentNullException("contentMimeType");
+
+            if (string.IsNullOrEmpty(configurationID))
+                throw new ArgumentNullException("configurationID");
+
+            return AddDocument(callback, environmentID, contentData, contentMimeType, configurationID, null, metadata, customData);
+        }
+
+        public bool AddDocumentUsingConfigFile(OnAddDocument callback, string environmentID, byte[] contentData, string contentMimeType, string configurationFilePath, string metadata = default(string), string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+
+            if (string.IsNullOrEmpty(environmentID))
+                throw new ArgumentNullException("environmentID");
 
             if (contentData == null)
                 throw new ArgumentNullException("contentData");
 
-            PreviewConfigurationRequest req = new PreviewConfigurationRequest();
+            if (string.IsNullOrEmpty(contentMimeType))
+                throw new ArgumentNullException("contentMimeType");
+
+            if (string.IsNullOrEmpty(configurationFilePath))
+                throw new ArgumentNullException("configurationFilePath");
+
+            string configuration = default(string);
+
+            if (!string.IsNullOrEmpty(configurationFilePath))
+            {
+                try
+                {
+                    configuration = File.ReadAllText(configurationFilePath);
+                }
+                catch (Exception e)
+                {
+                    throw new WatsonException(string.Format("Failed to load configuration json: {0}", e.Message));
+                }
+            }
+
+            return AddDocument(callback, environmentID, contentData, contentMimeType, null, configuration, metadata, customData);
+        }
+
+        public bool AddDocument(OnAddDocument callback, string environmentID, byte[] contentData, string contentMimeType, string configurationID = default(string), string configuration = default(string), string metadata = default(string), string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+
+            if (string.IsNullOrEmpty(environmentID))
+                throw new ArgumentNullException("environmentID");
+
+            if (contentData == null)
+                throw new ArgumentNullException("contentData");
+
+            if (string.IsNullOrEmpty(contentMimeType))
+                throw new ArgumentNullException("contentMimeType");
+
+            if (string.IsNullOrEmpty(configurationID) && string.IsNullOrEmpty(configuration))
+                throw new ArgumentNullException("Set either a configurationID or test configuration string");
+
+            if (!string.IsNullOrEmpty(configurationID) && !string.IsNullOrEmpty(configuration))
+                throw new WatsonException("Use either a configurationID OR designate a test configuration string - not both");
+
+            AddDocumentRequest req = new AddDocumentRequest();
             req.Callback = callback;
             req.EnvironmentID = environmentID;
             req.ConfigurationID = configurationID;
-            req.ConfigurationFilePath = configurationFilePath;
+            req.Configuration = configuration;
             req.ContentData = contentData;
+            req.ContentMimeType = contentMimeType;
             req.Metadata = metadata;
             req.Data = customData;
             req.Parameters["version"] = DiscoveryVersion.Version;
@@ -1103,38 +1170,21 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             req.Forms["file"] = new RESTConnector.Form(contentData, "contentData", contentMimeType);
-            req.Forms["metadata"] = new RESTConnector.Form(metadata);
 
-            if (!string.IsNullOrEmpty(configurationFilePath))
-            {
-                string configJson;
+            if (!string.IsNullOrEmpty(metadata))
+                req.Forms["metadata"] = new RESTConnector.Form(metadata);
 
-                try
-                {
-                    configJson = File.ReadAllText(configurationFilePath);
-                }
-                catch (Exception e)
-                {
-                    throw new WatsonException(string.Format("Failed to load configuration json: {0}", e.Message));
-                }
-
-                req.Forms["configuration"] = new RESTConnector.Form(configJson);
-            }
-            else if (!string.IsNullOrEmpty(configurationID))
-            {
+            if (!string.IsNullOrEmpty(configurationID))
                 req.Parameters["configuration_id"] = configurationID;
-            }
 
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_ENVIRONMENT_PREVIEW, environmentID));
+            if (!string.IsNullOrEmpty(configuration))
+                req.Forms["configuration"] = new RESTConnector.Form(configuration);
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_ENVIRONMENT_COLLECTION_DOCUMENTS, environmentID));
             if (connector == null)
                 return false;
 
             return connector.Send(req);
-        }
-
-        public bool AddDocument(OnAddDocument callback, string environmentID, string configurationID, byte[] contentData, string configuration, string contentMimeType, string metadata = default(string), string customData)
-        {
-
         }
 
         private class AddDocumentRequest : RESTConnector.Request
@@ -1142,10 +1192,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             public string Data { get; set; }
             public string EnvironmentID { get; set; }
             public string ConfigurationID { get; set; }
-            public string ConfigurationFilePath { get; set; }
+            public string Configuration { get; set; }
             public byte[] ContentData { get; set; }
+            public string ContentMimeType { get; set; }
             public string Metadata { get; set; }
-            public OnPreviewConfiguration Callback { get; set; }
+            public OnAddDocument Callback { get; set; }
         }
 
         private void OnAddDocumentResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -1189,7 +1240,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         #region Update Document
         #endregion
         #endregion
-    */
+
         #region Queries
         #endregion
 
