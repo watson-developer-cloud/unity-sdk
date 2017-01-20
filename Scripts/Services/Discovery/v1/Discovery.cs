@@ -1598,14 +1598,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 throw new ArgumentNullException("environmentID");
             if (string.IsNullOrEmpty(collectionID))
                 throw new ArgumentNullException("collectionID");
-            if(string.IsNullOrEmpty(filter))
-                throw new ArgumentNullException("filter");
             if (string.IsNullOrEmpty(query))
                 throw new ArgumentNullException("query");
-            if (string.IsNullOrEmpty(aggregation))
-                throw new ArgumentNullException("aggregation");
-            if (string.IsNullOrEmpty(_return))
-                throw new ArgumentNullException("_return");
 
             QueryRequest req = new QueryRequest();
             req.Callback = callback;

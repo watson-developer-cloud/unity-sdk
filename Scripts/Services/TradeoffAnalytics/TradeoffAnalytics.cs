@@ -64,8 +64,6 @@ namespace IBM.Watson.DeveloperCloud.Services.TradeoffAnalytics.v1
       fsData tempData = null;
       sm_Serializer.TrySerialize<Problem>(problem, out tempData);
 
-      Log.Status("GetDilemma", "JSON: {0}", tempData.ToString());
-
       req.Send = Encoding.UTF8.GetBytes(tempData.ToString());
       req.Headers["Content-Type"] = "application/json";
 

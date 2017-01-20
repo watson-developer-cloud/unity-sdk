@@ -34,12 +34,19 @@ public class ExampleDiscoveryV1 : MonoBehaviour
     private string m_CreatedCollectionID;
     private string m_CreatedCollectionName = "Unity SDK Created Collection";
     private string m_CreatedCollectionDescription = "A collection created by the Unity SDK. Please delete me.";
+    private string m_CreatedDocumentID;
+    private string m_DocumentFilePath;
+    private string m_Query = "What is the capital of china?";
+
+    private bool m_IsConfigDeleted = false;
+    private bool m_IsCollectionDeleted = false;
     private void Start()
     {
         LogSystem.InstallDefaultReactors();
 
         m_ConfigurationJsonPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/Discovery/exampleConfigurationData.json";
         m_FilePathToIngest = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/watson_beats_jeopardy.html";
+        m_DocumentFilePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/watson_beats_jeopardy.html";
 
         ////  Get Environments
         //Log.Debug("ExampleDiscoveryV1", "Attempting to get environments");
@@ -72,8 +79,6 @@ public class ExampleDiscoveryV1 : MonoBehaviour
         //    Log.Debug("ExampleDiscovery", "Failed to get collections");
     }
 
-    private bool isEnvironmentReady = false;
-
     private void CheckState()
     {
         Log.Debug("ExampleDiscoveryV1", "Attempting to get environment state");
@@ -93,11 +98,18 @@ public class ExampleDiscoveryV1 : MonoBehaviour
         Log.Debug("ExampleDiscoveryV1", "Environment {0} is {1}", resp.environment_id, resp.status);
 
         if (resp.status == "active")
-            isEnvironmentReady = true;
+            TestAddCollection();
         else
         {
             Invoke("CheckState", 10f);
         }
+    }
+
+    private void BeginDeleteCycle()
+    {
+        TestDeleteDocument();
+        Invoke("TestDeleteCollection", 1f);
+        Invoke("TestDeleteConfiguration", 2f);
     }
 
     private void TestPreviewConfiguration()
@@ -110,7 +122,7 @@ public class ExampleDiscoveryV1 : MonoBehaviour
     private void TestDeleteConfiguration()
     {
         //  DeleteEnvironment
-        Log.Debug("ExampleDiscoveryV1", "Attempting to delete configuration");
+        Log.Debug("ExampleDiscoveryV1", "Attempting to delete configuration {0}", m_CreatedConfigurationID);
         if (!m_Discovery.DeleteConfiguration(OnDeleteConfiguration, m_CreatedEnvironmentID, m_CreatedConfigurationID))
             Log.Debug("ExampleDiscoveryV1", "Failed to delete configuration");
     }
@@ -118,7 +130,7 @@ public class ExampleDiscoveryV1 : MonoBehaviour
     private void TestDeleteEnvironment()
     {
         //  DeleteEnvironment
-        Log.Debug("ExampleDiscoveryV1", "Attempting to delete environment");
+        Log.Debug("ExampleDiscoveryV1", "Attempting to delete environment {0}", m_CreatedEnvironmentID);
         if (!m_Discovery.DeleteEnvironment(OnDeleteEnvironment, m_CreatedEnvironmentID))
             Log.Debug("ExampleDiscoveryV1", "Failed to delete environment");
     }
@@ -150,9 +162,44 @@ public class ExampleDiscoveryV1 : MonoBehaviour
     private void TestDeleteCollection()
     {
         //  Delete Collection
-        Log.Debug("ExampleDiscoveryV1", "Attempting to delete collection");
+        Log.Debug("ExampleDiscoveryV1", "Attempting to delete collection {0}", m_CreatedCollectionID);
         if (!m_Discovery.DeleteCollection(OnDeleteCollection, m_CreatedEnvironmentID, m_CreatedCollectionID))
             Log.Debug("ExampleDiscovery", "Failed to add collection");
+    }
+
+    private void TestAddDocument()
+    {
+        Log.Debug("ExampleDiscoveryV1", "Attempting to add document");
+        if (!m_Discovery.AddDocument(OnAddDocument, m_CreatedEnvironmentID, m_CreatedCollectionID, m_DocumentFilePath, m_CreatedConfigurationID, null))
+            Log.Debug("ExampleDiscovery", "Failed to add document");
+    }
+
+    private void TestGetDocument()
+    {
+        Log.Debug("ExampleDiscoveryV1", "Attempting to get document");
+        if (!m_Discovery.GetDocument(OnGetDocument, m_CreatedEnvironmentID, m_CreatedCollectionID, m_CreatedDocumentID))
+            Log.Debug("ExampleDiscovery", "Failed to get document");
+    }
+
+    private void TestUpdateDocument()
+    {
+        Log.Debug("ExampleDiscoveryV1", "Attempting to update document");
+        if (!m_Discovery.UpdateDocument(OnUpdateDocument, m_CreatedEnvironmentID, m_CreatedCollectionID, m_CreatedDocumentID, m_DocumentFilePath, m_CreatedConfigurationID, null))
+            Log.Debug("ExampleDiscovery", "Failed to update document");
+    }
+
+    private void TestDeleteDocument()
+    {
+        Log.Debug("ExampleDiscoveryV1", "Attempting to delete document {0}", m_CreatedDocumentID);
+        if (!m_Discovery.DeleteDocument(OnDeleteDocument, m_CreatedEnvironmentID, m_CreatedCollectionID, m_CreatedDocumentID))
+            Log.Debug("ExampleDiscovery", "Failed to delete document");
+    }
+
+    private void TestQuery()
+    {
+        Log.Debug("ExampleDiscoveryV1", "Attempting to query");
+        if (!m_Discovery.Query(OnQuery, m_CreatedEnvironmentID, m_CreatedCollectionID, null, m_Query, null, 10, null, 0))
+            Log.Debug("ExampleDiscovery", "Failed to delete document");
     }
 
     private void OnGetEnvironments(GetEnvironmentsResponse resp, string data)
@@ -261,8 +308,10 @@ public class ExampleDiscoveryV1 : MonoBehaviour
         {
             Log.Debug("ExampleDiscoveryV1", "Delete configuration successful");
             m_CreatedConfigurationID = default(string);
+            m_IsConfigDeleted = true;
 
-            TestDeleteEnvironment();
+            if(m_IsConfigDeleted && m_IsCollectionDeleted)
+                Invoke("TestDeleteEnvironment", 1f);
         }
         else
             Log.Debug("ExampleDiscoveryV1", "Delete configuration failed");
@@ -308,7 +357,8 @@ public class ExampleDiscoveryV1 : MonoBehaviour
         {
             Log.Debug("ExampleDiscoveryV1", "Collection: {0}, {1}", resp.collection_id, resp.name);
 
-            TestDeleteCollection();
+
+            TestAddDocument();
         }
         else
         {
@@ -337,10 +387,77 @@ public class ExampleDiscoveryV1 : MonoBehaviour
         {
             Log.Debug("ExampleDiscoveryV1", "Delete collection successful");
             m_CreatedCollectionID = default(string);
+            m_IsCollectionDeleted = true;
 
-            TestDeleteConfiguration();
+            if (m_IsConfigDeleted && m_IsCollectionDeleted)
+                Invoke("TestDeleteEnvironment", 1f);
         }
         else
             Log.Debug("ExampleDiscoveryV1", "Delete collection failed");
+    }
+
+    private void OnAddDocument(DocumentAccepted resp, string data)
+    {
+        if(resp != null)
+        {
+            Log.Debug("ExampleDiscoveryV1", "Added Document {0} {1}", resp.document_id, resp.status);
+            m_CreatedDocumentID = resp.document_id;
+
+            TestGetDocument();
+        }
+        else
+        {
+            Log.Debug("ExampleDiscoveryV1", "resp is null, {0}", data);
+        }
+    }
+
+    private void OnGetDocument(DocumentStatus resp, string data)
+    {
+        if(resp != null)
+        {
+            Log.Debug("ExampleDiscoveryV1", "Got Document {0} {1}", resp.document_id, resp.status);
+            TestUpdateDocument();
+        }
+        else
+        {
+            Log.Debug("ExampleDiscoveryV1", "resp is null, {0}", data);
+        }
+    }
+
+    private void OnUpdateDocument(DocumentAccepted resp, string data)
+    {
+        if (resp != null)
+        {
+            Log.Debug("ExampleDiscoveryV1", "Updated Document {0} {1}", resp.document_id, resp.status);
+            TestQuery();
+        }
+        else
+        {
+            Log.Debug("ExampleDiscoveryV1", "resp is null, {0}", data);
+        }
+    }
+
+    private void OnDeleteDocument(bool success, string data)
+    {
+        if (success)
+        {
+            Log.Debug("ExampleDiscoveryV1", "Delete document successful");
+            m_CreatedDocumentID = default(string);
+        }
+        else
+            Log.Debug("ExampleDiscoveryV1", "Delete collection failed");
+    }
+
+    private void OnQuery(QueryResponse resp, string data)
+    {
+        if(resp != null)
+        {
+            foreach(QueryResult result in resp.results)
+                Log.Debug("ExampleDiscoveryV1", "Query response: id: {0}, score: {1}", result.id, result.score);
+        }
+        else
+        {
+            Log.Debug("ExampleDiscoveryV1", "resp is null, {0}", data);
+        }
     }
 }
