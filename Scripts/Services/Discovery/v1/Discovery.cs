@@ -1232,6 +1232,53 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         #endregion
 
         #region Delete Doucment
+        public delegate void OnDeleteDocument(bool success, string customData);
+
+        public bool DeleteDocument(OnDeleteDocument callback, string environmentID, string collectionID, string documentID, string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+
+            if (string.IsNullOrEmpty(environmentID))
+                throw new ArgumentNullException("environmentID");
+
+            if (string.IsNullOrEmpty(collectionID))
+                throw new ArgumentNullException("collectionID");
+
+            if (string.IsNullOrEmpty(documentID))
+                throw new ArgumentNullException("documentID");
+
+            DeleteDocumentRequest req = new DeleteDocumentRequest();
+            req.Callback = callback;
+            req.EnvironmentID = environmentID;
+            req.CollectionID = collectionID;
+            req.DocumentID = documentID;
+            req.Data = customData;
+            req.Parameters["version"] = DiscoveryVersion.Version;
+            req.OnResponse = OnDeleteDocumentResponse;
+            req.Delete = true;
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_ENVIRONMENT_COLLECTION_DOCUMENT, environmentID, collectionID, documentID));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class DeleteDocumentRequest : RESTConnector.Request
+        {
+            public string Data { get; set; }
+            public string EnvironmentID { get; set; }
+            public string CollectionID { get; set; }
+            public string DocumentID { get; set; }
+            public OnDeleteDocument Callback { get; set; }
+        }
+
+        private void OnDeleteDocumentResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            if (((DeleteDocumentRequest)req).Callback != null)
+                ((DeleteDocumentRequest)req).Callback(resp.Success, ((DeleteDocumentRequest)req).Data);
+        }
         #endregion
 
         #region Get Document
