@@ -26,7 +26,7 @@ public class ExampleDocumentConversion : MonoBehaviour
 
   void Start()
   {
-    LogSystem.InstallDefaultReactors(); LogSystem.InstallDefaultReactors();
+    LogSystem.InstallDefaultReactors(); 
     string examplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/watson_beats_jeopardy.html";
 
     if (!m_DocumentConversion.ConvertDocument(OnConvertDocument, examplePath, ConversionTarget.NORMALIZED_TEXT))

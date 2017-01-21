@@ -5,20 +5,20 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 456440}
-  - 114: {fileID: 11447296}
-  - 114: {fileID: 11482954}
-  - 114: {fileID: 11437114}
-  - 114: {fileID: 11479124}
-  - 114: {fileID: 11457544}
-  - 114: {fileID: 11469728}
-  - 114: {fileID: 11459306}
-  - 114: {fileID: 11461230}
-  - 114: {fileID: 11479102}
-  - 114: {fileID: 11417566}
-  - 114: {fileID: 11495534}
+  - component: {fileID: 456440}
+  - component: {fileID: 11447296}
+  - component: {fileID: 11482954}
+  - component: {fileID: 11437114}
+  - component: {fileID: 11479124}
+  - component: {fileID: 11457544}
+  - component: {fileID: 11469728}
+  - component: {fileID: 11459306}
+  - component: {fileID: 11461230}
+  - component: {fileID: 11479102}
+  - component: {fileID: 11417566}
+  - component: {fileID: 11495534}
   m_Layer: 0
   m_Name: TouchManager
   m_TagString: Untagged
@@ -31,10 +31,10 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 438902}
-  - 114: {fileID: 11412284}
+  - component: {fileID: 438902}
+  - component: {fileID: 11412284}
   m_Layer: 0
   m_Name: Inputs
   m_TagString: Untagged
@@ -47,11 +47,11 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 224: {fileID: 22440388}
-  - 114: {fileID: 11455964}
-  - 223: {fileID: 22308338}
+  - component: {fileID: 22440388}
+  - component: {fileID: 11455964}
+  - component: {fileID: 22308338}
   m_Layer: 0
   m_Name: Touch Visualizer Watson
   m_TagString: Untagged
@@ -68,10 +68,10 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 456440}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &456440
 Transform:
   m_ObjectHideFlags: 1
@@ -81,12 +81,12 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 438902}
   - {fileID: 22440388}
   m_Father: {fileID: 0}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &11412284
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -351,7 +351,8 @@ MonoBehaviour:
   useSendMessage: 0
   sendMessageEvents: 60
   sendMessageTarget: {fileID: 0}
-  layers: []
+  layers:
+  - {fileID: 0}
 --- !u!114 &11495534
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -403,10 +404,10 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 456440}
   m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
