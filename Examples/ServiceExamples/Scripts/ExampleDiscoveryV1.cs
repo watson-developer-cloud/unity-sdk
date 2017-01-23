@@ -220,7 +220,7 @@ public class ExampleDiscoveryV1 : MonoBehaviour
     {
         Log.Debug("ExampleDiscoveryV1", "Attempting to query");
         if (!m_Discovery.Query(OnQuery, m_CreatedEnvironmentID, m_CreatedCollectionID, null, m_Query, null, 10, null, 0))
-            Log.Debug("ExampleDiscovery", "Failed to delete document");
+            Log.Debug("ExampleDiscovery", "Failed to query");
     }
 
     private void OnGetEnvironments(GetEnvironmentsResponse resp, string data)
@@ -352,7 +352,7 @@ public class ExampleDiscoveryV1 : MonoBehaviour
         }
     }
 
-    private void OnGetCollections(GetCollectionsResponse resp, string customData)
+    private void OnGetCollections(GetCollectionsResponse resp, string data)
     {
         if (resp != null)
         {
