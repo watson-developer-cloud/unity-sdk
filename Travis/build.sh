@@ -17,10 +17,9 @@ if [ $? = 0 ] ; then
 else
   echo "Build Windows FAILED! Exited with $?"
   ERROR_CODE=$?
+  echo 'Logs from build'
+  cat $(pwd)/Travis/UnityTestProject/windowsBuild.log
 fi
-
-echo 'Logs from build'
-cat $(pwd)/Travis/UnityTestProject/windowsBuild.log
 
 echo "Attempting to build $project for OS X..."
 /Applications/Unity/Unity.app/Contents/MacOS/Unity \
@@ -36,10 +35,9 @@ if [ $? = 0 ] ; then
 else
   echo "Build Mac FAILED! Exited with $?"
   ERROR_CODE=$?
+  echo 'Logs from build'
+  cat $(pwd)/Travis/UnityTestProject/osxBuild.log
 fi
-
-echo 'Logs from build'
-cat $(pwd)/Travis/UnityTestProject/osxBuild.log
 
 if [ $ERROR_CODE = 0 ] ; then
   echo "BUILDS SUCCEEDED! Exited with $ERROR_CODE"
