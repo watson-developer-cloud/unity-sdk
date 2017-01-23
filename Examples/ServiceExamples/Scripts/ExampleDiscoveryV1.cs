@@ -59,9 +59,9 @@ public class ExampleDiscoveryV1 : MonoBehaviour
         //    Log.Debug("ExampleDiscoveryV1", "Failed to get environment");
 
         //  AddEnvironment
-        Log.Debug("ExampleDiscoveryV1", "Attempting to add environment");
-        if (!m_Discovery.AddEnvironment(OnAddEnvironment, "unity-testing-AddEnvironment-do-not-delete-until-active", "Testing addEnvironment in Unity SDK. Please do not delete this environment until the status is 'active'", 0))
-            Log.Debug("ExampleDiscoveryV1", "Failed to add environment");
+        //Log.Debug("ExampleDiscoveryV1", "Attempting to add environment");
+        //if (!m_Discovery.AddEnvironment(OnAddEnvironment, "unity-testing-AddEnvironment-do-not-delete-until-active", "Testing addEnvironment in Unity SDK. Please do not delete this environment until the status is 'active'", 0))
+        //    Log.Debug("ExampleDiscoveryV1", "Failed to add environment");
 
         ////  Get Configurations
         //Log.Debug("ExampleDiscoveryV1", "Attempting to get configurations");
@@ -77,8 +77,24 @@ public class ExampleDiscoveryV1 : MonoBehaviour
         //Log.Debug("ExampleDiscoveryV1", "Attempting to get collections");
         //if (!m_Discovery.GetCollections(OnGetCollections, m_DefaultEnvironmentID))
         //    Log.Debug("ExampleDiscovery", "Failed to get collections");
+
+        //  Add Collection
+        //Log.Debug("ExampleDiscoveryV1", "Attempting to add collection");
+        //if (!m_Discovery.AddCollection(OnAddCollection, "8a73b0aa-d8f3-418f-8341-f4ddc336c363", m_CreatedCollectionName, m_CreatedCollectionDescription, "c9b51b49-e6cf-480a-be9f-5b5e06d5f2d2"))
+        //    Log.Debug("ExampleDiscovery", "Failed to add collection");
+
+        //  Get Collection
+        //Log.Debug("ExampleDiscoveryV1", "Attempting to get collection");
+        //if (!m_Discovery.GetCollection(OnGetCollection, "8a73b0aa-d8f3-418f-8341-f4ddc336c363", "9388fbf8-38f6-44b1-81d2-9b4bade6b9c2"))
+        //    Log.Debug("ExampleDiscovery", "Failed to get collection");
+
+        //  Delete Collection
+        //Log.Debug("ExampleDiscoveryV1", "Attempting to delete collection {0}", m_CreatedCollectionID);
+        //if (!m_Discovery.DeleteCollection(OnDeleteCollection, "8a73b0aa-d8f3-418f-8341-f4ddc336c363", "9388fbf8-38f6-44b1-81d2-9b4bade6b9c2"))
+        //    Log.Debug("ExampleDiscovery", "Failed to add collection");
     }
 
+    #region Check State
     private void CheckState()
     {
         Log.Debug("ExampleDiscoveryV1", "Attempting to get environment state");
@@ -111,7 +127,17 @@ public class ExampleDiscoveryV1 : MonoBehaviour
         Invoke("TestDeleteCollection", 1f);
         Invoke("TestDeleteConfiguration", 2f);
     }
+    #endregion
 
+    private void TestDeleteEnvironment()
+    {
+        //  DeleteEnvironment
+        Log.Debug("ExampleDiscoveryV1", "Attempting to delete environment {0}", m_CreatedEnvironmentID);
+        if (!m_Discovery.DeleteEnvironment(OnDeleteEnvironment, m_CreatedEnvironmentID))
+            Log.Debug("ExampleDiscoveryV1", "Failed to delete environment");
+    }
+
+    #region Configuration
     private void TestPreviewConfiguration()
     {
         Log.Debug("ExampleDiscoveryV1", "Attempting to preview configuration");
@@ -127,14 +153,6 @@ public class ExampleDiscoveryV1 : MonoBehaviour
             Log.Debug("ExampleDiscoveryV1", "Failed to delete configuration");
     }
 
-    private void TestDeleteEnvironment()
-    {
-        //  DeleteEnvironment
-        Log.Debug("ExampleDiscoveryV1", "Attempting to delete environment {0}", m_CreatedEnvironmentID);
-        if (!m_Discovery.DeleteEnvironment(OnDeleteEnvironment, m_CreatedEnvironmentID))
-            Log.Debug("ExampleDiscoveryV1", "Failed to delete environment");
-    }
-
     private void TestAddConfiguration()
     {
         //  Add Configuration
@@ -142,7 +160,9 @@ public class ExampleDiscoveryV1 : MonoBehaviour
         if (!m_Discovery.AddConfiguration(OnAddConfiguration, m_CreatedEnvironmentID, m_ConfigurationJsonPath))
             Log.Debug("ExampleDiscoveryV1", "Failed to add configuration");
     }
+    #endregion
 
+    #region Collection
     private void TestAddCollection()
     {
         //  Add Collection
@@ -166,7 +186,9 @@ public class ExampleDiscoveryV1 : MonoBehaviour
         if (!m_Discovery.DeleteCollection(OnDeleteCollection, m_CreatedEnvironmentID, m_CreatedCollectionID))
             Log.Debug("ExampleDiscovery", "Failed to add collection");
     }
+    #endregion
 
+    #region Documents
     private void TestAddDocument()
     {
         Log.Debug("ExampleDiscoveryV1", "Attempting to add document");
@@ -194,6 +216,7 @@ public class ExampleDiscoveryV1 : MonoBehaviour
         if (!m_Discovery.DeleteDocument(OnDeleteDocument, m_CreatedEnvironmentID, m_CreatedCollectionID, m_CreatedDocumentID))
             Log.Debug("ExampleDiscovery", "Failed to delete document");
     }
+    #endregion
 
     private void TestQuery()
     {
@@ -358,7 +381,7 @@ public class ExampleDiscoveryV1 : MonoBehaviour
             Log.Debug("ExampleDiscoveryV1", "Collection: {0}, {1}", resp.collection_id, resp.name);
 
 
-            TestAddDocument();
+            //TestAddDocument();
         }
         else
         {
@@ -373,7 +396,7 @@ public class ExampleDiscoveryV1 : MonoBehaviour
             Log.Debug("ExampleDiscoveryV1", "Collection: {0}, {1}", resp.collection_id, resp.name);
             m_CreatedCollectionID = resp.collection_id;
 
-            TestGetCollection();
+            //TestGetCollection();
         }
         else
         {
