@@ -15,7 +15,6 @@
 *
 */
 
-using System.Collections.Generic;
 using IBM.Watson.DeveloperCloud.Services.Discovery.v1;
 using IBM.Watson.DeveloperCloud.Logging;
 using UnityEngine;
@@ -25,7 +24,22 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 {
     public class TestDiscovery : UnitTest
     {
-        Discovery m_Discovery = new Discovery();
+        private Discovery m_Discovery = new Discovery();
+        private System.Timers.Timer m_StateTimer = new System.Timers.Timer(1000);
+        private bool m_IsCheckingState = false;
+        private bool IsCheckingState
+        {
+            get
+            {
+                return m_IsCheckingState;
+            }
+            set
+            {
+                m_IsCheckingState = value;
+                if (m_IsCheckingState)
+                    CheckState();
+            }
+        }
 
         //  Default news values
         private string m_DefaultEnvironmentID = "6c8647b7-9dd4-42c8-9cb0-117b40b14517";
@@ -36,6 +50,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private string m_CreatedEnvironmentName = "unity-sdk-integration-test";
         private string m_CreatedEnvironmentDescription = "Integration test running for Unity SDK. Please do not delete this environment until 10 minutes after the status is 'active'. The test should delete this environment.";
         private string m_CreatedEnvironmentID;
+        private bool m_IsEnvironmentActive = false;
 
         //  Configuration
         private string m_ConfigurationJsonPath;
@@ -166,6 +181,108 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             #endregion
 
             #region Configurations
+            //  Get Configurations
+            Log.Debug("ExampleDiscoveryV1", "Attempting to get configurations");
+            if (!m_Discovery.GetConfigurations((GetConfigurationsResponse resp, string data) =>
+            {
+                if (resp != null)
+                {
+                    if (resp.configurations != null && resp.configurations.Length > 0)
+                    {
+                        foreach (ConfigurationRef configuration in resp.configurations)
+                        {
+                            Log.Debug("ExampleDiscoveryV1", "Configuration: {0}, {1}", configuration.configuration_id, configuration.name);
+                        }
+                    }
+                    else
+                    {
+                        Log.Debug("ExampleDiscoveryV1", "There are no configurations for this environment.");
+                    }
+                }
+                else
+                {
+                    Log.Debug("ExampleDiscoveryV1", "Discovery.GetConfigurations(); resp is null, {0}", data);
+                }
+
+                Test(resp.configurations != null);
+                m_GetConfigurationsTested = true;
+            }, m_DefaultEnvironmentID))
+                Log.Debug("ExampleDiscoveryV1", "Failed to get configurations");
+
+            while (!m_GetConfigurationsTested)
+                yield return null;
+
+            //  Add Configuration
+            Log.Debug("ExampleDiscoveryV1", "Attempting to add configuration");
+            if (!m_Discovery.AddConfiguration((Configuration resp, string data) =>
+            {
+                if (resp != null)
+                {
+                    Log.Debug("ExampleDiscoveryV1", "Configuration: {0}, {1}", resp.configuration_id, resp.name);
+                    m_CreatedConfigurationID = resp.configuration_id;
+
+
+                }
+                else
+                {
+                    Log.Debug("ExampleDiscoveryV1", "Discovery.AddConfiguration(); resp is null, {0}", data);
+                }
+
+                Test(!string.IsNullOrEmpty(resp.configuration_id));
+                m_AddConfigurationTested = true;
+            }, m_CreatedEnvironmentID, m_ConfigurationJsonPath))
+                Log.Debug("ExampleDiscoveryV1", "Failed to add configuration");
+
+            while (!m_AddConfigurationTested)
+                yield return null;
+
+            //  Get Configuration
+            Log.Debug("ExampleDiscoveryV1", "Attempting to get configuration");
+            if (!m_Discovery.GetConfiguration((Configuration resp, string data) =>
+            {
+                if (resp != null)
+                {
+                    Log.Debug("ExampleDiscoveryV1", "Configuration: {0}, {1}", resp.configuration_id, resp.name);
+                }
+                else
+                {
+                    Log.Debug("ExampleDiscoveryV1", "Discovery.GetConfiguration(); resp is null, {0}", data);
+                }
+
+                Test(!string.IsNullOrEmpty(resp.name));
+                m_GetConfigurationTested = true;
+            }, m_DefaultEnvironmentID, m_DefaultConfigurationID))
+                Log.Debug("ExampleDiscoveryV1", "Failed to get configuration");
+
+            while (!m_GetConfigurationTested)
+                yield return null;
+
+            //  Preview Configuration
+            Log.Debug("ExampleDiscoveryV1", "Attempting to preview configuration");
+            if (!m_Discovery.PreviewConfiguration((TestDocument resp, string data) =>
+            {
+                if (resp != null)
+                {
+                    Log.Debug("ExampleDiscoveryV1", "Preview succeeded: {0}", resp.status);
+                }
+                else
+                {
+                    Log.Debug("ExampleDiscoveryV1", "Discovery.PreviewConfiguration(); resp is null {0}", data);
+                }
+
+                Test(resp != null);
+                m_PreviewConfigurationTested = true;
+            }, m_CreatedEnvironmentID, m_CreatedConfigurationID, null, m_FilePathToIngest, m_Metadata))
+                Log.Debug("ExampleDiscoveryV1", "Failed to preview configuration");
+
+            while (!m_PreviewConfigurationTested)
+                yield return null;
+
+            IsCheckingState = true;
+
+            while (!m_IsEnvironmentActive)
+                yield return null;
+
             #endregion
 
             #region Collections
@@ -181,6 +298,26 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             #endregion
 
             #region Delete
+            //  DeleteEnvironment
+            Log.Debug("ExampleDiscoveryV1", "Attempting to delete configuration {0}", m_CreatedConfigurationID);
+            if (!m_Discovery.DeleteConfiguration((bool success, string data) =>
+            {
+                if (success)
+                {
+                    Log.Debug("ExampleDiscoveryV1", "Delete configuration successful");
+                    m_CreatedConfigurationID = default(string);
+                }
+                else
+                    Log.Debug("ExampleDiscoveryV1", "Delete configuration failed");
+
+                Test(success);
+                m_DeleteConfigurationTested = true;
+            }, m_CreatedEnvironmentID, m_CreatedConfigurationID))
+                Log.Debug("ExampleDiscoveryV1", "Failed to delete configuration");
+
+            while (!m_DeleteConfigurationTested)
+                yield return null;
+
             //  Delete Environment
             Log.Debug("ExampleDiscoveryV1", "Attempting to delete environment {0}", m_CreatedEnvironmentID);
             if (!m_Discovery.DeleteEnvironment((bool success, string data) =>
@@ -205,6 +342,34 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             #endregion
 
             yield break;
+        }
+
+        private void CheckState()
+        {
+            Log.Debug("ExampleDiscoveryV1", "Attempting to get environment state");
+
+            m_Discovery.GetEnvironment((Environment resp, string data) =>
+            {
+                Log.Debug("ExampleDiscoveryV1", "Environment {0} is {1}", resp.environment_id, resp.status);
+
+                IsCheckingState = false;
+                if (resp.status == "active")
+                {
+                    m_IsEnvironmentActive = true;
+                }
+                else
+                {
+                    m_StateTimer.Elapsed += OnTimer;
+                    m_StateTimer.Enabled = true;
+                }
+            }, m_CreatedEnvironmentID);
+        }
+
+        private void OnTimer(object source, System.Timers.ElapsedEventArgs e)
+        {
+            m_StateTimer.Enabled = false;
+            m_StateTimer.Elapsed -= OnTimer;
+            IsCheckingState = true;
         }
     }
 }

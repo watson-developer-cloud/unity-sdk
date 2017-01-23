@@ -16,8 +16,6 @@
 */
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Services.Discovery.v1;
-using IBM.Watson.DeveloperCloud.Utilities;
-using System.Collections;
 using UnityEngine;
 
 public class ExampleDiscoveryV1 : MonoBehaviour
