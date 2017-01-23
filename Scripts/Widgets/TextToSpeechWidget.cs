@@ -42,7 +42,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 
     #region Outputs
     [SerializeField]
-    private Output m_Speaking = new Output(typeof(SpeakingStateData));
+    private Output m_Speaking = new Output(typeof(SpeakingStateData), true);
     [SerializeField]
     private Output m_DisableMic = new Output(typeof(DisableMicData));
     [SerializeField]
