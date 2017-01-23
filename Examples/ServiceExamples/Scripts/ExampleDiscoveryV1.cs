@@ -475,6 +475,8 @@ public class ExampleDiscoveryV1 : MonoBehaviour
     {
         if(resp != null)
         {
+            Log.Debug("ExampleDiscoveryV1", "key: {0}, matching results: {1}", resp.aggregations.term.results.key, resp.aggregations.term.results.matching_results);
+
             foreach(QueryResult result in resp.results)
                 Log.Debug("ExampleDiscoveryV1", "Query response: id: {0}, score: {1}", result.id, result.score);
         }
