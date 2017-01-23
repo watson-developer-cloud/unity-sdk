@@ -2442,7 +2442,7 @@ See [CONTRIBUTING.md](.github/CONTRIBUTING.md).
 [text_to_speech]: http://www.ibm.com/watson/developercloud/doc/text-to-speech/
 [language_translator]: http://www.ibm.com/watson/developercloud/doc/language-translator/
 [dialog]: http://www.ibm.com/watson/developercloud/doc/dialog/
-[natural_language_classifier]: http://www.ibm.com/watson/developercloud/doc/nl-classifier/
+[natural_language_classifier]: http://www.ibm.com/watson/developercloud/doc/natural-language-classifier/index.html
 
 [alchemy_language]: http://www.alchemyapi.com/products/alchemylanguage
 [alchemyData_news]: http://www.ibm.com/watson/developercloud/alchemy-data-news.html

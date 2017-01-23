@@ -3,6 +3,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using TouchScript.Utils;
 using TouchScript.Utils.Attributes;
 using UnityEngine;
@@ -14,7 +15,7 @@ namespace TouchScript.Gestures
     /// Works with any gesture unless a Delegate is set.
     /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Press Gesture")]
-    [HelpURL("http://touchscript.github.io/docs/Index.html?topic=html/T_TouchScript_Gestures_PressGesture.htm")]
+    [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Gestures_PressGesture.htm")]
     public class PressGesture : Gesture
     {
         #region Constants
@@ -91,9 +92,9 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override void touchBegan(TouchPoint touch)
+        protected override void touchesBegan(IList<TouchPoint> touches)
         {
-            base.touchBegan(touch);
+            base.touchesBegan(touches);
 
             if (touchesNumState == TouchesNumState.PassedMinThreshold) setState(GestureState.Recognized);
         }

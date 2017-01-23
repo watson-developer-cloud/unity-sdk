@@ -11,7 +11,7 @@ namespace TouchScript.Behaviors.Visualizer
     /// <summary>
     /// Visual cursor implementation used by TouchScript.
     /// </summary>
-    [HelpURL("http://touchscript.github.io/docs/Index.html?topic=html/T_TouchScript_Behaviors_TouchProxy.htm")]
+    [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Behaviors_TouchProxy.htm")]
     public class TouchProxy : TouchProxyBase
     {
         /// <summary>
@@ -34,7 +34,11 @@ namespace TouchScript.Behaviors.Visualizer
             gameObject.name = stringBuilder.ToString();
 
             if (Text == null) return;
-            if (!ShowTouchId && !ShowTags) return;
+            if (!ShowTouchId && !ShowTags)
+            {
+                Text.text = "";
+                return;
+            }
 
             stringBuilder.Length = 0;
             if (ShowTouchId)
