@@ -350,21 +350,21 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             #region Fields
             Log.Debug("ExampleDiscoveryV1", "Attempting to get fields");
-            if(!m_Discovery.GetFields((GetFieldsResponse resp, string customData) =>
-            {
-                if(resp != null)
-                {
-                    foreach (Field field in resp.fields)
-                        Log.Debug("ExampleDiscoveryV1", "Field: {0}, type: {1}", field.field, field.type);
-                }
-                else
-                {
-                    Log.Debug("ExampleDiscoveryV1", "Discovery.GetFields(); resp is null");
-                }
+            if (!m_Discovery.GetFields((GetFieldsResponse resp, string customData) =>
+             {
+                 if (resp != null)
+                 {
+                     foreach (Field field in resp.fields)
+                         Log.Debug("ExampleDiscoveryV1", "Field: {0}, type: {1}", field.field, field.type);
+                 }
+                 else
+                 {
+                     Log.Debug("ExampleDiscoveryV1", "Discovery.GetFields(); resp is null");
+                 }
 
-                Test(resp != null);
-                m_GetFieldsTested = true;
-            }, m_CreatedEnvironmentID, m_CreatedCollectionID))
+                 Test(resp != null);
+                 m_GetFieldsTested = true;
+             }, m_CreatedEnvironmentID, m_CreatedCollectionID))
                 Log.Debug("ExampleDiscoveryV1", "Failed to get fields");
 
             while (!m_GetFieldsTested)
@@ -445,10 +445,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             {
                 if (resp != null)
                 {
-                    //Log.Debug("ExampleDiscoveryV1", "key: {0}, matching results: {1}", resp.aggregations.term.results.key, resp.aggregations.term.results.matching_results);
-
-                    foreach (QueryResult result in resp.results)
-                        Log.Debug("ExampleDiscoveryV1", "Query response: id: {0}, score: {1}", result.id, result.score);
+                    Log.Debug("ExampleDiscoveryV1", resp.ToString());
                 }
                 else
                 {

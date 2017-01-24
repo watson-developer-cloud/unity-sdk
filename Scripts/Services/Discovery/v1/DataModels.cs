@@ -16,6 +16,7 @@
 */
 
 using FullSerializer;
+using System.Text;
 
 namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 {
@@ -340,6 +341,36 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         public double matching_results { get; set; }
         public QueryResult[] results { get; set; }
         public QueryAggregation aggregations { get; set; }
+
+        public override string ToString()
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+
+            if (!string.IsNullOrEmpty(matching_results.ToString()))
+                stringBuilder.Append(string.Format("matching_results: {0}", matching_results.ToString()));
+
+            foreach(QueryResult result in results)
+            {
+                if(!string.IsNullOrEmpty(result.id))
+                    stringBuilder.Append(string.Format("result id: {0}", result.id) + "\n\t");
+
+                if(!string.IsNullOrEmpty(result.score.ToString()))
+                    stringBuilder.Append(string.Format("result score: {0}", result.score) + "\n\t");
+            }
+
+            stringBuilder.Append("\n");
+
+            if (aggregations != null && aggregations.term != null && aggregations.term.results != null)
+            {
+                if (!string.IsNullOrEmpty(aggregations.term.results.key))
+                    stringBuilder.Append(string.Format("key: {0}", aggregations.term.results.key));
+
+                if (!string.IsNullOrEmpty(aggregations.term.results.matching_results.ToString()))
+                    stringBuilder.Append(string.Format("key: {0}", aggregations.term.results.matching_results.ToString()));
+            }
+
+            return string.Format("{0}", stringBuilder.ToString());
+        }
     }
 
     [fsObject]
