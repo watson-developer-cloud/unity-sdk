@@ -27,6 +27,10 @@ using System.Text;
 
 namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 {
+    /// <summary>
+    /// This class wraps the Discovery service
+    /// <a href="http://www.ibm.com/watson/developercloud/discovery.html">Discovery Service</a>
+    /// </summary>
     public class Discovery : IWatsonService
     {
         #region Private Data
@@ -53,8 +57,20 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         #region Environments
         #region GetEnvironments
+        /// <summary>
+        /// The callback used by GetEnvironments().
+        /// </summary>
+        /// <param name="resp">The GetEnvironments response.</param>
+        /// <param name="customData">Optional data.</param>
         public delegate void OnGetEnvironments(GetEnvironmentsResponse resp, string customData);
 
+        /// <summary>
+        /// This class lists environments in a discovery instance. There are two environments returned: A read-only environment with the News
+        /// collection (IBM Managed) and a user-created environment that the user can utilize to analyze and query their own data.
+        /// </summary>
+        /// <param name="callback">The OnGetEnvironments callback.</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns>True if the call succeeds, false if the call is unsuccessful.</returns>
         public bool GetEnvironments(OnGetEnvironments callback, string customData = default(string))
         {
             if (callback == null)
@@ -112,8 +128,23 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         #endregion
 
         #region Add Environment
+        /// <summary>
+        /// The callback used by AddEnvironment().
+        /// </summary>
+        /// <param name="resp">The Environment response.</param>
+        /// <param name="customData">Optional custom data.</param>
         public delegate void OnAddEnvironment(Environment resp, string customData);
 
+        /// <summary>
+        /// Creates a new environment. You can only create one environment per service instance.An attempt to create another environment 
+        /// will result in an error. The size of the new environment can be controlled by specifying the size parameter.
+        /// </summary>
+        /// <param name="callback">The OnAddEnvironment callback.</param>
+        /// <param name="name">The name of the environment to be created.</param>
+        /// <param name="description">The description of the environment to be created.</param>
+        /// <param name="size">The size of the environment to be created. See <a href="http://www.ibm.com/watson/developercloud/discovery.html#pricing-block">pricing.</a></param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns>True if the call succeeds, false if the call is unsuccessful.</returns>
         public bool AddEnvironment(OnAddEnvironment callback, string name = default(string), string description = default(string), int size = 0, string customData = default(string))
         {
             if (callback == null)
@@ -127,6 +158,14 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             return AddEnvironment(callback, addEnvironmentData, customData);
         }
 
+        /// <summary>
+        /// Creates a new environment. You can only create one environment per service instance.An attempt to create another environment 
+        /// will result in an error. The size of the new environment can be controlled by specifying the size parameter.
+        /// </summary>
+        /// <param name="callback">The OnAddEnvironment callback.</param>
+        /// <param name="addEnvironmentData">The AddEnvironmentData.</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns>True if the call succeeds, false if the call is unsuccessful.</returns>
         public bool AddEnvironment(OnAddEnvironment callback, Dictionary<string, object> addEnvironmentData, string customData = default(string))
         {
             if (callback == null)
@@ -192,8 +231,20 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         #endregion
 
         #region GetEnvironment
+        /// <summary>
+        /// The callback used by GetEnvironment().
+        /// </summary>
+        /// <param name="resp">The Environment response.</param>
+        /// <param name="customData">Optional custom data.</param>
         public delegate void OnGetEnvironment(Environment resp, string customData);
 
+        /// <summary>
+        /// Returns specified environment data.
+        /// </summary>
+        /// <param name="callback">The OnGetEnvironment callback.</param>
+        /// <param name="environmentID">The environment identifier requested.</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns>True if the call succeeds, false if the call is unsuccessful.</returns>
         public bool GetEnvironment(OnGetEnvironment callback, string environmentID, string customData = default(string))
         {
             if (callback == null)
@@ -256,8 +307,20 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         #endregion
 
         #region Delete Environment
+        /// <summary>
+        /// The callback used by DeleteEnvironment().
+        /// </summary>
+        /// <param name="success">The success of the call.</param>
+        /// <param name="customData">Optional custom data.</param>
         public delegate void OnDeleteEnvironment(bool success, string customData);
 
+        /// <summary>
+        /// Deletes the specified environment.
+        /// </summary>
+        /// <param name="callback">The callback.</param>
+        /// <param name="environmentID">The environment identifier.</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns>True if the call succeeds, false if the call is unsuccessful.</returns>
         public bool DeleteEnvironment(OnDeleteEnvironment callback, string environmentID, string customData = default(string))
         {
             if (callback == null)
@@ -299,8 +362,21 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         #region Configurations
         #region Get Configurations
+        /// <summary>
+        /// The callback used by GetConfigurations().
+        /// </summary>
+        /// <param name="resp">The GetConfigurationsResponse.</param>
+        /// <param name="customData">Optional custom data.</param>
         public delegate void OnGetConfigurations(GetConfigurationsResponse resp, string customData);
 
+        /// <summary>
+        /// Lists an environment's configurations.
+        /// </summary>
+        /// <param name="callback">The OnGetConfigurations callback.</param>
+        /// <param name="environmentID">The environment identifier.</param>
+        /// <param name="name">An optional configuration name to search.</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns>True if the call succeeds, false if the call is unsuccessful.</returns>
         public bool GetConfigurations(OnGetConfigurations callback, string environmentID, string name = default(string), string customData = default(string))
         {
             if (callback == null)
@@ -367,8 +443,21 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         #endregion
 
         #region Add Configuration
+        /// <summary>
+        /// The callback used by AddConfiguration().
+        /// </summary>
+        /// <param name="resp">The Configuration response.</param>
+        /// <param name="customData">Optional custom data.</param>
         public delegate void OnAddConfiguration(Configuration resp, string customData);
 
+        /// <summary>
+        /// Adds a configuration via external json file.
+        /// </summary>
+        /// <param name="callback">The OnAddConfiguration callback.</param>
+        /// <param name="environmentID">The environment identifier.</param>
+        /// <param name="configurationJsonPath">The path to the configuration json file.</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns>True if the call succeeds, false if the call is unsuccessful.</returns>
         public bool AddConfiguration(OnAddConfiguration callback, string environmentID, string configurationJsonPath, string customData = default(string))
         {
             if (callback == null)
@@ -392,6 +481,14 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             return AddConfiguration(callback, environmentID, configJsonData, customData);
         }
 
+        /// <summary>
+        /// Adds a configuration via json byte data.
+        /// </summary>
+        /// <param name="callback">The OnAddConfiguration callback.</param>
+        /// <param name="environmentID">The environment identifier.</param>
+        /// <param name="configurationJsonData">A byte array of configuration json data.</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns>True if the call succeeds, false if the call is unsuccessful.</returns>
         public bool AddConfiguration(OnAddConfiguration callback, string environmentID, byte[] configurationJsonData, string customData = default(string))
         {
             if (callback == null)
@@ -418,7 +515,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             return connector.Send(req);
         }
 
-        public class AddConfigurationRequest : RESTConnector.Request
+        private class AddConfigurationRequest : RESTConnector.Request
         {
             public OnAddConfiguration Callback { get; set; }
             public string EnvironmentID { get; set; }
@@ -458,8 +555,21 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         #endregion
 
         #region Get Configuration
+        /// <summary>
+        /// The callback uesd by GetConfiguration().
+        /// </summary>
+        /// <param name="resp">The Configuration response.</param>
+        /// <param name="customData">Optional custom data.</param>
         public delegate void OnGetConfiguration(Configuration resp, string customData);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="callback">The OnGetConfiguration callback.</param>
+        /// <param name="environmentID">The environment identifier.</param>
+        /// <param name="configurationID">The configuration identifier.</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns>True if the call succeeds, false if the call is unsuccessful.</returns>
         public bool GetConfiguration(OnGetConfiguration callback, string environmentID, string configurationID, string customData = default(string))
         {
             if (callback == null)
@@ -524,8 +634,21 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         #endregion
 
         #region Delete Configuration
+        /// <summary>
+        /// The callback used by DeleteConfiguration().
+        /// </summary>
+        /// <param name="success">The success of the call.</param>
+        /// <param name="customData">Optional custom data.</param>
         public delegate void OnDeleteConfiguration(bool success, string customData);
 
+        /// <summary>
+        /// Deletes an environments specified configuration.
+        /// </summary>
+        /// <param name="callback">The OnDeleteConfiguration callback.</param>
+        /// <param name="environmentID">The environment identifier.</param>
+        /// <param name="configurationID">The configuration identifier.</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns>True if the call succeeds, false if the call is unsuccessful.</returns>
         public bool DeleteConfiguration(OnDeleteConfiguration callback, string environmentID, string configurationID, string customData = default(string))
         {
             if (callback == null)
@@ -571,8 +694,32 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         #endregion
 
         #region Preview Configuration
+        /// <summary>
+        /// The callback used by PreviewConfiguration().
+        /// </summary>
+        /// <param name="resp">The response.</param>
+        /// <param name="customData">Optional custom data.</param>
         public delegate void OnPreviewConfiguration(TestDocument resp, string customData);
 
+        /// <summary>
+        /// Runs a sample document through the default or your configuration and returns diagnostic information designed to 
+        /// help you understand how the document was processed. The document is not added to the index.
+        /// </summary>
+        /// <param name="callback">The OnPreviewConfiguration callback.</param>
+        /// <param name="environmentID">The environment identifier.</param>
+        /// <param name="configurationID">The ID of the configuration to use to process the document. If the configurationFilePath is also 
+        /// provided (both are present at the same time), then request will be rejected.</param>
+        /// <param name="configurationFilePath">The configuration to use to process the document. If this part is provided, then the 
+        /// provided configuration is used to process the document. If the configuration_id is also provided (both are present at the 
+        /// same time), then request is rejected. The maximum supported configuration size is 1 MB. Configuration parts larger than 1 MB 
+        /// are rejected. See the GET /configurations/{configuration_id} operation for an example configuration.</param>
+        /// <param name="contentFilePath">The file path to document to ingest.The maximum supported file size is 50 megabytes. Files 
+        /// larger than 50 megabytes is rejected.</param>
+        /// <param name="metadata">If you're using the Data Crawler to upload your documents, you can test a document against the type of 
+        /// metadata that the Data Crawler might send. The maximum supported metadata file size is 1 MB. Metadata parts larger than 1 MB 
+        /// are rejected. Example: { "Creator": "Johnny Appleseed", "Subject": "Apples" }</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns>True if the call succeeds, false if the call is unsuccessful.</returns>
         public bool PreviewConfiguration(OnPreviewConfiguration callback, string environmentID, string configurationID, string configurationFilePath, string contentFilePath, string metadata = default(string), string customData = default(string))
         {
             if (callback == null)
@@ -605,6 +752,26 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             return PreviewConfiguration(callback, environmentID, configurationID, configurationFilePath, contentData, contentMimeType, customData);
         }
 
+        /// <summary>
+        /// Runs a sample document through the default or your configuration and returns diagnostic information designed to 
+        /// help you understand how the document was processed. The document is not added to the index.
+        /// </summary>
+        /// <param name="callback">The OnPreviewConfiguration callback.</param>
+        /// <param name="environmentID">The environment identifier.</param>
+        /// <param name="configurationID">The ID of the configuration to use to process the document. If the configurationFilePath is also 
+        /// provided (both are present at the same time), then request will be rejected.</param>
+        /// <param name="configurationFilePath">The configuration to use to process the document. If this part is provided, then the 
+        /// provided configuration is used to process the document. If the configuration_id is also provided (both are present at the 
+        /// same time), then request is rejected. The maximum supported configuration size is 1 MB. Configuration parts larger than 1 MB 
+        /// are rejected. See the GET /configurations/{configuration_id} operation for an example configuration.</param>
+        /// <param name="contentData">The byte array data of the document to ingest.The maximum supported file size is 50 megabytes. Files 
+        /// larger than 50 megabytes is rejected.</param>
+        /// <param name="contentMimeType">The mimeType of the document to ingest.</param>
+        /// <param name="metadata">If you're using the Data Crawler to upload your documents, you can test a document against the type of 
+        /// metadata that the Data Crawler might send. The maximum supported metadata file size is 1 MB. Metadata parts larger than 1 MB 
+        /// are rejected. Example: { "Creator": "Johnny Appleseed", "Subject": "Apples" }</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns>True if the call succeeds, false if the call is unsuccessful.</returns>
         public bool PreviewConfiguration(OnPreviewConfiguration callback, string environmentID, string configurationID, string configurationFilePath, byte[] contentData, string contentMimeType, string metadata = default(string), string customData = default(string))
         {
             if (callback == null)
@@ -709,8 +876,21 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         #region Collections
         #region Get Collections
+        /// <summary>
+        /// The callback used by GetCollections().
+        /// </summary>
+        /// <param name="resp">The GetCollectionsResponse.</param>
+        /// <param name="customData">Optional custom data.</param>
         public delegate void OnGetCollections(GetCollectionsResponse resp, string customData);
 
+        /// <summary>
+        /// Lists a specified environment's collections.
+        /// </summary>
+        /// <param name="callback">The OnGetCollections callback.</param>
+        /// <param name="environmentID">The environment identifier.</param>
+        /// <param name="name">Find collections with the given name.</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns>True if the call succeeds, false if the call is unsuccessful.</returns>
         public bool GetCollections(OnGetCollections callback, string environmentID, string name = default(string), string customData = default(string))
         {
             if (callback == null)
@@ -777,8 +957,23 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         #endregion
 
         #region Add Collection
+        /// <summary>
+        /// The callback used by OnAddCollection
+        /// </summary>
+        /// <param name="resp">The CollectionRef response.</param>
+        /// <param name="customData">Optional custom data.</param>
         public delegate void OnAddCollection(CollectionRef resp, string customData);
 
+        /// <summary>
+        /// Adds a collection to a specified environment.
+        /// </summary>
+        /// <param name="callback">The OnAddCollection callback.</param>
+        /// <param name="environmentID">The environment identifier.</param>
+        /// <param name="name">The name of the collection to be created.</param>
+        /// <param name="description">The description of the collection to be created.</param>
+        /// <param name="configurationID">The configuration identifier.</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns>True if the call succeeds, false if the call is unsuccessful.</returns>
         public bool AddCollection(OnAddCollection callback, string environmentID, string name, string description = default(string), string configurationID = default(string), string customData = default(string))
         {
             if (callback == null)
@@ -796,6 +991,14 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             return AddCollection(callback, environmentID, Encoding.UTF8.GetBytes(Json.Serialize(parameters)), customData);
         }
 
+        /// <summary>
+        /// Adds a collection to a specified environment.
+        /// </summary>
+        /// <param name="callback">The OnAddCollection callback.</param>
+        /// <param name="environmentID">The environment identifier.</param>
+        /// <param name="collectionData">A byte array of json collection data.</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns>True if the call succeeds, false if the call is unsuccessful.</returns>
         public bool AddCollection(OnAddCollection callback, string environmentID, byte[] collectionData, string customData = default(string))
         {
             if (callback == null)
@@ -823,7 +1026,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             return connector.Send(req);
         }
 
-        public class AddCollectionRequest : RESTConnector.Request
+        private class AddCollectionRequest : RESTConnector.Request
         {
             public OnAddCollection Callback { get; set; }
             public string EnvironmentID { get; set; }
@@ -863,8 +1066,21 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         #endregion
 
         #region Get Collection
+        /// <summary>
+        /// The callback used by GetCollection().
+        /// </summary>
+        /// <param name="resp">The Collection response.</param>
+        /// <param name="customData">Optional custom data.</param>
         public delegate void OnGetCollection(Collection resp, string customData);
 
+        /// <summary>
+        /// Lists a specified collecton's details.
+        /// </summary>
+        /// <param name="callback">The OnGetCollection callback.</param>
+        /// <param name="environmentID">The environment identifier.</param>
+        /// <param name="collectionID">The collection identifier.</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns>True if the call succeeds, false if the call is unsuccessful.</returns>
         public bool GetCollection(OnGetCollection callback, string environmentID, string collectionID, string customData = default(string))
         {
             if (callback == null)
@@ -929,8 +1145,21 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         #endregion
 
         #region Delete Collection
+        /// <summary>
+        /// The callback used by DeleteCollection().
+        /// </summary>
+        /// <param name="success">The success of the call.</param>
+        /// <param name="customData">Optional custom data.</param>
         public delegate void OnDeleteCollection(bool success, string customData);
 
+        /// <summary>
+        /// Deletes a specified collection.
+        /// </summary>
+        /// <param name="callback">The callback.</param>
+        /// <param name="environmentID">The environment identifier.</param>
+        /// <param name="collectionID">The collection identifier.</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns>True if the call succeeds, false if the call is unsuccessful.</returns>
         public bool DeleteCollection(OnDeleteCollection callback, string environmentID, string collectionID, string customData = default(string))
         {
             if (callback == null)
@@ -975,8 +1204,21 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         #endregion
 
         #region Get Fields
+        /// <summary>
+        /// The callback used by GetFields().
+        /// </summary>
+        /// <param name="resp">The GetFieldsResponse.</param>
+        /// <param name="customData">Optional custom data.</param>
         public delegate void OnGetFields(GetFieldsResponse resp, string customData);
 
+        /// <summary>
+        /// Gets a list of the the unique fields (and their types) stored in the index.
+        /// </summary>
+        /// <param name="callback">The OnGetFields callback.</param>
+        /// <param name="environmentID">The environment identifier.</param>
+        /// <param name="collectionID">The collection identifier.</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns>True if the call succeeds, false if the call is unsuccessful.</returns>
         public bool GetFields(OnGetFields callback, string environmentID, string collectionID, string customData = default(string))
         {
             if (callback == null)
@@ -1044,8 +1286,32 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         #region Documents
         #region Add Document
+        /// <summary>
+        /// The callbackused by AddDocument().
+        /// </summary>
+        /// <param name="resp">The DocumentAccepted response.</param>
+        /// <param name="customData">Optional custom data.</param>
         public delegate void OnAddDocument(DocumentAccepted resp, string customData);
 
+        /// <summary>
+        /// Add a document to a collection with optional metadata and optional configuration. The configuration to use to process 
+        /// the document can be provided using the configuration_id argument. Returns immediately after the system has accepted the 
+        /// document for processing. The user must provide document content, metadata, or both. If the request is missing both document 
+        /// content and metadata, then it will be rejected.
+        /// </summary>
+        /// <param name="callback">The callback.</param>
+        /// <param name="environmentID">The environment identifier.</param>
+        /// <param name="collectionID">The collection identifier.</param>
+        /// <param name="contentFilePath">The path to content file to be added.</param>
+        /// <param name="configurationID">The ID of the configuration to use to process the document. If the configuration form part
+        /// is also provided (both are present at the same time), then request will be rejected.</param>
+        /// <param name="configurationFilePath">The content of the document to ingest.The maximum supported file size is 50 megabytes. 
+        /// Files larger than 50 megabytes is rejected.</param>
+        /// <param name="metadata">If you're using the Data Crawler to upload your documents, you can test a document against the type 
+        /// of metadata that the Data Crawler might send. The maximum supported metadata file size is 1 MB. Metadata parts larger than 
+        /// 1 MB are rejected. Example: { "Creator": "Johnny Appleseed", "Subject": "Apples" }</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns>True if the call succeeds, false if the call is unsuccessful.</returns>
         public bool AddDocument(OnAddDocument callback, string environmentID, string collectionID, string contentFilePath, string configurationID = default(string), string configurationFilePath = default(string), string metadata = default(string), string customData = default(string))
         {
             if (callback == null)
@@ -1065,6 +1331,9 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
             if (!string.IsNullOrEmpty(configurationID) && !string.IsNullOrEmpty(configurationFilePath))
                 throw new WatsonException("Use either a configurationID OR designate a configurationFilePath - not both");
+
+            if (string.IsNullOrEmpty(contentFilePath) && string.IsNullOrEmpty(metadata))
+                throw new WatsonException("The user must provide document content, metadata, or both");
 
             byte[] contentData = null;
             string contentMimeType = default(string);
@@ -1090,6 +1359,23 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 throw new WatsonException("A configurationID or configuration file path is required");
         }
 
+        /// <summary>
+        /// Add a document to a collection with optional metadata and optional configuration. The configuration to use to process 
+        /// the document can be provided using the configuration_id argument. Returns immediately after the system has accepted the 
+        /// document for processing. The user must provide document content, metadata, or both. If the request is missing both document 
+        /// content and metadata, then it will be rejected.
+        /// </summary>
+        /// <param name="callback">The OnAddDocument callback.</param>
+        /// <param name="environmentID">The environment identifier.</param>
+        /// <param name="collectionID">The collection identifier.</param>
+        /// <param name="contentData">A byte array of content to be ingested.</param>
+        /// <param name="contentMimeType">The mimeType of the content data to be ingested.</param>
+        /// <param name="configurationID">The identifier of the configuration to use to process the document.</param>
+        /// <param name="metadata">If you're using the Data Crawler to upload your documents, you can test a document against the type 
+        /// of metadata that the Data Crawler might send. The maximum supported metadata file size is 1 MB. Metadata parts larger than 
+        /// 1 MB are rejected. Example: { "Creator": "Johnny Appleseed", "Subject": "Apples" }</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns>True if the call succeeds, false if the call is unsuccessful.</returns>
         public bool AddDocumentUsingConfigID(OnAddDocument callback, string environmentID, string collectionID, byte[] contentData, string contentMimeType, string configurationID, string metadata = default(string), string customData = default(string))
         {
             if (callback == null)
@@ -1113,6 +1399,23 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             return AddDocument(callback, environmentID, collectionID, contentData, contentMimeType, configurationID, null, metadata, customData);
         }
 
+        /// <summary>
+        /// Add a document to a collection with optional metadata and optional configuration. The configuration to use to process 
+        /// the document can be provided using the configuration_id argument. Returns immediately after the system has accepted the 
+        /// document for processing. The user must provide document content, metadata, or both. If the request is missing both document 
+        /// content and metadata, then it will be rejected.
+        /// </summary>
+        /// <param name="callback">The OnAddDocument callback.</param>
+        /// <param name="environmentID">The environment identifier.</param>
+        /// <param name="collectionID">The collection identifier.</param>
+        /// <param name="contentData">A byte array of content to be ingested.</param>
+        /// <param name="contentMimeType">The mimeType of the content data to be ingested./param>
+        /// <param name="configurationFilePath">The file path to the configuration to use to process the document.</param>
+        /// <param name="metadata">If you're using the Data Crawler to upload your documents, you can test a document against the type 
+        /// of metadata that the Data Crawler might send. The maximum supported metadata file size is 1 MB. Metadata parts larger than 
+        /// 1 MB are rejected. Example: { "Creator": "Johnny Appleseed", "Subject": "Apples" }</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns>True if the call succeeds, false if the call is unsuccessful.</returns>
         public bool AddDocumentUsingConfigFile(OnAddDocument callback, string environmentID, string collectionID, byte[] contentData, string contentMimeType, string configurationFilePath, string metadata = default(string), string customData = default(string))
         {
             if (callback == null)
@@ -1150,6 +1453,24 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             return AddDocument(callback, environmentID, collectionID, contentData, contentMimeType, null, configuration, metadata, customData);
         }
 
+        /// <summary>
+        /// Add a document to a collection with optional metadata and optional configuration. The configuration to use to process 
+        /// the document can be provided using the configuration_id argument. Returns immediately after the system has accepted the 
+        /// document for processing. The user must provide document content, metadata, or both. If the request is missing both document 
+        /// content and metadata, then it will be rejected.
+        /// </summary>
+        /// <param name="callback">The OnAddDocument callback.</param>
+        /// <param name="environmentID">The environment identifier.</param>
+        /// <param name="collectionID">The collection identifier.</param>
+        /// <param name="contentData">A byte array of content to be ingested.</param>
+        /// <param name="contentMimeType">The mimeType of the content data to be ingested./param>
+        /// <param name="configurationID">The configuration identifier. If this is specified, do not specify a configuration.</param>
+        /// <param name="configuration">A json string of the configuration to test. If this is specified, do not specify a configurationID.</param>
+        /// <param name="metadata">If you're using the Data Crawler to upload your documents, you can test a document against the type 
+        /// of metadata that the Data Crawler might send. The maximum supported metadata file size is 1 MB. Metadata parts larger than 
+        /// 1 MB are rejected. Example: { "Creator": "Johnny Appleseed", "Subject": "Apples" }</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns>True if the call succeeds, false if the call is unsuccessful.</returns>
         public bool AddDocument(OnAddDocument callback, string environmentID, string collectionID, byte[] contentData, string contentMimeType, string configurationID = default(string), string configuration = default(string), string metadata = default(string), string customData = default(string))
         {
             if (callback == null)
@@ -1251,8 +1572,22 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         #endregion
 
         #region Delete Doucment
+        /// <summary>
+        /// The callback used by DeleteDocument().
+        /// </summary>
+        /// <param name="success">The success of the call.</param>
+        /// <param name="customData">Optional custom data.</param>
         public delegate void OnDeleteDocument(bool success, string customData);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="callback">The OnDeleteDocument callback.</param>
+        /// <param name="environmentID">The environment identifier.</param>
+        /// <param name="collectionID">The collection identifier.</param>
+        /// <param name="documentID">The document identifier.</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns>True if the call succeeds, false if the call is unsuccessful.</returns>
         public bool DeleteDocument(OnDeleteDocument callback, string environmentID, string collectionID, string documentID, string customData = default(string))
         {
             if (callback == null)
@@ -1302,8 +1637,22 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         #endregion
 
         #region Get Document
+        /// <summary>
+        /// The callback used by GetDocument().
+        /// </summary>
+        /// <param name="resp">The DocumentStatus response.</param>
+        /// <param name="customData">Optional custom data.</param>
         public delegate void OnGetDocument(DocumentStatus resp, string customData);
 
+        /// <summary>
+        /// Lists a specified document's details.
+        /// </summary>
+        /// <param name="callback">The OnGetDocument callback.</param>
+        /// <param name="environmentID">The environment identifier.</param>
+        /// <param name="collectionID">The collection identifier.</param>
+        /// <param name="documentID">The document identifier.</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns>True if the call succeeds, false if the call is unsuccessful.</returns>
         public bool GetDocument(OnGetDocument callback, string environmentID, string collectionID, string documentID, string customData = default(string))
         {
             if (callback == null)
@@ -1372,8 +1721,28 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         #endregion
 
         #region Update Document
+        /// <summary>
+        /// The callback used by UpdateDocument().
+        /// </summary>
+        /// <param name="resp">The DocumentAccepted response.</param>
+        /// <param name="customData">Optional custom data.</param>
         public delegate void OnUpdateDocument(DocumentAccepted resp, string customData);
 
+        /// <summary>
+        /// Updates a specified document.
+        /// </summary>
+        /// <param name="callback">The callback.</param>
+        /// <param name="environmentID">The environment identifier.</param>
+        /// <param name="collectionID">The collection identifier.</param>
+        /// <param name="documentID">The document identifier.</param>
+        /// <param name="contentFilePath">The file path to the updated document to be ingested.</param>
+        /// <param name="configurationID">The configuration identifier to use for ingestion. If this is specified, do not specify configurationFilePath.</param>
+        /// <param name="configurationFilePath">The path to a configuration file to use for ingestion. If this is specified, do not specify configurationID.</param>
+        /// <param name="metadata">If you're using the Data Crawler to upload your documents, you can test a document against the type 
+        /// of metadata that the Data Crawler might send. The maximum supported metadata file size is 1 MB. Metadata parts larger than 
+        /// 1 MB are rejected. Example: { "Creator": "Johnny Appleseed", "Subject": "Apples" }</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns>True if the call succeeds, false if the call is unsuccessful.</returns>
         public bool UpdateDocument(OnUpdateDocument callback, string environmentID, string collectionID, string documentID, string contentFilePath, string configurationID = default(string), string configurationFilePath = default(string), string metadata = default(string), string customData = default(string))
         {
             if (callback == null)
@@ -1421,6 +1790,21 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 throw new WatsonException("A configurationID or configuration file path is required");
         }
 
+        /// <summary>
+        /// Updates a specified document using ConfigID.
+        /// </summary>
+        /// <param name="callback">The OnUpdateDocument callback.</param>
+        /// <param name="environmentID">The environment identifier.</param>
+        /// <param name="collectionID">The collection identifier.</param>
+        /// <param name="documentID">The document identifier.</param>
+        /// <param name="contentData">A byte array of content to be ingested.</param>
+        /// <param name="contentMimeType">The mimeType of the content data to be ingested./param>
+        /// <param name="configurationID">The identifier of the configuration to use to process the document.</param>
+        /// <param name="metadata">If you're using the Data Crawler to upload your documents, you can test a document against the type 
+        /// of metadata that the Data Crawler might send. The maximum supported metadata file size is 1 MB. Metadata parts larger than 
+        /// 1 MB are rejected. Example: { "Creator": "Johnny Appleseed", "Subject": "Apples" }</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns>True if the call succeeds, false if the call is unsuccessful.</returns>
         public bool UpdateDocumentUsingConfigID(OnUpdateDocument callback, string environmentID, string collectionID, string documentID, byte[] contentData, string contentMimeType, string configurationID, string metadata = default(string), string customData = default(string))
         {
             if (callback == null)
@@ -1447,6 +1831,21 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             return UpdateDocument(callback, environmentID, collectionID, documentID, contentData, contentMimeType, configurationID, null, metadata, customData);
         }
 
+        /// <summary>
+        /// Updates a specified document using a configuration file path.
+        /// </summary>
+        /// <param name="callback">The OnUpdateDocument callback.</param>
+        /// <param name="environmentID">The environment identifier.</param>
+        /// <param name="collectionID">The collection identifier.</param>
+        /// <param name="documentID">The document identifier.</param>
+        /// <param name="contentData">A byte array of content to be ingested.</param>
+        /// <param name="contentMimeType">The mimeType of the content data to be ingested./param>
+        /// <param name="configurationFilePath">The file path to the configuration to use to process</param>
+        /// <param name="metadata">If you're using the Data Crawler to upload your documents, you can test a document against the type 
+        /// of metadata that the Data Crawler might send. The maximum supported metadata file size is 1 MB. Metadata parts larger than 
+        /// 1 MB are rejected. Example: { "Creator": "Johnny Appleseed", "Subject": "Apples" }</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns>True if the call succeeds, false if the call is unsuccessful.</returns>
         public bool UpdateDocumentUsingConfigFile(OnUpdateDocument callback, string environmentID, string collectionID, string documentID, byte[] contentData, string contentMimeType, string configurationFilePath, string metadata = default(string), string customData = default(string))
         {
             if (callback == null)
@@ -1487,6 +1886,22 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             return UpdateDocument(callback, environmentID, collectionID, documentID, contentData, contentMimeType, null, configuration, metadata, customData);
         }
 
+        /// <summary>
+        /// Updates a specified document.
+        /// </summary>
+        /// <param name="callback">The OnUpdateDocument callback.</param>
+        /// <param name="environmentID">The environment identifier.</param>
+        /// <param name="collectionID">The collection identifier.</param>
+        /// <param name="documentID">The document identifier.</param>
+        /// <param name="contentData">A byte array of content to be updated.</param>
+        /// <param name="contentMimeType">The mimeType of the content data to be updated.</param>
+        /// <param name="configurationID">The configuration identifier. If this is specified, do not specify a configuration.</param>
+        /// <param name="configuration">A json string of the configuration to test. If this is specified, do not specify a configurationID.</param>
+        /// <param name="metadata">If you're using the Data Crawler to upload your documents, you can test a document against the type 
+        /// of metadata that the Data Crawler might send. The maximum supported metadata file size is 1 MB. Metadata parts larger than 
+        /// 1 MB are rejected. Example: { "Creator": "Johnny Appleseed", "Subject": "Apples" }</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns>True if the call succeeds, false if the call is unsuccessful.</returns>
         public bool UpdateDocument(OnUpdateDocument callback, string environmentID, string collectionID, string documentID, byte[] contentData, string contentMimeType, string configurationID = default(string), string configuration = default(string), string metadata = default(string), string customData = default(string))
         {
             if (callback == null)
@@ -1594,8 +2009,33 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         #endregion
 
         #region Queries
+        /// <summary>
+        /// The callback used by Query().
+        /// </summary>
+        /// <param name="resp">The QueryResponse.</param>
+        /// <param name="customData">Optional custom data.</param>
         public delegate void OnQuery(QueryResponse resp, string customData);
 
+        /// <summary>
+        /// Query the discovery instance.
+        /// </summary>
+        /// <param name="callback">The OnQuery callback.</param>
+        /// <param name="environmentID">The environment identifier.</param>
+        /// <param name="collectionID">The collection identifier.</param>
+        /// <param name="filter">A cacheable query that limits the documents returned to exclude any documents that don't mention 
+        /// the query content. Filter searches are better for metadata type searches and when you are trying to get a sense of concepts 
+        /// in the data set.</param>
+        /// <param name="query">A query search returns all documents in your data set with full enrichments and full text, but with the
+        /// most relevant documents listed first. Use a query search when you want to find the most relevant search results.</param>
+        /// <param name="aggregation">An aggregation search uses combinations of filters and query search to return an exact answer. 
+        /// Aggregations are useful for building applications, because you can use them to build lists, tables, and time series. For a 
+        /// full list of possible aggregrations, see the Query reference.</param>
+        /// <param name="count">Number of documents to return.</param>
+        /// <param name="_return">A comma separated list of the portion of the document hierarchy to return.</param>
+        /// <param name="offset">The number of query results to skip at the beginning. For example, if the total number of results that
+        /// are returned is 10, and the offset is 8, it returns the last two results.</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns>True if the call succeeds, false if the call is unsuccessful.</returns>
         public bool Query(OnQuery callback, string environmentID, string collectionID, string filter, string query, string aggregation, int count, string _return, int offset, string customData = default(string))
         {
             if (callback == null)
@@ -1689,11 +2129,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         #endregion
 
         #region IWatsonService Interface
+        /// <exclude />
         public string GetServiceID()
         {
             return SERVICE_ID;
         }
-
+        /// <exclude />
         public void GetServiceStatus(ServiceStatus callback)
         {
             if (Config.Instance.FindCredentials(SERVICE_ID) != null)
