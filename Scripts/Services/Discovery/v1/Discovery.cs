@@ -44,6 +44,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         private const string SERVICE_ENVIRONMENT_COLLECTION_DOCUMENTS = "/v1/environments/{0}/collections/{1}/documents";
         private const string SERVICE_ENVIRONMENT_COLLECTION_DOCUMENT = "/v1/environments/{0}/collections/{1}/documents/{2}";
         private const string SERVICE_ENVIRONMENT_COLLECTION_QUERY = "/v1/environments/{0}/collections/{1}/query";
+
+        private const float DELETE_TIMEOUT = 30f;
         #endregion
 
         #region Public Types
@@ -271,6 +273,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             req.Parameters["version"] = DiscoveryVersion.Version;
             req.OnResponse = OnDeleteEnvironmentResponse;
             req.Delete = true;
+            req.Timeout = DELETE_TIMEOUT;
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_ENVIRONMENT, environmentID));
             if (connector == null)
@@ -542,6 +545,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             req.Parameters["version"] = DiscoveryVersion.Version;
             req.OnResponse = OnDeleteConfigurationResponse;
             req.Delete = true;
+            req.Timeout = DELETE_TIMEOUT;
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_ENVIRONMENT_CONFIGURATION, environmentID, configurationID));
             if (connector == null)
@@ -946,6 +950,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             req.Parameters["version"] = DiscoveryVersion.Version;
             req.OnResponse = OnDeleteCollectionResponse;
             req.Delete = true;
+            req.Timeout = DELETE_TIMEOUT;
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_ENVIRONMENT_COLLECTION, environmentID, collectionID));
             if (connector == null)
@@ -1271,6 +1276,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             req.Parameters["version"] = DiscoveryVersion.Version;
             req.OnResponse = OnDeleteDocumentResponse;
             req.Delete = true;
+            req.Timeout = DELETE_TIMEOUT;
 
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_ENVIRONMENT_COLLECTION_DOCUMENT, environmentID, collectionID, documentID));
             if (connector == null)
