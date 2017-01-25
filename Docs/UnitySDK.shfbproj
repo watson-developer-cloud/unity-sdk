@@ -37,58 +37,58 @@
     <HelpTitle>Watson Unity SDK</HelpTitle>
     <ContentPlacement>AboveNamespaces</ContentPlacement>
     <DocumentationSources>
-      <DocumentationSource sourceFile="..\..\..\Temp\UnityVS_bin\Debug\Assembly-CSharp.dll" />
-      <DocumentationSource sourceFile="..\..\..\Temp\UnityVS_bin\Debug\Assembly-CSharp.xml" />
-    </DocumentationSources>
+      <DocumentationSource sourceFile="..\..\..\..\DocumentationBuilder\ConsoleApplication1\ConsoleApplication1\bin\Debug\Assembly-CSharp.dll" />
+<DocumentationSource sourceFile="..\..\..\..\DocumentationBuilder\ConsoleApplication1\ConsoleApplication1\bin\Debug\Assembly-CSharp.xml" /></DocumentationSources>
     <NamespaceSummaries>
       <NamespaceSummaryItem name="DentedPixel.LTEditor" isDocumented="False" />
-<NamespaceSummaryItem name="FullSerializer" isDocumented="False" />
-<NamespaceSummaryItem name="FullSerializer.Internal" isDocumented="False" />
-<NamespaceSummaryItem name="FullSerializer.Internal.DirectConverters" isDocumented="False" />
-<NamespaceSummaryItem name="MiniJSON" isDocumented="False" />
-<NamespaceSummaryItem name="TouchScript.Examples" isDocumented="False" />
-<NamespaceSummaryItem name="TouchScript.Examples.CameraControl" isDocumented="False" />
-<NamespaceSummaryItem name="TouchScript.Examples.Checkers" isDocumented="False" />
-<NamespaceSummaryItem name="TouchScript.Examples.Colors" isDocumented="False" />
-<NamespaceSummaryItem name="TouchScript.Examples.Input" isDocumented="False" />
-<NamespaceSummaryItem name="TouchScript.Examples.Multiuser" isDocumented="False" />
-<NamespaceSummaryItem name="TouchScript.Examples.Photos" isDocumented="False" />
-<NamespaceSummaryItem name="TouchScript.Examples.Portal" isDocumented="False" />
-<NamespaceSummaryItem name="TouchScript.Examples.Tap" isDocumented="False" />
-<NamespaceSummaryItem name="TouchScript.Examples.UI" isDocumented="False" />
-<NamespaceSummaryItem name="UnityStandardAssets.ImageEffects" isDocumented="False" />
-<NamespaceSummaryItem name="UnityStandardAssets.Utility" isDocumented="False" />
-<NamespaceSummaryItem name="WebSocketSharp" isDocumented="False" />
-<NamespaceSummaryItem name="WebSocketSharp.Net" isDocumented="False" />
-<NamespaceSummaryItem name="WebSocketSharp.Net.WebSockets" isDocumented="False" />
-<NamespaceSummaryItem name="WebSocketSharp.Server" isDocumented="False" />
-<NamespaceSummaryItem name="(global)" isDocumented="False" />
-<NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Camera" isDocumented="True">Watson Unity SDK camera controls and touch interfaces.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Connection" isDocumented="True">Connection classes.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.DataModels" isDocumented="True">Data models for all services.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.DataTypes" isDocumented="True">Data types for Widget communications.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Debug" isDocumented="True">Debugging classes.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Logging" isDocumented="True">Logging subsystem.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.v1" isDocumented="True">Version 1.0 of all services.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Utilities" isDocumented="True">Various utility classes.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Widgets" isDocumented="True">Widget classes.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services" isDocumented="True">Watson service classes.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1" isDocumented="True">Alchemy API version 1 service abstraction.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.Conversation.v1" isDocumented="True">Conversation version 1 service abstraction.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.ConversationExperimental.v1" isDocumented="True">Experimental Conversation service abstraction.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.DeepQA.v1" isDocumented="True">Deep QA version 1 service abstraction.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.Dialog.v1" isDocumented="True">Dialog version 1 service abstraction.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1" isDocumented="True">Document Conversiont version 1 service abstraction.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v1" isDocumented="True">Language Translator version 1 service abstraction.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1" isDocumented="True">Natural Language Classifier version 1 service abstraction.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v2" isDocumented="True">Personality Insightst version 2 service abstraction.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1" isDocumented="True">Retrieve and Rankt version 1 service abstraction.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.SpeechToText.v1" isDocumented="True">Speech to Text version 1 service abstraction.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1" isDocumented="True">Text to Speech version 1 service abstraction.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3" isDocumented="True">Tone Analyzer version 3 service abstraction.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.TradeoffAnalytics.v1" isDocumented="True">Tradeoff Analytics version 1 service abstraction.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3" isDocumented="True">Visual Recognitionr version 3 service abstraction.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v1" isDocumented="True">Language Translation version 1 service abstraction.</NamespaceSummaryItem></NamespaceSummaries>
+      <NamespaceSummaryItem name="FullSerializer" isDocumented="False" />
+      <NamespaceSummaryItem name="FullSerializer.Internal" isDocumented="False" />
+      <NamespaceSummaryItem name="FullSerializer.Internal.DirectConverters" isDocumented="False" />
+      <NamespaceSummaryItem name="MiniJSON" isDocumented="False" />
+      <NamespaceSummaryItem name="TouchScript.Examples" isDocumented="False" />
+      <NamespaceSummaryItem name="TouchScript.Examples.CameraControl" isDocumented="False" />
+      <NamespaceSummaryItem name="TouchScript.Examples.Checkers" isDocumented="False" />
+      <NamespaceSummaryItem name="TouchScript.Examples.Colors" isDocumented="False" />
+      <NamespaceSummaryItem name="TouchScript.Examples.Input" isDocumented="False" />
+      <NamespaceSummaryItem name="TouchScript.Examples.Multiuser" isDocumented="False" />
+      <NamespaceSummaryItem name="TouchScript.Examples.Photos" isDocumented="False" />
+      <NamespaceSummaryItem name="TouchScript.Examples.Portal" isDocumented="False" />
+      <NamespaceSummaryItem name="TouchScript.Examples.Tap" isDocumented="False" />
+      <NamespaceSummaryItem name="TouchScript.Examples.UI" isDocumented="False" />
+      <NamespaceSummaryItem name="UnityStandardAssets.ImageEffects" isDocumented="False" />
+      <NamespaceSummaryItem name="UnityStandardAssets.Utility" isDocumented="False" />
+      <NamespaceSummaryItem name="WebSocketSharp" isDocumented="False" />
+      <NamespaceSummaryItem name="WebSocketSharp.Net" isDocumented="False" />
+      <NamespaceSummaryItem name="WebSocketSharp.Net.WebSockets" isDocumented="False" />
+      <NamespaceSummaryItem name="WebSocketSharp.Server" isDocumented="False" />
+      <NamespaceSummaryItem name="(global)" isDocumented="False" />
+      <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Camera" isDocumented="True">Watson Unity SDK camera controls and touch interfaces.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Connection" isDocumented="True">Connection classes.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.DataModels" isDocumented="True">Data models for all services.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.DataTypes" isDocumented="True">Data types for Widget communications.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Debug" isDocumented="True">Debugging classes.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Logging" isDocumented="True">Logging subsystem.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.v1" isDocumented="True">Version 1.0 of all services.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Utilities" isDocumented="True">Various utility classes.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Widgets" isDocumented="True">Widget classes.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services" isDocumented="True">Watson service classes.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1" isDocumented="True">Alchemy API version 1 service abstraction.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.Conversation.v1" isDocumented="True">Conversation version 1 service abstraction.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.ConversationExperimental.v1" isDocumented="True">Experimental Conversation service abstraction.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.DeepQA.v1" isDocumented="True">Deep QA version 1 service abstraction.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.Dialog.v1" isDocumented="True">Dialog version 1 service abstraction.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1" isDocumented="True">Document Conversiont version 1 service abstraction.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v1" isDocumented="True">Language Translator version 1 service abstraction.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1" isDocumented="True">Natural Language Classifier version 1 service abstraction.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v2" isDocumented="True">Personality Insightst version 2 service abstraction.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1" isDocumented="True">Retrieve and Rankt version 1 service abstraction.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.SpeechToText.v1" isDocumented="True">Speech to Text version 1 service abstraction.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1" isDocumented="True">Text to Speech version 1 service abstraction.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3" isDocumented="True">Tone Analyzer version 3 service abstraction.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.TradeoffAnalytics.v1" isDocumented="True">Tradeoff Analytics version 1 service abstraction.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3" isDocumented="True">Visual Recognitionr version 3 service abstraction.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v1" isDocumented="True">Language Translation version 1 service abstraction.</NamespaceSummaryItem>
+    </NamespaceSummaries>
     <ApiFilter>
       <Filter entryType="Namespace" fullName="" isExposed="False" />
       <Filter entryType="Namespace" fullName="FullSerializer" isExposed="False" />
