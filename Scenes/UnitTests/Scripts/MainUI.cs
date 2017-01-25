@@ -103,6 +103,16 @@ public class MainUI : MonoBehaviour
   }
 #endif
 
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += SceneManager_sceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= SceneManager_sceneLoaded;
+    }
+
   private IEnumerator Start()
   {
     if (m_BackgroundUI == null)
@@ -141,11 +151,12 @@ public class MainUI : MonoBehaviour
 
     // create the buttons..
     UpdateButtons();
+
   }
 
-  private void OnLevelWasLoaded(int level)
+  void SceneManager_sceneLoaded (Scene arg0, LoadSceneMode arg1)
   {
-    UpdateButtons();
+        UpdateButtons();
   }
 
   private void UpdateButtons()
