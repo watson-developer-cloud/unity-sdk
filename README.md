@@ -23,6 +23,7 @@ Use this SDK to build Watson-powered applications in Unity. It comes with a set 
   * [Document Conversion](#document-conversion)
   * [AlchemyData News](#alchemy-data-news)
   * [Retrieve and Rank](#retrieve-and-rank)
+  * [Discovery](#discovery)
 * [Developing a basic application in one minute](#developing-a-basic-application-in-one-minute)
 * [Documentation](#documentation)
 * [License](#license)
@@ -2281,9 +2282,7 @@ private void OnGetRankers(ListRankersPayload resp, string data)
             Log.Debug("ExampleRetrieveAndRank", "OnGetRankers | ranker name: {0}, ID: {1}, created: {2}, url: {3}.", ranker.name, ranker.ranker_id, ranker.created, ranker.url);
     }
     else
-    {
         Log.Debug("ExampleRetrieveAndRank", "OnGetRankers | Get Ranker Response is null!");
-    }
 }
 ```
 
@@ -2303,13 +2302,9 @@ void Start()
 private void OnCreateRanker(RankerStatusPayload resp, string data)
 {
 	if (resp != null)
-	{
 		Log.Debug("ExampleRetrieveAndRank", "OnCreateRanker | ID: {0}, url: {1}, name: {2}, created: {3}, status: {4}, statusDescription: {5}.", resp.ranker_id, resp.url, resp.name, resp.created, resp.status, resp.status_description);
-	}
 	else
-	{
 		Log.Debug("ExampleRetrieveAndRank", "OnCreateRanker | Get Cluster Response is null!");
-	}
 }
 ```
 
@@ -2343,9 +2338,7 @@ private void OnRank(RankerOutputPayload resp, string data)
 			}
 	}
 	else
-	{
 		Log.Debug("ExampleRetrieveAndRank", "OnRank | Rank response is null!");
-	}
 }
 ```
 
@@ -2363,13 +2356,9 @@ void Start()
 private void OnDeleteRanker(bool success, string data)
 {
 	if (success)
-	{
 		Log.Debug("ExampleRetrieveAndRank", "OnDeleteRanker | Success!");
-	}
 	else
-	{
 		Log.Debug("ExampleRetrieveAndRank", "OnDeleteRanker | Failure!");
-	}
 }
 ```
 
@@ -2387,16 +2376,444 @@ void Start()
 private void OnGetRanker(RankerStatusPayload resp, string data)
 {
 	if(resp != null)
-	{
 		Log.Debug("ExampleRetrieveAndRank", "GetRanker | ranker_id: {0}, url: {1}, name: {2}, created: {3}, status: {4}, status_description: {5}.", resp.ranker_id, resp.url, resp.name, resp.created, resp.status, resp.status_description);
-	}
 	else
-	{
 		Log.Debug("ExampleRetrieveAndRank", "GetRanker | GetRanker response is null!");
-	}
 }
 ```
 
+### Discovery
+The IBM Watson™ [Discovery][discovery] Service uses data analysis combined with cognitive intuition in order to take your unstructured data and enrich it so that you can query it to return the information that you need from it.
+
+####  Creating an environment
+Creates an environment for the service instance. Note: You can create only one environment per service instance. Attempting to create another environment for the same service instance results in an error.
+
+```cs
+private Discovery m_Discovery = new Discovery();
+
+private void CreateEnvironment()
+{
+  if (!m_Discovery.AddEnvironment(OnAddEnvironment, <environment-name>, <environment-description>, <environment-size>))
+    Log.Debug("ExampleDiscoveryV1", "Failed to add environment");
+}
+
+private void OnAddEnvironment(Environment resp, string data)
+{
+  if (resp != null)
+    Log.Debug("ExampleDiscoveryV1", "Added {0}", resp.environment_id, data);
+  else
+    Log.Debug("ExampleDiscoveryV1", "resp is null, {0}", data);
+}
+```
+
+####  Listing environments
+List existing environments for the service instance.
+
+```cs
+private Discovery m_Discovery = new Discovery();
+
+private void GetEnvironments()
+{
+  if (!m_Discovery.GetEnvironments(OnGetEnvironments))
+    Log.Debug("ExampleDiscoveryV1", "Failed to get environments");
+}
+
+private void OnGetEnvironments(GetEnvironmentsResponse resp, string data)
+{
+  if (resp != null)
+  {
+    foreach (Environment environment in resp.environments)
+      Log.Debug("ExampleDiscoveryV1", "environment_id: {0}", environment.environment_id);
+  }
+  else
+    Log.Debug("ExampleDiscoveryV1", "resp is null");
+}
+```
+
+####  Listing environment details
+Gets detailed information about the specified environment.
+
+```cs
+private Discovery m_Discovery = new Discovery();
+
+private void GetEnvironment()
+{
+  if(!m_Discovery.GetEnvironment(OnGetEnvironment, <environment-id>))
+    Log.Debug("ExampleDiscoveryV1", "Failed to get environment");
+}
+
+private void OnGetEnvironment(Environment resp, string data)
+{
+  if (resp != null)
+    Log.Debug("ExampleDiscoveryV1", "environment_name: {0}", resp.name);
+  else
+    Log.Debug("ExampleDiscoveryV1", "resp is null");
+}
+```
+
+####  Deleting an environment
+Updates an existing environment.
+
+```cs
+private Discovery m_Discovery = new Discovery();
+
+private void DeleteEnvironment()
+{
+  if (!m_Discovery.DeleteEnvironment(OnDeleteEnvironment, <environment-id>))
+    Log.Debug("ExampleDiscoveryV1", "Failed to delete environment");
+}
+
+private void OnDeleteEnvironment(bool success, string data)
+{
+  if (success)
+    Log.Debug("ExampleDiscoveryV1", "Delete environment successful");
+  else
+    Log.Debug("ExampleDiscoveryV1", "Delete environment failed");
+}
+```
+
+####  Adding a configuration
+Adds a configuration to the service instance.
+
+```cs
+private Discovery m_Discovery = new Discovery();
+
+private void AddConfiguration()
+{
+  if (!m_Discovery.AddConfiguration(OnAddConfiguration, <environment-id>, <configuration-json-path>))
+    Log.Debug("ExampleDiscoveryV1", "Failed to add configuration");
+}
+
+private void OnAddConfiguration(Configuration resp, string data)
+{
+  if (resp != null)
+    Log.Debug("ExampleDiscoveryV1", "Configuration: {0}, {1}", resp.configuration_id, resp.name);
+  else
+    Log.Debug("ExampleDiscoveryV1", "resp is null, {0}", data);
+}
+```
+
+####  Listing configurations
+Lists existing configurations for the service instance.
+
+```cs
+private Discovery m_Discovery = new Discovery();
+
+private void GetConfigurations()
+{
+  if(!m_Discovery.GetConfigurations(OnGetConfigurations, <environment-id>))
+    Log.Debug("ExampleDiscoveryV1", "Failed to get configurations");
+}
+
+private void OnGetConfigurations(GetConfigurationsResponse resp, string data)
+{
+  if (resp != null)
+  {
+    if (resp.configurations != null && resp.configurations.Length > 0)
+    {
+      foreach (ConfigurationRef configuration in resp.configurations)
+      {
+        Log.Debug("ExampleDiscoveryV1", "Configuration: {0}, {1}", configuration.configuration_id, configuration.name);
+      }
+    }
+    else
+      Log.Debug("ExampleDiscoveryV1", "There are no configurations for this environment.");
+  }
+  else
+    Log.Debug("ExampleDiscoveryV1", "resp is null, {0}", data);
+}
+```
+
+####  Listing configuration details
+Get information about the specified configuration.
+
+```cs
+private Discovery m_Discovery = new Discovery();
+
+private void GetConfiguration()
+{
+  if (!m_Discovery.GetConfiguration(OnGetConfiguration, <environment-id>, <configuration-id>))
+    Log.Debug("ExampleDiscoveryV1", "Failed to get configuration");
+}
+
+private void OnGetConfiguration(Configuration resp, string data)
+{
+  if (resp != null)
+    Log.Debug("ExampleDiscoveryV1", "Configuration: {0}, {1}", resp.configuration_id, resp.name);
+  else
+    Log.Debug("ExampleDiscoveryV1", "resp is null, {0}", data);
+}
+```
+
+####  Deleting a configuration
+Deletes an existing configuration from the service instance.
+
+```cs
+private Discovery m_Discovery = new Discovery();
+
+private void DeleteConfiguration()
+{
+  if (!m_Discovery.DeleteConfiguration(OnDeleteConfiguration, <environment-id>, <configuration-id>))
+    Log.Debug("ExampleDiscoveryV1", "Failed to delete configuration");
+}
+
+private void OnDeleteConfiguration(bool success, string data)
+{
+  if (success)
+    Log.Debug("ExampleDiscoveryV1", "Delete configuration successful");
+  else
+    Log.Debug("ExampleDiscoveryV1", "Delete configuration failed");
+}
+```
+
+####  Testing a configuration
+Run a sample document against your configuration or the default configuration and return diagnostic information designed to help you understand how the document was processed. The document is not added to a collection.
+
+```cs
+private Discovery m_Discovery = new Discovery();
+
+private void PreviewConfiguration()
+{
+  if (!m_Discovery.PreviewConfiguration(OnPreviewConfiguration, <environment-id>, <configuration-id>, null, <content-file-path>, <metadata>))
+    Log.Debug("ExampleDiscoveryV1", "Failed to preview configuration");
+}
+
+private void OnPreviewConfiguration(TestDocument resp, string data)
+{
+  if (resp != null)
+    Log.Debug("ExampleDiscoveryV1", "Preview succeeded: {0}", resp.status);
+  else
+    Log.Debug("ExampleDiscoveryV1", "Failed to preview configuration");
+}
+```
+
+####  Creating a collection
+Creates a new collection for storing documents.
+
+```cs
+private Discovery m_Discovery = new Discovery();
+
+private void CreateCollection()
+{
+  if (!m_Discovery.AddCollection(OnAddCollection, <environment-id>, <collection-name>, <collection-description>, <configuration-id>))
+    Log.Debug("ExampleDiscovery", "Failed to add collection");
+}
+
+private void OnAddCollection(CollectionRef resp, string data)
+{
+  if (resp != null)
+    Log.Debug("ExampleDiscoveryV1", "Collection: {0}, {1}", resp.collection_id, resp.name);
+  else
+    Log.Debug("ExampleDiscoveryV1", "resp is null, {0}", data);
+}
+```
+
+####  Listing collections
+Display a list of existing collections.
+
+```cs
+private Discovery m_Discovery = new Discovery();
+
+private void GetCollections()
+{
+  if (!m_Discovery.GetCollections(OnGetCollections, m_DefaultEnvironmentID))
+    Log.Debug("ExampleDiscovery", "Failed to get collections");
+}
+
+private void OnGetCollections(GetCollectionsResponse resp, string data)
+{
+  if (resp != null)
+  {
+    if (resp.collections != null && resp.collections.Length > 0)
+    {
+      foreach (CollectionRef collection in resp.collections)
+        Log.Debug("ExampleDiscoveryV1", "Collection: {0}, {1}", collection.collection_id, collection.name);
+    }
+    else
+      Log.Debug("ExampleDiscoveryV1", "There are no collections");
+  }
+  else
+    Log.Debug("ExampleDiscoveryV1", "Failed to get collections");
+}
+```
+
+####  Listing collection details
+Show detailed information about an existing collection.
+
+```cs
+private Discovery m_Discovery = new Discovery();
+
+private void GetCollection()
+{
+  if (!m_Discovery.GetCollection(OnGetCollection, <environment-id>, <collection-id>))
+    Log.Debug("ExampleDiscovery", "Failed to get collection");
+}
+
+private void OnGetCollection(Collection resp, string data)
+{
+  if (resp != null)
+    Log.Debug("ExampleDiscoveryV1", "Collection: {0}, {1}", resp.collection_id, resp.name);
+  else
+    Log.Debug("ExampleDiscoveryV1", "Failed to get collections");
+}
+```
+
+####  Deleting a collection
+Deletes an existing collection.
+
+```cs
+private Discovery m_Discovery = new Discovery();
+
+private void DeleteCollection()
+{
+  if (!m_Discovery.DeleteCollection(OnDeleteCollection, <environment-id>, <collection-id>))
+    Log.Debug("ExampleDiscovery", "Failed to add collection");
+}
+
+private void OnDeleteCollection(bool success, string data)
+{
+    if (success)
+        Log.Debug("ExampleDiscoveryV1", "Delete collection successful");
+    else
+        Log.Debug("ExampleDiscoveryV1", "Delete collection failed");
+}
+```
+
+####  Listing fields
+Gets a list of the unique fields, and each field's type, that are stored in a collection's index.
+
+```cs
+private Discovery m_Discovery = new Discovery();
+
+private void Start()
+{
+  if (!m_Discovery.GetFields(OnGetFields, m_CreatedEnvironmentID, m_CreatedCollectionID))
+    Log.Debug("ExampleDiscoveryV1", "Failed to get fields");
+}
+
+private void OnGetFields(GetFieldsResponse resp, string customData)
+{
+  if (resp != null)
+  {
+   foreach (Field field in resp.fields)
+     Log.Debug("ExampleDiscoveryV1", "Field: {0}, type: {1}", field.field, field.type);
+  }
+  else
+   Log.Debug("ExampleDiscoveryV1", "Discovery.GetFields(); resp is null");
+}
+```
+
+####  Adding a document
+Add a document to your collection.
+
+```cs
+private Discovery m_Discovery = new Discovery();
+
+private void AddDocument()
+{
+  if (!m_Discovery.AddDocument(OnAddDocument, <environment-id>, <collection-id>, <document-file-path>, <configuration-id>, <configuration>))
+    Log.Debug("ExampleDiscovery", "Failed to add document");
+}
+
+private void OnAddDocument(DocumentAccepted resp, string data)
+{
+  if(resp != null)
+    Log.Debug("ExampleDiscoveryV1", "Added Document {0} {1}", resp.document_id, resp.status);
+  else
+    Log.Debug("ExampleDiscoveryV1", "resp is null, {0}", data);
+}
+```
+
+####  Updating a document
+Update or partially update a document to create or replace an existing document.
+
+```cs
+private Discovery m_Discovery = new Discovery();
+
+private void UpdateDocument()
+{
+  if (!m_Discovery.UpdateDocument(OnUpdateDocument, <environment-id>, <collection-id>, <document-id>, <document-file-path>, <configuration-id>, <configuration>))
+    Log.Debug("ExampleDiscovery", "Failed to update document");
+}
+
+private void OnUpdateDocument(DocumentAccepted resp, string data)
+{
+    if (resp != null)
+      Log.Debug("ExampleDiscoveryV1", "Updated Document {0} {1}", resp.document_id, resp.status);
+    else
+      Log.Debug("ExampleDiscoveryV1", "resp is null, {0}", data);
+}
+```
+
+####  Listing document details
+Display status information about a submitted document.
+
+```cs
+private Discovery m_Discovery = new Discovery();
+
+private void GetDocument()
+{
+  if (!m_Discovery.GetDocument(OnGetDocument, <environment-id>, <collection-id>, <document-id>))
+    Log.Debug("ExampleDiscovery", "Failed to get document");
+}
+
+private void OnGetDocument(DocumentStatus resp, string data)
+{
+  if(resp != null)
+    Log.Debug("ExampleDiscoveryV1", "Got Document {0} {1}", resp.document_id, resp.status);
+  else
+    Log.Debug("ExampleDiscoveryV1", "resp is null, {0}", data);
+}
+```
+
+####  Deleting a document
+Delete a document from a collection.
+
+```cs
+private Discovery m_Discovery = new Discovery();
+
+private void DeleteDocument()
+{
+  if (!m_Discovery.DeleteDocument(OnDeleteDocument, <environment-id>, <collection-id>, <document-id>))
+    Log.Debug("ExampleDiscovery", "Failed to delete document");
+}
+
+private void OnDeleteDocument(bool success, string data)
+{
+    if (success)
+        Log.Debug("ExampleDiscoveryV1", "Delete document successful");
+    else
+        Log.Debug("ExampleDiscoveryV1", "Delete collection failed");
+}
+```
+
+####  Querying your collection
+Delete a document from a collection.
+
+Once your content is uploaded and enriched by the Discovery service, you can build queries to search your content. For a deep dive into queries, see [Building Queries and Delivering Content][discovery-query].
+
+```cs
+private Discovery m_Discovery = new Discovery();
+
+private void Query()
+{
+  if (!m_Discovery.Query(OnQuery, <environment-id>, <collection-id>, <filter>, <query>, <aggregation>, <count>, <return>, <offset>))
+    Log.Debug("ExampleDiscovery", "Failed to query");
+}
+
+private void OnQuery(QueryResponse resp, string data)
+{
+  if(resp != null)
+  {
+    Log.Debug("ExampleDiscoveryV1", "key: {0}, matching results: {1}", resp.aggregations.term.results.key, resp.aggregations.term.results.matching_results);
+
+    foreach(QueryResult result in resp.results)
+      Log.Debug("ExampleDiscoveryV1", "Query response: id: {0}, score: {1}", result.id, result.score);
+  }
+  else
+    Log.Debug("ExampleDiscoveryV1", "resp is null, {0}", data);
+}
+```
 
 ## Developing a basic application in one minute
 You can quickly develop a basic application that uses the Speech to Text service and the Natural Language Classifier service by using the prefabs that come with the SDK. Ensure that you prepare the test data before you complete the the following steps:
@@ -2454,9 +2871,11 @@ See [CONTRIBUTING.md](.github/CONTRIBUTING.md).
 [personality_insights]: http://www.ibm.com/watson/developercloud/personality-insights/api/v2/
 [conversation_tooling]: https://www.ibmwatsonconversation.com
 [retrieve_and_rank]: http://www.ibm.com/watson/developercloud/retrieve-and-rank/api/v1/
+[discovery]: http://www.ibm.com/watson/developercloud/discovery/api/v1/
 [document_conversion]: http://www.ibm.com/watson/developercloud/document-conversion/api/v1/
 [expressive_ssml]: http://www.ibm.com/watson/developercloud/doc/text-to-speech/http.shtml#expressive
 [ssml]: http://www.ibm.com/watson/developercloud/doc/text-to-speech/SSML.shtml
+[discovery-query]: http://www.ibm.com/watson/developercloud/doc/discovery/using.shtml
 
 [dialog_service]: http://www.ibm.com/watson/developercloud/doc/dialog/
 [dialog_migration]: https://www.ibm.com/watson/developercloud/doc/conversation/migration.shtml

@@ -34,7 +34,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
     class ConfigEditor : EditorWindow
     {
         #region Constants
-		private const string BLUEMIX_REGISTRATION = "http://bluemix.net/registration";
+        private const string BLUEMIX_REGISTRATION = "http://bluemix.net/registration";
         private const string API_REFERENCE = "WatsonUnitySDK.chm";
         private const string README = "https://github.com/watson-developer-cloud/unity-sdk/blob/develop/README.md";
 
@@ -46,27 +46,27 @@ namespace IBM.Watson.DeveloperCloud.Editor
             public string ServiceID;
         };
 
-        private ServiceSetup [] SERVICE_SETUP = new ServiceSetup[]
+        private ServiceSetup[] SERVICE_SETUP = new ServiceSetup[]
         {
             new ServiceSetup() { ServiceName = "Speech To Text", ServiceAPI = "speech-to-text/api",
                 URL ="https://console.ng.bluemix.net/catalog/speech-to-text/", ServiceID="SpeechToTextV1" },
             new ServiceSetup() { ServiceName = "Text To Speech", ServiceAPI = "text-to-speech/api",
                 URL ="https://console.ng.bluemix.net/catalog/text-to-speech/", ServiceID="TextToSpeechV1" },
-            new ServiceSetup() { ServiceName = "Language Translation (to be deprecated)", ServiceAPI = "language-translation/api",
-                URL ="https://console.ng.bluemix.net/catalog/services/language-translation/", ServiceID="LanguageTranslationV1" },
-            //new ServiceSetup() { ServiceName = "Language Translator", ServiceAPI = "language-translator/api",
-            //    URL ="https://console.ng.bluemix.net/catalog/services/language-translator/", ServiceID="LanguageTranslatorV1" },
+            //new ServiceSetup() { ServiceName = "Language Translation (to be deprecated)", ServiceAPI = "language-translation/api",
+            //    URL ="https://console.ng.bluemix.net/catalog/services/language-translation/", ServiceID="LanguageTranslationV1" },
+            new ServiceSetup() { ServiceName = "Language Translator", ServiceAPI = "language-translator/api",
+                URL ="https://console.ng.bluemix.net/catalog/services/language-translator/", ServiceID="LanguageTranslatorV1" },
             new ServiceSetup() { ServiceName = "Natural Language Classifier", ServiceAPI = "natural-language-classifier/api",
-				URL ="https://console.ng.bluemix.net/catalog/natural-language-classifier/", ServiceID="NaturalLanguageClassifierV1" },
+                URL ="https://console.ng.bluemix.net/catalog/natural-language-classifier/", ServiceID="NaturalLanguageClassifierV1" },
             new ServiceSetup() { ServiceName = "Tone Analyzer", ServiceAPI = "tone-analyzer/api",
                 URL ="https://console.ng.bluemix.net/catalog/services/tone-analyzer/", ServiceID="ToneAnalyzerV3" },
             new ServiceSetup() { ServiceName = "Tradeoff Analytics", ServiceAPI = "tradeoff-analytics/api",
                 URL ="https://console.ng.bluemix.net/catalog/services/tradeoff-analytics/", ServiceID="TradeoffAnalyticsV1" },
             new ServiceSetup() { ServiceName = "Personality Insights V2", ServiceAPI = "personality-insights/api",
                 URL ="https://console.ng.bluemix.net/catalog/services/personality-insights/", ServiceID="PersonalityInsightsV2" },
-			new ServiceSetup() { ServiceName = "Personality Insights V3", ServiceAPI = "personality-insights/api",
-				URL ="https://console.ng.bluemix.net/catalog/services/personality-insights/", ServiceID="PersonalityInsightsV3" },
-			new ServiceSetup() { ServiceName = "Conversation", ServiceAPI = "conversation/api",
+            new ServiceSetup() { ServiceName = "Personality Insights V3", ServiceAPI = "personality-insights/api",
+                URL ="https://console.ng.bluemix.net/catalog/services/personality-insights/", ServiceID="PersonalityInsightsV3" },
+            new ServiceSetup() { ServiceName = "Conversation", ServiceAPI = "conversation/api",
                 URL ="https://console.ng.bluemix.net/catalog/services/conversation/", ServiceID="ConversationV1" },
             new ServiceSetup() { ServiceName = "RetrieveAndRank", ServiceAPI = "retrieve-and-rank/api",
                 URL ="https://console.ng.bluemix.net/catalog/services/retrieve-and-rank/", ServiceID="RetrieveAndRankV1" },
@@ -75,17 +75,19 @@ namespace IBM.Watson.DeveloperCloud.Editor
             new ServiceSetup() { ServiceName = "Visual Recognition", ServiceAPI = "visual-recognition/api",
                 URL ="https://console.ng.bluemix.net/catalog/services/visual-recognition/", ServiceID="VisualRecognitionV3" },
             new ServiceSetup() { ServiceName = "Document Conversion", ServiceAPI = "document-conversion/api",
-                URL ="https://console.ng.bluemix.net/catalog/services/document-conversion/", ServiceID="DocumentConversionV1" }
+                URL ="https://console.ng.bluemix.net/catalog/services/document-conversion/", ServiceID="DocumentConversionV1" },
+            new ServiceSetup() { ServiceName = "Discovery", ServiceAPI = "discovery/api",
+                URL ="https://console.ng.bluemix.net/catalog/services/discovery/", ServiceID="DiscoveryV1" }
         };
 
         private const string TITLE = "Watson Unity SDK";
-        private const string RUN_WIZARD_MSG =  "Thanks for installing the Watson Unity SDK, would you like to configure your credentials?";
+        private const string RUN_WIZARD_MSG = "Thanks for installing the Watson Unity SDK, would you like to configure your credentials?";
         private const string YES = "Yes";
         private const string NO = "No";
         private const string OK = "Okay";
 
-        private IWatsonService [] m_Services = null;
-        private Dictionary<string,bool> m_ServiceStatus = new Dictionary<string,bool>();
+        private IWatsonService[] m_Services = null;
+        private Dictionary<string, bool> m_ServiceStatus = new Dictionary<string, bool>();
         private int m_CheckServiceRoutine = 0;
         private bool m_CheckServicesNow = false;
         #endregion
@@ -93,11 +95,11 @@ namespace IBM.Watson.DeveloperCloud.Editor
         [UnityEditor.Callbacks.DidReloadScripts]
         private static void OnScriptsReloaded()
         {
-            if ( !File.Exists( Application.streamingAssetsPath + Constants.Path.CONFIG_FILE ) )
+            if (!File.Exists(Application.streamingAssetsPath + Constants.Path.CONFIG_FILE))
             {
-                if ( EditorUtility.DisplayDialog( TITLE, RUN_WIZARD_MSG, YES, NO ) )
+                if (EditorUtility.DisplayDialog(TITLE, RUN_WIZARD_MSG, YES, NO))
                 {
-                    PlayerPrefs.SetInt("WizardMode", 1 );
+                    PlayerPrefs.SetInt("WizardMode", 1);
                     EditConfig();
                 }
             }
@@ -109,20 +111,20 @@ namespace IBM.Watson.DeveloperCloud.Editor
             titleContent.text = "Config Editor";
 #endif
             m_WatsonIcon = (Texture2D)Resources.Load(Constants.Resources.WATSON_ICON, typeof(Texture2D));
-            m_StatusUnknown = (Texture2D)Resources.Load( "status_unknown", typeof(Texture2D));
-            m_StatusDown = (Texture2D)Resources.Load( "status_down", typeof(Texture2D));
-            m_StatusUp = (Texture2D)Resources.Load( "status_up", typeof(Texture2D));
-            m_WizardMode = PlayerPrefs.GetInt( "WizardMode", 1 ) != 0;
+            m_StatusUnknown = (Texture2D)Resources.Load("status_unknown", typeof(Texture2D));
+            m_StatusDown = (Texture2D)Resources.Load("status_down", typeof(Texture2D));
+            m_StatusUp = (Texture2D)Resources.Load("status_up", typeof(Texture2D));
+            m_WizardMode = PlayerPrefs.GetInt("WizardMode", 1) != 0;
 
             Runnable.EnableRunnableInEditor();
-            m_CheckServiceRoutine = Runnable.Run( CheckServices() );
+            m_CheckServiceRoutine = Runnable.Run(CheckServices());
         }
 
         private void OnDisable()
         {
-            if ( m_CheckServiceRoutine != 0 )
+            if (m_CheckServiceRoutine != 0)
             {
-                Runnable.Stop( m_CheckServiceRoutine );
+                Runnable.Stop(m_CheckServiceRoutine);
                 m_CheckServiceRoutine = 0;
             }
         }
@@ -134,66 +136,66 @@ namespace IBM.Watson.DeveloperCloud.Editor
 
             DateTime lastCheck = DateTime.Now;
 
-            while( true )
+            while (true)
             {
-                foreach( var service in m_Services )
-                    service.GetServiceStatus( OnServiceStatus );
+                foreach (var service in m_Services)
+                    service.GetServiceStatus(OnServiceStatus);
 
-                while( (DateTime.Now - lastCheck).TotalSeconds < 60.0f && !m_CheckServicesNow )
+                while ((DateTime.Now - lastCheck).TotalSeconds < 60.0f && !m_CheckServicesNow)
                     yield return null;
                 lastCheck = DateTime.Now;
                 m_CheckServicesNow = false;
             }
         }
 
-        private void OnServiceStatus( string serviceID, bool active )
+        private void OnServiceStatus(string serviceID, bool active)
         {
             //Log.Debug( "ConfigEditor", "Service Status for {0} is {1}.", serviceID, active ? "up" : "down" );
-            m_ServiceStatus[ serviceID ] = active;
+            m_ServiceStatus[serviceID] = active;
         }
 
         private static void SaveConfig()
         {
             if (!Directory.Exists(Application.streamingAssetsPath))
-               Directory.CreateDirectory(Application.streamingAssetsPath);
+                Directory.CreateDirectory(Application.streamingAssetsPath);
             File.WriteAllText(Application.streamingAssetsPath + "/Config.json", Config.Instance.SaveConfig());
             RESTConnector.FlushConnectors();
         }
 
-        private static string FindFile( string directory, string name )
+        private static string FindFile(string directory, string name)
         {
-            foreach( var f in Directory.GetFiles( directory ) )
-                if ( f.EndsWith( name ) )
+            foreach (var f in Directory.GetFiles(directory))
+                if (f.EndsWith(name))
                     return f;
 
-            foreach( var d in Directory.GetDirectories( directory ) )
+            foreach (var d in Directory.GetDirectories(directory))
             {
-                string found = FindFile( d, name );
-                if ( found != null )
+                string found = FindFile(d, name);
+                if (found != null)
                     return found;
             }
 
             return null;
         }
 
-        [MenuItem("Watson/API Reference", false, 100 )]
+        [MenuItem("Watson/API Reference", false, 100)]
         private static void ShowAPIReference()
         {
-            Application.OpenURL( "file://" + FindFile( Application.dataPath, API_REFERENCE ) );
+            Application.OpenURL("file://" + FindFile(Application.dataPath, API_REFERENCE));
         }
-        [MenuItem("Watson/Getting Started", false, 100 )]
+        [MenuItem("Watson/Getting Started", false, 100)]
         private static void ShowReadme()
         {
-            Application.OpenURL( README );
+            Application.OpenURL(README);
         }
 
-        [MenuItem("Watson/Configuration Editor", false, 0 )]
+        [MenuItem("Watson/Configuration Editor", false, 0)]
         private static void EditConfig()
         {
             GetWindow<ConfigEditor>().Show();
         }
 
-        private delegate void WizardStepDelegate( ConfigEditor editor );
+        private delegate void WizardStepDelegate(ConfigEditor editor);
 
         private bool m_WizardMode = true;
         private Texture m_WatsonIcon = null;
@@ -207,10 +209,10 @@ namespace IBM.Watson.DeveloperCloud.Editor
         {
             bool isValid = false;
             Config cfg = Config.Instance;
-            Config.CredentialInfo info = cfg.FindCredentials( setup.ServiceID );
-            if(info != null)
+            Config.CredentialInfo info = cfg.FindCredentials(setup.ServiceID);
+            if (info != null)
             {
-                if((!string.IsNullOrEmpty(info.m_URL) && !string.IsNullOrEmpty(info.m_Password)) || !string.IsNullOrEmpty(info.m_Apikey))
+                if ((!string.IsNullOrEmpty(info.m_URL) && !string.IsNullOrEmpty(info.m_Password)) || !string.IsNullOrEmpty(info.m_Apikey))
                     isValid = true;
             }
 
@@ -224,55 +226,55 @@ namespace IBM.Watson.DeveloperCloud.Editor
             GUILayout.Label(m_WatsonIcon);
 
             m_ScrollPos = EditorGUILayout.BeginScrollView(m_ScrollPos);
-            if ( m_WizardMode )
+            if (m_WizardMode)
             {
                 //GUILayout.Label( "Use this dialog to generate your configuration file for the Watson Unity SDK." );
                 //GUILayout.Label( "If you have never registered for Watson BlueMix services, click on the button below to begin registration." );
 
-                if(GUILayout.Button("Register for Watson Services"))
-                    Application.OpenURL( BLUEMIX_REGISTRATION );
+                if (GUILayout.Button("Register for Watson Services"))
+                    Application.OpenURL(BLUEMIX_REGISTRATION);
 
-                foreach( var setup in SERVICE_SETUP )
+                foreach (var setup in SERVICE_SETUP)
                 {
-                    Config.CredentialInfo info = cfg.FindCredentials( setup.ServiceID );
+                    Config.CredentialInfo info = cfg.FindCredentials(setup.ServiceID);
 
                     bool bValid = GetIsValid(setup);
 
                     GUILayout.BeginHorizontal();
 
-                    if ( m_ServiceStatus.ContainsKey( setup.ServiceID ) )
+                    if (m_ServiceStatus.ContainsKey(setup.ServiceID))
                     {
-                        if ( m_ServiceStatus[setup.ServiceID] )
-                            GUILayout.Label( m_StatusUp, GUILayout.Width( 20 ) );
+                        if (m_ServiceStatus[setup.ServiceID])
+                            GUILayout.Label(m_StatusUp, GUILayout.Width(20));
                         else
-                            GUILayout.Label( m_StatusDown, GUILayout.Width( 20 ) );
+                            GUILayout.Label(m_StatusDown, GUILayout.Width(20));
                     }
                     else
-                        GUILayout.Label( m_StatusUnknown, GUILayout.Width( 20 ) );
+                        GUILayout.Label(m_StatusUnknown, GUILayout.Width(20));
 
                     GUIStyle labelStyle = new GUIStyle(GUI.skin.label);
                     labelStyle.normal.textColor = bValid ? Color.green : Color.grey;
 
-                    GUILayout.Label( string.Format( "Service {0} {1}.", setup.ServiceName, bValid ? "CONFIGURED" : "NOT CONFIGURED" ), labelStyle );
+                    GUILayout.Label(string.Format("Service {0} {1}.", setup.ServiceName, bValid ? "CONFIGURED" : "NOT CONFIGURED"), labelStyle);
 
-                    if ( GUILayout.Button( "Configure", GUILayout.Width( 100 ) ) )
-                        Application.OpenURL( setup.URL );
-                    if ( bValid && GUILayout.Button( "Clear", GUILayout.Width( 100 ) ) )
-                        cfg.Credentials.Remove( info );
+                    if (GUILayout.Button("Configure", GUILayout.Width(100)))
+                        Application.OpenURL(setup.URL);
+                    if (bValid && GUILayout.Button("Clear", GUILayout.Width(100)))
+                        cfg.Credentials.Remove(info);
 
                     GUILayout.EndHorizontal();
                 }
 
-                GUILayout.Label( "PASTE CREDENTIALS BELOW:" );
-                m_PastedCredentials = EditorGUILayout.TextArea( m_PastedCredentials );
+                GUILayout.Label("PASTE CREDENTIALS BELOW:");
+                m_PastedCredentials = EditorGUILayout.TextArea(m_PastedCredentials);
 
                 GUI.SetNextControlName("Apply");
-                if ( GUILayout.Button( "Apply Credentials" ) )
+                if (GUILayout.Button("Apply Credentials"))
                 {
                     bool bParsed = false;
 
                     Config.CredentialInfo newInfo = new Config.CredentialInfo();
-                    if ( newInfo.ParseJSON( m_PastedCredentials ) )
+                    if (newInfo.ParseJSON(m_PastedCredentials))
                     {
                         foreach (var setup in SERVICE_SETUP)
                         {
@@ -282,14 +284,14 @@ namespace IBM.Watson.DeveloperCloud.Editor
 
                                 bool bAdd = true;
                                 // remove any previous credentials with the same service ID
-                                for( int i=0;i<cfg.Credentials.Count;++i)
-                                    if ( cfg.Credentials[i].m_ServiceID == newInfo.m_ServiceID )
+                                for (int i = 0; i < cfg.Credentials.Count; ++i)
+                                    if (cfg.Credentials[i].m_ServiceID == newInfo.m_ServiceID)
                                     {
                                         bAdd = false;
 
-                                        if ( EditorUtility.DisplayDialog( "Confirm",
+                                        if (EditorUtility.DisplayDialog("Confirm",
                                             string.Format("Replace existing service credentials for {0}?", setup.ServiceName),
-                                            YES, NO ) )
+                                            YES, NO))
                                         {
                                             cfg.Credentials.RemoveAt(i);
                                             bAdd = true;
@@ -297,39 +299,39 @@ namespace IBM.Watson.DeveloperCloud.Editor
                                         }
                                     }
 
-                                if ( bAdd )
-                                    cfg.Credentials.Add( newInfo );
+                                if (bAdd)
+                                    cfg.Credentials.Add(newInfo);
                                 bParsed = true;
                             }
-                       }
+                        }
                     }
 
-                    if ( bParsed )
+                    if (bParsed)
                     {
                         m_CheckServicesNow = true;
 
-                        EditorUtility.DisplayDialog( "Complete", "Credentials applied.", OK );
+                        EditorUtility.DisplayDialog("Complete", "Credentials applied.", OK);
                         m_PastedCredentials = "\n\n\n\n\n\n\n";
                         GUI.FocusControl("Apply");
 
                         SaveConfig();
                     }
                     else
-                        EditorUtility.DisplayDialog( "Error", "Failed to parse credentials:\n" + m_PastedCredentials, OK );
+                        EditorUtility.DisplayDialog("Error", "Failed to parse credentials:\n" + m_PastedCredentials, OK);
                 }
 
-                if ( GUILayout.Button( "Save" ) )
+                if (GUILayout.Button("Save"))
                     SaveConfig();
 
-                if ( GUILayout.Button( "Advanced Mode" ) )
+                if (GUILayout.Button("Advanced Mode"))
                 {
                     m_WizardMode = false;
-                    PlayerPrefs.SetInt( "WizardMode", 0 );
+                    PlayerPrefs.SetInt("WizardMode", 0);
                 }
             }
             else
             {
-                cfg.ClassifierDirectory = EditorGUILayout.TextField("Classifier Directory", cfg.ClassifierDirectory );
+                cfg.ClassifierDirectory = EditorGUILayout.TextField("Classifier Directory", cfg.ClassifierDirectory);
                 cfg.TimeOut = EditorGUILayout.FloatField("Timeout", cfg.TimeOut);
                 cfg.MaxRestConnections = EditorGUILayout.IntField("Max Connections", cfg.MaxRestConnections);
 
@@ -342,22 +344,22 @@ namespace IBM.Watson.DeveloperCloud.Editor
                     GUILayout.BeginHorizontal();
                     info.m_ServiceID = EditorGUILayout.TextField("ServiceID", info.m_ServiceID);
 
-                    if ( !string.IsNullOrEmpty(info.m_ServiceID) && m_ServiceStatus.ContainsKey( info.m_ServiceID ) )
+                    if (!string.IsNullOrEmpty(info.m_ServiceID) && m_ServiceStatus.ContainsKey(info.m_ServiceID))
                     {
-                        if ( m_ServiceStatus[info.m_ServiceID] )
-                            GUILayout.Label( m_StatusUp, GUILayout.Width( 20 ) );
+                        if (m_ServiceStatus[info.m_ServiceID])
+                            GUILayout.Label(m_StatusUp, GUILayout.Width(20));
                         else
-                            GUILayout.Label( m_StatusDown, GUILayout.Width( 20 ) );
+                            GUILayout.Label(m_StatusDown, GUILayout.Width(20));
                     }
                     else
-                        GUILayout.Label( m_StatusUnknown, GUILayout.Width( 20 ) );
+                        GUILayout.Label(m_StatusUnknown, GUILayout.Width(20));
                     GUILayout.EndHorizontal();
 
                     info.m_URL = EditorGUILayout.TextField("URL", info.m_URL);
 
-                    if(!string.IsNullOrEmpty(info.m_URL))
+                    if (!string.IsNullOrEmpty(info.m_URL))
                     {
-                        if(info.m_URL.StartsWith("https://gateway-a"))
+                        if (info.m_URL.StartsWith("https://gateway-a"))
                             info.m_Apikey = EditorGUILayout.TextField("API Key", info.m_Apikey);
                         else
                         {
@@ -382,11 +384,11 @@ namespace IBM.Watson.DeveloperCloud.Editor
 
                     GUILayout.BeginHorizontal();
 
-                    variable.Key = EditorGUILayout.TextField( variable.Key );
-                    EditorGUILayout.LabelField( "=", GUILayout.Width( 30 ) );
-                    variable.Value = EditorGUILayout.TextField( variable.Value );
+                    variable.Key = EditorGUILayout.TextField(variable.Key);
+                    EditorGUILayout.LabelField("=", GUILayout.Width(30));
+                    variable.Value = EditorGUILayout.TextField(variable.Value);
 
-                    if (GUILayout.Button("Delete", GUILayout.Width( 100 ) ))
+                    if (GUILayout.Button("Delete", GUILayout.Width(100)))
                         cfg.Variables.RemoveAt(i--);
 
                     GUILayout.EndHorizontal();
@@ -402,10 +404,10 @@ namespace IBM.Watson.DeveloperCloud.Editor
                     SaveConfig();
                 }
 
-                if ( GUILayout.Button( "Basic Mode" ) )
+                if (GUILayout.Button("Basic Mode"))
                 {
                     m_WizardMode = true;
-                    PlayerPrefs.SetInt( "WizardMode", 1 );
+                    PlayerPrefs.SetInt("WizardMode", 1);
                 }
             }
 
