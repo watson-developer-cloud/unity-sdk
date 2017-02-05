@@ -42,7 +42,7 @@ namespace FullSerializer.Internal {
         public override fsResult TrySerialize(object instance, out fsData serialized, Type storageType) {
             var instanceType = instance.GetType();
 
-            if (fsConfig.Serialize64BitIntegerAsString && (instanceType == typeof(Int64) || instanceType == typeof(UInt64))) {
+            if (Serializer.Config.Serialize64BitIntegerAsString && (instanceType == typeof(Int64) || instanceType == typeof(UInt64))) {
                 serialized = new fsData((string)Convert.ChangeType(instance, typeof(string)));
                 return fsResult.Success;
             }
@@ -58,6 +58,22 @@ namespace FullSerializer.Internal {
             }
 
             if (UseDouble(instanceType)) {
+                // Casting from float to double introduces floating point jitter,
+                // ie, 0.1 becomes 0.100000001490116. Casting to decimal as an
+                // intermediate step removes the jitter. Not sure why.
+                if (instance.GetType() == typeof(float) &&
+                    // Decimal can't store
+                    // float.MinValue/float.MaxValue/float.PositiveInfinity/float.NegativeInfinity/float.NaN
+                    // - an exception gets thrown in that scenario.
+                    (float)instance != float.MinValue &&
+                    (float)instance != float.MaxValue &&
+                    !float.IsInfinity((float)instance) &&
+                    !float.IsNaN((float)instance)
+                    ) {
+                    serialized = new fsData((double)(decimal)(float)instance);
+                    return fsResult.Success;
+                }
+
                 serialized = new fsData((double)Convert.ChangeType(instance, typeof(double)));
                 return fsResult.Success;
             }
@@ -88,7 +104,7 @@ namespace FullSerializer.Internal {
                 else if (storage.IsInt64) {
                     instance = Convert.ChangeType(storage.AsInt64, storageType);
                 }
-                else if (fsConfig.Serialize64BitIntegerAsString && storage.IsString &&
+                else if (Serializer.Config.Serialize64BitIntegerAsString && storage.IsString &&
                     (storageType == typeof(Int64) || storageType == typeof(UInt64))) {
                     instance = Convert.ChangeType(storage.AsString, storageType);
                 }
@@ -109,4 +125,3 @@ namespace FullSerializer.Internal {
         }
     }
 }
-

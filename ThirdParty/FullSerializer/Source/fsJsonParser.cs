@@ -48,7 +48,8 @@ namespace FullSerializer {
         }
 
         /// <summary>
-        /// Skips input such that Character() will return a non-whitespace character
+        /// Skips input such that Character() will return a non-whitespace
+        /// character
         /// </summary>
         private void SkipSpace() {
             while (HasValue()) {
@@ -68,7 +69,8 @@ namespace FullSerializer {
                             TryMoveNext();
                         }
                         continue;
-                    } else if (Character(1) == '*') {
+                    }
+                    else if (Character(1) == '*') {
                         // skip to comment close
                         TryMoveNext();
                         TryMoveNext();
@@ -78,7 +80,8 @@ namespace FullSerializer {
                                 TryMoveNext();
                                 TryMoveNext();
                                 break;
-                            } else {
+                            }
+                            else {
                                 TryMoveNext();
                             }
                         }
@@ -143,7 +146,6 @@ namespace FullSerializer {
                      && IsHex(Character(1))
                      && IsHex(Character(2))
                      && IsHex(Character(3))) {
-
                         uint codePoint = ParseUnicode(Character(0), Character(1), Character(2), Character(3));
 
                         TryMoveNext();
@@ -168,7 +170,7 @@ namespace FullSerializer {
                     return MakeFailure(string.Format("Invalid escape sequence \\{0}", Character()));
             }
         }
-        #endregion
+        #endregion Escaping
 
         private fsResult TryParseExact(string content) {
             for (int i = 0; i < content.Length; ++i) {
@@ -220,7 +222,6 @@ namespace FullSerializer {
             return fail;
         }
 
-
         private bool IsSeparator(char c) {
             return char.IsWhiteSpace(c) || c == ',' || c == '}' || c == ']';
         }
@@ -241,7 +242,8 @@ namespace FullSerializer {
             string numberString = _input.Substring(start, _start - start);
 
             // double -- includes a .
-            if (numberString.Contains(".") || numberString == "Infinity" || numberString == "-Infinity" || numberString == "NaN") {
+            if (numberString.Contains(".") || numberString.Contains("e") || numberString.Contains("E") ||
+                numberString == "Infinity" || numberString == "-Infinity" || numberString == "NaN") {
                 double doubleValue;
                 if (double.TryParse(numberString, NumberStyles.Any, CultureInfo.InvariantCulture, out doubleValue) == false) {
                     data = null;
@@ -375,7 +377,7 @@ namespace FullSerializer {
             SkipSpace();
 
             var result = new Dictionary<string, fsData>(
-                fsConfig.IsCaseSensitive ? StringComparer.CurrentCulture : StringComparer.CurrentCultureIgnoreCase);
+                fsGlobalConfig.IsCaseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase);
 
             while (HasValue() && Character() != '}') {
                 fsResult failure;
@@ -471,10 +473,13 @@ namespace FullSerializer {
         }
 
         /// <summary>
-        /// Parses the specified input. Returns a failure state if parsing failed.
+        /// Parses the specified input. Returns a failure state if parsing
+        /// failed.
         /// </summary>
         /// <param name="input">The input to parse.</param>
-        /// <param name="data">The parsed data. This is undefined if parsing fails.</param>
+        /// <param name="data">
+        /// The parsed data. This is undefined if parsing fails.
+        /// </param>
         /// <returns>The parsed input.</returns>
         public static fsResult Parse(string input, out fsData data) {
             if (string.IsNullOrEmpty(input)) {
@@ -487,8 +492,8 @@ namespace FullSerializer {
         }
 
         /// <summary>
-        /// Helper method for Parse that does not allow the error information
-        /// to be recovered.
+        /// Helper method for Parse that does not allow the error information to
+        /// be recovered.
         /// </summary>
         public static fsData Parse(string input) {
             fsData data;

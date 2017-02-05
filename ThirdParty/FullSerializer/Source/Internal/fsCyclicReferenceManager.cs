@@ -41,7 +41,7 @@ namespace FullSerializer.Internal {
 
             if (_depth < 0) {
                 _depth = 0;
-                throw new InvalidOperationException("Internal Error - Mismatched Enter/Exit");
+                throw new InvalidOperationException("Internal Error - Mismatched Enter/Exit. Please report a bug at https://github.com/jacobdufault/fullserializer/issues with the serialization data.");
             }
 
             return _depth == 0;
@@ -52,7 +52,7 @@ namespace FullSerializer.Internal {
                 throw new InvalidOperationException("Internal Deserialization Error - Object " +
                     "definition has not been encountered for object with id=" + id +
                     "; have you reordered or modified the serialized data? If this is an issue " +
-                    "with an unmodified Full Json implementation and unmodified serialization " +
+                    "with an unmodified Full Serializer implementation and unmodified serialization " +
                     "data, please report an issue with an included test case.");
             }
 

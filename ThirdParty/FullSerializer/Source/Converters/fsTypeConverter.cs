@@ -1,5 +1,10 @@
 ﻿using System;
 
+#if !UNITY_EDITOR && UNITY_WSA
+// For System.Reflection.TypeExtensions
+using System.Reflection;
+#endif
+
 namespace FullSerializer.Internal {
     public class fsTypeConverter : fsConverter {
         public override bool CanProcess(Type type) {
@@ -25,7 +30,7 @@ namespace FullSerializer.Internal {
                 return fsResult.Fail("Type converter requires a string");
             }
 
-            instance = fsTypeLookup.GetType(data.AsString);
+            instance = fsTypeCache.GetType(data.AsString);
             if (instance == null) {
                 return fsResult.Fail("Unable to find type " + data.AsString);
             }

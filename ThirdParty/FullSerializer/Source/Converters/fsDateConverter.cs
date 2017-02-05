@@ -6,13 +6,14 @@ namespace FullSerializer.Internal {
     /// Supports serialization for DateTime, DateTimeOffset, and TimeSpan.
     /// </summary>
     public class fsDateConverter : fsConverter {
-        // The format strings that we use when serializing DateTime and DateTimeOffset types.
+        // The format strings that we use when serializing DateTime and
+        // DateTimeOffset types.
         private const string DefaultDateTimeFormatString = @"o";
         private const string DateTimeOffsetFormatString = @"o";
 
         private string DateTimeFormatString {
             get {
-                return fsConfig.CustomDateTimeFormatString ?? DefaultDateTimeFormatString;
+                return Serializer.Config.CustomDateTimeFormatString ?? DefaultDateTimeFormatString;
             }
         }
 
@@ -55,6 +56,18 @@ namespace FullSerializer.Internal {
                 if (DateTime.TryParse(data.AsString, null, DateTimeStyles.RoundtripKind, out result)) {
                     instance = result;
                     return fsResult.Success;
+                }
+
+                // DateTime.TryParse can fail for some valid DateTime instances.
+                // Try to use Convert.ToDateTime.
+                if (fsGlobalConfig.AllowInternalExceptions) {
+                    try {
+                        instance = Convert.ToDateTime(data.AsString);
+                        return fsResult.Success;
+                    }
+                    catch (Exception e) {
+                        return fsResult.Fail("Unable to parse " + data.AsString + " into a DateTime; got exception " + e);
+                    }
                 }
 
                 return fsResult.Fail("Unable to parse " + data.AsString + " into a DateTime");

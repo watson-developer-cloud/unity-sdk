@@ -68,6 +68,9 @@ You will need the 'username' and 'password' credentials for each service. Servic
 
 Note: The Config.json file is saved as plain text in the StreamingAssets directory. It is the user's responsibility to secure the credentials.
 
+## Notes about Holographic/WSA applications
+In order to build the player for Holographic applications, you have to change the Scripting backend (in File->Build Settings->Player settings) to IL2CPP.
+
 ## IBM Watson Services
 ### Speech to Text
 Use the [Speech to Text][speech_to_text] service to recognize the text from a .wav file. Assign the .wav file to the script in the Unity Editor. Speech to text can also be used to convert an audio stream into text. When using the Microphone Widget and publishing to iOS, the XCode project plist must be updated with a `NSMicrophoneUsageDescription` or the application will crash silently.
