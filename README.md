@@ -331,7 +331,7 @@ void Start () {
 	m_Conversation.Message(OnMessage, m_WorkspaceID, m_Input);
 }
 
-void OnMessage (MessageResponse resp)
+void OnMessage (MessageResponse resp, string customData)
 {
    foreach(Intent mi in resp.intents)
        Debug.Log("intent: " + mi.intent + ", confidence: " + mi.confidence);
