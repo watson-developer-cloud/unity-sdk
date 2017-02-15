@@ -32,8 +32,7 @@ public class ExampleStreamingChunks : MonoBehaviour
     private string m_MicrophoneID = null;
     private AudioClip m_Recording = null;
     private int m_RecordingBufferSize = 1;
-    private int m_ChunkCount = 5
-        ;
+    private int m_ChunkCount = 5;
     private int m_RecordingHZ = 22050;
 
     private SpeechToText m_SpeechToText = new SpeechToText();
