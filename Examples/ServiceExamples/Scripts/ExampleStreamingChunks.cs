@@ -15,6 +15,9 @@
 *
 */
 
+//#define ENABLE_DEBUGGING
+//#define ENABLE_TIME_LOGGING
+
 using UnityEngine;
 using System.Collections;
 using IBM.Watson.DeveloperCloud.Logging;
@@ -23,12 +26,14 @@ using IBM.Watson.DeveloperCloud.Utilities;
 using IBM.Watson.DeveloperCloud.DataTypes;
 using System;
 
-public class ExampleStreaming : MonoBehaviour
+public class ExampleStreamingChunks : MonoBehaviour
 {
     private int m_RecordingRoutine = 0;
     private string m_MicrophoneID = null;
     private AudioClip m_Recording = null;
     private int m_RecordingBufferSize = 1;
+    private int m_ChunkCount = 5
+        ;
     private int m_RecordingHZ = 22050;
 
     private SpeechToText m_SpeechToText = new SpeechToText();
@@ -36,7 +41,7 @@ public class ExampleStreaming : MonoBehaviour
     void Start()
     {
         LogSystem.InstallDefaultReactors();
-        Log.Debug("ExampleStreaming", "Start();");
+        Log.Debug("ExampleStreamingChunks", "Start();");
 
         Active = true;
 
@@ -90,14 +95,15 @@ public class ExampleStreaming : MonoBehaviour
     {
         Active = false;
 
-        Log.Debug("ExampleStreaming", "Error! {0}", error);
+        Log.Debug("ExampleStreamingChunks", "Error! {0}", error);
     }
 
     private IEnumerator RecordingHandler()
     {
-        Log.Debug("ExampleStreaming", "devices: {0}", Microphone.devices);
+        Log.Debug("ExampleStreamingChunks", "devices: {0}", Microphone.devices);
+        //  Start recording
         m_Recording = Microphone.Start(m_MicrophoneID, true, m_RecordingBufferSize, m_RecordingHZ);
-        yield return null;      // let m_RecordingRoutine get set..
+        yield return null;
 
         if (m_Recording == null)
         {
@@ -105,58 +111,94 @@ public class ExampleStreaming : MonoBehaviour
             yield break;
         }
 
+#if ENABLE_TIME_LOGGING
         //  Set a reference to now to check timing
         DateTime now = DateTime.Now;
+#endif
 
-        bool bFirstBlock = true;
-        int midPoint = m_Recording.samples / 2;
+        //  Current chunk number
+        int chunkNum = 0;
+
+        //  Size of the chunk in samples
+        int chunkSize = m_Recording.samples / m_ChunkCount;
+
+        //  Init samples
         float[] samples = null;
 
         while (m_RecordingRoutine != 0 && m_Recording != null)
         {
-            int writePos = Microphone.GetPosition(m_MicrophoneID);
-            Log.Debug("ExampleStreaming", "WritePos: {0}", writePos.ToString());
-            if (writePos > m_Recording.samples || !Microphone.IsRecording(m_MicrophoneID))
+            //  Get the mic position
+            int microphonePosition = Microphone.GetPosition(m_MicrophoneID);
+            if (microphonePosition > m_Recording.samples || !Microphone.IsRecording(m_MicrophoneID))
             {
-                Log.Error("MicrophoneWidget", "Microphone disconnected.");
+                Log.Error("ExampleStreamingChunks", "Microphone disconnected.");
 
                 StopRecording();
                 yield break;
             }
 
-            if ((bFirstBlock && writePos >= midPoint)
-              || (!bFirstBlock && writePos < midPoint))
-            {
-                // front block is recorded, make a RecordClip and pass it onto our callback.
-                samples = new float[midPoint];
-                m_Recording.GetData(samples, bFirstBlock ? 0 : midPoint);
+            int sampleStart = chunkSize * chunkNum;
+            int sampleEnd = chunkSize * (chunkNum + 1);
 
+#if ENABLE_DEBUGGING
+            Log.Debug("ExampleStreamingChunks", "microphonePosition: {0} | sampleStart: {1} | sampleEnd: {2} | chunkNum: {3}",
+                microphonePosition.ToString(),
+                sampleStart.ToString(),
+                sampleEnd.ToString(),
+                chunkNum.ToString());
+#endif
+            //If the write position is past the end of the chunk or if write position is before the start of the chunk and the chunk number is equal to the chunk count
+            if (microphonePosition > sampleEnd || (microphonePosition < sampleStart && chunkNum == (m_ChunkCount - 1)))
+            {
+                //  Init samples
+                samples = new float[chunkSize];
+                //  Write data from recording into samples starting from the chunkStart
+                m_Recording.GetData(samples, sampleStart);
+
+                //  Create AudioData and use the samples we just created
                 AudioData record = new AudioData();
                 record.MaxLevel = Mathf.Max(samples);
-                record.Clip = AudioClip.Create("Recording", midPoint, m_Recording.channels, m_RecordingHZ, false);
+                record.Clip = AudioClip.Create("Recording", chunkSize, m_Recording.channels, m_RecordingHZ, false);
                 record.Clip.SetData(samples, 0);
 
+                //  Send the newly created AudioData to the service
                 m_SpeechToText.OnListen(record);
 
-                bFirstBlock = !bFirstBlock;
-                //  log the time between calls.
-                Log.Debug("ExampleStreaming", "Sending data - time since last transmission: {0} ms", Mathf.Floor((float)(DateTime.Now - now).TotalMilliseconds));
+                //  Iterate or reset chunkNum
+                if (chunkNum < m_ChunkCount - 1)
+                {
+                    chunkNum++;
+#if ENABLE_DEBUGGING
+                    Log.Debug("ExampleStreamingChunks", "Iterating chunkNum: {0}", chunkNum);
+#endif
+                }
+                else
+                {
+                    chunkNum = 0;
+#if ENABLE_DEBUGGING
+                    Log.Debug("ExampleStreamingChunks", "Resetting chunkNum: {0}", chunkNum);
+#endif
+                }
+
+#if ENABLE_TIME_LOGGING
+                Log.Debug("ExampleStreamingChunks", "Sending data - time since last transmission: {0} ms", Mathf.Floor((float)(DateTime.Now - now).TotalMilliseconds));
                 now = DateTime.Now;
+#endif
             }
             else
             {
                 // calculate the number of samples remaining until we ready for a block of audio, 
                 // and wait that amount of time it will take to record.
-                int remaining = bFirstBlock ? (midPoint - writePos) : (m_Recording.samples - writePos);
+                int remaining = sampleEnd - microphonePosition;
                 float timeRemaining = (float)remaining / (float)m_RecordingHZ;
 
-                yield return new WaitForSeconds(timeRemaining);
+                yield return new WaitForSeconds(.1f);
             }
-
         }
 
         yield break;
     }
+
 
     private void OnRecognize(SpeechRecognitionEvent result)
     {
@@ -167,7 +209,7 @@ public class ExampleStreaming : MonoBehaviour
                 foreach (var alt in res.alternatives)
                 {
                     string text = alt.transcript;
-                    Log.Debug("ExampleStreaming", string.Format("{0} ({1}, {2:0.00})\n", text, res.final ? "Final" : "Interim", alt.confidence));
+                    Log.Debug("ExampleStreamingChunks", string.Format("{0} ({1}, {2:0.00})\n", text, res.final ? "Final" : "Interim", alt.confidence));
                 }
             }
         }
