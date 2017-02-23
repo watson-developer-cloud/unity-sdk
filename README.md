@@ -2857,7 +2857,7 @@ See [CONTRIBUTING.md](.github/CONTRIBUTING.md).
 
 [speech_to_text]: http://www.ibm.com/watson/developercloud/doc/speech-to-text/
 [text_to_speech]: http://www.ibm.com/watson/developercloud/doc/text-to-speech/
-[language_translator]: http://www.ibm.com/watson/developercloud/doc/language-translator/
+[language_translator]: http://www.ibm.com/watson/developercloud/doc/language-translator/index.html
 [dialog]: http://www.ibm.com/watson/developercloud/doc/dialog/
 [natural_language_classifier]: http://www.ibm.com/watson/developercloud/doc/natural-language-classifier/index.html
 
