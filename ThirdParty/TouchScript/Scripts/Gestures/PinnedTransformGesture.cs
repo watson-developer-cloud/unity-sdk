@@ -3,6 +3,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using TouchScript.Gestures.Base;
 using TouchScript.Layers;
 using TouchScript.Utils.Geom;
@@ -17,7 +18,7 @@ namespace TouchScript.Gestures
     /// Recognizes a transform gesture around center of the object, i.e. one finger rotation, scaling or a combination of these.
     /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Pinned Transform Gesture")]
-    [HelpURL("http://touchscript.github.io/docs/Index.html?topic=html/T_TouchScript_Gestures_PinnedTransformGesture.htm")]
+    [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Gestures_PinnedTransformGesture.htm")]
     public class PinnedTransformGesture : PinnedTrasformGestureBase, ITransformGesture
     {
         #region Constants
@@ -142,15 +143,6 @@ namespace TouchScript.Gestures
             base.OnEnable();
 
             updateProjectionPlane();
-            TouchManager.Instance.FrameFinished += frameFinishedHandler;
-        }
-
-        /// <inheritdoc />
-        protected override void OnDisable()
-        {
-            base.OnDisable();
-
-            if (TouchManager.Instance != null) TouchManager.Instance.FrameFinished -= frameFinishedHandler;
         }
 
         #endregion
@@ -158,12 +150,12 @@ namespace TouchScript.Gestures
         #region Gesture callbacks
 
         /// <inheritdoc />
-        protected override void touchBegan(TouchPoint touch)
+        protected override void touchesBegan(IList<TouchPoint> touches)
         {
-            base.touchBegan(touch);
+            base.touchesBegan(touches);
 
             if (State != GestureState.Possible) return;
-            if (NumTouches == 1)
+            if (NumTouches == touches.Count)
             {
                 projectionLayer = activeTouches[0].Layer;
                 updateProjectionPlane();
@@ -175,18 +167,101 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override void touchMoved(TouchPoint touch)
+        protected override void touchesMoved(IList<TouchPoint> touches)
         {
-            base.touchMoved(touch);
+            base.touchesMoved(touches);
 
-            movedTouches.Add(touch);
+            var projectionParams = activeTouches[0].ProjectionParams;
+            var dR = deltaRotation = 0;
+            var dS = deltaScale = 1f;
+
+#if TOUCHSCRIPT_DEBUG
+            var worldCenter = cachedTransform.position;
+            var screenCenter = projectionParams.ProjectFrom(worldCenter);
+            var newScreenPos = getPointScreenPosition();
+            drawDebug(screenCenter, newScreenPos);
+#endif
+
+            if (touchesNumState != TouchesNumState.InRange) return;
+
+            var rotationEnabled = (Type & TransformType.Rotation) == TransformType.Rotation;
+            var scalingEnabled = (Type & TransformType.Scaling) == TransformType.Scaling;
+            if (!rotationEnabled && !scalingEnabled) return;
+            if (!relevantTouches(touches)) return;
+
+#if !TOUCHSCRIPT_DEBUG
+            var theTouch = activeTouches[0];
+            var worldCenter = cachedTransform.position;
+            var screenCenter = projectionParams.ProjectFrom(worldCenter);
+            var newScreenPos = theTouch.Position;
+#endif
+
+            // Here we can't reuse last frame screen positions because points 0 and 1 can change.
+            // For example if the first of 3 fingers is lifted off.
+            var oldScreenPos = getPointPreviousScreenPosition();
+
+            if (rotationEnabled)
+            {
+                if (isTransforming)
+                {
+                    dR = doRotation(worldCenter, oldScreenPos, newScreenPos, projectionParams);
+                }
+                else
+                {
+                    // Find how much we moved perpendicular to the line (center, oldScreenPos)
+                    screenPixelRotationBuffer += TwoD.PointToLineDistance(screenCenter, oldScreenPos, newScreenPos);
+                    angleBuffer += doRotation(worldCenter, oldScreenPos, newScreenPos, projectionParams);
+
+                    if (screenPixelRotationBuffer * screenPixelRotationBuffer >=
+                        screenTransformPixelThresholdSquared)
+                    {
+                        isTransforming = true;
+                        dR = angleBuffer;
+                    }
+                }
+            }
+
+            if (scalingEnabled)
+            {
+                if (isTransforming)
+                {
+                    dS *= doScaling(worldCenter, oldScreenPos, newScreenPos, projectionParams);
+                }
+                else
+                {
+                    screenPixelScalingBuffer += (newScreenPos - screenCenter).magnitude -
+                                                (oldScreenPos - screenCenter).magnitude;
+                    scaleBuffer *= doScaling(worldCenter, oldScreenPos, newScreenPos, projectionParams);
+
+                    if (screenPixelScalingBuffer * screenPixelScalingBuffer >=
+                        screenTransformPixelThresholdSquared)
+                    {
+                        isTransforming = true;
+                        dS = scaleBuffer;
+                    }
+                }
+            }
+
+            if (dR != 0 || dS != 1)
+            {
+                if (State == GestureState.Possible) setState(GestureState.Began);
+                switch (State)
+                {
+                    case GestureState.Began:
+                    case GestureState.Changed:
+                        deltaRotation = dR;
+                        deltaScale = dS;
+                        setState(GestureState.Changed);
+                        break;
+                }
+            }
         }
 
 #if TOUCHSCRIPT_DEBUG
-        /// <inheritdoc />
-        protected override void touchEnded(TouchPoint touch)
+    /// <inheritdoc />
+        protected override void touchesEnded(IList<TouchPoint> touches)
         {
-            base.touchEnded(touch);
+            base.touchesEnded(touches);
 
             if (NumTouches == 0) return;
             drawDebug(activeTouches[0].ProjectionParams.ProjectFrom(cachedTransform.position), activeTouches[0].Position);
@@ -255,111 +330,6 @@ namespace TouchScript.Gestures
                 case ProjectionType.Global:
                     transformPlane = new Plane(projectionPlaneNormal, cachedTransform.position);
                     break;
-            }
-        }
-
-        private void updateMoved()
-        {
-#if TOUCHSCRIPT_DEBUG
-            var worldCenter = cachedTransform.position;
-            var screenCenter = projectionParams.ProjectFrom(worldCenter);
-            var newScreenPos = getPointScreenPosition();
-            drawDebug(screenCenter, newScreenPos);
-#endif
-
-            if (NumTouches == 0) return;
-
-            var rotationEnabled = (Type & TransformType.Rotation) == TransformType.Rotation;
-            var scalingEnabled = (Type & TransformType.Scaling) == TransformType.Scaling;
-            if (!rotationEnabled && !scalingEnabled) return;
-            if (!relevantTouches()) return;
-
-            var dR = deltaRotation = 0;
-            var dS = deltaScale = 1f;
-
-#if !TOUCHSCRIPT_DEBUG
-            var theTouch = activeTouches[0];
-            var worldCenter = cachedTransform.position;
-            var screenCenter = projectionParams.ProjectFrom(worldCenter);
-            var newScreenPos = theTouch.Position;
-#endif
-
-            // Here we can't reuse last frame screen positions because points 0 and 1 can change.
-            // For example if the first of 3 fingers is lifted off.
-            var oldScreenPos = getPointPreviousScreenPosition();
-
-            if (rotationEnabled)
-            {
-                if (isTransforming)
-                {
-                    dR = doRotation(worldCenter, oldScreenPos, newScreenPos, projectionParams);
-                }
-                else
-                {
-                    // Find how much we moved perpendicular to the line (center, oldScreenPos)
-                    screenPixelRotationBuffer += TwoD.PointToLineDistance(screenCenter, oldScreenPos, newScreenPos);
-                    angleBuffer += doRotation(worldCenter, oldScreenPos, newScreenPos, projectionParams);
-
-                    if (screenPixelRotationBuffer * screenPixelRotationBuffer >=
-                        screenTransformPixelThresholdSquared)
-                    {
-                        isTransforming = true;
-                        dR = angleBuffer;
-                    }
-                }
-            }
-
-            if (scalingEnabled)
-            {
-                if (isTransforming)
-                {
-                    dS *= doScaling(worldCenter, oldScreenPos, newScreenPos, projectionParams);
-                }
-                else
-                {
-                    screenPixelScalingBuffer += (newScreenPos - screenCenter).magnitude -
-                                                (oldScreenPos - screenCenter).magnitude;
-                    scaleBuffer *= doScaling(worldCenter, oldScreenPos, newScreenPos, projectionParams);
-
-                    if (screenPixelScalingBuffer * screenPixelScalingBuffer >=
-                        screenTransformPixelThresholdSquared)
-                    {
-                        isTransforming = true;
-                        dS = scaleBuffer;
-                    }
-                }
-            }
-
-            if (dR != 0 || dS != 1)
-            {
-                if (State == GestureState.Possible)
-                {
-                    if (touchesNumState == TouchesNumState.InRange) setState(GestureState.Began);
-                    else
-                    {
-                        // Wrong number of touches!
-                        setState(GestureState.Failed);
-                        return;
-                    }
-                }
-                switch (State)
-                {
-                    case GestureState.Began:
-                    case GestureState.Changed:
-                        deltaRotation = dR;
-                        deltaScale = dS;
-                        setState(GestureState.Changed);
-                        break;
-                }
-            }
-        }
-
-        private void frameFinishedHandler(object sender, EventArgs eventArgs)
-        {
-            if (movedTouches.Count > 0)
-            {
-                updateMoved();
-                movedTouches.Clear();
             }
         }
 

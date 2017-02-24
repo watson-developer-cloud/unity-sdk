@@ -23,6 +23,7 @@ Use this SDK to build Watson-powered applications in Unity. It comes with a set 
   * [Document Conversion](#document-conversion)
   * [AlchemyData News](#alchemy-data-news)
   * [Retrieve and Rank](#retrieve-and-rank)
+  * [Discovery](#discovery)
 * [Developing a basic application in one minute](#developing-a-basic-application-in-one-minute)
 * [Documentation](#documentation)
 * [License](#license)
@@ -43,8 +44,8 @@ Move the **`unity-sdk`** directory into the Assets directory of the Unity projec
 
 ## Configuring your service credentials
 You will need the 'username' and 'password' credentials for each service. Service credentials are different from your Bluemix account username and password.
-1. Determine which services to configure.
 
+1. Determine which services to configure.
 2. If you have configured the services already, complete the following steps. Otherwise, go to step 3.
     1. Log in to Bluemix at https://bluemix.net.
     2. Navigate to the **Dashboard** on your Bluemix account.
@@ -65,9 +66,11 @@ You will need the 'username' and 'password' credentials for each service. Servic
     ![services-1](http://g.recordit.co/zyL5RZYXqa.gif)
 4. Click **Save**, and close the Config Editor.
 
+Note: The Config.json file is saved as plain text in the StreamingAssets directory. It is the user's responsibility to secure the credentials.
+
 ## IBM Watson Services
 ### Speech to Text
-Use the [Speech to Text][speech_to_text] service to recognize the text from a .wav file. Assign the .wav file to the script in the Unity Editor. Speech to text can also be used to convert an audio stream into text.
+Use the [Speech to Text][speech_to_text] service to recognize the text from a .wav file. Assign the .wav file to the script in the Unity Editor. Speech to text can also be used to convert an audio stream into text. When using the Microphone Widget and publishing to iOS, the XCode project plist must be updated with a `NSMicrophoneUsageDescription` or the application will crash silently.
 
 ```cs
 [SerializeField]
@@ -316,7 +319,7 @@ void Start () {
 ```
 
 ### Conversation
-With the IBM Watson™ [Conversation][conversation] service you can create cognitive agents - virtual agents that combine machine learning, natural language understanding, and integrated dialog scripting tools to provide outstanding customer engagements. A workspace should be created using [Conversation tooling][conversation_tooling] and a variable `ConversationV1_ID` should be set in the Config Editor with the Workspace ID. This is required for the service status check in the `Config Editor`.
+With the IBM Watson™ [Conversation][conversation] service you can create cognitive agents - virtual agents that combine machine learning, natural language understanding, and integrated dialog scripting tools to provide outstanding customer engagements. A workspace should be created using [Conversation tooling][conversation_tooling] and a variable `ConversationV1_ID` should be set in the Config Editor with the Workspace ID (In the Config Editor, click `Advanced Mode` and click `Add Variable`). This is required for the service status check in the `Config Editor`.
 
 ```cs
 private Conversation m_Conversation = new Conversation();
@@ -328,12 +331,12 @@ void Start () {
 	m_Conversation.Message(OnMessage, m_WorkspaceID, m_Input);
 }
 
-void OnMessage (DataModels.MessageResponse resp)
+void OnMessage (MessageResponse resp)
 {
-	foreach(DataModels.MessageIntent mi in resp.intents)
-		Debug.Log("intent: " + mi.intent + ", confidence: " + mi.confidence);
+   foreach(Intent mi in resp.intents)
+       Debug.Log("intent: " + mi.intent + ", confidence: " + mi.confidence);
 
-	Debug.Log("response: " + resp.output.text);
+   Debug.Log("response: " + resp.output.text);
 }
 ```
 
@@ -1559,65 +1562,158 @@ private void OnGetCombinedData(CombinedCallData combinedData, string data)
 
 
 ### Personality Insights
-The IBM Watson™ [Personality Insights][personality_insights] service enables applications to derive insights from social media, enterprise data, or other digital communications. The service uses linguistic analytics to infer individuals' intrinsic personality characteristics, including Big Five, Needs, and Values, from digital communications such as email, text messages, tweets, and forum posts. The service can automatically infer, from potentially noisy social media, portraits of individuals that reflect their personality characteristics.
+The IBM Watson™ [Personality Insights][personality_insights] service provides a Representational State Transfer (REST) Application Programming Interface (API) that enables applications to derive insights from social media, enterprise data, or other digital communications. The service uses linguistic analytics to infer individuals' intrinsic personality characteristics, including Big Five, Needs, and Values, from digital communications such as email, text messages, tweets, and forum posts. The service can automatically infer, from potentially noisy social media, portraits of individuals that reflect their personality characteristics. The service can report consumption preferences based on the results of its analysis, and for JSON content that is timestamped, it can report temporal behavior.
 
 ```cs
 PersonalityInsights m_personalityInsights = new PersonalityInsights();
+	private string testString = "<text-here>"";
+  private string dataPath;
 
-void Start () {
-	string dataPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/personalityInsights.json";
+	void Start () {
+		LogSystem.InstallDefaultReactors();
 
-	if(!m_personalityInsights.GetProfile(OnGetProfile, dataPath, DataModels.ContentType.TEXT_PLAIN, DataModels.Language.ENGLISH))
-            Log.Debug("ExamplePersonalityInsights", "Failed to get profile!");
-}
+		dataPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/personalityInsights.json";
 
-private void OnGetProfile(DataModels.Profile profile, string data)
-{
-    Log.Debug("ExamplePersonalityInsights", "data: {0}", data);
-    if(profile != null)
-    {
-        if(!string.IsNullOrEmpty(profile.id))
-            Log.Debug("ExamplePersonalityInsights", "id: {0}", profile.id);
-        if(!string.IsNullOrEmpty(profile.source))
-            Log.Debug("ExamplePersonalityInsights", "source: {0}", profile.source);
-        if(!string.IsNullOrEmpty(profile.processed_lang))
-            Log.Debug("ExamplePersonalityInsights", "proccessed_lang: {0}", profile.processed_lang);
-        if(!string.IsNullOrEmpty(profile.word_count))
-            Log.Debug("ExamplePersonalityInsights", "word_count: {0}", profile.word_count);
-        if(!string.IsNullOrEmpty(profile.word_count_message))
-            Log.Debug("ExamplePersonalityInsights", "word_count_message: {0}", profile.word_count_message);
+		if(!m_personalityInsights.GetProfile(OnGetProfileJson, dataPath, ContentType.TEXT_HTML, ContentLanguage.ENGLISH, ContentType.APPLICATION_JSON, AcceptLanguage.ENGLISH, true, true, true))
+			Log.Debug("ExamplePersonalityInsights", "Failed to get profile!");
 
-        if(profile.tree != null)
-        {
-            LogTraitTree(profile.tree);
-        }
-    }
-    else
-    {
-        Log.Debug("ExamplePersonalityInsights", "Failed to get profile!");
-    }
-}
+		if (!m_personalityInsights.GetProfile(OnGetProfileText, testString, ContentType.TEXT_HTML, ContentLanguage.ENGLISH, ContentType.APPLICATION_JSON, AcceptLanguage.ENGLISH, true, true, true))
+			Log.Debug("ExamplePersonalityInsights", "Failed to get profile!");
+	}
+	private void OnGetProfileText(Profile profile, string data)
+	{
+		if (profile != null)
+		{
+			if (!string.IsNullOrEmpty(profile.processed_language))
+				Log.Debug("TestPersonalityInsightsV3", "processed_language: {0}", profile.processed_language);
 
-private void LogTraitTree(DataModels.TraitTreeNode traitTreeNode)
-{
-    if(!string.IsNullOrEmpty(traitTreeNode.id))
-        Log.Debug("ExamplePersonalityInsights", "id: {0}", traitTreeNode.id);
-    if(!string.IsNullOrEmpty(traitTreeNode.name))
-        Log.Debug("ExamplePersonalityInsights", "name: {0}", traitTreeNode.name);
-    if(!string.IsNullOrEmpty(traitTreeNode.category))
-        Log.Debug("ExamplePersonalityInsights", "category: {0}", traitTreeNode.category);
-    if(!string.IsNullOrEmpty(traitTreeNode.percentage))
-        Log.Debug("ExamplePersonalityInsights", "percentage: {0}", traitTreeNode.percentage);
-    if(!string.IsNullOrEmpty(traitTreeNode.sampling_error))
-        Log.Debug("ExamplePersonalityInsights", "sampling_error: {0}", traitTreeNode.sampling_error);
-    if(!string.IsNullOrEmpty(traitTreeNode.raw_score))
-        Log.Debug("ExamplePersonalityInsights", "raw_score: {0}", traitTreeNode.raw_score);
-    if(!string.IsNullOrEmpty(traitTreeNode.raw_sampling_error))
-        Log.Debug("ExamplePersonalityInsights", "raw_sampling_error: {0}", traitTreeNode.raw_sampling_error);
-    if(traitTreeNode.children != null && traitTreeNode.children.Length > 0)
-        foreach(DataModels.TraitTreeNode childNode in traitTreeNode.children)
-            LogTraitTree(childNode);
-}
+			Log.Debug("TestPersonalityInsightsV3", "word_count: {0}", profile.word_count);
+
+			if (!string.IsNullOrEmpty(profile.word_count_message))
+				Log.Debug("TestPersonalityInsightsV3", "word_count_message: {0}", profile.word_count_message);
+
+			if (profile.personality != null && profile.personality.Length > 0)
+			{
+				Log.Debug("TestPersonalityInsightsV3", "Personality trait tree");
+				foreach (TraitTreeNode node in profile.personality)
+					LogTraitTree(node);
+			}
+
+			if (profile.values != null && profile.values.Length > 0)
+			{
+				Log.Debug("TestPersonalityInsightsV3", "Values trait tree");
+				foreach (TraitTreeNode node in profile.values)
+					LogTraitTree(node);
+			}
+
+			if (profile.needs != null && profile.personality.Length > 0)
+			{
+				Log.Debug("TestPersonalityInsightsV3", "Needs trait tree");
+				foreach (TraitTreeNode node in profile.needs)
+					LogTraitTree(node);
+			}
+
+			if (profile.behavior != null && profile.behavior.Length > 0)
+			{
+				Log.Debug("TestPersonalityInsightsV3", "Behavior tree");
+				foreach (BehaviorNode behavior in profile.behavior)
+				{
+					Log.Debug("TestPersonalityInsightsV3", "trait_id: {0}", behavior.trait_id);
+					Log.Debug("TestPersonalityInsightsV3", "name: {0}", behavior.name);
+					Log.Debug("TestPersonalityInsightsV3", "category: {0}", behavior.category);
+					Log.Debug("TestPersonalityInsightsV3", "percentage: {0}", behavior.percentage.ToString());
+					Log.Debug("TestPersonalityInsightsV3", "----------------");
+				}
+			}
+
+			if (profile.consumption_preferences != null && profile.consumption_preferences.Length > 0)
+			{
+				Log.Debug("TestPersonalityInsightsV3", "ConsumptionPreferencesCategories");
+				foreach (ConsumptionPreferencesCategoryNode categoryNode in profile.consumption_preferences)
+					LogConsumptionPreferencesCategory(categoryNode);
+			}
+		}
+	}
+
+	private void OnGetProfileJson(Profile profile, string data)
+	{
+		if (profile != null)
+		{
+			if (!string.IsNullOrEmpty(profile.processed_language))
+				Log.Debug("TestPersonalityInsightsV3", "processed_language: {0}", profile.processed_language);
+
+			Log.Debug("TestPersonalityInsightsV3", "word_count: {0}", profile.word_count);
+
+			if (!string.IsNullOrEmpty(profile.word_count_message))
+				Log.Debug("TestPersonalityInsightsV3", "word_count_message: {0}", profile.word_count_message);
+
+			if (profile.personality != null && profile.personality.Length > 0)
+			{
+				Log.Debug("TestPersonalityInsightsV3", "Personality trait tree");
+				foreach (TraitTreeNode node in profile.personality)
+					LogTraitTree(node);
+			}
+
+			if (profile.values != null && profile.values.Length > 0)
+			{
+				Log.Debug("TestPersonalityInsightsV3", "Values trait tree");
+				foreach (TraitTreeNode node in profile.values)
+					LogTraitTree(node);
+			}
+
+			if (profile.needs != null && profile.personality.Length > 0)
+			{
+				Log.Debug("TestPersonalityInsightsV3", "Needs trait tree");
+				foreach (TraitTreeNode node in profile.needs)
+					LogTraitTree(node);
+			}
+
+			if (profile.behavior != null && profile.behavior.Length > 0)
+			{
+				Log.Debug("TestPersonalityInsightsV3", "Behavior tree");
+				foreach (BehaviorNode behavior in profile.behavior)
+				{
+					Log.Debug("TestPersonalityInsightsV3", "trait_id: {0}", behavior.trait_id);
+					Log.Debug("TestPersonalityInsightsV3", "name: {0}", behavior.name);
+					Log.Debug("TestPersonalityInsightsV3", "category: {0}", behavior.category);
+					Log.Debug("TestPersonalityInsightsV3", "percentage: {0}", behavior.percentage.ToString());
+					Log.Debug("TestPersonalityInsightsV3", "----------------");
+				}
+			}
+
+			if (profile.consumption_preferences != null && profile.consumption_preferences.Length > 0)
+			{
+				Log.Debug("TestPersonalityInsightsV3", "ConsumptionPreferencesCategories");
+				foreach (ConsumptionPreferencesCategoryNode categoryNode in profile.consumption_preferences)
+					LogConsumptionPreferencesCategory(categoryNode);
+			}
+		}
+	}
+
+	private void LogTraitTree(TraitTreeNode traitTreeNode)
+	{
+		Log.Debug("TestPersonalityInsightsV3", "trait_id: {0} | name: {1} | category: {2} | percentile: {3} | raw_score: {4}",
+			string.IsNullOrEmpty(traitTreeNode.trait_id) ? "null" : traitTreeNode.trait_id,
+			string.IsNullOrEmpty(traitTreeNode.name) ? "null" : traitTreeNode.name,
+			string.IsNullOrEmpty(traitTreeNode.category) ? "null" : traitTreeNode.category,
+			string.IsNullOrEmpty(traitTreeNode.percentile.ToString()) ? "null" : traitTreeNode.percentile.ToString(),
+			string.IsNullOrEmpty(traitTreeNode.raw_score.ToString()) ? "null" : traitTreeNode.raw_score.ToString());
+
+		if (traitTreeNode.children != null && traitTreeNode.children.Length > 0)
+			foreach (TraitTreeNode childNode in traitTreeNode.children)
+				LogTraitTree(childNode);
+	}
+
+	private void LogConsumptionPreferencesCategory(ConsumptionPreferencesCategoryNode categoryNode)
+	{
+		Log.Debug("TestPersonalityInsightsV3", "consumption_preference_category_id: {0} | name: {1}", categoryNode.consumption_preference_category_id, categoryNode.name);
+
+		foreach (ConsumptionPreferencesNode preferencesNode in categoryNode.consumption_preferences)
+			Log.Debug("TestPersonalityInsightsV3", "\t consumption_preference_id: {0} | name: {1} | score: {2}",
+				string.IsNullOrEmpty(preferencesNode.consumption_preference_id) ? "null" : preferencesNode.consumption_preference_id,
+				string.IsNullOrEmpty(preferencesNode.name) ? "null" : preferencesNode.name,
+				string.IsNullOrEmpty(preferencesNode.score.ToString()) ? "null" : preferencesNode.score.ToString());
+	}
 ```
 
 ### Document Conversion
@@ -2186,9 +2282,7 @@ private void OnGetRankers(ListRankersPayload resp, string data)
             Log.Debug("ExampleRetrieveAndRank", "OnGetRankers | ranker name: {0}, ID: {1}, created: {2}, url: {3}.", ranker.name, ranker.ranker_id, ranker.created, ranker.url);
     }
     else
-    {
         Log.Debug("ExampleRetrieveAndRank", "OnGetRankers | Get Ranker Response is null!");
-    }
 }
 ```
 
@@ -2208,13 +2302,9 @@ void Start()
 private void OnCreateRanker(RankerStatusPayload resp, string data)
 {
 	if (resp != null)
-	{
 		Log.Debug("ExampleRetrieveAndRank", "OnCreateRanker | ID: {0}, url: {1}, name: {2}, created: {3}, status: {4}, statusDescription: {5}.", resp.ranker_id, resp.url, resp.name, resp.created, resp.status, resp.status_description);
-	}
 	else
-	{
 		Log.Debug("ExampleRetrieveAndRank", "OnCreateRanker | Get Cluster Response is null!");
-	}
 }
 ```
 
@@ -2248,9 +2338,7 @@ private void OnRank(RankerOutputPayload resp, string data)
 			}
 	}
 	else
-	{
 		Log.Debug("ExampleRetrieveAndRank", "OnRank | Rank response is null!");
-	}
 }
 ```
 
@@ -2268,13 +2356,9 @@ void Start()
 private void OnDeleteRanker(bool success, string data)
 {
 	if (success)
-	{
 		Log.Debug("ExampleRetrieveAndRank", "OnDeleteRanker | Success!");
-	}
 	else
-	{
 		Log.Debug("ExampleRetrieveAndRank", "OnDeleteRanker | Failure!");
-	}
 }
 ```
 
@@ -2292,16 +2376,444 @@ void Start()
 private void OnGetRanker(RankerStatusPayload resp, string data)
 {
 	if(resp != null)
-	{
 		Log.Debug("ExampleRetrieveAndRank", "GetRanker | ranker_id: {0}, url: {1}, name: {2}, created: {3}, status: {4}, status_description: {5}.", resp.ranker_id, resp.url, resp.name, resp.created, resp.status, resp.status_description);
-	}
 	else
-	{
 		Log.Debug("ExampleRetrieveAndRank", "GetRanker | GetRanker response is null!");
-	}
 }
 ```
 
+### Discovery
+The IBM Watson™ [Discovery][discovery] Service uses data analysis combined with cognitive intuition in order to take your unstructured data and enrich it so that you can query it to return the information that you need from it.
+
+####  Creating an environment
+Creates an environment for the service instance. Note: You can create only one environment per service instance. Attempting to create another environment for the same service instance results in an error.
+
+```cs
+private Discovery m_Discovery = new Discovery();
+
+private void CreateEnvironment()
+{
+  if (!m_Discovery.AddEnvironment(OnAddEnvironment, <environment-name>, <environment-description>, <environment-size>))
+    Log.Debug("ExampleDiscoveryV1", "Failed to add environment");
+}
+
+private void OnAddEnvironment(Environment resp, string data)
+{
+  if (resp != null)
+    Log.Debug("ExampleDiscoveryV1", "Added {0}", resp.environment_id, data);
+  else
+    Log.Debug("ExampleDiscoveryV1", "resp is null, {0}", data);
+}
+```
+
+####  Listing environments
+List existing environments for the service instance.
+
+```cs
+private Discovery m_Discovery = new Discovery();
+
+private void GetEnvironments()
+{
+  if (!m_Discovery.GetEnvironments(OnGetEnvironments))
+    Log.Debug("ExampleDiscoveryV1", "Failed to get environments");
+}
+
+private void OnGetEnvironments(GetEnvironmentsResponse resp, string data)
+{
+  if (resp != null)
+  {
+    foreach (Environment environment in resp.environments)
+      Log.Debug("ExampleDiscoveryV1", "environment_id: {0}", environment.environment_id);
+  }
+  else
+    Log.Debug("ExampleDiscoveryV1", "resp is null");
+}
+```
+
+####  Listing environment details
+Gets detailed information about the specified environment.
+
+```cs
+private Discovery m_Discovery = new Discovery();
+
+private void GetEnvironment()
+{
+  if(!m_Discovery.GetEnvironment(OnGetEnvironment, <environment-id>))
+    Log.Debug("ExampleDiscoveryV1", "Failed to get environment");
+}
+
+private void OnGetEnvironment(Environment resp, string data)
+{
+  if (resp != null)
+    Log.Debug("ExampleDiscoveryV1", "environment_name: {0}", resp.name);
+  else
+    Log.Debug("ExampleDiscoveryV1", "resp is null");
+}
+```
+
+####  Deleting an environment
+Updates an existing environment.
+
+```cs
+private Discovery m_Discovery = new Discovery();
+
+private void DeleteEnvironment()
+{
+  if (!m_Discovery.DeleteEnvironment(OnDeleteEnvironment, <environment-id>))
+    Log.Debug("ExampleDiscoveryV1", "Failed to delete environment");
+}
+
+private void OnDeleteEnvironment(bool success, string data)
+{
+  if (success)
+    Log.Debug("ExampleDiscoveryV1", "Delete environment successful");
+  else
+    Log.Debug("ExampleDiscoveryV1", "Delete environment failed");
+}
+```
+
+####  Adding a configuration
+Adds a configuration to the service instance.
+
+```cs
+private Discovery m_Discovery = new Discovery();
+
+private void AddConfiguration()
+{
+  if (!m_Discovery.AddConfiguration(OnAddConfiguration, <environment-id>, <configuration-json-path>))
+    Log.Debug("ExampleDiscoveryV1", "Failed to add configuration");
+}
+
+private void OnAddConfiguration(Configuration resp, string data)
+{
+  if (resp != null)
+    Log.Debug("ExampleDiscoveryV1", "Configuration: {0}, {1}", resp.configuration_id, resp.name);
+  else
+    Log.Debug("ExampleDiscoveryV1", "resp is null, {0}", data);
+}
+```
+
+####  Listing configurations
+Lists existing configurations for the service instance.
+
+```cs
+private Discovery m_Discovery = new Discovery();
+
+private void GetConfigurations()
+{
+  if(!m_Discovery.GetConfigurations(OnGetConfigurations, <environment-id>))
+    Log.Debug("ExampleDiscoveryV1", "Failed to get configurations");
+}
+
+private void OnGetConfigurations(GetConfigurationsResponse resp, string data)
+{
+  if (resp != null)
+  {
+    if (resp.configurations != null && resp.configurations.Length > 0)
+    {
+      foreach (ConfigurationRef configuration in resp.configurations)
+      {
+        Log.Debug("ExampleDiscoveryV1", "Configuration: {0}, {1}", configuration.configuration_id, configuration.name);
+      }
+    }
+    else
+      Log.Debug("ExampleDiscoveryV1", "There are no configurations for this environment.");
+  }
+  else
+    Log.Debug("ExampleDiscoveryV1", "resp is null, {0}", data);
+}
+```
+
+####  Listing configuration details
+Get information about the specified configuration.
+
+```cs
+private Discovery m_Discovery = new Discovery();
+
+private void GetConfiguration()
+{
+  if (!m_Discovery.GetConfiguration(OnGetConfiguration, <environment-id>, <configuration-id>))
+    Log.Debug("ExampleDiscoveryV1", "Failed to get configuration");
+}
+
+private void OnGetConfiguration(Configuration resp, string data)
+{
+  if (resp != null)
+    Log.Debug("ExampleDiscoveryV1", "Configuration: {0}, {1}", resp.configuration_id, resp.name);
+  else
+    Log.Debug("ExampleDiscoveryV1", "resp is null, {0}", data);
+}
+```
+
+####  Deleting a configuration
+Deletes an existing configuration from the service instance.
+
+```cs
+private Discovery m_Discovery = new Discovery();
+
+private void DeleteConfiguration()
+{
+  if (!m_Discovery.DeleteConfiguration(OnDeleteConfiguration, <environment-id>, <configuration-id>))
+    Log.Debug("ExampleDiscoveryV1", "Failed to delete configuration");
+}
+
+private void OnDeleteConfiguration(bool success, string data)
+{
+  if (success)
+    Log.Debug("ExampleDiscoveryV1", "Delete configuration successful");
+  else
+    Log.Debug("ExampleDiscoveryV1", "Delete configuration failed");
+}
+```
+
+####  Testing a configuration
+Run a sample document against your configuration or the default configuration and return diagnostic information designed to help you understand how the document was processed. The document is not added to a collection.
+
+```cs
+private Discovery m_Discovery = new Discovery();
+
+private void PreviewConfiguration()
+{
+  if (!m_Discovery.PreviewConfiguration(OnPreviewConfiguration, <environment-id>, <configuration-id>, null, <content-file-path>, <metadata>))
+    Log.Debug("ExampleDiscoveryV1", "Failed to preview configuration");
+}
+
+private void OnPreviewConfiguration(TestDocument resp, string data)
+{
+  if (resp != null)
+    Log.Debug("ExampleDiscoveryV1", "Preview succeeded: {0}", resp.status);
+  else
+    Log.Debug("ExampleDiscoveryV1", "Failed to preview configuration");
+}
+```
+
+####  Creating a collection
+Creates a new collection for storing documents.
+
+```cs
+private Discovery m_Discovery = new Discovery();
+
+private void CreateCollection()
+{
+  if (!m_Discovery.AddCollection(OnAddCollection, <environment-id>, <collection-name>, <collection-description>, <configuration-id>))
+    Log.Debug("ExampleDiscovery", "Failed to add collection");
+}
+
+private void OnAddCollection(CollectionRef resp, string data)
+{
+  if (resp != null)
+    Log.Debug("ExampleDiscoveryV1", "Collection: {0}, {1}", resp.collection_id, resp.name);
+  else
+    Log.Debug("ExampleDiscoveryV1", "resp is null, {0}", data);
+}
+```
+
+####  Listing collections
+Display a list of existing collections.
+
+```cs
+private Discovery m_Discovery = new Discovery();
+
+private void GetCollections()
+{
+  if (!m_Discovery.GetCollections(OnGetCollections, m_DefaultEnvironmentID))
+    Log.Debug("ExampleDiscovery", "Failed to get collections");
+}
+
+private void OnGetCollections(GetCollectionsResponse resp, string data)
+{
+  if (resp != null)
+  {
+    if (resp.collections != null && resp.collections.Length > 0)
+    {
+      foreach (CollectionRef collection in resp.collections)
+        Log.Debug("ExampleDiscoveryV1", "Collection: {0}, {1}", collection.collection_id, collection.name);
+    }
+    else
+      Log.Debug("ExampleDiscoveryV1", "There are no collections");
+  }
+  else
+    Log.Debug("ExampleDiscoveryV1", "Failed to get collections");
+}
+```
+
+####  Listing collection details
+Show detailed information about an existing collection.
+
+```cs
+private Discovery m_Discovery = new Discovery();
+
+private void GetCollection()
+{
+  if (!m_Discovery.GetCollection(OnGetCollection, <environment-id>, <collection-id>))
+    Log.Debug("ExampleDiscovery", "Failed to get collection");
+}
+
+private void OnGetCollection(Collection resp, string data)
+{
+  if (resp != null)
+    Log.Debug("ExampleDiscoveryV1", "Collection: {0}, {1}", resp.collection_id, resp.name);
+  else
+    Log.Debug("ExampleDiscoveryV1", "Failed to get collections");
+}
+```
+
+####  Deleting a collection
+Deletes an existing collection.
+
+```cs
+private Discovery m_Discovery = new Discovery();
+
+private void DeleteCollection()
+{
+  if (!m_Discovery.DeleteCollection(OnDeleteCollection, <environment-id>, <collection-id>))
+    Log.Debug("ExampleDiscovery", "Failed to add collection");
+}
+
+private void OnDeleteCollection(bool success, string data)
+{
+    if (success)
+        Log.Debug("ExampleDiscoveryV1", "Delete collection successful");
+    else
+        Log.Debug("ExampleDiscoveryV1", "Delete collection failed");
+}
+```
+
+####  Listing fields
+Gets a list of the unique fields, and each field's type, that are stored in a collection's index.
+
+```cs
+private Discovery m_Discovery = new Discovery();
+
+private void Start()
+{
+  if (!m_Discovery.GetFields(OnGetFields, m_CreatedEnvironmentID, m_CreatedCollectionID))
+    Log.Debug("ExampleDiscoveryV1", "Failed to get fields");
+}
+
+private void OnGetFields(GetFieldsResponse resp, string customData)
+{
+  if (resp != null)
+  {
+   foreach (Field field in resp.fields)
+     Log.Debug("ExampleDiscoveryV1", "Field: {0}, type: {1}", field.field, field.type);
+  }
+  else
+   Log.Debug("ExampleDiscoveryV1", "Discovery.GetFields(); resp is null");
+}
+```
+
+####  Adding a document
+Add a document to your collection.
+
+```cs
+private Discovery m_Discovery = new Discovery();
+
+private void AddDocument()
+{
+  if (!m_Discovery.AddDocument(OnAddDocument, <environment-id>, <collection-id>, <document-file-path>, <configuration-id>, <configuration>))
+    Log.Debug("ExampleDiscovery", "Failed to add document");
+}
+
+private void OnAddDocument(DocumentAccepted resp, string data)
+{
+  if(resp != null)
+    Log.Debug("ExampleDiscoveryV1", "Added Document {0} {1}", resp.document_id, resp.status);
+  else
+    Log.Debug("ExampleDiscoveryV1", "resp is null, {0}", data);
+}
+```
+
+####  Updating a document
+Update or partially update a document to create or replace an existing document.
+
+```cs
+private Discovery m_Discovery = new Discovery();
+
+private void UpdateDocument()
+{
+  if (!m_Discovery.UpdateDocument(OnUpdateDocument, <environment-id>, <collection-id>, <document-id>, <document-file-path>, <configuration-id>, <configuration>))
+    Log.Debug("ExampleDiscovery", "Failed to update document");
+}
+
+private void OnUpdateDocument(DocumentAccepted resp, string data)
+{
+    if (resp != null)
+      Log.Debug("ExampleDiscoveryV1", "Updated Document {0} {1}", resp.document_id, resp.status);
+    else
+      Log.Debug("ExampleDiscoveryV1", "resp is null, {0}", data);
+}
+```
+
+####  Listing document details
+Display status information about a submitted document.
+
+```cs
+private Discovery m_Discovery = new Discovery();
+
+private void GetDocument()
+{
+  if (!m_Discovery.GetDocument(OnGetDocument, <environment-id>, <collection-id>, <document-id>))
+    Log.Debug("ExampleDiscovery", "Failed to get document");
+}
+
+private void OnGetDocument(DocumentStatus resp, string data)
+{
+  if(resp != null)
+    Log.Debug("ExampleDiscoveryV1", "Got Document {0} {1}", resp.document_id, resp.status);
+  else
+    Log.Debug("ExampleDiscoveryV1", "resp is null, {0}", data);
+}
+```
+
+####  Deleting a document
+Delete a document from a collection.
+
+```cs
+private Discovery m_Discovery = new Discovery();
+
+private void DeleteDocument()
+{
+  if (!m_Discovery.DeleteDocument(OnDeleteDocument, <environment-id>, <collection-id>, <document-id>))
+    Log.Debug("ExampleDiscovery", "Failed to delete document");
+}
+
+private void OnDeleteDocument(bool success, string data)
+{
+    if (success)
+        Log.Debug("ExampleDiscoveryV1", "Delete document successful");
+    else
+        Log.Debug("ExampleDiscoveryV1", "Delete collection failed");
+}
+```
+
+####  Querying your collection
+Delete a document from a collection.
+
+Once your content is uploaded and enriched by the Discovery service, you can build queries to search your content. For a deep dive into queries, see [Building Queries and Delivering Content][discovery-query].
+
+```cs
+private Discovery m_Discovery = new Discovery();
+
+private void Query()
+{
+  if (!m_Discovery.Query(OnQuery, <environment-id>, <collection-id>, <filter>, <query>, <aggregation>, <count>, <return>, <offset>))
+    Log.Debug("ExampleDiscovery", "Failed to query");
+}
+
+private void OnQuery(QueryResponse resp, string data)
+{
+  if(resp != null)
+  {
+    Log.Debug("ExampleDiscoveryV1", "key: {0}, matching results: {1}", resp.aggregations.term.results.key, resp.aggregations.term.results.matching_results);
+
+    foreach(QueryResult result in resp.results)
+      Log.Debug("ExampleDiscoveryV1", "Query response: id: {0}, score: {1}", result.id, result.score);
+  }
+  else
+    Log.Debug("ExampleDiscoveryV1", "resp is null, {0}", data);
+}
+```
 
 ## Developing a basic application in one minute
 You can quickly develop a basic application that uses the Speech to Text service and the Natural Language Classifier service by using the prefabs that come with the SDK. Ensure that you prepare the test data before you complete the the following steps:
@@ -2337,31 +2849,33 @@ This library is licensed under Apache 2.0. Full license text is available in [LI
 ## Contributing
 See [CONTRIBUTING.md](.github/CONTRIBUTING.md).
 
-[wdc]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/
+[wdc]: http://www.ibm.com/watson/developercloud/
 [wdc_unity_sdk]: https://github.com/watson-developer-cloud/unity-sdk
 [latest_release]: https://github.com/watson-developer-cloud/unity-sdk/releases/latest
 [bluemix_registration]: http://bluemix.net/registration
 [get_unity]: https://unity3d.com/get-unity
 
-[speech_to_text]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/speech-to-text/
-[text_to_speech]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/text-to-speech/
-[language_translator]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/language-translator/
-[dialog]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/dialog/
-[natural_language_classifier]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/nl-classifier/
+[speech_to_text]: http://www.ibm.com/watson/developercloud/doc/speech-to-text/
+[text_to_speech]: http://www.ibm.com/watson/developercloud/doc/text-to-speech/
+[language_translator]: http://www.ibm.com/watson/developercloud/doc/language-translator/index.html
+[dialog]: http://www.ibm.com/watson/developercloud/doc/dialog/
+[natural_language_classifier]: http://www.ibm.com/watson/developercloud/doc/natural-language-classifier/index.html
 
 [alchemy_language]: http://www.alchemyapi.com/products/alchemylanguage
-[alchemyData_news]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/alchemy-data-news.html
+[alchemyData_news]: http://www.ibm.com/watson/developercloud/alchemy-data-news.html
 [sentiment_analysis]: http://www.alchemyapi.com/products/alchemylanguage/sentiment-analysis
-[tone_analyzer]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/tone-analyzer/
-[tradeoff_analytics]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/tradeoff-analytics/
-[conversation]:http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/conversation/
-[visual_recognition]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/visual-recognition/api/v3/
-[personality_insights]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/personality-insights/api/v2/
+[tone_analyzer]: http://www.ibm.com/watson/developercloud/doc/tone-analyzer/
+[tradeoff_analytics]: http://www.ibm.com/watson/developercloud/doc/tradeoff-analytics/
+[conversation]:http://www.ibm.com/watson/developercloud/doc/conversation/
+[visual_recognition]: http://www.ibm.com/watson/developercloud/visual-recognition/api/v3/
+[personality_insights]: http://www.ibm.com/watson/developercloud/personality-insights/api/v2/
 [conversation_tooling]: https://www.ibmwatsonconversation.com
 [retrieve_and_rank]: http://www.ibm.com/watson/developercloud/retrieve-and-rank/api/v1/
-[document_conversion]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/document-conversion/api/v1/
+[discovery]: http://www.ibm.com/watson/developercloud/discovery/api/v1/
+[document_conversion]: http://www.ibm.com/watson/developercloud/document-conversion/api/v1/
 [expressive_ssml]: http://www.ibm.com/watson/developercloud/doc/text-to-speech/http.shtml#expressive
 [ssml]: http://www.ibm.com/watson/developercloud/doc/text-to-speech/SSML.shtml
+[discovery-query]: http://www.ibm.com/watson/developercloud/doc/discovery/using.shtml
 
 [dialog_service]: http://www.ibm.com/watson/developercloud/doc/dialog/
 [dialog_migration]: https://www.ibm.com/watson/developercloud/doc/conversation/migration.shtml

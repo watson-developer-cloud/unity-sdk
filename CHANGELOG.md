@@ -1,14 +1,36 @@
 Change Log
 ==========
+## Version 0.13.0
+_2017-01-25_
+
+* New: Abstracted `Discovery` service.
+* Fix: Updated TouchScript plugin.
+* New: Updated builds to use Unity 5.5.
+* Fix: TextToSpeech Widget now has multi output.
+* Fix: Added custom scenes in build editor.
+
+## Version 0.13.0
+_2016-12-02_
+
+* Fix: Increased conversation version.
+* Fix: Fixed infinite loop in Conversation service example.
+
+## Version 0.12.0
+_2016-11-04_
+
+* New: Added streaming `SpeechToText` example.
+* New: Abstraction for `Personality Insights V3`
+
 ## Version 0.11.0
-_2016_10_27_
+_2016-10-27_
+
 * New: Abstracted `Speech to Text` customization methods.
 
 ## Version 0.10.0
-_2016_09_23_
+_2016-09-23_
 
 * New: Added `similarity search` to the `Visual Recognition` service.
-* Fix: `Touch Widget` improvmements.
+* Fix: `Touch Widget` improvements.
 * Fix: Disabled 3rd Party plugin warnings.
 * Fix: Removed `Conversation` Message overload method that takes only input and conversationID.
 * Fix: Rewrote `Conversation` example script to show how to create MessageRequest object.

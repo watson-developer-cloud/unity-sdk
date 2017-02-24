@@ -23,59 +23,59 @@ using System.Collections.Generic;
 
 namespace IBM.Watson.DeveloperCloud.Services
 {
-    /// <summary>
-    /// Callback for the GetServiceStatus() function.
-    /// </summary>
-    /// <param name="serviceID">The ID of the service.</param>
-    /// <param name="active">The status of the service, true is up, false is down.</param>
-    public delegate void ServiceStatus(string serviceID, bool active);
+  /// <summary>
+  /// Callback for the GetServiceStatus() function.
+  /// </summary>
+  /// <param name="serviceID">The ID of the service.</param>
+  /// <param name="active">The status of the service, true is up, false is down.</param>
+  public delegate void ServiceStatus(string serviceID, bool active);
 
+  /// <summary>
+  /// This interface defines common interface for all watson services.
+  /// </summary>
+  public interface IWatsonService
+  {
     /// <summary>
-    /// This interface defines common interface for all watson services.
+    /// Returns the service ID.
     /// </summary>
-    public interface IWatsonService
-    {
-        /// <summary>
-        /// Returns the service ID.
-        /// </summary>
-        /// <returns>A string containing the service ID.</returns>
-        string GetServiceID();
-        /// <summary>
-        /// This should check if the service is up or down, and invoke the callback with the current
-        /// state of the service once determined.
-        /// </summary>
-        /// <param name="callback">The callback to invoke.</param>
-        void GetServiceStatus(ServiceStatus callback);
-    }
+    /// <returns>A string containing the service ID.</returns>
+    string GetServiceID();
+    /// <summary>
+    /// This should check if the service is up or down, and invoke the callback with the current
+    /// state of the service once determined.
+    /// </summary>
+    /// <param name="callback">The callback to invoke.</param>
+    void GetServiceStatus(ServiceStatus callback);
+  }
 
+  /// <summary>
+  /// Service helper class.
+  /// </summary>
+  public static class ServiceHelper
+  {
     /// <summary>
-    /// Service helper class.
+    /// This returns a instance of all services.
     /// </summary>
-    public static class ServiceHelper
+    /// <returns>An array of IWatsonService instances.</returns>
+    public static IWatsonService[] GetAllServices(bool reqCredentials = false)
     {
-        /// <summary>
-        /// This returns a instance of all services.
-        /// </summary>
-        /// <returns>An array of IWatsonService instances.</returns>
-        public static IWatsonService[] GetAllServices(bool reqCredentials = false)
+      List<IWatsonService> services = new List<IWatsonService>();
+
+      Type[] types = Utilities.Utility.FindAllDerivedTypes(typeof(IWatsonService));
+      foreach (var type in types)
+      {
+        try
         {
-            List<IWatsonService> services = new List<IWatsonService>();
-
-            Type[] types = Utilities.Utility.FindAllDerivedTypes(typeof(IWatsonService));
-            foreach (var type in types)
-            {
-                try
-                {
-                    IWatsonService serviceObject = Activator.CreateInstance(type) as IWatsonService;
-                    if (reqCredentials && Config.Instance.FindCredentials(serviceObject.GetServiceID()) == null)
-                        continue;       // skip services that don't have credential data..
-                    services.Add(serviceObject as IWatsonService);
-                }
-                catch (Exception)
-                { }
-            }
-
-            return services.ToArray();
+          IWatsonService serviceObject = Activator.CreateInstance(type) as IWatsonService;
+          if (reqCredentials && Config.Instance.FindCredentials(serviceObject.GetServiceID()) == null)
+            continue;       // skip services that don't have credential data..
+          services.Add(serviceObject as IWatsonService);
         }
+        catch (Exception)
+        { }
+      }
+
+      return services.ToArray();
     }
+  }
 }

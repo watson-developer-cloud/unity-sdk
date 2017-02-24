@@ -23,48 +23,48 @@ using UnityEngine;
 namespace IBM.Watson.DeveloperCloud.Widgets
 {
 
-    /// <summary>
-    /// This widget class maps key events to a SerializedDelegate.
-    /// </summary>
-    public class KeyboardWidget : Widget
+  /// <summary>
+  /// This widget class maps key events to a SerializedDelegate.
+  /// </summary>
+  public class KeyboardWidget : Widget
+  {
+    #region Widget interface
+    /// <exclude />
+    protected override string GetName()
     {
-        #region Widget interface
-        /// <exclude />
-        protected override string GetName()
-        {
-            return "Keyboard";
-        }
-        #endregion
-
-        #region Private Data
-        [Serializable]
-        private class Mapping
-        {
-            public KeyCode m_Key = (KeyCode)0;
-            public KeyModifiers m_Modifiers = KeyModifiers.NONE;
-            public string m_Event = "";
-        };
-
-        [SerializeField]
-        private List<Mapping> m_Mappings = new List<Mapping>();
-        #endregion
-
-        #region Event Handlers
-        private void OnEnable()
-        {
-            foreach (var mapping in m_Mappings)
-            {
-                KeyEventManager.Instance.RegisterKeyEvent(mapping.m_Key, mapping.m_Modifiers, mapping.m_Event);
-            }
-        }
-
-        private void OnDisable()
-        {
-            foreach (var mapping in m_Mappings)
-            {
-                KeyEventManager.Instance.UnregisterKeyEvent(mapping.m_Key, mapping.m_Modifiers, mapping.m_Event);
-            }
-        }
-        #endregion
+      return "Keyboard";
     }
+    #endregion
+
+    #region Private Data
+    [Serializable]
+    private class Mapping
+    {
+      public KeyCode m_Key = (KeyCode)0;
+      public KeyModifiers m_Modifiers = KeyModifiers.NONE;
+      public string m_Event = "";
+    };
+
+    [SerializeField]
+    private List<Mapping> m_Mappings = new List<Mapping>();
+    #endregion
+
+    #region Event Handlers
+    private void OnEnable()
+    {
+      foreach (var mapping in m_Mappings)
+      {
+        KeyEventManager.Instance.RegisterKeyEvent(mapping.m_Key, mapping.m_Modifiers, mapping.m_Event);
+      }
+    }
+
+    private void OnDisable()
+    {
+      foreach (var mapping in m_Mappings)
+      {
+        KeyEventManager.Instance.UnregisterKeyEvent(mapping.m_Key, mapping.m_Modifiers, mapping.m_Event);
+      }
+    }
+    #endregion
+  }
 }

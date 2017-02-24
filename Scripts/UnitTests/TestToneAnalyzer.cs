@@ -24,32 +24,32 @@ using UnityEngine;
 
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
-    public class TestToneAnalyzer : UnitTest
+  public class TestToneAnalyzer : UnitTest
+  {
+    ToneAnalyzer m_ToneAnalyzer = new ToneAnalyzer();
+    bool m_GetToneAnalyzerTested = false;
+    string m_StringToTestTone = "This service enables people to discover and understand, and revise the impact of tone in their content. It uses linguistic analysis to detect and interpret emotional, social, and language cues found in text.\n";
+
+    public override IEnumerator RunTest()
     {
-        ToneAnalyzer m_ToneAnalyzer = new ToneAnalyzer();
-        bool m_GetToneAnalyzerTested = false;
-        string m_StringToTestTone = "This service enables people to discover and understand, and revise the impact of tone in their content. It uses linguistic analysis to detect and interpret emotional, social, and language cues found in text.\n";
+      if (Utilities.Config.Instance.FindCredentials(m_ToneAnalyzer.GetServiceID()) == null)
+        yield break;
 
-        public override IEnumerator RunTest()
-        {
-            if ( Utilities.Config.Instance.FindCredentials( m_ToneAnalyzer.GetServiceID() ) == null )
-                yield break;
+      m_ToneAnalyzer.GetToneAnalyze(OnGetToneAnalyze, m_StringToTestTone, "TEST");
+      while (!m_GetToneAnalyzerTested)
+        yield return null;
 
-            m_ToneAnalyzer.GetToneAnalyze( OnGetToneAnalyze, m_StringToTestTone, "TEST");
-            while(! m_GetToneAnalyzerTested )
-                yield return null;
-
-            yield break;
-        }
-
-        private void OnGetToneAnalyze( ToneAnalyzerResponse resp , string data)
-        {
-            Log.Status("TestToneAnalyzer", "Response: {0} - {1}", resp, data);
-
-            Test( resp != null );
-            m_GetToneAnalyzerTested = true;
-        }
-
+      yield break;
     }
+
+    private void OnGetToneAnalyze(ToneAnalyzerResponse resp, string data)
+    {
+      Log.Status("TestToneAnalyzer", "Response: {0} - {1}", resp, data);
+
+      Test(resp != null);
+      m_GetToneAnalyzerTested = true;
+    }
+
+  }
 }
 

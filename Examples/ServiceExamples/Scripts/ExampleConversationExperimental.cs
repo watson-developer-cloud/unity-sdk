@@ -23,31 +23,32 @@ using IBM.Watson.DeveloperCloud.Utilities;
 
 public class ExampleConversationExperimental : MonoBehaviour
 {
-	private ConversationExperimental m_Conversation = new ConversationExperimental();
-    private string m_WorkspaceID;
-	private string m_Input = "Can you unlock the door?";
+  private ConversationExperimental m_Conversation = new ConversationExperimental();
+  private string m_WorkspaceID;
+  private string m_Input = "Can you unlock the door?";
 
-	void Start () {
-        LogSystem.InstallDefaultReactors();
-        m_WorkspaceID = Config.Instance.GetVariableValue("ConversationExperimentalV1_ID");
-		Debug.Log("User: " + m_Input);
+  void Start()
+  {
+    LogSystem.InstallDefaultReactors();
+    m_WorkspaceID = Config.Instance.GetVariableValue("ConversationExperimentalV1_ID");
+    Debug.Log("User: " + m_Input);
 
-        m_Conversation.Message(m_WorkspaceID, m_Input, OnMessage);
-	}
+    m_Conversation.Message(m_WorkspaceID, m_Input, OnMessage);
+  }
 
-	void OnMessage (MessageResponse resp)
-	{
-        if(resp != null)
-        {
-    		foreach(MessageIntent mi in resp.intents)
-    			Debug.Log("intent: " + mi.intent + ", confidence: " + mi.confidence);
-    		
-            if(resp.output != null && !string.IsNullOrEmpty(resp.output.text))
-    		    Debug.Log("response: " + resp.output.text);
-        }
-        else
-        {
-            Debug.Log("Failed to invoke Message();");
-        }
-	}
+  void OnMessage(MessageResponse resp)
+  {
+    if (resp != null)
+    {
+      foreach (MessageIntent mi in resp.intents)
+        Debug.Log("intent: " + mi.intent + ", confidence: " + mi.confidence);
+
+      if (resp.output != null && !string.IsNullOrEmpty(resp.output.text))
+        Debug.Log("response: " + resp.output.text);
+    }
+    else
+    {
+      Debug.Log("Failed to invoke Message();");
+    }
+  }
 }

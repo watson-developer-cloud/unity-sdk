@@ -12,7 +12,7 @@ namespace TouchScript.Layers
     /// Touch layer which works with Unity 4.3+ 2d physics. Can pick 2d objects hit by touches in right order.
     /// </summary>
     [AddComponentMenu("TouchScript/Layers/Camera Layer 2D")]
-    [HelpURL("http://touchscript.github.io/docs/Index.html?topic=html/T_TouchScript_Layers_CameraLayer2D.htm")]
+    [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Layers_CameraLayer2D.htm")]
     public class CameraLayer2D : CameraLayerBase
     {
         #region Private variables
@@ -132,10 +132,7 @@ namespace TouchScript.Layers
                     if (sprite1.sortingOrder > sprite2.sortingOrder) return -1;
                 }
 
-                var cameraPos = GetComponent<Camera>().transform.position;
-                var distA = (a.transform.position - cameraPos).sqrMagnitude;
-                var distB = (b.transform.position - cameraPos).sqrMagnitude;
-                return distA < distB ? -1 : 1;
+                return a.distance < b.distance ? -1 : 1;
             });
         }
 

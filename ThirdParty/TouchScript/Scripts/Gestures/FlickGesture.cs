@@ -3,6 +3,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using TouchScript.Utils;
 using UnityEngine;
 
@@ -12,7 +13,7 @@ namespace TouchScript.Gestures
     /// Recognizes fast movement before releasing touches. Doesn't care how much time touch points were on surface and how much they moved.
     /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Flick Gesture")]
-    [HelpURL("http://touchscript.github.io/docs/Index.html?topic=html/T_TouchScript_Gestures_FlickGesture.htm")]
+    [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Gestures_FlickGesture.htm")]
     public class FlickGesture : Gesture
     {
         #region Constants
@@ -152,9 +153,9 @@ namespace TouchScript.Gestures
         #region Gesture callbacks
 
         /// <inheritdoc />
-        protected override void touchBegan(TouchPoint touch)
+        protected override void touchesBegan(IList<TouchPoint> touches)
         {
-            base.touchBegan(touch);
+            base.touchesBegan(touches);
 
             if (touchesNumState == TouchesNumState.PassedMaxThreshold ||
                 touchesNumState == TouchesNumState.PassedMinMaxThreshold)
@@ -170,9 +171,9 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override void touchMoved(TouchPoint touch)
+        protected override void touchesMoved(IList<TouchPoint> touches)
         {
-            base.touchMoved(touch);
+            base.touchesMoved(touches);
 
             if (isActive || !moving)
             {
@@ -186,9 +187,9 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override void touchEnded(TouchPoint touch)
+        protected override void touchesEnded(IList<TouchPoint> touches)
         {
-            base.touchEnded(touch);
+            base.touchesEnded(touches);
 
             if (NumTouches == 0)
             {

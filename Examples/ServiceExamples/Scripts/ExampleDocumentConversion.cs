@@ -22,49 +22,49 @@ using IBM.Watson.DeveloperCloud.Logging;
 
 public class ExampleDocumentConversion : MonoBehaviour
 {
-    private DocumentConversion m_DocumentConversion = new DocumentConversion();
-	
-	void Start ()
-    {
-        LogSystem.InstallDefaultReactors(); LogSystem.InstallDefaultReactors();
-        string examplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/watson_beats_jeopardy.html";
+  private DocumentConversion m_DocumentConversion = new DocumentConversion();
 
-        if (!m_DocumentConversion.ConvertDocument(OnConvertDocument, examplePath, ConversionTarget.NORMALIZED_TEXT))
-            Log.Debug("ExampleDocumentConversion", "Document conversion failed!");
-    }
+  void Start()
+  {
+    LogSystem.InstallDefaultReactors(); 
+    string examplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/watson_beats_jeopardy.html";
 
-    private void OnConvertDocument(ConvertedDocument documentConversionResponse, string data)
+    if (!m_DocumentConversion.ConvertDocument(OnConvertDocument, examplePath, ConversionTarget.NORMALIZED_TEXT))
+      Log.Debug("ExampleDocumentConversion", "Document conversion failed!");
+  }
+
+  private void OnConvertDocument(ConvertedDocument documentConversionResponse, string data)
+  {
+    if (documentConversionResponse != null)
     {
-        if (documentConversionResponse != null)
+      if (!string.IsNullOrEmpty(documentConversionResponse.media_type_detected))
+        Log.Debug("ExampleDocumentConversion", "mediaTypeDetected: {0}", documentConversionResponse.media_type_detected);
+      if (!string.IsNullOrEmpty(documentConversionResponse.source_document_id))
+        Log.Debug("ExampleDocumentConversion", "mediaTypeDetected: {0}", documentConversionResponse.source_document_id);
+      if (!string.IsNullOrEmpty(documentConversionResponse.timestamp))
+        Log.Debug("ExampleDocumentConversion", "mediaTypeDetected: {0}", documentConversionResponse.timestamp);
+      if (documentConversionResponse.metadata != null && documentConversionResponse.metadata.Length > 0)
+      {
+        Log.Debug("ExampleDocumentConversion", "mediaTypeDetected: {0}", documentConversionResponse.metadata.Length);
+        foreach (Metadata metadata in documentConversionResponse.metadata)
+          Log.Debug("ExampleDocumentConversion", "metadata | name: {0}, content: {1}", metadata.name, metadata.content);
+      }
+      if (documentConversionResponse.answer_units != null && documentConversionResponse.answer_units.Length > 0)
+      {
+        Log.Debug("ExampleDocumentConversion", "mediaTypeDetected: {0}", documentConversionResponse.answer_units.Length);
+        foreach (AnswerUnit answerUnit in documentConversionResponse.answer_units)
         {
-            if(!string.IsNullOrEmpty(documentConversionResponse.media_type_detected))
-                Log.Debug("ExampleDocumentConversion", "mediaTypeDetected: {0}", documentConversionResponse.media_type_detected);
-            if (!string.IsNullOrEmpty(documentConversionResponse.source_document_id))
-                Log.Debug("ExampleDocumentConversion", "mediaTypeDetected: {0}", documentConversionResponse.source_document_id);
-            if(!string.IsNullOrEmpty(documentConversionResponse.timestamp))
-                Log.Debug("ExampleDocumentConversion", "mediaTypeDetected: {0}", documentConversionResponse.timestamp);
-            if (documentConversionResponse.metadata != null && documentConversionResponse.metadata.Length > 0)
-            {
-                Log.Debug("ExampleDocumentConversion", "mediaTypeDetected: {0}", documentConversionResponse.metadata.Length);
-                foreach (Metadata metadata in documentConversionResponse.metadata)
-                    Log.Debug("ExampleDocumentConversion", "metadata | name: {0}, content: {1}", metadata.name, metadata.content);
-            }
-            if (documentConversionResponse.answer_units != null && documentConversionResponse.answer_units.Length > 0)
-            {
-                Log.Debug("ExampleDocumentConversion", "mediaTypeDetected: {0}", documentConversionResponse.answer_units.Length);
-                foreach (AnswerUnit answerUnit in documentConversionResponse.answer_units)
-                {
-                Log.Debug("ExampleDocumentConversion", "answerUnit | type: {0}, title: {1}, parent_id: {2}, id: {3}, direction: {4}", answerUnit.type, answerUnit.title, answerUnit.parent_id, answerUnit.id, answerUnit.direction);
-                    if (answerUnit.content != null && answerUnit.content.Length > 0)
-                        foreach (Content content in answerUnit.content)
-                            Log.Debug("ExampleDocumentConversion", "content | mediaType: {0}, text: {1}", content.media_type, content.text);
-                }
-            }
-
-            if (!string.IsNullOrEmpty(documentConversionResponse.htmlContent))
-                Log.Debug("ExampleDocumentConversion", "HTMLContent: {0}", documentConversionResponse.htmlContent);
-            if (!string.IsNullOrEmpty(documentConversionResponse.textContent))
-                Log.Debug("ExampleDocumentConversion", "TextContent: {0}", documentConversionResponse.textContent);
+          Log.Debug("ExampleDocumentConversion", "answerUnit | type: {0}, title: {1}, parent_id: {2}, id: {3}, direction: {4}", answerUnit.type, answerUnit.title, answerUnit.parent_id, answerUnit.id, answerUnit.direction);
+          if (answerUnit.content != null && answerUnit.content.Length > 0)
+            foreach (Content content in answerUnit.content)
+              Log.Debug("ExampleDocumentConversion", "content | mediaType: {0}, text: {1}", content.media_type, content.text);
         }
+      }
+
+      if (!string.IsNullOrEmpty(documentConversionResponse.htmlContent))
+        Log.Debug("ExampleDocumentConversion", "HTMLContent: {0}", documentConversionResponse.htmlContent);
+      if (!string.IsNullOrEmpty(documentConversionResponse.textContent))
+        Log.Debug("ExampleDocumentConversion", "TextContent: {0}", documentConversionResponse.textContent);
     }
+  }
 }
