@@ -137,11 +137,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
     private void MessageResp(RESTConnector.Request req, RESTConnector.Response resp)
     {
       MessageResponse response = new MessageResponse();
+      fsData data = null;
+      
       if (resp.Success)
       {
         try
         {
-          fsData data = null;
           fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
           if (!r.Succeeded)
             throw new WatsonException(r.FormattedMessages);
@@ -159,7 +160,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
       }
 
       if (((MessageReq)req).Callback != null)
-        ((MessageReq)req).Callback(resp.Success ? response : null, ((MessageReq)req).Data);
+        ((MessageReq)req).Callback(resp.Success ? response : null, !string.IsNullOrEmpty(((MessageReq)req).Data) ? ((MessageReq)req).Data : data.ToString());
     }
     #endregion
 

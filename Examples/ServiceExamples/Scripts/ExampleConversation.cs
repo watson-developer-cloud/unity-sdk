@@ -34,8 +34,23 @@ public class ExampleConversation : MonoBehaviour
     m_WorkspaceID = Config.Instance.GetVariableValue("ConversationV1_ID");
 
     Debug.Log("**********User: Hello!");
-    MessageWithOnlyInput("Hello!");
+        //MessageWithOnlyInput("Hello!");
+
+        GetRawOutput("Hello");
   }
+
+    private void GetRawOutput(string input)
+    {
+        m_Conversation.Message(OnGetRawOutput, m_WorkspaceID, input);
+    }
+
+    private void OnGetRawOutput(MessageResponse resp, string customData)
+    {
+        if (!string.IsNullOrEmpty(customData))
+            Debug.Log(customData);
+        else
+            Debug.Log("No raw data was received.");
+    }
 
   private void MessageWithOnlyInput(string input)
   {
