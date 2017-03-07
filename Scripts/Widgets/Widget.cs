@@ -54,6 +54,23 @@ namespace IBM.Watson.DeveloperCloud.Widgets
     public delegate void OnReceiveData(Data data);
 
     /// <summary>
+    /// The callback on input connection added.
+    /// </summary>
+    public delegate void OnInputAdded(Input input);
+    /// <summary>
+    /// The callback on input connection removed.
+    /// </summary>
+    public delegate void OnInputRemoved(Input input);
+    /// <summary>
+    /// The callback on output connection added.
+    /// </summary>
+    public delegate void OnOutputAdded(Output output);
+    /// <summary>
+    /// The callback on output connection removed.
+    /// </summary>
+    public delegate void OnOutputRemoved(Output output);
+
+    /// <summary>
     /// This object handles input on a widget.
     /// </summary>
     [Serializable]
@@ -131,6 +148,16 @@ namespace IBM.Watson.DeveloperCloud.Widgets
       /// The delegate to the receiver function, this is set when Start() is called on this input.
       /// </summary>
       public OnReceiveData DataReceiver { get; private set; }
+      /// <summary>
+      /// Gets or sets the on output added callback
+      /// </summary>
+      /// <value>The on output added.</value>
+      public OnOutputAdded OnOutputAdded { get; set; }
+      /// <summary>
+      /// Gets or sets the on output removed callback
+      /// </summary>
+      /// <value>The on output removed.</value>
+      public OnOutputRemoved OnOutputRemoved { get; set; }
       #endregion
 
       #region Public Functions
@@ -146,6 +173,8 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         if (m_Connections.Contains(output))
           return false;
         m_Connections.Add(output);
+        if (OnOutputAdded != null)
+            OnOutputAdded.Invoke(output);
         return true;
       }
       /// <summary>
@@ -155,7 +184,10 @@ namespace IBM.Watson.DeveloperCloud.Widgets
       /// <returns></returns>
       public bool RemoveOutput(Output output)
       {
-        return m_Connections.Remove(output);
+        bool success = m_Connections.Remove(output);
+        if (success && OnOutputRemoved != null)
+            OnOutputRemoved.Invoke(output);
+        return success;
       }
 
       /// <summary>
@@ -374,6 +406,16 @@ namespace IBM.Watson.DeveloperCloud.Widgets
       /// If true, allows more than one input to be connected to this output.
       /// </summary>
       public bool AllowMany { get; private set; }
+      /// <summary>
+      /// Gets or sets the on input added callback
+      /// </summary>
+      /// <value>The on input added.</value>
+      public OnInputAdded OnInputAdded { get; set; }
+      /// <summary>
+      /// Gets or sets the on input removed callback
+      /// </summary>
+      /// <value>The on input removed.</value>
+      public OnInputRemoved OnInputRemoved { get; set; }
       #endregion
 
       #region Public Functions
@@ -430,7 +472,8 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         c.Start(this);
         c.TargetInput = input;
         m_Connections.Add(c);
-
+        if (OnInputAdded != null)
+            OnInputAdded.Invoke(input);
         return true;
       }
 
@@ -453,7 +496,8 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         if (!c.ResolveTargetInput())
           return false;       // couldn't resolve a input 
         m_Connections.Add(c);
-
+        if (OnInputAdded != null)
+            OnInputAdded.Invoke(c.TargetInput);
         return true;
       }
 
@@ -464,7 +508,10 @@ namespace IBM.Watson.DeveloperCloud.Widgets
       /// <returns></returns>
       public bool RemoveConnection(Connection c)
       {
-        return m_Connections.Remove(c);
+        bool success = m_Connections.Remove(c);
+        if (success && OnInputRemoved != null)
+            OnInputRemoved.Invoke(c.TargetInput);
+        return success;
       }
       #endregion
 
