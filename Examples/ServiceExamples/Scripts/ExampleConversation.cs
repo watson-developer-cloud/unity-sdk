@@ -20,6 +20,7 @@ using IBM.Watson.DeveloperCloud.Services.Conversation.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
 using IBM.Watson.DeveloperCloud.Logging;
 using System;
+using System.Collections.Generic;
 
 public class ExampleConversation : MonoBehaviour
 {
@@ -34,9 +35,9 @@ public class ExampleConversation : MonoBehaviour
     m_WorkspaceID = Config.Instance.GetVariableValue("ConversationV1_ID");
 
     Debug.Log("**********User: Hello!");
-        //MessageWithOnlyInput("Hello!");
+        MessageWithOnlyInput("Hello!");
 
-        GetRawOutput("Hello");
+        //GetRawOutput("Hello");
   }
 
     private void GetRawOutput(string input)
@@ -86,8 +87,11 @@ public class ExampleConversation : MonoBehaviour
 
           if (resp.context.system.dialog_stack != null)
           {
-            foreach (DialogNode dialogNode in resp.context.system.dialog_stack)
-              Log.Debug("ExampleConversation", "dialogNode: {0}", dialogNode.dialog_node);
+                        foreach (Dictionary<string, string> dialogNode in resp.context.system.dialog_stack)
+                            foreach(KeyValuePair<string, string> node in dialogNode)
+                                Log.Debug("ExampleConversation", "dialogNode: {0}", node.Value);
+            //foreach ((Dictionary<string, string> dialogNode as Dictionary<string, string>) in resp.context.system.dialog_stack)
+            //  Log.Debug("ExampleConversation", "dialogNode: {0}", dialogNode.val);
           }
           else
           {

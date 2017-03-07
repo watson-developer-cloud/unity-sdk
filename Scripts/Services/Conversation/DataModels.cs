@@ -14,7 +14,9 @@
 * limitations under the License.
 *
 */
+
 using FullSerializer;
+using System.Collections.Generic;
 
 namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 {
@@ -282,7 +284,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
     /// <summary>
     /// An array of dialog node IDs that are in focus in the conversation.
     /// </summary>
-    public DialogNode[] dialog_stack { get; set; }
+    public Dictionary<string, string>[] dialog_stack { get; set; }
     /// <summary>
     /// The number of cycles of user input and response in this conversation.
     /// </summary>
@@ -291,18 +293,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
     /// The number of inputs in this conversation. This counter might be higher than the dialog_turn_counter counter when multiple inputs are needed before a response can be returned.
     /// </summary>
     public int dialog_request_counter { get; set; }
-  }
-
-  /// <summary>
-  /// The dialog node ID information.
-  /// </summary>
-  [fsObject]
-  public class DialogNode
-  {
-    /// <summary>
-    /// The dialog node iD in focus.
-    /// </summary>
-    public string dialog_node { get; set; }
   }
   #endregion
 

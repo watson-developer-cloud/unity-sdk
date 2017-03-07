@@ -17,9 +17,7 @@
 
 using System;
 using System.Text;
-using System.Collections.Generic;
 using FullSerializer;
-using MiniJSON;
 using IBM.Watson.DeveloperCloud.Utilities;
 using IBM.Watson.DeveloperCloud.Connection;
 using IBM.Watson.DeveloperCloud.Logging;
