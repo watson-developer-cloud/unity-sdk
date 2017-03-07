@@ -87,11 +87,9 @@ public class ExampleConversation : MonoBehaviour
 
           if (resp.context.system.dialog_stack != null)
           {
-                        foreach (Dictionary<string, string> dialogNode in resp.context.system.dialog_stack)
-                            foreach(KeyValuePair<string, string> node in dialogNode)
-                                Log.Debug("ExampleConversation", "dialogNode: {0}", node.Value);
-            //foreach ((Dictionary<string, string> dialogNode as Dictionary<string, string>) in resp.context.system.dialog_stack)
-            //  Log.Debug("ExampleConversation", "dialogNode: {0}", dialogNode.val);
+            foreach (Dictionary<string, string> dialogNode in resp.context.system.dialog_stack)
+              foreach(KeyValuePair<string, string> node in dialogNode)
+                Log.Debug("ExampleConversation", "dialogNode: {0}", node.Value);
           }
           else
           {
