@@ -21,6 +21,7 @@ using FullSerializer;
 using IBM.Watson.DeveloperCloud.Utilities;
 using IBM.Watson.DeveloperCloud.Connection;
 using IBM.Watson.DeveloperCloud.Logging;
+using MiniJSON;
 
 namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 {
@@ -47,16 +48,17 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
     /// The callback delegate for the Message() function.
     /// </summary>
     /// <param name="resp">The response object to a call to Message().</param>
-    public delegate void OnMessage(MessageResponse resp, string customData);
+    public delegate void OnMessage(object resp, string customData);
+    //public delegate void OnMessage(MessageResponse resp, string customData);
 
-    /// <summary>
-    /// Message the specified workspaceId, input and callback.
-    /// </summary>
-    /// <param name="workspaceID">Workspace identifier.</param>
-    /// <param name="input">Input.</param>
-    /// <param name="callback">Callback.</param>
-    /// <param name="customData">Custom data.</param>
-    public bool Message(OnMessage callback, string workspaceID, string input, string customData = default(string))
+        /// <summary>
+        /// Message the specified workspaceId, input and callback.
+        /// </summary>
+        /// <param name="workspaceID">Workspace identifier.</param>
+        /// <param name="input">Input.</param>
+        /// <param name="callback">Callback.</param>
+        /// <param name="customData">Custom data.</param>
+        public bool Message(OnMessage callback, string workspaceID, string input, string customData = default(string))
     {
       if (string.IsNullOrEmpty(workspaceID))
         throw new ArgumentNullException("workspaceId");
@@ -132,33 +134,42 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
       public string Data { get; set; }
     }
 
-    private void MessageResp(RESTConnector.Request req, RESTConnector.Response resp)
-    {
-      MessageResponse response = new MessageResponse();
-      fsData data = null;
-      
-      if (resp.Success)
-      {
-        try
+        private void MessageResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
-          fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-          if (!r.Succeeded)
-            throw new WatsonException(r.FormattedMessages);
+            object dataObject = null;
+            string data = "";
 
-          object obj = response;
-          r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
-          if (!r.Succeeded)
-            throw new WatsonException(r.FormattedMessages);
-        }
-        catch (Exception e)
-        {
-          Log.Error("Conversation", "MessageResp Exception: {0}", e.ToString());
-          resp.Success = false;
-        }
-      }
+            //MessageResponse response = new MessageResponse();
+            //fsData data = null;
 
-      if (((MessageReq)req).Callback != null)
-        ((MessageReq)req).Callback(resp.Success ? response : null, !string.IsNullOrEmpty(((MessageReq)req).Data) ? ((MessageReq)req).Data : data.ToString());
+            if (resp.Success)
+            {
+                try
+                {
+                  //  For deserializing into a generic object
+                  data = Encoding.UTF8.GetString(resp.Data);
+                  dataObject = Json.Deserialize(data);
+
+                  //  For deserializing into fixed data model
+                  //  fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                  //  if (!r.Succeeded)
+                  //  throw new WatsonException(r.FormattedMessages);
+                  
+                  //  object obj = response;
+                  //  r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                  //  if (!r.Succeeded)
+                  //    throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                  Log.Error("Conversation", "MessageResp Exception: {0}", e.ToString());
+                  data = e.Message;
+                  resp.Success = false;
+                }
+            }
+
+            if (((MessageReq)req).Callback != null)
+              ((MessageReq)req).Callback(resp.Success ? dataObject : null, !string.IsNullOrEmpty(((MessageReq)req).Data) ? ((MessageReq)req).Data : data.ToString());
     }
     #endregion
 
@@ -220,7 +231,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
         }
       }
 
-      private void OnMessage(MessageResponse resp, string customData)
+      private void OnMessage(object resp, string customData)
       {
         if (m_ConversationCount > 0)
         {
