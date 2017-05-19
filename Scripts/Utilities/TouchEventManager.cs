@@ -479,7 +479,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
       RaycastResult hitToFire2DEventSystem = default(RaycastResult);
 #endif
 
-      //Log.Status ("TouchEventManager", "oneFingerManipulationTransformedHandler: {0}", m_OneFingerMoveGesture.DeltaPosition);
+        #if ENABLE_DEBUGGING
+            Log.Debug ("TouchEventManager", "oneFingerManipulationTransformedHandler: {0}, MainCamera: {1}", m_OneFingerMoveGesture.ScreenPosition, MainCamera.name);
+        #endif
+
       if (m_Active)
       {
         TouchEventData dragEventToFire = null;
@@ -493,7 +496,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             //Adding Variables for 3D Touch Check
             Transform hitTransform3D = null;
             RaycastHit hit3D = default(RaycastHit);
-            bool isHitOnLayer3D = Physics.Raycast(rayForDrag, out hit3D, Mathf.Infinity, kp.Key);
+            bool isHitOnLayer3D = Physics.Raycast(rayForDrag, out hit3D, Mathf.Infinity);
             if (isHitOnLayer3D)
             {
               hitTransform3D = hit3D.collider.transform;
@@ -501,7 +504,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 
             //Adding Variables for 2D Touch Check for 2d Colliders
             Transform hitTransform2D = null;
-            RaycastHit2D hit2D = Physics2D.Raycast(rayForDrag.origin, rayForDrag.direction, Mathf.Infinity, kp.Key);
+            RaycastHit2D hit2D = Physics2D.Raycast(rayForDrag.origin, rayForDrag.direction, Mathf.Infinity);
             bool isHitOnLayer2D = false;
             if (hit2D.collider != null)
             {
@@ -533,6 +536,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
               }
             }
 #endif
+
+            #if ENABLE_DEBUGGING
+                        Log.Debug ("TouchEventManager", "For Finger: {0} , isHitOnLayer3D: {1}, isHitOnLayer2D: {2}, isHitOnLayer2DEventSystem: {3} ", kp.Key, isHitOnLayer3D, isHitOnLayer2D, isHitOnLayer2DEventSystem);
+            #endif
 
             for (int i = 0; i < kp.Value.Count; ++i)
             {
@@ -567,7 +574,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                     hitToFire2D = default(RaycastHit2D);
                     hitToFire2DEventSystem = default(RaycastResult);
 #if ENABLE_DEBUGGING
-                                        Log.Debug("TouchEventManager", "Inside - OneFingerDrag Event Found 3D. itemCollider: {0}, callback: {1}, SortingLayer: {2}, isTapInside: {3} ",hitTransform3D, dragEventData.DragCallback, dragEventData.SortingLayer, dragEventData.IsInside);
+                    Log.Debug("TouchEventManager", "Inside - OneFingerDrag Event Found 3D. itemCollider: {0}, callback: {1}, SortingLayer: {2}, isTapInside: {3} ",hitTransform3D, dragEventData.DragCallback, dragEventData.SortingLayer, dragEventData.IsInside);
 #endif
                   }
                   else
@@ -581,7 +588,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                       hitToFire2DEventSystem = default(RaycastResult);
 
 #if ENABLE_DEBUGGING
-                                            Log.Debug("TouchEventManager", "Inside - OneFingerDrag Found 3D. itemCollider: {0}, callback: {1}, SortingLayer: {2}, isTapInside: {3} ",hitTransform3D, dragEventData.DragCallback, dragEventData.SortingLayer, dragEventData.IsInside);
+                    Log.Debug("TouchEventManager", "Inside - OneFingerDrag Found 3D. itemCollider: {0}, callback: {1}, SortingLayer: {2}, isTapInside: {3} ",hitTransform3D, dragEventData.DragCallback, dragEventData.SortingLayer, dragEventData.IsInside);
 #endif
                     }
                     else
@@ -820,7 +827,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             //Adding Variables for 3D Touch Check
             Transform hitTransform3D = null;
             RaycastHit hit3D = default(RaycastHit);
-            bool isHitOnLayer3D = Physics.Raycast(rayForDrag, out hit3D, Mathf.Infinity, kp.Key);
+            bool isHitOnLayer3D = Physics.Raycast(rayForDrag, out hit3D, Mathf.Infinity);
             if (isHitOnLayer3D)
             {
               hitTransform3D = hit3D.collider.transform;
@@ -828,7 +835,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 
             //Adding Variables for 2D Touch Check for 2d Colliders
             Transform hitTransform2D = null;
-            RaycastHit2D hit2D = Physics2D.Raycast(rayForDrag.origin, rayForDrag.direction, Mathf.Infinity, kp.Key);
+            RaycastHit2D hit2D = Physics2D.Raycast(rayForDrag.origin, rayForDrag.direction, Mathf.Infinity);
             bool isHitOnLayer2D = false;
             if (hit2D.collider != null)
             {
