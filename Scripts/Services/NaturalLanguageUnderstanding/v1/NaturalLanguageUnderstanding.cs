@@ -19,7 +19,9 @@ using FullSerializer;
 using IBM.Watson.DeveloperCloud.Connection;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
+using MiniJSON;
 using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
@@ -36,6 +38,83 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
         #endregion
 
         #region Analyze
+        /// <summary>
+        /// The callback used by AddEnvironment().
+        /// </summary>
+        /// <param name="resp">The Environment response.</param>
+        /// <param name="customData">Optional custom data.</param>
+        public delegate void OnAnalyze(AnalysisResults resp, string customData);
+
+        /// <summary>
+        /// Creates a new environment. You can only create one environment per service instance.An attempt to create another environment 
+        /// will result in an error. The size of the new environment can be controlled by specifying the size parameter.
+        /// </summary>
+        /// <param name="callback">The OnAddEnvironment callback.</param>
+        /// <param name="addEnvironmentData">The AddEnvironmentData.</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns>True if the call succeeds, false if the call is unsuccessful.</returns>
+        public bool Analyze(OnAnalyze callback, Parameters parameters, string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (parameters == null)
+                throw new ArgumentNullException("parameters");
+
+            AnalyzeRequest req = new AnalyzeRequest();
+            req.Callback = callback;
+            req._Parameters = parameters;
+            req.Data = customData;
+            req.OnResponse = OnAnalyzeResponse;
+
+            req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
+            req.Parameters["version"] = NaturalLanguageUnderstandingVersion.Version;
+            string sendjson = Json.Serialize(parameters);
+            req.Send = Encoding.UTF8.GetBytes(sendjson);
+
+            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_ANALYZE);
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class AnalyzeRequest : RESTConnector.Request
+        {
+            public string Data { get; set; }
+            public Parameters _Parameters { get; set; }
+            public OnAnalyze Callback { get; set; }
+        }
+
+        private void OnAnalyzeResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            AnalysisResults analysisResults = new AnalysisResults();
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsData data = null;
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = analysisResults;
+                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Discovery", "OnAnalyzeResponse Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (((AnalyzeRequest)req).Callback != null)
+                ((AnalyzeRequest)req).Callback(resp.Success ? analysisResults : null, ((AnalyzeRequest)req).Data);
+        }
         #endregion
 
         #region Get Models

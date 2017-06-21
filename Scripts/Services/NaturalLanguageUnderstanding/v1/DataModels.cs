@@ -484,6 +484,193 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
         public string deleted { get; set; }
     }
 
+    [fsObject]
+    public class Parameters
+    {
+        /// <summary>
+        /// The plain text to analyze
+        /// </summary>
+        public string text { get; set; }
+        /// <summary>
+        /// The HTML file to analyze
+        /// </summary>
+        public string html { get; set; }
+        /// <summary>
+        /// The web page to analyze
+        /// </summary>
+        public string url { get; set; }
+        /// <summary>
+        /// Specific features to analyze the document for
+        /// </summary>
+        public Features features { get; set; }
+        /// <summary>
+        /// Remove website elements, such as links, ads, etc
+        /// </summary>
+        public bool clean { get; set; }
+        /// <summary>
+        /// XPath query for targeting nodes in HTML
+        /// </summary>
+        public string xpath { get; set; }
+        /// <summary>
+        /// Whether to use raw HTML content if text cleaning fails
+        /// </summary>
+        public bool fallback_to_raw { get; set; }
+        /// <summary>
+        /// Whether or not to return the analyzed text
+        /// </summary>
+        public bool return_analyzed_text { get; set; }
+        /// <summary>
+        /// ISO 639-1 code indicating the language to use in the analysis
+        /// </summary>
+        public string language { get; set; }
+    }
+
+    [fsObject]
+    public class Features
+    {
+        /// <summary>
+        /// Whether or not to return the concepts that are mentioned in the analyzed text
+        /// </summary>
+        public ConceptsOptions concepts { get; set; }
+        /// <summary>
+        /// Whether or not to extract the emotions implied in the analyzed text
+        /// </summary>
+        public EmotionOptions emotion { get; set; }
+        /// <summary>
+        /// Whether or not to extract detected entity objects from the analyzed text
+        /// </summary>
+        public EntitiesOptions entities { get; set; }
+        /// <summary>
+        /// Whether or not to return the keywords in the analyzed text
+        /// </summary>
+        public KeywordsOptions keywords { get; set; }
+        /// <summary>
+        /// Whether or not the author, publication date, and title of the analyzed text should be returned.This parameter is only available for URL and HTML input
+        /// </summary>
+        public MetadataOptions metadata { get; set; }
+        /// <summary>
+        /// Whether or not to return the relationships between detected entities in the analyzed text
+        /// </summary>
+        public RelationsOptions relations { get; set; }
+        /// <summary>
+        /// Whether or not to return the subject-action-object relations from the analyzed text
+        /// </summary>
+        public SemanticRolesOptions semantic_roles { get; set; }
+        /// <summary>
+        /// Whether or not to return the overall sentiment of the analyzed text
+        /// </summary>
+        public SentimentOptions sentiment { get; set; }
+        /// <summary>
+        /// Whether or not to return the high level category the content is categorized as (i.e.news, art)
+        /// </summary>
+        public CategoriesOptions categories { get; set; }
+    }
+
+    [fsObject]
+    public class ConceptsOptions
+    {
+        /// <summary>
+        /// Maximum number of concepts to return
+        /// </summary>
+        public int limit { get; set; }
+    }
+
+    [fsObject]
+    public class EmotionOptions
+    {
+        /// <summary>
+        /// Set this to false to hide document-level emotion results
+        /// </summary>
+        public bool document { get; set; }
+        /// <summary>
+        /// Emotion results will be returned for each target string that is found in the document
+        /// </summary>
+        public string[] targets { get; set; }
+    }
+
+    [fsObject]
+    public class EntitiesOptions
+    {
+        /// <summary>
+        /// Maximum number of entities to return
+        /// </summary>
+        public int limit { get; set; }
+        /// <summary>
+        /// Enter a custom model ID to override the standard entity detection model
+        /// </summary>
+        public string model { get; set; }
+        /// <summary>
+        /// Set this to true to return sentiment information for detected entities
+        /// </summary>
+        public bool sentiment { get; set; }
+        /// <summary>
+        /// Set this to true to analyze emotion for detected keywords
+        /// </summary>
+        public bool emotion { get; set; }
+    }
+
+    [fsObject]
+    public class KeywordsOptions
+    {
+        /// <summary>
+        /// Maximum number of keywords to return
+        /// </summary>
+        public int limit { get; set; }
+        /// <summary>
+        /// Set this to true to return sentiment information for detected keywords
+        /// </summary>
+        public bool sentiment { get; set; }
+        /// <summary>
+        /// Set this to true to analyze emotion for detected keywords
+        /// </summary>
+        public bool emotion { get; set; }
+    }
+
+    [fsObject]
+    public class MetadataOptions { }
+
+    [fsObject]
+    public class RelationsOptions
+    {
+        /// <summary>
+        /// Enter a custom model ID to override the default model
+        /// </summary>
+        public string model { get; set; }
+    }
+
+    [fsObject]
+    public class SemanticRolesOptions
+    {
+        /// <summary>
+        /// Maximum number of semantic_roles results to return
+        /// </summary>
+        public int limit { get; set; }
+        /// <summary>
+        /// Set this to true to return keyword information for subjects and objects
+        /// </summary>
+        public bool keywords { get; set; }
+        /// <summary>
+        /// Set this to true to return entity information for subjects and objects
+        /// </summary>
+        public bool entities { get; set; }
+    }
+
+    [fsObject]
+    public class SentimentOptions
+    {
+        /// <summary>
+        /// Set this to false to hide document-level sentiment results
+        /// </summary>
+        public bool document { get; set; }
+        /// <summary>
+        /// Sentiment results will be returned for each target string that is found in the document
+        /// </summary>
+        public string[] targets { get; set; }
+    }
+
+    [fsObject]
+    public class CategoriesOptions { }
+
     #region Version
     /// <summary>
     /// The Discovery version.
