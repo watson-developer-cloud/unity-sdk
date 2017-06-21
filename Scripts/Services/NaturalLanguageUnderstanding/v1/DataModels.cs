@@ -494,10 +494,12 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
         /// <summary>
         /// The HTML file to analyze
         /// </summary>
+        [fsIgnore]
         public string html { get; set; }
         /// <summary>
         /// The web page to analyze
         /// </summary>
+        [fsIgnore]
         public string url { get; set; }
         /// <summary>
         /// Specific features to analyze the document for

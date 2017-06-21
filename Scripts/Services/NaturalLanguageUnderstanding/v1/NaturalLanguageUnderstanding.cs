@@ -23,6 +23,7 @@ using MiniJSON;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using UnityEngine;
 
 namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
 {
@@ -39,9 +40,9 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
 
         #region Analyze
         /// <summary>
-        /// The callback used by AddEnvironment().
+        /// The callback used by Analyze().
         /// </summary>
-        /// <param name="resp">The Environment response.</param>
+        /// <param name="resp">The AnalysisResult response.</param>
         /// <param name="customData">Optional custom data.</param>
         public delegate void OnAnalyze(AnalysisResults resp, string customData);
 
@@ -49,8 +50,8 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
         /// Creates a new environment. You can only create one environment per service instance.An attempt to create another environment 
         /// will result in an error. The size of the new environment can be controlled by specifying the size parameter.
         /// </summary>
-        /// <param name="callback">The OnAddEnvironment callback.</param>
-        /// <param name="addEnvironmentData">The AddEnvironmentData.</param>
+        /// <param name="callback">The OnAnalyze callback.</param>
+        /// <param name="parameters">The analyze parameters.</param>
         /// <param name="customData">Optional custom data.</param>
         /// <returns>True if the call succeeds, false if the call is unsuccessful.</returns>
         public bool Analyze(OnAnalyze callback, Parameters parameters, string customData = default(string))
@@ -69,9 +70,12 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
             req.Parameters["version"] = NaturalLanguageUnderstandingVersion.Version;
-            string sendjson = Json.Serialize(parameters);
-            req.Send = Encoding.UTF8.GetBytes(sendjson);
 
+            fsData data = null;
+            fsResult r = sm_Serializer.TrySerialize(parameters, out data);
+
+            string sendjson = data.ToString();
+            req.Send = Encoding.UTF8.GetBytes(sendjson);
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_ANALYZE);
             if (connector == null)
                 return false;
