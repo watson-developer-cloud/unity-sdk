@@ -17,7 +17,7 @@
 
 using FullSerializer;
 
-namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
+namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
 {
     [fsObject]
     public class AnalysisResults
@@ -483,4 +483,17 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
     {
         public string deleted { get; set; }
     }
+
+    #region Version
+    /// <summary>
+    /// The Discovery version.
+    /// </summary>
+    public class NaturalLanguageUnderstandingVersion
+    {
+        /// <summary>
+        /// The version.
+        /// </summary>
+        public const string Version = "2017-02-27";
+    }
+    #endregion
 }
