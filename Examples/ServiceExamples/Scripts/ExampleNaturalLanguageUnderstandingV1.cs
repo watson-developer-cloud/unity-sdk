@@ -15,6 +15,7 @@
 *
 */
 
+using FullSerializer;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1;
 using UnityEngine;
@@ -22,8 +23,9 @@ using UnityEngine;
 public class ExampleNaturalLanguageUnderstandingV1 : MonoBehaviour
 {
     NaturalLanguageUnderstanding m_NaturalLanguageUnderstanding = new NaturalLanguageUnderstanding();
+    private static fsSerializer sm_Serializer = new fsSerializer();
 
-	void Start ()
+    void Start ()
     {
         LogSystem.InstallDefaultReactors();
 
@@ -34,19 +36,23 @@ public class ExampleNaturalLanguageUnderstandingV1 : MonoBehaviour
         Parameters parameters = new Parameters()
         {
             text = "Analyze various features of text content at scale. Provide text, raw HTML, or a public URL, and IBM Watson Natural Language Understanding will give you results for the features you request. The service cleans HTML content before analysis by default, so the results can ignore most advertisements and other unwanted content.",
-            url = null,
-            html = null,
             return_analyzed_text = true,
-            language = "en"
-            //features = new Features()
-            //{
-            //    entities = new EntitiesOptions()
-            //    {
-            //        limit = 50,
-            //        sentiment = true,
-            //        emotion = true,
-            //    }
-            //}
+            language = "en",
+            features = new Features()
+            {
+                entities = new EntitiesOptions()
+                {
+                    limit = 50,
+                    sentiment = true,
+                    emotion = true,
+                },
+                keywords = new KeywordsOptions()
+                {
+                    limit = 50,
+                    sentiment = true,
+                    emotion = true
+                }
+            }
         };
 
         Log.Debug("ExampleNaturalLanguageUnderstandingV1", "attempting to analyze...");
@@ -56,11 +62,15 @@ public class ExampleNaturalLanguageUnderstandingV1 : MonoBehaviour
 
     private void OnGetModels(ListModelsResults resp, string customData)
     {
-        Log.Debug("ExampleNaturalLanguageUnderstandingV1", "ListModelsResult: {0}", JsonUtility.ToJson(resp));
+        fsData data = null;
+        sm_Serializer.TrySerialize(resp, out data).AssertSuccess();
+        Log.Debug("ExampleNaturalLanguageUnderstandingV1", "ListModelsResult: {0}", data.ToString());
     }
 
     private void OnAnalyze(AnalysisResults resp, string customData)
     {
-        Log.Debug("ExampleNaturalLanguageUnderstandingV1", "AnalysisResults: {0}", JsonUtility.ToJson(resp));
+        fsData data = null;
+        sm_Serializer.TrySerialize(resp, out data).AssertSuccess();
+        Log.Debug("ExampleNaturalLanguageUnderstandingV1", "AnalysisResults: {0}", data.ToString());
     }
 }

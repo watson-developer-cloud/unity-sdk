@@ -15,7 +15,9 @@
 *
 */
 
+using System;
 using FullSerializer;
+using System.Collections.Generic;
 
 namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
 {
@@ -484,7 +486,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
         public string deleted { get; set; }
     }
 
-    [fsObject]
+    [fsObject(Converter = typeof(ParametersConverter))]
     public class Parameters
     {
         /// <summary>
@@ -494,12 +496,10 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
         /// <summary>
         /// The HTML file to analyze
         /// </summary>
-        [fsIgnore]
         public string html { get; set; }
         /// <summary>
         /// The web page to analyze
         /// </summary>
-        [fsIgnore]
         public string url { get; set; }
         /// <summary>
         /// Specific features to analyze the document for
@@ -508,7 +508,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
         /// <summary>
         /// Remove website elements, such as links, ads, etc
         /// </summary>
-        public bool clean { get; set; }
+        public bool? clean { get; set; }
         /// <summary>
         /// XPath query for targeting nodes in HTML
         /// </summary>
@@ -516,18 +516,18 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
         /// <summary>
         /// Whether to use raw HTML content if text cleaning fails
         /// </summary>
-        public bool fallback_to_raw { get; set; }
+        public bool? fallback_to_raw { get; set; }
         /// <summary>
         /// Whether or not to return the analyzed text
         /// </summary>
-        public bool return_analyzed_text { get; set; }
+        public bool? return_analyzed_text { get; set; }
         /// <summary>
         /// ISO 639-1 code indicating the language to use in the analysis
         /// </summary>
         public string language { get; set; }
     }
 
-    [fsObject]
+    [fsObject(Converter = typeof(FeaturesConverter))]
     public class Features
     {
         /// <summary>
@@ -683,6 +683,147 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
         /// The version.
         /// </summary>
         public const string Version = "2017-02-27";
+    }
+    #endregion
+
+    #region Parameters Converter
+    public class ParametersConverter : fsConverter
+    {
+        private static fsSerializer sm_Serializer = new fsSerializer();
+
+        public override bool CanProcess(Type type)
+        {
+            return type == typeof(Parameters);
+        }
+
+        public override fsResult TryDeserialize(fsData data, ref object instance, Type storageType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override fsResult TrySerialize(object instance, out fsData serialized, Type storageType)
+        {
+            Parameters parameters = (Parameters)instance;
+            serialized = null;
+
+            Dictionary<string, fsData> serialization = new Dictionary<string, fsData>();
+            if (parameters.text != null)
+                serialization.Add("text", new fsData(parameters.text));
+
+            if (parameters.url != null)
+                serialization.Add("url", new fsData(parameters.url));
+
+            if (parameters.html != null)
+                serialization.Add("html", new fsData(parameters.html));
+
+            if (parameters.clean != null)
+                serialization.Add("clean", new fsData((bool)parameters.clean));
+
+            if (parameters.xpath != null)
+                serialization.Add("xpath", new fsData(parameters.xpath));
+
+            if (parameters.fallback_to_raw != null)
+                serialization.Add("fallback_to_raw", new fsData((bool)parameters.fallback_to_raw));
+
+            if (parameters.return_analyzed_text != null)
+                serialization.Add("return_analyzed_text", new fsData((bool)parameters.return_analyzed_text));
+
+            if (parameters.xpath != null)
+                serialization.Add("xpath", new fsData(parameters.xpath));
+
+            fsData tempData = null;
+            sm_Serializer.TrySerialize(parameters.features, out tempData);
+            serialization.Add("features", tempData);
+
+            serialized = new fsData(serialization);
+
+            return fsResult.Success;
+        }
+    }
+    #endregion
+
+    #region Features Converter
+    public class FeaturesConverter : fsConverter
+    {
+        private static fsSerializer sm_Serializer = new fsSerializer();
+
+        public override bool CanProcess(Type type)
+        {
+            return type == typeof(Parameters);
+        }
+
+        public override fsResult TryDeserialize(fsData data, ref object instance, Type storageType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override fsResult TrySerialize(object instance, out fsData serialized, Type storageType)
+        {
+            Features features = (Features)instance;
+            serialized = null;
+
+            Dictionary<string, fsData> serialization = new Dictionary<string, fsData>();
+
+            fsData tempData = null;
+
+            if (features.concepts != null)
+            {
+                sm_Serializer.TrySerialize(features.concepts, out tempData);
+                serialization.Add("concepts", tempData);
+            }
+
+            if (features.emotion != null)
+            {
+                sm_Serializer.TrySerialize(features.emotion, out tempData);
+                serialization.Add("emotion", tempData);
+            }
+
+            if (features.entities != null)
+            {
+                sm_Serializer.TrySerialize(features.entities, out tempData);
+                serialization.Add("entities", tempData);
+            }
+
+            if (features.keywords != null)
+            {
+                sm_Serializer.TrySerialize(features.keywords, out tempData);
+                serialization.Add("keywords", tempData);
+            }
+
+            if (features.metadata != null)
+            {
+                sm_Serializer.TrySerialize(features.metadata, out tempData);
+                serialization.Add("metadata", tempData);
+            }
+
+            if (features.relations != null)
+            {
+                sm_Serializer.TrySerialize(features.relations, out tempData);
+                serialization.Add("relations", tempData);
+            }
+
+            if (features.semantic_roles != null)
+            {
+                sm_Serializer.TrySerialize(features.semantic_roles, out tempData);
+                serialization.Add("semantic_roles", tempData);
+            }
+
+            if (features.sentiment != null)
+            {
+                sm_Serializer.TrySerialize(features.sentiment, out tempData);
+                serialization.Add("sentiment", tempData);
+            }
+
+            if (features.categories != null)
+            {
+                sm_Serializer.TrySerialize(features.categories, out tempData);
+                serialization.Add("categories", tempData);
+            }
+
+            serialized = new fsData(serialization);
+
+            return fsResult.Success;
+        }
     }
     #endregion
 }

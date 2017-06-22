@@ -66,14 +66,12 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
             req._Parameters = parameters;
             req.Data = customData;
             req.OnResponse = OnAnalyzeResponse;
-
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
             req.Parameters["version"] = NaturalLanguageUnderstandingVersion.Version;
 
             fsData data = null;
             fsResult r = sm_Serializer.TrySerialize(parameters, out data);
-
             string sendjson = data.ToString();
             req.Send = Encoding.UTF8.GetBytes(sendjson);
             RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_ANALYZE);
