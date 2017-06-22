@@ -19,11 +19,8 @@ using FullSerializer;
 using IBM.Watson.DeveloperCloud.Connection;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
-using MiniJSON;
 using System;
-using System.Collections.Generic;
 using System.Text;
-using UnityEngine;
 
 namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
 {
