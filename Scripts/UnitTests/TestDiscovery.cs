@@ -133,7 +133,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
                 Test(!string.IsNullOrEmpty(resp.environment_id));
                 m_AddEnvironmentsTested = true;
-            }, m_CreatedEnvironmentName, m_CreatedEnvironmentDescription, 0))
+            }, m_CreatedEnvironmentName, m_CreatedEnvironmentDescription, 1))
                 Log.Debug("ExampleDiscoveryV1", "Failed to add environment");
 
             while (!m_AddEnvironmentsTested)
