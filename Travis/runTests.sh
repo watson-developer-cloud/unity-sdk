@@ -8,7 +8,7 @@ echo "Attempting to create Streaming Assets directory..."
 mkdir -p Travis/UnityTestProject/Assets/StreamingAssets/
 
 echo "Attempting to decrypt config..."
-openssl aes-256-cbc -K $encrypted_91725f0df198_key -iv $encrypted_91725f0df198_iv -in Config.json.enc -out Travis/UnityTestProject/Assets/StreamingAssets/Config.json -d
+openssl aes-256-cbc -K $encrypted_984f19857b4c_key -iv $encrypted_984f19857b4c_iv -in Config.json.enc -out Travis/UnityTestProject/Assets/StreamingAssets/Config.json -d
 
 echo "Attempting to run UnitySDK integration Tests..."
 /Applications/Unity/Unity.app/Contents/MacOS/Unity \
