@@ -29,7 +29,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         //  Environment
         private string m_CreatedEnvironmentName = "unity-sdk-integration-test";
-        private string m_CreatedEnvironmentDescription = "Integration test running for Unity SDK. Please do not delete this environment until 10 minutes after the status is 'active'. The test should delete this environment.";
+        private string m_CreatedEnvironmentDescription = "Integration test running for Unity SDK. Please do not delete this environment until 10 minutes after the status is active. The test should delete this environment.";
         private string m_CreatedEnvironmentID;
         private bool m_IsEnvironmentActive = false;
 

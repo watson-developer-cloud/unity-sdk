@@ -2362,7 +2362,6 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
           m_GetClassifierCount -= 1;
           if (classifier != null)
           {
-            Log.Debug("VisualRecognition", "classifier status: {0}", classifier.status);
             if (classifier.status == "unavailable" || classifier.status == "failed")
             {
               Log.Debug("VisualRecognition", "Status of classifier {0} came back as {1}.", classifier.classifier_id, classifier.status);
