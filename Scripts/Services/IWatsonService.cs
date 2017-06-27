@@ -1,8 +1,4 @@
-﻿
-
-
-using IBM.Watson.DeveloperCloud.Utilities;
-/**
+﻿/**
 * Copyright 2015 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,8 +14,10 @@ using IBM.Watson.DeveloperCloud.Utilities;
 * limitations under the License.
 *
 */
+
 using System;
 using System.Collections.Generic;
+using IBM.Watson.DeveloperCloud.Utilities;
 
 namespace IBM.Watson.DeveloperCloud.Services
 {

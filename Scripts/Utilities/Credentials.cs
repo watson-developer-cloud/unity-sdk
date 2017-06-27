@@ -20,52 +20,83 @@ using System.Text;
 
 namespace IBM.Watson.DeveloperCloud.Utilities
 {
-  /// <summary>
-  /// Helper class for holding a user and password, used by both the WSCOnnector and RESTConnector.
-  /// </summary>
-  public class Credentials
-  {
     /// <summary>
-    /// Default constructor.
+    /// Helper class for holding a user and password, used by both the WSCOnnector and RESTConnector.
     /// </summary>
-    public Credentials()
-    { }
-    /// <summary>
-    /// Constructor that takes the user name and password.
-    /// </summary>
-    /// <param name="user">The string containing the user name.</param>
-    /// <param name="password">A string containing the password.</param>
-    public Credentials(string user, string password)
+    public class Credentials
     {
-      User = user;
-      Password = password;
-    }
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public Credentials()
+        { }
+        /// <summary>
+        /// Constructor that takes the user name and password.
+        /// </summary>
+        /// <param name="user">The string containing the user name.</param>
+        /// <param name="password">A string containing the password.</param>
+        public Credentials(string user, string password)
+        {
+            User = user;
+            Password = password;
+        }
 
-    /// <summary>
-    /// The user name.
-    /// </summary>
-    public string User { get; set; }
-    /// <summary>
-    /// The password.
-    /// </summary>
-    public string Password { get; set; }
+        /// <summary>
+        /// Constructor that takes an authentication token created by the user.
+        /// </summary>
+        /// <param name="authorizationToken">The authentication token.</param>
+        public Credentials(string authorizationToken)
+        {
+            AuthenticationToken = authorizationToken;
+        }
 
-    /// <summary>
-    /// Create basic authentication header data for REST requests.
-    /// </summary>
-    /// <returns>The authentication data base64 encoded.</returns>
-    public string CreateAuthorization()
-    {
-      return "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(User + ":" + Password));
-    }
+        /// <summary>
+        /// The user name.
+        /// </summary>
+        public string User { get; set; }
+        /// <summary>
+        /// The password.
+        /// </summary>
+        public string Password { get; set; }
+        /// <summary>
+        /// The autheentication token
+        /// </summary>
+        public string AuthenticationToken { get; set; }
 
-    /// <summary>
-    /// Do we have credentials?
-    /// </summary>
-    /// <returns></returns>
-    public bool HasCredentials()
-    {
-      return !string.IsNullOrEmpty(User) && !string.IsNullOrEmpty(Password);
+        /// <summary>
+        /// Create basic authentication header data for REST requests.
+        /// </summary>
+        /// <returns>The authentication data base64 encoded.</returns>
+        public string CreateAuthorization()
+        {
+            return "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(User + ":" + Password));
+        }
+
+        /// <summary>
+        /// Do we have credentials?
+        /// </summary>
+        /// <returns>true if the class has a username and password.</returns>
+        public bool HasCredentials()
+        {
+            return !string.IsNullOrEmpty(User) && !string.IsNullOrEmpty(Password);
+        }
+
+        /// <summary>
+        /// Do we have an authentication token?
+        /// </summary>
+        /// <returns>True if the class has a Authentication Token</returns>
+        public bool HasAuthorizationToken()
+        {
+            return !string.IsNullOrEmpty(AuthenticationToken);
+        }
+
+        /// <summary>
+        /// Get token stub.
+        /// </summary>
+        /// <returns>The authentication token.</returns>
+        public string GetToken()
+        {
+            return AuthenticationToken;
+        }
     }
-  };
 }
