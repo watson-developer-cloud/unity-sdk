@@ -14,7 +14,9 @@
 * limitations under the License.
 *
 */
+
 using FullSerializer;
+using System.Collections.Generic;
 
 namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 {
@@ -282,7 +284,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
     /// <summary>
     /// An array of dialog node IDs that are in focus in the conversation.
     /// </summary>
-    public string[] dialog_stack { get; set; }
+    public Dictionary<string, string>[] dialog_stack { get; set; }
     /// <summary>
     /// The number of cycles of user input and response in this conversation.
     /// </summary>
@@ -303,7 +305,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
     /// <summary>
     /// The version.
     /// </summary>
-	public const string VERSION = "2016-09-20";
+    public const string VERSION = "2016-09-20";
   }
   #endregion
 }
