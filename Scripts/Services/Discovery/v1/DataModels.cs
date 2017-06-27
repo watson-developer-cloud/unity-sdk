@@ -98,11 +98,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// <summary>
         /// Number of bytes used on the environment's disk capacity.
         /// </summary>
-        public uint used_bytes { get; set; }
+        public long used_bytes { get; set; }
         /// <summary>
         /// Total number of bytes available in the environment's disk capacity.
         /// </summary>
-        public uint total_bytes { get; set; }
+        public long total_bytes { get; set; }
         /// <summary>
         /// Amount of disk capacity used, in KB or GB format.
         /// </summary>
@@ -126,11 +126,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// <summary>
         /// Number of bytes used in the environment's memory capacity.
         /// </summary>
-        public uint used_bytes { get; set; }
+        public long used_bytes { get; set; }
         /// <summary>
         /// Total number of bytes available in the environment's memory capacity.
         /// </summary>
-        public uint total_bytes { get; set; }
+        public long total_bytes { get; set; }
         /// <summary>
         /// Amount of memory capacity used, in KB or GB format.
         /// </summary>
