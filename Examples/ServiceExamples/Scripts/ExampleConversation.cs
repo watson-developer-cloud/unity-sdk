@@ -20,6 +20,10 @@ using IBM.Watson.DeveloperCloud.Services.Conversation.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
 using IBM.Watson.DeveloperCloud.Logging;
 using System;
+using System.Collections.Generic;
+using System.Collections;
+using IBM.Watson.DeveloperCloud.DataTypes;
+using System.Reflection;
 
 public class ExampleConversation : MonoBehaviour
 {
@@ -33,75 +37,146 @@ public class ExampleConversation : MonoBehaviour
     LogSystem.InstallDefaultReactors();
     m_WorkspaceID = Config.Instance.GetVariableValue("ConversationV1_ID");
 
-    Debug.Log("**********User: Hello!");
-    MessageWithOnlyInput("Hello!");
-  }
+        //Debug.Log("**********User: Hello!");
+        //    MessageWithOnlyInput("Hello!");
 
-  private void MessageWithOnlyInput(string input)
-  {
-    if (string.IsNullOrEmpty(input))
-      throw new ArgumentNullException("input");
-
-    m_Conversation.Message(OnMessageWithOnlyInput, m_WorkspaceID, input);
-  }
-
-
-  private void OnMessageWithOnlyInput(MessageResponse resp, string customData)
-  {
-    if (resp != null)
-    {
-      foreach (Intent mi in resp.intents)
-        Debug.Log("Message Only intent: " + mi.intent + ", confidence: " + mi.confidence);
-
-      if (resp.output != null && resp.output.text.Length > 0)
-        foreach (string txt in resp.output.text)
-          Debug.Log("Message Only output: " + txt);
-
-      string questionStr = questionArray[UnityEngine.Random.Range(0, questionArray.Length - 1)];
-      Debug.Log(string.Format("**********User: {0}", questionStr));
-
-      MessageRequest messageRequest = new MessageRequest();
-      messageRequest.InputText = questionStr;
-      messageRequest.alternate_intents = m_UseAlternateIntents;
-      messageRequest.ContextData = resp.context;
-
-      MessageWithFullMessageRequest(messageRequest);
+        GetRawOutput("Hello");
     }
-    else
+    
+    private void GetRawOutput(string input)
     {
-      Debug.Log("Message Only: Failed to invoke Message();");
+        m_Conversation.Message(OnGetRawOutput, m_WorkspaceID, input);
     }
-  }
 
-  private void MessageWithFullMessageRequest(MessageRequest messageRequest)
-  {
-    if (messageRequest == null)
-      throw new ArgumentNullException("messageRequest");
-    m_Conversation.Message(OnMessageWithFullRequest, m_WorkspaceID, messageRequest);
-  }
-
-  private void OnMessageWithFullRequest(MessageResponse resp, string customData)
-  {
-    if (resp != null)
+    private void OnGetRawOutput(object resp, string customData)
     {
-      foreach (Intent mi in resp.intents)
-        Debug.Log("Full Request intent: " + mi.intent + ", confidence: " + mi.confidence);
+        if (!string.IsNullOrEmpty(customData))
+            Debug.Log(customData);
+        else
+            Debug.Log("No raw data was received.");
 
-      if (resp.output != null && resp.output.text.Length > 0)
-        foreach (string txt in resp.output.text)
-          Debug.Log("Full Request output: " + txt);
+        if (resp != null)
+        {
+            Dictionary<string, object> respDict = resp as Dictionary<string, object>;
+            object intents;
+            respDict.TryGetValue("intents", out intents);
 
-      string questionStr = questionArray[UnityEngine.Random.Range(0, questionArray.Length - 1)];
-      Debug.Log(string.Format("**********User: {0}", questionStr));
+            foreach(var intentObj in (intents as List<object>))
+            {
+                Dictionary<string, object> intentDict = intentObj as Dictionary<string, object>;
 
-      MessageRequest messageRequest = new MessageRequest();
-      messageRequest.InputText = questionStr;
-      messageRequest.alternate_intents = m_UseAlternateIntents;
-      messageRequest.ContextData = resp.context;
+                object intentString;
+                intentDict.TryGetValue("intent", out intentString);
+
+                object confidenceString;
+                intentDict.TryGetValue("confidence", out confidenceString);
+
+                Log.Debug("ExampleConversation", "intent: {0} | confidence {1}", intentString.ToString(), confidenceString.ToString());
+            }
+        }
     }
-    else
-    {
-      Debug.Log("Full Request: Failed to invoke Message();");
-    }
-  }
+
+  //private void MessageWithOnlyInput(string input)
+  //{
+  //  if (string.IsNullOrEmpty(input))
+  //    throw new ArgumentNullException("input");
+
+  //  m_Conversation.Message(OnMessageWithOnlyInput, m_WorkspaceID, input);
+  //}
+
+
+  //private void OnMessageWithOnlyInput(object resp, string customData)
+  //{
+  //  if (resp != null)
+  //  {
+  //    foreach (Intent mi in resp.intents)
+  //      Debug.Log("Message Only intent: " + mi.intent + ", confidence: " + mi.confidence);
+
+  //    if (resp.output != null && resp.output.text.Length > 0)
+  //      foreach (string txt in resp.output.text)
+  //        Debug.Log("Message Only output: " + txt);
+
+  //    if (resp.context != null)
+  //    {
+  //      if (!string.IsNullOrEmpty(resp.context.conversation_id))
+  //        Log.Debug("ExampleConversation", "Conversation ID: {0}", resp.context.conversation_id);
+  //      else
+  //        Log.Debug("ExampleConversation", "Conversation ID is null.");
+
+  //      if (resp.context.system != null)
+  //      {
+  //        Log.Debug("ExampleConversation", "dialog_request_counter: {0}", resp.context.system.dialog_request_counter);
+  //        Log.Debug("ExampleConversation", "dialog_turn_counter: {0}", resp.context.system.dialog_turn_counter);
+
+  //        if (resp.context.system.dialog_stack != null)
+  //        {
+  //          foreach (Dictionary<string, string> dialogNode in resp.context.system.dialog_stack)
+  //            foreach(KeyValuePair<string, string> node in dialogNode)
+  //              Log.Debug("ExampleConversation", "dialogNode: {0}", node.Value);
+  //        }
+  //        else
+  //        {
+  //          Log.Debug("ExampleConversation", "dialog stack is null");
+  //        }
+
+  //      }
+  //      else
+  //      {
+  //        Log.Debug("ExampleConversation", "system is null.");
+  //      }
+
+  //    }
+  //    else
+  //    {
+  //      Log.Debug("ExampleConversation", "Context is null");
+  //    }
+
+  //    string questionStr = questionArray[UnityEngine.Random.Range(0, questionArray.Length - 1)];
+  //    Debug.Log(string.Format("**********User: {0}", questionStr));
+
+  //    MessageRequest messageRequest = new MessageRequest();
+  //    messageRequest.InputText = questionStr;
+  //    messageRequest.alternate_intents = m_UseAlternateIntents;
+  //    messageRequest.ContextData = resp.context;
+
+  //    MessageWithFullMessageRequest(messageRequest);
+  //  }
+  //  else
+  //  {
+  //    Debug.Log("Message Only: Failed to invoke Message();");
+  //  }
+  //}
+
+  //private void MessageWithFullMessageRequest(MessageRequest messageRequest)
+  //{
+  //  if (messageRequest == null)
+  //    throw new ArgumentNullException("messageRequest");
+  //  m_Conversation.Message(OnMessageWithFullRequest, m_WorkspaceID, messageRequest);
+  //}
+
+  //private void OnMessageWithFullRequest(MessageResponse resp, string customData)
+  //{
+  //  if (resp != null)
+  //  {
+  //    foreach (Intent mi in resp.intents)
+  //      Debug.Log("Full Request intent: " + mi.intent + ", confidence: " + mi.confidence);
+
+  //    if (resp.output != null && resp.output.text.Length > 0)
+  //      foreach (string txt in resp.output.text)
+  //        Debug.Log("Full Request output: " + txt);
+
+  //    string questionStr = questionArray[UnityEngine.Random.Range(0, questionArray.Length - 1)];
+  //    Debug.Log(string.Format("**********User: {0}", questionStr));
+
+  //    MessageRequest messageRequest = new MessageRequest();
+  //    messageRequest.InputText = questionStr;
+  //    messageRequest.alternate_intents = m_UseAlternateIntents;
+  //    messageRequest.ContextData = resp.context;
+  //  }
+  //  else
+  //  {
+  //    Debug.Log("Full Request: Failed to invoke Message();");
+  //  }
+  //}
+
 }
