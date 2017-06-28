@@ -49,7 +49,13 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
         /// </summary>
         public string VersionDate
         {
-            get { return _versionDate; }
+            get
+            {
+                if (string.IsNullOrEmpty(_versionDate))
+                    throw new ArgumentNullException("VersionDate cannot be null. Use VersionDate `2017-05-26`");
+
+                return _versionDate;
+            }
             set { _versionDate = value; }
         }
 
@@ -79,6 +85,13 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
         private string _versionDate;
         #endregion
 
+        #region Constructor
+        public Conversation(Credentials credentials)
+        {
+            Credentials = credentials;
+        }
+        #endregion
+
         #region Message
         /// <summary>
         /// The callback delegate for the Message() function.
@@ -102,8 +115,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
                 throw new ArgumentNullException("input");
             if (callback == null)
                 throw new ArgumentNullException("callback");
-            if (string.IsNullOrEmpty(VersionDate))
-                throw new ArgumentNullException("VersionDate cannot be null. Use VersionDate `2017-05-26`");
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, SERVICE_MESSAGE);
             if (connector == null)
@@ -116,7 +127,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
             req.Callback = callback;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            req.Parameters["version"] = Version.VERSION;
+            req.Parameters["version"] = VersionDate;
             req.Function = "/" + workspaceID + "/message";
             req.Data = customData;
             req.Send = Encoding.UTF8.GetBytes(reqString);
@@ -155,7 +166,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
             req.MessageRequest = messageRequest;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            req.Parameters["version"] = Version.VERSION;
+            req.Parameters["version"] = VersionDate;
             req.Function = "/" + workspaceID + "/message";
             req.Data = customData;
             req.Send = Encoding.UTF8.GetBytes(reqString);

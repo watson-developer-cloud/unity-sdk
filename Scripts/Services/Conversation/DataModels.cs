@@ -295,17 +295,4 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
     public int dialog_request_counter { get; set; }
   }
   #endregion
-
-  #region Version
-  /// <summary>
-  /// The conversation service version.
-  /// </summary>
-  public class Version
-  {
-    /// <summary>
-    /// The version.
-    /// </summary>
-    public const string VERSION = "2016-09-20";
-  }
-  #endregion
 }

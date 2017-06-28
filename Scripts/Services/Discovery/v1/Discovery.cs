@@ -97,6 +97,13 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         }
         #endregion
 
+        #region Constructor
+        public Discovery(Credentials credentials)
+        {
+            Credentials = credentials;
+        }
+        #endregion
+
         #region Environments
         #region GetEnvironments
         /// <summary>

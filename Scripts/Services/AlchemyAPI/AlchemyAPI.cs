@@ -81,6 +81,13 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         }
         #endregion
 
+        #region Constructor
+        public AlchemyAPI(Credentials credentials)
+        {
+            Credentials = credentials;
+        }
+        #endregion
+
         #region GetAuthors
         private const string SERVICE_GET_AUTHORS_URL = "/url/URLGetAuthors";
         private const string SERVICE_GET_AUTHORS_HTML = "/html/HTMLGetAuthors";
