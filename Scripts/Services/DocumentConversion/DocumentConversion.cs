@@ -38,7 +38,7 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
         private const string SERVICE_ID = "DocumentConversionV1";
         private static fsSerializer sm_Serializer = new fsSerializer();
         private Credentials _credentials = null;
-        private string _url = "https://gateway.watsonplatform.net/tone-analyzer/api";
+        private string _url = "https://gateway.watsonplatform.net/document-conversion/api";
         #endregion
 
         #region Public Properties

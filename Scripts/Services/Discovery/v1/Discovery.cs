@@ -37,7 +37,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         private const string SERVICE_ID = "DiscoveryV1";
         private static fsSerializer sm_Serializer = new fsSerializer();
         private Credentials _credentials = null;
-        private string _url = "https://gateway.watsonplatform.net/tone-analyzer/api";
+        private string _url = "https://gateway.watsonplatform.net/discovery/api";
         private string _versionDate;
 
         private const string SERVICE_ENVIRONMENTS = "/v1/environments";
