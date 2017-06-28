@@ -284,7 +284,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
 
                 if (Authentication.HasAuthorizationToken())
                 {
-                    headers.Add(AUTHENTICATION_TOKEN_AUTHORIZATION_HEADER, Authentication.GetToken());
+                    headers.Add(AUTHENTICATION_TOKEN_AUTHORIZATION_HEADER, Authentication.AuthenticationToken);
                 }
                 else if (Authentication.HasCredentials())
                 {

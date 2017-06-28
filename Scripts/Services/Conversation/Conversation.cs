@@ -25,31 +25,67 @@ using MiniJSON;
 
 namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 {
-  /// <summary>
-  /// This class wraps the Watson Conversation service. 
-  /// <a href="http://www.ibm.com/watson/developercloud/conversation.html">Conversation Service</a>
-  /// </summary>
-  public class Conversation : IWatsonService
-  {
-    #region Public Types
-    #endregion
-
-    #region Public Properties
-    #endregion
-
-    #region Private Data
-    private const string SERVICE_ID = "ConversationV1";
-    private const string SERVICE_MESSAGE = "/v1/workspaces";
-    private static fsSerializer sm_Serializer = new fsSerializer();
-    #endregion
-
-    #region Message
     /// <summary>
-    /// The callback delegate for the Message() function.
+    /// This class wraps the Watson Conversation service. 
+    /// <a href="http://www.ibm.com/watson/developercloud/conversation.html">Conversation Service</a>
     /// </summary>
-    /// <param name="resp">The response object to a call to Message().</param>
-    public delegate void OnMessage(object resp, string customData);
-    //public delegate void OnMessage(MessageResponse resp, string customData);
+    public class Conversation : IWatsonService
+    {
+        #region Public Types
+        #endregion
+
+        #region Public Properties
+        /// <summary>
+        /// Gets and sets the endpoint URL for the service.
+        /// </summary>
+        public string Url
+        {
+            get { return _url; }
+            set { _url = value; }
+        }
+
+        /// <summary>
+        /// Gets and sets the versionDate of the service.
+        /// </summary>
+        public string VersionDate
+        {
+            get { return _versionDate; }
+            set { _versionDate = value; }
+        }
+
+        /// <summary>
+        /// Gets and sets the credentials of the service. Replace the default endpoint if endpoint is defined.
+        /// </summary>
+        public Credentials Credentials
+        {
+            get { return _credentials; }
+            set
+            {
+                _credentials = value;
+                if (!string.IsNullOrEmpty(_credentials.Url))
+                {
+                    _url = _credentials.Url;
+                }
+            }
+        }
+        #endregion
+
+        #region Private Data
+        private const string SERVICE_ID = "ConversationV1";
+        private const string SERVICE_MESSAGE = "/v1/workspaces";
+        private static fsSerializer sm_Serializer = new fsSerializer();
+        private Credentials _credentials = null;
+        private string _url = "https://gateway.watsonplatform.net/conversation/api";
+        private string _versionDate;
+        #endregion
+
+        #region Message
+        /// <summary>
+        /// The callback delegate for the Message() function.
+        /// </summary>
+        /// <param name="resp">The response object to a call to Message().</param>
+        public delegate void OnMessage(object resp, string customData);
+        //public delegate void OnMessage(MessageResponse resp, string customData);
 
         /// <summary>
         /// Message the specified workspaceId, input and callback.
@@ -59,200 +95,190 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
         /// <param name="callback">Callback.</param>
         /// <param name="customData">Custom data.</param>
         public bool Message(OnMessage callback, string workspaceID, string input, string customData = default(string))
-    {
-      if (string.IsNullOrEmpty(workspaceID))
-        throw new ArgumentNullException("workspaceId");
-      if (string.IsNullOrEmpty(input))
-        throw new ArgumentNullException("input");
-      if (callback == null)
-        throw new ArgumentNullException("callback");
+        {
+            if (string.IsNullOrEmpty(workspaceID))
+                throw new ArgumentNullException("workspaceId");
+            if (string.IsNullOrEmpty(input))
+                throw new ArgumentNullException("input");
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(VersionDate))
+                throw new ArgumentNullException("VersionDate cannot be null. Use VersionDate `2017-05-26`");
 
-      RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_MESSAGE);
-      if (connector == null)
-        return false;
+            RESTConnector connector = RESTConnector.GetConnector(_credentials, SERVICE_MESSAGE);
+            if (connector == null)
+                return false;
 
-      string reqJson = "{{\"input\": {{\"text\": \"{0}\"}}}}";
-      string reqString = string.Format(reqJson, input);
+            string reqJson = "{{\"input\": {{\"text\": \"{0}\"}}}}";
+            string reqString = string.Format(reqJson, input);
 
-      MessageReq req = new MessageReq();
-      req.Callback = callback;
-      req.Headers["Content-Type"] = "application/json";
-      req.Headers["Accept"] = "application/json";
-      req.Parameters["version"] = Version.VERSION;
-      req.Function = "/" + workspaceID + "/message";
-      req.Data = customData;
-      req.Send = Encoding.UTF8.GetBytes(reqString);
-      req.OnResponse = MessageResp;
+            MessageReq req = new MessageReq();
+            req.Callback = callback;
+            req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
+            req.Parameters["version"] = Version.VERSION;
+            req.Function = "/" + workspaceID + "/message";
+            req.Data = customData;
+            req.Send = Encoding.UTF8.GetBytes(reqString);
+            req.OnResponse = MessageResp;
 
-      return connector.Send(req);
-    }
+            return connector.Send(req);
+        }
 
-    /// <summary>
-    /// Message the specified workspaceId, input and callback.
-    /// </summary>
-    /// <param name="callback">Callback.</param>
-    /// <param name="workspaceID">Workspace identifier.</param>
-    /// <param name="messageRequest">Message request object.</param>
-    /// <param name="customData">Custom data.</param>
-    /// <returns></returns>
-    public bool Message(OnMessage callback, string workspaceID, MessageRequest messageRequest, string customData = default(string))
-    {
-      if (string.IsNullOrEmpty(workspaceID))
-        throw new ArgumentNullException("workspaceId");
-      if (string.IsNullOrEmpty(messageRequest.input.text))
-        throw new ArgumentNullException("messageRequest.input.text");
-      if (callback == null)
-        throw new ArgumentNullException("callback");
+        /// <summary>
+        /// Message the specified workspaceId, input and callback.
+        /// </summary>
+        /// <param name="callback">Callback.</param>
+        /// <param name="workspaceID">Workspace identifier.</param>
+        /// <param name="messageRequest">Message request object.</param>
+        /// <param name="customData">Custom data.</param>
+        /// <returns></returns>
+        public bool Message(OnMessage callback, string workspaceID, MessageRequest messageRequest, string customData = default(string))
+        {
+            if (string.IsNullOrEmpty(workspaceID))
+                throw new ArgumentNullException("workspaceId");
+            if (string.IsNullOrEmpty(messageRequest.input.text))
+                throw new ArgumentNullException("messageRequest.input.text");
+            if (callback == null)
+                throw new ArgumentNullException("callback");
 
-      RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_MESSAGE);
-      if (connector == null)
-        return false;
+            RESTConnector connector = RESTConnector.GetConnector(_credentials, SERVICE_MESSAGE);
+            if (connector == null)
+                return false;
 
-      fsData data;
-      sm_Serializer.TrySerialize(messageRequest.GetType(), messageRequest, out data).AssertSuccessWithoutWarnings();
-      string reqString = fsJsonPrinter.CompressedJson(data);
+            fsData data;
+            sm_Serializer.TrySerialize(messageRequest.GetType(), messageRequest, out data).AssertSuccessWithoutWarnings();
+            string reqString = fsJsonPrinter.CompressedJson(data);
 
-      MessageReq req = new MessageReq();
-      req.Callback = callback;
-      req.MessageRequest = messageRequest;
-      req.Headers["Content-Type"] = "application/json";
-      req.Headers["Accept"] = "application/json";
-      req.Parameters["version"] = Version.VERSION;
-      req.Function = "/" + workspaceID + "/message";
-      req.Data = customData;
-      req.Send = Encoding.UTF8.GetBytes(reqString);
-      req.OnResponse = MessageResp;
+            MessageReq req = new MessageReq();
+            req.Callback = callback;
+            req.MessageRequest = messageRequest;
+            req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
+            req.Parameters["version"] = Version.VERSION;
+            req.Function = "/" + workspaceID + "/message";
+            req.Data = customData;
+            req.Send = Encoding.UTF8.GetBytes(reqString);
+            req.OnResponse = MessageResp;
 
-      return connector.Send(req);
-    }
+            return connector.Send(req);
+        }
 
 
-    private class MessageReq : RESTConnector.Request
-    {
-      public OnMessage Callback { get; set; }
-      public MessageRequest MessageRequest { get; set; }
-      public string Data { get; set; }
-    }
+        private class MessageReq : RESTConnector.Request
+        {
+            public OnMessage Callback { get; set; }
+            public MessageRequest MessageRequest { get; set; }
+            public string Data { get; set; }
+        }
 
         private void MessageResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
             object dataObject = null;
             string data = "";
 
-            //MessageResponse response = new MessageResponse();
-            //fsData data = null;
-
             if (resp.Success)
             {
                 try
                 {
-                  //  For deserializing into a generic object
-                  data = Encoding.UTF8.GetString(resp.Data);
-                  dataObject = Json.Deserialize(data);
-
-                  //  For deserializing into fixed data model
-                  //  fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                  //  if (!r.Succeeded)
-                  //  throw new WatsonException(r.FormattedMessages);
-                  
-                  //  object obj = response;
-                  //  r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                  //  if (!r.Succeeded)
-                  //    throw new WatsonException(r.FormattedMessages);
+                    //  For deserializing into a generic object
+                    data = Encoding.UTF8.GetString(resp.Data);
+                    dataObject = Json.Deserialize(data);
                 }
                 catch (Exception e)
                 {
-                  Log.Error("Conversation", "MessageResp Exception: {0}", e.ToString());
-                  data = e.Message;
-                  resp.Success = false;
+                    Log.Error("Conversation", "MessageResp Exception: {0}", e.ToString());
+                    data = e.Message;
+                    resp.Success = false;
                 }
             }
 
+            string customData = ((MessageReq)req).Data;
             if (((MessageReq)req).Callback != null)
-              ((MessageReq)req).Callback(resp.Success ? dataObject : null, !string.IsNullOrEmpty(((MessageReq)req).Data) ? ((MessageReq)req).Data : data.ToString());
+                ((MessageReq)req).Callback(resp.Success ? dataObject : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+        }
+        #endregion
+
+        #region Intents
+        #endregion
+
+        #region Entities
+        #endregion
+
+        #region Dialog Nodes
+        #endregion
+
+        #region IWatsonService implementation
+        /// <exclude />
+        public string GetServiceID()
+        {
+            return SERVICE_ID;
+        }
+
+        /// <exclude />
+        public void GetServiceStatus(ServiceStatus callback)
+        {
+            if (Config.Instance.FindCredentials(SERVICE_ID) != null)
+                new CheckServiceStatus(this, callback);
+            else
+            {
+                if (callback != null && callback.Target != null)
+                {
+                    callback(SERVICE_ID, false);
+                }
+            }
+        }
+
+        private class CheckServiceStatus
+        {
+            private Conversation m_Service = null;
+            private ServiceStatus m_Callback = null;
+            private int m_ConversationCount = 0;
+
+            public CheckServiceStatus(Conversation service, ServiceStatus callback)
+            {
+                m_Service = service;
+                m_Callback = callback;
+
+                string customServiceID = Config.Instance.GetVariableValue(SERVICE_ID + "_ID");
+
+                //If custom classifierID is defined then we are using it to check the service health
+                if (!string.IsNullOrEmpty(customServiceID))
+                {
+
+                    if (!m_Service.Message(OnMessage, customServiceID, "Ping", "Ping"))
+                        OnFailure("Failed to invoke Converse().");
+                    else
+                        m_ConversationCount += 1;
+                }
+                else
+                {
+                    OnFailure("Please define a workspace variable in config.json (" + SERVICE_ID + "_ID)");
+                }
+            }
+
+            private void OnMessage(object resp, string customData)
+            {
+                if (m_ConversationCount > 0)
+                {
+                    m_ConversationCount -= 1;
+                    if (resp != null)
+                    {
+                        if (m_ConversationCount == 0 && m_Callback != null && m_Callback.Target != null)
+                            m_Callback(SERVICE_ID, true);
+                    }
+                    else
+                        OnFailure("ConverseResponse is null.");
+                }
+            }
+
+            private void OnFailure(string msg)
+            {
+                Log.Error("Dialog", msg);
+                m_Callback(SERVICE_ID, false);
+                m_ConversationCount = 0;
+            }
+        };
+        #endregion
     }
-    #endregion
-
-    #region Intents
-    #endregion
-
-    #region Entities
-    #endregion
-
-    #region Dialog Nodes
-    #endregion
-
-    #region IWatsonService implementation
-    /// <exclude />
-    public string GetServiceID()
-    {
-      return SERVICE_ID;
-    }
-
-    /// <exclude />
-    public void GetServiceStatus(ServiceStatus callback)
-    {
-      if (Config.Instance.FindCredentials(SERVICE_ID) != null)
-        new CheckServiceStatus(this, callback);
-      else
-      {
-        if (callback != null && callback.Target != null)
-        {
-          callback(SERVICE_ID, false);
-        }
-      }
-    }
-
-    private class CheckServiceStatus
-    {
-      private Conversation m_Service = null;
-      private ServiceStatus m_Callback = null;
-      private int m_ConversationCount = 0;
-
-      public CheckServiceStatus(Conversation service, ServiceStatus callback)
-      {
-        m_Service = service;
-        m_Callback = callback;
-
-        string customServiceID = Config.Instance.GetVariableValue(SERVICE_ID + "_ID");
-
-        //If custom classifierID is defined then we are using it to check the service health
-        if (!string.IsNullOrEmpty(customServiceID))
-        {
-
-          if (!m_Service.Message(OnMessage, customServiceID, "Ping", "Ping"))
-            OnFailure("Failed to invoke Converse().");
-          else
-            m_ConversationCount += 1;
-        }
-        else
-        {
-          OnFailure("Please define a workspace variable in config.json (" + SERVICE_ID + "_ID)");
-        }
-      }
-
-      private void OnMessage(object resp, string customData)
-      {
-        if (m_ConversationCount > 0)
-        {
-          m_ConversationCount -= 1;
-          if (resp != null)
-          {
-            if (m_ConversationCount == 0 && m_Callback != null && m_Callback.Target != null)
-              m_Callback(SERVICE_ID, true);
-          }
-          else
-            OnFailure("ConverseResponse is null.");
-        }
-      }
-
-      private void OnFailure(string msg)
-      {
-        Log.Error("Dialog", msg);
-        m_Callback(SERVICE_ID, false);
-        m_ConversationCount = 0;
-      }
-    };
-    #endregion
-  }
 }
