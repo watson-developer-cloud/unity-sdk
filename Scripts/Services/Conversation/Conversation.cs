@@ -105,7 +105,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
             if (string.IsNullOrEmpty(VersionDate))
                 throw new ArgumentNullException("VersionDate cannot be null. Use VersionDate `2017-05-26`");
 
-            RESTConnector connector = RESTConnector.GetConnector(_credentials, SERVICE_MESSAGE);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, SERVICE_MESSAGE);
             if (connector == null)
                 return false;
 
@@ -142,7 +142,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
             if (callback == null)
                 throw new ArgumentNullException("callback");
 
-            RESTConnector connector = RESTConnector.GetConnector(_credentials, SERVICE_MESSAGE);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, SERVICE_MESSAGE);
             if (connector == null)
                 return false;
 

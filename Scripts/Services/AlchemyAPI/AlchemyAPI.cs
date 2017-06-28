@@ -141,7 +141,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 return false;
             }
 
-            RESTConnector connector = RESTConnector.GetConnector(_credentials, service);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, service);
             if (connector == null)
                 return false;
 
@@ -269,7 +269,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 req.Forms["text"] = new RESTConnector.Form(source);
             }
 
-            RESTConnector connector = RESTConnector.GetConnector(_credentials, service);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, service);
             if (connector == null)
                 return false;
 
@@ -390,7 +390,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 req.Forms["text"] = new RESTConnector.Form(source);
             }
 
-            RESTConnector connector = RESTConnector.GetConnector(_credentials, service);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, service);
             if (connector == null)
                 return false;
 
@@ -514,7 +514,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 req.Forms["text"] = new RESTConnector.Form(source);
             }
 
-            RESTConnector connector = RESTConnector.GetConnector(_credentials, service);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, service);
             if (connector == null)
                 return false;
 
@@ -657,7 +657,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 req.Forms["text"] = new RESTConnector.Form(source);
             }
 
-            RESTConnector connector = RESTConnector.GetConnector(_credentials, service);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, service);
             if (connector == null)
                 return false;
 
@@ -768,7 +768,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 return false;
             }
 
-            RESTConnector connector = RESTConnector.GetConnector(_credentials, service);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, service);
             if (connector == null)
                 return false;
 
@@ -897,7 +897,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 req.Forms["text"] = new RESTConnector.Form(source);
             }
 
-            RESTConnector connector = RESTConnector.GetConnector(_credentials, service);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, service);
             if (connector == null)
                 return false;
 
@@ -1014,7 +1014,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 req.Forms["text"] = new RESTConnector.Form(source);
             }
 
-            RESTConnector connector = RESTConnector.GetConnector(_credentials, service);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, service);
             if (connector == null)
                 return false;
 
@@ -1125,7 +1125,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 return false;
             }
 
-            RESTConnector connector = RESTConnector.GetConnector(_credentials, service);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, service);
             if (connector == null)
                 return false;
 
@@ -1239,7 +1239,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 return false;
             }
 
-            RESTConnector connector = RESTConnector.GetConnector(_credentials, service);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, service);
             if (connector == null)
                 return false;
 
@@ -1389,7 +1389,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 req.Forms["text"] = new RESTConnector.Form(source);
             }
 
-            RESTConnector connector = RESTConnector.GetConnector(_credentials, service);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, service);
             if (connector == null)
                 return false;
 
@@ -1506,7 +1506,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 req.Forms["text"] = new RESTConnector.Form(source);
             }
 
-            RESTConnector connector = RESTConnector.GetConnector(_credentials, service);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, service);
             if (connector == null)
                 return false;
 
@@ -1627,7 +1627,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 req.Forms["text"] = new RESTConnector.Form(source);
             }
 
-            RESTConnector connector = RESTConnector.GetConnector(_credentials, service);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, service);
             if (connector == null)
                 return false;
 
@@ -1744,7 +1744,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 req.Forms["text"] = new RESTConnector.Form(source);
             }
 
-            RESTConnector connector = RESTConnector.GetConnector(_credentials, service);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, service);
             if (connector == null)
                 return false;
 
@@ -1862,7 +1862,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 return false;
             }
 
-            RESTConnector connector = RESTConnector.GetConnector(_credentials, service);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, service);
             if (connector == null)
                 return false;
 
@@ -1971,7 +1971,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 return false;
             }
 
-            RESTConnector connector = RESTConnector.GetConnector(_credentials, service);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, service);
             if (connector == null)
                 return false;
 
@@ -2042,7 +2042,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 return false;
             }
 
-            RESTConnector connector = RESTConnector.GetConnector(_credentials, service);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, service);
             if (connector == null)
                 return false;
 
@@ -2235,7 +2235,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 req.Forms["text"] = new RESTConnector.Form(source);
             }
 
-            RESTConnector connector = RESTConnector.GetConnector(_credentials, service);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, service);
             if (connector == null)
                 return false;
 
@@ -2341,7 +2341,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 foreach (KeyValuePair<string, string> entry in queryFields)
                     req.Parameters[entry.Key] = "q." + entry.Value;
 
-            RESTConnector connector = RESTConnector.GetConnector(_credentials, SERVICE_GET_NEWS);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, SERVICE_GET_NEWS);
             if (connector == null)
                 return false;
 

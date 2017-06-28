@@ -36,6 +36,9 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         #region Private Data
         private const string SERVICE_ID = "DiscoveryV1";
         private static fsSerializer sm_Serializer = new fsSerializer();
+        private Credentials _credentials = null;
+        private string _url = "https://gateway.watsonplatform.net/tone-analyzer/api";
+        private string _versionDate;
 
         private const string SERVICE_ENVIRONMENTS = "/v1/environments";
         private const string SERVICE_ENVIRONMENT = "/v1/environments/{0}";
@@ -52,7 +55,46 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         private const float DELETE_TIMEOUT = 30f;
         #endregion
 
-        #region Public Types
+        #region Public Properties
+        /// <summary>
+        /// Gets and sets the endpoint URL for the service.
+        /// </summary>
+        public string Url
+        {
+            get { return _url; }
+            set { _url = value; }
+        }
+
+        /// <summary>
+        /// Gets and sets the versionDate of the service.
+        /// </summary>
+        public string VersionDate
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_versionDate))
+                    throw new ArgumentNullException("VersionDate cannot be null. Use `2016-12-01`");
+
+                return _versionDate;
+            }
+            set { _versionDate = value; }
+        }
+
+        /// <summary>
+        /// Gets and sets the credentials of the service. Replace the default endpoint if endpoint is defined.
+        /// </summary>
+        public Credentials Credentials
+        {
+            get { return _credentials; }
+            set
+            {
+                _credentials = value;
+                if (!string.IsNullOrEmpty(_credentials.Url))
+                {
+                    _url = _credentials.Url;
+                }
+            }
+        }
         #endregion
 
         #region Environments
@@ -79,10 +121,10 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             GetEnvironmentsRequest req = new GetEnvironmentsRequest();
             req.Callback = callback;
             req.Data = customData;
-            req.Parameters["version"] = DiscoveryVersion.Version;
+            req.Parameters["version"] = VersionDate;
             req.OnResponse = OnGetEnvironmentsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_ENVIRONMENTS);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, SERVICE_ENVIRONMENTS);
             if (connector == null)
                 return false;
 
@@ -177,7 +219,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             req.Callback = callback;
             req.AddEnvironmentData = addEnvironmentData;
             req.Data = customData;
-            req.Parameters["version"] = DiscoveryVersion.Version;
+            req.Parameters["version"] = VersionDate;
             req.OnResponse = OnAddEnvironmentResponse;
 
             req.Headers["Content-Type"] = "application/json";
@@ -185,7 +227,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             string sendjson = Json.Serialize(addEnvironmentData);
             req.Send = Encoding.UTF8.GetBytes(sendjson);
 
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_ENVIRONMENTS);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, SERVICE_ENVIRONMENTS);
             if (connector == null)
                 return false;
 
@@ -257,10 +299,10 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             req.Callback = callback;
             req.EnvironmentID = environmentID;
             req.Data = customData;
-            req.Parameters["version"] = DiscoveryVersion.Version;
+            req.Parameters["version"] = VersionDate;
             req.OnResponse = OnGetEnvironmentResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_ENVIRONMENT, environmentID));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_ENVIRONMENT, environmentID));
             if (connector == null)
                 return false;
 
@@ -333,12 +375,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             req.Callback = callback;
             req.EnvironmentID = environmentID;
             req.Data = customData;
-            req.Parameters["version"] = DiscoveryVersion.Version;
+            req.Parameters["version"] = VersionDate;
             req.OnResponse = OnDeleteEnvironmentResponse;
             req.Delete = true;
             req.Timeout = DELETE_TIMEOUT;
 
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_ENVIRONMENT, environmentID));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_ENVIRONMENT, environmentID));
             if (connector == null)
                 return false;
 
@@ -388,7 +430,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             req.Callback = callback;
             req.Data = customData;
             req.EnvironmentID = environmentID;
-            req.Parameters["version"] = DiscoveryVersion.Version;
+            req.Parameters["version"] = VersionDate;
             if (!string.IsNullOrEmpty(name))
             {
                 req.Name = name;
@@ -396,7 +438,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.OnResponse = OnGetConfigurationsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_ENVIRONMENT_CONFIGURATIONS, environmentID));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_ENVIRONMENT_CONFIGURATIONS, environmentID));
             if (connector == null)
                 return false;
 
@@ -502,13 +544,13 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             req.Callback = callback;
             req.Data = customData;
             req.EnvironmentID = environmentID;
-            req.Parameters["version"] = DiscoveryVersion.Version;
+            req.Parameters["version"] = VersionDate;
             req.OnResponse = OnAddConfigurationResponse;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
             req.Send = configurationJsonData;
 
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_ENVIRONMENT_CONFIGURATIONS, environmentID));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_ENVIRONMENT_CONFIGURATIONS, environmentID));
             if (connector == null)
                 return false;
 
@@ -584,10 +626,10 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             req.Data = customData;
             req.EnvironmentID = environmentID;
             req.ConfigurationID = configurationID;
-            req.Parameters["version"] = DiscoveryVersion.Version;
+            req.Parameters["version"] = VersionDate;
             req.OnResponse = OnGetConfigurationResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_ENVIRONMENT_CONFIGURATION, environmentID, configurationID));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_ENVIRONMENT_CONFIGURATION, environmentID, configurationID));
             if (connector == null)
                 return false;
 
@@ -665,12 +707,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             req.EnvironmentID = environmentID;
             req.ConfigurationID = configurationID;
             req.Data = customData;
-            req.Parameters["version"] = DiscoveryVersion.Version;
+            req.Parameters["version"] = VersionDate;
             req.OnResponse = OnDeleteConfigurationResponse;
             req.Delete = true;
             req.Timeout = DELETE_TIMEOUT;
 
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_ENVIRONMENT_CONFIGURATION, environmentID, configurationID));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_ENVIRONMENT_CONFIGURATION, environmentID, configurationID));
             if (connector == null)
                 return false;
 
@@ -797,7 +839,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             req.ContentData = contentData;
             req.Metadata = metadata;
             req.Data = customData;
-            req.Parameters["version"] = DiscoveryVersion.Version;
+            req.Parameters["version"] = VersionDate;
             req.OnResponse = OnPreviewConfigurationResponse;
 
             req.Forms = new Dictionary<string, RESTConnector.Form>();
@@ -824,7 +866,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 req.Parameters["configuration_id"] = configurationID;
             }
 
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_ENVIRONMENT_PREVIEW, environmentID));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_ENVIRONMENT_PREVIEW, environmentID));
             if (connector == null)
                 return false;
 
@@ -902,7 +944,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             req.Callback = callback;
             req.Data = customData;
             req.EnvironmentID = environmentID;
-            req.Parameters["version"] = DiscoveryVersion.Version;
+            req.Parameters["version"] = VersionDate;
             if (!string.IsNullOrEmpty(name))
             {
                 req.Name = name;
@@ -910,7 +952,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.OnResponse = OnGetCollectionsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_ENVIRONMENT_COLLECTIONS, environmentID));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_ENVIRONMENT_COLLECTIONS, environmentID));
             if (connector == null)
                 return false;
 
@@ -1013,13 +1055,13 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             req.Data = customData;
             req.EnvironmentID = environmentID;
             req.CollectionJsonData = collectionData;
-            req.Parameters["version"] = DiscoveryVersion.Version;
+            req.Parameters["version"] = VersionDate;
             req.OnResponse = OnAddCollectionResponse;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
             req.Send = collectionData;
 
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_ENVIRONMENT_COLLECTIONS, environmentID));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_ENVIRONMENT_COLLECTIONS, environmentID));
             if (connector == null)
                 return false;
 
@@ -1095,10 +1137,10 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             req.Data = customData;
             req.EnvironmentID = environmentID;
             req.CollectionID = collectionID;
-            req.Parameters["version"] = DiscoveryVersion.Version;
+            req.Parameters["version"] = VersionDate;
             req.OnResponse = OnGetCollectionResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_ENVIRONMENT_COLLECTION, environmentID, collectionID));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_ENVIRONMENT_COLLECTION, environmentID, collectionID));
             if (connector == null)
                 return false;
 
@@ -1176,12 +1218,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             req.EnvironmentID = environmentID;
             req.CollectionID = collectionID;
             req.Data = customData;
-            req.Parameters["version"] = DiscoveryVersion.Version;
+            req.Parameters["version"] = VersionDate;
             req.OnResponse = OnDeleteCollectionResponse;
             req.Delete = true;
             req.Timeout = DELETE_TIMEOUT;
 
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_ENVIRONMENT_COLLECTION, environmentID, collectionID));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_ENVIRONMENT_COLLECTION, environmentID, collectionID));
             if (connector == null)
                 return false;
 
@@ -1233,10 +1275,10 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             req.Data = customData;
             req.EnvironmentID = environmentID;
             req.CollectionID = collectionID;
-            req.Parameters["version"] = DiscoveryVersion.Version;
+            req.Parameters["version"] = VersionDate;
             req.OnResponse = OnGetFieldsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_ENVIRONMENT_COLLECTION_FIELDS, environmentID, collectionID));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_ENVIRONMENT_COLLECTION_FIELDS, environmentID, collectionID));
             if (connector == null)
                 return false;
 
@@ -1504,7 +1546,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             req.ContentMimeType = contentMimeType;
             req.Metadata = metadata;
             req.Data = customData;
-            req.Parameters["version"] = DiscoveryVersion.Version;
+            req.Parameters["version"] = VersionDate;
             req.OnResponse = OnAddDocumentResponse;
 
             req.Forms = new Dictionary<string, RESTConnector.Form>();
@@ -1519,7 +1561,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             if (!string.IsNullOrEmpty(configuration))
                 req.Forms["configuration"] = new RESTConnector.Form(configuration);
 
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_ENVIRONMENT_COLLECTION_DOCUMENTS, environmentID, collectionID));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_ENVIRONMENT_COLLECTION_DOCUMENTS, environmentID, collectionID));
             if (connector == null)
                 return false;
 
@@ -1608,12 +1650,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             req.CollectionID = collectionID;
             req.DocumentID = documentID;
             req.Data = customData;
-            req.Parameters["version"] = DiscoveryVersion.Version;
+            req.Parameters["version"] = VersionDate;
             req.OnResponse = OnDeleteDocumentResponse;
             req.Delete = true;
             req.Timeout = DELETE_TIMEOUT;
 
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_ENVIRONMENT_COLLECTION_DOCUMENT, environmentID, collectionID, documentID));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_ENVIRONMENT_COLLECTION_DOCUMENT, environmentID, collectionID, documentID));
             if (connector == null)
                 return false;
 
@@ -1670,10 +1712,10 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             req.EnvironmentID = environmentID;
             req.CollectionID = collectionID;
             req.DocumentID = documentID;
-            req.Parameters["version"] = DiscoveryVersion.Version;
+            req.Parameters["version"] = VersionDate;
             req.OnResponse = OnGetDocumentResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_ENVIRONMENT_COLLECTION_DOCUMENT, environmentID, collectionID, documentID));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_ENVIRONMENT_COLLECTION_DOCUMENT, environmentID, collectionID, documentID));
             if (connector == null)
                 return false;
 
@@ -1939,7 +1981,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             req.ContentMimeType = contentMimeType;
             req.Metadata = metadata;
             req.Data = customData;
-            req.Parameters["version"] = DiscoveryVersion.Version;
+            req.Parameters["version"] = VersionDate;
             req.OnResponse = OnUpdateDocumentResponse;
 
             req.Forms = new Dictionary<string, RESTConnector.Form>();
@@ -1954,7 +1996,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             if (!string.IsNullOrEmpty(configuration))
                 req.Forms["configuration"] = new RESTConnector.Form(configuration);
 
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_ENVIRONMENT_COLLECTION_DOCUMENT, environmentID, collectionID, documentID));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_ENVIRONMENT_COLLECTION_DOCUMENT, environmentID, collectionID, documentID));
             if (connector == null)
                 return false;
 
@@ -2073,10 +2115,10 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
             req.Parameters["offset"] = offset;
             req.Parameters["count"] = count;
-            req.Parameters["version"] = DiscoveryVersion.Version;
+            req.Parameters["version"] = VersionDate;
             req.OnResponse = OnQueryResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_ENVIRONMENT_COLLECTION_QUERY, environmentID, collectionID));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_ENVIRONMENT_COLLECTION_QUERY, environmentID, collectionID));
             if (connector == null)
                 return false;
 

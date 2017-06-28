@@ -1005,17 +1005,4 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         public double matching_results { get; set; }
     }
     #endregion
-
-    #region Version
-    /// <summary>
-    /// The Discovery version.
-    /// </summary>
-    public class DiscoveryVersion
-    {
-        /// <summary>
-        /// The version.
-        /// </summary>
-        public const string Version = "2016-12-01";
-    }
-    #endregion
 }
