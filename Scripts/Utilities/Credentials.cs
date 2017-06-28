@@ -21,55 +21,77 @@ using System.Text;
 namespace IBM.Watson.DeveloperCloud.Utilities
 {
     /// <summary>
-    /// Helper class for holding a user and password, used by both the WSCOnnector and RESTConnector.
+    /// Helper class for holding a user and password or authorization token, used by both the WSCOnnector and RESTConnector.
     /// </summary>
     public class Credentials
     {
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public Credentials()
-        { }
-        /// <summary>
-        /// Constructor that takes the user name and password.
-        /// </summary>
-        /// <param name="user">The string containing the user name.</param>
-        /// <param name="password">A string containing the password.</param>
-        public Credentials(string user, string password)
-        {
-            User = user;
-            Password = password;
-        }
-
-        /// <summary>
-        /// Constructor that takes an authentication token created by the user.
-        /// </summary>
-        /// <param name="authorizationToken">The authentication token.</param>
-        public Credentials(string authorizationToken)
-        {
-            AuthenticationToken = authorizationToken;
-        }
-
+        #region Private Data
+        private string _authenticationToken;
+        #endregion
         /// <summary>
         /// The user name.
         /// </summary>
-        public string User { get; set; }
+        public string Username { get; set; }
         /// <summary>
         /// The password.
         /// </summary>
         public string Password { get; set; }
         /// <summary>
+        /// The Api Key.
+        /// </summary>
+        public string ApiKey { get; set; }
+        /// <summary>
         /// The autheentication token
         /// </summary>
-        public string AuthenticationToken { get; set; }
+        public string AuthenticationToken
+        {
+            get { return _authenticationToken; }
+            set { _authenticationToken = value; }
+        }
+        /// <summary>
+        /// The service endpoint.
+        /// </summary>
+        public string Url { get; set; }
 
+        /// <summary>
+        /// Constructor that takes the URL. Used for token authentication.
+        /// </summary>
+        public Credentials(string url = null)
+        {
+            Url = url;
+        }
+
+        /// <summary>
+        /// Constructor that takes the user name and password.
+        /// </summary>
+        /// <param name="username">The string containing the user name.</param>
+        /// <param name="password">A string containing the password.</param>
+        /// <param name="url">The service endpoint.</param>
+        public Credentials(string username, string password, string url = null)
+        {
+            Username = username;
+            Password = password;
+            Url = url;
+        }
+
+        /// <summary>
+        /// Constructor that takes an authentication token created by the user or an ApiKey. If providing an ApiKey 
+        /// set useApiKey to true.
+        /// </summary>
+        /// <param name="url">The service endpoint.</param>
+        public Credentials(string apiKey, string url = null)
+        {
+            ApiKey = apiKey;
+            Url = url;
+        }
+        
         /// <summary>
         /// Create basic authentication header data for REST requests.
         /// </summary>
         /// <returns>The authentication data base64 encoded.</returns>
         public string CreateAuthorization()
         {
-            return "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(User + ":" + Password));
+            return "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(Username + ":" + Password));
         }
 
         /// <summary>
@@ -78,7 +100,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// <returns>true if the class has a username and password.</returns>
         public bool HasCredentials()
         {
-            return !string.IsNullOrEmpty(User) && !string.IsNullOrEmpty(Password);
+            return !string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password);
         }
 
         /// <summary>
@@ -91,12 +113,12 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         }
 
         /// <summary>
-        /// Get token stub.
+        /// Do we have an ApiKey?
         /// </summary>
-        /// <returns>The authentication token.</returns>
-        public string GetToken()
+        /// <returns>True if the class has a Authentication Token</returns>
+        public bool HasApiKey()
         {
-            return AuthenticationToken;
+            return !string.IsNullOrEmpty(ApiKey);
         }
     }
 }

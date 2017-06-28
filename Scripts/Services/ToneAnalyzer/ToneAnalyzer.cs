@@ -60,12 +60,18 @@ namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
         }
 
         /// <summary>
-        /// Gets and sets the credentials of the service.
+        /// Gets and sets the credentials of the service. Replace the default endpoint if endpoint is defined.
         /// </summary>
         public Credentials Credentials
         {
             get { return _credentials; }
-            set { _credentials = value; }
+            set {
+                _credentials = value;
+                if (!string.IsNullOrEmpty(_credentials.Url))
+                {
+                    _url = _credentials.Url;
+                }
+            }
         }
         #endregion
 
@@ -98,7 +104,7 @@ namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
             if (callback == null)
                 throw new ArgumentNullException("callback");
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, _url, FUNCTION_TONE);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, FUNCTION_TONE);
             if (connector == null)
                 return false;
 
@@ -125,11 +131,12 @@ namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
         private void GetToneAnalyzerResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             ToneAnalyzerResponse response = new ToneAnalyzerResponse();
+            fsData data = null;
+
             if (resp.Success)
             {
                 try
                 {
-                    fsData data = null;
                     fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -146,8 +153,9 @@ namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
                 }
             }
 
+            string customData = ((GetToneAnalyzerRequest)req).Data;
             if (((GetToneAnalyzerRequest)req).Callback != null)
-                ((GetToneAnalyzerRequest)req).Callback(resp.Success ? response : null, ((GetToneAnalyzerRequest)req).Data);
+                ((GetToneAnalyzerRequest)req).Callback(resp.Success ? response : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
         }
 
 

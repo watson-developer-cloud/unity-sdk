@@ -232,10 +232,10 @@ namespace IBM.Watson.DeveloperCloud.Connection
         /// 
 
         
-        public static RESTConnector GetConnector(Credentials credentials, string url, string function)
+        public static RESTConnector GetConnector(Credentials credentials, string function)
         {
             RESTConnector connector = new RESTConnector();
-            connector.URL = url + function;
+            connector.URL = credentials.Url + function;
             connector.Authentication = credentials;
 
             return connector;
@@ -284,7 +284,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
 
                 if (Authentication.HasAuthorizationToken())
                 {
-                    headers.Add(AUTHENTICATION_TOKEN_AUTHORIZATION_HEADER, Authentication.AuthenticationToken);
+                    headers.Add(AUTHENTICATION_TOKEN_AUTHORIZATION_HEADER, Authentication.GetToken());
                 }
                 else if (Authentication.HasCredentials())
                 {

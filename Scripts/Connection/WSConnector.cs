@@ -178,20 +178,11 @@ namespace IBM.Watson.DeveloperCloud.Connection
     /// <param name="function">The name of the function to connect.</param>
     /// <param name="args">Additional function arguments.</param>
     /// <returns>The WSConnector object or null or error.</returns>
-    public static WSConnector CreateConnector(string serviceID, string function, string args)
+    public static WSConnector CreateConnector(Credentials credentials, string url, string function, string args)
     {
-      WSConnector connector = null;
-      Config cfg = Config.Instance;
-      Config.CredentialInfo cred = cfg.FindCredentials(serviceID);
-      if (cred == null)
-      {
-        Log.Error("Config", "Failed to find BLueMix Credentials for service {0}.", serviceID);
-        return null;
-      }
-
-      connector = new WSConnector();
-      connector.URL = FixupURL(cred.m_URL) + function + args;
-      connector.Authentication = new Credentials(cred.m_User, cred.m_Password);
+      WSConnector connector = new WSConnector();
+      connector.URL = FixupURL(credentials.Url) + function + args;
+      connector.Authentication = credentials;
 
       return connector;
     }
@@ -287,7 +278,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
         if (Headers != null)
           ws.Headers = Headers;
         if (Authentication != null)
-          ws.SetCredentials(Authentication.User, Authentication.Password, true);
+          ws.SetCredentials(Authentication.Username, Authentication.Password, true);
         ws.OnOpen += OnWSOpen;
         ws.OnClose += OnWSClose;
         ws.OnError += OnWSError;
