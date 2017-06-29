@@ -34,7 +34,6 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
   public class TextToSpeech : IWatsonService
   {
     #region Private Data
-    private DataCache m_SpeechCache = null;
     private VoiceType m_Voice = VoiceType.en_US_Michael;
     private AudioFormatType m_AudioFormat = AudioFormatType.WAV;
     private Dictionary<VoiceType, string> m_VoiceTypes = new Dictionary<VoiceType, string>()
@@ -66,10 +65,6 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 
     #region Public Properties
     /// <summary>
-    /// Disable the local cache.
-    /// </summary>
-    public bool DisableCache { get; set; }
-    /// <summary>
     /// This property allows the user to set the AudioFormat to use. Currently, only WAV is supported.
     /// </summary>
     public AudioFormatType AudioFormat { get { return m_AudioFormat; } set { m_AudioFormat = value; } }
@@ -84,7 +79,6 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
         if (m_Voice != value)
         {
           m_Voice = value;
-          m_SpeechCache = null;
         }
       }
     }
@@ -271,19 +265,6 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
       }
 
       string textId = Utility.GetMD5(text);
-      if (!DisableCache)
-      {
-        if (m_SpeechCache == null)
-          m_SpeechCache = new DataCache("TextToSpeech_" + m_VoiceTypes[m_Voice]);
-
-        byte[] data = m_SpeechCache.Find(textId);
-        if (data != null)
-        {
-          AudioClip clip = ProcessResponse(textId, data);
-          callback(clip);
-          return true;
-        }
-      }
 
       RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, "/v1/synthesize");
       if (connector == null)
@@ -327,8 +308,6 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
       AudioClip clip = resp.Success ? ProcessResponse(speechReq.TextId, resp.Data) : null;
       if (clip == null)
         Log.Error("TextToSpeech", "Request Failed: {0}", resp.Error);
-      if (m_SpeechCache != null && clip != null)
-        m_SpeechCache.Save(speechReq.TextId, resp.Data);
 
       if (speechReq.Callback != null)
         speechReq.Callback(clip);

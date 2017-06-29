@@ -184,18 +184,22 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
 
             return connector.Send(req);
         }
+
         private class GetClassifierReq : RESTConnector.Request
         {
             public OnGetClassifier Callback { get; set; }
+            public string Data { get; set; }
         };
+
         private void OnGetClassifierResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
             Classifier classifier = new Classifier();
+            fsData data = null;
+
             if (resp.Success)
             {
                 try
                 {
-                    fsData data = null;
                     fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -212,8 +216,9 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
                 }
             }
 
+            string customData = ((GetClassifierReq)req).Data;
             if (((GetClassifierReq)req).Callback != null)
-                ((GetClassifierReq)req).Callback(resp.Success ? classifier : null);
+                ((GetClassifierReq)req).Callback(resp.Success ? classifier : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
         }
         #endregion
 
@@ -254,18 +259,22 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
 
             return connector.Send(req);
         }
+
         private class TrainClassifierReq : RESTConnector.Request
         {
             public OnTrainClassifier Callback { get; set; }
+            public string Data { get; set; }
         };
+
         private void OnTrainClassifierResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
             Classifier classifier = new Classifier();
+            fsData data = null;
+
             if (resp.Success)
             {
                 try
                 {
-                    fsData data = null;
                     fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -282,8 +291,9 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
                 }
             }
 
+            string customData = ((TrainClassifierReq)req).Data;
             if (((TrainClassifierReq)req).Callback != null)
-                ((TrainClassifierReq)req).Callback(resp.Success ? classifier : null);
+                ((TrainClassifierReq)req).Callback(resp.Success ? classifier : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
         }
         #endregion
 
@@ -312,14 +322,18 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
 
             return connector.Send(req);
         }
+
         private class DeleteClassifierReq : RESTConnector.Request
         {
             public OnDeleteClassifier Callback { get; set; }
+            public string Data { get; set; }
         };
+
         private void OnDeleteClassifierResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
+            string customData = ((DeleteClassifierReq)req).Data;
             if (((DeleteClassifierReq)req).Callback != null)
-                ((DeleteClassifierReq)req).Callback(resp.Success);
+                ((DeleteClassifierReq)req).Callback(resp.Success, customData);
         }
         #endregion
 
@@ -361,6 +375,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
         {
             public string ClassiferId { get; set; }
             public OnClassify Callback { get; set; }
+            public string Data { get; set; }
         };
 
         private void OnClassifyResp(RESTConnector.Request req, RESTConnector.Response resp)
@@ -390,8 +405,9 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
 
             }
 
+            string customData = ((ClassifyReq)req).Data;
             if (((ClassifyReq)req).Callback != null)
-                ((ClassifyReq)req).Callback(classify);
+                ((ClassifyReq)req).Callback(classify, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
         }
         #endregion
 
@@ -445,7 +461,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
 
             }
 
-            private void OnCheckServices(Classifiers classifiers)
+            private void OnCheckServices(Classifiers classifiers, string customData)
             {
                 if (m_Callback != null)
                 {
@@ -480,7 +496,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
                 }
             }
 
-            private void OnCheckService(Classifier classifier)
+            private void OnCheckService(Classifier classifier, string customData)
             {
                 if (m_GetClassifierCount > 0)
                 {
@@ -506,7 +522,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
                 }
             }
 
-            private void OnClassify(ClassifyResult result)
+            private void OnClassify(ClassifyResult result, string customData)
             {
                 if (m_ClassifyCount > 0)
                 {

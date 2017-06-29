@@ -55,7 +55,13 @@ namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
         /// </summary>
         public string VersionDate
         {
-            get { return _versionDate; }
+            get
+            {
+                if (string.IsNullOrEmpty(_versionDate))
+                    throw new ArgumentNullException("VersionDate cannot be null. Use a VersionDate formatted as `YYYY-MM-DD`");
+
+                return _versionDate;
+            }
             set { _versionDate = value; }
         }
 

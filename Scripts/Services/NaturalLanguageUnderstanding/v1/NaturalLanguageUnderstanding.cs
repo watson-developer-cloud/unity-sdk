@@ -29,10 +29,62 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
         #region Private Data
         private const string SERVICE_ID = "NaturalLanguageUnderstandingV1";
         private static fsSerializer sm_Serializer = new fsSerializer();
+        private Credentials _credentials = null;
+        private string _url = "https://gateway.watsonplatform.net/natural-language-understanding/api";
+        private string _versionDate;
 
         private const string SERVICE_ANALYZE = "/v1/analyze";
         private const string SERVICE_MODELS = "/v1/models";
         private const string SERVICE_MODEL = "/v1/models/{0}";
+        #endregion
+
+        #region Public Properties
+        /// <summary>
+        /// Gets and sets the endpoint URL for the service.
+        /// </summary>
+        public string Url
+        {
+            get { return _url; }
+            set { _url = value; }
+        }
+
+        /// <summary>
+        /// Gets and sets the versionDate of the service.
+        /// </summary>
+        public string VersionDate
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_versionDate))
+                    throw new ArgumentNullException("VersionDate cannot be null. Use VersionDate `2017-02-27`");
+
+                return _versionDate;
+            }
+            set { _versionDate = value; }
+        }
+
+        /// <summary>
+        /// Gets and sets the credentials of the service. Replace the default endpoint if endpoint is defined.
+        /// </summary>
+        public Credentials Credentials
+        {
+            get { return _credentials; }
+            set
+            {
+                _credentials = value;
+                if (!string.IsNullOrEmpty(_credentials.Url))
+                {
+                    _url = _credentials.Url;
+                }
+            }
+        }
+        #endregion
+
+        #region Constructor
+        public NaturalLanguageUnderstanding(Credentials credentials)
+        {
+            Credentials = credentials;
+        }
         #endregion
 
         #region Analyze
@@ -71,7 +123,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
             fsResult r = sm_Serializer.TrySerialize(parameters, out data);
             string sendjson = data.ToString();
             req.Send = Encoding.UTF8.GetBytes(sendjson);
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_ANALYZE);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, SERVICE_ANALYZE);
             if (connector == null)
                 return false;
 
@@ -88,12 +140,12 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
         private void OnAnalyzeResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             AnalysisResults analysisResults = new AnalysisResults();
+            fsData data = null;
 
             if (resp.Success)
             {
                 try
                 {
-                    fsData data = null;
                     fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
 
                     if (!r.Succeeded)
@@ -111,8 +163,9 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
                 }
             }
 
+            string customData = ((AnalyzeRequest)req).Data;
             if (((AnalyzeRequest)req).Callback != null)
-                ((AnalyzeRequest)req).Callback(resp.Success ? analysisResults : null, ((AnalyzeRequest)req).Data);
+                ((AnalyzeRequest)req).Callback(resp.Success ? analysisResults : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
         }
         #endregion
 
@@ -142,7 +195,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
             req.Parameters["version"] = NaturalLanguageUnderstandingVersion.Version;
             req.OnResponse = OnGetModelsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_MODELS);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, SERVICE_MODELS);
             if (connector == null)
                 return false;
 
@@ -158,12 +211,12 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
         private void OnGetModelsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             ListModelsResults modelData = new ListModelsResults();
+            fsData data = null;
 
             if (resp.Success)
             {
                 try
                 {
-                    fsData data = null;
                     fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
 
                     if (!r.Succeeded)
@@ -181,8 +234,9 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
                 }
             }
 
+            string customData = ((AnalyzeRequest)req).Data;
             if (((GetModelsRequest)req).Callback != null)
-                ((GetModelsRequest)req).Callback(resp.Success ? modelData : null, ((GetModelsRequest)req).Data);
+                ((GetModelsRequest)req).Callback(resp.Success ? modelData : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
 
         }
         #endregion
@@ -218,7 +272,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
             req.OnResponse = OnDeleteModelResponse;
             req.Delete = true;
 
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_MODEL, modelId));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_MODEL, modelId));
             if (connector == null)
                 return false;
 
@@ -234,8 +288,9 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
 
         private void OnDeleteModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
+            string customData = ((AnalyzeRequest)req).Data;
             if (((DeleteModelRequest)req).Callback != null)
-                ((DeleteModelRequest)req).Callback(resp.Success, ((DeleteModelRequest)req).Data);
+                ((DeleteModelRequest)req).Callback(resp.Success, customData);
         }
         #endregion
 
