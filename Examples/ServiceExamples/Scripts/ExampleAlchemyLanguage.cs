@@ -18,12 +18,13 @@
 using UnityEngine;
 using IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1;
 using IBM.Watson.DeveloperCloud.Logging;
+using IBM.Watson.DeveloperCloud.Utilities;
 
 #pragma warning disable 0219
 #pragma warning disable 0414
 public class ExampleAlchemyLanguage : MonoBehaviour
 {
-  private AlchemyAPI m_AlchemyAPI = new AlchemyAPI();
+  private AlchemyAPI m_AlchemyAPI = new AlchemyAPI(new Credentials());
   private string m_ExampleURL_unitySDK = "https://developer.ibm.com/open/2016/01/21/introducing-watson-unity-sdk/";
   private string m_ExampleURL_watsonJeopardy = "http://www.nytimes.com/2011/02/17/science/17jeopardy-watson.html";
   private string m_ExampleURL_microformats = "http://microformats.org/wiki/hcard";

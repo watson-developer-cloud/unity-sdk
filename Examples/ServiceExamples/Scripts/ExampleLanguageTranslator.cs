@@ -17,10 +17,11 @@
 
 using UnityEngine;
 using IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v1;
+using IBM.Watson.DeveloperCloud.Utilities;
 
 public class ExampleLanguageTranslator : MonoBehaviour
 {
-  private LanguageTranslator m_Translate = new LanguageTranslator();
+  private LanguageTranslator m_Translate = new LanguageTranslator(new Credentials());
   private string m_PharseToTranslate = "How do I get to the disco?";
 
   void Start()
@@ -29,7 +30,7 @@ public class ExampleLanguageTranslator : MonoBehaviour
     m_Translate.GetTranslation(m_PharseToTranslate, "en", "es", OnGetTranslation);
   }
 
-  private void OnGetTranslation(Translations translation)
+  private void OnGetTranslation(Translations translation, string customData)
   {
     if (translation != null && translation.translations.Length > 0)
       Debug.Log("Spanish Translation: " + translation.translations[0].translation);

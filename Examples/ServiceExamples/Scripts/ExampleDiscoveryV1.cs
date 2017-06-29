@@ -16,11 +16,12 @@
 */
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Services.Discovery.v1;
+using IBM.Watson.DeveloperCloud.Utilities;
 using UnityEngine;
 
 public class ExampleDiscoveryV1 : MonoBehaviour
 {
-    private Discovery m_Discovery = new Discovery();
+    private Discovery m_Discovery = new Discovery(new Credentials());
     private string m_CreatedEnvironmentID;
     private string m_DefaultEnvironmentID = "6c8647b7-9dd4-42c8-9cb0-117b40b14517";
     private string m_DefaultConfigurationID = "662a2032-9e2c-472b-9eaa-1a2fa098c22e";

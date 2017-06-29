@@ -18,11 +18,12 @@
 using FullSerializer;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1;
+using IBM.Watson.DeveloperCloud.Utilities;
 using UnityEngine;
 
 public class ExampleNaturalLanguageUnderstandingV1 : MonoBehaviour
 {
-    NaturalLanguageUnderstanding m_NaturalLanguageUnderstanding = new NaturalLanguageUnderstanding();
+    NaturalLanguageUnderstanding m_NaturalLanguageUnderstanding = new NaturalLanguageUnderstanding(new Credentials());
     private static fsSerializer sm_Serializer = new fsSerializer();
 
     void Start ()

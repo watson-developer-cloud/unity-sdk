@@ -19,10 +19,11 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using IBM.Watson.DeveloperCloud.Services.TradeoffAnalytics.v1;
+using IBM.Watson.DeveloperCloud.Utilities;
 
 public class ExampleTradeoffAnalytics : MonoBehaviour
 {
-  TradeoffAnalytics m_TradeoffAnalytics = new TradeoffAnalytics();
+  TradeoffAnalytics m_TradeoffAnalytics = new TradeoffAnalytics(new Credentials());
 
   void Start()
   {

@@ -67,6 +67,13 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
         public delegate void OnDeleteClassifier(bool success, string customData);
         #endregion
 
+        #region Constructor
+        public NaturalLanguageClassifier(Credentials credentials)
+        {
+            Credentials = credentials;
+        }
+        #endregion
+
         #region Public Properties
         /// <summary>
         /// Gets and sets the endpoint URL for the service.

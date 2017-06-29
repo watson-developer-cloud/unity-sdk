@@ -26,7 +26,7 @@ using IBM.Watson.DeveloperCloud.Utilities;
 
 public class ExampleVisualRecognition : MonoBehaviour
 {
-  private VisualRecognition m_VisualRecognition = new VisualRecognition();
+  private VisualRecognition m_VisualRecognition = new VisualRecognition(new Credentials());
   private string m_classifierName = "unity-test-classifier-example";
   private string m_classifierID = "unitytestclassifierexample_487365485";
   private string m_classifierToDelete = "unitytestclassifierexample_263072401";

@@ -19,10 +19,11 @@ using UnityEngine;
 using IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1;
 using System.Collections;
 using IBM.Watson.DeveloperCloud.Logging;
+using IBM.Watson.DeveloperCloud.Utilities;
 
 public class ExampleDocumentConversion : MonoBehaviour
 {
-  private DocumentConversion m_DocumentConversion = new DocumentConversion();
+  private DocumentConversion m_DocumentConversion = new DocumentConversion(new Credentials());
 
   void Start()
   {

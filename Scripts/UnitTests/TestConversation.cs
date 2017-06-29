@@ -15,7 +15,6 @@
 *
 */
 
-using UnityEngine;
 using System.Collections;
 using IBM.Watson.DeveloperCloud.UnitTests;
 using IBM.Watson.DeveloperCloud.Services.Conversation.v1;
@@ -25,7 +24,7 @@ using System.Collections.Generic;
 
 public class TestConversation : UnitTest
 {
-  private Conversation m_Conversation = new Conversation();
+  private Conversation m_Conversation = new Conversation(new Credentials());
   private string m_WorkspaceID;
   private string m_Input = "Can you unlock the door?";
   private bool m_MessageInputTested = false;

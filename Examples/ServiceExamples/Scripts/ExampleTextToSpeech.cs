@@ -18,11 +18,12 @@
 using UnityEngine;
 using IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1;
 using IBM.Watson.DeveloperCloud.Logging;
+using IBM.Watson.DeveloperCloud.Utilities;
 #pragma warning disable 0414
 
 public class ExampleTextToSpeech : MonoBehaviour
 {
-  TextToSpeech m_TextToSpeech = new TextToSpeech();
+  TextToSpeech m_TextToSpeech = new TextToSpeech(new Credentials());
   string m_TestString = "<speak version=\"1.0\"><say-as interpret-as=\"letters\">I'm sorry</say-as>. <prosody pitch=\"150Hz\">This is Text to Speech!</prosody></express-as><express-as type=\"GoodNews\">I'm sorry. This is Text to Speech!</express-as></speak>";
 
 

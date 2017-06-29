@@ -25,7 +25,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 {
     public class TestDiscovery : UnitTest
     {
-        private Discovery m_Discovery = new Discovery();
+        private Discovery m_Discovery = new Discovery(new Credentials());
 
         //  Environment
         private string m_CreatedEnvironmentName = "unity-sdk-integration-test";

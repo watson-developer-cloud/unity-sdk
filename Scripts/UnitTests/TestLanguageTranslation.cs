@@ -25,7 +25,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 {
   public class TestLanguageTranslation : UnitTest
   {
-    private LanguageTranslation m_Translate = new LanguageTranslation();
+    private LanguageTranslation m_Translate = new LanguageTranslation(new Credentials());
     private bool m_GetModelTested = false;
     private bool m_GetModelsTested = false;
     private bool m_GetLanguagesTested = false;
@@ -60,7 +60,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
       yield break;
     }
 
-    private void OnGetModel(TranslationModel model)
+    private void OnGetModel(TranslationModel model, string customData)
     {
       Test(model != null);
       if (model != null)
@@ -71,7 +71,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
       m_GetModelTested = true;
     }
 
-    private void OnGetModels(TranslationModels models)
+    private void OnGetModels(TranslationModels models, string customData)
     {
       Test(models != null);
       if (models != null)
@@ -85,7 +85,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
       m_GetModelsTested = true;
     }
 
-    private void OnGetTranslation(Translations translation)
+    private void OnGetTranslation(Translations translation, string customData)
     {
       Test(translation != null);
       if (translation != null && translation.translations.Length > 0)
@@ -93,7 +93,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
       m_TranslateTested = true;
     }
 
-    private void OnIdentify(string lang)
+    private void OnIdentify(string lang, string customData)
     {
       Test(lang != null);
       if (lang != null)
@@ -101,7 +101,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
       m_IdentifyTested = true;
     }
 
-    private void OnGetLanguages(Languages languages)
+    private void OnGetLanguages(Languages languages, string customData)
     {
       Test(languages != null);
       if (languages != null)

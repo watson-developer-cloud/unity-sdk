@@ -17,10 +17,11 @@
 
 using UnityEngine;
 using IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1;
+using IBM.Watson.DeveloperCloud.Utilities;
 
 public class ExampleNaturalLanguageClassifier : MonoBehaviour
 {
-  private NaturalLanguageClassifier m_NaturalLanguageClassifier = new NaturalLanguageClassifier();
+  private NaturalLanguageClassifier m_NaturalLanguageClassifier = new NaturalLanguageClassifier(new Credentials());
   private string m_ClassifierId = "3a84d1x62-nlc-768";
   private string m_InputString = "Is it hot outside?";
 
@@ -30,7 +31,7 @@ public class ExampleNaturalLanguageClassifier : MonoBehaviour
     m_NaturalLanguageClassifier.Classify(m_ClassifierId, m_InputString, OnClassify);
   }
 
-  private void OnClassify(ClassifyResult result)
+  private void OnClassify(ClassifyResult result, string customData)
   {
     if (result != null)
     {

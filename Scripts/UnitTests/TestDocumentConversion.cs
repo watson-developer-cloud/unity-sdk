@@ -19,12 +19,13 @@ using UnityEngine;
 using System.Collections;
 using IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1;
 using IBM.Watson.DeveloperCloud.Logging;
+using IBM.Watson.DeveloperCloud.Utilities;
 
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
   public class TestDocumentConversion : UnitTest
   {
-    DocumentConversion m_DocumentConversion = new DocumentConversion();
+    DocumentConversion m_DocumentConversion = new DocumentConversion(new Credentials());
     bool m_DocumentConversionAnswerUnitsTested = false;
     bool m_DocumentConversionTextTested = false;
     bool m_DocumentConversionHTMLTested = false;

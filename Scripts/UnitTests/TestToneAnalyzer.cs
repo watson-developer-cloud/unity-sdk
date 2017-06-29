@@ -16,17 +16,15 @@
 */
 
 using System.Collections;
-using System.Collections.Generic;
 using IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
-using UnityEngine;
 
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
   public class TestToneAnalyzer : UnitTest
   {
-    ToneAnalyzer m_ToneAnalyzer = new ToneAnalyzer();
+    ToneAnalyzer m_ToneAnalyzer = new ToneAnalyzer(new Credentials());
     bool m_GetToneAnalyzerTested = false;
     string m_StringToTestTone = "This service enables people to discover and understand, and revise the impact of tone in their content. It uses linguistic analysis to detect and interpret emotional, social, and language cues found in text.\n";
 

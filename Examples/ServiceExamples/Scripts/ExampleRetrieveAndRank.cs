@@ -28,7 +28,7 @@ using UnityEditor;
 #pragma warning disable 219
 public class ExampleRetrieveAndRank : MonoBehaviour
 {
-  private RetrieveAndRank m_RetrieveAndRank = new RetrieveAndRank();
+  private RetrieveAndRank m_RetrieveAndRank = new RetrieveAndRank(new Credentials());
 
   void Start()
   {

@@ -27,7 +27,7 @@ using System.Reflection;
 
 public class ExampleConversation : MonoBehaviour
 {
-  private Conversation m_Conversation = new Conversation();
+  private Conversation m_Conversation = new Conversation(new Credentials());
   private string m_WorkspaceID;
   private bool m_UseAlternateIntents = true;
   private string[] questionArray = { "can you turn up the AC", "can you turn on the wipers", "can you turn off the wipers", "can you turn down the ac", "can you unlock the door" };

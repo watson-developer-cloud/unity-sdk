@@ -18,10 +18,11 @@
 using UnityEngine;
 using IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3;
 using IBM.Watson.DeveloperCloud.Logging;
+using IBM.Watson.DeveloperCloud.Utilities;
 
 public class ExamplePersonalityInsightsV3 : MonoBehaviour
 {
-  PersonalityInsights m_personalityInsights = new PersonalityInsights();
+  PersonalityInsights m_personalityInsights = new PersonalityInsights(new Credentials());
   private string testString = "<text-here>";
   private string dataPath;
 

@@ -254,7 +254,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
       }
     }
 
-    private void OnGetClassifier(Classifier classifier)
+    private void OnGetClassifier(Classifier classifier, string customData)
     {
       if (classifier != null && classifier.status == "Available")
       {
@@ -302,7 +302,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
       }
     }
 
-    private void OnClassified(ClassifyResult result)
+    private void OnClassified(ClassifyResult result, string customData)
     {
       EventManager.Instance.SendEvent("OnClassifyResult", result);
 

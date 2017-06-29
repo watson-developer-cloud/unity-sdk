@@ -38,7 +38,7 @@ public class WebCamRecognition : MonoBehaviour
 
   void Start()
   {
-    m_VisualRecognition = new VisualRecognition();
+    m_VisualRecognition = new VisualRecognition(new Credentials());
   }
 
   #region Public Functions

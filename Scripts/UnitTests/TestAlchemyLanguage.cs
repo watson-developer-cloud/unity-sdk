@@ -20,6 +20,7 @@ using IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1;
 using IBM.Watson.DeveloperCloud.Logging;
 using UnityEngine;
 using System.Collections.Generic;
+using IBM.Watson.DeveloperCloud.Utilities;
 
 #pragma warning disable 219
 #pragma warning disable 0414
@@ -28,7 +29,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 {
   public class TestAlchemyAPI : UnitTest
   {
-    AlchemyAPI m_AlchemyAPI = new AlchemyAPI();
+    AlchemyAPI m_AlchemyAPI = new AlchemyAPI(new Credentials());
     bool m_GetAuthorsURLTested = false;
     bool m_GetAuthorsHTMLTested = false;
 
