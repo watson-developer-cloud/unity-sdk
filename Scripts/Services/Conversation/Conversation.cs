@@ -98,7 +98,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
         /// </summary>
         /// <param name="resp">The response object to a call to Message().</param>
         public delegate void OnMessage(object resp, string customData);
-        //public delegate void OnMessage(MessageResponse resp, string customData);
 
         /// <summary>
         /// Message the specified workspaceId, input and callback.

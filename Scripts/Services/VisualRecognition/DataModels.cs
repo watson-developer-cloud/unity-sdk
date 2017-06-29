@@ -690,16 +690,5 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
     /// </summary>
     public string type_hierarchy { get; set; }
   }
-
-  /// <summary>
-  /// The Visual Recognition version.
-  /// </summary>
-  public class VisualRecognitionVersion
-  {
-    /// <summary>
-    /// The version.
-    /// </summary>
-    public const string Version = "2016-05-20";
-  }
   #endregion
 }
