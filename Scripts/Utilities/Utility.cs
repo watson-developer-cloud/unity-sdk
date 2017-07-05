@@ -421,6 +421,18 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 
             return null;
         }
+
+        /// <summary>
+        /// Hack to add a top level object to a json string because Unity does not like top level collections.
+        /// </summary>
+        /// <param name="json">The json string.</param>
+        /// <param name="objectName">The name of the top level object.</param>
+        /// <returns></returns>
+        public static string AddTopLevelObjectToJson(string json, string objectName)
+        {
+            string convertedJson = json.Insert(1, "\"" + objectName + "\": {");
+            return convertedJson.Insert(convertedJson.Length - 1, "}");
+        }
         #endregion
 
         #region MimeTypes

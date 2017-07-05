@@ -124,7 +124,7 @@ namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
             req.Send = Encoding.UTF8.GetBytes(Json.Serialize(upload));
             req.Data = data;
             req.Headers["Content-Type"] = "application/json";
-            req.Parameters["version"] = "2016-02-11";
+            req.Parameters["version"] = VersionDate;
             req.Parameters["sentences"] = "true";
             return connector.Send(req);
         }

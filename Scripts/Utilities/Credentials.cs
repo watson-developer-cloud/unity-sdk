@@ -15,7 +15,9 @@
 *
 */
 
+using FullSerializer;
 using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace IBM.Watson.DeveloperCloud.Utilities
@@ -120,5 +122,41 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         {
             return !string.IsNullOrEmpty(ApiKey);
         }
+    }
+
+    [fsObject]
+    public class VcapCredentials
+    {
+        public Dictionary<string, List<VcapCredential>> VCAP_SERVICES { get; set; }
+    }
+
+    [fsObject]
+    public class VcapCredential
+    {
+        [fsProperty("name")]
+        public string Name { get; set; }
+        [fsProperty("label")]
+        public string Label { get; set; }
+        [fsProperty("plan")]
+        public string Plan { get; set; }
+        [fsProperty("credentials")]
+        public Credential Credentials { get; set; }
+    }
+
+    [fsObject]
+    public class Credential
+    {
+        [fsProperty("url")]
+        public string Url { get; set; }
+        [fsProperty("username")]
+        public string Username { get; set; }
+        [fsProperty("password")]
+        public string Password { get; set; }
+        [fsProperty("workspaceId")]
+        public string WorkspaceId { get; set; }
+        [fsProperty("apikey")]
+        public string Apikey { get; set; }
+        [fsProperty("note")]
+        public string Note { get; set; }
     }
 }
