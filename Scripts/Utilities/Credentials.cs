@@ -84,7 +84,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             ApiKey = apiKey;
             Url = url;
         }
-        
+
         /// <summary>
         /// Create basic authentication header data for REST requests.
         /// </summary>

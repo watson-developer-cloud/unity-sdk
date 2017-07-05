@@ -89,7 +89,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         public override IEnumerator RunTest()
         {
             LogSystem.InstallDefaultReactors();
-            
+
             m_ConfigurationJsonPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/Discovery/exampleConfigurationData.json";
             m_FilePathToIngest = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/watson_beats_jeopardy.html";
             m_DocumentFilePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/watson_beats_jeopardy.html";
@@ -374,7 +374,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             //  Delete Document
             Runnable.Run(DeleteDocument());
-            
+
             while (!m_DeleteDocumentTested)
                 yield return null;
             #endregion

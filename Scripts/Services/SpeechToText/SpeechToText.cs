@@ -327,7 +327,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         private void OnGetModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             Model response = new Model();
-                    fsData data = null;
+            fsData data = null;
 
             if (resp.Success)
             {
@@ -874,7 +874,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         private void OnGetCustomizationsResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
             Customizations customizations = new Customizations();
-                    fsData data = null;
+            fsData data = null;
 
             if (resp.Success)
             {
@@ -962,7 +962,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         private void OnCreateCustomizationResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
             CustomizationID customizationID = new CustomizationID();
-                    fsData data = null;
+            fsData data = null;
 
             if (resp.Success)
             {
@@ -1087,7 +1087,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         private void OnGetCustomizationResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
             Customization customization = new Customization();
-                    fsData data = null;
+            fsData data = null;
 
             if (resp.Success)
             {
@@ -1330,7 +1330,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         private void OnGetCustomCorporaResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
             Corpora corpora = new Corpora();
-                    fsData data = null;
+            fsData data = null;
 
             if (resp.Success)
             {
@@ -1598,7 +1598,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         private void OnGetCustomWordsResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
             WordsList wordsList = new WordsList();
-                    fsData data = null;
+            fsData data = null;
 
             if (resp.Success)
             {
@@ -1834,7 +1834,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         private void OnGetCustomWordResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
             WordData word = new WordData();
-                    fsData data = null;
+            fsData data = null;
 
             if (resp.Success)
             {

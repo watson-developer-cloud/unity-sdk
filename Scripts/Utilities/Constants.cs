@@ -17,54 +17,54 @@
 
 namespace IBM.Watson.DeveloperCloud.Utilities
 {
-  /// <summary>
-  /// This class wraps all constants.
-  /// </summary>
-  public static class Constants
-  {
     /// <summary>
-    /// All constant path variables liste here. Exp. Configuration file
+    /// This class wraps all constants.
     /// </summary>
-    public static class Path
+    public static class Constants
     {
-      /// <summary>
-      /// Configuration file name.
-      /// </summary>
-      public const string CONFIG_FILE = "/Config.json";
-      /// <summary>
-      /// Cache folder to customize a parent folder for cache directory
-      /// </summary>
-      public static string CACHE_FOLDER = "";   //It needs to start with /
-                                                /// <summary>
-                                                /// Log folder to customize a parent folder for logs
-                                                /// </summary>
-      public static string LOG_FOLDER = "";    //It needs to start with /
-    }
+        /// <summary>
+        /// All constant path variables liste here. Exp. Configuration file
+        /// </summary>
+        public static class Path
+        {
+            /// <summary>
+            /// Configuration file name.
+            /// </summary>
+            public const string CONFIG_FILE = "/Config.json";
+            /// <summary>
+            /// Cache folder to customize a parent folder for cache directory
+            /// </summary>
+            public static string CACHE_FOLDER = "";   //It needs to start with /
+                                                      /// <summary>
+                                                      /// Log folder to customize a parent folder for logs
+                                                      /// </summary>
+            public static string LOG_FOLDER = "";    //It needs to start with /
+        }
 
-    /// <summary>
-    /// All resources (files names under resource directory) used in the SDK listed here. Exp. Watson Logo
-    /// </summary>
-    public static class Resources
-    {
-      /// <summary>
-      /// Watson icon.
-      /// </summary>
-      public const string WATSON_ICON = "watsonSpriteIcon-32x32";
-      /// <summary>
-      /// Watson logo.
-      /// </summary>
-      public const string WATSON_LOGO = "watsonSpriteLogo-506x506";
-    }
+        /// <summary>
+        /// All resources (files names under resource directory) used in the SDK listed here. Exp. Watson Logo
+        /// </summary>
+        public static class Resources
+        {
+            /// <summary>
+            /// Watson icon.
+            /// </summary>
+            public const string WATSON_ICON = "watsonSpriteIcon-32x32";
+            /// <summary>
+            /// Watson logo.
+            /// </summary>
+            public const string WATSON_LOGO = "watsonSpriteLogo-506x506";
+        }
 
-    /// <summary>
-    /// All string variables or string formats used in the SDK listed here. Exp. Quality Debug Format = Quality {0}
-    /// </summary>
-    public static class String
-    {
-      /// <exclude />
-      public const string VERSION = "watson-developer-cloud-unity-sdk-0.12.0";
-      /// <exclude />
-      public const string DEBUG_DISPLAY_QUALITY = "Quality: {0}";
+        /// <summary>
+        /// All string variables or string formats used in the SDK listed here. Exp. Quality Debug Format = Quality {0}
+        /// </summary>
+        public static class String
+        {
+            /// <exclude />
+            public const string VERSION = "watson-developer-cloud-unity-sdk-0.12.0";
+            /// <exclude />
+            public const string DEBUG_DISPLAY_QUALITY = "Quality: {0}";
+        }
     }
-  }
 }

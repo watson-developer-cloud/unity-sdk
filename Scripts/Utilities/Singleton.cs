@@ -22,62 +22,62 @@ using System;
 
 namespace IBM.Watson.DeveloperCloud.Utilities
 {
-  /// <summary>
-  /// Singleton pattern class. This class detects if T is a MonoBehavior and will 
-  /// make a containing GameObject.  
-  /// </summary>
-  /// <typeparam name="T">The typename of the class to create as a singleton object.</typeparam>
-  public class Singleton<T> where T : class
-  {
-    #region Private Data
-    static private T sm_Instance = null;
-    #endregion
-
-    #region Public Properties
     /// <summary>
-    /// Returns the Singleton instance of T.
+    /// Singleton pattern class. This class detects if T is a MonoBehavior and will 
+    /// make a containing GameObject.  
     /// </summary>
-    public static T Instance
+    /// <typeparam name="T">The typename of the class to create as a singleton object.</typeparam>
+    public class Singleton<T> where T : class
     {
-      get
-      {
-        if (sm_Instance == null)
-          CreateInstance();
-        return sm_Instance;
-      }
-    }
-    #endregion
+        #region Private Data
+        static private T sm_Instance = null;
+        #endregion
 
-    #region Singleton Creation
-    /// <summary>
-    /// Create the singleton instance.
-    /// </summary>
-    private static void CreateInstance()
-    {
-      if (typeof(MonoBehaviour).IsAssignableFrom(typeof(T)))
-      {
-        string singletonName = "_" + typeof(T).Name;
+        #region Public Properties
+        /// <summary>
+        /// Returns the Singleton instance of T.
+        /// </summary>
+        public static T Instance
+        {
+            get
+            {
+                if (sm_Instance == null)
+                    CreateInstance();
+                return sm_Instance;
+            }
+        }
+        #endregion
 
-        GameObject singletonObject = GameObject.Find(singletonName);
-        if (singletonObject == null)
-          singletonObject = new GameObject(singletonName);
+        #region Singleton Creation
+        /// <summary>
+        /// Create the singleton instance.
+        /// </summary>
+        private static void CreateInstance()
+        {
+            if (typeof(MonoBehaviour).IsAssignableFrom(typeof(T)))
+            {
+                string singletonName = "_" + typeof(T).Name;
+
+                GameObject singletonObject = GameObject.Find(singletonName);
+                if (singletonObject == null)
+                    singletonObject = new GameObject(singletonName);
 #if SINGLETONS_VISIBLE
-        singletonObject.hideFlags = HideFlags.DontSave;
+                singletonObject.hideFlags = HideFlags.DontSave;
 #else
                 singletonObject.hideFlags = HideFlags.HideAndDontSave;
 #endif
-        sm_Instance = singletonObject.GetComponent<T>();
-        if (sm_Instance == null)
-          sm_Instance = singletonObject.AddComponent(typeof(T)) as T;
-      }
-      else
-      {
-        sm_Instance = Activator.CreateInstance(typeof(T)) as T;
-      }
+                sm_Instance = singletonObject.GetComponent<T>();
+                if (sm_Instance == null)
+                    sm_Instance = singletonObject.AddComponent(typeof(T)) as T;
+            }
+            else
+            {
+                sm_Instance = Activator.CreateInstance(typeof(T)) as T;
+            }
 
-      if (sm_Instance == null)
-        throw new WatsonException("Failed to create instance " + typeof(T).Name);
+            if (sm_Instance == null)
+                throw new WatsonException("Failed to create instance " + typeof(T).Name);
+        }
+        #endregion
     }
-    #endregion
-  }
 }

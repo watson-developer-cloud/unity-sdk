@@ -24,43 +24,43 @@ using System.Collections.Generic;
 
 public class TestConversation : UnitTest
 {
-  private Conversation m_Conversation = new Conversation(new Credentials());
-  private string m_WorkspaceID;
-  private string m_Input = "Can you unlock the door?";
-  private bool m_MessageInputTested = false;
-  private bool m_MessageObjectTested = false;
+    private Conversation m_Conversation = new Conversation(new Credentials());
+    private string m_WorkspaceID;
+    private string m_Input = "Can you unlock the door?";
+    private bool m_MessageInputTested = false;
+    private bool m_MessageObjectTested = false;
 
-  public override IEnumerator RunTest()
-  {
-    m_WorkspaceID = Config.Instance.GetVariableValue("ConversationV1_ID");
-
-    if (Config.Instance.FindCredentials(m_Conversation.GetServiceID()) == null)
-      yield break;
-
-    if (!m_MessageInputTested)
+    public override IEnumerator RunTest()
     {
-      m_Conversation.Message(OnMessageInput, m_WorkspaceID, m_Input);
-      while (!m_MessageInputTested)
-        yield return null;
+        m_WorkspaceID = Config.Instance.GetVariableValue("ConversationV1_ID");
+
+        if (Config.Instance.FindCredentials(m_Conversation.GetServiceID()) == null)
+            yield break;
+
+        if (!m_MessageInputTested)
+        {
+            m_Conversation.Message(OnMessageInput, m_WorkspaceID, m_Input);
+            while (!m_MessageInputTested)
+                yield return null;
+        }
+
+        if (!m_MessageObjectTested)
+        {
+            MessageRequest messageRequest = new MessageRequest();
+            messageRequest.InputText = m_Input;
+            m_Conversation.Message(OnMessageObject, m_WorkspaceID, messageRequest);
+            while (!m_MessageObjectTested)
+                yield return null;
+        }
+
+        yield break;
     }
 
-    if (!m_MessageObjectTested)
+    private void OnMessageInput(object resp, string customData)
     {
-      MessageRequest messageRequest = new MessageRequest();
-      messageRequest.InputText = m_Input;
-      m_Conversation.Message(OnMessageObject, m_WorkspaceID, messageRequest);
-      while (!m_MessageObjectTested)
-        yield return null;
-    }
-
-    yield break;
-  }
-
-  private void OnMessageInput(object resp, string customData)
-  {
-    Test(resp != null);
-    if (resp != null)
-    {
+        Test(resp != null);
+        if (resp != null)
+        {
             Dictionary<string, object> respDict = resp as Dictionary<string, object>;
             object intents;
             respDict.TryGetValue("intents", out intents);
@@ -79,14 +79,14 @@ public class TestConversation : UnitTest
             }
         }
 
-    m_MessageInputTested = true;
-  }
+        m_MessageInputTested = true;
+    }
 
-  private void OnMessageObject(object resp, string customData)
-  {
-    Test(resp != null);
-    if (resp != null)
+    private void OnMessageObject(object resp, string customData)
     {
+        Test(resp != null);
+        if (resp != null)
+        {
             Dictionary<string, object> respDict = resp as Dictionary<string, object>;
             object intents;
             respDict.TryGetValue("intents", out intents);
@@ -105,6 +105,6 @@ public class TestConversation : UnitTest
             }
         }
 
-    m_MessageObjectTested = true;
-  }
+        m_MessageObjectTested = true;
+    }
 }

@@ -20,118 +20,118 @@ using FullSerializer;
 
 namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v1
 {
-  /// <summary>
-  /// Language data class.
-  /// </summary>
-  [fsObject]
-  public class Language
-  {
     /// <summary>
-    /// String that contains the country code.
+    /// Language data class.
     /// </summary>
-    public string language { get; set; }
+    [fsObject]
+    public class Language
+    {
+        /// <summary>
+        /// String that contains the country code.
+        /// </summary>
+        public string language { get; set; }
+        /// <summary>
+        /// The language name.
+        /// </summary>
+        public string name { get; set; }
+    }
     /// <summary>
-    /// The language name.
+    /// Languages data class.
     /// </summary>
-    public string name { get; set; }
-  }
-  /// <summary>
-  /// Languages data class.
-  /// </summary>
-  [fsObject]
-  public class Languages
-  {
+    [fsObject]
+    public class Languages
+    {
+        /// <summary>
+        /// Array of language objects.
+        /// </summary>
+        public Language[] languages { get; set; }
+    }
     /// <summary>
-    /// Array of language objects.
+    /// Translation data class.
     /// </summary>
-    public Language[] languages { get; set; }
-  }
-  /// <summary>
-  /// Translation data class.
-  /// </summary>
-  [fsObject]
-  public class Translation
-  {
+    [fsObject]
+    public class Translation
+    {
+        /// <summary>
+        /// Translation text.
+        /// </summary>
+        public string translation { get; set; }
+    };
     /// <summary>
-    /// Translation text.
+    /// Translate data class returned by the TranslateCallback.
     /// </summary>
-    public string translation { get; set; }
-  };
-  /// <summary>
-  /// Translate data class returned by the TranslateCallback.
-  /// </summary>
-  [fsObject]
-  public class Translations
-  {
+    [fsObject]
+    public class Translations
+    {
+        /// <summary>
+        /// Number of words in the translation.
+        /// </summary>
+        public long word_count { get; set; }
+        /// <summary>
+        /// Number of characters in the translation.
+        /// </summary>
+        public long character_count { get; set; }
+        /// <summary>
+        /// A array of translations.
+        /// </summary>
+        public Translation[] translations { get; set; }
+    }
     /// <summary>
-    /// Number of words in the translation.
+    /// Language model data class.
     /// </summary>
-    public long word_count { get; set; }
+    [fsObject]
+    public class TranslationModel
+    {
+        /// <summary>
+        /// The language model ID.
+        /// </summary>
+        public string model_id { get; set; }
+        /// <summary>
+        /// The name of the language model.
+        /// </summary>
+        public string name { get; set; }
+        /// <summary>
+        /// The source language ID.
+        /// </summary>
+        public string source { get; set; }
+        /// <summary>
+        /// The target language ID.
+        /// </summary>
+        public string target { get; set; }
+        /// <summary>
+        /// The model of which this model was based.
+        /// </summary>
+        public string base_model_id { get; set; }
+        /// <summary>
+        /// The domain of the language model.
+        /// </summary>
+        public string domain { get; set; }
+        /// <summary>
+        /// Is this model customizable?
+        /// </summary>
+        public bool customizable { get; set; }
+        /// <summary>
+        /// Is this model default.
+        /// </summary>
+        public bool @default { get; set; }
+        /// <summary>
+        /// Who is the owner of this model.
+        /// </summary>
+        public string owner { get; set; }
+        /// <summary>
+        /// What is the status of this model.
+        /// </summary>
+        public string status { get; set; }
+    }
     /// <summary>
-    /// Number of characters in the translation.
+    /// Models data class.
     /// </summary>
-    public long character_count { get; set; }
-    /// <summary>
-    /// A array of translations.
-    /// </summary>
-    public Translation[] translations { get; set; }
-  }
-  /// <summary>
-  /// Language model data class.
-  /// </summary>
-  [fsObject]
-  public class TranslationModel
-  {
-    /// <summary>
-    /// The language model ID.
-    /// </summary>
-    public string model_id { get; set; }
-    /// <summary>
-    /// The name of the language model.
-    /// </summary>
-    public string name { get; set; }
-    /// <summary>
-    /// The source language ID.
-    /// </summary>
-    public string source { get; set; }
-    /// <summary>
-    /// The target language ID.
-    /// </summary>
-    public string target { get; set; }
-    /// <summary>
-    /// The model of which this model was based.
-    /// </summary>
-    public string base_model_id { get; set; }
-    /// <summary>
-    /// The domain of the language model.
-    /// </summary>
-    public string domain { get; set; }
-    /// <summary>
-    /// Is this model customizable?
-    /// </summary>
-    public bool customizable { get; set; }
-    /// <summary>
-    /// Is this model default.
-    /// </summary>
-    public bool @default { get; set; }
-    /// <summary>
-    /// Who is the owner of this model.
-    /// </summary>
-    public string owner { get; set; }
-    /// <summary>
-    /// What is the status of this model.
-    /// </summary>
-    public string status { get; set; }
-  }
-  /// <summary>
-  /// Models data class.
-  /// </summary>
-  [fsObject]
-  public class TranslationModels
-  {
-    /// <summary>
-    /// The array of TranslationModel objects.
-    /// </summary>
-    public TranslationModel[] models { get; set; }
-  }
+    [fsObject]
+    public class TranslationModels
+    {
+        /// <summary>
+        /// The array of TranslationModel objects.
+        /// </summary>
+        public TranslationModel[] models { get; set; }
+    }
 }

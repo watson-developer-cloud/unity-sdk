@@ -327,7 +327,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
         /// An object containing the emotion results for the target
         /// </summary>
         public EmotionScores emotion { get; set; }
-     }
+    }
 
     [fsObject]
     public class Author
@@ -460,7 +460,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
     }
 
     [fsObject]
-    public class CustomModel 
+    public class CustomModel
     {
         /// <summary>
         /// Shows as available if the model is ready for use

@@ -231,7 +231,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
         /// <returns>Returns a RESTConnector object or null on error.</returns>
         /// 
 
-        
+
         public static RESTConnector GetConnector(Credentials credentials, string function)
         {
             RESTConnector connector = new RESTConnector();

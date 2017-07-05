@@ -20,32 +20,32 @@ using IBM.Watson.DeveloperCloud.Utilities;
 
 namespace IBM.Watson.DeveloperCloud.Debug
 {
-  /// <summary>
-  /// This singleton manages the quality level of all rendering in the application.
-  /// </summary>
-  public class QualityManager : MonoBehaviour
-  {
     /// <summary>
-    /// Returns the singleton instance of the QualityManager object.
+    /// This singleton manages the quality level of all rendering in the application.
     /// </summary>
-    public static QualityManager Instance { get { return Singleton<QualityManager>.Instance; } }
+    public class QualityManager : MonoBehaviour
+    {
+        /// <summary>
+        /// Returns the singleton instance of the QualityManager object.
+        /// </summary>
+        public static QualityManager Instance { get { return Singleton<QualityManager>.Instance; } }
 
-    void Start()
-    {
-      //KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CHANGE_QUALITY, KeyModifiers.NONE, OnNextQualityLevel ); 
-      DebugConsole.Instance.RegisterDebugInfo("QUALITY", OnQualityDebugInfo);
-    }
+        void Start()
+        {
+            //KeyEventManager.Instance.RegisterKeyEvent(Constants.KeyCodes.CHANGE_QUALITY, KeyModifiers.NONE, OnNextQualityLevel ); 
+            DebugConsole.Instance.RegisterDebugInfo("QUALITY", OnQualityDebugInfo);
+        }
 
-    /// <summary>
-    /// Event handler to move to the next quality level.
-    /// </summary>
-    public void OnNextQualityLevel()
-    {
-      QualitySettings.SetQualityLevel((QualitySettings.GetQualityLevel() + 1) % QualitySettings.names.Length, true);
+        /// <summary>
+        /// Event handler to move to the next quality level.
+        /// </summary>
+        public void OnNextQualityLevel()
+        {
+            QualitySettings.SetQualityLevel((QualitySettings.GetQualityLevel() + 1) % QualitySettings.names.Length, true);
+        }
+        private string OnQualityDebugInfo()
+        {
+            return QualitySettings.names[QualitySettings.GetQualityLevel()];
+        }
     }
-    private string OnQualityDebugInfo()
-    {
-      return QualitySettings.names[QualitySettings.GetQualityLevel()];
-    }
-  }
 }

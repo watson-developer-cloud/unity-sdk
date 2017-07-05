@@ -146,7 +146,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
         private string m_ClassifiersFolder = null;
         private Texture m_WatsonIcon = null;
         private Vector2 m_ScrollPos = Vector2.zero;
-        private NaturalLanguageClassifier m_NaturalLanguageClassifier = new NaturalLanguageClassifier();
+        private NaturalLanguageClassifier m_NaturalLanguageClassifier = new NaturalLanguageClassifier(new Credentials());
         private Classifiers m_Classifiers = null;
         private static fsSerializer sm_Serializer = new fsSerializer();
         private List<ClassifierData> m_ClassifierData = null;
@@ -154,7 +154,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
         private string m_NewClassifierLang = "en";
         private bool m_Refreshing = false;
 
-        private void OnGetClassifiers(Classifiers classifiers)
+        private void OnGetClassifiers(Classifiers classifiers, string customData)
         {
             m_Refreshing = false;
             m_Classifiers = classifiers;
@@ -164,7 +164,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
             }
         }
 
-        private void OnGetClassifier(Classifier details)
+        private void OnGetClassifier(Classifier details, string customData)
         {
             foreach (var c in m_Classifiers.classifiers)
                 if (c.classifier_id == details.classifier_id)
@@ -174,7 +174,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
                 }
         }
 
-        private void OnDeleteClassifier(bool success)
+        private void OnDeleteClassifier(bool success, string customData)
         {
             if (!success)
                 Log.Error("Natural Language Classifier Trainer", "Failed to delete classifier.");
@@ -182,7 +182,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
                 OnRefresh();
         }
 
-        private void OnClassiferTrained(Classifier classifier)
+        private void OnClassiferTrained(Classifier classifier, string customData)
         {
             if (classifier == null)
                 EditorUtility.DisplayDialog("ERROR", "Failed to train classifier.", "OK");

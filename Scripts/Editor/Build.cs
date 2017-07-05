@@ -49,8 +49,8 @@ public class Build
 
     public static string[] BuildScenes
     {
-        get { return string.IsNullOrEmpty( EditorPrefs.GetString(Application.productName + "BuildScenes"))? null :  EditorPrefs.GetString(Application.productName + "BuildScenes").Split('|'); }
-        set { if (value == null || value.Length == 0) EditorPrefs.SetString(Application.productName + "BuildScenes", null); else EditorPrefs.SetString(Application.productName + "BuildScenes",string.Join("|", value)); }
+        get { return string.IsNullOrEmpty(EditorPrefs.GetString(Application.productName + "BuildScenes")) ? null : EditorPrefs.GetString(Application.productName + "BuildScenes").Split('|'); }
+        set { if (value == null || value.Length == 0) EditorPrefs.SetString(Application.productName + "BuildScenes", null); else EditorPrefs.SetString(Application.productName + "BuildScenes", string.Join("|", value)); }
     }
 
     #endregion

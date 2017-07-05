@@ -17,16 +17,16 @@
 
 namespace IBM.Watson.DeveloperCloud.Logging
 {
-  /// <summary>
-  /// Any class that implement this interface can be added to the Logger class as a reactor and hook
-  /// all log messages.
-  /// </summary>
-  public interface ILogReactor
-  {
     /// <summary>
-    /// Process a LogRecord object.
+    /// Any class that implement this interface can be added to the Logger class as a reactor and hook
+    /// all log messages.
     /// </summary>
-    /// <param name="log">The log record.</param>
-    void ProcessLog(LogRecord log);
-  }
+    public interface ILogReactor
+    {
+        /// <summary>
+        /// Process a LogRecord object.
+        /// </summary>
+        /// <param name="log">The log record.</param>
+        void ProcessLog(LogRecord log);
+    }
 }

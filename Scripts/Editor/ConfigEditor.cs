@@ -159,7 +159,6 @@ namespace IBM.Watson.DeveloperCloud.Editor
             if (!Directory.Exists(Application.streamingAssetsPath))
                 Directory.CreateDirectory(Application.streamingAssetsPath);
             File.WriteAllText(Application.streamingAssetsPath + "/Config.json", Config.Instance.SaveConfig());
-            RESTConnector.FlushConnectors();
         }
 
         private static string FindFile(string directory, string name)

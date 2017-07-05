@@ -15,16 +15,16 @@
 *
 */
 
-using UnityEngine;
 using System.Collections;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1;
+using IBM.Watson.DeveloperCloud.Utilities;
 
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
     public class TestNaturalLanguageUnderstanding : UnitTest
     {
-        private NaturalLanguageUnderstanding m_NaturalLanguageUnderstanding = new NaturalLanguageUnderstanding();
+        private NaturalLanguageUnderstanding m_NaturalLanguageUnderstanding = new NaturalLanguageUnderstanding(new Credentials());
 
         private bool m_AnalyzeTested = false;
         private bool m_ListModelsTested = false;

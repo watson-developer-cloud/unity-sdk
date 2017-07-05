@@ -23,39 +23,39 @@ using UnityEngine.UI;
 
 namespace IBM.Watson.DeveloperCloud.Widgets
 {
-  /// <summary>
-  /// Simple widget for displaying the Natural Language Classification in the UI.
-  /// </summary>
-  public class ClassDisplayWidget : Widget
-  {
-    #region Inputs
-    [SerializeField]
-    private Input m_ClassInput = new Input("ClassInput", typeof(ClassifyResultData), "OnClassInput");
-    #endregion
-
-    #region Widget interface
-    /// <exclude />
-    protected override string GetName()
+    /// <summary>
+    /// Simple widget for displaying the Natural Language Classification in the UI.
+    /// </summary>
+    public class ClassDisplayWidget : Widget
     {
-      return "ClassDisplay";
-    }
-    #endregion
+        #region Inputs
+        [SerializeField]
+        private Input m_ClassInput = new Input("ClassInput", typeof(ClassifyResultData), "OnClassInput");
+        #endregion
 
-    #region Private Data
-    [SerializeField]
-    private Text m_ClassDisplay = null;
-    #endregion
+        #region Widget interface
+        /// <exclude />
+        protected override string GetName()
+        {
+            return "ClassDisplay";
+        }
+        #endregion
 
-    #region Event Handlers
-    private void OnClassInput(Data data)
-    {
-      ClassifyResultData results = (ClassifyResultData)data;
-      if (m_ClassDisplay != null)
-      {
-        m_ClassDisplay.text = string.Format("Top class: {0} ({1:0.00})",
-            results.Result.top_class, results.Result.topConfidence);
-      }
+        #region Private Data
+        [SerializeField]
+        private Text m_ClassDisplay = null;
+        #endregion
+
+        #region Event Handlers
+        private void OnClassInput(Data data)
+        {
+            ClassifyResultData results = (ClassifyResultData)data;
+            if (m_ClassDisplay != null)
+            {
+                m_ClassDisplay.text = string.Format("Top class: {0} ({1:0.00})",
+                    results.Result.top_class, results.Result.topConfidence);
+            }
+        }
+        #endregion
     }
-    #endregion
-  }
 }

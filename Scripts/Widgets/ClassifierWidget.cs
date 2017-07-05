@@ -26,71 +26,71 @@ using UnityEngine;
 
 namespace IBM.Watson.DeveloperCloud.Widgets
 {
-  /// <summary>
-  /// This widget class maps Natural Language Classifier results to a SerializedDelegate.
-  /// </summary>
-  public class ClassifierWidget : Widget
-  {
-    #region Inputs
-    [SerializeField]
-    private Input m_ClassifyInput = new Input("Classified", typeof(ClassifyResultData), "OnClassifyInput");
-    #endregion
-
-    #region Outputs
-    [SerializeField]
-    private Output m_ClassifyOutput = new Output(typeof(ClassifyResultData));
-    #endregion
-
-    #region Widget interface
-    /// <exclude />
-    protected override string GetName()
+    /// <summary>
+    /// This widget class maps Natural Language Classifier results to a SerializedDelegate.
+    /// </summary>
+    public class ClassifierWidget : Widget
     {
-      return "Classifier";
-    }
-    #endregion
+        #region Inputs
+        [SerializeField]
+        private Input m_ClassifyInput = new Input("Classified", typeof(ClassifyResultData), "OnClassifyInput");
+        #endregion
 
-    #region Private Data
-    private delegate void OnClassifierResult(ClassifyResult result);
+        #region Outputs
+        [SerializeField]
+        private Output m_ClassifyOutput = new Output(typeof(ClassifyResultData));
+        #endregion
 
-    [Serializable]
-    private class Mapping
-    {
-      public string m_Class = string.Empty;
-      public SerializedDelegate m_Callback = new SerializedDelegate(typeof(OnClassifierResult));
-      public bool m_Exclusive = true;
-    };
-
-    [SerializeField]
-    private List<Mapping> m_Mappings = new List<Mapping>();
-    #endregion
-
-    #region Event Handlers
-    private void OnClassifyInput(Data data)
-    {
-      ClassifyResultData input = (ClassifyResultData)data;
-
-      bool bPassthrough = true;
-      foreach (var mapping in m_Mappings)
-      {
-        if (mapping.m_Class == input.Result.top_class)
+        #region Widget interface
+        /// <exclude />
+        protected override string GetName()
         {
-          OnClassifierResult callback = mapping.m_Callback.ResolveDelegate() as OnClassifierResult;
-          if (callback != null)
-          {
-            callback(input.Result);
-            if (mapping.m_Exclusive)
-            {
-              bPassthrough = false;
-              break;
-            }
-          }
+            return "Classifier";
         }
-      }
+        #endregion
 
-      if (bPassthrough)
-        m_ClassifyOutput.SendData(data);
+        #region Private Data
+        private delegate void OnClassifierResult(ClassifyResult result);
+
+        [Serializable]
+        private class Mapping
+        {
+            public string m_Class = string.Empty;
+            public SerializedDelegate m_Callback = new SerializedDelegate(typeof(OnClassifierResult));
+            public bool m_Exclusive = true;
+        };
+
+        [SerializeField]
+        private List<Mapping> m_Mappings = new List<Mapping>();
+        #endregion
+
+        #region Event Handlers
+        private void OnClassifyInput(Data data)
+        {
+            ClassifyResultData input = (ClassifyResultData)data;
+
+            bool bPassthrough = true;
+            foreach (var mapping in m_Mappings)
+            {
+                if (mapping.m_Class == input.Result.top_class)
+                {
+                    OnClassifierResult callback = mapping.m_Callback.ResolveDelegate() as OnClassifierResult;
+                    if (callback != null)
+                    {
+                        callback(input.Result);
+                        if (mapping.m_Exclusive)
+                        {
+                            bPassthrough = false;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (bPassthrough)
+                m_ClassifyOutput.SendData(data);
+        }
+        #endregion
     }
-    #endregion
-  }
 
 }

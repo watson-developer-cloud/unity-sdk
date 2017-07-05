@@ -22,32 +22,32 @@ using IBM.Watson.DeveloperCloud.Utilities;
 
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
-  public class TestToneAnalyzer : UnitTest
-  {
-    ToneAnalyzer m_ToneAnalyzer = new ToneAnalyzer(new Credentials());
-    bool m_GetToneAnalyzerTested = false;
-    string m_StringToTestTone = "This service enables people to discover and understand, and revise the impact of tone in their content. It uses linguistic analysis to detect and interpret emotional, social, and language cues found in text.\n";
-
-    public override IEnumerator RunTest()
+    public class TestToneAnalyzer : UnitTest
     {
-      if (Utilities.Config.Instance.FindCredentials(m_ToneAnalyzer.GetServiceID()) == null)
-        yield break;
+        ToneAnalyzer m_ToneAnalyzer = new ToneAnalyzer(new Credentials());
+        bool m_GetToneAnalyzerTested = false;
+        string m_StringToTestTone = "This service enables people to discover and understand, and revise the impact of tone in their content. It uses linguistic analysis to detect and interpret emotional, social, and language cues found in text.\n";
 
-      m_ToneAnalyzer.GetToneAnalyze(OnGetToneAnalyze, m_StringToTestTone, "TEST");
-      while (!m_GetToneAnalyzerTested)
-        yield return null;
+        public override IEnumerator RunTest()
+        {
+            if (Utilities.Config.Instance.FindCredentials(m_ToneAnalyzer.GetServiceID()) == null)
+                yield break;
 
-      yield break;
+            m_ToneAnalyzer.GetToneAnalyze(OnGetToneAnalyze, m_StringToTestTone, "TEST");
+            while (!m_GetToneAnalyzerTested)
+                yield return null;
+
+            yield break;
+        }
+
+        private void OnGetToneAnalyze(ToneAnalyzerResponse resp, string data)
+        {
+            Log.Status("TestToneAnalyzer", "Response: {0} - {1}", resp, data);
+
+            Test(resp != null);
+            m_GetToneAnalyzerTested = true;
+        }
+
     }
-
-    private void OnGetToneAnalyze(ToneAnalyzerResponse resp, string data)
-    {
-      Log.Status("TestToneAnalyzer", "Response: {0} - {1}", resp, data);
-
-      Test(resp != null);
-      m_GetToneAnalyzerTested = true;
-    }
-
-  }
 }
 

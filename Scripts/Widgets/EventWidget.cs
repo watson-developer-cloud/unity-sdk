@@ -24,48 +24,48 @@ using UnityEngine;
 namespace IBM.Watson.DeveloperCloud.Widgets
 {
 
-  /// <summary>
-  /// This Event Widget class maps events to a SerializedDelegate.
-  /// </summary>
-  public class EventWidget : Widget
-  {
-    #region Widget interface
-    /// <exclude />
-    protected override string GetName()
+    /// <summary>
+    /// This Event Widget class maps events to a SerializedDelegate.
+    /// </summary>
+    public class EventWidget : Widget
     {
-      return "Event";
+        #region Widget interface
+        /// <exclude />
+        protected override string GetName()
+        {
+            return "Event";
+        }
+        #endregion
+
+        #region Private Data
+        [Serializable]
+        private class Mapping
+        {
+            public string m_Event = "";
+            public SerializedDelegate m_Callback = new SerializedDelegate(typeof(EventManager.OnReceiveEvent));
+        };
+
+        [SerializeField]
+        private List<Mapping> m_Mappings = new List<Mapping>();
+        #endregion
+
+        #region Event Handlers
+        private void OnEnable()
+        {
+            foreach (var mapping in m_Mappings)
+            {
+                EventManager.Instance.RegisterEventReceiver(mapping.m_Event, mapping.m_Callback.ResolveDelegate() as EventManager.OnReceiveEvent);
+            }
+        }
+
+        private void OnDisable()
+        {
+            foreach (var mapping in m_Mappings)
+            {
+                EventManager.Instance.UnregisterEventReceiver(mapping.m_Event, mapping.m_Callback.ResolveDelegate() as EventManager.OnReceiveEvent);
+            }
+        }
+        #endregion
     }
-    #endregion
-
-    #region Private Data
-    [Serializable]
-    private class Mapping
-    {
-      public string m_Event = "";
-      public SerializedDelegate m_Callback = new SerializedDelegate(typeof(EventManager.OnReceiveEvent));
-    };
-
-    [SerializeField]
-    private List<Mapping> m_Mappings = new List<Mapping>();
-    #endregion
-
-    #region Event Handlers
-    private void OnEnable()
-    {
-      foreach (var mapping in m_Mappings)
-      {
-        EventManager.Instance.RegisterEventReceiver(mapping.m_Event, mapping.m_Callback.ResolveDelegate() as EventManager.OnReceiveEvent);
-      }
-    }
-
-    private void OnDisable()
-    {
-      foreach (var mapping in m_Mappings)
-      {
-        EventManager.Instance.UnregisterEventReceiver(mapping.m_Event, mapping.m_Callback.ResolveDelegate() as EventManager.OnReceiveEvent);
-      }
-    }
-    #endregion
-  }
 
 }

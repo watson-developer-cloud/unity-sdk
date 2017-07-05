@@ -71,7 +71,8 @@ namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
         public Credentials Credentials
         {
             get { return _credentials; }
-            set {
+            set
+            {
                 _credentials = value;
                 if (!string.IsNullOrEmpty(_credentials.Url))
                 {
