@@ -24,159 +24,134 @@ using System.Collections.Generic;
 using System.Collections;
 using IBM.Watson.DeveloperCloud.DataTypes;
 using System.Reflection;
+using FullSerializer;
+using System.IO;
 
 public class ExampleConversation : MonoBehaviour
 {
-  private Conversation m_Conversation = new Conversation(new Credentials());
-  private string m_WorkspaceID;
-  private bool m_UseAlternateIntents = true;
-  private string[] questionArray = { "can you turn up the AC", "can you turn on the wipers", "can you turn off the wipers", "can you turn down the ac", "can you unlock the door" };
+    private Conversation _conversation;
+    private string _username;
+    private string _password;
+    private string _url;
+    private string _workspaceId;
+    private string[] _questionArray = { "can you turn up the AC", "can you turn on the wipers", "can you turn off the wipers", "can you turn down the ac", "can you unlock the door" };
+    private fsSerializer _serializer = new fsSerializer();
+    private Context _context = null;
+    private int _questionCount = -1;
+    private bool _waitingForResponse = true;
 
-  void Start()
-  {
-    LogSystem.InstallDefaultReactors();
-    m_WorkspaceID = Config.Instance.GetVariableValue("ConversationV1_ID");
-
-        //Debug.Log("**********User: Hello!");
-        //    MessageWithOnlyInput("Hello!");
-
-        GetRawOutput("Hello");
-    }
-    
-    private void GetRawOutput(string input)
+    void Start()
     {
-        m_Conversation.Message(OnGetRawOutput, m_WorkspaceID, input);
+        LogSystem.InstallDefaultReactors();
+
+        VcapCredentials vcapCredentials = new VcapCredentials();
+        fsData data = null;
+
+        //  Get credentials from a credential file defined in environmental variables in the VCAP_SERVICES format. 
+        //  See https://www.ibm.com/watson/developercloud/doc/common/getting-started-variables.html.
+        var environmentalVariable = Environment.GetEnvironmentVariable("VCAP_SERVICES");
+        var fileContent = File.ReadAllText(environmentalVariable);
+
+        //  Add in a parent object because Unity does not like to deserialize root level collection types.
+        fileContent = Utility.AddTopLevelObjectToJson(fileContent, "VCAP_SERVICES");
+
+        //  Convert json to fsResult
+        fsResult r = fsJsonParser.Parse(fileContent, out data);
+        if (!r.Succeeded)
+            throw new WatsonException(r.FormattedMessages);
+
+        //  Convert fsResult to VcapCredentials
+        object obj = vcapCredentials;
+        r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+        if (!r.Succeeded)
+            throw new WatsonException(r.FormattedMessages);
+
+        //  Set credentials from imported credntials
+        _username = vcapCredentials.VCAP_SERVICES["conversation"][0].Credentials.Username.ToString();
+        _password = vcapCredentials.VCAP_SERVICES["conversation"][0].Credentials.Password.ToString();
+        _url = vcapCredentials.VCAP_SERVICES["conversation"][0].Credentials.Url.ToString();
+        _workspaceId = vcapCredentials.VCAP_SERVICES["conversation"][0].Credentials.WorkspaceId.ToString();
+
+        //  Create credential and instantiate service
+        Credentials credentials = new Credentials(_username, _password, _url);
+        _conversation = new Conversation(credentials);
+        _conversation.VersionDate = "2017-05-26";
+
+        Runnable.Run(Examples());
     }
 
-    private void OnGetRawOutput(object resp, string customData)
+    private IEnumerator Examples()
     {
-        if (!string.IsNullOrEmpty(customData))
-            Debug.Log(customData);
-        else
-            Debug.Log("No raw data was received.");
+        if (!_conversation.Message(OnMessage, _workspaceId, "hello"))
+            Log.Debug("ExampleConversation", "Failed to message!");
 
-        if (resp != null)
+        while (_waitingForResponse)
+            yield return null;
+
+        _waitingForResponse = true;
+        _questionCount++;
+
+        AskQuestion();
+        while (_waitingForResponse)
+            yield return null;
+
+        _questionCount++;
+
+        _waitingForResponse = true;
+
+        AskQuestion();
+        while (_waitingForResponse)
+            yield return null;
+        _questionCount++;
+
+        _waitingForResponse = true;
+
+        AskQuestion();
+        while (_waitingForResponse)
+            yield return null;
+        _questionCount++;
+
+        _waitingForResponse = true;
+
+        AskQuestion();
+        while (_waitingForResponse)
+            yield return null;
+    }
+
+    private void AskQuestion()
+    {
+        MessageRequest messageRequest = new MessageRequest()
         {
-            Dictionary<string, object> respDict = resp as Dictionary<string, object>;
-            object intents;
-            respDict.TryGetValue("intents", out intents);
-
-            foreach(var intentObj in (intents as List<object>))
+            input = new MessageInput()
             {
-                Dictionary<string, object> intentDict = intentObj as Dictionary<string, object>;
+                text = _questionArray[_questionCount]
+            },
+            context = _context
+        };
 
-                object intentString;
-                intentDict.TryGetValue("intent", out intentString);
-
-                object confidenceString;
-                intentDict.TryGetValue("confidence", out confidenceString);
-
-                Log.Debug("ExampleConversation", "intent: {0} | confidence {1}", intentString.ToString(), confidenceString.ToString());
-            }
-        }
+        if (!_conversation.Message(OnMessage, _workspaceId, messageRequest))
+            Log.Debug("ExampleConversation", "Failed to message!");
     }
 
-  //private void MessageWithOnlyInput(string input)
-  //{
-  //  if (string.IsNullOrEmpty(input))
-  //    throw new ArgumentNullException("input");
+    private void OnMessage(object resp, string data)
+    {
+        Log.Debug("ExampleConversation", "Conversation: Message Response: {0}", data);
 
-  //  m_Conversation.Message(OnMessageWithOnlyInput, m_WorkspaceID, input);
-  //}
+        //  Convert resp to fsdata
+        fsData fsdata = null;
+        fsResult r = _serializer.TrySerialize(resp.GetType(), resp, out fsdata);
+        if (!r.Succeeded)
+            throw new WatsonException(r.FormattedMessages);
 
+        //  Convert fsdata to MessageResponse
+        MessageResponse messageResponse = new MessageResponse();
+        object obj = messageResponse;
+        r = _serializer.TryDeserialize(fsdata, obj.GetType(), ref obj);
+        if (!r.Succeeded)
+            throw new WatsonException(r.FormattedMessages);
 
-  //private void OnMessageWithOnlyInput(object resp, string customData)
-  //{
-  //  if (resp != null)
-  //  {
-  //    foreach (Intent mi in resp.intents)
-  //      Debug.Log("Message Only intent: " + mi.intent + ", confidence: " + mi.confidence);
-
-  //    if (resp.output != null && resp.output.text.Length > 0)
-  //      foreach (string txt in resp.output.text)
-  //        Debug.Log("Message Only output: " + txt);
-
-  //    if (resp.context != null)
-  //    {
-  //      if (!string.IsNullOrEmpty(resp.context.conversation_id))
-  //        Log.Debug("ExampleConversation", "Conversation ID: {0}", resp.context.conversation_id);
-  //      else
-  //        Log.Debug("ExampleConversation", "Conversation ID is null.");
-
-  //      if (resp.context.system != null)
-  //      {
-  //        Log.Debug("ExampleConversation", "dialog_request_counter: {0}", resp.context.system.dialog_request_counter);
-  //        Log.Debug("ExampleConversation", "dialog_turn_counter: {0}", resp.context.system.dialog_turn_counter);
-
-  //        if (resp.context.system.dialog_stack != null)
-  //        {
-  //          foreach (Dictionary<string, string> dialogNode in resp.context.system.dialog_stack)
-  //            foreach(KeyValuePair<string, string> node in dialogNode)
-  //              Log.Debug("ExampleConversation", "dialogNode: {0}", node.Value);
-  //        }
-  //        else
-  //        {
-  //          Log.Debug("ExampleConversation", "dialog stack is null");
-  //        }
-
-  //      }
-  //      else
-  //      {
-  //        Log.Debug("ExampleConversation", "system is null.");
-  //      }
-
-  //    }
-  //    else
-  //    {
-  //      Log.Debug("ExampleConversation", "Context is null");
-  //    }
-
-  //    string questionStr = questionArray[UnityEngine.Random.Range(0, questionArray.Length - 1)];
-  //    Debug.Log(string.Format("**********User: {0}", questionStr));
-
-  //    MessageRequest messageRequest = new MessageRequest();
-  //    messageRequest.InputText = questionStr;
-  //    messageRequest.alternate_intents = m_UseAlternateIntents;
-  //    messageRequest.ContextData = resp.context;
-
-  //    MessageWithFullMessageRequest(messageRequest);
-  //  }
-  //  else
-  //  {
-  //    Debug.Log("Message Only: Failed to invoke Message();");
-  //  }
-  //}
-
-  //private void MessageWithFullMessageRequest(MessageRequest messageRequest)
-  //{
-  //  if (messageRequest == null)
-  //    throw new ArgumentNullException("messageRequest");
-  //  m_Conversation.Message(OnMessageWithFullRequest, m_WorkspaceID, messageRequest);
-  //}
-
-  //private void OnMessageWithFullRequest(MessageResponse resp, string customData)
-  //{
-  //  if (resp != null)
-  //  {
-  //    foreach (Intent mi in resp.intents)
-  //      Debug.Log("Full Request intent: " + mi.intent + ", confidence: " + mi.confidence);
-
-  //    if (resp.output != null && resp.output.text.Length > 0)
-  //      foreach (string txt in resp.output.text)
-  //        Debug.Log("Full Request output: " + txt);
-
-  //    string questionStr = questionArray[UnityEngine.Random.Range(0, questionArray.Length - 1)];
-  //    Debug.Log(string.Format("**********User: {0}", questionStr));
-
-  //    MessageRequest messageRequest = new MessageRequest();
-  //    messageRequest.InputText = questionStr;
-  //    messageRequest.alternate_intents = m_UseAlternateIntents;
-  //    messageRequest.ContextData = resp.context;
-  //  }
-  //  else
-  //  {
-  //    Debug.Log("Full Request: Failed to invoke Message();");
-  //  }
-  //}
-
+        //  Set context for next round of messaging
+        _context = messageResponse.context;
+        _waitingForResponse = false;
+    }
 }

@@ -21,6 +21,7 @@ using IBM.Watson.DeveloperCloud.Utilities;
 using System.IO;
 using System;
 using FullSerializer;
+using IBM.Watson.DeveloperCloud.Logging;
 
 public class ExampleToneAnalyzer : MonoBehaviour
 {
@@ -28,15 +29,19 @@ public class ExampleToneAnalyzer : MonoBehaviour
     private string _password;
     private string _url;
     private static fsSerializer _serializer = new fsSerializer();
+    private string _toneAnalyzerVersionDate = "2017-05-26";
 
     string _stringToTestTone = "This service enables people to discover and understand, and revise the impact of tone in their content. It uses linguistic analysis to detect and interpret emotional, social, and language cues found in text.";
 
     void Start()
     {
+        LogSystem.InstallDefaultReactors();
+
         VcapCredentials vcapCredentials = new VcapCredentials();
         fsData data = null;
 
-        //  Get credentials from a credential file defined in environmental variables in the VCAP_SERVICES format. See https://www.ibm.com/watson/developercloud/doc/common/getting-started-variables.html.
+        //  Get credentials from a credential file defined in environmental variables in the VCAP_SERVICES format. 
+        //  See https://www.ibm.com/watson/developercloud/doc/common/getting-started-variables.html.
         var environmentalVariable = Environment.GetEnvironmentVariable("VCAP_SERVICES");
         var fileContent = File.ReadAllText(environmentalVariable);
 
@@ -62,14 +67,15 @@ public class ExampleToneAnalyzer : MonoBehaviour
         //  Create credential and instantiate service
         Credentials credentials = new Credentials(_username, _password, _url);
         ToneAnalyzer toneAnalyzer = new ToneAnalyzer(credentials);
-        toneAnalyzer.VersionDate = "2017-05-26";
+        toneAnalyzer.VersionDate = _toneAnalyzerVersionDate;
 
         //  Analyze tone
-        toneAnalyzer.GetToneAnalyze(OnGetToneAnalyze, _stringToTestTone);
+        if (!toneAnalyzer.GetToneAnalyze(OnGetToneAnalyze, _stringToTestTone))
+            Log.Debug("ExampleToneAnalyzer", "Failed to analyze!");
     }
 
     private void OnGetToneAnalyze(ToneAnalyzerResponse resp, string data)
     {
-        Debug.Log("Response: " + resp + " - " + data);
+        Log.Debug("ExampleToneAnalyzer", "Tone Analyzer - Analyze Response: {0}", data);
     }
 }

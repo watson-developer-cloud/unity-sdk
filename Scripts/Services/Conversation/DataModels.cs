@@ -30,7 +30,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
         /// <summary>
         /// The input text.
         /// </summary>
-        public InputData input { get; set; }
+        public MessageInput input { get; set; }
         /// <summary>
         /// The context objext.
         /// </summary>
@@ -38,22 +38,22 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
         /// <summary>
         /// Terms from the request that are identified as entities.
         /// </summary>
-        public EntityResponse[] entities { get; set; }
+        public RuntimeEntity[] entities { get; set; }
         /// <summary>
         /// Terms from the request that are identified as intents.
         /// </summary>
-        public Intent[] intents { get; set; }
+        public RuntimeIntent[] intents { get; set; }
         /// <summary>
         /// Output logs.
         /// </summary>
-        public OutputData output { get; set; }
+        public RuntimeOutput output { get; set; }
     }
 
     /// <summary>
     /// The entity object.
     /// </summary>
     [fsObject]
-    public class EntityResponse
+    public class RuntimeEntity
     {
         /// <summary>
         /// The entity name.
@@ -73,7 +73,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
     /// The resultant intent.
     /// </summary>
     [fsObject]
-    public class Intent
+    public class RuntimeIntent
     {
         /// <summary>
         /// The intent.
@@ -89,12 +89,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
     /// The Output data.
     /// </summary>
     [fsObject]
-    public class OutputData
+    public class RuntimeOutput
     {
         /// <summary>
         /// Log messages.
         /// </summary>
-        public LogMessageResponse[] log_messages { get; set; }
+        public RuntimeLogMessage[] log_messages { get; set; }
         /// <summary>
         /// Output text.
         /// </summary>
@@ -109,7 +109,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
     /// The log message object.
     /// </summary>
     [fsObject]
-    public class LogMessageResponse
+    public class RuntimeLogMessage
     {
         /// <summary>
         /// The log level.
@@ -141,7 +141,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
         /// <summary>
         /// The input text. 
         /// </summary>
-        public InputData input { get; set; }
+        public MessageInput input { get; set; }
         /// <summary>
         /// Whether to return more than one intent. Set to true to return all matching intents.
         /// </summary>
@@ -160,7 +160,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
             {
                 if (input == null)
                 {
-                    input = new InputData();
+                    input = new MessageInput();
                     return "";
                 }
                 else
@@ -171,7 +171,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
             set
             {
                 if (input == null)
-                    input = new InputData();
+                    input = new MessageInput();
 
                 input.text = value;
             }
@@ -180,13 +180,13 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
         /// <summary>
         /// Gets and sets the input value and creates the InputData object if it hasn't been created.
         /// </summary>
-        public InputData InputData
+        public MessageInput InputData
         {
-            get { return input != null ? input : input = new InputData(); }
+            get { return input != null ? input : input = new MessageInput(); }
             set
             {
                 if (input == null)
-                    input = new InputData();
+                    input = new MessageInput();
 
                 input = value;
             }
@@ -229,7 +229,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
     /// The input text.
     /// </summary>
     [fsObject]
-    public class InputData
+    public class MessageInput
     {
         /// <summary>
         /// The user's input.
@@ -243,13 +243,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
     [fsObject]
     public class Context
     {
-        ///// <summary>
-        ///// Default constructor.
-        ///// </summary>
-        //public Context()
-        //{
-        //	system = new SystemResponse();
-        //}
         /// <summary>
         /// The unique identifier of the conversation. 
         /// </summary>
@@ -282,17 +275,9 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
     public class SystemResponse
     {
         /// <summary>
-        /// An array of dialog node IDs that are in focus in the conversation.
+        /// The system response object.
         /// </summary>
-        public Dictionary<string, string>[] dialog_stack { get; set; }
-        /// <summary>
-        /// The number of cycles of user input and response in this conversation.
-        /// </summary>
-        public int dialog_turn_counter { get; set; }
-        /// <summary>
-        /// The number of inputs in this conversation. This counter might be higher than the dialog_turn_counter counter when multiple inputs are needed before a response can be returned.
-        /// </summary>
-        public int dialog_request_counter { get; set; }
+        public object SystemResponseObject { get; set; }
     }
     #endregion
 }

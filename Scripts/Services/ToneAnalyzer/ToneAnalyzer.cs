@@ -34,7 +34,7 @@ namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
     {
         #region Private Data
         private const string SERVICE_ID = "ToneAnalyzerV3";
-        private static fsSerializer _serializer = new fsSerializer();
+        private fsSerializer _serializer = new fsSerializer();
         private Credentials _credentials = null;
         private string _url = "https://gateway.watsonplatform.net/tone-analyzer/api";
         private string _versionDate;

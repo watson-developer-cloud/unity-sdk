@@ -101,7 +101,7 @@ public class ExampleDiscoveryV1 : MonoBehaviour
         {
             m_Discovery.GetEnvironment(HandleCheckEnvironmentState, m_CreatedEnvironmentID);
         }
-        catch(System.Exception e)
+        catch (System.Exception e)
         {
             Log.Debug("ExampleDiscoveryV1", string.Format("Failed to get environment state: {0}", e.Message));
             CheckState();
@@ -332,7 +332,7 @@ public class ExampleDiscoveryV1 : MonoBehaviour
             m_CreatedConfigurationID = default(string);
             m_IsConfigDeleted = true;
 
-            if(m_IsConfigDeleted && m_IsCollectionDeleted)
+            if (m_IsConfigDeleted && m_IsCollectionDeleted)
                 Invoke("TestDeleteEnvironment", 1f);
         }
         else
@@ -420,7 +420,7 @@ public class ExampleDiscoveryV1 : MonoBehaviour
 
     private void OnAddDocument(DocumentAccepted resp, string data)
     {
-        if(resp != null)
+        if (resp != null)
         {
             Log.Debug("ExampleDiscoveryV1", "Added Document {0} {1}", resp.document_id, resp.status);
             m_CreatedDocumentID = resp.document_id;
@@ -435,7 +435,7 @@ public class ExampleDiscoveryV1 : MonoBehaviour
 
     private void OnGetDocument(DocumentStatus resp, string data)
     {
-        if(resp != null)
+        if (resp != null)
         {
             Log.Debug("ExampleDiscoveryV1", "Got Document {0} {1}", resp.document_id, resp.status);
             TestUpdateDocument();
@@ -472,11 +472,11 @@ public class ExampleDiscoveryV1 : MonoBehaviour
 
     private void OnQuery(QueryResponse resp, string data)
     {
-        if(resp != null)
+        if (resp != null)
         {
             Log.Debug("ExampleDiscoveryV1", "key: {0}, matching results: {1}", resp.aggregations.term.results.key, resp.aggregations.term.results.matching_results);
 
-            foreach(QueryResult result in resp.results)
+            foreach (QueryResult result in resp.results)
                 Log.Debug("ExampleDiscoveryV1", "Query response: id: {0}, score: {1}", result.id, result.score);
         }
         else

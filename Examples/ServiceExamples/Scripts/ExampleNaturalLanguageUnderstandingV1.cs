@@ -26,7 +26,7 @@ public class ExampleNaturalLanguageUnderstandingV1 : MonoBehaviour
     NaturalLanguageUnderstanding m_NaturalLanguageUnderstanding = new NaturalLanguageUnderstanding(new Credentials());
     private static fsSerializer sm_Serializer = new fsSerializer();
 
-    void Start ()
+    void Start()
     {
         LogSystem.InstallDefaultReactors();
 
