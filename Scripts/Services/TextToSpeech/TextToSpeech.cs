@@ -59,7 +59,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
             { AudioFormatType.FLAC, "audio/flac" },
         };
         private const string SERVICE_ID = "TextToSpeechV1";
-        private static fsSerializer sm_Serializer = new fsSerializer();
+        private fsSerializer _serializer = new fsSerializer();
         private const float REQUEST_TIMEOUT = 10.0f * 60.0f;
         private Credentials _credentials = null;
         private string _url = "https://stream.watsonplatform.net/text-to-speech/api";
@@ -182,7 +182,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = voices;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -249,7 +249,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = voice;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -444,7 +444,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = pronunciation;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -513,7 +513,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = customizations;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -561,7 +561,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
             customVoice.description = description;
 
             fsData data;
-            sm_Serializer.TrySerialize(customVoice.GetType(), customVoice, out data).AssertSuccessWithoutWarnings();
+            _serializer.TrySerialize(customVoice.GetType(), customVoice, out data).AssertSuccessWithoutWarnings();
             string customizationJson = fsJsonPrinter.CompressedJson(data);
 
             CreateCustomizationRequest req = new CreateCustomizationRequest();
@@ -601,7 +601,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = customizationID;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -727,7 +727,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = customization;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -771,7 +771,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
                 throw new ArgumentNullException("Custom voice update data is required to update a custom voice model.");
 
             fsData data;
-            sm_Serializer.TrySerialize(customVoiceUpdate.GetType(), customVoiceUpdate, out data).AssertSuccessWithoutWarnings();
+            _serializer.TrySerialize(customVoiceUpdate.GetType(), customVoiceUpdate, out data).AssertSuccessWithoutWarnings();
             string customizationJson = fsJsonPrinter.CompressedJson(data);
 
             UpdateCustomizationRequest req = new UpdateCustomizationRequest();
@@ -866,7 +866,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = words;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -910,7 +910,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
                 throw new ArgumentNullException("Words data is required to add words to a custom voice model.");
 
             fsData data;
-            sm_Serializer.TrySerialize(words.GetType(), words, out data).AssertSuccessWithoutWarnings();
+            _serializer.TrySerialize(words.GetType(), words, out data).AssertSuccessWithoutWarnings();
             string customizationJson = fsJsonPrinter.CompressedJson(data);
 
             AddCustomizationWordsRequest req = new AddCustomizationWordsRequest();
@@ -1065,7 +1065,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = translation;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }

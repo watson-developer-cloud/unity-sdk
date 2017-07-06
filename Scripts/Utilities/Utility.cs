@@ -34,7 +34,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
     /// </summary>
     static public class Utility
     {
-        private static fsSerializer sm_Serializer = new fsSerializer();
+        private static fsSerializer _serializer = new fsSerializer();
         private static string sm_MacAddress = null;
 
         /// <summary>
@@ -408,7 +408,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                 if (obj == null)
                     obj = new T();
 
-                r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                 if (!r.Succeeded)
                     throw new WatsonException(r.FormattedMessages);
 

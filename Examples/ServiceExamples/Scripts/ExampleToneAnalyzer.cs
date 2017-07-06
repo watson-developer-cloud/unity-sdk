@@ -28,7 +28,7 @@ public class ExampleToneAnalyzer : MonoBehaviour
     private string _username;
     private string _password;
     private string _url;
-    private static fsSerializer _serializer = new fsSerializer();
+    private fsSerializer _serializer = new fsSerializer();
     private string _toneAnalyzerVersionDate = "2017-05-26";
 
     private string _stringToTestTone = "This service enables people to discover and understand, and revise the impact of tone in their content. It uses linguistic analysis to detect and interpret emotional, social, and language cues found in text.";

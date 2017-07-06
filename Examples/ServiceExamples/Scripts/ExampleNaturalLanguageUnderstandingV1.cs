@@ -24,7 +24,7 @@ using UnityEngine;
 public class ExampleNaturalLanguageUnderstandingV1 : MonoBehaviour
 {
     NaturalLanguageUnderstanding m_NaturalLanguageUnderstanding = new NaturalLanguageUnderstanding(new Credentials());
-    private static fsSerializer sm_Serializer = new fsSerializer();
+    private fsSerializer _serializer = new fsSerializer();
 
     void Start()
     {
@@ -64,14 +64,14 @@ public class ExampleNaturalLanguageUnderstandingV1 : MonoBehaviour
     private void OnGetModels(ListModelsResults resp, string customData)
     {
         fsData data = null;
-        sm_Serializer.TrySerialize(resp, out data).AssertSuccess();
+        _serializer.TrySerialize(resp, out data).AssertSuccess();
         Log.Debug("ExampleNaturalLanguageUnderstandingV1", "ListModelsResult: {0}", data.ToString());
     }
 
     private void OnAnalyze(AnalysisResults resp, string customData)
     {
         fsData data = null;
-        sm_Serializer.TrySerialize(resp, out data).AssertSuccess();
+        _serializer.TrySerialize(resp, out data).AssertSuccess();
         Log.Debug("ExampleNaturalLanguageUnderstandingV1", "AnalysisResults: {0}", data.ToString());
     }
 }

@@ -35,7 +35,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
     {
         #region Private Data
         private const string SERVICE_ID = "DiscoveryV1";
-        private static fsSerializer sm_Serializer = new fsSerializer();
+        private fsSerializer _serializer = new fsSerializer();
         private Credentials _credentials = null;
         private string _url = "https://gateway.watsonplatform.net/discovery/api";
         private string _versionDate;
@@ -159,7 +159,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = environmentsData;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -263,7 +263,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = environmentData;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -338,7 +338,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = environmentData;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -475,7 +475,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = configurations;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -587,7 +587,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = configuration;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -666,7 +666,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = configuration;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -906,7 +906,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = testDocument;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -989,7 +989,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = collections;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -1098,7 +1098,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = collection;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -1177,7 +1177,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = collection;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -1316,7 +1316,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = fields;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -1603,7 +1603,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = doucmentAccepted;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -1753,7 +1753,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = documentStatus;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -2039,7 +2039,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = doucmentAccepted;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -2161,7 +2161,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = queryResponse;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }

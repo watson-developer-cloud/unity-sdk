@@ -90,7 +90,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v1
 
         #region Private Data
         private const string SERVICE_ID = "LanguageTranslationV1";
-        private static fsSerializer sm_Serializer = new fsSerializer();
+        private fsSerializer _serializer = new fsSerializer();
         private Credentials _credentials = null;
         private string _url = "https://gateway.watsonplatform.net/language-translation/api";
         #endregion
@@ -185,7 +185,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = translations;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -276,7 +276,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = models;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -334,7 +334,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = model;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -390,7 +390,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = langs;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }

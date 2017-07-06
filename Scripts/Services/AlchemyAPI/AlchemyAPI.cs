@@ -37,7 +37,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
         #region Private Data
         private const string SERVICE_ID = "AlchemyAPIV1";
-        private static fsSerializer sm_Serializer = new fsSerializer();
+        private fsSerializer _serializer = new fsSerializer();
         private static string _apiKey = null;
         private Credentials _credentials = null;
         private string _url = "https://gateway-a.watsonplatform.net/calls";
@@ -185,7 +185,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = authorsData;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -313,7 +313,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = conceptsData;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -434,7 +434,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = dateData;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -558,7 +558,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = emotionData;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -701,7 +701,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = entityData;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -812,7 +812,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = feedData;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -941,7 +941,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = keywordData;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -1058,7 +1058,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = languageData;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -1169,7 +1169,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = microformatData;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -1283,7 +1283,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = pubDateData;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -1433,7 +1433,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = relationsData;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -1550,7 +1550,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = sentimentData;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -1671,7 +1671,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = sentimentData;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -1788,7 +1788,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = taxonomyData;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -1906,7 +1906,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = textData;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -2086,7 +2086,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = titleData;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -2279,7 +2279,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = combinedData;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -2385,7 +2385,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = newsData;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }

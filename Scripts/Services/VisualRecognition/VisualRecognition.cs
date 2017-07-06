@@ -176,8 +176,8 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         private const string SERVICE_COLLECTION_IMAGE = "/v3/collections/{0}/images/{1}";
         private const string SERVICE_COLLECTION_IMAGE_METADATA = "/v3/collections/{0}/images/{1}/metadata";
         private const string SERVICE_COLLECTION_FIND_SIMILAR = "/v3/collections/{0}/find_similar";
-        private static string mp_ApiKey = null;
-        private static fsSerializer sm_Serializer = new fsSerializer();
+        private string _apikey = null;
+        private fsSerializer _serializer = new fsSerializer();
         private const float REQUEST_TIMEOUT = 10.0f * 60.0f;
         private Credentials _credentials = null;
         private string _url = "https://gateway.watsonplatform.net/tone-analyzer/api";
@@ -202,7 +202,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             get
             {
                 if (string.IsNullOrEmpty(_versionDate))
-                    throw new ArgumentNullException("VersionDate cannot be null. Use a VersionDate formatted as `YYYY-MM-DD`");
+                    throw new ArgumentNullException("VersionDate cannot be null. Use VersionDate `2016-05-20`");
 
                 return _versionDate;
             }
@@ -233,13 +233,6 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         }
         #endregion
 
-        #region Public Functions
-        public static void ClearApiKey()
-        {
-            mp_ApiKey = default(string);
-        }
-        #endregion
-
         #region Classify Image
         /// <summary>
         /// Classifies image specified by URL.
@@ -253,9 +246,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <param name="customData">Custom data.</param>
         public bool Classify(OnClassify callback, string url, string[] owners = default(string[]), string[] classifierIDs = default(string[]), float threshold = default(float), string acceptLanguage = "en", string customData = default(string))
         {
-            if (string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
-            if (string.IsNullOrEmpty(mp_ApiKey))
+            if (string.IsNullOrEmpty(_apikey))
+                _apikey = Credentials.ApiKey;
+            if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
             if (string.IsNullOrEmpty(url))
                 throw new ArgumentNullException("url");
@@ -273,7 +266,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.Timeout = REQUEST_TIMEOUT;
             req.AcceptLanguage = acceptLanguage;
             req.Headers["Accepted-Language"] = acceptLanguage;
-            req.Parameters["api_key"] = mp_ApiKey;
+            req.Parameters["api_key"] = _apikey;
             req.Parameters["url"] = url;
             req.Parameters["version"] = VersionDate;
             if (owners != default(string[]))
@@ -298,9 +291,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <param name="customData">Custom data.</param>
         public bool Classify(string imagePath, OnClassify callback, string[] owners = default(string[]), string[] classifierIDs = default(string[]), float threshold = default(float), string acceptLanguage = "en", string customData = default(string))
         {
-            if (string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
-            if (string.IsNullOrEmpty(mp_ApiKey))
+            if (string.IsNullOrEmpty(_apikey))
+                _apikey = Credentials.ApiKey;
+            if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -341,9 +334,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <returns></returns>
         public bool Classify(OnClassify callback, byte[] imageData, string[] owners = default(string[]), string[] classifierIDs = default(string[]), float threshold = default(float), string acceptLanguage = "en", string customData = default(string))
         {
-            if (string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
-            if (string.IsNullOrEmpty(mp_ApiKey))
+            if (string.IsNullOrEmpty(_apikey))
+                _apikey = Credentials.ApiKey;
+            if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -359,7 +352,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.Timeout = REQUEST_TIMEOUT;
             req.OnResponse = OnClassifyResp;
             req.AcceptLanguage = acceptLanguage;
-            req.Parameters["api_key"] = mp_ApiKey;
+            req.Parameters["api_key"] = _apikey;
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
             req.Headers["Accept-Language"] = acceptLanguage;
@@ -412,7 +405,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                     classify = new ClassifyTopLevelMultiple();
 
                     object obj = classify;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -442,9 +435,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 throw new ArgumentNullException("url");
             if (callback == null)
                 throw new ArgumentNullException("callback");
-            if (string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
-            if (string.IsNullOrEmpty(mp_ApiKey))
+            if (string.IsNullOrEmpty(_apikey))
+                _apikey = Credentials.ApiKey;
+            if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, SERVICE_DETECT_FACES);
@@ -456,7 +449,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.Data = customData;
             req.OnResponse = OnDetectFacesResp;
             req.Timeout = REQUEST_TIMEOUT;
-            req.Parameters["api_key"] = mp_ApiKey;
+            req.Parameters["api_key"] = _apikey;
             req.Parameters["url"] = url;
             req.Parameters["version"] = VersionDate;
 
@@ -474,9 +467,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         {
             if (string.IsNullOrEmpty(imagePath))
                 throw new ArgumentNullException("Define an image path to classify!");
-            if (string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
-            if (string.IsNullOrEmpty(mp_ApiKey))
+            if (string.IsNullOrEmpty(_apikey))
+                _apikey = Credentials.ApiKey;
+            if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
 
             byte[] imageData = null;
@@ -509,9 +502,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <returns></returns>
         public bool DetectFaces(OnDetectFaces callback, byte[] imageData = default(byte[]), string customData = default(string))
         {
-            if (string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
-            if (string.IsNullOrEmpty(mp_ApiKey))
+            if (string.IsNullOrEmpty(_apikey))
+                _apikey = Credentials.ApiKey;
+            if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -526,7 +519,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.Data = customData;
             req.Timeout = REQUEST_TIMEOUT;
             req.OnResponse = OnDetectFacesResp;
-            req.Parameters["api_key"] = mp_ApiKey;
+            req.Parameters["api_key"] = _apikey;
             req.Parameters["version"] = VersionDate;
 
             if (imageData != null)
@@ -569,7 +562,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                     faces = new FacesTopLevelMultiple();
 
                     object obj = faces;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -599,9 +592,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 throw new ArgumentNullException("url");
             if (callback == null)
                 throw new ArgumentNullException("callback");
-            if (string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
-            if (string.IsNullOrEmpty(mp_ApiKey))
+            if (string.IsNullOrEmpty(_apikey))
+                _apikey = Credentials.ApiKey;
+            if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, SERVICE_RECOGNIZE_TEXT);
@@ -614,7 +607,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.Timeout = REQUEST_TIMEOUT;
             req.OnResponse = OnRecognizeTextResp;
             req.Timeout = REQUEST_TIMEOUT;
-            req.Parameters["api_key"] = mp_ApiKey;
+            req.Parameters["api_key"] = _apikey;
             req.Parameters["url"] = url;
             req.Parameters["version"] = VersionDate;
 
@@ -634,9 +627,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 throw new ArgumentNullException("callback");
             if (string.IsNullOrEmpty(imagePath))
                 throw new ArgumentNullException("Define an image path to classify!");
-            if (string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
-            if (string.IsNullOrEmpty(mp_ApiKey))
+            if (string.IsNullOrEmpty(_apikey))
+                _apikey = Credentials.ApiKey;
+            if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API KEy was found!");
 
             byte[] imageData = null;
@@ -669,9 +662,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <returns></returns>
         public bool RecognizeText(OnRecognizeText callback, byte[] imageData = default(byte[]), string customData = default(string))
         {
-            if (string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
-            if (string.IsNullOrEmpty(mp_ApiKey))
+            if (string.IsNullOrEmpty(_apikey))
+                _apikey = Credentials.ApiKey;
+            if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -687,7 +680,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.Timeout = REQUEST_TIMEOUT;
             req.OnResponse = OnRecognizeTextResp;
 
-            req.Parameters["api_key"] = mp_ApiKey;
+            req.Parameters["api_key"] = _apikey;
             req.Parameters["version"] = VersionDate;
 
             if (imageData != null)
@@ -724,7 +717,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                     text = new TextRecogTopLevelMultiple();
 
                     object obj = text;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -739,70 +732,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 ((RecognizeTextReq)req).Callback(resp.Success ? text : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
         }
         #endregion
-
-        #region Find Classifier by name
-        /// <summary>
-        /// Finds a classifier by classifier name.
-        /// </summary>
-        /// <param name="classifierName">Classifier name.</param>
-        /// <param name="callback">Callback.</param>
-        /// <param name="customData">Custom data.</param>
-        public void FindClassifier(OnFindClassifier callback, string classifierName, string customData = default(string))
-        {
-            new FindClassifierReq(callback, this, classifierName, customData);
-        }
-
-        private class FindClassifierReq
-        {
-            public FindClassifierReq(OnFindClassifier callback, VisualRecognition service, string classifierName, string customData = default(string))
-            {
-                if (callback == null)
-                    throw new ArgumentNullException("callback");
-                if (string.IsNullOrEmpty(classifierName))
-                    throw new WatsonException("classifierName required");
-                if (string.IsNullOrEmpty(mp_ApiKey))
-                    mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
-                if (string.IsNullOrEmpty(mp_ApiKey))
-                    throw new WatsonException("No API Key was found!");
-
-                Service = service;
-                ClassifierName = classifierName;
-                Callback = callback;
-
-                Service.GetClassifiers(OnGetClassifiers, customData);
-            }
-
-            public VisualRecognition Service { get; set; }
-            public string ClassifierName { get; set; }
-            public OnFindClassifier Callback { get; set; }
-
-            private void OnGetClassifiers(GetClassifiersTopLevelBrief classifiers, string customData)
-            {
-                bool bFound = false;
-                foreach (var c in classifiers.classifiers)
-                {
-                    if (c.name.ToLower().StartsWith(ClassifierName.ToLower()))
-                    {
-                        bFound = Service.GetClassifier(OnGetClassifier, c.classifier_id);
-                        break;
-                    }
-                }
-
-                if (!bFound)
-                {
-                    Log.Warning("VisualRecognition", "Failed to find classifier {0}", ClassifierName);
-                    Callback(null, customData);
-                }
-            }
-
-            private void OnGetClassifier(GetClassifiersPerClassifierVerbose classifier, string customData)
-            {
-                if (Callback != null)
-                    Callback(classifier, customData);
-            }
-        }
-        #endregion
-
+        
         #region Get Classifiers
         /// <summary>
         /// Gets a list of all classifiers.
@@ -814,9 +744,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
-            if (string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
-            if (string.IsNullOrEmpty(mp_ApiKey))
+            if (string.IsNullOrEmpty(_apikey))
+                _apikey = Credentials.ApiKey;
+            if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, SERVICE_CLASSIFIERS);
@@ -826,7 +756,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             GetClassifiersReq req = new GetClassifiersReq();
             req.Callback = callback;
             req.Data = customData;
-            req.Parameters["api_key"] = mp_ApiKey;
+            req.Parameters["api_key"] = _apikey;
             req.Parameters["version"] = VersionDate;
             req.Timeout = 20.0f * 60.0f;
             req.OnResponse = OnGetClassifiersResp;
@@ -861,7 +791,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                     fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
 
                     object obj = classifiers;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
 
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -892,9 +822,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 throw new ArgumentNullException("classifierId");
             if (callback == null)
                 throw new ArgumentNullException("callback");
-            if (string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
-            if (string.IsNullOrEmpty(mp_ApiKey))
+            if (string.IsNullOrEmpty(_apikey))
+                _apikey = Credentials.ApiKey;
+            if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, SERVICE_CLASSIFIERS + "/" + classifierId);
@@ -903,7 +833,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
             GetClassifierReq req = new GetClassifierReq();
             req.Callback = callback;
-            req.Parameters["api_key"] = mp_ApiKey;
+            req.Parameters["api_key"] = _apikey;
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnGetClassifierResp;
 
@@ -936,7 +866,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = classifier;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -967,9 +897,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <param name="mimeType">Mime type of the positive examples and negative examples data. Use GetMimeType to get Mimetype from filename.</param>
         public bool TrainClassifier(OnTrainClassifier callback, string classifierName, Dictionary<string, string> positiveExamples, string negativeExamplesPath = default(string), string mimeType = "application/zip", string customData = default(string))
         {
-            if (string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
-            if (string.IsNullOrEmpty(mp_ApiKey))
+            if (string.IsNullOrEmpty(_apikey))
+                _apikey = Credentials.ApiKey;
+            if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
             if (string.IsNullOrEmpty(classifierName))
                 throw new ArgumentNullException("ClassifierName");
@@ -1015,9 +945,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <returns></returns>
         public bool TrainClassifier(OnTrainClassifier callback, string classifierName, Dictionary<string, byte[]> positiveExamplesData, byte[] negativeExamplesData = null, string mimeType = "application/zip", string customData = default(string))
         {
-            if (string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
-            if (string.IsNullOrEmpty(mp_ApiKey))
+            if (string.IsNullOrEmpty(_apikey))
+                _apikey = Credentials.ApiKey;
+            if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
             if (string.IsNullOrEmpty(classifierName))
                 throw new ArgumentNullException("ClassifierName");
@@ -1034,7 +964,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.Callback = callback;
             req.OnResponse = OnTrainClassifierResp;
             req.Timeout = REQUEST_TIMEOUT;
-            req.Parameters["api_key"] = mp_ApiKey;
+            req.Parameters["api_key"] = _apikey;
             req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             req.Forms["name"] = new RESTConnector.Form(classifierName);
@@ -1076,7 +1006,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = classifier;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -1106,9 +1036,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <param name="mimeType">Mimetype of the file. Use GetMimeType to get Mimetype from filename.</param>
         public bool UpdateClassifier(OnTrainClassifier callback, string classifierID, string classifierName, Dictionary<string, string> positiveExamples, string negativeExamplesPath = default(string), string mimeType = "application/zip", string customData = default(string))
         {
-            if (string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
-            if (string.IsNullOrEmpty(mp_ApiKey))
+            if (string.IsNullOrEmpty(_apikey))
+                _apikey = Credentials.ApiKey;
+            if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
             if (string.IsNullOrEmpty(classifierName))
                 throw new ArgumentNullException("ClassifierName");
@@ -1157,9 +1087,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <returns></returns>
         public bool UpdateClassifier(OnTrainClassifier callback, string classifierID, string classifierName, Dictionary<string, byte[]> positiveExamplesData, byte[] negativeExamplesData = null, string mimeType = "application/zip", string customData = default(string))
         {
-            if (string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
-            if (string.IsNullOrEmpty(mp_ApiKey))
+            if (string.IsNullOrEmpty(_apikey))
+                _apikey = Credentials.ApiKey;
+            if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
             if (string.IsNullOrEmpty(classifierName))
                 throw new ArgumentNullException("ClassifierName");
@@ -1176,7 +1106,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.Callback = callback;
             req.OnResponse = OnTrainClassifierResp;
             req.Timeout = REQUEST_TIMEOUT;
-            req.Parameters["api_key"] = mp_ApiKey;
+            req.Parameters["api_key"] = _apikey;
             req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             req.Forms["name"] = new RESTConnector.Form(classifierName);
@@ -1203,9 +1133,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 throw new ArgumentNullException("classifierId");
             if (callback == null)
                 throw new ArgumentNullException("callback");
-            if (string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
-            if (string.IsNullOrEmpty(mp_ApiKey))
+            if (string.IsNullOrEmpty(_apikey))
+                _apikey = Credentials.ApiKey;
+            if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
 
             Log.Debug("VisualRecognition", "Attempting to delete classifier {0}", classifierId);
@@ -1217,7 +1147,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.Callback = callback;
             req.Data = customData;
             req.Timeout = REQUEST_TIMEOUT;
-            req.Parameters["api_key"] = mp_ApiKey;
+            req.Parameters["api_key"] = _apikey;
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnDeleteClassifierResp;
             req.Delete = true;
@@ -1255,9 +1185,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
-            if (string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
-            if (string.IsNullOrEmpty(mp_ApiKey))
+            if (string.IsNullOrEmpty(_apikey))
+                _apikey = Credentials.ApiKey;
+            if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, SERVICE_COLLECTIONS);
@@ -1268,7 +1198,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.Callback = callback;
             req.Data = customData;
 
-            req.Parameters["api_key"] = mp_ApiKey;
+            req.Parameters["api_key"] = _apikey;
             req.Parameters["version"] = VersionDate;
             req.Timeout = 20.0f * 60.0f;
             req.OnResponse = OnGetCollectionsResp;
@@ -1300,7 +1230,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                     fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
 
                     object obj = collections;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
 
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -1332,9 +1262,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 throw new ArgumentNullException("callback");
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentNullException("name");
-            if (string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
-            if (string.IsNullOrEmpty(mp_ApiKey))
+            if (string.IsNullOrEmpty(_apikey))
+                _apikey = Credentials.ApiKey;
+            if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, SERVICE_COLLECTIONS);
@@ -1345,7 +1275,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.Callback = callback;
             req.Name = name;
             req.Data = customData;
-            req.Parameters["api_key"] = mp_ApiKey;
+            req.Parameters["api_key"] = _apikey;
             req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             req.Forms["name"] = new RESTConnector.Form(name);
@@ -1385,7 +1315,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                     fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
 
                     object obj = collection;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
 
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -1417,9 +1347,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 throw new ArgumentNullException("callback");
             if (string.IsNullOrEmpty(collectionID))
                 throw new ArgumentNullException("collectionID");
-            if (string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
-            if (string.IsNullOrEmpty(mp_ApiKey))
+            if (string.IsNullOrEmpty(_apikey))
+                _apikey = Credentials.ApiKey;
+            if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_COLLECTION, collectionID));
@@ -1430,7 +1360,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.Callback = callback;
             req.CollectionID = collectionID;
             req.Data = customData;
-            req.Parameters["api_key"] = mp_ApiKey;
+            req.Parameters["api_key"] = _apikey;
             req.Parameters["version"] = VersionDate;
             req.Delete = true;
             req.Timeout = 20.0f * 60.0f;
@@ -1476,9 +1406,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 throw new ArgumentNullException("callback");
             if (string.IsNullOrEmpty(collectionID))
                 throw new ArgumentNullException(collectionID);
-            if (string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
-            if (string.IsNullOrEmpty(mp_ApiKey))
+            if (string.IsNullOrEmpty(_apikey))
+                _apikey = Credentials.ApiKey;
+            if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_COLLECTION, collectionID));
@@ -1489,7 +1419,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.Callback = callback;
             req.Data = customData;
             req.CollectionID = collectionID;
-            req.Parameters["api_key"] = mp_ApiKey;
+            req.Parameters["api_key"] = _apikey;
             req.Parameters["version"] = VersionDate;
             req.Timeout = 20.0f * 60.0f;
             req.OnResponse = OnGetCollectionResp;
@@ -1525,7 +1455,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                     fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
 
                     object obj = collection;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
 
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -1557,9 +1487,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 throw new ArgumentNullException("callback");
             if (string.IsNullOrEmpty(collectionID))
                 throw new ArgumentNullException(collectionID);
-            if (string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
-            if (string.IsNullOrEmpty(mp_ApiKey))
+            if (string.IsNullOrEmpty(_apikey))
+                _apikey = Credentials.ApiKey;
+            if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_COLLECTION_IMAGES, collectionID));
@@ -1570,7 +1500,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.Callback = callback;
             req.Data = customData;
             req.CollectionID = collectionID;
-            req.Parameters["api_key"] = mp_ApiKey;
+            req.Parameters["api_key"] = _apikey;
             req.Parameters["version"] = VersionDate;
             req.Timeout = 20.0f * 60.0f;
             req.OnResponse = OnGetCollectionImagesResp;
@@ -1606,7 +1536,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                     fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
 
                     object obj = collectionImages;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
 
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -1642,9 +1572,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 throw new ArgumentNullException("collectionID");
             if (string.IsNullOrEmpty(imagePath))
                 throw new ArgumentNullException("imagePath");
-            if (string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
-            if (string.IsNullOrEmpty(mp_ApiKey))
+            if (string.IsNullOrEmpty(_apikey))
+                _apikey = Credentials.ApiKey;
+            if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
 
             byte[] imageData = null;
@@ -1685,9 +1615,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 throw new ArgumentNullException("collectionID");
             if (string.IsNullOrEmpty(imagePath))
                 throw new ArgumentNullException("imagePath");
-            if (string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
-            if (string.IsNullOrEmpty(mp_ApiKey))
+            if (string.IsNullOrEmpty(_apikey))
+                _apikey = Credentials.ApiKey;
+            if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
 
             byte[] imageData = null;
@@ -1737,9 +1667,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 throw new ArgumentNullException("collectionID");
             if (imageData == default(byte[]))
                 throw new WatsonException("Image data is required!");
-            if (string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
-            if (string.IsNullOrEmpty(mp_ApiKey))
+            if (string.IsNullOrEmpty(_apikey))
+                _apikey = Credentials.ApiKey;
+            if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_COLLECTION_IMAGES, collectionID));
@@ -1753,7 +1683,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.Metadata = metadata;
             req.Data = customData;
 
-            req.Parameters["api_key"] = mp_ApiKey;
+            req.Parameters["api_key"] = _apikey;
             req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             req.Forms["image_file"] = new RESTConnector.Form(imageData, filename, GetMimeType(filename));
@@ -1801,7 +1731,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                     fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
 
                     object obj = collectionsConfig;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
 
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -1836,9 +1766,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 throw new ArgumentNullException("collectionID");
             if (string.IsNullOrEmpty(imageID))
                 throw new ArgumentNullException("imageID");
-            if (string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
-            if (string.IsNullOrEmpty(mp_ApiKey))
+            if (string.IsNullOrEmpty(_apikey))
+                _apikey = Credentials.ApiKey;
+            if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_COLLECTION_IMAGE, collectionID, imageID));
@@ -1850,7 +1780,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.CollectionID = collectionID;
             req.ImageID = imageID;
             req.Data = customData;
-            req.Parameters["api_key"] = mp_ApiKey;
+            req.Parameters["api_key"] = _apikey;
             req.Parameters["version"] = VersionDate;
             req.Delete = true;
             req.Timeout = 20.0f * 60.0f;
@@ -1902,9 +1832,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 throw new ArgumentNullException(collectionID);
             if (string.IsNullOrEmpty(imageID))
                 throw new ArgumentNullException(imageID);
-            if (string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
-            if (string.IsNullOrEmpty(mp_ApiKey))
+            if (string.IsNullOrEmpty(_apikey))
+                _apikey = Credentials.ApiKey;
+            if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_COLLECTION_IMAGE, collectionID, imageID));
@@ -1916,7 +1846,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.Data = customData;
             req.CollectionID = collectionID;
             req.ImageID = imageID;
-            req.Parameters["api_key"] = mp_ApiKey;
+            req.Parameters["api_key"] = _apikey;
             req.Parameters["version"] = VersionDate;
             req.Timeout = 20.0f * 60.0f;
             req.OnResponse = OnGetCollectionImageResp;
@@ -1956,7 +1886,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                     fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
 
                     object obj = image;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
 
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -1991,9 +1921,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 throw new ArgumentNullException("collectionID");
             if (string.IsNullOrEmpty(imageID))
                 throw new ArgumentNullException("imageID");
-            if (string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
-            if (string.IsNullOrEmpty(mp_ApiKey))
+            if (string.IsNullOrEmpty(_apikey))
+                _apikey = Credentials.ApiKey;
+            if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_COLLECTION_IMAGE_METADATA, collectionID, imageID));
@@ -2005,7 +1935,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.CollectionID = collectionID;
             req.ImageID = imageID;
             req.Data = customData;
-            req.Parameters["api_key"] = mp_ApiKey;
+            req.Parameters["api_key"] = _apikey;
             req.Parameters["version"] = VersionDate;
             req.Delete = true;
             req.Timeout = 20.0f * 60.0f;
@@ -2058,9 +1988,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 throw new ArgumentNullException(collectionID);
             if (string.IsNullOrEmpty(imageID))
                 throw new ArgumentNullException(imageID);
-            if (string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
-            if (string.IsNullOrEmpty(mp_ApiKey))
+            if (string.IsNullOrEmpty(_apikey))
+                _apikey = Credentials.ApiKey;
+            if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_COLLECTION_IMAGE_METADATA, collectionID, imageID));
@@ -2072,7 +2002,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.Data = customData;
             req.CollectionID = collectionID;
             req.ImageID = imageID;
-            req.Parameters["api_key"] = mp_ApiKey;
+            req.Parameters["api_key"] = _apikey;
             req.Parameters["version"] = VersionDate;
             req.Timeout = 20.0f * 60.0f;
             req.OnResponse = OnGetCollectionImageMetadataResp;
@@ -2112,7 +2042,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                     fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
 
                     object obj = image;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
 
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -2148,9 +2078,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 throw new ArgumentNullException("collectionID");
             if (string.IsNullOrEmpty(imagePath))
                 throw new ArgumentNullException("imagePath");
-            if (string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
-            if (string.IsNullOrEmpty(mp_ApiKey))
+            if (string.IsNullOrEmpty(_apikey))
+                _apikey = Credentials.ApiKey;
+            if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
 
             byte[] imageData = null;
@@ -2191,9 +2121,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 throw new ArgumentNullException("collectionID");
             if (imageData == default(byte[]))
                 throw new WatsonException("Image data is required!");
-            if (string.IsNullOrEmpty(mp_ApiKey))
-                mp_ApiKey = Config.Instance.GetAPIKey(SERVICE_ID);
-            if (string.IsNullOrEmpty(mp_ApiKey))
+            if (string.IsNullOrEmpty(_apikey))
+                _apikey = Credentials.ApiKey;
+            if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_COLLECTION_FIND_SIMILAR, collectionID));
@@ -2207,7 +2137,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.Limit = limit;
             req.Data = customData;
 
-            req.Parameters["api_key"] = mp_ApiKey;
+            req.Parameters["api_key"] = _apikey;
             req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             req.Forms["image_file"] = new RESTConnector.Form(imageData);
@@ -2254,7 +2184,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                     fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
 
                     object obj = config;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
 
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);

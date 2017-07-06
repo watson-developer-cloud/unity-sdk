@@ -33,15 +33,14 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         VisualRecognition m_VisualRecognition = new VisualRecognition(new Credentials());
         bool m_TrainClasifierTested = false;
         bool m_GetClassifiersTested = false;
-        bool m_FindClassifierTested = false;
         bool m_GetClassifierTested = false;
         bool m_UpdateClassifierTested = false;
         bool m_ClassifyGETTested = false;
         bool m_ClassifyPOSTTested = false;
         bool m_DetectFacesGETTested = false;
         bool m_DetectFacesPOSTTested = false;
-        bool m_RecognizeTextGETTested = false;
-        bool m_RecognizeTextPOSTTested = false;
+        //bool m_RecognizeTextGETTested = false;
+        //bool m_RecognizeTextPOSTTested = false;
         bool m_DeleteClassifierTested = false;
 
         bool m_ListCollectionsTested = false;
@@ -78,12 +77,6 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             Log.Debug("TestVisualRecognition", "Getting all classifiers!");
             m_VisualRecognition.GetClassifiers(OnGetClassifiers);
             while (!m_GetClassifiersTested)
-                yield return null;
-
-            //  test find classifier
-            Log.Debug("TestVisualRecognition", "Finding classifier {0}!", m_ClassifierName);
-            m_VisualRecognition.FindClassifier(OnFindClassifier, m_ClassifierName);
-            while (!m_FindClassifierTested)
                 yield return null;
 
             if (m_TrainClassifier)
@@ -162,17 +155,17 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 yield return null;
 
             //  test recognize text get
-            Log.Debug("TestVisualRecognition", "Recognizing text image using GET!");
-            m_VisualRecognition.RecognizeText(OnRecognizeTextGet, m_ImageTextURL);
-            while (!m_RecognizeTextGETTested)
-                yield return null;
+            //Log.Debug("TestVisualRecognition", "Recognizing text image using GET!");
+            //m_VisualRecognition.RecognizeText(OnRecognizeTextGet, m_ImageTextURL);
+            //while (!m_RecognizeTextGETTested)
+            //    yield return null;
 
-            //  test recognize text post
-            Log.Debug("TestVisualRecognition", "Recognizing text image using POST!");
-            string m_recognizeTextImagePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/from_platos_apology.png";
-            m_VisualRecognition.RecognizeText(m_recognizeTextImagePath, OnRecognizeTextPost);
-            while (!m_RecognizeTextPOSTTested)
-                yield return null;
+            ////  test recognize text post
+            //Log.Debug("TestVisualRecognition", "Recognizing text image using POST!");
+            //string m_recognizeTextImagePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/from_platos_apology.png";
+            //m_VisualRecognition.RecognizeText(m_recognizeTextImagePath, OnRecognizeTextPost);
+            //while (!m_RecognizeTextPOSTTested)
+            //    yield return null;
 
             //  test delete classifier
             Log.Debug("TestVisualRecognition", "Deleting classifier {0}!", m_ClassifierId);
@@ -251,30 +244,6 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             while (!m_DeleteCollectionTested)
                 yield return null;
             yield break;
-        }
-
-        private void OnFindClassifier(GetClassifiersPerClassifierVerbose classifier, string customData)
-        {
-            if (classifier != null)
-            {
-                Log.Status("TestVisualRecognition", "Find Result, Classifier ID: {0}, Status: {1}", classifier.classifier_id, classifier.status);
-                if (classifier.status == "ready")
-                {
-                    m_TrainClassifier = false;
-                    m_IsClassifierReady = true;
-                    m_ClassifierId = classifier.classifier_id;
-                }
-                else
-                {
-                    m_TrainClassifier = false;
-                }
-            }
-            else
-            {
-                m_TrainClassifier = true;
-            }
-
-            m_FindClassifierTested = true;
         }
 
         private void OnTrainClassifier(GetClassifiersPerClassifierVerbose classifier, string customData)
@@ -448,65 +417,60 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             }
         }
 
-        private void OnRecognizeTextGet(TextRecogTopLevelMultiple multipleImages, string customData)
-        {
-            Test(multipleImages != null);
-            if (multipleImages != null)
-            {
-                Log.Debug("TestVisualRecognition", "RecognizeText GET images processed: {0}", multipleImages.images_processed);
-                foreach (TextRecogTopLevelSingle texts in multipleImages.images)
-                {
-                    Log.Debug("TestVisualRecognition", "\tRecognizeText GET source_url: {0}, resolved_url: {1}", texts.source_url, texts.resolved_url);
-                    Log.Debug("TestVisualRecognition", "\tRecognizeText GET text: {0}", texts.text);
-                    //                    foreach(TextRecogOneWord text in texts.words)
-                    //                    {
-                    //                        Log.Debug("TestVisualRecognition", "\t\tRecognizeText GET text location: {0}, {1}, {2}, {3}", text.location.left, text.location.top, text.location.width, text.location.height);
-                    //                        Log.Debug("TestVisualRecognition", "\t\tRecognizeText GET Line number: {0}", text.line_number);
-                    //                        Log.Debug("TestVisualRecognition", "\t\tRecognizeText GET word: {0}, Score: {1}", text.word, text.score);
-                    //                    }
-                }
+        //private void OnRecognizeTextGet(TextRecogTopLevelMultiple multipleImages, string customData)
+        //{
+        //    Test(multipleImages != null);
+        //    if (multipleImages != null)
+        //    {
+        //        Log.Debug("TestVisualRecognition", "RecognizeText GET images processed: {0}", multipleImages.images_processed);
+        //        foreach (TextRecogTopLevelSingle texts in multipleImages.images)
+        //        {
+        //            Log.Debug("TestVisualRecognition", "\tRecognizeText GET source_url: {0}, resolved_url: {1}", texts.source_url, texts.resolved_url);
+        //            Log.Debug("TestVisualRecognition", "\tRecognizeText GET text: {0}", texts.text);
+        //            //                    foreach(TextRecogOneWord text in texts.words)
+        //            //                    {
+        //            //                        Log.Debug("TestVisualRecognition", "\t\tRecognizeText GET text location: {0}, {1}, {2}, {3}", text.location.left, text.location.top, text.location.width, text.location.height);
+        //            //                        Log.Debug("TestVisualRecognition", "\t\tRecognizeText GET Line number: {0}", text.line_number);
+        //            //                        Log.Debug("TestVisualRecognition", "\t\tRecognizeText GET word: {0}, Score: {1}", text.word, text.score);
+        //            //                    }
+        //        }
 
-                m_RecognizeTextGETTested = true;
-            }
-            else
-            {
-                Log.Debug("ExampleVisualRecognition", "RecognizeText GET failed!");
-            }
-        }
+        //        m_RecognizeTextGETTested = true;
+        //    }
+        //    else
+        //    {
+        //        Log.Debug("ExampleVisualRecognition", "RecognizeText GET failed!");
+        //    }
+        //}
 
-        private void OnRecognizeTextPost(TextRecogTopLevelMultiple multipleImages, string customData)
-        {
-            Test(multipleImages != null);
-            if (multipleImages != null)
-            {
-                Log.Debug("TestVisualRecognition", "RecognizeText POST images processed: {0}", multipleImages.images_processed);
-                foreach (TextRecogTopLevelSingle texts in multipleImages.images)
-                {
-                    Log.Debug("TestVisualRecognition", "\tRecognizeText POST source_url: {0}, resolved_url: {1}", texts.source_url, texts.resolved_url);
-                    Log.Debug("TestVisualRecognition", "\tRecognizeText POST text: {0}", texts.text);
-                    //                    foreach(TextRecogOneWord text in texts.words)
-                    //                    {
-                    //                        Log.Debug("TestVisualRecognition", "\t\tRecognizeText POST text location: {0}, {1}, {2}, {3}", text.location.left, text.location.top, text.location.width, text.location.height);
-                    //                        Log.Debug("TestVisualRecognition", "\t\tRecognizeText POST Line number: {0}", text.line_number);
-                    //                        Log.Debug("TestVisualRecognition", "\t\tRecognizeText POST word: {0}, Score: {1}", text.word, text.score);
-                    //                    }
-                }
+        //private void OnRecognizeTextPost(TextRecogTopLevelMultiple multipleImages, string customData)
+        //{
+        //    Test(multipleImages != null);
+        //    if (multipleImages != null)
+        //    {
+        //        Log.Debug("TestVisualRecognition", "RecognizeText POST images processed: {0}", multipleImages.images_processed);
+        //        foreach (TextRecogTopLevelSingle texts in multipleImages.images)
+        //        {
+        //            Log.Debug("TestVisualRecognition", "\tRecognizeText POST source_url: {0}, resolved_url: {1}", texts.source_url, texts.resolved_url);
+        //            Log.Debug("TestVisualRecognition", "\tRecognizeText POST text: {0}", texts.text);
+        //            //                    foreach(TextRecogOneWord text in texts.words)
+        //            //                    {
+        //            //                        Log.Debug("TestVisualRecognition", "\t\tRecognizeText POST text location: {0}, {1}, {2}, {3}", text.location.left, text.location.top, text.location.width, text.location.height);
+        //            //                        Log.Debug("TestVisualRecognition", "\t\tRecognizeText POST Line number: {0}", text.line_number);
+        //            //                        Log.Debug("TestVisualRecognition", "\t\tRecognizeText POST word: {0}, Score: {1}", text.word, text.score);
+        //            //                    }
+        //        }
 
-                m_RecognizeTextPOSTTested = true;
-            }
-            else
-            {
-                Log.Debug("ExampleVisualRecognition", "RecognizeText POST failed!");
-            }
-        }
+        //        m_RecognizeTextPOSTTested = true;
+        //    }
+        //    else
+        //    {
+        //        Log.Debug("ExampleVisualRecognition", "RecognizeText POST failed!");
+        //    }
+        //}
 
         private void OnDeleteClassifier(bool success, string customData)
         {
-            if (success)
-            {
-                m_VisualRecognition.FindClassifier(OnDeleteClassifierFinal, m_ClassifierName);
-            }
-
             m_DeleteClassifierTested = true;
             Test(success);
         }

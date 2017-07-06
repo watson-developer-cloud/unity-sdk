@@ -79,7 +79,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
         #region Private Data
         private const string SERVICE_ID = "ConversationV1";
         private const string SERVICE_MESSAGE = "/v1/workspaces";
-        private static fsSerializer sm_Serializer = new fsSerializer();
+        private fsSerializer _serializer = new fsSerializer();
         private Credentials _credentials = null;
         private string _url = "https://gateway.watsonplatform.net/conversation/api";
         private string _versionDate;
@@ -157,7 +157,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
                 return false;
 
             fsData data;
-            sm_Serializer.TrySerialize(messageRequest.GetType(), messageRequest, out data).AssertSuccessWithoutWarnings();
+            _serializer.TrySerialize(messageRequest.GetType(), messageRequest, out data).AssertSuccessWithoutWarnings();
             string reqString = fsJsonPrinter.CompressedJson(data);
 
             MessageReq req = new MessageReq();

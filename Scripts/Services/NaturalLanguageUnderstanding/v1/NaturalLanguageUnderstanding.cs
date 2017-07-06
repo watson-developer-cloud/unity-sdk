@@ -28,7 +28,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
     {
         #region Private Data
         private const string SERVICE_ID = "NaturalLanguageUnderstandingV1";
-        private static fsSerializer sm_Serializer = new fsSerializer();
+        private fsSerializer _serializer = new fsSerializer();
         private Credentials _credentials = null;
         private string _url = "https://gateway.watsonplatform.net/natural-language-understanding/api";
         private string _versionDate;
@@ -120,7 +120,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
             req.Parameters["version"] = NaturalLanguageUnderstandingVersion.Version;
 
             fsData data = null;
-            sm_Serializer.TrySerialize(parameters, out data);
+            _serializer.TrySerialize(parameters, out data);
             string sendjson = data.ToString();
             req.Send = Encoding.UTF8.GetBytes(sendjson);
             RESTConnector connector = RESTConnector.GetConnector(Credentials, SERVICE_ANALYZE);
@@ -152,7 +152,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = analysisResults;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -223,7 +223,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = modelData;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }

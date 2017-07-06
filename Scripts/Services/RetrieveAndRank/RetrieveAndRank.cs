@@ -36,7 +36,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
     {
         #region Private Data
         private const string SERVICE_ID = "RetrieveAndRankV1";
-        private static fsSerializer sm_Serializer = new fsSerializer();
+        private fsSerializer _serializer = new fsSerializer();
         private const float REQUEST_TIMEOUT = 10.0f * 60.0f;
         private Credentials _credentials = null;
         private string _url = "https://gateway.watsonplatform.net/retrieve-and-rank/api";
@@ -185,7 +185,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = clustersData;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -277,7 +277,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = clusterResponseData;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -439,7 +439,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = clusterData;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -531,7 +531,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = configData;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -832,7 +832,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = uploadResponse;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -961,7 +961,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = collectionsData;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -1082,7 +1082,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                     object obj = indexResponseData;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -1207,7 +1207,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = searchData;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -1285,7 +1285,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = rankersData;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -1401,7 +1401,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = rankerResponseData;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -1521,7 +1521,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = rankData;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -1683,7 +1683,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = rankerData;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }

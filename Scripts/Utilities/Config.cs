@@ -166,7 +166,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         [fsProperty]
         private List<Variable> m_Variables = new List<Variable>();
 
-        private static fsSerializer sm_Serializer = new fsSerializer();
+        private fsSerializer _serializer = new fsSerializer();
         #endregion
 
         #region Public Properties
@@ -264,7 +264,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                 }
 
                 object obj = this;
-                r = sm_Serializer.TryDeserialize(data, GetType(), ref obj);
+                r = _serializer.TryDeserialize(data, GetType(), ref obj);
                 if (!r.Succeeded)
                 {
                     Log.Error("Config", "Failed to parse Config.json: {0}", r.ToString());
@@ -291,7 +291,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         public string SaveConfig(bool pretty = true)
         {
             fsData data = null;
-            sm_Serializer.TrySerialize(GetType(), this, out data);
+            _serializer.TrySerialize(GetType(), this, out data);
 
             if (!System.IO.Directory.Exists(Application.streamingAssetsPath))
                 System.IO.Directory.CreateDirectory(Application.streamingAssetsPath);

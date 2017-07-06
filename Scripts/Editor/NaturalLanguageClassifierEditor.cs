@@ -45,6 +45,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
             public string Language { get; set; }
             public Dictionary<string, List<string>> Data { get; set; }
             public Dictionary<string, bool> DataExpanded { get; set; }
+            private fsSerializer _serializer = new fsSerializer();
 
             public void Import(string filename)
             {
@@ -84,7 +85,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
             public void Save(string filename)
             {
                 fsData data = null;
-                fsResult r = sm_Serializer.TrySerialize(typeof(ClassifierData), this, out data);
+                fsResult r = _serializer.TrySerialize(typeof(ClassifierData), this, out data);
                 if (!r.Succeeded)
                     throw new Exception("Failed to serialize ClassifierData: " + r.FormattedMessages);
 
@@ -111,7 +112,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
                         throw new Exception(r.FormattedMessages);
 
                     object obj = this;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new Exception(r.FormattedMessages);
                 }
@@ -148,7 +149,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
         private Vector2 m_ScrollPos = Vector2.zero;
         private NaturalLanguageClassifier m_NaturalLanguageClassifier = new NaturalLanguageClassifier(new Credentials());
         private Classifiers m_Classifiers = null;
-        private static fsSerializer sm_Serializer = new fsSerializer();
+        private fsSerializer _serializer = new fsSerializer();
         private List<ClassifierData> m_ClassifierData = null;
         private string m_NewClassifierName = null;
         private string m_NewClassifierLang = "en";
