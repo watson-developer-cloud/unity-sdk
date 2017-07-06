@@ -30,6 +30,7 @@ public class ExampleLanguageTranslator : MonoBehaviour
     private string _password;
     private string _url;
     private fsSerializer _serializer = new fsSerializer();
+    private string _token = "<authentication-token>";
 
     void Start()
     {
@@ -64,6 +65,13 @@ public class ExampleLanguageTranslator : MonoBehaviour
 
         //  Create credential and instantiate service
         Credentials credentials = new Credentials(_username, _password, _url);
+
+        //  Or authenticate using token
+        //Credentials credentials = new Credentials(_url)
+        //{
+        //    AuthenticationToken = _token
+        //};
+
         LanguageTranslator languageTranslator = new LanguageTranslator(credentials);
 
         if (!languageTranslator.GetTranslation(m_PharseToTranslate, "en", "es", OnGetTranslation))

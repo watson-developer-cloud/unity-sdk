@@ -20,10 +20,7 @@ using IBM.Watson.DeveloperCloud.Services.Conversation.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
 using IBM.Watson.DeveloperCloud.Logging;
 using System;
-using System.Collections.Generic;
 using System.Collections;
-using IBM.Watson.DeveloperCloud.DataTypes;
-using System.Reflection;
 using FullSerializer;
 using System.IO;
 
@@ -33,6 +30,7 @@ public class ExampleConversation : MonoBehaviour
     private string _username;
     private string _password;
     private string _url;
+    private string _token = "<authentication-token>";
     private string _workspaceId;
     private string[] _questionArray = { "can you turn up the AC", "can you turn on the wipers", "can you turn off the wipers", "can you turn down the ac", "can you unlock the door" };
     private fsSerializer _serializer = new fsSerializer();
@@ -74,6 +72,13 @@ public class ExampleConversation : MonoBehaviour
 
         //  Create credential and instantiate service
         Credentials credentials = new Credentials(_username, _password, _url);
+
+        //  Or authenticate using token
+        //Credentials credentials = new Credentials(_url)
+        //{
+        //    AuthenticationToken = _token
+        //};
+
         _conversation = new Conversation(credentials);
         _conversation.VersionDate = "2017-05-26";
 

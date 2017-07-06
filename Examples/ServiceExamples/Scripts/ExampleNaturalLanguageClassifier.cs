@@ -33,6 +33,7 @@ using System.Collections;
 public class ExampleNaturalLanguageClassifier : MonoBehaviour
 {
     private NaturalLanguageClassifier naturalLanguageClassifier;
+    private string _token = "<authentication-token>";
     private string _classifierId = "";
     private List<string> _classifierIds = new List<string>();
     private string _inputString = "Is it hot outside?";
@@ -86,6 +87,13 @@ public class ExampleNaturalLanguageClassifier : MonoBehaviour
 
         //  Create credential and instantiate service
         Credentials credentials = new Credentials(_username, _password, _url);
+
+        //  Or authenticate using token
+        //Credentials credentials = new Credentials(_url)
+        //{
+        //    AuthenticationToken = _token
+        //};
+
         naturalLanguageClassifier = new NaturalLanguageClassifier(credentials);
 
         Runnable.Run(Examples());

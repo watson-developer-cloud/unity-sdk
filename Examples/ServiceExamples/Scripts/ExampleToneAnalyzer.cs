@@ -31,7 +31,8 @@ public class ExampleToneAnalyzer : MonoBehaviour
     private static fsSerializer _serializer = new fsSerializer();
     private string _toneAnalyzerVersionDate = "2017-05-26";
 
-    string _stringToTestTone = "This service enables people to discover and understand, and revise the impact of tone in their content. It uses linguistic analysis to detect and interpret emotional, social, and language cues found in text.";
+    private string _stringToTestTone = "This service enables people to discover and understand, and revise the impact of tone in their content. It uses linguistic analysis to detect and interpret emotional, social, and language cues found in text.";
+    private string _token = "<authentication-token>";
 
     void Start()
     {
@@ -66,6 +67,13 @@ public class ExampleToneAnalyzer : MonoBehaviour
 
         //  Create credential and instantiate service
         Credentials credentials = new Credentials(_username, _password, _url);
+
+        //  Or authenticate using token
+        //Credentials credentials = new Credentials(_url)
+        //{
+        //    AuthenticationToken = _token
+        //};
+
         ToneAnalyzer toneAnalyzer = new ToneAnalyzer(credentials);
         toneAnalyzer.VersionDate = _toneAnalyzerVersionDate;
 

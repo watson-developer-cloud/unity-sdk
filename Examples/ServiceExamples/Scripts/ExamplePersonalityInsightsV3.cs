@@ -32,6 +32,7 @@ public class ExamplePersonalityInsightsV3 : MonoBehaviour
     private fsSerializer _serializer = new fsSerializer();
     private string _testString = "The IBM Watson™ Personality Insights service provides a Representational State Transfer (REST) Application Programming Interface (API) that enables applications to derive insights from social media, enterprise data, or other digital communications. The service uses linguistic analytics to infer individuals' intrinsic personality characteristics, including Big Five, Needs, and Values, from digital communications such as email, text messages, tweets, and forum posts. The service can automatically infer, from potentially noisy social media, portraits of individuals that reflect their personality characteristics. The service can report consumption preferences based on the results of its analysis, and for JSON content that is timestamped, it can report temporal behavior.";
     private string _dataPath;
+    private string _token = "<authentication-token>";
 
     void Start()
     {
@@ -66,6 +67,13 @@ public class ExamplePersonalityInsightsV3 : MonoBehaviour
 
         //  Create credential and instantiate service
         Credentials credentials = new Credentials(_username, _password, _url);
+
+        //  Or authenticate using token
+        //Credentials credentials = new Credentials(_url)
+        //{
+        //    AuthenticationToken = _token
+        //};
+
         PersonalityInsights personalityInsights = new PersonalityInsights(credentials);
         personalityInsights.VersionDate = _personalityInsightsVersionDate;
 
