@@ -115,7 +115,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
             GetAuthorsRequest req = new GetAuthorsRequest();
             req.Callback = callback;
-            req.Data = string.IsNullOrEmpty(customData) ? source : customData;
+            req.Data = customData;
 
             req.Parameters["apikey"] = _apiKey;
             req.Parameters["outputMode"] = "json";
@@ -239,7 +239,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
             GetRankedConceptsRequest req = new GetRankedConceptsRequest();
             req.Callback = callback;
-            req.Data = string.IsNullOrEmpty(customData) ? source : customData;
+            req.Data = customData;
 
             req.Parameters["apikey"] = _apiKey;
             req.Parameters["outputMode"] = "json";
@@ -362,7 +362,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
             GetDatesRequest req = new GetDatesRequest();
             req.Callback = callback;
-            req.Data = string.IsNullOrEmpty(customData) ? source : customData;
+            req.Data = customData;
 
             req.Parameters["apikey"] = _apiKey;
             req.Parameters["outputMode"] = "json";
@@ -487,7 +487,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
             GetEmotionsRequest req = new GetEmotionsRequest();
             req.Callback = callback;
-            req.Data = string.IsNullOrEmpty(customData) ? source : customData;
+            req.Data = customData;
 
             req.Parameters["apikey"] = _apiKey;
             req.Parameters["outputMode"] = "json";
@@ -622,7 +622,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
             GetEntitiesRequest req = new GetEntitiesRequest();
             req.Callback = callback;
-            req.Data = string.IsNullOrEmpty(customData) ? source : customData;
+            req.Data = customData;
 
             req.Parameters["apikey"] = _apiKey;
             req.Parameters["outputMode"] = "json";
@@ -745,7 +745,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
             DetectFeedsRequest req = new DetectFeedsRequest();
             req.Callback = callback;
-            req.Data = string.IsNullOrEmpty(customData) ? source : customData;
+            req.Data = customData;
 
             req.Parameters["apikey"] = _apiKey;
             req.Parameters["outputMode"] = "json";
@@ -866,7 +866,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
             GetKeywordsRequest req = new GetKeywordsRequest();
             req.Callback = callback;
-            req.Data = string.IsNullOrEmpty(customData) ? source : customData;
+            req.Data = customData;
 
             req.Parameters["apikey"] = _apiKey;
             req.Parameters["outputMode"] = "json";
@@ -987,7 +987,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
             GetLanguagesRequest req = new GetLanguagesRequest();
             req.Callback = callback;
-            req.Data = string.IsNullOrEmpty(customData) ? source : customData;
+            req.Data = customData;
 
             req.Parameters["apikey"] = _apiKey;
             req.Parameters["outputMode"] = "json";
@@ -1102,7 +1102,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
             GetMicroformatsRequest req = new GetMicroformatsRequest();
             req.Callback = callback;
-            req.Data = string.IsNullOrEmpty(customData) ? source : customData;
+            req.Data = customData;
 
             req.Parameters["apikey"] = _apiKey;
             req.Parameters["outputMode"] = "json";
@@ -1213,7 +1213,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
             GetPublicationDateRequest req = new GetPublicationDateRequest();
             req.Callback = callback;
-            req.Data = string.IsNullOrEmpty(customData) ? source : customData;
+            req.Data = customData;
 
             req.Parameters["apikey"] = _apiKey;
             req.Parameters["outputMode"] = "json";
@@ -1351,7 +1351,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
             GetRelationsRequest req = new GetRelationsRequest();
             req.Callback = callback;
-            req.Data = string.IsNullOrEmpty(customData) ? source : customData;
+            req.Data = customData;
 
             req.Parameters["apikey"] = _apiKey;
             req.Parameters["outputMode"] = "json";
@@ -1479,7 +1479,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
             GetTextSentimentRequest req = new GetTextSentimentRequest();
             req.Callback = callback;
-            req.Data = string.IsNullOrEmpty(customData) ? source : customData;
+            req.Data = customData;
 
             req.Parameters["apikey"] = _apiKey;
             req.Parameters["outputMode"] = "json";
@@ -1599,7 +1599,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
             GetTargetedSentimentRequest req = new GetTargetedSentimentRequest();
             req.Callback = callback;
-            req.Data = string.IsNullOrEmpty(customData) ? source : customData;
+            req.Data = customData;
 
             req.Parameters["apikey"] = _apiKey;
             req.Parameters["outputMode"] = "json";
@@ -1717,7 +1717,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
             GetRankedTaxomomyRequest req = new GetRankedTaxomomyRequest();
             req.Callback = callback;
-            req.Data = string.IsNullOrEmpty(customData) ? source : customData;
+            req.Data = customData;
 
             req.Parameters["apikey"] = _apiKey;
             req.Parameters["outputMode"] = "json";
@@ -1834,7 +1834,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
             GetTextRequest req = new GetTextRequest();
             req.Callback = callback;
-            req.Data = string.IsNullOrEmpty(customData) ? source : customData;
+            req.Data = customData;
 
             req.Parameters["apikey"] = _apiKey;
             req.Parameters["outputMode"] = "json";
@@ -1945,7 +1945,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
             GetTextRequest req = new GetTextRequest();
             req.Callback = callback;
-            req.Data = string.IsNullOrEmpty(customData) ? source : customData;
+            req.Data = customData;
 
             req.Parameters["apikey"] = _apiKey;
             req.Parameters["outputMode"] = "json";
@@ -2015,7 +2015,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
             GetTitleRequest req = new GetTitleRequest();
             req.Callback = callback;
-            req.Data = string.IsNullOrEmpty(customData) ? source : customData;
+            req.Data = customData;
 
             req.Parameters["apikey"] = _apiKey;
             req.Parameters["outputMode"] = "json";
@@ -2177,7 +2177,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
             CombinedCallRequest req = new CombinedCallRequest();
             req.Callback = callback;
-            req.Data = string.IsNullOrEmpty(customData) ? source : customData;
+            req.Data = customData;
 
             req.Parameters["apikey"] = _apiKey;
             req.Parameters["outputMode"] = "json";

@@ -34,6 +34,8 @@ public class ExampleTradeoffAnalytics : MonoBehaviour
     private fsSerializer _serializer = new fsSerializer();
     //private string _token = "<authentication-token>";
 
+    private bool _GetDillemaTested = false;
+
     void Start()
     {
         LogSystem.InstallDefaultReactors();
@@ -157,12 +159,14 @@ public class ExampleTradeoffAnalytics : MonoBehaviour
         problemToSolve.options = listOption.ToArray();
 
         _tradeoffAnalytics.GetDilemma(OnGetDilemma, problemToSolve, false);
+        while(!_GetDillemaTested)
         yield return null;
     }
 
     private void OnGetDilemma(DilemmasResponse resp, string data)
     {
         Log.Debug("ExampleTradeoffAnalyitics", "Tradeoff Analytics - Get Dillema: {0}", data);
+        _GetDillemaTested = true;
     }
 
     /// <summary>
