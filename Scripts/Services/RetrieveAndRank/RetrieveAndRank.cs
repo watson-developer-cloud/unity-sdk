@@ -196,7 +196,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                 }
             }
 
-            string customData = ((GetClusterRequest)req).Data;
+            string customData = ((GetClustersRequest)req).Data;
             if (((GetClustersRequest)req).Callback != null)
                 ((GetClustersRequest)req).Callback(resp.Success ? clustersData : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
         }
@@ -542,7 +542,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                 }
             }
 
-            string customData = ((GetClusterConfigRequest)req).Data;
+            string customData = ((GetClusterConfigsRequest)req).Data;
             if (((GetClusterConfigsRequest)req).Callback != null)
                 ((GetClusterConfigsRequest)req).Callback(resp.Success ? configData : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
         }
@@ -1296,7 +1296,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                 }
             }
 
-            string customData = ((GetRankerRequest)req).Data;
+            string customData = ((GetRankersRequest)req).Data;
             if (((GetRankersRequest)req).Callback != null)
                 ((GetRankersRequest)req).Callback(resp.Success ? rankersData : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
         }
