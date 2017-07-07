@@ -88,8 +88,9 @@ public class ExampleVisualRecognition : MonoBehaviour
             throw new WatsonException(r.FormattedMessages);
 
         //  Set credentials from imported credntials
-        _apikey = vcapCredentials.VCAP_SERVICES["visual_recognition"][0].Credentials.Apikey.ToString();
-        _url = vcapCredentials.VCAP_SERVICES["visual_recognition"][0].Credentials.Url.ToString();
+        Credential credential = vcapCredentials.VCAP_SERVICES["visual_recognition"][0].Credentials;
+        _apikey = credential.Apikey.ToString();
+        _url = credential.Url.ToString();
 
         //  Create credential and instantiate service
         Credentials credentials = new Credentials(_apikey, _url);
@@ -131,7 +132,6 @@ public class ExampleVisualRecognition : MonoBehaviour
         while (!_getClassifierTested)
             yield return null;
 #endif
-
 
 #if DELETE_TRAINED_CLASSIFIER
         //          Delete classifier by ID
@@ -195,6 +195,8 @@ public class ExampleVisualRecognition : MonoBehaviour
 
         //while (!_recognizeTextPostTested)
         //    yield return null;
+
+        Log.Debug("ExampleVisualRecognition", "Visual Recogition tests complete");
     }
 
     private void OnGetClassifiers(GetClassifiersTopLevelBrief classifiers, string data)

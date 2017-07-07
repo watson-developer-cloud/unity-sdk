@@ -32,7 +32,7 @@ public class ExampleToneAnalyzer : MonoBehaviour
     private string _toneAnalyzerVersionDate = "2017-05-26";
 
     private string _stringToTestTone = "This service enables people to discover and understand, and revise the impact of tone in their content. It uses linguistic analysis to detect and interpret emotional, social, and language cues found in text.";
-    private string _token = "<authentication-token>";
+    //private string _token = "<authentication-token>";
 
     void Start()
     {
@@ -61,9 +61,10 @@ public class ExampleToneAnalyzer : MonoBehaviour
             throw new WatsonException(r.FormattedMessages);
 
         //  Set credentials from imported credntials
-        _username = vcapCredentials.VCAP_SERVICES["tone_analyzer"][0].Credentials.Username.ToString();
-        _password = vcapCredentials.VCAP_SERVICES["tone_analyzer"][0].Credentials.Password.ToString();
-        _url = vcapCredentials.VCAP_SERVICES["tone_analyzer"][0].Credentials.Url.ToString();
+        Credential credential = vcapCredentials.VCAP_SERVICES["tone_analyzer"][0].Credentials;
+        _username = credential.Username.ToString();
+        _password = credential.Password.ToString();
+        _url = credential.Url.ToString();
 
         //  Create credential and instantiate service
         Credentials credentials = new Credentials(_username, _password, _url);

@@ -30,8 +30,8 @@ public class ExampleConversation : MonoBehaviour
     private string _username;
     private string _password;
     private string _url;
-    private string _token = "<authentication-token>";
     private string _workspaceId;
+    //private string _token = "<authentication-token>";
     private string[] _questionArray = { "can you turn up the AC", "can you turn on the wipers", "can you turn off the wipers", "can you turn down the ac", "can you unlock the door" };
     private fsSerializer _serializer = new fsSerializer();
     private Context _context = null;
@@ -65,10 +65,11 @@ public class ExampleConversation : MonoBehaviour
             throw new WatsonException(r.FormattedMessages);
 
         //  Set credentials from imported credntials
-        _username = vcapCredentials.VCAP_SERVICES["conversation"][0].Credentials.Username.ToString();
-        _password = vcapCredentials.VCAP_SERVICES["conversation"][0].Credentials.Password.ToString();
-        _url = vcapCredentials.VCAP_SERVICES["conversation"][0].Credentials.Url.ToString();
-        _workspaceId = vcapCredentials.VCAP_SERVICES["conversation"][0].Credentials.WorkspaceId.ToString();
+        Credential credential = vcapCredentials.VCAP_SERVICES["conversation"][0].Credentials;
+        _username = credential.Username.ToString();
+        _password = credential.Password.ToString();
+        _url = credential.Url.ToString();
+        _workspaceId = credential.WorkspaceId.ToString();
 
         //  Create credential and instantiate service
         Credentials credentials = new Credentials(_username, _password, _url);

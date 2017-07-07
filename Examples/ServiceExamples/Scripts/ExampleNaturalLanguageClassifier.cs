@@ -33,7 +33,6 @@ using System.Collections;
 public class ExampleNaturalLanguageClassifier : MonoBehaviour
 {
     private NaturalLanguageClassifier naturalLanguageClassifier;
-    private string _token = "<authentication-token>";
     private string _classifierId = "";
     private List<string> _classifierIds = new List<string>();
     private string _inputString = "Is it hot outside?";
@@ -41,8 +40,9 @@ public class ExampleNaturalLanguageClassifier : MonoBehaviour
     private string _password;
     private string _url;
     private fsSerializer _serializer = new fsSerializer();
-    private bool _areAnyClassifiersAvailable = false;
+    //private string _token = "<authentication-token>";
 
+    private bool _areAnyClassifiersAvailable = false;
     private bool _getClassifiersTested = false;
     private bool _getClassifierTested = false;
 #if TRAIN_CLASSIFIER
@@ -81,9 +81,10 @@ public class ExampleNaturalLanguageClassifier : MonoBehaviour
             throw new WatsonException(r.FormattedMessages);
 
         //  Set credentials from imported credntials
-        _username = vcapCredentials.VCAP_SERVICES["natural_language_classifier"][0].Credentials.Username.ToString();
-        _password = vcapCredentials.VCAP_SERVICES["natural_language_classifier"][0].Credentials.Password.ToString();
-        _url = vcapCredentials.VCAP_SERVICES["natural_language_classifier"][0].Credentials.Url.ToString();
+        Credential credential = vcapCredentials.VCAP_SERVICES["natural_language_classifier"][0].Credentials;
+        _username = credential.Username.ToString();
+        _password = credential.Password.ToString();
+        _url = credential.Url.ToString();
 
         //  Create credential and instantiate service
         Credentials credentials = new Credentials(_username, _password, _url);
