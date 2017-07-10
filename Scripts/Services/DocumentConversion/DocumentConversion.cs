@@ -104,7 +104,7 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
         /// <param name="conversionTarget"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        public bool ConvertDocument(OnConvertDocument callback, string documentPath, string conversionTarget = ConversionTarget.ANSWER_UNITS, string data = null)
+        public bool ConvertDocument(OnConvertDocument callback, string documentPath, string conversionTarget, string data = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -165,6 +165,7 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
         {
             ConvertedDocument response = new ConvertedDocument();
             fsData data = null;
+            fsResult r;
 
             if (resp.Success)
             {
@@ -172,7 +173,7 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
                 {
                     try
                     {
-                        fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                        r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
                         if (!r.Succeeded)
                             throw new WatsonException(r.FormattedMessages);
 
@@ -195,12 +196,10 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
                 {
                     response.textContent = System.Text.Encoding.Default.GetString(resp.Data);
                 }
-
             }
 
-            string customData = ((ConvertDocumentRequest)req).Data;
             if (((ConvertDocumentRequest)req).Callback != null)
-                ((ConvertDocumentRequest)req).Callback(resp.Success ? response : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+                ((ConvertDocumentRequest)req).Callback(resp.Success ? response : null, ((ConvertDocumentRequest)req).Data);
         }
         #endregion
 
@@ -230,7 +229,7 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
                 m_Service = service;
                 m_Callback = callback;
                 string examplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/watson_beats_jeopardy.html";
-                if (!m_Service.ConvertDocument(OnConvertDocument, examplePath))
+                if (!m_Service.ConvertDocument(OnConvertDocument, examplePath, "{\"conversion_target\":\"answer_units\"}"))
                     m_Callback(SERVICE_ID, false);
             }
 

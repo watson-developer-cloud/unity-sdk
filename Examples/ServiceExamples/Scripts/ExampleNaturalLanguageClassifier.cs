@@ -120,7 +120,7 @@ public class ExampleNaturalLanguageClassifier : MonoBehaviour
                 if (!naturalLanguageClassifier.GetClassifier(classifierId, OnGetClassifier))
                     Log.Debug("ExampleNaturalLanguageClassifier", "Failed to get classifier {0}!", classifierId);
             }
-            
+
             while (!_getClassifierTested)
                 yield return null;
         }

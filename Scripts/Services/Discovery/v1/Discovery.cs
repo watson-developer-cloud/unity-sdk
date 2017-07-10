@@ -147,12 +147,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         private void OnGetEnvironmentsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             GetEnvironmentsResponse environmentsData = new GetEnvironmentsResponse();
+            fsData data = null;
 
             if (resp.Success)
             {
                 try
                 {
-                    fsData data = null;
                     fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
 
                     if (!r.Succeeded)
@@ -170,8 +170,9 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 }
             }
 
+            string customData = ((GetEnvironmentsRequest)req).Data;
             if (((GetEnvironmentsRequest)req).Callback != null)
-                ((GetEnvironmentsRequest)req).Callback(resp.Success ? environmentsData : null, ((GetEnvironmentsRequest)req).Data);
+                ((GetEnvironmentsRequest)req).Callback(resp.Success ? environmentsData : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
 
         }
         #endregion
@@ -251,12 +252,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         private void OnAddEnvironmentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             Environment environmentData = new Environment();
+            fsData data = null;
 
             if (resp.Success)
             {
                 try
                 {
-                    fsData data = null;
                     fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
 
                     if (!r.Succeeded)
@@ -274,8 +275,9 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 }
             }
 
+            string customData = ((AddEnvironmentRequest)req).Data;
             if (((AddEnvironmentRequest)req).Callback != null)
-                ((AddEnvironmentRequest)req).Callback(resp.Success ? environmentData : null, ((AddEnvironmentRequest)req).Data);
+                ((AddEnvironmentRequest)req).Callback(resp.Success ? environmentData : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
         }
         #endregion
 
@@ -326,12 +328,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         private void OnGetEnvironmentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             Environment environmentData = new Environment();
+            fsData data = null;
 
             if (resp.Success)
             {
                 try
                 {
-                    fsData data = null;
                     fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
 
                     if (!r.Succeeded)
@@ -349,8 +351,9 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 }
             }
 
+            string customData = ((GetEnvironmentRequest)req).Data;
             if (((GetEnvironmentRequest)req).Callback != null)
-                ((GetEnvironmentRequest)req).Callback(resp.Success ? environmentData : null, ((GetEnvironmentRequest)req).Data);
+                ((GetEnvironmentRequest)req).Callback(resp.Success ? environmentData : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
 
         }
         #endregion
@@ -463,12 +466,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         private void OnGetConfigurationsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             GetConfigurationsResponse configurations = new GetConfigurationsResponse();
+            fsData data = null;
 
             if (resp.Success)
             {
                 try
                 {
-                    fsData data = null;
                     fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
 
                     if (!r.Succeeded)
@@ -486,8 +489,9 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 }
             }
 
+            string customData = ((GetConfigurationsRequest)req).Data;
             if (((GetConfigurationsRequest)req).Callback != null)
-                ((GetConfigurationsRequest)req).Callback(resp.Success ? configurations : null, ((GetConfigurationsRequest)req).Data);
+                ((GetConfigurationsRequest)req).Callback(resp.Success ? configurations : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
         }
         #endregion
 
@@ -575,12 +579,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         private void OnAddConfigurationResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             Configuration configuration = new Configuration();
+            fsData data = null;
 
             if (resp.Success)
             {
                 try
                 {
-                    fsData data = null;
                     fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
 
                     if (!r.Succeeded)
@@ -598,8 +602,9 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 }
             }
 
+            string customData = ((AddConfigurationRequest)req).Data;
             if (((AddConfigurationRequest)req).Callback != null)
-                ((AddConfigurationRequest)req).Callback(resp.Success ? configuration : null, ((AddConfigurationRequest)req).Data);
+                ((AddConfigurationRequest)req).Callback(resp.Success ? configuration : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
         }
         #endregion
 
@@ -654,12 +659,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         private void OnGetConfigurationResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             Configuration configuration = new Configuration();
+            fsData data = null;
 
             if (resp.Success)
             {
                 try
                 {
-                    fsData data = null;
                     fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
 
                     if (!r.Succeeded)
@@ -677,8 +682,9 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 }
             }
 
+            string customData = ((GetConfigurationRequest)req).Data;
             if (((GetConfigurationRequest)req).Callback != null)
-                ((GetConfigurationRequest)req).Callback(resp.Success ? configuration : null, ((GetConfigurationRequest)req).Data);
+                ((GetConfigurationRequest)req).Callback(resp.Success ? configuration : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
         }
         #endregion
 
@@ -894,12 +900,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         private void OnPreviewConfigurationResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             TestDocument testDocument = new TestDocument();
+            fsData data = null;
 
             if (resp.Success)
             {
                 try
                 {
-                    fsData data = null;
                     fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
 
                     if (!r.Succeeded)
@@ -917,8 +923,9 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 }
             }
 
+            string customData = ((PreviewConfigurationRequest)req).Data;
             if (((PreviewConfigurationRequest)req).Callback != null)
-                ((PreviewConfigurationRequest)req).Callback(resp.Success ? testDocument : null, ((PreviewConfigurationRequest)req).Data);
+                ((PreviewConfigurationRequest)req).Callback(resp.Success ? testDocument : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
 
         }
         #endregion
@@ -977,12 +984,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         private void OnGetCollectionsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             GetCollectionsResponse collections = new GetCollectionsResponse();
+            fsData data = null;
 
             if (resp.Success)
             {
                 try
                 {
-                    fsData data = null;
                     fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
 
                     if (!r.Succeeded)
@@ -1000,8 +1007,9 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 }
             }
 
+            string customData = ((GetCollectionsRequest)req).Data;
             if (((GetCollectionsRequest)req).Callback != null)
-                ((GetCollectionsRequest)req).Callback(resp.Success ? collections : null, ((GetCollectionsRequest)req).Data);
+                ((GetCollectionsRequest)req).Callback(resp.Success ? collections : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
         }
         #endregion
 
@@ -1086,12 +1094,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         private void OnAddCollectionResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             CollectionRef collection = new CollectionRef();
+            fsData data = null;
 
             if (resp.Success)
             {
                 try
                 {
-                    fsData data = null;
                     fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
 
                     if (!r.Succeeded)
@@ -1109,8 +1117,9 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 }
             }
 
+            string customData = ((AddCollectionRequest)req).Data;
             if (((AddCollectionRequest)req).Callback != null)
-                ((AddCollectionRequest)req).Callback(resp.Success ? collection : null, ((AddCollectionRequest)req).Data);
+                ((AddCollectionRequest)req).Callback(resp.Success ? collection : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
         }
         #endregion
 
@@ -1165,12 +1174,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         private void OnGetCollectionResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             Collection collection = new Collection();
+            fsData data = null;
 
             if (resp.Success)
             {
                 try
                 {
-                    fsData data = null;
                     fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
 
                     if (!r.Succeeded)
@@ -1188,8 +1197,9 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 }
             }
 
+            string customData = ((GetCollectionRequest)req).Data;
             if (((GetCollectionRequest)req).Callback != null)
-                ((GetCollectionRequest)req).Callback(resp.Success ? collection : null, ((GetCollectionRequest)req).Data);
+                ((GetCollectionRequest)req).Callback(resp.Success ? collection : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
         }
         #endregion
 
@@ -1304,12 +1314,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         private void OnGetFieldsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             GetFieldsResponse fields = new GetFieldsResponse();
+            fsData data = null;
 
             if (resp.Success)
             {
                 try
                 {
-                    fsData data = null;
                     fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
 
                     if (!r.Succeeded)
@@ -1327,8 +1337,9 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 }
             }
 
+            string customData = ((GetFieldsRequest)req).Data;
             if (((GetFieldsRequest)req).Callback != null)
-                ((GetFieldsRequest)req).Callback(resp.Success ? fields : null, ((GetFieldsRequest)req).Data);
+                ((GetFieldsRequest)req).Callback(resp.Success ? fields : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
         }
         #endregion
         #endregion
@@ -1591,12 +1602,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         private void OnAddDocumentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DocumentAccepted doucmentAccepted = new DocumentAccepted();
+            fsData data = null;
 
             if (resp.Success)
             {
                 try
                 {
-                    fsData data = null;
                     fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
 
                     if (!r.Succeeded)
@@ -1614,8 +1625,9 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 }
             }
 
+            string customData = ((AddDocumentRequest)req).Data;
             if (((AddDocumentRequest)req).Callback != null)
-                ((AddDocumentRequest)req).Callback(resp.Success ? doucmentAccepted : null, ((AddDocumentRequest)req).Data);
+                ((AddDocumentRequest)req).Callback(resp.Success ? doucmentAccepted : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
 
         }
         #endregion
@@ -1741,12 +1753,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         private void OnGetDocumentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DocumentStatus documentStatus = new DocumentStatus();
+            fsData data = null;
 
             if (resp.Success)
             {
                 try
                 {
-                    fsData data = null;
                     fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
 
                     if (!r.Succeeded)
@@ -1764,8 +1776,9 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 }
             }
 
+            string customData = ((GetDocumentRequest)req).Data;
             if (((GetDocumentRequest)req).Callback != null)
-                ((GetDocumentRequest)req).Callback(resp.Success ? documentStatus : null, ((GetDocumentRequest)req).Data);
+                ((GetDocumentRequest)req).Callback(resp.Success ? documentStatus : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
         }
         #endregion
 
@@ -2027,12 +2040,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         private void OnUpdateDocumentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DocumentAccepted doucmentAccepted = new DocumentAccepted();
+            fsData data = null;
 
             if (resp.Success)
             {
                 try
                 {
-                    fsData data = null;
                     fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
 
                     if (!r.Succeeded)
@@ -2050,8 +2063,9 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 }
             }
 
+            string customData = ((UpdateDocumentRequest)req).Data;
             if (((UpdateDocumentRequest)req).Callback != null)
-                ((UpdateDocumentRequest)req).Callback(resp.Success ? doucmentAccepted : null, ((UpdateDocumentRequest)req).Data);
+                ((UpdateDocumentRequest)req).Callback(resp.Success ? doucmentAccepted : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
 
         }
         #endregion
@@ -2149,12 +2163,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         private void OnQueryResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             QueryResponse queryResponse = new QueryResponse();
+            fsData data = null;
 
             if (resp.Success)
             {
                 try
                 {
-                    fsData data = null;
                     fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
 
                     if (!r.Succeeded)
@@ -2172,8 +2186,9 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 }
             }
 
+            string customData = ((QueryRequest)req).Data;
             if (((QueryRequest)req).Callback != null)
-                ((QueryRequest)req).Callback(resp.Success ? queryResponse : null, ((QueryRequest)req).Data);
+                ((QueryRequest)req).Callback(resp.Success ? queryResponse : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
         }
         #endregion
 

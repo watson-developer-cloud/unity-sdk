@@ -20,27 +20,77 @@ using System.Collections.Generic;
 using IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
+using System.Collections;
+using FullSerializer;
+using System.IO;
+using System;
 
 public class ExampleAlchemyDataNews : MonoBehaviour
 {
-    private AlchemyAPI m_AlchemyAPI = new AlchemyAPI(new Credentials());
+    private AlchemyAPI _alchemyAPI;
+    private string _apikey;
+    private string _url;
+    private fsSerializer _serializer = new fsSerializer();
 
+    private bool _getNewsTested = false;
     void Start()
     {
         LogSystem.InstallDefaultReactors();
 
-        string[] returnFields = { Fields.ENRICHED_URL_ENTITIES, Fields.ENRICHED_URL_KEYWORDS };
+        VcapCredentials vcapCredentials = new VcapCredentials();
+        fsData data = null;
+
+        //  Get credentials from a credential file defined in environmental variables in the VCAP_SERVICES format. 
+        //  See https://www.ibm.com/watson/developercloud/doc/common/getting-started-variables.html.
+        var environmentalVariable = Environment.GetEnvironmentVariable("VCAP_SERVICES");
+        var fileContent = File.ReadAllText(environmentalVariable);
+
+        //  Add in a parent object because Unity does not like to deserialize root level collection types.
+        fileContent = Utility.AddTopLevelObjectToJson(fileContent, "VCAP_SERVICES");
+
+        //  Convert json to fsResult
+        fsResult r = fsJsonParser.Parse(fileContent, out data);
+        if (!r.Succeeded)
+            throw new WatsonException(r.FormattedMessages);
+
+        //  Convert fsResult to VcapCredentials
+        object obj = vcapCredentials;
+        r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+        if (!r.Succeeded)
+            throw new WatsonException(r.FormattedMessages);
+
+        //  Set credentials from imported credntials
+        Credential credential = vcapCredentials.VCAP_SERVICES["alchemy_api"][0].Credentials;
+        _apikey = credential.Apikey.ToString();
+        _url = credential.Url.ToString();
+
+        //  Create credential and instantiate service
+        Credentials credentials = new Credentials(_apikey, _url);
+
+        _alchemyAPI = new AlchemyAPI(credentials);
+
+        Runnable.Run(Examples());
+    }
+
+    private IEnumerator Examples()
+    {
         Dictionary<string, string> queryFields = new Dictionary<string, string>();
         queryFields.Add(Fields.ENRICHED_URL_RELATIONS_RELATION_SUBJECT_TEXT, "Obama");
         queryFields.Add(Fields.ENRICHED_URL_CLEANEDTITLE, "Washington");
+        string[] returnFields = { Fields.ENRICHED_URL_ENTITIES, Fields.ENRICHED_URL_KEYWORDS };
 
-        if (!m_AlchemyAPI.GetNews(OnGetNews, returnFields, queryFields))
-            Log.Debug("ExampleAlchemyData", "Failed to get news!");
+        if (!_alchemyAPI.GetNews(OnGetNews, returnFields, queryFields))
+            Log.Debug("ExampleAlchemyDataNews", "Failed to get news!");
+
+        while (!_getNewsTested)
+            yield return null;
+
+        Log.Debug("ExampleAlchemyDataNews", "Alchemy data news examples complete!");
     }
 
     private void OnGetNews(NewsResponse newsData, string data)
     {
-        if (newsData != null)
-            Log.Debug("ExampleAlchemyData", "status: {0}", newsData.status);
+        Log.Debug("ExampleAlchemyDataNews", "Alchemy data news - Get news Response: {0}", data);
+        _getNewsTested = true;
     }
 }
