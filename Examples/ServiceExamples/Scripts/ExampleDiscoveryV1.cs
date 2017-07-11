@@ -69,6 +69,7 @@ public class ExampleDiscoveryV1 : MonoBehaviour
     private bool _deleteEnvironmentTested = false;
     private bool _isEnvironmentReady = false;
     private bool _readyToContinue = false;
+
     private void Start()
     {
         LogSystem.InstallDefaultReactors();

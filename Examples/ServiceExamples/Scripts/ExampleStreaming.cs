@@ -30,7 +30,7 @@ public class ExampleStreaming : MonoBehaviour
     private int m_RecordingBufferSize = 2;
     private int m_RecordingHZ = 22050;
 
-    private SpeechToText m_SpeechToText = new SpeechToText();
+    private SpeechToText _speechToText;
 
     void Start()
     {
@@ -44,24 +44,24 @@ public class ExampleStreaming : MonoBehaviour
 
     public bool Active
     {
-        get { return m_SpeechToText.IsListening; }
+        get { return _speechToText.IsListening; }
         set
         {
-            if (value && !m_SpeechToText.IsListening)
+            if (value && !_speechToText.IsListening)
             {
-                m_SpeechToText.DetectSilence = true;
-                m_SpeechToText.EnableWordConfidence = false;
-                m_SpeechToText.EnableTimestamps = false;
-                m_SpeechToText.SilenceThreshold = 0.03f;
-                m_SpeechToText.MaxAlternatives = 1;
-                m_SpeechToText.EnableContinousRecognition = true;
-                m_SpeechToText.EnableInterimResults = true;
-                m_SpeechToText.OnError = OnError;
-                m_SpeechToText.StartListening(OnRecognize);
+                _speechToText.DetectSilence = true;
+                _speechToText.EnableWordConfidence = false;
+                _speechToText.EnableTimestamps = false;
+                _speechToText.SilenceThreshold = 0.03f;
+                _speechToText.MaxAlternatives = 1;
+                _speechToText.EnableContinousRecognition = true;
+                _speechToText.EnableInterimResults = true;
+                _speechToText.OnError = OnError;
+                _speechToText.StartListening(OnRecognize);
             }
-            else if (!value && m_SpeechToText.IsListening)
+            else if (!value && _speechToText.IsListening)
             {
-                m_SpeechToText.StopListening();
+                _speechToText.StopListening();
             }
         }
     }
@@ -131,7 +131,7 @@ public class ExampleStreaming : MonoBehaviour
                 record.Clip = AudioClip.Create("Recording", midPoint, m_Recording.channels, m_RecordingHZ, false);
                 record.Clip.SetData(samples, 0);
 
-                m_SpeechToText.OnListen(record);
+                _speechToText.OnListen(record);
 
                 bFirstBlock = !bFirstBlock;
             }

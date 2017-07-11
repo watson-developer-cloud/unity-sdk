@@ -46,27 +46,27 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         #endregion
 
         #region Private Data
-        private SpeechToText m_SpeechToText = new SpeechToText();
+        private SpeechToText _speechToText;
         [SerializeField]
-        private Text m_StatusText = null;
+        private Text _statusText = null;
         [SerializeField]
-        private bool m_DetectSilence = true;
+        private bool _detectSilence = true;
         [SerializeField]
-        private float m_SilenceThreshold = 0.03f;
+        private float _silenceThreshold = 0.03f;
         [SerializeField]
-        private bool m_WordConfidence = false;
+        private bool _wordConfidence = false;
         [SerializeField]
-        private bool m_TimeStamps = false;
+        private bool _timeStamps = false;
         [SerializeField]
-        private int m_MaxAlternatives = 1;
+        private int _maxAlternatives = 1;
         [SerializeField]
-        private bool m_EnableContinous = false;
+        private bool _enableContinous = false;
         [SerializeField]
-        private bool m_EnableInterimResults = false;
+        private bool _enableInterimResults = false;
         [SerializeField]
-        private Text m_Transcript = null;
+        private Text _transcript = null;
         [SerializeField, Tooltip("Language ID to use in the speech recognition model.")]
-        private string m_Language = "en-US";
+        private string _language = "en-US";
         #endregion
 
         #region Public Properties
@@ -75,28 +75,28 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         /// </summary>
         public bool Active
         {
-            get { return m_SpeechToText.IsListening; }
+            get { return _speechToText.IsListening; }
             set
             {
-                if (value && !m_SpeechToText.IsListening)
+                if (value && !_speechToText.IsListening)
                 {
-                    m_SpeechToText.DetectSilence = m_DetectSilence;
-                    m_SpeechToText.EnableWordConfidence = m_WordConfidence;
-                    m_SpeechToText.EnableTimestamps = m_TimeStamps;
-                    m_SpeechToText.SilenceThreshold = m_SilenceThreshold;
-                    m_SpeechToText.MaxAlternatives = m_MaxAlternatives;
-                    m_SpeechToText.EnableContinousRecognition = m_EnableContinous;
-                    m_SpeechToText.EnableInterimResults = m_EnableInterimResults;
-                    m_SpeechToText.OnError = OnError;
-                    m_SpeechToText.StartListening(OnRecognize);
-                    if (m_StatusText != null)
-                        m_StatusText.text = "LISTENING";
+                    _speechToText.DetectSilence = _detectSilence;
+                    _speechToText.EnableWordConfidence = _wordConfidence;
+                    _speechToText.EnableTimestamps = _timeStamps;
+                    _speechToText.SilenceThreshold = _silenceThreshold;
+                    _speechToText.MaxAlternatives = _maxAlternatives;
+                    _speechToText.EnableContinousRecognition = _enableContinous;
+                    _speechToText.EnableInterimResults = _enableInterimResults;
+                    _speechToText.OnError = OnError;
+                    _speechToText.StartListening(OnRecognize);
+                    if (_statusText != null)
+                        _statusText.text = "LISTENING";
                 }
-                else if (!value && m_SpeechToText.IsListening)
+                else if (!value && _speechToText.IsListening)
                 {
-                    m_SpeechToText.StopListening();
-                    if (m_StatusText != null)
-                        m_StatusText.text = "READY";
+                    _speechToText.StopListening();
+                    if (_statusText != null)
+                        _statusText.text = "READY";
                 }
             }
         }
@@ -124,9 +124,9 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         {
             base.Start();
 
-            if (m_StatusText != null)
-                m_StatusText.text = "READY";
-            if (!m_SpeechToText.GetModels(OnGetModels))
+            if (_statusText != null)
+                _statusText.text = "READY";
+            if (!_speechToText.GetModels(OnGetModels))
                 Log.Error("SpeechToTextWidget", "Failed to request models.");
         }
 
@@ -139,8 +139,8 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         private void OnError(string error)
         {
             Active = false;
-            if (m_StatusText != null)
-                m_StatusText.text = "ERROR: " + error;
+            if (_statusText != null)
+                _statusText.text = "ERROR: " + error;
         }
 
         private void OnAudio(Data data)
@@ -148,7 +148,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
             if (!Active)
                 Active = true;
 
-            m_SpeechToText.OnListen((AudioData)data);
+            _speechToText.OnListen((AudioData)data);
         }
 
         private void OnLanguage(Data data)
@@ -159,21 +159,21 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 
             if (!string.IsNullOrEmpty(language.Language))
             {
-                m_Language = language.Language;
+                _language = language.Language;
 
-                if (!m_SpeechToText.GetModels(OnGetModels))
+                if (!_speechToText.GetModels(OnGetModels))
                     Log.Error("SpeechToTextWidget", "Failed to rquest models.");
             }
         }
 
-        private void OnGetModels(Model[] models)
+        private void OnGetModels(ModelSet models, string customData)
         {
             if (models != null)
             {
                 Model bestModel = null;
-                foreach (var model in models)
+                foreach (var model in models.models)
                 {
-                    if (model.language.StartsWith(m_Language)
+                    if (model.language.StartsWith(_language)
                         && (bestModel == null || model.rate > bestModel.rate))
                     {
                         bestModel = model;
@@ -183,7 +183,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                 if (bestModel != null)
                 {
                     Log.Status("SpeechToTextWidget", "Selecting Recognize Model: {0} ", bestModel.name);
-                    m_SpeechToText.RecognizeModel = bestModel.name;
+                    _speechToText.RecognizeModel = bestModel.name;
                 }
             }
         }
@@ -194,8 +194,8 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 
             if (result != null && result.results.Length > 0)
             {
-                if (m_Transcript != null)
-                    m_Transcript.text = "";
+                if (_transcript != null)
+                    _transcript.text = "";
 
                 foreach (var res in result.results)
                 {
@@ -203,8 +203,8 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                     {
                         string text = alt.transcript;
 
-                        if (m_Transcript != null)
-                            m_Transcript.text += string.Format("{0} ({1}, {2:0.00})\n",
+                        if (_transcript != null)
+                            _transcript.text += string.Format("{0} ({1}, {2:0.00})\n",
                                 text, res.final ? "Final" : "Interim", alt.confidence);
                     }
                 }

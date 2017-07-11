@@ -27,7 +27,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 {
     public class TestSpeechToText : UnitTest
     {
-        private SpeechToText m_SpeechToText = new SpeechToText();
+        private SpeechToText _speechToText;
 
         private bool m_GetModelsTested = false;
         private bool m_GetModelTested = false;
@@ -60,7 +60,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         public override IEnumerator RunTest()
         {
-            if (Config.Instance.FindCredentials(m_SpeechToText.GetServiceID()) == null)
+            if (Config.Instance.FindCredentials(_speechToText.GetServiceID()) == null)
                 yield break;
 
             m_CustomCorpusFilePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/test-stt-corpus.txt";
@@ -68,43 +68,43 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             //	GetModels
             Log.Debug("TestSpeechToText", "**********  Attempting to to GetModels");
-            m_SpeechToText.GetModels(HandleGetModels);
+            _speechToText.GetModels(HandleGetModels);
             while (!m_GetModelsTested)
                 yield return null;
 
             //	GetModel
             Log.Debug("TestSpeechToText", "**********  Attempting to to GetModel {0}", m_SpeechToTextModelEnglish);
-            m_SpeechToText.GetModel(HandleGetModel, m_SpeechToTextModelEnglish);
+            _speechToText.GetModel(HandleGetModel, m_SpeechToTextModelEnglish);
             while (!m_GetModelTested)
                 yield return null;
 
             //	GetCustomizations
             Log.Debug("TestSpeechToText", "**********  Attempting to to get customizations");
-            m_SpeechToText.GetCustomizations(HandleGetCustomizations);
+            _speechToText.GetCustomizations(HandleGetCustomizations);
             while (!m_GetCustomizationsTested)
                 yield return null;
 
             //	CreateCustomization
             Log.Debug("TestSpeechToText", "**********  Attempting to to create customization {0}", m_CreatedCustomizationName);
-            m_SpeechToText.CreateCustomization(HandleCreateCustomization, m_CreatedCustomizationName);
+            _speechToText.CreateCustomization(HandleCreateCustomization, m_CreatedCustomizationName);
             while (!m_CreateCustomizationTested)
                 yield return null;
 
             //	GetCustomization
             Log.Debug("TestSpeechToText", "**********  Attempting to to get customization {0}", m_CreatedCustomizationID);
-            m_SpeechToText.GetCustomization(HandleGetCustomization, m_CreatedCustomizationID);
+            _speechToText.GetCustomization(HandleGetCustomization, m_CreatedCustomizationID);
             while (!m_GetCustomizationTested)
                 yield return null;
 
             //	GetCustomCorpora
             Log.Debug("TestSpeechToText", "**********  Attempting to to get custom corpora");
-            m_SpeechToText.GetCustomCorpora(HandleGetCustomCorpora, m_CreatedCustomizationID);
+            _speechToText.GetCustomCorpora(HandleGetCustomCorpora, m_CreatedCustomizationID);
             while (!m_GetCustomCorporaTested)
                 yield return null;
 
             //	AddCustomCorpus
             Log.Debug("TestSpeechToText", "**********  Attempting to to add custom corpus {0}", m_CreatedCorpusName);
-            m_SpeechToText.AddCustomCorpus(HandleAddCustomCorpus, m_CreatedCustomizationID, m_CreatedCorpusName, m_AllowOverwrite, m_CustomCorpusFilePath);
+            _speechToText.AddCustomCorpus(HandleAddCustomCorpus, m_CreatedCustomizationID, m_CreatedCorpusName, m_AllowOverwrite, m_CustomCorpusFilePath);
             while (!m_AddCustomCorpusTested)
                 yield return null;
 
@@ -114,13 +114,13 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             //	GetCustomWords
             Log.Debug("TestSpeechToText", "**********  Attempting to to get custom words");
-            m_SpeechToText.GetCustomWords(HandleGetCustomWords, m_CreatedCustomizationID);
+            _speechToText.GetCustomWords(HandleGetCustomWords, m_CreatedCustomizationID);
             while (!m_GetCustomWordsTested)
                 yield return null;
 
             //	AddCustomWordsUsingFile
             Log.Debug("TestSpeechToText", "**********  Attempting to to add custom words using file {0}", m_CustomWordsFilePath);
-            m_SpeechToText.AddCustomWords(HandleAddCustomWordsUsingFile, m_CreatedCustomizationID, true, m_CustomWordsFilePath);
+            _speechToText.AddCustomWords(HandleAddCustomWordsUsingFile, m_CreatedCustomizationID, true, m_CustomWordsFilePath);
             while (!m_AddCustomWordsUsingFileTested)
                 yield return null;
 
@@ -152,7 +152,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             words.words = wordList.ToArray();
 
             Log.Debug("TestSpeechToText", "**********  Attempting to to add custom words using object");
-            m_SpeechToText.AddCustomWords(HandleAddCustomWordsUsingObject, m_CreatedCustomizationID, words);
+            _speechToText.AddCustomWords(HandleAddCustomWordsUsingObject, m_CreatedCustomizationID, words);
             while (!m_AddCustomWordsUsingObjectTested)
                 yield return null;
 
@@ -162,13 +162,13 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             //	GetCustomWord
             Log.Debug("TestSpeechToText", "**********  Attempting to to get custom word {0}", m_WordToGet);
-            m_SpeechToText.GetCustomWord(HandleGetCustomWord, m_CreatedCustomizationID, m_WordToGet);
+            _speechToText.GetCustomWord(HandleGetCustomWord, m_CreatedCustomizationID, m_WordToGet);
             while (!m_GetCustomWordTested)
                 yield return null;
 
             //	TrainCustomization
             Log.Debug("TestSpeechToText", "**********  Attempting to to train customization {0}", m_CreatedCustomizationID);
-            m_SpeechToText.TrainCustomization(HandleTrainCustomization, m_CreatedCustomizationID);
+            _speechToText.TrainCustomization(HandleTrainCustomization, m_CreatedCustomizationID);
             while (!m_TrainCustomizationTested)
                 yield return null;
 
@@ -178,7 +178,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             //	DeleteCustomCorpus
             Log.Debug("TestSpeechToText", "**********  Attempting to to delete custom corpus {0}", m_CreatedCorpusName);
-            m_SpeechToText.DeleteCustomCorpus(HandleDeleteCustomCorpus, m_CreatedCustomizationID, m_CreatedCorpusName);
+            _speechToText.DeleteCustomCorpus(HandleDeleteCustomCorpus, m_CreatedCustomizationID, m_CreatedCorpusName);
             while (!m_DeleteCustomCorpusTested)
                 yield return null;
 
@@ -188,7 +188,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             //	DeleteCustomWord
             Log.Debug("TestSpeechToText", "**********  Attempting to to delete custom word {0}", m_WordToGet);
-            m_SpeechToText.DeleteCustomWord(HandleDeleteCustomWord, m_CreatedCustomizationID, m_WordToGet);
+            _speechToText.DeleteCustomWord(HandleDeleteCustomWord, m_CreatedCustomizationID, m_WordToGet);
             while (!m_DeleteCustomWordTested)
                 yield return null;
 
@@ -198,7 +198,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             //	ResetCustomization
             Log.Debug("TestSpeechToText", "**********  Attempting to to reset customization {0}", m_CreatedCustomizationID);
-            m_SpeechToText.ResetCustomization(HandleResetCustomization, m_CreatedCustomizationID);
+            _speechToText.ResetCustomization(HandleResetCustomization, m_CreatedCustomizationID);
             while (!m_ResetCustomizationTested)
                 yield return null;
 
@@ -216,16 +216,16 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             yield break;
         }
 
-        private void HandleGetModels(Model[] models)
+        private void HandleGetModels(ModelSet models, string customData)
         {
             if (models != null)
-                Log.Status("TestSpeechToText", "GetModels() returned {0} models.", models.Length);
+                Log.Status("TestSpeechToText", "GetModels() returned {0} models.", models.models.Length);
 
             Test(models != null);
             m_GetModelsTested = true;
         }
 
-        private void HandleGetModel(Model model)
+        private void HandleGetModel(Model model, string customData)
         {
             if (model != null)
             {
@@ -568,7 +568,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             yield return new WaitForSeconds(delay);
 
             //	passing customizationID in custom data
-            m_SpeechToText.GetCustomization(OnCheckCustomizationStatus, customizationID, customizationID);
+            _speechToText.GetCustomization(OnCheckCustomizationStatus, customizationID, customizationID);
         }
     }
 }
