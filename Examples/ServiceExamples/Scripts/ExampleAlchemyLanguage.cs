@@ -26,10 +26,11 @@ using System.IO;
 
 public class ExampleAlchemyLanguage : MonoBehaviour
 {
-    private AlchemyAPI _alchemyAPI;
     private string _apikey;
     private string _url;
     private fsSerializer _serializer = new fsSerializer();
+
+    private AlchemyAPI _alchemyAPI;
 
     private string _exampleURL_watsonJeopardy = "http://www.nytimes.com/2011/02/17/science/17jeopardy-watson.html";
     private string _exampleURL_microformats = "http://microformats.org/wiki/hcard";
@@ -432,7 +433,7 @@ public class ExampleAlchemyLanguage : MonoBehaviour
         while (!_getCombinedDataHTMLTested)
             yield return null;
 
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Examples complete");
+        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language examples complete");
     }
 
     private void OnGetAuthorsHtml(AuthorsData authors, string data)

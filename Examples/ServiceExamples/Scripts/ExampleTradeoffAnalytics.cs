@@ -27,12 +27,13 @@ using IBM.Watson.DeveloperCloud.Logging;
 
 public class ExampleTradeoffAnalytics : MonoBehaviour
 {
-    TradeoffAnalytics _tradeoffAnalytics;
     private string _username;
     private string _password;
     private string _url;
     private fsSerializer _serializer = new fsSerializer();
     //private string _token = "<authentication-token>";
+
+    TradeoffAnalytics _tradeoffAnalytics;
 
     private bool _GetDillemaTested = false;
 
@@ -161,6 +162,8 @@ public class ExampleTradeoffAnalytics : MonoBehaviour
         _tradeoffAnalytics.GetDilemma(OnGetDilemma, problemToSolve, false);
         while(!_GetDillemaTested)
         yield return null;
+
+        Log.Debug("ExampleTradeoffAnalyitics", "Tradeoff analytics examples complete.");
     }
 
     private void OnGetDilemma(DilemmasResponse resp, string data)

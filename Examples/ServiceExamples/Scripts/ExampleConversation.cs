@@ -26,12 +26,15 @@ using System.IO;
 
 public class ExampleConversation : MonoBehaviour
 {
-    private Conversation _conversation;
     private string _username;
     private string _password;
     private string _url;
     private string _workspaceId;
     //private string _token = "<authentication-token>";
+
+    private Conversation _conversation;
+    private string _conversationVersionDate = "2017-05-26";
+
     private string[] _questionArray = { "can you turn up the AC", "can you turn on the wipers", "can you turn off the wipers", "can you turn down the ac", "can you unlock the door" };
     private fsSerializer _serializer = new fsSerializer();
     private Context _context = null;
@@ -81,7 +84,7 @@ public class ExampleConversation : MonoBehaviour
         //};
 
         _conversation = new Conversation(credentials);
-        _conversation.VersionDate = "2017-05-26";
+        _conversation.VersionDate = _conversationVersionDate;
 
         Runnable.Run(Examples());
     }
@@ -122,6 +125,8 @@ public class ExampleConversation : MonoBehaviour
         AskQuestion();
         while (_waitingForResponse)
             yield return null;
+
+        Log.Debug("ExampleConversation", "Conversation examples complete.");
     }
 
     private void AskQuestion()

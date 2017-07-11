@@ -22,6 +22,7 @@ using IBM.Watson.DeveloperCloud.Logging;
 using FullSerializer;
 using System.IO;
 using System;
+using System.Collections;
 
 public class ExampleLanguageTranslator : MonoBehaviour
 {
@@ -29,8 +30,12 @@ public class ExampleLanguageTranslator : MonoBehaviour
     private string _username;
     private string _password;
     private string _url;
-    private fsSerializer _serializer = new fsSerializer();
     //private string _token = "<authentication-token>";
+    private fsSerializer _serializer = new fsSerializer();
+
+    private LanguageTranslator _languageTranslator;
+
+    private bool _getTranslationTested = false;
 
     void Start()
     {
@@ -73,14 +78,24 @@ public class ExampleLanguageTranslator : MonoBehaviour
         //    AuthenticationToken = _token
         //};
 
-        LanguageTranslator languageTranslator = new LanguageTranslator(credentials);
+        _languageTranslator = new LanguageTranslator(credentials);
 
-        if (!languageTranslator.GetTranslation(m_PharseToTranslate, "en", "es", OnGetTranslation))
+        Runnable.Run(Examples());
+    }
+
+    private IEnumerator Examples()
+    {
+        if (!_languageTranslator.GetTranslation(m_PharseToTranslate, "en", "es", OnGetTranslation))
             Log.Debug("ExampleLanguageTranslator", "Failed to translate!");
+        while (!_getTranslationTested)
+            yield return null;
+
+        Log.Debug("ExampleLanguageTranslator", "Language Translator examples complete.");
     }
 
     private void OnGetTranslation(Translations translation, string data)
     {
         Log.Debug("ExampleLanguageTranslator", "Langauge Translator - Translate Response: {0}", data);
+        _getTranslationTested = true;
     }
 }

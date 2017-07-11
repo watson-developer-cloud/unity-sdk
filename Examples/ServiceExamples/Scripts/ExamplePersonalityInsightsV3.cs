@@ -22,17 +22,24 @@ using IBM.Watson.DeveloperCloud.Utilities;
 using FullSerializer;
 using System.IO;
 using System;
+using System.Collections;
 
 public class ExamplePersonalityInsightsV3 : MonoBehaviour
 {
     private string _username;
     private string _password;
     private string _url;
-    private string _personalityInsightsVersionDate = "2017-05-26";
     private fsSerializer _serializer = new fsSerializer();
+
+    private PersonalityInsights _personalityInsights;
+    private string _personalityInsightsVersionDate = "2017-05-26";
+
     private string _testString = "The IBM Watson™ Personality Insights service provides a Representational State Transfer (REST) Application Programming Interface (API) that enables applications to derive insights from social media, enterprise data, or other digital communications. The service uses linguistic analytics to infer individuals' intrinsic personality characteristics, including Big Five, Needs, and Values, from digital communications such as email, text messages, tweets, and forum posts. The service can automatically infer, from potentially noisy social media, portraits of individuals that reflect their personality characteristics. The service can report consumption preferences based on the results of its analysis, and for JSON content that is timestamped, it can report temporal behavior.";
     private string _dataPath;
     //private string _token = "<authentication-token>";
+
+    private bool _getProfileTextTested = false;
+    private bool _getProfileJsonTested = false;
 
     void Start()
     {
@@ -75,25 +82,38 @@ public class ExamplePersonalityInsightsV3 : MonoBehaviour
         //    AuthenticationToken = _token
         //};
 
-        PersonalityInsights personalityInsights = new PersonalityInsights(credentials);
-        personalityInsights.VersionDate = _personalityInsightsVersionDate;
+        _personalityInsights = new PersonalityInsights(credentials);
+        _personalityInsights.VersionDate = _personalityInsightsVersionDate;
 
         _dataPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/personalityInsights.json";
 
-        if (!personalityInsights.GetProfile(OnGetProfileJson, _dataPath, ContentType.TEXT_HTML, ContentLanguage.ENGLISH, ContentType.APPLICATION_JSON, AcceptLanguage.ENGLISH, true, true, true))
-            Log.Debug("ExamplePersonalityInsights", "Failed to get profile!");
+        Runnable.Run(Examples());
+    }
 
-        if (!personalityInsights.GetProfile(OnGetProfileText, _testString, ContentType.TEXT_HTML, ContentLanguage.ENGLISH, ContentType.APPLICATION_JSON, AcceptLanguage.ENGLISH, true, true, true))
+    private IEnumerator Examples()
+    {
+        if (!_personalityInsights.GetProfile(OnGetProfileJson, _dataPath, ContentType.TEXT_HTML, ContentLanguage.ENGLISH, ContentType.APPLICATION_JSON, AcceptLanguage.ENGLISH, true, true, true))
             Log.Debug("ExamplePersonalityInsights", "Failed to get profile!");
+        while (!_getProfileJsonTested)
+            yield return null;
+
+        if (!_personalityInsights.GetProfile(OnGetProfileText, _testString, ContentType.TEXT_HTML, ContentLanguage.ENGLISH, ContentType.APPLICATION_JSON, AcceptLanguage.ENGLISH, true, true, true))
+            Log.Debug("ExamplePersonalityInsights", "Failed to get profile!");
+        while (!_getProfileTextTested)
+            yield return null;
+
+        Log.Debug("ExamplePersonalityInsights", "Personality insights examples complete.");
     }
 
     private void OnGetProfileText(Profile profile, string data)
     {
         Log.Debug("ExamplePersonaltyInsights", "Personality Insights - GetProfileText Response: {0}", data);
+        _getProfileTextTested = true;
     }
 
     private void OnGetProfileJson(Profile profile, string data)
     {
         Log.Debug("ExamplePersonaltyInsights", "Personality Insights - GetProfileJson Response: {0}", data);
+        _getProfileJsonTested = true;
     }
 }

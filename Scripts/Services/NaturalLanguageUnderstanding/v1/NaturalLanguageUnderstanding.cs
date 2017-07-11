@@ -234,7 +234,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
                 }
             }
 
-            string customData = ((AnalyzeRequest)req).Data;
+            string customData = ((GetModelsRequest)req).Data;
             if (((GetModelsRequest)req).Callback != null)
                 ((GetModelsRequest)req).Callback(resp.Success ? modelData : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
 
@@ -288,7 +288,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
 
         private void OnDeleteModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            string customData = ((AnalyzeRequest)req).Data;
+            string customData = ((DeleteModelRequest)req).Data;
             if (((DeleteModelRequest)req).Callback != null)
                 ((DeleteModelRequest)req).Callback(resp.Success, customData);
         }

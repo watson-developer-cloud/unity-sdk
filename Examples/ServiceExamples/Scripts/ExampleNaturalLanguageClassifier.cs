@@ -32,15 +32,17 @@ using System.Collections;
 
 public class ExampleNaturalLanguageClassifier : MonoBehaviour
 {
-    private NaturalLanguageClassifier naturalLanguageClassifier;
-    private string _classifierId = "";
-    private List<string> _classifierIds = new List<string>();
-    private string _inputString = "Is it hot outside?";
     private string _username;
     private string _password;
     private string _url;
     private fsSerializer _serializer = new fsSerializer();
     //private string _token = "<authentication-token>";
+
+    private NaturalLanguageClassifier naturalLanguageClassifier;
+
+    private string _classifierId = "";
+    private List<string> _classifierIds = new List<string>();
+    private string _inputString = "Is it hot outside?";
 
     private bool _areAnyClassifiersAvailable = false;
     private bool _getClassifiersTested = false;
@@ -154,6 +156,8 @@ public class ExampleNaturalLanguageClassifier : MonoBehaviour
             while (!_classifyTested)
                 yield return null;
         }
+
+        Log.Debug("ExampleNaturalLanguageClassifier", "Natural language classifier examples complete.");
     }
 
     private void OnGetClassifiers(Classifiers classifiers, string data)

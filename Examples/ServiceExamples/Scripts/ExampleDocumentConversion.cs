@@ -31,10 +31,11 @@ public class ExampleDocumentConversion : MonoBehaviour
     private string _password;
     private string _url;
     private fsSerializer _serializer = new fsSerializer();
+    //private string _token = "<authentication-token>";
 
     private string _examplePath;
     private string _conversionTarget = ConversionTarget.NORMALIZED_HTML;
-        private bool _convertDocumentTested = false;
+    private bool _convertDocumentTested = false;
 
     void Start()
     {
@@ -78,8 +79,6 @@ public class ExampleDocumentConversion : MonoBehaviour
         //};
 
         _documentConversion = new DocumentConversion(credentials);
-
-
         _examplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/watson_beats_jeopardy.html";
 
         Runnable.Run(Examples());
@@ -92,6 +91,8 @@ public class ExampleDocumentConversion : MonoBehaviour
 
         while (!_convertDocumentTested)
             yield return null;
+
+        Log.Debug("ExampleDoucmentConversion", "Document conversion examples complete.");
     }
 
     private void OnConvertDocument(ConvertedDocument documentConversionResponse, string data)

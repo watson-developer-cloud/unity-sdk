@@ -30,12 +30,13 @@ using UnityEditor;
 #pragma warning disable 219
 public class ExampleRetrieveAndRank : MonoBehaviour
 {
-    private RetrieveAndRank _retrieveAndRank;
     private string _username;
     private string _password;
     private string _url;
     private fsSerializer _serializer = new fsSerializer();
     //private string _token = "<authentication-token>";
+
+    private RetrieveAndRank _retrieveAndRank;
 
     private string _testClusterConfigName;
     private string _testClusterConfigPath;
@@ -148,7 +149,6 @@ public class ExampleRetrieveAndRank : MonoBehaviour
             yield return null;
 
         //  Wait for cluster status to be `READY`.
-        Log.Debug("ExampleRetrieveAndRank", "Checking cluster status in 10 seconds");
         CheckClusterStatus();
         while (!_isClusterReady)
             yield return null;
@@ -160,9 +160,7 @@ public class ExampleRetrieveAndRank : MonoBehaviour
             Log.Debug("ExampleRetrieveAndRank", "Failed to get cluster configs!");
         while (!_getClusterConfigsTested || !_readyToContinue)
             yield return null;
-
         
-
         _readyToContinue = false;
         //  Upload cluster config
         Log.Debug("ExampleRetrieveAndRank", "Attempting to upload cluster config.");
@@ -202,8 +200,6 @@ public class ExampleRetrieveAndRank : MonoBehaviour
             Log.Debug("ExampleRetrieveAndRank", "Failed to create collections!");
         while (!_createCollectionTested || !_readyToContinue)
             yield return null;
-
-        
 
         _readyToContinue = false;
         //  Index documents
@@ -259,8 +255,7 @@ public class ExampleRetrieveAndRank : MonoBehaviour
             Log.Debug("ExampleRetrieveAndRank", "Failed to get ranker!");
         while (!_getRankerTested)
             yield return null;
-
-
+        
         _readyToContinue = false;
         //  Delete rankers
         Log.Debug("ExampleRetrieveAndRank", "Attempting to delete ranker {0}.", _rankerIdToDelete);
@@ -294,7 +289,7 @@ public class ExampleRetrieveAndRank : MonoBehaviour
         while (!_deleteClusterTested || !_readyToContinue)
             yield return null;
 
-        Log.Debug("\nExampleRetrieveAndRank", "Retrieve and rank examples complete!");
+        Log.Debug("ExampleRetrieveAndRank", "Retrieve and rank examples complete!");
     }
 
     private void OnGetClusters(SolrClusterListResponse resp, string data)

@@ -22,6 +22,7 @@ using System.IO;
 using System;
 using FullSerializer;
 using IBM.Watson.DeveloperCloud.Logging;
+using System.Collections;
 
 public class ExampleToneAnalyzer : MonoBehaviour
 {
@@ -29,9 +30,12 @@ public class ExampleToneAnalyzer : MonoBehaviour
     private string _password;
     private string _url;
     private fsSerializer _serializer = new fsSerializer();
+
+    private ToneAnalyzer _toneAnalyzer;
     private string _toneAnalyzerVersionDate = "2017-05-26";
 
     private string _stringToTestTone = "This service enables people to discover and understand, and revise the impact of tone in their content. It uses linguistic analysis to detect and interpret emotional, social, and language cues found in text.";
+    private bool _analyzeToneTested = false;
     //private string _token = "<authentication-token>";
 
     void Start()
@@ -75,16 +79,27 @@ public class ExampleToneAnalyzer : MonoBehaviour
         //    AuthenticationToken = _token
         //};
 
-        ToneAnalyzer toneAnalyzer = new ToneAnalyzer(credentials);
-        toneAnalyzer.VersionDate = _toneAnalyzerVersionDate;
+        _toneAnalyzer = new ToneAnalyzer(credentials);
+        _toneAnalyzer.VersionDate = _toneAnalyzerVersionDate;
 
+        Runnable.Run(Examples());
+    }
+
+    private IEnumerator Examples()
+    {
         //  Analyze tone
-        if (!toneAnalyzer.GetToneAnalyze(OnGetToneAnalyze, _stringToTestTone))
+        if (!_toneAnalyzer.GetToneAnalyze(OnGetToneAnalyze, _stringToTestTone))
             Log.Debug("ExampleToneAnalyzer", "Failed to analyze!");
+
+        while (!_analyzeToneTested)
+            yield return null;
+
+        Log.Debug("ExampleToneAnalyzer", "Tone analyzer examples complete.");
     }
 
     private void OnGetToneAnalyze(ToneAnalyzerResponse resp, string data)
     {
         Log.Debug("ExampleToneAnalyzer", "Tone Analyzer - Analyze Response: {0}", data);
+        _analyzeToneTested = true;
     }
 }

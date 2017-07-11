@@ -28,8 +28,10 @@ public class ExampleDiscoveryV1 : MonoBehaviour
     private string _password;
     private string _url;
     private fsSerializer _serializer = new fsSerializer();
+    //private string _token = "<authentication-token>";
 
     private Discovery _discovery;
+    private string _discoveryVersionDate = "2016-12-01";
 
     private string _createdEnvironmentID;
     private string _configurationJsonPath;
@@ -109,7 +111,7 @@ public class ExampleDiscoveryV1 : MonoBehaviour
         //};
 
         _discovery = new Discovery(credentials);
-        _discovery.VersionDate = "2016-12-01";
+        _discovery.VersionDate = _discoveryVersionDate;
         _configurationJsonPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/Discovery/exampleConfigurationData.json";
         _filePathToIngest = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/watson_beats_jeopardy.html";
         _documentFilePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/watson_beats_jeopardy.html";

@@ -18,7 +18,6 @@
 using UnityEngine;
 using IBM.Watson.DeveloperCloud.Services.SpeechToText.v1;
 using IBM.Watson.DeveloperCloud.Logging;
-#pragma warning disable 0414
 
 public class ExampleSpeechToText : MonoBehaviour
 {

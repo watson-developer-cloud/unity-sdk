@@ -33,14 +33,16 @@ using System.Collections.Generic;
 
 public class ExampleVisualRecognition : MonoBehaviour
 {
-    private VisualRecognition _visualRecognition;
     private string _apikey;
     private string _url;
     private fsSerializer _serializer = new fsSerializer();
+
+    private VisualRecognition _visualRecognition;
+    private string _visualRecognitionVersionDate = "2016-05-20";
+
     private string _classifierID = "swiftsdkunittestcarstrucks_128487308";
     private string _imageURL = "https://upload.wikimedia.org/wikipedia/commons/e/e9/Official_portrait_of_Barack_Obama.jpg";
     private string _imageTextURL = "http://i.stack.imgur.com/ZS6nH.png";
-    private string _visualRecognitionVersionDate = "2016-05-20";
 
 #if DELETE_TRAINED_CLASSIFIER
     private string _classifierToDelete;
