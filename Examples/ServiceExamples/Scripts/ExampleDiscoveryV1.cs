@@ -241,7 +241,7 @@ public class ExampleDiscoveryV1 : MonoBehaviour
             yield return null;
 
         _readyToContinue = false;
-            //  Delete Collection
+        //  Delete Collection
         Log.Debug("ExampleDiscoveryV1", "Attempting to delete collection {0}", _createdCollectionID);
         if (!_discovery.DeleteCollection(OnDeleteCollection, _createdEnvironmentID, _createdCollectionID))
             Log.Debug("ExampleDiscovery", "Failed to add collection");
@@ -331,21 +331,6 @@ public class ExampleDiscoveryV1 : MonoBehaviour
         _addEnvironmentTested = true;
     }
 
-    private void OnDeleteEnvironment(bool success, string data)
-    {
-        Log.Debug("ExampleDiscoveryV1", "Discovery - DeleteEnvironment Response: deleted:{0}", success);
-
-        if (success)
-        {
-            Log.Debug("ExampleDiscoveryV1", "Delete environment successful");
-            _createdEnvironmentID = default(string);
-        }
-        else
-            Log.Debug("ExampleDiscoveryV1", "Delete environment failed");
-
-        _deleteEnvironmentTested = true;
-    }
-
     private void OnGetConfigurations(GetConfigurationsResponse resp, string data)
     {
         Log.Debug("ExampleDiscoveryV1", "Discovery - GetConfigurations Response: {0}", data);
@@ -364,13 +349,6 @@ public class ExampleDiscoveryV1 : MonoBehaviour
         Log.Debug("ExampleDiscoveryV1", "Discovery - AddConfiguration Response: {0}", data);
         _createdConfigurationID = resp.configuration_id;
         _addConfigurationTested = true;
-    }
-
-    private void OnDeleteConfiguration(bool success, string data)
-    {
-        Log.Debug("ExampleDiscoveryV1", "Discovery - DeleteConfiguration Response: deleted:{0}", success);
-        _createdConfigurationID = default(string);
-        _deleteConfigurationTested = true;
     }
 
     private void OnPreviewConfiguration(TestDocument resp, string data)
@@ -396,13 +374,6 @@ public class ExampleDiscoveryV1 : MonoBehaviour
         Log.Debug("ExampleDiscoveryV1", "Discovery - Add collection Response: {0}", data);
          _createdCollectionID = resp.collection_id;
         _addCollectionTested = true;
-    }
-
-    private void OnDeleteCollection(bool success, string data)
-    {
-        Log.Debug("ExampleDiscoveryV1", "Discovery - Delete collection Response: deleted:{0}", success);
-        _createdCollectionID = default(string);
-        _deleteCollectionTested = true;
     }
 
     private void OnGetFields(GetFieldsResponse resp, string data)
@@ -435,14 +406,39 @@ public class ExampleDiscoveryV1 : MonoBehaviour
         Log.Debug("ExampleDiscoveryV1", "Discovery - Delete document Response: deleted:{0}", success);
 
         if (success)
-        {
-            Log.Debug("ExampleDiscoveryV1", "Delete document successful");
             _createdDocumentID = default(string);
-        }
-        else
-            Log.Debug("ExampleDiscoveryV1", "Delete collection failed");
 
         _deleteDocumentTested = true;
+    }
+
+    private void OnDeleteCollection(bool success, string data)
+    {
+        Log.Debug("ExampleDiscoveryV1", "Discovery - Delete collection Response: deleted:{0}", success);
+
+        if (success)
+            _createdCollectionID = default(string);
+
+        _deleteCollectionTested = true;
+    }
+
+    private void OnDeleteConfiguration(bool success, string data)
+    {
+        Log.Debug("ExampleDiscoveryV1", "Discovery - DeleteConfiguration Response: deleted:{0}", success);
+
+        if (success)
+            _createdConfigurationID = default(string);
+
+        _deleteConfigurationTested = true;
+    }
+
+    private void OnDeleteEnvironment(bool success, string data)
+    {
+        Log.Debug("ExampleDiscoveryV1", "Discovery - DeleteEnvironment Response: deleted:{0}", success);
+
+        if (success)
+            _createdEnvironmentID = default(string);
+
+        _deleteEnvironmentTested = true;
     }
 
     private void OnQuery(QueryResponse resp, string data)
