@@ -19,17 +19,74 @@ using UnityEngine;
 using IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
-#pragma warning disable 0414
+using System.Collections;
+using FullSerializer;
+using System;
+using System.IO;
 
 public class ExampleTextToSpeech : MonoBehaviour
 {
-    TextToSpeech m_TextToSpeech = new TextToSpeech(new Credentials());
-    string m_TestString = "<speak version=\"1.0\"><say-as interpret-as=\"letters\">I'm sorry</say-as>. <prosody pitch=\"150Hz\">This is Text to Speech!</prosody></express-as><express-as type=\"GoodNews\">I'm sorry. This is Text to Speech!</express-as></speak>";
+    private string _username;
+    private string _password;
+    private string _url;
+    private fsSerializer _serializer = new fsSerializer();
+    //private string _token = "<authentication-token>";
 
+    TextToSpeech _textToSpeech;
+    string _testString = "<speak version=\"1.0\"><say-as interpret-as=\"letters\">I'm sorry</say-as>. <prosody pitch=\"150Hz\">This is Text to Speech!</prosody></express-as><express-as type=\"GoodNews\">I'm sorry. This is Text to Speech!</express-as></speak>";
+
+    private bool _synthesizeTested = false;
 
     void Start()
     {
         LogSystem.InstallDefaultReactors();
+
+        VcapCredentials vcapCredentials = new VcapCredentials();
+        fsData data = null;
+
+        //  Get credentials from a credential file defined in environmental variables in the VCAP_SERVICES format. 
+        //  See https://www.ibm.com/watson/developercloud/doc/common/getting-started-variables.html.
+        var environmentalVariable = Environment.GetEnvironmentVariable("VCAP_SERVICES");
+        var fileContent = File.ReadAllText(environmentalVariable);
+
+        //  Add in a parent object because Unity does not like to deserialize root level collection types.
+        fileContent = Utility.AddTopLevelObjectToJson(fileContent, "VCAP_SERVICES");
+
+        //  Convert json to fsResult
+        fsResult r = fsJsonParser.Parse(fileContent, out data);
+        if (!r.Succeeded)
+            throw new WatsonException(r.FormattedMessages);
+
+        //  Convert fsResult to VcapCredentials
+        object obj = vcapCredentials;
+        r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+        if (!r.Succeeded)
+            throw new WatsonException(r.FormattedMessages);
+
+        //  Set credentials from imported credntials
+        Credential credential = vcapCredentials.VCAP_SERVICES["text_to_speech"][0].Credentials;
+        _username = credential.Username.ToString();
+        _password = credential.Password.ToString();
+        _url = credential.Url.ToString();
+
+        //  Create credential and instantiate service
+        Credentials credentials = new Credentials(_username, _password, _url);
+
+        //  Or authenticate using token
+        //Credentials credentials = new Credentials(_url)
+        //{
+        //    AuthenticationToken = _token
+        //};
+
+        _textToSpeech = new TextToSpeech(credentials);
+
+        Runnable.Run(Examples());
+    }
+
+    private IEnumerator Examples()
+    {
+        while (!_synthesizeTested)
+            yield return null;
 
         ////	Get Voices
         //Log.Debug("ExampleTextToSpeech", "Attempting to get voices.");
@@ -85,7 +142,7 @@ public class ExampleTextToSpeech : MonoBehaviour
         customVoiceUpdate.description = "My updated description";
         customVoiceUpdate.name = "My updated name";
         string customizationIdToUpdate = "1476ea80-5355-4911-ac99-ba39162a2d34";
-        if (!m_TextToSpeech.UpdateCustomization(OnUpdateCustomization, customizationIdToUpdate, customVoiceUpdate))
+        if (!_textToSpeech.UpdateCustomization(OnUpdateCustomization, customizationIdToUpdate, customVoiceUpdate))
             Log.Debug("ExampleTextToSpeech", "Failed to update customization!");
 
         //	Get Customization Words
@@ -138,6 +195,7 @@ public class ExampleTextToSpeech : MonoBehaviour
         //m_TextToSpeech.Voice = VoiceType.en_US_Allison;
         //m_TextToSpeech.ToSpeech(m_TestString, HandleToSpeechCallback, true);
 
+        Log.Debug("ExampleTextToSpeech", "Text to Speech examples complete.");
     }
 
     void HandleToSpeechCallback(AudioClip clip)
