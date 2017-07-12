@@ -1389,6 +1389,86 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         }
         #endregion
 
+        #region Get Custom Corpus
+        /// <summary>
+        /// This callback is used by the GetCustomCorpus() function.
+        /// </summary>
+        /// <param name="corpus">The corpus</param>
+        /// <param name="customData">Optional custom data.</param>
+        public delegate void GetCustomCorpusCallback(Corpus corpus, string customData);
+
+        /// <summary>
+        /// Lists information about all corpora that have been added to the specified custom language model. The information includes the total number of words and out-of-vocabulary (OOV) words, name, and status of each corpus. Only the owner of a custom model can use this method to list the model's corpora.
+        /// Note: This method is currently a beta release that is available for US English only.
+        /// </summary>
+        /// <param name="callback">The callback.</param>
+        /// <param name="language">The language for which custom models are to be returned. Currently, only en-US (the default) is supported.</param>
+        /// <param name="corpusName">The name of the custom corpus to be returned.</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns></returns>
+        public bool GetCustomCorpus(GetCustomCorpusCallback callback, string customizationID, string corpusName, string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(customizationID))
+                throw new ArgumentNullException("A customizationID is required to GetCustomCorpora");
+            if (string.IsNullOrEmpty(corpusName))
+                throw new ArgumentNullException("A corpusName is required to GetCustomCorpora");
+
+            GetCustomCorpusReq req = new GetCustomCorpusReq();
+            req.Callback = callback;
+            req.Data = customData;
+            req.CustomizationID = customizationID;
+            req.CustomCorpusName = corpusName;
+            req.OnResponse = OnGetCustomCorpusResp;
+
+            string service = "/v1/customizations/{0}/corpora/{1}";
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(service, customizationID, corpusName));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class GetCustomCorpusReq : RESTConnector.Request
+        {
+            public GetCustomCorpusCallback Callback { get; set; }
+            public string CustomizationID { get; set; }
+            public string CustomCorpusName { get; set; }
+            public string Data { get; set; }
+        }
+
+        private void OnGetCustomCorpusResp(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            Corpus corpus = new Corpus();
+            fsData data = null;
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = corpus;
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Speech To Text", "OnGetCustomCorpusResp Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            string customData = ((GetCustomCorpusReq)req).Data;
+            if (((GetCustomCorpusReq)req).Callback != null)
+                ((GetCustomCorpusReq)req).Callback(resp.Success ? corpus : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+        }
+        #endregion
+
         #region Delete Custom Corpus
         /// <summary>
         /// This callback is used by the DeleteCustomCorpus() function.

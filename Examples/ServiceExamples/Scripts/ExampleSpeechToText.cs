@@ -41,7 +41,9 @@ public class ExampleSpeechToText : MonoBehaviour
     private string _createdCorpusName = "unity-corpus";
     private string _customCorpusFilePath;
     private string _customWordsFilePath;
+    private string _wavFilePath;
 
+    private bool _recognizeTested = false;
     private bool _getModelsTested = false;
     private bool _getModelTested = false;
     private bool _getCustomizationsTested = false;
@@ -49,10 +51,11 @@ public class ExampleSpeechToText : MonoBehaviour
     private bool _getCustomizationTested = false;
     private bool _deleteCustomizationsTested = false;
     private bool _trainCustomizationTested = false;
-    private bool _upgradeCustomizationTested = false;
+    //private bool _upgradeCustomizationTested = false;
     private bool _resetCustomizationTested = false;
     private bool _getCustomCorporaTested = false;
     private bool _addCustomCorpusTested = false;
+    private bool _getCustomCorpusTested = false;
     private bool _getCustomWordsTested = false;
     private bool _addCustomWordsFromPathTested = false;
     private bool _addCustomWordsFromObjectTested = false;
@@ -61,6 +64,8 @@ public class ExampleSpeechToText : MonoBehaviour
     private bool _deleteCustomCorpusTested = false;
 
     private bool _isCustomizationReady = false;
+    private bool _readyToContinue = false;
+    private float _delayTimeInSeconds = 10f;
 
     void Start()
     {
@@ -106,12 +111,19 @@ public class ExampleSpeechToText : MonoBehaviour
         _speechToText = new SpeechToText(credentials);
         _customCorpusFilePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/test-stt-corpus.txt";
         _customWordsFilePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/test-stt-words.json";
+        _wavFilePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/test-audio.wav";
+        _audioClip = WaveFile.ParseWAV("testClip", File.ReadAllBytes(_wavFilePath));
 
         Runnable.Run(Examples());
     }
 
     private IEnumerator Examples()
     {
+        Log.Debug("ExampleSpeechToText", "Attempting to recognize");
+        _speechToText.Recognize(_audioClip, HandleOnRecognize);
+        while (!_recognizeTested)
+            yield return null;
+
         //  Get models
         Log.Debug("ExampleSpeechToText", "Attempting to get models");
         _speechToText.GetModels(HandleGetModels);
@@ -136,10 +148,6 @@ public class ExampleSpeechToText : MonoBehaviour
         while (!_createCustomizationsTested)
             yield return null;
 
-        Runnable.Run(CheckCustomizationStatus(_createdCustomizationID));
-        while (!_isCustomizationReady)
-            yield return null;
-
         //  Get customization
         Log.Debug("ExampleSpeechToText", "Attempting to get customization {0}", _createdCustomizationID);
         _speechToText.GetCustomization(HandleGetCustomization, _createdCustomizationID);
@@ -158,6 +166,17 @@ public class ExampleSpeechToText : MonoBehaviour
         while (!_addCustomCorpusTested)
             yield return null;
 
+        //  Get custom corpus
+        Log.Debug("ExampleSpeechToText", "Attempting to get custom corpus {1} in customization {0}", _createdCustomizationID, _createdCorpusName);
+        _speechToText.GetCustomCorpus(HandleGetCustomCorpus, _createdCustomizationID, _createdCorpusName);
+        while (!_getCustomCorpusTested)
+            yield return null;
+
+        //  Wait for customization
+        Runnable.Run(CheckCustomizationStatus(_createdCustomizationID));
+        while (!_isCustomizationReady)
+            yield return null;
+
         //  Get custom words
         Log.Debug("ExampleSpeechToText", "Attempting to get custom words.");
         _speechToText.GetCustomWords(HandleGetCustomWords, _createdCustomizationID);
@@ -166,8 +185,15 @@ public class ExampleSpeechToText : MonoBehaviour
 
         //  Add custom words from path
         Log.Debug("ExampleSpeechToText", "Attempting to add custom words in customization {0} using Words json path {1}", _createdCustomizationID, _customWordsFilePath);
-        _speechToText.AddCustomWords(HandleAddCustomWordsFromPath, _createdCustomizationID, _customWordsFilePath);
+        string customWords = File.ReadAllText(_customWordsFilePath);
+        _speechToText.AddCustomWords(HandleAddCustomWordsFromPath, _createdCustomizationID, customWords);
         while (!_addCustomWordsFromPathTested)
+            yield return null;
+
+        //  Wait for customization
+        _isCustomizationReady = false;
+        Runnable.Run(CheckCustomizationStatus(_createdCustomizationID));
+        while (!_isCustomizationReady)
             yield return null;
 
         //  Add custom words from object
@@ -192,9 +218,16 @@ public class ExampleSpeechToText : MonoBehaviour
         w2.display_as = "Bijou";
         wordList.Add(w2);
         words.words = wordList.ToArray();
+
         Log.Debug("ExampleSpeechToText", "Attempting to add custom words in customization {0} using Words object", _createdCustomizationID);
         _speechToText.AddCustomWords(HandleAddCustomWordsFromObject, _createdCustomizationID, words);
         while (!_addCustomWordsFromObjectTested)
+            yield return null;
+
+        //  Wait for customization
+        _isCustomizationReady = false;
+        Runnable.Run(CheckCustomizationStatus(_createdCustomizationID));
+        while (!_isCustomizationReady)
             yield return null;
 
         //  Get custom word
@@ -209,30 +242,57 @@ public class ExampleSpeechToText : MonoBehaviour
         while (!_trainCustomizationTested)
             yield return null;
 
-        //  Upgrade customization
-        Log.Debug("ExampleSpeechToText", "Attempting to upgrade customization {0}", _createdCustomizationID);
-        _speechToText.UpgradeCustomization(HandleUpgradeCustomization, _createdCustomizationID);
-        while (!_upgradeCustomizationTested)
+        //  Wait for customization
+        _isCustomizationReady = false;
+        Runnable.Run(CheckCustomizationStatus(_createdCustomizationID));
+        while (!_isCustomizationReady)
             yield return null;
-        
+
+        //  Upgrade customization - not currently implemented in service
+        //Log.Debug("ExampleSpeechToText", "Attempting to upgrade customization {0}", _createdCustomizationID);
+        //_speechToText.UpgradeCustomization(HandleUpgradeCustomization, _createdCustomizationID);
+        //while (!_upgradeCustomizationTested)
+        //    yield return null;
+
         //  Delete custom word
         Log.Debug("ExampleSpeechToText", "Attempting to delete custom word {1} in customization {0}", _createdCustomizationID, words.words[2].word);
         _speechToText.DeleteCustomWord(HandleDeleteCustomWord, _createdCustomizationID, words.words[2].word);
         while (!_deleteCustomWordTested)
             yield return null;
 
-        //  Reset customization
-        Log.Debug("ExampleSpeechToText", "Attempting to reset customization {0}", _createdCustomizationID);
-        _speechToText.ResetCustomization(HandleResetCustomization, _createdCustomizationID);
-        while (!_resetCustomizationTested)
+        //  Delay
+        Log.Debug("ExampleDiscovery", string.Format("Delaying delete environment for {0} sec", _delayTimeInSeconds));
+        Runnable.Run(Delay(_delayTimeInSeconds));
+        while (!_readyToContinue)
             yield return null;
 
+        _readyToContinue = false;
         //  Delete custom corpus
         Log.Debug("ExampleSpeechToText", "Attempting to delete custom corpus {1} in customization {0}", _createdCustomizationID, _createdCorpusName);
         _speechToText.DeleteCustomCorpus(HandleDeleteCustomCorpus, _createdCustomizationID, _createdCorpusName);
         while (!_deleteCustomCorpusTested)
             yield return null;
 
+        //  Delay
+        Log.Debug("ExampleDiscovery", string.Format("Delaying delete environment for {0} sec", _delayTimeInSeconds));
+        Runnable.Run(Delay(_delayTimeInSeconds));
+        while (!_readyToContinue)
+            yield return null;
+
+        _readyToContinue = false;
+        //  Reset customization
+        Log.Debug("ExampleSpeechToText", "Attempting to reset customization {0}", _createdCustomizationID);
+        _speechToText.ResetCustomization(HandleResetCustomization, _createdCustomizationID);
+        while (!_resetCustomizationTested)
+            yield return null;
+
+        //  Delay
+        Log.Debug("ExampleDiscovery", string.Format("Delaying delete environment for {0} sec", _delayTimeInSeconds));
+        Runnable.Run(Delay(_delayTimeInSeconds));
+        while (!_readyToContinue)
+            yield return null;
+
+        _readyToContinue = false;
         //  Delete customization
         Log.Debug("ExampleSpeechToText", "Attempting to delete customization {0}", _createdCustomizationID);
         _speechToText.DeleteCustomization(HandleDeleteCustomization, _createdCustomizationID);
@@ -256,20 +316,24 @@ public class ExampleSpeechToText : MonoBehaviour
         _getModelTested = true;
     }
 
-    //private void HandleOnRecognize(SpeechRecognitionEvent result)
-    //{
-    //    if (result != null && result.results.Length > 0)
-    //    {
-    //        foreach (var res in result.results)
-    //        {
-    //            foreach (var alt in res.alternatives)
-    //            {
-    //                string text = alt.transcript;
-    //                Log.Debug("ExampleSpeechToText", string.Format("{0} ({1}, {2:0.00})\n", text, res.final ? "Final" : "Interim", alt.confidence));
-    //            }
-    //        }
-    //    }
-    //}
+    private void HandleOnRecognize(SpeechRecognitionEvent result)
+    {
+        if (result != null && result.results.Length > 0)
+        {
+            foreach (var res in result.results)
+            {
+                foreach (var alt in res.alternatives)
+                {
+                    string text = alt.transcript;
+                    Log.Debug("ExampleSpeechToText", string.Format("{0} ({1}, {2:0.00})\n", text, res.final ? "Final" : "Interim", alt.confidence));
+
+                    if (res.final)
+                        _recognizeTested = true;
+                }
+            }
+        }
+
+    }
 
     private void HandleGetCustomizations(Customizations customizations, string customData)
     {
@@ -310,25 +374,29 @@ public class ExampleSpeechToText : MonoBehaviour
     {
         if (success)
         {
-            Log.Debug("ExampleSpeechToText", "Train customization {0}!", _createdCustomizationID);
+            Log.Debug("ExampleSpeechToText", "Trained customization {0}!", _createdCustomizationID);
         }
         else
         {
             Log.Debug("ExampleSpeechToText", "Failed to train customization!");
         }
+
+        _trainCustomizationTested = true;
     }
 
-    private void HandleUpgradeCustomization(bool success, string customData)
-    {
-        if (success)
-        {
-            Log.Debug("ExampleSpeechToText", "Upgrade customization {0}!", _createdCustomizationID);
-        }
-        else
-        {
-            Log.Debug("ExampleSpeechToText", "Failed to upgrade customization!");
-        }
-    }
+    //private void HandleUpgradeCustomization(bool success, string customData)
+    //{
+    //    if (success)
+    //    {
+    //        Log.Debug("ExampleSpeechToText", "Upgrade customization {0}!", _createdCustomizationID);
+    //    }
+    //    else
+    //    {
+    //        Log.Debug("ExampleSpeechToText", "Failed to upgrade customization!");
+    //    }
+
+    //    _upgradeCustomizationTested = true;
+    //}
 
     private void HandleResetCustomization(bool success, string customData)
     {
@@ -340,6 +408,8 @@ public class ExampleSpeechToText : MonoBehaviour
         {
             Log.Debug("ExampleSpeechToText", "Failed to reset customization!");
         }
+
+        _resetCustomizationTested = true;
     }
 
     private void HandleGetCustomCorpora(Corpora corpora, string customData)
@@ -358,12 +428,28 @@ public class ExampleSpeechToText : MonoBehaviour
         {
             Log.Debug("ExampleSpeechToText", "Failed to delete custom corpus!");
         }
+
+        _deleteCustomCorpusTested = true;
     }
 
     private void HandleAddCustomCorpus(bool success, string customData)
     {
-        Log.Debug("ExampleSpeechToText", "Speech to Text - Add custom corpus response: {0}", customData);
+        if(success)
+        {
+            Log.Debug("ExampleSpeechToText", "Speech to Text - Add custom corpus response: succeeded!");
+        }
+        else
+        {
+            Log.Debug("ExampleSpeechToText", "Failed to add custom corpus!");
+        }
+
         _addCustomCorpusTested = true;
+    }
+
+    private void HandleGetCustomCorpus(Corpus corpus, string customData)
+    {
+        Log.Debug("ExampleSpeechToText", "Speech to Text - Get custom corpus response: {0}", customData);
+        _getCustomCorpusTested = true;
     }
 
     private void HandleGetCustomWords(WordsList wordList, string customData)
@@ -374,13 +460,29 @@ public class ExampleSpeechToText : MonoBehaviour
 
     private void HandleAddCustomWordsFromPath(bool success, string customData)
     {
-        Log.Debug("ExampleSpeechToText", "Speech to Text - Add custom words (path) response: {0}", customData);
+        if (success)
+        {
+            Log.Debug("ExampleSpeechToText", "Speech to Text - Add custom words from path response: succeeded!");
+        }
+        else
+        {
+            Log.Debug("ExampleSpeechToText", "Failed to delete custom word!");
+        }
+
         _addCustomWordsFromPathTested = true;
     }
 
     private void HandleAddCustomWordsFromObject(bool success, string customData)
     {
-        Log.Debug("ExampleSpeechToText", "Speech to Text - Add custom words (object) response: {0}", customData);
+        if (success)
+        {
+            Log.Debug("ExampleSpeechToText", "Speech to Text - Add custom words from object response: succeeded!");
+        }
+        else
+        {
+            Log.Debug("ExampleSpeechToText", "Failed to delete custom word!");
+        }
+
         _addCustomWordsFromObjectTested = true;
     }
 
@@ -394,6 +496,8 @@ public class ExampleSpeechToText : MonoBehaviour
         {
             Log.Debug("ExampleSpeechToText", "Failed to delete custom word!");
         }
+
+        _deleteCustomWordTested = true;
     }
 
     private void HandleGetCustomWord(WordData word, string customData)
@@ -425,5 +529,11 @@ public class ExampleSpeechToText : MonoBehaviour
         {
             Log.Debug("TestSpeechToText", "Check customization status failed!");
         }
+    }
+
+    private IEnumerator Delay(float delayTime)
+    {
+        yield return new WaitForSeconds(delayTime);
+        _readyToContinue = true;
     }
 }
