@@ -174,36 +174,6 @@ namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
         {
             return SERVICE_ID;
         }
-
-        /// <exclude />
-        public void GetServiceStatus(ServiceStatus callback)
-        {
-            if (Utilities.Config.Instance.FindCredentials(SERVICE_ID) != null)
-                new CheckServiceStatus(this, callback);
-            else
-                callback(SERVICE_ID, false);
-        }
-
-        private class CheckServiceStatus
-        {
-            private ToneAnalyzer service = null;
-            private ServiceStatus callback = null;
-
-            public CheckServiceStatus(ToneAnalyzer service, ServiceStatus callback)
-            {
-                this.service = service;
-                this.callback = callback;
-
-                if (!this.service.GetToneAnalyze(this.OnGetToneAnalyzed, "Test"))
-                    this.callback(SERVICE_ID, false);
-            }
-
-            private void OnGetToneAnalyzed(ToneAnalyzerResponse resp, string data)
-            {
-                if (callback != null)
-                    callback(SERVICE_ID, resp != null);
-            }
-        };
         #endregion
     }
 }

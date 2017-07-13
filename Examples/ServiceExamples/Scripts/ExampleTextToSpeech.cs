@@ -118,7 +118,6 @@ public class ExampleTextToSpeech : MonoBehaviour
             yield return null;
 
         //	Get Voice
-        string selectedVoice = "en-US_AllisonVoice";
         Log.Debug("ExampleTextToSpeech", "Attempting to get voice {0}.", VoiceType.en_US_Allison);
         _textToSpeech.GetVoice(OnGetVoice, VoiceType.en_US_Allison);
         while (!_getVoiceTested)

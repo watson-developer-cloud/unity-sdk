@@ -50,10 +50,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// <param name="callback">The event receiver function.</param>
         public void RegisterEventReceiver(string eventName, OnReceiveEvent callback)
         {
-            if (!m_EventMap.ContainsKey(eventName))
-                m_EventMap.Add(eventName, new List<OnReceiveEvent>() { callback });
+            if (!_eventMap.ContainsKey(eventName))
+                _eventMap.Add(eventName, new List<OnReceiveEvent>() { callback });
             else
-                m_EventMap[eventName].Add(callback);
+                _eventMap[eventName].Add(callback);
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// </summary>
         public void UnregisterAllEventReceivers()
         {
-            m_EventMap.Clear();
+            _eventMap.Clear();
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// <param name="eventName">Name of the event to unregister.</param>
         public void UnregisterEventReceivers(string eventName)
         {
-            m_EventMap.Remove(eventName);
+            _eventMap.Remove(eventName);
         }
 
         /// <summary>
@@ -80,8 +80,8 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// <param name="callback">The event handler.</param>
         public void UnregisterEventReceiver(string eventName, OnReceiveEvent callback)
         {
-            if (m_EventMap.ContainsKey(eventName))
-                m_EventMap[eventName].Remove(callback);
+            if (_eventMap.ContainsKey(eventName))
+                _eventMap[eventName].Remove(callback);
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                 throw new ArgumentNullException(eventName);
 
             List<OnReceiveEvent> receivers = null;
-            if (m_EventMap.TryGetValue(eventName, out receivers))
+            if (_eventMap.TryGetValue(eventName, out receivers))
             {
                 for (int i = 0; i < receivers.Count; ++i)
                 {
@@ -127,44 +127,44 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// <param name="args">Arguments to send to the event receiver.</param>
         public void SendEventAsync(string eventName, params object[] args)
         {
-            m_AsyncEvents.Enqueue(new AsyncEvent() { m_EventName = eventName, m_Args = args });
-            if (m_ProcesserCount == 0)
+            _asyncEvents.Enqueue(new AsyncEvent() { _eventName = eventName, _args = args });
+            if (_processerCount == 0)
                 Runnable.Run(ProcessAsyncEvents());
         }
         #endregion
 
         #region Private Data
-        private Dictionary<Type, Dictionary<object, string>> m_EventTypeName = new Dictionary<Type, Dictionary<object, string>>();
-        private Dictionary<string, List<OnReceiveEvent>> m_EventMap = new Dictionary<string, List<OnReceiveEvent>>();
+        private Dictionary<Type, Dictionary<object, string>> _eventTypeName = new Dictionary<Type, Dictionary<object, string>>();
+        private Dictionary<string, List<OnReceiveEvent>> _eventMap = new Dictionary<string, List<OnReceiveEvent>>();
 
         private class AsyncEvent
         {
-            public string m_EventName;
-            public object[] m_Args;
+            public string _eventName;
+            public object[] _args;
         }
-        private Queue<AsyncEvent> m_AsyncEvents = new Queue<AsyncEvent>();
-        private int m_ProcesserCount = 0;
+        private Queue<AsyncEvent> _asyncEvents = new Queue<AsyncEvent>();
+        private int _processerCount = 0;
 
         private IEnumerator ProcessAsyncEvents()
         {
-            m_ProcesserCount += 1;
+            _processerCount += 1;
             yield return null;
 
-            while (m_AsyncEvents.Count > 0)
+            while (_asyncEvents.Count > 0)
             {
-                AsyncEvent send = m_AsyncEvents.Dequeue();
-                SendEvent(send.m_EventName, send.m_Args);
+                AsyncEvent send = _asyncEvents.Dequeue();
+                SendEvent(send._eventName, send._args);
             }
 
-            m_ProcesserCount -= 1;
+            _processerCount -= 1;
         }
         #endregion
 
         private void InitializeEventTypeNames(Type enumType)
         {
-            m_EventTypeName[enumType] = new Dictionary<object, string>();
+            _eventTypeName[enumType] = new Dictionary<object, string>();
             foreach (var en in Enum.GetNames(enumType))
-                m_EventTypeName[enumType][Enum.Parse(enumType, en)] = en;
+                _eventTypeName[enumType][Enum.Parse(enumType, en)] = en;
         }
     }
 }

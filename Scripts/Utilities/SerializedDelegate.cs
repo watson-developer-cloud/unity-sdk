@@ -44,16 +44,16 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         public Type DelegateType { get; private set; }
 
         [SerializeField]
-        GameObject m_Target = null;
+        GameObject _target = null;
         [SerializeField]
-        string m_Component = null;
+        string _component = null;
         [SerializeField]
-        string m_Method = null;
+        string _method = null;
 
         /// <summary>
         /// Target Game Object to invoke the callback under selected component
         /// </summary>
-        public GameObject TargetGameObject { get { return m_Target; } }
+        public GameObject TargetGameObject { get { return _target; } }
 
         /// <summary>
         /// This resolves the actual delegate for invoke.
@@ -61,12 +61,12 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// <returns>Returns a delegate or null if the delegate can't be resolved.</returns>
         public Delegate ResolveDelegate()
         {
-            if (m_Target == null)
+            if (_target == null)
                 return null;
-            Component component = m_Target.GetComponent(m_Component);
+            Component component = _target.GetComponent(_component);
             if (component == null)
                 return null;
-            MethodInfo info = component.GetType().GetMethod(m_Method, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.InvokeMethod);
+            MethodInfo info = component.GetType().GetMethod(_method, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.InvokeMethod);
             if (info == null)
                 return null;
 

@@ -27,7 +27,6 @@ using System;
 using UnityEditor;
 #endif
 
-#pragma warning disable 219
 public class ExampleRetrieveAndRank : MonoBehaviour
 {
     private string _username;
@@ -54,7 +53,7 @@ public class ExampleRetrieveAndRank : MonoBehaviour
     private bool _getClusterConfigsTested = false;
     private bool _deleteClusterConfigTested = false;
     private bool _getClusterConfigTested = false;
-    private bool _saveConfigTested = false;
+    //private bool _saveConfigTested = false;
     private bool _uploadClusterConfigTested = false;
     private bool _getCollectionsTested = false;
     private bool _createCollectionTested = false;
@@ -347,12 +346,12 @@ public class ExampleRetrieveAndRank : MonoBehaviour
         Invoke("ReadyToContinue", _waitTime);
     }
 
-    private void OnSaveConfig(bool success, string data)
-    {
-        Log.Debug("\tExampleRetrieveAndRank", "Retrieve and rank - Save config response: {0}", data);
-        _saveConfigTested = true;
-        Invoke("ReadyToContinue", _waitTime);
-    }
+    //private void OnSaveConfig(bool success, string data)
+    //{
+    //    Log.Debug("\tExampleRetrieveAndRank", "Retrieve and rank - Save config response: {0}", data);
+    //    _saveConfigTested = true;
+    //    Invoke("ReadyToContinue", _waitTime);
+    //}
 
     private void OnUploadClusterConfig(UploadResponse resp, string data)
     {

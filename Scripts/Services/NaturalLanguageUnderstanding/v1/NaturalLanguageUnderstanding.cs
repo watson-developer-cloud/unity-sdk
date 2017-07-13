@@ -300,35 +300,6 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
         {
             return SERVICE_ID;
         }
-        /// <exclude />
-        public void GetServiceStatus(ServiceStatus callback)
-        {
-            if (Config.Instance.FindCredentials(SERVICE_ID) != null)
-                new CheckServiceStatus(this, callback);
-            else
-                callback(SERVICE_ID, false);
-        }
-
-        private class CheckServiceStatus
-        {
-            private NaturalLanguageUnderstanding m_Service = null;
-            private ServiceStatus m_Callback = null;
-
-            public CheckServiceStatus(NaturalLanguageUnderstanding service, ServiceStatus callback)
-            {
-                m_Service = service;
-                m_Callback = callback;
-
-                if (!m_Service.GetModels(OnGetModels, "CheckServiceStatus"))
-                    m_Callback(SERVICE_ID, false);
-            }
-
-            private void OnGetModels(ListModelsResults modelsData, string customData)
-            {
-                if (m_Callback != null)
-                    m_Callback(SERVICE_ID, modelsData != null);
-            }
-        }
         #endregion
     }
 }

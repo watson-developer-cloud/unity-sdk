@@ -199,35 +199,6 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3
         {
             return SERVICE_ID;
         }
-
-        public void GetServiceStatus(ServiceStatus callback)
-        {
-            if (Utilities.Config.Instance.FindCredentials(SERVICE_ID) != null)
-                new CheckServiceStatus(this, callback);
-            else
-                callback(SERVICE_ID, false);
-        }
-
-        private class CheckServiceStatus
-        {
-            private PersonalityInsights m_Service = null;
-            private ServiceStatus m_Callback = null;
-
-            public CheckServiceStatus(PersonalityInsights service, ServiceStatus callback)
-            {
-                m_Service = service;
-                m_Callback = callback;
-                string dataPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/personalityInsights.json";
-                if (!m_Service.GetProfile(OnGetProfile, dataPath, ContentType.TEXT_PLAIN, ContentLanguage.ENGLISH))
-                    m_Callback(SERVICE_ID, false);
-            }
-
-            private void OnGetProfile(Profile resp, string data)
-            {
-                if (m_Callback != null)
-                    m_Callback(SERVICE_ID, resp != null);
-            }
-        }
         #endregion
     }
 }

@@ -55,16 +55,16 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         private int KEYCODE_MASK = (1 << 10) - 1;
 
         #region Private Data
-        private bool m_Active = true;
-        private bool m_UpdateActivate = true;
-        private Dictionary<int, string> m_KeyEvents = new Dictionary<int, string>();
+        private bool _active = true;
+        private bool _updateActivate = true;
+        private Dictionary<int, string> _keyEvents = new Dictionary<int, string>();
         #endregion
 
         #region Public Properties
         /// <summary>
         /// Set/Get the active state of this manager.
         /// </summary>
-        public bool Active { get { return m_Active; } set { m_UpdateActivate = value; } }
+        public bool Active { get { return _active; } set { _updateActivate = value; } }
         /// <summary>
         /// The current instance of the DebugConsole.
         /// </summary>
@@ -100,7 +100,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         public bool RegisterKeyEvent(KeyCode key, KeyModifiers modifiers, string eventType)
         {
             int code = ((int)key) | (((int)modifiers) << MODIFIER_SHIFT_BITS);
-            m_KeyEvents[code] = eventType;
+            _keyEvents[code] = eventType;
             return true;
         }
         /// <summary>
@@ -113,20 +113,20 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         public bool UnregisterKeyEvent(KeyCode key, KeyModifiers modifiers = KeyModifiers.NONE, string eventType = "")
         {
             int code = ((int)key) | (((int)modifiers) << MODIFIER_SHIFT_BITS);
-            if (eventType != "" && m_KeyEvents.ContainsKey(code) && m_KeyEvents[code] == eventType)
-                return m_KeyEvents.Remove(code);
+            if (eventType != "" && _keyEvents.ContainsKey(code) && _keyEvents[code] == eventType)
+                return _keyEvents.Remove(code);
 
-            return m_KeyEvents.Remove(code);
+            return _keyEvents.Remove(code);
         }
 
         #endregion
 
         private void Update()
         {
-            if (m_Active)
+            if (_active)
             {
                 List<string> fire = new List<string>();
-                foreach (var kp in m_KeyEvents)
+                foreach (var kp in _keyEvents)
                 {
                     KeyCode key = (KeyCode)(kp.Key & KEYCODE_MASK);
 
@@ -172,7 +172,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             // update our active flag AFTER we check the active flag, this prevents
             // us from responding the key events during the same frame as we activate
             // this manager.
-            m_Active = m_UpdateActivate;
+            _active = _updateActivate;
         }
 
         private void OnApplicationQuit()

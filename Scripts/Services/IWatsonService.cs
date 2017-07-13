@@ -15,10 +15,6 @@
 *
 */
 
-using System;
-using System.Collections.Generic;
-using IBM.Watson.DeveloperCloud.Utilities;
-
 namespace IBM.Watson.DeveloperCloud.Services
 {
     /// <summary>
@@ -38,42 +34,5 @@ namespace IBM.Watson.DeveloperCloud.Services
         /// </summary>
         /// <returns>A string containing the service ID.</returns>
         string GetServiceID();
-        /// <summary>
-        /// This should check if the service is up or down, and invoke the callback with the current
-        /// state of the service once determined.
-        /// </summary>
-        /// <param name="callback">The callback to invoke.</param>
-        void GetServiceStatus(ServiceStatus callback);
-    }
-
-    /// <summary>
-    /// Service helper class.
-    /// </summary>
-    public static class ServiceHelper
-    {
-        /// <summary>
-        /// This returns a instance of all services.
-        /// </summary>
-        /// <returns>An array of IWatsonService instances.</returns>
-        public static IWatsonService[] GetAllServices(bool reqCredentials = false)
-        {
-            List<IWatsonService> services = new List<IWatsonService>();
-
-            Type[] types = Utilities.Utility.FindAllDerivedTypes(typeof(IWatsonService));
-            foreach (var type in types)
-            {
-                try
-                {
-                    IWatsonService serviceObject = Activator.CreateInstance(type) as IWatsonService;
-                    if (reqCredentials && Config.Instance.FindCredentials(serviceObject.GetServiceID()) == null)
-                        continue;       // skip services that don't have credential data..
-                    services.Add(serviceObject as IWatsonService);
-                }
-                catch (Exception)
-                { }
-            }
-
-            return services.ToArray();
-        }
     }
 }

@@ -181,7 +181,7 @@ namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
         /// Gets the highest score.
         /// </summary>
         /// <value>The highest score.</value>
-        private double m_HighestScore = -1;
+        private double _highestScore = -1;
         /// <summary>
         /// Returns the highest score.
         /// </summary>
@@ -189,24 +189,24 @@ namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
         {
             get
             {
-                if (m_HighestScore < 0)
+                if (_highestScore < 0)
                 {
                     for (int i = 0; tone_categories != null && i < tone_categories.Length; i++)
                     {
                         for (int j = 0; tone_categories[i].tones != null && j < tone_categories[i].tones.Length; j++)
                         {
 
-                            if (m_HighestScore < tone_categories[i].tones[j].score)
+                            if (_highestScore < tone_categories[i].tones[j].score)
                             {
-                                m_HighestScore = tone_categories[i].tones[j].score;
-                                m_HighestScoreToneName = tone_categories[i].tones[j].tone_name;
-                                m_HighestScoreToneCategoryName = tone_categories[i].category_name;
+                                _highestScore = tone_categories[i].tones[j].score;
+                                _highestScoreToneName = tone_categories[i].tones[j].tone_name;
+                                _highestScoreToneCategoryName = tone_categories[i].category_name;
                             }
                         }
 
                     }
                 }
-                return m_HighestScore;
+                return _highestScore;
             }
         }
 
@@ -214,7 +214,7 @@ namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
         /// Gets the name of the highest score tone.
         /// </summary>
         /// <value>The name of the highest score tone.</value>
-        private string m_HighestScoreToneName = null;
+        private string _highestScoreToneName = null;
         /// <summary>
         /// The highest score tone name.
         /// </summary>
@@ -222,7 +222,7 @@ namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
         {
             get
             {
-                return m_HighestScoreToneName;
+                return _highestScoreToneName;
             }
         }
 
@@ -230,7 +230,7 @@ namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
         /// Gets the name of the highest score tone category.
         /// </summary>
         /// <value>The name of the highest score tone category.</value>
-        private string m_HighestScoreToneCategoryName = null;
+        private string _highestScoreToneCategoryName = null;
         /// <summary>
         /// The highest score category name.
         /// </summary>
@@ -238,7 +238,7 @@ namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
         {
             get
             {
-                return m_HighestScoreToneCategoryName;
+                return _highestScoreToneCategoryName;
             }
         }
 

@@ -45,9 +45,6 @@ public class ExampleDiscoveryV1 : MonoBehaviour
     private string _documentFilePath;
     private string _query = "What is the capital of china?";
 
-    private bool _isConfigDeleted = false;
-    private bool _isCollectionDeleted = false;
-
     private bool _getEnvironmentsTested = false;
     private bool _getEnvironmentTested = false;
     private bool _addEnvironmentTested = false;

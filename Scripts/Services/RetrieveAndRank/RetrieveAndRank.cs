@@ -315,8 +315,6 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                 throw new ArgumentNullException("callback");
             if (string.IsNullOrEmpty(clusterID))
                 throw new ArgumentNullException("ClusterID to be deleted is required!");
-            if (clusterID == Config.Instance.GetVariableValue("RetrieveAndRank_IntegrationTestClusterID"))
-                throw new WatsonException("You cannot delete the example cluster!");
 
             DeleteClusterRequest req = new DeleteClusterRequest();
             req.Callback = callback;
@@ -572,8 +570,6 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                 throw new ArgumentNullException("clusterID to is required!");
             if (string.IsNullOrEmpty(configID))
                 throw new ArgumentNullException("configID to be deleted is required!");
-            if (configID == Config.Instance.GetVariableValue("RetrieveAndRank_IntegrationTestClusterConfigID"))
-                throw new WatsonException("You cannot delete the example cluster config!");
 
             DeleteClusterConfigRequest req = new DeleteClusterConfigRequest();
             req.Callback = callback;
@@ -1559,8 +1555,6 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                 throw new ArgumentNullException("callback");
             if (string.IsNullOrEmpty(rankerID))
                 throw new ArgumentNullException("RankerID to be deleted is required!");
-            if (rankerID == Config.Instance.GetVariableValue("RetrieveAndRank_IntegrationTestRankerID"))
-                throw new WatsonException("You cannot delete the example ranker!");
 
             DeleteRankerRequest req = new DeleteRankerRequest();
             req.Callback = callback;
@@ -1706,36 +1700,6 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         {
             return SERVICE_ID;
         }
-
-        /// <exclude />
-        public void GetServiceStatus(ServiceStatus callback)
-        {
-            if (Config.Instance.FindCredentials(SERVICE_ID) != null)
-                new CheckServiceStatus(this, callback);
-            else
-                callback(SERVICE_ID, false);
-        }
-
-        private class CheckServiceStatus
-        {
-            private RetrieveAndRank m_Service = null;
-            private ServiceStatus m_Callback = null;
-
-            public CheckServiceStatus(RetrieveAndRank service, ServiceStatus callback)
-            {
-                m_Service = service;
-                m_Callback = callback;
-
-                if (!m_Service.GetClusters(OnGetClusters))
-                    m_Callback(SERVICE_ID, false);
-            }
-
-            void OnGetClusters(SolrClusterListResponse clustersData, string data)
-            {
-                if (m_Callback != null)
-                    m_Callback(SERVICE_ID, clustersData != null);
-            }
-        };
         #endregion
     }
 }

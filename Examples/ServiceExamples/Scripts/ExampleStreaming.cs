@@ -24,11 +24,11 @@ using IBM.Watson.DeveloperCloud.DataTypes;
 
 public class ExampleStreaming : MonoBehaviour
 {
-    private int m_RecordingRoutine = 0;
-    private string m_MicrophoneID = null;
-    private AudioClip m_Recording = null;
-    private int m_RecordingBufferSize = 2;
-    private int m_RecordingHZ = 22050;
+    private int _recordingRoutine = 0;
+    private string _microphoneID = null;
+    private AudioClip _recording = null;
+    private int _recordingBufferSize = 2;
+    private int _recordingHZ = 22050;
 
     private SpeechToText _speechToText;
 
@@ -68,20 +68,20 @@ public class ExampleStreaming : MonoBehaviour
 
     private void StartRecording()
     {
-        if (m_RecordingRoutine == 0)
+        if (_recordingRoutine == 0)
         {
             UnityObjectUtil.StartDestroyQueue();
-            m_RecordingRoutine = Runnable.Run(RecordingHandler());
+            _recordingRoutine = Runnable.Run(RecordingHandler());
         }
     }
 
     private void StopRecording()
     {
-        if (m_RecordingRoutine != 0)
+        if (_recordingRoutine != 0)
         {
-            Microphone.End(m_MicrophoneID);
-            Runnable.Stop(m_RecordingRoutine);
-            m_RecordingRoutine = 0;
+            Microphone.End(_microphoneID);
+            Runnable.Stop(_recordingRoutine);
+            _recordingRoutine = 0;
         }
     }
 
@@ -95,23 +95,23 @@ public class ExampleStreaming : MonoBehaviour
     private IEnumerator RecordingHandler()
     {
         Log.Debug("ExampleStreaming", "devices: {0}", Microphone.devices);
-        m_Recording = Microphone.Start(m_MicrophoneID, true, m_RecordingBufferSize, m_RecordingHZ);
-        yield return null;      // let m_RecordingRoutine get set..
+        _recording = Microphone.Start(_microphoneID, true, _recordingBufferSize, _recordingHZ);
+        yield return null;      // let _recordingRoutine get set..
 
-        if (m_Recording == null)
+        if (_recording == null)
         {
             StopRecording();
             yield break;
         }
 
         bool bFirstBlock = true;
-        int midPoint = m_Recording.samples / 2;
+        int midPoint = _recording.samples / 2;
         float[] samples = null;
 
-        while (m_RecordingRoutine != 0 && m_Recording != null)
+        while (_recordingRoutine != 0 && _recording != null)
         {
-            int writePos = Microphone.GetPosition(m_MicrophoneID);
-            if (writePos > m_Recording.samples || !Microphone.IsRecording(m_MicrophoneID))
+            int writePos = Microphone.GetPosition(_microphoneID);
+            if (writePos > _recording.samples || !Microphone.IsRecording(_microphoneID))
             {
                 Log.Error("MicrophoneWidget", "Microphone disconnected.");
 
@@ -124,11 +124,11 @@ public class ExampleStreaming : MonoBehaviour
             {
                 // front block is recorded, make a RecordClip and pass it onto our callback.
                 samples = new float[midPoint];
-                m_Recording.GetData(samples, bFirstBlock ? 0 : midPoint);
+                _recording.GetData(samples, bFirstBlock ? 0 : midPoint);
 
                 AudioData record = new AudioData();
                 record.MaxLevel = Mathf.Max(samples);
-                record.Clip = AudioClip.Create("Recording", midPoint, m_Recording.channels, m_RecordingHZ, false);
+                record.Clip = AudioClip.Create("Recording", midPoint, _recording.channels, _recordingHZ, false);
                 record.Clip.SetData(samples, 0);
 
                 _speechToText.OnListen(record);
@@ -139,8 +139,8 @@ public class ExampleStreaming : MonoBehaviour
             {
                 // calculate the number of samples remaining until we ready for a block of audio, 
                 // and wait that amount of time it will take to record.
-                int remaining = bFirstBlock ? (midPoint - writePos) : (m_Recording.samples - writePos);
-                float timeRemaining = (float)remaining / (float)m_RecordingHZ;
+                int remaining = bFirstBlock ? (midPoint - writePos) : (_recording.samples - writePos);
+                float timeRemaining = (float)remaining / (float)_recordingHZ;
 
                 yield return new WaitForSeconds(timeRemaining);
             }

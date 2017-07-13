@@ -66,5 +66,20 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// <exclude />
             public const string DEBUG_DISPLAY_QUALITY = "Quality: {0}";
         }
+
+        /// <summary>
+        /// Variables for configuration.
+        /// </summary>
+        public static class Config
+        {
+            /// <summary>
+            /// Maximum number of REST connections allowed at once.
+            /// </summary>
+            public static int MaxRestConnections = 5;
+            /// <summary>
+            /// Default time in seconds after which a call should timeout.
+            /// </summary>
+            public static float Timeout = 120.0f;
+        }
     }
 }

@@ -99,11 +99,11 @@ namespace IBM.Watson.DeveloperCloud.Logging
         /// <param name="log">The log record.</param>
         public void ProcessLog(LogRecord log)
         {
-            if (log.m_Level >= Level)
+            if (log._level >= Level)
             {
                 File.AppendAllText(LogFile, string.Format("[{0}][{1}][{2}] {3}\n",
-                    log.m_TimeStamp.ToString("MM/dd/yyyy HH:mm:ss"),
-                    log.m_SubSystem, log.m_Level.ToString(), log.m_Message));
+                    log._timeStamp.ToString("MM/dd/yyyy HH:mm:ss"),
+                    log._subSystem, log._level.ToString(), log._message));
 
                 // automatically rotate logs once our size is large enough..
                 if (new FileInfo(LogFile).Length > MaxLogSize)

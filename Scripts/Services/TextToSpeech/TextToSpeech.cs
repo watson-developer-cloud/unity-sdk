@@ -34,9 +34,9 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
     public class TextToSpeech : IWatsonService
     {
         #region Private Data
-        private VoiceType m_Voice = VoiceType.en_US_Michael;
-        private AudioFormatType m_AudioFormat = AudioFormatType.WAV;
-        private Dictionary<VoiceType, string> m_VoiceTypes = new Dictionary<VoiceType, string>()
+        private VoiceType _voice = VoiceType.en_US_Michael;
+        private AudioFormatType _audioFormat = AudioFormatType.WAV;
+        private Dictionary<VoiceType, string> _voiceTypes = new Dictionary<VoiceType, string>()
         {
             { VoiceType.en_US_Michael, "en-US_MichaelVoice" },
             { VoiceType.en_US_Lisa, "en-US_LisaVoice" },
@@ -52,7 +52,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
             { VoiceType.ja_JP_Emi, "ja-JP_EmiVoice" },
       { VoiceType.pt_BR_Isabela, "pt-BR_IsabelaVoice"},
         };
-        private Dictionary<AudioFormatType, string> m_AudioFormats = new Dictionary<AudioFormatType, string>()
+        private Dictionary<AudioFormatType, string> _audioFormats = new Dictionary<AudioFormatType, string>()
         {
             { AudioFormatType.OGG, "audio/ogg;codecs=opus" },
             { AudioFormatType.WAV, "audio/wav" },
@@ -69,18 +69,18 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
         /// <summary>
         /// This property allows the user to set the AudioFormat to use. Currently, only WAV is supported.
         /// </summary>
-        public AudioFormatType AudioFormat { get { return m_AudioFormat; } set { m_AudioFormat = value; } }
+        public AudioFormatType AudioFormat { get { return _audioFormat; } set { _audioFormat = value; } }
         /// <summary>
         /// This property allows the user to specify the voice to use.
         /// </summary>
         public VoiceType Voice
         {
-            get { return m_Voice; }
+            get { return _voice; }
             set
             {
-                if (m_Voice != value)
+                if (_voice != value)
                 {
-                    m_Voice = value;
+                    _voice = value;
                 }
             }
         }
@@ -114,10 +114,10 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
         #region GetVoiceType
         private string GetVoiceType(VoiceType voiceType)
         {
-            if (m_VoiceTypes.ContainsKey(voiceType))
+            if (_voiceTypes.ContainsKey(voiceType))
             {
                 string voiceName = "";
-                m_VoiceTypes.TryGetValue(voiceType, out voiceName);
+                _voiceTypes.TryGetValue(voiceType, out voiceName);
                 return voiceName;
             }
             else
@@ -216,7 +216,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
             if (callback == null)
                 throw new ArgumentNullException("callback");
             if (voice == null)
-                voice = m_Voice;
+                voice = _voice;
 
             string service = "/v1/voices/{0}";
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(service, GetVoiceType((VoiceType)voice)));
@@ -297,14 +297,14 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
             if (callback == null)
                 throw new ArgumentNullException("callback");
 
-            if (!m_AudioFormats.ContainsKey(m_AudioFormat))
+            if (!_audioFormats.ContainsKey(_audioFormat))
             {
-                Log.Error("TextToSpeech", "Unsupported audio format: {0}", m_AudioFormat.ToString());
+                Log.Error("TextToSpeech", "Unsupported audio format: {0}", _audioFormat.ToString());
                 return false;
             }
-            if (!m_VoiceTypes.ContainsKey(m_Voice))
+            if (!_voiceTypes.ContainsKey(_voice))
             {
-                Log.Error("TextToSpeech", "Unsupported voice: {0}", m_Voice.ToString());
+                Log.Error("TextToSpeech", "Unsupported voice: {0}", _voice.ToString());
                 return false;
             }
 
@@ -321,8 +321,8 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
             req.TextId = textId;
             req.Text = text;
             req.Callback = callback;
-            req.Parameters["accept"] = m_AudioFormats[m_AudioFormat];
-            req.Parameters["voice"] = m_VoiceTypes[m_Voice];
+            req.Parameters["accept"] = _audioFormats[_audioFormat];
+            req.Parameters["voice"] = _voiceTypes[_voice];
             req.OnResponse = ToSpeechResponse;
 
             if (usePost)
@@ -359,7 +359,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 
         private AudioClip ProcessResponse(string textId, byte[] data)
         {
-            switch (m_AudioFormat)
+            switch (_audioFormat)
             {
                 case AudioFormatType.WAV:
                     return WaveFile.ParseWAV(textId, data);
@@ -367,7 +367,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
                     break;
             }
 
-            Log.Error("TextToSpeech", "Unsupported audio format: {0}", m_AudioFormat.ToString());
+            Log.Error("TextToSpeech", "Unsupported audio format: {0}", _audioFormat.ToString());
             return null;
         }
         #endregion
@@ -398,7 +398,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
             if (string.IsNullOrEmpty(text))
                 throw new ArgumentNullException("text");
             if (voice == null)
-                voice = m_Voice;
+                voice = _voice;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/pronunciation");
             if (connector == null)
@@ -1155,36 +1155,6 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
         {
             return SERVICE_ID;
         }
-
-        /// <exclude />
-        public void GetServiceStatus(ServiceStatus callback)
-        {
-            if (Config.Instance.FindCredentials(SERVICE_ID) != null)
-                new CheckServiceStatus(this, callback);
-            else
-                callback(SERVICE_ID, false);
-        }
-
-        private class CheckServiceStatus
-        {
-            private TextToSpeech m_Service = null;
-            private ServiceStatus m_Callback = null;
-
-            public CheckServiceStatus(TextToSpeech service, ServiceStatus callback)
-            {
-                m_Service = service;
-                m_Callback = callback;
-
-                if (!m_Service.GetVoices(OnCheckService))
-                    m_Callback(SERVICE_ID, false);
-            }
-
-            private void OnCheckService(Voices voices, string customData)
-            {
-                if (m_Callback != null && m_Callback.Target != null)
-                    m_Callback(SERVICE_ID, voices != null);
-            }
-        };
         #endregion
     }
 

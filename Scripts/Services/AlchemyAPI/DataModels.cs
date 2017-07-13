@@ -462,7 +462,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// <value>The text.</value>
         public string text { get; set; }
 
-        private System.DateTime m_dateValue = default(System.DateTime);
+        private System.DateTime _dateValue = default(System.DateTime);
 
         /// <summary>
         /// Gets the date value.
@@ -472,17 +472,17 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         {
             get
             {
-                if (m_dateValue == default(System.DateTime) && !string.IsNullOrEmpty(date) && date.Length > 8)
+                if (_dateValue == default(System.DateTime) && !string.IsNullOrEmpty(date) && date.Length > 8)
                 {
                     //19840101T000000
                     System.DateTime.TryParseExact(date.Remove(8),
                         "yyyyddMM",
                         System.Globalization.CultureInfo.InvariantCulture,
                         System.Globalization.DateTimeStyles.None,
-                        out m_dateValue);
+                        out _dateValue);
 
                 }
-                return m_dateValue;
+                return _dateValue;
             }
         }
     };
@@ -635,7 +635,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             }
         }
 
-        private PositionOnMap m_GeoLocation = null;
+        private PositionOnMap _geoLocation = null;
         /// <summary>
         /// Gets the geo location.
         /// </summary>
@@ -644,7 +644,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         {
             get
             {
-                if (m_GeoLocation == null)
+                if (_geoLocation == null)
                 {
                     string geoString = null;
                     for (int i = 0; entities != null && i < entities.Length; i++)
@@ -662,7 +662,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
                                     if (double.TryParse(geoValues[0], out latitute) && double.TryParse(geoValues[1], out longitutde))
                                     {
-                                        m_GeoLocation = new PositionOnMap(latitute, longitutde, entities[i].disambiguated.name);
+                                        _geoLocation = new PositionOnMap(latitute, longitutde, entities[i].disambiguated.name);
                                         break;
                                     }
                                 }
@@ -670,7 +670,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                         }
                     }
                 }
-                return m_GeoLocation;
+                return _geoLocation;
             }
         }
 
@@ -2090,7 +2090,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// <value>The mixed.</value>
         public string mixed { get; set; }
 
-        private double m_Score = 0;
+        private double _score = 0;
         /// <summary>
         /// Gets the score.
         /// </summary>
@@ -2099,15 +2099,15 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         {
             get
             {
-                if (m_Score == 0)
+                if (_score == 0)
                 {
                     if (!string.IsNullOrEmpty(score))
                     {
-                        double.TryParse(score, out m_Score);
+                        double.TryParse(score, out _score);
                     }
                 }
 
-                return m_Score;
+                return _score;
             }
         }
 

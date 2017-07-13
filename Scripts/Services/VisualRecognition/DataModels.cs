@@ -97,7 +97,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// The class result.
         /// </summary>
         [fsProperty("class")]
-        public string m_class { get; set; }
+        public string _class { get; set; }
         /// <summary>
         /// The score.
         /// </summary>
@@ -408,7 +408,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// The class.
         /// </summary>
         [fsProperty("class")]
-        public string m_Class { get; set; }
+        public string _class { get; set; }
     }
     #endregion
 

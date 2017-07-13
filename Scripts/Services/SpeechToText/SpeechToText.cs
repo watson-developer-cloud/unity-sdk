@@ -1979,36 +1979,6 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         {
             return SERVICE_ID;
         }
-
-        /// <exclude />
-        public void GetServiceStatus(ServiceStatus callback)
-        {
-            if (Config.Instance.FindCredentials(SERVICE_ID) != null)
-                new CheckServiceStatus(this, callback);
-            else
-                callback(SERVICE_ID, false);
-        }
-
-        private class CheckServiceStatus
-        {
-            private SpeechToText m_Service = null;
-            private ServiceStatus m_Callback = null;
-
-            public CheckServiceStatus(SpeechToText service, ServiceStatus callback)
-            {
-                m_Service = service;
-                m_Callback = callback;
-
-                if (!m_Service.GetModels(OnCheckService))
-                    m_Callback(SERVICE_ID, false);
-            }
-
-            private void OnCheckService(ModelSet models, string customData)
-            {
-                if (m_Callback != null && m_Callback.Target != null)
-                    m_Callback(SERVICE_ID, models != null);
-            }
-        };
         #endregion
     }
 }

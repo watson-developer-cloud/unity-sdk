@@ -29,7 +29,6 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 
-#pragma warning disable 0414
 
 public class ExampleVisualRecognition : MonoBehaviour
 {
@@ -42,7 +41,7 @@ public class ExampleVisualRecognition : MonoBehaviour
 
     private string _classifierID = "swiftsdkunittestcarstrucks_128487308";
     private string _imageURL = "https://upload.wikimedia.org/wikipedia/commons/e/e9/Official_portrait_of_Barack_Obama.jpg";
-    private string _imageTextURL = "http://i.stack.imgur.com/ZS6nH.png";
+    //private string _imageTextURL = "http://i.stack.imgur.com/ZS6nH.png";
 
 #if DELETE_TRAINED_CLASSIFIER
     private string _classifierToDelete;

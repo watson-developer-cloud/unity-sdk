@@ -2198,35 +2198,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         {
             return SERVICE_ID;
         }
-        /// <exclude />
-        public void GetServiceStatus(ServiceStatus callback)
-        {
-            if (Config.Instance.FindCredentials(SERVICE_ID) != null)
-                new CheckServiceStatus(this, callback);
-            else
-                callback(SERVICE_ID, false);
-        }
-
-        private class CheckServiceStatus
-        {
-            private Discovery m_Service = null;
-            private ServiceStatus m_Callback = null;
-
-            public CheckServiceStatus(Discovery service, ServiceStatus callback)
-            {
-                m_Service = service;
-                m_Callback = callback;
-
-                if (!m_Service.GetEnvironments(OnGetEnvironments, "CheckServiceStatus"))
-                    m_Callback(SERVICE_ID, false);
-            }
-
-            private void OnGetEnvironments(GetEnvironmentsResponse environmentsData, string customData)
-            {
-                if (m_Callback != null)
-                    m_Callback(SERVICE_ID, environmentsData != null);
-            }
-        }
         #endregion
     }
 }

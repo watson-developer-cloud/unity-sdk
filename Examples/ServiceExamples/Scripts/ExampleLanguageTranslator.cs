@@ -26,7 +26,7 @@ using System.Collections;
 
 public class ExampleLanguageTranslator : MonoBehaviour
 {
-    private string m_PharseToTranslate = "Hello, welcome to IBM Watson!";
+    private string _pharseToTranslate = "Hello, welcome to IBM Watson!";
     private string _username;
     private string _password;
     private string _url;
@@ -85,7 +85,7 @@ public class ExampleLanguageTranslator : MonoBehaviour
 
     private IEnumerator Examples()
     {
-        if (!_languageTranslator.GetTranslation(m_PharseToTranslate, "en", "es", OnGetTranslation))
+        if (!_languageTranslator.GetTranslation(_pharseToTranslate, "en", "es", OnGetTranslation))
             Log.Debug("ExampleLanguageTranslator", "Failed to translate!");
         while (!_getTranslationTested)
             yield return null;

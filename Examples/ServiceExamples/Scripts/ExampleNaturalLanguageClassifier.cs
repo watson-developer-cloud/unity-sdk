@@ -132,7 +132,7 @@ public class ExampleNaturalLanguageClassifier : MonoBehaviour
 
         //  Train classifier
 #if TRAIN_CLASSIFIER
-        string dataPath = Application.dataPath + "/Watson/Scripts/Editor/TestData/weather_data_train.csv";
+        string dataPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/weather_data_train.csv";
         var trainingContent = File.ReadAllText(dataPath);
         if (!naturalLanguageClassifier.TrainClassifier(_classifierName + "/" + DateTime.Now.ToString(), "en", trainingContent, OnTrainClassifier))
             Log.Debug("ExampleNaturalLanguageClassifier", "Failed to train clasifier!");

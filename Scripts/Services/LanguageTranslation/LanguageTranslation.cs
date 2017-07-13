@@ -464,36 +464,6 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v1
         {
             return SERVICE_ID;
         }
-
-        /// <exclude />
-        public void GetServiceStatus(ServiceStatus callback)
-        {
-            if (Config.Instance.FindCredentials(SERVICE_ID) != null)
-                new CheckServiceStatus(this, callback);
-            else
-                callback(SERVICE_ID, false);
-        }
-
-        private class CheckServiceStatus
-        {
-            private LanguageTranslation m_Service = null;
-            private ServiceStatus m_Callback = null;
-
-            public CheckServiceStatus(LanguageTranslation service, ServiceStatus callback)
-            {
-                m_Service = service;
-                m_Callback = callback;
-
-                if (!m_Service.GetLanguages(OnCheckService))
-                    m_Callback(SERVICE_ID, false);
-            }
-
-            private void OnCheckService(Languages langs, string customData)
-            {
-                if (m_Callback != null)
-                    m_Callback(SERVICE_ID, langs != null);
-            }
-        };
         #endregion
     }
 }

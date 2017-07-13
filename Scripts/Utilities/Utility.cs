@@ -35,7 +35,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
     static public class Utility
     {
         private static fsSerializer _serializer = new fsSerializer();
-        private static string sm_MacAddress = null;
+        private static string _macAddress = null;
 
         /// <summary>
         /// This helper functions returns all Type's that inherit from the given type.
@@ -324,7 +324,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         {
             get
             {
-                if (string.IsNullOrEmpty(sm_MacAddress))
+                if (string.IsNullOrEmpty(_macAddress))
                 {
                     foreach (NetworkInterface adapter in NetworkInterface.GetAllNetworkInterfaces())
                     {
@@ -333,14 +333,14 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                         {
                             string regex = "(.{2})(.{2})(.{2})(.{2})(.{2})(.{2})";
                             string replace = "$1:$2:$3:$4:$5:$6";
-                            sm_MacAddress = Regex.Replace(macAddress, regex, replace);
+                            _macAddress = Regex.Replace(macAddress, regex, replace);
 
                             break;
                         }
                     }
                 }
 
-                return sm_MacAddress;
+                return _macAddress;
             }
         }
 

@@ -26,35 +26,35 @@ namespace IBM.Watson.DeveloperCloud.Utilities
     public class TimedDestroy : MonoBehaviour
     {
         [SerializeField, Tooltip("How many seconds until this component destroy's it's parent object.")]
-        private float m_DestroyTime = 5.0f;
-        private float m_ElapsedTime = 0.0f;
-        private bool m_TimeReachedToDestroy = false;
+        private float _destroyTime = 5.0f;
+        private float _elapsedTime = 0.0f;
+        private bool _timeReachedToDestroy = false;
         [SerializeField]
-        private bool m_AlphaFade = true;
+        private bool _alphaFade = true;
         [SerializeField]
-        private bool m_AlphaFadeOnAwake = false;
+        private bool _alphaFadeOnAwake = false;
         [SerializeField]
-        private float m_FadeTime = 1.0f;
+        private float _fadeTime = 1.0f;
         [SerializeField]
-        private float m_FadeTimeOnAwake = 1.0f;
+        private float _fadeTimeOnAwake = 1.0f;
         [SerializeField]
-        private Graphic m_AlphaTarget = null;
-        private bool m_Fading = false;
-        private float m_FadeStart = 0.0f;
-        private Color m_InitialColor = Color.white;
-        private float m_FadeAwakeRatio = 0.0f;
+        private Graphic _alphaTarget = null;
+        private bool _fading = false;
+        private float _fadeStart = 0.0f;
+        private Color _initialColor = Color.white;
+        private float _fadeAwakeRatio = 0.0f;
 
         private void Start()
         {
-            m_ElapsedTime = 0.0f;
+            _elapsedTime = 0.0f;
 
-            if (m_AlphaFade && m_AlphaTarget != null)
+            if (_alphaFade && _alphaTarget != null)
             {
-                m_InitialColor = m_AlphaTarget.color;
+                _initialColor = _alphaTarget.color;
 
-                if (m_AlphaFadeOnAwake)
+                if (_alphaFadeOnAwake)
                 {
-                    m_AlphaTarget.color = new Color(m_InitialColor.r, m_InitialColor.g, m_InitialColor.b, 0.0f);
+                    _alphaTarget.color = new Color(_initialColor.r, _initialColor.g, _initialColor.b, 0.0f);
                 }
             }
         }
@@ -62,32 +62,32 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         private void Update()
         {
 
-            if (m_AlphaFadeOnAwake)
+            if (_alphaFadeOnAwake)
             {
-                m_FadeAwakeRatio += (Time.deltaTime / m_FadeTimeOnAwake);
-                m_AlphaTarget.color = new Color(m_InitialColor.r, m_InitialColor.g, m_InitialColor.b, Mathf.Clamp01(m_FadeAwakeRatio));
-                if (m_FadeAwakeRatio > 1.0f)
-                    m_AlphaFadeOnAwake = false;
+                _fadeAwakeRatio += (Time.deltaTime / _fadeTimeOnAwake);
+                _alphaTarget.color = new Color(_initialColor.r, _initialColor.g, _initialColor.b, Mathf.Clamp01(_fadeAwakeRatio));
+                if (_fadeAwakeRatio > 1.0f)
+                    _alphaFadeOnAwake = false;
             }
 
-            if (!m_TimeReachedToDestroy)
+            if (!_timeReachedToDestroy)
             {
-                m_ElapsedTime += Time.deltaTime;
-                if (m_ElapsedTime > m_DestroyTime)
+                _elapsedTime += Time.deltaTime;
+                if (_elapsedTime > _destroyTime)
                 {
-                    m_TimeReachedToDestroy = true;
+                    _timeReachedToDestroy = true;
                     OnTimeExpired();
                 }
             }
 
-            if (m_Fading)
+            if (_fading)
             {
-                float fElapsed = Time.time - m_FadeStart;
-                if (fElapsed < m_FadeTime && m_AlphaTarget != null)
+                float fElapsed = Time.time - _fadeStart;
+                if (fElapsed < _fadeTime && _alphaTarget != null)
                 {
-                    Color c = m_AlphaTarget.color;
-                    c.a = 1.0f - fElapsed / m_FadeTime;
-                    m_AlphaTarget.color = c;
+                    Color c = _alphaTarget.color;
+                    c.a = 1.0f - fElapsed / _fadeTime;
+                    _alphaTarget.color = c;
                 }
                 else
                     Destroy(gameObject);
@@ -99,23 +99,23 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// </summary>
         public void ResetTimer()
         {
-            m_ElapsedTime = 0.0f;
-            m_Fading = false;
-            m_TimeReachedToDestroy = false;
+            _elapsedTime = 0.0f;
+            _fading = false;
+            _timeReachedToDestroy = false;
 
-            if (m_AlphaFade && m_AlphaTarget != null)
+            if (_alphaFade && _alphaTarget != null)
             {
-                m_AlphaTarget.color = m_InitialColor;
+                _alphaTarget.color = _initialColor;
 
             }
         }
 
         private void OnTimeExpired()
         {
-            if (m_AlphaFade && m_AlphaTarget != null)
+            if (_alphaFade && _alphaTarget != null)
             {
-                m_Fading = true;
-                m_FadeStart = Time.time;
+                _fading = true;
+                _fadeStart = Time.time;
             }
             else
                 Destroy(gameObject);
