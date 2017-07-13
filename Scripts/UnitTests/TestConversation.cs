@@ -154,6 +154,7 @@ public class TestConversation : UnitTest
 
         //  Set context for next round of messaging
         _context = messageResponse.context;
+        Test(resp != null);
         _waitingForResponse = false;
     }
 }

@@ -264,6 +264,19 @@ public static class RunUnitTest
         instance.QueueTests(Utility.FindAllDerivedTypes(typeof(UnitTest)), true);
     }
 
+#if UNITY_EDITOR
+    [MenuItem("Watson/Run All UnitTests", false, 50)]
+    static public void AllNoQuit()
+    {
+        Runnable.EnableRunnableInEditor();
+
+        IBM.Watson.DeveloperCloud.Editor.UnitTestManager instance = IBM.Watson.DeveloperCloud.Editor.UnitTestManager.Instance;
+        instance.OnTestCompleteCallback = OnTestsComplete;
+        instance.QueueTests(Utility.FindAllDerivedTypes(typeof(UnitTest)), true);
+    }
+
+#endif
+
     static void OnTestsComplete()
     { }
 }
