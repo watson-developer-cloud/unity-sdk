@@ -163,4 +163,12 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v1
         public float confidence { get; set; }
     }
 
+    [fsObject]
+    public class DeleteModelResult
+    {
+        /// <summary>
+        /// The status of the call. "OK" indicates that the model was successfully deleted.
+        /// </summary>
+        public string status { get; set; }
+    }
 }
