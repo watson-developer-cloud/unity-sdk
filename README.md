@@ -1,7 +1,7 @@
 # Watson Developer Cloud Unity SDK
 [![Build Status](https://travis-ci.org/watson-developer-cloud/unity-sdk.svg?branch=develop)](https://travis-ci.org/watson-developer-cloud/unity-sdk)
 
-Use this SDK to build Watson-powered applications in Unity. It comes with a set of prefabs that you can use to develop a simple Watson application in just one minute.
+Use this SDK to build Watson-powered applications in Unity.
 
 ## Table of Contents
 * [Before you begin](#before-you-begin)
@@ -47,57 +47,78 @@ Move the **`unity-sdk`** directory into the Assets directory of the Unity projec
 You will need the 'username' and 'password' credentials for each service. Service credentials are different from your Bluemix account username and password.
 
 1. Determine which services to configure.
-2. If you have configured the services already, complete the following steps. Otherwise, go to step 3.
+1. If you have configured the services already, complete the following steps. Otherwise, go to step 3.
     1. Log in to Bluemix at https://bluemix.net.
-    2. Navigate to the **Dashboard** on your Bluemix account.
-    3. Click the **tile** for a service.
-    4. Click **Service Credentials**. Note: If your browser window is too narrow, the service options may be collapsed. Click on the upward facing double arrow next to "Back to Dashboard..." on the upper left to expand the sidebar.
-    5. Copy the content in the **Service Credentials** field, and paste it in the credentials field in the Config Editor (**Watson -> Config Editor**) in Unity.
-    6. Click **Apply Credentials**.
-    7. Repeat steps 1 - 5 for each service you want to use.
-    ![services-0](http://g.recordit.co/cPa1FOGwEU.gif)
-3. If you need to configure the services that you want to use, complete the following steps.
-    1. In the Config Editor (**Watson -> Config Editor**), click the **Configure** button beside the service to register. The service window is displayed.
-    2. Under **Add Service**, type a unique name for the service instance in the Service name field. For example, type 'my-service-name'. Leave the default values for the other options.
-    3. Click **Create**.
-    4. Click **Service Credentials**. Note: If your browser window is too narrow, the service options may be collapsed. Click on the upward facing double arrow next to "Back to Dashboard..." on the upper left to expand the sidebar.
-    5. Copy the content in the **Service Credentials** field, and paste it in the empty credentials field in the **Config Editor** in Unity.
-    6. Click **Apply Credentials**.
-    7. Repeat steps 1 - 5 for each service you want to use.
-    ![services-1](http://g.recordit.co/zyL5RZYXqa.gif)
-4. Click **Save**, and close the Config Editor.
-
-Note: The Config.json file is saved as plain text in the StreamingAssets directory. It is the user's responsibility to secure the credentials.
+    1. Click the service you would like to use.
+    1. Click **Service credentials**.
+    1. Click **View credentials** to access your credentials.
+1. If you need to configure the services that you want to use, complete the following steps.
+    1. Log in to Bluemix at https://bluemix.net.
+    1. Click the **Create service** button.
+    1. Under **Watson**, select which service you would like to create an instnace of and click that service.
+    1. Give the service and credential a name. Select a plan and click the **Create** button on the bottom.
+    4. Click **Service Credentials**.
+    5. Click **View credentials** to access your credentials.
+1. Your service credentials can be used to instantiate Watson Services within your application. Most services also support tokens which you can instantiate the service with as well.
 
 ## IBM Watson Services
 ### Speech to Text
 Use the [Speech to Text][speech_to_text] service to recognize the text from a .wav file. Assign the .wav file to the script in the Unity Editor. Speech to text can also be used to convert an audio stream into text. When using the Microphone Widget and publishing to iOS, the XCode project plist must be updated with a `NSMicrophoneUsageDescription` or the application will crash silently.
 
+#### Instantiate the service with your service credentials
 ```cs
-[SerializeField]
-private AudioClip m_AudioClip = new AudioClip();
-private SpeechToText m_SpeechToText = new SpeechToText();
+//  Create credential and instantiate service
+Credentials credentials = new Credentials(_username, _password, _url);
+SpeechToText _speechToText = new SpeechToText(credentials);
+```
 
+#### Recognize
+```cs
 void Start()
 {
-  m_SpeechToText.Recognize(m_AudioClip, HandleOnRecognize);
+  AudioClip _audioClip = WaveFile.ParseWAV("testClip", File.ReadAllBytes(_wavFilePath));
+  _speechToText.Recognize(_audioClip, HandleOnRecognize);
 }
 
-void HandleOnRecognize (SpeechResultList result)
+private void HandleOnRecognize(SpeechRecognitionEvent result)
 {
-  if (result != null && result.Results.Length > 0)
+  if (result != null && result.results.Length > 0)
   {
-    foreach( var res in result.Results )
+    foreach (var res in result.results)
     {
-      foreach( var alt in res.Alternatives )
+      foreach (var alt in res.alternatives)
       {
-        string text = alt.Transcript;
-        Debug.Log(string.Format( "{0} ({1}, {2:0.00})\n", text, res.Final ? "Final" : "Interim", alt.Confidence));
+        string text = alt.transcript;
+        Log.Debug("ExampleSpeechToText", string.Format("{0} ({1}, {2:0.00})\n", text, res.final ? "Final" : "Interim", alt.confidence));
+
+        if (res.final)
+          _recognizeTested = true;
       }
     }
   }
+
 }
 ```
+
+#### Get models
+#### Get model
+#### Get customizations
+#### Create customization
+#### Get customization
+#### Delete customization
+#### Get custom corpora
+#### Add custom corpus
+#### Get custom corpus
+#### Delete custom corpus
+#### Get custom words
+#### Add custom words via json
+#### Add custom words via object
+#### Get custom word
+#### Delete custom word
+#### Train customization
+#### Reset customization
+
+
 
 ### Text to Speech
 Use the [Text to Speech][text_to_speech] service to get the available voices to synthesize. The Text to Speech service also supports Speech Synthesis Markup Language ([SSML][ssml]). In addition, the service supports a service-specific [expressive SSML][expressive_ssml] element. See Text To Speech service examples for examples on how to create custom Text to Speech voice models.
