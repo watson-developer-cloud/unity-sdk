@@ -275,6 +275,14 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             while (!_deleteEnvironmentTested)
                 yield return null;
 
+            if (!string.IsNullOrEmpty(_createdEnvironmentID))
+            {
+                if (!_discovery.GetEnvironment(OnGetEnvironment, _createdEnvironmentID))
+                {
+                    _discovery.DeleteEnvironment(OnDeleteEnvironment, _createdEnvironmentID);
+                }
+            }
+
             Log.Debug("ExampleDiscoveryV1", "Discovery examples complete.");
 
             yield break;
