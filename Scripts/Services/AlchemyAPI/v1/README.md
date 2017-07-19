@@ -1,16 +1,16 @@
-### Alchemy API
+# Alchemy API
 
 The [AlchemyLanguage API][alchemy-api] uses natural language processing technology and machine learning algorithms to extract semantic meta-data from content, such as information on people, places, companies, topics, facts, relationships, authors, and languages.
 
-### Usage
-#### Instantiating and authenticating the service
+## Usage
+### Instantiating and authenticating the service
 Before you can send requests to the service it must be instantiated and credentials must be set.
 ```cs
-Credentials credentials = new Credentials(_apikey, _url);
+Credentials credentials = new Credentials(<apikey>, <url>);
 AlchemyAPI _alchemyApi = new AlchemyAPI(credentials);
 ```
 
-#### Get Authors
+### Get Authors
 You can extract Authors from a URL or HTML source.
 ```cs
 private void GetAuthors()
@@ -25,7 +25,7 @@ private void OnGetAuthors(AuthorsData authors, string data)
 }
 ```
 
-#### Get Concepts
+### Get Concepts
 You can get Concepts from a URL, HTML or Text source.
 ```cs
 private void GetRankedConcepts()
@@ -40,7 +40,7 @@ private void OnGetConcepts(ConceptsData concepts, string data)
 }
 ```
 
-#### Get Date
+### Get Date
 You can extract Dates from a URL, HTML or Text source.
 ```cs
 private void GetRankedConcepts()
@@ -55,7 +55,7 @@ private void OnGetDates(DateData dates, string data)
 }
 ```
 
-#### Get Emotions
+### Get Emotions
 You can get Emotions from a URL, HTML or Text source.
 ```cs
 private void GetEmotions()
@@ -70,7 +70,7 @@ private void OnGetEmotions(EmotionData emotions, string data)
 }
 ```
 
-#### Get Entities
+### Get Entities
 You can extract Entities from a URL, HTML or Text source.
 ```cs
 private void ExtractEntities()
@@ -85,7 +85,7 @@ private void OnExtractEntities(EntityData entityData, string data)
 }
 ```
 
-#### Get Feeds
+### Get Feeds
 You can detect RSS Feeds from a URL source.
 ```cs
 private void GetFeeds()
@@ -100,7 +100,7 @@ private void OnDetectFeeds(FeedData feedData, string data)
 }
 ```
 
-#### Get Keywords
+### Get Keywords
 You can extract Keywords form a URL, HTML or Text source.
 ```cs
 private void GetKeywords()
@@ -115,7 +115,7 @@ private void OnExtractKeywords(KeywordData keywordData, string data)
 }
 ```
 
-#### Get Languages
+### Get Languages
 You can extract the language of a URL, HTML or Text source.
 ```cs
 private void GetLanguages()
@@ -130,7 +130,7 @@ private void OnGetLanguages(LanguageData languages, string data)
 }
 ```
 
-#### Get Microformats
+### Get Microformats
 You can get the Microformat of a URL source.
 ```cs
 private void GetMicroformats()
@@ -145,7 +145,7 @@ private void OnGetMicroformats(MicroformatData microformats, string data)
 }
 ```
 
-#### Get Publication Date
+### Get Publication Date
 You can extract the publication date from a URL or HTML source.
 ```cs
 private void GetPublicationDate()
@@ -160,7 +160,7 @@ private void OnGetPublicationDate(PubDateData pubDates, string data)
 }
 ```
 
-#### Get Relations
+### Get Relations
 You can extract Relations from a URL, HTML or Text source.
 ```cs
 private void GetRelations()
@@ -175,7 +175,7 @@ private void OnGetRelations(RelationsData relationsData, string data)
 }
 ```
 
-#### Get Sentiment
+### Get Sentiment
 You can extract the Sentiment from a URL, HTML or Text source.
 ```cs
 private void GetTextSentiment()
@@ -190,7 +190,7 @@ private void OnGetTextSentiment(SentimentData sentimentData, string data)
 }
 ```
 
-#### Get Targeted Sentiment
+### Get Targeted Sentiment
 You can extract a Targeted Sentiment from a URL, HTML or Text source. Targets are a pipe delimited list of target phrases.
 ```cs
 private void GetTargetedSentiment()
@@ -205,7 +205,7 @@ private void OnGetTargetedSentiment(TargetedSentimentData sentimentData, string 
 }
 ```
 
-#### Get Taxonomy
+### Get Taxonomy
 You can get the Taxonomy of entities from a URL, HTML or Text source.
 ```cs
 private void GetRankedTaxonomy()
@@ -220,7 +220,7 @@ private void OnGetRankedTaxonomy(TaxonomyData taxonomyData, string data)
 }
 ```
 
-#### Get Text
+### Get Text
 You can exctract the Text from a URL or HTML source.
 ```cs
 private void GetText()
@@ -235,7 +235,7 @@ private void OnGetText(TextData textData, string data)
 }
 ```
 
-#### Get Raw Text
+### Get Raw Text
 You can exctract the Raw Text from a URL or HTML source.
 ```cs
 private void GetRawText()
@@ -250,7 +250,7 @@ private void OnGetRawText(TextData textData, string data)
 }
 ```
 
-#### Get Title
+### Get Title
 You can extract the Title form a URL or HTML source.
 ```cs
 private void GetTitle()
@@ -265,7 +265,7 @@ private void OnGetTitle(Title titleData, string data)
 }
 ```
 
-#### Combined Call
+### Combined Call
 You can combine multiple requests into one call using a Combined Data call from a URL, HTML or Text source. Allowed services in Combined Call are authors, concepts, dates, doc-emotion, entities, feeds, keywords, pub-dates, relations, doc-sentiment, taxonomy, title, page-image and image-keywords.
 ```cs
 private void CombinedCall()
