@@ -239,6 +239,11 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             while (!_readyToContinue)
                 yield return null;
 
+            _isEnvironmentReady = false;
+            Runnable.Run(CheckEnvironmentState(_waitTime));
+            while (!_isEnvironmentReady)
+                yield return null;
+
             _readyToContinue = false;
             //  Delete Collection
             Log.Debug("ExampleDiscoveryV1", "Attempting to delete collection {0}", _createdCollectionID);
@@ -253,6 +258,11 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             while (!_readyToContinue)
                 yield return null;
 
+            _isEnvironmentReady = false;
+            Runnable.Run(CheckEnvironmentState(_waitTime));
+            while (!_isEnvironmentReady)
+                yield return null;
+
             _readyToContinue = false;
             //  Delete Configuration
             Log.Debug("ExampleDiscoveryV1", "Attempting to delete configuration {0}", _createdConfigurationID);
@@ -265,6 +275,11 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             Log.Debug("ExampleDiscovery", "Delaying delete environment for 10 sec");
             Runnable.Run(Delay(_waitTime));
             while (!_readyToContinue)
+                yield return null;
+
+            _isEnvironmentReady = false;
+            Runnable.Run(CheckEnvironmentState(_waitTime));
+            while (!_isEnvironmentReady)
                 yield return null;
 
             _readyToContinue = false;
@@ -451,7 +466,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void OnDeleteConfiguration(bool success, string data)
         {
-            Log.Debug("ExampleDiscoveryV1", "Discovery - DeleteConfiguration Response: deleted:{0}", success);
+            Log.Debug("ExampleDiscoveryV1", "Discovery - Delete configuration Response: deleted:{0}", success);
 
             if (success)
                 _createdConfigurationID = default(string);
@@ -462,7 +477,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void OnDeleteEnvironment(bool success, string data)
         {
-            Log.Debug("ExampleDiscoveryV1", "Discovery - DeleteEnvironment Response: deleted:{0}", success);
+            Log.Debug("ExampleDiscoveryV1", "Discovery - Delete environment Response: deleted:{0}", success);
 
             if (success)
                 _createdEnvironmentID = default(string);

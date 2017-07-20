@@ -52,7 +52,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         private const string SERVICE_ENVIRONMENT_COLLECTION_DOCUMENT = "/v1/environments/{0}/collections/{1}/documents/{2}";
         private const string SERVICE_ENVIRONMENT_COLLECTION_QUERY = "/v1/environments/{0}/collections/{1}/query";
 
-        private const float DELETE_TIMEOUT = 30f;
+        private const float DELETE_TIMEOUT = 100f;
         #endregion
 
         #region Public Properties
