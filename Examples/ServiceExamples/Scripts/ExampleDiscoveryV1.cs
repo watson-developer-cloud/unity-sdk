@@ -194,6 +194,7 @@ public class ExampleDiscoveryV1 : MonoBehaviour
         while (!_getCollectionTested)
             yield return null;
         
+        //  Get fields
         if (!_discovery.GetFields(OnGetFields, _createdEnvironmentID, _createdCollectionID))
             Log.Debug("ExampleDiscovery", "Failed to get fields");
         while (!_getFieldsTested)
