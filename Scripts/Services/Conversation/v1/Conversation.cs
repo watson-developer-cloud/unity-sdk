@@ -22,6 +22,8 @@ using IBM.Watson.DeveloperCloud.Utilities;
 using IBM.Watson.DeveloperCloud.Connection;
 using IBM.Watson.DeveloperCloud.Logging;
 using MiniJSON;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 {
@@ -147,7 +149,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
         {
             if (string.IsNullOrEmpty(workspaceID))
                 throw new ArgumentNullException("workspaceId");
-            if (string.IsNullOrEmpty(messageRequest.input.text))
+            if (string.IsNullOrEmpty(messageRequest.input["text"] as string))
                 throw new ArgumentNullException("messageRequest.input.text");
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -155,10 +157,31 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
             RESTConnector connector = RESTConnector.GetConnector(Credentials, SERVICE_MESSAGE);
             if (connector == null)
                 return false;
+            
+            IDictionary<string, string> requestDict = new Dictionary<string, string>();
+            if (messageRequest.context != null)
+                requestDict.Add("context", Json.Serialize(messageRequest.context));
+            if (messageRequest.input != null)
+                requestDict.Add("input", Json.Serialize(messageRequest.input));
+            requestDict.Add("alternate_intents", Json.Serialize(messageRequest.alternate_intents));
+            if (messageRequest.entities != null)
+                requestDict.Add("entities", Json.Serialize(messageRequest.entities));
+            if (messageRequest.intents != null)
+                requestDict.Add("intents", Json.Serialize(messageRequest.intents));
+            if (messageRequest.output != null)
+                requestDict.Add("output", Json.Serialize(messageRequest.output));
 
-            fsData data;
-            _serializer.TrySerialize(messageRequest.GetType(), messageRequest, out data).AssertSuccessWithoutWarnings();
-            string reqString = fsJsonPrinter.CompressedJson(data);
+            int iterator = 0;
+            StringBuilder stringBuilder = new StringBuilder("{");
+            foreach(KeyValuePair<string, string> property in requestDict)
+            {
+                string delimeter = iterator < requestDict.Count - 1 ? "," : "";
+                stringBuilder.Append(string.Format("\"{0}\": {1}{2}", property.Key, property.Value, delimeter));
+                iterator++;
+            }
+            stringBuilder.Append("}");
+
+            string stringToSend = stringBuilder.ToString();
 
             MessageReq req = new MessageReq();
             req.Callback = callback;
@@ -168,7 +191,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
             req.Parameters["version"] = VersionDate;
             req.Function = "/" + workspaceID + "/message";
             req.Data = customData;
-            req.Send = Encoding.UTF8.GetBytes(reqString);
+            req.Send = Encoding.UTF8.GetBytes(stringToSend);
             req.OnResponse = MessageResp;
 
             return connector.Send(req);

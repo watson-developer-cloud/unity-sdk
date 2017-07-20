@@ -23,6 +23,7 @@ using System;
 using System.Collections;
 using FullSerializer;
 using System.IO;
+using System.Collections.Generic;
 
 public class ExampleConversation : MonoBehaviour
 {
@@ -37,7 +38,7 @@ public class ExampleConversation : MonoBehaviour
 
     private string[] _questionArray = { "can you turn up the AC", "can you turn on the wipers", "can you turn off the wipers", "can you turn down the ac", "can you unlock the door" };
     private fsSerializer _serializer = new fsSerializer();
-    private Context _context = null;
+    private Dictionary<string, object> _context = null;
     private int _questionCount = -1;
     private bool _waitingForResponse = true;
 
@@ -133,9 +134,9 @@ public class ExampleConversation : MonoBehaviour
     {
         MessageRequest messageRequest = new MessageRequest()
         {
-            input = new MessageInput()
+            input = new Dictionary<string, object>()
             {
-                text = _questionArray[_questionCount]
+                { "text", _questionArray[_questionCount] }
             },
             context = _context
         };
@@ -162,7 +163,13 @@ public class ExampleConversation : MonoBehaviour
             throw new WatsonException(r.FormattedMessages);
 
         //  Set context for next round of messaging
-        _context = messageResponse.context;
+        object _tempContext = null;
+        (resp as Dictionary<string, object>).TryGetValue("context", out _tempContext);
+
+        if (_tempContext != null)
+            _context = _tempContext as Dictionary<string, object>;
+        else
+            Log.Debug("ExampleConversation", "Failed to get context");
         _waitingForResponse = false;
     }
 }

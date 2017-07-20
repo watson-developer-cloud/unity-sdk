@@ -16,6 +16,7 @@
 */
 
 using System.Collections;
+using System.Collections.Generic;
 using IBM.Watson.DeveloperCloud.UnitTests;
 using IBM.Watson.DeveloperCloud.Services.Conversation.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
@@ -37,7 +38,11 @@ public class TestConversation : UnitTest
 
     private string[] _questionArray = { "can you turn up the AC", "can you turn on the wipers", "can you turn off the wipers", "can you turn down the ac", "can you unlock the door" };
     private fsSerializer _serializer = new fsSerializer();
-    private Context _context = null;
+    private Dictionary<string, object> _context = null;
+    private bool _useAlternateIntents = false;
+    private RuntimeEntity[] _entities = null;
+    private RuntimeIntent[] _intents = null;
+    private OutputData _output = null;
     private int _questionCount = -1;
     private bool _waitingForResponse = true;
 
@@ -124,9 +129,9 @@ public class TestConversation : UnitTest
     {
         MessageRequest messageRequest = new MessageRequest()
         {
-            input = new MessageInput()
+            input = new Dictionary<string, object>()
             {
-                text = _questionArray[_questionCount]
+                { "text", _questionArray[_questionCount] }
             },
             context = _context
         };
@@ -152,9 +157,14 @@ public class TestConversation : UnitTest
         if (!r.Succeeded)
             throw new WatsonException(r.FormattedMessages);
 
+        object _tempContext = null;
         //  Set context for next round of messaging
-        _context = messageResponse.context;
-        Test(resp != null);
+        (resp as Dictionary<string, object>).TryGetValue("context", out _tempContext);
+
+        if (_tempContext != null)
+            _context = _tempContext as Dictionary<string, object>;
+        else
+            Log.Debug("ExampleConversation", "Failed to get context");
         _waitingForResponse = false;
     }
 }
