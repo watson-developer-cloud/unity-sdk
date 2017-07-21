@@ -1,6 +1,4 @@
-[![NuGet](https://img.shields.io/badge/nuget-v1.0.0-green.svg?style=flat)](https://www.nuget.org/packages/IBM.WatsonDeveloperCloud.TextToSpeech.v1/)
-
-### Text to Speech
+# Text to Speech
 
 The IBM® [Text to Speech][text-to-speech] service provides an API that uses IBM's speech-synthesis capabilities to synthesize text into natural-sounding speech in a variety of languages, accents, and voices. The service supports at least one male or female voice, sometimes both, for each language. The audio is streamed back to the client with minimal delay.
 
@@ -18,22 +16,7 @@ The Text to Speech API consists of the following groups of related calls:
 
 * Custom words provides methods that let users manage the word/translation pairs in a custom voice model.
 
-### Installation
-#### Nuget
-```
-
-PM > Install-Package IBM.WatsonDeveloperCloud.TextToSpeech.v1
-
-```
-#### Project.json
-```JSON
-
-"dependencies": {
-   "IBM.WatsonDeveloperCloud.TextToSpeech.v1": "1.1.0"
-}
-
-```
-### Usage
+## Usage
 The following usage information pertains to many of the calls:
 
 * Many calls refer to the Speech Synthesis Markup Language (SSML), an XML-based markup language that provides annotations of text for speech-synthesis applications; for example, many methods accept or produce translations that use an SSML-based phoneme format. For more information about support for SSML, see [Using SSML][using-ssml] and [Using SPRs][using-sprs].
@@ -57,31 +40,59 @@ or the proprietary IBM Symbolic Phonetic Representation (SPR), for example
 
 For more information about customization and about sounds-like and phonetic translations, see [Understanding customization][understanding-customization] and [Using customization][using-customization].
 
-#### Instantiating and authenticating the service
+### Instantiating and authenticating the service
 Before you can send requests to the service it must be instantiated and credentials must be set.
 ```cs
-// create a Text to Speech Service instance
-TextToSpeechService _textToSpeech = new TextToSpeechService();
-
-// set the credentials
-_languageTranslator.SetCredential("<username>", "<password>");
+Credentials credentials = new Credentials(<username>, <password>, <url>);
+TextToSpeech _textToSpeech = new TextToSpeech(credentials);
 ```
 
-#### Get voices
+
+
+
+
+
+### Get voices
 Retrieves a list of all voices available for use with the service. The information includes the voice's name, language, and gender, among other things. To see information about a specific voice, use the Get a voice method.
 ```cs
-//  returns a list of all available standard voice models
-var results = _textToSpeech.GetVoices();
+private void GetVoices()
+{
+  if(!_textToSpeech.GetVoices(OnGetVoices))
+    Log.Debug("ExampleTextToSpeech", "Failed to get voices!");
+}
+
+private void OnGetVoices(Voices voices, string customData)
+{
+  Log.Debug("ExampleTextToSpeech", "Text to Speech - Get voices response: {0}", customData);
+}
 ```
 
-#### Get a voice
+
+
+
+
+
+### Get a voice
 Lists information about the specified voice. Specify a customization_id to obtain information for that custom voice model of the specified voice. To see information about all available voices, use the Get voices method.
 ```cs
-//  returns details of a specified voice
-var results = _textToSpeech.GetVoice("<voice-name>");
+private void GetVoice()
+{
+  if(!_textToSpeech.GetVoice(OnGetVoice, <voicetype>))
+    Log.Debug("ExampleTextToSpeech", "Failed to get voice!");
+}
+
+private void OnGetVoice(Voice voice, string customData)
+{
+  Log.Debug("ExampleTextToSpeech", "Text to Speech - Get voice response: {0}", customData);
+}
 ```
 
-#### Synthesize audio using file
+
+
+
+
+
+### Synthesize audio using file
 Synthesizes text to spoken audio, returning the synthesized audio stream as an array of bytes. You can use two request methods to synthesize audio:
 
 * The HTTP GET request method passes shorter text via a query parameter. The text size is limited by the maximum length of the HTTP request line and headers (about 6 KB) or by system limits, whichever is less.
@@ -89,125 +100,259 @@ Synthesizes text to spoken audio, returning the synthesized audio stream as an a
 * The HTTP POST request method passes longer text in the body of the request. Text size is limited to 5 KB.
 
 With either request method, you can provide plain text or text that is annotated with SSML.
+
 ```cs
-//  returns a stream of audio data from text in wave format using the Allison voice
-var results = _textToSpeech.Synthesize(_text, Voice.EN_ALLISON, AudioType.WAV);
+private void Synthesize()
+{
+  _textToSpeech.Voice = <voice-type>;
+  if(!_textToSpeech.ToSpeech(<text-to-synthesize>, OnSynthesize, <use-post>))
+    Log.Debug("ExampleTextToSpeech", "Failed to synthesize!");
+}
+
+private void OnSynthesize(AudioClip clip, string customData)
+{
+  PlayClip(clip);
+}
+
+private void PlayClip(AudioClip clip)
+{
+  if (Application.isPlaying && clip != null)
+  {
+    GameObject audioObject = new GameObject("AudioObject");
+    AudioSource source = audioObject.AddComponent<AudioSource>();
+    source.spatialBlend = 0.0f;
+    source.loop = false;
+    source.clip = clip;
+    source.Play();
+
+    Destroy(audioObject, clip.length);
+  }
+}
 ```
 
-<!-- #### Synthesize audio using websockets
+
+
+
+
+
+<!-- ### Synthesize audio using websockets
 Synthesizes text to spoken audio over a WebSocket connection. The synthesize method establishes a connection with the service. You then send the text to be synthesized to the service as a JSON text message over the connection, and the service returns the audio as a binary stream of data.
 
 You can provide a maximum of 5 KB of either plain text or text that is annotated with SSML. You can use the SSML <mark> element to request the location of the marker in the audio stream. You can also request word timing information in the form of start and end times for all strings of the input text. Mark and word timing results are sent as text messages over the connection.
 ```cs
 ``` -->
 
-#### Get pronunciation
+
+
+
+
+
+### Get pronunciation
 Returns the phonetic pronunciation for the specified word. You can request the pronunciation for a specific format. You can also request the pronunciation for a specific voice to see the default translation for the language of that voice or for a specific custom voice model to see the translation for that voice model.
 ```cs
-//  returns pronunciation of the specified text
-var results = _textToSpeech.GetPronunciation(_pronunciation);
+private void GetPronunciation()
+{
+  if(!_textToSpeech.GetPronunciation(OnGetPronunciation, <word>, <voicetype>))
+    Log.Debug("ExampleTextToSpeech", "Failed to get pronunication!");
+}
+
+private void OnGetPronunciation(Pronunciation pronunciation, string customData)
+{
+  Log.Debug("ExampleTextToSpeech", "Text to Speech - Get pronunciation response: {0}", customData);
+}
 ```
 
-#### Create a voice model
+
+
+
+
+
+### Create a voice model
 Creates a new empty custom voice model that is owned by the requesting user.
 ```cs
-//  create a custom voice model object
-CustomVoiceModel voiceModel = new CustomVoiceModel()
+private void CreateCustomization()
 {
-  Name = "<voice-model-name>",
-  Description = "<voice-model-description>",
-  Language = "<voice-model-language>"
-};
+  if(!_textToSpeech.CreateCustomization(OnCreateCustomization, <customization-name>, <customization-language>, <customization-description>))
+    Log.Debug("ExampleTextToSpeech", "Failed to create customization!");
+}
 
-//  create the custom voice model using the voice model data
-var results = _textToSpeech.SaveCustomVoiceModel(voiceModel);
+private void OnCreateCustomization(CustomizationID customizationID, string customData)
+{
+  Log.Debug("ExampleTextToSpeech", "Text to Speech - Create customization response: {0}", customData);
+}
 ```
 
-#### Update a voice model
+
+
+
+
+
+### Update a voice model
 Updates information for the specified custom voice model. You can update the metadata such as the name and description of the voice model. You can also update the words in the model and their translations. Adding a new translation for a word that already exists in a custom model overwrites the word's existing translation. A custom model can contain no more than 20,000 entries. Only the owner of a custom voice model can use this method to update the model. If no modelID is provided, a new custom model will be created.
 ```cs
-// create a custom voice model object with updated data
-CustomVoiceModel voiceModel = new CustomVoiceModel()
+private void UpdateCustomization()
 {
-  Name = "<voice-model-name>",
-  Description = "<voice-model-description>",
-  Language = "<voice-model-language>",
-  Id = "<voice-model-id>"
-};
+  CustomVoiceUpdate _customVoiceUpdate = new CustomVoiceUpdate()
+  {
+    words = <customization-words>,
+    description = <customization-description>,
+    name = <customization-name>
+  }
 
-//  update the custom voice model using the voice model data
-var results = _textToSpeech.SaveCustomVoiceModel(voiceModel);
+  if(!_textToSpeech.UpdateCustomization(OnUpdateCustomization, <customization-id>, _customVoiceUpdate))
+    Log.Debug("ExampleTextToSpeech", "Failed to update customization!");
+}
+
+private void OnUpdateCustomization(bool success, string customData)
+{
+  Log.Debug("ExampleTextToSpeech", "Text to Speech - Update customization response: {0}", success);
+}
 ```
 
-#### List voice models
+
+
+
+
+
+### List voice models
 Lists metadata such as the name and description for all custom voice models that you own for all languages. Specify a language to list the voice models that you own for the specified language only. To see the words in addition to the metadata for a specific voice model, use the List a voice model method. Only the owner of a custom voice model can use this method to list information about the model.
 ```cs
-//  lists all custom voice models
-var results = _textToSpeech.GetCustomVoiceModels();
+private void GetCustomizations()
+{
+  if(!_textToSpeech.GetCustomizations(OnGetCustomizations))
+    Log.Debug("ExampleTextToSpeech", "Failed to get customizations!");
+}
+
+private void OnGetCustomizations(Customizations customizations, string customData)
+{
+  Log.Debug("ExampleTextToSpeech", "Text to Speech - Get customizations response: {0}", customData);
+}
 ```
 
-#### List a voice model
+
+
+
+
+
+### List a voice model
 Lists all information about the specified custom voice model. In addition to metadata such as the name and description of the voice model, the output includes the words in the model and their translations as defined in the model. To see just the metadata for a voice model, use the List voice models method. Only the owner of a custom voice model can use this method to query information about the model.
 ```cs
-//  list details of a specified custom voice model
-var results = _textToSpeech.GetCustomVoiceModel("<voice-model-id>");
+private void GetCustomization()
+{
+  if(!_textToSpeech.GetCustomization(OnGetCustomization))
+    Log.Debug("ExampleTextToSpeech", "Failed to get customization!");
+}
+
+private void OnGetCustomization(Customization customization, string customData)
+{
+  Log.Debug("ExampleTextToSpeech", "Text to Speech - Get customization response: {0}", customData);
+}
 ```
 
-#### Delete a voice model
+
+
+
+
+
+### Delete a voice model
 Deletes the custom voice model with the specified customization_id. Only the owner of a custom voice model can use this method to delete the model.
 ```cs
-//  deletes the specified voice model
-_textToSpeech.DeleteCustomVoiceModel("<voice-model-id>");
+private void DeleteCustomization()
+{
+  if(!_textToSpeech.DeleteCustomization(OnDeleteCustomization, <customization-id>))
+    Log.Debug("ExampleTextToSpeech", "Failed to delete customization!");
+}
+
+private void OnDeleteCustomization(bool success, string customData)
+{
+  Log.Debug("ExampleTextToSpeech", "Text to Speech - Get customization response: {0}", success);
+}
 ```
 
-#### Add words
+
+
+
+
+
+### Add words
 Adds one or more words and their translations to the specified custom voice model. Adding a new translation for a word that already exists in a custom model overwrites the word's existing translation. A custom model can contain no more than 20,000 entries. Only the owner of a custom voice model can use this method to add words to the model.
 ```cs
-//  create words to update custom voice model
-CustomWordTranslation ibm = new CustomWordTranslation()
+Word[] _wordArrayToAddToCustomization =
 {
-  Word = "IBM",
-  Translation = "I B M"
+  new Word()
+  {
+    word = "bananna",
+    translation = "arange"
+  },
+  new Word()
+  {
+    word = "orange",
+    translation = "gbye"
+  },
+  new Word()
+  {
+    word = "tomato",
+    translation = "tomahto"
+  }
 };
 
-CustomWordTranslation iPhone = new CustomWordTranslation()
+Words wordsToAddToCustomization = new Words()
 {
-  Word = "iPhone",
-  Translation = "i Phone"
+    words = wordArrayToAddToCustomization
 };
 
-CustomWordTranslation jpl = new CustomWordTranslation()
-{
-  Word = "jpl",
-  Translation = "J P L"
-};
-
-//  update custom voice model
-_textToSpeech.SaveWords("<voice-model-id>", ibm, iPhone, jpl);
+if (!_textToSpeech.AddCustomizationWords(OnAddCustomizationWords, <customization-id>, _wordsToAddToCustomization))
+    Log.Debug("ExampleTextToSpeech", "Failed to add words customization!");
 ```
 
-<!-- #### Add a word
+<!-- ### Add a word
 Adds a single word and its translation to the specified custom voice model. Adding a new translation for a word that already exists in a custom model overwrites the word's existing translation. A custom model can contain no more than 20,000 entries. Only the owner of a custom voice model can use this method to add a word to the model.
 ```cs
 ``` -->
 
-#### List words
+
+
+
+
+
+### List words
 Lists all of the words and their translations for the specified custom voice model. The output shows the translations as they are defined in the model. Only the owner of a custom voice model can use this method to query information about the model's words.
 ```cs
-//  lists all words in a custom voice model
-var results = _textToSpeech.GetWords("<voice-model-id>");
+private void GetCustomizationWords()
+{
+  if(!_textToSpeech.GetCustomizationWords(OnGetCustomizationWords, <customization-id>))
+    Log.Debug("ExampleTextToSpeech", "Failed to get customization words!");
+}
+
+private void OnGetCustomizationWords(Words words, string customData)
+{
+  Log.Debug("ExampleTextToSpeech", "Text to Speech - Get customization words response: {0}", customData);
+}
 ```
 
-<!-- #### List a word
+<!-- ### List a word
 Returns the translation for a single word from the specified custom model. The output shows the translation as it is defined in the model. Only the owner of a custom voice model can use this method to query information about a word from the model.
 ```cs
 ``` -->
 
-#### Delete a word
+
+
+
+
+
+### Delete a word
 Deletes a single word from the specified custom voice model. Only the owner of a custom voice model can use this method to delete a word from the model.
 ```cs
-//  deletes the word "jpl" from the custom voice model
-_textToSpeech.DeleteWord(_customVoiceModelID, "jpl");
+private void DeleteCustomizationWord()
+{
+  if(!_textToSpeech.DeleteCustomizationWords(OnDeleteCustomizationWords, <customization-id>, <customization-word>))
+    Log.Debug("ExampleTextToSpeech", "Failed to get delete word!");
+}
+
+private void OnDeleteCustomizationWords(bool success, string customData)
+{
+  Log.Debug("ExampleTextToSpeech", "Text to Speech - Delete customization word response: {0}", success);
+}
 ```
 
 [text-to-speech]: https://www.ibm.com/watson/developercloud/doc/text-to-speech/index.html

@@ -183,9 +183,8 @@ public class ExampleTextToSpeech : MonoBehaviour
 
         //  Get Customization Words
         Log.Debug("ExampleTextToSpeech", "Attempting to get a customization's words");
-        string customIdentifierToGetWords = "1476ea80-5355-4911-ac99-ba39162a2d34";
-        if (!_textToSpeech.GetCustomizationWords(OnGetCustomizationWords, customIdentifierToGetWords))
-            Log.Debug("ExampleTextToSpeech", "Failed to get {0} words!", customIdentifierToGetWords);
+        if (!_textToSpeech.GetCustomizationWords(OnGetCustomizationWords, _createdCustomizationId))
+            Log.Debug("ExampleTextToSpeech", "Failed to get {0} words!", _createdCustomizationId);
         while (!_getCustomizationWordsTested)
             yield return null;
 
