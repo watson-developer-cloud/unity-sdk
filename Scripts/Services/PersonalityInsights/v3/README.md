@@ -12,7 +12,6 @@ The service offers a single `profile` method that accepts up to 20 MB of input d
 ### Instantiating and authenticating the service
 Before you can send requests to the service it must be instantiated and credentials must be set.
 ```cs
-// create a Personality Insights Service instance
 Credentials credentials = new Credentials(<username>, <password>, <url>);
 PersonalityInsights _personalityInsights = new PersonalityInsights(credentials);
 ```
