@@ -46,20 +46,20 @@ You will need the 'username' and 'password' credentials for each service. Servic
 **Note:** You are responsible for securing your own credentials. Any user with your service credentials can access your service instances!
 
 ## Watson Services
-* [Speech to Text](/scripts/services/SpeechToText/v1)
-* [Text to Speech](/scripts/services/TextToSpeech/v1)
-* [Language Translator](/scripts/services/LanguageTranslator/v2)
-* [Natural Language Classifier](/scripts/services/NaturalLanguageClassifier/v2)
-* [Tone Analyzer](/scripts/services/ToneAnalyzer/v3)
-* [Tradeoff Analytics](/scripts/services/TradeoffAnalytics/v1)
-* [Conversation](/scripts/services/Conversation/v1)
-* [Visual Recognition](/scripts/services/VisualRecognition/v3)
-* [Alchemy Language](/scripts/services/AlchemyAPI/v1)
-* [Personality Insights](/scripts/services/PersonalityInsights/v3)
-* [Document Conversion](/scripts/services/DocumentConversion/v1)
-* [Retrieve and Rank](/scripts/services/RetrieveAndRank/v1)
-* [Discovery](/scripts/services/Discovery/v1)
-* [Natural Language Understanding](/scripts/services/NaturalLanguageUnderstanding/v1)
+* [Speech to Text](/Scripts/Services/SpeechToText/v1)
+* [Text to Speech](/Scripts/Services/TextToSpeech/v1)
+* [Language Translator](/Scripts/Services/LanguageTranslator/v2)
+* [Natural Language Classifier](/Scripts/Services/NaturalLanguageClassifier/v2)
+* [Tone Analyzer](/Scripts/Services/ToneAnalyzer/v3)
+* [Tradeoff Analytics](/Scripts/Services/TradeoffAnalytics/v1)
+* [Conversation](/Scripts/Services/Conversation/v1)
+* [Visual Recognition](/Scripts/Services/VisualRecognition/v3)
+* [Alchemy Language](/Scripts/Services/AlchemyAPI/v1)
+* [Personality Insights](/Scripts/Services/PersonalityInsights/v3)
+* [Document Conversion](/Scripts/Services/DocumentConversion/v1)
+* [Retrieve and Rank](/Scripts/Services/RetrieveAndRank/v1)
+* [Discovery](/Scripts/Services/Discovery/v1)
+* [Natural Language Understanding](/Scripts/Services/NaturalLanguageUnderstanding/v1)
 
 ## Documentation
 To read the documentation you need to have a **chm reader** installed. Open the documentation by selecting API Reference the Watson menu (**Watson -> API Reference**).
