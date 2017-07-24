@@ -34,12 +34,6 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
     {
         #region Public Types
         /// <summary>
-        /// Callback used by FindClassifier().
-        /// </summary>
-        /// <param name="classifier">The classifer found by name.</param>
-        /// <param name="data">Optional data</param>
-        public delegate void OnFindClassifier(GetClassifiersPerClassifierVerbose classifier, string data);
-        /// <summary>
         /// The callback used by the GetClassifiers() method.
         /// </summary>
         /// <param name="classifiers">A brief description of classifiers.</param>
