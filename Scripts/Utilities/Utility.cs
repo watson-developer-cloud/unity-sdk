@@ -26,6 +26,7 @@ using UnityEngine;
 using System.Net.NetworkInformation;
 using System.Text.RegularExpressions;
 using System.Runtime.InteropServices;
+using IBM.Watson.DeveloperCloud.Connection;
 
 namespace IBM.Watson.DeveloperCloud.Utilities
 {
@@ -1130,5 +1131,141 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             throw new ArgumentException("Requested mime type is not registered: " + mimeType);
         }
         #endregion
+
+#region Get Token
+        private const string TOKEN_REST_ENDPOINT = "https://gateway.watsonplatform.net/authorization/api/v1/token";
+        private const string TOKEN_STREAM_ENDPOINT = "https://stream.watsonplatform.net/authorization/api/v1/token";
+
+        /// <summary>
+        /// The OnGetToken callback.
+        /// </summary>
+        /// <param name="authenticationToken">The authentication token object.</param>
+        /// <param name="data">User defined custom data.</param>
+        public delegate void OnGetToken(AuthenticationToken authenticationToken, string data);
+
+        /// <summary>
+        /// Gets a token to authenticate serivce calls instead of using username and password.
+        /// </summary>
+        /// <param name="callback">The OnGetToken callback,</param>
+        /// <param name="serviceEndpoint">The service endpoint.</param>
+        /// <param name="username">The service username.</param>
+        /// <param name="password">The service password.</param>
+        /// <param name="tokenName">A user defined name for the token.</param>
+        /// <returns>True if the call succeeds.</returns>
+        public static bool GetToken(OnGetToken callback, string serviceEndpoint, string username, string password, string tokenName = "")
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(serviceEndpoint))
+                throw new ArgumentNullException("serviceEndpoint");
+            if (string.IsNullOrEmpty(username))
+                throw new ArgumentNullException("username");
+            if (string.IsNullOrEmpty(password))
+                throw new ArgumentNullException("password");
+
+            string tokenEndpoint;
+            if (serviceEndpoint.Contains("stream"))
+                tokenEndpoint = TOKEN_STREAM_ENDPOINT;
+            else
+                tokenEndpoint = TOKEN_REST_ENDPOINT;
+
+            Credentials Credentials = new Credentials()
+            {
+                Username = username,
+                Password = password
+            };
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, tokenEndpoint + "?url=" + serviceEndpoint);
+            if (connector == null)
+                return false;
+
+            GetTokenReq req = new GetTokenReq();
+            req.Callback = callback;
+            req.OnResponse = OnGetTokenResp;
+            req.TokenName = tokenName;
+
+            return connector.Send(req);
+        }
+
+        private class GetTokenReq : RESTConnector.Request
+        {
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public string Data { get; set; }
+            /// <summary>
+            /// OnGetToken callback delegate
+            /// </summary>
+            public OnGetToken Callback { get; set; }
+            /// <summary>
+            /// User defined service name to keep track of authentication tokens.
+            /// </summary>
+            public string TokenName { get; set; }
+        }
+
+        private static void OnGetTokenResp(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            AuthenticationToken authenticationToken = new AuthenticationToken();
+            string token = "";
+
+            if (resp.Success)
+            {
+                try
+                {
+                    authenticationToken.Token = token = Encoding.UTF8.GetString(resp.Data);
+                    authenticationToken.Created = DateTime.Now;
+                    authenticationToken.ServiceName = ((GetTokenReq)req).TokenName;
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Visual Recognition", "GetClassifier Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            string customData = ((GetTokenReq)req).Data;
+            if (((GetTokenReq)req).Callback != null)
+                ((GetTokenReq)req).Callback(resp.Success ? authenticationToken : null, string.IsNullOrEmpty(customData) ? token : customData);
+        }
+#endregion
+    }
+
+    /// <summary>
+    /// The authentication token object.
+    /// </summary>
+    public class AuthenticationToken
+    {
+        /// <summary>
+        /// The token string for authentication.
+        /// </summary>
+        public string Token { get; set; }
+        /// <summary>
+        /// The DateTime the token was created.
+        /// </summary>
+        public DateTime Created { get; set; }
+        /// <summary>
+        /// The user created service name to keep track of authentication tokens.
+        /// </summary>
+        public string ServiceName { get; set; }
+        /// <summary>
+        /// Returns the time in minutes until the expiration of the authentication token.
+        /// </summary>
+        public double TimeUntilExpiration
+        {
+            get
+            {
+                return ((Created.AddMinutes(Constants.Token.TOKEN_TIME_TO_LIVE)) - DateTime.Now).TotalMinutes;
+            }
+        }
+        /// <summary>
+        /// Is the token expired.
+        /// </summary>
+        public bool IsTokenExpired
+        {
+            get
+            {
+                return TimeUntilExpiration <= 0;
+            }
+        }
     }
 }

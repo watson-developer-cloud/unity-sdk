@@ -1,4 +1,7 @@
-﻿/**
+﻿
+
+using System;
+/**
 * Copyright 2015 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,7 +17,6 @@
 * limitations under the License.
 *
 */
-
 namespace IBM.Watson.DeveloperCloud.Utilities
 {
     /// <summary>
@@ -80,6 +82,17 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// Default time in seconds after which a call should timeout.
             /// </summary>
             public static float Timeout = 120.0f;
+        }
+
+        /// <summary>
+        /// Variables for authentication tokens
+        /// </summary>
+        public static class Token
+        {
+            /// <summary>
+            /// The time in minutes after which the authentication token is expired.
+            /// </summary>
+            public static float TOKEN_TIME_TO_LIVE = 60f;
         }
     }
 }
