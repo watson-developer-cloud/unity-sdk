@@ -223,7 +223,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// <summary>
         /// List of each keyword entered via the keywords parameter and, for each keyword, an array of KeywordResult objects that provides information about its occurrences in the input audio. The keys of the list are the actual keyword strings. A keyword for which no matches are spotted in the input is omitted from the array.
         /// </summary>
-        public Dictionary<string, KeywordResult> keyword { get; set; }
+        public KeywordResult[] keyword { get; set; }
     }
 
     /// <summary>

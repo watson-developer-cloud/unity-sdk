@@ -21,9 +21,19 @@ using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Services.SpeechToText.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
 using IBM.Watson.DeveloperCloud.DataTypes;
+using System.Collections.Generic;
+using FullSerializer;
+using System.IO;
+using System;
 
 public class ExampleStreaming : MonoBehaviour
 {
+    private string _username;
+    private string _password;
+    private string _url;
+    private fsSerializer _serializer = new fsSerializer();
+    //private string _token = "<authentication-token>";
+
     private int _recordingRoutine = 0;
     private string _microphoneID = null;
     private AudioClip _recording = null;
@@ -35,8 +45,45 @@ public class ExampleStreaming : MonoBehaviour
     void Start()
     {
         LogSystem.InstallDefaultReactors();
-        Log.Debug("ExampleStreaming", "Start();");
 
+        VcapCredentials vcapCredentials = new VcapCredentials();
+        fsData data = null;
+
+        //  Get credentials from a credential file defined in environmental variables in the VCAP_SERVICES format. 
+        //  See https://www.ibm.com/watson/developercloud/doc/common/getting-started-variables.html.
+        var environmentalVariable = Environment.GetEnvironmentVariable("VCAP_SERVICES");
+        var fileContent = File.ReadAllText(environmentalVariable);
+
+        //  Add in a parent object because Unity does not like to deserialize root level collection types.
+        fileContent = Utility.AddTopLevelObjectToJson(fileContent, "VCAP_SERVICES");
+
+        //  Convert json to fsResult
+        fsResult r = fsJsonParser.Parse(fileContent, out data);
+        if (!r.Succeeded)
+            throw new WatsonException(r.FormattedMessages);
+
+        //  Convert fsResult to VcapCredentials
+        object obj = vcapCredentials;
+        r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+        if (!r.Succeeded)
+            throw new WatsonException(r.FormattedMessages);
+
+        //  Set credentials from imported credntials
+        Credential credential = vcapCredentials.VCAP_SERVICES["speech_to_text"][0].Credentials;
+        _username = credential.Username.ToString();
+        _password = credential.Password.ToString();
+        _url = credential.Url.ToString();
+
+        //  Create credential and instantiate service
+        Credentials credentials = new Credentials(_username, _password, _url);
+
+        //  Or authenticate using token
+        //Credentials credentials = new Credentials(_url)
+        //{
+        //    AuthenticationToken = _token
+        //};
+
+        _speechToText = new SpeechToText(credentials);
         Active = true;
 
         StartRecording();
@@ -58,6 +105,10 @@ public class ExampleStreaming : MonoBehaviour
                 _speechToText.EnableInterimResults = true;
                 _speechToText.OnError = OnError;
                 _speechToText.StartListening(OnRecognize);
+                List<string> keywords = new List<string>();
+                keywords.Add("hello");
+                _speechToText.KeywordsThreshold = 0.5f;
+                _speechToText.Keywords = keywords.ToArray();
             }
             else if (!value && _speechToText.IsListening)
             {
@@ -160,6 +211,14 @@ public class ExampleStreaming : MonoBehaviour
                 {
                     string text = alt.transcript;
                     Log.Debug("ExampleStreaming", string.Format("{0} ({1}, {2:0.00})\n", text, res.final ? "Final" : "Interim", alt.confidence));
+                }
+
+                if (res.keywords_result != null && res.keywords_result.keyword != null)
+                {
+                    foreach (var keyword in res.keywords_result.keyword)
+                    {
+                        Log.Debug("ExampleSpeechToText", "keyword: {0}, confidence: {1}, start time: {2}, end time: {3}", keyword.normalized_text, keyword.confidence, keyword.start_time, keyword.end_time);
+                    }
                 }
             }
         }

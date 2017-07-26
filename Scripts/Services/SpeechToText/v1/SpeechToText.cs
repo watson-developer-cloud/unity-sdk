@@ -522,7 +522,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             start["profanity_filter"] = ProfanityFilter;
             start["word_alternatives_threshold"] = WordAlternativesThreshold;
             start["keywords_threshold"] = KeywordsThreshold;
-            start["keywords"] = string.Join(",", Keywords);
+            start["keywords"] = Keywords;
 
             _listenSocket.Send(new WSConnector.TextMessage(Json.Serialize(start)));
             _lastStartSent = DateTime.Now;
@@ -834,66 +834,34 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 
                         alternatives.Add(alternative);
                     }
+                    
+                    IDictionary iKeywords = iresult["keywords_result"] as IDictionary;
+                    if (iKeywords != null)
+                    {
+                        result.keywords_result = new KeywordResults();
+                        List<KeywordResult> keywordResults = new List<KeywordResult>();
+                        foreach (string keyword in Keywords)
+                        {
+                            if (iKeywords[keyword] != null)
+                            {
+                                IList iKeywordList = iKeywords[keyword] as IList;
+                                if (iKeywordList == null)
+                                    continue;
 
-
-                    //IDictionary iKeywordsResultDict = iresult["keywords_result"] as IDictionary;
-                    //if (iKeywordsResultDict == null)
-                    //    continue;
-
-                    //KeywordResults keywordResults = new KeywordResults();
-                    //List<KeywordResult> keywordResultList = new List<KeywordResult>();
-
-                    //foreach(var k in iKeywordsResultDict)
-                    //{
-                    //    KeyValuePair<string, IList> kvp = (KeyValuePair<string, IList>)k;
-
-                    //    //IDictionary iKeyword = k as IDictionary;
-                    //    foreach (var j in kvp.Value)
-                    //    {
-                    //        Log.Debug("SpeechToText", iKeywordsResultDict.ToString());
-
-                    //    }
-                    //    //if (iKeyword == null)
-                    //    //    continue;
-
-                    //    KeywordResult keyword = new KeywordResult();
-                    //    //keyword.confidence = (double)iKeyword["confidence"];
-                    //    //keyword.normalized_text = (string)iKeyword["normalized_text"];
-                    //    //keyword.start_time = (double)iKeyword["start_time"];
-                    //    //keyword.end_time = (double)iKeyword["end_time"];
-
-                    //    keywordResultList.Add(keyword);
-                    //}
-
-                    //keywordResults.keyword = keywordResultList.ToArray();
-                    //Log.Debug("SpeechToText", iKeywordsResultDict.ToString());
-                    ////KeywordResults keywordsResult = new KeywordResults();
-                    //////KeywordResults keywordResults = iresult["keywords_result"] as KeywordResults;
-                    ////List<KeywordResult> KeywordResultList = new List<KeywordResult>();
-                    ////foreach (var kvp in iKeywordsResultDict)
-                    ////{
-                    ////    KeyValuePair<string, IDictionary> keyValuePair = (KeyValuePair<string, IDictionary>)kvp;
-                    ////    IDictionary valDict = (IDictionary)keyValuePair.Value;
-                    ////    KeywordResult keyword = new KeywordResult()
-                    ////    {
-                    ////        normalized_text = (string)valDict["normalized_text"],
-                    ////        start_time = (double)valDict["start_time"],
-                    ////        end_time = (double)valDict["end_time"],
-                    ////        confidence = (double)valDict["confidence"],
-                    ////    };
-                    ////}
-
-                    ////IList iKeywordList = iKeywordsResultDict["keyword"] as IList;
-
-                    ////foreach(var keywordResult in iKeywordsList)
-                    ////{
-                    ////    keywordsList.Add(keywordResult);
-                    ////}
-
-                    ////keywordsResult.keyword = keywordsList.ToArray();
-
-                    ////result.keywords_result = keywordsResult;
-
+                                foreach (var k in iKeywordList)
+                                {
+                                    IDictionary iKeywordDictionary = k as IDictionary;
+                                    KeywordResult keywordResult = new KeywordResult();
+                                    keywordResult.confidence = (double)iKeywordDictionary["confidence"];
+                                    keywordResult.end_time = (double)iKeywordDictionary["end_time"];
+                                    keywordResult.start_time = (double)iKeywordDictionary["start_time"];
+                                    keywordResult.normalized_text = (string)iKeywordDictionary["normalized_text"];
+                                    keywordResults.Add(keywordResult);
+                                }
+                            }
+                        }
+                        result.keywords_result.keyword = keywordResults.ToArray();
+                    }
 
                     result.alternatives = alternatives.ToArray();
                     results.Add(result);
