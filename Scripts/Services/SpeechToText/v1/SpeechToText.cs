@@ -92,6 +92,12 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         private DateTime _lastStartSent = DateTime.Now;
         private string _recognizeModel = "en-US_BroadbandModel";   // ID of the model to use.
         private int _maxAlternatives = 1;              // maximum number of alternatives to return.
+        private string[] _keywords;
+        private float _keywordsThreshold = 0.5f;
+        private float _wordAlternativesThreshold = 0.5f;
+        private bool _profanityFilter = true;
+        private bool _smallFormatting = false;
+        private bool _speakerLabels = false;
         private bool _timestamps = false;
         private bool _wordConfidence = false;
         private bool _detectSilence = true;            // If true, then we will try not to record silence.
@@ -185,6 +191,31 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                 }
             }
         }
+
+        /// <summary>
+        /// NON-MULTIPART ONLY: Array of keyword strings to spot in the audio. Each keyword string can include one or more tokens. Keywords are spotted only in the final hypothesis, not in interim results. Omit the parameter or specify an empty array if you do not need to spot keywords.
+        /// </summary>
+        public string[] Keywords { get { return _keywords; } set { _keywords = value; } }
+        /// <summary>
+        /// NON-MULTIPART ONLY: Confidence value that is the lower bound for spotting a keyword. A word is considered to match a keyword if its confidence is greater than or equal to the threshold. Specify a probability between 0 and 1 inclusive. No keyword spotting is performed if you omit the parameter. If you specify a threshold, you must also specify one or more keywords.
+        /// </summary>
+        public float KeywordsThreshold { get { return _keywordsThreshold; } set { _keywordsThreshold = value; } }
+        /// <summary>
+        /// NON-MULTIPART ONLY: Confidence value that is the lower bound for identifying a hypothesis as a possible word alternative (also known as "Confusion Networks"). An alternative word is considered if its confidence is greater than or equal to the threshold. Specify a probability between 0 and 1 inclusive. No alternative words are computed if you omit the parameter.
+        /// </summary>
+        public float WordAlternativesThreshold { get { return _wordAlternativesThreshold; } set { _wordAlternativesThreshold = value; } }
+        /// <summary>
+        /// NON-MULTIPART ONLY: If true (the default), filters profanity from all output except for keyword results by replacing inappropriate words with a series of asterisks. Set the parameter to false to return results with no censoring. Applies to US English transcription only.
+        /// </summary>
+        public bool ProfanityFilter { get { return _profanityFilter; } set { _profanityFilter = value; } }
+        /// <summary>
+        /// NON-MULTIPART ONLY: If true, converts dates, times, series of digits and numbers, phone numbers, currency values, and Internet addresses into more readable, conventional representations in the final transcript of a recognition request. If false (the default), no formatting is performed. Applies to US English transcription only.
+        /// </summary>
+        public bool SmallFormatting { get { return _smallFormatting; } set { _smallFormatting = value; } }
+        /// <summary>
+        /// NON-MULTIPART ONLY: Indicates whether labels that identify which words were spoken by which participants in a multi-person exchange are to be included in the response. If true, speaker labels are returned; if false (the default), they are not. Speaker labels can be returned only for the following language models: en-US_NarrowbandModel, en-US_BroadbandModel, es-ES_NarrowbandModel, es-ES_BroadbandModel, ja-JP_NarrowbandModel, and ja-JP_BroadbandModel. Setting speaker_labels to true forces the timestamps parameter to be true, regardless of whether you specify false for the parameter.
+        /// </summary>
+        public bool SpeakerLabels { get { return _speakerLabels; } set { _speakerLabels = value; } }
         #endregion
 
         #region Constructor
@@ -231,59 +262,6 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 
         private void OnGetModelsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            #region trash
-            //GetModelsRequest gmr = req as GetModelsRequest;
-            //if (gmr == null)
-            //    throw new WatsonException("Unexpected request type.");
-
-            //Model[] models = null;
-            //if (resp.Success)
-            //{
-            //    string jsonString = Encoding.UTF8.GetString(resp.Data);
-            //    if (jsonString == null)
-            //        Log.Error("SpeechToText", "Failed to get JSON string from response.");
-
-            //    IDictionary json = (IDictionary)Json.Deserialize(jsonString);
-            //    if (json == null)
-            //        Log.Error("SpechToText", "Failed to parse JSON: {0}", jsonString);
-
-            //    try
-            //    {
-            //        List<Model> models = new List<Model>();
-
-            //        IList imodels = json["models"] as IList;
-            //        if (imodels == null)
-            //            throw new Exception("Expected IList");
-
-            //        foreach (var m in imodels)
-            //        {
-            //            IDictionary imodel = m as IDictionary;
-            //            if (imodel == null)
-            //                throw new Exception("Expected IDictionary");
-
-            //            Model model = new Model();
-            //            model.name = (string)imodel["name"];
-            //            model.rate = (long)imodel["rate"];
-            //            model.language = (string)imodel["language"];
-            //            model.description = (string)imodel["description"];
-            //            model.url = (string)imodel["url"];
-
-            //            models.Add(model);
-            //        }
-            //    }
-            //    catch (Exception e)
-            //    {
-            //        Log.Error("SpeechToText", "Caught exception {0} when parsing GetModels() response: {1}", e.ToString(), jsonString);
-            //    }
-
-            //    if (models == null)
-            //        Log.Error("SpeechToText", "Failed to parse GetModels response.");
-            //}
-
-            //if (gmr.Callback != null)
-            //    gmr.Callback(models, gmr.Data);
-            #endregion
-
             ModelSet response = new ModelSet();
             fsData data = null;
 
@@ -539,6 +517,12 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             start["interim_results"] = EnableInterimResults;
             start["word_confidence"] = _wordConfidence;
             start["timestamps"] = _timestamps;
+            start["speaker_labels"] = SpeakerLabels;
+            start["small_formatting"] = SmallFormatting;
+            start["profanity_filter"] = ProfanityFilter;
+            start["word_alternatives_threshold"] = WordAlternativesThreshold;
+            start["keywords_threshold"] = KeywordsThreshold;
+            start["keywords"] = string.Join(",", Keywords);
 
             _listenSocket.Send(new WSConnector.TextMessage(Json.Serialize(start)));
             _lastStartSent = DateTime.Now;
@@ -710,6 +694,13 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             req.Parameters["max_alternatives"] = _maxAlternatives.ToString();
             req.Parameters["timestamps"] = _timestamps ? "true" : "false";
             req.Parameters["word_confidence"] = _wordConfidence ? "true" : "false";
+            req.Parameters["speaker_labels"] = SpeakerLabels;
+            req.Parameters["small_formatting"] = SmallFormatting;
+            req.Parameters["profanity_filter"] = ProfanityFilter;
+            req.Parameters["word_alternatives_threshold"] = WordAlternativesThreshold;
+            req.Parameters["keywords_threshold"] = KeywordsThreshold;
+            req.Parameters["keywords"] = string.Join(",", Keywords);
+
             req.OnResponse = OnRecognizeResponse;
 
             return connector.Send(req);
@@ -843,6 +834,67 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 
                         alternatives.Add(alternative);
                     }
+
+
+                    //IDictionary iKeywordsResultDict = iresult["keywords_result"] as IDictionary;
+                    //if (iKeywordsResultDict == null)
+                    //    continue;
+
+                    //KeywordResults keywordResults = new KeywordResults();
+                    //List<KeywordResult> keywordResultList = new List<KeywordResult>();
+
+                    //foreach(var k in iKeywordsResultDict)
+                    //{
+                    //    KeyValuePair<string, IList> kvp = (KeyValuePair<string, IList>)k;
+
+                    //    //IDictionary iKeyword = k as IDictionary;
+                    //    foreach (var j in kvp.Value)
+                    //    {
+                    //        Log.Debug("SpeechToText", iKeywordsResultDict.ToString());
+
+                    //    }
+                    //    //if (iKeyword == null)
+                    //    //    continue;
+
+                    //    KeywordResult keyword = new KeywordResult();
+                    //    //keyword.confidence = (double)iKeyword["confidence"];
+                    //    //keyword.normalized_text = (string)iKeyword["normalized_text"];
+                    //    //keyword.start_time = (double)iKeyword["start_time"];
+                    //    //keyword.end_time = (double)iKeyword["end_time"];
+
+                    //    keywordResultList.Add(keyword);
+                    //}
+
+                    //keywordResults.keyword = keywordResultList.ToArray();
+                    //Log.Debug("SpeechToText", iKeywordsResultDict.ToString());
+                    ////KeywordResults keywordsResult = new KeywordResults();
+                    //////KeywordResults keywordResults = iresult["keywords_result"] as KeywordResults;
+                    ////List<KeywordResult> KeywordResultList = new List<KeywordResult>();
+                    ////foreach (var kvp in iKeywordsResultDict)
+                    ////{
+                    ////    KeyValuePair<string, IDictionary> keyValuePair = (KeyValuePair<string, IDictionary>)kvp;
+                    ////    IDictionary valDict = (IDictionary)keyValuePair.Value;
+                    ////    KeywordResult keyword = new KeywordResult()
+                    ////    {
+                    ////        normalized_text = (string)valDict["normalized_text"],
+                    ////        start_time = (double)valDict["start_time"],
+                    ////        end_time = (double)valDict["end_time"],
+                    ////        confidence = (double)valDict["confidence"],
+                    ////    };
+                    ////}
+
+                    ////IList iKeywordList = iKeywordsResultDict["keyword"] as IList;
+
+                    ////foreach(var keywordResult in iKeywordsList)
+                    ////{
+                    ////    keywordsList.Add(keywordResult);
+                    ////}
+
+                    ////keywordsResult.keyword = keywordsList.ToArray();
+
+                    ////result.keywords_result = keywordsResult;
+
+
                     result.alternatives = alternatives.ToArray();
                     results.Add(result);
                 }

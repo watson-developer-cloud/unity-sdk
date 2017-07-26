@@ -331,7 +331,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
                         value = WWW.EscapeURL((string)value);             // escape the value
                     else if (value is byte[])
                         value = Convert.ToBase64String((byte[])value);    // convert any byte data into base64 string
-                    else if (value is Int32 || value is Int64 || value is UInt32 || value is UInt64 || value is float)
+                    else if (value is Int32 || value is Int64 || value is UInt32 || value is UInt64 || value is float || value is bool)
                         value = value.ToString();
                     else if (value != null)
                         Log.Warning("RESTConnector", "Unsupported parameter value type {0}", value.GetType().Name);
