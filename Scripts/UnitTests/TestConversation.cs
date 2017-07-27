@@ -39,10 +39,6 @@ public class TestConversation : UnitTest
     private string[] _questionArray = { "can you turn up the AC", "can you turn on the wipers", "can you turn off the wipers", "can you turn down the ac", "can you unlock the door" };
     private fsSerializer _serializer = new fsSerializer();
     private Dictionary<string, object> _context = null;
-    private bool _useAlternateIntents = false;
-    private RuntimeEntity[] _entities = null;
-    private RuntimeIntent[] _intents = null;
-    private OutputData _output = null;
     private int _questionCount = -1;
     private bool _waitingForResponse = true;
 

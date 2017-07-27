@@ -65,9 +65,6 @@ public class ExampleGetToken : MonoBehaviour
         _password = credential.Password.ToString();
         _url = credential.Url.ToString();
 
-        //  Create credential and instantiate service
-        Credentials credentials = new Credentials(_username, _password, _url);
-
         //  Get token
         if (!Utility.GetToken(OnGetToken, _url, _username, _password))
             Log.Debug("ExampleGetToken", "Failed to get token.");
