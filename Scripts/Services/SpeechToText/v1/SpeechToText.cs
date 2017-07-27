@@ -92,7 +92,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         private DateTime _lastStartSent = DateTime.Now;
         private string _recognizeModel = "en-US_BroadbandModel";   // ID of the model to use.
         private int _maxAlternatives = 1;              // maximum number of alternatives to return.
-        private string[] _keywords;
+        private string[] _keywords = { "" };
         private float _keywordsThreshold = 0.5f;
         private float _wordAlternativesThreshold = 0.5f;
         private bool _profanityFilter = true;
