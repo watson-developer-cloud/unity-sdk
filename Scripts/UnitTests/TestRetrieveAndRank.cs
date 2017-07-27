@@ -96,6 +96,8 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
     public override IEnumerator RunTest()
     {
+      LogSystem.InstallDefaultReactors();
+
       m_IntegrationTestClusterConfigPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/RetrieveAndRank/cranfield_solr_config.zip";
       m_IntegrationTestRankerTrainingPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/RetrieveAndRank/ranker_training_data.csv";
       m_IntegrationTestRankerAnswerDataPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/RetrieveAndRank/ranker_answer_data.csv";

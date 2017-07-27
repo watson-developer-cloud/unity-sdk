@@ -1,5 +1,9 @@
 Change Log
 ==========
+## Version 0.14.0
+_2017-07-xx_
+* New: Abstracted `Natural Language Understanding` service.
+
 ## Version 0.13.0
 _2017-01-25_
 

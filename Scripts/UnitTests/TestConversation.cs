@@ -21,6 +21,7 @@ using IBM.Watson.DeveloperCloud.UnitTests;
 using IBM.Watson.DeveloperCloud.Services.Conversation.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
 using IBM.Watson.DeveloperCloud.Logging;
+using System.Collections.Generic;
 
 public class TestConversation : UnitTest
 {
@@ -56,32 +57,54 @@ public class TestConversation : UnitTest
     yield break;
   }
 
-  private void OnMessageInput(MessageResponse resp, string customData)
+  private void OnMessageInput(object resp, string customData)
   {
     Test(resp != null);
     if (resp != null)
     {
-      foreach (Intent mi in resp.intents)
-        Log.Debug("TestConversation", "input intent: " + mi.intent + ", confidence: " + mi.confidence);
-      if (resp.output != null && resp.output.text.Length > 0)
-        foreach (string txt in resp.output.text)
-          Debug.Log("output: " + txt);
-    }
+            Dictionary<string, object> respDict = resp as Dictionary<string, object>;
+            object intents;
+            respDict.TryGetValue("intents", out intents);
+
+            foreach (var intentObj in (intents as List<object>))
+            {
+                Dictionary<string, object> intentDict = intentObj as Dictionary<string, object>;
+
+                object intentString;
+                intentDict.TryGetValue("intent", out intentString);
+
+                object confidenceString;
+                intentDict.TryGetValue("confidence", out confidenceString);
+
+                Log.Debug("ExampleConversation", "intent: {0} | confidence {1}", intentString.ToString(), confidenceString.ToString());
+            }
+        }
 
     m_MessageInputTested = true;
   }
 
-  private void OnMessageObject(MessageResponse resp, string customData)
+  private void OnMessageObject(object resp, string customData)
   {
     Test(resp != null);
     if (resp != null)
     {
-      foreach (Intent mi in resp.intents)
-        Log.Debug("TestConversation", "object intent: " + mi.intent + ", confidence: " + mi.confidence);
-      if (resp.output != null && resp.output.text.Length > 0)
-        foreach (string txt in resp.output.text)
-          Debug.Log("output: " + txt);
-    }
+            Dictionary<string, object> respDict = resp as Dictionary<string, object>;
+            object intents;
+            respDict.TryGetValue("intents", out intents);
+
+            foreach (var intentObj in (intents as List<object>))
+            {
+                Dictionary<string, object> intentDict = intentObj as Dictionary<string, object>;
+
+                object intentString;
+                intentDict.TryGetValue("intent", out intentString);
+
+                object confidenceString;
+                intentDict.TryGetValue("confidence", out confidenceString);
+
+                Log.Debug("ExampleConversation", "intent: {0} | confidence {1}", intentString.ToString(), confidenceString.ToString());
+            }
+        }
 
     m_MessageObjectTested = true;
   }

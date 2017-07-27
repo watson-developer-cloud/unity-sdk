@@ -24,6 +24,7 @@ Use this SDK to build Watson-powered applications in Unity. It comes with a set 
   * [AlchemyData News](#alchemy-data-news)
   * [Retrieve and Rank](#retrieve-and-rank)
   * [Discovery](#discovery)
+  * [Natural Language Understanding](#natural-language-understanding)
 * [Developing a basic application in one minute](#developing-a-basic-application-in-one-minute)
 * [Documentation](#documentation)
 * [License](#license)
@@ -331,7 +332,7 @@ void Start () {
 	m_Conversation.Message(OnMessage, m_WorkspaceID, m_Input);
 }
 
-void OnMessage (MessageResponse resp)
+void OnMessage (MessageResponse resp, string customData)
 {
    foreach(Intent mi in resp.intents)
        Debug.Log("intent: " + mi.intent + ", confidence: " + mi.confidence);
@@ -2814,6 +2815,94 @@ private void OnQuery(QueryResponse resp, string data)
     Log.Debug("ExampleDiscoveryV1", "resp is null, {0}", data);
 }
 ```
+### Natural Language Understanding
+[Natural Language Understanding][natural_language_understanding] uses natural language processing to analyze semantic features of any text. Provide plain text, HTML, or a public URL, and Natural Language Understanding returns results for the features you specify. The service cleans HTML before analysis by default, which removes most advertisements and other unwanted content.
+
+You can create [custom models][nlu_models] with Watson Knowledge Studio that can be used to detect custom [entities][nlu_entities] and [relations][nlu_relations] in Natural Language Understanding.
+
+#### Analyze
+Analyze features of natural language content.
+
+```cs
+NaturalLanguageUnderstanding m_NaturalLanguageUnderstanding = new NaturalLanguageUnderstanding();
+private static fsSerializer sm_Serializer = new fsSerializer();
+
+void Start ()
+{
+    Parameters parameters = new Parameters()
+    {
+        text = <text-to-analyze>,
+        return_analyzed_text = true,
+        language = "en",
+        features = new Features()
+        {
+            entities = new EntitiesOptions()
+            {
+                limit = 50,
+                sentiment = true,
+                emotion = true,
+            },
+            keywords = new KeywordsOptions()
+            {
+                limit = 50,
+                sentiment = true,
+                emotion = true
+            }
+        }
+    };
+
+    if (!m_NaturalLanguageUnderstanding.Analyze(OnAnalyze, parameters))
+        Log.Debug("ExampleNaturalLanguageUnderstandingV1", "Failed to get models.");
+}
+
+private void OnAnalyze(AnalysisResults resp, string customData)
+{
+    fsData data = null;
+    sm_Serializer.TrySerialize(resp, out data).AssertSuccess();
+    Log.Debug("ExampleNaturalLanguageUnderstandingV1", "AnalysisResults: {0}", data.ToString());
+}
+```
+
+#### Get models
+List available custom models.
+
+```cs
+NaturalLanguageUnderstanding m_NaturalLanguageUnderstanding = new NaturalLanguageUnderstanding();
+private static fsSerializer sm_Serializer = new fsSerializer();
+
+void Start ()
+{
+    if (!m_NaturalLanguageUnderstanding.GetModels(OnGetModels))
+        Log.Debug("ExampleNaturalLanguageUnderstandingV1", "Failed to get models.");
+}
+
+private void OnGetModels(ListModelsResults resp, string customData)
+{
+    fsData data = null;
+    sm_Serializer.TrySerialize(resp, out data).AssertSuccess();
+    Log.Debug("ExampleNaturalLanguageUnderstandingV1", "ListModelsResult: {0}", data.ToString());
+}
+```
+
+#### Delete model
+Delete a custom model.
+
+```cs
+NaturalLanguageUnderstanding m_NaturalLanguageUnderstanding = new NaturalLanguageUnderstanding();
+private static fsSerializer sm_Serializer = new fsSerializer();
+
+void Start ()
+{
+    if (!m_NaturalLanguageUnderstanding.DeleteModel(OnDeleteModel, <model-id>))
+        Log.Debug("ExampleNaturalLanguageUnderstandingV1", "Failed to delete model.");
+}
+
+private void OnDeleteModel(bool success, string customData)
+{
+    Log.Debug("ExampleNaturalLanguageUnderstandingV1", "DeleteModelResult: {0}", success);
+}
+```
+
 
 ## Developing a basic application in one minute
 You can quickly develop a basic application that uses the Speech to Text service and the Natural Language Classifier service by using the prefabs that come with the SDK. Ensure that you prepare the test data before you complete the the following steps:
@@ -2876,6 +2965,10 @@ See [CONTRIBUTING.md](.github/CONTRIBUTING.md).
 [expressive_ssml]: http://www.ibm.com/watson/developercloud/doc/text-to-speech/http.shtml#expressive
 [ssml]: http://www.ibm.com/watson/developercloud/doc/text-to-speech/SSML.shtml
 [discovery-query]: http://www.ibm.com/watson/developercloud/doc/discovery/using.shtml
+[natural_language_understanding]: https://www.ibm.com/watson/developercloud/natural-language-understanding.html
+[nlu_models]: https://www.ibm.com/watson/developercloud/doc/natural-language-understanding/customizing.html
+[nlu_entities]: https://www.ibm.com/watson/developercloud/natural-language-understanding/api/v1/#entities
+[nlu_relations]: https://www.ibm.com/watson/developercloud/natural-language-understanding/api/v1/#relations
 
 [dialog_service]: http://www.ibm.com/watson/developercloud/doc/dialog/
 [dialog_migration]: https://console.bluemix.net/docs/services/conversation/index.html#about
