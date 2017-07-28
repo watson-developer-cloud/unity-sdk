@@ -17,6 +17,7 @@
 
 using FullSerializer;
 using IBM.Watson.DeveloperCloud.Logging;
+using IBM.Watson.DeveloperCloud.Services.Conversation.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
 using System;
 using System.Collections;
@@ -32,11 +33,14 @@ public class ExampleGetToken : MonoBehaviour
     private fsSerializer _serializer = new fsSerializer();
 
     private AuthenticationToken _authenticationToken;
+    private bool _receivedAuthToken = false;
+    private string _conversationVersionDate = "2017-05-26";
 
     void Start ()
     {
         LogSystem.InstallDefaultReactors();
 
+#region Get credentials from a local file who's path is defined as 'VCAP_SERVICES' in environmental variables
         VcapCredentials vcapCredentials = new VcapCredentials();
         fsData data = null;
 
@@ -63,25 +67,58 @@ public class ExampleGetToken : MonoBehaviour
         Credential credential = vcapCredentials.VCAP_SERVICES["conversation"][0].Credentials;
         _username = credential.Username.ToString();
         _password = credential.Password.ToString();
+        _workspaceId = credential.WorkspaceId.ToString();
         _url = credential.Url.ToString();
+        #endregion
 
+        Runnable.Run(Example());
+    }
+
+    private IEnumerator Example()
+    {
         //  Get token
         if (!Utility.GetToken(OnGetToken, _url, _username, _password))
             Log.Debug("ExampleGetToken", "Failed to get token.");
 
-        //  Check time remaining after x seconds.
-        Runnable.Run(GetTokenTimeRemaining(90f));
+        while (!_receivedAuthToken)
+            yield return null;
+
+        //  Use token to authenticate Conversation call
+        Message();
     }
 
     private void OnGetToken(AuthenticationToken authenticationToken, string customData)
     {
         _authenticationToken = authenticationToken;
         Log.Debug("ExampleGetToken", "created: {0} | time to expiration: {1} minutes | token: {2}", _authenticationToken.Created, _authenticationToken.TimeUntilExpiration, _authenticationToken.Token);
+        _receivedAuthToken = true;
     }
 
     private IEnumerator GetTokenTimeRemaining(float time)
     {
         yield return new WaitForSeconds(time);
         Log.Debug("ExampleGetToken", "created: {0} | time to expiration: {1} minutes | token: {2}", _authenticationToken.Created, _authenticationToken.TimeUntilExpiration, _authenticationToken.Token);
+    }
+
+    private void Message()
+    {
+        Credentials credentials = new Credentials()
+        {
+            AuthenticationToken = _authenticationToken.Token,
+            Url = _url
+        };
+
+        Conversation conversation = new Conversation(credentials);
+        conversation.VersionDate = _conversationVersionDate;
+
+        conversation.Message(OnMessage, _workspaceId, "hello");
+    }
+
+    private void OnMessage(object resp, string customData)
+    {
+        Log.Debug("ExampleGetToken", "message response: {0}", customData);
+
+        //  Check token time remaining
+        Runnable.Run(GetTokenTimeRemaining(0f));
     }
 }
