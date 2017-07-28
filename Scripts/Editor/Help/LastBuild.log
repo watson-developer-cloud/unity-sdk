@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shfbBuild product="Sandcastle Help File Builder and Tools" version="2017.5.15.0" projectFile="C:\Users\ajiemar\Documents\_projects\watson-unity-sdk-testbed\Assets\Watson\Docs\UnitySDK.shfbproj" started="7/28/2017 12:56:31 PM">
+<buildStep step="Initializing">
+Finding tools...
+The Sandcastle tools are located in &#39;C:\Program Files (x86)\EWSoftware\Sandcastle Help File Builder\&#39;
+Searching for HTML Help 1 compiler...
+Found HTML Help 1 compiler in &#39;C:\Program Files (x86)\HTML Help Workshop\&#39;
+Locating components in the following folder(s):
+    C:\Users\ajiemar\Documents\_projects\watson-unity-sdk-testbed\Assets\Watson\Docs
+    C:\ProgramData\EWSoftware\Sandcastle Help File Builder\Components and Plug-Ins\
+    C:\Program Files (x86)\EWSoftware\Sandcastle Help File Builder\
+Using framework reflection data for &#39;.NET Framework 3.5&#39; located in &#39;C:\Program Files (x86)\EWSoftware\Sandcastle Help File Builder\Data\.NETFramework&#39;
+Using presentation style &#39;VS2013&#39; located in &#39;C:\Program Files (x86)\EWSoftware\Sandcastle Help File Builder\PresentationStyles\VS2013&#39;
+Loading and initializing plug-ins...
+Lightweight Website Style Version 2017.5.15.0
+Copyright &#169; 2006-2017, Eric Woodruff, All Rights Reserved
+Portions Copyright &#169; 2014, Sam Harwell, All Rights Reserved
+</buildStep>
+<buildStep step="ClearWorkFolder">
+Clearing working folder...
+</buildStep>
+<buildStep step="ValidatingDocumentationSources">
+Validating and copying documentation source information
+Source: C:\Users\ajiemar\Documents\_projects\DocumentationBuilder\ConsoleApplication1\ConsoleApplication1\bin\Debug\Assembly-CSharp.xml
+SHFB: Warning BE0006: Unable to locate any documentation sources for &#39;C:\Users\ajiemar\Documents\_projects\DocumentationBuilder\ConsoleApplication1\ConsoleApplication1\bin\Debug\Assembly-CSharp.xml&#39; (Configuration: Debug Platform: AnyCPU)
+Source: C:\Users\ajiemar\Documents\_projects\watson-unity-sdk-testbed\obj\Debug\Assembly-CSharp.dll
+    Found assembly &#39;C:\Users\ajiemar\Documents\_projects\watson-unity-sdk-testbed\obj\Debug\Assembly-CSharp.dll&#39;
+SHFB: Warning BE0062: No documentation source XML comments files found.  The help file will not contain any member comments.
+</buildStep>
+<buildStep step="GenerateSharedContent">
+Generating shared content files (en-US, English (United States))...
+<plugIn name="Lightweight Website Style" behavior="After" priority="1000">
+</plugIn>    Last step completed in 00:00:00.0175
+</buildStep>
+<buildStep step="GenerateApiFilter">
+Generating API filter for MRefBuilder...
+    Last step completed in 00:00:00.0060
+</buildStep>
+<buildStep step="GenerateReflectionInfo">
+Generating reflection information...
+[C:\Program Files (x86)\MSBuild\14.0\bin\amd64\MSBuild.exe - GenerateRefInfo.proj]
+Build started 7/28/2017 12:56:31 PM.
+Project &quot;C:\Users\ajiemar\Documents\_projects\watson-unity-sdk-testbed\Assets\Watson\Scripts\Editor\Help\Working\GenerateRefInfo.proj&quot; on node 1 (default targets).
+PrepareForBuild:
+  Creating directory &quot;obj\Debug\&quot;.
+GenerateRefInfo:
+  MRefBuilder (v2017.5.15.0)
+  Copyright c 2006-2017, Microsoft Corporation, All Rights Reserved.
+  Portions Copyright c 2006-2016, Eric Woodruff, All Rights Reserved.
+  No source code context base path specified.  Source context information is unavailable.
+  Loaded 1 assemblies for reflection and 1 dependency assemblies.
+MRefBuilder : error : Unresolved assembly reference: UnityEngine (UnityEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null) required by Assembly-CSharp [C:\Users\ajiemar\Documents\_projects\watson-unity-sdk-testbed\Assets\Watson\Scripts\Editor\Help\Working\GenerateRefInfo.proj]
+    Last step completed in 00:00:00.7365
+</buildStep>
+<buildStep step="Failed">
+
+SHFB: Error BE0043: Unexpected error detected in last build step.  See build log for details.
+   at SandcastleBuilder.Utils.BuildEngine.TaskRunner.Run(String processFilename, String targetFile, String arguments)
+   at SandcastleBuilder.Utils.BuildEngine.BuildProcess.Build()
+
+</buildStep>
+</shfbBuild>
