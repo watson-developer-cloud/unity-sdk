@@ -26,7 +26,7 @@ using System;
 using FullSerializer;
 using System.IO;
 
-namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v1
+namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
 {
     /// <summary>
     /// This class wraps the Language Translator service.

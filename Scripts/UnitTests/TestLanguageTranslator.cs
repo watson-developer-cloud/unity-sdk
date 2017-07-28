@@ -17,7 +17,7 @@
 
 using FullSerializer;
 using IBM.Watson.DeveloperCloud.Logging;
-using IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v1;
+using IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2;
 using IBM.Watson.DeveloperCloud.Utilities;
 using System;
 using System.Collections;

@@ -18,7 +18,7 @@
 
 using FullSerializer;
 
-namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v1
+namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
 {
     /// <summary>
     /// Language data class.

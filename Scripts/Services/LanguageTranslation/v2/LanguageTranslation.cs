@@ -25,7 +25,7 @@ using MiniJSON;
 using System;
 using FullSerializer;
 
-namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v1
+namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
 {
     /// <summary>
     /// This class wraps the Language Translation service.

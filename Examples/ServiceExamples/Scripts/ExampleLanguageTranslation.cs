@@ -16,7 +16,7 @@
 */
 
 using UnityEngine;
-using IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v1;
+using IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2;
 using IBM.Watson.DeveloperCloud.Utilities;
 
 public class ExampleLanguageTranslation : MonoBehaviour
