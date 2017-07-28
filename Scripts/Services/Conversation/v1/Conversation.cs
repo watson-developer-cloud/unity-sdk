@@ -81,7 +81,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
         #region Private Data
         private const string SERVICE_ID = "ConversationV1";
         private const string SERVICE_MESSAGE = "/v1/workspaces";
-        private fsSerializer _serializer = new fsSerializer();
         private Credentials _credentials = null;
         private string _url = "https://gateway.watsonplatform.net/conversation/api";
         private string _versionDate;
