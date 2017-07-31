@@ -10,7 +10,7 @@ Use this SDK to build Watson-powered applications in Unity.
 * [Configuring your service credentials](#configuring-your-service-credentials)
 * [Documentation](#documentation)
 * [Questions](#questions)
-* [Open Source @ IBM](#open-source-ibm)
+* [Open Source @ IBM](#open-source--ibm)
 * [License](#license)
 * [Contributing](#contributing)
 
