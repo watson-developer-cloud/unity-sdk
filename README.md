@@ -29,7 +29,9 @@ You can get the latest SDK release by clicking [here][latest_release].
 Move the **`unity-sdk`** directory into the Assets directory of the Unity project. **Rename the SDK directory from `unity-sdk` to `Watson`.**
 
 ## Configuring your service credentials
-You will need the 'username' and 'password' credentials for each service. Service credentials are different from your Bluemix account username and password. 
+To create instances of Watson services and their credentials, follow the steps below.
+
+**Note:** Service credentials are different from your Bluemix account username and password.
 
 1. Determine which services to configure.
 1. If you have configured the services already, complete the following steps. Otherwise, go to step 3.
@@ -46,23 +48,24 @@ You will need the 'username' and 'password' credentials for each service. Servic
     5. Click **View credentials** to access your credentials.
 1. Your service credentials can be used to instantiate Watson Services within your application. Most services also support tokens which you can instantiate the service with as well.
 
-**Note:** You are responsible for securing your own credentials. Any user with your service credentials can access your service instances!
+**WARNING:** You are responsible for securing your own credentials. Any user with your service credentials can access your service instances!
 
 ## Watson Services
-* [Speech to Text](/Scripts/Services/SpeechToText/v1)
-* [Text to Speech](/Scripts/Services/TextToSpeech/v1)
+### To get started with the Watson Services in Unity, click on each service below to read through each of their `README.md`'s and their codes.
+* [Alchemy Language](/Scripts/Services/AlchemyAPI/v1)
+* [Conversation](/Scripts/Services/Conversation/v1)
+* [Discovery](/Scripts/Services/Discovery/v1)
+* [Document Conversion](/Scripts/Services/DocumentConversion/v1)
 * [Language Translator](/Scripts/Services/LanguageTranslator/v2)
 * [Natural Language Classifier](/Scripts/Services/NaturalLanguageClassifier/v2)
+* [Natural Language Understanding](/Scripts/Services/NaturalLanguageUnderstanding/v1)
+* [Personality Insights](/Scripts/Services/PersonalityInsights/v3)
+* [Retrieve and Rank](/Scripts/Services/RetrieveAndRank/v1)
+* [Speech to Text](/Scripts/Services/SpeechToText/v1)
+* [Text to Speech](/Scripts/Services/TextToSpeech/v1)
 * [Tone Analyzer](/Scripts/Services/ToneAnalyzer/v3)
 * [Tradeoff Analytics](/Scripts/Services/TradeoffAnalytics/v1)
-* [Conversation](/Scripts/Services/Conversation/v1)
 * [Visual Recognition](/Scripts/Services/VisualRecognition/v3)
-* [Alchemy Language](/Scripts/Services/AlchemyAPI/v1)
-* [Personality Insights](/Scripts/Services/PersonalityInsights/v3)
-* [Document Conversion](/Scripts/Services/DocumentConversion/v1)
-* [Retrieve and Rank](/Scripts/Services/RetrieveAndRank/v1)
-* [Discovery](/Scripts/Services/Discovery/v1)
-* [Natural Language Understanding](/Scripts/Services/NaturalLanguageUnderstanding/v1)
 
 ## Documentation
 To read the documentation you need to have a **chm reader** installed. Open the documentation by selecting API Reference the Watson menu (**Watson -> API Reference**).
