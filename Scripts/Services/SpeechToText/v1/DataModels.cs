@@ -538,11 +538,11 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// <summary>
         /// All word types.
         /// </summary>
-        public const string ALL = "all";
+        public const string All = "all";
         /// <summary>
         /// User word types.
         /// </summary>
-        public const string USER = "user";
+        public const string User = "user";
     }
     #endregion
 
@@ -635,15 +635,15 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// <summary>
         ///	All words.
         /// </summary>
-        public const string ALL = "all";
+        public const string All = "all";
         /// <summary>
         /// User words.
         /// </summary>
-        public const string USER = "user";
+        public const string User = "user";
         /// <summary>
         /// Corpora words.
         /// </summary>
-        public const string CORPORA = "corpora";
+        public const string Corpora = "corpora";
     }
 
     /// <summary>

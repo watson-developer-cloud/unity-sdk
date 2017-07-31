@@ -16,7 +16,6 @@
 */
 
 using UnityEngine;
-using System.Collections;
 
 namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3
 {
@@ -223,17 +222,17 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3
         /// <summary>
         /// Mime type for plain text.
         /// </summary>
-        public const string TEXT_PLAIN = "text/plain";
+        public const string TextPlain = "text/plain";
 
         /// <summary>
         /// Mime type for HTML.
         /// </summary>
-        public const string TEXT_HTML = "text/html";
+        public const string TextHtml = "text/html";
 
         /// <summary>
         /// Mime type for json.
         /// </summary>
-        public const string APPLICATION_JSON = "application/json";
+        public const string ApplicationJson = "application/json";
     }
 
     /// <summary>
@@ -244,19 +243,19 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3
         /// <summary>
         /// English.
         /// </summary>
-        public const string ENGLISH = "en";
+        public const string English = "en";
         /// <summary>
         /// Arabic.
         /// </summary>
-        public const string ARABIC = "ar";
+        public const string Arabic = "ar";
         /// <summary>
         /// Spanish.
         /// </summary>
-        public const string SPANISH = "es";
+        public const string Spanish = "es";
         /// <summary>
         /// Japanese
         /// </summary>
-        public const string JAPANESE = "ja";
+        public const string Japanese = "ja";
     }
 
     /// <summary>
@@ -267,47 +266,47 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3
         /// <summary>
         /// English.
         /// </summary>
-        public const string ENGLISH = "en";
+        public const string English = "en";
         /// <summary>
         /// Arabic.
         /// </summary>
-        public const string ARABIC = "ar";
+        public const string Arabic = "ar";
         /// <summary>
         /// Spanish.
         /// </summary>
-        public const string SPANISH = "es";
+        public const string Spanish = "es";
         /// <summary>
         /// Japanese.
         /// </summary>
-        public const string JAPANESE = "ja";
+        public const string Japanese = "ja";
         /// <summary>
         /// German.
         /// </summary>
-        public const string GERMAN = "de";
+        public const string German = "de";
         /// <summary>
         /// French.
         /// </summary>
-        public const string FRENCH = "fr";
+        public const string French = "fr";
         /// <summary>
         /// Italian.
         /// </summary>
-        public const string ITALIAN = "it";
+        public const string Italian = "it";
         /// <summary>
         /// Korean.
         /// </summary>
-        public const string KOREAN = "ko";
+        public const string Korean = "ko";
         /// <summary>
         /// Brazilian Portuguese.
         /// </summary>
-        public const string BRAZILIAN_PORTUGUESE = "pt-br";
+        public const string BrazilianPortuguese = "pt-br";
         /// <summary>
         /// Simplified Chinese.
         /// </summary>
-        public const string SIMPLIFIED_CHINESE = "zh-cn";
+        public const string SimplifiedChinese = "zh-cn";
         /// <summary>
         /// Traditional Chinese.
         /// </summary>
-        public const string TRADITIONAL_CHINESE = "zh-tw";
+        public const string TraditionalChinese = "zh-tw";
     }
 
     /// <summary>

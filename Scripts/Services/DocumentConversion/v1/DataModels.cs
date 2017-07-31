@@ -149,15 +149,15 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
         /// <summary>
         /// Answer units conversion target.
         /// </summary>
-        public const string ANSWER_UNITS = "{\"conversion_target\": \"answer_units\"}";
+        public const string Answerunits = "{\"conversion_target\": \"answer_units\"}";
         /// <summary>
         /// Normalized html conversion target.
         /// </summary>
-        public const string NORMALIZED_HTML = "{\"conversion_target\": \"normalized_html\"}";
+        public const string NormalizedHtml = "{\"conversion_target\": \"normalized_html\"}";
         /// <summary>
         /// Normalized text conversion target.
         /// </summary>
-        public const string NORMALIZED_TEXT = "{\"conversion_target\": \"normalized_text\"}";
+        public const string NormalizedText = "{\"conversion_target\": \"normalized_text\"}";
     }
 
     /// <summary>
@@ -168,6 +168,6 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
         /// <summary>
         /// The version.
         /// </summary>
-        public const string DOCUMENT_CONVERSION = "2015-12-15";
+        public const string DocumentConversion = "2015-12-15";
     }
 }

@@ -89,7 +89,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
         #endregion
 
         #region Private Data
-        private const string SERVICE_ID = "LanguageTranslationV1";
+        private const string ServiceId = "LanguageTranslationV1";
         private fsSerializer _serializer = new fsSerializer();
         private Credentials _credentials = null;
         private string _url = "https://gateway.watsonplatform.net/language-translation/api";
@@ -462,7 +462,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
         /// <exclude />
         public string GetServiceID()
         {
-            return SERVICE_ID;
+            return ServiceId;
         }
         #endregion
     }

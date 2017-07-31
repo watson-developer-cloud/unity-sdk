@@ -35,7 +35,7 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
     public class DocumentConversion : IWatsonService
     {
         #region Private Data
-        private const string SERVICE_ID = "DocumentConversionV1";
+        private const string ServiceId = "DocumentConversionV1";
         private fsSerializer _serializer = new fsSerializer();
         private Credentials _credentials = null;
         private string _url = "https://gateway.watsonplatform.net/document-conversion/api";
@@ -76,7 +76,7 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
         #endregion
 
         #region ConvertDocument
-        private const string FUNCTION_CONVERT_DOCUMENT = "/v1/convert_document";
+        private const string ConvertDocumentEndpoint = "/v1/convert_document";
         /// <summary>
         /// The OnConvertDocument callback.
         /// </summary>
@@ -113,7 +113,7 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
             if (string.IsNullOrEmpty(conversionTarget))
                 throw new ArgumentNullException("A conversion target is needed to convert document.");
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, FUNCTION_CONVERT_DOCUMENT);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, ConvertDocumentEndpoint);
             if (connector == null)
                 return false;
 
@@ -122,7 +122,7 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
             req.OnResponse = ConvertDocumentResponse;
             req.Data = data;
             req.ConversionTarget = conversionTarget;
-            req.Parameters["version"] = Version.DOCUMENT_CONVERSION;
+            req.Parameters["version"] = Version.DocumentConversion;
 
             byte[] documentData = null;
             if (documentPath != default(string))
@@ -169,7 +169,7 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
 
             if (resp.Success)
             {
-                if ((req as ConvertDocumentRequest).ConversionTarget == ConversionTarget.ANSWER_UNITS)
+                if ((req as ConvertDocumentRequest).ConversionTarget == ConversionTarget.Answerunits)
                 {
                     try
                     {
@@ -188,11 +188,11 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
                         resp.Success = false;
                     }
                 }
-                else if ((req as ConvertDocumentRequest).ConversionTarget == ConversionTarget.NORMALIZED_HTML)
+                else if ((req as ConvertDocumentRequest).ConversionTarget == ConversionTarget.NormalizedHtml)
                 {
                     response.htmlContent = System.Text.Encoding.Default.GetString(resp.Data);
                 }
-                else if ((req as ConvertDocumentRequest).ConversionTarget == ConversionTarget.NORMALIZED_TEXT)
+                else if ((req as ConvertDocumentRequest).ConversionTarget == ConversionTarget.NormalizedText)
                 {
                     response.textContent = System.Text.Encoding.Default.GetString(resp.Data);
                 }
@@ -207,7 +207,7 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
         /// <exclude /> 
         public string GetServiceID()
         {
-            return SERVICE_ID;
+            return ServiceId;
         }
         #endregion
     }

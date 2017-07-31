@@ -15,8 +15,6 @@
 *
 */
 
-using UnityEngine;
-using System.Collections;
 using IBM.Watson.DeveloperCloud.Connection;
 using IBM.Watson.DeveloperCloud.Utilities;
 using IBM.Watson.DeveloperCloud.Logging;
@@ -35,35 +33,35 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
     public class RetrieveAndRank : IWatsonService
     {
         #region Private Data
-        private const string SERVICE_ID = "RetrieveAndRankV1";
+        private const string ServiceId = "RetrieveAndRankV1";
+        private const float RequestTimeout = 10.0f * 60.0f;
         private fsSerializer _serializer = new fsSerializer();
-        private const float REQUEST_TIMEOUT = 10.0f * 60.0f;
         private Credentials _credentials = null;
         private string _url = "https://gateway.watsonplatform.net/retrieve-and-rank/api";
 
         //  List clusters or create cluster.
-        private const string SERVICE_CLUSTERS = "/v1/solr_clusters";
+        private const string ClustersEndpoint = "/v1/solr_clusters";
         //  Delete cluster or get cluster info.
-        private const string SERVICE_CLUSTER = "/v1/solr_clusters/{0}";
+        private const string ClusterEndpoint = "/v1/solr_clusters/{0}";
         //  List Solr cluster configurations.
-        private const string SERVICE_CLUSTER_CONFIGS = "/v1/solr_clusters/{0}/config";
+        private const string ConfigsEndpoint = "/v1/solr_clusters/{0}/config";
         //  Upload, Get or Delete Solr configuration.
-        private const string SERVICE_CLUSTER_CONFIG = "/v1/solr_clusters/{0}/config/{1}";
+        private const string ConfigEndpoint = "/v1/solr_clusters/{0}/config/{1}";
         //  Forward requests to Solr (Create, Delete, List).
-        private const string SERVICE_CLUSTER_COLLECTIONS = "/v1/solr_clusters/{0}/solr/admin/collections";
+        private const string CollectionsEndpoint = "/v1/solr_clusters/{0}/solr/admin/collections";
         //  Index documents.
-        private const string SERVICE_CLUSTER_COLLECTION_UPDATE = "/v1/solr_clusters/{0}/solr/{1}/update";
+        private const string CollectionUpdateEndpoint = "/v1/solr_clusters/{0}/solr/{1}/update";
         //  Search Solr standard query parser.
-        private const string SERVICE_CLUSTER_COLLECTION_SELECT = "/v1/solr_clusters/{0}/solr/{1}/select";
+        private const string CollectionSelectEndpoint = "/v1/solr_clusters/{0}/solr/{1}/select";
         //  Search Solr ranked query parser.
-        private const string SERVICE_CLUSTER_COLLECTION_FCSELECT = "/v1/solr_clusters/{0}/solr/{1}/fcselect";
+        private const string CollectionFcSelectEndpoint = "/v1/solr_clusters/{0}/solr/{1}/fcselect";
 
         //  List rankers or create ranker.
-        private const string SERVICE_RANKERS = "/v1/rankers";
+        private const string RankersEndpoint = "/v1/rankers";
         //  Get ranker information or delete ranker.
-        private const string SERVICE_RANKER = "/v1/rankers/{0}";
+        private const string RankerEndpoint = "/v1/rankers/{0}";
         //  Rank.
-        private const string SERVICE_RANK = "/v1/rankers/{0}/rank";
+        private const string RankEndpoint = "/v1/rankers/{0}/rank";
         #endregion
 
         #region Public Properties
@@ -146,9 +144,9 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             GetClustersRequest req = new GetClustersRequest();
             req.Callback = callback;
             req.Data = customData;
-            req.Timeout = REQUEST_TIMEOUT;
+            req.Timeout = RequestTimeout;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, SERVICE_CLUSTERS);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, ClustersEndpoint);
             if (connector == null)
                 return false;
 
@@ -226,9 +224,9 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             CreateClusterRequest req = new CreateClusterRequest();
             req.Callback = callback;
             req.Data = customData;
-            req.Timeout = REQUEST_TIMEOUT;
+            req.Timeout = RequestTimeout;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, SERVICE_CLUSTERS);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, ClustersEndpoint);
             if (connector == null)
                 return false;
 
@@ -321,9 +319,9 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             req.Data = customData;
             req.ClusterID = clusterID;
             req.Delete = true;
-            req.Timeout = REQUEST_TIMEOUT;
+            req.Timeout = RequestTimeout;
             req.OnResponse = OnDeleteClusterResponse;
-            string service = string.Format(SERVICE_CLUSTER, clusterID);
+            string service = string.Format(ClusterEndpoint, clusterID);
             RESTConnector connector = RESTConnector.GetConnector(Credentials, service);
             if (connector == null)
                 return false;
@@ -389,9 +387,9 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             req.Callback = callback;
             req.Data = customData;
             req.ClusterID = clusterID;
-            req.Timeout = REQUEST_TIMEOUT;
+            req.Timeout = RequestTimeout;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_CLUSTER, clusterID));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(ClusterEndpoint, clusterID));
             if (connector == null)
                 return false;
 
@@ -480,10 +478,10 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             req.Callback = callback;
             req.ClusterID = clusterID;
             req.Data = customData;
-            req.Timeout = REQUEST_TIMEOUT;
+            req.Timeout = RequestTimeout;
             req.OnResponse = OnGetClusterConfigsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_CLUSTER_CONFIGS, clusterID));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(ConfigsEndpoint, clusterID));
             if (connector == null)
                 return false;
 
@@ -576,10 +574,10 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             req.Data = customData;
             req.ClusterID = clusterID;
             req.ConfigID = configID;
-            req.Timeout = REQUEST_TIMEOUT;
+            req.Timeout = RequestTimeout;
             req.Delete = true;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_CLUSTER_CONFIG, clusterID, configID));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(ConfigEndpoint, clusterID, configID));
             if (connector == null)
                 return false;
 
@@ -649,9 +647,9 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             req.ClusterID = clusterID;
             req.ConfigName = configName;
             req.OnResponse = GetClusterConfigResponse;
-            req.Timeout = REQUEST_TIMEOUT;
+            req.Timeout = RequestTimeout;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_CLUSTER_CONFIG, clusterID, configName));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(ConfigEndpoint, clusterID, configName));
             if (connector == null)
                 return false;
 
@@ -768,7 +766,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             req.ClusterID = clusterID;
             req.ConfigName = configName;
             req.OnResponse = UploadClusterConfigResponse;
-            req.Timeout = REQUEST_TIMEOUT;
+            req.Timeout = RequestTimeout;
 
             byte[] configData = null;
             if (LoadFile != null)
@@ -787,7 +785,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 
             req.Headers["Content-Type"] = "application/zip";
             req.Send = configData;
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_CLUSTER_CONFIG, clusterID, configName));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(ConfigEndpoint, clusterID, configName));
             if (connector == null)
                 return false;
 
@@ -881,13 +879,13 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             req.ConfigName = configName;
             req.Parameters["action"] = action;
             req.Parameters["wt"] = "json";
-            req.Timeout = REQUEST_TIMEOUT;
+            req.Timeout = RequestTimeout;
 
             switch (action)
             {
-                case CollectionsAction.LIST:
+                case CollectionsAction.List:
                     break;
-                case CollectionsAction.CREATE:
+                case CollectionsAction.Create:
                     if (string.IsNullOrEmpty(collectionName))
                         throw new ArgumentNullException("A collectionName is required for ForwardCollectionRequest (CREATE)!");
                     if (string.IsNullOrEmpty(configName))
@@ -895,7 +893,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                     req.Parameters["name"] = collectionName;
                     req.Parameters["collection.configName"] = configName;
                     break;
-                case CollectionsAction.DELETE:
+                case CollectionsAction.Delete:
                     if (string.IsNullOrEmpty(collectionName))
                         throw new ArgumentNullException("A collectionName is required for ForwardCollectionRequest (DELETE)!");
                     req.Parameters["name"] = collectionName;
@@ -904,7 +902,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                     throw new WatsonException(string.Format("No case exists for action {0}!", action));
             }
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_CLUSTER_COLLECTIONS, clusterID));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(CollectionsEndpoint, clusterID));
             if (connector == null)
                 return false;
 
@@ -1008,7 +1006,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             req.ClusterID = clusterID;
             req.CollectionName = collectionName;
             req.Data = customData;
-            req.Timeout = REQUEST_TIMEOUT;
+            req.Timeout = RequestTimeout;
 
             byte[] indexData;
             if (LoadFile != null)
@@ -1025,7 +1023,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             if (indexData == null)
                 Log.Error("RetrieveAndRank", "Failed to upload {0}!", indexDataPath);
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_CLUSTER_COLLECTION_UPDATE, clusterID, collectionName));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(CollectionUpdateEndpoint, clusterID, collectionName));
             if (connector == null)
                 return false;
 
@@ -1135,7 +1133,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             req.Query = query;
             req.Fl = fl;
             req.Data = customData;
-            req.Timeout = REQUEST_TIMEOUT;
+            req.Timeout = RequestTimeout;
 
             req.Parameters["wt"] = "json";
             req.Parameters["q"] = query;
@@ -1145,10 +1143,10 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 
             RESTConnector connector;
             if (!isRankedSearch)
-                connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_CLUSTER_COLLECTION_SELECT, clusterID, collectionName));
+                connector = RESTConnector.GetConnector(Credentials, string.Format(CollectionSelectEndpoint, clusterID, collectionName));
             else
             {
-                connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_CLUSTER_COLLECTION_FCSELECT, clusterID, collectionName));
+                connector = RESTConnector.GetConnector(Credentials, string.Format(CollectionFcSelectEndpoint, clusterID, collectionName));
                 req.Parameters["ranker_id"] = rankerID;
             }
 
@@ -1242,9 +1240,9 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             GetRankersRequest req = new GetRankersRequest();
             req.Callback = callback;
             req.Data = customData;
-            req.Timeout = REQUEST_TIMEOUT;
+            req.Timeout = RequestTimeout;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, SERVICE_RANKERS);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, RankersEndpoint);
             if (connector == null)
                 return false;
 
@@ -1328,7 +1326,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             req.Name = name;
             req.TrainingDataPath = trainingDataPath;
             req.Data = customData;
-            req.Timeout = REQUEST_TIMEOUT;
+            req.Timeout = RequestTimeout;
 
             byte[] trainingData;
             if (LoadFile != null)
@@ -1345,7 +1343,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             if (trainingData == null)
                 Log.Error("RetrieveAndRank", "Failed to upload {0}!", trainingDataPath);
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, SERVICE_RANKERS);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, RankersEndpoint);
             if (connector == null)
                 return false;
 
@@ -1444,7 +1442,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             req.RankerID = rankerID;
             req.SearchResultsPath = searchResultPath;
             req.Data = customData;
-            req.Timeout = REQUEST_TIMEOUT;
+            req.Timeout = RequestTimeout;
 
             byte[] searchResultData;
             if (LoadFile != null)
@@ -1461,7 +1459,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             if (searchResultData == null)
                 Log.Error("RetrieveAndRank", "Failed to upload {0}!", searchResultData);
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_RANK, rankerID));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(RankEndpoint, rankerID));
             if (connector == null)
                 return false;
 
@@ -1560,10 +1558,10 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             req.Callback = callback;
             req.Data = customData;
             req.RankerID = rankerID;
-            req.Timeout = REQUEST_TIMEOUT;
+            req.Timeout = RequestTimeout;
             req.Delete = true;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_RANKER, rankerID));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(RankerEndpoint, rankerID));
             if (connector == null)
                 return false;
 
@@ -1629,9 +1627,9 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             req.Callback = callback;
             req.Data = customData;
             req.RankerID = rankerID;
-            req.Timeout = REQUEST_TIMEOUT;
+            req.Timeout = RequestTimeout;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_RANKER, rankerID));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(RankerEndpoint, rankerID));
             if (connector == null)
                 return false;
 
@@ -1698,7 +1696,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// <exclude />
         public string GetServiceID()
         {
-            return SERVICE_ID;
+            return ServiceId;
         }
         #endregion
     }

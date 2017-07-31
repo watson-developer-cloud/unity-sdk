@@ -33,7 +33,7 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3
     public class PersonalityInsights : IWatsonService
     {
         #region Private Data
-        private const string SERVICE_ID = "PersonalityInsightsV3";
+        private const string ServiceId = "PersonalityInsightsV3";
         private fsSerializer _serializer = new fsSerializer();
         private Credentials _credentials = null;
         private string _url = "https://gateway.watsonplatform.net/personality-insights/api";
@@ -90,15 +90,15 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3
         #endregion
 
         #region Profile
-        private const string SERVICE_GET_PROFILE = "/v3/profile";
+        private const string ProfileEndpoint = "/v3/profile";
 
         public delegate void OnGetProfile(Profile profile, string data);
 
         public bool GetProfile(OnGetProfile callback, string source,
-            string contentType = ContentType.TEXT_PLAIN,
-            string contentLanguage = ContentLanguage.ENGLISH,
-            string accept = ContentType.APPLICATION_JSON,
-            string acceptLanguage = AcceptLanguage.ENGLISH,
+            string contentType = ContentType.TextPlain,
+            string contentLanguage = ContentLanguage.English,
+            string accept = ContentType.ApplicationJson,
+            string acceptLanguage = AcceptLanguage.English,
             bool raw_scores = false,
             bool csv_headers = false,
             bool consumption_preferences = false,
@@ -110,7 +110,7 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3
             if (string.IsNullOrEmpty(source))
                 throw new ArgumentNullException("A JSON or Text source is required for GetProfile!");
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, SERVICE_GET_PROFILE);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, ProfileEndpoint);
             if (connector == null)
                 return false;
 
@@ -197,7 +197,7 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3
         #region IWatsonService implementation
         public string GetServiceID()
         {
-            return SERVICE_ID;
+            return ServiceId;
         }
         #endregion
     }

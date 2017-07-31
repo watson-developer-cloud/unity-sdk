@@ -25,12 +25,12 @@ namespace IBM.Watson.DeveloperCloud.Editor
 {
     public class WatsonMenu : MonoBehaviour
     {
-        private const string API_REFERENCE = "WatsonUnitySDK.chm";
+        private const string ApiReference = "WatsonUnitySDK.chm";
 
         [MenuItem("Watson/API Reference", false, 100)]
         private static void ShowAPIReference()
         {
-            Application.OpenURL("file://" + FindFile(Application.dataPath, "Docs" + Path.DirectorySeparatorChar + "Help" + Path.DirectorySeparatorChar + API_REFERENCE));
+            Application.OpenURL("file://" + FindFile(Application.dataPath, "Docs" + Path.DirectorySeparatorChar + "Help" + Path.DirectorySeparatorChar + ApiReference));
         }
 
         private static string FindFile(string directory, string name)

@@ -27,15 +27,15 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
     public class NaturalLanguageUnderstanding : IWatsonService
     {
         #region Private Data
-        private const string SERVICE_ID = "NaturalLanguageUnderstandingV1";
+        private const string ServiceId = "NaturalLanguageUnderstandingV1";
         private fsSerializer _serializer = new fsSerializer();
         private Credentials _credentials = null;
         private string _url = "https://gateway.watsonplatform.net/natural-language-understanding/api";
         private string _versionDate;
 
-        private const string SERVICE_ANALYZE = "/v1/analyze";
-        private const string SERVICE_MODELS = "/v1/models";
-        private const string SERVICE_MODEL = "/v1/models/{0}";
+        private const string AnalyzeEndpoint = "/v1/analyze";
+        private const string ModelsEndpoint = "/v1/models";
+        private const string ModelEndpoint = "/v1/models/{0}";
         #endregion
 
         #region Public Properties
@@ -123,7 +123,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
             _serializer.TrySerialize(parameters, out data);
             string sendjson = data.ToString();
             req.Send = Encoding.UTF8.GetBytes(sendjson);
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, SERVICE_ANALYZE);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, AnalyzeEndpoint);
             if (connector == null)
                 return false;
 
@@ -195,7 +195,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
             req.Parameters["version"] = NaturalLanguageUnderstandingVersion.Version;
             req.OnResponse = OnGetModelsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, SERVICE_MODELS);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, ModelsEndpoint);
             if (connector == null)
                 return false;
 
@@ -272,7 +272,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
             req.OnResponse = OnDeleteModelResponse;
             req.Delete = true;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_MODEL, modelId));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(ModelEndpoint, modelId));
             if (connector == null)
                 return false;
 
@@ -298,7 +298,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
         /// <exclude />
         public string GetServiceID()
         {
-            return SERVICE_ID;
+            return ServiceId;
         }
         #endregion
     }

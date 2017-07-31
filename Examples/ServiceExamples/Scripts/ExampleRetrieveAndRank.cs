@@ -187,7 +187,7 @@ public class ExampleRetrieveAndRank : MonoBehaviour
         _readyToContinue = false;
         //  List Collection request
         Log.Debug("ExampleRetrieveAndRank", "Attempting to get collections.");
-        if (!_retrieveAndRank.ForwardCollectionRequest(OnGetCollections, _clusterToDelete, CollectionsAction.LIST))
+        if (!_retrieveAndRank.ForwardCollectionRequest(OnGetCollections, _clusterToDelete, CollectionsAction.List))
             Log.Debug("ExampleRetrieveAndRank", "Failed to get collections!");
         while (!_getCollectionsTested || !_readyToContinue)
             yield return null;
@@ -195,7 +195,7 @@ public class ExampleRetrieveAndRank : MonoBehaviour
         _readyToContinue = false;
         //  Create Collection request
         Log.Debug("ExampleRetrieveAndRank", "Attempting to create collection.");
-        if (!_retrieveAndRank.ForwardCollectionRequest(OnCreateCollection, _clusterToDelete, CollectionsAction.CREATE, _collectionNameToDelete, _testClusterConfigName))
+        if (!_retrieveAndRank.ForwardCollectionRequest(OnCreateCollection, _clusterToDelete, CollectionsAction.Create, _collectionNameToDelete, _testClusterConfigName))
             Log.Debug("ExampleRetrieveAndRank", "Failed to create collections!");
         while (!_createCollectionTested || !_readyToContinue)
             yield return null;
@@ -266,7 +266,7 @@ public class ExampleRetrieveAndRank : MonoBehaviour
         _readyToContinue = false;
         //  Delete Collection request
         Log.Debug("ExampleRetrieveAndRank", "Attempting to delete collection {0}.", "TestCollectionToDelete");
-        if (!_retrieveAndRank.ForwardCollectionRequest(OnDeleteCollection, _clusterToDelete, CollectionsAction.DELETE, "TestCollectionToDelete"))
+        if (!_retrieveAndRank.ForwardCollectionRequest(OnDeleteCollection, _clusterToDelete, CollectionsAction.Delete, "TestCollectionToDelete"))
             Log.Debug("ExampleRetrieveAndRank", "Failed to delete collections!");
         while (!_deleteCollectionTested || !_readyToContinue)
             yield return null;

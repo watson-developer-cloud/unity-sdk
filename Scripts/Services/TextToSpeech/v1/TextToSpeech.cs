@@ -58,9 +58,9 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
             { AudioFormatType.WAV, "audio/wav" },
             { AudioFormatType.FLAC, "audio/flac" },
         };
-        private const string SERVICE_ID = "TextToSpeechV1";
+        private const string ServiceId = "TextToSpeechV1";
         private fsSerializer _serializer = new fsSerializer();
-        private const float REQUEST_TIMEOUT = 10.0f * 60.0f;
+        private const float RequestTimeout = 10.0f * 60.0f;
         private Credentials _credentials = null;
         private string _url = "https://stream.watsonplatform.net/text-to-speech/api";
         #endregion
@@ -644,7 +644,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
             req.Callback = callback;
             req.CustomizationID = customizationID;
             req.Data = customData;
-            req.Timeout = REQUEST_TIMEOUT;
+            req.Timeout = RequestTimeout;
             req.Delete = true;
             req.OnResponse = OnDeleteCustomizationResp;
 
@@ -976,7 +976,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
             req.CustomizationID = customizationID;
             req.Word = word;
             req.Data = customData;
-            req.Timeout = REQUEST_TIMEOUT;
+            req.Timeout = RequestTimeout;
             req.Delete = true;
             req.OnResponse = OnDeleteCustomizationWordResp;
 
@@ -1153,7 +1153,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
         /// <exclude />
         public string GetServiceID()
         {
-            return SERVICE_ID;
+            return ServiceId;
         }
         #endregion
     }

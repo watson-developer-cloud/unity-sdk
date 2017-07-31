@@ -36,7 +36,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
     {
 
         #region Private Data
-        private const string SERVICE_ID = "AlchemyAPIV1";
+        private const string ServiceId = "AlchemyAPIV1";
         private fsSerializer _serializer = new fsSerializer();
         private static string _apiKey = null;
         private Credentials _credentials = null;
@@ -89,8 +89,8 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         #endregion
 
         #region GetAuthors
-        private const string SERVICE_GET_AUTHORS_URL = "/url/URLGetAuthors";
-        private const string SERVICE_GET_AUTHORS_HTML = "/html/HTMLGetAuthors";
+        private const string GetAuthorsUrl = "/url/URLGetAuthors";
+        private const string GetAuthorsHtml = "/html/HTMLGetAuthors";
 
         /// <summary>
         /// On get authors delegate.
@@ -127,14 +127,14 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             string normalizedSource = source.Trim().ToLower();
             if (normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
             {
-                service = SERVICE_GET_AUTHORS_URL;
+                service = GetAuthorsUrl;
                 req.Forms["url"] = new RESTConnector.Form(source);
             }
             else if (source.StartsWith(Application.dataPath) && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
             {
                 if (Path.GetExtension(normalizedSource).EndsWith(".html"))
                 {
-                    service = SERVICE_GET_AUTHORS_HTML;
+                    service = GetAuthorsHtml;
                     string htmlData = default(string);
                     htmlData = File.ReadAllText(source);
                     req.Forms["html"] = new RESTConnector.Form(htmlData);
@@ -203,9 +203,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         #endregion
 
         #region GetRankedConcepts
-        private const string SERVICE_GET_RANKED_CONCEPTS_HTML = "/html/HTMLGetRankedConcepts";
-        private const string SERVICE_GET_RANKED_CONCEPTS_URL = "/url/URLGetRankedConcepts";
-        private const string SERVICE_GET_RANKED_CONCEPTS_TEXT = "/text/TextGetRankedConcepts";
+        private const string GetRankedConceptsHtml = "/html/HTMLGetRankedConcepts";
+        private const string GetRankedConceptsUrl = "/url/URLGetRankedConcepts";
+        private const string GetRankedConceptsText = "/text/TextGetRankedConcepts";
 
         /// <summary>
         /// On get ranked concepts delegate.
@@ -255,14 +255,14 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             string normalizedSource = source.Trim().ToLower();
             if (normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
             {
-                service = SERVICE_GET_RANKED_CONCEPTS_URL;
+                service = GetRankedConceptsUrl;
                 req.Forms["url"] = new RESTConnector.Form(source);
             }
             else if (!normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://") && source.StartsWith(Application.dataPath))
             {
                 if (Path.GetExtension(normalizedSource).EndsWith(".html"))
                 {
-                    service = SERVICE_GET_RANKED_CONCEPTS_HTML;
+                    service = GetRankedConceptsHtml;
                     string htmlData = default(string);
                     htmlData = File.ReadAllText(source);
                     req.Forms["html"] = new RESTConnector.Form(htmlData);
@@ -272,7 +272,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             }
             else
             {
-                service = SERVICE_GET_RANKED_CONCEPTS_TEXT;
+                service = GetRankedConceptsText;
                 req.Forms["text"] = new RESTConnector.Form(source);
             }
 
@@ -331,9 +331,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         #endregion
 
         #region ExtractDates
-        private const string SERVICE_GET_DATES_HTML = "/html/HTMLExtractDates";
-        private const string SERVICE_GET_DATES_URL = "/url/URLExtractDates";
-        private const string SERVICE_GET_DATES_TEXT = "/text/TextExtractDates";
+        private const string GetDatesHtml = "/html/HTMLExtractDates";
+        private const string GetDatesUrl = "/url/URLExtractDates";
+        private const string GetDatesText = "/text/TextExtractDates";
 
         /// <summary>
         /// On get dates delegate.
@@ -376,14 +376,14 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             string normalizedSource = source.Trim().ToLower();
             if (normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
             {
-                service = SERVICE_GET_DATES_URL;
+                service = GetDatesUrl;
                 req.Forms["url"] = new RESTConnector.Form(source);
             }
             else if (source.StartsWith(Application.dataPath) && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
             {
                 if (Path.GetExtension(normalizedSource).EndsWith(".html"))
                 {
-                    service = SERVICE_GET_DATES_HTML;
+                    service = GetDatesHtml;
                     string htmlData = default(string);
                     htmlData = File.ReadAllText(source);
                     req.Forms["html"] = new RESTConnector.Form(htmlData);
@@ -393,7 +393,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             }
             else
             {
-                service = SERVICE_GET_DATES_TEXT;
+                service = GetDatesText;
                 req.Forms["text"] = new RESTConnector.Form(source);
             }
 
@@ -459,9 +459,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         #endregion
 
         #region GetEmotion
-        private const string SERVICE_GET_EMOTION_HTML = "/html/HTMLGetEmotion";
-        private const string SERVICE_GET_EMOTION_URL = "/url/URLGetEmotion";
-        private const string SERVICE_GET_EMOTION_TEXT = "/text/TextGetEmotion";
+        private const string GetEmotionHtml = "/html/HTMLGetEmotion";
+        private const string GetEmotionUrl = "/url/URLGetEmotion";
+        private const string GetEmotionText = "/text/TextGetEmotion";
 
         /// <summary>
         /// On get emotions delegate.
@@ -500,14 +500,14 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             string normalizedSource = source.Trim().ToLower();
             if (normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
             {
-                service = SERVICE_GET_EMOTION_URL;
+                service = GetEmotionUrl;
                 req.Forms["url"] = new RESTConnector.Form(source);
             }
             else if (source.StartsWith(Application.dataPath) && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
             {
                 if (Path.GetExtension(normalizedSource).EndsWith(".html"))
                 {
-                    service = SERVICE_GET_EMOTION_HTML;
+                    service = GetEmotionHtml;
                     string htmlData = default(string);
                     htmlData = File.ReadAllText(source);
                     req.Forms["html"] = new RESTConnector.Form(htmlData);
@@ -517,7 +517,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             }
             else
             {
-                service = SERVICE_GET_EMOTION_TEXT;
+                service = GetEmotionText;
                 req.Forms["text"] = new RESTConnector.Form(source);
             }
 
@@ -576,9 +576,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         #endregion
 
         #region Entity Extraction
-        private const string SERVICE_GET_ENTITY_EXTRACTION_HTML = "/html/HTMLGetRankedNamedEntities";
-        private const string SERVICE_GET_ENTITY_EXTRACTION_URL = "/url/URLGetRankedNamedEntities";
-        private const string SERVICE_GET_ENTITY_EXTRACTION_TEXT = "/text/TextGetRankedNamedEntities";
+        private const string ExtractEntityHtml = "/html/HTMLGetRankedNamedEntities";
+        private const string ExtractEntityUrl = "/url/URLGetRankedNamedEntities";
+        private const string ExtractEntityText = "/text/TextGetRankedNamedEntities";
 
         /// <summary>
         /// On get entities delegate.
@@ -643,14 +643,14 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             string normalizedSource = source.Trim().ToLower();
             if (normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
             {
-                service = SERVICE_GET_ENTITY_EXTRACTION_URL;
+                service = ExtractEntityUrl;
                 req.Forms["url"] = new RESTConnector.Form(source);
             }
             else if (source.StartsWith(Application.dataPath) && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
             {
                 if (Path.GetExtension(normalizedSource).EndsWith(".html"))
                 {
-                    service = SERVICE_GET_ENTITY_EXTRACTION_HTML;
+                    service = ExtractEntityHtml;
                     string htmlData = default(string);
                     htmlData = File.ReadAllText(source);
                     req.Forms["html"] = new RESTConnector.Form(htmlData);
@@ -660,7 +660,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             }
             else
             {
-                service = SERVICE_GET_ENTITY_EXTRACTION_TEXT;
+                service = ExtractEntityText;
                 req.Forms["text"] = new RESTConnector.Form(source);
             }
 
@@ -719,8 +719,8 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         #endregion
 
         #region FeedDetection
-        private const string SERVICE_DETECT_FEEDS_URL = "/url/URLGetFeedLinks";
-        private const string SERVICE_DETECT_FEEDS_HTML = "/html/HTMLGetFeedLinks";
+        private const string DetectFeedsUrl = "/url/URLGetFeedLinks";
+        private const string DectectFeedsHtml = "/html/HTMLGetFeedLinks";
 
         /// <summary>
         /// On detect feeds delegate.
@@ -757,7 +757,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             string normalizedSource = source.Trim().ToLower();
             if (normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
             {
-                service = SERVICE_DETECT_FEEDS_URL;
+                service = DetectFeedsUrl;
                 req.Forms["url"] = new RESTConnector.Form(source);
             }
             else if (source.StartsWith(Application.dataPath) && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
@@ -830,9 +830,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         #endregion
 
         #region Keyword Extraction
-        private const string SERVICE_GET_KEYWORD_EXTRACTION_HTML = "/html/HTMLGetRankedKeywords";
-        private const string SERVICE_GET_KEYWORD_EXTRACTION_URL = "/url/URLGetRankedKeywords";
-        private const string SERVICE_GET_KEYWORD_EXTRACTION_TEXT = "/text/TextGetRankedKeywords";
+        private const string ExtractKeywordHtml = "/html/HTMLGetRankedKeywords";
+        private const string ExtractKeywordUrl = "/url/URLGetRankedKeywords";
+        private const string ExtractKeywordText = "/text/TextGetRankedKeywords";
 
         /// <summary>
         /// On get keywords delegate.
@@ -883,14 +883,14 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             string normalizedSource = source.Trim().ToLower();
             if (normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
             {
-                service = SERVICE_GET_KEYWORD_EXTRACTION_URL;
+                service = ExtractKeywordUrl;
                 req.Forms["url"] = new RESTConnector.Form(source);
             }
             else if (source.StartsWith(Application.dataPath) && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
             {
                 if (Path.GetExtension(normalizedSource).EndsWith(".html"))
                 {
-                    service = SERVICE_GET_KEYWORD_EXTRACTION_HTML;
+                    service = ExtractKeywordHtml;
                     string htmlData = default(string);
                     htmlData = File.ReadAllText(source);
                     req.Forms["html"] = new RESTConnector.Form(htmlData);
@@ -900,7 +900,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             }
             else
             {
-                service = SERVICE_GET_KEYWORD_EXTRACTION_TEXT;
+                service = ExtractKeywordText;
                 req.Forms["text"] = new RESTConnector.Form(source);
             }
 
@@ -959,9 +959,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         #endregion
 
         #region GetLanguage
-        private const string SERVICE_GET_LANGUAGE_HTML = "/html/HTMLGetLanguage";
-        private const string SERVICE_GET_LANGUAGE_URL = "/url/URLGetLanguage";
-        private const string SERVICE_GET_LANGUAGE_TEXT = "/text/TextGetLanguage";
+        private const string GetLanguageHtml = "/html/HTMLGetLanguage";
+        private const string GetLanguageUrl = "/url/URLGetLanguage";
+        private const string GetLanguageText = "/text/TextGetLanguage";
 
         /// <summary>
         /// On get languages.
@@ -1000,14 +1000,14 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             string normalizedSource = source.Trim().ToLower();
             if (normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
             {
-                service = SERVICE_GET_LANGUAGE_URL;
+                service = GetLanguageUrl;
                 req.Forms["url"] = new RESTConnector.Form(source);
             }
             else if (source.StartsWith(Application.dataPath) && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
             {
                 if (Path.GetExtension(normalizedSource).EndsWith(".html"))
                 {
-                    service = SERVICE_GET_LANGUAGE_HTML;
+                    service = GetLanguageHtml;
                     string htmlData = default(string);
                     htmlData = File.ReadAllText(source);
                     req.Forms["html"] = new RESTConnector.Form(htmlData);
@@ -1017,7 +1017,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             }
             else
             {
-                service = SERVICE_GET_LANGUAGE_TEXT;
+                service = GetLanguageText;
                 req.Forms["text"] = new RESTConnector.Form(source);
             }
 
@@ -1076,8 +1076,8 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         #endregion
 
         #region GetMicroformat
-        private const string SERVICE_GET_MICROFORMAT_URL = "/url/URLGetMicroformatData";
-        private const string SERVICE_GET_MICROFORMAT_HTML = "/html/HTMLGetMicroformatData";
+        private const string GetMicroformatUrl = "/url/URLGetMicroformatData";
+        private const string GetMicroformatHtml = "/html/HTMLGetMicroformatData";
 
         /// <summary>
         /// On get microformats.
@@ -1114,7 +1114,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             string normalizedSource = source.Trim().ToLower();
             if (normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
             {
-                service = SERVICE_GET_MICROFORMAT_URL;
+                service = GetMicroformatUrl;
                 req.Forms["url"] = new RESTConnector.Form(source);
             }
             else if (source.StartsWith(Application.dataPath) && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
@@ -1187,8 +1187,8 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         #endregion
 
         #region GetPubDate
-        private const string SERVICE_GET_PUBLICATION_DATE_URL = "/url/URLGetPubDate";
-        private const string SERVICE_GET_PUBLICATION_DATE_HTML = "/html/HTMLGetPubDate";
+        private const string GetPublicationDateUrl = "/url/URLGetPubDate";
+        private const string GetPublicationDateHtml = "/html/HTMLGetPubDate";
 
         /// <summary>
         /// On get publication date delegate.
@@ -1225,14 +1225,14 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             string normalizedSource = source.Trim().ToLower();
             if (normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
             {
-                service = SERVICE_GET_PUBLICATION_DATE_URL;
+                service = GetPublicationDateUrl;
                 req.Forms["url"] = new RESTConnector.Form(source);
             }
             else if (source.StartsWith(Application.dataPath) && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
             {
                 if (Path.GetExtension(normalizedSource).EndsWith(".html"))
                 {
-                    service = SERVICE_GET_PUBLICATION_DATE_HTML;
+                    service = GetPublicationDateHtml;
                     string htmlData = default(string);
                     htmlData = File.ReadAllText(source);
                     req.Forms["html"] = new RESTConnector.Form(htmlData);
@@ -1301,9 +1301,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         #endregion
 
         #region GetRelations
-        private const string SERVICE_GET_RELATIONS_HTML = "/html/HTMLGetRelations";
-        private const string SERVICE_GET_RELATIONS_URL = "/url/URLGetRelations";
-        private const string SERVICE_GET_RELATIONS_TEXT = "/text/TextGetRelations";
+        private const string GetRelationsHtml = "/html/HTMLGetRelations";
+        private const string GetRelationsUrl = "/url/URLGetRelations";
+        private const string GetRelationsText = "/text/TextGetRelations";
 
         /// <summary>
         /// On get relations delegate.
@@ -1375,14 +1375,14 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             string normalizedSource = source.Trim().ToLower();
             if (normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
             {
-                service = SERVICE_GET_RELATIONS_URL;
+                service = GetRelationsUrl;
                 req.Forms["url"] = new RESTConnector.Form(source);
             }
             else if (source.StartsWith(Application.dataPath) && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
             {
                 if (Path.GetExtension(normalizedSource).EndsWith(".html"))
                 {
-                    service = SERVICE_GET_RELATIONS_HTML;
+                    service = GetRelationsHtml;
                     string htmlData = default(string);
                     htmlData = File.ReadAllText(source);
                     req.Forms["html"] = new RESTConnector.Form(htmlData);
@@ -1392,7 +1392,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             }
             else
             {
-                service = SERVICE_GET_RELATIONS_TEXT;
+                service = GetRelationsText;
                 req.Forms["text"] = new RESTConnector.Form(source);
             }
 
@@ -1451,9 +1451,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         #endregion
 
         #region GetTextSentiment
-        private const string SERVICE_GET_TEXT_SENTIMENT_HTML = "/html/HTMLGetTextSentiment";
-        private const string SERVICE_GET_TEXT_SENTIMENT_URL = "/url/URLGetTextSentiment";
-        private const string SERVICE_GET_TEXT_SENTIMENT_TEXT = "/text/TextGetTextSentiment";
+        private const string GetTextSentimentHtml = "/html/HTMLGetTextSentiment";
+        private const string GetTextSentimentUrl = "/url/URLGetTextSentiment";
+        private const string GetTextSentimentText = "/text/TextGetTextSentiment";
 
         /// <summary>
         /// On get text sentiment delegate.
@@ -1492,14 +1492,14 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             string normalizedSource = source.Trim().ToLower();
             if (normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
             {
-                service = SERVICE_GET_TEXT_SENTIMENT_URL;
+                service = GetTextSentimentUrl;
                 req.Forms["url"] = new RESTConnector.Form(source);
             }
             else if (source.StartsWith(Application.dataPath) && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
             {
                 if (Path.GetExtension(normalizedSource).EndsWith(".html"))
                 {
-                    service = SERVICE_GET_TEXT_SENTIMENT_HTML;
+                    service = GetTextSentimentHtml;
                     string htmlData = default(string);
                     htmlData = File.ReadAllText(source);
                     req.Forms["html"] = new RESTConnector.Form(htmlData);
@@ -1509,7 +1509,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             }
             else
             {
-                service = SERVICE_GET_TEXT_SENTIMENT_TEXT;
+                service = GetTextSentimentText;
                 req.Forms["text"] = new RESTConnector.Form(source);
             }
 
@@ -1568,9 +1568,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         #endregion
 
         #region GetTargetedSentiment
-        private const string SERVICE_GET_TARGETED_SENTIMENT_HTML = "/html/HTMLGetTargetedSentiment";
-        private const string SERVICE_GET_TARGETED_SENTIMENT_URL = "/url/URLGetTargetedSentiment";
-        private const string SERVICE_GET_TARGETED_SENTIMENT_TEXT = "/text/TextGetTargetedSentiment";
+        private const string GetTargetedSentimentHtml = "/html/HTMLGetTargetedSentiment";
+        private const string GetTargetedSentimentUrl = "/url/URLGetTargetedSentiment";
+        private const string GetTargetedSentimentText = "/text/TextGetTargetedSentiment";
 
         /// <summary>
         /// On get targeted sentiment delegate.
@@ -1613,14 +1613,14 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             string normalizedSource = source.Trim().ToLower();
             if (normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
             {
-                service = SERVICE_GET_TARGETED_SENTIMENT_URL;
+                service = GetTargetedSentimentUrl;
                 req.Forms["url"] = new RESTConnector.Form(source);
             }
             else if (source.StartsWith(Application.dataPath) && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
             {
                 if (Path.GetExtension(normalizedSource).EndsWith(".html"))
                 {
-                    service = SERVICE_GET_TARGETED_SENTIMENT_HTML;
+                    service = GetTargetedSentimentHtml;
                     string htmlData = default(string);
                     htmlData = File.ReadAllText(source);
                     req.Forms["html"] = new RESTConnector.Form(htmlData);
@@ -1630,7 +1630,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             }
             else
             {
-                service = SERVICE_GET_TARGETED_SENTIMENT_TEXT;
+                service = GetTargetedSentimentText;
                 req.Forms["text"] = new RESTConnector.Form(source);
             }
 
@@ -1689,9 +1689,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         #endregion
 
         #region GetRankedTaxonomy
-        private const string SERVICE_GET_RANKED_TAXONOMY_HTML = "/html/HTMLGetRankedTaxonomy";
-        private const string SERVICE_GET_RANKED_TAXONOMY_URL = "/url/URLGetRankedTaxonomy";
-        private const string SERVICE_GET_RANKED_TAXONOMY_TEXT = "/text/TextGetRankedTaxonomy";
+        private const string GetRankedTaxonomyHtml = "/html/HTMLGetRankedTaxonomy";
+        private const string GetRankedTaxonomyUrl = "/url/URLGetRankedTaxonomy";
+        private const string GetRankedTaxonomyText = "/text/TextGetRankedTaxonomy";
 
         /// <summary>
         /// On get ranked taxonomy delegate.
@@ -1730,14 +1730,14 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             string normalizedSource = source.Trim().ToLower();
             if (normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
             {
-                service = SERVICE_GET_RANKED_TAXONOMY_URL;
+                service = GetRankedTaxonomyUrl;
                 req.Forms["url"] = new RESTConnector.Form(source);
             }
             else if (source.StartsWith(Application.dataPath) && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
             {
                 if (Path.GetExtension(normalizedSource).EndsWith(".html"))
                 {
-                    service = SERVICE_GET_RANKED_TAXONOMY_HTML;
+                    service = GetRankedTaxonomyHtml;
                     string htmlData = default(string);
                     htmlData = File.ReadAllText(source);
                     req.Forms["html"] = new RESTConnector.Form(htmlData);
@@ -1747,7 +1747,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             }
             else
             {
-                service = SERVICE_GET_RANKED_TAXONOMY_TEXT;
+                service = GetRankedTaxonomyText;
                 req.Forms["text"] = new RESTConnector.Form(source);
             }
 
@@ -1806,8 +1806,8 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         #endregion
 
         #region GetText
-        private const string SERVICE_GET_TEXT_HTML = "/html/HTMLGetText";
-        private const string SERVICE_GET_TEXT_URL = "/url/URLGetText";
+        private const string GetTextHtml = "/html/HTMLGetText";
+        private const string GetTextUrl = "/url/URLGetText";
 
         /// <summary>
         /// On get text delegate.
@@ -1848,14 +1848,14 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             string normalizedSource = source.Trim().ToLower();
             if (normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
             {
-                service = SERVICE_GET_TEXT_URL;
+                service = GetTextUrl;
                 req.Forms["url"] = new RESTConnector.Form(source);
             }
             else if (source.StartsWith(Application.dataPath) && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
             {
                 if (Path.GetExtension(normalizedSource).EndsWith(".html"))
                 {
-                    service = SERVICE_GET_TEXT_HTML;
+                    service = GetTextHtml;
                     string htmlData = default(string);
                     htmlData = File.ReadAllText(source);
                     req.Forms["html"] = new RESTConnector.Form(htmlData);
@@ -1924,8 +1924,8 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         #endregion
 
         #region GetRawText
-        private const string SERVICE_GET_RAW_TEXT_HTML = "/html/HTMLGetRawText";
-        private const string SERVICE_GET_RAW_TEXT_URL = "/url/URLGetRawText";
+        private const string GetRawTextHtml = "/html/HTMLGetRawText";
+        private const string GetRawTextUrl = "/url/URLGetRawText";
 
         /// <summary>
         /// Gets raw text from a source.
@@ -1957,14 +1957,14 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             string normalizedSource = source.Trim().ToLower();
             if (normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
             {
-                service = SERVICE_GET_TEXT_URL;
+                service = GetTextUrl;
                 req.Forms["url"] = new RESTConnector.Form(source);
             }
             else if (source.StartsWith(Application.dataPath) && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
             {
                 if (Path.GetExtension(normalizedSource).EndsWith(".html"))
                 {
-                    service = SERVICE_GET_TEXT_HTML;
+                    service = GetTextHtml;
                     string htmlData = default(string);
                     htmlData = File.ReadAllText(source);
                     req.Forms["html"] = new RESTConnector.Form(htmlData);
@@ -1988,8 +1988,8 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         #endregion
 
         #region GetTitle
-        private const string SERVICE_GET_TITLE_HTML = "/html/HTMLGetTitle";
-        private const string SERVICE_GET_TITLE_URL = "/url/URLGetTitle";
+        private const string GetTitleHtml = "/html/HTMLGetTitle";
+        private const string GetTitleUrl = "/url/URLGetTitle";
 
         /// <summary>
         /// On get title delegate.
@@ -2028,14 +2028,14 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             string normalizedSource = source.Trim().ToLower();
             if (normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
             {
-                service = SERVICE_GET_TITLE_URL;
+                service = GetTitleUrl;
                 req.Forms["url"] = new RESTConnector.Form(source);
             }
             else if (source.StartsWith(Application.dataPath) && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
             {
                 if (Path.GetExtension(normalizedSource).EndsWith(".html"))
                 {
-                    service = SERVICE_GET_TITLE_HTML;
+                    service = GetTitleHtml;
                     string htmlData = default(string);
                     htmlData = File.ReadAllText(source);
                     req.Forms["html"] = new RESTConnector.Form(htmlData);
@@ -2104,9 +2104,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         #endregion
 
         #region Combined Call
-        private const string SERVICE_COMBINED_CALL_HTML = "/html/HTMLGetCombinedData";
-        private const string SERVICE_COMBINED_CALL_URL = "/url/URLGetCombinedData";
-        private const string SERVICE_COMBINED_CALL_TEXT = "/text/TextGetCombinedData";
+        private const string CombinedCallHtml = "/html/HTMLGetCombinedData";
+        private const string CombinedCallUrl = "/url/URLGetCombinedData";
+        private const string CombinedCallText = "/text/TextGetCombinedData";
 
         /// <summary>
         /// On get combined data delegate.
@@ -2221,14 +2221,14 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             string normalizedSource = source.Trim().ToLower();
             if (normalizedSource.StartsWith("http://") || normalizedSource.StartsWith("https://"))
             {
-                service = SERVICE_COMBINED_CALL_URL;
+                service = CombinedCallUrl;
                 req.Forms["url"] = new RESTConnector.Form(source);
             }
             else if (source.StartsWith(Application.dataPath) && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
             {
                 if (Path.GetExtension(normalizedSource).EndsWith(".html"))
                 {
-                    service = SERVICE_COMBINED_CALL_HTML;
+                    service = CombinedCallHtml;
                     string htmlData = default(string);
                     htmlData = File.ReadAllText(source);
                     req.Forms["html"] = new RESTConnector.Form(htmlData);
@@ -2238,7 +2238,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             }
             else
             {
-                service = SERVICE_COMBINED_CALL_TEXT;
+                service = CombinedCallText;
                 req.Forms["text"] = new RESTConnector.Form(source);
             }
 
@@ -2297,7 +2297,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         #endregion
 
         #region GetNews
-        private const string SERVICE_GET_NEWS = "/data/GetNews";
+        private const string GetNewsEndpoint = "/data/GetNews";
 
         /// <summary>
         /// On get news delegate.
@@ -2348,7 +2348,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 foreach (KeyValuePair<string, string> entry in queryFields)
                     req.Parameters[entry.Key] = "q." + entry.Value;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, SERVICE_GET_NEWS);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, GetNewsEndpoint);
             if (connector == null)
                 return false;
 
@@ -2406,7 +2406,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// <exclude />
         public string GetServiceID()
         {
-            return SERVICE_ID;
+            return ServiceId;
         }
         #endregion
     }

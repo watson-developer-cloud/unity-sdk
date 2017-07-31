@@ -36,7 +36,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         //private string _token = "<authentication-token>";
 
         private string _examplePath;
-        private string _conversionTarget = ConversionTarget.NORMALIZED_HTML;
+        private string _conversionTarget = ConversionTarget.NormalizedHtml;
         private bool _convertDocumentTested = false;
 
         public override IEnumerator RunTest()

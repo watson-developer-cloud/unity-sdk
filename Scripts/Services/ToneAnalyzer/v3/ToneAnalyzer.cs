@@ -33,7 +33,7 @@ namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
     public class ToneAnalyzer : IWatsonService
     {
         #region Private Data
-        private const string SERVICE_ID = "ToneAnalyzerV3";
+        private const string ServiceId = "ToneAnalyzerV3";
         private fsSerializer _serializer = new fsSerializer();
         private Credentials _credentials = null;
         private string _url = "https://gateway.watsonplatform.net/tone-analyzer/api";
@@ -90,7 +90,7 @@ namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
         #endregion
 
         #region Get Tone
-        private const string FUNCTION_TONE = "/v3/tone";
+        private const string ToneEndpoint = "/v3/tone";
 
         /// <summary>
         /// The Get Tone Analyzed callback delegate.
@@ -111,7 +111,7 @@ namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
             if (callback == null)
                 throw new ArgumentNullException("callback");
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, FUNCTION_TONE);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, ToneEndpoint);
             if (connector == null)
                 return false;
 
@@ -172,7 +172,7 @@ namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
         /// <exclude />
         public string GetServiceID()
         {
-            return SERVICE_ID;
+            return ServiceId;
         }
         #endregion
     }

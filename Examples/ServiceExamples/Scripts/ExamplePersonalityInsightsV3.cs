@@ -92,12 +92,12 @@ public class ExamplePersonalityInsightsV3 : MonoBehaviour
 
     private IEnumerator Examples()
     {
-        if (!_personalityInsights.GetProfile(OnGetProfileJson, _dataPath, ContentType.TEXT_HTML, ContentLanguage.ENGLISH, ContentType.APPLICATION_JSON, AcceptLanguage.ENGLISH, true, true, true))
+        if (!_personalityInsights.GetProfile(OnGetProfileJson, _dataPath, ContentType.TextHtml, ContentLanguage.English, ContentType.ApplicationJson, AcceptLanguage.English, true, true, true))
             Log.Debug("ExamplePersonalityInsights", "Failed to get profile!");
         while (!_getProfileJsonTested)
             yield return null;
 
-        if (!_personalityInsights.GetProfile(OnGetProfileText, _testString, ContentType.TEXT_HTML, ContentLanguage.ENGLISH, ContentType.APPLICATION_JSON, AcceptLanguage.ENGLISH, true, true, true))
+        if (!_personalityInsights.GetProfile(OnGetProfileText, _testString, ContentType.TextHtml, ContentLanguage.English, ContentType.ApplicationJson, AcceptLanguage.English, true, true, true))
             Log.Debug("ExamplePersonalityInsights", "Failed to get profile!");
         while (!_getProfileTextTested)
             yield return null;

@@ -79,8 +79,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
         #endregion
 
         #region Private Data
-        private const string SERVICE_ID = "ConversationV1";
-        private const string SERVICE_MESSAGE = "/v1/workspaces";
+        private const string ServiceId = "ConversationV1";
+        private const string Workspaces = "/v1/workspaces";
         private Credentials _credentials = null;
         private string _url = "https://gateway.watsonplatform.net/conversation/api";
         private string _versionDate;
@@ -116,7 +116,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
             if (callback == null)
                 throw new ArgumentNullException("callback");
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, SERVICE_MESSAGE);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, Workspaces);
             if (connector == null)
                 return false;
 
@@ -153,7 +153,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
             if (callback == null)
                 throw new ArgumentNullException("callback");
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, SERVICE_MESSAGE);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, Workspaces);
             if (connector == null)
                 return false;
             
@@ -244,7 +244,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
         /// <exclude />
         public string GetServiceID()
         {
-            return SERVICE_ID;
+            return ServiceId;
         }
         #endregion
     }

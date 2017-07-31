@@ -35,7 +35,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TradeoffAnalytics.v1
     {
 
         #region Private Data
-        private const string SERVICE_ID = "TradeoffAnalyticsV1";
+        private const string ServiceId = "TradeoffAnalyticsV1";
         private fsSerializer _serializer = new fsSerializer();
         private Credentials _credentials = null;
         private string _url = "https://gateway.watsonplatform.net/tone-analyzer/api";
@@ -76,7 +76,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TradeoffAnalytics.v1
         #endregion
 
         #region Dilemmas
-        private const string FUNCTION_DILEMMA = "/v1/dilemmas";
+        private const string DillemaEndpoint = "/v1/dilemmas";
         /// <summary>
         /// The On Dilemma callback delegate.
         /// </summary>
@@ -88,7 +88,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TradeoffAnalytics.v1
             if (callback == null)
                 throw new ArgumentNullException("callback");
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, FUNCTION_DILEMMA);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, DillemaEndpoint);
             if (connector == null)
                 return false;
 
@@ -149,7 +149,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TradeoffAnalytics.v1
         /// <exclude />
         public string GetServiceID()
         {
-            return SERVICE_ID;
+            return ServiceId;
         }
         #endregion
     }

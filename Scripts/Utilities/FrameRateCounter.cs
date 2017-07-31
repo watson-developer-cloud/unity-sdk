@@ -25,8 +25,8 @@ namespace IBM.Watson.DeveloperCloud.Utilities
     /// </summary>
     public class FrameRateCounter : MonoBehaviour
     {
-        const float FPS_INTERVAL = 0.5f;
-        const string DISPLAY = "{0} FPS";
+        const float FpsInterval = 0.5f;
+        const string Display = "{0} FPS";
 
         private int _fpsAccumulator = 0;
         private float _fpsNextPeriod = 0;
@@ -37,7 +37,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 
         private void Start()
         {
-            _fpsNextPeriod = Time.realtimeSinceStartup + FPS_INTERVAL;
+            _fpsNextPeriod = Time.realtimeSinceStartup + FpsInterval;
         }
 
         private void Update()
@@ -46,10 +46,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             _fpsAccumulator++;
             if (Time.realtimeSinceStartup > _fpsNextPeriod)
             {
-                _currentFps = (int)(_fpsAccumulator / FPS_INTERVAL);
+                _currentFps = (int)(_fpsAccumulator / FpsInterval);
                 _fpsAccumulator = 0;
-                _fpsNextPeriod += FPS_INTERVAL;
-                _text.text = string.Format(DISPLAY, _currentFps);
+                _fpsNextPeriod += FpsInterval;
+                _text.text = string.Format(Display, _currentFps);
             }
         }
     }

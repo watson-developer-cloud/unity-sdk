@@ -102,7 +102,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
         #endregion
 
         #region Private Data
-        private const string SERVICE_ID = "NaturalLanguageClassifierV1";
+        private const string ServiceId = "NaturalLanguageClassifierV1";
         private fsSerializer _serializer = new fsSerializer();
         private Credentials _credentials = null;
         private string _url = "https://gateway.watsonplatform.net/natural-language-classifier/api";
@@ -422,7 +422,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
         /// <exclude />
         public string GetServiceID()
         {
-            return SERVICE_ID;
+            return ServiceId;
         }
         #endregion
     }

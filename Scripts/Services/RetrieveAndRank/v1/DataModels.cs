@@ -197,15 +197,15 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// <summary>
         /// List collections.
         /// </summary>
-        public const string LIST = "LIST";
+        public const string List = "LIST";
         /// <summary>
         /// Create a collection.
         /// </summary>
-        public const string CREATE = "CREATE";
+        public const string Create = "CREATE";
         /// <summary>
         /// Delete a collection.
         /// </summary>
-        public const string DELETE = "DELETE";
+        public const string Delete = "DELETE";
     }
 
     /// <summary>

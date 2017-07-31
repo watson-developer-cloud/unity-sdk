@@ -42,24 +42,24 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// <summary>
         /// This ID is used to match up a configuration record with this service.
         /// </summary>
-        private const string SERVICE_ID = "SpeechToTextV1";
+        private const string ServiceId = "SpeechToTextV1";
         /// <summary>
         /// How often to send a message to the web socket to keep it alive.
         /// </summary>
-        private const float WS_KEEP_ALIVE_TIME = 20.0f;
+        private const float WsKeepAliveInterval = 20.0f;
         /// <summary>
         /// If no listen state is received after start is sent within this time, we will timeout
         /// and stop listening. 
         /// </summary>
-        private const float LISTEN_TIMEOUT = 10.0f;
+        private const float ListenTimeout = 10.0f;
         /// <summary>
         /// How many recording AudioClips will we queue before we enter a error state.
         /// </summary>
-        private const int MAX_QUEUED_RECORDINGS = 30;
+        private const int MaxQueuedRecordings = 30;
         /// <summary>
         /// Size of a clip in bytes that can be sent through the Recognize function.
         /// </summary>
-        private const int MAX_RECOGNIZE_CLIP_SIZE = 4 * (1024 * 1024);
+        private const int MaxRecognizeClipSize = 4 * (1024 * 1024);
         #endregion
 
         #region Public Types
@@ -426,7 +426,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                         _listenRecordings.Enqueue(clip);
 
                         // check the length of this queue and do something if it gets too full.
-                        if (_listenRecordings.Count > MAX_QUEUED_RECORDINGS)
+                        if (_listenRecordings.Count > MaxQueuedRecordings)
                         {
                             Log.Error("SpeechToText", "Recording queue is full.");
 
@@ -444,7 +444,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 
                 // After sending start, we should get into the listening state within the amount of time specified
                 // by LISTEN_TIMEOUT. If not, then stop listening and record the error.
-                if (!_listenActive && (DateTime.Now - _lastStartSent).TotalSeconds > LISTEN_TIMEOUT)
+                if (!_listenActive && (DateTime.Now - _lastStartSent).TotalSeconds > ListenTimeout)
                 {
                     Log.Error("SpeechToText", "Failed to enter listening state.");
 
@@ -551,7 +551,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             {
                 yield return null;
 
-                if ((DateTime.Now - _lastKeepAlive).TotalSeconds > WS_KEEP_ALIVE_TIME)
+                if ((DateTime.Now - _lastKeepAlive).TotalSeconds > WsKeepAliveInterval)
                 {
                     Dictionary<string, string> nop = new Dictionary<string, string>();
                     nop["action"] = "no-op";
@@ -684,7 +684,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 
             req.Headers["Content-Type"] = "audio/wav";
             req.Send = WaveFile.CreateWAV(clip);
-            if (req.Send.Length > MAX_RECOGNIZE_CLIP_SIZE)
+            if (req.Send.Length > MaxRecognizeClipSize)
             {
                 Log.Error("SpeechToText", "AudioClip is too large for Recognize().");
                 return false;
@@ -1189,7 +1189,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// <param name="customizationID">The requested custom language model's identifier.</param>
         /// <param name="customData">Optional custom data.</param>
         /// <returns></returns>
-        public bool TrainCustomization(TrainCustomizationCallback callback, string customizationID, string wordTypeToAdd = WordTypeToAdd.ALL, string customData = default(string))
+        public bool TrainCustomization(TrainCustomizationCallback callback, string customizationID, string wordTypeToAdd = WordTypeToAdd.All, string customData = default(string))
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -1696,7 +1696,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// <param name="language">The language for which custom models are to be returned. Currently, only en-US (the default) is supported.</param>
         /// <param name="customData">Optional custom data.</param>
         /// <returns></returns>
-        public bool GetCustomWords(GetCustomWordsCallback callback, string customizationID, string wordType = WordType.ALL, string customData = default(string))
+        public bool GetCustomWords(GetCustomWordsCallback callback, string customizationID, string wordType = WordType.All, string customData = default(string))
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -1997,7 +1997,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// <exclude />
         public string GetServiceID()
         {
-            return SERVICE_ID;
+            return ServiceId;
         }
         #endregion
     }

@@ -1133,8 +1133,8 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         #endregion
 
 #region Get Token
-        private const string TOKEN_REST_ENDPOINT = "https://gateway.watsonplatform.net/authorization/api/v1/token";
-        private const string TOKEN_STREAM_ENDPOINT = "https://stream.watsonplatform.net/authorization/api/v1/token";
+        private const string TokenRestEndpoint = "https://gateway.watsonplatform.net/authorization/api/v1/token";
+        private const string TokenStreamEndpoint = "https://stream.watsonplatform.net/authorization/api/v1/token";
 
         /// <summary>
         /// The OnGetToken callback.
@@ -1165,9 +1165,9 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 
             string tokenEndpoint;
             if (serviceEndpoint.Contains("stream"))
-                tokenEndpoint = TOKEN_STREAM_ENDPOINT;
+                tokenEndpoint = TokenStreamEndpoint;
             else
-                tokenEndpoint = TOKEN_REST_ENDPOINT;
+                tokenEndpoint = TokenRestEndpoint;
 
             Credentials Credentials = new Credentials()
             {

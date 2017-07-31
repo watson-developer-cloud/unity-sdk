@@ -155,17 +155,17 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         #endregion
 
         #region Private Data
-        private const string SERVICE_ID = "VisualRecognitionV3";
-        private const string SERVICE_CLASSIFY = "/v3/classify";
-        private const string SERVICE_DETECT_FACES = "/v3/detect_faces";
-        private const string SERVICE_RECOGNIZE_TEXT = "/v3/recognize_text";
-        private const string SERVICE_CLASSIFIERS = "/v3/classifiers";
-        private const string SERVICE_COLLECTIONS = "/v3/collections";
-        private const string SERVICE_COLLECTION = "/v3/collections/{0}";
-        private const string SERVICE_COLLECTION_IMAGES = "/v3/collections/{0}/images";
-        private const string SERVICE_COLLECTION_IMAGE = "/v3/collections/{0}/images/{1}";
-        private const string SERVICE_COLLECTION_IMAGE_METADATA = "/v3/collections/{0}/images/{1}/metadata";
-        private const string SERVICE_COLLECTION_FIND_SIMILAR = "/v3/collections/{0}/find_similar";
+        private const string ServiceId = "VisualRecognitionV3";
+        private const string ClassifyEndpoint = "/v3/classify";
+        private const string DetectFacesEndpoint = "/v3/detect_faces";
+        private const string RecognizeTextEndpoint = "/v3/recognize_text";
+        private const string ClassifiersEndpoint = "/v3/classifiers";
+        private const string CollectionsEndpoint = "/v3/collections";
+        private const string CollectionEndpoint = "/v3/collections/{0}";
+        private const string ImagesEndpoint = "/v3/collections/{0}/images";
+        private const string ImageEndpoint = "/v3/collections/{0}/images/{1}";
+        private const string MetadataEndpoint = "/v3/collections/{0}/images/{1}/metadata";
+        private const string FindSimilarEndpoint = "/v3/collections/{0}/find_similar";
         private string _apikey = null;
         private fsSerializer _serializer = new fsSerializer();
         private const float REQUEST_TIMEOUT = 10.0f * 60.0f;
@@ -245,7 +245,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if (callback == null)
                 throw new ArgumentNullException("callback");
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, SERVICE_CLASSIFY);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, ClassifyEndpoint);
             if (connector == null)
                 return false;
 
@@ -333,7 +333,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if (imageData == null)
                 throw new ArgumentNullException("Image data is required to classify!");
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, SERVICE_CLASSIFY);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, ClassifyEndpoint);
             if (connector == null)
                 return false;
             ClassifyReq req = new ClassifyReq();
@@ -430,7 +430,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, SERVICE_DETECT_FACES);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, DetectFacesEndpoint);
             if (connector == null)
                 return false;
 
@@ -501,7 +501,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if (imageData == null)
                 throw new ArgumentNullException("Image data is required to DetectFaces!");
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, SERVICE_DETECT_FACES);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, DetectFacesEndpoint);
             if (connector == null)
                 return false;
             DetectFacesReq req = new DetectFacesReq();
@@ -587,7 +587,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, SERVICE_RECOGNIZE_TEXT);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, RecognizeTextEndpoint);
             if (connector == null)
                 return false;
 
@@ -661,7 +661,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if (imageData == null)
                 throw new ArgumentNullException("Image data is required to RecognizeText!");
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, SERVICE_RECOGNIZE_TEXT);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, RecognizeTextEndpoint);
             if (connector == null)
                 return false;
             RecognizeTextReq req = new RecognizeTextReq();
@@ -739,7 +739,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, SERVICE_CLASSIFIERS);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, ClassifiersEndpoint);
             if (connector == null)
                 return false;
 
@@ -817,7 +817,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, SERVICE_CLASSIFIERS + "/" + classifierId);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, ClassifiersEndpoint + "/" + classifierId);
             if (connector == null)
                 return false;
 
@@ -946,7 +946,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if (callback == null)
                 throw new ArgumentNullException("callback");
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, SERVICE_CLASSIFIERS);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, ClassifiersEndpoint);
             if (connector == null)
                 return false;
 
@@ -1088,7 +1088,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if (callback == null)
                 throw new ArgumentNullException("callback");
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, SERVICE_CLASSIFIERS + "/" + classifierID);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, ClassifiersEndpoint + "/" + classifierID);
             if (connector == null)
                 return false;
 
@@ -1129,7 +1129,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 throw new WatsonException("No API Key was found!");
 
             Log.Debug("VisualRecognition", "Attempting to delete classifier {0}", classifierId);
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, SERVICE_CLASSIFIERS + "/" + classifierId);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, ClassifiersEndpoint + "/" + classifierId);
             if (connector == null)
                 return false;
 
@@ -1180,7 +1180,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, SERVICE_COLLECTIONS);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, CollectionsEndpoint);
             if (connector == null)
                 return false;
 
@@ -1257,7 +1257,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, SERVICE_COLLECTIONS);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, CollectionsEndpoint);
             if (connector == null)
                 return false;
 
@@ -1342,7 +1342,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_COLLECTION, collectionID));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(CollectionEndpoint, collectionID));
             if (connector == null)
                 return false;
 
@@ -1401,7 +1401,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_COLLECTION, collectionID));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(CollectionEndpoint, collectionID));
             if (connector == null)
                 return false;
 
@@ -1482,7 +1482,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_COLLECTION_IMAGES, collectionID));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(ImagesEndpoint, collectionID));
             if (connector == null)
                 return false;
 
@@ -1662,7 +1662,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_COLLECTION_IMAGES, collectionID));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(ImagesEndpoint, collectionID));
             if (connector == null)
                 return false;
 
@@ -1761,7 +1761,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_COLLECTION_IMAGE, collectionID, imageID));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(ImageEndpoint, collectionID, imageID));
             if (connector == null)
                 return false;
 
@@ -1827,7 +1827,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_COLLECTION_IMAGE, collectionID, imageID));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(ImageEndpoint, collectionID, imageID));
             if (connector == null)
                 return false;
 
@@ -1916,7 +1916,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_COLLECTION_IMAGE_METADATA, collectionID, imageID));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(MetadataEndpoint, collectionID, imageID));
             if (connector == null)
                 return false;
 
@@ -1983,7 +1983,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_COLLECTION_IMAGE_METADATA, collectionID, imageID));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(MetadataEndpoint, collectionID, imageID));
             if (connector == null)
                 return false;
 
@@ -2116,7 +2116,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(SERVICE_COLLECTION_FIND_SIMILAR, collectionID));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(FindSimilarEndpoint, collectionID));
             if (connector == null)
                 return false;
 
@@ -2265,7 +2265,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <exclude />
         public string GetServiceID()
         {
-            return SERVICE_ID;
+            return ServiceId;
         }
         #endregion
     }

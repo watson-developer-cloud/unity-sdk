@@ -1,7 +1,4 @@
-﻿
-
-using System;
-/**
+﻿/**
 * Copyright 2015 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,6 +14,7 @@ using System;
 * limitations under the License.
 *
 */
+
 namespace IBM.Watson.DeveloperCloud.Utilities
 {
     /// <summary>
@@ -32,30 +30,15 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// <summary>
             /// Configuration file name.
             /// </summary>
-            public const string CONFIG_FILE = "/Config.json";
+            public const string ConfigFile = "/Config.json";
             /// <summary>
             /// Cache folder to customize a parent folder for cache directory
             /// </summary>
-            public static string CACHE_FOLDER = "";   //It needs to start with /
+            public static string CacheDirectory = "";   //It needs to start with /
                                                       /// <summary>
                                                       /// Log folder to customize a parent folder for logs
                                                       /// </summary>
-            public static string LOG_FOLDER = "";    //It needs to start with /
-        }
-
-        /// <summary>
-        /// All resources (files names under resource directory) used in the SDK listed here. Exp. Watson Logo
-        /// </summary>
-        public static class Resources
-        {
-            /// <summary>
-            /// Watson icon.
-            /// </summary>
-            public const string WATSON_ICON = "watsonSpriteIcon-32x32";
-            /// <summary>
-            /// Watson logo.
-            /// </summary>
-            public const string WATSON_LOGO = "watsonSpriteLogo-506x506";
+            public static string LogDirectory = "";   //It needs to start with /
         }
 
         /// <summary>
@@ -64,9 +47,9 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         public static class String
         {
             /// <exclude />
-            public const string VERSION = "watson-apis-unity-sdk/1.0.0";
+            public const string Version = "watson-apis-unity-sdk/1.0.0";
             /// <exclude />
-            public const string DEBUG_DISPLAY_QUALITY = "Quality: {0}";
+            public const string DebugDispalyQuality = "Quality: {0}";
         }
 
         /// <summary>
