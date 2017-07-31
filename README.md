@@ -20,6 +20,7 @@ Ensure that you have the following prerequisites:
 * An IBM Bluemix account. If you don't have one, [sign up][bluemix_registration].
 * [Unity][get_unity]. You can use the **free** Personal edition.
 * Change the build settings in Unity (**File > Build Settings**) to any platform except for web player. The Watson Developer Cloud Unity SDK does not support Unity Web Player.
+* A chm reader if you would like to access SDK Documentation (optional).
 
 ## Getting the Watson SDK and adding it to Unity
 You can get the latest SDK release by clicking [here][latest_release].
@@ -39,7 +40,7 @@ You will need the 'username' and 'password' credentials for each service. Servic
 1. If you need to configure the services that you want to use, complete the following steps.
     1. Log in to Bluemix at https://bluemix.net.
     1. Click the **Create service** button.
-    1. Under **Watson**, select which service you would like to create an instnace of and click that service.
+    1. Under **Watson**, select which service you would like to create an instance of and click that service.
     1. Give the service and credential a name. Select a plan and click the **Create** button on the bottom.
     4. Click **Service Credentials**.
     5. Click **View credentials** to access your credentials.
