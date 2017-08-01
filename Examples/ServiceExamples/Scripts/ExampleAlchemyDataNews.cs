@@ -77,10 +77,9 @@ public class ExampleAlchemyDataNews : MonoBehaviour
     private IEnumerator Examples()
     {
         Dictionary<string, string> queryFields = new Dictionary<string, string>();
-        queryFields.Add(Fields.ENRICHED_URL_RELATIONS_RELATION_SUBJECT_TEXT, "Obama");
-        queryFields.Add(Fields.ENRICHED_URL_CLEANEDTITLE, "Washington");
-        string[] returnFields = { Fields.ENRICHED_URL_ENTITIES, Fields.ENRICHED_URL_KEYWORDS };
-
+        queryFields.Add(Fields.EnrichedUrlRelationsRelationSubjectText, "Obama");
+        queryFields.Add(Fields.EnrichedUrlCleanedtitle, "Washington");
+        string[] returnFields = { Fields.EnrichedUrlEntities, Fields.EnrichedUrlKeywords };
         if (!_alchemyAPI.GetNews(OnGetNews, returnFields, queryFields))
             Log.Debug("ExampleAlchemyDataNews", "Failed to get news!");
 
