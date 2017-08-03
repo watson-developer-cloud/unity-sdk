@@ -12,8 +12,14 @@ The service offers a single `profile` method that accepts up to 20 MB of input d
 ### Instantiating and authenticating the service
 Before you can send requests to the service it must be instantiated and credentials must be set.
 ```cs
-Credentials credentials = new Credentials(<username>, <password>, <url>);
-PersonalityInsights _personalityInsights = new PersonalityInsights(credentials);
+using IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3;
+using IBM.Watson.DeveloperCloud.Utilities;
+
+void Start()
+{
+    Credentials credentials = new Credentials(<username>, <password>, <url>);
+    PersonalityInsights _personalityInsights = new PersonalityInsights(credentials);
+}
 ```
 
 ### Profile

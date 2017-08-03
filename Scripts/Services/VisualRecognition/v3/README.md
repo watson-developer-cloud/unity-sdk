@@ -7,8 +7,14 @@ The IBM Watson™ [Visual Recognition][visual-recognition] service uses deep lea
 ### Instantiating and authenticating the service
 Before you can send requests to the service it must be instantiated and api key must be set.
 ```cs
-Credentials credentials = new Credentials(<username>, <password>, <url>);
-VisualRecognition _visualRecognition = new VisualRecognition(credentials);
+using IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3;
+using IBM.Watson.DeveloperCloud.Utilities;
+
+void Start()
+{
+    Credentials credentials = new Credentials(<username>, <password>, <url>);
+    VisualRecognition _visualRecognition = new VisualRecognition(credentials);
+}
 ```
 
 ### Classify an image

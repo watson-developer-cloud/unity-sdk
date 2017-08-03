@@ -12,8 +12,14 @@ You complete these steps to implement your application:
 ### Instantiating and authenticating the service
 Before you can send requests to the service it must be instantiated and credentials must be set.
 ```cs
-Credentials credentials = new Credentials(<username>, <password>, <url>);
-Conversation _conversation = new Conversation(credentials);
+using IBM.Watson.DeveloperCloud.Services.Conversation.v1;
+using IBM.Watson.DeveloperCloud.Utilities;
+
+void Start()
+{
+    Credentials credentials = new Credentials(<username>, <password>, <url>);
+    Conversation _conversation = new Conversation(credentials);
+}
 ```
 
 ### Message

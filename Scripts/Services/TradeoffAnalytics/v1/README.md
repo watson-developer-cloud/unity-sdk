@@ -10,8 +10,14 @@ The IBM Watson™ Tradeoff Analytics service helps people make better choices wh
 ### Instantiating and authenticating the service
 Before you can send requests to the service it must be instantiated and credentials must be set.
 ```cs
-Credentials credentials = new Credentials(<username>, <password>, <url>);
-TradeoffAnalytics _tradeoffAnalytics = new TradeoffAnalytics(credentials);
+using IBM.Watson.DeveloperCloud.Services.TradeoffAnalytics.v1;
+using IBM.Watson.DeveloperCloud.Utilities;
+
+void Start()
+{
+    Credentials credentials = new Credentials(<username>, <password>, <url>);
+    TradeoffAnalytics _tradeoffAnalytics = new TradeoffAnalytics(credentials);
+}
 ```
 
 ### Get dillema

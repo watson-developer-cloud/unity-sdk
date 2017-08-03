@@ -8,8 +8,14 @@ Use [Tone Analyzer][tone-analyzer] to detect three types of tones from written t
 ### Instantiating and authenticating the service
 Before you can send requests to the service it must be instantiated and credentials must be set.
 ```cs
-Credentials credentials = new Credentials(<username>, <password>, <url>);
-ToneAnalyzer _toneAnalyzer = new ToneAnalyzer(credentials);
+using IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v1;
+using IBM.Watson.DeveloperCloud.Utilities;
+
+void Start()
+{
+    Credentials credentials = new Credentials(<username>, <password>, <url>);
+    ToneAnalyzer _toneAnalyzer = new ToneAnalyzer(credentials);
+}
 ```
 
 

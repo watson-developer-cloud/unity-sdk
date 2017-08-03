@@ -8,8 +8,14 @@ Convert a document into an easily ingestible format.
 ### Instantiating and authenticating the service
 Before you can send requests to the service it must be instantiated and credentials must be set.
 ```cs
-Credentials credentials = new Credentials(<username>, <password>, <url>);
-DocumentConversion _documentConversion = new DocumentConversion(credentials);
+using IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1;
+using IBM.Watson.DeveloperCloud.Utilities;
+
+void Start()
+{
+    Credentials credentials = new Credentials(<username>, <password>, <url>);
+    DocumentConversion _documentConversion = new DocumentConversion(credentials);
+}
 ```
 
 ### Converting Documents

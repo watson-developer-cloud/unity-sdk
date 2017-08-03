@@ -6,8 +6,14 @@ The [AlchemyLanguage API][alchemy-api] uses natural language processing technolo
 ### Instantiating and authenticating the service
 Before you can send requests to the service it must be instantiated and credentials must be set.
 ```cs
-Credentials credentials = new Credentials(<apikey>, <url>);
-AlchemyAPI _alchemyApi = new AlchemyAPI(credentials);
+using IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1;
+using IBM.Watson.DeveloperCloud.Utilities;
+
+void Start()
+{
+    Credentials credentials = new Credentials(<apikey>, <url>);
+    AlchemyAPI _alchemyApi = new AlchemyAPI(credentials);
+}
 ```
 
 ### Get Authors

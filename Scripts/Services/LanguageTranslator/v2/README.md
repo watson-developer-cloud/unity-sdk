@@ -8,8 +8,14 @@ Select a domain, then identify or select the language of text, and then translat
 ### Instantiating and authenticating the service
 Before you can send requests to the service it must be instantiated and credentials must be set.
 ```cs
-Credentials credentials = new Credentials(<username>, <password>, <url>);
-LanguageTranslator _languageTranslator = new LanguageTranslator(credentials);
+using IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2;
+using IBM.Watson.DeveloperCloud.Utilities;
+
+void Start()
+{
+    Credentials credentials = new Credentials(<username>, <password>, <url>);
+    LanguageTranslator _languageTranslator = new LanguageTranslator(credentials);
+}
 ```
 
 

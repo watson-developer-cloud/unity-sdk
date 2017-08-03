@@ -7,8 +7,14 @@ The IBM Watson™ [Discovery][discovery] Service uses data analysis combined wit
 ### Instantiating and authenticating the service
 Before you can send requests to the service it must be instantiated and credentials must be set.
 ```cs
-Credentials credentials = new Credentials(<username>, <password>, <url>);
-Discovery _discovery = new Discovery(credentials);
+using IBM.Watson.DeveloperCloud.Services.Discovery.v1;
+using IBM.Watson.DeveloperCloud.Utilities;
+
+void Start()
+{
+    Credentials credentials = new Credentials(<username>, <password>, <url>);
+    Discovery _discovery = new Discovery(credentials);
+}
 ```
 
 

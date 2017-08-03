@@ -8,8 +8,14 @@ Ingest documents and query the document corpus.
 ### Instantiating and authenticating the service
 Before you can send requests to the service it must be instantiated and credentials must be set.
 ```cs
-Credentials credentials = new Credentials(<username>, <password>, <url>);
-RetrieveAndRank _retrieveAndRank = new RetrieveAndRank(credentials);
+using IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1;
+using IBM.Watson.DeveloperCloud.Utilities;
+
+void Start()
+{
+    Credentials credentials = new Credentials(<username>, <password>, <url>);
+    RetrieveAndRank _retrieveAndRank = new RetrieveAndRank(credentials);
+}
 ```
 
 

@@ -10,8 +10,14 @@ You can create [custom models][custom_models] with Watson Knowledge Studio that 
 ### Instantiating and authenticating the service
 Before you can send requests to the service it must be instantiated and credentials must be set.
 ```cs
-Credentials credentials = new Credentials(<username>, <password>, <url>);
-NaturalLanguageUnderstanding _naturalLanguageUnderstanding = new NaturalLanguageUnderstanding(credentials);
+using IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v2;
+using IBM.Watson.DeveloperCloud.Utilities;
+
+void Start()
+{
+    Credentials credentials = new Credentials(<username>, <password>, <url>);
+    NaturalLanguageUnderstanding _naturalLanguageUnderstanding = new NaturalLanguageUnderstanding(credentials);
+}
 ```
 
 ### Analyze
