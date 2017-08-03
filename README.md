@@ -53,7 +53,7 @@ To create instances of Watson services and their credentials, follow the steps b
 **WARNING:** You are responsible for securing your own credentials. Any user with your service credentials can access your service instances!
 
 ## Watson Services
-### To get started with the Watson Services in Unity, click on each service below to read through each of their `README.md`'s and their codes.
+To get started with the Watson Services in Unity, click on each service below to read through each of their `README.md`'s and their codes.
 * [Alchemy Language](/Scripts/Services/AlchemyAPI/v1)
 * [Conversation](/Scripts/Services/Conversation/v1)
 * [Discovery](/Scripts/Services/Discovery/v1)
@@ -70,9 +70,9 @@ To create instances of Watson services and their credentials, follow the steps b
 * [Visual Recognition](/Scripts/Services/VisualRecognition/v3)
 
 ## Authentication Tokens
-### You use tokens to write applications that make authenticated requests to IBM Watson™ services without embedding service credentials in every call.
+You use tokens to write applications that make authenticated requests to IBM Watson™ services without embedding service credentials in every call.
 
-### You can write an authentication proxy in IBM® Bluemix® that obtains and returns a token to your client application, which can then use the token to call the service directly. This proxy eliminates the need to channel all service requests through an intermediate server-side application, which is otherwise necessary to avoid exposing your service credentials from your client application.
+You can write an authentication proxy in IBM® Bluemix® that obtains and returns a token to your client application, which can then use the token to call the service directly. This proxy eliminates the need to channel all service requests through an intermediate server-side application, which is otherwise necessary to avoid exposing your service credentials from your client application.
 
 ```
 using IBM.Watson.DeveloperCloud.Services.Conversation.v1;
@@ -88,7 +88,7 @@ void Start()
 }
 ```
 
-### There is a helper class included to obtain tokens from within your Unity application.
+There is a helper class included to obtain tokens from within your Unity application.
 
 ```
 using IBM.Watson.DeveloperCloud.Utilities;
