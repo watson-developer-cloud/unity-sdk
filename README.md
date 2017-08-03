@@ -8,6 +8,8 @@ Use this SDK to build Watson-powered applications in Unity.
 * [Getting the Watson SDK and adding it to Unity](#getting-the-watson-sdk-and-adding-it-to-unity)
   * [Installing the SDK source into your Unity project](#installing-the-sdk-source-into-your-unity-project)
 * [Configuring your service credentials](#configuring-your-service-credentials)
+* [Watson Services](#watson-services)
+* [Authentication Tokens](#authentication-tokens)
 * [Documentation](#documentation)
 * [Questions](#questions)
 * [Open Source @ IBM](#open-source--ibm)
@@ -66,6 +68,45 @@ To create instances of Watson services and their credentials, follow the steps b
 * [Tone Analyzer](/Scripts/Services/ToneAnalyzer/v3)
 * [Tradeoff Analytics](/Scripts/Services/TradeoffAnalytics/v1)
 * [Visual Recognition](/Scripts/Services/VisualRecognition/v3)
+
+## Authentication Tokens
+### You use tokens to write applications that make authenticated requests to IBM Watson™ services without embedding service credentials in every call.
+
+### You can write an authentication proxy in IBM® Bluemix® that obtains and returns a token to your client application, which can then use the token to call the service directly. This proxy eliminates the need to channel all service requests through an intermediate server-side application, which is otherwise necessary to avoid exposing your service credentials from your client application.
+
+```
+using IBM.Watson.DeveloperCloud.Services.Conversation.v1;
+using IBM.Watson.DeveloperCloud.Utilities;
+
+void Start()
+{
+    Credentials credentials = new Credentials(<service-url>)
+    {
+        AuthenticationToken = <authentication-token>
+    };
+    Conversation _conversation = new Conversation(credentials);
+}
+```
+
+### There is a helper class included to obtain tokens from within your Unity application.
+
+```
+using IBM.Watson.DeveloperCloud.Utilities;
+
+AuthenticationToken _authenticationToken;
+
+void Start()
+{
+    if (!Utility.GetToken(OnGetToken, <service-url>, <service-username>, <service-password>))
+        Log.Debug("ExampleGetToken", "Failed to get token.");
+}
+
+private void OnGetToken(AuthenticationToken authenticationToken, string customData)
+{
+    _authenticationToken = authenticationToken;
+    Log.Debug("ExampleGetToken", "created: {0} | time to expiration: {1} minutes | token: {2}", _authenticationToken.Created, _authenticationToken.TimeUntilExpiration, _authenticationToken.Token);
+}
+```
 
 ## Documentation
 To read the documentation you need to have a **chm reader** installed. Open the documentation by selecting API Reference the Watson menu (**Watson -> API Reference**).
