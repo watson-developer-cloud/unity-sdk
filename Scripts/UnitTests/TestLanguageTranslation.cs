@@ -89,7 +89,7 @@
 //        {
 //            Test(translation != null);
 //            if (translation != null && translation.translations.Length > 0)
-//                Log.Status("TestTranslate", "Translation: {0}", translation.translations[0].translation);
+//                Log.Status("TestTranslate", "Translation: {0}", translation.translations[TestCredentialIndex].translation);
 //            m_TranslateTested = true;
 //        }
 

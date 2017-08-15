@@ -32,7 +32,6 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
     {
         private string _username;
         private string _password;
-        private string _url;
         private fsSerializer _serializer = new fsSerializer();
 
         private PersonalityInsights _personalityInsights;
@@ -72,7 +71,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 throw new WatsonException(r.FormattedMessages);
 
             //  Set credentials from imported credntials
-            Credential credential = vcapCredentials.VCAP_SERVICES["personality_insights"][0].Credentials;
+            Credential credential = vcapCredentials.VCAP_SERVICES["personality_insights"][TestCredentialIndex].Credentials;
             _username = credential.Username.ToString();
             _password = credential.Password.ToString();
             _url = credential.Url.ToString();

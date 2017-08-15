@@ -29,7 +29,6 @@ public class TestConversation : UnitTest
 {
     private string _username;
     private string _password;
-    private string _url;
     private string _workspaceId;
     //private string _token = "<authentication-token>";
 
@@ -69,7 +68,7 @@ public class TestConversation : UnitTest
             throw new WatsonException(r.FormattedMessages);
 
         //  Set credentials from imported credntials
-        Credential credential = vcapCredentials.VCAP_SERVICES["conversation"][0].Credentials;
+        Credential credential = vcapCredentials.VCAP_SERVICES["conversation"][TestCredentialIndex].Credentials;
         _username = credential.Username.ToString();
         _password = credential.Password.ToString();
         _url = credential.Url.ToString();
@@ -161,6 +160,8 @@ public class TestConversation : UnitTest
             _context = _tempContext as Dictionary<string, object>;
         else
             Log.Debug("ExampleConversation", "Failed to get context");
+
+        Test(messageResponse != null);
         _waitingForResponse = false;
     }
 }

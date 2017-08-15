@@ -36,7 +36,6 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
     {
         private string _username;
         private string _password;
-        private string _url;
         private fsSerializer _serializer = new fsSerializer();
         //private string _token = "<authentication-token>";
 
@@ -85,7 +84,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 throw new WatsonException(r.FormattedMessages);
 
             //  Set credentials from imported credntials
-            Credential credential = vcapCredentials.VCAP_SERVICES["natural_language_classifier"][0].Credentials;
+            Credential credential = vcapCredentials.VCAP_SERVICES["natural_language_classifier"][TestCredentialIndex].Credentials;
             _username = credential.Username.ToString();
             _password = credential.Password.ToString();
             _url = credential.Url.ToString();

@@ -35,7 +35,6 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
     public class TestVisualRecognition : UnitTest
     {
         private string _apikey;
-        private string _url;
         private fsSerializer _serializer = new fsSerializer();
 
         private VisualRecognition _visualRecognition;
@@ -91,7 +90,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 throw new WatsonException(r.FormattedMessages);
 
             //  Set credentials from imported credntials
-            Credential credential = vcapCredentials.VCAP_SERVICES["visual_recognition"][0].Credentials;
+            Credential credential = vcapCredentials.VCAP_SERVICES["visual_recognition"][TestCredentialIndex].Credentials;
             _apikey = credential.Apikey.ToString();
             _url = credential.Url.ToString();
 

@@ -15,6 +15,9 @@
 *
 */
 
+//  Uncomment to print the current service endpoint.
+#define PRINT_ENDPOINT
+
 using IBM.Watson.DeveloperCloud.Logging;
 using System.Collections;
 using UnityEngine;
@@ -26,9 +29,16 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
     /// </summary>
     public abstract class UnitTest
     {
+        /// <summary>
+        /// Which credential should the tests use. Default is 0.
+        /// </summary>
+        public int TestCredentialIndex = 0;
+
         public bool TestFailed { get; set; }
 
         public abstract IEnumerator RunTest();
+
+        protected string _url;
 
         /// <summary>
         /// Utility function that fails this test if false.
@@ -44,6 +54,9 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             else
             {
                 Log.Status("UnitTest", "UnitTest {0} has passed.", GetType().Name);
+#if PRINT_ENDPOINT
+                Log.Status("UnitTest", "endpoint: {0}", _url);
+#endif
             }
         }
 

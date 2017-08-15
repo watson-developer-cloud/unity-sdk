@@ -30,7 +30,6 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
     public class TestAlchemyAPI : UnitTest
     {
         private string _apikey;
-        private string _url;
         private fsSerializer _serializer = new fsSerializer();
 
         private AlchemyAPI _alchemyAPI;
@@ -134,7 +133,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 throw new WatsonException(r.FormattedMessages);
 
             //  Set credentials from imported credntials
-            Credential credential = vcapCredentials.VCAP_SERVICES["alchemy_api"][0].Credentials;
+            Credential credential = vcapCredentials.VCAP_SERVICES["alchemy_api"][TestCredentialIndex].Credentials;
             _apikey = credential.Apikey.ToString();
             _url = credential.Url.ToString();
 

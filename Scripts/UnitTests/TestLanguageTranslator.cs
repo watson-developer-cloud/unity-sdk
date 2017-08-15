@@ -31,7 +31,6 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private string _pharseToTranslate = "Hello, welcome to IBM Watson!";
         private string _username;
         private string _password;
-        private string _url;
         //private string _token = "<authentication-token>";
         private fsSerializer _serializer = new fsSerializer();
 
@@ -76,7 +75,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 throw new WatsonException(r.FormattedMessages);
 
             //  Set credentials from imported credntials
-            Credential credential = vcapCredentials.VCAP_SERVICES["language_translator"][0].Credentials;
+            Credential credential = vcapCredentials.VCAP_SERVICES["language_translator"][TestCredentialIndex].Credentials;
             _username = credential.Username.ToString();
             _password = credential.Password.ToString();
             _url = credential.Url.ToString();

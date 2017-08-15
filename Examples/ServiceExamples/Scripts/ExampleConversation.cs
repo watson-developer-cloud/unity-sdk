@@ -69,7 +69,7 @@ public class ExampleConversation : MonoBehaviour
             throw new WatsonException(r.FormattedMessages);
 
         //  Set credentials from imported credntials
-        Credential credential = vcapCredentials.VCAP_SERVICES["conversation"][0].Credentials;
+        Credential credential = vcapCredentials.VCAP_SERVICES["conversation"][1].Credentials;
         _username = credential.Username.ToString();
         _password = credential.Password.ToString();
         _url = credential.Url.ToString();
