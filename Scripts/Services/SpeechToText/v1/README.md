@@ -68,6 +68,40 @@ private void HandleGetModel(Model result, string customData)
 ```
 
 ### Recognize audio
+#### Accessing the device microphone and sending data to the Speech to Text instance
+You can access the microphone of a device using Unity's Microphone class.
+
+```cs
+_speechToText.StartListening(OnRecognize);
+_recording = Microphone.Start(<device-name>, <loop>, <length-seconds>, <frequency>);
+```
+
+AudioData can be created using the resulting AudioClip
+```cs
+int midPoint = _recording.samples / 2;
+samples = new float[midPoint];
+_recording.GetData(samples, 0);
+
+AudioData record = new AudioData();
+record.MaxLevel = Mathf.Max(samples);
+record.Clip = AudioClip.Create("Recording", midPoint, _recording.channels, _recordingHZ, false);
+record.Clip.SetData(samples, 0);
+```
+
+The AudioData can be sent to the Speech to Text service and handled by the OnRecognize callback
+```cs
+ _speechToText.OnListen(record);
+```
+
+```cs
+private void OnRecognize(SpeechRecognitionEvent result)
+{
+    //  do something
+}
+```
+
+Please see `ExampleStreaming` scene for an example.
+
 #### Streaming mode
 
 For requests to transcribe live audio as it becomes available or to transcribe multiple audio files with multipart requests, you must set the Transfer-Encoding header to chunked to use streaming mode. In streaming mode, the server closes the connection (status code 408) if the service receives no data chunk for 30 seconds and the service has no audio to transcribe for 30 seconds. The server also closes the connection (status code 400) if no speech is detected for inactivity_timeout seconds of audio (not processing time); use the inactivity_timeout parameter to change the default of 30 seconds. An example of streaming from the Unity microphone is provided in the Examples directory.
@@ -90,8 +124,6 @@ An example of the multipart metadata for a pair of FLAC files follows. This firs
 ```
 metadata="{\"part_content_type\":\"audio/flac\",\"data_parts_count\":2,\"continuous\":true,\"inactivity_timeout\"=-1}"
 ```
-
-Note about the Try It Out feature: The Try it out! button is not supported for use with the the POST /v1/recognize method. For examples of calls to the method, see the [Speech to Text API reference][speech-to-text].
 
 ```cs
 private void Recognize()
