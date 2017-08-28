@@ -89,7 +89,14 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
         #region Constructor
         public Conversation(Credentials credentials)
         {
-            Credentials = credentials;
+            if (credentials.HasCredentials() || credentials.HasAuthorizationToken())
+            {
+                Credentials = credentials;
+            }
+            else
+            {
+                throw new WatsonException("Please provide a username and password or authorization token to use the Conversation service.");
+            }
         }
         #endregion
 

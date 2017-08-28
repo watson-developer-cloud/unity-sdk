@@ -85,7 +85,14 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3
         #region Constructor
         public PersonalityInsights(Credentials credentials)
         {
-            Credentials = credentials;
+            if (credentials.HasCredentials() || credentials.HasAuthorizationToken())
+            {
+                Credentials = credentials;
+            }
+            else
+            {
+                throw new WatsonException("Please provide a username and password or authorization token to use the Personality Insights service.");
+            }
         }
         #endregion
 

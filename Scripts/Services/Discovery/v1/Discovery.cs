@@ -100,7 +100,14 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         #region Constructor
         public Discovery(Credentials credentials)
         {
-            Credentials = credentials;
+            if (credentials.HasCredentials() || credentials.HasAuthorizationToken())
+            {
+                Credentials = credentials;
+            }
+            else
+            {
+                throw new WatsonException("Please provide a username and password or authorization token to use the Discovery service.");
+            }
         }
         #endregion
 

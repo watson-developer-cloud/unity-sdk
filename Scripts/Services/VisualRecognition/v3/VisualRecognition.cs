@@ -219,7 +219,14 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         #region Constructor
         public VisualRecognition(Credentials credentials)
         {
-            Credentials = credentials;
+            if (credentials.HasApiKey())
+            {
+                Credentials = credentials;
+            }
+            else
+            {
+                throw new WatsonException("Please provide an apikey to use the Visual Recognition service.");
+            }
         }
         #endregion
 

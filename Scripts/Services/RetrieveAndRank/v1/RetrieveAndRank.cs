@@ -94,7 +94,14 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         #region Constructor
         public RetrieveAndRank(Credentials credentials)
         {
-            Credentials = credentials;
+            if (credentials.HasCredentials() || credentials.HasAuthorizationToken())
+            {
+                Credentials = credentials;
+            }
+            else
+            {
+                throw new WatsonException("Please provide a username and password or authorization token to use the Retrieve and Rank service.");
+            }
         }
         #endregion
 

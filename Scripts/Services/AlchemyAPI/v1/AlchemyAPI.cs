@@ -84,7 +84,14 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         #region Constructor
         public AlchemyAPI(Credentials credentials)
         {
-            Credentials = credentials;
+            if (credentials.HasApiKey())
+            {
+                Credentials = credentials;
+            }
+            else
+            {
+                throw new WatsonException("Please provide an apikey to use the Alchemy API.");
+            }
         }
         #endregion
 
