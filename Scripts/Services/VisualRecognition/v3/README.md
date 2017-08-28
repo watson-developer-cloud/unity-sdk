@@ -12,7 +12,7 @@ using IBM.Watson.DeveloperCloud.Utilities;
 
 void Start()
 {
-    Credentials credentials = new Credentials(<username>, <password>, <url>);
+    Credentials credentials = new Credentials(<apikey>, <url>);
     VisualRecognition _visualRecognition = new VisualRecognition(credentials);
 }
 ```

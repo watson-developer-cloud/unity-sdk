@@ -21,7 +21,7 @@ Ensure that you have the following prerequisites:
 
 * An IBM Bluemix account. If you don't have one, [sign up][bluemix_registration].
 * [Unity][get_unity]. You can use the **free** Personal edition.
-* Change the build settings in Unity (**File > Build Settings**) to any platform except for web player. The Watson Developer Cloud Unity SDK does not support Unity Web Player.
+* Change the build settings in Unity (**File > Build Settings**) to any platform except for web player/Web GL. The Watson Developer Cloud Unity SDK does not support Unity Web Player.
 * A chm reader if you would like to access SDK Documentation (optional).
 
 ## Getting the Watson SDK and adding it to Unity
@@ -50,7 +50,36 @@ To create instances of Watson services and their credentials, follow the steps b
     5. Click **View credentials** to access your credentials.
 1. Your service credentials can be used to instantiate Watson Services within your application. Most services also support tokens which you can instantiate the service with as well.
 
+The credentials for each service contain either a `username`, `password` and endpoint `url` **or** an `apikey` and endpoint `url`.
+
 **WARNING:** You are responsible for securing your own credentials. Any user with your service credentials can access your service instances!
+
+## Authentication
+Before you can use a service, it must be authenticated with the service instance's `username`, `password` and `url`.
+
+```cs
+using IBM.Watson.DeveloperCloud.Services.Conversation.v1;
+using IBM.Watson.DeveloperCloud.Utilities;
+
+void Start()
+{
+    Credentials credentials = new Credentials(<username>, <password>, <url>);
+    Conversation _conversation = new Conversation(credentials);
+}
+```
+
+For services that authenticate using an apikey, you can instantiate the service instance using a `Credential` object with an `apikey` and `url`.
+
+```cs
+using IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3;
+using IBM.Watson.DeveloperCloud.Utilities;
+
+void Start()
+{
+    Credentials credentials = new Credentials(<apikey>, <url>);
+    VisualRecognition _visualRecognition = new VisualRecognition(credentials);
+}
+```
 
 ## Watson Services
 To get started with the Watson Services in Unity, click on each service below to read through each of their `README.md`'s and their codes.
