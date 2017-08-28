@@ -28,7 +28,7 @@ Ensure that you have the following prerequisites:
 You can get the latest SDK release by clicking [here][latest_release].
 
 ### Installing the SDK source into your Unity project
-Move the **`unity-sdk`** directory into the Assets directory of the Unity project. **Rename the SDK directory from `unity-sdk` to `Watson`.**
+Move the **`unity-sdk`** directory into the **`Assets`** directory of your Unity project. _Optional: rename the SDK directory from `unity-sdk` to `Watson`_.
 
 ## Configuring your service credentials
 To create instances of Watson services and their credentials, follow the steps below.
