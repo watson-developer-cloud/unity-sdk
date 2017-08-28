@@ -91,7 +91,7 @@ namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
             }
             else
             {
-                throw new WatsonException("Please provide a username and password or authorization token to use the Tone Analyzer service.");
+                throw new WatsonException("Please provide a username and password or authorization token to use the Tone Analyzer service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
             }
         }
         #endregion

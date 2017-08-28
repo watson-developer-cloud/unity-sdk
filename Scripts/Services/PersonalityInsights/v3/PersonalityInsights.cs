@@ -91,7 +91,7 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3
             }
             else
             {
-                throw new WatsonException("Please provide a username and password or authorization token to use the Personality Insights service.");
+                throw new WatsonException("Please provide a username and password or authorization token to use the Personality Insights service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
             }
         }
         #endregion

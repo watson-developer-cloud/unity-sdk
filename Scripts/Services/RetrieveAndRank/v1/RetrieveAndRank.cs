@@ -100,7 +100,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             }
             else
             {
-                throw new WatsonException("Please provide a username and password or authorization token to use the Retrieve and Rank service.");
+                throw new WatsonException("Please provide a username and password or authorization token to use the Retrieve and Rank service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
             }
         }
         #endregion

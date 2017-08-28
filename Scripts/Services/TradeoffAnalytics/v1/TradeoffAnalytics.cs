@@ -77,7 +77,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TradeoffAnalytics.v1
             }
             else
             {
-                throw new WatsonException("Please provide a username and password or authorization token to use the Tradeoff Analytics service.");
+                throw new WatsonException("Please provide a username and password or authorization token to use the Tradeoff Analytics service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
             }
         }
         #endregion

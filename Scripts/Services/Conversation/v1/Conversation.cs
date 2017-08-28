@@ -95,7 +95,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
             }
             else
             {
-                throw new WatsonException("Please provide a username and password or authorization token to use the Conversation service.");
+                throw new WatsonException("Please provide a username and password or authorization token to use the Conversation service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
             }
         }
         #endregion

@@ -104,7 +104,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
             }
             else
             {
-                throw new WatsonException("Please provide a username and password or authorization token to use the Language Translation service.");
+                throw new WatsonException("Please provide a username and password or authorization token to use the Language Translation service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
             }
         }
         #endregion

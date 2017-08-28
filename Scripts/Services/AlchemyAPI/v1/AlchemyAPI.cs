@@ -90,7 +90,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             }
             else
             {
-                throw new WatsonException("Please provide an apikey to use the Alchemy API.");
+                throw new WatsonException("Please provide an apikey to use the Alchemy API. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
             }
         }
         #endregion

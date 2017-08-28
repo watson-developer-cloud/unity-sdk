@@ -106,7 +106,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             else
             {
-                throw new WatsonException("Please provide a username and password or authorization token to use the Discovery service.");
+                throw new WatsonException("Please provide a username and password or authorization token to use the Discovery service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
             }
         }
         #endregion

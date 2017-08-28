@@ -76,7 +76,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
             }
             else
             {
-                throw new WatsonException("Please provide a username and password or authorization token to use the Natural Language Classifier service.");
+                throw new WatsonException("Please provide a username and password or authorization token to use the Natural Language Classifier service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
             }
         }
         #endregion

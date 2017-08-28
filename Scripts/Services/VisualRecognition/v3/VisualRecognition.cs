@@ -225,7 +225,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             }
             else
             {
-                throw new WatsonException("Please provide an apikey to use the Visual Recognition service.");
+                throw new WatsonException("Please provide an apikey to use the Visual Recognition service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
             }
         }
         #endregion
