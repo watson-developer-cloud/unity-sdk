@@ -20,9 +20,6 @@ using System.Collections;
 using IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
-using System.IO;
-using FullSerializer;
-using System;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -32,9 +29,7 @@ public class ExampleRetrieveAndRank : MonoBehaviour
     private string _username = null;
     private string _password = null;
     private string _url = null;
-    //private fsSerializer _serializer = new fsSerializer();
-    //private string _token = "<authentication-token>";
-
+    
     private RetrieveAndRank _retrieveAndRank;
 
     private string _testClusterConfigName;
@@ -85,43 +80,9 @@ public class ExampleRetrieveAndRank : MonoBehaviour
         _testQuery = "What is the basic mechanisim of the transonic aileron buzz";
         _collectionNameToDelete = "TestCollectionToDelete";
         _createdRankerName = "RankerToDelete";
-        
-        //VcapCredentials vcapCredentials = new VcapCredentials();
-        //fsData data = null;
-
-        ////  Get credentials from a credential file defined in environmental variables in the VCAP_SERVICES format. 
-        ////  See https://www.ibm.com/watson/developercloud/doc/common/getting-started-variables.html.
-        //var environmentalVariable = Environment.GetEnvironmentVariable("VCAP_SERVICES");
-        //var fileContent = File.ReadAllText(environmentalVariable);
-
-        ////  Add in a parent object because Unity does not like to deserialize root level collection types.
-        //fileContent = Utility.AddTopLevelObjectToJson(fileContent, "VCAP_SERVICES");
-
-        ////  Convert json to fsResult
-        //fsResult r = fsJsonParser.Parse(fileContent, out data);
-        //if (!r.Succeeded)
-        //    throw new WatsonException(r.FormattedMessages);
-
-        ////  Convert fsResult to VcapCredentials
-        //object obj = vcapCredentials;
-        //r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-        //if (!r.Succeeded)
-        //    throw new WatsonException(r.FormattedMessages);
-
-        ////  Set credentials from imported credntials
-        //Credential credential = vcapCredentials.VCAP_SERVICES["retrieve_and_rank"][0].Credentials;
-        //_username = credential.Username.ToString();
-        //_password = credential.Password.ToString();
-        //_url = credential.Url.ToString();
 
         //  Create credential and instantiate service
         Credentials credentials = new Credentials(_username, _password, _url);
-
-        //  Or authenticate using token
-        //Credentials credentials = new Credentials(_url)
-        //{
-        //    AuthenticationToken = _token
-        //};
 
         _retrieveAndRank = new RetrieveAndRank(credentials);
 
@@ -343,13 +304,6 @@ public class ExampleRetrieveAndRank : MonoBehaviour
         _getClusterConfigTested = true;
         Invoke("ReadyToContinue", _waitTime);
     }
-
-    //private void OnSaveConfig(bool success, string data)
-    //{
-    //    Log.Debug("\tExampleRetrieveAndRank", "Retrieve and rank - Save config response: {0}", data);
-    //    _saveConfigTested = true;
-    //    Invoke("ReadyToContinue", _waitTime);
-    //}
 
     private void OnUploadClusterConfig(UploadResponse resp, string data)
     {

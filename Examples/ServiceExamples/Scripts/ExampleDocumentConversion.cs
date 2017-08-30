@@ -19,9 +19,6 @@ using UnityEngine;
 using IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
-using FullSerializer;
-using System;
-using System.IO;
 using System.Collections;
 
 public class ExampleDocumentConversion : MonoBehaviour
@@ -30,9 +27,7 @@ public class ExampleDocumentConversion : MonoBehaviour
     private string _username = null;
     private string _password = null;
     private string _url = null;
-    //private fsSerializer _serializer = new fsSerializer();
-    //private string _token = "<authentication-token>";
-
+    
     private string _examplePath;
     private string _conversionTarget = ConversionTarget.NormalizedHtml;
     private bool _convertDocumentTested = false;
@@ -41,42 +36,8 @@ public class ExampleDocumentConversion : MonoBehaviour
     {
         LogSystem.InstallDefaultReactors();
 
-        //VcapCredentials vcapCredentials = new VcapCredentials();
-        //fsData data = null;
-
-        ////  Get credentials from a credential file defined in environmental variables in the VCAP_SERVICES format. 
-        ////  See https://www.ibm.com/watson/developercloud/doc/common/getting-started-variables.html.
-        //var environmentalVariable = Environment.GetEnvironmentVariable("VCAP_SERVICES");
-        //var fileContent = File.ReadAllText(environmentalVariable);
-
-        ////  Add in a parent object because Unity does not like to deserialize root level collection types.
-        //fileContent = Utility.AddTopLevelObjectToJson(fileContent, "VCAP_SERVICES");
-
-        ////  Convert json to fsResult
-        //fsResult r = fsJsonParser.Parse(fileContent, out data);
-        //if (!r.Succeeded)
-        //    throw new WatsonException(r.FormattedMessages);
-
-        ////  Convert fsResult to VcapCredentials
-        //object obj = vcapCredentials;
-        //r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-        //if (!r.Succeeded)
-        //    throw new WatsonException(r.FormattedMessages);
-
-        ////  Set credentials from imported credntials
-        //Credential credential = vcapCredentials.VCAP_SERVICES["document_conversion"][0].Credentials;
-        //_username = credential.Username.ToString();
-        //_password = credential.Password.ToString();
-        //_url = credential.Url.ToString();
-
         //  Create credential and instantiate service
         Credentials credentials = new Credentials(_username, _password, _url);
-
-        //  Or authenticate using token
-        //Credentials credentials = new Credentials(_url)
-        //{
-        //    AuthenticationToken = _token
-        //};
 
         _documentConversion = new DocumentConversion(credentials);
         _examplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/watson_beats_jeopardy.html";

@@ -24,16 +24,12 @@ using System.Collections;
 using IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
-using FullSerializer;
-using System;
-using System.IO;
 using System.Collections.Generic;
 
 public class ExampleVisualRecognition : MonoBehaviour
 {
     private string _apikey = null;
     private string _url = null;
-    //private fsSerializer _serializer = new fsSerializer();
 
     private VisualRecognition _visualRecognition;
     private string _visualRecognitionVersionDate = "2016-05-20";
@@ -64,33 +60,6 @@ public class ExampleVisualRecognition : MonoBehaviour
     void Start()
     {
         LogSystem.InstallDefaultReactors();
-
-        //VcapCredentials vcapCredentials = new VcapCredentials();
-        //fsData data = null;
-
-        ////  Get credentials from a credential file defined in environmental variables in the VCAP_SERVICES format. 
-        ////  See https://www.ibm.com/watson/developercloud/doc/common/getting-started-variables.html.
-        //var environmentalVariable = Environment.GetEnvironmentVariable("VCAP_SERVICES");
-        //var fileContent = File.ReadAllText(environmentalVariable);
-
-        ////  Add in a parent object because Unity does not like to deserialize root level collection types.
-        //fileContent = Utility.AddTopLevelObjectToJson(fileContent, "VCAP_SERVICES");
-
-        ////  Convert json to fsResult
-        //fsResult r = fsJsonParser.Parse(fileContent, out data);
-        //if (!r.Succeeded)
-        //    throw new WatsonException(r.FormattedMessages);
-
-        ////  Convert fsResult to VcapCredentials
-        //object obj = vcapCredentials;
-        //r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-        //if (!r.Succeeded)
-        //    throw new WatsonException(r.FormattedMessages);
-
-        ////  Set credentials from imported credntials
-        //Credential credential = vcapCredentials.VCAP_SERVICES["visual_recognition"][0].Credentials;
-        //_apikey = credential.Apikey.ToString();
-        //_url = credential.Url.ToString();
 
         //  Create credential and instantiate service
         Credentials credentials = new Credentials(_apikey, _url);

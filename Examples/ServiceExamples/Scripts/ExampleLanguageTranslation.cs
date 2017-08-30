@@ -21,13 +21,20 @@ using IBM.Watson.DeveloperCloud.Utilities;
 
 public class ExampleLanguageTranslation : MonoBehaviour
 {
-    private LanguageTranslation _translate = new LanguageTranslation(new Credentials());
+    private LanguageTranslation _languageTranslation;
+    private string _username = null;
+    private string _password = null;
+    private string _url = null;
     private string _pharseToTranslate = "How do I get to the disco?";
 
     void Start()
     {
+        //  Create credential and instantiate service
+        Credentials credentials = new Credentials(_username, _password, _url);
+        _languageTranslation = new LanguageTranslation(credentials);
+
         Debug.Log("English Phrase to translate: " + _pharseToTranslate);
-        _translate.GetTranslation(_pharseToTranslate, "en", "es", OnGetTranslation);
+        _languageTranslation.GetTranslation(_pharseToTranslate, "en", "es", OnGetTranslation);
     }
 
     private void OnGetTranslation(Translations translation, string customData)
