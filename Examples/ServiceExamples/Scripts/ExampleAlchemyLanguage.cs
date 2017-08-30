@@ -26,9 +26,9 @@ using System.IO;
 
 public class ExampleAlchemyLanguage : MonoBehaviour
 {
-    private string _apikey;
-    private string _url;
-    private fsSerializer _serializer = new fsSerializer();
+    private string _apikey = null;
+    private string _url = null;
+    //private fsSerializer _serializer = new fsSerializer();
 
     private AlchemyAPI _alchemyAPI;
 

@@ -27,10 +27,10 @@ using System.Collections.Generic;
 
 public class ExampleConversation : MonoBehaviour
 {
-    private string _username;
-    private string _password;
-    private string _url;
-    private string _workspaceId;
+    private string _username = null;
+    private string _password = null;
+    private string _url = null;
+    private string _workspaceId = null;
     //private string _token = "<authentication-token>";
 
     private Conversation _conversation;

@@ -27,11 +27,11 @@ using System;
 
 public class ExampleAlchemyDataNews : MonoBehaviour
 {
-    private string _apikey;
-    private string _url;
-    private fsSerializer _serializer = new fsSerializer();
+    private string _apikey = null;
+    private string _url = null;
+    //private fsSerializer _serializer = new fsSerializer();
 
-    private AlchemyAPI _alchemyAPI;
+    private AlchemyAPI _alchemyAPI = null;
 
     private bool _getNewsTested = false;
 

@@ -29,8 +29,8 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 {
     public class TestConversation : UnitTest
     {
-        private string _username;
-        private string _password;
+        private string _username = null;
+        private string _password = null;
         private string _workspaceId;
         //private string _token = "<authentication-token>";
 

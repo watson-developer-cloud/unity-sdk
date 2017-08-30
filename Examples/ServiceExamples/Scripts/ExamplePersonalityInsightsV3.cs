@@ -26,10 +26,10 @@ using System.Collections;
 
 public class ExamplePersonalityInsightsV3 : MonoBehaviour
 {
-    private string _username;
-    private string _password;
-    private string _url;
-    private fsSerializer _serializer = new fsSerializer();
+    private string _username = null;
+    private string _password = null;
+    private string _url = null;
+    //private fsSerializer _serializer = new fsSerializer();
 
     private PersonalityInsights _personalityInsights;
     private string _personalityInsightsVersionDate = "2017-05-26";

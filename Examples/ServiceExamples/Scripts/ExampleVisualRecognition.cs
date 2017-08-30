@@ -31,9 +31,9 @@ using System.Collections.Generic;
 
 public class ExampleVisualRecognition : MonoBehaviour
 {
-    private string _apikey;
-    private string _url;
-    private fsSerializer _serializer = new fsSerializer();
+    private string _apikey = null;
+    private string _url = null;
+    //private fsSerializer _serializer = new fsSerializer();
 
     private VisualRecognition _visualRecognition;
     private string _visualRecognitionVersionDate = "2016-05-20";

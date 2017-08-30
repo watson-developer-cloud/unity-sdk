@@ -30,8 +30,8 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 {
     public class TestSpeechToText : UnitTest
     {
-        private string _username;
-        private string _password;
+        private string _username = null;
+        private string _password = null;
         private fsSerializer _serializer = new fsSerializer();
         //private string _token = "<authentication-token>";
 

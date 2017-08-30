@@ -26,9 +26,9 @@ using UnityEngine;
 
 public class ExampleGetToken : MonoBehaviour
 {
-    private string _username;
-    private string _password;
-    private string _url;
+    private string _username = null;
+    private string _password = null;
+    private string _url = null;
     private string _workspaceId;
     private fsSerializer _serializer = new fsSerializer();
 

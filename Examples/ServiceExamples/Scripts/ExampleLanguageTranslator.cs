@@ -28,11 +28,11 @@ public class ExampleLanguageTranslator : MonoBehaviour
 {
     private string _pharseToTranslate = "Hello, welcome to IBM Watson!";
     private string _pharseToIdentify = "Hola, donde esta la bibliteca?";
-    private string _username;
-    private string _password;
-    private string _url;
+    private string _username = null;
+    private string _password = null;
+    private string _url = null;
     //private string _token = "<authentication-token>";
-    private fsSerializer _serializer = new fsSerializer();
+    //private fsSerializer _serializer = new fsSerializer();
 
     private LanguageTranslator _languageTranslator;
     private string _baseModelName = "en-es";
