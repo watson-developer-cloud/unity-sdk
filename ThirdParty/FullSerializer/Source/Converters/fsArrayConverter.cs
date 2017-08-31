@@ -16,8 +16,8 @@ namespace FullSerializer.Internal {
         }
 
         public override fsResult TrySerialize(object instance, out fsData serialized, Type storageType) {
-            // note: IList[index] is **significantly** faster than Array.Get, so make sure we use
-            //       that instead.
+            // note: IList[index] is **significantly** faster than Array.Get, so
+            //       make sure we use that instead.
 
             IList arr = (Array)instance;
             Type elementType = storageType.GetElementType();
@@ -74,7 +74,7 @@ namespace FullSerializer.Internal {
         }
 
         public override object CreateInstance(fsData data, Type storageType) {
-            return fsMetaType.Get(storageType).CreateInstance();
+            return fsMetaType.Get(Serializer.Config, storageType).CreateInstance();
         }
     }
 }

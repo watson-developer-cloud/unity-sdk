@@ -43,6 +43,7 @@ namespace FullSerializer
 
                     if (performAot)
                     {
+#if UNITY_IOS
                         string compilation = null;
                         if (fsAotCompilationManager.TryToPerformAotCompilation(t, out compilation))
                         {
@@ -54,6 +55,7 @@ namespace FullSerializer
                         {
                             Debug.Log("Failed AOT compilation for " + t.CSharpName(true));
                         }
+#endif
                     }
                 }
             }

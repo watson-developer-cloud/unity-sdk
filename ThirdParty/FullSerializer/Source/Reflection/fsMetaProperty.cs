@@ -3,27 +3,45 @@ using System.Reflection;
 
 namespace FullSerializer.Internal {
     /// <summary>
-    /// A property or field on a MetaType.
+    /// A property or field on a MetaType. This unifies the FieldInfo and
+    /// PropertyInfo classes.
     /// </summary>
     public class fsMetaProperty {
-        internal fsMetaProperty(FieldInfo field) {
+        internal fsMetaProperty(fsConfig config, FieldInfo field) {
             _memberInfo = field;
             StorageType = field.FieldType;
-            JsonName = GetJsonName(field);
             MemberName = field.Name;
             IsPublic = field.IsPublic;
+            IsReadOnly = field.IsInitOnly;
             CanRead = true;
             CanWrite = true;
+
+            CommonInitialize(config);
         }
 
-        internal fsMetaProperty(PropertyInfo property) {
+        internal fsMetaProperty(fsConfig config, PropertyInfo property) {
             _memberInfo = property;
             StorageType = property.PropertyType;
-            JsonName = GetJsonName(property);
             MemberName = property.Name;
-            IsPublic = (property.GetGetMethod() != null && property.GetGetMethod().IsPublic) && (property.GetSetMethod() != null && property.GetSetMethod().IsPublic);
+            IsPublic = (property.GetGetMethod() != null && property.GetGetMethod().IsPublic) &&
+                       (property.GetSetMethod() != null && property.GetSetMethod().IsPublic);
+            IsReadOnly = false;
             CanRead = property.CanRead;
             CanWrite = property.CanWrite;
+
+            CommonInitialize(config);
+        }
+
+        private void CommonInitialize(fsConfig config) {
+            var attr = fsPortableReflection.GetAttribute<fsPropertyAttribute>(_memberInfo);
+            if (attr != null) {
+                JsonName = attr.Name;
+                OverrideConverterType = attr.Converter;
+            }
+
+            if (string.IsNullOrEmpty(JsonName)) {
+                JsonName = config.GetJsonNameFromMemberName(MemberName, _memberInfo);
+            }
         }
 
         /// <summary>
@@ -32,10 +50,21 @@ namespace FullSerializer.Internal {
         private MemberInfo _memberInfo;
 
         /// <summary>
-        /// The type of value that is stored inside of the property. For example, for an int field,
-        /// StorageType will be typeof(int).
+        /// The type of value that is stored inside of the property. For example,
+        /// for an int field, StorageType will be typeof(int).
         /// </summary>
         public Type StorageType {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// A custom fsBaseConverter instance to use for this field/property, if
+        /// requested. This will be null if the default converter selection
+        /// algorithm should be used. This is specified using the [fsObject]
+        /// annotation with the Converter field.
+        /// </summary>
+        public Type OverrideConverterType {
             get;
             private set;
         }
@@ -81,8 +110,16 @@ namespace FullSerializer.Internal {
         }
 
         /// <summary>
-        /// Writes a value to the property that this MetaProperty represents, using given object
-        /// instance as the context.
+        /// Is this type readonly? We can modify readonly properties using
+        /// reflection, but not using generated C#.
+        /// </summary>
+        public bool IsReadOnly {
+            get; private set;
+        }
+
+        /// <summary>
+        /// Writes a value to the property that this MetaProperty represents,
+        /// using given object instance as the context.
         /// </summary>
         public void Write(object context, object value) {
             FieldInfo field = _memberInfo as FieldInfo;
@@ -91,7 +128,6 @@ namespace FullSerializer.Internal {
             if (field != null) {
                 field.SetValue(context, value);
             }
-
             else if (property != null) {
                 MethodInfo setMethod = property.GetSetMethod(/*nonPublic:*/ true);
                 if (setMethod != null) {
@@ -101,29 +137,16 @@ namespace FullSerializer.Internal {
         }
 
         /// <summary>
-        /// Reads a value from the property that this MetaProperty represents, using the given
-        /// object instance as the context.
+        /// Reads a value from the property that this MetaProperty represents,
+        /// using the given object instance as the context.
         /// </summary>
         public object Read(object context) {
             if (_memberInfo is PropertyInfo) {
                 return ((PropertyInfo)_memberInfo).GetValue(context, new object[] { });
             }
-
             else {
                 return ((FieldInfo)_memberInfo).GetValue(context);
             }
-        }
-
-        /// <summary>
-        /// Returns the name the given member wants to use for JSON serialization.
-        /// </summary>
-        private static string GetJsonName(MemberInfo member) {
-            var attr = fsPortableReflection.GetAttribute<fsPropertyAttribute>(member);
-            if (attr != null && string.IsNullOrEmpty(attr.Name) == false) {
-                return attr.Name;
-            }
-
-            return member.Name;
         }
     }
 }

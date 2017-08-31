@@ -2,15 +2,16 @@
 
 namespace FullSerializer {
     /// <summary>
-    /// This allows you to forward serialization of an object to one of its members. For example,
-    /// 
+    /// This allows you to forward serialization of an object to one of its
+    /// members. For example,
+    ///
     /// [fsForward("Values")]
     /// struct Wrapper {
-    ///   public int[] Values;
+    ///     public int[] Values;
     /// }
-    /// 
-    /// Then `Wrapper` will be serialized into a JSON array of integers. It will be as if `Wrapper`
-    /// doesn't exist.
+    ///
+    /// Then `Wrapper` will be serialized into a JSON array of integers. It will
+    /// be as if `Wrapper` doesn't exist.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface | AttributeTargets.Struct)]
     public sealed class fsForwardAttribute : Attribute {
@@ -20,9 +21,12 @@ namespace FullSerializer {
         public string MemberName;
 
         /// <summary>
-        /// Forward object serialization to an instance member. See class comment.
+        /// Forward object serialization to an instance member. See class
+        /// comment.
         /// </summary>
-        /// <param name="memberName">The name of the member that we should serialize this object as.</param>
+        /// <param name="memberName">
+        /// The name of the member that we should serialize this object as.
+        /// </param>
         public fsForwardAttribute(string memberName) {
             MemberName = memberName;
         }
@@ -42,7 +46,7 @@ namespace FullSerializer.Internal {
         }
 
         private fsResult GetProperty(object instance, out fsMetaProperty property) {
-            var properties = fsMetaType.Get(instance.GetType()).Properties;
+            var properties = fsMetaType.Get(Serializer.Config, instance.GetType()).Properties;
             for (int i = 0; i < properties.Length; ++i) {
                 if (properties[i].MemberName == _memberName) {
                     property = properties[i];
@@ -80,7 +84,7 @@ namespace FullSerializer.Internal {
         }
 
         public override object CreateInstance(fsData data, Type storageType) {
-            return fsMetaType.Get(storageType).CreateInstance();
+            return fsMetaType.Get(Serializer.Config, storageType).CreateInstance();
         }
     }
 }

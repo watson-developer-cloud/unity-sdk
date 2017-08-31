@@ -18,7 +18,8 @@ namespace FullSerializer {
         /// Escapes a string.
         /// </summary>
         private static string EscapeString(string str) {
-            // Escaping a string is pretty allocation heavy, so we try hard to not do it.
+            // Escaping a string is pretty allocation heavy, so we try hard to
+            // not do it.
 
             bool needsEscape = false;
             for (int i = 0; i < str.Length; ++i) {
@@ -55,7 +56,6 @@ namespace FullSerializer {
                 return str;
             }
 
-
             StringBuilder result = new StringBuilder();
 
             for (int i = 0; i < str.Length; ++i) {
@@ -87,7 +87,7 @@ namespace FullSerializer {
             return result.ToString();
         }
 
-        private static void BuildCompressedString(fsData data, TextWriter stream, bool dontAddIfNull = false) {
+        private static void BuildCompressedString(fsData data, TextWriter stream) {
             switch (data.Type) {
                 case fsDataType.Null:
                     stream.Write("null");
@@ -117,9 +117,6 @@ namespace FullSerializer {
                         stream.Write('{');
                         bool comma = false;
                         foreach (var entry in data.AsDictionary) {
-                            if (dontAddIfNull && (entry.Value.Type == fsDataType.Null || (entry.Value.Type == fsDataType.String && string.IsNullOrEmpty(entry.Value.AsString))))
-                                continue;
-
                             if (comma) stream.Write(',');
                             comma = true;
                             stream.Write('"');
@@ -144,7 +141,7 @@ namespace FullSerializer {
                         break;
                     }
             }
-        } 
+        }
 
         /// <summary>
         /// Formats this data into the given builder.
@@ -167,7 +164,6 @@ namespace FullSerializer {
                 case fsDataType.Int64:
                     stream.Write(data.AsInt64);
                     break;
-
 
                 case fsDataType.String:
                     stream.Write('"');
@@ -199,11 +195,11 @@ namespace FullSerializer {
                     }
 
                 case fsDataType.Array:
-                    // special case for empty lists; we don't put an empty line between the brackets
+                    // special case for empty lists; we don't put an empty line
+                    // between the brackets
                     if (data.AsList.Count == 0) {
                         stream.Write("[]");
                     }
-
                     else {
                         bool comma = false;
 
@@ -258,10 +254,10 @@ namespace FullSerializer {
         /// <summary>
         /// Returns the data in a relatively compressed JSON format.
         /// </summary>
-        public static string CompressedJson(fsData data, bool dontAddIfNull = false) {
+        public static string CompressedJson(fsData data) {
             var sb = new StringBuilder();
             using (var writer = new StringWriter(sb)) {
-                BuildCompressedString(data, writer, dontAddIfNull);
+                BuildCompressedString(data, writer);
                 return sb.ToString();
             }
         }
@@ -270,14 +266,20 @@ namespace FullSerializer {
         /// Utility method that converts a double to a string.
         /// </summary>
         private static string ConvertDoubleToString(double d) {
-            if (Double.IsInfinity(d) || Double.IsNaN(d)) return d.ToString(CultureInfo.InvariantCulture);
+            if (Double.IsInfinity(d) || Double.IsNaN(d))
+                return d.ToString(CultureInfo.InvariantCulture);
+
             string doubledString = d.ToString(CultureInfo.InvariantCulture);
 
-            // NOTE/HACK: If we don't serialize with a period, then the number will be deserialized as an Int64, not a double.
-            if (doubledString.Contains(".") == false) doubledString += ".0";
+            // NOTE/HACK: If we don't serialize with a period or an exponent,
+            // then the number will be deserialized as an Int64, not a double.
+            if (doubledString.Contains(".") == false &&
+                doubledString.Contains("e") == false &&
+                doubledString.Contains("E") == false) {
+                doubledString += ".0";
+            }
 
             return doubledString;
         }
-
     }
 }
