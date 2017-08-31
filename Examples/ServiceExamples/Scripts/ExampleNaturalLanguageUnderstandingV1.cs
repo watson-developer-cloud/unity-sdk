@@ -18,20 +18,41 @@
 using FullSerializer;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1;
+using IBM.Watson.DeveloperCloud.Utilities;
+using System.Collections;
 using UnityEngine;
 
 public class ExampleNaturalLanguageUnderstandingV1 : MonoBehaviour
 {
-    NaturalLanguageUnderstanding m_NaturalLanguageUnderstanding = new NaturalLanguageUnderstanding();
-    private static fsSerializer sm_Serializer = new fsSerializer();
+    private string _username = null;
+    private string _password = null;
+    private string _url = null;
+    private fsSerializer _serializer = new fsSerializer();
 
-    void Start ()
+    NaturalLanguageUnderstanding _naturalLanguageUnderstanding;
+
+    private bool _getModelsTested = false;
+    private bool _analyzeTested = false;
+
+    void Start()
     {
         LogSystem.InstallDefaultReactors();
 
+        //  Create credential and instantiate service
+        Credentials credentials = new Credentials(_username, _password, _url);
+
+        _naturalLanguageUnderstanding = new NaturalLanguageUnderstanding(credentials);
+
+        Runnable.Run(Examples());
+    }
+
+    private IEnumerator Examples()
+    {
         Log.Debug("ExampleNaturalLanguageUnderstandingV1", "attempting to get models...");
-        if (!m_NaturalLanguageUnderstanding.GetModels(OnGetModels))
+        if (!_naturalLanguageUnderstanding.GetModels(OnGetModels))
             Log.Debug("ExampleNaturalLanguageUnderstandingV1", "Failed to get models.");
+        while (!_getModelsTested)
+            yield return null;
 
         Parameters parameters = new Parameters()
         {
@@ -56,21 +77,29 @@ public class ExampleNaturalLanguageUnderstandingV1 : MonoBehaviour
         };
 
         Log.Debug("ExampleNaturalLanguageUnderstandingV1", "attempting to analyze...");
-        if (!m_NaturalLanguageUnderstanding.Analyze(OnAnalyze, parameters))
+        if (!_naturalLanguageUnderstanding.Analyze(OnAnalyze, parameters))
             Log.Debug("ExampleNaturalLanguageUnderstandingV1", "Failed to get models.");
+        while (!_analyzeTested)
+            yield return null;
+
+        Log.Debug("ExampleNaturalLanguageUnderstandingV1", "Natural language understanding examples complete.");
     }
 
     private void OnGetModels(ListModelsResults resp, string customData)
     {
         fsData data = null;
-        sm_Serializer.TrySerialize(resp, out data).AssertSuccess();
+        _serializer.TrySerialize(resp, out data).AssertSuccess();
         Log.Debug("ExampleNaturalLanguageUnderstandingV1", "ListModelsResult: {0}", data.ToString());
+
+        _getModelsTested = true;
     }
 
     private void OnAnalyze(AnalysisResults resp, string customData)
     {
         fsData data = null;
-        sm_Serializer.TrySerialize(resp, out data).AssertSuccess();
+        _serializer.TrySerialize(resp, out data).AssertSuccess();
         Log.Debug("ExampleNaturalLanguageUnderstandingV1", "AnalysisResults: {0}", data.ToString());
+
+        _analyzeTested = true;
     }
 }

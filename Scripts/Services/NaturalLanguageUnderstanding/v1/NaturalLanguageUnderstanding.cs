@@ -27,12 +27,71 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
     public class NaturalLanguageUnderstanding : IWatsonService
     {
         #region Private Data
-        private const string SERVICE_ID = "NaturalLanguageUnderstandingV1";
-        private static fsSerializer sm_Serializer = new fsSerializer();
+        private const string ServiceId = "NaturalLanguageUnderstandingV1";
+        private fsSerializer _serializer = new fsSerializer();
+        private Credentials _credentials = null;
+        private string _url = "https://gateway.watsonplatform.net/natural-language-understanding/api";
+        private string _versionDate;
 
-        private const string SERVICE_ANALYZE = "/v1/analyze";
-        private const string SERVICE_MODELS = "/v1/models";
-        private const string SERVICE_MODEL = "/v1/models/{0}";
+        private const string AnalyzeEndpoint = "/v1/analyze";
+        private const string ModelsEndpoint = "/v1/models";
+        private const string ModelEndpoint = "/v1/models/{0}";
+        #endregion
+
+        #region Public Properties
+        /// <summary>
+        /// Gets and sets the endpoint URL for the service.
+        /// </summary>
+        public string Url
+        {
+            get { return _url; }
+            set { _url = value; }
+        }
+
+        /// <summary>
+        /// Gets and sets the versionDate of the service.
+        /// </summary>
+        public string VersionDate
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_versionDate))
+                    throw new ArgumentNullException("VersionDate cannot be null. Use VersionDate `2017-02-27`");
+
+                return _versionDate;
+            }
+            set { _versionDate = value; }
+        }
+
+        /// <summary>
+        /// Gets and sets the credentials of the service. Replace the default endpoint if endpoint is defined.
+        /// </summary>
+        public Credentials Credentials
+        {
+            get { return _credentials; }
+            set
+            {
+                _credentials = value;
+                if (!string.IsNullOrEmpty(_credentials.Url))
+                {
+                    _url = _credentials.Url;
+                }
+            }
+        }
+        #endregion
+
+        #region Constructor
+        public NaturalLanguageUnderstanding(Credentials credentials)
+        {
+            if (credentials.HasCredentials() || credentials.HasAuthorizationToken())
+            {
+                Credentials = credentials;
+            }
+            else
+            {
+                throw new WatsonException("Please provide a username and password or authorization token to use the Natural Language Understanding service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
+            }
+        }
         #endregion
 
         #region Analyze
@@ -68,10 +127,10 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
             req.Parameters["version"] = NaturalLanguageUnderstandingVersion.Version;
 
             fsData data = null;
-            fsResult r = sm_Serializer.TrySerialize(parameters, out data);
+            _serializer.TrySerialize(parameters, out data);
             string sendjson = data.ToString();
             req.Send = Encoding.UTF8.GetBytes(sendjson);
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_ANALYZE);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, AnalyzeEndpoint);
             if (connector == null)
                 return false;
 
@@ -88,19 +147,19 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
         private void OnAnalyzeResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             AnalysisResults analysisResults = new AnalysisResults();
+            fsData data = null;
 
             if (resp.Success)
             {
                 try
                 {
-                    fsData data = null;
                     fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
 
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = analysisResults;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -111,8 +170,9 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
                 }
             }
 
+            string customData = ((AnalyzeRequest)req).Data;
             if (((AnalyzeRequest)req).Callback != null)
-                ((AnalyzeRequest)req).Callback(resp.Success ? analysisResults : null, ((AnalyzeRequest)req).Data);
+                ((AnalyzeRequest)req).Callback(resp.Success ? analysisResults : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
         }
         #endregion
 
@@ -142,7 +202,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
             req.Parameters["version"] = NaturalLanguageUnderstandingVersion.Version;
             req.OnResponse = OnGetModelsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, SERVICE_MODELS);
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, ModelsEndpoint);
             if (connector == null)
                 return false;
 
@@ -158,19 +218,19 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
         private void OnGetModelsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             ListModelsResults modelData = new ListModelsResults();
+            fsData data = null;
 
             if (resp.Success)
             {
                 try
                 {
-                    fsData data = null;
                     fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
 
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
                     object obj = modelData;
-                    r = sm_Serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
                 }
@@ -181,8 +241,9 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
                 }
             }
 
+            string customData = ((GetModelsRequest)req).Data;
             if (((GetModelsRequest)req).Callback != null)
-                ((GetModelsRequest)req).Callback(resp.Success ? modelData : null, ((GetModelsRequest)req).Data);
+                ((GetModelsRequest)req).Callback(resp.Success ? modelData : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
 
         }
         #endregion
@@ -218,7 +279,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
             req.OnResponse = OnDeleteModelResponse;
             req.Delete = true;
 
-            RESTConnector connector = RESTConnector.GetConnector(SERVICE_ID, string.Format(SERVICE_MODEL, modelId));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(ModelEndpoint, modelId));
             if (connector == null)
                 return false;
 
@@ -234,8 +295,9 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
 
         private void OnDeleteModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
+            string customData = ((DeleteModelRequest)req).Data;
             if (((DeleteModelRequest)req).Callback != null)
-                ((DeleteModelRequest)req).Callback(resp.Success, ((DeleteModelRequest)req).Data);
+                ((DeleteModelRequest)req).Callback(resp.Success, customData);
         }
         #endregion
 
@@ -243,36 +305,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
         /// <exclude />
         public string GetServiceID()
         {
-            return SERVICE_ID;
-        }
-        /// <exclude />
-        public void GetServiceStatus(ServiceStatus callback)
-        {
-            if (Config.Instance.FindCredentials(SERVICE_ID) != null)
-                new CheckServiceStatus(this, callback);
-            else
-                callback(SERVICE_ID, false);
-        }
-
-        private class CheckServiceStatus
-        {
-            private NaturalLanguageUnderstanding m_Service = null;
-            private ServiceStatus m_Callback = null;
-
-            public CheckServiceStatus(NaturalLanguageUnderstanding service, ServiceStatus callback)
-            {
-                m_Service = service;
-                m_Callback = callback;
-
-                if (!m_Service.GetModels(OnGetModels, "CheckServiceStatus"))
-                    m_Callback(SERVICE_ID, false);
-            }
-
-            private void OnGetModels(ListModelsResults modelsData, string customData)
-            {
-                if (m_Callback != null)
-                    m_Callback(SERVICE_ID, modelsData != null);
-            }
+            return ServiceId;
         }
         #endregion
     }

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (c) 2013 Calvin Rien
  *
  * Based on the JSON parser by Patrick van Bergen
@@ -545,4 +545,3 @@ namespace MiniJSON {
         }
     }
 }
-

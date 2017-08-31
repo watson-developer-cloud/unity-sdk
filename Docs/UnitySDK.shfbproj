@@ -25,7 +25,7 @@
     <KeepLogFile>False</KeepLogFile>
     <DisableCodeBlockComponent>False</DisableCodeBlockComponent>
     <CleanIntermediates>True</CleanIntermediates>
-    <HelpFileVersion>1.1.0.0</HelpFileVersion>
+    <HelpFileVersion>1.0.0.0</HelpFileVersion>
     <MaximumGroupParts>2</MaximumGroupParts>
     <NamespaceGrouping>False</NamespaceGrouping>
     <SyntaxFilters>C#</SyntaxFilters>
@@ -38,7 +38,9 @@
     <ContentPlacement>AboveNamespaces</ContentPlacement>
     <DocumentationSources>
       <DocumentationSource sourceFile="..\..\..\..\DocumentationBuilder\ConsoleApplication1\ConsoleApplication1\bin\Debug\Assembly-CSharp.dll" />
-<DocumentationSource sourceFile="..\..\..\..\DocumentationBuilder\ConsoleApplication1\ConsoleApplication1\bin\Debug\Assembly-CSharp.xml" /></DocumentationSources>
+      <DocumentationSource sourceFile="..\..\..\..\DocumentationBuilder\ConsoleApplication1\ConsoleApplication1\bin\Debug\Assembly-CSharp.xml" />
+      <DocumentationSource sourceFile="..\..\Watson.xml" />
+    </DocumentationSources>
     <NamespaceSummaries>
       <NamespaceSummaryItem name="DentedPixel.LTEditor" isDocumented="False" />
       <NamespaceSummaryItem name="FullSerializer" isDocumented="False" />

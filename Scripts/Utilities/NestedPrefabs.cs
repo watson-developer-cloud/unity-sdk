@@ -20,47 +20,47 @@ using System.Collections.Generic;
 
 namespace IBM.Watson.DeveloperCloud.Utilities
 {
-  class NestedPrefabs : MonoBehaviour
-  {
-    [SerializeField]
-    private List<GameObject> m_Prefabs = new List<GameObject>();
-    private List<GameObject> m_GameObjectCreated = new List<GameObject>();
-    [SerializeField]
-    private bool m_SetParent = true;
-
-    private void Awake()
+    class NestedPrefabs : MonoBehaviour
     {
-      foreach (GameObject prefab in m_Prefabs)
-      {
-        if (prefab == null)
-          continue;
+        [SerializeField]
+        private List<GameObject> _prefabs = new List<GameObject>();
+        private List<GameObject> _gameObjectCreated = new List<GameObject>();
+        [SerializeField]
+        private bool _setParent = true;
 
-        GameObject instance = Instantiate(prefab);
-        if (m_SetParent)
-          instance.transform.SetParent(transform, false);
+        private void Awake()
+        {
+            foreach (GameObject prefab in _prefabs)
+            {
+                if (prefab == null)
+                    continue;
 
-        m_GameObjectCreated.Add(instance);
-      }
+                GameObject instance = Instantiate(prefab);
+                if (_setParent)
+                    instance.transform.SetParent(transform, false);
+
+                _gameObjectCreated.Add(instance);
+            }
+        }
+
+        #region Destroy objects
+
+        /// <summary>
+        /// It destroys the created object to set the initial state
+        /// </summary>
+        public void DestroyCreatedObject()
+        {
+            foreach (GameObject gameObject in _gameObjectCreated)
+            {
+                if (gameObject == null)
+                    continue;
+
+                gameObject.SendMessage("DestroyCreatedObject", SendMessageOptions.DontRequireReceiver);
+                Destroy(gameObject);
+            }
+            _gameObjectCreated.Clear();
+            Destroy(this.gameObject);
+        }
+        #endregion
     }
-
-    #region Destroy objects
-
-    /// <summary>
-    /// It destroys the created object to set the initial state
-    /// </summary>
-    public void DestroyCreatedObject()
-    {
-      foreach (GameObject gameObject in m_GameObjectCreated)
-      {
-        if (gameObject == null)
-          continue;
-
-        gameObject.SendMessage("DestroyCreatedObject", SendMessageOptions.DontRequireReceiver);
-        Destroy(gameObject);
-      }
-      m_GameObjectCreated.Clear();
-      Destroy(this.gameObject);
-    }
-    #endregion
-  }
 }

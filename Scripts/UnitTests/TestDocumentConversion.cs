@@ -19,92 +19,92 @@ using UnityEngine;
 using System.Collections;
 using IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1;
 using IBM.Watson.DeveloperCloud.Logging;
+using IBM.Watson.DeveloperCloud.Utilities;
+using FullSerializer;
+using System;
+using System.IO;
 
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
-  public class TestDocumentConversion : UnitTest
-  {
-    DocumentConversion m_DocumentConversion = new DocumentConversion();
-    bool m_DocumentConversionAnswerUnitsTested = false;
-    bool m_DocumentConversionTextTested = false;
-    bool m_DocumentConversionHTMLTested = false;
-
-    public override IEnumerator RunTest()
+    public class TestDocumentConversion : UnitTest
     {
-      string examplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/watson_beats_jeopardy.html";
+        private DocumentConversion _documentConversion;
+        private string _username = null;
+        private string _password = null;
+        private fsSerializer _serializer = new fsSerializer();
+        //private string _token = "<authentication-token>";
 
-      //  test get classifiers
-      Log.Debug("TestDocumentConversion", "Testing conversion by answerUnit!");
-      m_DocumentConversion.ConvertDocument(OnConvertDocumentAnswerUnits, examplePath, ConversionTarget.ANSWER_UNITS);
-      while (!m_DocumentConversionAnswerUnitsTested)
-        yield return null;
+        private string _examplePath;
+        private string _conversionTarget = ConversionTarget.NormalizedHtml;
+        private bool _convertDocumentTested = false;
 
-
-      Log.Debug("TestDocumentConversion", "Testing conversion by Text!");
-      m_DocumentConversion.ConvertDocument(OnConvertDocumentText, examplePath, ConversionTarget.NORMALIZED_TEXT);
-      while (!m_DocumentConversionTextTested)
-        yield return null;
-
-      Log.Debug("TestDocumentConversion", "Testing conversion by HTML!");
-      m_DocumentConversion.ConvertDocument(OnConvertDocumentHTML, examplePath, ConversionTarget.NORMALIZED_HTML);
-      while (!m_DocumentConversionHTMLTested)
-        yield return null;
-
-      yield break;
-    }
-
-    private void OnConvertDocumentAnswerUnits(ConvertedDocument documentConversionResponse, string data)
-    {
-      Test(documentConversionResponse != null);
-
-      if (documentConversionResponse != null)
-      {
-        if (!string.IsNullOrEmpty(documentConversionResponse.media_type_detected))
-          Log.Debug("ExampleDocumentConversion", "mediaTypeDetected: {0}", documentConversionResponse.media_type_detected);
-        if (!string.IsNullOrEmpty(documentConversionResponse.source_document_id))
-          Log.Debug("ExampleDocumentConversion", "mediaTypeDetected: {0}", documentConversionResponse.source_document_id);
-        if (!string.IsNullOrEmpty(documentConversionResponse.timestamp))
-          Log.Debug("ExampleDocumentConversion", "mediaTypeDetected: {0}", documentConversionResponse.timestamp);
-        if (documentConversionResponse.metadata != null && documentConversionResponse.metadata.Length > 0)
+        public override IEnumerator RunTest()
         {
-          Log.Debug("ExampleDocumentConversion", "mediaTypeDetected: {0}", documentConversionResponse.metadata.Length);
-          foreach (Metadata metadata in documentConversionResponse.metadata)
-            Log.Debug("ExampleDocumentConversion", "metadata | name: {0}, content: {1}", metadata.name, metadata.content);
+            LogSystem.InstallDefaultReactors();
+
+            try
+            {
+                VcapCredentials vcapCredentials = new VcapCredentials();
+                fsData data = null;
+
+                //  Get credentials from a credential file defined in environmental variables in the VCAP_SERVICES format. 
+                //  See https://www.ibm.com/watson/developercloud/doc/common/getting-started-variables.html.
+                var environmentalVariable = Environment.GetEnvironmentVariable("VCAP_SERVICES");
+                var fileContent = File.ReadAllText(environmentalVariable);
+
+                //  Add in a parent object because Unity does not like to deserialize root level collection types.
+                fileContent = Utility.AddTopLevelObjectToJson(fileContent, "VCAP_SERVICES");
+
+                //  Convert json to fsResult
+                fsResult r = fsJsonParser.Parse(fileContent, out data);
+                if (!r.Succeeded)
+                    throw new WatsonException(r.FormattedMessages);
+
+                //  Convert fsResult to VcapCredentials
+                object obj = vcapCredentials;
+                r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                if (!r.Succeeded)
+                    throw new WatsonException(r.FormattedMessages);
+
+                //  Set credentials from imported credntials
+                Credential credential = vcapCredentials.VCAP_SERVICES["document_conversion"][TestCredentialIndex].Credentials;
+                _username = credential.Username.ToString();
+                _password = credential.Password.ToString();
+                _url = credential.Url.ToString();
+            }
+            catch
+            {
+                Log.Debug("TestDocumentConversion", "Failed to get credentials from VCAP_SERVICES file. Please configure credentials to run this test. For more information, see: https://github.com/watson-developer-cloud/unity-sdk/#authentication");
+            }
+
+            //  Create credential and instantiate service
+            Credentials credentials = new Credentials(_username, _password, _url);
+
+            //  Or authenticate using token
+            //Credentials credentials = new Credentials(_url)
+            //{
+            //    AuthenticationToken = _token
+            //};
+
+            _documentConversion = new DocumentConversion(credentials);
+            _examplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/watson_beats_jeopardy.html";
+
+            if (!_documentConversion.ConvertDocument(OnConvertDocument, _examplePath, _conversionTarget))
+                Log.Debug("ExampleDocumentConversion", "Document conversion failed!");
+
+            while (!_convertDocumentTested)
+                yield return null;
+
+            Log.Debug("ExampleDoucmentConversion", "Document conversion examples complete.");
+
+            yield break;
         }
-        if (documentConversionResponse.answer_units != null && documentConversionResponse.answer_units.Length > 0)
+
+        private void OnConvertDocument(ConvertedDocument documentConversionResponse, string data)
         {
-          Log.Debug("ExampleDocumentConversion", "mediaTypeDetected: {0}", documentConversionResponse.answer_units.Length);
-          foreach (AnswerUnit answerUnit in documentConversionResponse.answer_units)
-          {
-            Log.Debug("ExampleDocumentConversion", "answerUnit | type: {0}, title: {1}, parent_id: {2}, id: {3}, direction: {4}", answerUnit.type, answerUnit.title, answerUnit.parent_id, answerUnit.id, answerUnit.direction);
-            if (answerUnit.content != null && answerUnit.content.Length > 0)
-              foreach (Content content in answerUnit.content)
-                Log.Debug("ExampleDocumentConversion", "content | mediaType: {0}, text: {1}", content.media_type, content.text);
-          }
+            Log.Debug("ExampleDoucmentConversion", "DocumentConversion - Convert document Response: {0}", documentConversionResponse.htmlContent);
+            Test(documentConversionResponse != null);
+            _convertDocumentTested = true;
         }
-      }
-
-      m_DocumentConversionAnswerUnitsTested = true;
     }
-
-    private void OnConvertDocumentHTML(ConvertedDocument documentConversionResponse, string data)
-    {
-      Test(!string.IsNullOrEmpty(documentConversionResponse.htmlContent));
-
-      if (!string.IsNullOrEmpty(documentConversionResponse.htmlContent))
-        Log.Debug("ExampleDocumentConversion", "TextContent: {0}", documentConversionResponse.htmlContent);
-
-      m_DocumentConversionHTMLTested = true;
-    }
-
-    private void OnConvertDocumentText(ConvertedDocument documentConversionResponse, string data)
-    {
-      Test(!string.IsNullOrEmpty(documentConversionResponse.textContent));
-
-      if (!string.IsNullOrEmpty(documentConversionResponse.textContent))
-        Log.Debug("ExampleDocumentConversion", "HTMLContent: {0}", documentConversionResponse.textContent);
-
-      m_DocumentConversionTextTested = true;
-    }
-  }
 }

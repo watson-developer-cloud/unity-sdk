@@ -8,16 +8,15 @@ or [Stack Overflow](http://stackoverflow.com/questions/ask?tags=ibm-watson).
 # Coding Standard
 
 * Use spaces instead of tab characters, a tab should be 4 spaces.
-* Class names should be camel case (e.g. AvatarWidget), with no underscores "_".
-* Class member fields should be camel case and begin with "m_" (e.g. m_MemberVariable), no other underscores allowed in the variable name.
-* Static class member fields should camel case and begin with "sm_", no other underscores allowed in the variable name.
+* Class names should be PascalCase (e.g. SpeechToText), with no underscores "_".
+* Class member fields should be camel case and begin with "_" (e.g. _memberVariable), no other underscores allowed in the variable name.
 * Structures should follow the same naming standards as classes.
 * No K&R coding style. Braces {} should be on their own line, aligned with the parent statement.
 * No public variables, always use public properties unless there is no other workaround.
-* Properties should be camel case, no underscores. (e.g. public bool IsReady { get; set; })
-* Constants should be all upper case (e.g. static readonly string CONFIG_FILE = "/Config.json"). This includes enumerations.
+* Properties should be camel case, no underscores (e.g. public bool IsReady { get; set; }).
+* Constants should be all PascalCase (e.g. static readonly string ConfigFile = "/Config.json"). This includes enumerations.
 * All public functions and types of all classes should be fully documented using the XML comment style.
-* Local variables should begin with lower-case character, then camel case after the first character. (e.g. var widgetConnector = new WidgetConnector())
+* Local variables should be camel case. (e.g. var speechToText = new SpeechToText())
 * Use protected on variables & functions only if you plan to inherit from the class or there is a good chance we will need to be polymorphic. 
 * Use region to separate parts of a class based on functionality.
  

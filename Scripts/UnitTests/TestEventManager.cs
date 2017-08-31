@@ -21,38 +21,38 @@ using IBM.Watson.DeveloperCloud.Logging;
 
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
-  public class TestEventManager : UnitTest
-  {
-    EventManager m_Manager = new EventManager();
-    bool m_SendTested = false;
-    bool m_SendAsyncTested = false;
-
-    public override IEnumerator RunTest()
+    public class TestEventManager : UnitTest
     {
-      m_Manager.RegisterEventReceiver("SendEvent", OnSendEvent);
-      m_Manager.RegisterEventReceiver("SendAsyncEvent", OnSendAsyncEvent);
+        EventManager m_Manager = new EventManager();
+        bool m_SendTested = false;
+        bool m_SendAsyncTested = false;
 
-      m_Manager.SendEvent("SendEvent");
-      while (!m_SendTested)
-        yield return null;
+        public override IEnumerator RunTest()
+        {
+            m_Manager.RegisterEventReceiver("SendEvent", OnSendEvent);
+            m_Manager.RegisterEventReceiver("SendAsyncEvent", OnSendAsyncEvent);
 
-      m_Manager.SendEventAsync("SendAsyncEvent");
-      while (!m_SendAsyncTested)
-        yield return null;
+            m_Manager.SendEvent("SendEvent");
+            while (!m_SendTested)
+                yield return null;
 
-      yield break;
+            m_Manager.SendEventAsync("SendAsyncEvent");
+            while (!m_SendAsyncTested)
+                yield return null;
+
+            yield break;
+        }
+
+        private void OnSendEvent(object[] args)
+        {
+            Log.Status("TestEventManager", "OnSendEvent()");
+            m_SendTested = true;
+        }
+
+        private void OnSendAsyncEvent(object[] args)
+        {
+            Log.Status("TestEventManager", "OnSendAsyncEvent()");
+            m_SendAsyncTested = true;
+        }
     }
-
-    private void OnSendEvent(object[] args)
-    {
-      Log.Status("TestEventManager", "OnSendEvent()");
-      m_SendTested = true;
-    }
-
-    private void OnSendAsyncEvent(object[] args)
-    {
-      Log.Status("TestEventManager", "OnSendAsyncEvent()");
-      m_SendAsyncTested = true;
-    }
-  }
 }

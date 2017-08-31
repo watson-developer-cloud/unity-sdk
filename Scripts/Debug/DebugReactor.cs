@@ -19,56 +19,56 @@ using IBM.Watson.DeveloperCloud.Logging;
 
 namespace IBM.Watson.DeveloperCloud.Debug
 {
-  /// <summary>
-  /// This log reactor logs into the UnityEngine.Debug.Log() function.
-  /// </summary>
-  public class DebugReactor : ILogReactor
-  {
-    #region Public Properties
     /// <summary>
-    /// Minimum level of log messages to send to the debug console.
+    /// This log reactor logs into the UnityEngine.Debug.Log() function.
     /// </summary>
-    public LogLevel Level { get; set; }
-    #endregion
-
-    #region Construction
-    /// <summary>
-    /// DebugReactor constructor.
-    /// </summary>
-    /// <param name="level">Minimum level of log messages to log.</param>
-    public DebugReactor(LogLevel level = LogLevel.DEBUG)
+    public class DebugReactor : ILogReactor
     {
-      Level = level;
-    }
-    #endregion
+        #region Public Properties
+        /// <summary>
+        /// Minimum level of log messages to send to the debug console.
+        /// </summary>
+        public LogLevel Level { get; set; }
+        #endregion
 
-    #region ILogReactor Interface
-    /// <summary>
-    /// Process a LogRecord object.
-    /// </summary>
-    /// <param name="log">The log record.</param>
-    public void ProcessLog(LogRecord log)
-    {
-      if (log.m_Level >= Level)
-      {
-        string logString = string.Format("[{0}][{1}][{2}] {3}",
-                                         log.m_TimeStamp.ToString("MM/dd/yyyy HH:mm:ss"),
-                                         log.m_SubSystem, log.m_Level.ToString(), log.m_Message);
+        #region Construction
+        /// <summary>
+        /// DebugReactor constructor.
+        /// </summary>
+        /// <param name="level">Minimum level of log messages to log.</param>
+        public DebugReactor(LogLevel level = LogLevel.DEBUG)
+        {
+            Level = level;
+        }
+        #endregion
 
-        if (log.m_Level == LogLevel.ERROR || log.m_Level == LogLevel.CRITICAL)
+        #region ILogReactor Interface
+        /// <summary>
+        /// Process a LogRecord object.
+        /// </summary>
+        /// <param name="log">The log record.</param>
+        public void ProcessLog(LogRecord log)
         {
-          UnityEngine.Debug.LogError(logString);
+            if (log._level >= Level)
+            {
+                string logString = string.Format("[{0}][{1}][{2}] {3}",
+                                                 log._timeStamp.ToString("MM/dd/yyyy HH:mm:ss"),
+                                                 log._subSystem, log._level.ToString(), log._message);
+
+                if (log._level == LogLevel.ERROR || log._level == LogLevel.CRITICAL)
+                {
+                    UnityEngine.Debug.LogError(logString);
+                }
+                else if (log._level == LogLevel.WARNING)
+                {
+                    UnityEngine.Debug.LogWarning(logString);
+                }
+                else
+                {
+                    UnityEngine.Debug.Log(logString);
+                }
+            }
         }
-        else if (log.m_Level == LogLevel.WARNING)
-        {
-          UnityEngine.Debug.LogWarning(logString);
-        }
-        else
-        {
-          UnityEngine.Debug.Log(logString);
-        }
-      }
+        #endregion
     }
-    #endregion
-  }
 }

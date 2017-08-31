@@ -15,110 +15,208 @@
 *
 */
 
-//#define TEST_DELETE
+//  Uncomment to train a new classifier
+#define TRAIN_CLASSIFIER
+//  Uncomment to delete the newley trained classifier
+#define DELETE_TRAINED_CLASSIFIER
 
 using System.Collections;
 using IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
 using System.IO;
-using UnityEngine;
 using System;
+using FullSerializer;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
-  public class TestNaturalLanguageClassifier : UnitTest
-  {
-    NaturalLanguageClassifier m_NaturalLanguageClassifier = new NaturalLanguageClassifier();
-    bool m_FindClassifierTested = false;
-    bool m_TrainClasifierTested = false;
-    bool m_TrainClassifier = false;
-#if TEST_DELETE
-        bool m_DeleteTested = false;
-#endif
-    string m_ClassifierId = null;
-    bool m_ClassifyTested = false;
-
-    public override IEnumerator RunTest()
+    public class TestNaturalLanguageClassifier : UnitTest
     {
-      if (Config.Instance.FindCredentials(m_NaturalLanguageClassifier.GetServiceID()) == null)
-        yield break;
+        private string _username = null;
+        private string _password = null;
+        private fsSerializer _serializer = new fsSerializer();
+        //private string _token = "<authentication-token>";
 
-      m_NaturalLanguageClassifier.FindClassifier("TestNaturalLanguageClassifier/", OnFindClassifier);
-      while (!m_FindClassifierTested)
-        yield return null;
+        private NaturalLanguageClassifier naturalLanguageClassifier;
 
-      if (m_TrainClassifier)
-      {
-        string trainingData = File.ReadAllText(Application.dataPath + "/Watson/Scripts/Editor/TestData/weather_data_train.csv");
+        private string _classifierId = "";
+        private List<string> _classifierIds = new List<string>();
+        private string _inputString = "Is it hot outside?";
 
-        Test(m_NaturalLanguageClassifier.TrainClassifier("TestNaturalLanguageClassifier/" + DateTime.Now.ToString(), "en", trainingData, OnTrainClassifier));
-        while (!m_TrainClasifierTested)
-          yield return null;
-      }
-      else if (!string.IsNullOrEmpty(m_ClassifierId))
-      {
-        Test(m_NaturalLanguageClassifier.Classify(m_ClassifierId, "Is it hot outside", OnClassify));
-        while (!m_ClassifyTested)
-          yield return null;
-      }
+        private bool _areAnyClassifiersAvailable = false;
+        private bool _getClassifiersTested = false;
+        private bool _getClassifierTested = false;
+#if TRAIN_CLASSIFIER
+        private string _classifierName = "testClassifier";
+        private bool _trainClassifierTested = false;
+#endif
+#if DELETE_TRAINED_CLASSIFIER
+        private string _classifierToDelete;
+#endif
+        private bool _classifyTested = false;
 
-#if TEST_DELETE
-            if ( !string.IsNullOrEmpty( m_ClassifierId ) )
+        public override IEnumerator RunTest()
+        {
+            LogSystem.InstallDefaultReactors();
+
+            try
             {
-                Test( m_NaturalLanguageClassifier.DeleteClassifer( m_ClassifierId, OnDeleteClassifier ) );
-                while(! m_DeleteTested ) 
+                VcapCredentials vcapCredentials = new VcapCredentials();
+                fsData data = null;
+
+                //  Get credentials from a credential file defined in environmental variables in the VCAP_SERVICES format. 
+                //  See https://www.ibm.com/watson/developercloud/doc/common/getting-started-variables.html.
+                var environmentalVariable = Environment.GetEnvironmentVariable("VCAP_SERVICES");
+                var fileContent = File.ReadAllText(environmentalVariable);
+
+                //  Add in a parent object because Unity does not like to deserialize root level collection types.
+                fileContent = Utility.AddTopLevelObjectToJson(fileContent, "VCAP_SERVICES");
+
+                //  Convert json to fsResult
+                fsResult r = fsJsonParser.Parse(fileContent, out data);
+                if (!r.Succeeded)
+                    throw new WatsonException(r.FormattedMessages);
+
+                //  Convert fsResult to VcapCredentials
+                object obj = vcapCredentials;
+                r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                if (!r.Succeeded)
+                    throw new WatsonException(r.FormattedMessages);
+
+                //  Set credentials from imported credntials
+                Credential credential = vcapCredentials.VCAP_SERVICES["natural_language_classifier"][TestCredentialIndex].Credentials;
+                _username = credential.Username.ToString();
+                _password = credential.Password.ToString();
+                _url = credential.Url.ToString();
+            }
+            catch
+            {
+                Log.Debug("TestNaturalLanguageClassifier", "Failed to get credentials from VCAP_SERVICES file. Please configure credentials to run this test. For more information, see: https://github.com/watson-developer-cloud/unity-sdk/#authentication");
+            }
+
+            //  Create credential and instantiate service
+            Credentials credentials = new Credentials(_username, _password, _url);
+
+            //  Or authenticate using token
+            //Credentials credentials = new Credentials(_url)
+            //{
+            //    AuthenticationToken = _token
+            //};
+
+            naturalLanguageClassifier = new NaturalLanguageClassifier(credentials);
+
+            //  Get classifiers
+            if (!naturalLanguageClassifier.GetClassifiers(OnGetClassifiers))
+                Log.Debug("ExampleNaturalLanguageClassifier", "Failed to get classifiers!");
+
+            while (!_getClassifiersTested)
+                yield return null;
+
+            if (_classifierIds.Count == 0)
+                Log.Debug("ExampleNaturalLanguageClassifier", "There are no trained classifiers. Please train a classifier...");
+
+            if (_classifierIds.Count > 0)
+            {
+                //  Get each classifier
+                foreach (string classifierId in _classifierIds)
+                {
+                    if (!naturalLanguageClassifier.GetClassifier(classifierId, OnGetClassifier))
+                        Log.Debug("ExampleNaturalLanguageClassifier", "Failed to get classifier {0}!", classifierId);
+                }
+
+                while (!_getClassifierTested)
                     yield return null;
             }
+
+            if (!_areAnyClassifiersAvailable && _classifierIds.Count > 0)
+                Log.Debug("ExampleNaturalLanguageClassifier", "All classifiers are training...");
+
+            //  Train classifier
+#if TRAIN_CLASSIFIER
+            string dataPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/weather_data_train.csv";
+            var trainingContent = File.ReadAllText(dataPath);
+            if (!naturalLanguageClassifier.TrainClassifier(_classifierName + "/" + DateTime.Now.ToString(), "en", trainingContent, OnTrainClassifier))
+                Log.Debug("ExampleNaturalLanguageClassifier", "Failed to train clasifier!");
+
+            while (!_trainClassifierTested)
+                yield return null;
 #endif
 
-      yield break;
-    }
+#if DELETE_TRAINED_CLASSIFIER
+            if (!string.IsNullOrEmpty(_classifierToDelete))
+                if (!naturalLanguageClassifier.DeleteClassifer(_classifierToDelete, OnDeleteTrainedClassifier))
+                    Log.Debug("ExampleNaturalLanguageClassifier", "Failed to delete clasifier {0}!", _classifierToDelete);
+#endif
 
-#if TEST_DELETE
-        private void OnDeleteClassifier( bool success )
+            //  Classify
+            if (_areAnyClassifiersAvailable)
+            {
+                if (!naturalLanguageClassifier.Classify(_classifierId, _inputString, OnClassify))
+                    Log.Debug("ExampleNaturalLanguageClassifier", "Failed to classify!");
+
+                while (!_classifyTested)
+                    yield return null;
+            }
+
+            Log.Debug("ExampleNaturalLanguageClassifier", "Natural language classifier examples complete.");
+
+            yield break;
+        }
+        private void OnGetClassifiers(Classifiers classifiers, string data)
         {
-            Test( success );
-            m_DeleteTested = true;
+            Log.Debug("ExampleNaturalLanguageClassifier", "Natural Language Classifier - GetClassifiers  Response: {0}", data);
+
+            foreach (Classifier classifier in classifiers.classifiers)
+                _classifierIds.Add(classifier.classifier_id);
+
+            Test(classifiers != null);
+            _getClassifiersTested = true;
+        }
+
+        private void OnClassify(ClassifyResult result, string data)
+        {
+            Log.Debug("ExampleNaturalLanguageClassifier", "Natural Language Classifier - Classify Response: {0}", data);
+            Test(result != null);
+            _classifyTested = true;
+        }
+
+#if TRAIN_CLASSIFIER
+        private void OnTrainClassifier(Classifier classifier, string data)
+        {
+            Log.Debug("ExampleNaturalLanguageClassifier", "Natural Language Classifier - Train Classifier: {0}", data);
+#if DELETE_TRAINED_CLASSIFIER
+            _classifierToDelete = classifier.classifier_id;
+#endif
+            Test(classifier != null);
+            _trainClassifierTested = true;
         }
 #endif
 
-    private void OnFindClassifier(Classifier find)
-    {
-      if (find != null)
-      {
-        Log.Status("TestNaturalLanguageClassifier", "Find Result, Classifier ID: {0}, Status: {1}", find.classifier_id, find.status);
+        private void OnGetClassifier(Classifier classifier, string data)
+        {
+            Log.Debug("ExampleNaturalLanguageClassifier", "Natural Language Classifier - Get Classifier {0}: {1}", classifier.classifier_id, data);
 
-        m_TrainClassifier = false;
-        if (find.status == "Available")
-          m_ClassifierId = find.classifier_id;
-      }
-      else
-      {
-        m_TrainClassifier = true;
-      }
-      m_FindClassifierTested = true;
+            //  Get any classifier that is available
+            if (!string.IsNullOrEmpty(classifier.status) && classifier.status.ToLower() == "available")
+            {
+                _areAnyClassifiersAvailable = true;
+                _classifierId = classifier.classifier_id;
+            }
+
+            Test(classifier != null);
+            if (classifier.classifier_id == _classifierIds[_classifierIds.Count - 1])
+                _getClassifierTested = true;
+        }
+
+#if DELETE_TRAINED_CLASSIFIER
+        private void OnDeleteTrainedClassifier(bool success, string data)
+        {
+            Log.Debug("ExampleNaturalLanguageClassifier", "Natural Language Classifier - Delete Trained Classifier {0} | success: {1} {2}", _classifierToDelete, success, data);
+            Test(success);
+        }
+#endif
     }
-
-    private void OnClassify(ClassifyResult result)
-    {
-      Test(result != null);
-      if (result != null)
-      {
-        Log.Status("TestNaturalLanguageClassifier", "Classify Result: {0}", result.top_class);
-        Test(result.top_class == "temperature");
-      }
-      m_ClassifyTested = true;
-    }
-
-    private void OnTrainClassifier(Classifier classifier)
-    {
-      Test(classifier != null);
-      if (classifier != null)
-        Log.Status("TestNaturalLanguageClassifier", "Classifier ID: {0}, Status: {1}", classifier.classifier_id, classifier.status);
-
-      m_TrainClasifierTested = true;
-    }
-  }
 }
 

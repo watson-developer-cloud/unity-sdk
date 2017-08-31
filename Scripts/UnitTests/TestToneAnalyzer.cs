@@ -16,40 +16,96 @@
 */
 
 using System.Collections;
-using System.Collections.Generic;
 using IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
-using UnityEngine;
+using FullSerializer;
+using System;
+using System.IO;
 
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
-  public class TestToneAnalyzer : UnitTest
-  {
-    ToneAnalyzer m_ToneAnalyzer = new ToneAnalyzer();
-    bool m_GetToneAnalyzerTested = false;
-    string m_StringToTestTone = "This service enables people to discover and understand, and revise the impact of tone in their content. It uses linguistic analysis to detect and interpret emotional, social, and language cues found in text.\n";
-
-    public override IEnumerator RunTest()
+    public class TestToneAnalyzer : UnitTest
     {
-      if (Utilities.Config.Instance.FindCredentials(m_ToneAnalyzer.GetServiceID()) == null)
-        yield break;
+        private string _username = null;
+        private string _password = null;
+        private fsSerializer _serializer = new fsSerializer();
+        //private string _token = "<authentication-token>";
 
-      m_ToneAnalyzer.GetToneAnalyze(OnGetToneAnalyze, m_StringToTestTone, "TEST");
-      while (!m_GetToneAnalyzerTested)
-        yield return null;
+        private ToneAnalyzer _toneAnalyzer;
+        private string _toneAnalyzerVersionDate = "2017-05-26";
 
-      yield break;
+        private string _stringToTestTone = "This service enables people to discover and understand, and revise the impact of tone in their content. It uses linguistic analysis to detect and interpret emotional, social, and language cues found in text.";
+        private bool _analyzeToneTested = false;
+
+        public override IEnumerator RunTest()
+        {
+            LogSystem.InstallDefaultReactors();
+
+            try
+            {
+                VcapCredentials vcapCredentials = new VcapCredentials();
+                fsData data = null;
+
+                //  Get credentials from a credential file defined in environmental variables in the VCAP_SERVICES format. 
+                //  See https://www.ibm.com/watson/developercloud/doc/common/getting-started-variables.html.
+                var environmentalVariable = Environment.GetEnvironmentVariable("VCAP_SERVICES");
+                var fileContent = File.ReadAllText(environmentalVariable);
+
+                //  Add in a parent object because Unity does not like to deserialize root level collection types.
+                fileContent = Utility.AddTopLevelObjectToJson(fileContent, "VCAP_SERVICES");
+
+                //  Convert json to fsResult
+                fsResult r = fsJsonParser.Parse(fileContent, out data);
+                if (!r.Succeeded)
+                    throw new WatsonException(r.FormattedMessages);
+
+                //  Convert fsResult to VcapCredentials
+                object obj = vcapCredentials;
+                r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                if (!r.Succeeded)
+                    throw new WatsonException(r.FormattedMessages);
+
+                //  Set credentials from imported credntials
+                Credential credential = vcapCredentials.VCAP_SERVICES["tone_analyzer"][TestCredentialIndex].Credentials;
+                _username = credential.Username.ToString();
+                _password = credential.Password.ToString();
+                _url = credential.Url.ToString();
+            }
+            catch
+            {
+                Log.Debug("TestToneAnalyzer", "Failed to get credentials from VCAP_SERVICES file. Please configure credentials to run this test. For more information, see: https://github.com/watson-developer-cloud/unity-sdk/#authentication");
+            }
+            //  Create credential and instantiate service
+            Credentials credentials = new Credentials(_username, _password, _url);
+
+            //  Or authenticate using token
+            //Credentials credentials = new Credentials(_url)
+            //{
+            //    AuthenticationToken = _token
+            //};
+
+            _toneAnalyzer = new ToneAnalyzer(credentials);
+            _toneAnalyzer.VersionDate = _toneAnalyzerVersionDate;
+
+            //  Analyze tone
+            if (!_toneAnalyzer.GetToneAnalyze(OnGetToneAnalyze, _stringToTestTone))
+                Log.Debug("ExampleToneAnalyzer", "Failed to analyze!");
+
+            while (!_analyzeToneTested)
+                yield return null;
+
+            Log.Debug("ExampleToneAnalyzer", "Tone analyzer examples complete.");
+
+            yield break;
+        }
+
+        private void OnGetToneAnalyze(ToneAnalyzerResponse resp, string data)
+        {
+            Log.Debug("ExampleToneAnalyzer", "Tone Analyzer - Analyze Response: {0}", data);
+            Test(resp != null);
+            _analyzeToneTested = true;
+        }
     }
-
-    private void OnGetToneAnalyze(ToneAnalyzerResponse resp, string data)
-    {
-      Log.Status("TestToneAnalyzer", "Response: {0} - {1}", resp, data);
-
-      Test(resp != null);
-      m_GetToneAnalyzerTested = true;
-    }
-
-  }
 }
 

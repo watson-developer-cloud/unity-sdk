@@ -327,7 +327,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
         /// An object containing the emotion results for the target
         /// </summary>
         public EmotionScores emotion { get; set; }
-     }
+    }
 
     [fsObject]
     public class Author
@@ -460,7 +460,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
     }
 
     [fsObject]
-    public class CustomModel 
+    public class CustomModel
     {
         /// <summary>
         /// Shows as available if the model is ready for use
@@ -689,7 +689,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
     #region Parameters Converter
     public class ParametersConverter : fsConverter
     {
-        private static fsSerializer sm_Serializer = new fsSerializer();
+        private fsSerializer _serializer = new fsSerializer();
 
         public override bool CanProcess(Type type)
         {
@@ -732,7 +732,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
                 serialization.Add("xpath", new fsData(parameters.xpath));
 
             fsData tempData = null;
-            sm_Serializer.TrySerialize(parameters.features, out tempData);
+            _serializer.TrySerialize(parameters.features, out tempData);
             serialization.Add("features", tempData);
 
             serialized = new fsData(serialization);
@@ -745,7 +745,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
     #region Features Converter
     public class FeaturesConverter : fsConverter
     {
-        private static fsSerializer sm_Serializer = new fsSerializer();
+        private fsSerializer _serializer = new fsSerializer();
 
         public override bool CanProcess(Type type)
         {
@@ -768,55 +768,55 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
 
             if (features.concepts != null)
             {
-                sm_Serializer.TrySerialize(features.concepts, out tempData);
+                _serializer.TrySerialize(features.concepts, out tempData);
                 serialization.Add("concepts", tempData);
             }
 
             if (features.emotion != null)
             {
-                sm_Serializer.TrySerialize(features.emotion, out tempData);
+                _serializer.TrySerialize(features.emotion, out tempData);
                 serialization.Add("emotion", tempData);
             }
 
             if (features.entities != null)
             {
-                sm_Serializer.TrySerialize(features.entities, out tempData);
+                _serializer.TrySerialize(features.entities, out tempData);
                 serialization.Add("entities", tempData);
             }
 
             if (features.keywords != null)
             {
-                sm_Serializer.TrySerialize(features.keywords, out tempData);
+                _serializer.TrySerialize(features.keywords, out tempData);
                 serialization.Add("keywords", tempData);
             }
 
             if (features.metadata != null)
             {
-                sm_Serializer.TrySerialize(features.metadata, out tempData);
+                _serializer.TrySerialize(features.metadata, out tempData);
                 serialization.Add("metadata", tempData);
             }
 
             if (features.relations != null)
             {
-                sm_Serializer.TrySerialize(features.relations, out tempData);
+                _serializer.TrySerialize(features.relations, out tempData);
                 serialization.Add("relations", tempData);
             }
 
             if (features.semantic_roles != null)
             {
-                sm_Serializer.TrySerialize(features.semantic_roles, out tempData);
+                _serializer.TrySerialize(features.semantic_roles, out tempData);
                 serialization.Add("semantic_roles", tempData);
             }
 
             if (features.sentiment != null)
             {
-                sm_Serializer.TrySerialize(features.sentiment, out tempData);
+                _serializer.TrySerialize(features.sentiment, out tempData);
                 serialization.Add("sentiment", tempData);
             }
 
             if (features.categories != null)
             {
-                sm_Serializer.TrySerialize(features.categories, out tempData);
+                _serializer.TrySerialize(features.categories, out tempData);
                 serialization.Add("categories", tempData);
             }
 

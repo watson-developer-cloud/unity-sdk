@@ -21,25 +21,25 @@ using IBM.Watson.DeveloperCloud.Utilities;
 
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
-  public class TestRunnable : UnitTest
-  {
-    bool m_CoroutineRan = false;
-
-    public override IEnumerator RunTest()
+    public class TestRunnable : UnitTest
     {
-      Runnable.Run(TestCoroutine("Test"));
-      yield return new WaitForSeconds(1.0f);
+        bool m_CoroutineRan = false;
 
-      Test(m_CoroutineRan);
-      yield break;
-    }
+        public override IEnumerator RunTest()
+        {
+            Runnable.Run(TestCoroutine("Test"));
+            yield return new WaitForSeconds(1.0f);
 
-    private IEnumerator TestCoroutine(string a_Argument)
-    {
-      Test(a_Argument == "Test");
-      m_CoroutineRan = true;
-      yield break;
+            Test(m_CoroutineRan);
+            yield break;
+        }
+
+        private IEnumerator TestCoroutine(string a_Argument)
+        {
+            Test(a_Argument == "Test");
+            m_CoroutineRan = true;
+            yield break;
+        }
     }
-  }
 }
 

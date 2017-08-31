@@ -16,22 +16,30 @@
 */
 
 using UnityEngine;
-using IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v1;
+using IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2;
+using IBM.Watson.DeveloperCloud.Utilities;
 
 public class ExampleLanguageTranslation : MonoBehaviour
 {
-  private LanguageTranslation m_Translate = new LanguageTranslation();
-  private string m_PharseToTranslate = "How do I get to the disco?";
+    private LanguageTranslation _languageTranslation;
+    private string _username = null;
+    private string _password = null;
+    private string _url = null;
+    private string _pharseToTranslate = "How do I get to the disco?";
 
-  void Start()
-  {
-    Debug.Log("English Phrase to translate: " + m_PharseToTranslate);
-    m_Translate.GetTranslation(m_PharseToTranslate, "en", "es", OnGetTranslation);
-  }
+    void Start()
+    {
+        //  Create credential and instantiate service
+        Credentials credentials = new Credentials(_username, _password, _url);
+        _languageTranslation = new LanguageTranslation(credentials);
 
-  private void OnGetTranslation(Translations translation)
-  {
-    if (translation != null && translation.translations.Length > 0)
-      Debug.Log("Spanish Translation: " + translation.translations[0].translation);
-  }
+        Debug.Log("English Phrase to translate: " + _pharseToTranslate);
+        _languageTranslation.GetTranslation(_pharseToTranslate, "en", "es", OnGetTranslation);
+    }
+
+    private void OnGetTranslation(Translations translation, string customData)
+    {
+        if (translation != null && translation.translations.Length > 0)
+            Debug.Log("Spanish Translation: " + translation.translations[0].translation);
+    }
 }

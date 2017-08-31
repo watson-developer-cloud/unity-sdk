@@ -18,157 +18,64 @@
 using UnityEngine;
 using IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3;
 using IBM.Watson.DeveloperCloud.Logging;
+using IBM.Watson.DeveloperCloud.Utilities;
+using System.Collections;
 
 public class ExamplePersonalityInsightsV3 : MonoBehaviour
 {
-  PersonalityInsights m_personalityInsights = new PersonalityInsights();
-  private string testString = "<text-here>";
-  private string dataPath;
+    private string _username = null;
+    private string _password = null;
+    private string _url = null;
+    
 
-  void Start()
-  {
-    LogSystem.InstallDefaultReactors();
+    private PersonalityInsights _personalityInsights;
+    private string _personalityInsightsVersionDate = "2017-05-26";
 
-    dataPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/personalityInsights.json";
+    private string _testString = "The IBM Watson™ Personality Insights service provides a Representational State Transfer (REST) Application Programming Interface (API) that enables applications to derive insights from social media, enterprise data, or other digital communications. The service uses linguistic analytics to infer individuals' intrinsic personality characteristics, including Big Five, Needs, and Values, from digital communications such as email, text messages, tweets, and forum posts. The service can automatically infer, from potentially noisy social media, portraits of individuals that reflect their personality characteristics. The service can report consumption preferences based on the results of its analysis, and for JSON content that is timestamped, it can report temporal behavior.";
+    private string _dataPath;
 
-    if (!m_personalityInsights.GetProfile(OnGetProfileJson, dataPath, ContentType.TEXT_HTML, ContentLanguage.ENGLISH, ContentType.APPLICATION_JSON, AcceptLanguage.ENGLISH, true, true, true))
-      Log.Debug("ExamplePersonalityInsights", "Failed to get profile!");
+    private bool _getProfileTextTested = false;
+    private bool _getProfileJsonTested = false;
 
-    if (!m_personalityInsights.GetProfile(OnGetProfileText, testString, ContentType.TEXT_HTML, ContentLanguage.ENGLISH, ContentType.APPLICATION_JSON, AcceptLanguage.ENGLISH, true, true, true))
-      Log.Debug("ExamplePersonalityInsights", "Failed to get profile!");
-  }
-  private void OnGetProfileText(Profile profile, string data)
-  {
-    if (profile != null)
+    void Start()
     {
-      if (!string.IsNullOrEmpty(profile.processed_language))
-        Log.Debug("TestPersonalityInsightsV3", "processed_language: {0}", profile.processed_language);
+        LogSystem.InstallDefaultReactors();
 
-      Log.Debug("TestPersonalityInsightsV3", "word_count: {0}", profile.word_count);
+        //  Create credential and instantiate service
+        Credentials credentials = new Credentials(_username, _password, _url);
 
-      if (!string.IsNullOrEmpty(profile.word_count_message))
-        Log.Debug("TestPersonalityInsightsV3", "word_count_message: {0}", profile.word_count_message);
+        _personalityInsights = new PersonalityInsights(credentials);
+        _personalityInsights.VersionDate = _personalityInsightsVersionDate;
 
-      if (profile.personality != null && profile.personality.Length > 0)
-      {
-        Log.Debug("TestPersonalityInsightsV3", "Personality trait tree");
-        foreach (TraitTreeNode node in profile.personality)
-          LogTraitTree(node);
-      }
+        _dataPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/personalityInsights.json";
 
-      if (profile.values != null && profile.values.Length > 0)
-      {
-        Log.Debug("TestPersonalityInsightsV3", "Values trait tree");
-        foreach (TraitTreeNode node in profile.values)
-          LogTraitTree(node);
-      }
-
-      if (profile.needs != null && profile.personality.Length > 0)
-      {
-        Log.Debug("TestPersonalityInsightsV3", "Needs trait tree");
-        foreach (TraitTreeNode node in profile.needs)
-          LogTraitTree(node);
-      }
-
-      if (profile.behavior != null && profile.behavior.Length > 0)
-      {
-        Log.Debug("TestPersonalityInsightsV3", "Behavior tree");
-        foreach (BehaviorNode behavior in profile.behavior)
-        {
-          Log.Debug("TestPersonalityInsightsV3", "trait_id: {0}", behavior.trait_id);
-          Log.Debug("TestPersonalityInsightsV3", "name: {0}", behavior.name);
-          Log.Debug("TestPersonalityInsightsV3", "category: {0}", behavior.category);
-          Log.Debug("TestPersonalityInsightsV3", "percentage: {0}", behavior.percentage.ToString());
-          Log.Debug("TestPersonalityInsightsV3", "----------------");
-        }
-      }
-
-      if (profile.consumption_preferences != null && profile.consumption_preferences.Length > 0)
-      {
-        Log.Debug("TestPersonalityInsightsV3", "ConsumptionPreferencesCategories");
-        foreach (ConsumptionPreferencesCategoryNode categoryNode in profile.consumption_preferences)
-          LogConsumptionPreferencesCategory(categoryNode);
-      }
+        Runnable.Run(Examples());
     }
-  }
 
-  private void OnGetProfileJson(Profile profile, string data)
-  {
-    if (profile != null)
+    private IEnumerator Examples()
     {
-      if (!string.IsNullOrEmpty(profile.processed_language))
-        Log.Debug("TestPersonalityInsightsV3", "processed_language: {0}", profile.processed_language);
+        if (!_personalityInsights.GetProfile(OnGetProfileJson, _dataPath, ContentType.TextHtml, ContentLanguage.English, ContentType.ApplicationJson, AcceptLanguage.English, true, true, true))
+            Log.Debug("ExamplePersonalityInsights", "Failed to get profile!");
+        while (!_getProfileJsonTested)
+            yield return null;
 
-      Log.Debug("TestPersonalityInsightsV3", "word_count: {0}", profile.word_count);
+        if (!_personalityInsights.GetProfile(OnGetProfileText, _testString, ContentType.TextHtml, ContentLanguage.English, ContentType.ApplicationJson, AcceptLanguage.English, true, true, true))
+            Log.Debug("ExamplePersonalityInsights", "Failed to get profile!");
+        while (!_getProfileTextTested)
+            yield return null;
 
-      if (!string.IsNullOrEmpty(profile.word_count_message))
-        Log.Debug("TestPersonalityInsightsV3", "word_count_message: {0}", profile.word_count_message);
-
-      if (profile.personality != null && profile.personality.Length > 0)
-      {
-        Log.Debug("TestPersonalityInsightsV3", "Personality trait tree");
-        foreach (TraitTreeNode node in profile.personality)
-          LogTraitTree(node);
-      }
-
-      if (profile.values != null && profile.values.Length > 0)
-      {
-        Log.Debug("TestPersonalityInsightsV3", "Values trait tree");
-        foreach (TraitTreeNode node in profile.values)
-          LogTraitTree(node);
-      }
-
-      if (profile.needs != null && profile.personality.Length > 0)
-      {
-        Log.Debug("TestPersonalityInsightsV3", "Needs trait tree");
-        foreach (TraitTreeNode node in profile.needs)
-          LogTraitTree(node);
-      }
-
-      if (profile.behavior != null && profile.behavior.Length > 0)
-      {
-        Log.Debug("TestPersonalityInsightsV3", "Behavior tree");
-        foreach (BehaviorNode behavior in profile.behavior)
-        {
-          Log.Debug("TestPersonalityInsightsV3", "trait_id: {0}", behavior.trait_id);
-          Log.Debug("TestPersonalityInsightsV3", "name: {0}", behavior.name);
-          Log.Debug("TestPersonalityInsightsV3", "category: {0}", behavior.category);
-          Log.Debug("TestPersonalityInsightsV3", "percentage: {0}", behavior.percentage.ToString());
-          Log.Debug("TestPersonalityInsightsV3", "----------------");
-        }
-      }
-
-      if (profile.consumption_preferences != null && profile.consumption_preferences.Length > 0)
-      {
-        Log.Debug("TestPersonalityInsightsV3", "ConsumptionPreferencesCategories");
-        foreach (ConsumptionPreferencesCategoryNode categoryNode in profile.consumption_preferences)
-          LogConsumptionPreferencesCategory(categoryNode);
-      }
+        Log.Debug("ExamplePersonalityInsights", "Personality insights examples complete.");
     }
-  }
 
-  private void LogTraitTree(TraitTreeNode traitTreeNode)
-  {
-    Log.Debug("TestPersonalityInsightsV3", "trait_id: {0} | name: {1} | category: {2} | percentile: {3} | raw_score: {4}",
-        string.IsNullOrEmpty(traitTreeNode.trait_id) ? "null" : traitTreeNode.trait_id,
-        string.IsNullOrEmpty(traitTreeNode.name) ? "null" : traitTreeNode.name,
-        string.IsNullOrEmpty(traitTreeNode.category) ? "null" : traitTreeNode.category,
-        string.IsNullOrEmpty(traitTreeNode.percentile.ToString()) ? "null" : traitTreeNode.percentile.ToString(),
-        string.IsNullOrEmpty(traitTreeNode.raw_score.ToString()) ? "null" : traitTreeNode.raw_score.ToString());
+    private void OnGetProfileText(Profile profile, string data)
+    {
+        Log.Debug("ExamplePersonaltyInsights", "Personality Insights - GetProfileText Response: {0}", data);
+        _getProfileTextTested = true;
+    }
 
-    if (traitTreeNode.children != null && traitTreeNode.children.Length > 0)
-      foreach (TraitTreeNode childNode in traitTreeNode.children)
-        LogTraitTree(childNode);
-  }
-
-  private void LogConsumptionPreferencesCategory(ConsumptionPreferencesCategoryNode categoryNode)
-  {
-    Log.Debug("TestPersonalityInsightsV3", "consumption_preference_category_id: {0} | name: {1}", categoryNode.consumption_preference_category_id, categoryNode.name);
-
-    foreach (ConsumptionPreferencesNode preferencesNode in categoryNode.consumption_preferences)
-      Log.Debug("TestPersonalityInsightsV3", "\t consumption_preference_id: {0} | name: {1} | score: {2}",
-          string.IsNullOrEmpty(preferencesNode.consumption_preference_id) ? "null" : preferencesNode.consumption_preference_id,
-          string.IsNullOrEmpty(preferencesNode.name) ? "null" : preferencesNode.name,
-          string.IsNullOrEmpty(preferencesNode.score.ToString()) ? "null" : preferencesNode.score.ToString());
-  }
+    private void OnGetProfileJson(Profile profile, string data)
+    {
+        Log.Debug("ExamplePersonaltyInsights", "Personality Insights - GetProfileJson Response: {0}", data);
+        _getProfileJsonTested = true;
+    }
 }
