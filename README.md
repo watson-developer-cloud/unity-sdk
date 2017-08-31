@@ -2947,7 +2947,7 @@ See [CONTRIBUTING.md](.github/CONTRIBUTING.md).
 [speech_to_text]: http://www.ibm.com/watson/developercloud/doc/speech-to-text/
 [text_to_speech]: http://www.ibm.com/watson/developercloud/doc/text-to-speech/
 [language_translator]: http://www.ibm.com/watson/developercloud/doc/language-translator/index.html
-[dialog]: http://www.ibm.com/watson/developercloud/doc/dialog/
+[dialog]: https://console.bluemix.net/docs/services/conversation/index.html#about
 [natural_language_classifier]: http://www.ibm.com/watson/developercloud/doc/natural-language-classifier/index.html
 
 [alchemy_language]: http://www.alchemyapi.com/products/alchemylanguage
@@ -2955,7 +2955,7 @@ See [CONTRIBUTING.md](.github/CONTRIBUTING.md).
 [sentiment_analysis]: http://www.alchemyapi.com/products/alchemylanguage/sentiment-analysis
 [tone_analyzer]: http://www.ibm.com/watson/developercloud/doc/tone-analyzer/
 [tradeoff_analytics]: http://www.ibm.com/watson/developercloud/doc/tradeoff-analytics/
-[conversation]:http://www.ibm.com/watson/developercloud/doc/conversation/
+[conversation]:https://console.bluemix.net/docs/services/conversation/index.html#about
 [visual_recognition]: http://www.ibm.com/watson/developercloud/visual-recognition/api/v3/
 [personality_insights]: http://www.ibm.com/watson/developercloud/personality-insights/api/v2/
 [conversation_tooling]: https://www.ibmwatsonconversation.com
@@ -2971,5 +2971,5 @@ See [CONTRIBUTING.md](.github/CONTRIBUTING.md).
 [nlu_relations]: https://www.ibm.com/watson/developercloud/natural-language-understanding/api/v1/#relations
 
 [dialog_service]: http://www.ibm.com/watson/developercloud/doc/dialog/
-[dialog_migration]: https://www.ibm.com/watson/developercloud/doc/conversation/migration.shtml
-[conversation_service]: https://www.ibm.com/watson/developercloud/doc/conversation/
+[dialog_migration]: https://console.bluemix.net/docs/services/conversation/index.html#about
+[conversation_service]: https://console.bluemix.net/docs/services/conversation/index.html#about
