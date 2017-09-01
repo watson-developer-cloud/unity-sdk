@@ -1,0 +1,4 @@
+var class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_personality_insights_1_1v3_1_1_personality_insights_version =
+[
+    [ "Version", "dc/d56/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_personality_insights_1_1v3_1_1_personality_insights_version.html#adbb622af53ff7188e2dd8bb6fb732bd9", null ]
+];

@@ -1,0 +1,5 @@
+var class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_understanding_1_1v1_1_1_targeted_sentiment_results =
+[
+    [ "score", "da/de2/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_understanding_1_1v1_1_1_targeted_sentiment_results.html#a6f641cfce9e7c2306a63aec8bcf98cef", null ],
+    [ "text", "da/de2/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_understanding_1_1v1_1_1_targeted_sentiment_results.html#a7a2a78de14482cc0fdf0ee35e15b4512", null ]
+];

@@ -1,0 +1,4 @@
+var class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_understanding_1_1v1_1_1_list_models_results =
+[
+    [ "models", "d9/dd1/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_understanding_1_1v1_1_1_list_models_results.html#a7c623b4bb784c5169e215bda0da8bd2d", null ]
+];

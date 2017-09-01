@@ -1,0 +1,4 @@
+var class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_language_translator_1_1v2_1_1_delete_model_result =
+[
+    [ "status", "d4/d38/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_language_translator_1_1v2_1_1_delete_model_result.html#a3cea245e811be1107f48cb42a0eb4211", null ]
+];

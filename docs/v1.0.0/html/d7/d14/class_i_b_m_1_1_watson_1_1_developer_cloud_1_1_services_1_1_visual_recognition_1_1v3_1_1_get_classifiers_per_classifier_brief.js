@@ -1,0 +1,5 @@
+var class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_visual_recognition_1_1v3_1_1_get_classifiers_per_classifier_brief =
+[
+    [ "classifier_id", "d7/d14/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_visual_recognition_1_1v3_1_1_get_classifiers_per_classifier_brief.html#a5ac6209aeb16b6aabd9f704a13e51252", null ],
+    [ "name", "d7/d14/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_visual_recognition_1_1v3_1_1_get_classifiers_per_classifier_brief.html#a9467ff37b6b36b7331b0c363e41694bc", null ]
+];

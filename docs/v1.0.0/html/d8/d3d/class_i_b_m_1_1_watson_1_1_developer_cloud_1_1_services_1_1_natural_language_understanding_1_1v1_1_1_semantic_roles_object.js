@@ -1,0 +1,5 @@
+var class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_understanding_1_1v1_1_1_semantic_roles_object =
+[
+    [ "keywords", "d8/d3d/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_understanding_1_1v1_1_1_semantic_roles_object.html#a66f66efadd7951c7b16cc91c7685139c", null ],
+    [ "text", "d8/d3d/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_understanding_1_1v1_1_1_semantic_roles_object.html#ac3219cb4e004a07ffd9a460dbc977f67", null ]
+];

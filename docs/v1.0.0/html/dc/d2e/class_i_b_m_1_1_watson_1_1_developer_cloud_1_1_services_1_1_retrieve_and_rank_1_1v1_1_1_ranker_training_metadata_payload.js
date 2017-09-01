@@ -1,0 +1,4 @@
+var class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_retrieve_and_rank_1_1v1_1_1_ranker_training_metadata_payload =
+[
+    [ "name", "dc/d2e/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_retrieve_and_rank_1_1v1_1_1_ranker_training_metadata_payload.html#a82fdbe70526795e163143e4711a65a17", null ]
+];

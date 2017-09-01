@@ -1,0 +1,20 @@
+var namespace_i_b_m_1_1_watson_1_1_developer_cloud_1_1_unit_tests =
+[
+    [ "TestAlchemyAPI", "d8/df1/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_unit_tests_1_1_test_alchemy_a_p_i.html", "d8/df1/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_unit_tests_1_1_test_alchemy_a_p_i" ],
+    [ "TestConversation", "d9/d20/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_unit_tests_1_1_test_conversation.html", "d9/d20/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_unit_tests_1_1_test_conversation" ],
+    [ "TestDiscovery", "d3/d12/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_unit_tests_1_1_test_discovery.html", "d3/d12/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_unit_tests_1_1_test_discovery" ],
+    [ "TestDocumentConversion", "da/dca/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_unit_tests_1_1_test_document_conversion.html", "da/dca/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_unit_tests_1_1_test_document_conversion" ],
+    [ "TestEventManager", "db/dba/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_unit_tests_1_1_test_event_manager.html", "db/dba/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_unit_tests_1_1_test_event_manager" ],
+    [ "TestLanguageTranslator", "da/d1f/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_unit_tests_1_1_test_language_translator.html", "da/d1f/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_unit_tests_1_1_test_language_translator" ],
+    [ "TestNaturalLanguageClassifier", "dc/d89/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_unit_tests_1_1_test_natural_language_classifier.html", "dc/d89/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_unit_tests_1_1_test_natural_language_classifier" ],
+    [ "TestNaturalLanguageUnderstanding", "de/dfd/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_unit_tests_1_1_test_natural_language_understanding.html", "de/dfd/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_unit_tests_1_1_test_natural_language_understanding" ],
+    [ "TestPersonalityInsightsV3", "dc/d44/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_unit_tests_1_1_test_personality_insights_v3.html", "dc/d44/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_unit_tests_1_1_test_personality_insights_v3" ],
+    [ "TestRetrieveAndRank", "d0/d80/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_unit_tests_1_1_test_retrieve_and_rank.html", "d0/d80/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_unit_tests_1_1_test_retrieve_and_rank" ],
+    [ "TestRunnable", "d1/dc0/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_unit_tests_1_1_test_runnable.html", "d1/dc0/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_unit_tests_1_1_test_runnable" ],
+    [ "TestSpeechToText", "d4/d19/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_unit_tests_1_1_test_speech_to_text.html", "d4/d19/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_unit_tests_1_1_test_speech_to_text" ],
+    [ "TestTextToSpeech", "d1/df0/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_unit_tests_1_1_test_text_to_speech.html", "d1/df0/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_unit_tests_1_1_test_text_to_speech" ],
+    [ "TestToneAnalyzer", "da/d61/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_unit_tests_1_1_test_tone_analyzer.html", "da/d61/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_unit_tests_1_1_test_tone_analyzer" ],
+    [ "TestTradeoffAnalytics", "d5/dbd/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_unit_tests_1_1_test_tradeoff_analytics.html", "d5/dbd/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_unit_tests_1_1_test_tradeoff_analytics" ],
+    [ "TestVisualRecognition", "d0/d92/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_unit_tests_1_1_test_visual_recognition.html", "d0/d92/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_unit_tests_1_1_test_visual_recognition" ],
+    [ "UnitTest", "d0/d5c/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_unit_tests_1_1_unit_test.html", "d0/d5c/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_unit_tests_1_1_unit_test" ]
+];

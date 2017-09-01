@@ -1,0 +1,5 @@
+var class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_understanding_1_1v1_1_1_semantic_roles_entity =
+[
+    [ "text", "d3/d7b/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_understanding_1_1v1_1_1_semantic_roles_entity.html#a6880c775b8ad39711d2eda9ad8955ade", null ],
+    [ "type", "d3/d7b/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_understanding_1_1v1_1_1_semantic_roles_entity.html#ab49f99747ada273fbb6c675456ade83c", null ]
+];

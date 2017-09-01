@@ -1,0 +1,10 @@
+var namespace_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_language_translation_1_1v2 =
+[
+    [ "Language", "d7/d03/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_language_translation_1_1v2_1_1_language.html", "d7/d03/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_language_translation_1_1v2_1_1_language" ],
+    [ "Languages", "db/de3/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_language_translation_1_1v2_1_1_languages.html", "db/de3/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_language_translation_1_1v2_1_1_languages" ],
+    [ "LanguageTranslation", "d8/dc6/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_language_translation_1_1v2_1_1_language_translation.html", "d8/dc6/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_language_translation_1_1v2_1_1_language_translation" ],
+    [ "Translation", "d5/d36/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_language_translation_1_1v2_1_1_translation.html", "d5/d36/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_language_translation_1_1v2_1_1_translation" ],
+    [ "TranslationModel", "db/d42/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_language_translation_1_1v2_1_1_translation_model.html", "db/d42/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_language_translation_1_1v2_1_1_translation_model" ],
+    [ "TranslationModels", "db/d66/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_language_translation_1_1v2_1_1_translation_models.html", "db/d66/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_language_translation_1_1v2_1_1_translation_models" ],
+    [ "Translations", "d3/dc5/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_language_translation_1_1v2_1_1_translations.html", "d3/dc5/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_language_translation_1_1v2_1_1_translations" ]
+];

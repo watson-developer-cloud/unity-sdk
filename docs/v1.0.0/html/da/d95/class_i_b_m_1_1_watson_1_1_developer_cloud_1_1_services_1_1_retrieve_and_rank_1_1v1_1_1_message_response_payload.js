@@ -1,0 +1,4 @@
+var class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_retrieve_and_rank_1_1v1_1_1_message_response_payload =
+[
+    [ "message", "da/d95/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_retrieve_and_rank_1_1v1_1_1_message_response_payload.html#a350ab7caac8c3e4f7da18e184d58a94a", null ]
+];

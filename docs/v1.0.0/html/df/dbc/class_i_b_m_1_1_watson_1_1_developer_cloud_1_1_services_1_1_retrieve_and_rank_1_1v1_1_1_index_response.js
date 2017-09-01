@@ -1,0 +1,4 @@
+var class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_retrieve_and_rank_1_1v1_1_1_index_response =
+[
+    [ "responseHeader", "df/dbc/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_retrieve_and_rank_1_1v1_1_1_index_response.html#a088710cc0a2b3410aa048a60078ad2b5", null ]
+];

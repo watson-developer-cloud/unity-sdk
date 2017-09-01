@@ -1,0 +1,19 @@
+var searchData=
+[
+  ['language',['Language',['../d7/d03/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_language_translation_1_1v2_1_1_language.html',1,'IBM::Watson::DeveloperCloud::Services::LanguageTranslation::v2']]],
+  ['language',['Language',['../d1/d1a/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_language_translator_1_1v2_1_1_language.html',1,'IBM::Watson::DeveloperCloud::Services::LanguageTranslator::v2']]],
+  ['languagedata',['LanguageData',['../da/d15/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_alchemy_a_p_i_1_1v1_1_1_language_data.html',1,'IBM::Watson::DeveloperCloud::Services::AlchemyAPI::v1']]],
+  ['languagedata',['LanguageData',['../d0/df6/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_data_types_1_1_language_data.html',1,'IBM::Watson::DeveloperCloud::DataTypes']]],
+  ['languages',['Languages',['../db/de3/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_language_translation_1_1v2_1_1_languages.html',1,'IBM::Watson::DeveloperCloud::Services::LanguageTranslation::v2']]],
+  ['languages',['Languages',['../d1/d49/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_language_translator_1_1v2_1_1_languages.html',1,'IBM::Watson::DeveloperCloud::Services::LanguageTranslator::v2']]],
+  ['languagetranslation',['LanguageTranslation',['../d8/dc6/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_language_translation_1_1v2_1_1_language_translation.html',1,'IBM::Watson::DeveloperCloud::Services::LanguageTranslation::v2']]],
+  ['languagetranslator',['LanguageTranslator',['../d7/d42/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_language_translator_1_1v2_1_1_language_translator.html',1,'IBM::Watson::DeveloperCloud::Services::LanguageTranslator::v2']]],
+  ['leveldata',['LevelData',['../d7/df6/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_data_types_1_1_level_data.html',1,'IBM::Watson::DeveloperCloud::DataTypes']]],
+  ['listmodelsresults',['ListModelsResults',['../d9/dd1/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_understanding_1_1v1_1_1_list_models_results.html',1,'IBM::Watson::DeveloperCloud::Services::NaturalLanguageUnderstanding::v1']]],
+  ['listrankerspayload',['ListRankersPayload',['../d9/db9/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_retrieve_and_rank_1_1v1_1_1_list_rankers_payload.html',1,'IBM::Watson::DeveloperCloud::Services::RetrieveAndRank::v1']]],
+  ['location',['Location',['../d2/d66/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_visual_recognition_1_1v3_1_1_location.html',1,'IBM::Watson::DeveloperCloud::Services::VisualRecognition::v3']]],
+  ['location',['Location',['../da/d36/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_alchemy_a_p_i_1_1v1_1_1_location.html',1,'IBM::Watson::DeveloperCloud::Services::AlchemyAPI::v1']]],
+  ['log',['Log',['../d8/dab/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_logging_1_1_log.html',1,'IBM::Watson::DeveloperCloud::Logging']]],
+  ['logrecord',['LogRecord',['../d1/d5c/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_logging_1_1_log_record.html',1,'IBM::Watson::DeveloperCloud::Logging']]],
+  ['logsystem',['LogSystem',['../d1/d33/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_logging_1_1_log_system.html',1,'IBM::Watson::DeveloperCloud::Logging']]]
+];

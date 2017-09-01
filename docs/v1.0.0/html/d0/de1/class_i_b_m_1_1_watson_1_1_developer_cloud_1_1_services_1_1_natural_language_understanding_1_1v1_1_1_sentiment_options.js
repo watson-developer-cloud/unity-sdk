@@ -1,0 +1,5 @@
+var class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_understanding_1_1v1_1_1_sentiment_options =
+[
+    [ "document", "d0/de1/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_understanding_1_1v1_1_1_sentiment_options.html#a1e05ed668a9beca783e8a30b6ad2e647", null ],
+    [ "targets", "d0/de1/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_understanding_1_1v1_1_1_sentiment_options.html#abf25b0807495a03936fda4f073701d5f", null ]
+];

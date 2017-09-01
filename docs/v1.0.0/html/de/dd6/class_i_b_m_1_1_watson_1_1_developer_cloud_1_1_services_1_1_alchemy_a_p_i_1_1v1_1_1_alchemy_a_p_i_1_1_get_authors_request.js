@@ -1,0 +1,5 @@
+var class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_alchemy_a_p_i_1_1v1_1_1_alchemy_a_p_i_1_1_get_authors_request =
+[
+    [ "Callback", "de/dd6/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_alchemy_a_p_i_1_1v1_1_1_alchemy_a_p_i_1_1_get_authors_request.html#ae70fb9d90cc8e78b480cfda3c163fbdf", null ],
+    [ "Data", "de/dd6/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_alchemy_a_p_i_1_1v1_1_1_alchemy_a_p_i_1_1_get_authors_request.html#ab86a288bc061d8e3a72d1a2f01eb2b89", null ]
+];

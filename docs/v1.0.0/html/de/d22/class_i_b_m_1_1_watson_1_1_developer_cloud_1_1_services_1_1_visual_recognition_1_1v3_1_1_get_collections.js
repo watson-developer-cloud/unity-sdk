@@ -1,0 +1,4 @@
+var class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_visual_recognition_1_1v3_1_1_get_collections =
+[
+    [ "collections", "de/d22/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_visual_recognition_1_1v3_1_1_get_collections.html#a8aed11625ea5e2a0e30491224c1de017", null ]
+];

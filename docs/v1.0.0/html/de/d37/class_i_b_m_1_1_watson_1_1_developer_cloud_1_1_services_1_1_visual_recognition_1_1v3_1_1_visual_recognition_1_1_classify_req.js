@@ -1,0 +1,6 @@
+var class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_visual_recognition_1_1v3_1_1_visual_recognition_1_1_classify_req =
+[
+    [ "AcceptLanguage", "de/d37/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_visual_recognition_1_1v3_1_1_visual_recognition_1_1_classify_req.html#a1295766cda2cfc56b182f9ad92d0df2e", null ],
+    [ "Callback", "de/d37/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_visual_recognition_1_1v3_1_1_visual_recognition_1_1_classify_req.html#a2439c71743534c31d9d648d0f9353e73", null ],
+    [ "Data", "de/d37/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_visual_recognition_1_1v3_1_1_visual_recognition_1_1_classify_req.html#a479003eeba89ec22711607bfea391fd4", null ]
+];

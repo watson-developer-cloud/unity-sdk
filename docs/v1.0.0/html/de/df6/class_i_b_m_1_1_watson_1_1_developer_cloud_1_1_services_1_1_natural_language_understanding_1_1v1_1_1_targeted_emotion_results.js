@@ -1,0 +1,5 @@
+var class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_understanding_1_1v1_1_1_targeted_emotion_results =
+[
+    [ "emotion", "de/df6/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_understanding_1_1v1_1_1_targeted_emotion_results.html#ab6cce63eb7541638378a863a011a0a55", null ],
+    [ "text", "de/df6/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_understanding_1_1v1_1_1_targeted_emotion_results.html#a31177ea5fb88ad753fab81f718880b9e", null ]
+];

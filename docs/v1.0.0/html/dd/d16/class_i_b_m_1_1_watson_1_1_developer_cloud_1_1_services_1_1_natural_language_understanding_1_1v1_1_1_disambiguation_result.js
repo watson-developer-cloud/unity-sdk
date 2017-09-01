@@ -1,0 +1,6 @@
+var class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_understanding_1_1v1_1_1_disambiguation_result =
+[
+    [ "dbpedia_resource", "dd/d16/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_understanding_1_1v1_1_1_disambiguation_result.html#a01d01defe5e4c2b178a6a5f53743c1d1", null ],
+    [ "name", "dd/d16/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_understanding_1_1v1_1_1_disambiguation_result.html#ac0a2aadda2ec0cb1fadd9ad1db927dd4", null ],
+    [ "subtype", "dd/d16/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_understanding_1_1v1_1_1_disambiguation_result.html#a01fac2ed935af98211ec4dd62d284466", null ]
+];

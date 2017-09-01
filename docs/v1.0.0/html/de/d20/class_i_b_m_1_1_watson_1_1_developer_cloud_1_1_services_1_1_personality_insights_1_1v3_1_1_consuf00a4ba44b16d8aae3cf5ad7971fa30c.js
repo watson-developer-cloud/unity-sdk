@@ -1,0 +1,6 @@
+var class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_personality_insights_1_1v3_1_1_consuf00a4ba44b16d8aae3cf5ad7971fa30c =
+[
+    [ "consumption_preference_category_id", "de/d20/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_personality_insights_1_1v3_1_1_consuf00a4ba44b16d8aae3cf5ad7971fa30c.html#a181d5edce3bafa4c3c1dbf6000d651ed", null ],
+    [ "consumption_preferences", "de/d20/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_personality_insights_1_1v3_1_1_consuf00a4ba44b16d8aae3cf5ad7971fa30c.html#ad5a8e548ee8b568e19a41979b509214b", null ],
+    [ "name", "de/d20/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_personality_insights_1_1v3_1_1_consuf00a4ba44b16d8aae3cf5ad7971fa30c.html#a36697a9f5f75af8317bca84b764fb4f4", null ]
+];

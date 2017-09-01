@@ -1,0 +1,6 @@
+var class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_retrieve_and_rank_1_1v1_1_1_retrieve11c0f47daf273ec146c37ad4b4b330bc =
+[
+    [ "Callback", "d5/d96/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_retrieve_and_rank_1_1v1_1_1_retrieve11c0f47daf273ec146c37ad4b4b330bc.html#a1055b986668e7630c913283ca3db2b82", null ],
+    [ "Data", "d5/d96/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_retrieve_and_rank_1_1v1_1_1_retrieve11c0f47daf273ec146c37ad4b4b330bc.html#a4b82677b8b6ef5ac6b08d8c9f74e5e2f", null ],
+    [ "RankerID", "d5/d96/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_retrieve_and_rank_1_1v1_1_1_retrieve11c0f47daf273ec146c37ad4b4b330bc.html#a0973fe837774baa4dc53438dab6a82d8", null ]
+];

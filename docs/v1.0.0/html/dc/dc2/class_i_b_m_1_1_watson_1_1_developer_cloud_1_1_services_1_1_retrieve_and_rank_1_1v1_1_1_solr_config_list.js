@@ -1,0 +1,4 @@
+var class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_retrieve_and_rank_1_1v1_1_1_solr_config_list =
+[
+    [ "solr_configs", "dc/dc2/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_retrieve_and_rank_1_1v1_1_1_solr_config_list.html#a757c05e6791911c3e029a27a5cab63f8", null ]
+];

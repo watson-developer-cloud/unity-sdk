@@ -1,0 +1,5 @@
+var class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_alchemy_a_p_i_1_1v1_1_1_alchemy_a_p_i_1_1_get_entities_request =
+[
+    [ "Callback", "d1/d8b/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_alchemy_a_p_i_1_1v1_1_1_alchemy_a_p_i_1_1_get_entities_request.html#aeef50f98875a26fbafe2bdd5258bdc81", null ],
+    [ "Data", "d1/d8b/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_alchemy_a_p_i_1_1v1_1_1_alchemy_a_p_i_1_1_get_entities_request.html#afbafe996d663f90bf06b6e9db12cbabb", null ]
+];

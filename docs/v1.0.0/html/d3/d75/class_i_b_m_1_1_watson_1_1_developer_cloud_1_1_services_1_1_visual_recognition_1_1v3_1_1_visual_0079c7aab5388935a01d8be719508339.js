@@ -1,0 +1,5 @@
+var class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_visual_recognition_1_1v3_1_1_visual_0079c7aab5388935a01d8be719508339 =
+[
+    [ "Callback", "d3/d75/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_visual_recognition_1_1v3_1_1_visual_0079c7aab5388935a01d8be719508339.html#a25f90cc814febf207682fafd75e081bf", null ],
+    [ "Data", "d3/d75/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_visual_recognition_1_1v3_1_1_visual_0079c7aab5388935a01d8be719508339.html#a1f9c36f08fb6544525476a3a1501bf81", null ]
+];

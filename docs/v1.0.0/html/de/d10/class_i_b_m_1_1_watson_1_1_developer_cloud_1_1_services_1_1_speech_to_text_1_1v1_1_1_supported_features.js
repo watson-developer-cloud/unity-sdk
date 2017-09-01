@@ -1,0 +1,4 @@
+var class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_speech_to_text_1_1v1_1_1_supported_features =
+[
+    [ "custom_language_model", "de/d10/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_speech_to_text_1_1v1_1_1_supported_features.html#a3e12517cf6a0f3d8083c7270cb07f391", null ]
+];

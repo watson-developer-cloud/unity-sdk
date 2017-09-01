@@ -1,0 +1,6 @@
+var class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_personality_insights_1_1v3_1_1_perso7b22282e7db5d373d578800aeaaeef32 =
+[
+    [ "Callback", "d8/d8e/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_personality_insights_1_1v3_1_1_perso7b22282e7db5d373d578800aeaaeef32.html#a270d5e33f8fa539bec57882046259976", null ],
+    [ "Data", "d8/d8e/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_personality_insights_1_1v3_1_1_perso7b22282e7db5d373d578800aeaaeef32.html#aeacf4ebc88ae325ca4e7fe1648da6d89", null ],
+    [ "Source", "d8/d8e/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_personality_insights_1_1v3_1_1_perso7b22282e7db5d373d578800aeaaeef32.html#a36afe4116ab71df91814c3abb190687c", null ]
+];

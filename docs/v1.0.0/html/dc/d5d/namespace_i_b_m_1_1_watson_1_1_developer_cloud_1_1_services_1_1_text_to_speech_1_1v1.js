@@ -1,0 +1,17 @@
+var namespace_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_text_to_speech_1_1v1 =
+[
+    [ "Customization", "db/d9f/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_text_to_speech_1_1v1_1_1_customization.html", "db/d9f/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_text_to_speech_1_1v1_1_1_customization" ],
+    [ "CustomizationID", "db/d2a/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_text_to_speech_1_1v1_1_1_customization_i_d.html", "db/d2a/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_text_to_speech_1_1v1_1_1_customization_i_d" ],
+    [ "Customizations", "d8/d05/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_text_to_speech_1_1v1_1_1_customizations.html", "d8/d05/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_text_to_speech_1_1v1_1_1_customizations" ],
+    [ "CustomizationWords", "d7/d7a/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_text_to_speech_1_1v1_1_1_customization_words.html", "d7/d7a/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_text_to_speech_1_1v1_1_1_customization_words" ],
+    [ "CustomVoice", "de/d0d/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_text_to_speech_1_1v1_1_1_custom_voice.html", "de/d0d/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_text_to_speech_1_1v1_1_1_custom_voice" ],
+    [ "CustomVoiceUpdate", "d4/daf/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_text_to_speech_1_1v1_1_1_custom_voice_update.html", "d4/daf/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_text_to_speech_1_1v1_1_1_custom_voice_update" ],
+    [ "ErrorModel", "d8/df3/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_text_to_speech_1_1v1_1_1_error_model.html", "d8/df3/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_text_to_speech_1_1v1_1_1_error_model" ],
+    [ "Pronunciation", "df/d42/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_text_to_speech_1_1v1_1_1_pronunciation.html", "df/d42/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_text_to_speech_1_1v1_1_1_pronunciation" ],
+    [ "TextToSpeech", "d0/de3/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_text_to_speech_1_1v1_1_1_text_to_speech.html", "d0/de3/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_text_to_speech_1_1v1_1_1_text_to_speech" ],
+    [ "Translation", "d8/db9/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_text_to_speech_1_1v1_1_1_translation.html", "d8/db9/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_text_to_speech_1_1v1_1_1_translation" ],
+    [ "Voice", "d7/d2a/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_text_to_speech_1_1v1_1_1_voice.html", "d7/d2a/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_text_to_speech_1_1v1_1_1_voice" ],
+    [ "Voices", "d5/d10/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_text_to_speech_1_1v1_1_1_voices.html", "d5/d10/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_text_to_speech_1_1v1_1_1_voices" ],
+    [ "Word", "d1/dfe/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_text_to_speech_1_1v1_1_1_word.html", "d1/dfe/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_text_to_speech_1_1v1_1_1_word" ],
+    [ "Words", "df/dc5/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_text_to_speech_1_1v1_1_1_words.html", "df/dc5/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_text_to_speech_1_1v1_1_1_words" ]
+];

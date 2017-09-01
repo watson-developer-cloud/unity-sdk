@@ -1,0 +1,5 @@
+var class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_retrieve_and_rank_1_1v1_1_1_retrieve60a26aaa9ec686629c753f3a5baca3f3 =
+[
+    [ "Callback", "d1/deb/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_retrieve_and_rank_1_1v1_1_1_retrieve60a26aaa9ec686629c753f3a5baca3f3.html#aafb5620f005b4f159dc05d696c8f52e9", null ],
+    [ "Data", "d1/deb/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_retrieve_and_rank_1_1v1_1_1_retrieve60a26aaa9ec686629c753f3a5baca3f3.html#a8adcb2f26eec075de88bec8bc4bd5970", null ]
+];

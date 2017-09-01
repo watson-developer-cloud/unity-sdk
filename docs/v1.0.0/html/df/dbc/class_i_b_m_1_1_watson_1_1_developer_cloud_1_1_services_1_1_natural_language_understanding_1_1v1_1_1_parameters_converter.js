@@ -1,0 +1,6 @@
+var class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_understanding_1_1v1_1_1_parameters_converter =
+[
+    [ "CanProcess", "df/dbc/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_understanding_1_1v1_1_1_parameters_converter.html#a96ae16484b6b9a774f72252b36fe6706", null ],
+    [ "TryDeserialize", "df/dbc/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_understanding_1_1v1_1_1_parameters_converter.html#abeb1d1e63ad27104c00e765916095e6b", null ],
+    [ "TrySerialize", "df/dbc/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_understanding_1_1v1_1_1_parameters_converter.html#af1a863a6ed28af698fa545d30725198a", null ]
+];

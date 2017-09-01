@@ -1,0 +1,4 @@
+var class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_language_translation_1_1v2_1_1_translation =
+[
+    [ "translation", "d5/d36/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_language_translation_1_1v2_1_1_translation.html#a21471b266a7de0995ac74d4fe4d3f9c6", null ]
+];

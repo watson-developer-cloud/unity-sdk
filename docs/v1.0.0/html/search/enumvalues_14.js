@@ -1,0 +1,12 @@
+var searchData=
+[
+  ['ukoverseasterritory',['UKOverseasTerritory',['../d7/daf/namespace_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_alchemy_a_p_i_1_1v1.html#a23c839e131eb9e6efe8f8df03121f2c0a2478b5db9daa209344f1453c3338eea1',1,'IBM::Watson::DeveloperCloud::Services::AlchemyAPI::v1']]],
+  ['university',['University',['../d7/daf/namespace_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_alchemy_a_p_i_1_1v1.html#a23c839e131eb9e6efe8f8df03121f2c0a50c60ac437e4d4ef19c77bdca5bbcf3b',1,'IBM::Watson::DeveloperCloud::Services::AlchemyAPI::v1']]],
+  ['uscongressperson',['USCongressperson',['../d7/daf/namespace_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_alchemy_a_p_i_1_1v1.html#a23c839e131eb9e6efe8f8df03121f2c0a713522cd2c03c8dc0ffb6f78efb46e64',1,'IBM::Watson::DeveloperCloud::Services::AlchemyAPI::v1']]],
+  ['uscounty',['USCounty',['../d7/daf/namespace_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_alchemy_a_p_i_1_1v1.html#a23c839e131eb9e6efe8f8df03121f2c0aed2712a9e6eea0015a25cf7ee89bec86',1,'IBM::Watson::DeveloperCloud::Services::AlchemyAPI::v1']]],
+  ['usindianreservation',['USIndianReservation',['../d7/daf/namespace_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_alchemy_a_p_i_1_1v1.html#a23c839e131eb9e6efe8f8df03121f2c0a8ca75a92100e0ab5e2123742d8db50c3',1,'IBM::Watson::DeveloperCloud::Services::AlchemyAPI::v1']]],
+  ['uspresident',['USPresident',['../d7/daf/namespace_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_alchemy_a_p_i_1_1v1.html#a23c839e131eb9e6efe8f8df03121f2c0a291ce7b7fb5ce5a74e0227bed3539d3a',1,'IBM::Watson::DeveloperCloud::Services::AlchemyAPI::v1']]],
+  ['usstate',['USState',['../d7/daf/namespace_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_alchemy_a_p_i_1_1v1.html#a23c839e131eb9e6efe8f8df03121f2c0a93934ae4c9bcaf0c3b216da442f0bc7e',1,'IBM::Watson::DeveloperCloud::Services::AlchemyAPI::v1']]],
+  ['usterritory',['USTerritory',['../d7/daf/namespace_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_alchemy_a_p_i_1_1v1.html#a23c839e131eb9e6efe8f8df03121f2c0a5a92dceef305aaa57bb147d591dc6801',1,'IBM::Watson::DeveloperCloud::Services::AlchemyAPI::v1']]],
+  ['usvicepresident',['USVicePresident',['../d7/daf/namespace_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_alchemy_a_p_i_1_1v1.html#a23c839e131eb9e6efe8f8df03121f2c0a9dafc56e9f3faa12e2e0efeb8c2817af',1,'IBM::Watson::DeveloperCloud::Services::AlchemyAPI::v1']]]
+];

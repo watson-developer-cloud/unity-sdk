@@ -1,0 +1,4 @@
+var class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_understanding_1_1v15190d6ad9661fd4efd79fd55c4ff7598 =
+[
+    [ "Version", "d0/d12/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_understanding_1_1v15190d6ad9661fd4efd79fd55c4ff7598.html#a14d0f84fc6f4058e6d818596a3878f64", null ]
+];

@@ -1,0 +1,4 @@
+var searchData=
+[
+  ['version',['Version',['../d0/d12/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_understanding_1_1v15190d6ad9661fd4efd79fd55c4ff7598.html#a14d0f84fc6f4058e6d818596a3878f64',1,'IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1.NaturalLanguageUnderstandingVersion.Version()'],['../dc/d56/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_personality_insights_1_1v3_1_1_personality_insights_version.html#adbb622af53ff7188e2dd8bb6fb732bd9',1,'IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3.PersonalityInsightsVersion.Version()'],['../dd/d9c/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_utilities_1_1_constants_1_1_string.html#adfc46a6d4caec4b2c79dbbd952ff88e0',1,'IBM.Watson.DeveloperCloud.Utilities.Constants.String.Version()']]]
+];

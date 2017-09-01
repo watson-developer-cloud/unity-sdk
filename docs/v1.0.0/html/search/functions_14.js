@@ -1,0 +1,6 @@
+var searchData=
+[
+  ['warning',['Warning',['../d8/dab/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_logging_1_1_log.html#a2b1aaf1f688014f0b8f4e722af2cfb66',1,'IBM::Watson::DeveloperCloud::Logging::Log']]],
+  ['watsonexception',['WatsonException',['../da/d3d/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_utilities_1_1_watson_exception.html#a6f742eb550fe0f43ccd094da2c0020f9',1,'IBM.Watson.DeveloperCloud.Utilities.WatsonException.WatsonException(string message)'],['../da/d3d/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_utilities_1_1_watson_exception.html#a20514c559f01cec48b11d10241fa58a9',1,'IBM.Watson.DeveloperCloud.Utilities.WatsonException.WatsonException(string message, WatsonException innerException)']]],
+  ['webcamtexturedata',['WebCamTextureData',['../d1/d6b/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_data_types_1_1_web_cam_texture_data.html#ae7a7febdd37baf1b372025d06878f6f9',1,'IBM.Watson.DeveloperCloud.DataTypes.WebCamTextureData.WebCamTextureData()'],['../d1/d6b/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_data_types_1_1_web_cam_texture_data.html#a5bd7b8b6e0a45273213e719d587167b0',1,'IBM.Watson.DeveloperCloud.DataTypes.WebCamTextureData.WebCamTextureData(WebCamTexture camTexture, int requestedWidth=640, int requestedHeight=480, int requestedFPS=60)']]]
+];

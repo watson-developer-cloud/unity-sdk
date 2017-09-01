@@ -1,0 +1,8 @@
+var namespace_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_classifier_1_1v1 =
+[
+    [ "Class", "db/d29/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_classifier_1_1v1_1_1_class.html", "db/d29/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_classifier_1_1v1_1_1_class" ],
+    [ "Classifier", "de/d65/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_classifier_1_1v1_1_1_classifier.html", "de/d65/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_classifier_1_1v1_1_1_classifier" ],
+    [ "Classifiers", "d9/d34/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_classifier_1_1v1_1_1_classifiers.html", "d9/d34/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_classifier_1_1v1_1_1_classifiers" ],
+    [ "ClassifyResult", "df/d8a/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_classifier_1_1v1_1_1_classify_result.html", "df/d8a/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_classifier_1_1v1_1_1_classify_result" ],
+    [ "NaturalLanguageClassifier", "d2/d60/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_classifier_1_1v1_1_1_natural_language_classifier.html", "d2/d60/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_classifier_1_1v1_1_1_natural_language_classifier" ]
+];

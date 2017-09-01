@@ -1,0 +1,4 @@
+var class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_understanding_1_1v1_1_1_usage =
+[
+    [ "features", "db/df5/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_understanding_1_1v1_1_1_usage.html#a4e4b525d1d425ad53c4edd48b5bd0e72", null ]
+];

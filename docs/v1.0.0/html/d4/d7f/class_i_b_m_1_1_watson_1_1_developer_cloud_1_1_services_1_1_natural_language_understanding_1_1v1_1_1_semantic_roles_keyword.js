@@ -1,0 +1,4 @@
+var class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_understanding_1_1v1_1_1_semantic_roles_keyword =
+[
+    [ "text", "d4/d7f/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_understanding_1_1v1_1_1_semantic_roles_keyword.html#ae53a30f3e81a4dc8d34366f8a64dd9a4", null ]
+];

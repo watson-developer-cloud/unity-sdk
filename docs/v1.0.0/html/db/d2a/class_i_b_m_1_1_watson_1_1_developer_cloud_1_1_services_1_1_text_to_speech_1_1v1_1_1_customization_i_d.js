@@ -1,0 +1,4 @@
+var class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_text_to_speech_1_1v1_1_1_customization_i_d =
+[
+    [ "customization_id", "db/d2a/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_text_to_speech_1_1v1_1_1_customization_i_d.html#aef2269d9b7f8416b4bdca36c6e3c5d60", null ]
+];

@@ -1,0 +1,4 @@
+var class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_visual_recognition_1_1v3_1_1_get_classifiers_top_level_brief =
+[
+    [ "classifiers", "d4/dc0/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_visual_recognition_1_1v3_1_1_get_classifiers_top_level_brief.html#a66c1c7d2767a9b7142043ca03a4045ac", null ]
+];

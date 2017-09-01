@@ -1,0 +1,4 @@
+var class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_understanding_1_1v1_1_1_feature_sentiment_results =
+[
+    [ "score", "d0/db8/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_understanding_1_1v1_1_1_feature_sentiment_results.html#a38178d89d9910836c29e7b99ae8acf60", null ]
+];

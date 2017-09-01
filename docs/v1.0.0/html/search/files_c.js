@@ -1,0 +1,24 @@
+var searchData=
+[
+  ['testalchemylanguage_2ecs',['TestAlchemyLanguage.cs',['../d8/d71/_test_alchemy_language_8cs.html',1,'']]],
+  ['testconversation_2ecs',['TestConversation.cs',['../d6/def/_test_conversation_8cs.html',1,'']]],
+  ['testdiscovery_2ecs',['TestDiscovery.cs',['../dd/d51/_test_discovery_8cs.html',1,'']]],
+  ['testdocumentconversion_2ecs',['TestDocumentConversion.cs',['../d2/da7/_test_document_conversion_8cs.html',1,'']]],
+  ['testeventmanager_2ecs',['TestEventManager.cs',['../d0/d65/_test_event_manager_8cs.html',1,'']]],
+  ['testlanguagetranslation_2ecs',['TestLanguageTranslation.cs',['../d0/da2/_test_language_translation_8cs.html',1,'']]],
+  ['testlanguagetranslator_2ecs',['TestLanguageTranslator.cs',['../d8/d00/_test_language_translator_8cs.html',1,'']]],
+  ['testnaturallanguageclassifier_2ecs',['TestNaturalLanguageClassifier.cs',['../da/d4c/_test_natural_language_classifier_8cs.html',1,'']]],
+  ['testnaturallanguageunderstanding_2ecs',['TestNaturalLanguageUnderstanding.cs',['../d9/d65/_test_natural_language_understanding_8cs.html',1,'']]],
+  ['testpersonalityinsightsv3_2ecs',['TestPersonalityInsightsV3.cs',['../d4/dec/_test_personality_insights_v3_8cs.html',1,'']]],
+  ['testretrieveandrank_2ecs',['TestRetrieveAndRank.cs',['../de/d1f/_test_retrieve_and_rank_8cs.html',1,'']]],
+  ['testrunnable_2ecs',['TestRunnable.cs',['../d0/df0/_test_runnable_8cs.html',1,'']]],
+  ['testspeechtotext_2ecs',['TestSpeechToText.cs',['../d6/d6c/_test_speech_to_text_8cs.html',1,'']]],
+  ['testtexttospeech_2ecs',['TestTextToSpeech.cs',['../d2/dda/_test_text_to_speech_8cs.html',1,'']]],
+  ['testtoneanalyzer_2ecs',['TestToneAnalyzer.cs',['../d2/db4/_test_tone_analyzer_8cs.html',1,'']]],
+  ['testtradeoffanalytics_2ecs',['TestTradeoffAnalytics.cs',['../d1/d6a/_test_tradeoff_analytics_8cs.html',1,'']]],
+  ['testvisualrecognition_2ecs',['TestVisualRecognition.cs',['../db/d6e/_test_visual_recognition_8cs.html',1,'']]],
+  ['texttospeech_2ecs',['TextToSpeech.cs',['../d1/d80/_text_to_speech_8cs.html',1,'']]],
+  ['timeddestroy_2ecs',['TimedDestroy.cs',['../df/da9/_timed_destroy_8cs.html',1,'']]],
+  ['toneanalyzer_2ecs',['ToneAnalyzer.cs',['../d9/d4c/_tone_analyzer_8cs.html',1,'']]],
+  ['tradeoffanalytics_2ecs',['TradeoffAnalytics.cs',['../d5/d31/_tradeoff_analytics_8cs.html',1,'']]]
+];

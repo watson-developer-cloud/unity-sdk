@@ -1,0 +1,7 @@
+var class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_retrieve_and_rank_1_1v1_1_1_retrieve8aa2385a50fcc6c1790f051726fbe198 =
+[
+    [ "Callback", "d4/db3/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_retrieve_and_rank_1_1v1_1_1_retrieve8aa2385a50fcc6c1790f051726fbe198.html#a2b1838d4c9737c448e07e64800906020", null ],
+    [ "Data", "d4/db3/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_retrieve_and_rank_1_1v1_1_1_retrieve8aa2385a50fcc6c1790f051726fbe198.html#a30e4e5395fca0c3a5ad71fe5dfbea13f", null ],
+    [ "Name", "d4/db3/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_retrieve_and_rank_1_1v1_1_1_retrieve8aa2385a50fcc6c1790f051726fbe198.html#ad63d0a24cf131549076cad84473d6ec1", null ],
+    [ "TrainingDataPath", "d4/db3/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_retrieve_and_rank_1_1v1_1_1_retrieve8aa2385a50fcc6c1790f051726fbe198.html#a8e74712d51c3c1bb9cd85a443343e71f", null ]
+];

@@ -1,0 +1,22 @@
+var searchData=
+[
+  ['datamodels_2ecs',['DataModels.cs',['../d2/d8e/_alchemy_a_p_i_2v1_2_data_models_8cs.html',1,'']]],
+  ['datamodels_2ecs',['DataModels.cs',['../de/da5/_discovery_2v1_2_data_models_8cs.html',1,'']]],
+  ['datamodels_2ecs',['DataModels.cs',['../de/da2/_natural_language_classifier_2v2_2_data_models_8cs.html',1,'']]],
+  ['datamodels_2ecs',['DataModels.cs',['../dc/d79/_visual_recognition_2v3_2_data_models_8cs.html',1,'']]],
+  ['datamodels_2ecs',['DataModels.cs',['../d6/d7c/_natural_language_understanding_2v1_2_data_models_8cs.html',1,'']]],
+  ['datamodels_2ecs',['DataModels.cs',['../d3/dee/_tradeoff_analytics_2v1_2_data_models_8cs.html',1,'']]],
+  ['datamodels_2ecs',['DataModels.cs',['../d4/d50/_tone_analyzer_2v3_2_data_models_8cs.html',1,'']]],
+  ['datamodels_2ecs',['DataModels.cs',['../d8/d3a/_text_to_speech_2v1_2_data_models_8cs.html',1,'']]],
+  ['datamodels_2ecs',['DataModels.cs',['../da/d1b/_speech_to_text_2v1_2_data_models_8cs.html',1,'']]],
+  ['datamodels_2ecs',['DataModels.cs',['../d0/dbd/_retrieve_and_rank_2v1_2_data_models_8cs.html',1,'']]],
+  ['datamodels_2ecs',['DataModels.cs',['../d7/d3c/_document_conversion_2v1_2_data_models_8cs.html',1,'']]],
+  ['datamodels_2ecs',['DataModels.cs',['../d7/d33/_personality_insights_2v3_2_data_models_8cs.html',1,'']]],
+  ['datamodels_2ecs',['DataModels.cs',['../dd/d65/_conversation_2v1_2_data_models_8cs.html',1,'']]],
+  ['datamodels_2ecs',['DataModels.cs',['../df/d18/_language_translator_2v2_2_data_models_8cs.html',1,'']]],
+  ['datamodels_2ecs',['DataModels.cs',['../dc/deb/_language_translation_2v2_2_data_models_8cs.html',1,'']]],
+  ['datatypes_2ecs',['DataTypes.cs',['../d6/d8d/_data_types_8cs.html',1,'']]],
+  ['debugreactor_2ecs',['DebugReactor.cs',['../d0/dcb/_debug_reactor_8cs.html',1,'']]],
+  ['discovery_2ecs',['Discovery.cs',['../d4/d06/_discovery_8cs.html',1,'']]],
+  ['documentconversion_2ecs',['DocumentConversion.cs',['../dd/dce/_document_conversion_8cs.html',1,'']]]
+];

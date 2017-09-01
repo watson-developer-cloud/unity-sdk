@@ -1,0 +1,4 @@
+var class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_visual_recognition_1_1v3_1_1_detect_faces_parameters =
+[
+    [ "url", "d6/dea/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_visual_recognition_1_1v3_1_1_detect_faces_parameters.html#ad961d13b1b246550f71b3beee9fda323", null ]
+];

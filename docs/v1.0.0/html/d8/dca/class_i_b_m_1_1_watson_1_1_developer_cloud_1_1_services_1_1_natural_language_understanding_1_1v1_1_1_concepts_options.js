@@ -1,0 +1,4 @@
+var class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_understanding_1_1v1_1_1_concepts_options =
+[
+    [ "limit", "d8/dca/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_understanding_1_1v1_1_1_concepts_options.html#a91e471c1ed4d920dc3458d05f6846f13", null ]
+];

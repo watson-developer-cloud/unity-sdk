@@ -1,0 +1,5 @@
+var class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_understanding_1_1v1_1_1_categories_result =
+[
+    [ "label", "df/dc0/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_understanding_1_1v1_1_1_categories_result.html#abe8538ab9ff2386eed36fc7bf102104f", null ],
+    [ "score", "df/dc0/class_i_b_m_1_1_watson_1_1_developer_cloud_1_1_services_1_1_natural_language_understanding_1_1v1_1_1_categories_result.html#a09e2b1e3e6c1d0b630a016831f2eec6d", null ]
+];
