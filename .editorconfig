@@ -3,7 +3,7 @@ root = true
 
 ; Unix-style newlines
 [*]
-end of line = LF
+end_of_line = LF
 
 ; 2-column space indentation
 [*.cs]
