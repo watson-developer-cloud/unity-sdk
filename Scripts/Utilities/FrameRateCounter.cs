@@ -20,37 +20,37 @@ using UnityEngine.UI;
 
 namespace IBM.Watson.DeveloperCloud.Utilities
 {
-  /// <summary>
-  /// Displays the frame rate of the application.
-  /// </summary>
-  public class FrameRateCounter : MonoBehaviour
-  {
-    const float FPS_INTERVAL = 0.5f;
-    const string DISPLAY = "{0} FPS";
-
-    private int m_FpsAccumulator = 0;
-    private float m_FpsNextPeriod = 0;
-    private int m_CurrentFps;
-
-    [SerializeField]
-    private Text m_Text;
-
-    private void Start()
+    /// <summary>
+    /// Displays the frame rate of the application.
+    /// </summary>
+    public class FrameRateCounter : MonoBehaviour
     {
-      m_FpsNextPeriod = Time.realtimeSinceStartup + FPS_INTERVAL;
-    }
+        const float FpsInterval = 0.5f;
+        const string Display = "{0} FPS";
 
-    private void Update()
-    {
-      // measure average frames per second
-      m_FpsAccumulator++;
-      if (Time.realtimeSinceStartup > m_FpsNextPeriod)
-      {
-        m_CurrentFps = (int)(m_FpsAccumulator / FPS_INTERVAL);
-        m_FpsAccumulator = 0;
-        m_FpsNextPeriod += FPS_INTERVAL;
-        m_Text.text = string.Format(DISPLAY, m_CurrentFps);
-      }
+        private int _fpsAccumulator = 0;
+        private float _fpsNextPeriod = 0;
+        private int _currentFps;
+
+        [SerializeField]
+        private Text _text;
+
+        private void Start()
+        {
+            _fpsNextPeriod = Time.realtimeSinceStartup + FpsInterval;
+        }
+
+        private void Update()
+        {
+            // measure average frames per second
+            _fpsAccumulator++;
+            if (Time.realtimeSinceStartup > _fpsNextPeriod)
+            {
+                _currentFps = (int)(_fpsAccumulator / FpsInterval);
+                _fpsAccumulator = 0;
+                _fpsNextPeriod += FpsInterval;
+                _text.text = string.Format(Display, _currentFps);
+            }
+        }
     }
-  }
 }

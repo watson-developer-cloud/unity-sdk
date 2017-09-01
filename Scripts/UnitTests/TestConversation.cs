@@ -15,74 +15,162 @@
 *
 */
 
-using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using IBM.Watson.DeveloperCloud.UnitTests;
 using IBM.Watson.DeveloperCloud.Services.Conversation.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
 using IBM.Watson.DeveloperCloud.Logging;
+using FullSerializer;
+using System.IO;
+using System;
 
-public class TestConversation : UnitTest
+namespace IBM.Watson.DeveloperCloud.UnitTests
 {
-  private Conversation m_Conversation = new Conversation();
-  private string m_WorkspaceID;
-  private string m_Input = "Can you unlock the door?";
-  private bool m_MessageInputTested = false;
-  private bool m_MessageObjectTested = false;
-
-  public override IEnumerator RunTest()
-  {
-    m_WorkspaceID = Config.Instance.GetVariableValue("ConversationV1_ID");
-
-    if (Config.Instance.FindCredentials(m_Conversation.GetServiceID()) == null)
-      yield break;
-
-    if (!m_MessageInputTested)
+    public class TestConversation : UnitTest
     {
-      m_Conversation.Message(OnMessageInput, m_WorkspaceID, m_Input);
-      while (!m_MessageInputTested)
-        yield return null;
+        private string _username = null;
+        private string _password = null;
+        private string _workspaceId;
+        //private string _token = "<authentication-token>";
+
+        private Conversation _conversation;
+        private string _conversationVersionDate = "2017-05-26";
+
+        private string[] _questionArray = { "can you turn up the AC", "can you turn on the wipers", "can you turn off the wipers", "can you turn down the ac", "can you unlock the door" };
+        private fsSerializer _serializer = new fsSerializer();
+        private Dictionary<string, object> _context = null;
+        private int _questionCount = -1;
+        private bool _waitingForResponse = true;
+
+        public override IEnumerator RunTest()
+        {
+            LogSystem.InstallDefaultReactors();
+            try
+            {
+                VcapCredentials vcapCredentials = new VcapCredentials();
+                fsData data = null;
+
+                //  Get credentials from a credential file defined in environmental variables in the VCAP_SERVICES format. 
+                //  See https://www.ibm.com/watson/developercloud/doc/common/getting-started-variables.html.
+                var environmentalVariable = Environment.GetEnvironmentVariable("VCAP_SERVICES");
+                var fileContent = File.ReadAllText(environmentalVariable);
+
+                //  Add in a parent object because Unity does not like to deserialize root level collection types.
+                fileContent = Utility.AddTopLevelObjectToJson(fileContent, "VCAP_SERVICES");
+
+                //  Convert json to fsResult
+                fsResult r = fsJsonParser.Parse(fileContent, out data);
+                if (!r.Succeeded)
+                    throw new WatsonException(r.FormattedMessages);
+
+                //  Convert fsResult to VcapCredentials
+                object obj = vcapCredentials;
+                r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                if (!r.Succeeded)
+                    throw new WatsonException(r.FormattedMessages);
+
+                //  Set credentials from imported credntials
+                Credential credential = vcapCredentials.VCAP_SERVICES["conversation"][TestCredentialIndex].Credentials;
+                _username = credential.Username.ToString();
+                _password = credential.Password.ToString();
+                _url = credential.Url.ToString();
+                _workspaceId = credential.WorkspaceId.ToString();
+            }
+            catch
+            {
+                Log.Debug("TestConversation", "Failed to get credentials from VCAP_SERVICES file. Please configure credentials to run this test. For more information, see: https://github.com/watson-developer-cloud/unity-sdk/#authentication");
+            }
+
+            //  Create credential and instantiate service
+            Credentials credentials = new Credentials(_username, _password, _url);
+
+            _conversation = new Conversation(credentials);
+            _conversation.VersionDate = _conversationVersionDate;
+
+            if (!_conversation.Message(OnMessage, _workspaceId, "hello"))
+                Log.Debug("ExampleConversation", "Failed to message!");
+
+            while (_waitingForResponse)
+                yield return null;
+
+            _waitingForResponse = true;
+            _questionCount++;
+
+            AskQuestion();
+            while (_waitingForResponse)
+                yield return null;
+
+            _questionCount++;
+
+            _waitingForResponse = true;
+
+            AskQuestion();
+            while (_waitingForResponse)
+                yield return null;
+            _questionCount++;
+
+            _waitingForResponse = true;
+
+            AskQuestion();
+            while (_waitingForResponse)
+                yield return null;
+            _questionCount++;
+
+            _waitingForResponse = true;
+
+            AskQuestion();
+            while (_waitingForResponse)
+                yield return null;
+
+            Log.Debug("ExampleConversation", "Conversation examples complete.");
+
+            yield break;
+        }
+
+        private void AskQuestion()
+        {
+            MessageRequest messageRequest = new MessageRequest()
+            {
+                input = new Dictionary<string, object>()
+            {
+                { "text", _questionArray[_questionCount] }
+            },
+                context = _context
+            };
+
+            if (!_conversation.Message(OnMessage, _workspaceId, messageRequest))
+                Log.Debug("ExampleConversation", "Failed to message!");
+        }
+
+        private void OnMessage(object resp, string data)
+        {
+            Log.Debug("ExampleConversation", "Conversation: Message Response: {0}", data);
+
+            //  Convert resp to fsdata
+            fsData fsdata = null;
+            fsResult r = _serializer.TrySerialize(resp.GetType(), resp, out fsdata);
+            if (!r.Succeeded)
+                throw new WatsonException(r.FormattedMessages);
+
+            //  Convert fsdata to MessageResponse
+            MessageResponse messageResponse = new MessageResponse();
+            object obj = messageResponse;
+            r = _serializer.TryDeserialize(fsdata, obj.GetType(), ref obj);
+            if (!r.Succeeded)
+                throw new WatsonException(r.FormattedMessages);
+
+            object _tempContext = null;
+            //  Set context for next round of messaging
+            (resp as Dictionary<string, object>).TryGetValue("context", out _tempContext);
+
+            if (_tempContext != null)
+                _context = _tempContext as Dictionary<string, object>;
+            else
+                Log.Debug("ExampleConversation", "Failed to get context");
+
+            Test(messageResponse != null);
+            _waitingForResponse = false;
+        }
     }
-
-    if (!m_MessageObjectTested)
-    {
-      MessageRequest messageRequest = new MessageRequest();
-      messageRequest.InputText = m_Input;
-      m_Conversation.Message(OnMessageObject, m_WorkspaceID, messageRequest);
-      while (!m_MessageObjectTested)
-        yield return null;
-    }
-
-    yield break;
-  }
-
-  private void OnMessageInput(MessageResponse resp, string customData)
-  {
-    Test(resp != null);
-    if (resp != null)
-    {
-      foreach (Intent mi in resp.intents)
-        Log.Debug("TestConversation", "input intent: " + mi.intent + ", confidence: " + mi.confidence);
-      if (resp.output != null && resp.output.text.Length > 0)
-        foreach (string txt in resp.output.text)
-          Debug.Log("output: " + txt);
-    }
-
-    m_MessageInputTested = true;
-  }
-
-  private void OnMessageObject(MessageResponse resp, string customData)
-  {
-    Test(resp != null);
-    if (resp != null)
-    {
-      foreach (Intent mi in resp.intents)
-        Log.Debug("TestConversation", "object intent: " + mi.intent + ", confidence: " + mi.confidence);
-      if (resp.output != null && resp.output.text.Length > 0)
-        foreach (string txt in resp.output.text)
-          Debug.Log("output: " + txt);
-    }
-
-    m_MessageObjectTested = true;
-  }
 }

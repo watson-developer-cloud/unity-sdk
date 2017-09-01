@@ -19,28 +19,48 @@ using UnityEngine;
 using System.Collections.Generic;
 using IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1;
 using IBM.Watson.DeveloperCloud.Logging;
-using System;
+using IBM.Watson.DeveloperCloud.Utilities;
+using System.Collections;
 
 public class ExampleAlchemyDataNews : MonoBehaviour
 {
-  private AlchemyAPI m_AlchemyAPI = new AlchemyAPI();
+    private string _apikey = null;
+    private string _url = null;
 
-  void Start()
-  {
-    LogSystem.InstallDefaultReactors();
+    private AlchemyAPI _alchemyAPI = null;
 
-    string[] returnFields = { Fields.ENRICHED_URL_ENTITIES, Fields.ENRICHED_URL_KEYWORDS };
-    Dictionary<string, string> queryFields = new Dictionary<string, string>();
-    queryFields.Add(Fields.ENRICHED_URL_RELATIONS_RELATION_SUBJECT_TEXT, "Obama");
-    queryFields.Add(Fields.ENRICHED_URL_CLEANEDTITLE, "Washington");
+    private bool _getNewsTested = false;
 
-    if (!m_AlchemyAPI.GetNews(OnGetNews, returnFields, queryFields))
-      Log.Debug("ExampleAlchemyData", "Failed to get news!");
-  }
+    void Start()
+    {
+        LogSystem.InstallDefaultReactors();
 
-  private void OnGetNews(NewsResponse newsData, string data)
-  {
-    if (newsData != null)
-      Log.Debug("ExampleAlchemyData", "status: {0}", newsData.status);
-  }
+        //  Create credential and instantiate service
+        Credentials credentials = new Credentials(_apikey, _url);
+
+        _alchemyAPI = new AlchemyAPI(credentials);
+
+        Runnable.Run(Examples());
+    }
+
+    private IEnumerator Examples()
+    {
+        Dictionary<string, string> queryFields = new Dictionary<string, string>();
+        queryFields.Add(Fields.EnrichedUrlRelationsRelationSubjectText, "Obama");
+        queryFields.Add(Fields.EnrichedUrlCleanedtitle, "Washington");
+        string[] returnFields = { Fields.EnrichedUrlEntities, Fields.EnrichedUrlKeywords };
+        if (!_alchemyAPI.GetNews(OnGetNews, returnFields, queryFields))
+            Log.Debug("ExampleAlchemyDataNews", "Failed to get news!");
+
+        while (!_getNewsTested)
+            yield return null;
+
+        Log.Debug("ExampleAlchemyDataNews", "Alchemy data news examples complete!");
+    }
+
+    private void OnGetNews(NewsResponse newsData, string data)
+    {
+        Log.Debug("ExampleAlchemyDataNews", "Alchemy data news - Get news Response: {0}", data);
+        _getNewsTested = true;
+    }
 }

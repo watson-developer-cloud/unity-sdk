@@ -22,55 +22,55 @@ using UnityEngine;
 
 namespace IBM.Watson.DeveloperCloud.Utilities
 {
-  /// <summary>
-  /// This class allows for a delegate to be serialized for a component and method 
-  /// on a given GameObject.
-  /// </summary>
-  [Serializable]
-  public class SerializedDelegate
-  {
     /// <summary>
-    /// Default constructor.
+    /// This class allows for a delegate to be serialized for a component and method 
+    /// on a given GameObject.
     /// </summary>
-    /// <param name="delegateType">The delegate type.</param>
-    public SerializedDelegate(Type delegateType)
+    [Serializable]
+    public class SerializedDelegate
     {
-      DelegateType = delegateType;
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        /// <param name="delegateType">The delegate type.</param>
+        public SerializedDelegate(Type delegateType)
+        {
+            DelegateType = delegateType;
+        }
+
+        /// <summary>
+        /// The delegate type of the method.
+        /// </summary>
+        public Type DelegateType { get; private set; }
+
+        [SerializeField]
+        GameObject _target = null;
+        [SerializeField]
+        string _component = null;
+        [SerializeField]
+        string _method = null;
+
+        /// <summary>
+        /// Target Game Object to invoke the callback under selected component
+        /// </summary>
+        public GameObject TargetGameObject { get { return _target; } }
+
+        /// <summary>
+        /// This resolves the actual delegate for invoke.
+        /// </summary>
+        /// <returns>Returns a delegate or null if the delegate can't be resolved.</returns>
+        public Delegate ResolveDelegate()
+        {
+            if (_target == null)
+                return null;
+            Component component = _target.GetComponent(_component);
+            if (component == null)
+                return null;
+            MethodInfo info = component.GetType().GetMethod(_method, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.InvokeMethod);
+            if (info == null)
+                return null;
+
+            return Delegate.CreateDelegate(DelegateType, component, info);
+        }
     }
-
-    /// <summary>
-    /// The delegate type of the method.
-    /// </summary>
-    public Type DelegateType { get; private set; }
-
-    [SerializeField]
-    GameObject m_Target = null;
-    [SerializeField]
-    string m_Component = null;
-    [SerializeField]
-    string m_Method = null;
-
-    /// <summary>
-    /// Target Game Object to invoke the callback under selected component
-    /// </summary>
-    public GameObject TargetGameObject { get { return m_Target; } }
-
-    /// <summary>
-    /// This resolves the actual delegate for invoke.
-    /// </summary>
-    /// <returns>Returns a delegate or null if the delegate can't be resolved.</returns>
-    public Delegate ResolveDelegate()
-    {
-      if (m_Target == null)
-        return null;
-      Component component = m_Target.GetComponent(m_Component);
-      if (component == null)
-        return null;
-      MethodInfo info = component.GetType().GetMethod(m_Method, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.InvokeMethod);
-      if (info == null)
-        return null;
-
-      return Delegate.CreateDelegate(DelegateType, component, info);
-    }
-  }
 }

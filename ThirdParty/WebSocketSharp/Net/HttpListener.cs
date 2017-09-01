@@ -352,7 +352,7 @@ namespace WebSocketSharp.Net
     public ServerSslConfiguration SslConfiguration {
       get {
         CheckDisposed ();
-        return _sslConfig ?? (_sslConfig = new ServerSslConfiguration (null));
+        return _sslConfig ?? (_sslConfig = new ServerSslConfiguration ());
       }
 
       set {
@@ -580,9 +580,6 @@ namespace WebSocketSharp.Net
     internal bool RegisterContext (HttpListenerContext context)
     {
       if (!_listening)
-        return false;
-
-      if (!context.Authenticate ())
         return false;
 
       lock (_ctxRegistrySync) {

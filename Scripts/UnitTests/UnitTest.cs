@@ -15,41 +15,54 @@
 *
 */
 
+//  Uncomment to print the current service endpoint.
+#define PRINT_ENDPOINT
+
 using IBM.Watson.DeveloperCloud.Logging;
 using System.Collections;
 using UnityEngine;
 
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
-  /// <summary>
-  /// This is the base class for all UnitTest classes. Derive from this class and implement the RunTest() function.
-  /// </summary>
-  public abstract class UnitTest
-  {
-    public bool TestFailed { get; set; }
-
-    public abstract IEnumerator RunTest();
-
     /// <summary>
-    /// Utility function that fails this test if false.
+    /// This is the base class for all UnitTest classes. Derive from this class and implement the RunTest() function.
     /// </summary>
-    /// <param name="condition">If false then the test is failed and the failure is logged.</param>
-    public void Test(bool condition)
+    public abstract class UnitTest
     {
-      if (!condition)
-      {
-        Log.Error("UnitTest", "UnitTest {0} has failed, Stack:\n{1}", GetType().Name, StackTraceUtility.ExtractStackTrace());
-        TestFailed = true;
-      }
-      else
-      {
-        Log.Status("UnitTest", "UnitTest {0} has passed.", GetType().Name);
-      }
-    }
+        /// <summary>
+        /// Which credential should the tests use. Default is 0.
+        /// </summary>
+        public int TestCredentialIndex = 0;
 
-    public virtual string ProjectToTest()
-    {
-      return null;
+        public bool TestFailed { get; set; }
+
+        public abstract IEnumerator RunTest();
+
+        protected string _url;
+
+        /// <summary>
+        /// Utility function that fails this test if false.
+        /// </summary>
+        /// <param name="condition">If false then the test is failed and the failure is logged.</param>
+        public void Test(bool condition)
+        {
+            if (!condition)
+            {
+                Log.Error("UnitTest", "UnitTest {0} has failed, Stack:\n{1}", GetType().Name, StackTraceUtility.ExtractStackTrace());
+                TestFailed = true;
+            }
+            else
+            {
+                Log.Status("UnitTest", "UnitTest {0} has passed.", GetType().Name);
+#if PRINT_ENDPOINT
+                Log.Status("UnitTest", "endpoint: {0}", _url);
+#endif
+            }
+        }
+
+        public virtual string ProjectToTest()
+        {
+            return null;
+        }
     }
-  }
 }

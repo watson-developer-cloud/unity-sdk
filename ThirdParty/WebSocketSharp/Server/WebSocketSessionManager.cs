@@ -290,6 +290,23 @@ namespace WebSocketSharp.Server
       _sweepTimer.Elapsed += (sender, e) => Sweep ();
     }
 
+    private void stop (PayloadData payloadData, bool send)
+    {
+      var bytes = send
+                  ? WebSocketFrame.CreateCloseFrame (payloadData, false).ToArray ()
+                  : null;
+
+      lock (_sync) {
+        _state = ServerState.ShuttingDown;
+
+        _sweepTimer.Enabled = false;
+        foreach (var session in _sessions.Values.ToList ())
+          session.Context.WebSocket.Close (payloadData, bytes);
+
+        _state = ServerState.Stop;
+      }
+    }
+
     private bool tryGetSession (string id, out IWebSocketSession session)
     {
       bool ret;
@@ -368,17 +385,14 @@ namespace WebSocketSharp.Server
       }
     }
 
-    internal void Stop (CloseEventArgs e, byte[] frameAsBytes, bool receive)
+    internal void Stop (ushort code, string reason)
     {
-      lock (_sync) {
-        _state = ServerState.ShuttingDown;
-
-        _sweepTimer.Enabled = false;
-        foreach (var session in _sessions.Values.ToList ())
-          session.Context.WebSocket.Close (e, frameAsBytes, receive);
-
-        _state = ServerState.Stop;
+      if (code == 1005) { // == no status
+        stop (PayloadData.Empty, true);
+        return;
       }
+
+      stop (new PayloadData (code, reason), !code.IsReserved ());
     }
 
     #endregion

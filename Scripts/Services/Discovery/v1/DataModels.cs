@@ -98,11 +98,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// <summary>
         /// Number of bytes used on the environment's disk capacity.
         /// </summary>
-        public uint used_bytes { get; set; }
+        public long used_bytes { get; set; }
         /// <summary>
         /// Total number of bytes available in the environment's disk capacity.
         /// </summary>
-        public uint total_bytes { get; set; }
+        public long total_bytes { get; set; }
         /// <summary>
         /// Amount of disk capacity used, in KB or GB format.
         /// </summary>
@@ -126,11 +126,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// <summary>
         /// Number of bytes used in the environment's memory capacity.
         /// </summary>
-        public uint used_bytes { get; set; }
+        public long used_bytes { get; set; }
         /// <summary>
         /// Total number of bytes available in the environment's memory capacity.
         /// </summary>
-        public uint total_bytes { get; set; }
+        public long total_bytes { get; set; }
         /// <summary>
         /// Amount of memory capacity used, in KB or GB format.
         /// </summary>
@@ -925,12 +925,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             if (!string.IsNullOrEmpty(matching_results.ToString()))
                 stringBuilder.Append(string.Format("matching_results: {0}", matching_results.ToString()));
 
-            foreach(QueryResult result in results)
+            foreach (QueryResult result in results)
             {
-                if(!string.IsNullOrEmpty(result.id))
+                if (!string.IsNullOrEmpty(result.id))
                     stringBuilder.Append(string.Format("result id: {0}", result.id) + "\n\t");
 
-                if(!string.IsNullOrEmpty(result.score.ToString()))
+                if (!string.IsNullOrEmpty(result.score.ToString()))
                     stringBuilder.Append(string.Format("result score: {0}", result.score) + "\n\t");
             }
 
@@ -1003,19 +1003,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// THe aggregation matching results.
         /// </summary>
         public double matching_results { get; set; }
-    }
-    #endregion
-
-    #region Version
-    /// <summary>
-    /// The Discovery version.
-    /// </summary>
-    public class DiscoveryVersion
-    {
-        /// <summary>
-        /// The version.
-        /// </summary>
-        public const string Version = "2016-12-01";
     }
     #endregion
 }

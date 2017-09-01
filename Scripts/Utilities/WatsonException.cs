@@ -19,18 +19,18 @@ using IBM.Watson.DeveloperCloud.Logging;
 
 namespace IBM.Watson.DeveloperCloud.Utilities
 {
-  /// <summary>
-  /// Watson exception class.
-  /// </summary>
-  class WatsonException : System.Exception
-  {
-    public WatsonException(string message) : base(message)
+    /// <summary>
+    /// Watson exception class.
+    /// </summary>
+    class WatsonException : System.Exception
     {
-      Log.Critical("Exception", "Exception: {0}", message);
+        public WatsonException(string message) : base(message)
+        {
+            Log.Critical("Exception", "Exception: {0}", message);
+        }
+        public WatsonException(string message, WatsonException innerException) : base(message, innerException)
+        {
+            Log.Critical("Exception", "Exception: {0}", message);
+        }
     }
-    public WatsonException(string message, WatsonException innerException) : base(message, innerException)
-    {
-      Log.Critical("Exception", "Exception: {0}", message);
-    }
-  }
 }

@@ -1,8 +1,4 @@
-﻿
-
-
-using IBM.Watson.DeveloperCloud.Utilities;
-/**
+﻿/**
 * Copyright 2015 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,64 +14,25 @@ using IBM.Watson.DeveloperCloud.Utilities;
 * limitations under the License.
 *
 */
-using System;
-using System.Collections.Generic;
 
 namespace IBM.Watson.DeveloperCloud.Services
 {
-  /// <summary>
-  /// Callback for the GetServiceStatus() function.
-  /// </summary>
-  /// <param name="serviceID">The ID of the service.</param>
-  /// <param name="active">The status of the service, true is up, false is down.</param>
-  public delegate void ServiceStatus(string serviceID, bool active);
+    /// <summary>
+    /// Callback for the GetServiceStatus() function.
+    /// </summary>
+    /// <param name="serviceID">The ID of the service.</param>
+    /// <param name="active">The status of the service, true is up, false is down.</param>
+    public delegate void ServiceStatus(string serviceID, bool active);
 
-  /// <summary>
-  /// This interface defines common interface for all watson services.
-  /// </summary>
-  public interface IWatsonService
-  {
     /// <summary>
-    /// Returns the service ID.
+    /// This interface defines common interface for all watson services.
     /// </summary>
-    /// <returns>A string containing the service ID.</returns>
-    string GetServiceID();
-    /// <summary>
-    /// This should check if the service is up or down, and invoke the callback with the current
-    /// state of the service once determined.
-    /// </summary>
-    /// <param name="callback">The callback to invoke.</param>
-    void GetServiceStatus(ServiceStatus callback);
-  }
-
-  /// <summary>
-  /// Service helper class.
-  /// </summary>
-  public static class ServiceHelper
-  {
-    /// <summary>
-    /// This returns a instance of all services.
-    /// </summary>
-    /// <returns>An array of IWatsonService instances.</returns>
-    public static IWatsonService[] GetAllServices(bool reqCredentials = false)
+    public interface IWatsonService
     {
-      List<IWatsonService> services = new List<IWatsonService>();
-
-      Type[] types = Utilities.Utility.FindAllDerivedTypes(typeof(IWatsonService));
-      foreach (var type in types)
-      {
-        try
-        {
-          IWatsonService serviceObject = Activator.CreateInstance(type) as IWatsonService;
-          if (reqCredentials && Config.Instance.FindCredentials(serviceObject.GetServiceID()) == null)
-            continue;       // skip services that don't have credential data..
-          services.Add(serviceObject as IWatsonService);
-        }
-        catch (Exception)
-        { }
-      }
-
-      return services.ToArray();
+        /// <summary>
+        /// Returns the service ID.
+        /// </summary>
+        /// <returns>A string containing the service ID.</returns>
+        string GetServiceID();
     }
-  }
 }

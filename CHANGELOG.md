@@ -1,5 +1,23 @@
 Change Log
 ==========
+## Version 1.0.0
+_2017-08-31_ MAJOR RELEASE, BREAKING CHANGES
+
+* New: Abstracted `Natural Language Understanding` service.
+* New: Removed higher level `Widget` architecture - Will create a separate package to add in this functionality.
+* New: Removed dependency on `config.json` file for credentials.
+* New: Removed the `Configuration Editor`.
+* New: Removed the `Natural Language Classifier Editor`.
+* New: Added `KeywordSpotting` functionality to `Speech to Text`.
+* New: Support authentication tokens.
+* New: Remove `Touchscript` and `Watson Camera` scripts.
+* New: Revised all services to directly take credentials.
+* New: Data models to support credentials through `VCAP_SERVICES`.
+* Fixed: Updated examples, tests and ReadMe.md files.
+* Fixed: Updated 3rd party plugins.
+* Fixed: Removed deprecated services.
+
+
 ## Version 0.13.0
 _2017-01-25_
 

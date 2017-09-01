@@ -20,105 +20,105 @@ using UnityEngine.UI;
 
 namespace IBM.Watson.DeveloperCloud.Utilities
 {
-  /// <summary>
-  /// Helper class for automatically destroying objects after a static amount of time has elapsed.
-  /// </summary>
-  public class TimedDestroy : MonoBehaviour
-  {
-    [SerializeField, Tooltip("How many seconds until this component destroy's it's parent object.")]
-    private float m_DestroyTime = 5.0f;
-    private float m_ElapsedTime = 0.0f;
-    private bool m_TimeReachedToDestroy = false;
-    [SerializeField]
-    private bool m_AlphaFade = true;
-    [SerializeField]
-    private bool m_AlphaFadeOnAwake = false;
-    [SerializeField]
-    private float m_FadeTime = 1.0f;
-    [SerializeField]
-    private float m_FadeTimeOnAwake = 1.0f;
-    [SerializeField]
-    private Graphic m_AlphaTarget = null;
-    private bool m_Fading = false;
-    private float m_FadeStart = 0.0f;
-    private Color m_InitialColor = Color.white;
-    private float m_FadeAwakeRatio = 0.0f;
-
-    private void Start()
-    {
-      m_ElapsedTime = 0.0f;
-
-      if (m_AlphaFade && m_AlphaTarget != null)
-      {
-        m_InitialColor = m_AlphaTarget.color;
-
-        if (m_AlphaFadeOnAwake)
-        {
-          m_AlphaTarget.color = new Color(m_InitialColor.r, m_InitialColor.g, m_InitialColor.b, 0.0f);
-        }
-      }
-    }
-
-    private void Update()
-    {
-
-      if (m_AlphaFadeOnAwake)
-      {
-        m_FadeAwakeRatio += (Time.deltaTime / m_FadeTimeOnAwake);
-        m_AlphaTarget.color = new Color(m_InitialColor.r, m_InitialColor.g, m_InitialColor.b, Mathf.Clamp01(m_FadeAwakeRatio));
-        if (m_FadeAwakeRatio > 1.0f)
-          m_AlphaFadeOnAwake = false;
-      }
-
-      if (!m_TimeReachedToDestroy)
-      {
-        m_ElapsedTime += Time.deltaTime;
-        if (m_ElapsedTime > m_DestroyTime)
-        {
-          m_TimeReachedToDestroy = true;
-          OnTimeExpired();
-        }
-      }
-
-      if (m_Fading)
-      {
-        float fElapsed = Time.time - m_FadeStart;
-        if (fElapsed < m_FadeTime && m_AlphaTarget != null)
-        {
-          Color c = m_AlphaTarget.color;
-          c.a = 1.0f - fElapsed / m_FadeTime;
-          m_AlphaTarget.color = c;
-        }
-        else
-          Destroy(gameObject);
-      }
-    }
-
     /// <summary>
-    /// Resets the timer.
+    /// Helper class for automatically destroying objects after a static amount of time has elapsed.
     /// </summary>
-    public void ResetTimer()
+    public class TimedDestroy : MonoBehaviour
     {
-      m_ElapsedTime = 0.0f;
-      m_Fading = false;
-      m_TimeReachedToDestroy = false;
+        [SerializeField, Tooltip("How many seconds until this component destroy's it's parent object.")]
+        private float _destroyTime = 5.0f;
+        private float _elapsedTime = 0.0f;
+        private bool _timeReachedToDestroy = false;
+        [SerializeField]
+        private bool _alphaFade = true;
+        [SerializeField]
+        private bool _alphaFadeOnAwake = false;
+        [SerializeField]
+        private float _fadeTime = 1.0f;
+        [SerializeField]
+        private float _fadeTimeOnAwake = 1.0f;
+        [SerializeField]
+        private Graphic _alphaTarget = null;
+        private bool _fading = false;
+        private float _fadeStart = 0.0f;
+        private Color _initialColor = Color.white;
+        private float _fadeAwakeRatio = 0.0f;
 
-      if (m_AlphaFade && m_AlphaTarget != null)
-      {
-        m_AlphaTarget.color = m_InitialColor;
+        private void Start()
+        {
+            _elapsedTime = 0.0f;
 
-      }
+            if (_alphaFade && _alphaTarget != null)
+            {
+                _initialColor = _alphaTarget.color;
+
+                if (_alphaFadeOnAwake)
+                {
+                    _alphaTarget.color = new Color(_initialColor.r, _initialColor.g, _initialColor.b, 0.0f);
+                }
+            }
+        }
+
+        private void Update()
+        {
+
+            if (_alphaFadeOnAwake)
+            {
+                _fadeAwakeRatio += (Time.deltaTime / _fadeTimeOnAwake);
+                _alphaTarget.color = new Color(_initialColor.r, _initialColor.g, _initialColor.b, Mathf.Clamp01(_fadeAwakeRatio));
+                if (_fadeAwakeRatio > 1.0f)
+                    _alphaFadeOnAwake = false;
+            }
+
+            if (!_timeReachedToDestroy)
+            {
+                _elapsedTime += Time.deltaTime;
+                if (_elapsedTime > _destroyTime)
+                {
+                    _timeReachedToDestroy = true;
+                    OnTimeExpired();
+                }
+            }
+
+            if (_fading)
+            {
+                float fElapsed = Time.time - _fadeStart;
+                if (fElapsed < _fadeTime && _alphaTarget != null)
+                {
+                    Color c = _alphaTarget.color;
+                    c.a = 1.0f - fElapsed / _fadeTime;
+                    _alphaTarget.color = c;
+                }
+                else
+                    Destroy(gameObject);
+            }
+        }
+
+        /// <summary>
+        /// Resets the timer.
+        /// </summary>
+        public void ResetTimer()
+        {
+            _elapsedTime = 0.0f;
+            _fading = false;
+            _timeReachedToDestroy = false;
+
+            if (_alphaFade && _alphaTarget != null)
+            {
+                _alphaTarget.color = _initialColor;
+
+            }
+        }
+
+        private void OnTimeExpired()
+        {
+            if (_alphaFade && _alphaTarget != null)
+            {
+                _fading = true;
+                _fadeStart = Time.time;
+            }
+            else
+                Destroy(gameObject);
+        }
     }
-
-    private void OnTimeExpired()
-    {
-      if (m_AlphaFade && m_AlphaTarget != null)
-      {
-        m_Fading = true;
-        m_FadeStart = Time.time;
-      }
-      else
-        Destroy(gameObject);
-    }
-  }
 }

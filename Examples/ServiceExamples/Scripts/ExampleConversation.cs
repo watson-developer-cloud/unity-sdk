@@ -19,89 +19,119 @@ using UnityEngine;
 using IBM.Watson.DeveloperCloud.Services.Conversation.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
 using IBM.Watson.DeveloperCloud.Logging;
-using System;
+using System.Collections;
+using FullSerializer;
+using System.Collections.Generic;
 
 public class ExampleConversation : MonoBehaviour
 {
-  private Conversation m_Conversation = new Conversation();
-  private string m_WorkspaceID;
-  private bool m_UseAlternateIntents = true;
-  private string[] questionArray = { "can you turn up the AC", "can you turn on the wipers", "can you turn off the wipers", "can you turn down the ac", "can you unlock the door" };
+    private string _username = null;
+    private string _password = null;
+    private string _url = null;
+    private string _workspaceId = null;
 
-  void Start()
-  {
-    LogSystem.InstallDefaultReactors();
-    m_WorkspaceID = Config.Instance.GetVariableValue("ConversationV1_ID");
+    private Conversation _conversation;
+    private string _conversationVersionDate = "2017-05-26";
 
-    Debug.Log("**********User: Hello!");
-    MessageWithOnlyInput("Hello!");
-  }
+    private string[] _questionArray = { "can you turn up the AC", "can you turn on the wipers", "can you turn off the wipers", "can you turn down the ac", "can you unlock the door" };
+    private fsSerializer _serializer = new fsSerializer();
+    private Dictionary<string, object> _context = null;
+    private int _questionCount = -1;
+    private bool _waitingForResponse = true;
 
-  private void MessageWithOnlyInput(string input)
-  {
-    if (string.IsNullOrEmpty(input))
-      throw new ArgumentNullException("input");
-
-    m_Conversation.Message(OnMessageWithOnlyInput, m_WorkspaceID, input);
-  }
-
-
-  private void OnMessageWithOnlyInput(MessageResponse resp, string customData)
-  {
-    if (resp != null)
+    void Start()
     {
-      foreach (Intent mi in resp.intents)
-        Debug.Log("Message Only intent: " + mi.intent + ", confidence: " + mi.confidence);
+        LogSystem.InstallDefaultReactors();
 
-      if (resp.output != null && resp.output.text.Length > 0)
-        foreach (string txt in resp.output.text)
-          Debug.Log("Message Only output: " + txt);
+        //  Create credential and instantiate service
+        Credentials credentials = new Credentials(_username, _password, _url);
 
-      string questionStr = questionArray[UnityEngine.Random.Range(0, questionArray.Length - 1)];
-      Debug.Log(string.Format("**********User: {0}", questionStr));
+        _conversation = new Conversation(credentials);
+        _conversation.VersionDate = _conversationVersionDate;
 
-      MessageRequest messageRequest = new MessageRequest();
-      messageRequest.InputText = questionStr;
-      messageRequest.alternate_intents = m_UseAlternateIntents;
-      messageRequest.ContextData = resp.context;
-
-      MessageWithFullMessageRequest(messageRequest);
+        Runnable.Run(Examples());
     }
-    else
+
+    private IEnumerator Examples()
     {
-      Debug.Log("Message Only: Failed to invoke Message();");
+        if (!_conversation.Message(OnMessage, _workspaceId, "hello"))
+            Log.Debug("ExampleConversation", "Failed to message!");
+
+        while (_waitingForResponse)
+            yield return null;
+
+        _waitingForResponse = true;
+        _questionCount++;
+
+        AskQuestion();
+        while (_waitingForResponse)
+            yield return null;
+
+        _questionCount++;
+
+        _waitingForResponse = true;
+
+        AskQuestion();
+        while (_waitingForResponse)
+            yield return null;
+        _questionCount++;
+
+        _waitingForResponse = true;
+
+        AskQuestion();
+        while (_waitingForResponse)
+            yield return null;
+        _questionCount++;
+
+        _waitingForResponse = true;
+
+        AskQuestion();
+        while (_waitingForResponse)
+            yield return null;
+
+        Log.Debug("ExampleConversation", "Conversation examples complete.");
     }
-  }
 
-  private void MessageWithFullMessageRequest(MessageRequest messageRequest)
-  {
-    if (messageRequest == null)
-      throw new ArgumentNullException("messageRequest");
-    m_Conversation.Message(OnMessageWithFullRequest, m_WorkspaceID, messageRequest);
-  }
-
-  private void OnMessageWithFullRequest(MessageResponse resp, string customData)
-  {
-    if (resp != null)
+    private void AskQuestion()
     {
-      foreach (Intent mi in resp.intents)
-        Debug.Log("Full Request intent: " + mi.intent + ", confidence: " + mi.confidence);
+        MessageRequest messageRequest = new MessageRequest()
+        {
+            input = new Dictionary<string, object>()
+            {
+                { "text", _questionArray[_questionCount] }
+            },
+            context = _context
+        };
 
-      if (resp.output != null && resp.output.text.Length > 0)
-        foreach (string txt in resp.output.text)
-          Debug.Log("Full Request output: " + txt);
-
-      string questionStr = questionArray[UnityEngine.Random.Range(0, questionArray.Length - 1)];
-      Debug.Log(string.Format("**********User: {0}", questionStr));
-
-      MessageRequest messageRequest = new MessageRequest();
-      messageRequest.InputText = questionStr;
-      messageRequest.alternate_intents = m_UseAlternateIntents;
-      messageRequest.ContextData = resp.context;
+        if (!_conversation.Message(OnMessage, _workspaceId, messageRequest))
+            Log.Debug("ExampleConversation", "Failed to message!");
     }
-    else
+
+    private void OnMessage(object resp, string data)
     {
-      Debug.Log("Full Request: Failed to invoke Message();");
+        Log.Debug("ExampleConversation", "Conversation: Message Response: {0}", data);
+
+        //  Convert resp to fsdata
+        fsData fsdata = null;
+        fsResult r = _serializer.TrySerialize(resp.GetType(), resp, out fsdata);
+        if (!r.Succeeded)
+            throw new WatsonException(r.FormattedMessages);
+
+        //  Convert fsdata to MessageResponse
+        MessageResponse messageResponse = new MessageResponse();
+        object obj = messageResponse;
+        r = _serializer.TryDeserialize(fsdata, obj.GetType(), ref obj);
+        if (!r.Succeeded)
+            throw new WatsonException(r.FormattedMessages);
+
+        //  Set context for next round of messaging
+        object _tempContext = null;
+        (resp as Dictionary<string, object>).TryGetValue("context", out _tempContext);
+
+        if (_tempContext != null)
+            _context = _tempContext as Dictionary<string, object>;
+        else
+            Log.Debug("ExampleConversation", "Failed to get context");
+        _waitingForResponse = false;
     }
-  }
 }
