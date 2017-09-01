@@ -103,7 +103,7 @@ You use tokens to write applications that make authenticated requests to IBM Wat
 
 You can write an authentication proxy in IBM® Bluemix® that obtains and returns a token to your client application, which can then use the token to call the service directly. This proxy eliminates the need to channel all service requests through an intermediate server-side application, which is otherwise necessary to avoid exposing your service credentials from your client application.
 
-```
+```cs
 using IBM.Watson.DeveloperCloud.Services.Conversation.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
 
@@ -119,7 +119,7 @@ void Start()
 
 There is a helper class included to obtain tokens from within your Unity application.
 
-```
+```cs
 using IBM.Watson.DeveloperCloud.Utilities;
 
 AuthenticationToken _authenticationToken;
