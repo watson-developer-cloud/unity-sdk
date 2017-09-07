@@ -34,4 +34,4 @@ private void OnGetToneAnalyze(ToneAnalyzerResponse resp, string data)
 }
 ```
 
-[tone-analyzer]: https://www.ibm.com/watson/developercloud/doc/tone-analyzer/index.html
+[tone-analyzer]: https://console.bluemix.net/docs/services/tone-analyzer/index.html

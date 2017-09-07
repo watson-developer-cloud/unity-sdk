@@ -47,7 +47,7 @@ Uploads a TMX glossary file on top of a domain to customize a translation model.
 private void CreateModel()
 {
   if (!_languageTranslation.CreateModel(OnCreateModel, <base-model-name>, <custom-model-name>, <glossary-filepath>))
-    Log.Debug("TestLanguageTranslation", "Failed to create model.");  
+    Log.Debug("TestLanguageTranslation", "Failed to create model.");
 }
 
 private void OnCreateModel(TranslationModel model, string customData)
@@ -154,4 +154,4 @@ private void OnGetLanguages(Languages languages, string customData)
 
 
 
-[language_Translation]: https://www.ibm.com/watson/developercloud/language-translator.html
+[language_Translation]: https://www.ibm.com/watson/services/language-translator/
