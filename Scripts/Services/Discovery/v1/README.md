@@ -405,5 +405,5 @@ private void OnQuery(QueryResponse resp, string data)
 ```
 
 [discovery]: https://www.ibm.com/watson/developercloud/discovery.html
-[discovery-sizing]: https://www.ibm.com/watson/developercloud/discovery.html#pricing-block
-[discovery-query]: https://www.ibm.com/watson/developercloud/doc/discovery/using.html
+[discovery-sizing]: https://www.ibm.com/watson/developercloud/discovery.html
+[discovery-query]: https://console.bluemix.net/docs/services/discovery/using.html

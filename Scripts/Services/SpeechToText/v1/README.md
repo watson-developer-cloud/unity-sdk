@@ -476,4 +476,4 @@ private void HandleDeleteCustomWord(bool success, string customData)
 }
 ```
 
-[speech-to-text]: https://www.ibm.com/watson/developercloud/doc/speech-to-text/index.html
+[speech-to-text]: https://console.bluemix.net/docs/services/speech-to-text/index.html

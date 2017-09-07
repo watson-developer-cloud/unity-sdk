@@ -34,4 +34,4 @@ private void OnConvertDocument(ConvertedDocument documentConversionResponse, str
 }
 ```
 
-[document_conversion]: https://www.ibm.com/watson/developercloud/document-conversion.html
+[document_conversion]: https://www.ibm.com/watson/services/document-conversion/

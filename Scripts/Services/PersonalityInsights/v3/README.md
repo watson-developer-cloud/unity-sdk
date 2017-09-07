@@ -37,6 +37,6 @@ private void OnGetProfile(Profile profile, string data)
 }
 ```
 
-[personality-insights]: https://www.ibm.com/watson/developercloud/personality-insights.html
-[personality-models]: https://www.ibm.com/watson/developercloud/doc/personality-insights/models.html
-[consumption-preferences]:https://www.ibm.com/watson/developercloud/doc/personality-insights/preferences.html
+[personality-insights]: https://www.ibm.com/watson/services/personality-insights/
+[personality-models]: https://console.bluemix.net/docs/services/personality-insights/models.html
+[consumption-preferences]: https://console.bluemix.net/docs/services/personality-insights/preferences.html

@@ -337,6 +337,5 @@ private void OnGetRanker(RankerStatusPayload resp, string data)
   Log.Debug("ExampleRetrieveAndRank", "GetRanker results: {0}", data.ToString());
 }
 ```
-[personality-insights]: https://www.ibm.com/watson/developercloud/personality-insights.html
-[personality-models]: https://www.ibm.com/watson/developercloud/doc/personality-insights/models.html
-[consumption-preferences]:https://www.ibm.com/watson/developercloud/doc/personality-insights/preferences.html
+[retrieve-and-rank-service]: https://www.ibm.com/watson/services/retrieve-and-rank/
+[retrieve-and-rank-documentation]: https://console.bluemix.net/docs/services/retrieve-and-rank/index.html

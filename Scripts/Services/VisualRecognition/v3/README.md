@@ -314,6 +314,6 @@ private void OnFindSimilar(SimilarImagesConfig images, string customData)
 ```
 
 [visual-recognition]: https://www.ibm.com/watson/developercloud/visual-recognition/api/v3/
-[structure-of-the-training-data]: https://www.ibm.com/watson/developercloud/doc/visual-recognition/customizing.html#structure
-[guidelines-for-good-training]: https://www.ibm.com/watson/developercloud/doc/visual-recognition/customizing.html#guidelines-for-good-training
-[updating-custom-classifiers]: https://www.ibm.com/watson/developercloud/doc/visual-recognition/customizing.html#updating-custom-classifiers
+[structure-of-the-training-data]: https://console.bluemix.net/docs/services/visual-recognition/customizing.html#structure
+[guidelines-for-good-training]: https://console.bluemix.net/docs/services/visual-recognition/customizing.html#guidelines-for-good-training
+[updating-custom-classifiers]: https://console.bluemix.net/docs/services/visual-recognition/customizing.html#updating-custom-classifiers
