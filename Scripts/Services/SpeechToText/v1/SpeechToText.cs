@@ -530,6 +530,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             start["word_alternatives_threshold"] = WordAlternativesThreshold;
             start["keywords_threshold"] = KeywordsThreshold;
             start["keywords"] = Keywords;
+            start["inactivity_timeout "] = -1;
 
             _listenSocket.Send(new WSConnector.TextMessage(Json.Serialize(start)));
             _lastStartSent = DateTime.Now;
@@ -567,6 +568,8 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                     Log.Debug("SpeechToText", "Sending keep alive.");
 #endif
                     _listenSocket.Send(new WSConnector.TextMessage(Json.Serialize(nop)));
+                    AudioClip clip = AudioClip.Create("silence", 44100, 1, 44100, false);
+                    _listenSocket.Send(new WSConnector.BinaryMessage(WaveFile.CreateWAV(clip)));
                     _lastKeepAlive = DateTime.Now;
                 }
             }
