@@ -66,11 +66,19 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             Component component = _target.GetComponent(_component);
             if (component == null)
                 return null;
+#if NETFX_CORE
+            MethodInfo info = component.GetType().GetMethod(_method, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public);
+            if (info == null)
+                return null;
+
+            return info.CreateDelegate(DelegateType, component);
+#else
             MethodInfo info = component.GetType().GetMethod(_method, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.InvokeMethod);
             if (info == null)
                 return null;
 
             return Delegate.CreateDelegate(DelegateType, component, info);
+#endif
         }
     }
 }
