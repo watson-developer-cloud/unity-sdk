@@ -103,6 +103,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         private bool _detectSilence = true;            // If true, then we will try not to record silence.
         private float _silenceThreshold = 0.03f;         // If the audio level is below this value, then it's considered silent.
         private int _recordingHZ = -1;
+        private int _inactivityTimeout = 60;
         private fsSerializer _serializer = new fsSerializer();
         private Credentials _credentials = null;
         private string _url = "https://stream.watsonplatform.net/speech-to-text/api";
@@ -491,7 +492,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         {
             if (_listenSocket == null)
             {
-                _listenSocket = WSConnector.CreateConnector(Credentials, Url, "/v1/recognize", "?model=" + WWW.EscapeURL(_recognizeModel));
+                _listenSocket = WSConnector.CreateConnector(Credentials, Url, "/v1/recognize", "?model=" + WWW.EscapeURL(_recognizeModel) + "&inactivity_timeout=" + _inactivityTimeout);
                 if (_listenSocket == null)
                     return false;
 
@@ -530,7 +531,6 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             start["word_alternatives_threshold"] = WordAlternativesThreshold;
             start["keywords_threshold"] = KeywordsThreshold;
             start["keywords"] = Keywords;
-            start["inactivity_timeout "] = -1;
 
             _listenSocket.Send(new WSConnector.TextMessage(Json.Serialize(start)));
             _lastStartSent = DateTime.Now;
@@ -561,15 +561,16 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 
                 if ((DateTime.Now - _lastKeepAlive).TotalSeconds > WsKeepAliveInterval)
                 {
-                    Dictionary<string, string> nop = new Dictionary<string, string>();
-                    nop["action"] = "no-op";
+                    //  Temporary clip to use for KeepAlive
+                    //  TODO: Generate small sound clip to send to the service to keep alive.
+                    AudioClip _keepAliveClip = Resources.Load<AudioClip>("highHat");
 
 #if ENABLE_DEBUGGING
                     Log.Debug("SpeechToText", "Sending keep alive.");
 #endif
-                    _listenSocket.Send(new WSConnector.TextMessage(Json.Serialize(nop)));
-                    AudioClip clip = AudioClip.Create("silence", 44100, 1, 44100, false);
-                    _listenSocket.Send(new WSConnector.BinaryMessage(WaveFile.CreateWAV(clip)));
+                    _listenSocket.Send(new WSConnector.BinaryMessage(AudioClipUtil.GetL16(_keepAliveClip)));
+                    _keepAliveClip = null;
+                    
                     _lastKeepAlive = DateTime.Now;
                 }
             }

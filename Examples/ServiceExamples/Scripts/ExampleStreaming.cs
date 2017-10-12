@@ -60,7 +60,7 @@ public class ExampleStreaming : MonoBehaviour
                 _speechToText.DetectSilence = true;
                 _speechToText.EnableWordConfidence = false;
                 _speechToText.EnableTimestamps = false;
-                _speechToText.SilenceThreshold = 0.03f;
+                _speechToText.SilenceThreshold = 0.00f;
                 _speechToText.MaxAlternatives = 1;
                 _speechToText.EnableContinousRecognition = true;
                 _speechToText.EnableInterimResults = true;
