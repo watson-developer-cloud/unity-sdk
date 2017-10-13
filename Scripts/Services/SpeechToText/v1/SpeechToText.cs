@@ -96,12 +96,12 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         private float _keywordsThreshold = 0.5f;
         private float _wordAlternativesThreshold = 0.5f;
         private bool _profanityFilter = true;
-        private bool _smallFormatting = false;
+        private bool _smartFormatting = false;
         private bool _speakerLabels = false;
         private bool _timestamps = false;
         private bool _wordConfidence = false;
         private bool _detectSilence = true;            // If true, then we will try not to record silence.
-        private float _silenceThreshold = 0.03f;         // If the audio level is below this value, then it's considered silent.
+        private float _silenceThreshold = 0.0f;         // If the audio level is below this value, then it's considered silent.
         private int _recordingHZ = -1;
         private int _inactivityTimeout = 60;
         private fsSerializer _serializer = new fsSerializer();
@@ -149,10 +149,6 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// True to return word confidence with results.
         /// </summary>
         public bool EnableWordConfidence { get { return _wordConfidence; } set { _wordConfidence = value; } }
-        /// <summary>
-        /// If true, then we will try to continuously recognize speech.
-        /// </summary>
-        public bool EnableContinousRecognition { get; set; }
         /// <summary>
         /// If true, then we will get interim results while recognizing. The user will then need to check 
         /// the Final flag on the results.
@@ -212,7 +208,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// <summary>
         /// NON-MULTIPART ONLY: If true, converts dates, times, series of digits and numbers, phone numbers, currency values, and Internet addresses into more readable, conventional representations in the final transcript of a recognition request. If false (the default), no formatting is performed. Applies to US English transcription only.
         /// </summary>
-        public bool SmallFormatting { get { return _smallFormatting; } set { _smallFormatting = value; } }
+        public bool SmartFormatting { get { return _smartFormatting; } set { _smartFormatting = value; } }
         /// <summary>
         /// NON-MULTIPART ONLY: Indicates whether labels that identify which words were spoken by which participants in a multi-person exchange are to be included in the response. If true, speaker labels are returned; if false (the default), they are not. Speaker labels can be returned only for the following language models: en-US_NarrowbandModel, en-US_BroadbandModel, es-ES_NarrowbandModel, es-ES_BroadbandModel, ja-JP_NarrowbandModel, and ja-JP_BroadbandModel. Setting speaker_labels to true forces the timestamps parameter to be true, regardless of whether you specify false for the parameter.
         /// </summary>
@@ -520,13 +516,12 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             Dictionary<string, object> start = new Dictionary<string, object>();
             start["action"] = "start";
             start["content-type"] = "audio/l16;rate=" + _recordingHZ.ToString() + ";channels=1;";
-            start["continuous"] = EnableContinousRecognition;
             start["max_alternatives"] = _maxAlternatives;
             start["interim_results"] = EnableInterimResults;
             start["word_confidence"] = _wordConfidence;
             start["timestamps"] = _timestamps;
             start["speaker_labels"] = SpeakerLabels;
-            start["small_formatting"] = SmallFormatting;
+            start["smart_formatting"] = SmartFormatting;
             start["profanity_filter"] = ProfanityFilter;
             start["word_alternatives_threshold"] = WordAlternativesThreshold;
             start["keywords_threshold"] = KeywordsThreshold;
@@ -591,10 +586,9 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                         SpeechRecognitionEvent results = ParseRecognizeResponse(json);
                         if (results != null)
                         {
-                            // when we get results, start listening for the next block ..
-                            // if continuous is true, then we don't need to do this..
-                            if (!EnableContinousRecognition && results.HasFinalResult())
-                                SendStart();
+                            //// when we get results, start listening for the next block ..
+                            //if (results.HasFinalResult())
+                            //    SendStart();
 
                             if (_listenCallback != null)
                                 _listenCallback(results);
@@ -701,12 +695,11 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                 return false;
             }
             req.Parameters["model"] = _recognizeModel;
-            req.Parameters["continuous"] = "false";
             req.Parameters["max_alternatives"] = _maxAlternatives.ToString();
             req.Parameters["timestamps"] = _timestamps ? "true" : "false";
             req.Parameters["word_confidence"] = _wordConfidence ? "true" : "false";
             req.Parameters["speaker_labels"] = SpeakerLabels;
-            req.Parameters["small_formatting"] = SmallFormatting;
+            req.Parameters["smart_formatting"] = SmartFormatting;
             req.Parameters["profanity_filter"] = ProfanityFilter;
             req.Parameters["word_alternatives_threshold"] = WordAlternativesThreshold;
             req.Parameters["keywords_threshold"] = KeywordsThreshold;
