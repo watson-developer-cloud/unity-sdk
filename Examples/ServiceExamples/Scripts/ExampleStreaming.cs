@@ -64,6 +64,7 @@ public class ExampleStreaming : MonoBehaviour
                 _speechToText.MaxAlternatives = 1;
                 _speechToText.EnableInterimResults = true;
                 _speechToText.OnError = OnError;
+                _speechToText.InactivityTimeout = -1;
                 _speechToText.StartListening(OnRecognize);
                 List<string> keywords = new List<string>();
                 keywords.Add("hello");

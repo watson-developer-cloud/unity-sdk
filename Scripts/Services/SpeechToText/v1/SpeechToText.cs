@@ -213,6 +213,10 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// NON-MULTIPART ONLY: Indicates whether labels that identify which words were spoken by which participants in a multi-person exchange are to be included in the response. If true, speaker labels are returned; if false (the default), they are not. Speaker labels can be returned only for the following language models: en-US_NarrowbandModel, en-US_BroadbandModel, es-ES_NarrowbandModel, es-ES_BroadbandModel, ja-JP_NarrowbandModel, and ja-JP_BroadbandModel. Setting speaker_labels to true forces the timestamps parameter to be true, regardless of whether you specify false for the parameter.
         /// </summary>
         public bool SpeakerLabels { get { return _speakerLabels; } set { _speakerLabels = value; } }
+        /// <summary>
+        /// NON-MULTIPART ONLY: The time in seconds after which, if only silence (no speech) is detected in submitted audio, the connection is closed with a 400 error. Useful for stopping audio submission from a live microphone when a user simply walks away. Use -1 for infinity.
+        /// </summary>
+        public int InactivityTimeout { get { return _inactivityTimeout; } set { _inactivityTimeout = value; } }
         #endregion
 
         #region Constructor
@@ -488,9 +492,17 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         {
             if (_listenSocket == null)
             {
-                _listenSocket = WSConnector.CreateConnector(Credentials, Url, "/v1/recognize", "?model=" + WWW.EscapeURL(_recognizeModel) + "&inactivity_timeout=" + _inactivityTimeout);
+                _listenSocket = WSConnector.CreateConnector(Credentials, Url, "/v1/recognize", "?model=" + WWW.EscapeURL(_recognizeModel) + "&inactivity_timeout=" + InactivityTimeout);
                 if (_listenSocket == null)
+                {
                     return false;
+                }
+                else
+                {
+#if ENABLE_DEBUGGING
+                    Log.Debug("SpeechToText", "Created listen socket. Model: {0}, Inactivity Timeout: {1}", WWW.EscapeURL(_recognizeModel), InactivityTimeout);
+#endif
+                }
 
                 _listenSocket.OnMessage = OnListenMessage;
                 _listenSocket.OnClose = OnListenClosed;
