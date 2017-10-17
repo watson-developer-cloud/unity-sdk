@@ -1627,7 +1627,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                     Log.Error("SpeechToText", "Failed to upload {0}!", trainingPath);
             }
 
-            return AddCustomCorpus(callback, customizationID, corpusName, allowOverwrite, trainingDataBytes);
+            return AddCustomCorpus(callback, customizationID, corpusName, allowOverwrite, trainingDataBytes, Path.GetFileName(trainingPath));
         }
 
         /// <summary>
@@ -1639,7 +1639,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// <param name="allowOverwrite">Allow overwriting of corpus data.</param>
         /// <param name="trainingData">ByteArray data for training data.</param>
         /// <param name="customData">Optional customization data.</param>
-        public bool AddCustomCorpus(OnAddCustomCorpusCallback callback, string customizationID, string corpusName, bool allowOverwrite, byte[] trainingData, string customData = default(string))
+        public bool AddCustomCorpus(OnAddCustomCorpusCallback callback, string customizationID, string corpusName, bool allowOverwrite, byte[] trainingData, string filename,  string customData = default(string))
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -1649,6 +1649,8 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                 throw new ArgumentNullException("A corpusName is requried for AddCustomCorpus.");
             if (trainingData == default(byte[]))
                 throw new ArgumentNullException("Training data is required for AddCustomCorpus.");
+            if (string.IsNullOrEmpty(filename))
+                throw new ArgumentNullException("Filename is required for AddCustomCorpus.");
 
             AddCustomCorpusRequest req = new AddCustomCorpusRequest();
             req.Callback = callback;
@@ -1659,7 +1661,46 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             req.Headers["Accept"] = "application/json";
             req.Parameters["allow_overwrite"] = allowOverwrite.ToString();
             req.Forms = new Dictionary<string, RESTConnector.Form>();
-            req.Forms["body"] = new RESTConnector.Form(trainingData, "trainingData.txt", "text/plain");
+            req.Forms["body"] = new RESTConnector.Form(trainingData, filename, Utility.GetMimeType(Path.GetExtension(filename)));
+            req.OnResponse = OnAddCustomCorpusResp;
+
+            string service = "/v1/customizations/{0}/corpora/{1}";
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(service, customizationID, corpusName));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        /// <summary>
+        /// Overload method for AddCustomCorpus that takes string training data.
+        /// </summary>
+        /// <param name="callback">The callback.</param>
+        /// <param name="customizationID">The customization ID with the corpus to be deleted.</param>
+        /// <param name="corpusName">The corpus name to be deleted.</param>
+        /// <param name="allowOverwrite">Allow overwriting of corpus data.</param>
+        /// <param name="trainingData">String data for training data.</param>
+        /// <param name="customData">Optional customization data.</param>
+        public bool AddCustomCorpusString(OnAddCustomCorpusCallback callback, string customizationID, string corpusName, bool allowOverwrite, string trainingData, string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(customizationID))
+                throw new ArgumentNullException("A customizationID is required for AddCustomCorpus.");
+            if (string.IsNullOrEmpty(corpusName))
+                throw new ArgumentNullException("A corpusName is requried for AddCustomCorpus.");
+            if (string.IsNullOrEmpty(trainingData))
+                throw new ArgumentNullException("Training data is required for AddCustomCorpus.");
+
+            AddCustomCorpusRequest req = new AddCustomCorpusRequest();
+            req.Callback = callback;
+            req.CustomizationID = customizationID;
+            req.CorpusName = corpusName;
+            req.Data = customData;
+            req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
+            req.Headers["Accept"] = "application/json";
+            req.Parameters["allow_overwrite"] = allowOverwrite.ToString();
+            req.Send = Encoding.UTF8.GetBytes(trainingData);
             req.OnResponse = OnAddCustomCorpusResp;
 
             string service = "/v1/customizations/{0}/corpora/{1}";
