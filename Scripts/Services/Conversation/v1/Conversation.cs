@@ -118,8 +118,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
         {
             if (string.IsNullOrEmpty(workspaceID))
                 throw new ArgumentNullException("workspaceId");
-            if (string.IsNullOrEmpty(input))
-                throw new ArgumentNullException("input");
             if (callback == null)
                 throw new ArgumentNullException("callback");
 
@@ -155,8 +153,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
         {
             if (string.IsNullOrEmpty(workspaceID))
                 throw new ArgumentNullException("workspaceId");
-            if (string.IsNullOrEmpty(messageRequest.input["text"] as string))
-                throw new ArgumentNullException("messageRequest.input.text");
             if (callback == null)
                 throw new ArgumentNullException("callback");
 
