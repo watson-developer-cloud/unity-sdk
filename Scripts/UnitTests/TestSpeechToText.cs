@@ -40,7 +40,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private string _modelNameToGet;
         private string _createdCustomizationID;
-        private string _createdCorpusName = "unity-corpus";
+        private string _createdCorpusName = "the-jabberwocky-corpus";
         private string _customCorpusFilePath;
         private string _customWordsFilePath;
         private string _wavFilePath;
@@ -164,16 +164,10 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             while (!_getCustomCorporaTested)
                 yield return null;
 
-            ////  Add custom corpus
-            //Log.Debug("ExampleSpeechToText", "Attempting to add custom corpus {1} in customization {0}", _createdCustomizationID, _createdCorpusName);
-            //_speechToText.AddCustomCorpus(HandleAddCustomCorpus, _createdCustomizationID, _createdCorpusName, true, _customCorpusFilePath);
-            //while (!_addCustomCorpusTested)
-            //    yield return null;
-
-            //  Add custom corpus string
+            //  Add custom corpus
             Log.Debug("ExampleSpeechToText", "Attempting to add custom corpus {1} in customization {0}", _createdCustomizationID, _createdCorpusName);
             string corpusData = File.ReadAllText(_customCorpusFilePath);
-            _speechToText.AddCustomCorpusString(HandleAddCustomCorpus, _createdCustomizationID, _createdCorpusName, true, corpusData);
+            _speechToText.AddCustomCorpus(HandleAddCustomCorpus, _createdCustomizationID, _createdCorpusName, true, corpusData);
             while (!_addCustomCorpusTested)
                 yield return null;
 
