@@ -171,15 +171,9 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             get { return _silenceThreshold; }
             set
             {
-                if (value < 0)
+                if (value < 0f || value > 1f)
                 {
-                    Log.Warning("SpeechToText", "Silence threshold should be between 0.0f and 1.0f. Setting threshold to 0.0f");
-                    _silenceThreshold = 0f;
-                }
-                else if (value > 1)
-                {
-                    Log.Warning("SpeechToText", "Silence threshold should be between 0.0f and 1.0f. Setting threshold to 1.0f");
-                    _silenceThreshold = 1f;
+                    throw new ArgumentOutOfRangeException("Silence threshold should be between 0.0f and 1.0f");
                 }
                 else
                 {
