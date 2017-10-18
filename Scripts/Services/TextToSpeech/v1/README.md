@@ -361,8 +361,8 @@ private void OnDeleteCustomizationWords(bool success, string customData)
 }
 ```
 
-[text-to-speech]: https://www.ibm.com/watson/developercloud/doc/text-to-speech/index.html
-[using-ssml]: https://www.ibm.com/watson/developercloud/doc/text-to-speech/SSML.html
-[using-sprs]: https://www.ibm.com/watson/developercloud/doc/text-to-speech/SPRs.html
-[understanding-customization]: https://www.ibm.com/watson/developercloud/doc/text-to-speech/custom-intro.html
-[using-customization]: https://www.ibm.com/watson/developercloud/doc/text-to-speech/custom-using.html
+[text-to-speech]: https://console.bluemix.net/docs/services/text-to-speech/index.html
+[using-ssml]: https://console.bluemix.net/docs/services/text-to-speech/SSML.html
+[using-sprs]: https://console.bluemix.net/docs/services/text-to-speech/SPRs.html
+[understanding-customization]: https://console.bluemix.net/docs/services/text-to-speech/custom-intro.html
+[using-customization]: https://console.bluemix.net/docs/services/text-to-speech/custom-using.html

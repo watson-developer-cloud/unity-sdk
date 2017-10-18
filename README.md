@@ -23,7 +23,6 @@ Ensure that you have the following prerequisites:
 * An IBM Bluemix account. If you don't have one, [sign up][bluemix_registration].
 * [Unity][get_unity]. You can use the **free** Personal edition.
 * Change the build settings in Unity (**File > Build Settings**) to any platform except for web player/Web GL. The Watson Developer Cloud Unity SDK does not support Unity Web Player.
-* A chm reader if you would like to access SDK Documentation (optional).
 
 ## Getting the Watson SDK and adding it to Unity
 You can get the latest SDK release by clicking [here][latest_release].
@@ -104,7 +103,7 @@ You use tokens to write applications that make authenticated requests to IBM Wat
 
 You can write an authentication proxy in IBM® Bluemix® that obtains and returns a token to your client application, which can then use the token to call the service directly. This proxy eliminates the need to channel all service requests through an intermediate server-side application, which is otherwise necessary to avoid exposing your service credentials from your client application.
 
-```
+```cs
 using IBM.Watson.DeveloperCloud.Services.Conversation.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
 
@@ -120,7 +119,7 @@ void Start()
 
 There is a helper class included to obtain tokens from within your Unity application.
 
-```
+```cs
 using IBM.Watson.DeveloperCloud.Utilities;
 
 AuthenticationToken _authenticationToken;
@@ -139,7 +138,7 @@ private void OnGetToken(AuthenticationToken authenticationToken, string customDa
 ```
 
 ## Documentation
-To read the documentation you need to have a **chm reader** installed. Open the documentation by selecting API Reference the Watson menu (**Watson -> API Reference**).
+Documentation can be found [here][documentation]. You can also access the documentation by selecting API Reference the Watson menu (**Watson -> API Reference**).
 
 ## Questions
 
@@ -162,32 +161,33 @@ See [CONTRIBUTING.md](.github/CONTRIBUTING.md).
 [bluemix_registration]: http://bluemix.net/registration
 [get_unity]: https://unity3d.com/get-unity
 
-[speech_to_text]: http://www.ibm.com/watson/developercloud/doc/speech-to-text/
-[text_to_speech]: http://www.ibm.com/watson/developercloud/doc/text-to-speech/
-[language_translator]: http://www.ibm.com/watson/developercloud/doc/language-translator/index.html
-[dialog]: https://console.bluemix.net/docs/services/conversation/index.html#about
-[natural_language_classifier]: http://www.ibm.com/watson/developercloud/doc/natural-language-classifier/index.html
+[speech_to_text]: https://console.bluemix.net/docs/services/speech-to-text/index.html
+[text_to_speech]: https://console.bluemix.net/docs/services/text-to-speech/index.html
+[language_translator]: https://console.bluemix.net/docs/services/language-translator/index.html
+[dialog]: https://console.bluemix.net/docs/services/dialog/index.html
+[natural_language_classifier]: https://console.bluemix.net/docs/services/natural-language-classifier/natural-language-classifier-overview.html
 
 [alchemy_language]: http://www.alchemyapi.com/products/alchemylanguage
 [alchemyData_news]: http://www.ibm.com/watson/developercloud/alchemy-data-news.html
 [sentiment_analysis]: http://www.alchemyapi.com/products/alchemylanguage/sentiment-analysis
-[tone_analyzer]: http://www.ibm.com/watson/developercloud/doc/tone-analyzer/
-[tradeoff_analytics]: http://www.ibm.com/watson/developercloud/doc/tradeoff-analytics/
-[conversation]:https://console.bluemix.net/docs/services/conversation/index.html#about
-[visual_recognition]: http://www.ibm.com/watson/developercloud/visual-recognition/api/v3/
-[personality_insights]: http://www.ibm.com/watson/developercloud/personality-insights/api/v2/
+[tone_analyzer]: https://console.bluemix.net/docs/services/tone-analyzer/index.html
+[tradeoff_analytics]: https://console.bluemix.net/docs/services/tradeoff-analytics/index.html
+[conversation]: https://console.bluemix.net/docs/services/conversation/index.html
+[visual_recognition]: https://console.bluemix.net/docs/services/visual-recognition/index.html
+[personality_insights]: https://console.bluemix.net/docs/services/personality-insights/index.html
 [conversation_tooling]: https://www.ibmwatsonconversation.com
-[retrieve_and_rank]: http://www.ibm.com/watson/developercloud/retrieve-and-rank/api/v1/
-[discovery]: http://www.ibm.com/watson/developercloud/discovery/api/v1/
-[document_conversion]: http://www.ibm.com/watson/developercloud/document-conversion/api/v1/
-[expressive_ssml]: http://www.ibm.com/watson/developercloud/doc/text-to-speech/http.shtml#expressive
-[ssml]: http://www.ibm.com/watson/developercloud/doc/text-to-speech/SSML.shtml
-[discovery-query]: http://www.ibm.com/watson/developercloud/doc/discovery/using.shtml
+[retrieve_and_rank]: https://console.bluemix.net/docs/services/retrieve-and-rank/index.html
+[discovery]: https://console.bluemix.net/docs/services/discovery/index.html
+[document_conversion]: https://console.bluemix.net/docs/services/document-conversion/index.html
+[expressive_ssml]: https://console.bluemix.net/docs/services/text-to-speech/http.html#expressive
+[ssml]: https://console.bluemix.net/docs/services/text-to-speech/SSML.html
+[discovery-query]: https://console.bluemix.net/docs/services/discovery/using.html
 [natural_language_understanding]: https://www.ibm.com/watson/developercloud/natural-language-understanding.html
-[nlu_models]: https://www.ibm.com/watson/developercloud/doc/natural-language-understanding/customizing.html
-[nlu_entities]: https://www.ibm.com/watson/developercloud/natural-language-understanding/api/v1/#entities
-[nlu_relations]: https://www.ibm.com/watson/developercloud/natural-language-understanding/api/v1/#relations
+[nlu_models]: https://console.bluemix.net/docs/services/natural-language-understanding/customizing.html
+[nlu_entities]: https://console.bluemix.net/docs/services/natural-language-understanding/entity-types.html
+[nlu_relations]: https://console.bluemix.net/docs/services/natural-language-understanding/relations.html
 
-[dialog_service]: http://www.ibm.com/watson/developercloud/doc/dialog/
-[dialog_migration]: https://console.bluemix.net/docs/services/conversation/index.html#about
-[conversation_service]: https://console.bluemix.net/docs/services/conversation/index.html#about
+[dialog_service]: https://console.bluemix.net/docs/services/dialog/index.html
+[dialog_migration]: https://console.bluemix.net/docs/services/conversation/index.html
+[conversation_service]: https://console.bluemix.net/docs/services/conversation/index.html
+[documentation]: https://watson-developer-cloud.github.io/unity-sdk/

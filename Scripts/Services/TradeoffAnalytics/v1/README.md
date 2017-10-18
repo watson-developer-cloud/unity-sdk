@@ -115,4 +115,4 @@ public class TestDataValue : IBM.Watson.DeveloperCloud.Services.TradeoffAnalytic
 }
 ```
 
-[tradeoff_analytics]: http://www.ibm.com/watson/developercloud/doc/tradeoff-analytics/
+[tradeoff_analytics]: https://console.bluemix.net/docs/services/tradeoff-analytics/index.html

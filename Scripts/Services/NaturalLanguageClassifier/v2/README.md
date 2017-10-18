@@ -105,4 +105,4 @@ private void OnDeleteTrainedClassifier(bool success, string data)
 ```
 
 
-[natural_language_classifier]: https://www.ibm.com/watson/developercloud/nl-classifier.html
+[natural_language_classifier]: https://www.ibm.com/watson/services/natural-language-classifier/

@@ -103,4 +103,4 @@ private void OnMessage1(object resp, string data)
 }
 ```
 
-[conversation]:https://www.ibm.com/watson/developercloud/doc/conversation/index.html
+[conversation]: https://console.bluemix.net/docs/services/conversation/index.html

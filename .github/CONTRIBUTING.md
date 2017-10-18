@@ -14,7 +14,6 @@ or [Stack Overflow](http://stackoverflow.com/questions/ask?tags=ibm-watson).
 * No K&R coding style. Braces {} should be on their own line, aligned with the parent statement.
 * No public variables, always use public properties unless there is no other workaround.
 * Properties should be camel case, no underscores (e.g. public bool IsReady { get; set; }).
-* Constants should be all PascalCase (e.g. static readonly string ConfigFile = "/Config.json"). This includes enumerations.
 * All public functions and types of all classes should be fully documented using the XML comment style.
 * Local variables should be camel case. (e.g. var speechToText = new SpeechToText())
 * Use protected on variables & functions only if you plan to inherit from the class or there is a good chance we will need to be polymorphic. 
@@ -34,7 +33,7 @@ If you want to contribute to the repository, follow these steps:
 1. Fork the repo.
 1. Develop and test your code changes Make sure you work in the `develop` branch. PLEASE don't do your work in `master`.
 1. Add a unit test for any new classes you add. Only refactoring and documentation changes require no new tests.
-1. Run the Watson->Run All UnitTest inside of Unity, make sure all tests work.
+1. Run the Watson->Run All UnitTest inside of Unity, make sure all tests work. 
 1. Commit your changes.
 1. Push to your fork and submit a pull request.
 
