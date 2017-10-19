@@ -1598,57 +1598,16 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// 
         /// The service limits the overall amount of data that you can add to a custom model to a maximum of 10 million total words from all corpora combined.Also, you can add no more than 30 thousand new words to a model; this includes words that the service extracts from corpora and words that you add directly.
         /// Note: This method is currently a beta release that is available for US English only
-        /// </summary>
-        /// <param name="callback">The callback.</param>
-        /// <param name="customizationID">The customization ID with the corpus to be deleted.</param>
-        /// <param name="corpusName">The corpus name to be deleted.</param>
-        /// <param name="allowOverwrite">Allow overwriting of corpus data.</param>
-        /// <param name="trainingData">A file path to plain text training data.</param>
-        /// <param name="customData">Optional customization data.</param>
-        /// <returns></returns>
-        public bool AddCustomCorpus(OnAddCustomCorpusCallback callback, string customizationID, string corpusName, bool allowOverwrite, string trainingPath, string customData = default(string))
-        {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
-            if (string.IsNullOrEmpty(customizationID))
-                throw new ArgumentNullException("A customizationID is required for AddCustomCorpus.");
-            if (string.IsNullOrEmpty(corpusName))
-                throw new ArgumentNullException("A corpusName is required to AddCustomCorpus.");
-            if (string.IsNullOrEmpty(trainingPath))
-                throw new ArgumentNullException("A path to training data is required to AddCustomCorpus");
-
-            byte[] trainingDataBytes = null;
-
-            if (!string.IsNullOrEmpty(trainingPath))
-            {
-                if (LoadFile != null)
-                {
-                    trainingDataBytes = LoadFile(trainingPath);
-                }
-                else
-                {
-#if !UNITY_WEBPLAYER
-                    trainingDataBytes = File.ReadAllBytes(trainingPath);
-#endif
-                }
-
-                if (trainingDataBytes == null)
-                    Log.Error("SpeechToText", "Failed to upload {0}!", trainingPath);
-            }
-
-            return AddCustomCorpus(callback, customizationID, corpusName, allowOverwrite, trainingDataBytes);
-        }
-
         /// <summary>
-        /// Overload method for AddCustomCorpus that takes byteArray training data.
+        /// Overload method for AddCustomCorpus that takes string training data.
         /// </summary>
         /// <param name="callback">The callback.</param>
         /// <param name="customizationID">The customization ID with the corpus to be deleted.</param>
         /// <param name="corpusName">The corpus name to be deleted.</param>
         /// <param name="allowOverwrite">Allow overwriting of corpus data.</param>
-        /// <param name="trainingData">ByteArray data for training data.</param>
+        /// <param name="trainingData">String data for training data.</param>
         /// <param name="customData">Optional customization data.</param>
-        public bool AddCustomCorpus(OnAddCustomCorpusCallback callback, string customizationID, string corpusName, bool allowOverwrite, byte[] trainingData, string customData = default(string))
+        public bool AddCustomCorpus(OnAddCustomCorpusCallback callback, string customizationID, string corpusName, bool allowOverwrite, string trainingData, string customData = default(string))
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -1656,7 +1615,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                 throw new ArgumentNullException("A customizationID is required for AddCustomCorpus.");
             if (string.IsNullOrEmpty(corpusName))
                 throw new ArgumentNullException("A corpusName is requried for AddCustomCorpus.");
-            if (trainingData == default(byte[]))
+            if (string.IsNullOrEmpty(trainingData))
                 throw new ArgumentNullException("Training data is required for AddCustomCorpus.");
 
             AddCustomCorpusRequest req = new AddCustomCorpusRequest();
@@ -1667,8 +1626,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
             req.Headers["Accept"] = "application/json";
             req.Parameters["allow_overwrite"] = allowOverwrite.ToString();
-            req.Forms = new Dictionary<string, RESTConnector.Form>();
-            req.Forms["body"] = new RESTConnector.Form(trainingData, "trainingData.txt", "text/plain");
+            req.Send = Encoding.UTF8.GetBytes(trainingData);
             req.OnResponse = OnAddCustomCorpusResp;
 
             string service = "/v1/customizations/{0}/corpora/{1}";
