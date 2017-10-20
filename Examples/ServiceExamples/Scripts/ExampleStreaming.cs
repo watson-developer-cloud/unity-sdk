@@ -139,7 +139,7 @@ public class ExampleStreaming : MonoBehaviour
                 _recording.GetData(samples, bFirstBlock ? 0 : midPoint);
 
                 AudioData record = new AudioData();
-                record.MaxLevel = Mathf.Max(samples);
+                record.MaxLevel = Mathf.Abs(Mathf.Max(samples));
                 record.Clip = AudioClip.Create("Recording", midPoint, _recording.channels, _recordingHZ, false);
                 record.Clip.SetData(samples, 0);
 

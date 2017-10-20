@@ -160,10 +160,24 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// </summary>
         public bool DetectSilence { get { return _detectSilence; } set { _detectSilence = value; } }
         /// <summary>
-        /// A value from 1.0 to 0.0 that determines what is considered silence. If the audio level is below this value
-        /// then we consider it silence.
+        /// A value from 1.0 to 0.0 that determines what is considered silence. If the absolute value of the 
+        /// audio level is below this value then we consider it silence.
         /// </summary>
-        public float SilenceThreshold { get { return _silenceThreshold; } set { _silenceThreshold = value; } }
+        public float SilenceThreshold
+        { 
+            get { return _silenceThreshold; }
+            set
+            {
+                if (value < 0f || value > 1f)
+                {
+                    throw new ArgumentOutOfRangeException("Silence threshold should be between 0.0f and 1.0f");
+                }
+                else
+                {
+                    _silenceThreshold = value;
+                }
+            }
+        }
         /// <summary>
         /// Gets and sets the endpoint URL for the service.
         /// </summary>
