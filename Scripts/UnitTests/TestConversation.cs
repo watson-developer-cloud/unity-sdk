@@ -88,6 +88,23 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _conversation = new Conversation(credentials);
             _conversation.VersionDate = _conversationVersionDate;
 
+            //  Test initate with empty string
+            if (!_conversation.Message(OnMessage, _workspaceId, ""))
+                Log.Debug("ExampleConversation", "Failed to message!");
+
+            //  Test initiate with empty string message object
+            MessageRequest messageRequest = new MessageRequest()
+            {
+                input = new Dictionary<string, object>()
+            {
+                { "text", "" }
+            },
+                context = _context
+            };
+
+            if (!_conversation.Message(OnMessage, _workspaceId, messageRequest))
+                Log.Debug("ExampleConversation", "Failed to message!");
+
             if (!_conversation.Message(OnMessage, _workspaceId, "hello"))
                 Log.Debug("ExampleConversation", "Failed to message!");
 

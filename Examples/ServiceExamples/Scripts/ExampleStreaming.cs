@@ -60,11 +60,11 @@ public class ExampleStreaming : MonoBehaviour
                 _speechToText.DetectSilence = true;
                 _speechToText.EnableWordConfidence = false;
                 _speechToText.EnableTimestamps = false;
-                _speechToText.SilenceThreshold = 0.03f;
+                _speechToText.SilenceThreshold = 0.00f;
                 _speechToText.MaxAlternatives = 1;
-                _speechToText.EnableContinousRecognition = true;
                 _speechToText.EnableInterimResults = true;
                 _speechToText.OnError = OnError;
+                _speechToText.InactivityTimeout = -1;
                 _speechToText.StartListening(OnRecognize);
                 List<string> keywords = new List<string>();
                 keywords.Add("hello");
@@ -139,7 +139,7 @@ public class ExampleStreaming : MonoBehaviour
                 _recording.GetData(samples, bFirstBlock ? 0 : midPoint);
 
                 AudioData record = new AudioData();
-                record.MaxLevel = Mathf.Max(samples);
+                record.MaxLevel = Mathf.Abs(Mathf.Max(samples));
                 record.Clip = AudioClip.Create("Recording", midPoint, _recording.channels, _recordingHZ, false);
                 record.Clip.SetData(samples, 0);
 
