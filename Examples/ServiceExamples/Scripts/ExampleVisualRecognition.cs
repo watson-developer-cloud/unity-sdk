@@ -34,7 +34,7 @@ public class ExampleVisualRecognition : MonoBehaviour
     private VisualRecognition _visualRecognition;
     private string _visualRecognitionVersionDate = "2016-05-20";
 
-    private string _classifierID = "swiftsdkunittestcarstrucks_128487308";
+    private string _classifierID = "";
     private string _imageURL = "https://upload.wikimedia.org/wikipedia/commons/e/e9/Official_portrait_of_Barack_Obama.jpg";
     //private string _imageTextURL = "http://i.stack.imgur.com/ZS6nH.png";
 
@@ -102,16 +102,6 @@ public class ExampleVisualRecognition : MonoBehaviour
             yield return null;
 #endif
 
-#if DELETE_TRAINED_CLASSIFIER
-        //          Delete classifier by ID
-        Log.Debug("ExampleVisualRecognition", "Attempting to delete classifier");
-        if (!_visualRecognition.DeleteClassifier(OnDeleteClassifier, _classifierToDelete))
-            Log.Debug("ExampleVisualRecognition", "Failed to delete classifier!");
-#endif
-
-        while (!_deleteClassifierTested)
-            yield return null;
-
         //          Classify get
         Log.Debug("ExampleVisualRecognition", "Attempting to get classify via URL");
         if (!_visualRecognition.Classify(OnClassifyGet, _imageURL))
@@ -165,6 +155,23 @@ public class ExampleVisualRecognition : MonoBehaviour
         //while (!_recognizeTextPostTested)
         //    yield return null;
 
+
+#if DELETE_TRAINED_CLASSIFIER
+        #region Delay
+        Runnable.Run(Delay(_delayTime));
+        while (_isWaitingForDelay)
+            yield return null;
+        #endregion
+
+        //          Delete classifier by ID
+        Log.Debug("ExampleVisualRecognition", "Attempting to delete classifier");
+        if (!_visualRecognition.DeleteClassifier(OnDeleteClassifier, _classifierToDelete))
+            Log.Debug("ExampleVisualRecognition", "Failed to delete classifier!");
+
+        while (!_deleteClassifierTested)
+            yield return null;
+#endif
+
         Log.Debug("ExampleVisualRecognition", "Visual Recogition tests complete");
     }
 
@@ -197,6 +204,7 @@ public class ExampleVisualRecognition : MonoBehaviour
 #if DELETE_TRAINED_CLASSIFIER
         _classifierToDelete = classifier.classifier_id;
 #endif
+        _classifierID = classifier.classifier_id;
         _trainClassifierTested = true;
     }
 #endif
@@ -237,4 +245,19 @@ public class ExampleVisualRecognition : MonoBehaviour
     //    Log.Debug("ExampleVisualRecognition", "VisualRecognition - RecognizeTextPost Response: {0}", data);
     //    _recognizeTextPostTested = true;
     //}
+
+    #region Delay
+    //  Introducing a delay because of a known issue with Visual Recognition where newly created classifiers 
+    //  will disappear without being deleted if a delete is attempted less than ~10 seconds after creation.
+    private float _delayTime = 15f;
+    private bool _isWaitingForDelay = false;
+
+    private IEnumerator Delay(float delayTime)
+    {
+        _isWaitingForDelay = true;
+        Log.Debug("TestVisualRecognition", "Delaying for {0} seconds....", delayTime);
+        yield return new WaitForSeconds(delayTime);
+        _isWaitingForDelay = false;
+    }
+    #endregion
 }
