@@ -60,11 +60,11 @@ public class ExampleStreaming : MonoBehaviour
                 _speechToText.DetectSilence = true;
                 _speechToText.EnableWordConfidence = false;
                 _speechToText.EnableTimestamps = false;
-                _speechToText.SilenceThreshold = 0.03f;
+                _speechToText.SilenceThreshold = 0.00f;
                 _speechToText.MaxAlternatives = 1;
-                _speechToText.EnableContinousRecognition = true;
                 _speechToText.EnableInterimResults = true;
                 _speechToText.OnError = OnError;
+                _speechToText.InactivityTimeout = -1;
                 _speechToText.StartListening(OnRecognize);
                 List<string> keywords = new List<string>();
                 keywords.Add("hello");

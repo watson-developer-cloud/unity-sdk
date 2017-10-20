@@ -96,13 +96,14 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         private float _keywordsThreshold = 0.5f;
         private float _wordAlternativesThreshold = 0.5f;
         private bool _profanityFilter = true;
-        private bool _smallFormatting = false;
+        private bool _smartFormatting = false;
         private bool _speakerLabels = false;
         private bool _timestamps = false;
         private bool _wordConfidence = false;
         private bool _detectSilence = true;            // If true, then we will try not to record silence.
-        private float _silenceThreshold = 0.03f;         // If the audio level is below this value, then it's considered silent.
+        private float _silenceThreshold = 0.0f;         // If the audio level is below this value, then it's considered silent.
         private int _recordingHZ = -1;
+        private int _inactivityTimeout = 60;
         private fsSerializer _serializer = new fsSerializer();
         private Credentials _credentials = null;
         private string _url = "https://stream.watsonplatform.net/speech-to-text/api";
@@ -148,10 +149,6 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// True to return word confidence with results.
         /// </summary>
         public bool EnableWordConfidence { get { return _wordConfidence; } set { _wordConfidence = value; } }
-        /// <summary>
-        /// If true, then we will try to continuously recognize speech.
-        /// </summary>
-        public bool EnableContinousRecognition { get; set; }
         /// <summary>
         /// If true, then we will get interim results while recognizing. The user will then need to check 
         /// the Final flag on the results.
@@ -225,11 +222,15 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// <summary>
         /// NON-MULTIPART ONLY: If true, converts dates, times, series of digits and numbers, phone numbers, currency values, and Internet addresses into more readable, conventional representations in the final transcript of a recognition request. If false (the default), no formatting is performed. Applies to US English transcription only.
         /// </summary>
-        public bool SmallFormatting { get { return _smallFormatting; } set { _smallFormatting = value; } }
+        public bool SmartFormatting { get { return _smartFormatting; } set { _smartFormatting = value; } }
         /// <summary>
         /// NON-MULTIPART ONLY: Indicates whether labels that identify which words were spoken by which participants in a multi-person exchange are to be included in the response. If true, speaker labels are returned; if false (the default), they are not. Speaker labels can be returned only for the following language models: en-US_NarrowbandModel, en-US_BroadbandModel, es-ES_NarrowbandModel, es-ES_BroadbandModel, ja-JP_NarrowbandModel, and ja-JP_BroadbandModel. Setting speaker_labels to true forces the timestamps parameter to be true, regardless of whether you specify false for the parameter.
         /// </summary>
         public bool SpeakerLabels { get { return _speakerLabels; } set { _speakerLabels = value; } }
+        /// <summary>
+        /// NON-MULTIPART ONLY: The time in seconds after which, if only silence (no speech) is detected in submitted audio, the connection is closed with a 400 error. Useful for stopping audio submission from a live microphone when a user simply walks away. Use -1 for infinity.
+        /// </summary>
+        public int InactivityTimeout { get { return _inactivityTimeout; } set { _inactivityTimeout = value; } }
         #endregion
 
         #region Constructor
@@ -505,9 +506,17 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         {
             if (_listenSocket == null)
             {
-                _listenSocket = WSConnector.CreateConnector(Credentials, Url, "/v1/recognize", "?model=" + WWW.EscapeURL(_recognizeModel));
+                _listenSocket = WSConnector.CreateConnector(Credentials, Url, "/v1/recognize", "?model=" + WWW.EscapeURL(_recognizeModel) + "&inactivity_timeout=" + InactivityTimeout);
                 if (_listenSocket == null)
+                {
                     return false;
+                }
+                else
+                {
+#if ENABLE_DEBUGGING
+                    Log.Debug("SpeechToText", "Created listen socket. Model: {0}, Inactivity Timeout: {1}", WWW.EscapeURL(_recognizeModel), InactivityTimeout);
+#endif
+                }
 
                 _listenSocket.OnMessage = OnListenMessage;
                 _listenSocket.OnClose = OnListenClosed;
@@ -533,13 +542,12 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             Dictionary<string, object> start = new Dictionary<string, object>();
             start["action"] = "start";
             start["content-type"] = "audio/l16;rate=" + _recordingHZ.ToString() + ";channels=1;";
-            start["continuous"] = EnableContinousRecognition;
             start["max_alternatives"] = _maxAlternatives;
             start["interim_results"] = EnableInterimResults;
             start["word_confidence"] = _wordConfidence;
             start["timestamps"] = _timestamps;
             start["speaker_labels"] = SpeakerLabels;
-            start["small_formatting"] = SmallFormatting;
+            start["smart_formatting"] = SmartFormatting;
             start["profanity_filter"] = ProfanityFilter;
             start["word_alternatives_threshold"] = WordAlternativesThreshold;
             start["keywords_threshold"] = KeywordsThreshold;
@@ -574,13 +582,16 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 
                 if ((DateTime.Now - _lastKeepAlive).TotalSeconds > WsKeepAliveInterval)
                 {
-                    Dictionary<string, string> nop = new Dictionary<string, string>();
-                    nop["action"] = "no-op";
+                    //  Temporary clip to use for KeepAlive
+                    //  TODO: Generate small sound clip to send to the service to keep alive.
+                    AudioClip _keepAliveClip = Resources.Load<AudioClip>("highHat");
 
 #if ENABLE_DEBUGGING
                     Log.Debug("SpeechToText", "Sending keep alive.");
 #endif
-                    _listenSocket.Send(new WSConnector.TextMessage(Json.Serialize(nop)));
+                    _listenSocket.Send(new WSConnector.BinaryMessage(AudioClipUtil.GetL16(_keepAliveClip)));
+                    _keepAliveClip = null;
+                    
                     _lastKeepAlive = DateTime.Now;
                 }
             }
@@ -601,10 +612,9 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                         SpeechRecognitionEvent results = ParseRecognizeResponse(json);
                         if (results != null)
                         {
-                            // when we get results, start listening for the next block ..
-                            // if continuous is true, then we don't need to do this..
-                            if (!EnableContinousRecognition && results.HasFinalResult())
-                                SendStart();
+                            //// when we get results, start listening for the next block ..
+                            //if (results.HasFinalResult())
+                            //    SendStart();
 
                             if (_listenCallback != null)
                                 _listenCallback(results);
@@ -711,12 +721,11 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                 return false;
             }
             req.Parameters["model"] = _recognizeModel;
-            req.Parameters["continuous"] = "false";
             req.Parameters["max_alternatives"] = _maxAlternatives.ToString();
             req.Parameters["timestamps"] = _timestamps ? "true" : "false";
             req.Parameters["word_confidence"] = _wordConfidence ? "true" : "false";
             req.Parameters["speaker_labels"] = SpeakerLabels;
-            req.Parameters["small_formatting"] = SmallFormatting;
+            req.Parameters["smart_formatting"] = SmartFormatting;
             req.Parameters["profanity_filter"] = ProfanityFilter;
             req.Parameters["word_alternatives_threshold"] = WordAlternativesThreshold;
             req.Parameters["keywords_threshold"] = KeywordsThreshold;
@@ -1603,57 +1612,16 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// 
         /// The service limits the overall amount of data that you can add to a custom model to a maximum of 10 million total words from all corpora combined.Also, you can add no more than 30 thousand new words to a model; this includes words that the service extracts from corpora and words that you add directly.
         /// Note: This method is currently a beta release that is available for US English only
-        /// </summary>
-        /// <param name="callback">The callback.</param>
-        /// <param name="customizationID">The customization ID with the corpus to be deleted.</param>
-        /// <param name="corpusName">The corpus name to be deleted.</param>
-        /// <param name="allowOverwrite">Allow overwriting of corpus data.</param>
-        /// <param name="trainingData">A file path to plain text training data.</param>
-        /// <param name="customData">Optional customization data.</param>
-        /// <returns></returns>
-        public bool AddCustomCorpus(OnAddCustomCorpusCallback callback, string customizationID, string corpusName, bool allowOverwrite, string trainingPath, string customData = default(string))
-        {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
-            if (string.IsNullOrEmpty(customizationID))
-                throw new ArgumentNullException("A customizationID is required for AddCustomCorpus.");
-            if (string.IsNullOrEmpty(corpusName))
-                throw new ArgumentNullException("A corpusName is required to AddCustomCorpus.");
-            if (string.IsNullOrEmpty(trainingPath))
-                throw new ArgumentNullException("A path to training data is required to AddCustomCorpus");
-
-            byte[] trainingDataBytes = null;
-
-            if (!string.IsNullOrEmpty(trainingPath))
-            {
-                if (LoadFile != null)
-                {
-                    trainingDataBytes = LoadFile(trainingPath);
-                }
-                else
-                {
-#if !UNITY_WEBPLAYER
-                    trainingDataBytes = File.ReadAllBytes(trainingPath);
-#endif
-                }
-
-                if (trainingDataBytes == null)
-                    Log.Error("SpeechToText", "Failed to upload {0}!", trainingPath);
-            }
-
-            return AddCustomCorpus(callback, customizationID, corpusName, allowOverwrite, trainingDataBytes);
-        }
-
         /// <summary>
-        /// Overload method for AddCustomCorpus that takes byteArray training data.
+        /// Overload method for AddCustomCorpus that takes string training data.
         /// </summary>
         /// <param name="callback">The callback.</param>
         /// <param name="customizationID">The customization ID with the corpus to be deleted.</param>
         /// <param name="corpusName">The corpus name to be deleted.</param>
         /// <param name="allowOverwrite">Allow overwriting of corpus data.</param>
-        /// <param name="trainingData">ByteArray data for training data.</param>
+        /// <param name="trainingData">String data for training data.</param>
         /// <param name="customData">Optional customization data.</param>
-        public bool AddCustomCorpus(OnAddCustomCorpusCallback callback, string customizationID, string corpusName, bool allowOverwrite, byte[] trainingData, string customData = default(string))
+        public bool AddCustomCorpus(OnAddCustomCorpusCallback callback, string customizationID, string corpusName, bool allowOverwrite, string trainingData, string customData = default(string))
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -1661,7 +1629,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                 throw new ArgumentNullException("A customizationID is required for AddCustomCorpus.");
             if (string.IsNullOrEmpty(corpusName))
                 throw new ArgumentNullException("A corpusName is requried for AddCustomCorpus.");
-            if (trainingData == default(byte[]))
+            if (string.IsNullOrEmpty(trainingData))
                 throw new ArgumentNullException("Training data is required for AddCustomCorpus.");
 
             AddCustomCorpusRequest req = new AddCustomCorpusRequest();
@@ -1672,8 +1640,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
             req.Headers["Accept"] = "application/json";
             req.Parameters["allow_overwrite"] = allowOverwrite.ToString();
-            req.Forms = new Dictionary<string, RESTConnector.Form>();
-            req.Forms["body"] = new RESTConnector.Form(trainingData, "trainingData.txt", "text/plain");
+            req.Send = Encoding.UTF8.GetBytes(trainingData);
             req.OnResponse = OnAddCustomCorpusResp;
 
             string service = "/v1/customizations/{0}/corpora/{1}";
