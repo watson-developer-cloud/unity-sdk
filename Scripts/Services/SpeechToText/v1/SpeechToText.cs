@@ -545,7 +545,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                 else
                 {
 #if ENABLE_DEBUGGING
-                    Log.Debug("SpeechToText", "Created listen socket. Model: {0}, Inactivity Timeout: {1}", WWW.EscapeURL(_recognizeModel));
+                    Log.Debug("SpeechToText", "Created listen socket. Model: {0}, parsedParams: {1}", WWW.EscapeURL(_recognizeModel), parsedParams);
 #endif
                 }
 
@@ -586,6 +586,9 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             start["word_confidence"] = EnableWordConfidence;
 
             _listenSocket.Send(new WSConnector.TextMessage(Json.Serialize(start)));
+#if ENABLE_DEBUGGING
+            Log.Debug("SpeechToText", "SendStart() with the following params: {0}", Json.Serialize(start));
+#endif
             _lastStartSent = DateTime.Now;
         }
 
