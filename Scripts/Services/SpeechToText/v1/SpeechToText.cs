@@ -104,6 +104,10 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         private float _silenceThreshold = 0.0f;         // If the audio level is below this value, then it's considered silent.
         private int _recordingHZ = -1;
         private int _inactivityTimeout = 60;
+        private string _customization_id = null;
+        private string _acoustic_customization_id = null;
+        public float _customization_weight = 0.3f;
+
         private fsSerializer _serializer = new fsSerializer();
         private Credentials _credentials = null;
         private string _url = "https://stream.watsonplatform.net/speech-to-text/api";
@@ -231,6 +235,18 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// NON-MULTIPART ONLY: The time in seconds after which, if only silence (no speech) is detected in submitted audio, the connection is closed with a 400 error. Useful for stopping audio submission from a live microphone when a user simply walks away. Use -1 for infinity.
         /// </summary>
         public int InactivityTimeout { get { return _inactivityTimeout; } set { _inactivityTimeout = value; } }
+        /// <summary>
+        /// Specifies the Globally Unique Identifier (GUID) of a custom language model that is to be used for all requests sent over the connection. The base model of the custom language model must match the value of the model parameter. By default, no custom language model is used. For more information, see https://console.bluemix.net/docs/services/speech-to-text/custom.html.
+        /// </summary>
+        public string CustomizationId { get { return _customization_id; } set { _customization_id = value; } }
+        /// <summary>
+        /// Specifies the Globally Unique Identifier (GUID) of a custom acoustic model that is to be used for all requests sent over the connection. The base model of the custom acoustic model must match the value of the model parameter. By default, no custom acoustic model is used. For more information, see https://console.bluemix.net/docs/services/speech-to-text/custom.html.
+        /// </summary>
+        public string AcousticCustomizationId { get { return _acoustic_customization_id; } set { _acoustic_customization_id = value; } }
+        /// <summary>
+        /// Specifies the weight the service gives to words from a specified custom language model compared to those from the base model for all requests sent over the connection. Specify a value between 0.0 and 1.0; the default value is 0.3. For more information, see https://console.bluemix.net/docs/services/speech-to-text/language-use.html#weight.
+        /// </summary>
+        public float CustomizationWeight { get { return _customization_weight; } set { _customization_weight = value; } }
         #endregion
 
         #region Constructor
@@ -506,7 +522,22 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         {
             if (_listenSocket == null)
             {
-                _listenSocket = WSConnector.CreateConnector(Credentials, "/v1/recognize", "?model=" + WWW.EscapeURL(_recognizeModel));
+                Dictionary<string, string> queryParams = new Dictionary<string, string>();
+                if (!string.IsNullOrEmpty(CustomizationId))
+                    queryParams["customization_id"] = CustomizationId;
+                if (!string.IsNullOrEmpty(AcousticCustomizationId))
+                    queryParams["acoustic_customization_id"] = AcousticCustomizationId;
+                if (!string.IsNullOrEmpty(CustomizationId))
+                    queryParams["customization_weight"] = CustomizationWeight.ToString();
+
+                string parsedParams = "";
+
+                foreach(KeyValuePair<string, string> kvp in queryParams)
+                {
+                    parsedParams += string.Format("&{0}={1}", kvp.Key, kvp.Value);
+                }
+
+                _listenSocket = WSConnector.CreateConnector(Credentials, "/v1/recognize", "?model=" + WWW.EscapeURL(_recognizeModel) + parsedParams);
                 if (_listenSocket == null)
                 {
                     return false;

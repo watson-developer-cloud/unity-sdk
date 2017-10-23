@@ -188,10 +188,6 @@ namespace IBM.Watson.DeveloperCloud.Connection
             {
                 connector.Authentication = credentials;
             }
-            else
-            {
-                Log.Error("WSConnector", "Failed to find credentials or authorization token.");
-            }
 
             connector.URL = FixupURL(credentials.Url) + function + args;
 
