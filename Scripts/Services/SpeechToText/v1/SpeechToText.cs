@@ -506,7 +506,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         {
             if (_listenSocket == null)
             {
-                _listenSocket = WSConnector.CreateConnector(Credentials, Url, "/v1/recognize", "?model=" + WWW.EscapeURL(_recognizeModel) + "&inactivity_timeout=" + InactivityTimeout);
+                _listenSocket = WSConnector.CreateConnector(Credentials, "/v1/recognize", "?model=" + WWW.EscapeURL(_recognizeModel));
                 if (_listenSocket == null)
                 {
                     return false;
@@ -514,7 +514,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                 else
                 {
 #if ENABLE_DEBUGGING
-                    Log.Debug("SpeechToText", "Created listen socket. Model: {0}, Inactivity Timeout: {1}", WWW.EscapeURL(_recognizeModel), InactivityTimeout);
+                    Log.Debug("SpeechToText", "Created listen socket. Model: {0}, Inactivity Timeout: {1}", WWW.EscapeURL(_recognizeModel));
 #endif
                 }
 
