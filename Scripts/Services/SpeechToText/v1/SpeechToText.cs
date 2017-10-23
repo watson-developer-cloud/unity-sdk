@@ -573,16 +573,17 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             Dictionary<string, object> start = new Dictionary<string, object>();
             start["action"] = "start";
             start["content-type"] = "audio/l16;rate=" + _recordingHZ.ToString() + ";channels=1;";
-            start["max_alternatives"] = _maxAlternatives;
+            start["inactivity_timeout"] = InactivityTimeout;
             start["interim_results"] = EnableInterimResults;
-            start["word_confidence"] = _wordConfidence;
-            start["timestamps"] = _timestamps;
-            start["speaker_labels"] = SpeakerLabels;
-            start["smart_formatting"] = SmartFormatting;
-            start["profanity_filter"] = ProfanityFilter;
-            start["word_alternatives_threshold"] = WordAlternativesThreshold;
-            start["keywords_threshold"] = KeywordsThreshold;
             start["keywords"] = Keywords;
+            start["keywords_threshold"] = KeywordsThreshold;
+            start["max_alternatives"] = MaxAlternatives;
+            start["profanity_filter"] = ProfanityFilter;
+            start["smart_formatting"] = SmartFormatting;
+            start["speaker_labels"] = SpeakerLabels;
+            start["timestamps"] = _timestamps;
+            start["word_alternatives_threshold"] = WordAlternativesThreshold;
+            start["word_confidence"] = EnableWordConfidence;
 
             _listenSocket.Send(new WSConnector.TextMessage(Json.Serialize(start)));
             _lastStartSent = DateTime.Now;
