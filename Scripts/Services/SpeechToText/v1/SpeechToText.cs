@@ -2030,6 +2030,646 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         }
         #endregion
 
+        #region Get Custom Acoustic Models
+        /// <summary>
+        /// This callback is used by the GetCustomAcousticModels() function.
+        /// </summary>
+        /// <param name = "acousticCustomizations" > The acoustic customizations</param>
+        /// <param name = "customData" > Optional custom data.</param>
+        public delegate void GetCustomAcousticModelsCallback(AcousticCustomizations acousticCustomizations, string customData);
+
+        /// <summary>
+        /// Lists information about all custom acoustic models.
+        /// </summary>
+        /// <param name = "callback" >The callback.</param>
+        /// <param name = "language" >The identifier of the language for which custom acoustic models are to be returned (for example, `en-US`). Omit the parameter to see all custom acoustic models owned by the requesting service credentials.</param>
+        /// <param name = "customData" >Optional custom data.</param>
+        /// <returns></returns>
+        public bool GetCustomAcousticModels(GetCustomAcousticModelsCallback callback, string language = null, string customData = default(string))
+        {
+            GetCustomAcousticModelsReq req = new GetCustomAcousticModelsReq();
+            req.Callback = callback;
+            req.Data = customData;
+            if(!string.IsNullOrEmpty(language))
+                req.Parameters["language"] = language;
+            req.OnResponse = OnGetCustomAcousticModelsResp;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/acoustic_customizations/"));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class GetCustomAcousticModelsReq : RESTConnector.Request
+        {
+            public GetCustomAcousticModelsCallback Callback { get; set; }
+            public string Data { get; set; }
+        }
+
+        private void OnGetCustomAcousticModelsResp(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            AcousticCustomizations acousticCustomizations = new AcousticCustomizations();
+            fsData data = null;
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = acousticCustomizations;
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Speech To Text", "OnGetCustomAcousticModelsResp Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            string customData = ((GetCustomAcousticModelsReq)req).Data;
+            if (((GetCustomAcousticModelsReq)req).Callback != null)
+                ((GetCustomAcousticModelsReq)req).Callback(resp.Success ? acousticCustomizations : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+        }
+        #endregion
+
+        #region Create Custom Acoustic Model
+        /// <summary>
+        /// Thid callback is used by the CreateAcousticCustomization() function.
+        /// </summary>
+        /// <param name="customizationID">The customizationID.</param>
+        /// <param name="customData">Optional custom data.</param>
+        public delegate void CreateAcousticCustomizationCallback(CustomizationID customizationID, string customData);
+
+        /// <summary>
+        /// Creates a custom acoustic model.
+        /// </summary>
+        /// <param name="callback">The callback.</param>
+        /// <param name="name">The custom model name.</param>
+        /// <param name="base_model_name">The base model name - only en-US_BroadbandModel is currently supported.</param>
+        /// <param name="description">Descripotion of the custom model.</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns></returns>
+        public bool CreateAcousticCustomization(CreateAcousticCustomizationCallback callback, string name, string base_model_name = "en-US_BroadbandModel", string description = default(string), string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException("A name is required to create a custom language model.");
+
+            CustomLanguage customLanguage = new CustomLanguage();
+            customLanguage.name = name;
+            customLanguage.base_model_name = base_model_name;
+            customLanguage.description = string.IsNullOrEmpty(description) ? name : description;
+
+            fsData data;
+            _serializer.TrySerialize(customLanguage.GetType(), customLanguage, out data).AssertSuccessWithoutWarnings();
+            string customizationJson = fsJsonPrinter.CompressedJson(data);
+
+            CreateAcousticCustomizationRequest req = new CreateAcousticCustomizationRequest();
+            req.Callback = callback;
+            req.CustomLanguage = customLanguage;
+            req.Data = customData;
+            req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
+            req.Send = Encoding.UTF8.GetBytes(customizationJson);
+            req.OnResponse = OnCreateAcousticCustomizationResp;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/acoustic_customizations");
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class CreateAcousticCustomizationRequest : RESTConnector.Request
+        {
+            public CreateAcousticCustomizationCallback Callback { get; set; }
+            public CustomLanguage CustomLanguage { get; set; }
+            public string Data { get; set; }
+        }
+
+        private void OnCreateAcousticCustomizationResp(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            CustomizationID customizationID = new CustomizationID();
+            fsData data = null;
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = customizationID;
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Speech To Text", "OnCreateAcousticCustomizationResp Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            string customData = ((CreateAcousticCustomizationRequest)req).Data;
+            if (((CreateAcousticCustomizationRequest)req).Callback != null)
+                ((CreateAcousticCustomizationRequest)req).Callback(resp.Success ? customizationID : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+        }
+        #endregion
+
+        #region Delete Custom Acoustic Model
+        /// <summary>
+        /// This callback is used by the DeleteAcousticCustomization() function.
+        /// </summary>
+        /// <param name="success"></param>
+        /// <param name="customData"></param>
+        public delegate void OnDeleteAcousticCustomizationCallback(bool success, string customData);
+        /// <summary>
+        /// Deletes a custom acoustic model.
+        /// </summary>
+        /// <param name="callback">The callback.</param>
+        /// <param name="customizationID">The acoustic customization ID to be deleted.</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns></returns>
+        public bool DeleteAcousticCustomization(OnDeleteAcousticCustomizationCallback callback, string customizationID, string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(customizationID))
+                throw new ArgumentNullException("A customizationID to delete is required for DeleteAcousticCustomization");
+
+            DeleteAcousticCustomizationRequest req = new DeleteAcousticCustomizationRequest();
+            req.Callback = callback;
+            req.CustomizationID = customizationID;
+            req.Data = customData;
+            req.Delete = true;
+            req.OnResponse = OnDeleteAcousticCustomizationResp;
+
+            string service = "/v1/acoustic_customizations/{0}";
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(service, customizationID));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class DeleteAcousticCustomizationRequest : RESTConnector.Request
+        {
+            public OnDeleteAcousticCustomizationCallback Callback { get; set; }
+            public string CustomizationID { get; set; }
+            public string Data { get; set; }
+        }
+
+        private void OnDeleteAcousticCustomizationResp(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            if (((DeleteAcousticCustomizationRequest)req).Callback != null)
+                ((DeleteAcousticCustomizationRequest)req).Callback(resp.Success, ((DeleteAcousticCustomizationRequest)req).Data);
+        }
+        #endregion
+
+        #region Get Custom Acoustic Model
+        /// <summary>
+        /// This callback is used by the GetCustomAcousticModel() function.
+        /// </summary>
+        /// <param name = "acousticCustomization" > The acoustic customization</param>
+        /// <param name = "customData" > Optional custom data.</param>
+        public delegate void GetCustomAcousticModelCallback(AcousticCustomization acousticCustomization, string customData);
+
+        /// <summary>
+        /// Lists information about a custom acoustic model.
+        /// </summary>
+        /// <param name = "callback" >The callback.</param>
+        /// <param name = "customizationId" >The GUID of the custom acoustic model for which information is to be returned. You must make the request with service credentials created for the instance of the service that owns the custom model.</param>
+        /// <param name = "customData" >Optional custom data.</param>
+        /// <returns></returns>
+        public bool GetCustomAcousticModel(GetCustomAcousticModelCallback callback, string customizationId, string customData = default(string))
+        {
+            if (string.IsNullOrEmpty(customizationId))
+                throw new ArgumentNullException("customizationId");
+
+            GetCustomAcousticModelReq req = new GetCustomAcousticModelReq();
+            req.Callback = callback;
+            req.Data = customData;
+            req.OnResponse = OnGetCustomAcousticModelResp;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/acoustic_customizations/{0}", customizationId));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class GetCustomAcousticModelReq : RESTConnector.Request
+        {
+            public GetCustomAcousticModelCallback Callback { get; set; }
+            public string Data { get; set; }
+        }
+
+        private void OnGetCustomAcousticModelResp(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            AcousticCustomization acousticCustomization = new AcousticCustomization();
+            fsData data = null;
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = acousticCustomization;
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Speech To Text", "OnGetCustomAcousticModelResp Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            string customData = ((GetCustomAcousticModelReq)req).Data;
+            if (((GetCustomAcousticModelReq)req).Callback != null)
+                ((GetCustomAcousticModelReq)req).Callback(resp.Success ? acousticCustomization : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+        }
+        #endregion
+
+        #region Train Custom Acoustic Model
+        /// <summary>
+        /// This callback is used by the TrainAcousticCustomization() function.
+        /// </summary>
+        /// <param name="success">The success of the call.</param>
+        /// <param name="customData">Optional custom data.</param>
+        public delegate void TrainAcousticCustomizationCallback(bool success, string customData);
+        /// <summary>
+        /// Trains a custom acoustic model.
+        /// <returns></returns>
+        public bool TrainAcousticCustomization(TrainAcousticCustomizationCallback callback, string customizationID, string customLanguageModelId = null, string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(customizationID))
+                throw new ArgumentNullException("A customizationID to train a custom acoustic language model.");
+
+            TrainAcousticCustomizationRequest req = new TrainAcousticCustomizationRequest();
+            req.Callback = callback;
+            req.CustomizationID = customizationID;
+            req.Data = customData;
+            if(!string.IsNullOrEmpty(customLanguageModelId))
+                req.Parameters["custom_language_model_id"] = customLanguageModelId;
+            req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
+            req.Send = Encoding.UTF8.GetBytes("{}");
+            req.OnResponse = OnTrainAcousticCustomizationResp;
+
+            string service = "/v1/acoustic_customizations/{0}/train";
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(service, customizationID));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class TrainAcousticCustomizationRequest : RESTConnector.Request
+        {
+            public TrainAcousticCustomizationCallback Callback { get; set; }
+            public string CustomizationID { get; set; }
+            public string Data { get; set; }
+        }
+
+        private void OnTrainAcousticCustomizationResp(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            if (((TrainAcousticCustomizationRequest)req).Callback != null)
+                ((TrainAcousticCustomizationRequest)req).Callback(resp.Success, ((TrainAcousticCustomizationRequest)req).Data);
+        }
+        #endregion
+
+        #region Reset Custom Acoustic Model
+        /// <summary>
+        /// This callback is used by the ResetAcousticCustomization() function.
+        /// </summary>
+        /// <param name="success">The success of the call.</param>
+        /// <param name="customData">Optional custom data.</param>
+        public delegate void ResetAcousticCustomizationCallback(bool success, string customData);
+        /// <summary>
+        /// Resets a custom acoustic model.
+        /// <returns></returns>
+        public bool ResetAcousticCustomization(ResetAcousticCustomizationCallback callback, string customizationID, string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(customizationID))
+                throw new ArgumentNullException("A customizationID to reset a custom acoustic language model.");
+
+            ResetAcousticCustomizationRequest req = new ResetAcousticCustomizationRequest();
+            req.Callback = callback;
+            req.CustomizationID = customizationID;
+            req.Data = customData;
+            req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
+            req.Send = Encoding.UTF8.GetBytes("{}");
+            req.OnResponse = OnResetAcousticCustomizationResp;
+
+            string service = "/v1/acoustic_customizations/{0}/reset";
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(service, customizationID));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class ResetAcousticCustomizationRequest : RESTConnector.Request
+        {
+            public ResetAcousticCustomizationCallback Callback { get; set; }
+            public string CustomizationID { get; set; }
+            public string Data { get; set; }
+        }
+
+        private void OnResetAcousticCustomizationResp(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            if (((ResetAcousticCustomizationRequest)req).Callback != null)
+                ((ResetAcousticCustomizationRequest)req).Callback(resp.Success, ((ResetAcousticCustomizationRequest)req).Data);
+        }
+        #endregion
+
+        #region Get Custom Acoustic Resource
+        /// <summary>
+        /// This callback is used by the GetCustomAcousticResource() function.
+        /// </summary>
+        /// <param name = "acousticCustomization" > The acoustic customization</param>
+        /// <param name = "customData" > Optional custom data.</param>
+        public delegate void GetCustomAcousticResourcesCallback(AudioResources audioResources, string customData);
+
+        /// <summary>
+        /// Lists information about all audio resources for a custom acoustic model.
+        /// </summary>
+        /// <param name = "callback" >The callback.</param>
+        /// <param name = "customizationId" >The GUID of the custom acoustic model for which audio resources are to be listed. You must make the request with service credentials created for the instance of the service that.</param>
+        /// <param name = "customData" >Optional custom data.</param>
+        /// <returns></returns>
+        public bool GetCustomAcousticResources(GetCustomAcousticResourcesCallback callback, string customizationId, string customData = default(string))
+        {
+            if (string.IsNullOrEmpty(customizationId))
+                throw new ArgumentNullException("customizationId");
+
+            GetCustomAcousticResourcesReq req = new GetCustomAcousticResourcesReq();
+            req.Callback = callback;
+            req.Data = customData;
+            req.OnResponse = OnGetCustomAcousticResourcesResp;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/acoustic_customizations/{0}/audio", customizationId));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class GetCustomAcousticResourcesReq : RESTConnector.Request
+        {
+            public GetCustomAcousticResourcesCallback Callback { get; set; }
+            public string Data { get; set; }
+        }
+
+        private void OnGetCustomAcousticResourcesResp(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            AudioResources audioResources = new AudioResources();
+            fsData data = null;
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = audioResources;
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Speech To Text", "OnGetCustomAcousticResourcesResp Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            string customData = ((GetCustomAcousticResourcesReq)req).Data;
+            if (((GetCustomAcousticResourcesReq)req).Callback != null)
+                ((GetCustomAcousticResourcesReq)req).Callback(resp.Success ? audioResources : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+        }
+        #endregion
+
+        #region Delete Audio Resource
+        /// <summary>
+        /// This callback is used by the DeleteAcousticCustomization() function.
+        /// </summary>
+        /// <param name="success"></param>
+        /// <param name="customData"></param>
+        public delegate void OnDeleteAcousticResourceCallback(bool success, string customData);
+        /// <summary>
+        /// Deletes an audio resource from a custom acoustic model.
+        /// </summary>
+        /// <param name="callback">The callback.</param>
+        /// <param name="customizationID">The GUID of the custom acoustic model from which an audio resource is to be deleted. You must make the request with service credentials created for the instance of the service that owns the custom model.</param>
+        /// <param name="audioName">The name of the audio resource that is to be deleted from the custom acoustic model.</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns></returns>
+        public bool DeleteAcousticResource(OnDeleteAcousticCustomizationCallback callback, string customizationID, string audioName, string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(customizationID))
+                throw new ArgumentNullException("A customizationID to delete is required for DeleteAcousticResource");
+            if (string.IsNullOrEmpty(audioName))
+                throw new ArgumentNullException("An audioName to delete is required for DeleteAcousticResource");
+
+            DeleteAcousticResourceRequest req = new DeleteAcousticResourceRequest();
+            req.Callback = callback;
+            req.CustomizationID = customizationID;
+            req.AudioName = audioName;
+            req.Data = customData;
+            req.Delete = true;
+            req.OnResponse = OnDeleteAcousticResourceResp;
+
+            string service = "/v1/acoustic_customizations/{0}/audio/{1}";
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(service, customizationID, audioName));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class DeleteAcousticResourceRequest : RESTConnector.Request
+        {
+            public OnDeleteAcousticCustomizationCallback Callback { get; set; }
+            public string CustomizationID { get; set; }
+            public string AudioName { get; set; }
+            public string Data { get; set; }
+        }
+
+        private void OnDeleteAcousticResourceResp(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            if (((DeleteAcousticResourceRequest)req).Callback != null)
+                ((DeleteAcousticResourceRequest)req).Callback(resp.Success, ((DeleteAcousticResourceRequest)req).Data);
+        }
+        #endregion
+
+        #region Get Custom Acoustic Resource
+        /// <summary>
+        /// This callback is used by the GetCustomAcousticResource() function.
+        /// </summary>
+        /// <param name = "audioListing" > The acoustic resource</param>
+        /// <param name = "customData" > Optional custom data.</param>
+        public delegate void GetCustomAcousticResourceCallback(AudioListing audioListing, string customData);
+
+        /// <summary>
+        /// Lists information about an audio resource for a custom acoustic model.
+        /// </summary>
+        /// <param name = "callback" >The callback.</param>
+        /// <param name = "customizationId" >The GUID of the custom acoustic model for which an audio resource is to be listed. You must make the request with service credentials created for the instance of the service that owns the custom model.</param>
+        /// <param name = "audioName" >The name of the audio resource about which information is to be listed.</param>
+        /// <param name = "customData" >Optional custom data.</param>
+        /// <returns></returns>
+        public bool GetCustomAcousticResource(GetCustomAcousticResourceCallback callback, string customizationId, string audioName, string customData = default(string))
+        {
+            if (string.IsNullOrEmpty(customizationId))
+                throw new ArgumentNullException("customizationId");
+            if (string.IsNullOrEmpty(audioName))
+                throw new ArgumentNullException("audioName");
+
+            GetCustomAcousticResourceReq req = new GetCustomAcousticResourceReq();
+            req.Callback = callback;
+            req.Data = customData;
+            req.OnResponse = OnGetCustomAcousticResourceResp;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/acoustic_customizations/{0}/audio/{1}", customizationId, audioName));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class GetCustomAcousticResourceReq : RESTConnector.Request
+        {
+            public GetCustomAcousticResourceCallback Callback { get; set; }
+            public string Data { get; set; }
+        }
+
+        private void OnGetCustomAcousticResourceResp(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            AudioListing audioListing = new AudioListing();
+            fsData data = null;
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = audioListing;
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Speech To Text", "OnGetCustomAcousticResourceResp Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            string customData = ((GetCustomAcousticResourceReq)req).Data;
+            if (((GetCustomAcousticResourceReq)req).Callback != null)
+                ((GetCustomAcousticResourceReq)req).Callback(resp.Success ? audioListing : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+        }
+        #endregion
+
+        #region Add Custom Acoustic Resource
+        /// <summary>
+        /// This callback is used by the AddAcousticResource() function.
+        /// </summary>
+        /// <param name="customData">Optional custom data.</param>
+        public delegate void AddAcousticResourceCallback(string customData);
+
+        /// <summary>
+        /// Adds an audio resource to a custom acoustic model.
+        /// </summary>
+        /// <param name="callback">The callback.</param>
+        /// <param name="name">The custom model name.</param>
+        /// <param name="base_model_name">The base model name - only en-US_BroadbandModel is currently supported.</param>
+        /// <param name="description">Descripotion of the custom model.</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns></returns>
+        public bool AddAcousticResource(AddAcousticResourceCallback callback, string customizationId, string audioName, string contentType, string containedContentType, bool allowOverwrite, byte[] audioResource, string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(customizationId))
+                throw new ArgumentNullException("customizationId");
+            if (string.IsNullOrEmpty(audioName))
+                throw new ArgumentNullException("audioName");
+            if (string.IsNullOrEmpty(contentType))
+                throw new ArgumentNullException("contentType");
+            if (string.IsNullOrEmpty(containedContentType))
+                throw new ArgumentNullException("containedContentType");
+            if (audioResource == null)
+                throw new ArgumentNullException("audioResource");
+
+            AddAcousticResourceRequest req = new AddAcousticResourceRequest();
+            req.Callback = callback;
+            req.CustomizationId = customizationId;
+            req.AudioName = audioName;
+            req.ContentType = contentType;
+            req.ContainedContentType = containedContentType;
+            req.AllowOverwrite = allowOverwrite;
+            req.AudioResource = audioResource;
+            req.Data = customData;
+            req.Headers["Content-Type"] = contentType;
+            req.Headers["Accept"] = "application/json";
+            req.Send = audioResource;
+            req.OnResponse = OnAddAcousticResourceResp;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/acoustic_customizations/{0}/audio/{1}", customizationId, audioName));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class AddAcousticResourceRequest : RESTConnector.Request
+        {
+            public AddAcousticResourceCallback Callback { get; set; }
+            public string CustomizationId { get; set; }
+            public string AudioName { get; set; }
+            public string ContentType { get; set; }
+            public string ContainedContentType { get; set; }
+            public bool AllowOverwrite{ get; set; }
+            public byte[] AudioResource { get; set; }
+            public string Data { get; set; }
+        }
+
+        private void OnAddAcousticResourceResp(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            string customData = ((AddAcousticResourceRequest)req).Data;
+            if (((AddAcousticResourceRequest)req).Callback != null)
+                ((AddAcousticResourceRequest)req).Callback(!string.IsNullOrEmpty(customData) ? customData : "success");
+        }
+        #endregion
+
         #region IWatsonService interface
         /// <exclude />
         public string GetServiceID()

@@ -502,6 +502,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
     /// <summary>
     /// This data class contains information about the language model customization identifier.
     /// </summary>
+    [fsObject]
     public class CustomizationID
     {
         /// <summary>
@@ -676,6 +677,166 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// How the word is displayed.
         /// </summary>
         public string display_as { get; set; }
+    }
+    #endregion
+
+    #region Custom Acoustic Models
+    /// <summary>
+    /// The Acoustic Customizations object.
+    /// </summary>
+    [fsObject]
+    public class AcousticCustomizations
+    {
+        /// <summary>
+        /// An array of AcousticCustomization objects that provides information about each available custom acoustic model. The array is empty if the requesting service credentials own no custom acoustic models (if no language is specified) or own no custom acoustic models for the specified language.
+        /// </summary>
+        public AcousticCustomization[] customizations { get; set; }
+    }
+
+    /// <summary>
+    /// The Acoustic Customization object.
+    /// </summary>
+    [fsObject]
+    public class AcousticCustomization
+    {
+        /// <summary>
+        /// The GUID of the custom acoustic model. 
+        /// </summary>
+        public string customization_id { get; set; }
+        /// <summary>
+        /// The date and time in Coordinated Universal Time (UTC) at which the custom acoustic model was created. The value is provided in full ISO 8601 format (YYYY-MM-DDThh:mm:ss.sTZD).
+        /// </summary>
+        public string created { get; set; }
+        /// <summary>
+        /// The language identifier of the custom acoustic model (for example, `en-US`).
+        /// </summary>
+        public string language { get; set; }
+        /// <summary>
+        /// The GUID of the service credentials for the instance of the service that owns the custom acoustic model.
+        /// </summary>
+        public string owner { get; set; }
+        /// <summary>
+        /// The name of the custom acoustic model.
+        /// </summary>
+        public string name { get; set; }
+        /// <summary>
+        /// The description of the custom acoustic model.
+        /// </summary>
+        public string description { get; set; }
+        /// <summary>
+        /// The name of the language model for which the custom acoustic model was created.
+        /// </summary>
+        public string base_model_name { get; set; }
+        /// <summary>
+        /// The current status of the custom acoustic model. `pending` indicates that the model was created but is waiting either for training data to be added or for the service to finish analyzing added data. `ready` indicates that the model contains data and is ready to be trained. `training` indicates that the model is currently being trained. `available` indicates that the model is trained and ready to use. `failed` indicates that training of the model failed.
+        /// </summary>
+        public string status { get; set; }
+        /// <summary>
+        /// A percentage that indicates the progress of the model's current training. A value of `100` means that the model is fully trained. Note: The `progress` field does not currently reflect the progress of the training; the field changes from `0` to `100` when training is complete.
+        /// </summary>
+        public int progress { get; set; }
+        /// <summary>
+        /// If the request included unknown query parameters, the following message: `Unexpected query parameter(s) ['parameters'] detected`, where `parameters` is a list that includes a quoted string for each unknown parameter.
+        /// </summary>
+        public string warnings { get; set; }
+    }
+    #endregion
+
+    #region Custom Audio Resouces
+    /// <summary>
+    /// The Audio Resources object.
+    /// </summary>
+    [fsObject]
+    public class AudioResources
+    {
+        /// <summary>
+        /// The total seconds of accumulated audio summed over all of the valid audio resources for the custom acoustic model. You can use this value to determine whether the custom model has too little or too much audio to begin training.
+        /// </summary>
+        public float total_minutes_of_audio { get; set; }
+        /// <summary>
+        /// An array of `AudioResource` objects that provides information about the audio resources of the custom acoustic model. The array is empty if the custom model has no audio resources
+        /// </summary>
+        public AudioResource[] audio { get; set; }
+    }
+
+    /// <summary>
+    /// The Audio Resource object.
+    /// </summary>
+    [fsObject]
+    public class AudioResource
+    {
+        /// <summary>
+        /// The total seconds of audio in the audio resource.
+        /// </summary>
+        public float duration { get; set; }
+        /// <summary>
+        /// The name of the audio resource. 
+        /// </summary>
+        public string name { get; set; }
+        /// <summary>
+        /// An `AudioDetails` object that provides detailed information about the audio resource. The object is empty until the service finishes processing the audio.
+        /// </summary>
+        public AudioDetails details { get; set; }
+        /// <summary>
+        /// The status of the audio resource. `ok` indicates that the service has successfully analyzed the audio data. The data can be used to train the custom model. `being_processed` indicates that the service is still analyzing the audio data.The service cannot accept requests to add new audio resources or to train the custom model until its analysis is complete. `invalid` indicates that the audio data is not valid for training the custom model(possibly because it has the wrong format or sampling rate, or because it is corrupted). For an archive file, the entire archive is invalid if any of its audio files are invalid.
+        /// </summary>
+        public string status { get; set; }
+    }
+
+    /// <summary>
+    /// The Audio Details object.
+    /// </summary>
+    [fsObject]
+    public class AudioDetails
+    {
+        /// <summary>
+        /// The type of the audio resource. `audio` for an individual audio file. `archive` for an archive(.zip or .tar.gz) file that contains audio files
+        /// </summary>
+        public string type { get; set; }
+        /// <summary>
+        /// For an audio-type resource, the codec in which the audio is encoded. Omitted for an archive-type resource.
+        /// </summary>
+        public string codec { get; set; }
+        /// <summary>
+        /// For an audio-type resource, the sampling rate of the audio in Hertz (samples per second). Omitted for an archive-type resource. 
+        /// </summary>
+        public int frequency { get; set; }
+        /// <summary>
+        /// For an archive-type resource, the format of the compressed archive. `zip` for a .zip file. `gzip` for a.tar.gz file
+        /// </summary>
+        public string compression { get; set; }
+    }
+
+    /// <summary>
+    /// The AudioListing object.
+    /// </summary>
+    [fsObject]
+    public class AudioListing
+    {
+        /// <summary>
+        /// The total seconds of audio in the audio resource.
+        /// </summary>
+        public float duration { get; set; }
+        /// <summary>
+        ///  The name of the audio resource.
+        /// </summary>
+        public string name { get; set; }
+        /// <summary>
+        /// An AudioDetails object that provides detailed information about the audio resource. The object is empty until the service finishes processing the audio.
+        /// </summary>
+        public AudioDetails details { get; set; }
+        /// <summary>
+        /// The status of the audio resource. `ok` indicates that the service has successfully analyzed the audio data. The data can be used to train the custom model. `being_processed` indicates that the service is still analyzing the audio data.The service cannot accept requests to add new audio resources or to train the custom model until its analysis is complete. `invalid` indicates that the audio data is not valid for training the custom model(possibly because it has the wrong format or sampling rate, or because it is corrupted). For an archive file, the entire archive is invalid if any of its audio files are invalid.
+        /// </summary>
+        public string status { get; set; }
+        /// <summary>
+        /// For an archive-type resource, an object of type AudioResource that provides information about the resource. Omitted for an audio-type resource.
+        /// </summary>
+        public AudioResource container { get; set; }
+        /// <summary>
+        /// For an archive-type resource, an array of AudioResource objects that provides information about the audio-type resources that are contained in the resource. Omitted for an audio-type resource.
+        /// </summary>
+        public AudioResource[] audio { get; set; }
     }
     #endregion
 }
