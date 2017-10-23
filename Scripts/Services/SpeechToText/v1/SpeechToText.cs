@@ -107,6 +107,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         private string _customization_id = null;
         private string _acoustic_customization_id = null;
         public float _customization_weight = 0.3f;
+        public bool _streamMultipart = false;           //  If true sets `Transfer-Encoding` header of multipart request to `chunked`.
 
         private fsSerializer _serializer = new fsSerializer();
         private Credentials _credentials = null;
@@ -168,7 +169,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// audio level is below this value then we consider it silence.
         /// </summary>
         public float SilenceThreshold
-        { 
+        {
             get { return _silenceThreshold; }
             set
             {
@@ -247,6 +248,10 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// Specifies the weight the service gives to words from a specified custom language model compared to those from the base model for all requests sent over the connection. Specify a value between 0.0 and 1.0; the default value is 0.3. For more information, see https://console.bluemix.net/docs/services/speech-to-text/language-use.html#weight.
         /// </summary>
         public float CustomizationWeight { get { return _customization_weight; } set { _customization_weight = value; } }
+        /// <summary>
+        /// If true sets `Transfer-Encoding` request header to `chunked` causing the audio to be streamed to the service. By default, audio is sent all at once as a one-shot delivery. See https://console.bluemix.net/docs/services/speech-to-text/input.html#transmission.
+        /// </summary>
+        public bool StreamMultipart { get { return _streamMultipart; } set { _streamMultipart = value; } }
         #endregion
 
         #region Constructor
@@ -532,7 +537,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 
                 string parsedParams = "";
 
-                foreach(KeyValuePair<string, string> kvp in queryParams)
+                foreach (KeyValuePair<string, string> kvp in queryParams)
                 {
                     parsedParams += string.Format("&{0}={1}", kvp.Key, kvp.Value);
                 }
@@ -626,7 +631,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 #endif
                     _listenSocket.Send(new WSConnector.BinaryMessage(AudioClipUtil.GetL16(_keepAliveClip)));
                     _keepAliveClip = null;
-                    
+
                     _lastKeepAlive = DateTime.Now;
                 }
             }
@@ -749,22 +754,31 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             req.Callback = callback;
 
             req.Headers["Content-Type"] = "audio/wav";
+            if (StreamMultipart)
+                req.Headers["Transfer-Encoding"] = "chunked";
+
             req.Send = WaveFile.CreateWAV(clip);
             if (req.Send.Length > MaxRecognizeClipSize)
             {
                 Log.Error("SpeechToText", "AudioClip is too large for Recognize().");
                 return false;
             }
-            req.Parameters["model"] = _recognizeModel;
-            req.Parameters["max_alternatives"] = _maxAlternatives.ToString();
-            req.Parameters["timestamps"] = _timestamps ? "true" : "false";
-            req.Parameters["word_confidence"] = _wordConfidence ? "true" : "false";
-            req.Parameters["speaker_labels"] = SpeakerLabels;
-            req.Parameters["smart_formatting"] = SmartFormatting;
-            req.Parameters["profanity_filter"] = ProfanityFilter;
-            req.Parameters["word_alternatives_threshold"] = WordAlternativesThreshold;
-            req.Parameters["keywords_threshold"] = KeywordsThreshold;
+            req.Parameters["acoustic_customization_id"] = AcousticCustomizationId;
+            req.Parameters["customization_id"] = CustomizationId;
+            req.Parameters["customization_weight"] = CustomizationWeight;
+            req.Parameters["inactivity_timeout"] = InactivityTimeout;
             req.Parameters["keywords"] = string.Join(",", Keywords);
+            req.Parameters["keywords_threshold"] = KeywordsThreshold;
+            req.Parameters["max_alternatives"] = MaxAlternatives.ToString();
+            req.Parameters["model"] = RecognizeModel;
+            req.Parameters["profanity_filter"] = ProfanityFilter;
+            req.Parameters["smart_formatting"] = SmartFormatting;
+            req.Parameters["speaker_labels"] = SpeakerLabels;
+            req.Parameters["timestamps"] = EnableTimestamps ? "true" : "false";
+            if (Credentials.HasAuthorizationToken())
+                req.Parameters["watson-token"] = Credentials.AuthenticationToken;
+            req.Parameters["word_alternatives_threshold"] = WordAlternativesThreshold;
+            req.Parameters["word_confidence"] = EnableWordConfidence ? "true" : "false";
 
             req.OnResponse = OnRecognizeResponse;
 
@@ -899,7 +913,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 
                         alternatives.Add(alternative);
                     }
-                    
+
                     IDictionary iKeywords = iresult["keywords_result"] as IDictionary;
                     if (iKeywords != null)
                     {
