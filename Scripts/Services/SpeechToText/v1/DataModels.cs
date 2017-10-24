@@ -127,6 +127,10 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// </summary>
         public int result_index { get; set; }
         /// <summary>
+        /// An array that identifies which words were spoken by which speakers in a multi-person exchange. Returned in the response only if `speaker_labels` is `true`.
+        /// </summary>
+        public SpeakerLabelsResult[] speaker_labels { get; set; }
+        /// <summary>
         /// An array of warning messages about invalid query parameters or JSON fields included with the request. Each warning includes a descriptive message and a list of invalid argument strings. For example, a message such as "Unknown arguments:" or "Unknown url query arguments:" followed by a list of the form "invalid_arg_1, invalid_arg_2." The request succeeds despite the warnings.
         /// </summary>
         public string[] warnings { get; set; }
@@ -158,6 +162,18 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
     }
 
     /// <summary>
+    /// This data object contains data for the speakerRecognitionEvent if speaker data comes separately from the speechRecognitionEvent.
+    /// </summary>
+    [fsObject]
+    public class SpeakerRecognitionEvent
+    {
+        /// <summary>
+        /// An array that identifies which words were spoken by which speakers in a multi-person exchange. Returned in the response only if `speaker_labels` is `true`.
+        /// </summary>
+        public SpeakerLabelsResult[] speaker_labels { get; set; }
+    }
+
+    /// <summary>
     /// The speech recognition result.
     /// </summary>
     [fsObject]
@@ -178,7 +194,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// <summary>
         /// Array of word alternative hypotheses found for words of the input audio if word_alternatives_threshold is not null.
         /// </summary>
-        public WordAlternativeResults word_alternatives { get; set; }
+        public WordAlternativeResults[] word_alternatives { get; set; }
     }
 
     /// <summary>
@@ -191,7 +207,6 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// Transcription of the audio. 
         /// </summary>
         public string transcript { get; set; }
-
         /// <summary>
         /// Confidence score of the transcript in the range of 0 to 1. Available only for the best alternative and only in results marked as final.
         /// </summary>
@@ -244,6 +259,34 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// Specified keyword normalized to the spoken phrase that matched in the audio input. 
         /// </summary>
         public WordAlternativeResult[] alternatives { get; set; }
+    }
+
+    /// <summary>
+    /// This class holds Speaker Labels Result.
+    /// </summary>
+    [fsObject]
+    public class SpeakerLabelsResult
+    {
+        /// <summary>
+        /// The start time of a word from the transcript. The value matches the start time of a word from the `timestamps` array.
+        /// </summary>
+        public double from { get; set; }
+        /// <summary>
+        /// The end time of a word from the transcript. The value matches the end time of a word from the `timestamps` array.
+        /// </summary>
+        public double to { get; set; }
+        /// <summary>
+        /// The numeric identifier that the service assigns to a speaker from the audio. Speaker IDs begin at `0` initially but can evolve and change across interim results (if supported by the method) and between interim and final results as the service processes the audio. They are not guaranteed to be sequential, contiguous, or ordered.
+        /// </summary>
+        public Int64 speaker { get; set; }
+        /// <summary>
+        /// A score that indicates how confident the service is in its identification of the speaker in the range of 0 to 1.
+        /// </summary>
+        public double confidence { get; set; }
+        /// <summary>
+        /// An indication of whether the service might further change word and speaker-label results. A value of `true` means that the service guarantees not to send any further updates for the current or any preceding results; `false` means that the service might send further updates to the results.
+        /// </summary>
+        public bool final { get; set; }
     }
 
     /// <summary>
@@ -752,7 +795,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// <summary>
         /// The total seconds of accumulated audio summed over all of the valid audio resources for the custom acoustic model. You can use this value to determine whether the custom model has too little or too much audio to begin training.
         /// </summary>
-        public float total_minutes_of_audio { get; set; }
+        public double total_minutes_of_audio { get; set; }
         /// <summary>
         /// An array of `AudioResource` objects that provides information about the audio resources of the custom acoustic model. The array is empty if the custom model has no audio resources
         /// </summary>
@@ -768,7 +811,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// <summary>
         /// The total seconds of audio in the audio resource.
         /// </summary>
-        public float duration { get; set; }
+        public double duration { get; set; }
         /// <summary>
         /// The name of the audio resource. 
         /// </summary>
@@ -816,7 +859,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// <summary>
         /// The total seconds of audio in the audio resource.
         /// </summary>
-        public float duration { get; set; }
+        public double duration { get; set; }
         /// <summary>
         ///  The name of the audio resource.
         /// </summary>

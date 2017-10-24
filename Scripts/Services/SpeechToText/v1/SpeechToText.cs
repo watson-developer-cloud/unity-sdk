@@ -81,7 +81,8 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         #endregion
 
         #region Private Data
-        private OnRecognize _listenCallback = null;        // Callback is set by StartListening()                                                             
+        private OnRecognize _listenCallback = null;        // Callback is set by StartListening()    
+        private OnRecognizeSpeaker _speakerLabelCallback = null;
         private WSConnector _listenSocket = null;          // WebSocket object used when StartListening() is invoked  
         private bool _listenActive = false;
         private bool _audioSent = false;
@@ -416,13 +417,20 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         public delegate void OnRecognize(SpeechRecognitionEvent results);
 
         /// <summary>
+        /// This callback object is used by the RecognizeSpeaker() method.
+        /// </summary>
+        /// <param name="speakerRecognitionEvent">Array of speaker label results.</param>
+        public delegate void OnRecognizeSpeaker(SpeakerRecognitionEvent speakerRecognitionEvent);
+
+        /// <summary>
         /// This starts the service listening and it will invoke the callback for any recognized speech.
         /// OnListen() must be called by the user to queue audio data to send to the service. 
         /// StopListening() should be called when you want to stop listening.
         /// </summary>
         /// <param name="callback">All recognize results are passed to this callback.</param>
+        /// <param name="speakerLabelCallback">Speaker label goes through this callback if it arrives separately from recognize result.</param>
         /// <returns>Returns true on success, false on failure.</returns>
-        public bool StartListening(OnRecognize callback)
+        public bool StartListening(OnRecognize callback, OnRecognizeSpeaker speakerLabelCallback = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -433,6 +441,8 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 
             _isListening = true;
             _listenCallback = callback;
+            if (speakerLabelCallback != null)
+                _speakerLabelCallback = speakerLabelCallback;
             _keepAliveRoutine = Runnable.Run(KeepAlive());
             _lastKeepAlive = DateTime.Now;
 
@@ -586,7 +596,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             start["profanity_filter"] = ProfanityFilter;
             start["smart_formatting"] = SmartFormatting;
             start["speaker_labels"] = SpeakerLabels;
-            start["timestamps"] = _timestamps;
+            start["timestamps"] = EnableTimestamps;
             start["word_alternatives_threshold"] = WordAlternativesThreshold;
             start["word_confidence"] = EnableWordConfidence;
 
@@ -653,10 +663,11 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                         if (results != null)
                         {
                             //// when we get results, start listening for the next block ..
-                            //if (results.HasFinalResult())
-                            //    SendStart();
+                            if (results.HasFinalResult())
+                                Log.Debug("SpeechToText", "final json response: {0}", tm.Text);
+                                //    SendStart();
 
-                            if (_listenCallback != null)
+                                if (_listenCallback != null)
                                 _listenCallback(results);
                             else
                                 StopListening();            // automatically stop listening if our callback is destroyed.
@@ -690,6 +701,14 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                             }
                         }
 
+                    }
+                    else if(json.Contains("speaker_labels"))
+                    {
+                        SpeakerRecognitionEvent speakerRecognitionEvent = ParseSpeakerRecognitionResponse(json);
+                        if (speakerRecognitionEvent != null)
+                        {
+                            _speakerLabelCallback(speakerRecognitionEvent);
+                        }
                     }
                     else if (json.Contains("error"))
                     {
@@ -834,6 +853,45 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             return ParseRecognizeResponse(resp);
         }
 
+        private SpeakerRecognitionEvent ParseSpeakerRecognitionResponse(IDictionary resp)
+        {
+            if (resp == null)
+                return null;
+
+            try
+            {
+                List<SpeakerLabelsResult> results = new List<SpeakerLabelsResult>();
+                IList iresults = resp["speaker_labels"] as IList;
+
+                if (iresults == null)
+                    return null;
+
+                foreach (var r in iresults)
+                {
+                    IDictionary iresult = r as IDictionary;
+                    if (iresult == null)
+                        continue;
+
+                    SpeakerLabelsResult result = new SpeakerLabelsResult();
+                    result.confidence = (double)iresult["confidence"];
+                    result.final = (bool)iresult["final"];
+                    result.from = (double)iresult["from"];
+                    result.to = (double)iresult["to"];
+                    result.speaker = (Int64)iresult["speaker"];
+
+                    results.Add(result);
+                }
+                SpeakerRecognitionEvent speakerRecognitionEvent = new SpeakerRecognitionEvent();
+                speakerRecognitionEvent.speaker_labels = results.ToArray();
+                return (speakerRecognitionEvent);
+            }
+            catch(Exception e)
+            {
+                Log.Error("SpeechToText", "ParseSpeakerRecognitionResponse exception: {0}", e.ToString());
+                return null;
+            }
+        }
+
         private SpeechRecognitionEvent ParseRecognizeResponse(IDictionary resp)
         {
             if (resp == null)
@@ -855,6 +913,49 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                     SpeechRecognitionResult result = new SpeechRecognitionResult();
                     result.final = (bool)iresult["final"];
 
+                    
+                    IList iwordAlternatives = iresult["word_alternatives"] as IList;
+                    if (iwordAlternatives == null)
+                        continue;
+
+                    List<WordAlternativeResults> wordAlternatives = new List<WordAlternativeResults>();
+                    foreach(var w in iwordAlternatives)
+                    {
+                        IDictionary iwordAlternative = w as IDictionary;
+                        if (iwordAlternative == null)
+                            continue;
+
+                        WordAlternativeResults wordAlternativeResults = new WordAlternativeResults();
+                        if (iwordAlternative.Contains("start_time"))
+                            wordAlternativeResults.start_time = (double)iwordAlternative["start_time"];
+                        if (iwordAlternative.Contains("end_time"))
+                            wordAlternativeResults.end_time = (double)iwordAlternative["end_time"];
+                        if(iwordAlternative.Contains("alternatives"))
+                        {
+                            List<WordAlternativeResult> wordAlternativeResultList = new List<WordAlternativeResult>();
+                            IList iwordAlternativeResult = iwordAlternative["alternatives"] as IList;
+                            if (iwordAlternativeResult == null)
+                                continue;
+
+                            foreach (var a in iwordAlternativeResult)
+                            {
+                                WordAlternativeResult wordAlternativeResult = new WordAlternativeResult();
+                                IDictionary ialternative = a as IDictionary;
+                                if (ialternative.Contains("word"))
+                                    wordAlternativeResult.word = (string)ialternative["word"];
+                                if (ialternative.Contains("confidence"))
+                                    wordAlternativeResult.confidence = (double)ialternative["confidence"];
+                                wordAlternativeResultList.Add(wordAlternativeResult);
+                            }
+
+                            wordAlternativeResults.alternatives = wordAlternativeResultList.ToArray();
+                        }
+
+                        wordAlternatives.Add(wordAlternativeResults);
+                    }
+
+                    result.word_alternatives = wordAlternatives.ToArray();
+                    
                     IList ialternatives = iresult["alternatives"] as IList;
                     if (ialternatives == null)
                         continue;
