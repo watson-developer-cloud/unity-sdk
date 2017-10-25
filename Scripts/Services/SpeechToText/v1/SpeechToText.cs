@@ -783,9 +783,13 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                 Log.Error("SpeechToText", "AudioClip is too large for Recognize().");
                 return false;
             }
-            req.Parameters["acoustic_customization_id"] = AcousticCustomizationId;
-            req.Parameters["customization_id"] = CustomizationId;
-            req.Parameters["customization_weight"] = CustomizationWeight;
+            if(!string.IsNullOrEmpty(AcousticCustomizationId))
+                req.Parameters["acoustic_customization_id"] = AcousticCustomizationId;
+            if (!string.IsNullOrEmpty(CustomizationId))
+            {
+                req.Parameters["customization_id"] = CustomizationId;
+                req.Parameters["customization_weight"] = CustomizationWeight;
+            }
             req.Parameters["inactivity_timeout"] = InactivityTimeout;
             req.Parameters["keywords"] = string.Join(",", Keywords);
             req.Parameters["keywords_threshold"] = KeywordsThreshold;
@@ -2316,6 +2320,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             req.CustomizationID = customizationID;
             req.Data = customData;
             req.Delete = true;
+            req.Timeout = 10f;
             req.OnResponse = OnDeleteAcousticCustomizationResp;
 
             string service = "/v1/acoustic_customizations/{0}";
@@ -2414,12 +2419,13 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// This callback is used by the TrainAcousticCustomization() function.
         /// </summary>
         /// <param name="success">The success of the call.</param>
+        /// <param name="force">Force training with an acoustic resource with a length less than 10 minutes.</param>
         /// <param name="customData">Optional custom data.</param>
         public delegate void TrainAcousticCustomizationCallback(bool success, string customData);
         /// <summary>
         /// Trains a custom acoustic model.
         /// <returns></returns>
-        public bool TrainAcousticCustomization(TrainAcousticCustomizationCallback callback, string customizationID, string customLanguageModelId = null, string customData = default(string))
+        public bool TrainAcousticCustomization(TrainAcousticCustomizationCallback callback, string customizationID, string customLanguageModelId = null, bool force = false, string customData = default(string))
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -2434,6 +2440,8 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                 req.Parameters["custom_language_model_id"] = customLanguageModelId;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
+            if (force != false)
+                req.Parameters["force"] = "true";
             req.Send = Encoding.UTF8.GetBytes("{}");
             req.OnResponse = OnTrainAcousticCustomizationResp;
 
@@ -2606,10 +2614,11 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             req.AudioName = audioName;
             req.Data = customData;
             req.Delete = true;
+            req.Timeout = 10f;
             req.OnResponse = OnDeleteAcousticResourceResp;
 
             string service = "/v1/acoustic_customizations/{0}/audio/{1}";
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(service, customizationID, audioName));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(service, customizationID, WWW.EscapeURL(audioName)));
             if (connector == null)
                 return false;
 
