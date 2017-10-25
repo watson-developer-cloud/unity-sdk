@@ -665,9 +665,9 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                             //// when we get results, start listening for the next block ..
                             if (results.HasFinalResult())
                                 Log.Debug("SpeechToText", "final json response: {0}", tm.Text);
-                                //    SendStart();
+                            //    SendStart();
 
-                                if (_listenCallback != null)
+                            if (_listenCallback != null)
                                 _listenCallback(results);
                             else
                                 StopListening();            // automatically stop listening if our callback is destroyed.
@@ -702,7 +702,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                         }
 
                     }
-                    else if(json.Contains("speaker_labels"))
+                    else if (json.Contains("speaker_labels"))
                     {
                         SpeakerRecognitionEvent speakerRecognitionEvent = ParseSpeakerRecognitionResponse(json);
                         if (speakerRecognitionEvent != null)
@@ -885,7 +885,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                 speakerRecognitionEvent.speaker_labels = results.ToArray();
                 return (speakerRecognitionEvent);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Log.Error("SpeechToText", "ParseSpeakerRecognitionResponse exception: {0}", e.ToString());
                 return null;
@@ -912,107 +912,110 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 
                     SpeechRecognitionResult result = new SpeechRecognitionResult();
                     result.final = (bool)iresult["final"];
-
                     
                     IList iwordAlternatives = iresult["word_alternatives"] as IList;
-                    if (iwordAlternatives == null)
-                        continue;
-
-                    List<WordAlternativeResults> wordAlternatives = new List<WordAlternativeResults>();
-                    foreach(var w in iwordAlternatives)
+                    if (iwordAlternatives != null)
                     {
-                        IDictionary iwordAlternative = w as IDictionary;
-                        if (iwordAlternative == null)
-                            continue;
 
-                        WordAlternativeResults wordAlternativeResults = new WordAlternativeResults();
-                        if (iwordAlternative.Contains("start_time"))
-                            wordAlternativeResults.start_time = (double)iwordAlternative["start_time"];
-                        if (iwordAlternative.Contains("end_time"))
-                            wordAlternativeResults.end_time = (double)iwordAlternative["end_time"];
-                        if(iwordAlternative.Contains("alternatives"))
+                        List<WordAlternativeResults> wordAlternatives = new List<WordAlternativeResults>();
+                        foreach (var w in iwordAlternatives)
                         {
-                            List<WordAlternativeResult> wordAlternativeResultList = new List<WordAlternativeResult>();
-                            IList iwordAlternativeResult = iwordAlternative["alternatives"] as IList;
-                            if (iwordAlternativeResult == null)
+                            IDictionary iwordAlternative = w as IDictionary;
+                            if (iwordAlternative == null)
                                 continue;
 
-                            foreach (var a in iwordAlternativeResult)
+                            WordAlternativeResults wordAlternativeResults = new WordAlternativeResults();
+                            if (iwordAlternative.Contains("start_time"))
+                                wordAlternativeResults.start_time = (double)iwordAlternative["start_time"];
+                            if (iwordAlternative.Contains("end_time"))
+                                wordAlternativeResults.end_time = (double)iwordAlternative["end_time"];
+                            if (iwordAlternative.Contains("alternatives"))
                             {
-                                WordAlternativeResult wordAlternativeResult = new WordAlternativeResult();
-                                IDictionary ialternative = a as IDictionary;
-                                if (ialternative.Contains("word"))
-                                    wordAlternativeResult.word = (string)ialternative["word"];
-                                if (ialternative.Contains("confidence"))
-                                    wordAlternativeResult.confidence = (double)ialternative["confidence"];
-                                wordAlternativeResultList.Add(wordAlternativeResult);
+                                List<WordAlternativeResult> wordAlternativeResultList = new List<WordAlternativeResult>();
+                                IList iwordAlternativeResult = iwordAlternative["alternatives"] as IList;
+                                if (iwordAlternativeResult == null)
+                                    continue;
+
+                                foreach (var a in iwordAlternativeResult)
+                                {
+                                    WordAlternativeResult wordAlternativeResult = new WordAlternativeResult();
+                                    IDictionary ialternative = a as IDictionary;
+                                    if (ialternative.Contains("word"))
+                                        wordAlternativeResult.word = (string)ialternative["word"];
+                                    if (ialternative.Contains("confidence"))
+                                        wordAlternativeResult.confidence = (double)ialternative["confidence"];
+                                    wordAlternativeResultList.Add(wordAlternativeResult);
+                                }
+
+                                wordAlternativeResults.alternatives = wordAlternativeResultList.ToArray();
                             }
 
-                            wordAlternativeResults.alternatives = wordAlternativeResultList.ToArray();
+                            wordAlternatives.Add(wordAlternativeResults);
                         }
 
-                        wordAlternatives.Add(wordAlternativeResults);
+                        result.word_alternatives = wordAlternatives.ToArray();
                     }
 
-                    result.word_alternatives = wordAlternatives.ToArray();
-                    
                     IList ialternatives = iresult["alternatives"] as IList;
-                    if (ialternatives == null)
-                        continue;
-
-                    List<SpeechRecognitionAlternative> alternatives = new List<SpeechRecognitionAlternative>();
-                    foreach (var a in ialternatives)
+                    if (ialternatives != null)
                     {
-                        IDictionary ialternative = a as IDictionary;
-                        if (ialternative == null)
-                            continue;
 
-                        SpeechRecognitionAlternative alternative = new SpeechRecognitionAlternative();
-                        alternative.transcript = (string)ialternative["transcript"];
-                        if (ialternative.Contains("confidence"))
-                            alternative.confidence = (double)ialternative["confidence"];
-
-                        if (ialternative.Contains("timestamps"))
+                        List<SpeechRecognitionAlternative> alternatives = new List<SpeechRecognitionAlternative>();
+                        foreach (var a in ialternatives)
                         {
-                            IList itimestamps = ialternative["timestamps"] as IList;
+                            IDictionary ialternative = a as IDictionary;
+                            if (ialternative == null)
+                                continue;
 
-                            TimeStamp[] timestamps = new TimeStamp[itimestamps.Count];
-                            for (int i = 0; i < itimestamps.Count; ++i)
+                            SpeechRecognitionAlternative alternative = new SpeechRecognitionAlternative();
+                            alternative.transcript = (string)ialternative["transcript"];
+                            if (ialternative.Contains("confidence"))
+                                alternative.confidence = (double)ialternative["confidence"];
+
+                            if (ialternative.Contains("timestamps"))
                             {
-                                IList itimestamp = itimestamps[i] as IList;
-                                if (itimestamp == null)
-                                    continue;
+                                IList itimestamps = ialternative["timestamps"] as IList;
 
-                                TimeStamp ts = new TimeStamp();
-                                ts.Word = (string)itimestamp[0];
-                                ts.Start = (double)itimestamp[1];
-                                ts.End = (double)itimestamp[2];
-                                timestamps[i] = ts;
+                                TimeStamp[] timestamps = new TimeStamp[itimestamps.Count];
+                                for (int i = 0; i < itimestamps.Count; ++i)
+                                {
+                                    IList itimestamp = itimestamps[i] as IList;
+                                    if (itimestamp == null)
+                                        continue;
+
+                                    TimeStamp ts = new TimeStamp();
+                                    ts.Word = (string)itimestamp[0];
+                                    ts.Start = (double)itimestamp[1];
+                                    ts.End = (double)itimestamp[2];
+                                    timestamps[i] = ts;
+                                }
+
+                                alternative.Timestamps = timestamps;
+                            }
+                            if (ialternative.Contains("word_confidence"))
+                            {
+                                IList iconfidence = ialternative["word_confidence"] as IList;
+
+                                WordConfidence[] confidence = new WordConfidence[iconfidence.Count];
+                                for (int i = 0; i < iconfidence.Count; ++i)
+                                {
+                                    IList iwordconf = iconfidence[i] as IList;
+                                    if (iwordconf == null)
+                                        continue;
+
+                                    WordConfidence wc = new WordConfidence();
+                                    wc.Word = (string)iwordconf[0];
+                                    wc.Confidence = (double)iwordconf[1];
+                                    confidence[i] = wc;
+                                }
+
+                                alternative.WordConfidence = confidence;
                             }
 
-                            alternative.Timestamps = timestamps;
-                        }
-                        if (ialternative.Contains("word_confidence"))
-                        {
-                            IList iconfidence = ialternative["word_confidence"] as IList;
-
-                            WordConfidence[] confidence = new WordConfidence[iconfidence.Count];
-                            for (int i = 0; i < iconfidence.Count; ++i)
-                            {
-                                IList iwordconf = iconfidence[i] as IList;
-                                if (iwordconf == null)
-                                    continue;
-
-                                WordConfidence wc = new WordConfidence();
-                                wc.Word = (string)iwordconf[0];
-                                wc.Confidence = (double)iwordconf[1];
-                                confidence[i] = wc;
-                            }
-
-                            alternative.WordConfidence = confidence;
+                            alternatives.Add(alternative);
                         }
 
-                        alternatives.Add(alternative);
+                        result.alternatives = alternatives.ToArray();
                     }
 
                     IDictionary iKeywords = iresult["keywords_result"] as IDictionary;
@@ -1043,7 +1046,6 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                         result.keywords_result.keyword = keywordResults.ToArray();
                     }
 
-                    result.alternatives = alternatives.ToArray();
                     results.Add(result);
                 }
 
@@ -2151,7 +2153,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             GetCustomAcousticModelsReq req = new GetCustomAcousticModelsReq();
             req.Callback = callback;
             req.Data = customData;
-            if(!string.IsNullOrEmpty(language))
+            if (!string.IsNullOrEmpty(language))
                 req.Parameters["language"] = language;
             req.OnResponse = OnGetCustomAcousticModelsResp;
 
@@ -2426,7 +2428,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             req.Callback = callback;
             req.CustomizationID = customizationID;
             req.Data = customData;
-            if(!string.IsNullOrEmpty(customLanguageModelId))
+            if (!string.IsNullOrEmpty(customLanguageModelId))
                 req.Parameters["custom_language_model_id"] = customLanguageModelId;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
@@ -2758,7 +2760,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             public string AudioName { get; set; }
             public string ContentType { get; set; }
             public string ContainedContentType { get; set; }
-            public bool AllowOverwrite{ get; set; }
+            public bool AllowOverwrite { get; set; }
             public byte[] AudioResource { get; set; }
             public string Data { get; set; }
         }
