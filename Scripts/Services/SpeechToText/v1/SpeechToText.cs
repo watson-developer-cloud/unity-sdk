@@ -95,7 +95,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         private int _maxAlternatives = 1;              // maximum number of alternatives to return.
         private string[] _keywords = { "" };
         private float _keywordsThreshold = 0.5f;
-        private float _wordAlternativesThreshold = 0.0f;
+        private float? _wordAlternativesThreshold = null;
         private bool _profanityFilter = true;
         private bool _smartFormatting = false;
         private bool _speakerLabels = false;
@@ -220,7 +220,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// <summary>
         /// NON-MULTIPART ONLY: Confidence value that is the lower bound for identifying a hypothesis as a possible word alternative (also known as "Confusion Networks"). An alternative word is considered if its confidence is greater than or equal to the threshold. Specify a probability between 0 and 1 inclusive. No alternative words are computed if you omit the parameter.
         /// </summary>
-        public float WordAlternativesThreshold { get { return _wordAlternativesThreshold; } set { _wordAlternativesThreshold = value; } }
+        public float? WordAlternativesThreshold { get { return _wordAlternativesThreshold; } set { _wordAlternativesThreshold = value; } }
         /// <summary>
         /// NON-MULTIPART ONLY: If true (the default), filters profanity from all output except for keyword results by replacing inappropriate words with a series of asterisks. Set the parameter to false to return results with no censoring. Applies to US English transcription only.
         /// </summary>
@@ -597,7 +597,8 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             start["smart_formatting"] = SmartFormatting;
             start["speaker_labels"] = SpeakerLabels;
             start["timestamps"] = EnableTimestamps;
-            start["word_alternatives_threshold"] = WordAlternativesThreshold;
+            if(WordAlternativesThreshold != null)
+                start["word_alternatives_threshold"] = WordAlternativesThreshold;
             start["word_confidence"] = EnableWordConfidence;
 
             _listenSocket.Send(new WSConnector.TextMessage(Json.Serialize(start)));
@@ -796,7 +797,8 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             req.Parameters["timestamps"] = EnableTimestamps ? "true" : "false";
             if (Credentials.HasAuthorizationToken())
                 req.Parameters["watson-token"] = Credentials.AuthenticationToken;
-            req.Parameters["word_alternatives_threshold"] = WordAlternativesThreshold;
+            if(WordAlternativesThreshold != null)
+                req.Parameters["word_alternatives_threshold"] = WordAlternativesThreshold;
             req.Parameters["word_confidence"] = EnableWordConfidence ? "true" : "false";
 
             req.OnResponse = OnRecognizeResponse;

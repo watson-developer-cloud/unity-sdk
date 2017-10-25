@@ -68,7 +68,7 @@ public class ExampleStreaming : MonoBehaviour
                 _speechToText.ProfanityFilter = true;
                 _speechToText.SmartFormatting = true;
                 _speechToText.SpeakerLabels = true;
-                _speechToText.WordAlternativesThreshold = 0.5f;
+                _speechToText.WordAlternativesThreshold = null;
                 List<string> keywords = new List<string>();
                 keywords.Add("hello");
                 keywords.Add("testing");
