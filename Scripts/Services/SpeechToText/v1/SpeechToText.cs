@@ -95,7 +95,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         private int _maxAlternatives = 1;              // maximum number of alternatives to return.
         private string[] _keywords = { "" };
         private float _keywordsThreshold = 0.5f;
-        private float _wordAlternativesThreshold = 0.5f;
+        private float _wordAlternativesThreshold = 0.0f;
         private bool _profanityFilter = true;
         private bool _smartFormatting = false;
         private bool _speakerLabels = false;
