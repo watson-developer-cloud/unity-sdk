@@ -81,7 +81,8 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         #endregion
 
         #region Private Data
-        private OnRecognize _listenCallback = null;        // Callback is set by StartListening()                                                             
+        private OnRecognize _listenCallback = null;        // Callback is set by StartListening()    
+        private OnRecognizeSpeaker _speakerLabelCallback = null;
         private WSConnector _listenSocket = null;          // WebSocket object used when StartListening() is invoked  
         private bool _listenActive = false;
         private bool _audioSent = false;
@@ -94,7 +95,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         private int _maxAlternatives = 1;              // maximum number of alternatives to return.
         private string[] _keywords = { "" };
         private float _keywordsThreshold = 0.5f;
-        private float _wordAlternativesThreshold = 0.5f;
+        private float? _wordAlternativesThreshold = null;
         private bool _profanityFilter = true;
         private bool _smartFormatting = false;
         private bool _speakerLabels = false;
@@ -104,6 +105,11 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         private float _silenceThreshold = 0.0f;         // If the audio level is below this value, then it's considered silent.
         private int _recordingHZ = -1;
         private int _inactivityTimeout = 60;
+        private string _customization_id = null;
+        private string _acoustic_customization_id = null;
+        public float _customization_weight = 0.3f;
+        public bool _streamMultipart = false;           //  If true sets `Transfer-Encoding` header of multipart request to `chunked`.
+
         private fsSerializer _serializer = new fsSerializer();
         private Credentials _credentials = null;
         private string _url = "https://stream.watsonplatform.net/speech-to-text/api";
@@ -164,7 +170,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// audio level is below this value then we consider it silence.
         /// </summary>
         public float SilenceThreshold
-        { 
+        {
             get { return _silenceThreshold; }
             set
             {
@@ -214,7 +220,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// <summary>
         /// NON-MULTIPART ONLY: Confidence value that is the lower bound for identifying a hypothesis as a possible word alternative (also known as "Confusion Networks"). An alternative word is considered if its confidence is greater than or equal to the threshold. Specify a probability between 0 and 1 inclusive. No alternative words are computed if you omit the parameter.
         /// </summary>
-        public float WordAlternativesThreshold { get { return _wordAlternativesThreshold; } set { _wordAlternativesThreshold = value; } }
+        public float? WordAlternativesThreshold { get { return _wordAlternativesThreshold; } set { _wordAlternativesThreshold = value; } }
         /// <summary>
         /// NON-MULTIPART ONLY: If true (the default), filters profanity from all output except for keyword results by replacing inappropriate words with a series of asterisks. Set the parameter to false to return results with no censoring. Applies to US English transcription only.
         /// </summary>
@@ -231,6 +237,22 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// NON-MULTIPART ONLY: The time in seconds after which, if only silence (no speech) is detected in submitted audio, the connection is closed with a 400 error. Useful for stopping audio submission from a live microphone when a user simply walks away. Use -1 for infinity.
         /// </summary>
         public int InactivityTimeout { get { return _inactivityTimeout; } set { _inactivityTimeout = value; } }
+        /// <summary>
+        /// Specifies the Globally Unique Identifier (GUID) of a custom language model that is to be used for all requests sent over the connection. The base model of the custom language model must match the value of the model parameter. By default, no custom language model is used. For more information, see https://console.bluemix.net/docs/services/speech-to-text/custom.html.
+        /// </summary>
+        public string CustomizationId { get { return _customization_id; } set { _customization_id = value; } }
+        /// <summary>
+        /// Specifies the Globally Unique Identifier (GUID) of a custom acoustic model that is to be used for all requests sent over the connection. The base model of the custom acoustic model must match the value of the model parameter. By default, no custom acoustic model is used. For more information, see https://console.bluemix.net/docs/services/speech-to-text/custom.html.
+        /// </summary>
+        public string AcousticCustomizationId { get { return _acoustic_customization_id; } set { _acoustic_customization_id = value; } }
+        /// <summary>
+        /// Specifies the weight the service gives to words from a specified custom language model compared to those from the base model for all requests sent over the connection. Specify a value between 0.0 and 1.0; the default value is 0.3. For more information, see https://console.bluemix.net/docs/services/speech-to-text/language-use.html#weight.
+        /// </summary>
+        public float CustomizationWeight { get { return _customization_weight; } set { _customization_weight = value; } }
+        /// <summary>
+        /// If true sets `Transfer-Encoding` request header to `chunked` causing the audio to be streamed to the service. By default, audio is sent all at once as a one-shot delivery. See https://console.bluemix.net/docs/services/speech-to-text/input.html#transmission.
+        /// </summary>
+        public bool StreamMultipart { get { return _streamMultipart; } set { _streamMultipart = value; } }
         #endregion
 
         #region Constructor
@@ -395,13 +417,20 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         public delegate void OnRecognize(SpeechRecognitionEvent results);
 
         /// <summary>
+        /// This callback object is used by the RecognizeSpeaker() method.
+        /// </summary>
+        /// <param name="speakerRecognitionEvent">Array of speaker label results.</param>
+        public delegate void OnRecognizeSpeaker(SpeakerRecognitionEvent speakerRecognitionEvent);
+
+        /// <summary>
         /// This starts the service listening and it will invoke the callback for any recognized speech.
         /// OnListen() must be called by the user to queue audio data to send to the service. 
         /// StopListening() should be called when you want to stop listening.
         /// </summary>
         /// <param name="callback">All recognize results are passed to this callback.</param>
+        /// <param name="speakerLabelCallback">Speaker label goes through this callback if it arrives separately from recognize result.</param>
         /// <returns>Returns true on success, false on failure.</returns>
-        public bool StartListening(OnRecognize callback)
+        public bool StartListening(OnRecognize callback, OnRecognizeSpeaker speakerLabelCallback = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -412,6 +441,8 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 
             _isListening = true;
             _listenCallback = callback;
+            if (speakerLabelCallback != null)
+                _speakerLabelCallback = speakerLabelCallback;
             _keepAliveRoutine = Runnable.Run(KeepAlive());
             _lastKeepAlive = DateTime.Now;
 
@@ -506,7 +537,22 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         {
             if (_listenSocket == null)
             {
-                _listenSocket = WSConnector.CreateConnector(Credentials, Url, "/v1/recognize", "?model=" + WWW.EscapeURL(_recognizeModel) + "&inactivity_timeout=" + InactivityTimeout);
+                Dictionary<string, string> queryParams = new Dictionary<string, string>();
+                if (!string.IsNullOrEmpty(CustomizationId))
+                    queryParams["customization_id"] = CustomizationId;
+                if (!string.IsNullOrEmpty(AcousticCustomizationId))
+                    queryParams["acoustic_customization_id"] = AcousticCustomizationId;
+                if (!string.IsNullOrEmpty(CustomizationId))
+                    queryParams["customization_weight"] = CustomizationWeight.ToString();
+
+                string parsedParams = "";
+
+                foreach (KeyValuePair<string, string> kvp in queryParams)
+                {
+                    parsedParams += string.Format("&{0}={1}", kvp.Key, kvp.Value);
+                }
+
+                _listenSocket = WSConnector.CreateConnector(Credentials, "/v1/recognize", "?model=" + WWW.EscapeURL(_recognizeModel) + parsedParams);
                 if (_listenSocket == null)
                 {
                     return false;
@@ -514,7 +560,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                 else
                 {
 #if ENABLE_DEBUGGING
-                    Log.Debug("SpeechToText", "Created listen socket. Model: {0}, Inactivity Timeout: {1}", WWW.EscapeURL(_recognizeModel), InactivityTimeout);
+                    Log.Debug("SpeechToText", "Created listen socket. Model: {0}, parsedParams: {1}", WWW.EscapeURL(_recognizeModel), parsedParams);
 #endif
                 }
 
@@ -542,18 +588,23 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             Dictionary<string, object> start = new Dictionary<string, object>();
             start["action"] = "start";
             start["content-type"] = "audio/l16;rate=" + _recordingHZ.ToString() + ";channels=1;";
-            start["max_alternatives"] = _maxAlternatives;
+            start["inactivity_timeout"] = InactivityTimeout;
             start["interim_results"] = EnableInterimResults;
-            start["word_confidence"] = _wordConfidence;
-            start["timestamps"] = _timestamps;
-            start["speaker_labels"] = SpeakerLabels;
-            start["smart_formatting"] = SmartFormatting;
-            start["profanity_filter"] = ProfanityFilter;
-            start["word_alternatives_threshold"] = WordAlternativesThreshold;
-            start["keywords_threshold"] = KeywordsThreshold;
             start["keywords"] = Keywords;
+            start["keywords_threshold"] = KeywordsThreshold;
+            start["max_alternatives"] = MaxAlternatives;
+            start["profanity_filter"] = ProfanityFilter;
+            start["smart_formatting"] = SmartFormatting;
+            start["speaker_labels"] = SpeakerLabels;
+            start["timestamps"] = EnableTimestamps;
+            if(WordAlternativesThreshold != null)
+                start["word_alternatives_threshold"] = WordAlternativesThreshold;
+            start["word_confidence"] = EnableWordConfidence;
 
             _listenSocket.Send(new WSConnector.TextMessage(Json.Serialize(start)));
+#if ENABLE_DEBUGGING
+            Log.Debug("SpeechToText", "SendStart() with the following params: {0}", Json.Serialize(start));
+#endif
             _lastStartSent = DateTime.Now;
         }
 
@@ -591,7 +642,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 #endif
                     _listenSocket.Send(new WSConnector.BinaryMessage(AudioClipUtil.GetL16(_keepAliveClip)));
                     _keepAliveClip = null;
-                    
+
                     _lastKeepAlive = DateTime.Now;
                 }
             }
@@ -613,7 +664,8 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                         if (results != null)
                         {
                             //// when we get results, start listening for the next block ..
-                            //if (results.HasFinalResult())
+                            if (results.HasFinalResult())
+                                Log.Debug("SpeechToText", "final json response: {0}", tm.Text);
                             //    SendStart();
 
                             if (_listenCallback != null)
@@ -650,6 +702,14 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                             }
                         }
 
+                    }
+                    else if (json.Contains("speaker_labels"))
+                    {
+                        SpeakerRecognitionEvent speakerRecognitionEvent = ParseSpeakerRecognitionResponse(json);
+                        if (speakerRecognitionEvent != null)
+                        {
+                            _speakerLabelCallback(speakerRecognitionEvent);
+                        }
                     }
                     else if (json.Contains("error"))
                     {
@@ -714,22 +774,36 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             req.Callback = callback;
 
             req.Headers["Content-Type"] = "audio/wav";
+            if (StreamMultipart)
+                req.Headers["Transfer-Encoding"] = "chunked";
+
             req.Send = WaveFile.CreateWAV(clip);
             if (req.Send.Length > MaxRecognizeClipSize)
             {
                 Log.Error("SpeechToText", "AudioClip is too large for Recognize().");
                 return false;
             }
-            req.Parameters["model"] = _recognizeModel;
-            req.Parameters["max_alternatives"] = _maxAlternatives.ToString();
-            req.Parameters["timestamps"] = _timestamps ? "true" : "false";
-            req.Parameters["word_confidence"] = _wordConfidence ? "true" : "false";
-            req.Parameters["speaker_labels"] = SpeakerLabels;
-            req.Parameters["smart_formatting"] = SmartFormatting;
-            req.Parameters["profanity_filter"] = ProfanityFilter;
-            req.Parameters["word_alternatives_threshold"] = WordAlternativesThreshold;
-            req.Parameters["keywords_threshold"] = KeywordsThreshold;
+            if(!string.IsNullOrEmpty(AcousticCustomizationId))
+                req.Parameters["acoustic_customization_id"] = AcousticCustomizationId;
+            if (!string.IsNullOrEmpty(CustomizationId))
+            {
+                req.Parameters["customization_id"] = CustomizationId;
+                req.Parameters["customization_weight"] = CustomizationWeight;
+            }
+            req.Parameters["inactivity_timeout"] = InactivityTimeout;
             req.Parameters["keywords"] = string.Join(",", Keywords);
+            req.Parameters["keywords_threshold"] = KeywordsThreshold;
+            req.Parameters["max_alternatives"] = MaxAlternatives.ToString();
+            req.Parameters["model"] = RecognizeModel;
+            req.Parameters["profanity_filter"] = ProfanityFilter;
+            req.Parameters["smart_formatting"] = SmartFormatting;
+            req.Parameters["speaker_labels"] = SpeakerLabels;
+            req.Parameters["timestamps"] = EnableTimestamps ? "true" : "false";
+            if (Credentials.HasAuthorizationToken())
+                req.Parameters["watson-token"] = Credentials.AuthenticationToken;
+            if(WordAlternativesThreshold != null)
+                req.Parameters["word_alternatives_threshold"] = WordAlternativesThreshold;
+            req.Parameters["word_confidence"] = EnableWordConfidence ? "true" : "false";
 
             req.OnResponse = OnRecognizeResponse;
 
@@ -785,6 +859,45 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             return ParseRecognizeResponse(resp);
         }
 
+        private SpeakerRecognitionEvent ParseSpeakerRecognitionResponse(IDictionary resp)
+        {
+            if (resp == null)
+                return null;
+
+            try
+            {
+                List<SpeakerLabelsResult> results = new List<SpeakerLabelsResult>();
+                IList iresults = resp["speaker_labels"] as IList;
+
+                if (iresults == null)
+                    return null;
+
+                foreach (var r in iresults)
+                {
+                    IDictionary iresult = r as IDictionary;
+                    if (iresult == null)
+                        continue;
+
+                    SpeakerLabelsResult result = new SpeakerLabelsResult();
+                    result.confidence = (double)iresult["confidence"];
+                    result.final = (bool)iresult["final"];
+                    result.from = (double)iresult["from"];
+                    result.to = (double)iresult["to"];
+                    result.speaker = (Int64)iresult["speaker"];
+
+                    results.Add(result);
+                }
+                SpeakerRecognitionEvent speakerRecognitionEvent = new SpeakerRecognitionEvent();
+                speakerRecognitionEvent.speaker_labels = results.ToArray();
+                return (speakerRecognitionEvent);
+            }
+            catch (Exception e)
+            {
+                Log.Error("SpeechToText", "ParseSpeakerRecognitionResponse exception: {0}", e.ToString());
+                return null;
+            }
+        }
+
         private SpeechRecognitionEvent ParseRecognizeResponse(IDictionary resp)
         {
             if (resp == null)
@@ -805,66 +918,112 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 
                     SpeechRecognitionResult result = new SpeechRecognitionResult();
                     result.final = (bool)iresult["final"];
+                    
+                    IList iwordAlternatives = iresult["word_alternatives"] as IList;
+                    if (iwordAlternatives != null)
+                    {
+
+                        List<WordAlternativeResults> wordAlternatives = new List<WordAlternativeResults>();
+                        foreach (var w in iwordAlternatives)
+                        {
+                            IDictionary iwordAlternative = w as IDictionary;
+                            if (iwordAlternative == null)
+                                continue;
+
+                            WordAlternativeResults wordAlternativeResults = new WordAlternativeResults();
+                            if (iwordAlternative.Contains("start_time"))
+                                wordAlternativeResults.start_time = (double)iwordAlternative["start_time"];
+                            if (iwordAlternative.Contains("end_time"))
+                                wordAlternativeResults.end_time = (double)iwordAlternative["end_time"];
+                            if (iwordAlternative.Contains("alternatives"))
+                            {
+                                List<WordAlternativeResult> wordAlternativeResultList = new List<WordAlternativeResult>();
+                                IList iwordAlternativeResult = iwordAlternative["alternatives"] as IList;
+                                if (iwordAlternativeResult == null)
+                                    continue;
+
+                                foreach (var a in iwordAlternativeResult)
+                                {
+                                    WordAlternativeResult wordAlternativeResult = new WordAlternativeResult();
+                                    IDictionary ialternative = a as IDictionary;
+                                    if (ialternative.Contains("word"))
+                                        wordAlternativeResult.word = (string)ialternative["word"];
+                                    if (ialternative.Contains("confidence"))
+                                        wordAlternativeResult.confidence = (double)ialternative["confidence"];
+                                    wordAlternativeResultList.Add(wordAlternativeResult);
+                                }
+
+                                wordAlternativeResults.alternatives = wordAlternativeResultList.ToArray();
+                            }
+
+                            wordAlternatives.Add(wordAlternativeResults);
+                        }
+
+                        result.word_alternatives = wordAlternatives.ToArray();
+                    }
 
                     IList ialternatives = iresult["alternatives"] as IList;
-                    if (ialternatives == null)
-                        continue;
-
-                    List<SpeechRecognitionAlternative> alternatives = new List<SpeechRecognitionAlternative>();
-                    foreach (var a in ialternatives)
+                    if (ialternatives != null)
                     {
-                        IDictionary ialternative = a as IDictionary;
-                        if (ialternative == null)
-                            continue;
 
-                        SpeechRecognitionAlternative alternative = new SpeechRecognitionAlternative();
-                        alternative.transcript = (string)ialternative["transcript"];
-                        if (ialternative.Contains("confidence"))
-                            alternative.confidence = (double)ialternative["confidence"];
-
-                        if (ialternative.Contains("timestamps"))
+                        List<SpeechRecognitionAlternative> alternatives = new List<SpeechRecognitionAlternative>();
+                        foreach (var a in ialternatives)
                         {
-                            IList itimestamps = ialternative["timestamps"] as IList;
+                            IDictionary ialternative = a as IDictionary;
+                            if (ialternative == null)
+                                continue;
 
-                            TimeStamp[] timestamps = new TimeStamp[itimestamps.Count];
-                            for (int i = 0; i < itimestamps.Count; ++i)
+                            SpeechRecognitionAlternative alternative = new SpeechRecognitionAlternative();
+                            alternative.transcript = (string)ialternative["transcript"];
+                            if (ialternative.Contains("confidence"))
+                                alternative.confidence = (double)ialternative["confidence"];
+
+                            if (ialternative.Contains("timestamps"))
                             {
-                                IList itimestamp = itimestamps[i] as IList;
-                                if (itimestamp == null)
-                                    continue;
+                                IList itimestamps = ialternative["timestamps"] as IList;
 
-                                TimeStamp ts = new TimeStamp();
-                                ts.Word = (string)itimestamp[0];
-                                ts.Start = (double)itimestamp[1];
-                                ts.End = (double)itimestamp[2];
-                                timestamps[i] = ts;
+                                TimeStamp[] timestamps = new TimeStamp[itimestamps.Count];
+                                for (int i = 0; i < itimestamps.Count; ++i)
+                                {
+                                    IList itimestamp = itimestamps[i] as IList;
+                                    if (itimestamp == null)
+                                        continue;
+
+                                    TimeStamp ts = new TimeStamp();
+                                    ts.Word = (string)itimestamp[0];
+                                    ts.Start = (double)itimestamp[1];
+                                    ts.End = (double)itimestamp[2];
+                                    timestamps[i] = ts;
+                                }
+
+                                alternative.Timestamps = timestamps;
+                            }
+                            if (ialternative.Contains("word_confidence"))
+                            {
+                                IList iconfidence = ialternative["word_confidence"] as IList;
+
+                                WordConfidence[] confidence = new WordConfidence[iconfidence.Count];
+                                for (int i = 0; i < iconfidence.Count; ++i)
+                                {
+                                    IList iwordconf = iconfidence[i] as IList;
+                                    if (iwordconf == null)
+                                        continue;
+
+                                    WordConfidence wc = new WordConfidence();
+                                    wc.Word = (string)iwordconf[0];
+                                    wc.Confidence = (double)iwordconf[1];
+                                    confidence[i] = wc;
+                                }
+
+                                alternative.WordConfidence = confidence;
                             }
 
-                            alternative.Timestamps = timestamps;
-                        }
-                        if (ialternative.Contains("word_confidence"))
-                        {
-                            IList iconfidence = ialternative["word_confidence"] as IList;
-
-                            WordConfidence[] confidence = new WordConfidence[iconfidence.Count];
-                            for (int i = 0; i < iconfidence.Count; ++i)
-                            {
-                                IList iwordconf = iconfidence[i] as IList;
-                                if (iwordconf == null)
-                                    continue;
-
-                                WordConfidence wc = new WordConfidence();
-                                wc.Word = (string)iwordconf[0];
-                                wc.Confidence = (double)iwordconf[1];
-                                confidence[i] = wc;
-                            }
-
-                            alternative.WordConfidence = confidence;
+                            alternatives.Add(alternative);
                         }
 
-                        alternatives.Add(alternative);
+                        result.alternatives = alternatives.ToArray();
                     }
-                    
+
                     IDictionary iKeywords = iresult["keywords_result"] as IDictionary;
                     if (iKeywords != null)
                     {
@@ -893,7 +1052,6 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                         result.keywords_result.keyword = keywordResults.ToArray();
                     }
 
-                    result.alternatives = alternatives.ToArray();
                     results.Add(result);
                 }
 
@@ -1978,6 +2136,651 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             string customData = ((GetCustomWordReq)req).Data;
             if (((GetCustomWordReq)req).Callback != null)
                 ((GetCustomWordReq)req).Callback(resp.Success ? word : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+        }
+        #endregion
+
+        #region Get Custom Acoustic Models
+        /// <summary>
+        /// This callback is used by the GetCustomAcousticModels() function.
+        /// </summary>
+        /// <param name = "acousticCustomizations" > The acoustic customizations</param>
+        /// <param name = "customData" > Optional custom data.</param>
+        public delegate void GetCustomAcousticModelsCallback(AcousticCustomizations acousticCustomizations, string customData);
+
+        /// <summary>
+        /// Lists information about all custom acoustic models.
+        /// </summary>
+        /// <param name = "callback" >The callback.</param>
+        /// <param name = "language" >The identifier of the language for which custom acoustic models are to be returned (for example, `en-US`). Omit the parameter to see all custom acoustic models owned by the requesting service credentials.</param>
+        /// <param name = "customData" >Optional custom data.</param>
+        /// <returns></returns>
+        public bool GetCustomAcousticModels(GetCustomAcousticModelsCallback callback, string language = null, string customData = default(string))
+        {
+            GetCustomAcousticModelsReq req = new GetCustomAcousticModelsReq();
+            req.Callback = callback;
+            req.Data = customData;
+            if (!string.IsNullOrEmpty(language))
+                req.Parameters["language"] = language;
+            req.OnResponse = OnGetCustomAcousticModelsResp;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/acoustic_customizations/"));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class GetCustomAcousticModelsReq : RESTConnector.Request
+        {
+            public GetCustomAcousticModelsCallback Callback { get; set; }
+            public string Data { get; set; }
+        }
+
+        private void OnGetCustomAcousticModelsResp(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            AcousticCustomizations acousticCustomizations = new AcousticCustomizations();
+            fsData data = null;
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = acousticCustomizations;
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Speech To Text", "OnGetCustomAcousticModelsResp Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            string customData = ((GetCustomAcousticModelsReq)req).Data;
+            if (((GetCustomAcousticModelsReq)req).Callback != null)
+                ((GetCustomAcousticModelsReq)req).Callback(resp.Success ? acousticCustomizations : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+        }
+        #endregion
+
+        #region Create Custom Acoustic Model
+        /// <summary>
+        /// Thid callback is used by the CreateAcousticCustomization() function.
+        /// </summary>
+        /// <param name="customizationID">The customizationID.</param>
+        /// <param name="customData">Optional custom data.</param>
+        public delegate void CreateAcousticCustomizationCallback(CustomizationID customizationID, string customData);
+
+        /// <summary>
+        /// Creates a custom acoustic model.
+        /// </summary>
+        /// <param name="callback">The callback.</param>
+        /// <param name="name">The custom model name.</param>
+        /// <param name="base_model_name">The base model name - only en-US_BroadbandModel is currently supported.</param>
+        /// <param name="description">Descripotion of the custom model.</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns></returns>
+        public bool CreateAcousticCustomization(CreateAcousticCustomizationCallback callback, string name, string base_model_name = "en-US_BroadbandModel", string description = default(string), string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException("A name is required to create a custom language model.");
+
+            CustomLanguage customLanguage = new CustomLanguage();
+            customLanguage.name = name;
+            customLanguage.base_model_name = base_model_name;
+            customLanguage.description = string.IsNullOrEmpty(description) ? name : description;
+
+            fsData data;
+            _serializer.TrySerialize(customLanguage.GetType(), customLanguage, out data).AssertSuccessWithoutWarnings();
+            string customizationJson = fsJsonPrinter.CompressedJson(data);
+
+            CreateAcousticCustomizationRequest req = new CreateAcousticCustomizationRequest();
+            req.Callback = callback;
+            req.CustomLanguage = customLanguage;
+            req.Data = customData;
+            req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
+            req.Send = Encoding.UTF8.GetBytes(customizationJson);
+            req.OnResponse = OnCreateAcousticCustomizationResp;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/acoustic_customizations");
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class CreateAcousticCustomizationRequest : RESTConnector.Request
+        {
+            public CreateAcousticCustomizationCallback Callback { get; set; }
+            public CustomLanguage CustomLanguage { get; set; }
+            public string Data { get; set; }
+        }
+
+        private void OnCreateAcousticCustomizationResp(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            CustomizationID customizationID = new CustomizationID();
+            fsData data = null;
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = customizationID;
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Speech To Text", "OnCreateAcousticCustomizationResp Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            string customData = ((CreateAcousticCustomizationRequest)req).Data;
+            if (((CreateAcousticCustomizationRequest)req).Callback != null)
+                ((CreateAcousticCustomizationRequest)req).Callback(resp.Success ? customizationID : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+        }
+        #endregion
+
+        #region Delete Custom Acoustic Model
+        /// <summary>
+        /// This callback is used by the DeleteAcousticCustomization() function.
+        /// </summary>
+        /// <param name="success"></param>
+        /// <param name="customData"></param>
+        public delegate void OnDeleteAcousticCustomizationCallback(bool success, string customData);
+        /// <summary>
+        /// Deletes a custom acoustic model.
+        /// </summary>
+        /// <param name="callback">The callback.</param>
+        /// <param name="customizationID">The acoustic customization ID to be deleted.</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns></returns>
+        public bool DeleteAcousticCustomization(OnDeleteAcousticCustomizationCallback callback, string customizationID, string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(customizationID))
+                throw new ArgumentNullException("A customizationID to delete is required for DeleteAcousticCustomization");
+
+            DeleteAcousticCustomizationRequest req = new DeleteAcousticCustomizationRequest();
+            req.Callback = callback;
+            req.CustomizationID = customizationID;
+            req.Data = customData;
+            req.Delete = true;
+            req.Timeout = 10f;
+            req.OnResponse = OnDeleteAcousticCustomizationResp;
+
+            string service = "/v1/acoustic_customizations/{0}";
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(service, customizationID));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class DeleteAcousticCustomizationRequest : RESTConnector.Request
+        {
+            public OnDeleteAcousticCustomizationCallback Callback { get; set; }
+            public string CustomizationID { get; set; }
+            public string Data { get; set; }
+        }
+
+        private void OnDeleteAcousticCustomizationResp(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            if (((DeleteAcousticCustomizationRequest)req).Callback != null)
+                ((DeleteAcousticCustomizationRequest)req).Callback(resp.Success, ((DeleteAcousticCustomizationRequest)req).Data);
+        }
+        #endregion
+
+        #region Get Custom Acoustic Model
+        /// <summary>
+        /// This callback is used by the GetCustomAcousticModel() function.
+        /// </summary>
+        /// <param name = "acousticCustomization" > The acoustic customization</param>
+        /// <param name = "customData" > Optional custom data.</param>
+        public delegate void GetCustomAcousticModelCallback(AcousticCustomization acousticCustomization, string customData);
+
+        /// <summary>
+        /// Lists information about a custom acoustic model.
+        /// </summary>
+        /// <param name = "callback" >The callback.</param>
+        /// <param name = "customizationId" >The GUID of the custom acoustic model for which information is to be returned. You must make the request with service credentials created for the instance of the service that owns the custom model.</param>
+        /// <param name = "customData" >Optional custom data.</param>
+        /// <returns></returns>
+        public bool GetCustomAcousticModel(GetCustomAcousticModelCallback callback, string customizationId, string customData = default(string))
+        {
+            if (string.IsNullOrEmpty(customizationId))
+                throw new ArgumentNullException("customizationId");
+
+            GetCustomAcousticModelReq req = new GetCustomAcousticModelReq();
+            req.Callback = callback;
+            req.Data = customData;
+            req.OnResponse = OnGetCustomAcousticModelResp;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/acoustic_customizations/{0}", customizationId));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class GetCustomAcousticModelReq : RESTConnector.Request
+        {
+            public GetCustomAcousticModelCallback Callback { get; set; }
+            public string Data { get; set; }
+        }
+
+        private void OnGetCustomAcousticModelResp(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            AcousticCustomization acousticCustomization = new AcousticCustomization();
+            fsData data = null;
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = acousticCustomization;
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Speech To Text", "OnGetCustomAcousticModelResp Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            string customData = ((GetCustomAcousticModelReq)req).Data;
+            if (((GetCustomAcousticModelReq)req).Callback != null)
+                ((GetCustomAcousticModelReq)req).Callback(resp.Success ? acousticCustomization : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+        }
+        #endregion
+
+        #region Train Custom Acoustic Model
+        /// <summary>
+        /// This callback is used by the TrainAcousticCustomization() function.
+        /// </summary>
+        /// <param name="success">The success of the call.</param>
+        /// <param name="force">Force training with an acoustic resource with a length less than 10 minutes.</param>
+        /// <param name="customData">Optional custom data.</param>
+        public delegate void TrainAcousticCustomizationCallback(bool success, string customData);
+        /// <summary>
+        /// Trains a custom acoustic model.
+        /// <returns></returns>
+        public bool TrainAcousticCustomization(TrainAcousticCustomizationCallback callback, string customizationID, string customLanguageModelId = null, bool force = false, string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(customizationID))
+                throw new ArgumentNullException("A customizationID to train a custom acoustic language model.");
+
+            TrainAcousticCustomizationRequest req = new TrainAcousticCustomizationRequest();
+            req.Callback = callback;
+            req.CustomizationID = customizationID;
+            req.Data = customData;
+            if (!string.IsNullOrEmpty(customLanguageModelId))
+                req.Parameters["custom_language_model_id"] = customLanguageModelId;
+            req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
+            if (force != false)
+                req.Parameters["force"] = "true";
+            req.Send = Encoding.UTF8.GetBytes("{}");
+            req.OnResponse = OnTrainAcousticCustomizationResp;
+
+            string service = "/v1/acoustic_customizations/{0}/train";
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(service, customizationID));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class TrainAcousticCustomizationRequest : RESTConnector.Request
+        {
+            public TrainAcousticCustomizationCallback Callback { get; set; }
+            public string CustomizationID { get; set; }
+            public string Data { get; set; }
+        }
+
+        private void OnTrainAcousticCustomizationResp(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            if (((TrainAcousticCustomizationRequest)req).Callback != null)
+                ((TrainAcousticCustomizationRequest)req).Callback(resp.Success, ((TrainAcousticCustomizationRequest)req).Data);
+        }
+        #endregion
+
+        #region Reset Custom Acoustic Model
+        /// <summary>
+        /// This callback is used by the ResetAcousticCustomization() function.
+        /// </summary>
+        /// <param name="success">The success of the call.</param>
+        /// <param name="customData">Optional custom data.</param>
+        public delegate void ResetAcousticCustomizationCallback(bool success, string customData);
+        /// <summary>
+        /// Resets a custom acoustic model.
+        /// <returns></returns>
+        public bool ResetAcousticCustomization(ResetAcousticCustomizationCallback callback, string customizationID, string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(customizationID))
+                throw new ArgumentNullException("A customizationID to reset a custom acoustic language model.");
+
+            ResetAcousticCustomizationRequest req = new ResetAcousticCustomizationRequest();
+            req.Callback = callback;
+            req.CustomizationID = customizationID;
+            req.Data = customData;
+            req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
+            req.Send = Encoding.UTF8.GetBytes("{}");
+            req.OnResponse = OnResetAcousticCustomizationResp;
+
+            string service = "/v1/acoustic_customizations/{0}/reset";
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(service, customizationID));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class ResetAcousticCustomizationRequest : RESTConnector.Request
+        {
+            public ResetAcousticCustomizationCallback Callback { get; set; }
+            public string CustomizationID { get; set; }
+            public string Data { get; set; }
+        }
+
+        private void OnResetAcousticCustomizationResp(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            if (((ResetAcousticCustomizationRequest)req).Callback != null)
+                ((ResetAcousticCustomizationRequest)req).Callback(resp.Success, ((ResetAcousticCustomizationRequest)req).Data);
+        }
+        #endregion
+
+        #region Get Custom Acoustic Resource
+        /// <summary>
+        /// This callback is used by the GetCustomAcousticResource() function.
+        /// </summary>
+        /// <param name = "acousticCustomization" > The acoustic customization</param>
+        /// <param name = "customData" > Optional custom data.</param>
+        public delegate void GetCustomAcousticResourcesCallback(AudioResources audioResources, string customData);
+
+        /// <summary>
+        /// Lists information about all audio resources for a custom acoustic model.
+        /// </summary>
+        /// <param name = "callback" >The callback.</param>
+        /// <param name = "customizationId" >The GUID of the custom acoustic model for which audio resources are to be listed. You must make the request with service credentials created for the instance of the service that.</param>
+        /// <param name = "customData" >Optional custom data.</param>
+        /// <returns></returns>
+        public bool GetCustomAcousticResources(GetCustomAcousticResourcesCallback callback, string customizationId, string customData = default(string))
+        {
+            if (string.IsNullOrEmpty(customizationId))
+                throw new ArgumentNullException("customizationId");
+
+            GetCustomAcousticResourcesReq req = new GetCustomAcousticResourcesReq();
+            req.Callback = callback;
+            req.Data = customData;
+            req.OnResponse = OnGetCustomAcousticResourcesResp;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/acoustic_customizations/{0}/audio", customizationId));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class GetCustomAcousticResourcesReq : RESTConnector.Request
+        {
+            public GetCustomAcousticResourcesCallback Callback { get; set; }
+            public string Data { get; set; }
+        }
+
+        private void OnGetCustomAcousticResourcesResp(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            AudioResources audioResources = new AudioResources();
+            fsData data = null;
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = audioResources;
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Speech To Text", "OnGetCustomAcousticResourcesResp Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            string customData = ((GetCustomAcousticResourcesReq)req).Data;
+            if (((GetCustomAcousticResourcesReq)req).Callback != null)
+                ((GetCustomAcousticResourcesReq)req).Callback(resp.Success ? audioResources : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+        }
+        #endregion
+
+        #region Delete Audio Resource
+        /// <summary>
+        /// This callback is used by the DeleteAcousticCustomization() function.
+        /// </summary>
+        /// <param name="success"></param>
+        /// <param name="customData"></param>
+        public delegate void OnDeleteAcousticResourceCallback(bool success, string customData);
+        /// <summary>
+        /// Deletes an audio resource from a custom acoustic model.
+        /// </summary>
+        /// <param name="callback">The callback.</param>
+        /// <param name="customizationID">The GUID of the custom acoustic model from which an audio resource is to be deleted. You must make the request with service credentials created for the instance of the service that owns the custom model.</param>
+        /// <param name="audioName">The name of the audio resource that is to be deleted from the custom acoustic model.</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns></returns>
+        public bool DeleteAcousticResource(OnDeleteAcousticCustomizationCallback callback, string customizationID, string audioName, string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(customizationID))
+                throw new ArgumentNullException("A customizationID to delete is required for DeleteAcousticResource");
+            if (string.IsNullOrEmpty(audioName))
+                throw new ArgumentNullException("An audioName to delete is required for DeleteAcousticResource");
+
+            DeleteAcousticResourceRequest req = new DeleteAcousticResourceRequest();
+            req.Callback = callback;
+            req.CustomizationID = customizationID;
+            req.AudioName = audioName;
+            req.Data = customData;
+            req.Delete = true;
+            req.Timeout = 10f;
+            req.OnResponse = OnDeleteAcousticResourceResp;
+
+            string service = "/v1/acoustic_customizations/{0}/audio/{1}";
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(service, customizationID, WWW.EscapeURL(audioName)));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class DeleteAcousticResourceRequest : RESTConnector.Request
+        {
+            public OnDeleteAcousticCustomizationCallback Callback { get; set; }
+            public string CustomizationID { get; set; }
+            public string AudioName { get; set; }
+            public string Data { get; set; }
+        }
+
+        private void OnDeleteAcousticResourceResp(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            if (((DeleteAcousticResourceRequest)req).Callback != null)
+                ((DeleteAcousticResourceRequest)req).Callback(resp.Success, ((DeleteAcousticResourceRequest)req).Data);
+        }
+        #endregion
+
+        #region Get Custom Acoustic Resource
+        /// <summary>
+        /// This callback is used by the GetCustomAcousticResource() function.
+        /// </summary>
+        /// <param name = "audioListing" > The acoustic resource</param>
+        /// <param name = "customData" > Optional custom data.</param>
+        public delegate void GetCustomAcousticResourceCallback(AudioListing audioListing, string customData);
+
+        /// <summary>
+        /// Lists information about an audio resource for a custom acoustic model.
+        /// </summary>
+        /// <param name = "callback" >The callback.</param>
+        /// <param name = "customizationId" >The GUID of the custom acoustic model for which an audio resource is to be listed. You must make the request with service credentials created for the instance of the service that owns the custom model.</param>
+        /// <param name = "audioName" >The name of the audio resource about which information is to be listed.</param>
+        /// <param name = "customData" >Optional custom data.</param>
+        /// <returns></returns>
+        public bool GetCustomAcousticResource(GetCustomAcousticResourceCallback callback, string customizationId, string audioName, string customData = default(string))
+        {
+            if (string.IsNullOrEmpty(customizationId))
+                throw new ArgumentNullException("customizationId");
+            if (string.IsNullOrEmpty(audioName))
+                throw new ArgumentNullException("audioName");
+
+            GetCustomAcousticResourceReq req = new GetCustomAcousticResourceReq();
+            req.Callback = callback;
+            req.Data = customData;
+            req.OnResponse = OnGetCustomAcousticResourceResp;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/acoustic_customizations/{0}/audio/{1}", customizationId, audioName));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class GetCustomAcousticResourceReq : RESTConnector.Request
+        {
+            public GetCustomAcousticResourceCallback Callback { get; set; }
+            public string Data { get; set; }
+        }
+
+        private void OnGetCustomAcousticResourceResp(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            AudioListing audioListing = new AudioListing();
+            fsData data = null;
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = audioListing;
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Speech To Text", "OnGetCustomAcousticResourceResp Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            string customData = ((GetCustomAcousticResourceReq)req).Data;
+            if (((GetCustomAcousticResourceReq)req).Callback != null)
+                ((GetCustomAcousticResourceReq)req).Callback(resp.Success ? audioListing : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+        }
+        #endregion
+
+        #region Add Custom Acoustic Resource
+        /// <summary>
+        /// This callback is used by the AddAcousticResource() function.
+        /// </summary>
+        /// <param name="customData">Optional custom data.</param>
+        public delegate void AddAcousticResourceCallback(string customData);
+
+        /// <summary>
+        /// Adds an audio resource to a custom acoustic model.
+        /// </summary>
+        /// <param name="callback">The callback.</param>
+        /// <param name="name">The custom model name.</param>
+        /// <param name="base_model_name">The base model name - only en-US_BroadbandModel is currently supported.</param>
+        /// <param name="description">Descripotion of the custom model.</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns></returns>
+        public bool AddAcousticResource(AddAcousticResourceCallback callback, string customizationId, string audioName, string contentType, string containedContentType, bool allowOverwrite, byte[] audioResource, string customData = default(string))
+        {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+            if (string.IsNullOrEmpty(customizationId))
+                throw new ArgumentNullException("customizationId");
+            if (string.IsNullOrEmpty(audioName))
+                throw new ArgumentNullException("audioName");
+            if (string.IsNullOrEmpty(contentType))
+                throw new ArgumentNullException("contentType");
+            if (string.IsNullOrEmpty(containedContentType))
+                throw new ArgumentNullException("containedContentType");
+            if (audioResource == null)
+                throw new ArgumentNullException("audioResource");
+
+            AddAcousticResourceRequest req = new AddAcousticResourceRequest();
+            req.Callback = callback;
+            req.CustomizationId = customizationId;
+            req.AudioName = audioName;
+            req.ContentType = contentType;
+            req.ContainedContentType = containedContentType;
+            req.AllowOverwrite = allowOverwrite;
+            req.AudioResource = audioResource;
+            req.Data = customData;
+            req.Headers["Content-Type"] = contentType;
+            req.Headers["Accept"] = "application/json";
+            req.Send = audioResource;
+            req.OnResponse = OnAddAcousticResourceResp;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/acoustic_customizations/{0}/audio/{1}", customizationId, audioName));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class AddAcousticResourceRequest : RESTConnector.Request
+        {
+            public AddAcousticResourceCallback Callback { get; set; }
+            public string CustomizationId { get; set; }
+            public string AudioName { get; set; }
+            public string ContentType { get; set; }
+            public string ContainedContentType { get; set; }
+            public bool AllowOverwrite { get; set; }
+            public byte[] AudioResource { get; set; }
+            public string Data { get; set; }
+        }
+
+        private void OnAddAcousticResourceResp(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            string customData = ((AddAcousticResourceRequest)req).Data;
+            if (((AddAcousticResourceRequest)req).Callback != null)
+                ((AddAcousticResourceRequest)req).Callback(!string.IsNullOrEmpty(customData) ? customData : "success");
         }
         #endregion
 

@@ -189,11 +189,19 @@ namespace IBM.Watson.DeveloperCloud.Connection
         /// <param name="function">The name of the function to connect.</param>
         /// <param name="args">Additional function arguments.</param>
         /// <returns>The WSConnector object or null or error.</returns>
-        public static WSConnector CreateConnector(Credentials credentials, string url, string function, string args)
+        public static WSConnector CreateConnector(Credentials credentials, string function, string args)
         {
             WSConnector connector = new WSConnector();
+            if (credentials.HasAuthorizationToken())
+            {
+                args += "&watson-token=" + credentials.AuthenticationToken;
+            }
+            else if (credentials.HasCredentials())
+            {
+                connector.Authentication = credentials;
+            }
+
             connector.URL = FixupURL(credentials.Url) + function + args;
-            connector.Authentication = credentials;
 
             return connector;
         }

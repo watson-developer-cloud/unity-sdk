@@ -37,7 +37,12 @@ public class ExampleSpeechToText : MonoBehaviour
     private string _createdCorpusName = "the-jabberwocky-corpus";
     private string _customCorpusFilePath;
     private string _customWordsFilePath;
-    private string _wavFilePath;
+    private string _acousticResourceUrl = "https://ia802302.us.archive.org/10/items/Greatest_Speeches_of_the_20th_Century/TheFirstAmericaninEarthOrbit.mp3";
+    private bool _isAudioLoaded = false;
+    private string _createdAcousticModelId;
+    private string _acousticResourceName = "unity-acoustic-resource";
+    private string _createdAcousticModelName = "unity-example-acoustic-model";
+    private byte[] _acousticResourceData;
 
     private bool _recognizeTested = false;
     private bool _getModelsTested = false;
@@ -58,8 +63,17 @@ public class ExampleSpeechToText : MonoBehaviour
     private bool _getCustomWordTested = false;
     private bool _deleteCustomWordTested = false;
     private bool _deleteCustomCorpusTested = false;
-
+    private bool _getAcousticCustomizationsTested = false;
+    private bool _createAcousticCustomizationsTested = false;
+    private bool _deleteAcousticCustomizationsTested = false;
+    private bool _getAcousticCustomizationTested = false;
+    private bool _trainAcousticCustomizationsTested = false;
+    private bool _resetAcousticCustomizationsTested = false;
+    private bool _getAcousticResourcesTested = false;
+    private bool _getAcousticResourceTested = false;
+    private bool _addAcousticResourcesTested = false;
     private bool _isCustomizationReady = false;
+    private bool _isAcousticCustomizationReady = false;
     private bool _readyToContinue = false;
     private float _delayTimeInSeconds = 10f;
 
@@ -73,14 +87,14 @@ public class ExampleSpeechToText : MonoBehaviour
         _speechToText = new SpeechToText(credentials);
         _customCorpusFilePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/theJabberwocky-utf8.txt";
         _customWordsFilePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/test-stt-words.json";
-        _wavFilePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/test-audio.wav";
-        _audioClip = WaveFile.ParseWAV("testClip", File.ReadAllBytes(_wavFilePath));
 
         Runnable.Run(Examples());
     }
 
     private IEnumerator Examples()
     {
+        Runnable.Run(DownloadAcousticResource());
+
         //  Recognize
         Log.Debug("ExampleSpeechToText", "Attempting to recognize");
         List<string> keywords = new List<string>();
@@ -267,7 +281,109 @@ public class ExampleSpeechToText : MonoBehaviour
         while (!_deleteCustomizationsTested)
             yield return null;
 
+        //  List acoustic customizations
+        Log.Debug("ExampleSpeechToText", "Attempting to get acoustic customizations");
+        _speechToText.GetCustomAcousticModels(HandleGetCustomAcousticModels);
+        while (!_getAcousticCustomizationsTested)
+            yield return null;
+
+        //  Create acoustic customization
+        Log.Debug("ExampleSpeechToText", "Attempting to create acoustic customization");
+        _speechToText.CreateAcousticCustomization(HandleCreateAcousticCustomization, _createdAcousticModelName);
+        while (!_createAcousticCustomizationsTested)
+            yield return null;
+
+        //  Get acoustic customization
+        Log.Debug("ExampleSpeechToText", "Attempting to get acoustic customization {0}", _createdAcousticModelId);
+        _speechToText.GetCustomAcousticModel(HandleGetCustomAcousticModel, _createdAcousticModelId);
+        while (!_getAcousticCustomizationTested)
+            yield return null;
+
+        while (!_isAudioLoaded)
+            yield return null;
+
+        //  Create acoustic resource
+        Log.Debug("ExampleSpeechToText", "Attempting to create audio resource {1} on {0}", _createdAcousticModelId, _acousticResourceName);
+        string mimeType = Utility.GetMimeType(Path.GetExtension(_acousticResourceUrl));
+        _speechToText.AddAcousticResource(HandleAddAcousticResource, _createdAcousticModelId, _acousticResourceName, mimeType, mimeType, true, _acousticResourceData);
+        while (!_addAcousticResourcesTested)
+            yield return null;
+
+        //  Wait for customization
+        _isAcousticCustomizationReady = false;
+        Runnable.Run(CheckAcousticCustomizationStatus(_createdAcousticModelId));
+        while (!_isAcousticCustomizationReady)
+            yield return null;
+
+        //  List acoustic resources
+        Log.Debug("ExampleSpeechToText", "Attempting to get audio resources {0}", _createdAcousticModelId);
+        _speechToText.GetCustomAcousticResources(HandleGetCustomAcousticResources, _createdAcousticModelId);
+        while (!_getAcousticResourcesTested)
+            yield return null;
+
+        //  Train acoustic customization
+        Log.Debug("ExampleSpeechToText", "Attempting to train acoustic customization {0}", _createdAcousticModelId);
+        _speechToText.TrainAcousticCustomization(HandleTrainAcousticCustomization, _createdAcousticModelId, null, true);
+        while (!_trainAcousticCustomizationsTested)
+            yield return null;
+
+        //  Get acoustic resource
+        Log.Debug("ExampleSpeechToText", "Attempting to get audio resource {1} from {0}", _createdAcousticModelId, _acousticResourceName);
+        _speechToText.GetCustomAcousticResource(HandleGetCustomAcousticResource, _createdAcousticModelId, _acousticResourceName);
+        while (!_getAcousticResourceTested)
+            yield return null;
+
+        //  Wait for customization
+        _isAcousticCustomizationReady = false;
+        Runnable.Run(CheckAcousticCustomizationStatus(_createdAcousticModelId));
+        while (!_isAcousticCustomizationReady)
+            yield return null;
+
+        //  Reset acoustic customization
+        Log.Debug("ExampleSpeechToText", "Attempting to reset acoustic customization {0}", _createdAcousticModelId);
+        _speechToText.ResetAcousticCustomization(HandleResetAcousticCustomization, _createdAcousticModelId);
+        while (!_resetAcousticCustomizationsTested)
+            yield return null;
+
+        //  Delay
+        Log.Debug("ExampleSpeechToText", string.Format("Delaying delete acoustic resource for {0} sec", _delayTimeInSeconds));
+        Runnable.Run(Delay(_delayTimeInSeconds));
+        while (!_readyToContinue)
+            yield return null;
+
+        //  Delete acoustic resource
+        DeleteAcousticResource();
+
+        //  Delay
+        Log.Debug("ExampleSpeechToText", string.Format("Delaying delete acoustic customization for {0} sec", _delayTimeInSeconds));
+        Runnable.Run(Delay(_delayTimeInSeconds));
+        while (!_readyToContinue)
+            yield return null;
+
+        //  Delete acoustic customization
+        DeleteAcousticCustomization();
+        while (!_deleteAcousticCustomizationsTested)
+            yield return null;
+
+        //  Delay
+        Log.Debug("ExampleSpeechToText", string.Format("Delaying complete for {0} sec", _delayTimeInSeconds));
+        Runnable.Run(Delay(_delayTimeInSeconds));
+        while (!_readyToContinue)
+            yield return null;
+
         Log.Debug("ExampleSpeechToText", "Speech to Text examples complete.");
+    }
+
+    private void DeleteAcousticResource()
+    {
+        Log.Debug("ExampleSpeechToText", "Attempting to delete audio resource {1} from {0}", _createdAcousticModelId, _acousticResourceName);
+        _speechToText.DeleteAcousticResource(HandleDeleteAcousticResource, _createdAcousticModelId, _acousticResourceName);
+    }
+
+    private void DeleteAcousticCustomization()
+    {
+        Log.Debug("ExampleSpeechToText", "Attempting to delete acoustic customization {0}", _createdAcousticModelId);
+        _speechToText.DeleteAcousticCustomization(HandleDeleteAcousticCustomization, _createdAcousticModelId);
     }
 
     private void HandleGetModels(ModelSet result, string customData)
@@ -343,7 +459,6 @@ public class ExampleSpeechToText : MonoBehaviour
 
         _deleteCustomizationsTested = true;
     }
-
 
     private void HandleTrainCustomization(bool success, string customData)
     {
@@ -481,6 +596,69 @@ public class ExampleSpeechToText : MonoBehaviour
         _getCustomWordTested = true;
     }
 
+    private void HandleGetCustomAcousticModels(AcousticCustomizations acousticCustomizations, string customData)
+    {
+        Log.Debug("ExampleSpeechToText", "acousticCustomizations: {0}", customData);
+        _getAcousticCustomizationsTested = true;
+    }
+
+    private void HandleCreateAcousticCustomization(CustomizationID customizationID, string customData)
+    {
+        Log.Debug("ExampleSpeechToText", "customizationId: {0}", customData);
+        _createdAcousticModelId = customizationID.customization_id;
+        _createAcousticCustomizationsTested = true;
+    }
+
+    private void HandleGetCustomAcousticModel(AcousticCustomization acousticCustomization, string customData)
+    {
+        Log.Debug("ExampleSpeechToText", "acousticCustomization: {0}", customData);
+        _getAcousticCustomizationTested = true;
+    }
+
+    private void HandleTrainAcousticCustomization(bool success, string customData)
+    {
+        Log.Debug("ExampleSpeechToText", "train customization success: {0}", success);
+        _trainAcousticCustomizationsTested = true;
+    }
+
+    private void HandleGetCustomAcousticResources(AudioResources audioResources, string customData)
+    {
+        Log.Debug("ExampleSpeechToText", "audioResources: {0}", customData);
+        _getAcousticResourcesTested = true;
+    }
+
+    private void HandleAddAcousticResource(string customData)
+    {
+        Log.Debug("ExampleSpeechToText", "added acoustic resource: {0}", customData);
+        _addAcousticResourcesTested = true;
+    }
+
+    private void HandleGetCustomAcousticResource(AudioListing audioListing, string customData)
+    {
+        Log.Debug("ExampleSpeechToText", "audioListing: {0}", customData);
+        _getAcousticResourceTested = true;
+    }
+
+    private void HandleResetAcousticCustomization(bool success, string customData)
+    {
+        Log.Debug("ExampleSpeechToText", "reset customization success: {0}", success);
+        _resetAcousticCustomizationsTested = true;
+    }
+
+    private void HandleDeleteAcousticResource(bool success, string customData)
+    {
+        Log.Debug("ExampleSpeechToText", "deleted acoustic resource: {0}", success);
+    }
+
+    private void HandleDeleteAcousticCustomization(bool success, string customData)
+    {
+        Log.Debug("ExampleSpeechToText", "deleted acoustic customization: {0}", success);
+        if (success)
+            _deleteAcousticCustomizationsTested = true;
+        else
+            DeleteAcousticCustomization();
+    }
+
     private IEnumerator CheckCustomizationStatus(string customizationID, float delay = 0.1f)
     {
         Log.Debug("TestSpeechToText", "Checking customization status in {0} seconds...", delay.ToString());
@@ -506,9 +684,45 @@ public class ExampleSpeechToText : MonoBehaviour
         }
     }
 
+    private IEnumerator CheckAcousticCustomizationStatus(string customizationID, float delay = 0.1f)
+    {
+        Log.Debug("TestSpeechToText", "Checking acoustic customization status in {0} seconds...", delay.ToString());
+        yield return new WaitForSeconds(delay);
+
+        //	passing customizationID in custom data
+        _speechToText.GetCustomAcousticModel(OnCheckAcousticCustomizationStatus, customizationID, customizationID);
+    }
+
+    private void OnCheckAcousticCustomizationStatus(AcousticCustomization acousticCustomization, string customData)
+    {
+        if (acousticCustomization != null)
+        {
+            Log.Debug("TestSpeechToText", "Acoustic customization status: {0}", acousticCustomization.status);
+            if (acousticCustomization.status != "ready" && acousticCustomization.status != "available")
+                Runnable.Run(CheckAcousticCustomizationStatus(customData, 5f));
+            else
+                _isAcousticCustomizationReady = true;
+        }
+        else
+        {
+            Log.Debug("TestSpeechToText", "Check acoustic customization status failed!");
+        }
+    }
+
     private IEnumerator Delay(float delayTime)
     {
         yield return new WaitForSeconds(delayTime);
         _readyToContinue = true;
+    }
+
+    private IEnumerator DownloadAcousticResource()
+    {
+        Log.Debug("ExampleSpeechToText", "downloading acoustic resource from {0}", _acousticResourceUrl);
+        WWW www = new WWW(_acousticResourceUrl);
+        yield return www;
+
+        Log.Debug("ExampleSpeechToText", "acoustic resource downloaded");
+        _acousticResourceData = www.bytes;
+        _isAudioLoaded = true;
     }
 }

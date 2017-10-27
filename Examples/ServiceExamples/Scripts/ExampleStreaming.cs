@@ -58,18 +58,24 @@ public class ExampleStreaming : MonoBehaviour
             if (value && !_speechToText.IsListening)
             {
                 _speechToText.DetectSilence = true;
-                _speechToText.EnableWordConfidence = false;
-                _speechToText.EnableTimestamps = false;
-                _speechToText.SilenceThreshold = 0.00f;
-                _speechToText.MaxAlternatives = 1;
+                _speechToText.EnableWordConfidence = true;
+                _speechToText.EnableTimestamps = true;
+                _speechToText.SilenceThreshold = 0.1f;
+                _speechToText.MaxAlternatives = 5;
                 _speechToText.EnableInterimResults = true;
                 _speechToText.OnError = OnError;
                 _speechToText.InactivityTimeout = -1;
-                _speechToText.StartListening(OnRecognize);
+                _speechToText.ProfanityFilter = true;
+                _speechToText.SmartFormatting = true;
+                _speechToText.SpeakerLabels = true;
+                _speechToText.WordAlternativesThreshold = null;
                 List<string> keywords = new List<string>();
                 keywords.Add("hello");
+                keywords.Add("testing");
+                keywords.Add("watson");
                 _speechToText.KeywordsThreshold = 0.5f;
                 _speechToText.Keywords = keywords.ToArray();
+                _speechToText.StartListening(OnRecognize, OnRecognizeSpeaker);
             }
             else if (!value && _speechToText.IsListening)
             {
@@ -181,7 +187,29 @@ public class ExampleStreaming : MonoBehaviour
                         Log.Debug("ExampleSpeechToText", "keyword: {0}, confidence: {1}, start time: {2}, end time: {3}", keyword.normalized_text, keyword.confidence, keyword.start_time, keyword.end_time);
                     }
                 }
+
+                if (res.word_alternatives != null)
+                {
+                    foreach (var wordAlternative in res.word_alternatives)
+                    {
+                        Log.Debug("ExampleSpeechToText", "Word alternatives found. Start time: {0} | EndTime: {1}", wordAlternative.start_time, wordAlternative.end_time);
+                        foreach(var alternative in wordAlternative.alternatives)
+                            Log.Debug("ExampleSpeechToText", "\t word: {0} | confidence: {1}", alternative.word, alternative.confidence);
+                    }
+                }
             }
         }
+    }
+
+    private void OnRecognizeSpeaker(SpeakerRecognitionEvent result)
+    {
+        if (result != null)
+        {
+            foreach (SpeakerLabelsResult labelResult in result.speaker_labels)
+            {
+                Log.Debug("ExampleStreaming", string.Format("speaker result: {0} | confidence: {3} | from: {1} | to: {2}", labelResult.speaker, labelResult.from, labelResult.to, labelResult.confidence));
+            }
+        }
+
     }
 }
