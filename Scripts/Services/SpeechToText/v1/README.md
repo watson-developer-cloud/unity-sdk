@@ -476,4 +476,227 @@ private void HandleDeleteCustomWord(bool success, string customData)
 }
 ```
 
+
+
+### List custom acoustic models
+Lists information about all custom acoustic models that are owned by an instance of the service. Use the `language` parameter to see all custom acoustic models for the specified language; omit the parameter to see all custom acoustic models for all languages. You must use credentials for the instance of the service that owns a model to list information about it.
+```cs
+private void ListCustomAcousticModels()
+{
+  if(!_speechToText.GetCustomAcousticModels(HandleGetCustomAcousticModels))
+    Log.Debug("ExampleSpeechToText", "Failed to list custom acoustic models");
+}
+
+private void HandleListCustomAcousticModels(AcousticCustomizations acousticCustomizations, string customData)
+{
+  Log.Debug("ExampleSpeechToText", "acousticCustomizations: {0}", customData);
+}
+```
+
+
+
+
+### Create custom acoustic model
+Creates a new custom acoustic model for a specified base model. The custom acoustic model can be used only with the base model for which it is created. The model is owned by the instance of the service whose credentials are used to create it.
+```cs
+private void CreateAcousticCustomization()
+{
+  if(!_speechToText.CreateAcousticCustomization(HandleCreateAcousticCustomization, "<createdAcousticModelName>"))
+    Log.Debug("ExampleSpeechToText", "Failed to create acoustic customization");
+}
+
+private void HandleCreateAcousticCustomization(CustomizationID customizationID, string customData)
+{
+  Log.Debug("ExampleSpeechToText", "customizationId: {0}", customData);
+}
+
+```
+
+
+
+
+
+### Delete custom acoustic model
+Deletes an existing custom acoustic model. The custom model cannot be deleted if another request, such as adding an audio resource to the model, is currently being processed. You must use credentials for the instance of the service that owns a model to delete it.
+```cs
+private void DeleteAcousticCustomization()
+{
+  if(!_speechToText.DeleteAcousticCustomization(HandleDeleteAcousticCustomization, "<createdAcousticModelId>"))
+    Log.Debug("ExampleSpeechToText", "Failed to delete acoustic customization");
+}
+
+private void HandleDeleteAcousticCustomization(bool success, string customData)
+{
+  Log.Debug("ExampleSpeechToText", "deleted acoustic customization: {0}", success);
+}
+```
+
+
+
+
+
+### Get details about a custom acoustic model
+Lists information about a specified custom acoustic model. You must use credentials for the instance of the service that owns a model to list information about it.
+```cs
+private void GetCustomAcousticModel()
+{
+  if(!_speechToText.GetCustomAcousticModel(HandleGetCustomAcousticModel, "<createdAcousticModelId>"))
+    Log.Debug("ExampleSpeechToText", "Failed to get custom acoustic model");
+}
+
+private void HandleGetCustomAcousticModel(AcousticCustomization acousticCustomization, string customData)
+{
+  Log.Debug("ExampleSpeechToText", "acousticCustomization: {0}", customData);
+}
+```
+
+
+
+
+
+### Train a custom acoustic model
+Initiates the training of a custom acoustic model with new or changed audio resources. After adding or deleting audio resources for a custom acoustic model, use this method to begin the actual training of the model on the latest audio data. The custom acoustic model does not reflect its changed data until you train it. You must use credentials for the instance of the service that owns a model to train it.
+
+The training method is asynchronous. It can take on the order of minutes or hours to complete depending on the total amount of audio data on which the model is being trained and the current load on the service. Typically, training takes approximately twice the length of the total audio contained in the custom model. The method returns an HTTP 200 response code to indicate that the training process has begun.
+
+You can monitor the status of the training by using the `GET /v1/acoustic_customizations/{customization_id}` method to poll the model's status. Use a loop to check the status once a minute. The method returns an `AcousticCustomization` object that includes `status` and `progress` fields. A status of `available` indicates that the custom model is trained and ready to use. The service cannot accept subsequent training requests, or requests to add new audio resources, until the existing request completes.
+
+You can use the optional `custom_language_model_id` query parameter to specify the GUID of a separately created custom language model that is to be used during training. Specify a custom language model if you have verbatim transcriptions of the audio files that you have added to the custom model or you have either corpora (text files) or a list of words that are relevant to the contents of the audio files. For information about creating a separate custom language model, see [Creating a custom language model][creating-a-custom-language-model].
+
+Training can fail to start for the following reasons:
+* The service is currently handling another request for the custom model, such as another training request or a request to add audio resources to the model.
+* The custom model contains less than 10 minutes or more than 50 hours of audio data.
+* One or more of the custom model's audio resources is invalid.
+```cs
+private void TrainAcousticCustomization()
+{
+  if(!_speechToText.TrainAcousticCustomization(HandleTrainAcousticCustomization, "<createdAcousticModelId>", "<customLanguageModelId>", "<forceTrain>"))
+    Log.Debug("ExampleSpeechToText", "Failed to train acoustic customization");
+}
+
+private void HandleTrainAcousticCustomization(bool success, string customData)
+{
+  Log.Debug("ExampleSpeechToText", "train customization success: {0}", success);
+}
+```
+
+
+
+
+
+### Reset a custom acoustic model
+Resets a custom acoustic model by removing all audio resources from the model. Resetting a custom acoustic model initializes the model to its state when it was first created. Metadata such as the name and language of the model are preserved, but the model's audio resources are removed and must be re-created. You must use credentials for the instance of the service that owns a model to reset it.
+```cs
+private void ResetAcousticCustomization()
+{
+  if(!_speechToText.ResetAcousticCustomization(HandleResetAcousticCustomization, "<createdAcousticModelId>"))
+    Log.Debug("ExampleSpeechToText", "Failed to reset acoustic customizations");
+}
+
+private void HandleResetAcousticCustomization(bool success, string customData)
+{
+  Log.Debug("ExampleSpeechToText", "reset customization success: {0}", success);
+}
+```
+
+
+
+
+
+### List information about a custom acoustic model's audio resources
+Lists information about all audio resources from a custom acoustic model. The information includes the name of the resource and information about its audio data, such as its duration. It also includes the status of the audio resource, which is important for checking the service's analysis of the resource in response to a request to add it to the custom acoustic model. You must use credentials for the instance of the service that owns a model to list its audio resources.
+```cs
+private void GetCustomAcousticResources()
+{
+  if(!_speechToText.GetCustomAcousticResources(HandleGetCustomAcousticResources, "<createdAcousticModelId>"))
+    Log.Debug("ExampleSpeechToText", "Failed to get custom acoustic resources");
+}
+
+private void HandleGetCustomAcousticResources(AudioResources audioResources, string customData)
+{
+  Log.Debug("ExampleSpeechToText", "audioResources: {0}", customData);
+}
+```
+
+
+
+
+
+### Delete an audio resource from a custom acoustic model
+Deletes an existing audio resource from a custom acoustic model. Deleting an archive-type audio resource removes the entire archive of files; the current interface does not allow deletion of individual files from an archive resource. Removing an audio resource does not affect the custom model until you train the model on its updated data by using the `POST /v1/acoustic_customizations/{customization_id}/train` method. You must use credentials for the instance of the service that owns a model to delete its audio resources.
+```cs
+private void DeleteAcousticResource()
+{
+  if(!_speechToText.DeleteAcousticResource(HandleDeleteAcousticResource, "<createdAcousticModelId>", "<acousticResourceName>"))
+    Log.Debug("ExampleSpeechToText", "Failed to delete acoustic resource");
+}
+
+private void HandleDeleteAcousticResource(bool success, string customData)
+{
+  Log.Debug("ExampleSpeechToText", "deleted acoustic resource: {0}", success);
+}
+```
+
+
+
+
+
+### Get information about an audio resource associated with a custom acoustic model
+Lists information about an audio resource from a custom acoustic model. The method returns an `AudioListing` object whose fields depend on the type of audio resource you specify with the method's `audio_name` parameter:
+For an audio-type resource, the object's fields match those of an `AudioResource` object: `duration`, `name`, `details`, and `status`.
+
+For an archive-type resource, the object includes a `container` field whose fields match those of an `AudioResource` object. It also includes an `audio` field, which contains an array of `AudioResource` objects that provides information about the audio files that are contained in the archive.
+
+The information includes the status of the specified audio resource, which is important for checking the service's analysis of the resource in response to a request to add it to the custom model. You must use credentials for the instance of the service that owns a model to list its audio resources.
+```cs
+private void GetCustomAcousticResource()
+{
+  if(!_speechToText.GetCustomAcousticResource(HandleGetCustomAcousticResource, "<createdAcousticModelId>", "<acousticResourceName>"))
+    Log.Debug("ExampleSpeechToText", "Failed to get custom acoustic resource");
+}
+
+private void HandleGetCustomAcousticResource(AudioListing audioListing, string customData)
+{
+  Log.Debug("ExampleSpeechToText", "audioListing: {0}", customData);
+}
+```
+
+
+
+
+
+### Add an audio resource to a custom acoustic model
+Adds an audio resource to a custom acoustic model. Add audio content that reflects the acoustic characteristics of the audio that you plan to transcribe. You must use credentials for the instance of the service that owns a model to add an audio resource to it. Adding audio data does not affect the custom acoustic model until you train the model for the new data by using the `POST /v1/acoustic_customizations/{customization_id}/train` method.
+
+You can add individual audio files or an archive file that contains multiple audio files. Adding multiple audio files via a single archive file is significantly more efficient than adding each file individually.
+You can add an individual audio file in any format that the service supports for speech recognition. Use the `Content-Type` header to specify the format of the audio file.
+
+You can add an archive file (**.zip** or **.tar.gz** file) that contains audio files in any format that the service supports for speech recognition. All audio files added with the same archive file must have the same audio format. Use the `Content-Type` header to specify the archive type, `application/zip` or `application/gzip`. Use the `Contained-Content-Type` header to specify the format of the contained audio files; the default format is `audio/wav`.
+
+You can use this method to add any number of audio resources to a custom model by calling the method once for each audio or archive file. But the addition of one audio resource must be fully complete before you can add another. You must add a minimum of 10 minutes and a maximum of 50 hours of audio that includes speech, not just silence, to a custom acoustic model before you can train it. No audio resource, audio- or archive-type, can be larger than 100 MB.
+
+The method is asynchronous. It can take several seconds to complete depending on the duration of the audio and, in the case of an archive file, the total number of audio files being processed. The service returns a 201 response code if the audio is valid. It then asynchronously analyzes the contents of the audio file or files and automatically extracts information about the audio such as its length, sampling rate, and encoding. You cannot submit requests to add additional audio resources to a custom acoustic model, or to train the model, until the service's analysis of all audio files for the current request completes.
+
+To determine the status of the service's analysis of the audio, use the `GET /v1/acoustic_customizations/{customization_id}/audio/{audio_name}` method to poll the status of the audio. The method accepts the GUID of the custom model and the name of the audio resource, and it returns the status of the resource. Use a loop to check the status of the audio every few seconds until it becomes `ok`.
+
+**Note:** The sampling rate of an audio file must match the sampling rate of the base model for the custom model: for broadband models, at least 16 kHz; for narrowband models, at least 8 kHz. If the sampling rate of the audio is higher than the minimum required rate, the service down-samples the audio to the appropriate rate. If the sampling rate of the audio is lower than the minimum required rate, the service labels the audio file as `invalid`.
+```cs
+private void AddAcousticResource()
+{
+  string mimeType = Utility.GetMimeType(Path.GetExtension("<acousticResourceUrl>"));
+  if(!_speechToText.AddAcousticResource(HandleAddAcousticResource, "<acousticModelId>", "<acousticResourceName>", mimeType, mimeType, true, "<acousticResourceData>")
+    Log.Debug("ExampleSpeechToText", "Failed to add acoustic resource");
+}
+
+private void HandleAddAcousticResource(string customData)
+{
+  Log.Debug("ExampleSpeechToText", "added acoustic resource: {0}", customData);
+}
+```
+
+
+
+
+
 [speech-to-text]: https://console.bluemix.net/docs/services/speech-to-text/index.html
+[creating-a-custom-language-model]: https://console.bluemix.net/docs/services/speech-to-text/language-create.html
