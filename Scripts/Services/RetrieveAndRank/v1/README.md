@@ -31,7 +31,7 @@ void GetClusters()
 
 private void OnGetClusters(SolrClusterListResponse resp, string data)
 {
-  Log.Debug("ExampleRetrieveAndRank", "GetClusters results: {0}", data.ToString());
+  Log.Debug("ExampleRetrieveAndRank", "GetClusters results: {0}", data);
 }
 ```
 
@@ -47,7 +47,7 @@ void CreateCluster()
 
 private void OnCreateCluster(SolrClusterResponse resp, string data)
 {
-  Log.Debug("ExampleRetrieveAndRank", "CreateCluster results: {0}", data.ToString());
+  Log.Debug("ExampleRetrieveAndRank", "CreateCluster results: {0}", data);
 }
 ```
 
@@ -80,7 +80,7 @@ void GetCluster()
 
 private void OnGetCluster(SolrClusterResponse resp, string data)
 {
-  Log.Debug("ExampleRetrieveAndRank", "GetCluster results: {0}", data.ToString());
+  Log.Debug("ExampleRetrieveAndRank", "GetCluster results: {0}", data);
 }
 ```
 
@@ -96,7 +96,7 @@ void GetClusterConfigs()
 
 private void OnGetClusterConfigs(SolrConfigList resp, string data)
 {
-  Log.Debug("ExampleRetrieveAndRank", "GetClusterConfigs results: {0}", data.ToString());
+  Log.Debug("ExampleRetrieveAndRank", "GetClusterConfigs results: {0}", data);
 }
 ```
 
@@ -128,7 +128,7 @@ void GetClusterConfig()
 
 private void OnGetClusterConfig(byte[] respData, string data)
 {
-  Log.Debug("ExampleRetrieveAndRank", "GetClusterConfig results: {0}", data.ToString());
+  Log.Debug("ExampleRetrieveAndRank", "GetClusterConfig results: {0}", data);
 }
 ```
 
@@ -143,7 +143,7 @@ void SaveClusterConfig()
 
 private void OnSaveConfig(bool success, string data)
 {
-  Log.Debug("ExampleRetrieveAndRank", "SaveClusterConfig results: {0}", data.ToString());
+  Log.Debug("ExampleRetrieveAndRank", "SaveClusterConfig results: {0}", data);
 }
 ```
 
@@ -159,7 +159,7 @@ void UploadClusterConfig()
 
 private void OnUploadClusterConfig(UploadResponse resp, string data)
 {
-  Log.Debug("ExampleRetrieveAndRank", "UploadClusterConfig results: {0}", data.ToString());
+  Log.Debug("ExampleRetrieveAndRank", "UploadClusterConfig results: {0}", data);
 }
 ```
 
@@ -175,7 +175,7 @@ void ListCollections()
 
 private void OnGetCollections(CollectionsResponse resp, string data)
 {
-  Log.Debug("ExampleRetrieveAndRank", "ListCollections results: {0}", data.ToString());
+  Log.Debug("ExampleRetrieveAndRank", "ListCollections results: {0}", data);
 }
 ```
 
@@ -191,7 +191,7 @@ void CreateCollection()
 
 private void OnCreateCollection(CollectionsResponse resp, string data)
 {
-  Log.Debug("ExampleRetrieveAndRank", "ListCollections results: {0}", data.ToString());
+  Log.Debug("ExampleRetrieveAndRank", "ListCollections results: {0}", data);
 }
 ```
 
@@ -207,7 +207,7 @@ void DeleteCollection()
 
 private void OnGetCollections(CollectionsResponse resp, string data)
 {
-  Log.Debug("ExampleRetrieveAndRank", "DeleteCollection results: {0}", data.ToString());
+  Log.Debug("ExampleRetrieveAndRank", "DeleteCollection results: {0}", data);
 }
 ```
 
@@ -227,7 +227,7 @@ void IndexDocuments()
 
 private void OnIndexDocuments(IndexResponse resp, string data)
 {
-  Log.Debug("ExampleRetrieveAndRank", "IndexDocuments results: {0}", data.ToString());
+  Log.Debug("ExampleRetrieveAndRank", "IndexDocuments results: {0}", data);
 }
 ```
 
@@ -250,7 +250,7 @@ void Search()
 
 private void OnSearch(SearchResponse resp, string data)
 {
-  Log.Debug("ExampleRetrieveAndRank", "Search results: {0}", data.ToString());
+  Log.Debug("ExampleRetrieveAndRank", "Search results: {0}", data);
 }
 ```
 
@@ -266,7 +266,7 @@ void GetRankers()
 
 private void OnGetRankers(ListRankersPayload resp, string data)
 {
-  Log.Debug("ExampleRetrieveAndRank", "GetRankers results: {0}", data.ToString());
+  Log.Debug("ExampleRetrieveAndRank", "GetRankers results: {0}", data);
 }
 ```
 
@@ -284,7 +284,7 @@ void CreateRanker()
 
 private void OnCreateRanker(RankerStatusPayload resp, string data)
 {
-  Log.Debug("ExampleRetrieveAndRank", "CreateRanker results: {0}", data.ToString());
+  Log.Debug("ExampleRetrieveAndRank", "CreateRanker results: {0}", data);
 }
 ```
 
@@ -302,7 +302,7 @@ void Rank()
 
 private void OnRank(RankerOutputPayload resp, string data)
 {
-  Log.Debug("ExampleRetrieveAndRank", "Rank results: {0}", data.ToString());
+  Log.Debug("ExampleRetrieveAndRank", "Rank results: {0}", data);
 }
 ```
 
@@ -334,7 +334,7 @@ void GetRanker()
 
 private void OnGetRanker(RankerStatusPayload resp, string data)
 {
-  Log.Debug("ExampleRetrieveAndRank", "GetRanker results: {0}", data.ToString());
+  Log.Debug("ExampleRetrieveAndRank", "GetRanker results: {0}", data);
 }
 ```
 [retrieve-and-rank-service]: https://www.ibm.com/watson/services/retrieve-and-rank/

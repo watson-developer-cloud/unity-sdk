@@ -31,9 +31,9 @@ private void GetModels()
     Log.Debug("ExampleLanguageTranslator", "Failed to get models.");
 }
 
-private void OnGetModels(TranslationModels models, string customData)
+private void OnGetModels(TranslationModels models, string data)
 {
-  Log.Debug("ExampleLanguageTranslator", "Language Translator - Get models response: {0}", customData);
+  Log.Debug("ExampleLanguageTranslator", "Language Translator - Get models response: {0}", data);
 }
 ```
 
@@ -50,9 +50,9 @@ private void CreateModel()
     Log.Debug("ExampleLanguageTranslator", "Failed to create model.");
 }
 
-private void OnCreateModel(TranslationModel model, string customData)
+private void OnCreateModel(TranslationModel model, string data)
 {
-  Log.Debug("ExampleLanguageTranslator", "Language Translator - Create model response: {0}", customData);
+  Log.Debug("ExampleLanguageTranslator", "Language Translator - Create model response: {0}", data);
 }
 ```
 
@@ -69,9 +69,9 @@ private void GetModel()
     Log.Debug("ExampleLanguageTranslator", "Failed to get model.");
 }
 
-private void OnGetModel(TranslationModel model, string customData)
+private void OnGetModel(TranslationModel model, string data)
 {
-  Log.Debug("ExampleLanguageTranslator", "Language Translator - Get model response: {0}", customData);
+  Log.Debug("ExampleLanguageTranslator", "Language Translator - Get model response: {0}", data);
 }
 ```
 
@@ -88,7 +88,7 @@ private void DeleteModel()
     Log.Debug("ExampleLanguageTranslator", "Failed to delete model.");
 }
 
-private void OnDeleteModel(bool success, string customData)
+private void OnDeleteModel(bool success, string data)
 {
   Log.Debug("ExampleLanguageTranslator", "Language Translator - Delete model response: success: {0}", success);
 }
@@ -107,9 +107,9 @@ private void Translate()
     Log.Debug("ExampleLanguageTranslator", "Failed to translate.");
 }
 
-private void OnGetTranslation(Translations translation, string customData)
+private void OnGetTranslation(Translations translation, string data)
 {
-  Log.Debug("ExampleLanguageTranslator", "Langauge Translator - Translate Response: {0}", customData);
+  Log.Debug("ExampleLanguageTranslator", "Langauge Translator - Translate Response: {0}", data);
 }
 ```
 
@@ -125,9 +125,9 @@ private void Identify()
     Log.Debug("ExampleLanguageTranslator", "Failed to identify language.");
 }
 
-private void OnIdentify(string lang, string customData)
+private void OnIdentify(string lang, string data)
 {
-  Log.Debug("ExampleLanguageTranslator", "Language Translator - Identify response: {0}", customData);
+  Log.Debug("ExampleLanguageTranslator", "Language Translator - Identify response: {0}", data);
 }
 ```
 
@@ -144,9 +144,9 @@ private void GetLanguages()
     Log.Debug("ExampleLanguageTranslator", "Failed to get languages.");
 }
 
-private void OnGetLanguages(Languages languages, string customData)
+private void OnGetLanguages(Languages languages, string data)
 {
-  Log.Debug("ExampleLanguageTranslator", "Language Translator - Get languages response: {0}", customData);
+  Log.Debug("ExampleLanguageTranslator", "Language Translator - Get languages response: {0}", data);
 }
 ```
 

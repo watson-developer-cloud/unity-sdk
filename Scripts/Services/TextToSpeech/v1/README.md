@@ -67,9 +67,9 @@ private void GetVoices()
     Log.Debug("ExampleTextToSpeech", "Failed to get voices!");
 }
 
-private void OnGetVoices(Voices voices, string customData)
+private void OnGetVoices(Voices voices, string data)
 {
-  Log.Debug("ExampleTextToSpeech", "Text to Speech - Get voices response: {0}", customData);
+  Log.Debug("ExampleTextToSpeech", "Text to Speech - Get voices response: {0}", data);
 }
 ```
 
@@ -87,9 +87,9 @@ private void GetVoice()
     Log.Debug("ExampleTextToSpeech", "Failed to get voice!");
 }
 
-private void OnGetVoice(Voice voice, string customData)
+private void OnGetVoice(Voice voice, string data)
 {
-  Log.Debug("ExampleTextToSpeech", "Text to Speech - Get voice response: {0}", customData);
+  Log.Debug("ExampleTextToSpeech", "Text to Speech - Get voice response: {0}", data);
 }
 ```
 
@@ -115,7 +115,7 @@ private void Synthesize()
     Log.Debug("ExampleTextToSpeech", "Failed to synthesize!");
 }
 
-private void OnSynthesize(AudioClip clip, string customData)
+private void OnSynthesize(AudioClip clip, string data)
 {
   PlayClip(clip);
 }
@@ -162,9 +162,9 @@ private void GetPronunciation()
     Log.Debug("ExampleTextToSpeech", "Failed to get pronunication!");
 }
 
-private void OnGetPronunciation(Pronunciation pronunciation, string customData)
+private void OnGetPronunciation(Pronunciation pronunciation, string data)
 {
-  Log.Debug("ExampleTextToSpeech", "Text to Speech - Get pronunciation response: {0}", customData);
+  Log.Debug("ExampleTextToSpeech", "Text to Speech - Get pronunciation response: {0}", data);
 }
 ```
 
@@ -182,9 +182,9 @@ private void CreateCustomization()
     Log.Debug("ExampleTextToSpeech", "Failed to create customization!");
 }
 
-private void OnCreateCustomization(CustomizationID customizationID, string customData)
+private void OnCreateCustomization(CustomizationID customizationID, string data)
 {
-  Log.Debug("ExampleTextToSpeech", "Text to Speech - Create customization response: {0}", customData);
+  Log.Debug("ExampleTextToSpeech", "Text to Speech - Create customization response: {0}", data);
 }
 ```
 
@@ -209,7 +209,7 @@ private void UpdateCustomization()
     Log.Debug("ExampleTextToSpeech", "Failed to update customization!");
 }
 
-private void OnUpdateCustomization(bool success, string customData)
+private void OnUpdateCustomization(bool success, string data)
 {
   Log.Debug("ExampleTextToSpeech", "Text to Speech - Update customization response: {0}", success);
 }
@@ -229,9 +229,9 @@ private void GetCustomizations()
     Log.Debug("ExampleTextToSpeech", "Failed to get customizations!");
 }
 
-private void OnGetCustomizations(Customizations customizations, string customData)
+private void OnGetCustomizations(Customizations customizations, string data)
 {
-  Log.Debug("ExampleTextToSpeech", "Text to Speech - Get customizations response: {0}", customData);
+  Log.Debug("ExampleTextToSpeech", "Text to Speech - Get customizations response: {0}", data);
 }
 ```
 
@@ -249,9 +249,9 @@ private void GetCustomization()
     Log.Debug("ExampleTextToSpeech", "Failed to get customization!");
 }
 
-private void OnGetCustomization(Customization customization, string customData)
+private void OnGetCustomization(Customization customization, string data)
 {
-  Log.Debug("ExampleTextToSpeech", "Text to Speech - Get customization response: {0}", customData);
+  Log.Debug("ExampleTextToSpeech", "Text to Speech - Get customization response: {0}", data);
 }
 ```
 
@@ -269,7 +269,7 @@ private void DeleteCustomization()
     Log.Debug("ExampleTextToSpeech", "Failed to delete customization!");
 }
 
-private void OnDeleteCustomization(bool success, string customData)
+private void OnDeleteCustomization(bool success, string data)
 {
   Log.Debug("ExampleTextToSpeech", "Text to Speech - Get customization response: {0}", success);
 }
@@ -330,9 +330,9 @@ private void GetCustomizationWords()
     Log.Debug("ExampleTextToSpeech", "Failed to get customization words!");
 }
 
-private void OnGetCustomizationWords(Words words, string customData)
+private void OnGetCustomizationWords(Words words, string data)
 {
-  Log.Debug("ExampleTextToSpeech", "Text to Speech - Get customization words response: {0}", customData);
+  Log.Debug("ExampleTextToSpeech", "Text to Speech - Get customization words response: {0}", data);
 }
 ```
 
@@ -355,7 +355,7 @@ private void DeleteCustomizationWord()
     Log.Debug("ExampleTextToSpeech", "Failed to get delete word!");
 }
 
-private void OnDeleteCustomizationWords(bool success, string customData)
+private void OnDeleteCustomizationWords(bool success, string data)
 {
   Log.Debug("ExampleTextToSpeech", "Text to Speech - Delete customization word response: {0}", success);
 }

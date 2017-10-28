@@ -102,7 +102,7 @@ private void GetDillema()
     Log.Debug("ExampleTradeoffAnalytics", "Failed to get dillema!");
 }
 
-private void OnGetDillema(DilemmasResponse resp)
+private void OnGetDillema(DilemmasResponse resp, string data)
 {
   Log.Debug("ExampleTradeoffAnalytics", "Get dillema result: {0}", data);
 }

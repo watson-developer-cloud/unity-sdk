@@ -43,9 +43,9 @@ private void GetModels()
     Log.Debug("ExampleSpeechToText", "Failed to get models");
 }
 
-private void HandleGetModels(ModelSet result, string customData)
+private void HandleGetModels(ModelSet result, string data)
 {
-  Log.Debug("ExampleSpeechToText", "Speech to Text - Get models response: {0}", customData);
+  Log.Debug("ExampleSpeechToText", "Speech to Text - Get models response: {0}", data);
 }
 ```
 
@@ -61,9 +61,9 @@ private void GetModel()
     Log.Debug("ExampleSpeechToText", "Failed to get model");
 }
 
-private void HandleGetModel(Model result, string customData)
+private void HandleGetModel(Model result, string data)
 {
-  Log.Debug("ExampleSpeechToText", "Speech to Text - Get model response: {0}", customData);
+  Log.Debug("ExampleSpeechToText", "Speech to Text - Get model response: {0}", data);
 }
 ```
 
@@ -166,9 +166,9 @@ private void GetCustomizations()
     Log.Debug("ExampleSpeechToText", "Failed to get customizations");
 }
 
-private void HandleGetCustomizations(Customizations customizations, string customData)
+private void HandleGetCustomizations(Customizations customizations, string data)
 {
-  Log.Debug("ExampleSpeechToText", "Speech to Text - Get customizations response: {0}", customData);
+  Log.Debug("ExampleSpeechToText", "Speech to Text - Get customizations response: {0}", data);
 }
 ```
 
@@ -184,9 +184,9 @@ private void GetCustomization()
     Log.Debug("ExampleSpeechToText", "Failed to get customization");
 }
 
-private void HandleGetCustomization(Customization customization, string customData)
+private void HandleGetCustomization(Customization customization, string data)
 {
-  Log.Debug("ExampleSpeechToText", "Speech to Text - Get customization response: {0}", customData);
+  Log.Debug("ExampleSpeechToText", "Speech to Text - Get customization response: {0}", data);
 }
 ```
 
@@ -202,9 +202,9 @@ private void CreateModel()
     Log.Debug("ExampleSpeechToText", "Failed to create custom model");
 }
 
-private void HandleCreateCustomization(CustomizationID customizationID, string customData)
+private void HandleCreateCustomization(CustomizationID customizationID, string data)
 {
-  Log.Debug("ExampleSpeechToText", "Speech to Text - Get model response: {0}", customData);
+  Log.Debug("ExampleSpeechToText", "Speech to Text - Get model response: {0}", data);
 }
 ```
 
@@ -220,7 +220,7 @@ private void TrainModel()
     Log.Debug("ExampleSpeechToText", "Failed to train custom model");
 }
 
-private void HandleTrainCustomization(bool success, string customData)
+private void HandleTrainCustomization(bool success, string data)
 {
   Log.Debug("ExampleSpeechToText", "Speech to Text - Train model response: {0}", success);
 }
@@ -239,7 +239,7 @@ private void ResetModel()
     Log.Debug("ExampleSpeechToText", "Failed to train custom model");
 }
 
-private void HandleResetCustomization(bool success, string customData)
+private void HandleResetCustomization(bool success, string data)
 {
   Log.Debug("ExampleSpeechToText", "Speech to Text - Reset model response: {0}", success);
 }
@@ -257,7 +257,7 @@ private void UpgradeModel()
     Log.Debug("ExampleSpeechToText", "Failed to train custom model");
 }
 
-private void HandleUpgradeCustomizationh(bool success, string customData)
+private void HandleUpgradeCustomizationh(bool success, string data)
 {
   Log.Debug("ExampleSpeechToText", "Speech to Text - Upgrade model response: {0}", success);
 }
@@ -275,7 +275,7 @@ private void DeleteModel()
     Log.Debug("ExampleSpeechToText", "Failed to delete custom model");
 }
 
-private void HandleDeleteCustomization(bool success, string customData)
+private void HandleDeleteCustomization(bool success, string data)
 {
   Log.Debug("ExampleSpeechToText", "Speech to Text - Delete model response: {0}", success);
 }
@@ -294,7 +294,7 @@ private void AddCustomCorpus()
     Log.Debug("ExampleSpeechToText", "Failed to delete custom model");
 }
 
-private void HandleAddCustomCorpus(bool success, string customData)
+private void HandleAddCustomCorpus(bool success, string data)
 {
   Log.Debug("ExampleSpeechToText", "Speech to Text - Add custom corpus response: {0}", success);
 }
@@ -313,7 +313,7 @@ private void GetCorpora()
     Log.Debug("ExampleSpeechToText", "Failed to get custom corpora");
 }
 
-private void HandleGetCustomCorpora(Corpora corpora, string customData)
+private void HandleGetCustomCorpora(Corpora corpora, string data)
 {
   Log.Debug("ExampleSpeechToText", "Speech to Text - Get custom corpora response: {0}", customdData);
 }
@@ -332,7 +332,7 @@ private void GetCorpus()
     Log.Debug("ExampleSpeechToText", "Failed to get custom corpus");
 }
 
-private void HandleGetCustomCorpus(Corpus corpus, string customData)
+private void HandleGetCustomCorpus(Corpus corpus, string data)
 {
   Log.Debug("ExampleSpeechToText", "Speech to Text - Get custom corpus response: {0}", customdData);
 }
@@ -351,7 +351,7 @@ private void DeleteCorpus()
     Log.Debug("ExampleSpeechToText", "Failed to delete custom corpus");
 }
 
-private void HandleDeleteCustomCorpus(bool success, string customData)
+private void HandleDeleteCustomCorpus(bool success, string data)
 {
   Log.Debug("ExampleSpeechToText", "Speech to Text - Delete custom corpus response: {0}", success);
 }
@@ -412,7 +412,7 @@ private void AddCustomWordsUsingFile()
     Log.Debug("ExampleSpeechToText", "Failed to add custom words");
 }
 
-private void HandleAddCustomCorpus(bool success, string customData)
+private void HandleAddCustomCorpus(bool success, string data)
 {
   Log.Debug("ExampleSpeechToText", "Speech to Text - Add custom words response: {0}", success);
 }
@@ -430,9 +430,9 @@ private void GetCustomWords()
     Log.Debug("ExampleSpeechToText", "Failed to get custom words");
 }
 
-private void HandleGetCustomWords(WordsList wordList, string customData)
+private void HandleGetCustomWords(WordsList wordList, string data)
 {
-  Log.Debug("ExampleSpeechToText", "Speech to Text - Get custom words response: {0}", customData);
+  Log.Debug("ExampleSpeechToText", "Speech to Text - Get custom words response: {0}", data);
 }
 ```
 
@@ -449,9 +449,9 @@ private void GetCustomWord()
     Log.Debug("ExampleSpeechToText", "Failed to get custom word");
 }
 
-private void HandleGetCustomWord(WordData word, string customData)
+private void HandleGetCustomWord(WordData word, string data)
 {
-  Log.Debug("ExampleSpeechToText", "Speech to Text - Get custom word response: {0}", customData);
+  Log.Debug("ExampleSpeechToText", "Speech to Text - Get custom word response: {0}", data);
 }
 ```
 
@@ -470,7 +470,7 @@ private void DeleteCustomWord()
     Log.Debug("ExampleSpeechToText", "Failed to delete custom word");
 }
 
-private void HandleDeleteCustomWord(bool success, string customData)
+private void HandleDeleteCustomWord(bool success, string data)
 {
   Log.Debug("ExampleSpeechToText", "Speech to Text - Delete custom word response: {0}", success);
 }
@@ -487,9 +487,9 @@ private void ListCustomAcousticModels()
     Log.Debug("ExampleSpeechToText", "Failed to list custom acoustic models");
 }
 
-private void HandleListCustomAcousticModels(AcousticCustomizations acousticCustomizations, string customData)
+private void HandleListCustomAcousticModels(AcousticCustomizations acousticCustomizations, string data)
 {
-  Log.Debug("ExampleSpeechToText", "acousticCustomizations: {0}", customData);
+  Log.Debug("ExampleSpeechToText", "acousticCustomizations: {0}", data);
 }
 ```
 
@@ -505,9 +505,9 @@ private void CreateAcousticCustomization()
     Log.Debug("ExampleSpeechToText", "Failed to create acoustic customization");
 }
 
-private void HandleCreateAcousticCustomization(CustomizationID customizationID, string customData)
+private void HandleCreateAcousticCustomization(CustomizationID customizationID, string data)
 {
-  Log.Debug("ExampleSpeechToText", "customizationId: {0}", customData);
+  Log.Debug("ExampleSpeechToText", "customizationId: {0}", data);
 }
 
 ```
@@ -525,7 +525,7 @@ private void DeleteAcousticCustomization()
     Log.Debug("ExampleSpeechToText", "Failed to delete acoustic customization");
 }
 
-private void HandleDeleteAcousticCustomization(bool success, string customData)
+private void HandleDeleteAcousticCustomization(bool success, string data)
 {
   Log.Debug("ExampleSpeechToText", "deleted acoustic customization: {0}", success);
 }
@@ -544,9 +544,9 @@ private void GetCustomAcousticModel()
     Log.Debug("ExampleSpeechToText", "Failed to get custom acoustic model");
 }
 
-private void HandleGetCustomAcousticModel(AcousticCustomization acousticCustomization, string customData)
+private void HandleGetCustomAcousticModel(AcousticCustomization acousticCustomization, string data)
 {
-  Log.Debug("ExampleSpeechToText", "acousticCustomization: {0}", customData);
+  Log.Debug("ExampleSpeechToText", "acousticCustomization: {0}", data);
 }
 ```
 
@@ -574,7 +574,7 @@ private void TrainAcousticCustomization()
     Log.Debug("ExampleSpeechToText", "Failed to train acoustic customization");
 }
 
-private void HandleTrainAcousticCustomization(bool success, string customData)
+private void HandleTrainAcousticCustomization(bool success, string data)
 {
   Log.Debug("ExampleSpeechToText", "train customization success: {0}", success);
 }
@@ -593,7 +593,7 @@ private void ResetAcousticCustomization()
     Log.Debug("ExampleSpeechToText", "Failed to reset acoustic customizations");
 }
 
-private void HandleResetAcousticCustomization(bool success, string customData)
+private void HandleResetAcousticCustomization(bool success, string data)
 {
   Log.Debug("ExampleSpeechToText", "reset customization success: {0}", success);
 }
@@ -612,9 +612,9 @@ private void GetCustomAcousticResources()
     Log.Debug("ExampleSpeechToText", "Failed to get custom acoustic resources");
 }
 
-private void HandleGetCustomAcousticResources(AudioResources audioResources, string customData)
+private void HandleGetCustomAcousticResources(AudioResources audioResources, string data)
 {
-  Log.Debug("ExampleSpeechToText", "audioResources: {0}", customData);
+  Log.Debug("ExampleSpeechToText", "audioResources: {0}", data);
 }
 ```
 
@@ -631,7 +631,7 @@ private void DeleteAcousticResource()
     Log.Debug("ExampleSpeechToText", "Failed to delete acoustic resource");
 }
 
-private void HandleDeleteAcousticResource(bool success, string customData)
+private void HandleDeleteAcousticResource(bool success, string data)
 {
   Log.Debug("ExampleSpeechToText", "deleted acoustic resource: {0}", success);
 }
@@ -655,9 +655,9 @@ private void GetCustomAcousticResource()
     Log.Debug("ExampleSpeechToText", "Failed to get custom acoustic resource");
 }
 
-private void HandleGetCustomAcousticResource(AudioListing audioListing, string customData)
+private void HandleGetCustomAcousticResource(AudioListing audioListing, string data)
 {
-  Log.Debug("ExampleSpeechToText", "audioListing: {0}", customData);
+  Log.Debug("ExampleSpeechToText", "audioListing: {0}", data);
 }
 ```
 
@@ -688,9 +688,9 @@ private void AddAcousticResource()
     Log.Debug("ExampleSpeechToText", "Failed to add acoustic resource");
 }
 
-private void HandleAddAcousticResource(string customData)
+private void HandleAddAcousticResource(string data)
 {
-  Log.Debug("ExampleSpeechToText", "added acoustic resource: {0}", customData);
+  Log.Debug("ExampleSpeechToText", "added acoustic resource: {0}", data);
 }
 ```
 

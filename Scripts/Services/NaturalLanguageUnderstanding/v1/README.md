@@ -29,9 +29,9 @@ private void Analyze()
       Log.Debug("ExampleNaturalLanguageUnderstanding", "Failed to get models.");
 }
 
-private void OnAnalyze(AnalysisResults resp, string customData)
+private void OnAnalyze(AnalysisResults resp, string data)
 {
-    Log.Debug("ExampleNaturalLanguageUnderstanding", "AnalysisResults: {0}", customData.ToString());
+    Log.Debug("ExampleNaturalLanguageUnderstanding", "AnalysisResults: {0}", data);
 }
 ```
 
@@ -46,9 +46,9 @@ private void GetModels()
       Log.Debug("ExampleNaturalLanguageUnderstanding", "Failed to get models.");
 }
 
-private void OnGetModels(ListModelsResults resp, string customData)
+private void OnGetModels(ListModelsResults resp, string data)
 {
-    Log.Debug("ExampleNaturalLanguageUnderstanding", "ListModelsResult: {0}", customData.ToString());
+    Log.Debug("ExampleNaturalLanguageUnderstanding", "ListModelsResult: {0}", data);
 }
 ```
 
@@ -63,7 +63,7 @@ private void DeleteModel()
       Log.Debug("ExampleNaturalLanguageUnderstanding", "Failed to delete model.");
 }
 
-private void OnDeleteModel(bool success, string customData)
+private void OnDeleteModel(bool success, string data)
 {
     Log.Debug("ExampleNaturalLanguageUnderstanding", "DeleteModelResult: {0}", success);
 }
