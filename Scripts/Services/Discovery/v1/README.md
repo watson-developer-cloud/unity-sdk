@@ -27,12 +27,12 @@ Creates an environment for the service instance. Note: You can create only one e
 private void CreateEnvironment()
 {
   if (!_discovery.AddEnvironment(OnAddEnvironment, <environment-name>, <environment-description>, <environment-size>))
-    Log.Debug("ExampleDiscoveryV1", "Failed to add environment");
+    Log.Debug("ExampleDiscovery", "Failed to add environment");
 }
 
 private void OnAddEnvironment(Environment resp, string data)
 {
-  Log.Debug("ExampleDiscoveryV1", "Discovery - AddEnvironment Response: {0}", data);
+  Log.Debug("ExampleDiscovery", "Discovery - AddEnvironment Response: {0}", data);
 }
 ```
 
@@ -47,12 +47,12 @@ List existing environments for the service instance.
 private void GetEnvironments()
 {
   if (!_discovery.GetEnvironments(OnGetEnvironments))
-    Log.Debug("ExampleDiscoveryV1", "Failed to get environments");
+    Log.Debug("ExampleDiscovery", "Failed to get environments");
 }
 
 private void OnGetEnvironments(GetEnvironmentsResponse resp, string data)
 {
-  Log.Debug("ExampleDiscoveryV1", "Discovery - GetEnvironments Response: {0}", data);
+  Log.Debug("ExampleDiscovery", "Discovery - GetEnvironments Response: {0}", data);
 }
 ```
 
@@ -67,12 +67,12 @@ Gets detailed information about the specified environment.
 private void GetEnvironment()
 {
   if (!_discovery.GetEnvironment(OnGetEnvironment, <environment-id>))
-    Log.Debug("ExampleDiscoveryV1", "Failed to get environment");
+    Log.Debug("ExampleDiscovery", "Failed to get environment");
 }
 
 private void OnGetEnvironment(Environment resp, string data)
 {
-  Log.Debug("ExampleDiscoveryV1", "Discovery - GetEnvironment Response: {0}", data);
+  Log.Debug("ExampleDiscovery", "Discovery - GetEnvironment Response: {0}", data);
 }
 ```
 
@@ -88,12 +88,12 @@ Deletes an existing environment.
 private void DeleteEnvironment()
 {
   if (!_discovery.DeleteEnvironment(OnDeleteEnvironment, <environment-id>))
-    Log.Debug("ExampleDiscoveryV1", "Failed to delete environment");
+    Log.Debug("ExampleDiscovery", "Failed to delete environment");
 }
 
 private void OnDeleteEnvironment(bool success, string data)
 {
-  Log.Debug("ExampleDiscoveryV1", "Discovery - DeleteEnvironment Response: deleted:{0}", success);
+  Log.Debug("ExampleDiscovery", "Discovery - DeleteEnvironment Response: deleted:{0}", success);
 }
 ```
 
@@ -108,12 +108,12 @@ Adds a configuration to the service instance.
 private void AddConfiguration()
 {
   if (!_discovery.AddConfiguration(OnAddConfiguration, <environment-id>, <configuration-json-path>))
-    Log.Debug("ExampleDiscoveryV1", "Failed to add configuration");
+    Log.Debug("ExampleDiscovery", "Failed to add configuration");
 }
 
 private void OnAddConfiguration(Configuration resp, string data)
 {
-  Log.Debug("ExampleDiscoveryV1", "Discovery - AddConfiguration Response: {0}", data);
+  Log.Debug("ExampleDiscovery", "Discovery - AddConfiguration Response: {0}", data);
 }
 ```
 
@@ -128,12 +128,12 @@ Lists existing configurations for the service instance.
 private void GetConfigurations()
 {
   if (!_discovery.GetConfigurations(OnGetConfigurations, <environment-id>))
-    Log.Debug("ExampleDiscoveryV1", "Failed to get configurations");
+    Log.Debug("ExampleDiscovery", "Failed to get configurations");
 }
 
 private void OnGetConfigurations(GetConfigurationsResponse resp, string data)
 {
-  Log.Debug("ExampleDiscoveryV1", "Discovery - GetConfigurations Response: {0}", data);
+  Log.Debug("ExampleDiscovery", "Discovery - GetConfigurations Response: {0}", data);
 }
 ```
 
@@ -148,12 +148,12 @@ Get information about the specified configuration.
 private void GetConfiguration()
 {
   if (!_discovery.GetConfiguration(OnGetConfiguration, <environment-id>, <configuration-id>))
-    Log.Debug("ExampleDiscoveryV1", "Failed to get configuration");
+    Log.Debug("ExampleDiscovery", "Failed to get configuration");
 }
 
 private void OnGetConfiguration(Configuration resp, string data)
 {
-  Log.Debug("ExampleDiscoveryV1", "Discovery - GetConfiguration Response: {0}", data);
+  Log.Debug("ExampleDiscovery", "Discovery - GetConfiguration Response: {0}", data);
 }
 ```
 
@@ -168,12 +168,12 @@ Runs a sample document through the default or your configuration and returns dia
 private void PreviewConfiguration()
 {
   if (!_discovery.PreviewConfiguration(OnPreviewConfiguration, <environment-id>, <configuration-id>, null, <filepath-to-ingest>, <metadata>))
-    Log.Debug("ExampleDiscoveryV1", "Failed to preview configuration");
+    Log.Debug("ExampleDiscovery", "Failed to preview configuration");
 }
 
 private void OnPreviewConfiguration(TestDocument resp, string data)
 {
-  Log.Debug("ExampleDiscoveryV1", "Discovery - Preview configuration Response: {0}", data);
+  Log.Debug("ExampleDiscovery", "Discovery - Preview configuration Response: {0}", data);
 }
 ```
 
@@ -190,12 +190,12 @@ The delete operation is performed unconditionally. A delete request succeeds eve
 private void DeleteConfiguration()
 {
   if (!_discovery.DeleteConfiguration(OnDeleteConfiguration, <environment-id>, <configuration-id>))
-    Log.Debug("ExampleDiscoveryV1", "Failed to delete configuration");
+    Log.Debug("ExampleDiscovery", "Failed to delete configuration");
 }
 
 private void OnDeleteConfiguration(bool success, string data)
 {
-  Log.Debug("ExampleDiscoveryV1", "Discovery - DeleteConfiguration Response: deleted:{0}", success);
+  Log.Debug("ExampleDiscovery", "Discovery - DeleteConfiguration Response: deleted:{0}", success);
 }
 ```
 
@@ -215,7 +215,7 @@ private void AddCollection()
 
 private void OnAddCollection(CollectionRef resp, string data)
 {
-  Log.Debug("ExampleDiscoveryV1", "Discovery - Add collection Response: {0}", data);
+  Log.Debug("ExampleDiscovery", "Discovery - Add collection Response: {0}", data);
 }
 ```
 
@@ -235,7 +235,7 @@ private void GetCollections()
 
 private void OnGetCollections(GetCollectionsResponse resp, string data)
 {
-  Log.Debug("ExampleDiscoveryV1", "Discovery - Get colletions Response: {0}", data);
+  Log.Debug("ExampleDiscovery", "Discovery - Get colletions Response: {0}", data);
 }
 ```
 
@@ -255,7 +255,7 @@ private void GetCollection()
 
 private void OnGetCollection(Collection resp, string data)
 {
-  Log.Debug("ExampleDiscoveryV1", "Discovery - Get colletion Response: {0}", data);
+  Log.Debug("ExampleDiscovery", "Discovery - Get colletion Response: {0}", data);
 }
 ```
 
@@ -275,7 +275,7 @@ private void GetFields()
 
 private void OnGetFields(GetFieldsResponse resp, string data)
 {
-  Log.Debug("ExampleDiscoveryV1", "Discovery - Get fields Response: {0}", data);
+  Log.Debug("ExampleDiscovery", "Discovery - Get fields Response: {0}", data);
 }
 ```
 
@@ -295,7 +295,7 @@ private void DeleteCollection()
 
 private void OnDeleteCollection(bool success, string data)
 {
-  Log.Debug("ExampleDiscoveryV1", "Discovery - Delete collection Response: deleted:{0}", success);
+  Log.Debug("ExampleDiscovery", "Discovery - Delete collection Response: deleted:{0}", success);
 }
 ```
 
@@ -316,7 +316,7 @@ private void AddDocument()
 
 private void OnAddDocument(DocumentAccepted resp, string data)
 {
-  Log.Debug("ExampleDiscoveryV1", "Discovery - Add document Response: {0}", data);
+  Log.Debug("ExampleDiscovery", "Discovery - Add document Response: {0}", data);
 }
 ```
 
@@ -337,7 +337,7 @@ private void UpdateDocument()
 
 private void OnUpdateDocument(DocumentAccepted resp, string data)
 {
-  Log.Debug("ExampleDiscoveryV1", "Discovery - Update document Response: {0}", data);
+  Log.Debug("ExampleDiscovery", "Discovery - Update document Response: {0}", data);
 }
 ```
 
@@ -358,7 +358,7 @@ private void GetDocument()
 
 private void OnGetDocument(DocumentStatus resp, string data)
 {
-  Log.Debug("ExampleDiscoveryV1", "Discovery - Get document Response: {0}", data);
+  Log.Debug("ExampleDiscovery", "Discovery - Get document Response: {0}", data);
 }
 ```
 
@@ -378,7 +378,7 @@ private void DeleteDocument()
 
 private void OnDeleteDocument(bool success, string data)
 {
-  Log.Debug("ExampleDiscoveryV1", "Discovery - Delete document Response: deleted:{0}", success);
+  Log.Debug("ExampleDiscovery", "Discovery - Delete document Response: deleted:{0}", success);
 }
 ```
 
@@ -400,7 +400,7 @@ private void Query()
 
 private void OnQuery(QueryResponse resp, string data)
 {
-  Log.Debug("ExampleDiscoveryV1", "Discovery - Query Response: {0}", data);
+  Log.Debug("ExampleDiscovery", "Discovery - Query Response: {0}", data);
 }
 ```
 

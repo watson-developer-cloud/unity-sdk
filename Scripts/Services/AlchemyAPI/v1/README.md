@@ -22,7 +22,7 @@ You can extract Authors from a URL or HTML source.
 private void GetAuthors()
 {
   if(!_alchemyApi.GetAuthors(OnGetAuthors, <url-or-htmlpage>))
-    Log.Debug("Failed to get authors");
+    Log.Debug("ExampleAlchemyLanguage", "Failed to get authors");
 }
 
 private void OnGetAuthors(AuthorsData authors, string data)

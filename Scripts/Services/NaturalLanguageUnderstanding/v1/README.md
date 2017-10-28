@@ -26,12 +26,12 @@ Analyze features of natural language content.
 private void Analyze()
 {
   if (!_naturalLanguageUnderstanding.Analyze(OnAnalyze, <parameters>))
-      Log.Debug("ExampleNaturalLanguageUnderstandingV1", "Failed to get models.");
+      Log.Debug("ExampleNaturalLanguageUnderstanding", "Failed to get models.");
 }
 
 private void OnAnalyze(AnalysisResults resp, string customData)
 {
-    Log.Debug("ExampleNaturalLanguageUnderstandingV1", "AnalysisResults: {0}", customData.ToString());
+    Log.Debug("ExampleNaturalLanguageUnderstanding", "AnalysisResults: {0}", customData.ToString());
 }
 ```
 
@@ -43,12 +43,12 @@ List available custom models.
 private void GetModels()
 {
   if (!_naturalLanguageUnderstanding.GetModels(OnGetModels))
-      Log.Debug("ExampleNaturalLanguageUnderstandingV1", "Failed to get models.");
+      Log.Debug("ExampleNaturalLanguageUnderstanding", "Failed to get models.");
 }
 
 private void OnGetModels(ListModelsResults resp, string customData)
 {
-    Log.Debug("ExampleNaturalLanguageUnderstandingV1", "ListModelsResult: {0}", customData.ToString());
+    Log.Debug("ExampleNaturalLanguageUnderstanding", "ListModelsResult: {0}", customData.ToString());
 }
 ```
 
@@ -60,12 +60,12 @@ Delete a custom model.
 private void DeleteModel()
 {
   if (!_naturalLanguageUnderstanding.DeleteModel(OnDeleteModel, <model-id>))
-      Log.Debug("ExampleNaturalLanguageUnderstandingV1", "Failed to delete model.");
+      Log.Debug("ExampleNaturalLanguageUnderstanding", "Failed to delete model.");
 }
 
 private void OnDeleteModel(bool success, string customData)
 {
-    Log.Debug("ExampleNaturalLanguageUnderstandingV1", "DeleteModelResult: {0}", success);
+    Log.Debug("ExampleNaturalLanguageUnderstanding", "DeleteModelResult: {0}", success);
 }
 ```
 
