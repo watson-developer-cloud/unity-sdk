@@ -55,7 +55,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// <summary>
         /// How many recording AudioClips will we queue before we enter a error state.
         /// </summary>
-        private const int MaxQueuedRecordings = 30;
+        private const int MaxQueuedRecordings = 1000;
         /// <summary>
         /// Size of a clip in bytes that can be sent through the Recognize function.
         /// </summary>
