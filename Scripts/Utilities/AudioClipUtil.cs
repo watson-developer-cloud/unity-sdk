@@ -100,10 +100,14 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             for (int i = 0; i < samples.Length; ++i)
                 writer.Write((short)(samples[i] * divisor));
 
+#if NETFX_CORE
+            return stream.ToArray();
+#else
             byte[] data = new byte[samples.Length * 2];
             Array.Copy(stream.GetBuffer(), data, data.Length);
 
             return data;
+#endif
         }
     }
 }

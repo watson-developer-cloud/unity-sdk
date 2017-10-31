@@ -197,11 +197,19 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
                 }
                 else if ((req as ConvertDocumentRequest).ConversionTarget == ConversionTarget.NormalizedHtml)
                 {
+#if NETFX_CORE
+                    response.htmlContent = System.Text.Encoding.GetEncoding(0).GetString(resp.Data);
+#else
                     response.htmlContent = System.Text.Encoding.Default.GetString(resp.Data);
+#endif
                 }
                 else if ((req as ConvertDocumentRequest).ConversionTarget == ConversionTarget.NormalizedText)
                 {
+#if NETFX_CORE
+                    response.textContent = System.Text.Encoding.GetEncoding(0).GetString(resp.Data);
+#else
                     response.textContent = System.Text.Encoding.Default.GetString(resp.Data);
+#endif
                 }
             }
 
