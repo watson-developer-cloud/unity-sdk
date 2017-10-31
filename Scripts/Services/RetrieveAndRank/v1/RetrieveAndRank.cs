@@ -135,7 +135,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// </summary>
         /// <param name="resp"></param>
         /// <param name="data"></param>
-        public delegate void OnGetClusters(SolrClusterListResponse resp, string data);
+        public delegate void OnGetClusters(SolrClusterListResponse resp, RESTConnector.Error error, string data);
 
         /// <summary>
         /// Retrieves the list of Solr clusters for the service instance.
@@ -203,7 +203,12 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 
             string customData = ((GetClustersRequest)req).Data;
             if (((GetClustersRequest)req).Callback != null)
-                ((GetClustersRequest)req).Callback(resp.Success ? clustersData : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((GetClustersRequest)req).Callback(clustersData, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((GetClustersRequest)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -213,7 +218,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// </summary>
         /// <param name="resp"></param>
         /// <param name="data"></param>
-        public delegate void OnCreateCluster(SolrClusterResponse resp, string data);
+        public delegate void OnCreateCluster(SolrClusterResponse resp, RESTConnector.Error error, string data);
 
         /// <summary>
         /// Provisions a Solr cluster asynchronously. When the operation is successful, the status of the cluster is set to NOT_AVAILABLE. The status must be READY before you can use the cluster. For information about cluster sizing see http://www.ibm.com/watson/developercloud/doc/retrieve-rank/solr_ops.shtml#sizing.
@@ -295,7 +300,12 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 
             string customData = ((CreateClusterRequest)req).Data;
             if (((CreateClusterRequest)req).Callback != null)
-                ((CreateClusterRequest)req).Callback(resp.Success ? clusterResponseData : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((CreateClusterRequest)req).Callback(clusterResponseData, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((CreateClusterRequest)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -305,7 +315,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// </summary>
         /// <param name="deleteSuccess"></param>
         /// <param name="data"></param>
-        public delegate void OnDeleteCluster(bool success, string data);
+        public delegate void OnDeleteCluster(bool success, RESTConnector.Error error, string data);
 
         /// <summary>
         /// Delete a Solr cluster.
@@ -364,7 +374,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         {
             string customData = ((DeleteClusterRequest)req).Data;
             if (((DeleteClusterRequest)req).Callback != null)
-                ((DeleteClusterRequest)req).Callback(resp.Success, customData);
+                ((DeleteClusterRequest)req).Callback(resp.Success, resp.Error, customData);
         }
         #endregion
 
@@ -374,7 +384,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// </summary>
         /// <param name="resp"></param>
         /// <param name="data"></param>
-        public delegate void OnGetCluster(SolrClusterResponse resp, string data);
+        public delegate void OnGetCluster(SolrClusterResponse resp, RESTConnector.Error error, string data);
 
         /// <summary>
         /// Returns status and other information about a cluster.
@@ -455,7 +465,12 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 
             string customData = ((GetClusterRequest)req).Data;
             if (((GetClusterRequest)req).Callback != null)
-                ((GetClusterRequest)req).Callback(resp.Success ? clusterData : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((GetClusterRequest)req).Callback(clusterData, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((GetClusterRequest)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -465,7 +480,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// </summary>
         /// <param name="resp"></param>
         /// <param name="data"></param>
-        public delegate void OnGetClusterConfigs(SolrConfigList resp, string data);
+        public delegate void OnGetClusterConfigs(SolrConfigList resp, RESTConnector.Error error, string data);
 
         /// <summary>
         /// Returns a configuration .zip file for a cluster.
@@ -547,7 +562,12 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 
             string customData = ((GetClusterConfigsRequest)req).Data;
             if (((GetClusterConfigsRequest)req).Callback != null)
-                ((GetClusterConfigsRequest)req).Callback(resp.Success ? configData : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((GetClusterConfigsRequest)req).Callback(configData, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((GetClusterConfigsRequest)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -557,7 +577,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// </summary>
         /// <param name="deleteSuccess"></param>
         /// <param name="data"></param>
-        public delegate void OnDeleteClusterConfig(bool success, string data);
+        public delegate void OnDeleteClusterConfig(bool success, RESTConnector.Error error, string data);
 
         /// <summary>
         /// Deletes the configuration for a cluster. Before you delete the configuration, delete any collections that point to it.
@@ -619,7 +639,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         {
             string customData = ((DeleteClusterConfigRequest)req).Data;
             if (((DeleteClusterConfigRequest)req).Callback != null)
-                ((DeleteClusterConfigRequest)req).Callback(resp.Success, customData);
+                ((DeleteClusterConfigRequest)req).Callback(resp.Success, resp.Error, customData);
         }
         #endregion
 
@@ -629,7 +649,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// </summary>
         /// <param name="getSuccess"></param>
         /// <param name="data"></param>
-        public delegate void OnGetClusterConfig(byte[] resp, string data);
+        public delegate void OnGetClusterConfig(byte[] resp, RESTConnector.Error error, string data);
 
         /// <summary>
         /// Retrieves the configuration for a cluster by its name.
@@ -694,7 +714,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 
             string customData = ((GetClusterConfigRequest)req).Data;
             if (((GetClusterConfigRequest)req).Callback != null)
-                ((GetClusterConfigRequest)req).Callback(respData, customData);
+                ((GetClusterConfigRequest)req).Callback(respData, resp.Error, customData);
         }
 
         /// <summary>
@@ -745,7 +765,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// </summary>
         /// <param name="resp"></param>
         /// <param name="data"></param>
-        public delegate void OnUploadClusterConfig(UploadResponse resp, string data);
+        public delegate void OnUploadClusterConfig(UploadResponse resp, RESTConnector.Error error, string data);
 
         /// <summary>
         /// Uploads a zip file containing the configuration files for your Solr collection. The zip file must include schema.xml, solrconfig.xml, and other files you need for your configuration. Configuration files on the zip file's path are not uploaded. The request fails if a configuration with the same name exists. To update an existing config, use the Solr configuration API (https://cwiki.apache.org/confluence/display/solr/Config+API).
@@ -846,7 +866,12 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 
             string customData = ((UploadClusterConfigRequest)req).Data;
             if (((UploadClusterConfigRequest)req).Callback != null)
-                ((UploadClusterConfigRequest)req).Callback(resp.Success ? uploadResponse : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((UploadClusterConfigRequest)req).Callback(uploadResponse, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((UploadClusterConfigRequest)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -856,7 +881,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// </summary>
         /// <param name="resp"></param>
         /// <param name="data"></param>
-        public delegate void OnCollections(CollectionsResponse resp, string data);
+        public delegate void OnCollections(CollectionsResponse resp, RESTConnector.Error error, string data);
 
         /// <summary>
         /// An example of a method that forwards to the Solr Collections API (https://cwiki.apache.org/confluence/display/solr/Collections+API). This Retrieve and Rank resource improves error handling and resiliency of the Solr Collections API.
@@ -975,7 +1000,12 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 
             string customData = ((CollectionRequest)req).Data;
             if (((CollectionRequest)req).Callback != null)
-                ((CollectionRequest)req).Callback(resp.Success ? collectionsData : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((CollectionRequest)req).Callback(collectionsData, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((CollectionRequest)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -985,7 +1015,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// </summary>
         /// <param name="resp"></param>
         /// <param name="data"></param>
-        public delegate void OnIndexDocuments(IndexResponse resp, string data);
+        public delegate void OnIndexDocuments(IndexResponse resp, RESTConnector.Error error, string data);
 
         /// <summary>
         /// Adds content to a Solr index so you can search it. An example of a method that forwards to Solr. For more information about indexing, see Indexing and Basic Data Operations in the Apache Solr Reference (https://cwiki.apache.org/confluence/display/solr/Indexing+and+Basic+Data+Operations). You must commit your documents to the index to search for them. For more information about when to commit, see UpdateHandlers in SolrConfig in the Solr Reference (https://cwiki.apache.org/confluence/display/solr/UpdateHandlers+in+SolrConfig).
@@ -1096,7 +1126,12 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 
             string customData = ((IndexDocumentsRequest)req).Data;
             if (((IndexDocumentsRequest)req).Callback != null)
-                ((IndexDocumentsRequest)req).Callback(resp.Success ? indexResponseData : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((IndexDocumentsRequest)req).Callback(indexResponseData, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((IndexDocumentsRequest)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -1106,7 +1141,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// </summary>
         /// <param name="resp"></param>
         /// <param name="data"></param>
-        public delegate void OnSearch(SearchResponse resp, string data);
+        public delegate void OnSearch(SearchResponse resp, RESTConnector.Error error, string data);
 
         /// <summary>
         /// Return reranked results for your query. The request is similar to the Search Solr standard query parser method, but includes the ranker_id and, in the default configuration, fcselect replaces the select request handler. (https://cwiki.apache.org/confluence/display/solr/The+Standard+Query+Parser).
@@ -1221,7 +1256,12 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 
             string customData = ((SearchRequest)req).Data;
             if (((SearchRequest)req).Callback != null)
-                ((SearchRequest)req).Callback(resp.Success ? searchData : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((SearchRequest)req).Callback(searchData, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((SearchRequest)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -1231,7 +1271,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// </summary>
         /// <param name="resp"></param>
         /// <param name="data"></param>
-        public delegate void OnGetRankers(ListRankersPayload resp, string data);
+        public delegate void OnGetRankers(ListRankersPayload resp, RESTConnector.Error error, string data);
 
         /// <summary>
         /// Retrieves the list of rankers for the service instance.
@@ -1299,7 +1339,12 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 
             string customData = ((GetRankersRequest)req).Data;
             if (((GetRankersRequest)req).Callback != null)
-                ((GetRankersRequest)req).Callback(resp.Success ? rankersData : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((GetRankersRequest)req).Callback(rankersData, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((GetRankersRequest)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -1309,7 +1354,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// </summary>
         /// <param name="resp"></param>
         /// <param name="data"></param>
-        public delegate void OnCreateRanker(RankerStatusPayload resp, string data);
+        public delegate void OnCreateRanker(RankerStatusPayload resp, RESTConnector.Error error, string data);
 
         /// <summary>
         /// Sends data to create and train a ranker and returns information about the new ranker. When the operation is successful, the status of the ranker is set to Training. The status must be Available before you can use the ranker.
@@ -1415,7 +1460,12 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 
             string customData = ((CreateRankerRequest)req).Data;
             if (((CreateRankerRequest)req).Callback != null)
-                ((CreateRankerRequest)req).Callback(resp.Success ? rankerResponseData : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((CreateRankerRequest)req).Callback(rankerResponseData, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((CreateRankerRequest)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -1425,7 +1475,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// </summary>
         /// <param name="resp"></param>
         /// <param name="data"></param>
-        public delegate void OnRank(RankerOutputPayload resp, string data);
+        public delegate void OnRank(RankerOutputPayload resp, RESTConnector.Error error, string data);
 
         /// <summary>
         /// Returns the top answer and a list of ranked answers with their ranked scores and confidence values. Use the Get information about a ranker method to retrieve the status (http://www.ibm.com/watson/developercloud/retrieve-and-rank/api/v1/#get_status). Use this method to return answers when you train the ranker with custom features. However, in most cases, you can use the Search and rank method (http://www.ibm.com/watson/developercloud/retrieve-and-rank/api/v1/#query_ranker).
@@ -1535,7 +1585,12 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 
             string customData = ((RankRequest)req).Data;
             if (((RankRequest)req).Callback != null)
-                ((RankRequest)req).Callback(resp.Success ? rankData : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((RankRequest)req).Callback(rankData, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((RankRequest)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -1545,7 +1600,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// </summary>
         /// <param name="deleteSuccess"></param>
         /// <param name="data"></param>
-        public delegate void OnDeleteRanker(bool success, string data);
+        public delegate void OnDeleteRanker(bool success, RESTConnector.Error error, string data);
 
         /// <summary>
         /// Deletes a ranker.
@@ -1604,7 +1659,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         {
             string customData = ((DeleteRankerRequest)req).Data;
             if (((DeleteRankerRequest)req).Callback != null)
-                ((DeleteRankerRequest)req).Callback(resp.Success, customData);
+                ((DeleteRankerRequest)req).Callback(resp.Success, resp.Error, customData);
         }
         #endregion
 
@@ -1614,7 +1669,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// </summary>
         /// <param name="resp"></param>
         /// <param name="data"></param>
-        public delegate void OnGetRanker(RankerStatusPayload resp, string data);
+        public delegate void OnGetRanker(RankerStatusPayload resp, RESTConnector.Error error, string data);
 
         /// <summary>
         /// Returns status and other information about a ranker.
@@ -1695,7 +1750,12 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 
             string customData = ((GetRankerRequest)req).Data;
             if (((GetRankerRequest)req).Callback != null)
-                ((GetRankerRequest)req).Callback(resp.Success ? rankerData : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((GetRankerRequest)req).Callback(rankerData, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((GetRankerRequest)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 

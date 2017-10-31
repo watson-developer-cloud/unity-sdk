@@ -24,6 +24,7 @@ using System.Collections;
 using IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
+using IBM.Watson.DeveloperCloud.Connection;
 using System.IO;
 using System;
 using FullSerializer;
@@ -164,7 +165,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             yield break;
         }
-        private void OnGetClassifiers(Classifiers classifiers, string data)
+        private void OnGetClassifiers(Classifiers classifiers, RESTConnector.Error error, string data)
         {
             Log.Debug("ExampleNaturalLanguageClassifier", "Natural Language Classifier - GetClassifiers  Response: {0}", data);
 
@@ -175,7 +176,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _getClassifiersTested = true;
         }
 
-        private void OnClassify(ClassifyResult result, string data)
+        private void OnClassify(ClassifyResult result, RESTConnector.Error error, string data)
         {
             Log.Debug("ExampleNaturalLanguageClassifier", "Natural Language Classifier - Classify Response: {0}", data);
             Test(result != null);
@@ -183,7 +184,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         }
 
 #if TRAIN_CLASSIFIER
-        private void OnTrainClassifier(Classifier classifier, string data)
+        private void OnTrainClassifier(Classifier classifier, RESTConnector.Error error, string data)
         {
             Log.Debug("ExampleNaturalLanguageClassifier", "Natural Language Classifier - Train Classifier: {0}", data);
 #if DELETE_TRAINED_CLASSIFIER
@@ -194,7 +195,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         }
 #endif
 
-        private void OnGetClassifier(Classifier classifier, string data)
+        private void OnGetClassifier(Classifier classifier, RESTConnector.Error error, string data)
         {
             Log.Debug("ExampleNaturalLanguageClassifier", "Natural Language Classifier - Get Classifier {0}: {1}", classifier.classifier_id, data);
 
@@ -211,7 +212,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         }
 
 #if DELETE_TRAINED_CLASSIFIER
-        private void OnDeleteTrainedClassifier(bool success, string data)
+        private void OnDeleteTrainedClassifier(bool success, RESTConnector.Error error, string data)
         {
             Log.Debug("ExampleNaturalLanguageClassifier", "Natural Language Classifier - Delete Trained Classifier {0} | success: {1} {2}", _classifierToDelete, success, data);
             Test(success);

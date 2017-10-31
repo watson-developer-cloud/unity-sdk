@@ -38,109 +38,109 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// </summary>
         /// <param name="classifiers">A brief description of classifiers.</param>
         /// <param name="data">Optional data</param>
-        public delegate void OnGetClassifiers(GetClassifiersTopLevelBrief classifiers, string data);
+        public delegate void OnGetClassifiers(GetClassifiersTopLevelBrief classifiers, RESTConnector.Error error, string data);
         /// <summary>
         /// Callback used by the GetClassifier() method.
         /// </summary>
         /// <param name="classifier">The classifier found by ID.</param>
         /// <param name="data">Optional data</param>
-        public delegate void OnGetClassifier(GetClassifiersPerClassifierVerbose classifier, string data);
+        public delegate void OnGetClassifier(GetClassifiersPerClassifierVerbose classifier, RESTConnector.Error error, string data);
         /// <summary>
         /// This callback is used by the DeleteClassifier() method.
         /// </summary>
         /// <param name="success">Success or failure of the delete call.</param>
         /// <param name="data">Optional data</param>
-        public delegate void OnDeleteClassifier(bool success, string data);
+        public delegate void OnDeleteClassifier(bool success, RESTConnector.Error error, string data);
         /// <summary>
         /// Callback used by the TrainClassifier() method.
         /// </summary>
         /// <param name="classifier">The classifier created.</param>
         /// <param name="data">Optional data</param>
-        public delegate void OnTrainClassifier(GetClassifiersPerClassifierVerbose classifier, string data);
+        public delegate void OnTrainClassifier(GetClassifiersPerClassifierVerbose classifier, RESTConnector.Error error, string data);
         /// <summary>
         /// This callback is used by the Classify() method.
         /// </summary>
         /// <param name="classify">Returned classification.</param>
         /// <param name="data">Optional data</param>
-        public delegate void OnClassify(ClassifyTopLevelMultiple classify, string data);
+        public delegate void OnClassify(ClassifyTopLevelMultiple classify, RESTConnector.Error error, string data);
         /// <summary>
         /// This callback is used by the DetectFaces() method.
         /// </summary>
         /// <param name="faces">Faces Detected.</param>
         /// <param name="data">Optional data</param>
-        public delegate void OnDetectFaces(FacesTopLevelMultiple faces, string data);
+        public delegate void OnDetectFaces(FacesTopLevelMultiple faces, RESTConnector.Error error, string data);
         /// <summary>
         /// This callback is used by the RecognizeText() method.
         /// </summary>
         /// <param name="text">Text Recognized.</param>
         /// <param name="data">Optional data</param>
-        public delegate void OnRecognizeText(TextRecogTopLevelMultiple text, string data);
+        public delegate void OnRecognizeText(TextRecogTopLevelMultiple text, RESTConnector.Error error, string data);
         /// <summary>
         /// This callback is used by the GetCollections() method.
         /// </summary>
         /// <param name="collections">Collections.</param>
         /// <param name="data">Optional data</param>
-        public delegate void OnGetCollections(GetCollections collections, string data);
+        public delegate void OnGetCollections(GetCollections collections, RESTConnector.Error error, string data);
         /// <summary>
         /// This callback is used by the CreateCollection() method.
         /// </summary>
         /// <param name="collection">The created collection.</param>
         /// <param name="data">Optional data</param>
-        public delegate void OnCreateCollection(CreateCollection collection, string data);
+        public delegate void OnCreateCollection(CreateCollection collection, RESTConnector.Error error, string data);
         /// <summary>
         /// This callback is used by the DeleteCollection() method.
         /// </summary>
         /// <param name="success">Success of the delete call.</param>
         /// <param name="data">Optional data</param>
-        public delegate void OnDeleteCollection(bool success, string data);
+        public delegate void OnDeleteCollection(bool success, RESTConnector.Error error, string data);
         /// <summary>
         /// This callback is used y the GetCollection() method.
         /// </summary>
         /// <param name="collection">The collection.</param>
         /// <param name="data">Optional data</param>
-        public delegate void OnGetCollection(CreateCollection collection, string data);
+        public delegate void OnGetCollection(CreateCollection collection, RESTConnector.Error error, string data);
         /// <summary>
         /// This callback is used by the GetCollectionImages() method.
         /// </summary>
         /// <param name="images">Collection images.</param>
         /// <param name="data">Optional data</param>
-        public delegate void OnGetCollectionImages(GetCollectionImages images, string data);
+        public delegate void OnGetCollectionImages(GetCollectionImages images, RESTConnector.Error error, string data);
         /// <summary>
         /// This callback is used by the AddCollectionImage() method.
         /// </summary>
         /// <param name="config">The collection config.</param>
         /// <param name="data">Optional data</param>
-        public delegate void OnAddCollectionImage(CollectionsConfig config, string data);
+        public delegate void OnAddCollectionImage(CollectionsConfig config, RESTConnector.Error error, string data);
         /// <summary>
         /// This callback is used by the DeleteCollectionImage() method.
         /// </summary>
         /// <param name="success">Success or failure of deleting collection image.</param>
         /// <param name="data">Optional data</param>
-        public delegate void OnDeleteCollectionImage(bool success, string data);
+        public delegate void OnDeleteCollectionImage(bool success, RESTConnector.Error error, string data);
         /// <summary>
         /// This callback is used by the GetImageDetails() method.
         /// </summary>
         /// <param name="image">The image details.</param>
         /// <param name="data">Optional data</param>
-        public delegate void OnGetImageDetails(GetCollectionsBrief image, string data);
+        public delegate void OnGetImageDetails(GetCollectionsBrief image, RESTConnector.Error error, string data);
         /// <summary>
         /// This callback is used by the DeleteImageMetadata() method.
         /// </summary>
         /// <param name="success">Success of the delete call.</param>
         /// <param name="data">Optional data</param>
-        public delegate void OnDeleteImageMetadata(bool success, string data);
+        public delegate void OnDeleteImageMetadata(bool success, RESTConnector.Error error, string data);
         /// <summary>
         /// This callback is used by the GetImageMetadata() method.
         /// </summary>
         /// <param name="metadata"></param>
         /// <param name="data">Optional data</param>
-        public delegate void OnGetImageMetadata(object metadata, string data);
+        public delegate void OnGetImageMetadata(object metadata, RESTConnector.Error error, string data);
         /// <summary>
         /// This callback is used by the FindSimilar() method.
         /// </summary>
         /// <param name="similarImages"></param>
         /// <param name="data">Optional data</param>
-        public delegate void OnFindSimilar(SimilarImagesConfig similarImages, string data);
+        public delegate void OnFindSimilar(SimilarImagesConfig similarImages, RESTConnector.Error error, string data);
 
         /// <summary>
         /// The delegate for loading a file, used by TrainClassifier().
@@ -414,7 +414,12 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
             string customData = ((ClassifyReq)req).Data;
             if (((ClassifyReq)req).Callback != null)
-                ((ClassifyReq)req).Callback(resp.Success ? classify : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((ClassifyReq)req).Callback(classify, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((ClassifyReq)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -571,7 +576,12 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
             string customData = ((DetectFacesReq)req).Data;
             if (((DetectFacesReq)req).Callback != null)
-                ((DetectFacesReq)req).Callback(resp.Success ? faces : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((DetectFacesReq)req).Callback(faces, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((DetectFacesReq)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -726,7 +736,12 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
             string customData = ((RecognizeTextReq)req).Data;
             if (((RecognizeTextReq)req).Callback != null)
-                ((RecognizeTextReq)req).Callback(resp.Success ? text : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((RecognizeTextReq)req).Callback(text, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((RecognizeTextReq)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
         
@@ -802,7 +817,12 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
             string customData = ((GetClassifiersReq)req).Data;
             if (((GetClassifiersReq)req).Callback != null)
-                ((GetClassifiersReq)req).Callback(resp.Success ? classifiers : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((GetClassifiersReq)req).Callback(classifiers, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((GetClassifiersReq)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -876,7 +896,12 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
             string customData = ((GetClassifierReq)req).Data;
             if (((GetClassifierReq)req).Callback != null)
-                ((GetClassifierReq)req).Callback(resp.Success ? classifier : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((GetClassifierReq)req).Callback(classifier, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((GetClassifierReq)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -1016,7 +1041,12 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
             string customData = ((TrainClassifierReq)req).Data;
             if (((TrainClassifierReq)req).Callback != null)
-                ((TrainClassifierReq)req).Callback(resp.Success ? classifier : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((TrainClassifierReq)req).Callback(classifier, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((TrainClassifierReq)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -1167,7 +1197,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         private void OnDeleteClassifierResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
             if (((DeleteClassifierReq)req).Callback != null)
-                ((DeleteClassifierReq)req).Callback(resp.Success, ((DeleteClassifierReq)req).Data);
+                ((DeleteClassifierReq)req).Callback(resp.Success, resp.Error, ((DeleteClassifierReq)req).Data);
         }
         #endregion
 
@@ -1241,7 +1271,12 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
             string customData = ((GetCollectionsReq)req).Data;
             if (((GetCollectionsReq)req).Callback != null)
-                ((GetCollectionsReq)req).Callback(resp.Success ? collections : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((GetCollectionsReq)req).Callback(collections, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((GetCollectionsReq)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -1326,7 +1361,12 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
             string customData = ((CreateCollectionReq)req).Data;
             if (((CreateCollectionReq)req).Callback != null)
-                ((CreateCollectionReq)req).Callback(resp.Success ? collection : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((CreateCollectionReq)req).Callback(collection, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((CreateCollectionReq)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -1385,7 +1425,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         private void OnDeleteCollectionResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
             if (((DeleteCollectionReq)req).Callback != null)
-                ((DeleteCollectionReq)req).Callback(resp.Success, ((DeleteCollectionReq)req).Data);
+                ((DeleteCollectionReq)req).Callback(resp.Success, resp.Error, ((DeleteCollectionReq)req).Data);
         }
         #endregion
 
@@ -1466,7 +1506,12 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
             string customData = ((GetCollectionReq)req).Data;
             if (((GetCollectionReq)req).Callback != null)
-                ((GetCollectionReq)req).Callback(resp.Success ? collection : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((GetCollectionReq)req).Callback(collection, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((GetCollectionReq)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -1547,7 +1592,12 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
             string customData = ((GetCollectionImagesReq)req).Data;
             if (((GetCollectionImagesReq)req).Callback != null)
-                ((GetCollectionImagesReq)req).Callback(resp.Success ? collectionImages : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((GetCollectionImagesReq)req).Callback(collectionImages, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((GetCollectionImagesReq)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -1742,7 +1792,12 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
             string customData = ((AddCollectionImageReq)req).Data;
             if (((AddCollectionImageReq)req).Callback != null)
-                ((AddCollectionImageReq)req).Callback(resp.Success ? collectionsConfig : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((AddCollectionImageReq)req).Callback(collectionsConfig, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((AddCollectionImageReq)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -1809,7 +1864,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         private void OnDeleteCollectionImageResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
             if (((DeleteCollectionImageReq)req).Callback != null)
-                ((DeleteCollectionImageReq)req).Callback(resp.Success, ((DeleteCollectionImageReq)req).Data);
+                ((DeleteCollectionImageReq)req).Callback(resp.Success, resp.Error, ((DeleteCollectionImageReq)req).Data);
         }
         #endregion
 
@@ -1897,7 +1952,12 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
             string customData = ((GetCollectionImageReq)req).Data;
             if (((GetCollectionImageReq)req).Callback != null)
-                ((GetCollectionImageReq)req).Callback(resp.Success ? image : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((GetCollectionImageReq)req).Callback(image, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((GetCollectionImageReq)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -1964,7 +2024,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         private void OnDeleteCollectionImageMetadataResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
             if (((DeleteCollectionImageMetadataReq)req).Callback != null)
-                ((DeleteCollectionImageMetadataReq)req).Callback(resp.Success, ((DeleteCollectionImageMetadataReq)req).Data);
+                ((DeleteCollectionImageMetadataReq)req).Callback(resp.Success, resp.Error, ((DeleteCollectionImageMetadataReq)req).Data);
         }
         #endregion
 
@@ -2053,7 +2113,12 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
             string customData = ((GetCollectionImageMetadataReq)req).Data;
             if (((GetCollectionImageMetadataReq)req).Callback != null)
-                ((GetCollectionImageMetadataReq)req).Callback(resp.Success ? image : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((GetCollectionImageMetadataReq)req).Callback(image, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((GetCollectionImageMetadataReq)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -2195,7 +2260,12 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
             string customData = ((FindSimilarReq)req).Data;
             if (((FindSimilarReq)req).Callback != null)
-                ((FindSimilarReq)req).Callback(resp.Success ? config : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((FindSimilarReq)req).Callback(config, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((FindSimilarReq)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 

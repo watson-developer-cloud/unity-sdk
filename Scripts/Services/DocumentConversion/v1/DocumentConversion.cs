@@ -89,7 +89,7 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
         /// </summary>
         /// <param name="resp"></param>
         /// <param name="data"></param>
-        public delegate void OnConvertDocument(ConvertedDocument resp, string data);
+        public delegate void OnConvertDocument(ConvertedDocument resp, RESTConnector.Error error, string data);
 
         /// <summary>
         /// The delegate for loading a file, used by TrainClassifier().
@@ -214,7 +214,7 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
             }
 
             if (((ConvertDocumentRequest)req).Callback != null)
-                ((ConvertDocumentRequest)req).Callback(resp.Success ? response : null, ((ConvertDocumentRequest)req).Data);
+                ((ConvertDocumentRequest)req).Callback(resp.Success ? response : null, resp.Error, ((ConvertDocumentRequest)req).Data);
         }
         #endregion
 

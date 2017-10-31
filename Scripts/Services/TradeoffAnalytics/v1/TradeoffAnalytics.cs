@@ -88,7 +88,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TradeoffAnalytics.v1
         /// The On Dilemma callback delegate.
         /// </summary>
         /// <param name="resp"></param>
-        public delegate void OnDilemma(DilemmasResponse resp, string CustomData);
+        public delegate void OnDilemma(DilemmasResponse resp, RESTConnector.Error error, string CustomData);
 
         public bool GetDilemma(OnDilemma callback, Problem problem, Boolean generateVisualization, string customData = default(string))
         {
@@ -147,7 +147,12 @@ namespace IBM.Watson.DeveloperCloud.Services.TradeoffAnalytics.v1
 
             string customData = ((GetDilemmaRequest)req).Data;
             if (((GetDilemmaRequest)req).Callback != null)
-                ((GetDilemmaRequest)req).Callback(resp.Success ? response : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((GetDilemmaRequest)req).Callback(response, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((GetDilemmaRequest)req).Callback(null, resp.Error, customData);
+			}
         }
 
         #endregion

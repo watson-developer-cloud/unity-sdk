@@ -37,34 +37,34 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
         /// Callback used by the GetClassifier() method.
         /// </summary>
         /// <param name="classifier">The classifier found by ID.</param>
-        public delegate void OnGetClassifier(Classifier classifier, string customData);
+        public delegate void OnGetClassifier(Classifier classifier, RESTConnector.Error error, string customData);
         /// <summary>
         /// Callback used by the TrainClassifier() method.
         /// </summary>
         /// <param name="classifier">The classifier created.</param>
-        public delegate void OnTrainClassifier(Classifier classifier, string customData);
+        public delegate void OnTrainClassifier(Classifier classifier, RESTConnector.Error error, string customData);
         /// <summary>
         /// Callback used by FindClassifier().
         /// </summary>
         /// <param name="classifier">The classifer found by name.</param>
-        public delegate void OnFindClassifier(Classifier classifier, string customData);
+        public delegate void OnFindClassifier(Classifier classifier, RESTConnector.Error error, string customData);
 
         /// <summary>
         /// The callback used by the GetClassifiers() method.
         /// </summary>
         /// <param name="classifiers"></param>
-        public delegate void OnGetClassifiers(Classifiers classifiers, string customData);
+        public delegate void OnGetClassifiers(Classifiers classifiers, RESTConnector.Error error, string customData);
 
         /// <summary>
         /// This callback is used by the Classify() method.
         /// </summary>
         /// <param name="classify"></param>
-        public delegate void OnClassify(ClassifyResult classify, string customData);
+        public delegate void OnClassify(ClassifyResult classify, RESTConnector.Error error, string customData);
         /// <summary>
         /// This callback is used by the DeleteClassifier() method.
         /// </summary>
         /// <param name="success"></param>
-        public delegate void OnDeleteClassifier(bool success, string customData);
+        public delegate void OnDeleteClassifier(bool success, RESTConnector.Error error, string customData);
         #endregion
 
         #region Constructor
@@ -170,7 +170,12 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
 
             string customData = ((GetClassifiersReq)req).Data;
             if (((GetClassifiersReq)req).Callback != null)
-                ((GetClassifiersReq)req).Callback(resp.Success ? classifiers : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((GetClassifiersReq)req).Callback(classifiers, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((GetClassifiersReq)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -232,7 +237,12 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
 
             string customData = ((GetClassifierReq)req).Data;
             if (((GetClassifierReq)req).Callback != null)
-                ((GetClassifierReq)req).Callback(resp.Success ? classifier : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((GetClassifierReq)req).Callback(classifier, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((GetClassifierReq)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -307,7 +317,12 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
 
             string customData = ((TrainClassifierReq)req).Data;
             if (((TrainClassifierReq)req).Callback != null)
-                ((TrainClassifierReq)req).Callback(resp.Success ? classifier : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((TrainClassifierReq)req).Callback(classifier, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((TrainClassifierReq)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -347,7 +362,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
         {
             string customData = ((DeleteClassifierReq)req).Data;
             if (((DeleteClassifierReq)req).Callback != null)
-                ((DeleteClassifierReq)req).Callback(resp.Success, customData);
+                ((DeleteClassifierReq)req).Callback(resp.Success, resp.Error, customData);
         }
         #endregion
 
@@ -421,7 +436,12 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
 
             string customData = ((ClassifyReq)req).Data;
             if (((ClassifyReq)req).Callback != null)
-                ((ClassifyReq)req).Callback(classify, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((ClassifyReq)req).Callback(classify, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((ClassifyReq)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 

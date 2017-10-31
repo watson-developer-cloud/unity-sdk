@@ -19,6 +19,7 @@ using FullSerializer;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2;
 using IBM.Watson.DeveloperCloud.Utilities;
+using IBM.Watson.DeveloperCloud.Connection;
 using System;
 using System.Collections;
 using System.IO;
@@ -140,14 +141,14 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             yield break;
         }
 
-        private void OnGetModels(TranslationModels models, string customData)
+        private void OnGetModels(TranslationModels models, RESTConnector.Error error, string customData)
         {
             Log.Debug("TestLanguageTranslator", "Language Translator - Get models response: {0}", customData);
             Test(models != null);
             _getModelsTested = true;
         }
 
-        private void OnCreateModel(TranslationModel model, string customData)
+        private void OnCreateModel(TranslationModel model, RESTConnector.Error error, string customData)
         {
             Log.Debug("TestLanguageTranslator", "Language Translator - Create model response: {0}", customData);
             _customLanguageModelId = model.model_id;
@@ -155,14 +156,14 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _createModelTested = true;
         }
 
-        private void OnGetModel(TranslationModel model, string customData)
+        private void OnGetModel(TranslationModel model, RESTConnector.Error error, string customData)
         {
             Log.Debug("TestLanguageTranslator", "Language Translator - Get model response: {0}", customData);
             Test(model != null);
             _getModelTested = true;
         }
 
-        private void OnDeleteModel(bool success, string customData)
+        private void OnDeleteModel(bool success, RESTConnector.Error error, string customData)
         {
             Log.Debug("TestLanguageTranslator", "Language Translator - Delete model response: success: {0}", success);
             Test(success);
@@ -170,21 +171,21 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _deleteModelTested = true;
         }
 
-        private void OnGetTranslation(Translations translation, string customData)
+        private void OnGetTranslation(Translations translation, RESTConnector.Error error, string customData)
         {
             Log.Debug("TestLanguageTranslator", "Langauge Translator - Translate Response: {0}", customData);
             Test(translation != null);
             _getTranslationTested = true;
         }
 
-        private void OnIdentify(string lang, string customData)
+        private void OnIdentify(string lang, RESTConnector.Error error, string customData)
         {
             Log.Debug("TestLanguageTranslator", "Language Translator - Identify response: {0}", customData);
             Test(lang != null);
             _identifyTested = true;
         }
 
-        private void OnGetLanguages(Languages languages, string customData)
+        private void OnGetLanguages(Languages languages, RESTConnector.Error error, string customData)
         {
             Log.Debug("TestLanguageTranslator", "Language Translator - Get languages response: {0}", customData);
             Test(languages != null);

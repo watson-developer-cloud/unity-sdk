@@ -20,6 +20,7 @@ using IBM.Watson.DeveloperCloud.Logging;
 using UnityEngine;
 using System.Collections;
 using IBM.Watson.DeveloperCloud.Utilities;
+using IBM.Watson.DeveloperCloud.Connection;
 using FullSerializer;
 using System.IO;
 
@@ -326,7 +327,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             }
         }
 
-        private void HandleCheckEnvironmentState(Environment resp, string data)
+        private void HandleCheckEnvironmentState(Environment resp, RESTConnector.Error error, string data)
         {
             Log.Debug("ExampleDiscoveryV1", "Environment {0} is {1}", resp.environment_id, resp.status);
 
@@ -345,21 +346,21 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         }
         #endregion
 
-        private void OnGetEnvironments(GetEnvironmentsResponse resp, string data)
+        private void OnGetEnvironments(GetEnvironmentsResponse resp, RESTConnector.Error error, string data)
         {
             Log.Debug("ExampleDiscoveryV1", "Discovery - GetEnvironments Response: {0}", data);
             Test(resp != null);
             _getEnvironmentsTested = true;
         }
 
-        private void OnGetEnvironment(Environment resp, string data)
+        private void OnGetEnvironment(Environment resp, RESTConnector.Error error, string data)
         {
             Log.Debug("ExampleDiscoveryV1", "Discovery - GetEnvironment Response: {0}", data);
             Test(resp != null);
             _getEnvironmentTested = true;
         }
 
-        private void OnAddEnvironment(Environment resp, string data)
+        private void OnAddEnvironment(Environment resp, RESTConnector.Error error, string data)
         {
             Log.Debug("ExampleDiscoveryV1", "Discovery - AddEnvironment Response: {0}", data);
             _createdEnvironmentID = resp.environment_id;
@@ -367,14 +368,14 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _addEnvironmentTested = true;
         }
 
-        private void OnGetConfigurations(GetConfigurationsResponse resp, string data)
+        private void OnGetConfigurations(GetConfigurationsResponse resp, RESTConnector.Error error, string data)
         {
             Log.Debug("ExampleDiscoveryV1", "Discovery - GetConfigurations Response: {0}", data);
             Test(resp != null);
             _getConfigurationsTested = true;
         }
 
-        private void OnGetConfiguration(Configuration resp, string data)
+        private void OnGetConfiguration(Configuration resp, RESTConnector.Error error, string data)
         {
             Log.Debug("ExampleDiscoveryV1", "Discovery - GetConfiguration Response: {0}", data);
             Test(resp != null);
@@ -382,7 +383,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         }
 
-        private void OnAddConfiguration(Configuration resp, string data)
+        private void OnAddConfiguration(Configuration resp, RESTConnector.Error error, string data)
         {
             Log.Debug("ExampleDiscoveryV1", "Discovery - AddConfiguration Response: {0}", data);
             _createdConfigurationID = resp.configuration_id;
@@ -390,28 +391,28 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _addConfigurationTested = true;
         }
 
-        private void OnPreviewConfiguration(TestDocument resp, string data)
+        private void OnPreviewConfiguration(TestDocument resp, RESTConnector.Error error, string data)
         {
             Log.Debug("ExampleDiscoveryV1", "Discovery - Preview configuration Response: {0}", data);
             Test(resp != null);
             _previewConfigurationTested = true;
         }
 
-        private void OnGetCollections(GetCollectionsResponse resp, string data)
+        private void OnGetCollections(GetCollectionsResponse resp, RESTConnector.Error error, string data)
         {
             Log.Debug("ExampleDiscoveryV1", "Discovery - Get collections Response: {0}", data);
             Test(resp != null);
             _getCollectionsTested = true;
         }
 
-        private void OnGetCollection(Collection resp, string data)
+        private void OnGetCollection(Collection resp, RESTConnector.Error error, string data)
         {
             Log.Debug("ExampleDiscoveryV1", "Discovery - Get colletion Response: {0}", data);
             Test(resp != null);
             _getCollectionTested = true;
         }
 
-        private void OnAddCollection(CollectionRef resp, string data)
+        private void OnAddCollection(CollectionRef resp, RESTConnector.Error error, string data)
         {
             Log.Debug("ExampleDiscoveryV1", "Discovery - Add collection Response: {0}", data);
             _createdCollectionID = resp.collection_id;
@@ -419,14 +420,14 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _addCollectionTested = true;
         }
 
-        private void OnGetFields(GetFieldsResponse resp, string data)
+        private void OnGetFields(GetFieldsResponse resp, RESTConnector.Error error, string data)
         {
             Log.Debug("ExampleDiscoveryV1", "Discovery - Get fields Response: {0}", data);
             Test(resp != null);
             _getFieldsTested = true;
         }
 
-        private void OnAddDocument(DocumentAccepted resp, string data)
+        private void OnAddDocument(DocumentAccepted resp, RESTConnector.Error error, string data)
         {
             Log.Debug("ExampleDiscoveryV1", "Discovery - Add document Response: {0}", data);
             _createdDocumentID = resp.document_id;
@@ -434,21 +435,21 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _addDocumentTested = true;
         }
 
-        private void OnGetDocument(DocumentStatus resp, string data)
+        private void OnGetDocument(DocumentStatus resp, RESTConnector.Error error, string data)
         {
             Log.Debug("ExampleDiscoveryV1", "Discovery - Get document Response: {0}", data);
             Test(resp != null);
             _getDocumentTested = true;
         }
 
-        private void OnUpdateDocument(DocumentAccepted resp, string data)
+        private void OnUpdateDocument(DocumentAccepted resp, RESTConnector.Error error, string data)
         {
             Log.Debug("ExampleDiscoveryV1", "Discovery - Update document Response: {0}", data);
             Test(resp != null);
             _updateDocumentTested = true;
         }
 
-        private void OnDeleteDocument(bool success, string data)
+        private void OnDeleteDocument(bool success, RESTConnector.Error error, string data)
         {
             Log.Debug("ExampleDiscoveryV1", "Discovery - Delete document Response: deleted:{0}", success);
 
@@ -459,7 +460,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _deleteDocumentTested = true;
         }
 
-        private void OnDeleteCollection(bool success, string data)
+        private void OnDeleteCollection(bool success, RESTConnector.Error error, string data)
         {
             Log.Debug("ExampleDiscoveryV1", "Discovery - Delete collection Response: deleted:{0}", success);
 
@@ -470,7 +471,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _deleteCollectionTested = true;
         }
 
-        private void OnDeleteConfiguration(bool success, string data)
+        private void OnDeleteConfiguration(bool success, RESTConnector.Error error, string data)
         {
             Log.Debug("ExampleDiscoveryV1", "Discovery - Delete configuration Response: deleted:{0}", success);
 
@@ -481,7 +482,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _deleteConfigurationTested = true;
         }
 
-        private void OnDeleteEnvironment(bool success, string data)
+        private void OnDeleteEnvironment(bool success, RESTConnector.Error error, string data)
         {
             Log.Debug("ExampleDiscoveryV1", "Discovery - Delete environment Response: deleted:{0}", success);
 
@@ -492,7 +493,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _deleteEnvironmentTested = true;
         }
 
-        private void OnQuery(QueryResponse resp, string data)
+        private void OnQuery(QueryResponse resp, RESTConnector.Error error, string data)
         {
             Log.Debug("ExampleDiscoveryV1", "Discovery - Query Response: {0}", data);
             Test(resp != null);

@@ -102,7 +102,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// <summary>
         /// On get authors delegate.
         /// </summary>
-        public delegate void OnGetAuthors(AuthorsData authorExtractionData, string data);
+        public delegate void OnGetAuthors(AuthorsData authorExtractionData, RESTConnector.Error error, string data);
 
         /// <summary>
         /// Extracts authors from a source.
@@ -205,7 +205,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
             string customData = ((GetAuthorsRequest)req).Data;
             if (((GetAuthorsRequest)req).Callback != null)
-                ((GetAuthorsRequest)req).Callback(resp.Success ? authorsData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+			{
+				if (resp.Success)
+					((GetAuthorsRequest)req).Callback(authorsData, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((GetAuthorsRequest)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -217,7 +222,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// <summary>
         /// On get ranked concepts delegate.
         /// </summary>
-        public delegate void OnGetRankedConcepts(ConceptsData conceptExtractionData, string data);
+        public delegate void OnGetRankedConcepts(ConceptsData conceptExtractionData, RESTConnector.Error error, string data);
 
         /// <summary>
         /// Extracts concepts from a source.
@@ -333,7 +338,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
             string customData = ((GetRankedConceptsRequest)req).Data;
             if (((GetRankedConceptsRequest)req).Callback != null)
-                ((GetRankedConceptsRequest)req).Callback(resp.Success ? conceptsData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+			{
+				if (resp.Success)
+					((GetRankedConceptsRequest)req).Callback(conceptsData, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((GetRankedConceptsRequest)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -345,7 +355,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// <summary>
         /// On get dates delegate.
         /// </summary>
-        public delegate void OnGetDates(DateData dateData, string data);
+        public delegate void OnGetDates(DateData dateData, RESTConnector.Error error, string data);
 
         /// <summary>
         /// Extracts dates from a source.
@@ -454,7 +464,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
             string customData = ((GetDatesRequest)req).Data;
             if (((GetDatesRequest)req).Callback != null)
-                ((GetDatesRequest)req).Callback(resp.Success ? dateData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+			{
+				if (resp.Success)
+					((GetDatesRequest)req).Callback(dateData, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((GetDatesRequest)req).Callback(null, resp.Error, customData);
+			}
         }
 
         private string GetCurrentDatetime()
@@ -473,7 +488,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// <summary>
         /// On get emotions delegate.
         /// </summary>
-        public delegate void OnGetEmotions(EmotionData emotionData, string data);
+        public delegate void OnGetEmotions(EmotionData emotionData, RESTConnector.Error error, string data);
 
         /// <summary>
         /// Gets the emotions from a source.
@@ -578,7 +593,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
             string customData = ((GetEmotionsRequest)req).Data;
             if (((GetEmotionsRequest)req).Callback != null)
-                ((GetEmotionsRequest)req).Callback(resp.Success ? emotionData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+			{
+				if (resp.Success)
+					((GetEmotionsRequest)req).Callback(emotionData, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((GetEmotionsRequest)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -590,7 +610,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// <summary>
         /// On get entities delegate.
         /// </summary>
-        public delegate void OnGetEntities(EntityData entityData, string data);
+        public delegate void OnGetEntities(EntityData entityData, RESTConnector.Error error, string data);
 
         /// <summary>
         /// Extracts the entities from a source.
@@ -721,7 +741,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
             string customData = ((GetEntitiesRequest)req).Data;
             if (((GetEntitiesRequest)req).Callback != null)
-                ((GetEntitiesRequest)req).Callback(resp.Success ? entityData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+			{
+				if (resp.Success)
+					((GetEntitiesRequest)req).Callback(entityData, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((GetEntitiesRequest)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -732,7 +757,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// <summary>
         /// On detect feeds delegate.
         /// </summary>
-        public delegate void OnDetectFeeds(FeedData feedData, string data);
+        public delegate void OnDetectFeeds(FeedData feedData, RESTConnector.Error error, string data);
 
         /// <summary>
         /// Detects RSS feeds in a source.
@@ -832,7 +857,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
             string customData = ((DetectFeedsRequest)req).Data;
             if (((DetectFeedsRequest)req).Callback != null)
-                ((DetectFeedsRequest)req).Callback(resp.Success ? feedData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+			{
+				if (resp.Success)
+					((DetectFeedsRequest)req).Callback(feedData, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((DetectFeedsRequest)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -844,7 +874,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// <summary>
         /// On get keywords delegate.
         /// </summary>
-        public delegate void OnGetKeywords(KeywordData keywordData, string data);
+        public delegate void OnGetKeywords(KeywordData keywordData, RESTConnector.Error error, string data);
 
         /// <summary>
         /// Extracts the keywords from a source.
@@ -961,7 +991,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
             string customData = ((GetKeywordsRequest)req).Data;
             if (((GetKeywordsRequest)req).Callback != null)
-                ((GetKeywordsRequest)req).Callback(resp.Success ? keywordData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+			{
+				if (resp.Success)
+					((GetKeywordsRequest)req).Callback(keywordData, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((GetKeywordsRequest)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -973,7 +1008,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// <summary>
         /// On get languages.
         /// </summary>
-        public delegate void OnGetLanguages(LanguageData languageData, string data);
+        public delegate void OnGetLanguages(LanguageData languageData, RESTConnector.Error error, string data);
 
         /// <summary>
         /// Extracts the language a source is written.
@@ -1078,7 +1113,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
             string customData = ((GetLanguagesRequest)req).Data;
             if (((GetLanguagesRequest)req).Callback != null)
-                ((GetLanguagesRequest)req).Callback(resp.Success ? languageData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+			{
+				if (resp.Success)
+					((GetLanguagesRequest)req).Callback(languageData, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((GetLanguagesRequest)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -1089,7 +1129,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// <summary>
         /// On get microformats.
         /// </summary>
-        public delegate void OnGetMicroformats(MicroformatData microformatData, string data);
+        public delegate void OnGetMicroformats(MicroformatData microformatData, RESTConnector.Error error, string data);
 
         /// <summary>
         /// Extracts microformats from a URL source.
@@ -1189,7 +1229,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
             string customData = ((GetMicroformatsRequest)req).Data;
             if (((GetMicroformatsRequest)req).Callback != null)
-                ((GetMicroformatsRequest)req).Callback(resp.Success ? microformatData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+			{
+				if (resp.Success)
+					((GetMicroformatsRequest)req).Callback(microformatData, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((GetMicroformatsRequest)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -1200,7 +1245,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// <summary>
         /// On get publication date delegate.
         /// </summary>
-        public delegate void OnGetPublicationDate(PubDateData pubDateData, string data);
+        public delegate void OnGetPublicationDate(PubDateData pubDateData, RESTConnector.Error error, string data);
 
         /// <summary>
         /// Extracts the publication date from a source.
@@ -1303,7 +1348,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
             string customData = ((GetPublicationDateRequest)req).Data;
             if (((GetPublicationDateRequest)req).Callback != null)
-                ((GetPublicationDateRequest)req).Callback(resp.Success ? pubDateData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+			{
+				if (resp.Success)
+					((GetPublicationDateRequest)req).Callback(pubDateData, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((GetPublicationDateRequest)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -1315,7 +1365,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// <summary>
         /// On get relations delegate.
         /// </summary>
-        public delegate void OnGetRelations(RelationsData relationData, string data);
+        public delegate void OnGetRelations(RelationsData relationData, RESTConnector.Error error, string data);
 
         /// <summary>
         /// Extracts the relations from a source.
@@ -1453,7 +1503,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
             string customData = ((GetRelationsRequest)req).Data;
             if (((GetRelationsRequest)req).Callback != null)
-                ((GetRelationsRequest)req).Callback(resp.Success ? relationsData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+			{
+				if (resp.Success)
+					((GetRelationsRequest)req).Callback(relationsData, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((GetRelationsRequest)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -1465,7 +1520,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// <summary>
         /// On get text sentiment delegate.
         /// </summary>
-        public delegate void OnGetTextSentiment(SentimentData sentimentData, string data);
+        public delegate void OnGetTextSentiment(SentimentData sentimentData, RESTConnector.Error error, string data);
 
         /// <summary>
         /// Extracts the sentiment from a source.
@@ -1570,7 +1625,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
             string customData = ((GetTextSentimentRequest)req).Data;
             if (((GetTextSentimentRequest)req).Callback != null)
-                ((GetTextSentimentRequest)req).Callback(resp.Success ? sentimentData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+			{
+				if (resp.Success)
+					((GetTextSentimentRequest)req).Callback(sentimentData, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((GetTextSentimentRequest)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -1582,7 +1642,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// <summary>
         /// On get targeted sentiment delegate.
         /// </summary>
-        public delegate void OnGetTargetedSentiment(TargetedSentimentData targetedSentimentData, string data);
+        public delegate void OnGetTargetedSentiment(TargetedSentimentData targetedSentimentData, RESTConnector.Error error, string data);
 
         /// <summary>
         /// Extracts targeted sentiment from a source.
@@ -1691,7 +1751,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
             string customData = ((GetTargetedSentimentRequest)req).Data;
             if (((GetTargetedSentimentRequest)req).Callback != null)
-                ((GetTargetedSentimentRequest)req).Callback(resp.Success ? sentimentData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+			{
+				if (resp.Success)
+					((GetTargetedSentimentRequest)req).Callback(sentimentData, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((GetTargetedSentimentRequest)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -1703,7 +1768,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// <summary>
         /// On get ranked taxonomy delegate.
         /// </summary>
-        public delegate void OnGetRankedTaxonomy(TaxonomyData taxonomyData, string data);
+        public delegate void OnGetRankedTaxonomy(TaxonomyData taxonomyData, RESTConnector.Error error, string data);
 
         /// <summary>
         /// Extracts the ranked taxonomy from a source.
@@ -1808,7 +1873,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
             string customData = ((GetRankedTaxomomyRequest)req).Data;
             if (((GetRankedTaxomomyRequest)req).Callback != null)
-                ((GetRankedTaxomomyRequest)req).Callback(resp.Success ? taxonomyData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+			{
+				if (resp.Success)
+					((GetRankedTaxomomyRequest)req).Callback(taxonomyData, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((GetRankedTaxomomyRequest)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -1819,7 +1889,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// <summary>
         /// On get text delegate.
         /// </summary>
-        public delegate void OnGetText(TextData textData, string data);
+        public delegate void OnGetText(TextData textData, RESTConnector.Error error, string data);
 
         /// <summary>
         /// Extracts text from a source.
@@ -1926,7 +1996,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
             string customData = ((GetTextRequest)req).Data;
             if (((GetTextRequest)req).Callback != null)
-                ((GetTextRequest)req).Callback(resp.Success ? textData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+			{
+				if (resp.Success)
+					((GetTextRequest)req).Callback(textData, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((GetTextRequest)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -2001,7 +2076,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// <summary>
         /// On get title delegate.
         /// </summary>
-        public delegate void OnGetTitle(Title titleData, string data);
+        public delegate void OnGetTitle(Title titleData, RESTConnector.Error error, string data);
 
         /// <summary>
         /// Extracts the title from a source.
@@ -2106,7 +2181,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
             string customData = ((GetTitleRequest)req).Data;
             if (((GetTitleRequest)req).Callback != null)
-                ((GetTitleRequest)req).Callback(resp.Success ? titleData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+			{
+				if (resp.Success)
+					((GetTitleRequest)req).Callback(titleData, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((GetTitleRequest)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -2118,7 +2198,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// <summary>
         /// On get combined data delegate.
         /// </summary>
-        public delegate void OnGetCombinedData(CombinedCallData combinedData, string data);
+        public delegate void OnGetCombinedData(CombinedCallData combinedData, RESTConnector.Error error, string data);
 
         /// <summary>
         /// Access multiple services in one call.
@@ -2299,7 +2379,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
             string customData = ((CombinedCallRequest)req).Data;
             if (((CombinedCallRequest)req).Callback != null)
-                ((CombinedCallRequest)req).Callback(resp.Success ? combinedData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+			{
+				if (resp.Success)
+					((CombinedCallRequest)req).Callback(combinedData, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((CombinedCallRequest)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -2309,7 +2394,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// <summary>
         /// On get news delegate.
         /// </summary>
-        public delegate void OnGetNews(NewsResponse newsData, string data);
+        public delegate void OnGetNews(NewsResponse newsData, RESTConnector.Error error, string data);
 
         /// <summary>
         /// Gets news.
@@ -2405,7 +2490,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
             string customData = ((GetNewsRequest)req).Data;
             if (((GetNewsRequest)req).Callback != null)
-                ((GetNewsRequest)req).Callback(resp.Success ? newsData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+			{
+				if (resp.Success)
+					((GetNewsRequest)req).Callback(newsData, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((GetNewsRequest)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 

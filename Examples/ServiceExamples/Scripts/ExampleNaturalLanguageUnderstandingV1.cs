@@ -19,6 +19,7 @@ using FullSerializer;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
+using IBM.Watson.DeveloperCloud.Connection;
 using System.Collections;
 using UnityEngine;
 
@@ -85,7 +86,7 @@ public class ExampleNaturalLanguageUnderstandingV1 : MonoBehaviour
         Log.Debug("ExampleNaturalLanguageUnderstandingV1", "Natural language understanding examples complete.");
     }
 
-    private void OnGetModels(ListModelsResults resp, string customData)
+    private void OnGetModels(ListModelsResults resp, RESTConnector.Error error, string customData)
     {
         fsData data = null;
         _serializer.TrySerialize(resp, out data).AssertSuccess();
@@ -94,7 +95,7 @@ public class ExampleNaturalLanguageUnderstandingV1 : MonoBehaviour
         _getModelsTested = true;
     }
 
-    private void OnAnalyze(AnalysisResults resp, string customData)
+    private void OnAnalyze(AnalysisResults resp, RESTConnector.Error error, string customData)
     {
         fsData data = null;
         _serializer.TrySerialize(resp, out data).AssertSuccess();

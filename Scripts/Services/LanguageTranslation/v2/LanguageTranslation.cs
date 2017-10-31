@@ -38,27 +38,27 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
         /// Callback for GetModels() method.
         /// </summary>
         /// <param name="models"></param>
-        public delegate void GetModelsCallback(TranslationModels models, string customData = null);
+        public delegate void GetModelsCallback(TranslationModels models, RESTConnector.Error error, string customData = null);
         /// <summary>
         /// Callback for GetModel() method.
         /// </summary>
         /// <param name="model"></param>
-        public delegate void GetModelCallback(TranslationModel model, string customData = null);
+        public delegate void GetModelCallback(TranslationModel model, RESTConnector.Error error, string customData = null);
         /// <summary>
         /// Callback for GetLanguages() method.
         /// </summary>
         /// <param name="languages"></param>
-        public delegate void GetLanguagesCallback(Languages languages, string customData = null);
+        public delegate void GetLanguagesCallback(Languages languages, RESTConnector.Error error, string customData = null);
         /// <summary>
         /// Callback for Identify() method.
         /// </summary>
         /// <param name="languages"></param>
-        public delegate void IdentifyCallback(string languages, string customData = null);
+        public delegate void IdentifyCallback(string languages, RESTConnector.Error error, string customData = null);
         /// <summary>
         /// Callback for Translate() method.
         /// </summary>
         /// <param name="translation"></param>
-        public delegate void TranslateCallback(Translations translation, string customData = null);
+        public delegate void TranslateCallback(Translations translation, RESTConnector.Error error, string customData = null);
         #endregion
 
         #region Public Properties
@@ -205,7 +205,12 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
 
             string customData = ((TranslateReq)req).Data;
             if (((TranslateReq)req).Callback != null)
-                ((TranslateReq)req).Callback(resp.Success ? translations : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((TranslateReq)req).Callback(translations, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((TranslateReq)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -295,7 +300,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
             }
 
             if (((GetModelsReq)req).Callback != null)
-                ((GetModelsReq)req).Callback(resp.Success ? models : null);
+                ((GetModelsReq)req).Callback(resp.Success ? models : null, resp.Error);
         }
 
         /// <summary>
@@ -353,7 +358,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
             }
 
             if (((GetModelReq)req).Callback != null)
-                ((GetModelReq)req).Callback(resp.Success ? model : null);
+                ((GetModelReq)req).Callback(resp.Success ? model : null, resp.Error);
         }
         #endregion
 
@@ -409,7 +414,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
             }
 
             if (((GetLanguagesReq)req).Callback != null)
-                ((GetLanguagesReq)req).Callback(resp.Success ? langs : null);
+                ((GetLanguagesReq)req).Callback(resp.Success ? langs : null, resp.Error);
         }
         #endregion
 
@@ -454,13 +459,13 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
             if (resp.Success)
             {
                 if (req.Callback != null)
-                    req.Callback(Encoding.UTF8.GetString(resp.Data));
+                    req.Callback(Encoding.UTF8.GetString(resp.Data), null);
             }
             else
             {
                 Log.Error("Translate", "Identify() failed: {0}", resp.Error);
                 if (req.Callback != null)
-                    req.Callback(null);
+                    req.Callback(null, resp.Error);
             }
         }
         #endregion

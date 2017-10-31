@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
+using IBM.Watson.DeveloperCloud.Connection;
 using System.Collections;
 
 public class ExampleAlchemyDataNews : MonoBehaviour
@@ -58,7 +59,7 @@ public class ExampleAlchemyDataNews : MonoBehaviour
         Log.Debug("ExampleAlchemyDataNews", "Alchemy data news examples complete!");
     }
 
-    private void OnGetNews(NewsResponse newsData, string data)
+    private void OnGetNews(NewsResponse newsData, RESTConnector.Error error, string data)
     {
         Log.Debug("ExampleAlchemyDataNews", "Alchemy data news - Get news Response: {0}", data);
         _getNewsTested = true;

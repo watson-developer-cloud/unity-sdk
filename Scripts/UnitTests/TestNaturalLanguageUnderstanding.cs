@@ -19,6 +19,7 @@ using System.Collections;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
+using IBM.Watson.DeveloperCloud.Connection;
 using FullSerializer;
 using System;
 using System.IO;
@@ -126,7 +127,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             yield break;
         }
 
-        private void OnGetModels(ListModelsResults resp, string customData)
+        private void OnGetModels(ListModelsResults resp, RESTConnector.Error error, string customData)
         {
             fsData data = null;
             _serializer.TrySerialize(resp, out data).AssertSuccess();
@@ -136,7 +137,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _getModelsTested = true;
         }
 
-        private void OnAnalyze(AnalysisResults resp, string customData)
+        private void OnAnalyze(AnalysisResults resp, RESTConnector.Error error, string customData)
         {
             fsData data = null;
             _serializer.TrySerialize(resp, out data).AssertSuccess();

@@ -19,6 +19,7 @@ using UnityEngine;
 using IBM.Watson.DeveloperCloud.Services.Conversation.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
 using IBM.Watson.DeveloperCloud.Logging;
+using IBM.Watson.DeveloperCloud.Connection;
 using System.Collections;
 using FullSerializer;
 using System.Collections.Generic;
@@ -107,7 +108,7 @@ public class ExampleConversation : MonoBehaviour
             Log.Debug("ExampleConversation", "Failed to message!");
     }
 
-    private void OnMessage(object resp, string data)
+    private void OnMessage(object resp, RESTConnector.Error error, string data)
     {
         Log.Debug("ExampleConversation", "Conversation: Message Response: {0}", data);
 

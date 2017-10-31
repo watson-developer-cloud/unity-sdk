@@ -21,6 +21,7 @@ using System.Collections;
 using IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
+using IBM.Watson.DeveloperCloud.Connection;
 using FullSerializer;
 using System;
 using System.IO;
@@ -112,14 +113,14 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             yield break;
         }
 
-        private void OnGetProfileText(Profile profile, string data)
+        private void OnGetProfileText(Profile profile, RESTConnector.Error error, string data)
         {
             Log.Debug("ExamplePersonaltyInsights", "Personality Insights - GetProfileText Response: {0}", data);
             Test(profile != null);
             _getProfileTextTested = true;
         }
 
-        private void OnGetProfileJson(Profile profile, string data)
+        private void OnGetProfileJson(Profile profile, RESTConnector.Error error, string data)
         {
             Log.Debug("ExamplePersonaltyInsights", "Personality Insights - GetProfileJson Response: {0}", data);
             Test(profile != null);

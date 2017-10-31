@@ -104,7 +104,7 @@ namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
         /// </summary>
         /// <param name="resp"></param>
         /// <param name="data"></param>
-        public delegate void OnGetToneAnalyzed(ToneAnalyzerResponse resp, string data);
+        public delegate void OnGetToneAnalyzed(ToneAnalyzerResponse resp, RESTConnector.Error error, string data);
 
         /// <summary>
         /// Gets the tone analyze.
@@ -169,7 +169,12 @@ namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
 
             string customData = ((GetToneAnalyzerRequest)req).Data;
             if (((GetToneAnalyzerRequest)req).Callback != null)
-                ((GetToneAnalyzerRequest)req).Callback(resp.Success ? response : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+			{
+				if (resp.Success)
+					((GetToneAnalyzerRequest)req).Callback(response, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((GetToneAnalyzerRequest)req).Callback(null, resp.Error, customData);
+			}
         }
 
 

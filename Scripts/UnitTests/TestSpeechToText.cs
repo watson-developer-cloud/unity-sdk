@@ -20,6 +20,7 @@ using FullSerializer;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Services.SpeechToText.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
+using IBM.Watson.DeveloperCloud.Connection;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -418,7 +419,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             yield break;
         }
 
-        private void HandleGetModels(ModelSet result, string customData)
+        private void HandleGetModels(ModelSet result, RESTConnector.Error error, string customData)
         {
 
             Log.Debug("TestSpeechToText", "Speech to Text - Get models response: {0}", customData);
@@ -427,14 +428,14 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _getModelsTested = true;
         }
 
-        private void HandleGetModel(Model model, string customData)
+        private void HandleGetModel(Model model, RESTConnector.Error error, string customData)
         {
             Log.Debug("TestSpeechToText", "Speech to Text - Get model response: {0}", customData);
             Test(model != null);
             _getModelTested = true;
         }
 
-        private void HandleOnRecognize(SpeechRecognitionEvent result)
+        private void HandleOnRecognize(SpeechRecognitionEvent result, RESTConnector.Error error)
         {
             if (result != null && result.results.Length > 0)
             {
@@ -454,14 +455,14 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             Test(result != null);
         }
 
-        private void HandleGetCustomizations(Customizations customizations, string customData)
+        private void HandleGetCustomizations(Customizations customizations, RESTConnector.Error error, string customData)
         {
             Log.Debug("TestSpeechToText", "Speech to Text - Get customizations response: {0}", customData);
             Test(customizations != null);
             _getCustomizationsTested = true;
         }
 
-        private void HandleCreateCustomization(CustomizationID customizationID, string customData)
+        private void HandleCreateCustomization(CustomizationID customizationID, RESTConnector.Error error, string customData)
         {
             Log.Debug("TestSpeechToText", "Speech to Text - Create customization response: {0}", customData);
             _createdCustomizationID = customizationID.customization_id;
@@ -469,14 +470,14 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _createCustomizationsTested = true;
         }
 
-        private void HandleGetCustomization(Customization customization, string customData)
+        private void HandleGetCustomization(Customization customization, RESTConnector.Error error, string customData)
         {
             Log.Debug("TestSpeechToText", "Speech to Text - Get customization response: {0}", customData);
             Test(customization != null);
             _getCustomizationTested = true;
         }
 
-        private void HandleDeleteCustomization(bool success, string customData)
+        private void HandleDeleteCustomization(bool success, RESTConnector.Error error, string customData)
         {
             if (success)
             {
@@ -490,7 +491,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         }
 
 
-        private void HandleTrainCustomization(bool success, string customData)
+        private void HandleTrainCustomization(bool success, RESTConnector.Error error, string customData)
         {
             if (success)
             {
@@ -505,7 +506,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _trainCustomizationTested = true;
         }
 
-        //private void HandleUpgradeCustomization(bool success, string customData)
+        //private void HandleUpgradeCustomization(bool success, RESTConnector.Error error, string customData)
         //{
         //    if (success)
         //    {
@@ -520,7 +521,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         //    _upgradeCustomizationTested = true;
         //}
 
-        private void HandleResetCustomization(bool success, string customData)
+        private void HandleResetCustomization(bool success, RESTConnector.Error error, string customData)
         {
             if (success)
             {
@@ -535,14 +536,14 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _resetCustomizationTested = true;
         }
 
-        private void HandleGetCustomCorpora(Corpora corpora, string customData)
+        private void HandleGetCustomCorpora(Corpora corpora, RESTConnector.Error error, string customData)
         {
             Log.Debug("TestSpeechToText", "Speech to Text - Get custom corpora response: {0}", customData);
             Test(corpora != null);
             _getCustomCorporaTested = true;
         }
 
-        private void HandleDeleteCustomCorpus(bool success, string customData)
+        private void HandleDeleteCustomCorpus(bool success, RESTConnector.Error error, string customData)
         {
             if (success)
             {
@@ -557,7 +558,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _deleteCustomCorpusTested = true;
         }
 
-        private void HandleAddCustomCorpus(bool success, string customData)
+        private void HandleAddCustomCorpus(bool success, RESTConnector.Error error, string customData)
         {
             if (success)
             {
@@ -572,21 +573,21 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _addCustomCorpusTested = true;
         }
 
-        private void HandleGetCustomCorpus(Corpus corpus, string customData)
+        private void HandleGetCustomCorpus(Corpus corpus, RESTConnector.Error error, string customData)
         {
             Log.Debug("TestSpeechToText", "Speech to Text - Get custom corpus response: {0}", customData);
             Test(corpus != null);
             _getCustomCorpusTested = true;
         }
 
-        private void HandleGetCustomWords(WordsList wordList, string customData)
+        private void HandleGetCustomWords(WordsList wordList, RESTConnector.Error error, string customData)
         {
             Log.Debug("TestSpeechToText", "Speech to Text - Get custom words response: {0}", customData);
             Test(wordList != null);
             _getCustomWordsTested = true;
         }
 
-        private void HandleAddCustomWordsFromPath(bool success, string customData)
+        private void HandleAddCustomWordsFromPath(bool success, RESTConnector.Error error, string customData)
         {
             if (success)
             {
@@ -601,7 +602,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _addCustomWordsFromPathTested = true;
         }
 
-        private void HandleAddCustomWordsFromObject(bool success, string customData)
+        private void HandleAddCustomWordsFromObject(bool success, RESTConnector.Error error, string customData)
         {
             if (success)
             {
@@ -616,7 +617,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _addCustomWordsFromObjectTested = true;
         }
 
-        private void HandleDeleteCustomWord(bool success, string customData)
+        private void HandleDeleteCustomWord(bool success, RESTConnector.Error error, string customData)
         {
             if (success)
             {
@@ -631,21 +632,21 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _deleteCustomWordTested = true;
         }
 
-        private void HandleGetCustomWord(WordData word, string customData)
+        private void HandleGetCustomWord(WordData word, RESTConnector.Error error, string customData)
         {
             Log.Debug("TestSpeechToText", "Speech to Text - Get custom word response: {0}", customData);
             Test(word != null);
             _getCustomWordTested = true;
         }
         
-        private void HandleGetCustomAcousticModels(AcousticCustomizations acousticCustomizations, string customData)
+        private void HandleGetCustomAcousticModels(AcousticCustomizations acousticCustomizations, RESTConnector.Error error, string customData)
         {
             Log.Debug("TestSpeechToText", "acousticCustomizations: {0}", customData);
             Test(acousticCustomizations != null);
             _getAcousticCustomizationsTested = true;
         }
 
-        private void HandleCreateAcousticCustomization(CustomizationID customizationID, string customData)
+        private void HandleCreateAcousticCustomization(CustomizationID customizationID, RESTConnector.Error error, string customData)
         {
             Log.Debug("TestSpeechToText", "customizationId: {0}", customData);
             _createdAcousticModelId = customizationID.customization_id;
@@ -653,54 +654,54 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _createAcousticCustomizationsTested = true;
         }
 
-        private void HandleGetCustomAcousticModel(AcousticCustomization acousticCustomization, string customData)
+        private void HandleGetCustomAcousticModel(AcousticCustomization acousticCustomization, RESTConnector.Error error, string customData)
         {
             Log.Debug("TestSpeechToText", "acousticCustomization: {0}", customData);
             Test(acousticCustomization != null);
             _getAcousticCustomizationTested = true;
         }
 
-        private void HandleTrainAcousticCustomization(bool success, string customData)
+        private void HandleTrainAcousticCustomization(bool success, RESTConnector.Error error, string customData)
         {
             Log.Debug("TestSpeechToText", "train customization success: {0}", success);
             Test(success);
             _trainAcousticCustomizationsTested = true;
         }
 
-        private void HandleGetCustomAcousticResources(AudioResources audioResources, string customData)
+        private void HandleGetCustomAcousticResources(AudioResources audioResources, RESTConnector.Error error, string customData)
         {
             Log.Debug("TestSpeechToText", "audioResources: {0}", customData);
             Test(audioResources != null);
             _getAcousticResourcesTested = true;
         }
 
-        private void HandleAddAcousticResource(string customData)
+        private void HandleAddAcousticResource(RESTConnector.Error error, string customData)
         {
             Log.Debug("TestSpeechToText", "added acoustic resource: {0}", customData);
             Test(!string.IsNullOrEmpty(customData));
             _addAcousticResourcesTested = true;
         }
 
-        private void HandleGetCustomAcousticResource(AudioListing audioListing, string customData)
+        private void HandleGetCustomAcousticResource(AudioListing audioListing, RESTConnector.Error error, string customData)
         {
             Log.Debug("TestSpeechToText", "audioListing: {0}", customData);
             Test(audioListing != null);
             _getAcousticResourceTested = true;
         }
 
-        private void HandleResetAcousticCustomization(bool success, string customData)
+        private void HandleResetAcousticCustomization(bool success, RESTConnector.Error error, string customData)
         {
             Log.Debug("TestSpeechToText", "reset customization success: {0}", success);
             Test(success);
             _resetAcousticCustomizationsTested = true;
         }
 
-        private void HandleDeleteAcousticResource(bool success, string customData)
+        private void HandleDeleteAcousticResource(bool success, RESTConnector.Error error, string customData)
         {
             Log.Debug("TestSpeechToText", "deleted acoustic resource: {0}", success);
         }
 
-        private void HandleDeleteAcousticCustomization(bool success, string customData)
+        private void HandleDeleteAcousticCustomization(bool success, RESTConnector.Error error, string customData)
         {
             Log.Debug("TestSpeechToText", "deleted acoustic customization: {0}", success);
         }
@@ -714,7 +715,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _speechToText.GetCustomization(OnCheckCustomizationStatus, customizationID, customizationID);
         }
 
-        private void OnCheckCustomizationStatus(Customization customization, string customData)
+        private void OnCheckCustomizationStatus(Customization customization, RESTConnector.Error error, string customData)
         {
             if (customization != null)
             {
@@ -739,7 +740,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _speechToText.GetCustomAcousticModel(OnCheckAcousticCustomizationStatus, customizationID, customizationID);
         }
 
-        private void OnCheckAcousticCustomizationStatus(AcousticCustomization acousticCustomization, string customData)
+        private void OnCheckAcousticCustomizationStatus(AcousticCustomization acousticCustomization, RESTConnector.Error error, string customData)
         {
             if (acousticCustomization != null)
             {

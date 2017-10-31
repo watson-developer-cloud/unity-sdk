@@ -19,6 +19,7 @@ using UnityEngine;
 using IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
+using IBM.Watson.DeveloperCloud.Connection;
 using System.Collections;
 
 public class ExampleTextToSpeech : MonoBehaviour
@@ -206,7 +207,7 @@ public class ExampleTextToSpeech : MonoBehaviour
         Log.Debug("ExampleTextToSpeech", "Text to Speech examples complete.");
     }
 
-    void HandleToSpeechCallback(AudioClip clip, string customData)
+    void HandleToSpeechCallback(AudioClip clip, RESTConnector.Error error, string customData)
     {
         PlayClip(clip);
     }
@@ -228,75 +229,75 @@ public class ExampleTextToSpeech : MonoBehaviour
         }
     }
 
-    private void OnGetVoices(Voices voices, string customData)
+    private void OnGetVoices(Voices voices, RESTConnector.Error error, string customData)
     {
         Log.Debug("ExampleTextToSpeech", "Text to Speech - Get voices response: {0}", customData);
         _getVoicesTested = true;
     }
 
-    private void OnGetVoice(Voice voice, string customData)
+    private void OnGetVoice(Voice voice, RESTConnector.Error error, string customData)
     {
         Log.Debug("ExampleTextToSpeech", "Text to Speech - Get voice  response: {0}", customData);
         _getVoiceTested = true;
     }
 
-    private void OnGetPronunciation(Pronunciation pronunciation, string customData)
+    private void OnGetPronunciation(Pronunciation pronunciation, RESTConnector.Error error, string customData)
     {
         Log.Debug("ExampleTextToSpeech", "Text to Speech - Get pronunciation response: {0}", customData);
         _getPronuciationTested = true;
     }
 
-    private void OnGetCustomizations(Customizations customizations, string customData)
+    private void OnGetCustomizations(Customizations customizations, RESTConnector.Error error, string customData)
     {
         Log.Debug("ExampleTextToSpeech", "Text to Speech - Get customizations response: {0}", customData);
         _getCustomizationsTested = true;
     }
 
-    private void OnCreateCustomization(CustomizationID customizationID, string customData)
+    private void OnCreateCustomization(CustomizationID customizationID, RESTConnector.Error error, string customData)
     {
         Log.Debug("ExampleTextToSpeech", "Text to Speech - Create customization response: {0}", customData);
         _createdCustomizationId = customizationID.customization_id;
         _createCustomizationTested = true;
     }
 
-    private void OnDeleteCustomization(bool success, string customData)
+    private void OnDeleteCustomization(bool success, RESTConnector.Error error, string customData)
     {
         Log.Debug("ExampleTextToSpeech", "Text to Speech - Delete customization response: {0}", customData);
         _createdCustomizationId = null;
         _deleteCustomizationTested = true;
     }
 
-    private void OnGetCustomization(Customization customization, string customData)
+    private void OnGetCustomization(Customization customization, RESTConnector.Error error, string customData)
     {
         Log.Debug("ExampleTextToSpeech", "Text to Speech - Get customization response: {0}", customData);
         _getCustomizationTested = true;
     }
 
-    private void OnUpdateCustomization(bool success, string customData)
+    private void OnUpdateCustomization(bool success, RESTConnector.Error error, string customData)
     {
         Log.Debug("ExampleTextToSpeech", "Text to Speech - Update customization response: {0}", customData);
         _updateCustomizationTested = true;
     }
 
-    private void OnGetCustomizationWords(Words words, string customData)
+    private void OnGetCustomizationWords(Words words, RESTConnector.Error error, string customData)
     {
         Log.Debug("ExampleTextToSpeech", "Text to Speech - Get customization words response: {0}", customData);
         _getCustomizationWordsTested = true;
     }
 
-    private void OnAddCustomizationWords(bool success, string customData)
+    private void OnAddCustomizationWords(bool success, RESTConnector.Error error, string customData)
     {
         Log.Debug("ExampleTextToSpeech", "Text to Speech - Add customization words response: {0}", customData);
         _addCustomizationWordsTested = true;
     }
 
-    private void OnDeleteCustomizationWord(bool success, string customData)
+    private void OnDeleteCustomizationWord(bool success, RESTConnector.Error error, string customData)
     {
         Log.Debug("ExampleTextToSpeech", "Text to Speech - Delete customization word response: {0}", customData);
         _deleteCustomizationWordTested = true;
     }
 
-    private void OnGetCustomizationWord(Translation translation, string customData)
+    private void OnGetCustomizationWord(Translation translation, RESTConnector.Error error, string customData)
     {
         Log.Debug("ExampleTextToSpeech", "Text to Speech - Get customization word response: {0}", customData);
         _getCustomizationWordTested = true;

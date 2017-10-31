@@ -100,7 +100,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
         /// </summary>
         /// <param name="resp">The AnalysisResult response.</param>
         /// <param name="customData">Optional custom data.</param>
-        public delegate void OnAnalyze(AnalysisResults resp, string customData);
+        public delegate void OnAnalyze(AnalysisResults resp, RESTConnector.Error error, string customData);
 
         /// <summary>
         /// Creates a new environment. You can only create one environment per service instance.An attempt to create another environment 
@@ -172,7 +172,12 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
 
             string customData = ((AnalyzeRequest)req).Data;
             if (((AnalyzeRequest)req).Callback != null)
-                ((AnalyzeRequest)req).Callback(resp.Success ? analysisResults : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((AnalyzeRequest)req).Callback(analysisResults, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((AnalyzeRequest)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -182,7 +187,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
         /// </summary>
         /// <param name="resp">The GetModels response.</param>
         /// <param name="customData">Optional data.</param>
-        public delegate void OnGetModels(ListModelsResults resp, string customData);
+        public delegate void OnGetModels(ListModelsResults resp, RESTConnector.Error error, string customData);
 
         /// <summary>
         /// Lists available models for Relations and Entities features, including Watson Knowledge Studio 
@@ -243,7 +248,12 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
 
             string customData = ((GetModelsRequest)req).Data;
             if (((GetModelsRequest)req).Callback != null)
-                ((GetModelsRequest)req).Callback(resp.Success ? modelData : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((GetModelsRequest)req).Callback(modelData, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((GetModelsRequest)req).Callback(null, resp.Error, customData);
+			}
 
         }
         #endregion
@@ -254,7 +264,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
         /// </summary>
         /// <param name="success">The success of the call.</param>
         /// <param name="customData">Optional custom data.</param>
-        public delegate void OnDeleteModel(bool success, string customData);
+        public delegate void OnDeleteModel(bool success, RESTConnector.Error error, string customData);
 
         /// <summary>
         /// Deletes the specified model.
@@ -297,7 +307,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
         {
             string customData = ((DeleteModelRequest)req).Data;
             if (((DeleteModelRequest)req).Callback != null)
-                ((DeleteModelRequest)req).Callback(resp.Success, customData);
+                ((DeleteModelRequest)req).Callback(resp.Success, resp.Error, customData);
         }
         #endregion
 

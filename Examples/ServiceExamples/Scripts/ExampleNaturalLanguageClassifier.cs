@@ -24,6 +24,7 @@ using UnityEngine;
 using IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
 using IBM.Watson.DeveloperCloud.Logging;
+using IBM.Watson.DeveloperCloud.Connection;
 using System.Collections.Generic;
 using System.Collections;
 
@@ -121,7 +122,7 @@ public class ExampleNaturalLanguageClassifier : MonoBehaviour
         Log.Debug("ExampleNaturalLanguageClassifier", "Natural language classifier examples complete.");
     }
 
-    private void OnGetClassifiers(Classifiers classifiers, string data)
+    private void OnGetClassifiers(Classifiers classifiers, RESTConnector.Error error, string data)
     {
         Log.Debug("ExampleNaturalLanguageClassifier", "Natural Language Classifier - GetClassifiers  Response: {0}", data);
 
@@ -131,7 +132,7 @@ public class ExampleNaturalLanguageClassifier : MonoBehaviour
         _getClassifiersTested = true;
     }
 
-    private void OnClassify(ClassifyResult result, string data)
+    private void OnClassify(ClassifyResult result, RESTConnector.Error error, string data)
     {
         Log.Debug("ExampleNaturalLanguageClassifier", "Natural Language Classifier - Classify Response: {0}", data);
         _classifyTested = true;
@@ -148,7 +149,7 @@ public class ExampleNaturalLanguageClassifier : MonoBehaviour
     }
 #endif
 
-    private void OnGetClassifier(Classifier classifier, string data)
+    private void OnGetClassifier(Classifier classifier, RESTConnector.Error error, string data)
     {
         Log.Debug("ExampleNaturalLanguageClassifier", "Natural Language Classifier - Get Classifier {0}: {1}", classifier.classifier_id, data);
 

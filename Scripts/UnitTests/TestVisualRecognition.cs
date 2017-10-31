@@ -25,6 +25,7 @@ using System.Collections;
 using IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
+using IBM.Watson.DeveloperCloud.Connection;
 using FullSerializer;
 using System;
 using System.IO;
@@ -210,14 +211,14 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             yield break;
         }
 
-        private void OnGetClassifiers(GetClassifiersTopLevelBrief classifiers, string data)
+        private void OnGetClassifiers(GetClassifiersTopLevelBrief classifiers, RESTConnector.Error error, string data)
         {
             Log.Debug("ExampleVisualRecognition", "VisualRecognition - GetClassifiers Response: {0}", data);
             Test(classifiers != null);
             _getClassifiersTested = true;
         }
 
-        private void OnGetClassifier(GetClassifiersPerClassifierVerbose classifier, string data)
+        private void OnGetClassifier(GetClassifiersPerClassifierVerbose classifier, RESTConnector.Error error, string data)
         {
             Log.Debug("ExampleVisualRecognition", "VisualRecognition - GetClassifier Response: {0}", data);
             Test(classifier != null);
@@ -225,7 +226,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         }
 
 #if DELETE_TRAINED_CLASSIFIER
-        private void OnDeleteClassifier(bool success, string data)
+        private void OnDeleteClassifier(bool success, RESTConnector.Error error, string data)
         {
             Log.Debug("ExampleVisualRecognition", "VisualRecognition - DeleteClassifier Response: {0}", success);
             Test(success);
@@ -234,7 +235,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 #endif
 
 #if TRAIN_CLASSIFIER
-        private void OnTrainClassifier(GetClassifiersPerClassifierVerbose classifier, string data)
+        private void OnTrainClassifier(GetClassifiersPerClassifierVerbose classifier, RESTConnector.Error error, string data)
         {
             Log.Debug("ExampleVisualRecognition", "VisualRecognition - TrainClassifier Response: {0}", data);
 
@@ -247,7 +248,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         }
 #endif
 
-        private void OnClassifyGet(ClassifyTopLevelMultiple classify, string data)
+        private void OnClassifyGet(ClassifyTopLevelMultiple classify, RESTConnector.Error error, string data)
         {
             Log.Debug("ExampleVisualRecognition", "VisualRecognition - ClassifyGet Response: {0}", data);
             Test(classify != null);
@@ -255,34 +256,34 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         }
 
-        private void OnClassifyPost(ClassifyTopLevelMultiple classify, string data)
+        private void OnClassifyPost(ClassifyTopLevelMultiple classify, RESTConnector.Error error, string data)
         {
             Log.Debug("ExampleVisualRecognition", "VisualRecognition - ClassifyPost Response: {0}", data);
             Test(classify != null);
             _classifyPostTested = true;
         }
 
-        private void OnDetectFacesGet(FacesTopLevelMultiple multipleImages, string data)
+        private void OnDetectFacesGet(FacesTopLevelMultiple multipleImages, RESTConnector.Error error, string data)
         {
             Log.Debug("ExampleVisualRecognition", "VisualRecognition - DetectFacesGet Response: {0}", data);
             Test(multipleImages != null);
             _detectFacesGetTested = true;
         }
 
-        private void OnDetectFacesPost(FacesTopLevelMultiple multipleImages, string data)
+        private void OnDetectFacesPost(FacesTopLevelMultiple multipleImages, RESTConnector.Error error, string data)
         {
             Log.Debug("ExampleVisualRecognition", "VisualRecognition - DetectFacesPost Response: {0}", data);
             Test(multipleImages != null);
             _detectFacesPostTested = true;
         }
 
-        //private void OnRecognizeTextGet(TextRecogTopLevelMultiple multipleImages, string data)
+        //private void OnRecognizeTextGet(TextRecogTopLevelMultiple multipleImages, RESTConnector.Error error, string data)
         //{
         //    Log.Debug("ExampleVisualRecognition", "VisualRecognition - RecognizeTextGet Response: {0}", data);
         //    _recognizeTextGetTested = true;
         //}
 
-        //private void OnRecognizeTextPost(TextRecogTopLevelMultiple multipleImages, string data)
+        //private void OnRecognizeTextPost(TextRecogTopLevelMultiple multipleImages, RESTConnector.Error error, string data)
         //{
         //    Log.Debug("ExampleVisualRecognition", "VisualRecognition - RecognizeTextPost Response: {0}", data);
         //    _recognizeTextPostTested = true;

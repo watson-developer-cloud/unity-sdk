@@ -40,37 +40,37 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
         /// </summary>
         /// <param name="models"></param>
         /// <param name="customData">User defined custom data</param>
-        public delegate void GetModelsCallback(TranslationModels models, string customData);
+        public delegate void GetModelsCallback(TranslationModels models, RESTConnector.Error error, string customData);
         /// <summary>
         /// Callback for GetModel() method.
         /// </summary>
         /// <param name="model"></param>
         /// <param name="customData">User defined custom data</param>
-        public delegate void GetModelCallback(TranslationModel model, string customData);
+        public delegate void GetModelCallback(TranslationModel model, RESTConnector.Error error, string customData);
         /// <summary>
         /// Callback for DeleteModel() method.
         /// </summary>
         /// <param name="success">Was the model deleted?</param>
         /// <param name="customData">User defined custom data</param>
-        public delegate void DeleteModelCallback(bool success, string customData);
+        public delegate void DeleteModelCallback(bool success, RESTConnector.Error error, string customData);
         /// <summary>
         /// Callback for GetLanguages() method.
         /// </summary>
         /// <param name="languages"></param>
         /// <param name="customData">User defined custom data</param>
-        public delegate void GetLanguagesCallback(Languages languages, string customData);
+        public delegate void GetLanguagesCallback(Languages languages, RESTConnector.Error error, string customData);
         /// <summary>
         /// Callback for Identify() method.
         /// </summary>
         /// <param name="languages"></param>
         /// <param name="customData">User defined custom data</param>
-        public delegate void IdentifyCallback(string languages, string customData);
+        public delegate void IdentifyCallback(string languages, RESTConnector.Error error, string customData);
         /// <summary>
         /// Callback for Translate() method.
         /// </summary>
         /// <param name="translation"></param>
         /// <param name="customData">User defined custom data</param>
-        public delegate void TranslateCallback(Translations translation, string customData);
+        public delegate void TranslateCallback(Translations translation, RESTConnector.Error error, string customData);
         #endregion
 
         #region Public Properties
@@ -217,7 +217,12 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
 
             string customData = ((TranslateReq)req).Data;
             if (((TranslateReq)req).Callback != null)
-                ((TranslateReq)req).Callback(resp.Success ? translations : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((TranslateReq)req).Callback(translations, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((TranslateReq)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -310,7 +315,12 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
 
             string customData = ((GetModelsReq)req).Data;
             if (((GetModelsReq)req).Callback != null)
-                ((GetModelsReq)req).Callback(resp.Success ? models : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+			{
+				if (resp.Success)
+					((GetModelsReq)req).Callback(models, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((GetModelsReq)req).Callback(null, resp.Error, customData);
+			}
         }
 
         /// <summary>
@@ -371,7 +381,12 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
 
             string customData = ((GetModelReq)req).Data;
             if (((GetModelReq)req).Callback != null)
-                ((GetModelReq)req).Callback(resp.Success ? model : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+			{
+				if (resp.Success)
+					((GetModelReq)req).Callback(model, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((GetModelReq)req).Callback(null, resp.Error, customData);
+			}
         }
 
         /// <summary>
@@ -379,7 +394,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
         /// </summary>
         /// <param name="resp">The TranslationModel response.</param>
         /// <param name="customData">Optional custom data.</param>
-        public delegate void OnCreateModel(TranslationModel resp, string customData);
+        public delegate void OnCreateModel(TranslationModel resp, RESTConnector.Error error, string customData);
 
         /// <summary>
         /// Uploads a TMX glossary file on top of a domain to customize a translation model.
@@ -509,7 +524,12 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
 
             string customData = ((CreateModelRequest)req).Data;
             if (((CreateModelRequest)req).Callback != null)
-                ((CreateModelRequest)req).Callback(resp.Success ? result : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((CreateModelRequest)req).Callback(result, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((CreateModelRequest)req).Callback(null, resp.Error, customData);
+			}
         }
 
         /// <summary>
@@ -547,7 +567,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
         {
             string customData = ((DeleteModelReq)req).Data;
             if (((DeleteModelReq)req).Callback != null)
-                ((DeleteModelReq)req).Callback(resp.Success, customData);
+                ((DeleteModelReq)req).Callback(resp.Success, resp.Error, customData);
         }
         #endregion
 
@@ -606,7 +626,12 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
 
             string customData = ((GetLanguagesReq)req).Data;
             if (((GetLanguagesReq)req).Callback != null)
-                ((GetLanguagesReq)req).Callback(resp.Success ? langs : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+			{
+				if (resp.Success)
+					((GetLanguagesReq)req).Callback(langs, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((GetLanguagesReq)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -656,7 +681,12 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
                 identifiedLanguages = Encoding.UTF8.GetString(resp.Data);
                 string customData = identifyRequest.Data;
                 if (((IdentifyReq)req).Callback != null)
-                    ((IdentifyReq)req).Callback(resp.Success ? identifiedLanguages : null, (!string.IsNullOrEmpty(customData) ? customData : identifiedLanguages));
+				{
+					if (resp.Success)
+						((IdentifyReq)req).Callback(identifiedLanguages, null, !string.IsNullOrEmpty(customData) ? customData : identifiedLanguages);
+					else
+						((IdentifyReq)req).Callback(null, resp.Error, customData);
+				}
             }
         }
         #endregion

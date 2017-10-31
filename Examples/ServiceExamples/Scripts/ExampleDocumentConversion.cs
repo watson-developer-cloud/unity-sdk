@@ -19,6 +19,7 @@ using UnityEngine;
 using IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
+using IBM.Watson.DeveloperCloud.Connection;
 using System.Collections;
 
 public class ExampleDocumentConversion : MonoBehaviour
@@ -56,7 +57,7 @@ public class ExampleDocumentConversion : MonoBehaviour
         Log.Debug("ExampleDoucmentConversion", "Document conversion examples complete.");
     }
 
-    private void OnConvertDocument(ConvertedDocument documentConversionResponse, string data)
+    private void OnConvertDocument(ConvertedDocument documentConversionResponse, RESTConnector.Error error, string data)
     {
         Log.Debug("ExampleDoucmentConversion", "DocumentConversion - Convert document Response: {0}", documentConversionResponse.htmlContent);
         _convertDocumentTested = true;

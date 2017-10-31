@@ -105,7 +105,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
         /// The callback delegate for the Message() function.
         /// </summary>
         /// <param name="resp">The response object to a call to Message().</param>
-        public delegate void OnMessage(object resp, string customData);
+        public delegate void OnMessage(object resp, RESTConnector.Error error, string customData);
 
         /// <summary>
         /// Message the specified workspaceId, input and callback.
@@ -230,7 +230,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 
             string customData = ((MessageReq)req).Data;
             if (((MessageReq)req).Callback != null)
-                ((MessageReq)req).Callback(resp.Success ? dataObject : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((MessageReq)req).Callback(dataObject, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((MessageReq)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 

@@ -66,9 +66,9 @@ namespace IBM.Watson.DeveloperCloud.Connection
             /// </summary>
             public bool Success { get; set; }
             /// <summary>
-            /// Error message if Success is false.
+            /// Error object if Success is false (null otherwise).
             /// </summary>
-            public string Error { get; set; }
+            public Error Error { get; set; }
             /// <summary>
             /// The data returned by the request.
             /// </summary>
@@ -79,6 +79,36 @@ namespace IBM.Watson.DeveloperCloud.Connection
             public float ElapsedTime { get; set; }
             #endregion
         };
+
+        /// <summary>
+        /// Class to encapsulate an error returned from a server request.
+        /// </summary>
+        public class Error
+        {
+            /// <summary>
+            /// The url that generated the error.
+            /// </summary>
+            public string URL { get; set; }
+            /// <summary>
+            /// The error code returned from the server.
+            /// </summary>
+            public int ErrorCode { get; set; }
+            /// <summary>
+            /// The error message returned from the server.
+            /// </summary>
+            public string ErrorMessage { get; set; }
+            /// <summary>
+            /// The contents of the response from the server.
+            /// </summary>
+            public string Response { get; set; }
+
+            public override string ToString()
+            {
+                return string.Format("URL: {0}, ErrorCode: {1}, Error: {2}, Response: {3}", URL, ErrorCode,
+                                     string.IsNullOrEmpty(ErrorMessage) ? "" : ErrorMessage,
+                                     string.IsNullOrEmpty(Response) ? "" : Response);
+            }
+        }
 
         /// <summary>
         /// Multi-part form data class.
@@ -419,6 +449,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
                         continue;
 
                     bool bError = false;
+                    Error error = null;
                     if (!string.IsNullOrEmpty(www.error))
                     {
                         int nErrorCode = -1;
@@ -437,6 +468,12 @@ namespace IBM.Watson.DeveloperCloud.Connection
                             }
                         }
 
+						error = new Error();
+						error.URL = url;
+						error.ErrorCode = nErrorCode;
+						error.ErrorMessage = www.error;
+						error.Response = www.text;
+
                         if (bError)
                             Log.Error("RESTConnector", "URL: {0}, ErrorCode: {1}, Error: {2}, Response: {3}", url, nErrorCode, www.error,
                                 string.IsNullOrEmpty(www.text) ? "" : www.text);
@@ -448,6 +485,10 @@ namespace IBM.Watson.DeveloperCloud.Connection
                     {
                         Log.Error("RESTConnector", "Request timed out for URL: {0}", url);
                         bError = true;
+
+						error = new Error();
+						error.URL = url;
+						error.ErrorMessage = "Timeout";
                     }
                     /*if (!bError && (www.bytes == null || www.bytes.Length == 0))
                     {
@@ -460,13 +501,15 @@ namespace IBM.Watson.DeveloperCloud.Connection
                     if (!bError)
                     {
                         resp.Success = true;
+                        resp.Error = null;
                         resp.Data = www.bytes;
                     }
                     else
                     {
                         resp.Success = false;
-                        resp.Error = string.Format("Request Error.\nURL: {0}\nError: {1}",
-                            url, string.IsNullOrEmpty(www.error) ? "Timeout" : www.error);
+                        //resp.Error = string.Format("Request Error.\nURL: {0}\nError: {1}",
+                        //    url, string.IsNullOrEmpty(www.error) ? "Timeout" : www.error);
+                        resp.Error = error;
                     }
 
                     resp.ElapsedTime = (float)(DateTime.Now - startTime).TotalSeconds;

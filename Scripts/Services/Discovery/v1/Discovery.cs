@@ -118,7 +118,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// </summary>
         /// <param name="resp">The GetEnvironments response.</param>
         /// <param name="customData">Optional data.</param>
-        public delegate void OnGetEnvironments(GetEnvironmentsResponse resp, string customData);
+        public delegate void OnGetEnvironments(GetEnvironmentsResponse resp, RESTConnector.Error error, string customData);
 
         /// <summary>
         /// This class lists environments in a discovery instance. There are two environments returned: A read-only environment with the News
@@ -179,7 +179,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
             string customData = ((GetEnvironmentsRequest)req).Data;
             if (((GetEnvironmentsRequest)req).Callback != null)
-                ((GetEnvironmentsRequest)req).Callback(resp.Success ? environmentsData : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((GetEnvironmentsRequest)req).Callback(environmentsData, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((GetEnvironmentsRequest)req).Callback(null, resp.Error, customData);
+			}
 
         }
         #endregion
@@ -190,7 +195,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// </summary>
         /// <param name="resp">The Environment response.</param>
         /// <param name="customData">Optional custom data.</param>
-        public delegate void OnAddEnvironment(Environment resp, string customData);
+        public delegate void OnAddEnvironment(Environment resp, RESTConnector.Error error, string customData);
 
         /// <summary>
         /// Creates a new environment. You can only create one environment per service instance.An attempt to create another environment 
@@ -284,7 +289,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
             string customData = ((AddEnvironmentRequest)req).Data;
             if (((AddEnvironmentRequest)req).Callback != null)
-                ((AddEnvironmentRequest)req).Callback(resp.Success ? environmentData : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((AddEnvironmentRequest)req).Callback(environmentData, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((AddEnvironmentRequest)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -294,7 +304,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// </summary>
         /// <param name="resp">The Environment response.</param>
         /// <param name="customData">Optional custom data.</param>
-        public delegate void OnGetEnvironment(Environment resp, string customData);
+        public delegate void OnGetEnvironment(Environment resp, RESTConnector.Error error, string customData);
 
         /// <summary>
         /// Returns specified environment data.
@@ -360,7 +370,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
             string customData = ((GetEnvironmentRequest)req).Data;
             if (((GetEnvironmentRequest)req).Callback != null)
-                ((GetEnvironmentRequest)req).Callback(resp.Success ? environmentData : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((GetEnvironmentRequest)req).Callback(environmentData, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((GetEnvironmentRequest)req).Callback(null, resp.Error, customData);
+			}
 
         }
         #endregion
@@ -371,7 +386,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// </summary>
         /// <param name="success">The success of the call.</param>
         /// <param name="customData">Optional custom data.</param>
-        public delegate void OnDeleteEnvironment(bool success, string customData);
+        public delegate void OnDeleteEnvironment(bool success, RESTConnector.Error error, string customData);
 
         /// <summary>
         /// Deletes the specified environment.
@@ -414,7 +429,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         private void OnDeleteEnvironmentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             if (((DeleteEnvironmentRequest)req).Callback != null)
-                ((DeleteEnvironmentRequest)req).Callback(resp.Success, ((DeleteEnvironmentRequest)req).Data);
+                ((DeleteEnvironmentRequest)req).Callback(resp.Success, resp.Error, ((DeleteEnvironmentRequest)req).Data);
         }
         #endregion
         #endregion
@@ -426,7 +441,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// </summary>
         /// <param name="resp">The GetConfigurationsResponse.</param>
         /// <param name="customData">Optional custom data.</param>
-        public delegate void OnGetConfigurations(GetConfigurationsResponse resp, string customData);
+        public delegate void OnGetConfigurations(GetConfigurationsResponse resp, RESTConnector.Error error, string customData);
 
         /// <summary>
         /// Lists an environment's configurations.
@@ -498,7 +513,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
             string customData = ((GetConfigurationsRequest)req).Data;
             if (((GetConfigurationsRequest)req).Callback != null)
-                ((GetConfigurationsRequest)req).Callback(resp.Success ? configurations : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((GetConfigurationsRequest)req).Callback(configurations, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((GetConfigurationsRequest)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -508,7 +528,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// </summary>
         /// <param name="resp">The Configuration response.</param>
         /// <param name="customData">Optional custom data.</param>
-        public delegate void OnAddConfiguration(Configuration resp, string customData);
+        public delegate void OnAddConfiguration(Configuration resp, RESTConnector.Error error, string customData);
 
         /// <summary>
         /// Adds a configuration via external json file.
@@ -611,7 +631,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
             string customData = ((AddConfigurationRequest)req).Data;
             if (((AddConfigurationRequest)req).Callback != null)
-                ((AddConfigurationRequest)req).Callback(resp.Success ? configuration : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((AddConfigurationRequest)req).Callback(configuration, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((AddConfigurationRequest)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -621,7 +646,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// </summary>
         /// <param name="resp">The Configuration response.</param>
         /// <param name="customData">Optional custom data.</param>
-        public delegate void OnGetConfiguration(Configuration resp, string customData);
+        public delegate void OnGetConfiguration(Configuration resp, RESTConnector.Error error, string customData);
 
         /// <summary>
         /// 
@@ -691,7 +716,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
             string customData = ((GetConfigurationRequest)req).Data;
             if (((GetConfigurationRequest)req).Callback != null)
-                ((GetConfigurationRequest)req).Callback(resp.Success ? configuration : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((GetConfigurationRequest)req).Callback(configuration, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((GetConfigurationRequest)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -701,7 +731,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// </summary>
         /// <param name="success">The success of the call.</param>
         /// <param name="customData">Optional custom data.</param>
-        public delegate void OnDeleteConfiguration(bool success, string customData);
+        public delegate void OnDeleteConfiguration(bool success, RESTConnector.Error error, string customData);
 
         /// <summary>
         /// Deletes an environments specified configuration.
@@ -750,7 +780,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         private void OnDeleteConfigurationResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             if (((DeleteConfigurationRequest)req).Callback != null)
-                ((DeleteConfigurationRequest)req).Callback(resp.Success, ((DeleteConfigurationRequest)req).Data);
+                ((DeleteConfigurationRequest)req).Callback(resp.Success, resp.Error, ((DeleteConfigurationRequest)req).Data);
         }
         #endregion
         #endregion
@@ -761,7 +791,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// </summary>
         /// <param name="resp">The response.</param>
         /// <param name="customData">Optional custom data.</param>
-        public delegate void OnPreviewConfiguration(TestDocument resp, string customData);
+        public delegate void OnPreviewConfiguration(TestDocument resp, RESTConnector.Error error, string customData);
 
         /// <summary>
         /// Runs a sample document through the default or your configuration and returns diagnostic information designed to 
@@ -932,7 +962,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
             string customData = ((PreviewConfigurationRequest)req).Data;
             if (((PreviewConfigurationRequest)req).Callback != null)
-                ((PreviewConfigurationRequest)req).Callback(resp.Success ? testDocument : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((PreviewConfigurationRequest)req).Callback(testDocument, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((PreviewConfigurationRequest)req).Callback(null, resp.Error, customData);
+			}
 
         }
         #endregion
@@ -944,7 +979,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// </summary>
         /// <param name="resp">The GetCollectionsResponse.</param>
         /// <param name="customData">Optional custom data.</param>
-        public delegate void OnGetCollections(GetCollectionsResponse resp, string customData);
+        public delegate void OnGetCollections(GetCollectionsResponse resp, RESTConnector.Error error, string customData);
 
         /// <summary>
         /// Lists a specified environment's collections.
@@ -1016,7 +1051,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
             string customData = ((GetCollectionsRequest)req).Data;
             if (((GetCollectionsRequest)req).Callback != null)
-                ((GetCollectionsRequest)req).Callback(resp.Success ? collections : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((GetCollectionsRequest)req).Callback(collections, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((GetCollectionsRequest)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -1026,7 +1066,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// </summary>
         /// <param name="resp">The CollectionRef response.</param>
         /// <param name="customData">Optional custom data.</param>
-        public delegate void OnAddCollection(CollectionRef resp, string customData);
+        public delegate void OnAddCollection(CollectionRef resp, RESTConnector.Error error, string customData);
 
         /// <summary>
         /// Adds a collection to a specified environment.
@@ -1126,7 +1166,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
             string customData = ((AddCollectionRequest)req).Data;
             if (((AddCollectionRequest)req).Callback != null)
-                ((AddCollectionRequest)req).Callback(resp.Success ? collection : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((AddCollectionRequest)req).Callback(collection, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((AddCollectionRequest)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -1136,7 +1181,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// </summary>
         /// <param name="resp">The Collection response.</param>
         /// <param name="customData">Optional custom data.</param>
-        public delegate void OnGetCollection(Collection resp, string customData);
+        public delegate void OnGetCollection(Collection resp, RESTConnector.Error error, string customData);
 
         /// <summary>
         /// Lists a specified collecton's details.
@@ -1206,7 +1251,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
             string customData = ((GetCollectionRequest)req).Data;
             if (((GetCollectionRequest)req).Callback != null)
-                ((GetCollectionRequest)req).Callback(resp.Success ? collection : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((GetCollectionRequest)req).Callback(collection, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((GetCollectionRequest)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -1216,7 +1266,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// </summary>
         /// <param name="success">The success of the call.</param>
         /// <param name="customData">Optional custom data.</param>
-        public delegate void OnDeleteCollection(bool success, string customData);
+        public delegate void OnDeleteCollection(bool success, RESTConnector.Error error, string customData);
 
         /// <summary>
         /// Deletes a specified collection.
@@ -1265,7 +1315,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         private void OnDeleteCollectionResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             if (((DeleteCollectionRequest)req).Callback != null)
-                ((DeleteCollectionRequest)req).Callback(resp.Success, ((DeleteCollectionRequest)req).Data);
+                ((DeleteCollectionRequest)req).Callback(resp.Success, resp.Error, ((DeleteCollectionRequest)req).Data);
         }
         #endregion
 
@@ -1275,7 +1325,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// </summary>
         /// <param name="resp">The GetFieldsResponse.</param>
         /// <param name="customData">Optional custom data.</param>
-        public delegate void OnGetFields(GetFieldsResponse resp, string customData);
+        public delegate void OnGetFields(GetFieldsResponse resp, RESTConnector.Error error, string customData);
 
         /// <summary>
         /// Gets a list of the the unique fields (and their types) stored in the index.
@@ -1346,7 +1396,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
             string customData = ((GetFieldsRequest)req).Data;
             if (((GetFieldsRequest)req).Callback != null)
-                ((GetFieldsRequest)req).Callback(resp.Success ? fields : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((GetFieldsRequest)req).Callback(fields, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((GetFieldsRequest)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
         #endregion
@@ -1358,7 +1413,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// </summary>
         /// <param name="resp">The DocumentAccepted response.</param>
         /// <param name="customData">Optional custom data.</param>
-        public delegate void OnAddDocument(DocumentAccepted resp, string customData);
+        public delegate void OnAddDocument(DocumentAccepted resp, RESTConnector.Error error, string customData);
 
         /// <summary>
         /// Add a document to a collection with optional metadata and optional configuration. The configuration to use to process 
@@ -1634,7 +1689,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
             string customData = ((AddDocumentRequest)req).Data;
             if (((AddDocumentRequest)req).Callback != null)
-                ((AddDocumentRequest)req).Callback(resp.Success ? doucmentAccepted : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((AddDocumentRequest)req).Callback(doucmentAccepted, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((AddDocumentRequest)req).Callback(null, resp.Error, customData);
+			}
 
         }
         #endregion
@@ -1645,7 +1705,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// </summary>
         /// <param name="success">The success of the call.</param>
         /// <param name="customData">Optional custom data.</param>
-        public delegate void OnDeleteDocument(bool success, string customData);
+        public delegate void OnDeleteDocument(bool success, RESTConnector.Error error, string customData);
 
         /// <summary>
         /// 
@@ -1700,7 +1760,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         private void OnDeleteDocumentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             if (((DeleteDocumentRequest)req).Callback != null)
-                ((DeleteDocumentRequest)req).Callback(resp.Success, ((DeleteDocumentRequest)req).Data);
+                ((DeleteDocumentRequest)req).Callback(resp.Success, resp.Error, ((DeleteDocumentRequest)req).Data);
         }
         #endregion
 
@@ -1710,7 +1770,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// </summary>
         /// <param name="resp">The DocumentStatus response.</param>
         /// <param name="customData">Optional custom data.</param>
-        public delegate void OnGetDocument(DocumentStatus resp, string customData);
+        public delegate void OnGetDocument(DocumentStatus resp, RESTConnector.Error error, string customData);
 
         /// <summary>
         /// Lists a specified document's details.
@@ -1785,7 +1845,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
             string customData = ((GetDocumentRequest)req).Data;
             if (((GetDocumentRequest)req).Callback != null)
-                ((GetDocumentRequest)req).Callback(resp.Success ? documentStatus : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((GetDocumentRequest)req).Callback(documentStatus, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((GetDocumentRequest)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 
@@ -1795,7 +1860,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// </summary>
         /// <param name="resp">The DocumentAccepted response.</param>
         /// <param name="customData">Optional custom data.</param>
-        public delegate void OnUpdateDocument(DocumentAccepted resp, string customData);
+        public delegate void OnUpdateDocument(DocumentAccepted resp, RESTConnector.Error error, string customData);
 
         /// <summary>
         /// Updates a specified document.
@@ -2072,7 +2137,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
             string customData = ((UpdateDocumentRequest)req).Data;
             if (((UpdateDocumentRequest)req).Callback != null)
-                ((UpdateDocumentRequest)req).Callback(resp.Success ? doucmentAccepted : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((UpdateDocumentRequest)req).Callback(doucmentAccepted, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((UpdateDocumentRequest)req).Callback(null, resp.Error, customData);
+			}
 
         }
         #endregion
@@ -2084,7 +2154,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// </summary>
         /// <param name="resp">The QueryResponse.</param>
         /// <param name="customData">Optional custom data.</param>
-        public delegate void OnQuery(QueryResponse resp, string customData);
+        public delegate void OnQuery(QueryResponse resp, RESTConnector.Error error, string customData);
 
         /// <summary>
         /// Query the discovery instance.
@@ -2195,7 +2265,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
             string customData = ((QueryRequest)req).Data;
             if (((QueryRequest)req).Callback != null)
-                ((QueryRequest)req).Callback(resp.Success ? queryResponse : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((QueryRequest)req).Callback(queryResponse, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((QueryRequest)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 

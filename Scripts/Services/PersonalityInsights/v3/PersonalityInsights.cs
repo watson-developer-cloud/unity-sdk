@@ -99,7 +99,7 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3
         #region Profile
         private const string ProfileEndpoint = "/v3/profile";
 
-        public delegate void OnGetProfile(Profile profile, string data);
+        public delegate void OnGetProfile(Profile profile, RESTConnector.Error error, string data);
 
         public bool GetProfile(OnGetProfile callback, string source,
             string contentType = ContentType.TextPlain,
@@ -197,7 +197,12 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3
 
             string customData = ((GetProfileRequest)req).Data;
             if (((GetProfileRequest)req).Callback != null)
-                ((GetProfileRequest)req).Callback(resp.Success ? response : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+			{
+				if (resp.Success)
+					((GetProfileRequest)req).Callback(response, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+				else
+					((GetProfileRequest)req).Callback(null, resp.Error, customData);
+			}
         }
         #endregion
 

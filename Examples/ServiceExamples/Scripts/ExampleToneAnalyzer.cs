@@ -19,6 +19,7 @@ using UnityEngine;
 using IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3;
 using IBM.Watson.DeveloperCloud.Utilities;
 using IBM.Watson.DeveloperCloud.Logging;
+using IBM.Watson.DeveloperCloud.Connection;
 using System.Collections;
 
 public class ExampleToneAnalyzer : MonoBehaviour
@@ -58,7 +59,7 @@ public class ExampleToneAnalyzer : MonoBehaviour
         Log.Debug("ExampleToneAnalyzer", "Tone analyzer examples complete.");
     }
 
-    private void OnGetToneAnalyze(ToneAnalyzerResponse resp, string data)
+    private void OnGetToneAnalyze(ToneAnalyzerResponse resp, RESTConnector.Error error, string data)
     {
         Log.Debug("ExampleToneAnalyzer", "Tone Analyzer - Analyze Response: {0}", data);
         _analyzeToneTested = true;

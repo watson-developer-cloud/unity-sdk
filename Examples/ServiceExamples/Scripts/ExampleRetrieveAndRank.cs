@@ -20,6 +20,7 @@ using System.Collections;
 using IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
+using IBM.Watson.DeveloperCloud.Connection;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -250,14 +251,14 @@ public class ExampleRetrieveAndRank : MonoBehaviour
         Log.Debug("ExampleRetrieveAndRank", "Retrieve and rank examples complete!");
     }
 
-    private void OnGetClusters(SolrClusterListResponse resp, string data)
+    private void OnGetClusters(SolrClusterListResponse resp, RESTConnector.Error error, string data)
     {
         Log.Debug("\tExampleRetrieveAndRank", "Retrieve and rank - Get clusters response: {0}", data);
         _getClustersTested = true;
         Invoke("ReadyToContinue", _waitTime);
     }
 
-    private void OnCreateCluster(SolrClusterResponse resp, string data)
+    private void OnCreateCluster(SolrClusterResponse resp, RESTConnector.Error error, string data)
     {
         Log.Debug("\tExampleRetrieveAndRank", "Retrieve and rank - Create cluster response: {0}", data);
         _clusterToDelete = resp.solr_cluster_id;
@@ -265,28 +266,28 @@ public class ExampleRetrieveAndRank : MonoBehaviour
         Invoke("ReadyToContinue", _waitTime);
     }
 
-    private void OnDeleteCluster(bool success, string data)
+    private void OnDeleteCluster(bool success, RESTConnector.Error error, string data)
     {
         Log.Debug("\tExampleRetrieveAndRank", "Retrieve and rank - Delete cluster response: {0}", data);
         _deleteClusterTested = true;
         Invoke("ReadyToContinue", _waitTime);
     }
 
-    private void OnGetCluster(SolrClusterResponse resp, string data)
+    private void OnGetCluster(SolrClusterResponse resp, RESTConnector.Error error, string data)
     {
         Log.Debug("\tExampleRetrieveAndRank", "Retrieve and rank - Get cluster response: {0}", data);
         _getClusterTested = true;
         Invoke("ReadyToContinue", _waitTime);
     }
 
-    private void OnGetClusterConfigs(SolrConfigList resp, string data)
+    private void OnGetClusterConfigs(SolrConfigList resp, RESTConnector.Error error, string data)
     {
         Log.Debug("\tExampleRetrieveAndRank", "Retrieve and rank - Get cluster config response: {0}", data);
         _getClusterConfigsTested = true;
         Invoke("ReadyToContinue", _waitTime);
     }
 
-    private void OnDeleteClusterConfig(bool success, string data)
+    private void OnDeleteClusterConfig(bool success, RESTConnector.Error error, string data)
     {
         Log.Debug("\tExampleRetrieveAndRank", "Retrieve and rank - Deletecluster config response: {0}", data);
         _deleteClusterConfigTested = true;
@@ -294,7 +295,7 @@ public class ExampleRetrieveAndRank : MonoBehaviour
     }
 
 
-    private void OnGetClusterConfig(byte[] respData, string data)
+    private void OnGetClusterConfig(byte[] respData, RESTConnector.Error error, string data)
     {
 #if UNITY_EDITOR
         Log.Debug("\tExampleRetrieveAndRank", "Retrieve and rank - Get cluster config response: {0}", data);
@@ -305,49 +306,49 @@ public class ExampleRetrieveAndRank : MonoBehaviour
         Invoke("ReadyToContinue", _waitTime);
     }
 
-    private void OnUploadClusterConfig(UploadResponse resp, string data)
+    private void OnUploadClusterConfig(UploadResponse resp, RESTConnector.Error error, string data)
     {
         Log.Debug("\tExampleRetrieveAndRank", "Retrieve and rank - Upload cluster config response: {0}", data);
         _uploadClusterConfigTested = true;
         Invoke("ReadyToContinue", _waitTime);
     }
 
-    private void OnGetCollections(CollectionsResponse resp, string data)
+    private void OnGetCollections(CollectionsResponse resp, RESTConnector.Error error, string data)
     {
         Log.Debug("\tExampleRetrieveAndRank", "Retrieve and rank - Get collections response: {0}", data);
         _getCollectionsTested = true;
         Invoke("ReadyToContinue", _waitTime);
     }
 
-    private void OnCreateCollection(CollectionsResponse resp, string data)
+    private void OnCreateCollection(CollectionsResponse resp, RESTConnector.Error error, string data)
     {
         Log.Debug("\tExampleRetrieveAndRank", "Retrieve and rank - Get collections response: {0}", data);
         _createCollectionTested = true;
         Invoke("ReadyToContinue", _waitTime);
     }
 
-    private void OnDeleteCollection(CollectionsResponse resp, string data)
+    private void OnDeleteCollection(CollectionsResponse resp, RESTConnector.Error error, string data)
     {
         Log.Debug("\tExampleRetrieveAndRank", "Retrieve and rank - Get collections response: {0}", data);
         _deleteCollectionTested = true;
         Invoke("ReadyToContinue", _waitTime);
     }
 
-    private void OnIndexDocuments(IndexResponse resp, string data)
+    private void OnIndexDocuments(IndexResponse resp, RESTConnector.Error error, string data)
     {
         Log.Debug("\tExampleRetrieveAndRank", "Retrieve and rank - Index documents response: {0}", data);
         _indexDocumentsTested = true;
         Invoke("ReadyToContinue", _waitTime);
     }
 
-    private void OnGetRankers(ListRankersPayload resp, string data)
+    private void OnGetRankers(ListRankersPayload resp, RESTConnector.Error error, string data)
     {
         Log.Debug("\tExampleRetrieveAndRank", "Retrieve and rank - Get rankers response: {0}", data);
         _getRankersTested = true;
         Invoke("ReadyToContinue", _waitTime);
     }
 
-    private void OnCreateRanker(RankerStatusPayload resp, string data)
+    private void OnCreateRanker(RankerStatusPayload resp, RESTConnector.Error error, string data)
     {
         Log.Debug("\tExampleRetrieveAndRank", "Retrieve and rank - Create ranker response: {0}", data);
         _rankerIdToDelete = resp.ranker_id;
@@ -355,28 +356,28 @@ public class ExampleRetrieveAndRank : MonoBehaviour
         Invoke("ReadyToContinue", _waitTime);
     }
 
-    private void OnRank(RankerOutputPayload resp, string data)
+    private void OnRank(RankerOutputPayload resp, RESTConnector.Error error, string data)
     {
         Log.Debug("\tExampleRetrieveAndRank", "Retrieve and rank - Rank response: {0}", data);
         _rankTested = true;
         Invoke("ReadyToContinue", _waitTime);
     }
 
-    private void OnGetRanker(RankerStatusPayload resp, string data)
+    private void OnGetRanker(RankerStatusPayload resp, RESTConnector.Error error, string data)
     {
         Log.Debug("\tExampleRetrieveAndRank", "Retrieve and rank - Get ranker response: {0}", data);
         _getRankerTested = true;
         Invoke("ReadyToContinue", _waitTime);
     }
 
-    private void OnDeleteRanker(bool success, string data)
+    private void OnDeleteRanker(bool success, RESTConnector.Error error, string data)
     {
         Log.Debug("\tExampleRetrieveAndRank", "Retrieve and rank - Delete ranker response: {0}", data);
         _deleteRankerTested = true;
         Invoke("ReadyToContinue", _waitTime);
     }
 
-    private void OnSearchStandard(SearchResponse resp, string data)
+    private void OnSearchStandard(SearchResponse resp, RESTConnector.Error error, string data)
     {
         Log.Debug("\tExampleRetrieveAndRank", "Retrieve and rank - Search standard response: {0}", data);
         _searchStandardTested = true;
@@ -385,7 +386,7 @@ public class ExampleRetrieveAndRank : MonoBehaviour
 
     private void CheckClusterStatus()
     {
-        if (!_retrieveAndRank.GetCluster((SolrClusterResponse resp, string data) =>
+        if (!_retrieveAndRank.GetCluster((SolrClusterResponse resp, RESTConnector.Error error, string data) =>
          {
              Log.Debug("\tExampleRetrieveAndRank", "Solr cluster status is '{0}'", resp.solr_cluster_status);
              if (resp.solr_cluster_status.ToLower() != "ready")
@@ -403,7 +404,7 @@ public class ExampleRetrieveAndRank : MonoBehaviour
 
     private void CheckRankerStatus()
     {
-        if (!_retrieveAndRank.GetRanker((RankerStatusPayload resp, string data) =>
+        if (!_retrieveAndRank.GetRanker((RankerStatusPayload resp, RESTConnector.Error error, string data) =>
         {
             Log.Debug("\tExampleRetrieveAndRank", "Solr ranker status is '{0}'", resp.status);
             if (resp.status.ToLower() != "available")
