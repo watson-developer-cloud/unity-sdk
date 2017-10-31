@@ -552,7 +552,11 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 deleteReq.method = "DELETE";
                 foreach (var kp in Headers)
                     deleteReq.SetRequestHeader(kp.Key, kp.Value);
+#if UNITY_2017_0_OR_NEWER
                 deleteReq.SendWebRequest();
+#else
+                deleteReq.Send();
+#endif
 #if ENABLE_DEBUGGING
                 Log.Debug("RESTConnector", "DeleteRequest, sending deletereq {0}", deleteReq);
 #endif
@@ -568,6 +572,6 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 IsComplete = true;
             }
         };
-        #endregion
+#endregion
     }
 }
