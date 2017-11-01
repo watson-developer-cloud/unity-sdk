@@ -36,6 +36,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
       Runnable.EnableRunnableInEditor();
 #endif
       string ProjectToTest = "";
+#if !NETFX_CORE
       string[] args = Environment.GetCommandLineArgs();
       for (int i = 0; i < args.Length; ++i)
       {
@@ -57,6 +58,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
           }
         }
       }
+#endif
 
       UnitTestManager.ProjectToTest = ProjectToTest;
       UnitTestManager instance = UnitTestManager.Instance;

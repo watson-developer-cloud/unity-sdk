@@ -60,11 +60,19 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         #region Private Functions
         private static T ReadType<T>(BinaryReader reader)
         {
+#if NETFX_CORE
+            byte[] bytes = reader.ReadBytes(Marshal.SizeOf<T>());
+
+            GCHandle handle = GCHandle.Alloc(bytes, GCHandleType.Pinned);
+            T theStructure = (T)Marshal.PtrToStructure<T>(handle.AddrOfPinnedObject());
+            handle.Free();
+#else
             byte[] bytes = reader.ReadBytes(Marshal.SizeOf(typeof(T)));
 
             GCHandle handle = GCHandle.Alloc(bytes, GCHandleType.Pinned);
             T theStructure = (T)Marshal.PtrToStructure(handle.AddrOfPinnedObject(), typeof(T));
             handle.Free();
+#endif
 
             return theStructure;
         }
@@ -254,7 +262,15 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             writer.Seek(0, SeekOrigin.Begin);
             WriteType(writer, form);
 
+#if NETFX_CORE
+            ArraySegment<byte> bytes;
+            if (stream.TryGetBuffer(out bytes))
+                return bytes.Array;
+            else
+                return null;
+#else
             return stream.GetBuffer();
+#endif
         }
         #endregion
     }

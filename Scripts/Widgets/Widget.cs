@@ -200,6 +200,18 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 
                 if (!string.IsNullOrEmpty(ReceiverFunction))
                 {
+#if NETFX_CORE
+                    MethodInfo info = Owner.GetType().GetMethod(ReceiverFunction, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public |
+                        BindingFlags.NonPublic | BindingFlags.Static);
+                    if (info != null)
+                    {
+                        DataReceiver = info.CreateDelegate(typeof(OnReceiveData), Owner) as OnReceiveData;
+                        if (DataReceiver == null)
+                            Log.Error("Widget", "CreateDelegate failed for function {0}", ReceiverFunction);
+                    }
+                    else
+                        Log.Error("Widget", "Failed to find receiver function {0} in object {1}.", ReceiverFunction, Owner.gameObject.name);
+#else
                     MethodInfo info = Owner.GetType().GetMethod(ReceiverFunction, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public |
                         BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.InvokeMethod);
                     if (info != null)
@@ -210,6 +222,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                     }
                     else
                         Log.Error("Widget", "Failed to find receiver function {0} in object {1}.", ReceiverFunction, Owner.gameObject.name);
+#endif
                 }
             }
 
@@ -611,8 +624,13 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         {
             List<T> inputs = new List<T>();
 
+#if NETFX_CORE
+            MemberInfo[] members = GetType().GetMembers(BindingFlags.Instance
+                | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public);
+#else
             MemberInfo[] members = GetType().GetMembers(BindingFlags.Instance | BindingFlags.GetField
                 | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public);
+#endif
             foreach (MemberInfo info in members)
             {
                 FieldInfo field = info as FieldInfo;

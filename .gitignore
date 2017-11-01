@@ -42,6 +42,7 @@ Resources.meta
 Scenes.meta
 Scripts.meta
 ThirdParty.meta
+Plugins.meta
 Prefabs.meta
 Examples.meta
 Docs.meta
