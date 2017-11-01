@@ -138,7 +138,7 @@ namespace IBM.Watson.DeveloperCloud.Logging
             {
                 // install the default reactors...
                 _bInstalledDefaultReactors = true;
-#if UNITY_EDITOR || UNITY_IOS || UNITY_ANDROID
+#if UNITY_EDITOR || UNITY_IOS || UNITY_ANDROID || NETFX_CORE
                 LogSystem.Instance.InstallReactor(new DebugReactor());
 #endif
 
@@ -210,11 +210,13 @@ namespace IBM.Watson.DeveloperCloud.Logging
         /// <param name="subSystem">Name of the subsystem.</param>
         /// <param name="messageFmt">Message with formatting.</param>
         /// <param name="args">Formatting arguments.</param>
-#if UNITY_EDITOR
+#if UNITY_EDITOR || NETFX_CORE
         public static void Debug(string subSystem, string messageFmt, params object[] args)
         {
             LogSystem.Instance.ProcessLog(new LogRecord(LogLevel.DEBUG, subSystem, messageFmt, args));
+#if !NETFX_CORE
             System.Console.WriteLine("[{0}][{1}]: {2}", LogLevel.DEBUG, subSystem, string.Format(messageFmt, args));
+#endif
         }
 #else
         // We compile out Log.Debug() functions in release builds.
@@ -231,7 +233,9 @@ namespace IBM.Watson.DeveloperCloud.Logging
         public static void Status(string subSystem, string messageFmt, params object[] args)
         {
             LogSystem.Instance.ProcessLog(new LogRecord(LogLevel.STATUS, subSystem, messageFmt, args));
+#if !NETFX_CORE
             System.Console.WriteLine("[{0}][{1}]: {2}", LogLevel.STATUS, subSystem, string.Format(messageFmt, args));
+#endif
         }
         /// <summary>
         /// Log a WARNING level message.
@@ -242,7 +246,9 @@ namespace IBM.Watson.DeveloperCloud.Logging
         public static void Warning(string subSystem, string messageFmt, params object[] args)
         {
             LogSystem.Instance.ProcessLog(new LogRecord(LogLevel.WARNING, subSystem, messageFmt, args));
+#if !NETFX_CORE
             System.Console.WriteLine("[{0}][{1}]: {2}", LogLevel.WARNING, subSystem, string.Format(messageFmt, args));
+#endif
         }
         /// <summary>
         /// Log a ERROR level message.
@@ -253,7 +259,9 @@ namespace IBM.Watson.DeveloperCloud.Logging
         public static void Error(string subSystem, string messageFmt, params object[] args)
         {
             LogSystem.Instance.ProcessLog(new LogRecord(LogLevel.ERROR, subSystem, messageFmt, args));
+#if !NETFX_CORE
             System.Console.WriteLine("[{0}][{1}]: {2}", LogLevel.ERROR, subSystem, string.Format(messageFmt, args));
+#endif
         }
         /// <summary>
         /// Log a CRITICAL level message.
@@ -264,7 +272,9 @@ namespace IBM.Watson.DeveloperCloud.Logging
         public static void Critical(string subSystem, string messageFmt, params object[] args)
         {
             LogSystem.Instance.ProcessLog(new LogRecord(LogLevel.CRITICAL, subSystem, messageFmt, args));
+#if !NETFX_CORE
             System.Console.WriteLine("[{0}][{1}]: {2}", LogLevel.CRITICAL, subSystem, string.Format(messageFmt, args));
+#endif
         }
     }
 }

@@ -235,6 +235,7 @@ public static class RunUnitTest
         Runnable.EnableRunnableInEditor();
 #endif
         string ProjectToTest = "";
+#if !NETFX_CORE
         string[] args = Environment.GetCommandLineArgs();
         for (int i = 0; i < args.Length; ++i)
         {
@@ -256,6 +257,7 @@ public static class RunUnitTest
                 }
             }
         }
+#endif
 
         IBM.Watson.DeveloperCloud.Editor.UnitTestManager.ProjectToTest = ProjectToTest;
         IBM.Watson.DeveloperCloud.Editor.UnitTestManager instance = IBM.Watson.DeveloperCloud.Editor.UnitTestManager.Instance;
