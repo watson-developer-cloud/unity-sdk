@@ -288,9 +288,9 @@ public class ExampleStreaming : MonoBehaviour
             {
                 foreach (var alt in res.alternatives)
                 {
-                    string text = alt.transcript;
-                    Log.Debug("ExampleStreaming", string.Format("{0} ({1}, {2:0.00})\n", text, res.final ? "Final" : "Interim", alt.confidence));
-                    ResultsField.text = text;
+					string text = string.Format("{0} ({1}, {2:0.00})\n", alt.transcript, res.final ? "Final" : "Interim", alt.confidence);
+					Log.Debug("ExampleStreaming", text);
+					ResultsField.text = text;
                 }
 
                 if (res.keywords_result != null && res.keywords_result.keyword != null)
