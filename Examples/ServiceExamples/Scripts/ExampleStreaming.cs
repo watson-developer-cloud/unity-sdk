@@ -15,6 +15,9 @@
 *
 */
 
+//  Uncomment to test chunked
+#define TEST_NEW
+
 using UnityEngine;
 using System.Collections;
 using IBM.Watson.DeveloperCloud.Logging;
@@ -22,18 +25,21 @@ using IBM.Watson.DeveloperCloud.Services.SpeechToText.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
 using IBM.Watson.DeveloperCloud.DataTypes;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class ExampleStreaming : MonoBehaviour
 {
     private string _username = null;
     private string _password = null;
     private string _url = null;
+    public Text ResultsField;
     
     private int _recordingRoutine = 0;
     private string _microphoneID = null;
     private AudioClip _recording = null;
-    private int _recordingBufferSize = 2;
+    private int _recordingBufferSize = 1;
     private int _recordingHZ = 22050;
+    private int _chunkCount = 50;
 
     private SpeechToText _speechToText;
 
@@ -57,24 +63,24 @@ public class ExampleStreaming : MonoBehaviour
         {
             if (value && !_speechToText.IsListening)
             {
-                _speechToText.DetectSilence = true;
+                _speechToText.DetectSilence = false;
                 _speechToText.EnableWordConfidence = true;
                 _speechToText.EnableTimestamps = true;
                 _speechToText.SilenceThreshold = 0.1f;
-                _speechToText.MaxAlternatives = 5;
+                _speechToText.MaxAlternatives = 0;
                 _speechToText.EnableInterimResults = true;
                 _speechToText.OnError = OnError;
                 _speechToText.InactivityTimeout = -1;
-                _speechToText.ProfanityFilter = true;
+                _speechToText.ProfanityFilter = false;
                 _speechToText.SmartFormatting = true;
-                _speechToText.SpeakerLabels = true;
+                _speechToText.SpeakerLabels = false;
                 _speechToText.WordAlternativesThreshold = null;
-                List<string> keywords = new List<string>();
-                keywords.Add("hello");
-                keywords.Add("testing");
-                keywords.Add("watson");
-                _speechToText.KeywordsThreshold = 0.5f;
-                _speechToText.Keywords = keywords.ToArray();
+                //List<string> keywords = new List<string>();
+                //keywords.Add("hello");
+                //keywords.Add("testing");
+                //keywords.Add("watson");
+                //_speechToText.KeywordsThreshold = 0.5f;
+                //_speechToText.Keywords = keywords.ToArray();
                 _speechToText.StartListening(OnRecognize, OnRecognizeSpeaker);
             }
             else if (!value && _speechToText.IsListening)
@@ -109,6 +115,111 @@ public class ExampleStreaming : MonoBehaviour
 
         Log.Debug("ExampleStreaming", "Error! {0}", error);
     }
+
+#if TEST_NEW
+
+    private IEnumerator RecordingHandler()
+    {
+        Log.Debug("ExampleStreamingChunks", "devices: {0}", Microphone.devices);
+        //  Start recording
+        _recording = Microphone.Start(_microphoneID, true, _recordingBufferSize, _recordingHZ);
+        yield return null;
+
+        if (_recording == null)
+        {
+            StopRecording();
+            yield break;
+        }
+
+#if ENABLE_TIME_LOGGING
+        //  Set a reference to now to check timing
+        DateTime now = DateTime.Now;
+#endif
+
+        //  Current chunk number
+        int chunkNum = 0;
+
+        //  Size of the chunk in samples
+        int chunkSize = _recording.samples / _chunkCount;
+
+        //  Init samples
+        float[] samples = null;
+
+        while (_recordingRoutine != 0 && _recording != null)
+        {
+            //  Get the mic position
+            int microphonePosition = Microphone.GetPosition(_microphoneID);
+            if (microphonePosition > _recording.samples || !Microphone.IsRecording(_microphoneID))
+            {
+                Log.Error("ExampleStreaming", "Microphone disconnected.");
+
+                StopRecording();
+                yield break;
+            }
+
+            int sampleStart = chunkSize * chunkNum;
+            int sampleEnd = chunkSize * (chunkNum + 1);
+
+#if ENABLE_DEBUGGING
+            Log.Debug("ExampleStreamingChunks", "microphonePosition: {0} | sampleStart: {1} | sampleEnd: {2} | chunkNum: {3}",
+                microphonePosition.ToString(),
+                sampleStart.ToString(),
+                sampleEnd.ToString(),
+                chunkNum.ToString());
+#endif
+            //If the write position is past the end of the chunk or if write position is before the start of the chunk and the chunk number is equal to the chunk count
+            if (microphonePosition > sampleEnd || (microphonePosition < sampleStart && chunkNum == (_chunkCount - 1)))
+            {
+                //  Init samples
+                samples = new float[chunkSize];
+                //  Write data from recording into samples starting from the chunkStart
+                _recording.GetData(samples, sampleStart);
+
+                //  Create AudioData and use the samples we just created
+                AudioData record = new AudioData();
+                record.MaxLevel = Mathf.Max(samples);
+                record.Clip = AudioClip.Create("Recording", chunkSize, _recording.channels, _recordingHZ, false);
+                record.Clip.SetData(samples, 0);
+
+                //  Send the newly created AudioData to the service
+                _speechToText.OnListen(record);
+
+                //  Iterate or reset chunkNum
+                if (chunkNum < _chunkCount - 1)
+                {
+                    chunkNum++;
+#if ENABLE_DEBUGGING
+                    Log.Debug("ExampleStreamingChunks", "Iterating chunkNum: {0}", chunkNum);
+#endif
+                }
+                else
+                {
+                    chunkNum = 0;
+#if ENABLE_DEBUGGING
+                    Log.Debug("ExampleStreamingChunks", "Resetting chunkNum: {0}", chunkNum);
+#endif
+                }
+
+#if ENABLE_TIME_LOGGING
+                Log.Debug("ExampleStreamingChunks", "Sending data - time since last transmission: {0} ms", Mathf.Floor((float)(DateTime.Now - now).TotalMilliseconds));
+                now = DateTime.Now;
+#endif
+            }
+            else
+            {
+                // calculate the number of samples remaining until we ready for a block of audio, 
+                // and wait that amount of time it will take to record.
+                int remaining = sampleEnd - microphonePosition;
+                float timeRemaining = (float)remaining / (float)_recordingHZ;
+
+                yield return new WaitForSeconds(timeRemaining);
+            }
+        }
+
+        yield break;
+    }
+
+#else
 
     private IEnumerator RecordingHandler()
     {
@@ -167,6 +278,7 @@ public class ExampleStreaming : MonoBehaviour
 
         yield break;
     }
+#endif
 
     private void OnRecognize(SpeechRecognitionEvent result)
     {
@@ -178,6 +290,7 @@ public class ExampleStreaming : MonoBehaviour
                 {
                     string text = alt.transcript;
                     Log.Debug("ExampleStreaming", string.Format("{0} ({1}, {2:0.00})\n", text, res.final ? "Final" : "Interim", alt.confidence));
+                    ResultsField.text = text;
                 }
 
                 if (res.keywords_result != null && res.keywords_result.keyword != null)
@@ -210,6 +323,5 @@ public class ExampleStreaming : MonoBehaviour
                 Log.Debug("ExampleStreaming", string.Format("speaker result: {0} | confidence: {3} | from: {1} | to: {2}", labelResult.speaker, labelResult.from, labelResult.to, labelResult.confidence));
             }
         }
-
     }
 }
