@@ -549,7 +549,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 Log.Debug("RESTConnector", "DeleteRequest, ProcessRequest {0}", URL);
 #endif
                 UnityWebRequest deleteReq = UnityWebRequest.Delete(URL);
-                deleteReq.method = "DELETE";
+				deleteReq.method = UnityWebRequest.kHttpVerbDELETE;
                 foreach (var kp in Headers)
                     deleteReq.SetRequestHeader(kp.Key, kp.Value);
 #if UNITY_2017_1_OR_NEWER
