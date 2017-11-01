@@ -2,9 +2,9 @@
 
 set -e
 
-BASE_URL=http://netstorage.unity3d.com/unity
-HASH=38b4efef76f0
-VERSION=5.5.0f3
+BASE_URL=https://netstorage.unity3d.com/unity
+HASH=46dda1414e51
+VERSION=2017.2.0f3
 
 download() {
  file=$1
@@ -35,6 +35,3 @@ fi
 
 install "MacEditorInstaller/Unity-$VERSION.pkg"
 install "MacEditorTargetInstaller/UnitySetup-Windows-Support-for-Editor-$VERSION.pkg"
-
-#"Mac Target Support - now part of Editor as default player instead of web player"
-#install "MacEditorTargetInstaller/UnitySetup-Mac-Support-for-Editor-$VERSION.pkg"

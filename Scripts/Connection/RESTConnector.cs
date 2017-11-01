@@ -24,8 +24,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading;
 using UnityEngine;
+using UnityEngine.Networking;
 
 #if UNITY_EDITOR
 using System.Net;
@@ -491,7 +491,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
                     float timeout = Mathf.Max(Constants.Config.Timeout, req.Timeout);
 
                     DeleteRequest deleteReq = new DeleteRequest();
-                    deleteReq.Send(url, req.Headers);
+                    Runnable.Run(deleteReq.Send(url, req.Headers));
                     while (!deleteReq.IsComplete)
                     {
                         if (req.Cancel)
@@ -521,7 +521,6 @@ namespace IBM.Watson.DeveloperCloud.Connection
             yield break;
         }
 
-#if UNITY_EDITOR
         private class DeleteRequest
         {
             public string URL { get; set; }
@@ -529,15 +528,11 @@ namespace IBM.Watson.DeveloperCloud.Connection
             public bool IsComplete { get; set; }
             public bool Success { get; set; }
 
-            private Thread _thread = null;
-
-            public bool Send(string url, Dictionary<string, string> headers)
+            public IEnumerator Send(string url, Dictionary<string, string> headers)
             {
 #if ENABLE_DEBUGGING
                 Log.Debug("RESTConnector", "DeleteRequest, Send: {0}, _thread:{1}", url, _thread);
 #endif
-                if (_thread != null && _thread.IsAlive)
-                    return false;
 
                 URL = url;
                 Headers = new Dictionary<string, string>();
@@ -547,42 +542,36 @@ namespace IBM.Watson.DeveloperCloud.Connection
                         Headers[kp.Key] = kp.Value;
                 }
 
-                _thread = new Thread(ProcessRequest);
-
-                _thread.Start();
-                return true;
-            }
-
-            private void ProcessRequest()
-            {
                 // This fixes the exception thrown by self-signed certificates.
                 ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(delegate { return true; });
 
 #if ENABLE_DEBUGGING
                 Log.Debug("RESTConnector", "DeleteRequest, ProcessRequest {0}", URL);
 #endif
-
-                WebRequest deleteReq = WebRequest.Create(URL);
-
+                UnityWebRequest deleteReq = UnityWebRequest.Delete(URL);
+				deleteReq.method = UnityWebRequest.kHttpVerbDELETE;
                 foreach (var kp in Headers)
-                    deleteReq.Headers.Add(kp.Key, kp.Value);
-                deleteReq.Method = "DELETE";
-
+                    deleteReq.SetRequestHeader(kp.Key, kp.Value);
+#if UNITY_2017_1_OR_NEWER
+                deleteReq.SendWebRequest();
+#else
+                deleteReq.Send();
+#endif
 #if ENABLE_DEBUGGING
                 Log.Debug("RESTConnector", "DeleteRequest, sending deletereq {0}", deleteReq);
 #endif
-                HttpWebResponse deleteResp = deleteReq.GetResponse() as HttpWebResponse;
+                while (!deleteReq.isDone)
+                    yield return null;
 #if ENABLE_DEBUGGING
                 Log.Debug("RESTConnector", "DELETE Request SENT: {0}", URL);
 #endif
-                Success = deleteResp.StatusCode == HttpStatusCode.OK || deleteResp.StatusCode == HttpStatusCode.NoContent;
+                Success = deleteReq.responseCode == (long)HttpStatusCode.OK || deleteReq.responseCode == (long)HttpStatusCode.NoContent;
 #if ENABLE_DEBUGGING
                 Log.Debug("RESTConnector", "DELETE Request COMPLETE: {0}", URL);
 #endif
                 IsComplete = true;
             }
         };
-#endif
-        #endregion
+#endregion
     }
 }
