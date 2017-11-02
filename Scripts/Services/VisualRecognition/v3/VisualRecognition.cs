@@ -1135,7 +1135,6 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
 
-            Log.Debug("VisualRecognition", "Attempting to delete classifier {0}", classifierId);
             RESTConnector connector = RESTConnector.GetConnector(Credentials, ClassifiersEndpoint + "/" + classifierId);
             if (connector == null)
                 return false;

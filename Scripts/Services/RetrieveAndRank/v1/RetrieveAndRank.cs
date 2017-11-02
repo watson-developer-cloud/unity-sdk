@@ -1078,7 +1078,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                 try
                 {
                     string json = Encoding.UTF8.GetString(resp.Data);
-                    Log.Debug("RetriveAndRank", "json: {0}", json);
+                    Log.Debug("RetriveAndRank.OnIndexDocumentsResponse()", "json: {0}", json);
                     fsResult r = fsJsonParser.Parse(json, out data);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);

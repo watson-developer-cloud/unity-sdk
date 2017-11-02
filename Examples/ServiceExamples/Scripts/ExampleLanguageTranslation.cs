@@ -34,13 +34,13 @@ public class ExampleLanguageTranslation : MonoBehaviour
         Credentials credentials = new Credentials(_username, _password, _url);
         _languageTranslation = new LanguageTranslation(credentials);
 
-        Log.Debug("ExampleLangaugeTranslation", "English Phrase to translate: " + _pharseToTranslate);
+        Log.Debug("ExampleLangaugeTranslation.Start()", "English Phrase to translate: " + _pharseToTranslate);
         _languageTranslation.GetTranslation(_pharseToTranslate, "en", "es", OnGetTranslation);
     }
 
     private void OnGetTranslation(Translations translation, string customData)
     {
         if (translation != null && translation.translations.Length > 0)
-            Log.Debug("ExampleLangaugeTranslation", "Spanish Translation: " + translation.translations[0].translation);
+            Log.Debug("ExampleLangaugeTranslation.OnGetTranslation()", "Spanish Translation: " + translation.translations[0].translation);
     }
 }

@@ -66,51 +66,51 @@ public class ExampleTextToSpeech : MonoBehaviour
     private IEnumerator Examples()
     {
         //  Synthesize
-        Log.Debug("ExampleTextToSpeech", "Attempting synthesize.");
+        Log.Debug("ExampleTextToSpeech.Examples()", "Attempting synthesize.");
         _textToSpeech.Voice = VoiceType.en_US_Allison;
         _textToSpeech.ToSpeech(_testString, HandleToSpeechCallback, true);
         while (!_synthesizeTested)
             yield return null;
 
         //	Get Voices
-        Log.Debug("ExampleTextToSpeech", "Attempting to get voices.");
+        Log.Debug("ExampleTextToSpeech.Examples()", "Attempting to get voices.");
         _textToSpeech.GetVoices(OnGetVoices);
         while (!_getVoicesTested)
             yield return null;
 
         //	Get Voice
-        Log.Debug("ExampleTextToSpeech", "Attempting to get voice {0}.", VoiceType.en_US_Allison);
+        Log.Debug("ExampleTextToSpeech.Examples()", "Attempting to get voice {0}.", VoiceType.en_US_Allison);
         _textToSpeech.GetVoice(OnGetVoice, VoiceType.en_US_Allison);
         while (!_getVoiceTested)
             yield return null;
 
         //	Get Pronunciation
-        Log.Debug("ExampleTextToSpeech", "Attempting to get pronunciation of {0}", _testWord);
+        Log.Debug("ExampleTextToSpeech.Examples()", "Attempting to get pronunciation of {0}", _testWord);
         _textToSpeech.GetPronunciation(OnGetPronunciation, _testWord, VoiceType.en_US_Allison);
         while (!_getPronuciationTested)
             yield return null;
 
         //  Get Customizations
-        Log.Debug("ExampleTextToSpeech", "Attempting to get a list of customizations");
+        Log.Debug("ExampleTextToSpeech.Examples()", "Attempting to get a list of customizations");
         _textToSpeech.GetCustomizations(OnGetCustomizations);
         while (!_getCustomizationsTested)
             yield return null;
 
         //  Create Customization
-        Log.Debug("ExampleTextToSpeech", "Attempting to create a customization");
+        Log.Debug("ExampleTextToSpeech.Examples()", "Attempting to create a customization");
         _textToSpeech.CreateCustomization(OnCreateCustomization, _customizationName, _customizationLanguage, _customizationDescription);
         while (!_createCustomizationTested)
             yield return null;
 
         //  Get Customization
-        Log.Debug("ExampleTextToSpeech", "Attempting to get a customization");
+        Log.Debug("ExampleTextToSpeech.Examples()", "Attempting to get a customization");
         if (!_textToSpeech.GetCustomization(OnGetCustomization, _createdCustomizationId))
-            Log.Debug("ExampleTextToSpeech", "Failed to get custom voice model!");
+            Log.Debug("ExampleTextToSpeech.Examples()", "Failed to get custom voice model!");
         while (!_getCustomizationTested)
             yield return null;
 
         //  Update Customization
-        Log.Debug("ExampleTextToSpeech", "Attempting to update a customization");
+        Log.Debug("ExampleTextToSpeech.Examples()", "Attempting to update a customization");
         Word[] wordsToUpdateCustomization =
         {
             new Word()
@@ -138,19 +138,19 @@ public class ExampleTextToSpeech : MonoBehaviour
         };
 
         if (!_textToSpeech.UpdateCustomization(OnUpdateCustomization, _createdCustomizationId, _customVoiceUpdate))
-            Log.Debug("ExampleTextToSpeech", "Failed to update customization!");
+            Log.Debug("ExampleTextToSpeech.Examples()", "Failed to update customization!");
         while (!_updateCustomizationTested)
             yield return null;
 
         //  Get Customization Words
-        Log.Debug("ExampleTextToSpeech", "Attempting to get a customization's words");
+        Log.Debug("ExampleTextToSpeech.Examples()", "Attempting to get a customization's words");
         if (!_textToSpeech.GetCustomizationWords(OnGetCustomizationWords, _createdCustomizationId))
-            Log.Debug("ExampleTextToSpeech", "Failed to get {0} words!", _createdCustomizationId);
+            Log.Debug("ExampleTextToSpeech.GetCustomizationWords()", "Failed to get {0} words!", _createdCustomizationId);
         while (!_getCustomizationWordsTested)
             yield return null;
 
         //  Add Customization Words
-        Log.Debug("ExampleTextToSpeech", "Attempting to add words to a customization");
+        Log.Debug("ExampleTextToSpeech.Examples()", "Attempting to add words to a customization");
         Word[] wordArrayToAddToCustomization =
         {
             new Word()
@@ -176,34 +176,34 @@ public class ExampleTextToSpeech : MonoBehaviour
         };
 
         if (!_textToSpeech.AddCustomizationWords(OnAddCustomizationWords, _createdCustomizationId, wordsToAddToCustomization))
-            Log.Debug("ExampleTextToSpeech", "Failed to add words to {0}!", _createdCustomizationId);
+            Log.Debug("ExampleTextToSpeech.AddCustomizationWords()", "Failed to add words to {0}!", _createdCustomizationId);
         while (!_addCustomizationWordsTested)
             yield return null;
 
         //  Get Customization Word
-        Log.Debug("ExampleTextToSpeech", "Attempting to get the translation of a custom voice model's word.");
+        Log.Debug("ExampleTextToSpeech.Examples()", "Attempting to get the translation of a custom voice model's word.");
         string customIdentifierWord = wordsToUpdateCustomization[0].word;
         if (!_textToSpeech.GetCustomizationWord(OnGetCustomizationWord, _createdCustomizationId, customIdentifierWord))
-            Log.Debug("ExampleTextToSpeech", "Failed to get the translation of {0} from {1}!", customIdentifierWord, _createdCustomizationId);
+            Log.Debug("ExampleTextToSpeech.GetCustomizationWord()", "Failed to get the translation of {0} from {1}!", customIdentifierWord, _createdCustomizationId);
         while (!_getCustomizationWordTested)
             yield return null;
 
         //  Delete Customization Word
-        Log.Debug("ExampleTextToSpeech", "Attempting to delete customization word from custom voice model.");
+        Log.Debug("ExampleTextToSpeech.Examples()", "Attempting to delete customization word from custom voice model.");
         string wordToDelete = "goodbye";
         if (!_textToSpeech.DeleteCustomizationWord(OnDeleteCustomizationWord, _createdCustomizationId, wordToDelete))
-            Log.Debug("ExampleTextToSpeech", "Failed to delete {0} from {1}!", wordToDelete, _createdCustomizationId);
+            Log.Debug("ExampleTextToSpeech.DeleteCustomizationWord()", "Failed to delete {0} from {1}!", wordToDelete, _createdCustomizationId);
         while (!_deleteCustomizationWordTested)
             yield return null;
 
         //  Delete Customization
-        Log.Debug("ExampleTextToSpeech", "Attempting to delete a customization");
+        Log.Debug("ExampleTextToSpeech.Examples()", "Attempting to delete a customization");
         if (!_textToSpeech.DeleteCustomization(OnDeleteCustomization, _createdCustomizationId))
-            Log.Debug("ExampleTextToSpeech", "Failed to delete custom voice model!");
+            Log.Debug("ExampleTextToSpeech.DeleteCustomization()", "Failed to delete custom voice model!");
         while (!_deleteCustomizationTested)
             yield return null;
 
-        Log.Debug("ExampleTextToSpeech", "Text to Speech examples complete.");
+        Log.Debug("ExampleTextToSpeech.Examples()", "Text to Speech examples complete.");
     }
 
     void HandleToSpeechCallback(AudioClip clip, string customData)
@@ -230,75 +230,75 @@ public class ExampleTextToSpeech : MonoBehaviour
 
     private void OnGetVoices(Voices voices, string customData)
     {
-        Log.Debug("ExampleTextToSpeech", "Text to Speech - Get voices response: {0}", customData);
+        Log.Debug("ExampleTextToSpeech.OnGetVoices()", "Text to Speech - Get voices response: {0}", customData);
         _getVoicesTested = true;
     }
 
     private void OnGetVoice(Voice voice, string customData)
     {
-        Log.Debug("ExampleTextToSpeech", "Text to Speech - Get voice  response: {0}", customData);
+        Log.Debug("ExampleTextToSpeech.OnGetVoice()", "Text to Speech - Get voice  response: {0}", customData);
         _getVoiceTested = true;
     }
 
     private void OnGetPronunciation(Pronunciation pronunciation, string customData)
     {
-        Log.Debug("ExampleTextToSpeech", "Text to Speech - Get pronunciation response: {0}", customData);
+        Log.Debug("ExampleTextToSpeech.OnGetPronunciation()", "Text to Speech - Get pronunciation response: {0}", customData);
         _getPronuciationTested = true;
     }
 
     private void OnGetCustomizations(Customizations customizations, string customData)
     {
-        Log.Debug("ExampleTextToSpeech", "Text to Speech - Get customizations response: {0}", customData);
+        Log.Debug("ExampleTextToSpeech.OnGetCustomizations()", "Text to Speech - Get customizations response: {0}", customData);
         _getCustomizationsTested = true;
     }
 
     private void OnCreateCustomization(CustomizationID customizationID, string customData)
     {
-        Log.Debug("ExampleTextToSpeech", "Text to Speech - Create customization response: {0}", customData);
+        Log.Debug("ExampleTextToSpeech.OnCreateCustomization()", "Text to Speech - Create customization response: {0}", customData);
         _createdCustomizationId = customizationID.customization_id;
         _createCustomizationTested = true;
     }
 
     private void OnDeleteCustomization(bool success, string customData)
     {
-        Log.Debug("ExampleTextToSpeech", "Text to Speech - Delete customization response: {0}", customData);
+        Log.Debug("ExampleTextToSpeech.OnDeleteCustomization()", "Text to Speech - Delete customization response: {0}", customData);
         _createdCustomizationId = null;
         _deleteCustomizationTested = true;
     }
 
     private void OnGetCustomization(Customization customization, string customData)
     {
-        Log.Debug("ExampleTextToSpeech", "Text to Speech - Get customization response: {0}", customData);
+        Log.Debug("ExampleTextToSpeech.OnGetCustomization()", "Text to Speech - Get customization response: {0}", customData);
         _getCustomizationTested = true;
     }
 
     private void OnUpdateCustomization(bool success, string customData)
     {
-        Log.Debug("ExampleTextToSpeech", "Text to Speech - Update customization response: {0}", customData);
+        Log.Debug("ExampleTextToSpeech.OnUpdateCustomization()", "Text to Speech - Update customization response: {0}", customData);
         _updateCustomizationTested = true;
     }
 
     private void OnGetCustomizationWords(Words words, string customData)
     {
-        Log.Debug("ExampleTextToSpeech", "Text to Speech - Get customization words response: {0}", customData);
+        Log.Debug("ExampleTextToSpeech.OnGetCustomizationWords()", "Text to Speech - Get customization words response: {0}", customData);
         _getCustomizationWordsTested = true;
     }
 
     private void OnAddCustomizationWords(bool success, string customData)
     {
-        Log.Debug("ExampleTextToSpeech", "Text to Speech - Add customization words response: {0}", customData);
+        Log.Debug("ExampleTextToSpeech.OnAddCustomizationWords()", "Text to Speech - Add customization words response: {0}", customData);
         _addCustomizationWordsTested = true;
     }
 
     private void OnDeleteCustomizationWord(bool success, string customData)
     {
-        Log.Debug("ExampleTextToSpeech", "Text to Speech - Delete customization word response: {0}", customData);
+        Log.Debug("ExampleTextToSpeech.OnDeleteCustomizationWord()", "Text to Speech - Delete customization word response: {0}", customData);
         _deleteCustomizationWordTested = true;
     }
 
     private void OnGetCustomizationWord(Translation translation, string customData)
     {
-        Log.Debug("ExampleTextToSpeech", "Text to Speech - Get customization word response: {0}", customData);
+        Log.Debug("ExampleTextToSpeech.OnGetCustomizationWord()", "Text to Speech - Get customization word response: {0}", customData);
         _getCustomizationWordTested = true;
     }
 }

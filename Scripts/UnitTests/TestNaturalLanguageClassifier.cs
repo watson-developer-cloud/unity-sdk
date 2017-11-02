@@ -93,7 +93,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             }
             catch
             {
-                Log.Debug("TestNaturalLanguageClassifier", "Failed to get credentials from VCAP_SERVICES file. Please configure credentials to run this test. For more information, see: https://github.com/watson-developer-cloud/unity-sdk/#authentication");
+                Log.Debug("TestNaturalLanguageClassifier.RunTest()", "Failed to get credentials from VCAP_SERVICES file. Please configure credentials to run this test. For more information, see: https://github.com/watson-developer-cloud/unity-sdk/#authentication");
             }
 
             //  Create credential and instantiate service
@@ -109,13 +109,13 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             //  Get classifiers
             if (!naturalLanguageClassifier.GetClassifiers(OnGetClassifiers))
-                Log.Debug("ExampleNaturalLanguageClassifier", "Failed to get classifiers!");
+                Log.Debug("TestNaturalLanguageClassifier.GetClassifiers()", "Failed to get classifiers!");
 
             while (!_getClassifiersTested)
                 yield return null;
 
             if (_classifierIds.Count == 0)
-                Log.Debug("ExampleNaturalLanguageClassifier", "There are no trained classifiers. Please train a classifier...");
+                Log.Debug("TestNaturalLanguageClassifier.RunTest()", "There are no trained classifiers. Please train a classifier...");
 
             if (_classifierIds.Count > 0)
             {
@@ -123,7 +123,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 foreach (string classifierId in _classifierIds)
                 {
                     if (!naturalLanguageClassifier.GetClassifier(classifierId, OnGetClassifier))
-                        Log.Debug("ExampleNaturalLanguageClassifier", "Failed to get classifier {0}!", classifierId);
+                        Log.Debug("TestNaturalLanguageClassifier.GetClassifier()", "Failed to get classifier {0}!", classifierId);
                 }
 
                 while (!_getClassifierTested)
@@ -131,14 +131,14 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             }
 
             if (!_areAnyClassifiersAvailable && _classifierIds.Count > 0)
-                Log.Debug("ExampleNaturalLanguageClassifier", "All classifiers are training...");
+                Log.Debug("TestNaturalLanguageClassifier.RunTest()", "All classifiers are training...");
 
             //  Train classifier
 #if TRAIN_CLASSIFIER
             string dataPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/weather_data_train.csv";
             var trainingContent = File.ReadAllText(dataPath);
             if (!naturalLanguageClassifier.TrainClassifier(_classifierName + "/" + DateTime.Now.ToString(), "en", trainingContent, OnTrainClassifier))
-                Log.Debug("ExampleNaturalLanguageClassifier", "Failed to train clasifier!");
+                Log.Debug("TestNaturalLanguageClassifier.TrainClassifier()", "Failed to train clasifier!");
 
             while (!_trainClassifierTested)
                 yield return null;
@@ -147,26 +147,26 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 #if DELETE_TRAINED_CLASSIFIER
             if (!string.IsNullOrEmpty(_classifierToDelete))
                 if (!naturalLanguageClassifier.DeleteClassifer(_classifierToDelete, OnDeleteTrainedClassifier))
-                    Log.Debug("ExampleNaturalLanguageClassifier", "Failed to delete clasifier {0}!", _classifierToDelete);
+                    Log.Debug("TestNaturalLanguageClassifier.DeleteClassifer()", "Failed to delete clasifier {0}!", _classifierToDelete);
 #endif
 
             //  Classify
             if (_areAnyClassifiersAvailable)
             {
                 if (!naturalLanguageClassifier.Classify(_classifierId, _inputString, OnClassify))
-                    Log.Debug("ExampleNaturalLanguageClassifier", "Failed to classify!");
+                    Log.Debug("TestNaturalLanguageClassifier.Classify()", "Failed to classify!");
 
                 while (!_classifyTested)
                     yield return null;
             }
 
-            Log.Debug("ExampleNaturalLanguageClassifier", "Natural language classifier examples complete.");
+            Log.Debug("TestNaturalLanguageClassifier.RunTest()", "Natural language classifier examples complete.");
 
             yield break;
         }
         private void OnGetClassifiers(Classifiers classifiers, string data)
         {
-            Log.Debug("ExampleNaturalLanguageClassifier", "Natural Language Classifier - GetClassifiers  Response: {0}", data);
+            Log.Debug("TestNaturalLanguageClassifier.OnGetClassifiers()", "Natural Language Classifier - GetClassifiers  Response: {0}", data);
 
             foreach (Classifier classifier in classifiers.classifiers)
                 _classifierIds.Add(classifier.classifier_id);
@@ -177,7 +177,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void OnClassify(ClassifyResult result, string data)
         {
-            Log.Debug("ExampleNaturalLanguageClassifier", "Natural Language Classifier - Classify Response: {0}", data);
+            Log.Debug("TestNaturalLanguageClassifier.OnClassify()", "Natural Language Classifier - Classify Response: {0}", data);
             Test(result != null);
             _classifyTested = true;
         }
@@ -185,7 +185,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 #if TRAIN_CLASSIFIER
         private void OnTrainClassifier(Classifier classifier, string data)
         {
-            Log.Debug("ExampleNaturalLanguageClassifier", "Natural Language Classifier - Train Classifier: {0}", data);
+            Log.Debug("TestNaturalLanguageClassifier.OnTrainClassifier()", "Natural Language Classifier - Train Classifier: {0}", data);
 #if DELETE_TRAINED_CLASSIFIER
             _classifierToDelete = classifier.classifier_id;
 #endif
@@ -196,7 +196,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void OnGetClassifier(Classifier classifier, string data)
         {
-            Log.Debug("ExampleNaturalLanguageClassifier", "Natural Language Classifier - Get Classifier {0}: {1}", classifier.classifier_id, data);
+            Log.Debug("TestNaturalLanguageClassifier.OnGetClassifier()", "Natural Language Classifier - Get Classifier {0}: {1}", classifier.classifier_id, data);
 
             //  Get any classifier that is available
             if (!string.IsNullOrEmpty(classifier.status) && classifier.status.ToLower() == "available")
@@ -213,7 +213,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 #if DELETE_TRAINED_CLASSIFIER
         private void OnDeleteTrainedClassifier(bool success, string data)
         {
-            Log.Debug("ExampleNaturalLanguageClassifier", "Natural Language Classifier - Delete Trained Classifier {0} | success: {1} {2}", _classifierToDelete, success, data);
+            Log.Debug("TestNaturalLanguageClassifier.OnDeleteTrainedClassifier()", "Natural Language Classifier - Delete Trained Classifier {0} | success: {1} {2}", _classifierToDelete, success, data);
             Test(success);
         }
 #endif

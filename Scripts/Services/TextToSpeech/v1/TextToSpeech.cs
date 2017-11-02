@@ -354,7 +354,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
             if (speechReq == null)
                 throw new WatsonException("Wrong type of request object.");
 
-            //Log.Debug( "TextToSpeech", "Request completed in {0} seconds.", resp.ElapsedTime );
+            //Log.Debug( "TextToSpeech.ToSpeechResponse()", "Request completed in {0} seconds.", resp.ElapsedTime );
 
             AudioClip clip = resp.Success ? ProcessResponse(speechReq.TextId, resp.Data) : null;
             if (clip == null)

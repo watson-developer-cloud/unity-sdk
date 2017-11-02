@@ -560,7 +560,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                 else
                 {
 #if ENABLE_DEBUGGING
-                    Log.Debug("SpeechToText", "Created listen socket. Model: {0}, parsedParams: {1}", WWW.EscapeURL(_recognizeModel), parsedParams);
+                    Log.Debug("SpeechToText.CreateListenConnector()", "Created listen socket. Model: {0}, parsedParams: {1}", WWW.EscapeURL(_recognizeModel), parsedParams);
 #endif
                 }
 
@@ -603,7 +603,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 
             _listenSocket.Send(new WSConnector.TextMessage(Json.Serialize(start)));
 #if ENABLE_DEBUGGING
-            Log.Debug("SpeechToText", "SendStart() with the following params: {0}", Json.Serialize(start));
+            Log.Debug("SpeechToText.SendStart()", "SendStart() with the following params: {0}", Json.Serialize(start));
 #endif
             _lastStartSent = DateTime.Now;
         }
@@ -638,7 +638,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                     AudioClip _keepAliveClip = Resources.Load<AudioClip>("highHat");
 
 #if ENABLE_DEBUGGING
-                    Log.Debug("SpeechToText", "Sending keep alive.");
+                    Log.Debug("SpeechToText.KeepAlive()", "Sending keep alive.");
 #endif
                     _listenSocket.Send(new WSConnector.BinaryMessage(AudioClipUtil.GetL16(_keepAliveClip)));
                     _keepAliveClip = null;
@@ -646,7 +646,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                     _lastKeepAlive = DateTime.Now;
                 }
             }
-            Log.Debug("SpeechToText", "KeepAlive exited.");
+            Log.Debug("SpeechToText.KeepAlive()", "KeepAlive exited.");
         }
 
         private void OnListenMessage(WSConnector.Message msg)
@@ -665,7 +665,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                         {
                             //// when we get results, start listening for the next block ..
                             if (results.HasFinalResult())
-                                Log.Debug("SpeechToText", "final json response: {0}", tm.Text);
+                                Log.Debug("SpeechToText.OnListenMessage()", "final json response: {0}", tm.Text);
                             //    SendStart();
 
                             if (_listenCallback != null)
@@ -674,14 +674,14 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                                 StopListening();            // automatically stop listening if our callback is destroyed.
                         }
                         else
-                            Log.Error("SpeechToText", "Failed to parse results: {0}", tm.Text);
+                            Log.Error("SpeechToText.OnListenMessage()", "Failed to parse results: {0}", tm.Text);
                     }
                     else if (json.Contains("state"))
                     {
                         string state = (string)json["state"];
 
 #if ENABLE_DEBUGGING
-                        Log.Debug("SpeechToText", "Server state is {0}", state);
+                        Log.Debug("SpeechToText.OnListenMessage()", "Server state is {0}", state);
 #endif
                         if (state == "listening")
                         {
@@ -714,7 +714,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                     else if (json.Contains("error"))
                     {
                         string error = (string)json["error"];
-                        Log.Error("SpeechToText", "Error: {0}", error);
+                        Log.Error("SpeechToText.OnListenMessage()", "Error: {0}", error);
 
                         StopListening();
                         if (OnError != null)
@@ -722,12 +722,12 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                     }
                     else
                     {
-                        Log.Warning("SpeechToText", "Unknown message: {0}", tm.Text);
+                        Log.Warning("SpeechToText.OnListenMessage()", "Unknown message: {0}", tm.Text);
                     }
                 }
                 else
                 {
-                    Log.Error("SpeechToText", "Failed to parse JSON from server: {0}", tm.Text);
+                    Log.Error("SpeechToText.OnListenMessage()", "Failed to parse JSON from server: {0}", tm.Text);
                 }
             }
         }
@@ -735,7 +735,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         private void OnListenClosed(WSConnector connector)
         {
 #if ENABLE_DEBUGGING
-            Log.Debug("SpeechToText", "OnListenClosed(), State = {0}", connector.State.ToString());
+            Log.Debug("SpeechToText.OnListenClosed()", "OnListenClosed(), State = {0}", connector.State.ToString());
 #endif
 
             _listenActive = false;

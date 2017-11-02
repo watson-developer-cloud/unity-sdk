@@ -427,7 +427,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
                 }
                 catch(Exception e)
                 {
-                    Log.Debug("LanguageTranslator", "There was an error loading the forced glossary file: {0}", e.Message);
+                    Log.Debug("LanguageTranslator.CreateModel()", "There was an error loading the forced glossary file: {0}", e.Message);
                 }
             }
 
@@ -439,7 +439,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
                 }
                 catch (Exception e)
                 {
-                    Log.Debug("LanguageTranslator", "There was an error loading the parallel corpus file: {0}", e.Message);
+                    Log.Debug("LanguageTranslator.CreateModel()", "There was an error loading the parallel corpus file: {0}", e.Message);
                 }
             }
 
@@ -451,7 +451,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
                 }
                 catch (Exception e)
                 {
-                    Log.Debug("LanguageTranslator", "There was an error loading the monolingual corpus file: {0}", e.Message);
+                    Log.Debug("LanguageTranslator.CreateModel()", "There was an error loading the monolingual corpus file: {0}", e.Message);
                 }
             }
 
@@ -502,7 +502,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Discovery", "Create model Exception: {0}", e.ToString());
+                    Log.Error("LanguageTranslator.OnCreateModelResponse()", "Create model Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }

@@ -172,7 +172,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Discovery", "OnGetEnvironmentsResponse Exception: {0}", e.ToString());
+                    Log.Error("Discovery.OnGetEnvironmentsResponse()", "OnGetEnvironmentsResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -277,7 +277,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Discovery", "OnAddEnvironmentResponse Exception: {0}", e.ToString());
+                    Log.Error("Discovery.OnAddEnvironmentResponse()", "OnAddEnvironmentResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -353,7 +353,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Discovery", "OnGetEnvironmentResponse Exception: {0}", e.ToString());
+                    Log.Error("Discovery.OnGetEnvironmentResponse()", "OnGetEnvironmentResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -491,7 +491,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Discovery", "OnGetConfigurationsResponse Exception: {0}", e.ToString());
+                    Log.Error("Discovery.Method()", "OnGetConfigurationsResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -604,7 +604,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Discovery", "OnGetConfigurationResponse Exception: {0}", e.ToString());
+                    Log.Error("Discovery.Method()", "OnGetConfigurationResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -684,7 +684,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Discovery", "OnGetConfigurationResponse Exception: {0}", e.ToString());
+                    Log.Error("Discovery.Method()", "OnGetConfigurationResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -925,7 +925,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Discovery", "OnPreviewConfigurationResponse Exception: {0}", e.ToString());
+                    Log.Error("Discovery.Method()", "OnPreviewConfigurationResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -1009,7 +1009,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Discovery", "OnGetCollectionsResponse Exception: {0}", e.ToString());
+                    Log.Error("Discovery.Method()", "OnGetCollectionsResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -1119,7 +1119,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Discovery", "OnGetConfigurationResponse Exception: {0}", e.ToString());
+                    Log.Error("Discovery.Method()", "OnGetConfigurationResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -1199,7 +1199,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Discovery", "OnGetCollectionResponse Exception: {0}", e.ToString());
+                    Log.Error("Discovery.Method()", "OnGetCollectionResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -1339,7 +1339,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Discovery", "OnGetFieldsResponse Exception: {0}", e.ToString());
+                    Log.Error("Discovery.Method()", "OnGetFieldsResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -1627,7 +1627,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Discovery", "OnAddDocumentResponse Exception: {0}", e.ToString());
+                    Log.Error("Discovery.Method()", "OnAddDocumentResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -1778,7 +1778,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Discovery", "OnGetDocumentResponse Exception: {0}", e.ToString());
+                    Log.Error("Discovery.Method()", "OnGetDocumentResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -2065,7 +2065,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Discovery", "OnUpdateDocumentResponse Exception: {0}", e.ToString());
+                    Log.Error("Discovery.Method()", "OnUpdateDocumentResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -2188,7 +2188,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Discovery", "OnQueryResponse Exception: {0}", e.ToString());
+                    Log.Error("Discovery.Method()", "OnQueryResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }

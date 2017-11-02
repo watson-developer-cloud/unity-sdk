@@ -327,7 +327,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             }
             catch (ArgumentOutOfRangeException ex)
             {
-                Log.Debug("Utility", "Time conversion assuming time is in Milliseconds: {0}, {1}", epochTime, ex.Message);
+                Log.Debug("Utility.GetLocalDateTimeFromEpoch()", "Time conversion assuming time is in Milliseconds: {0}, {1}", epochTime, ex.Message);
                 dateTime = dateTime.AddMilliseconds(epochTime).ToLocalTime();
             }
 

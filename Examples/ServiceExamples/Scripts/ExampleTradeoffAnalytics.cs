@@ -124,12 +124,12 @@ public class ExampleTradeoffAnalytics : MonoBehaviour
         while(!_GetDillemaTested)
         yield return null;
 
-        Log.Debug("ExampleTradeoffAnalyitics", "Tradeoff analytics examples complete.");
+        Log.Debug("ExampleTradeoffAnalyitics.Examples()", "Tradeoff analytics examples complete.");
     }
 
     private void OnGetDilemma(DilemmasResponse resp, string data)
     {
-        Log.Debug("ExampleTradeoffAnalyitics", "Tradeoff Analytics - Get Dillema: {0}", data);
+        Log.Debug("ExampleTradeoffAnalyitics.OnGetDilemma()", "Tradeoff Analytics - Get Dillema: {0}", data);
         _GetDillemaTested = true;
     }
 

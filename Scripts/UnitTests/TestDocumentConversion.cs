@@ -74,7 +74,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             }
             catch
             {
-                Log.Debug("TestDocumentConversion", "Failed to get credentials from VCAP_SERVICES file. Please configure credentials to run this test. For more information, see: https://github.com/watson-developer-cloud/unity-sdk/#authentication");
+                Log.Debug("TestDocumentConversion.RunTest()", "Failed to get credentials from VCAP_SERVICES file. Please configure credentials to run this test. For more information, see: https://github.com/watson-developer-cloud/unity-sdk/#authentication");
             }
 
             //  Create credential and instantiate service
@@ -90,19 +90,19 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _examplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/watson_beats_jeopardy.html";
 
             if (!_documentConversion.ConvertDocument(OnConvertDocument, _examplePath, _conversionTarget))
-                Log.Debug("ExampleDocumentConversion", "Document conversion failed!");
+                Log.Debug("TestDocumentConversion.RunTest()", "Document conversion failed!");
 
             while (!_convertDocumentTested)
                 yield return null;
 
-            Log.Debug("ExampleDoucmentConversion", "Document conversion examples complete.");
+            Log.Debug("TestDoucmentConversion.RunTest()", "Document conversion examples complete.");
 
             yield break;
         }
 
         private void OnConvertDocument(ConvertedDocument documentConversionResponse, string data)
         {
-            Log.Debug("ExampleDoucmentConversion", "DocumentConversion - Convert document Response: {0}", documentConversionResponse.htmlContent);
+            Log.Debug("TestDoucmentConversion.OnConvertDocument()", "DocumentConversion - Convert document Response: {0}", documentConversionResponse.htmlContent);
             Test(documentConversionResponse != null);
             _convertDocumentTested = true;
         }
