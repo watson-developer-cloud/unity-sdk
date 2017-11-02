@@ -16,7 +16,7 @@
 */
 
 //  Uncomment to test chunked
-#define TEST_NEW
+#define CHUNK_BUFFER
 
 using UnityEngine;
 using System.Collections;
@@ -116,7 +116,7 @@ public class ExampleStreaming : MonoBehaviour
         Log.Debug("ExampleStreaming", "Error! {0}", error);
     }
 
-#if TEST_NEW
+	#if CHUNK_BUFFER
 
     private IEnumerator RecordingHandler()
     {
