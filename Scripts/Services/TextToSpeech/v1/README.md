@@ -64,12 +64,12 @@ Retrieves a list of all voices available for use with the service. The informati
 private void GetVoices()
 {
   if(!_textToSpeech.GetVoices(OnGetVoices))
-    Log.Debug("ExampleTextToSpeech", "Failed to get voices!");
+    Log.Debug("ExampleTextToSpeech.GetVoices()", "Failed to get voices!");
 }
 
 private void OnGetVoices(Voices voices, string data)
 {
-  Log.Debug("ExampleTextToSpeech", "Text to Speech - Get voices response: {0}", data);
+  Log.Debug("ExampleTextToSpeech.OnGetVoices()", "Text to Speech - Get voices response: {0}", data);
 }
 ```
 
@@ -84,12 +84,12 @@ Lists information about the specified voice. Specify a customization_id to obtai
 private void GetVoice()
 {
   if(!_textToSpeech.GetVoice(OnGetVoice, <voicetype>))
-    Log.Debug("ExampleTextToSpeech", "Failed to get voice!");
+    Log.Debug("ExampleTextToSpeech.GetVoice()", "Failed to get voice!");
 }
 
 private void OnGetVoice(Voice voice, string data)
 {
-  Log.Debug("ExampleTextToSpeech", "Text to Speech - Get voice response: {0}", data);
+  Log.Debug("ExampleTextToSpeech.OnGetVoice()", "Text to Speech - Get voice response: {0}", data);
 }
 ```
 
@@ -112,7 +112,7 @@ private void Synthesize()
 {
   _textToSpeech.Voice = <voice-type>;
   if(!_textToSpeech.ToSpeech(<text-to-synthesize>, OnSynthesize, <use-post>))
-    Log.Debug("ExampleTextToSpeech", "Failed to synthesize!");
+    Log.Debug("ExampleTextToSpeech.ToSpeech()", "Failed to synthesize!");
 }
 
 private void OnSynthesize(AudioClip clip, string data)
@@ -159,12 +159,12 @@ Returns the phonetic pronunciation for the specified word. You can request the p
 private void GetPronunciation()
 {
   if(!_textToSpeech.GetPronunciation(OnGetPronunciation, <word>, <voicetype>))
-    Log.Debug("ExampleTextToSpeech", "Failed to get pronunication!");
+    Log.Debug("ExampleTextToSpeech.GetPronunciation()", "Failed to get pronunication!");
 }
 
 private void OnGetPronunciation(Pronunciation pronunciation, string data)
 {
-  Log.Debug("ExampleTextToSpeech", "Text to Speech - Get pronunciation response: {0}", data);
+  Log.Debug("ExampleTextToSpeech.OnGetPronunciation()", "Text to Speech - Get pronunciation response: {0}", data);
 }
 ```
 
@@ -179,12 +179,12 @@ Creates a new empty custom voice model that is owned by the requesting user.
 private void CreateCustomization()
 {
   if(!_textToSpeech.CreateCustomization(OnCreateCustomization, <customization-name>, <customization-language>, <customization-description>))
-    Log.Debug("ExampleTextToSpeech", "Failed to create customization!");
+    Log.Debug("ExampleTextToSpeech.CreateCustomization()", "Failed to create customization!");
 }
 
 private void OnCreateCustomization(CustomizationID customizationID, string data)
 {
-  Log.Debug("ExampleTextToSpeech", "Text to Speech - Create customization response: {0}", data);
+  Log.Debug("ExampleTextToSpeech.OnCreateCustomization()", "Text to Speech - Create customization response: {0}", data);
 }
 ```
 
@@ -206,12 +206,12 @@ private void UpdateCustomization()
   }
 
   if(!_textToSpeech.UpdateCustomization(OnUpdateCustomization, <customization-id>, _customVoiceUpdate))
-    Log.Debug("ExampleTextToSpeech", "Failed to update customization!");
+    Log.Debug("ExampleTextToSpeech.UpdateCustomization()", "Failed to update customization!");
 }
 
 private void OnUpdateCustomization(bool success, string data)
 {
-  Log.Debug("ExampleTextToSpeech", "Text to Speech - Update customization response: {0}", success);
+  Log.Debug("ExampleTextToSpeech.OnUpdateCustomization()", "Text to Speech - Update customization response: {0}", success);
 }
 ```
 
@@ -226,12 +226,12 @@ Lists metadata such as the name and description for all custom voice models that
 private void GetCustomizations()
 {
   if(!_textToSpeech.GetCustomizations(OnGetCustomizations))
-    Log.Debug("ExampleTextToSpeech", "Failed to get customizations!");
+    Log.Debug("ExampleTextToSpeech.GetCustomizations()", "Failed to get customizations!");
 }
 
 private void OnGetCustomizations(Customizations customizations, string data)
 {
-  Log.Debug("ExampleTextToSpeech", "Text to Speech - Get customizations response: {0}", data);
+  Log.Debug("ExampleTextToSpeech.OnGetCustomizations()", "Text to Speech - Get customizations response: {0}", data);
 }
 ```
 
@@ -246,12 +246,12 @@ Lists all information about the specified custom voice model. In addition to met
 private void GetCustomization()
 {
   if(!_textToSpeech.GetCustomization(OnGetCustomization))
-    Log.Debug("ExampleTextToSpeech", "Failed to get customization!");
+    Log.Debug("ExampleTextToSpeech.GetCustomization()", "Failed to get customization!");
 }
 
 private void OnGetCustomization(Customization customization, string data)
 {
-  Log.Debug("ExampleTextToSpeech", "Text to Speech - Get customization response: {0}", data);
+  Log.Debug("ExampleTextToSpeech.OnGetCustomization()", "Text to Speech - Get customization response: {0}", data);
 }
 ```
 
@@ -266,12 +266,12 @@ Deletes the custom voice model with the specified customization_id. Only the own
 private void DeleteCustomization()
 {
   if(!_textToSpeech.DeleteCustomization(OnDeleteCustomization, <customization-id>))
-    Log.Debug("ExampleTextToSpeech", "Failed to delete customization!");
+    Log.Debug("ExampleTextToSpeech.DeleteCustomization()", "Failed to delete customization!");
 }
 
 private void OnDeleteCustomization(bool success, string data)
 {
-  Log.Debug("ExampleTextToSpeech", "Text to Speech - Get customization response: {0}", success);
+  Log.Debug("ExampleTextToSpeech.OnDeleteCustomization()", "Text to Speech - Get customization response: {0}", success);
 }
 ```
 
@@ -308,7 +308,7 @@ Words wordsToAddToCustomization = new Words()
 };
 
 if (!_textToSpeech.AddCustomizationWords(OnAddCustomizationWords, <customization-id>, _wordsToAddToCustomization))
-    Log.Debug("ExampleTextToSpeech", "Failed to add words customization!");
+    Log.Debug("ExampleTextToSpeech.AddCustomizationWords()", "Failed to add words customization!");
 ```
 
 <!-- ### Add a word
@@ -327,12 +327,12 @@ Lists all of the words and their translations for the specified custom voice mod
 private void GetCustomizationWords()
 {
   if(!_textToSpeech.GetCustomizationWords(OnGetCustomizationWords, <customization-id>))
-    Log.Debug("ExampleTextToSpeech", "Failed to get customization words!");
+    Log.Debug("ExampleTextToSpeech.GetCustomizationWords()", "Failed to get customization words!");
 }
 
 private void OnGetCustomizationWords(Words words, string data)
 {
-  Log.Debug("ExampleTextToSpeech", "Text to Speech - Get customization words response: {0}", data);
+  Log.Debug("ExampleTextToSpeech.OnGetCustomizationWords()", "Text to Speech - Get customization words response: {0}", data);
 }
 ```
 
@@ -352,12 +352,12 @@ Deletes a single word from the specified custom voice model. Only the owner of a
 private void DeleteCustomizationWord()
 {
   if(!_textToSpeech.DeleteCustomizationWords(OnDeleteCustomizationWords, <customization-id>, <customization-word>))
-    Log.Debug("ExampleTextToSpeech", "Failed to get delete word!");
+    Log.Debug("ExampleTextToSpeech.DeleteCustomizationWord()", "Failed to get delete word!");
 }
 
 private void OnDeleteCustomizationWords(bool success, string data)
 {
-  Log.Debug("ExampleTextToSpeech", "Text to Speech - Delete customization word response: {0}", success);
+  Log.Debug("ExampleTextToSpeech.OnDeleteCustomizationWords()", "Text to Speech - Delete customization word response: {0}", success);
 }
 ```
 

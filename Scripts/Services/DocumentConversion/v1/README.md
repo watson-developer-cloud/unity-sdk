@@ -25,12 +25,12 @@ Converts a document to answer units, HTML or text. This method accepts a multipa
 void ConvertDocument ()
 {
   if (!m_DocumentConversion.ConvertDocument(OnConvertDocument, <document-filepath>, <conversion-target>))
-    Log.Debug("ExampleDocumentConversion", "Document conversion failed!");
+    Log.Debug("ExampleDocumentConversion.ConvertDocument()", "Document conversion failed!");
 }
 
 private void OnConvertDocument(ConvertedDocument documentConversionResponse, string data)
 {
-  Log.Debug("ExampleDocumentConversion", "DocuemntConversion - ConvertDocument Response: {0}", data);
+  Log.Debug("ExampleDocumentConversion.OnConvertDocument()", "DocuemntConversion - ConvertDocument Response: {0}", data);
 }
 ```
 

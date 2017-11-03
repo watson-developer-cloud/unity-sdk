@@ -28,12 +28,12 @@ Lists available models for language translation with option to filter by source 
 private void GetModels()
 {
   if (!_languageTranslator.GetModels(OnGetModels))
-    Log.Debug("ExampleLanguageTranslator", "Failed to get models.");
+    Log.Debug("ExampleLanguageTranslator.GetModels()", "Failed to get models.");
 }
 
 private void OnGetModels(TranslationModels models, string data)
 {
-  Log.Debug("ExampleLanguageTranslator", "Language Translator - Get models response: {0}", data);
+  Log.Debug("ExampleLanguageTranslator.OnGetModels()", "Language Translator - Get models response: {0}", data);
 }
 ```
 
@@ -47,12 +47,12 @@ Uploads a TMX glossary file on top of a domain to customize a translation model.
 private void CreateModel()
 {
   if (!_languageTranslator.CreateModel(OnCreateModel, <base-model-name>, <custom-model-name>, <glossary-filepath>))
-    Log.Debug("ExampleLanguageTranslator", "Failed to create model.");
+    Log.Debug("ExampleLanguageTranslator.CreateModel()", "Failed to create model.");
 }
 
 private void OnCreateModel(TranslationModel model, string data)
 {
-  Log.Debug("ExampleLanguageTranslator", "Language Translator - Create model response: {0}", data);
+  Log.Debug("ExampleLanguageTranslator.OnCreateModel()", "Language Translator - Create model response: {0}", data);
 }
 ```
 
@@ -66,12 +66,12 @@ Returns information, including training status, about a specified translation mo
 private void GetModel()
 {
   if (!_languageTranslator.GetModel(OnGetModel, <custom-language-model-id>))
-    Log.Debug("ExampleLanguageTranslator", "Failed to get model.");
+    Log.Debug("ExampleLanguageTranslator.GetModel()", "Failed to get model.");
 }
 
 private void OnGetModel(TranslationModel model, string data)
 {
-  Log.Debug("ExampleLanguageTranslator", "Language Translator - Get model response: {0}", data);
+  Log.Debug("ExampleLanguageTranslator.OnGetModel()", "Language Translator - Get model response: {0}", data);
 }
 ```
 
@@ -85,12 +85,12 @@ Deletes trained translation models.
 private void DeleteModel()
 {
   if (!_languageTranslator.DeleteModel(OnDeleteModel, <custom-language-model-id>))
-    Log.Debug("ExampleLanguageTranslator", "Failed to delete model.");
+    Log.Debug("ExampleLanguageTranslator.DeleteModel()", "Failed to delete model.");
 }
 
 private void OnDeleteModel(bool success, string data)
 {
-  Log.Debug("ExampleLanguageTranslator", "Language Translator - Delete model response: success: {0}", success);
+  Log.Debug("ExampleLanguageTranslator.OnDeleteModel()", "Language Translator - Delete model response: success: {0}", success);
 }
 ```
 
@@ -104,12 +104,12 @@ Translates input text from the source language to the target language.
 private void Translate()
 {
   if (!_languageTranslator.GetTranslation(<text-to-translate>, <from-language>, <to-language>, OnGetTranslation))
-    Log.Debug("ExampleLanguageTranslator", "Failed to translate.");
+    Log.Debug("ExampleLanguageTranslator.Translate()", "Failed to translate.");
 }
 
 private void OnGetTranslation(Translations translation, string data)
 {
-  Log.Debug("ExampleLanguageTranslator", "Langauge Translator - Translate Response: {0}", data);
+  Log.Debug("ExampleLanguageTranslator.OnGetTranslation()", "Langauge Translator - Translate Response: {0}", data);
 }
 ```
 
@@ -122,12 +122,12 @@ Identify the language in which a text is written.
 private void Identify()
 {
   if (!_languageTranslator.Identify(OnIdentify, <text-to-identify>))
-    Log.Debug("ExampleLanguageTranslator", "Failed to identify language.");
+    Log.Debug("ExampleLanguageTranslator.Identify()", "Failed to identify language.");
 }
 
 private void OnIdentify(string lang, string data)
 {
-  Log.Debug("ExampleLanguageTranslator", "Language Translator - Identify response: {0}", data);
+  Log.Debug("ExampleLanguageTranslator.OnIdentify()", "Language Translator - Identify response: {0}", data);
 }
 ```
 
@@ -141,12 +141,12 @@ Return the list of languages it can detect.
 private void GetLanguages()
 {
   if (!_languageTranslator.GetLanguages(OnGetLanguages))
-    Log.Debug("ExampleLanguageTranslator", "Failed to get languages.");
+    Log.Debug("ExampleLanguageTranslator.GetLanguages()", "Failed to get languages.");
 }
 
 private void OnGetLanguages(Languages languages, string data)
 {
-  Log.Debug("ExampleLanguageTranslator", "Language Translator - Get languages response: {0}", data);
+  Log.Debug("ExampleLanguageTranslator.OnGetLanguages()", "Language Translator - Get languages response: {0}", data);
 }
 ```
 

@@ -22,12 +22,12 @@ You can extract Authors from a URL or HTML source.
 private void GetAuthors()
 {
   if(!_alchemyApi.GetAuthors(OnGetAuthors, <url-or-htmlpage>))
-    Log.Debug("ExampleAlchemyLanguage", "Failed to get authors");
+    Log.Debug("ExampleAlchemyLanguage.GetAuthors()", "Failed to get authors");
 }
 
 private void OnGetAuthors(AuthorsData authors, string data)
 {
-    Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get authors response html: {0}", data);
+    Log.Debug("ExampleAlchemyLanguage.OnGetAuthors()", "Alchemy Language - Get authors response html: {0}", data);
 }
 ```
 
@@ -37,12 +37,12 @@ You can get Concepts from a URL, HTML or Text source.
 private void GetRankedConcepts()
 {
   if(!_alchemyApi.GetRankedConcepts(OnGetConcepts, <text-or-url-or-htmlpage>))
-    Log.Debug("ExampleAlchemyLanguage", "Failed to get concepts");
+    Log.Debug("ExampleAlchemyLanguage.GetRankedConcepts()", "Failed to get concepts");
 }
 
 private void OnGetConcepts(ConceptsData concepts, string data)
 {
-  Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get ranked concepts response text: {0}", data);
+  Log.Debug("ExampleAlchemyLanguage.OnGetConcepts()", "Alchemy Language - Get ranked concepts response text: {0}", data);
 }
 ```
 
@@ -52,12 +52,12 @@ You can extract Dates from a URL, HTML or Text source.
 private void GetRankedConcepts()
 {
   if(!_alchemyApi.GetDates(OnGetConcepts, <text-or-url-or-htmlpage>))
-    Log.Debug("ExampleAlchemyLanguage", "Failed to get concepts");
+    Log.Debug("ExampleAlchemyLanguage.GetRankedConcepts()", "Failed to get concepts");
 }
 
 private void OnGetDates(DateData dates, string data)
 {
-  Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get dates response html: {0}", data);
+  Log.Debug("ExampleAlchemyLanguage.OnGetDates()", "Alchemy Language - Get dates response html: {0}", data);
 }
 ```
 
@@ -67,12 +67,12 @@ You can get Emotions from a URL, HTML or Text source.
 private void GetEmotions()
 {
   if(!_alchemyApi.GetEmotions(OnGetEmotions, <text-or-url-or-htmlpage>))
-    Log.Debug("ExampleAlchemyLanguage", "Failed to get emotions");
+    Log.Debug("ExampleAlchemyLanguage.GetEmotions()", "Failed to get emotions");
 }
 
 private void OnGetEmotions(EmotionData emotions, string data)
 {
-    Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get emotions response html: {0}", data);
+    Log.Debug("ExampleAlchemyLanguage.OnGetEmotions()", "Alchemy Language - Get emotions response html: {0}", data);
 }
 ```
 
@@ -82,12 +82,12 @@ You can extract Entities from a URL, HTML or Text source.
 private void ExtractEntities()
 {
   if(!_alchemyApi.ExtractEntities(OnExtractEntities, <text-or-url-or-htmlpage>))
-    Log.Debug("ExampleAlchemyLanguage", "Failed to get emotions");
+    Log.Debug("ExampleAlchemyLanguage.ExtractEntities()", "Failed to get emotions");
 }
 
 private void OnExtractEntities(EntityData entityData, string data)
 {
-    Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Extract entities response html: {0}", data);
+    Log.Debug("ExampleAlchemyLanguage.OnExtractEntities()", "Alchemy Language - Extract entities response html: {0}", data);
 }
 ```
 
@@ -97,12 +97,12 @@ You can detect RSS Feeds from a URL source.
 private void GetFeeds()
 {
   if(!m_AlchemyLanguage.DetectFeeds(OnDetectFeeds, <url-or-htmlpage>))
-	    Log.Debug("ExampleAlchemyLanguage", "Failed to get feeds.");
+	    Log.Debug("ExampleAlchemyLanguage.GetFeeds()", "Failed to get feeds.");
 }
 
 private void OnDetectFeeds(FeedData feedData, string data)
 {
-    Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Detect feeds response url: {0}", data);
+    Log.Debug("ExampleAlchemyLanguage.OnDetectFeeds()", "Alchemy Language - Detect feeds response url: {0}", data);
 }
 ```
 
@@ -112,12 +112,12 @@ You can extract Keywords form a URL, HTML or Text source.
 private void GetKeywords()
 {
   if(!m_AlchemyLanguage.ExtractKeywords(OnExtractKeywords, <text-or-url-or-htmlpage>))
-      Log.Debug("ExampleAlchemyLanguage", "Failed to get keywords by URL POST");
+      Log.Debug("ExampleAlchemyLanguage.GetKeywords()", "Failed to get keywords by URL POST");
 }
 
 private void OnExtractKeywords(KeywordData keywordData, string data)
 {
-    Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Extract keywords response html: {0}", data);
+    Log.Debug("ExampleAlchemyLanguage.OnExtractKeywords()", "Alchemy Language - Extract keywords response html: {0}", data);
 }
 ```
 
@@ -127,12 +127,12 @@ You can extract the language of a URL, HTML or Text source.
 private void GetLanguages()
 {
   if(!m_AlchemyLanguage.GetLanguages(OnGetLanguages, <text-or-url>))
-      Log.Debug("ExampleAlchemyLanguage", "Failed to get languages");
+      Log.Debug("ExampleAlchemyLanguage.GetLanguages()", "Failed to get languages");
 }
 
 private void OnGetLanguages(LanguageData languages, string data)
 {
-    Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get languages response html: {0}", data);
+    Log.Debug("ExampleAlchemyLanguage.OnGetLanguages()", "Alchemy Language - Get languages response html: {0}", data);
 }
 ```
 
@@ -142,12 +142,12 @@ You can get the Microformat of a URL source.
 private void GetMicroformats()
 {
   if(!m_AlchemyLanguage.GetMicroformats(OnGetMicroformats, <url-or-htmlpage>))
-      Log.Debug("ExampleAlchemyLanguage", "Failed to get microformats");
+      Log.Debug("ExampleAlchemyLanguage.GetMicroformats()", "Failed to get microformats");
 }
 
 private void OnGetMicroformats(MicroformatData microformats, string data)
 {
-    Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get microformats response url: {0}", data);
+    Log.Debug("ExampleAlchemyLanguage.OnGetMicroformats()", "Alchemy Language - Get microformats response url: {0}", data);
 }
 ```
 
@@ -157,12 +157,12 @@ You can extract the publication date from a URL or HTML source.
 private void GetPublicationDate()
 {
   if(!m_AlchemyLanguage.GetPublicationDate(OnGetPublicationDate, <url-or-htmlpage>))
-      Log.Debug("ExampleAlchemyLanguage", "Failed to get publication dates");
+      Log.Debug("ExampleAlchemyLanguage.GetPublicationDate()", "Failed to get publication dates");
 }
 
 private void OnGetPublicationDate(PubDateData pubDates, string data)
 {
-    Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get publication date response url: {0}", data);
+    Log.Debug("ExampleAlchemyLanguage.OnGetPublicationDate()", "Alchemy Language - Get publication date response url: {0}", data);
 }
 ```
 
@@ -172,12 +172,12 @@ You can extract Relations from a URL, HTML or Text source.
 private void GetRelations()
 {
   if(!m_AlchemyLanguage.GetRelations(OnGetRelations, <text-or-url-or-htmlpage>))
-      Log.Debug("ExampleAlchemyLanguage", "Failed to get relations");
+      Log.Debug("ExampleAlchemyLanguage.GetRelations()", "Failed to get relations");
 }
 
 private void OnGetRelations(RelationsData relationsData, string data)
 {
-    Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get relations response html: {0}", data);
+    Log.Debug("ExampleAlchemyLanguage.OnGetRelations()", "Alchemy Language - Get relations response html: {0}", data);
 }
 ```
 
@@ -187,12 +187,12 @@ You can extract the Sentiment from a URL, HTML or Text source.
 private void GetTextSentiment()
 {
   if(!m_AlchemyLanguage.GetTextSentiment(OnGetTextSentiment, <text-or-url-or-htmlpage>))
-      Log.Debug("ExampleAlchemyLanguage", "Failed to get sentiment");
+      Log.Debug("ExampleAlchemyLanguage.GetTextSentiment()", "Failed to get sentiment");
 }
 
 private void OnGetTextSentiment(SentimentData sentimentData, string data)
 {
-    Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get text sentiment response html: {0}", data);
+    Log.Debug("ExampleAlchemyLanguage.OnGetTextSentiment()", "Alchemy Language - Get text sentiment response html: {0}", data);
 }
 ```
 
@@ -202,12 +202,12 @@ You can extract a Targeted Sentiment from a URL, HTML or Text source. Targets ar
 private void GetTargetedSentiment()
 {
   if(!m_AlchemyLanguage.GetTargetedSentiment(OnGetTargetedSentiment, <text-or-url-or-htmlpage>, <targets>))
-      Log.Debug("ExampleAlchemyLanguage", "Failed to get targeted sentiment");
+      Log.Debug("ExampleAlchemyLanguage.GetTargetedSentiment()", "Failed to get targeted sentiment");
 }
 
 private void OnGetTargetedSentiment(TargetedSentimentData sentimentData, string data)
 {
-    Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get targeted sentiment response html: {0}", data);
+    Log.Debug("ExampleAlchemyLanguage.OnGetTargetedSentiment()", "Alchemy Language - Get targeted sentiment response html: {0}", data);
 }
 ```
 
@@ -217,12 +217,12 @@ You can get the Taxonomy of entities from a URL, HTML or Text source.
 private void GetRankedTaxonomy()
 {
   if(!m_AlchemyLanguage.GetRankedTaxonomy(OnGetRankedTaxonomy, <text-or-url-or-htmlpage>))
-      Log.Debug("ExampleAlchemyLanguage", "Failed to get ranked taxonomy");
+      Log.Debug("ExampleAlchemyLanguage.GetRankedTaxonomy()", "Failed to get ranked taxonomy");
 }
 
 private void OnGetRankedTaxonomy(TaxonomyData taxonomyData, string data)
 {
-    Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get ranked taxonomy response html: {0}", data);
+    Log.Debug("ExampleAlchemyLanguage.OnGetRankedTaxonomy()", "Alchemy Language - Get ranked taxonomy response html: {0}", data);
 }
 ```
 
@@ -232,12 +232,12 @@ You can exctract the Text from a URL or HTML source.
 private void GetText()
 {
   if(!m_AlchemyLanguage.GetText(OnGetText, <url-or-htmlpage>))
-      Log.Debug("ExampleAlchemyLanguage", "Failed to get text by text");
+      Log.Debug("ExampleAlchemyLanguage.GetText()", "Failed to get text by text");
 }
 
 private void OnGetText(TextData textData, string data)
 {
-    Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get Text HTML response: {0}", data);
+    Log.Debug("ExampleAlchemyLanguage.OnGetText()", "Alchemy Language - Get Text HTML response: {0}", data);
 }
 ```
 
@@ -247,12 +247,12 @@ You can exctract the Raw Text from a URL or HTML source.
 private void GetRawText()
 {
   if(!m_AlchemyLanguage.GetRawText(OnGetText, <url-or-htmlpage>))
-      Log.Debug("ExampleAlchemyLanguage", "Failed to get raw text by text");
+      Log.Debug("ExampleAlchemyLanguage.GetRawText()", "Failed to get raw text by text");
 }
 
 private void OnGetRawText(TextData textData, string data)
 {
-    Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get raw text HTML response: {0}", data);
+    Log.Debug("ExampleAlchemyLanguage.OnGetRawText()", "Alchemy Language - Get raw text HTML response: {0}", data);
 }
 ```
 
@@ -262,12 +262,12 @@ You can extract the Title form a URL or HTML source.
 private void GetTitle()
 {
   if(!m_AlchemyLanguage.GetTitle(OnGetTitle, <url-or-htmlpage>))
-      Log.Debug("ExampleAlchemyLanguage", "Failed to get title by text POST");
+      Log.Debug("ExampleAlchemyLanguage.GetTitle()", "Failed to get title by text POST");
 }
 
 private void OnGetTitle(Title titleData, string data)
 {
-    Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get Title Url response: {0}", data);
+    Log.Debug("ExampleAlchemyLanguage.OnGetTitle()", "Alchemy Language - Get Title Url response: {0}", data);
 }
 ```
 
@@ -277,12 +277,12 @@ You can combine multiple requests into one call using a Combined Data call from 
 private void CombinedCall()
 {
   if(!m_AlchemyLanguage.GetCombinedData(OnGetCombinedData, <text-or-url-or-htmlpage>, <includeSourceText>, <extractAuthors>, <extractConcepts>, <extractDates>, <extractDocEmotion>, <extractEntities>, <extractFeeds>, <extractKeywords>, <extractPubDate>, <extractRelations>, <extractDocSentiment>, <extractTaxonomy>, <extractTitle>, <extractPageImage>, <extractImageKeywords>))
-      Log.Debug("ExampleAlchemyLanguage", "Failed to get combined data by text POST");
+      Log.Debug("ExampleAlchemyLanguage.CombinedCall()", "Failed to get combined data by text POST");
 }
 
 private void OnGetCombinedData(CombinedCallData combinedData, string data)
 {
-    Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get Combined Data Text response: {0}", data);
+    Log.Debug("ExampleAlchemyLanguage.OnGetCombinedData()", "Alchemy Language - Get Combined Data Text response: {0}", data);
 }
 ```
 
