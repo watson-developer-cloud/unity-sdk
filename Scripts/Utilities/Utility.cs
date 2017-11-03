@@ -440,7 +440,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             }
             catch (Exception e)
             {
-                Log.Error("Utility", "DeserializeResponse Exception: {0}", e.ToString());
+                Log.Error("Utility.DeserializeResponse()", "DeserializeResponse Exception: {0}", e.ToString());
             }
 
             return null;
@@ -1241,7 +1241,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Visual Recognition", "GetClassifier Exception: {0}", e.ToString());
+                    Log.Error("Utility.OnGetTokenResp()", "Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }

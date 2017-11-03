@@ -118,7 +118,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             IFF_FORM_CHUNK form = ReadType<IFF_FORM_CHUNK>(reader);
             if (GetID(form.form_id) != "RIFF" || GetID(form.id) != "WAVE")
             {
-                Log.Error("TextToSpeech", "Malformed WAV header: {0} != RIFF || {1} != WAVE", GetID(form.form_id), GetID(form.id));
+                Log.Error("WaveFile.ParseWAV()", "Malformed WAV header: {0} != RIFF || {1} != WAVE", GetID(form.form_id), GetID(form.id));
                 return null;
             }
 

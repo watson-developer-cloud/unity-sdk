@@ -162,7 +162,7 @@ namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
                 }
                 catch (Exception e)
                 {
-                    Log.Error("ToneAnalyzer", "GetToneAnalyzerResponse Exception: {0}", e.ToString());
+                    Log.Error("ToneAnalyzer.GetToneAnalyzerResponse()", "GetToneAnalyzerResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }

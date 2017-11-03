@@ -374,7 +374,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
                                 else if (formData.Value.BoxedObject is int)
                                     form.AddField(formData.Key, (int)formData.Value.BoxedObject);
                                 else if (formData.Value.BoxedObject != null)
-                                    Log.Warning("RESTConnector", "Unsupported form field type {0}", formData.Value.BoxedObject.GetType().ToString());
+                                    Log.Warning("RESTConnector.ProcessRequestQueue()", "Unsupported form field type {0}", formData.Value.BoxedObject.GetType().ToString());
                             }
                             foreach (var headerData in form.headers)
                                 req.Headers[headerData.Key] = headerData.Value;
@@ -451,7 +451,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
                     }
                     /*if (!bError && (www.bytes == null || www.bytes.Length == 0))
                     {
-                        Log.Warning("RESTConnector", "No data recevied for URL: {0}", url);
+                        Log.Warning("RESTConnector.ProcessRequestQueue()", "No data recevied for URL: {0}", url);
                         bError = true;
                     }*/
 

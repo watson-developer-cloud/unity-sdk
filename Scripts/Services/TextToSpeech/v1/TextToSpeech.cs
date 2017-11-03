@@ -122,7 +122,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
             }
             else
             {
-                Log.Warning("TextToSpeech", "There is no voicetype for {0}!", voiceType);
+                Log.Warning("TextToSpeech.GetVoiceType()", "There is no voicetype for {0}!", voiceType);
                 return null;
             }
         }
@@ -195,7 +195,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Natural Language Classifier", "GetVoices Exception: {0}", e.ToString());
+                    Log.Error("TextToSpeech.OnGetVoicesResp()", "GetVoices Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -262,7 +262,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("TextToSpeech", "GetVoice Exception: {0}", e.ToString());
+                    Log.Error("TextToSpeech.OnGetVoiceResp()", "GetVoice Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -306,12 +306,12 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 
             if (!_audioFormats.ContainsKey(_audioFormat))
             {
-                Log.Error("TextToSpeech", "Unsupported audio format: {0}", _audioFormat.ToString());
+                Log.Error("TextToSpeech.ToSpeech()", "Unsupported audio format: {0}", _audioFormat.ToString());
                 return false;
             }
             if (!_voiceTypes.ContainsKey(_voice))
             {
-                Log.Error("TextToSpeech", "Unsupported voice: {0}", _voice.ToString());
+                Log.Error("TextToSpeech.ToSpeech()", "Unsupported voice: {0}", _voice.ToString());
                 return false;
             }
 
@@ -320,7 +320,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/synthesize");
             if (connector == null)
             {
-                Log.Error("TextToSpeech", "Failed to get connector.");
+                Log.Error("TextToSpeech.ToSpeech()", "Failed to get connector.");
                 return false;
             }
 
@@ -358,7 +358,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 
             AudioClip clip = resp.Success ? ProcessResponse(speechReq.TextId, resp.Data) : null;
             if (clip == null)
-                Log.Error("TextToSpeech", "Request Failed: {0}", resp.Error);
+                Log.Error("TextToSpeech.ToSpeechResponse()", "Request Failed: {0}", resp.Error);
 
             if (speechReq.Callback != null)
                 speechReq.Callback(clip, speechReq.Data);
@@ -374,7 +374,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
                     break;
             }
 
-            Log.Error("TextToSpeech", "Unsupported audio format: {0}", _audioFormat.ToString());
+            Log.Error("TextToSpeech.ProcessResponse()", "Unsupported audio format: {0}", _audioFormat.ToString());
             return null;
         }
         #endregion
@@ -457,7 +457,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Text To Speech", "GetPronunciation Exception: {0}", e.ToString());
+                    Log.Error("TextToSpeech.OnGetPronunciationResp()", "GetPronunciation Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -526,7 +526,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Text To Speech", "GetCustomizations Exception: {0}", e.ToString());
+                    Log.Error("TextToSpeech.OnGetCustomizationsResp()", "GetCustomizations Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -614,7 +614,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Text To Speech", "CreateCustomization Exception: {0}", e.ToString());
+                    Log.Error("TextToSpeech.OnCreateCustomizationResp()", "CreateCustomization Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -740,7 +740,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Text To Speech", "GetCustomization Exception: {0}", e.ToString());
+                    Log.Error("TextToSpeech.OnGetCustomizationResp()", "GetCustomization Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -879,7 +879,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Text To Speech", "GetCustomizationWords Exception: {0}", e.ToString());
+                    Log.Error("TextToSpeech.OnGetCustomizationWordsResp()", "GetCustomizationWords Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -1078,7 +1078,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Text To Speech", "GetCustomizationWord Exception: {0}", e.ToString());
+                    Log.Error("TextToSpeech.OnGetCustomizationWordResp()", "GetCustomizationWord Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -1108,7 +1108,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
         /// <returns></returns>
         public bool AddCustomizationWord(AddCustomizationWordCallback callback, string customizationID, string word, string translation, string customData = default(string))
         {
-            Log.Error("TextToSpeech", "AddCustomizationWord is not supported. Unity WWW does not support PUT method! Use AddCustomizationWords() instead!");
+            Log.Error("TextToSpeech.AddCustomizationWord()", "AddCustomizationWord is not supported. Unity WWW does not support PUT method! Use AddCustomizationWords() instead!");
             if (callback == null)
                 throw new ArgumentNullException("callback");
             if (string.IsNullOrEmpty(customizationID))

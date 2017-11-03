@@ -210,7 +210,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Natural Language Classifier", "GetTranslation Exception: {0}", e.ToString());
+                    Log.Error("LanguageTranslator.TranslateResponse()", "GetTranslation Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -303,7 +303,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Natural Language Classifier", "GetModels Exception: {0}", e.ToString());
+                    Log.Error("LanguageTranslator.GetModelsResponse()", "GetModels Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -364,7 +364,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Natural Language Classifier", "GetModel Exception: {0}", e.ToString());
+                    Log.Error("LanguageTranslator.GetModelResponse()", "GetModel Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -599,7 +599,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Natural Language Classifier", "GetLanguages Exception: {0}", e.ToString());
+                    Log.Error("LanguageTranslator.GetLanguagesResponse()", "GetLanguages Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
