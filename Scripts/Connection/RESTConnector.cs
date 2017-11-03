@@ -552,7 +552,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
 				deleteReq.method = UnityWebRequest.kHttpVerbDELETE;
                 foreach (var kp in Headers)
                     deleteReq.SetRequestHeader(kp.Key, kp.Value);
-#if UNITY_2017_1_OR_NEWER
+#if UNITY_2017_2_OR_NEWER
                 deleteReq.SendWebRequest();
 #else
                 deleteReq.Send();
