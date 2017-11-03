@@ -48,9 +48,9 @@ public class ExampleNaturalLanguageUnderstandingV1 : MonoBehaviour
 
     private IEnumerator Examples()
     {
-        Log.Debug("ExampleNaturalLanguageUnderstandingV1", "attempting to get models...");
+        Log.Debug("ExampleNaturalLanguageUnderstanding.Examples()", "attempting to get models...");
         if (!_naturalLanguageUnderstanding.GetModels(OnGetModels))
-            Log.Debug("ExampleNaturalLanguageUnderstandingV1", "Failed to get models.");
+            Log.Debug("ExampleNaturalLanguageUnderstanding.GetModels()", "Failed to get models.");
         while (!_getModelsTested)
             yield return null;
 
@@ -76,20 +76,20 @@ public class ExampleNaturalLanguageUnderstandingV1 : MonoBehaviour
             }
         };
 
-        Log.Debug("ExampleNaturalLanguageUnderstandingV1", "attempting to analyze...");
+        Log.Debug("ExampleNaturalLanguageUnderstanding.Examples()", "attempting to analyze...");
         if (!_naturalLanguageUnderstanding.Analyze(OnAnalyze, parameters))
-            Log.Debug("ExampleNaturalLanguageUnderstandingV1", "Failed to get models.");
+            Log.Debug("ExampleNaturalLanguageUnderstanding.Analyze()", "Failed to get models.");
         while (!_analyzeTested)
             yield return null;
 
-        Log.Debug("ExampleNaturalLanguageUnderstandingV1", "Natural language understanding examples complete.");
+        Log.Debug("ExampleNaturalLanguageUnderstanding.Examples()", "Natural language understanding examples complete.");
     }
 
     private void OnGetModels(ListModelsResults resp, string customData)
     {
         fsData data = null;
         _serializer.TrySerialize(resp, out data).AssertSuccess();
-        Log.Debug("ExampleNaturalLanguageUnderstandingV1", "ListModelsResult: {0}", data.ToString());
+        Log.Debug("ExampleNaturalLanguageUnderstanding.Examples()", "ListModelsResult: {0}", data.ToString());
 
         _getModelsTested = true;
     }
@@ -98,7 +98,7 @@ public class ExampleNaturalLanguageUnderstandingV1 : MonoBehaviour
     {
         fsData data = null;
         _serializer.TrySerialize(resp, out data).AssertSuccess();
-        Log.Debug("ExampleNaturalLanguageUnderstandingV1", "AnalysisResults: {0}", data.ToString());
+        Log.Debug("ExampleNaturalLanguageUnderstanding.Examples()", "AnalysisResults: {0}", data.ToString());
 
         _analyzeTested = true;
     }

@@ -165,7 +165,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Discovery", "OnAnalyzeResponse Exception: {0}", e.ToString());
+                    Log.Error("Discovery.OnAnalyzeResponse()", "OnAnalyzeResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -236,7 +236,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Discovery", "OnGetModelssResponse Exception: {0}", e.ToString());
+                    Log.Error("Discovery.OnGetModelsResponse()", "OnGetModelssResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }

@@ -25,12 +25,12 @@ Analyzes the tone of a piece of text. The message is analyzed for several tones 
 private void AnalyzeTone()
 {
     if (!_toneAnalyzer.GetToneAnalyze(OnGetToneAnalyze, _stringToTestTone))
-        Log.Debug("ExampleToneAnalyzer", "Failed to analyze!");
+        Log.Debug("ExampleToneAnalyzer.GetToneAnalyze()", "Failed to analyze!");
 }
 
 private void OnGetToneAnalyze(ToneAnalyzerResponse resp, string data)
 {
-    Log.Debug("ExampleToneAnalyzer", "Tone Analyzer - Analyze Response: {0}", data);
+    Log.Debug("ExampleToneAnalyzer.OnGetToneAnalyze()", "Tone Analyzer - Analyze Response: {0}", data);
 }
 ```
 

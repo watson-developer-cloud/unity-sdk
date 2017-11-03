@@ -127,13 +127,13 @@ AuthenticationToken _authenticationToken;
 void Start()
 {
     if (!Utility.GetToken(OnGetToken, <service-url>, <service-username>, <service-password>))
-        Log.Debug("ExampleGetToken", "Failed to get token.");
+        Log.Debug("ExampleGetToken.Start()", "Failed to get token.");
 }
 
 private void OnGetToken(AuthenticationToken authenticationToken, string customData)
 {
     _authenticationToken = authenticationToken;
-    Log.Debug("ExampleGetToken", "created: {0} | time to expiration: {1} minutes | token: {2}", _authenticationToken.Created, _authenticationToken.TimeUntilExpiration, _authenticationToken.Token);
+    Log.Debug("ExampleGetToken.OnGetToken()", "created: {0} | time to expiration: {1} minutes | token: {2}", _authenticationToken.Created, _authenticationToken.TimeUntilExpiration, _authenticationToken.Token);
 }
 ```
 

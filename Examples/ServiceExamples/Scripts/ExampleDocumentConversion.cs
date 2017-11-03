@@ -48,17 +48,17 @@ public class ExampleDocumentConversion : MonoBehaviour
     private IEnumerator Examples()
     {
         if (!_documentConversion.ConvertDocument(OnConvertDocument, _examplePath, _conversionTarget))
-            Log.Debug("ExampleDocumentConversion", "Document conversion failed!");
+            Log.Debug("ExampleDocumentConversion.ConvertDocument()", "Document conversion failed!");
 
         while (!_convertDocumentTested)
             yield return null;
 
-        Log.Debug("ExampleDoucmentConversion", "Document conversion examples complete.");
+        Log.Debug("ExampleDoucmentConversion.Examples()", "Document conversion examples complete.");
     }
 
     private void OnConvertDocument(ConvertedDocument documentConversionResponse, string data)
     {
-        Log.Debug("ExampleDoucmentConversion", "DocumentConversion - Convert document Response: {0}", documentConversionResponse.htmlContent);
+        Log.Debug("ExampleDoucmentConversion.OnConvertDocument()", "DocumentConversion - Convert document Response: {0}", documentConversionResponse.htmlContent);
         _convertDocumentTested = true;
     }
 }

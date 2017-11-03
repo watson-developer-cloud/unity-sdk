@@ -140,7 +140,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TradeoffAnalytics.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("TradeoffAnalytics", "GetDilemmaResponse Exception: {0}", e.ToString());
+                    Log.Error("TradeoffAnalytics.GetDilemmaResponse()", "GetDilemmaResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }

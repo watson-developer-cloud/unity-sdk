@@ -215,7 +215,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
         public void Send(Message msg, bool queue = false)
         {
 #if ENABLE_MESSAGE_DEBUGGING
-            Log.Debug( "WSConnector", "Sending {0} message: {1}",
+            Log.Debug( "WSConnector.Send()", "Sending {0} message: {1}",
                 msg is TextMessage ? "TextMessage" : "BinaryMessage", 
                 msg is TextMessage ? ((TextMessage)msg).Text : ((BinaryMessage)msg).Data.Length.ToString() + " bytes" );
 #endif
@@ -278,7 +278,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
                         {
                             Message msg = _receiveQueue.Dequeue();
 #if ENABLE_MESSAGE_DEBUGGING
-                            Log.Debug( "WSConnector", "Received {0} message: {1}",
+                            Log.Debug( "WSConnector.ProcessReceiveQueue()", "Received {0} message: {1}",
                                 msg is TextMessage ? "TextMessage" : "BinaryMessage", 
                                 msg is TextMessage ? ((TextMessage)msg).Text : ((BinaryMessage)msg).Data.Length.ToString() + " bytes" );
 #endif
@@ -338,7 +338,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
             catch (System.Exception e)
             {
                 _connectionState = ConnectionState.DISCONNECTED;
-                Log.Error("WSConnector", "Caught WebSocket exception: {0}", e.ToString());
+                Log.Error("WSConnector.SendMessages()", "Caught WebSocket exception: {0}", e.ToString());
             }
         }
 
@@ -424,7 +424,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
             catch (System.Exception e)
             {
                 _connectionState = ConnectionState.DISCONNECTED;
-                Log.Error("WSConnector", "Caught WebSocket exception: {0}", e.ToString());
+                Log.Error("WSConnector.SendMessagesAsync()", "Caught WebSocket exception: {0}", e.ToString());
             }
         }
 
@@ -467,7 +467,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
             }
             catch (System.Exception e)
             {
-                Log.Error("WSConnector", "Caught WebSocket exception: {0}", e.ToString());
+                Log.Error("WSConnector.SendMessagesAsync()", "Caught WebSocket exception: {0}", e.ToString());
             }
         }
 #endif

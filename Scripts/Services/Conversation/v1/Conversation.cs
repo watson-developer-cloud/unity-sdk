@@ -222,7 +222,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Conversation", "MessageResp Exception: {0}", e.ToString());
+                    Log.Error("Conversation.MessageResp()", "MessageResp Exception: {0}", e.ToString());
                     data = e.Message;
                     resp.Success = false;
                 }

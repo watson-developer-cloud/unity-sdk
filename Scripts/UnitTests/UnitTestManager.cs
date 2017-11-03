@@ -115,7 +115,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
                 {
                     if ((string.IsNullOrEmpty(_activeTest.ProjectToTest()) && string.IsNullOrEmpty(ProjectToTest)) || (_activeTest.ProjectToTest() == ProjectToTest) || (!string.IsNullOrEmpty(_activeTest.ProjectToTest()) && !string.IsNullOrEmpty(ProjectToTest) && ProjectToTest.ToLower().Contains(_activeTest.ProjectToTest().ToLower())))
                     {
-                        Log.Status("UnitTestManager", "STARTING UnitTest {0} ...", testType.Name);
+                        Log.Status("UnitTestManager.RunTestsCR()", "STARTING UnitTest {0} ...", testType.Name);
 
                         // wait for the test to complete..
                         bool bTestException = true;
@@ -131,7 +131,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
                                 yield return null;
                                 if ((DateTime.Now - startTime).TotalSeconds > TestTimeout)
                                 {
-                                    Log.Error("UnitTestManager", "UnitTest {0} has timed out.", testType.Name);
+                                    Log.Error("UnitTestManager.RunTestsCR()", "UnitTest {0} has timed out.", testType.Name);
                                     _activeTest.TestFailed = true;
                                     break;
                                 }
@@ -140,12 +140,12 @@ namespace IBM.Watson.DeveloperCloud.Editor
                             bTestException = false;
                             if (_activeTest.TestFailed)
                             {
-                                Log.Error("UnitTestManager", "... UnitTest {0} FAILED.", testType.Name);
+                                Log.Error("UnitTestManager.RunTestsCR()", "... UnitTest {0} FAILED.", testType.Name);
                                 TestsFailed += 1;
                             }
                             else
                             {
-                                Log.Status("UnitTestManager", "... UnitTest {0} COMPLETED.", testType.Name);
+                                Log.Status("UnitTestManager.RunTestsCR()", "... UnitTest {0} COMPLETED.", testType.Name);
                                 TestsComplete += 1;
                             }
                         }
@@ -155,7 +155,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
 
                         if (bTestException)
                         {
-                            Log.Error("UnitTestManager", "... UnitTest {0} threw exception.", testType.Name);
+                            Log.Error("UnitTestManager.RunTestsCR()", "... UnitTest {0} threw exception.", testType.Name);
                             TestsFailed += 1;
                         }
                     }
@@ -167,7 +167,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
                 }
                 else
                 {
-                    Log.Error("UnitTestManager", "Failed to instantiate test {0}.", testType.Name);
+                    Log.Error("UnitTestManager.RunTestsCR()", "Failed to instantiate test {0}.", testType.Name);
                     TestsFailed += 1;
                 }
 
@@ -178,11 +178,11 @@ namespace IBM.Watson.DeveloperCloud.Editor
 
             if (TestsComplete == 0 && TestsFailed == 0)
             {
-                Log.Status("UnitTestManager", "Nothing to Test");
+                Log.Status("UnitTestManager.RunTestsCR()", "Nothing to Test");
             }
             else
             {
-                Log.Status("UnitTestManager", "Tests Completed: {0}, Tests Failed: {1}", TestsComplete, TestsFailed);
+                Log.Status("UnitTestManager.RunTestsCR()", "Tests Completed: {0}, Tests Failed: {1}", TestsComplete, TestsFailed);
             }
 
 #if UNITY_EDITOR
@@ -251,7 +251,7 @@ public static class RunUnitTest
                     if (kv[0] == "ProjectName")
                     {
                         ProjectToTest = kv.Length > 1 ? kv[1] : "";
-                        Log.Status("RunUnitTest", "AutoLunchOptions ProjectToTest:{0}", ProjectToTest);
+                        Log.Status("UnitTestManager.RunUnitTest()", "AutoLunchOptions ProjectToTest:{0}", ProjectToTest);
                         break;
                     }
                 }

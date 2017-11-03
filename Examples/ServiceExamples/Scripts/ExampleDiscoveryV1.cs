@@ -82,16 +82,16 @@ public class ExampleDiscoveryV1 : MonoBehaviour
     private IEnumerator Examples()
     {
         //  Get Environments
-        Log.Debug("ExampleDiscoveryV1", "Attempting to get environments");
+        Log.Debug("ExampleDiscoveryV1.Examples()", "Attempting to get environments");
         if (!_discovery.GetEnvironments(OnGetEnvironments))
-            Log.Debug("ExampleDiscoveryV1", "Failed to get environments");
+            Log.Debug("ExampleDiscoveryV1.GetEnvironments()", "Failed to get environments");
         while (!_getEnvironmentsTested)
             yield return null;
 
         //  AddEnvironment
-        Log.Debug("ExampleDiscoveryV1", "Attempting to add environment");
+        Log.Debug("ExampleDiscovery.Examples()", "Attempting to add environment");
         if (!_discovery.AddEnvironment(OnAddEnvironment, "unity-testing-AddEnvironment-do-not-delete-until-active", "Testing addEnvironment in Unity SDK. Please do not delete this environment until the status is 'active'", 1))
-            Log.Debug("ExampleDiscoveryV1", "Failed to add environment");
+            Log.Debug("ExampleDiscovery.AddEnvironment()", "Failed to add environment");
         while (!_addEnvironmentTested)
             yield return null;
 
@@ -101,165 +101,165 @@ public class ExampleDiscoveryV1 : MonoBehaviour
             yield return null;
 
         //  GetEnvironment
-        Log.Debug("ExampleDiscoveryV1", "Attempting to get environment");
+        Log.Debug("ExampleDiscovery.Examples()", "Attempting to get environment");
         if (!_discovery.GetEnvironment(OnGetEnvironment, _createdEnvironmentID))
-            Log.Debug("ExampleDiscoveryV1", "Failed to get environment");
+            Log.Debug("ExampleDiscovery.GetEnvironment()", "Failed to get environment");
         while (!_getEnvironmentTested)
             yield return null;
 
         //  Get Configurations
-        Log.Debug("ExampleDiscoveryV1", "Attempting to get configurations");
+        Log.Debug("ExampleDiscovery.Examples()", "Attempting to get configurations");
         if (!_discovery.GetConfigurations(OnGetConfigurations, _createdEnvironmentID))
-            Log.Debug("ExampleDiscoveryV1", "Failed to get configurations");
+            Log.Debug("ExampleDiscovery.GetConfigurations()", "Failed to get configurations");
         while (!_getConfigurationsTested)
             yield return null;
 
         //  Add Configuration
-        Log.Debug("ExampleDiscoveryV1", "Attempting to add configuration");
+        Log.Debug("ExampleDiscovery.Examples()", "Attempting to add configuration");
         if (!_discovery.AddConfiguration(OnAddConfiguration, _createdEnvironmentID, _configurationJsonPath))
-            Log.Debug("ExampleDiscoveryV1", "Failed to add configuration");
+            Log.Debug("ExampleDiscovery.AddConfiguration()", "Failed to add configuration");
         while (!_addConfigurationTested)
             yield return null;
 
         //  Get Configuration
-        Log.Debug("ExampleDiscoveryV1", "Attempting to get configuration");
+        Log.Debug("ExampleDiscovery.Examples()", "Attempting to get configuration");
         if (!_discovery.GetConfiguration(OnGetConfiguration, _createdEnvironmentID, _createdConfigurationID))
-            Log.Debug("ExampleDiscoveryV1", "Failed to get configuration");
+            Log.Debug("ExampleDiscovery.GetConfiguration()", "Failed to get configuration");
         while (!_getConfigurationTested)
             yield return null;
 
         //  Preview Configuration
-        Log.Debug("ExampleDiscoveryV1", "Attempting to preview configuration");
+        Log.Debug("ExampleDiscovery.Examples()", "Attempting to preview configuration");
         if (!_discovery.PreviewConfiguration(OnPreviewConfiguration, _createdEnvironmentID, _createdConfigurationID, null, _filePathToIngest, _metadata))
-            Log.Debug("ExampleDiscoveryV1", "Failed to preview configuration");
+            Log.Debug("ExampleDiscovery.PreviewConfiguration()", "Failed to preview configuration");
         while (!_previewConfigurationTested)
             yield return null;
 
         //  Get Collections
-        Log.Debug("ExampleDiscoveryV1", "Attempting to get collections");
+        Log.Debug("ExampleDiscovery.Examples()", "Attempting to get collections");
         if (!_discovery.GetCollections(OnGetCollections, _createdEnvironmentID))
-            Log.Debug("ExampleDiscovery", "Failed to get collections");
+            Log.Debug("ExampleDiscovery.GetCollections()", "Failed to get collections");
         while (!_getCollectionsTested)
             yield return null;
 
         //  Add Collection
-        Log.Debug("ExampleDiscoveryV1", "Attempting to add collection");
+        Log.Debug("ExampleDiscovery.Examples()", "Attempting to add collection");
         if (!_discovery.AddCollection(OnAddCollection, _createdEnvironmentID, _createdCollectionName, _createdCollectionDescription, _createdConfigurationID))
-            Log.Debug("ExampleDiscovery", "Failed to add collection");
+            Log.Debug("ExampleDiscovery.AddCollection()", "Failed to add collection");
         while (!_addCollectionTested)
             yield return null;
 
         //  Get Collection
-        Log.Debug("ExampleDiscoveryV1", "Attempting to get collection");
+        Log.Debug("ExampleDiscovery.Examples()", "Attempting to get collection");
         if (!_discovery.GetCollection(OnGetCollection, _createdEnvironmentID, _createdCollectionID))
-            Log.Debug("ExampleDiscovery", "Failed to get collection");
+            Log.Debug("ExampleDiscovery.GetCollection()", "Failed to get collection");
         while (!_getCollectionTested)
             yield return null;
         
         //  Get fields
         if (!_discovery.GetFields(OnGetFields, _createdEnvironmentID, _createdCollectionID))
-            Log.Debug("ExampleDiscovery", "Failed to get fields");
+            Log.Debug("ExampleDiscovery.GetFields()", "Failed to get fields");
         while (!_getFieldsTested)
             yield return null;
 
         //  Add Document
-        Log.Debug("ExampleDiscoveryV1", "Attempting to add document");
+        Log.Debug("ExampleDiscovery.Examples()", "Attempting to add document");
         if (!_discovery.AddDocument(OnAddDocument, _createdEnvironmentID, _createdCollectionID, _documentFilePath, _createdConfigurationID, null))
-            Log.Debug("ExampleDiscovery", "Failed to add document");
+            Log.Debug("ExampleDiscovery.AddDocument()", "Failed to add document");
         while (!_addDocumentTested)
             yield return null;
 
         //  Get Document
-        Log.Debug("ExampleDiscoveryV1", "Attempting to get document");
+        Log.Debug("ExampleDiscovery.Examples()", "Attempting to get document");
         if (!_discovery.GetDocument(OnGetDocument, _createdEnvironmentID, _createdCollectionID, _createdDocumentID))
-            Log.Debug("ExampleDiscovery", "Failed to get document");
+            Log.Debug("ExampleDiscovery.GetDocument()", "Failed to get document");
         while (!_getDocumentTested)
             yield return null;
 
         //  Update Document
-        Log.Debug("ExampleDiscoveryV1", "Attempting to update document");
+        Log.Debug("ExampleDiscovery.Examples()", "Attempting to update document");
         if (!_discovery.UpdateDocument(OnUpdateDocument, _createdEnvironmentID, _createdCollectionID, _createdDocumentID, _documentFilePath, _createdConfigurationID, null))
-            Log.Debug("ExampleDiscovery", "Failed to update document");
+            Log.Debug("ExampleDiscovery.UpdateDocument()", "Failed to update document");
         while (!_updateDocumentTested)
             yield return null;
 
         //  Query
-        Log.Debug("ExampleDiscoveryV1", "Attempting to query");
+        Log.Debug("ExampleDiscovery.Examples()", "Attempting to query");
         if (!_discovery.Query(OnQuery, _createdEnvironmentID, _createdCollectionID, null, _query, null, 10, null, 0))
-            Log.Debug("ExampleDiscovery", "Failed to query");
+            Log.Debug("ExampleDiscovery.Query()", "Failed to query");
         while (!_queryTested)
             yield return null;
 
         //  Delete Document
-        Log.Debug("ExampleDiscoveryV1", "Attempting to delete document {0}", _createdDocumentID);
+        Log.Debug("ExampleDiscovery.Examples()", "Attempting to delete document {0}", _createdDocumentID);
         if (!_discovery.DeleteDocument(OnDeleteDocument, _createdEnvironmentID, _createdCollectionID, _createdDocumentID))
-            Log.Debug("ExampleDiscovery", "Failed to delete document");
+            Log.Debug("ExampleDiscovery.DeleteDocument()", "Failed to delete document");
         while (!_deleteDocumentTested)
             yield return null;
 
         //  Delay
-        Log.Debug("ExampleDiscovery", "Delaying delete collection for 10 sec");
+        Log.Debug("ExampleDiscovery.Examples()", "Delaying delete collection for 10 sec");
         Invoke("Delay", 10f);
         while (!_readyToContinue)
             yield return null;
 
         _readyToContinue = false;
         //  Delete Collection
-        Log.Debug("ExampleDiscoveryV1", "Attempting to delete collection {0}", _createdCollectionID);
+        Log.Debug("ExampleDiscovery.Examples()", "Attempting to delete collection {0}", _createdCollectionID);
         if (!_discovery.DeleteCollection(OnDeleteCollection, _createdEnvironmentID, _createdCollectionID))
-            Log.Debug("ExampleDiscovery", "Failed to add collection");
+            Log.Debug("ExampleDiscovery.DeleteCollection()", "Failed to add collection");
         while (!_deleteCollectionTested)
             yield return null;
 
         //  Delay
-        Log.Debug("ExampleDiscovery", "Delaying delete configuration for 10 sec");
+        Log.Debug("ExampleDiscovery.Examples()", "Delaying delete configuration for 10 sec");
         Invoke("Delay", 10f);
         while (!_readyToContinue)
             yield return null;
 
         _readyToContinue = false;
         //  Delete Configuration
-        Log.Debug("ExampleDiscoveryV1", "Attempting to delete configuration {0}", _createdConfigurationID);
+        Log.Debug("ExampleDiscovery.Examples()", "Attempting to delete configuration {0}", _createdConfigurationID);
         if (!_discovery.DeleteConfiguration(OnDeleteConfiguration, _createdEnvironmentID, _createdConfigurationID))
-            Log.Debug("ExampleDiscoveryV1", "Failed to delete configuration");
+            Log.Debug("ExampleDiscovery.DeleteConfiguration()", "Failed to delete configuration");
         while (!_deleteConfigurationTested)
             yield return null;
 
         //  Delay
-        Log.Debug("ExampleDiscovery", "Delaying delete environment for 10 sec");
+        Log.Debug("ExampleDiscovery.Examples()", "Delaying delete environment for 10 sec");
         Invoke("Delay", 10f);
         while (!_readyToContinue)
             yield return null;
 
         _readyToContinue = false;
         //  Delete Environment
-        Log.Debug("ExampleDiscoveryV1", "Attempting to delete environment {0}", _createdEnvironmentID);
+        Log.Debug("ExampleDiscovery.Examples()", "Attempting to delete environment {0}", _createdEnvironmentID);
         if (!_discovery.DeleteEnvironment(OnDeleteEnvironment, _createdEnvironmentID))
-            Log.Debug("ExampleDiscoveryV1", "Failed to delete environment");
+            Log.Debug("ExampleDiscovery.DeleteEnvironment()", "Failed to delete environment");
         while (!_deleteEnvironmentTested)
             yield return null;
 
-        Log.Debug("ExampleDiscoveryV1", "Discovery examples complete.");
+        Log.Debug("ExampleDiscovery.Examples()", "Discovery examples complete.");
     }
 
     #region Check State
     private void CheckEnvironmentState()
     {
-        Log.Debug("ExampleDiscoveryV1", "Attempting to get environment state");
+        Log.Debug("ExampleDiscovery.Examples()", "Attempting to get environment state");
         try
         {
             _discovery.GetEnvironment(HandleCheckEnvironmentState, _createdEnvironmentID);
         }
         catch (System.Exception e)
         {
-            Log.Debug("ExampleDiscoveryV1", string.Format("Failed to get environment state: {0}", e.Message));
+            Log.Debug("ExampleDiscovery.Examples()", string.Format("Failed to get environment state: {0}", e.Message));
             CheckEnvironmentState();
         }
     }
 
     private void HandleCheckEnvironmentState(Environment resp, string data)
     {
-        Log.Debug("ExampleDiscoveryV1", "Environment {0} is {1}", resp.environment_id, resp.status);
+        Log.Debug("ExampleDiscovery.Examples()", "Environment {0} is {1}", resp.environment_id, resp.status);
 
         if (resp.status.ToLower() == "active")
             _isEnvironmentReady = true;
@@ -277,39 +277,39 @@ public class ExampleDiscoveryV1 : MonoBehaviour
 
     private void OnGetEnvironments(GetEnvironmentsResponse resp, string data)
     {
-        Log.Debug("ExampleDiscoveryV1", "Discovery - GetEnvironments Response: {0}", data);
+        Log.Debug("ExampleDiscovery.OnGetEnvironments()", "Discovery - GetEnvironments Response: {0}", data);
         _getEnvironmentsTested = true;
     }
 
     private void OnGetEnvironment(Environment resp, string data)
     {
-        Log.Debug("ExampleDiscoveryV1", "Discovery - GetEnvironment Response: {0}", data);
+        Log.Debug("ExampleDiscovery.OnGetEnvironment()", "Discovery - GetEnvironment Response: {0}", data);
         _getEnvironmentTested = true;
     }
 
     private void OnAddEnvironment(Environment resp, string data)
     {
-        Log.Debug("ExampleDiscoveryV1", "Discovery - AddEnvironment Response: {0}", data);
+        Log.Debug("ExampleDiscovery.OnAddEnvironment()", "Discovery - AddEnvironment Response: {0}", data);
         _createdEnvironmentID = resp.environment_id;
         _addEnvironmentTested = true;
     }
 
     private void OnGetConfigurations(GetConfigurationsResponse resp, string data)
     {
-        Log.Debug("ExampleDiscoveryV1", "Discovery - GetConfigurations Response: {0}", data);
+        Log.Debug("ExampleDiscovery.OnGetConfigurations()", "Discovery - GetConfigurations Response: {0}", data);
         _getConfigurationsTested = true;
     }
 
     private void OnGetConfiguration(Configuration resp, string data)
     {
-        Log.Debug("ExampleDiscoveryV1", "Discovery - GetConfiguration Response: {0}", data);
+        Log.Debug("ExampleDiscovery.OnGetConfiguration()", "Discovery - GetConfiguration Response: {0}", data);
         _getConfigurationTested = true;
 
     }
 
     private void OnAddConfiguration(Configuration resp, string data)
     {
-        Log.Debug("ExampleDiscoveryV1", "Discovery - AddConfiguration Response: {0}", data);
+        Log.Debug("ExampleDiscovery.OnAddConfiguration()", "Discovery - AddConfiguration Response: {0}", data);
         _createdConfigurationID = resp.configuration_id;
         _addConfigurationTested = true;
     }
@@ -317,56 +317,56 @@ public class ExampleDiscoveryV1 : MonoBehaviour
     private void OnPreviewConfiguration(TestDocument resp, string data)
     {
         _previewConfigurationTested = true;
-        Log.Debug("ExampleDiscoveryV1", "Discovery - Preview configuration Response: {0}", data);
+        Log.Debug("ExampleDiscovery.OnPreviewConfiguration()", "Discovery - Preview configuration Response: {0}", data);
     }
 
     private void OnGetCollections(GetCollectionsResponse resp, string data)
     {
-        Log.Debug("ExampleDiscoveryV1", "Discovery - Get collections Response: {0}", data);
+        Log.Debug("ExampleDiscovery.OnGetCollections()", "Discovery - Get collections Response: {0}", data);
         _getCollectionsTested = true;
     }
 
     private void OnGetCollection(Collection resp, string data)
     {
-        Log.Debug("ExampleDiscoveryV1", "Discovery - Get colletion Response: {0}", data);
+        Log.Debug("ExampleDiscovery.OnGetCollection()", "Discovery - Get colletion Response: {0}", data);
         _getCollectionTested = true;
     }
 
     private void OnAddCollection(CollectionRef resp, string data)
     {
-        Log.Debug("ExampleDiscoveryV1", "Discovery - Add collection Response: {0}", data);
+        Log.Debug("ExampleDiscovery.OnAddCollection()", "Discovery - Add collection Response: {0}", data);
          _createdCollectionID = resp.collection_id;
         _addCollectionTested = true;
     }
 
     private void OnGetFields(GetFieldsResponse resp, string data)
     {
-        Log.Debug("ExampleDiscoveryV1", "Discovery - Get fields Response: {0}", data);
+        Log.Debug("ExampleDiscovery.OnGetFields()", "Discovery - Get fields Response: {0}", data);
         _getFieldsTested = true;
     }
 
     private void OnAddDocument(DocumentAccepted resp, string data)
     {
-        Log.Debug("ExampleDiscoveryV1", "Discovery - Add document Response: {0}", data);
+        Log.Debug("ExampleDiscovery.OnAddDocument()", "Discovery - Add document Response: {0}", data);
         _createdDocumentID = resp.document_id;
         _addDocumentTested = true;
     }
 
     private void OnGetDocument(DocumentStatus resp, string data)
     {
-        Log.Debug("ExampleDiscoveryV1", "Discovery - Get document Response: {0}", data);
+        Log.Debug("ExampleDiscovery.OnGetDocument()", "Discovery - Get document Response: {0}", data);
         _getDocumentTested = true;
     }
 
     private void OnUpdateDocument(DocumentAccepted resp, string data)
     {
-        Log.Debug("ExampleDiscoveryV1", "Discovery - Update document Response: {0}", data);
+        Log.Debug("ExampleDiscovery.OnUpdateDocument()", "Discovery - Update document Response: {0}", data);
         _updateDocumentTested = true;
     }
 
     private void OnDeleteDocument(bool success, string data)
     {
-        Log.Debug("ExampleDiscoveryV1", "Discovery - Delete document Response: deleted:{0}", success);
+        Log.Debug("ExampleDiscovery.OnDeleteDocument()", "Discovery - Delete document Response: deleted:{0}", success);
 
         if (success)
             _createdDocumentID = default(string);
@@ -376,7 +376,7 @@ public class ExampleDiscoveryV1 : MonoBehaviour
 
     private void OnDeleteCollection(bool success, string data)
     {
-        Log.Debug("ExampleDiscoveryV1", "Discovery - Delete collection Response: deleted:{0}", success);
+        Log.Debug("ExampleDiscovery.OnDeleteCollection()", "Discovery - Delete collection Response: deleted:{0}", success);
 
         if (success)
             _createdCollectionID = default(string);
@@ -386,7 +386,7 @@ public class ExampleDiscoveryV1 : MonoBehaviour
 
     private void OnDeleteConfiguration(bool success, string data)
     {
-        Log.Debug("ExampleDiscoveryV1", "Discovery - DeleteConfiguration Response: deleted:{0}", success);
+        Log.Debug("ExampleDiscovery.OnDeleteConfiguration()", "Discovery - DeleteConfiguration Response: deleted:{0}", success);
 
         if (success)
             _createdConfigurationID = default(string);
@@ -396,7 +396,7 @@ public class ExampleDiscoveryV1 : MonoBehaviour
 
     private void OnDeleteEnvironment(bool success, string data)
     {
-        Log.Debug("ExampleDiscoveryV1", "Discovery - DeleteEnvironment Response: deleted:{0}", success);
+        Log.Debug("ExampleDiscovery.OnDeleteEnvironment()", "Discovery - DeleteEnvironment Response: deleted:{0}", success);
 
         if (success)
             _createdEnvironmentID = default(string);
@@ -406,7 +406,7 @@ public class ExampleDiscoveryV1 : MonoBehaviour
 
     private void OnQuery(QueryResponse resp, string data)
     {
-        Log.Debug("ExampleDiscoveryV1", "Discovery - Query Response: {0}", data);
+        Log.Debug("ExampleDiscovery.OnQuery()", "Discovery - Query Response: {0}", data);
         _queryTested = true;
     }
 }
