@@ -324,13 +324,20 @@ namespace IBM.Watson.DeveloperCloud.Connection
                             msg = _sendQueue.Dequeue();
                     }
 
-                    if (msg == null)
-                        continue;
+                    while (msg != null)
+                    {
+                        if (msg is TextMessage)
+                            ws.Send(((TextMessage)msg).Text);
+                        else if (msg is BinaryMessage)
+                            ws.Send(((BinaryMessage)msg).Data);
 
-                    if (msg is TextMessage)
-                        ws.Send(((TextMessage)msg).Text);
-                    else if (msg is BinaryMessage)
-                        ws.Send(((BinaryMessage)msg).Data);
+                        msg = null;
+                        lock (_sendQueue)
+                        {
+                            if (_sendQueue.Count > 0)
+                                msg = _sendQueue.Dequeue();
+                        }
+                    }
                 }
 
                 ws.Close();

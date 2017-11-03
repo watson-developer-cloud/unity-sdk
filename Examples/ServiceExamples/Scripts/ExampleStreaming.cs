@@ -33,7 +33,7 @@ public class ExampleStreaming : MonoBehaviour
     private string _password = null;
     private string _url = null;
     public Text ResultsField;
-    
+
     private int _recordingRoutine = 0;
     private string _microphoneID = null;
     private AudioClip _recording = null;
@@ -116,7 +116,7 @@ public class ExampleStreaming : MonoBehaviour
         Log.Debug("ExampleStreaming", "Error! {0}", error);
     }
 
-	#if CHUNK_BUFFER
+#if CHUNK_BUFFER
 
     private IEnumerator RecordingHandler()
     {
@@ -167,8 +167,8 @@ public class ExampleStreaming : MonoBehaviour
                 sampleEnd.ToString(),
                 chunkNum.ToString());
 #endif
-            //If the write position is past the end of the chunk or if write position is before the start of the chunk and the chunk number is equal to the chunk count
-            if (microphonePosition > sampleEnd || (microphonePosition < sampleStart && chunkNum == (_chunkCount - 1)))
+            //If the write position is past the end of the chunk or if write position is before the start of the chunk
+            while (microphonePosition > sampleEnd || microphonePosition < sampleStart)
             {
                 //  Init samples
                 samples = new float[chunkSize];
@@ -204,20 +204,16 @@ public class ExampleStreaming : MonoBehaviour
                 Log.Debug("ExampleStreamingChunks", "Sending data - time since last transmission: {0} ms", Mathf.Floor((float)(DateTime.Now - now).TotalMilliseconds));
                 now = DateTime.Now;
 #endif
+                sampleStart = chunkSize * chunkNum;
+                sampleEnd = chunkSize * (chunkNum + 1);
             }
-            else
-            {
-                // calculate the number of samples remaining until we ready for a block of audio, 
-                // and wait that amount of time it will take to record.
-                int remaining = sampleEnd - microphonePosition;
-                float timeRemaining = (float)remaining / (float)_recordingHZ;
 
-                yield return new WaitForSeconds(timeRemaining);
-            }
+            yield return 0;
         }
 
         yield break;
     }
+
 
 #else
 
@@ -288,9 +284,9 @@ public class ExampleStreaming : MonoBehaviour
             {
                 foreach (var alt in res.alternatives)
                 {
-					string text = string.Format("{0} ({1}, {2:0.00})\n", alt.transcript, res.final ? "Final" : "Interim", alt.confidence);
-					Log.Debug("ExampleStreaming", text);
-					ResultsField.text = text;
+                    string text = string.Format("{0} ({1}, {2:0.00})\n", alt.transcript, res.final ? "Final" : "Interim", alt.confidence);
+                    Log.Debug("ExampleStreaming", text);
+                    ResultsField.text = text;
                 }
 
                 if (res.keywords_result != null && res.keywords_result.keyword != null)
@@ -306,7 +302,7 @@ public class ExampleStreaming : MonoBehaviour
                     foreach (var wordAlternative in res.word_alternatives)
                     {
                         Log.Debug("ExampleSpeechToText", "Word alternatives found. Start time: {0} | EndTime: {1}", wordAlternative.start_time, wordAlternative.end_time);
-                        foreach(var alternative in wordAlternative.alternatives)
+                        foreach (var alternative in wordAlternative.alternatives)
                             Log.Debug("ExampleSpeechToText", "\t word: {0} | confidence: {1}", alternative.word, alternative.confidence);
                     }
                 }
