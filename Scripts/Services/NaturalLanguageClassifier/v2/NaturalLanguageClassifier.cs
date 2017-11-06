@@ -36,35 +36,29 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
         /// <summary>
         /// Callback used by the GetClassifier() method.
         /// </summary>
-        /// <param name="classifier">The classifier found by ID.</param>
-        public delegate void OnGetClassifier(Classifier classifier, RESTConnector.Error error, string customData);
+        public delegate void OnGetClassifier(RESTConnector.ParsedResponse<Classifier> resp);
         /// <summary>
         /// Callback used by the TrainClassifier() method.
         /// </summary>
-        /// <param name="classifier">The classifier created.</param>
-        public delegate void OnTrainClassifier(Classifier classifier, RESTConnector.Error error, string customData);
+        public delegate void OnTrainClassifier(RESTConnector.ParsedResponse<Classifier> resp);
         /// <summary>
         /// Callback used by FindClassifier().
         /// </summary>
-        /// <param name="classifier">The classifer found by name.</param>
-        public delegate void OnFindClassifier(Classifier classifier, RESTConnector.Error error, string customData);
+        public delegate void OnFindClassifier(RESTConnector.ParsedResponse<Classifier> resp);
 
         /// <summary>
         /// The callback used by the GetClassifiers() method.
         /// </summary>
-        /// <param name="classifiers"></param>
-        public delegate void OnGetClassifiers(Classifiers classifiers, RESTConnector.Error error, string customData);
+        public delegate void OnGetClassifiers(RESTConnector.ParsedResponse<Classifiers> resp);
 
         /// <summary>
         /// This callback is used by the Classify() method.
         /// </summary>
-        /// <param name="classify"></param>
-        public delegate void OnClassify(ClassifyResult classify, RESTConnector.Error error, string customData);
+        public delegate void OnClassify(RESTConnector.ParsedResponse<ClassifyResult> resp);
         /// <summary>
         /// This callback is used by the DeleteClassifier() method.
         /// </summary>
-        /// <param name="success"></param>
-        public delegate void OnDeleteClassifier(bool success, RESTConnector.Error error, string customData);
+        public delegate void OnDeleteClassifier(RESTConnector.ParsedResponse<object> resp);
         #endregion
 
         #region Constructor
@@ -145,37 +139,12 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
 
         private void OnGetClassifiersResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            Classifiers classifiers = new Classifiers();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = classifiers;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("Natural Language Classifier", "GetClassifiers Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((GetClassifiersReq)req).Data;
+
+            RESTConnector.ParsedResponse<Classifiers> parsedResp = new RESTConnector.ParsedResponse<Classifiers>(resp, customData, _serializer);
+
             if (((GetClassifiersReq)req).Callback != null)
-			{
-				if (resp.Success)
-					((GetClassifiersReq)req).Callback(classifiers, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
-				else
-					((GetClassifiersReq)req).Callback(null, resp.Error, customData);
-			}
+                ((GetClassifiersReq)req).Callback(parsedResp);
         }
         #endregion
 
@@ -212,37 +181,12 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
 
         private void OnGetClassifierResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            Classifier classifier = new Classifier();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = classifier;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("Natural Language Classifier", "GetClassifiers Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((GetClassifierReq)req).Data;
+
+            RESTConnector.ParsedResponse<Classifier> parsedResp = new RESTConnector.ParsedResponse<Classifier>(resp, customData, _serializer);
+
             if (((GetClassifierReq)req).Callback != null)
-			{
-				if (resp.Success)
-					((GetClassifierReq)req).Callback(classifier, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
-				else
-					((GetClassifierReq)req).Callback(null, resp.Error, customData);
-			}
+                ((GetClassifierReq)req).Callback(parsedResp);
         }
         #endregion
 
@@ -292,37 +236,12 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
 
         private void OnTrainClassifierResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            Classifier classifier = new Classifier();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = classifier;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("Natural Language Classifier", "GetClassifiers Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((TrainClassifierReq)req).Data;
+
+            RESTConnector.ParsedResponse<Classifier> parsedResp = new RESTConnector.ParsedResponse<Classifier>(resp, customData, _serializer);
+
             if (((TrainClassifierReq)req).Callback != null)
-			{
-				if (resp.Success)
-					((TrainClassifierReq)req).Callback(classifier, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
-				else
-					((TrainClassifierReq)req).Callback(null, resp.Error, customData);
-			}
+                ((TrainClassifierReq)req).Callback(parsedResp);
         }
         #endregion
 
@@ -361,8 +280,11 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
         private void OnDeleteClassifierResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
             string customData = ((DeleteClassifierReq)req).Data;
+
+            RESTConnector.ParsedResponse<object> parsedResp = new RESTConnector.ParsedResponse<object>(resp, customData, null);
+
             if (((DeleteClassifierReq)req).Callback != null)
-                ((DeleteClassifierReq)req).Callback(resp.Success, resp.Error, customData);
+                ((DeleteClassifierReq)req).Callback(parsedResp);
         }
         #endregion
 
@@ -409,39 +331,12 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
 
         private void OnClassifyResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            ClassifyResult classify = null;
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    classify = new ClassifyResult();
-
-                    object obj = classify;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("Natural Language Classifier", "GetClassifiers Exception: {0}", e.ToString());
-                }
-
-            }
-
             string customData = ((ClassifyReq)req).Data;
+
+            RESTConnector.ParsedResponse<ClassifyResult> parsedResp = new RESTConnector.ParsedResponse<ClassifyResult>(resp, customData, _serializer);
+
             if (((ClassifyReq)req).Callback != null)
-			{
-				if (resp.Success)
-					((ClassifyReq)req).Callback(classify, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
-				else
-					((ClassifyReq)req).Callback(null, resp.Error, customData);
-			}
+                ((ClassifyReq)req).Callback(parsedResp);
         }
         #endregion
 

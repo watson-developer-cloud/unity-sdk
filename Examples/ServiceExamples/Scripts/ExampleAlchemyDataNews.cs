@@ -59,9 +59,9 @@ public class ExampleAlchemyDataNews : MonoBehaviour
         Log.Debug("ExampleAlchemyDataNews", "Alchemy data news examples complete!");
     }
 
-    private void OnGetNews(NewsResponse newsData, RESTConnector.Error error, string data)
+    private void OnGetNews(RESTConnector.ParsedResponse<NewsResponse> resp)
     {
-        Log.Debug("ExampleAlchemyDataNews", "Alchemy data news - Get news Response: {0}", data);
+        Log.Debug("ExampleAlchemyDataNews", "Alchemy data news - Get news Response: {0}", resp.JSON);
         _getNewsTested = true;
     }
 }

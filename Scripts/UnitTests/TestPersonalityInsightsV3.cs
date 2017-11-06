@@ -113,17 +113,17 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             yield break;
         }
 
-        private void OnGetProfileText(Profile profile, RESTConnector.Error error, string data)
+        private void OnGetProfileText(RESTConnector.ParsedResponse<Profile> resp)
         {
-            Log.Debug("ExamplePersonaltyInsights", "Personality Insights - GetProfileText Response: {0}", data);
-            Test(profile != null);
+            Log.Debug("ExamplePersonaltyInsights", "Personality Insights - GetProfileText Response: {0}", resp.JSON);
+            Test(resp.DataObject != null);
             _getProfileTextTested = true;
         }
 
-        private void OnGetProfileJson(Profile profile, RESTConnector.Error error, string data)
+        private void OnGetProfileJson(RESTConnector.ParsedResponse<Profile> resp)
         {
-            Log.Debug("ExamplePersonaltyInsights", "Personality Insights - GetProfileJson Response: {0}", data);
-            Test(profile != null);
+            Log.Debug("ExamplePersonaltyInsights", "Personality Insights - GetProfileJson Response: {0}", resp.JSON);
+            Test(resp.DataObject != null);
             _getProfileJsonTested = true;
         }
     }

@@ -327,11 +327,11 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             }
         }
 
-        private void HandleCheckEnvironmentState(Environment resp, RESTConnector.Error error, string data)
+        private void HandleCheckEnvironmentState(RESTConnector.ParsedResponse<Environment> resp)
         {
-            Log.Debug("ExampleDiscoveryV1", "Environment {0} is {1}", resp.environment_id, resp.status);
+            Log.Debug("ExampleDiscoveryV1", "Environment {0} is {1}", resp.DataObject.environment_id, resp.DataObject.status);
 
-            if (resp.status.ToLower() == "active")
+            if (resp.DataObject.status.ToLower() == "active")
                 _isEnvironmentReady = true;
             else
             {
@@ -346,157 +346,157 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         }
         #endregion
 
-        private void OnGetEnvironments(GetEnvironmentsResponse resp, RESTConnector.Error error, string data)
+        private void OnGetEnvironments(RESTConnector.ParsedResponse<GetEnvironmentsResponse> resp)
         {
-            Log.Debug("ExampleDiscoveryV1", "Discovery - GetEnvironments Response: {0}", data);
-            Test(resp != null);
+            Log.Debug("ExampleDiscoveryV1", "Discovery - GetEnvironments Response: {0}", resp.JSON);
+            Test(resp.DataObject != null);
             _getEnvironmentsTested = true;
         }
 
-        private void OnGetEnvironment(Environment resp, RESTConnector.Error error, string data)
+        private void OnGetEnvironment(RESTConnector.ParsedResponse<Environment> resp)
         {
-            Log.Debug("ExampleDiscoveryV1", "Discovery - GetEnvironment Response: {0}", data);
-            Test(resp != null);
+            Log.Debug("ExampleDiscoveryV1", "Discovery - GetEnvironment Response: {0}", resp.JSON);
+            Test(resp.DataObject != null);
             _getEnvironmentTested = true;
         }
 
-        private void OnAddEnvironment(Environment resp, RESTConnector.Error error, string data)
+        private void OnAddEnvironment(RESTConnector.ParsedResponse<Environment> resp)
         {
-            Log.Debug("ExampleDiscoveryV1", "Discovery - AddEnvironment Response: {0}", data);
-            _createdEnvironmentID = resp.environment_id;
-            Test(resp != null);
+            Log.Debug("ExampleDiscoveryV1", "Discovery - AddEnvironment Response: {0}", resp.JSON);
+            _createdEnvironmentID = resp.DataObject.environment_id;
+            Test(resp.DataObject != null);
             _addEnvironmentTested = true;
         }
 
-        private void OnGetConfigurations(GetConfigurationsResponse resp, RESTConnector.Error error, string data)
+        private void OnGetConfigurations(RESTConnector.ParsedResponse<GetConfigurationsResponse> resp)
         {
-            Log.Debug("ExampleDiscoveryV1", "Discovery - GetConfigurations Response: {0}", data);
-            Test(resp != null);
+            Log.Debug("ExampleDiscoveryV1", "Discovery - GetConfigurations Response: {0}", resp.JSON);
+            Test(resp.DataObject != null);
             _getConfigurationsTested = true;
         }
 
-        private void OnGetConfiguration(Configuration resp, RESTConnector.Error error, string data)
+        private void OnGetConfiguration(RESTConnector.ParsedResponse<Configuration> resp)
         {
-            Log.Debug("ExampleDiscoveryV1", "Discovery - GetConfiguration Response: {0}", data);
-            Test(resp != null);
+            Log.Debug("ExampleDiscoveryV1", "Discovery - GetConfiguration Response: {0}", resp.JSON);
+            Test(resp.DataObject != null);
             _getConfigurationTested = true;
 
         }
 
-        private void OnAddConfiguration(Configuration resp, RESTConnector.Error error, string data)
+        private void OnAddConfiguration(RESTConnector.ParsedResponse<Configuration> resp)
         {
-            Log.Debug("ExampleDiscoveryV1", "Discovery - AddConfiguration Response: {0}", data);
-            _createdConfigurationID = resp.configuration_id;
-            Test(resp != null);
+            Log.Debug("ExampleDiscoveryV1", "Discovery - AddConfiguration Response: {0}", resp.JSON);
+            _createdConfigurationID = resp.DataObject.configuration_id;
+            Test(resp.DataObject != null);
             _addConfigurationTested = true;
         }
 
-        private void OnPreviewConfiguration(TestDocument resp, RESTConnector.Error error, string data)
+        private void OnPreviewConfiguration(RESTConnector.ParsedResponse<TestDocument> resp)
         {
-            Log.Debug("ExampleDiscoveryV1", "Discovery - Preview configuration Response: {0}", data);
-            Test(resp != null);
+            Log.Debug("ExampleDiscoveryV1", "Discovery - Preview configuration Response: {0}", resp.JSON);
+            Test(resp.DataObject != null);
             _previewConfigurationTested = true;
         }
 
-        private void OnGetCollections(GetCollectionsResponse resp, RESTConnector.Error error, string data)
+        private void OnGetCollections(RESTConnector.ParsedResponse<GetCollectionsResponse> resp)
         {
-            Log.Debug("ExampleDiscoveryV1", "Discovery - Get collections Response: {0}", data);
-            Test(resp != null);
+            Log.Debug("ExampleDiscoveryV1", "Discovery - Get collections Response: {0}", resp.JSON);
+            Test(resp.DataObject != null);
             _getCollectionsTested = true;
         }
 
-        private void OnGetCollection(Collection resp, RESTConnector.Error error, string data)
+        private void OnGetCollection(RESTConnector.ParsedResponse<Collection> resp)
         {
-            Log.Debug("ExampleDiscoveryV1", "Discovery - Get colletion Response: {0}", data);
-            Test(resp != null);
+            Log.Debug("ExampleDiscoveryV1", "Discovery - Get colletion Response: {0}", resp.JSON);
+            Test(resp.DataObject != null);
             _getCollectionTested = true;
         }
 
-        private void OnAddCollection(CollectionRef resp, RESTConnector.Error error, string data)
+        private void OnAddCollection(RESTConnector.ParsedResponse<CollectionRef> resp)
         {
-            Log.Debug("ExampleDiscoveryV1", "Discovery - Add collection Response: {0}", data);
-            _createdCollectionID = resp.collection_id;
-            Test(resp != null);
+            Log.Debug("ExampleDiscoveryV1", "Discovery - Add collection Response: {0}", resp.JSON);
+            _createdCollectionID = resp.DataObject.collection_id;
+            Test(resp.DataObject != null);
             _addCollectionTested = true;
         }
 
-        private void OnGetFields(GetFieldsResponse resp, RESTConnector.Error error, string data)
+        private void OnGetFields(RESTConnector.ParsedResponse<GetFieldsResponse> resp)
         {
-            Log.Debug("ExampleDiscoveryV1", "Discovery - Get fields Response: {0}", data);
-            Test(resp != null);
+            Log.Debug("ExampleDiscoveryV1", "Discovery - Get fields Response: {0}", resp.JSON);
+            Test(resp.DataObject != null);
             _getFieldsTested = true;
         }
 
-        private void OnAddDocument(DocumentAccepted resp, RESTConnector.Error error, string data)
+        private void OnAddDocument(RESTConnector.ParsedResponse<DocumentAccepted> resp)
         {
-            Log.Debug("ExampleDiscoveryV1", "Discovery - Add document Response: {0}", data);
-            _createdDocumentID = resp.document_id;
-            Test(resp != null);
+            Log.Debug("ExampleDiscoveryV1", "Discovery - Add document Response: {0}", resp.JSON);
+            _createdDocumentID = resp.DataObject.document_id;
+            Test(resp.DataObject != null);
             _addDocumentTested = true;
         }
 
-        private void OnGetDocument(DocumentStatus resp, RESTConnector.Error error, string data)
+        private void OnGetDocument(RESTConnector.ParsedResponse<DocumentStatus> resp)
         {
-            Log.Debug("ExampleDiscoveryV1", "Discovery - Get document Response: {0}", data);
-            Test(resp != null);
+            Log.Debug("ExampleDiscoveryV1", "Discovery - Get document Response: {0}", resp.JSON);
+            Test(resp.DataObject != null);
             _getDocumentTested = true;
         }
 
-        private void OnUpdateDocument(DocumentAccepted resp, RESTConnector.Error error, string data)
+        private void OnUpdateDocument(RESTConnector.ParsedResponse<DocumentAccepted> resp)
         {
-            Log.Debug("ExampleDiscoveryV1", "Discovery - Update document Response: {0}", data);
-            Test(resp != null);
+            Log.Debug("ExampleDiscoveryV1", "Discovery - Update document Response: {0}", resp.JSON);
+            Test(resp.DataObject != null);
             _updateDocumentTested = true;
         }
 
-        private void OnDeleteDocument(bool success, RESTConnector.Error error, string data)
+        private void OnDeleteDocument(RESTConnector.ParsedResponse<object> resp)
         {
-            Log.Debug("ExampleDiscoveryV1", "Discovery - Delete document Response: deleted:{0}", success);
+            Log.Debug("ExampleDiscoveryV1", "Discovery - Delete document Response: deleted:{0}", resp.Success);
 
-            if (success)
+            if (resp.Success)
                 _createdDocumentID = default(string);
-            Test(success);
+            Test(resp.Success);
 
             _deleteDocumentTested = true;
         }
 
-        private void OnDeleteCollection(bool success, RESTConnector.Error error, string data)
+        private void OnDeleteCollection(RESTConnector.ParsedResponse<object> resp)
         {
-            Log.Debug("ExampleDiscoveryV1", "Discovery - Delete collection Response: deleted:{0}", success);
+            Log.Debug("ExampleDiscoveryV1", "Discovery - Delete collection Response: deleted:{0}", resp.Success);
 
-            if (success)
+            if (resp.Success)
                 _createdCollectionID = default(string);
-            Test(success);
+            Test(resp.Success);
 
             _deleteCollectionTested = true;
         }
 
-        private void OnDeleteConfiguration(bool success, RESTConnector.Error error, string data)
+        private void OnDeleteConfiguration(RESTConnector.ParsedResponse<object> resp)
         {
-            Log.Debug("ExampleDiscoveryV1", "Discovery - Delete configuration Response: deleted:{0}", success);
+            Log.Debug("ExampleDiscoveryV1", "Discovery - Delete configuration Response: deleted:{0}", resp.Success);
 
-            if (success)
+            if (resp.Success)
                 _createdConfigurationID = default(string);
-            Test(success);
+            Test(resp.Success);
 
             _deleteConfigurationTested = true;
         }
 
-        private void OnDeleteEnvironment(bool success, RESTConnector.Error error, string data)
+        private void OnDeleteEnvironment(RESTConnector.ParsedResponse<object> resp)
         {
-            Log.Debug("ExampleDiscoveryV1", "Discovery - Delete environment Response: deleted:{0}", success);
+            Log.Debug("ExampleDiscoveryV1", "Discovery - Delete environment Response: deleted:{0}", resp.Success);
 
-            if (success)
+            if (resp.Success)
                 _createdEnvironmentID = default(string);
-            Test(success);
+            Test(resp.Success);
 
             _deleteEnvironmentTested = true;
         }
 
-        private void OnQuery(QueryResponse resp, RESTConnector.Error error, string data)
+        private void OnQuery(RESTConnector.ParsedResponse<QueryResponse> resp)
         {
-            Log.Debug("ExampleDiscoveryV1", "Discovery - Query Response: {0}", data);
-            Test(resp != null);
+            Log.Debug("ExampleDiscoveryV1", "Discovery - Query Response: {0}", resp.JSON);
+            Test(resp.DataObject != null);
             _queryTested = true;
         }
     }

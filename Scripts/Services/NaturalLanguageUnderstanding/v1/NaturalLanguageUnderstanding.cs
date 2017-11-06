@@ -99,8 +99,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
         /// The callback used by Analyze().
         /// </summary>
         /// <param name="resp">The AnalysisResult response.</param>
-        /// <param name="customData">Optional custom data.</param>
-        public delegate void OnAnalyze(AnalysisResults resp, RESTConnector.Error error, string customData);
+        public delegate void OnAnalyze(RESTConnector.ParsedResponse<AnalysisResults> resp);
 
         /// <summary>
         /// Creates a new environment. You can only create one environment per service instance.An attempt to create another environment 
@@ -146,38 +145,12 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
 
         private void OnAnalyzeResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            AnalysisResults analysisResults = new AnalysisResults();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = analysisResults;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("Discovery", "OnAnalyzeResponse Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((AnalyzeRequest)req).Data;
+
+            RESTConnector.ParsedResponse<AnalysisResults> parsedResp = new RESTConnector.ParsedResponse<AnalysisResults>(resp, customData, _serializer);
+
             if (((AnalyzeRequest)req).Callback != null)
-			{
-				if (resp.Success)
-					((AnalyzeRequest)req).Callback(analysisResults, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
-				else
-					((AnalyzeRequest)req).Callback(null, resp.Error, customData);
-			}
+                ((AnalyzeRequest)req).Callback(parsedResp);
         }
         #endregion
 
@@ -186,8 +159,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
         /// The callback used by GetModels().
         /// </summary>
         /// <param name="resp">The GetModels response.</param>
-        /// <param name="customData">Optional data.</param>
-        public delegate void OnGetModels(ListModelsResults resp, RESTConnector.Error error, string customData);
+        public delegate void OnGetModels(RESTConnector.ParsedResponse<ListModelsResults> resp);
 
         /// <summary>
         /// Lists available models for Relations and Entities features, including Watson Knowledge Studio 
@@ -222,39 +194,12 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
 
         private void OnGetModelsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            ListModelsResults modelData = new ListModelsResults();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = modelData;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("Discovery", "OnGetModelssResponse Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((GetModelsRequest)req).Data;
-            if (((GetModelsRequest)req).Callback != null)
-			{
-				if (resp.Success)
-					((GetModelsRequest)req).Callback(modelData, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
-				else
-					((GetModelsRequest)req).Callback(null, resp.Error, customData);
-			}
 
+            RESTConnector.ParsedResponse<ListModelsResults> parsedResp = new RESTConnector.ParsedResponse<ListModelsResults>(resp, customData, _serializer);
+
+            if (((GetModelsRequest)req).Callback != null)
+                ((GetModelsRequest)req).Callback(parsedResp);
         }
         #endregion
 
@@ -262,9 +207,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
         /// <summary>
         /// The callback used by DeleteModel().
         /// </summary>
-        /// <param name="success">The success of the call.</param>
-        /// <param name="customData">Optional custom data.</param>
-        public delegate void OnDeleteModel(bool success, RESTConnector.Error error, string customData);
+        public delegate void OnDeleteModel(RESTConnector.ParsedResponse<object> resp);
 
         /// <summary>
         /// Deletes the specified model.
@@ -306,8 +249,11 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
         private void OnDeleteModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             string customData = ((DeleteModelRequest)req).Data;
+
+            RESTConnector.ParsedResponse<object> parsedResp = new RESTConnector.ParsedResponse<object>(resp, customData, null);
+
             if (((DeleteModelRequest)req).Callback != null)
-                ((DeleteModelRequest)req).Callback(resp.Success, resp.Error, customData);
+                ((DeleteModelRequest)req).Callback(parsedResp);
         }
         #endregion
 

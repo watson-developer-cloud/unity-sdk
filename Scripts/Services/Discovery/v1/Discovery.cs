@@ -117,8 +117,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// The callback used by GetEnvironments().
         /// </summary>
         /// <param name="resp">The GetEnvironments response.</param>
-        /// <param name="customData">Optional data.</param>
-        public delegate void OnGetEnvironments(GetEnvironmentsResponse resp, RESTConnector.Error error, string customData);
+        public delegate void OnGetEnvironments(RESTConnector.ParsedResponse<GetEnvironmentsResponse> resp);
 
         /// <summary>
         /// This class lists environments in a discovery instance. There are two environments returned: A read-only environment with the News
@@ -153,39 +152,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         private void OnGetEnvironmentsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            GetEnvironmentsResponse environmentsData = new GetEnvironmentsResponse();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = environmentsData;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("Discovery", "OnGetEnvironmentsResponse Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((GetEnvironmentsRequest)req).Data;
-            if (((GetEnvironmentsRequest)req).Callback != null)
-			{
-				if (resp.Success)
-					((GetEnvironmentsRequest)req).Callback(environmentsData, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
-				else
-					((GetEnvironmentsRequest)req).Callback(null, resp.Error, customData);
-			}
 
+            RESTConnector.ParsedResponse<GetEnvironmentsResponse> parsedResp = new RESTConnector.ParsedResponse<GetEnvironmentsResponse>(resp, customData, _serializer);
+
+            if (((GetEnvironmentsRequest)req).Callback != null)
+                ((GetEnvironmentsRequest)req).Callback(parsedResp);
         }
         #endregion
 
@@ -194,8 +166,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// The callback used by AddEnvironment().
         /// </summary>
         /// <param name="resp">The Environment response.</param>
-        /// <param name="customData">Optional custom data.</param>
-        public delegate void OnAddEnvironment(Environment resp, RESTConnector.Error error, string customData);
+        public delegate void OnAddEnvironment(RESTConnector.ParsedResponse<Environment> resp);
 
         /// <summary>
         /// Creates a new environment. You can only create one environment per service instance.An attempt to create another environment 
@@ -263,38 +234,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         private void OnAddEnvironmentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            Environment environmentData = new Environment();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = environmentData;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("Discovery", "OnAddEnvironmentResponse Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((AddEnvironmentRequest)req).Data;
+
+            RESTConnector.ParsedResponse<Environment> parsedResp = new RESTConnector.ParsedResponse<Environment>(resp, customData, _serializer);
+
             if (((AddEnvironmentRequest)req).Callback != null)
-			{
-				if (resp.Success)
-					((AddEnvironmentRequest)req).Callback(environmentData, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
-				else
-					((AddEnvironmentRequest)req).Callback(null, resp.Error, customData);
-			}
+                ((AddEnvironmentRequest)req).Callback(parsedResp);
         }
         #endregion
 
@@ -303,8 +248,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// The callback used by GetEnvironment().
         /// </summary>
         /// <param name="resp">The Environment response.</param>
-        /// <param name="customData">Optional custom data.</param>
-        public delegate void OnGetEnvironment(Environment resp, RESTConnector.Error error, string customData);
+        public delegate void OnGetEnvironment(RESTConnector.ParsedResponse<Environment> resp);
 
         /// <summary>
         /// Returns specified environment data.
@@ -344,39 +288,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         private void OnGetEnvironmentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            Environment environmentData = new Environment();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = environmentData;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("Discovery", "OnGetEnvironmentResponse Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((GetEnvironmentRequest)req).Data;
-            if (((GetEnvironmentRequest)req).Callback != null)
-			{
-				if (resp.Success)
-					((GetEnvironmentRequest)req).Callback(environmentData, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
-				else
-					((GetEnvironmentRequest)req).Callback(null, resp.Error, customData);
-			}
 
+            RESTConnector.ParsedResponse<Environment> parsedResp = new RESTConnector.ParsedResponse<Environment>(resp, customData, _serializer);
+
+            if (((GetEnvironmentRequest)req).Callback != null)
+                ((GetEnvironmentRequest)req).Callback(parsedResp);
         }
         #endregion
 
@@ -384,9 +301,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// <summary>
         /// The callback used by DeleteEnvironment().
         /// </summary>
-        /// <param name="success">The success of the call.</param>
-        /// <param name="customData">Optional custom data.</param>
-        public delegate void OnDeleteEnvironment(bool success, RESTConnector.Error error, string customData);
+        public delegate void OnDeleteEnvironment(RESTConnector.ParsedResponse<object> resp);
 
         /// <summary>
         /// Deletes the specified environment.
@@ -428,8 +343,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         private void OnDeleteEnvironmentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
+            string customData = ((DeleteEnvironmentRequest)req).Data;
+
+            RESTConnector.ParsedResponse<object> parsedResp = new RESTConnector.ParsedResponse<object>(resp, customData, null);
+
             if (((DeleteEnvironmentRequest)req).Callback != null)
-                ((DeleteEnvironmentRequest)req).Callback(resp.Success, resp.Error, ((DeleteEnvironmentRequest)req).Data);
+                ((DeleteEnvironmentRequest)req).Callback(parsedResp);
         }
         #endregion
         #endregion
@@ -440,8 +359,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// The callback used by GetConfigurations().
         /// </summary>
         /// <param name="resp">The GetConfigurationsResponse.</param>
-        /// <param name="customData">Optional custom data.</param>
-        public delegate void OnGetConfigurations(GetConfigurationsResponse resp, RESTConnector.Error error, string customData);
+        public delegate void OnGetConfigurations(RESTConnector.ParsedResponse<GetConfigurationsResponse> resp);
 
         /// <summary>
         /// Lists an environment's configurations.
@@ -487,38 +405,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         private void OnGetConfigurationsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            GetConfigurationsResponse configurations = new GetConfigurationsResponse();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = configurations;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("Discovery", "OnGetConfigurationsResponse Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((GetConfigurationsRequest)req).Data;
+
+            RESTConnector.ParsedResponse<GetConfigurationsResponse> parsedResp = new RESTConnector.ParsedResponse<GetConfigurationsResponse>(resp, customData, _serializer);
+
             if (((GetConfigurationsRequest)req).Callback != null)
-			{
-				if (resp.Success)
-					((GetConfigurationsRequest)req).Callback(configurations, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
-				else
-					((GetConfigurationsRequest)req).Callback(null, resp.Error, customData);
-			}
+                ((GetConfigurationsRequest)req).Callback(parsedResp);
         }
         #endregion
 
@@ -527,8 +419,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// The callback used by AddConfiguration().
         /// </summary>
         /// <param name="resp">The Configuration response.</param>
-        /// <param name="customData">Optional custom data.</param>
-        public delegate void OnAddConfiguration(Configuration resp, RESTConnector.Error error, string customData);
+        public delegate void OnAddConfiguration(RESTConnector.ParsedResponse<Configuration> resp);
 
         /// <summary>
         /// Adds a configuration via external json file.
@@ -605,38 +496,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         private void OnAddConfigurationResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            Configuration configuration = new Configuration();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = configuration;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("Discovery", "OnGetConfigurationResponse Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((AddConfigurationRequest)req).Data;
+
+            RESTConnector.ParsedResponse<Configuration> parsedResp = new RESTConnector.ParsedResponse<Configuration>(resp, customData, _serializer);
+
             if (((AddConfigurationRequest)req).Callback != null)
-			{
-				if (resp.Success)
-					((AddConfigurationRequest)req).Callback(configuration, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
-				else
-					((AddConfigurationRequest)req).Callback(null, resp.Error, customData);
-			}
+                ((AddConfigurationRequest)req).Callback(parsedResp);
         }
         #endregion
 
@@ -645,8 +510,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// The callback uesd by GetConfiguration().
         /// </summary>
         /// <param name="resp">The Configuration response.</param>
-        /// <param name="customData">Optional custom data.</param>
-        public delegate void OnGetConfiguration(Configuration resp, RESTConnector.Error error, string customData);
+        public delegate void OnGetConfiguration(RESTConnector.ParsedResponse<Configuration> resp);
 
         /// <summary>
         /// 
@@ -690,38 +554,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         private void OnGetConfigurationResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            Configuration configuration = new Configuration();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = configuration;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("Discovery", "OnGetConfigurationResponse Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((GetConfigurationRequest)req).Data;
+
+            RESTConnector.ParsedResponse<Configuration> parsedResp = new RESTConnector.ParsedResponse<Configuration>(resp, customData, _serializer);
+
             if (((GetConfigurationRequest)req).Callback != null)
-			{
-				if (resp.Success)
-					((GetConfigurationRequest)req).Callback(configuration, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
-				else
-					((GetConfigurationRequest)req).Callback(null, resp.Error, customData);
-			}
+                ((GetConfigurationRequest)req).Callback(parsedResp);
         }
         #endregion
 
@@ -729,9 +567,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// <summary>
         /// The callback used by DeleteConfiguration().
         /// </summary>
-        /// <param name="success">The success of the call.</param>
-        /// <param name="customData">Optional custom data.</param>
-        public delegate void OnDeleteConfiguration(bool success, RESTConnector.Error error, string customData);
+        public delegate void OnDeleteConfiguration(RESTConnector.ParsedResponse<object> resp);
 
         /// <summary>
         /// Deletes an environments specified configuration.
@@ -779,8 +615,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         private void OnDeleteConfigurationResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
+            string customData = ((DeleteConfigurationRequest)req).Data;
+
+            RESTConnector.ParsedResponse<object> parsedResp = new RESTConnector.ParsedResponse<object>(resp, customData, null);
+
             if (((DeleteConfigurationRequest)req).Callback != null)
-                ((DeleteConfigurationRequest)req).Callback(resp.Success, resp.Error, ((DeleteConfigurationRequest)req).Data);
+                ((DeleteConfigurationRequest)req).Callback(parsedResp);
         }
         #endregion
         #endregion
@@ -790,8 +630,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// The callback used by PreviewConfiguration().
         /// </summary>
         /// <param name="resp">The response.</param>
-        /// <param name="customData">Optional custom data.</param>
-        public delegate void OnPreviewConfiguration(TestDocument resp, RESTConnector.Error error, string customData);
+        public delegate void OnPreviewConfiguration(RESTConnector.ParsedResponse<TestDocument> resp);
 
         /// <summary>
         /// Runs a sample document through the default or your configuration and returns diagnostic information designed to 
@@ -936,39 +775,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         private void OnPreviewConfigurationResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            TestDocument testDocument = new TestDocument();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = testDocument;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("Discovery", "OnPreviewConfigurationResponse Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((PreviewConfigurationRequest)req).Data;
-            if (((PreviewConfigurationRequest)req).Callback != null)
-			{
-				if (resp.Success)
-					((PreviewConfigurationRequest)req).Callback(testDocument, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
-				else
-					((PreviewConfigurationRequest)req).Callback(null, resp.Error, customData);
-			}
 
+            RESTConnector.ParsedResponse<TestDocument> parsedResp = new RESTConnector.ParsedResponse<TestDocument>(resp, customData, _serializer);
+
+            if (((PreviewConfigurationRequest)req).Callback != null)
+                ((PreviewConfigurationRequest)req).Callback(parsedResp);
         }
         #endregion
 
@@ -978,8 +790,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// The callback used by GetCollections().
         /// </summary>
         /// <param name="resp">The GetCollectionsResponse.</param>
-        /// <param name="customData">Optional custom data.</param>
-        public delegate void OnGetCollections(GetCollectionsResponse resp, RESTConnector.Error error, string customData);
+        public delegate void OnGetCollections(RESTConnector.ParsedResponse<GetCollectionsResponse> resp);
 
         /// <summary>
         /// Lists a specified environment's collections.
@@ -1025,38 +836,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         private void OnGetCollectionsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            GetCollectionsResponse collections = new GetCollectionsResponse();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = collections;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("Discovery", "OnGetCollectionsResponse Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((GetCollectionsRequest)req).Data;
+
+            RESTConnector.ParsedResponse<GetCollectionsResponse> parsedResp = new RESTConnector.ParsedResponse<GetCollectionsResponse>(resp, customData, _serializer);
+
             if (((GetCollectionsRequest)req).Callback != null)
-			{
-				if (resp.Success)
-					((GetCollectionsRequest)req).Callback(collections, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
-				else
-					((GetCollectionsRequest)req).Callback(null, resp.Error, customData);
-			}
+                ((GetCollectionsRequest)req).Callback(parsedResp);
         }
         #endregion
 
@@ -1065,8 +850,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// The callback used by OnAddCollection
         /// </summary>
         /// <param name="resp">The CollectionRef response.</param>
-        /// <param name="customData">Optional custom data.</param>
-        public delegate void OnAddCollection(CollectionRef resp, RESTConnector.Error error, string customData);
+        public delegate void OnAddCollection(RESTConnector.ParsedResponse<CollectionRef> resp);
 
         /// <summary>
         /// Adds a collection to a specified environment.
@@ -1140,38 +924,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         private void OnAddCollectionResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            CollectionRef collection = new CollectionRef();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = collection;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("Discovery", "OnGetConfigurationResponse Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((AddCollectionRequest)req).Data;
+
+            RESTConnector.ParsedResponse<CollectionRef> parsedResp = new RESTConnector.ParsedResponse<CollectionRef>(resp, customData, _serializer);
+
             if (((AddCollectionRequest)req).Callback != null)
-			{
-				if (resp.Success)
-					((AddCollectionRequest)req).Callback(collection, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
-				else
-					((AddCollectionRequest)req).Callback(null, resp.Error, customData);
-			}
+                ((AddCollectionRequest)req).Callback(parsedResp);
         }
         #endregion
 
@@ -1180,8 +938,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// The callback used by GetCollection().
         /// </summary>
         /// <param name="resp">The Collection response.</param>
-        /// <param name="customData">Optional custom data.</param>
-        public delegate void OnGetCollection(Collection resp, RESTConnector.Error error, string customData);
+        public delegate void OnGetCollection(RESTConnector.ParsedResponse<Collection> resp);
 
         /// <summary>
         /// Lists a specified collecton's details.
@@ -1225,38 +982,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         private void OnGetCollectionResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            Collection collection = new Collection();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = collection;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("Discovery", "OnGetCollectionResponse Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((GetCollectionRequest)req).Data;
+
+            RESTConnector.ParsedResponse<Collection> parsedResp = new RESTConnector.ParsedResponse<Collection>(resp, customData, _serializer);
+
             if (((GetCollectionRequest)req).Callback != null)
-			{
-				if (resp.Success)
-					((GetCollectionRequest)req).Callback(collection, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
-				else
-					((GetCollectionRequest)req).Callback(null, resp.Error, customData);
-			}
+                ((GetCollectionRequest)req).Callback(parsedResp);
         }
         #endregion
 
@@ -1264,9 +995,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// <summary>
         /// The callback used by DeleteCollection().
         /// </summary>
-        /// <param name="success">The success of the call.</param>
-        /// <param name="customData">Optional custom data.</param>
-        public delegate void OnDeleteCollection(bool success, RESTConnector.Error error, string customData);
+        public delegate void OnDeleteCollection(RESTConnector.ParsedResponse<object> resp);
 
         /// <summary>
         /// Deletes a specified collection.
@@ -1314,8 +1043,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         private void OnDeleteCollectionResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
+            string customData = ((DeleteCollectionRequest)req).Data;
+
+            RESTConnector.ParsedResponse<object> parsedResp = new RESTConnector.ParsedResponse<object>(resp, customData, null);
+
             if (((DeleteCollectionRequest)req).Callback != null)
-                ((DeleteCollectionRequest)req).Callback(resp.Success, resp.Error, ((DeleteCollectionRequest)req).Data);
+                ((DeleteCollectionRequest)req).Callback(parsedResp);
         }
         #endregion
 
@@ -1324,8 +1057,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// The callback used by GetFields().
         /// </summary>
         /// <param name="resp">The GetFieldsResponse.</param>
-        /// <param name="customData">Optional custom data.</param>
-        public delegate void OnGetFields(GetFieldsResponse resp, RESTConnector.Error error, string customData);
+        public delegate void OnGetFields(RESTConnector.ParsedResponse<GetFieldsResponse> resp);
 
         /// <summary>
         /// Gets a list of the the unique fields (and their types) stored in the index.
@@ -1370,38 +1102,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         private void OnGetFieldsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            GetFieldsResponse fields = new GetFieldsResponse();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = fields;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("Discovery", "OnGetFieldsResponse Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((GetFieldsRequest)req).Data;
+
+            RESTConnector.ParsedResponse<GetFieldsResponse> parsedResp = new RESTConnector.ParsedResponse<GetFieldsResponse>(resp, customData, _serializer);
+
             if (((GetFieldsRequest)req).Callback != null)
-			{
-				if (resp.Success)
-					((GetFieldsRequest)req).Callback(fields, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
-				else
-					((GetFieldsRequest)req).Callback(null, resp.Error, customData);
-			}
+                ((GetFieldsRequest)req).Callback(parsedResp);
         }
         #endregion
         #endregion
@@ -1412,8 +1118,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// The callbackused by AddDocument().
         /// </summary>
         /// <param name="resp">The DocumentAccepted response.</param>
-        /// <param name="customData">Optional custom data.</param>
-        public delegate void OnAddDocument(DocumentAccepted resp, RESTConnector.Error error, string customData);
+        public delegate void OnAddDocument(RESTConnector.ParsedResponse<DocumentAccepted> resp);
 
         /// <summary>
         /// Add a document to a collection with optional metadata and optional configuration. The configuration to use to process 
@@ -1663,39 +1368,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         private void OnAddDocumentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DocumentAccepted doucmentAccepted = new DocumentAccepted();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = doucmentAccepted;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("Discovery", "OnAddDocumentResponse Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((AddDocumentRequest)req).Data;
-            if (((AddDocumentRequest)req).Callback != null)
-			{
-				if (resp.Success)
-					((AddDocumentRequest)req).Callback(doucmentAccepted, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
-				else
-					((AddDocumentRequest)req).Callback(null, resp.Error, customData);
-			}
 
+            RESTConnector.ParsedResponse<DocumentAccepted> parsedResp = new RESTConnector.ParsedResponse<DocumentAccepted>(resp, customData, _serializer);
+
+            if (((AddDocumentRequest)req).Callback != null)
+                ((AddDocumentRequest)req).Callback(parsedResp);
         }
         #endregion
 
@@ -1703,9 +1381,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// <summary>
         /// The callback used by DeleteDocument().
         /// </summary>
-        /// <param name="success">The success of the call.</param>
-        /// <param name="customData">Optional custom data.</param>
-        public delegate void OnDeleteDocument(bool success, RESTConnector.Error error, string customData);
+        public delegate void OnDeleteDocument(RESTConnector.ParsedResponse<object> resp);
 
         /// <summary>
         /// 
@@ -1759,8 +1435,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         private void OnDeleteDocumentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
+            string customData = ((DeleteDocumentRequest)req).Data;
+
+            RESTConnector.ParsedResponse<object> parsedResp = new RESTConnector.ParsedResponse<object>(resp, customData, null);
+
             if (((DeleteDocumentRequest)req).Callback != null)
-                ((DeleteDocumentRequest)req).Callback(resp.Success, resp.Error, ((DeleteDocumentRequest)req).Data);
+                ((DeleteDocumentRequest)req).Callback(parsedResp);
         }
         #endregion
 
@@ -1769,8 +1449,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// The callback used by GetDocument().
         /// </summary>
         /// <param name="resp">The DocumentStatus response.</param>
-        /// <param name="customData">Optional custom data.</param>
-        public delegate void OnGetDocument(DocumentStatus resp, RESTConnector.Error error, string customData);
+        public delegate void OnGetDocument(RESTConnector.ParsedResponse<DocumentStatus> resp);
 
         /// <summary>
         /// Lists a specified document's details.
@@ -1819,38 +1498,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         private void OnGetDocumentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DocumentStatus documentStatus = new DocumentStatus();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = documentStatus;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("Discovery", "OnGetDocumentResponse Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((GetDocumentRequest)req).Data;
+
+            RESTConnector.ParsedResponse<DocumentStatus> parsedResp = new RESTConnector.ParsedResponse<DocumentStatus>(resp, customData, _serializer);
+
             if (((GetDocumentRequest)req).Callback != null)
-			{
-				if (resp.Success)
-					((GetDocumentRequest)req).Callback(documentStatus, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
-				else
-					((GetDocumentRequest)req).Callback(null, resp.Error, customData);
-			}
+                ((GetDocumentRequest)req).Callback(parsedResp);
         }
         #endregion
 
@@ -1859,8 +1512,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// The callback used by UpdateDocument().
         /// </summary>
         /// <param name="resp">The DocumentAccepted response.</param>
-        /// <param name="customData">Optional custom data.</param>
-        public delegate void OnUpdateDocument(DocumentAccepted resp, RESTConnector.Error error, string customData);
+        public delegate void OnUpdateDocument(RESTConnector.ParsedResponse<DocumentAccepted> resp);
 
         /// <summary>
         /// Updates a specified document.
@@ -2111,39 +1763,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         private void OnUpdateDocumentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DocumentAccepted doucmentAccepted = new DocumentAccepted();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = doucmentAccepted;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("Discovery", "OnUpdateDocumentResponse Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((UpdateDocumentRequest)req).Data;
-            if (((UpdateDocumentRequest)req).Callback != null)
-			{
-				if (resp.Success)
-					((UpdateDocumentRequest)req).Callback(doucmentAccepted, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
-				else
-					((UpdateDocumentRequest)req).Callback(null, resp.Error, customData);
-			}
 
+            RESTConnector.ParsedResponse<DocumentAccepted> parsedResp = new RESTConnector.ParsedResponse<DocumentAccepted>(resp, customData, _serializer);
+
+            if (((UpdateDocumentRequest)req).Callback != null)
+                ((UpdateDocumentRequest)req).Callback(parsedResp);
         }
         #endregion
         #endregion
@@ -2153,8 +1778,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// The callback used by Query().
         /// </summary>
         /// <param name="resp">The QueryResponse.</param>
-        /// <param name="customData">Optional custom data.</param>
-        public delegate void OnQuery(QueryResponse resp, RESTConnector.Error error, string customData);
+        public delegate void OnQuery(RESTConnector.ParsedResponse<QueryResponse> resp);
 
         /// <summary>
         /// Query the discovery instance.
@@ -2239,38 +1863,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         private void OnQueryResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            QueryResponse queryResponse = new QueryResponse();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = queryResponse;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("Discovery", "OnQueryResponse Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((QueryRequest)req).Data;
+
+            RESTConnector.ParsedResponse<QueryResponse> parsedResp = new RESTConnector.ParsedResponse<QueryResponse>(resp, customData, _serializer);
+
             if (((QueryRequest)req).Callback != null)
-			{
-				if (resp.Success)
-					((QueryRequest)req).Callback(queryResponse, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
-				else
-					((QueryRequest)req).Callback(null, resp.Error, customData);
-			}
+                ((QueryRequest)req).Callback(parsedResp);
         }
         #endregion
 

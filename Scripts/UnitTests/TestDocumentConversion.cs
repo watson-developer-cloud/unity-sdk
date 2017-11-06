@@ -101,10 +101,10 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             yield break;
         }
 
-        private void OnConvertDocument(ConvertedDocument documentConversionResponse, RESTConnector.Error error, string data)
+        private void OnConvertDocument(RESTConnector.ParsedResponse<ConvertedDocument> resp)
         {
-            Log.Debug("ExampleDoucmentConversion", "DocumentConversion - Convert document Response: {0}", documentConversionResponse.htmlContent);
-            Test(documentConversionResponse != null);
+            Log.Debug("ExampleDoucmentConversion", "DocumentConversion - Convert document Response: {0}", resp.DataObject.htmlContent);
+            Test(resp.DataObject != null);
             _convertDocumentTested = true;
         }
     }

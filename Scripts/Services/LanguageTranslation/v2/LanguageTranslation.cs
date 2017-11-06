@@ -37,28 +37,23 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
         /// <summary>
         /// Callback for GetModels() method.
         /// </summary>
-        /// <param name="models"></param>
-        public delegate void GetModelsCallback(TranslationModels models, RESTConnector.Error error, string customData = null);
+        public delegate void GetModelsCallback(RESTConnector.ParsedResponse<TranslationModels> resp);
         /// <summary>
         /// Callback for GetModel() method.
         /// </summary>
-        /// <param name="model"></param>
-        public delegate void GetModelCallback(TranslationModel model, RESTConnector.Error error, string customData = null);
+        public delegate void GetModelCallback(RESTConnector.ParsedResponse<TranslationModel> resp);
         /// <summary>
         /// Callback for GetLanguages() method.
         /// </summary>
-        /// <param name="languages"></param>
-        public delegate void GetLanguagesCallback(Languages languages, RESTConnector.Error error, string customData = null);
+        public delegate void GetLanguagesCallback(RESTConnector.ParsedResponse<Languages> resp);
         /// <summary>
         /// Callback for Identify() method.
         /// </summary>
-        /// <param name="languages"></param>
-        public delegate void IdentifyCallback(string languages, RESTConnector.Error error, string customData = null);
+        public delegate void IdentifyCallback(RESTConnector.ParsedResponse<object> resp);
         /// <summary>
         /// Callback for Translate() method.
         /// </summary>
-        /// <param name="translation"></param>
-        public delegate void TranslateCallback(Translations translation, RESTConnector.Error error, string customData = null);
+        public delegate void TranslateCallback(RESTConnector.ParsedResponse<Translations> resp);
         #endregion
 
         #region Public Properties
@@ -180,37 +175,12 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
         };
         private void TranslateResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            Translations translations = new Translations();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = translations;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("Natural Language Classifier", "GetTranslation Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((TranslateReq)req).Data;
+
+            RESTConnector.ParsedResponse<Translations> parsedResp = new RESTConnector.ParsedResponse<Translations>(resp, customData, _serializer);
+
             if (((TranslateReq)req).Callback != null)
-			{
-				if (resp.Success)
-					((TranslateReq)req).Callback(translations, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
-				else
-					((TranslateReq)req).Callback(null, resp.Error, customData);
-			}
+                ((TranslateReq)req).Callback(parsedResp);
         }
         #endregion
 
@@ -277,30 +247,10 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
 
         private void GetModelsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            TranslationModels models = new TranslationModels();
-            if (resp.Success)
-            {
-                try
-                {
-                    fsData data = null;
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = models;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("Natural Language Classifier", "GetModels Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
+            RESTConnector.ParsedResponse<TranslationModels> parsedResp = new RESTConnector.ParsedResponse<TranslationModels>(resp, null, _serializer);
 
             if (((GetModelsReq)req).Callback != null)
-                ((GetModelsReq)req).Callback(resp.Success ? models : null, resp.Error);
+                ((GetModelsReq)req).Callback(parsedResp);
         }
 
         /// <summary>
@@ -335,30 +285,10 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
 
         private void GetModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            TranslationModel model = new TranslationModel();
-            if (resp.Success)
-            {
-                try
-                {
-                    fsData data = null;
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = model;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("Natural Language Classifier", "GetModel Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
+            RESTConnector.ParsedResponse<TranslationModel> parsedResp = new RESTConnector.ParsedResponse<TranslationModel>(resp, null, _serializer);
 
             if (((GetModelReq)req).Callback != null)
-                ((GetModelReq)req).Callback(resp.Success ? model : null, resp.Error);
+                ((GetModelReq)req).Callback(parsedResp);
         }
         #endregion
 
@@ -391,30 +321,10 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
 
         private void GetLanguagesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            Languages langs = new Languages();
-            if (resp.Success)
-            {
-                try
-                {
-                    fsData data = null;
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = langs;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("Natural Language Classifier", "GetLanguages Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
+            RESTConnector.ParsedResponse<Languages> parsedResp = new RESTConnector.ParsedResponse<Languages>(resp, null, _serializer);
 
             if (((GetLanguagesReq)req).Callback != null)
-                ((GetLanguagesReq)req).Callback(resp.Success ? langs : null, resp.Error);
+                ((GetLanguagesReq)req).Callback(parsedResp);
         }
         #endregion
 
@@ -456,16 +366,19 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
             if (req == null)
                 throw new WatsonException("Unexpected Request type.");
 
+            RESTConnector.ParsedResponse<object> parsedResp = new RESTConnector.ParsedResponse<object>(resp, null, null);
+
             if (resp.Success)
             {
+                parsedResp.DataObject = Encoding.UTF8.GetString(resp.Data);
                 if (req.Callback != null)
-                    req.Callback(Encoding.UTF8.GetString(resp.Data), null);
+                    req.Callback(parsedResp);
             }
             else
             {
                 Log.Error("Translate", "Identify() failed: {0}", resp.Error);
                 if (req.Callback != null)
-                    req.Callback(null, resp.Error);
+                    req.Callback(parsedResp);
             }
         }
         #endregion

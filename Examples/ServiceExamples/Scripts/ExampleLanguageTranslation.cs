@@ -38,9 +38,9 @@ public class ExampleLanguageTranslation : MonoBehaviour
         _languageTranslation.GetTranslation(_pharseToTranslate, "en", "es", OnGetTranslation);
     }
 
-    private void OnGetTranslation(Translations translation, RESTConnector.Error error, string customData)
+    private void OnGetTranslation(RESTConnector.ParsedResponse<Translations> resp)
     {
-        if (translation != null && translation.translations.Length > 0)
-            Debug.Log("Spanish Translation: " + translation.translations[0].translation);
+        if (resp.DataObject != null && resp.DataObject.translations.Length > 0)
+            Debug.Log("Spanish Translation: " + resp.DataObject.translations[0].translation);
     }
 }

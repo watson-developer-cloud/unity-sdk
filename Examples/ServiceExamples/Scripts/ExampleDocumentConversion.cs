@@ -57,9 +57,9 @@ public class ExampleDocumentConversion : MonoBehaviour
         Log.Debug("ExampleDoucmentConversion", "Document conversion examples complete.");
     }
 
-    private void OnConvertDocument(ConvertedDocument documentConversionResponse, RESTConnector.Error error, string data)
+    private void OnConvertDocument(RESTConnector.ParsedResponse<ConvertedDocument> resp)
     {
-        Log.Debug("ExampleDoucmentConversion", "DocumentConversion - Convert document Response: {0}", documentConversionResponse.htmlContent);
+        Log.Debug("ExampleDoucmentConversion", "DocumentConversion - Convert document Response: {0}", resp.DataObject.htmlContent);
         _convertDocumentTested = true;
     }
 }

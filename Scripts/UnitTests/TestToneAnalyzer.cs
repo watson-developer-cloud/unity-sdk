@@ -101,10 +101,10 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             yield break;
         }
 
-        private void OnGetToneAnalyze(ToneAnalyzerResponse resp, RESTConnector.Error error, string data)
+        private void OnGetToneAnalyze(RESTConnector.ParsedResponse<ToneAnalyzerResponse> resp)
         {
-            Log.Debug("ExampleToneAnalyzer", "Tone Analyzer - Analyze Response: {0}", data);
-            Test(resp != null);
+            Log.Debug("ExampleToneAnalyzer", "Tone Analyzer - Analyze Response: {0}", resp.JSON);
+            Test(resp.DataObject != null);
             _analyzeToneTested = true;
         }
     }

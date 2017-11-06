@@ -88,8 +88,7 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
         /// The OnConvertDocument callback.
         /// </summary>
         /// <param name="resp"></param>
-        /// <param name="data"></param>
-        public delegate void OnConvertDocument(ConvertedDocument resp, RESTConnector.Error error, string data);
+        public delegate void OnConvertDocument(RESTConnector.ParsedResponse<ConvertedDocument> resp);
 
         /// <summary>
         /// The delegate for loading a file, used by TrainClassifier().
@@ -170,51 +169,38 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
 
         private void ConvertDocumentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            ConvertedDocument response = new ConvertedDocument();
-            fsData data = null;
-            fsResult r;
+            string customData = ((ConvertDocumentRequest)req).Data;
 
-            if (resp.Success)
+            RESTConnector.ParsedResponse<ConvertedDocument> parsedResp;
+
+            if ((req as ConvertDocumentRequest).ConversionTarget == ConversionTarget.Answerunits)
             {
-                if ((req as ConvertDocumentRequest).ConversionTarget == ConversionTarget.Answerunits)
-                {
-                    try
-                    {
-                        r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                        if (!r.Succeeded)
-                            throw new WatsonException(r.FormattedMessages);
+                parsedResp = new RESTConnector.ParsedResponse<ConvertedDocument>(resp, customData, _serializer);
+            }
+            else
+            {
+                parsedResp = new RESTConnector.ParsedResponse<ConvertedDocument>(resp, customData, null);
 
-                        object obj = response;
-                        r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                        if (!r.Succeeded)
-                            throw new WatsonException(r.FormattedMessages);
-                    }
-                    catch (Exception e)
-                    {
-                        Log.Error("DocumentConversion", "ConvertDocumentResponse Exception: {0}", e.ToString());
-                        resp.Success = false;
-                    }
-                }
-                else if ((req as ConvertDocumentRequest).ConversionTarget == ConversionTarget.NormalizedHtml)
+                if ((req as ConvertDocumentRequest).ConversionTarget == ConversionTarget.NormalizedHtml)
                 {
 #if NETFX_CORE
-                    response.htmlContent = System.Text.Encoding.GetEncoding(0).GetString(resp.Data);
+                    parsedResp.DataObject.htmlContent = System.Text.Encoding.GetEncoding(0).GetString(resp.Data);
 #else
-                    response.htmlContent = System.Text.Encoding.Default.GetString(resp.Data);
+                    parsedResp.DataObject.htmlContent = System.Text.Encoding.Default.GetString(resp.Data);
 #endif
                 }
                 else if ((req as ConvertDocumentRequest).ConversionTarget == ConversionTarget.NormalizedText)
                 {
 #if NETFX_CORE
-                    response.textContent = System.Text.Encoding.GetEncoding(0).GetString(resp.Data);
+                    parsedResp.DataObject.textContent = System.Text.Encoding.GetEncoding(0).GetString(resp.Data);
 #else
-                    response.textContent = System.Text.Encoding.Default.GetString(resp.Data);
+                    parsedResp.DataObject.textContent = System.Text.Encoding.Default.GetString(resp.Data);
 #endif
                 }
             }
 
             if (((ConvertDocumentRequest)req).Callback != null)
-                ((ConvertDocumentRequest)req).Callback(resp.Success ? response : null, resp.Error, ((ConvertDocumentRequest)req).Data);
+                ((ConvertDocumentRequest)req).Callback(parsedResp);
         }
         #endregion
 

@@ -176,74 +176,74 @@ public class ExampleVisualRecognition : MonoBehaviour
         Log.Debug("ExampleVisualRecognition", "Visual Recogition tests complete");
     }
 
-    private void OnGetClassifiers(GetClassifiersTopLevelBrief classifiers, RESTConnector.Error error, string data)
+    private void OnGetClassifiers(RESTConnector.ParsedResponse<GetClassifiersTopLevelBrief> resp)
     {
-        Log.Debug("ExampleVisualRecognition", "VisualRecognition - GetClassifiers Response: {0}", data);
+        Log.Debug("ExampleVisualRecognition", "VisualRecognition - GetClassifiers Response: {0}", resp.JSON);
 
         _getClassifiersTested = true;
     }
 
-    private void OnGetClassifier(GetClassifiersPerClassifierVerbose classifier, RESTConnector.Error error, string data)
+    private void OnGetClassifier(RESTConnector.ParsedResponse<GetClassifiersPerClassifierVerbose> resp)
     {
-        Log.Debug("ExampleVisualRecognition", "VisualRecognition - GetClassifier Response: {0}", data);
+        Log.Debug("ExampleVisualRecognition", "VisualRecognition - GetClassifier Response: {0}", resp.JSON);
         _getClassifierTested = true;
     }
 
 #if DELETE_TRAINED_CLASSIFIER
-    private void OnDeleteClassifier(bool success, RESTConnector.Error error, string data)
+    private void OnDeleteClassifier(RESTConnector.ParsedResponse<object> resp)
     {
-        Log.Debug("ExampleVisualRecognition", "VisualRecognition - DeleteClassifier Response: {0}", success);
+        Log.Debug("ExampleVisualRecognition", "VisualRecognition - DeleteClassifier Response: {0}", resp.Success);
         _deleteClassifierTested = true;
     }
 #endif
 
 #if TRAIN_CLASSIFIER
-    private void OnTrainClassifier(GetClassifiersPerClassifierVerbose classifier, RESTConnector.Error error, string data)
+    private void OnTrainClassifier(RESTConnector.ParsedResponse<GetClassifiersPerClassifierVerbose> resp)
     {
-        Log.Debug("ExampleVisualRecognition", "VisualRecognition - TrainClassifier Response: {0}", data);
+        Log.Debug("ExampleVisualRecognition", "VisualRecognition - TrainClassifier Response: {0}", resp.JSON);
 
 #if DELETE_TRAINED_CLASSIFIER
-        _classifierToDelete = classifier.classifier_id;
+        _classifierToDelete = resp.DataObject.classifier_id;
 #endif
-        _classifierID = classifier.classifier_id;
+        _classifierID = resp.DataObject.classifier_id;
         _trainClassifierTested = true;
     }
 #endif
 
-    private void OnClassifyGet(ClassifyTopLevelMultiple classify, RESTConnector.Error error, string data)
+    private void OnClassifyGet(RESTConnector.ParsedResponse<ClassifyTopLevelMultiple> resp)
     {
-        Log.Debug("ExampleVisualRecognition", "VisualRecognition - ClassifyGet Response: {0}", data);
+        Log.Debug("ExampleVisualRecognition", "VisualRecognition - ClassifyGet Response: {0}", resp.JSON);
         _classifyGetTested = true;
 
     }
 
-    private void OnClassifyPost(ClassifyTopLevelMultiple classify, RESTConnector.Error error, string data)
+    private void OnClassifyPost(RESTConnector.ParsedResponse<ClassifyTopLevelMultiple> resp)
     {
-        Log.Debug("ExampleVisualRecognition", "VisualRecognition - ClassifyPost Response: {0}", data);
+        Log.Debug("ExampleVisualRecognition", "VisualRecognition - ClassifyPost Response: {0}", resp.JSON);
         _classifyPostTested = true;
     }
 
-    private void OnDetectFacesGet(FacesTopLevelMultiple multipleImages, RESTConnector.Error error, string data)
+    private void OnDetectFacesGet(RESTConnector.ParsedResponse<FacesTopLevelMultiple> resp)
     {
-        Log.Debug("ExampleVisualRecognition", "VisualRecognition - DetectFacesGet Response: {0}", data);
+        Log.Debug("ExampleVisualRecognition", "VisualRecognition - DetectFacesGet Response: {0}", resp.JSON);
         _detectFacesGetTested = true;
     }
 
-    private void OnDetectFacesPost(FacesTopLevelMultiple multipleImages, RESTConnector.Error error, string data)
+    private void OnDetectFacesPost(RESTConnector.ParsedResponse<FacesTopLevelMultiple> resp)
     {
-        Log.Debug("ExampleVisualRecognition", "VisualRecognition - DetectFacesPost Response: {0}", data);
+        Log.Debug("ExampleVisualRecognition", "VisualRecognition - DetectFacesPost Response: {0}", resp.JSON);
         _detectFacesPostTested = true;
     }
 
-    //private void OnRecognizeTextGet(TextRecogTopLevelMultiple multipleImages, RESTConnector.Error error, string data)
+    //private void OnRecognizeTextGet(RESTConnector.ParsedResponse<TextRecogTopLevelMultiple> resp)
     //{
-    //    Log.Debug("ExampleVisualRecognition", "VisualRecognition - RecognizeTextGet Response: {0}", data);
+    //    Log.Debug("ExampleVisualRecognition", "VisualRecognition - RecognizeTextGet Response: {0}", resp.JSON);
     //    _recognizeTextGetTested = true;
     //}
 
-    //private void OnRecognizeTextPost(TextRecogTopLevelMultiple multipleImages, RESTConnector.Error error, string data)
+    //private void OnRecognizeTextPost(RESTConnector.ParsedResponse<TextRecogTopLevelMultiple> resp)
     //{
-    //    Log.Debug("ExampleVisualRecognition", "VisualRecognition - RecognizeTextPost Response: {0}", data);
+    //    Log.Debug("ExampleVisualRecognition", "VisualRecognition - RecognizeTextPost Response: {0}", resp.JSON);
     //    _recognizeTextPostTested = true;
     //}
 

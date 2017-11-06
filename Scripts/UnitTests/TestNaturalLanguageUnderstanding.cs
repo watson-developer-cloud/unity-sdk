@@ -127,22 +127,22 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             yield break;
         }
 
-        private void OnGetModels(ListModelsResults resp, RESTConnector.Error error, string customData)
+        private void OnGetModels(RESTConnector.ParsedResponse<ListModelsResults> resp)
         {
             fsData data = null;
-            _serializer.TrySerialize(resp, out data).AssertSuccess();
+            _serializer.TrySerialize(resp.DataObject, out data).AssertSuccess();
             Log.Debug("ExampleNaturalLanguageUnderstandingV1", "ListModelsResult: {0}", data.ToString());
-            Test(resp != null);
+            Test(resp.DataObject != null);
 
             _getModelsTested = true;
         }
 
-        private void OnAnalyze(AnalysisResults resp, RESTConnector.Error error, string customData)
+        private void OnAnalyze(RESTConnector.ParsedResponse<AnalysisResults> resp)
         {
             fsData data = null;
-            _serializer.TrySerialize(resp, out data).AssertSuccess();
+            _serializer.TrySerialize(resp.DataObject, out data).AssertSuccess();
             Log.Debug("ExampleNaturalLanguageUnderstandingV1", "AnalysisResults: {0}", data.ToString());
-            Test(resp != null);
+            Test(resp.DataObject != null);
             _analyzeTested = true;
         }
     }

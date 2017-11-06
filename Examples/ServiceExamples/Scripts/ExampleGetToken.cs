@@ -79,9 +79,9 @@ public class ExampleGetToken : MonoBehaviour
         conversation.Message(OnMessage, _workspaceId, "hello");
     }
 
-    private void OnMessage(object resp, RESTConnector.Error error, string customData)
+    private void OnMessage(RESTConnector.ParsedResponse<object> resp)
     {
-        Log.Debug("ExampleGetToken", "message response: {0}", customData);
+        Log.Debug("ExampleGetToken", "message response: {0}", resp.JSON);
 
         //  Check token time remaining
         Runnable.Run(GetTokenTimeRemaining(0f));

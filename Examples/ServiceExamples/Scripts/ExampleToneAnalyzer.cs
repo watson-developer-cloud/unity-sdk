@@ -59,9 +59,9 @@ public class ExampleToneAnalyzer : MonoBehaviour
         Log.Debug("ExampleToneAnalyzer", "Tone analyzer examples complete.");
     }
 
-    private void OnGetToneAnalyze(ToneAnalyzerResponse resp, RESTConnector.Error error, string data)
+    private void OnGetToneAnalyze(RESTConnector.ParsedResponse<ToneAnalyzerResponse> resp)
     {
-        Log.Debug("ExampleToneAnalyzer", "Tone Analyzer - Analyze Response: {0}", data);
+        Log.Debug("ExampleToneAnalyzer", "Tone Analyzer - Analyze Response: {0}", resp.JSON);
         _analyzeToneTested = true;
     }
 }

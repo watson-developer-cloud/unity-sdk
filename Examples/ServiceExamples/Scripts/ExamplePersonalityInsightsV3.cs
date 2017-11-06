@@ -68,15 +68,15 @@ public class ExamplePersonalityInsightsV3 : MonoBehaviour
         Log.Debug("ExamplePersonalityInsights", "Personality insights examples complete.");
     }
 
-    private void OnGetProfileText(Profile profile, RESTConnector.Error error, string data)
+    private void OnGetProfileText(RESTConnector.ParsedResponse<Profile> resp)
     {
-        Log.Debug("ExamplePersonaltyInsights", "Personality Insights - GetProfileText Response: {0}", data);
+        Log.Debug("ExamplePersonaltyInsights", "Personality Insights - GetProfileText Response: {0}", resp.JSON);
         _getProfileTextTested = true;
     }
 
-    private void OnGetProfileJson(Profile profile, RESTConnector.Error error, string data)
+    private void OnGetProfileJson(RESTConnector.ParsedResponse<Profile> resp)
     {
-        Log.Debug("ExamplePersonaltyInsights", "Personality Insights - GetProfileJson Response: {0}", data);
+        Log.Debug("ExamplePersonaltyInsights", "Personality Insights - GetProfileJson Response: {0}", resp.JSON);
         _getProfileJsonTested = true;
     }
 }

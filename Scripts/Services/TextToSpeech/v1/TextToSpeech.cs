@@ -146,8 +146,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
         /// <summary>
         /// This callback is used by the GetVoices() function.
         /// </summary>
-        /// <param name="voices">The Voices object.</param>
-        public delegate void GetVoicesCallback(Voices voices, RESTConnector.Error error, string customData);
+        public delegate void GetVoicesCallback(RESTConnector.ParsedResponse<Voices> resp);
         /// <summary>
         /// Returns all available voices that can be used.
         /// </summary>
@@ -177,37 +176,12 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 
         private void OnGetVoicesResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            Voices voices = new Voices();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = voices;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("Natural Language Classifier", "GetVoices Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((GetVoicesReq)req).Data;
+
+            RESTConnector.ParsedResponse<Voices> parsedResp = new RESTConnector.ParsedResponse<Voices>(resp, customData, _serializer);
+
             if (((GetVoicesReq)req).Callback != null)
-			{
-				if (resp.Success)
-					((GetVoicesReq)req).Callback(voices, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
-				else
-					((GetVoicesReq)req).Callback(null, resp.Error, customData);
-			}
+                ((GetVoicesReq)req).Callback(parsedResp);
         }
         #endregion
 
@@ -215,8 +189,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
         /// <summary>
         /// This callback is used by the GetVoice() function.
         /// </summary>
-        /// <param name="voice">The Voice object.</param>
-        public delegate void GetVoiceCallback(Voice voice, RESTConnector.Error error, string customData);
+        public delegate void GetVoiceCallback(RESTConnector.ParsedResponse<Voice> resp);
         /// <summary>
         /// Return specific voice.
         /// </summary>
@@ -249,37 +222,12 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 
         private void OnGetVoiceResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            Voice voice = new Voice();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = voice;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("TextToSpeech", "GetVoice Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((GetVoiceReq)req).Data;
+
+            RESTConnector.ParsedResponse<Voice> parsedResp = new RESTConnector.ParsedResponse<Voice>(resp, customData, _serializer);
+
             if (((GetVoiceReq)req).Callback != null)
-			{
-				if (resp.Success)
-					((GetVoiceReq)req).Callback(voice, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
-				else
-					((GetVoiceReq)req).Callback(null, resp.Error, customData);
-			}
+                ((GetVoiceReq)req).Callback(parsedResp);
         }
         #endregion
 
@@ -287,8 +235,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
         /// <summary>
         /// This callback is passed into the ToSpeech() method.
         /// </summary>
-        /// <param name="clip">The AudioClip containing the audio to play.</param>
-        public delegate void ToSpeechCallback(AudioClip clip, RESTConnector.Error error, string customData);
+        public delegate void ToSpeechCallback(RESTConnector.ParsedResponse<AudioClip> resp);
         /// <summary>
         /// Private Request object that holds data specific to the ToSpeech request.
         /// </summary>
@@ -366,12 +313,18 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 
             //Log.Debug( "TextToSpeech", "Request completed in {0} seconds.", resp.ElapsedTime );
 
+            string customData = ((ToSpeechRequest)req).Data;
+
+            RESTConnector.ParsedResponse<AudioClip> parsedResp = new RESTConnector.ParsedResponse<AudioClip>(resp, customData, null, false);
+
             AudioClip clip = resp.Success ? ProcessResponse(speechReq.TextId, resp.Data) : null;
             if (clip == null)
                 Log.Error("TextToSpeech", "Request Failed: {0}", resp.Error);
+            else
+                parsedResp.DataObject = clip;
 
-            if (speechReq.Callback != null)
-                speechReq.Callback(clip, resp.Error, speechReq.Data);
+            if (((ToSpeechRequest)req).Callback != null)
+                ((ToSpeechRequest)req).Callback(parsedResp);
         }
 
         private AudioClip ProcessResponse(string textId, byte[] data)
@@ -393,8 +346,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
         /// <summary>
         /// This callback is used by the GetPronunciation() function.
         /// </summary>
-        /// <param name="pronunciation">The pronunciation strting.</param>
-        public delegate void GetPronunciationCallback(Pronunciation pronunciation, RESTConnector.Error error, string customData);
+        public delegate void GetPronunciationCallback(RESTConnector.ParsedResponse<Pronunciation> resp);
         /// <summary>
         /// Returns the phonetic pronunciation for the word specified by the text parameter. You can request 
         /// the pronunciation for a specific format. You can also request the pronunciation for a specific
@@ -449,37 +401,12 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 
         private void OnGetPronunciationResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            Pronunciation pronunciation = new Pronunciation();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = pronunciation;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("Text To Speech", "GetPronunciation Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((GetPronunciationReq)req).Data;
+
+            RESTConnector.ParsedResponse<Pronunciation> parsedResp = new RESTConnector.ParsedResponse<Pronunciation>(resp, customData, _serializer);
+
             if (((GetPronunciationReq)req).Callback != null)
-			{
-				if (resp.Success)
-					((GetPronunciationReq)req).Callback(pronunciation, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
-				else
-					((GetPronunciationReq)req).Callback(null, resp.Error, customData);
-			}
+                ((GetPronunciationReq)req).Callback(parsedResp);
         }
         #endregion
 
@@ -487,9 +414,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
         /// <summary>
         /// This callback is used by the GetCustomizations() function.
         /// </summary>
-        /// <param name="customizations">The customizations</param>
-        /// <param name="data">Optional custom data.</param>
-        public delegate void GetCustomizationsCallback(Customizations customizations, RESTConnector.Error error, string customData);
+        public delegate void GetCustomizationsCallback(RESTConnector.ParsedResponse<Customizations> resp);
 
         /// <summary>
         /// Lists metadata such as the name and description for the custom voice models that you own. Use the language query parameter to list the voice models that you own for the specified language only. Omit the parameter to see all voice models that you own for all languages. To see the words in addition to the metadata for a specific voice model, use the GET /v1/customizations/{customization_id} method. Only the owner of a custom voice model can use this method to list information about the model.
@@ -523,37 +448,12 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 
         private void OnGetCustomizationsResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            Customizations customizations = new Customizations();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = customizations;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("Text To Speech", "GetCustomizations Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((GetCustomizationsReq)req).Data;
+
+            RESTConnector.ParsedResponse<Customizations> parsedResp = new RESTConnector.ParsedResponse<Customizations>(resp, customData, _serializer);
+
             if (((GetCustomizationsReq)req).Callback != null)
-			{
-				if (resp.Success)
-					((GetCustomizationsReq)req).Callback(customizations, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
-				else
-					((GetCustomizationsReq)req).Callback(null, resp.Error, customData);
-			}
+                ((GetCustomizationsReq)req).Callback(parsedResp);
         }
         #endregion
 
@@ -561,9 +461,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
         /// <summary>
         /// Thid callback is used by the CreateCustomization() function.
         /// </summary>
-        /// <param name="customizationID">The customizationID.</param>
-        /// <param name="data">Optional custom data.</param>
-        public delegate void CreateCustomizationCallback(CustomizationID customizationID, RESTConnector.Error error, string customData);
+        public delegate void CreateCustomizationCallback(RESTConnector.ParsedResponse<CustomizationID> resp);
 
         /// <summary>
         /// Creates a new empty custom voice model that is owned by the requesting user.
@@ -616,37 +514,12 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 
         private void OnCreateCustomizationResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            CustomizationID customizationID = new CustomizationID();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = customizationID;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("Text To Speech", "CreateCustomization Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((CreateCustomizationRequest)req).Data;
+
+            RESTConnector.ParsedResponse<CustomizationID> parsedResp = new RESTConnector.ParsedResponse<CustomizationID>(resp, customData, _serializer);
+
             if (((CreateCustomizationRequest)req).Callback != null)
-			{
-				if (resp.Success)
-					((CreateCustomizationRequest)req).Callback(customizationID, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
-				else
-					((CreateCustomizationRequest)req).Callback(null, resp.Error, customData);
-			}
+                ((CreateCustomizationRequest)req).Callback(parsedResp);
         }
         #endregion
 
@@ -654,9 +527,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
         /// <summary>
         /// This callback is used by the DeleteCustomization() function.
         /// </summary>
-        /// <param name="success"></param>
-        /// <param name="data"></param>
-        public delegate void OnDeleteCustomizationCallback(bool success, RESTConnector.Error error, string customData);
+        public delegate void OnDeleteCustomizationCallback(RESTConnector.ParsedResponse<object> resp);
         /// <summary>
         /// Deletes the custom voice model with the specified `customization_id`. Only the owner of a custom voice model can use this method to delete the model.
         /// Note: This method is currently a beta release that supports US English only.
@@ -697,8 +568,12 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 
         private void OnDeleteCustomizationResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
+            string customData = ((DeleteCustomizationRequest)req).Data;
+
+            RESTConnector.ParsedResponse<object> parsedResp = new RESTConnector.ParsedResponse<object>(resp, customData, null);
+
             if (((DeleteCustomizationRequest)req).Callback != null)
-                ((DeleteCustomizationRequest)req).Callback(resp.Success, resp.Error, ((DeleteCustomizationRequest)req).Data);
+                ((DeleteCustomizationRequest)req).Callback(parsedResp);
         }
         #endregion
 
@@ -706,9 +581,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
         /// <summary>
         /// This callback is used by the GetCusomization() function.
         /// </summary>
-        /// <param name="customization"></param>
-        /// <param name="data"></param>
-        public delegate void GetCustomizationCallback(Customization customization, RESTConnector.Error error, string customData);
+        public delegate void GetCustomizationCallback(RESTConnector.ParsedResponse<Customization> resp);
         /// <summary>
         /// Lists all information about the custom voice model with the specified `customization_id`. In addition to metadata such as the name and description of the voice model, the output includes the words in the model and their translations as defined in the model. To see just the metadata for a voice model, use the GET `/v1/customizations` method. Only the owner of a custom voice model can use this method to query information about the model.
         /// Note: This method is currently a beta release that supports US English only.
@@ -747,37 +620,12 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 
         private void OnGetCustomizationResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            Customization customization = new Customization();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = customization;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("Text To Speech", "GetCustomization Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((GetCustomizationRequest)req).Data;
+
+            RESTConnector.ParsedResponse<Customization> parsedResp = new RESTConnector.ParsedResponse<Customization>(resp, customData, _serializer);
+
             if (((GetCustomizationRequest)req).Callback != null)
-			{
-				if (resp.Success)
-					((GetCustomizationRequest)req).Callback(customization, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
-				else
-					((GetCustomizationRequest)req).Callback(null, resp.Error, customData);
-			}
+                ((GetCustomizationRequest)req).Callback(parsedResp);
         }
         #endregion
 
@@ -785,9 +633,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
         /// <summary>
         /// This callback is used by the UpdateCustomization() function.
         /// </summary>
-        /// <param name="success">Success</param>
-        /// <param name="data">Optional custom data.</param>
-        public delegate void UpdateCustomizationCallback(bool success, RESTConnector.Error error, string customData);
+        public delegate void UpdateCustomizationCallback(RESTConnector.ParsedResponse<object> resp);
 
         /// <summary>
         /// Updates information for the custom voice model with the specified `customization_id`. You can update the metadata such as the name and description of the voice model. You can also update the words in the model and their translations. A custom model can contain no more than 20,000 entries. Only the owner of a custom voice model can use this method to update the model.
@@ -841,8 +687,12 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 
         private void OnUpdateCustomizationResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
+            string customData = ((UpdateCustomizationRequest)req).Data;
+
+            RESTConnector.ParsedResponse<object> parsedResp = new RESTConnector.ParsedResponse<object>(resp, customData, null);
+
             if (((UpdateCustomizationRequest)req).Callback != null)
-                ((UpdateCustomizationRequest)req).Callback(resp.Success, resp.Error, ((UpdateCustomizationRequest)req).Data);
+                ((UpdateCustomizationRequest)req).Callback(parsedResp);
         }
         #endregion
 
@@ -850,9 +700,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
         /// <summary>
         /// This callback is used by the GetCusomizationWords() function.
         /// </summary>
-        /// <param name="customization"></param>
-        /// <param name="data"></param>
-        public delegate void GetCustomizationWordsCallback(Words words, RESTConnector.Error error, string customData);
+        public delegate void GetCustomizationWordsCallback(RESTConnector.ParsedResponse<Words> resp);
         /// <summary>
         /// Lists all of the words and their translations for the custom voice model with the specified `customization_id`. The output shows the translations as they are defined in the model. Only the owner of a custom voice model can use this method to query information about the model's words.
         /// Note: This method is currently a beta release that supports US English only.
@@ -891,37 +739,12 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 
         private void OnGetCustomizationWordsResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            Words words = new Words();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = words;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("Text To Speech", "GetCustomizationWords Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((GetCustomizationWordsRequest)req).Data;
+
+            RESTConnector.ParsedResponse<Words> parsedResp = new RESTConnector.ParsedResponse<Words>(resp, customData, _serializer);
+
             if (((GetCustomizationWordsRequest)req).Callback != null)
-			{
-				if (resp.Success)
-					((GetCustomizationWordsRequest)req).Callback(words, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
-				else
-					((GetCustomizationWordsRequest)req).Callback(null, resp.Error, customData);
-			}
+                ((GetCustomizationWordsRequest)req).Callback(parsedResp);
         }
         #endregion
 
@@ -929,9 +752,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
         /// <summary>
         /// This callback is used by the AddCustomizationWords() function.
         /// </summary>
-        /// <param name="success">Success</param>
-        /// <param name="data">Optional custom data.</param>
-        public delegate void AddCustomizationWordsCallback(bool success, RESTConnector.Error error, string customData);
+        public delegate void AddCustomizationWordsCallback(RESTConnector.ParsedResponse<object> resp);
 
         /// <summary>
         /// Adds one or more words and their translations to the custom voice model with the specified `customization_id`. A custom model can contain no more than 20,000 entries. Only the owner of a custom voice model can use this method to add words to the model.
@@ -983,8 +804,12 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 
         private void OnAddCustomizationWordsResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
+            string customData = ((AddCustomizationWordsRequest)req).Data;
+
+            RESTConnector.ParsedResponse<object> parsedResp = new RESTConnector.ParsedResponse<object>(resp, customData, null);
+
             if (((AddCustomizationWordsRequest)req).Callback != null)
-                ((AddCustomizationWordsRequest)req).Callback(resp.Success, resp.Error, ((AddCustomizationWordsRequest)req).Data);
+                ((AddCustomizationWordsRequest)req).Callback(parsedResp);
         }
         #endregion
 
@@ -992,9 +817,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
         /// <summary>
         /// This callback is used by the DeleteCustomizationWord() function.
         /// </summary>
-        /// <param name="success"></param>
-        /// <param name="data"></param>
-        public delegate void OnDeleteCustomizationWordCallback(bool success, RESTConnector.Error error, string customData);
+        public delegate void OnDeleteCustomizationWordCallback(RESTConnector.ParsedResponse<object> resp);
         /// <summary>
         /// Deletes a single word from the custom voice model with the specified customization_id. Only the owner of a custom voice model can use this method to delete a word from the model.
         /// Note: This method is currently a beta release that supports US English only.
@@ -1040,8 +863,12 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 
         private void OnDeleteCustomizationWordResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
+            string customData = ((DeleteCustomizationWordRequest)req).Data;
+
+            RESTConnector.ParsedResponse<object> parsedResp = new RESTConnector.ParsedResponse<object>(resp, customData, null);
+
             if (((DeleteCustomizationWordRequest)req).Callback != null)
-                ((DeleteCustomizationWordRequest)req).Callback(resp.Success, resp.Error, ((DeleteCustomizationWordRequest)req).Data);
+                ((DeleteCustomizationWordRequest)req).Callback(parsedResp);
         }
         #endregion
 
@@ -1049,9 +876,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
         /// <summary>
         /// This callback is used by the GetCusomizationWord() function.
         /// </summary>
-        /// <param name="translation">Translation of the requested word.</param>
-        /// <param name="data">optional custom data.</param>
-        public delegate void GetCustomizationWordCallback(Translation translation, RESTConnector.Error error, string customData);
+        public delegate void GetCustomizationWordCallback(RESTConnector.ParsedResponse<Translation> resp);
         /// <summary>
         /// Returns the translation for a single word from the custom model with the specified `customization_id`. The output shows the translation as it is defined in the model. Only the owner of a custom voice model can use this method to query information about a word from the model.
         /// Note: This method is currently a beta release that supports US English only.
@@ -1095,37 +920,12 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 
         private void OnGetCustomizationWordResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            Translation translation = new Translation();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = translation;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("Text To Speech", "GetCustomizationWord Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((GetCustomizationWordRequest)req).Data;
+
+            RESTConnector.ParsedResponse<Translation> parsedResp = new RESTConnector.ParsedResponse<Translation>(resp, customData, _serializer);
+
             if (((GetCustomizationWordRequest)req).Callback != null)
-			{
-				if (resp.Success)
-					((GetCustomizationWordRequest)req).Callback(translation, null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
-				else
-					((GetCustomizationWordRequest)req).Callback(null, resp.Error, customData);
-			}
+                ((GetCustomizationWordRequest)req).Callback(parsedResp);
         }
         #endregion
 
@@ -1133,9 +933,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
         /// <summary>
         /// This callback is used by the AddCustomizationWord() function.
         /// </summary>
-        /// <param name="success">Success</param>
-        /// <param name="data">Optional custom data.</param>
-        public delegate void AddCustomizationWordCallback(bool success, RESTConnector.Error error, string customData);
+        public delegate void AddCustomizationWordCallback(RESTConnector.ParsedResponse<object> resp);
 
         /// <summary>
         /// Adds a single word and its translation to the custom voice model with the specified `customization_id`. A custom model can contain no more than 20,000 entries. Only the owner of a custom voice model can use this method to add a word to the model.
@@ -1191,8 +989,12 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 
         private void OnAddCustomizationWordResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
+            string customData = ((AddCustomizationWordRequest)req).Data;
+
+            RESTConnector.ParsedResponse<object> parsedResp = new RESTConnector.ParsedResponse<object>(resp, customData, null);
+
             if (((AddCustomizationWordRequest)req).Callback != null)
-                ((AddCustomizationWordRequest)req).Callback(resp.Success, resp.Error, ((AddCustomizationWordRequest)req).Data);
+                ((AddCustomizationWordRequest)req).Callback(parsedResp);
         }
         #endregion
 

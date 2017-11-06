@@ -128,9 +128,9 @@ public class ExampleTradeoffAnalytics : MonoBehaviour
         Log.Debug("ExampleTradeoffAnalyitics", "Tradeoff analytics examples complete.");
     }
 
-    private void OnGetDilemma(DilemmasResponse resp, RESTConnector.Error error, string data)
+    private void OnGetDilemma(RESTConnector.ParsedResponse<DilemmasResponse> resp)
     {
-        Log.Debug("ExampleTradeoffAnalyitics", "Tradeoff Analytics - Get Dillema: {0}", data);
+        Log.Debug("ExampleTradeoffAnalyitics", "Tradeoff Analytics - Get Dillema: {0}", resp.JSON);
         _GetDillemaTested = true;
     }
 

@@ -108,13 +108,13 @@ public class ExampleConversation : MonoBehaviour
             Log.Debug("ExampleConversation", "Failed to message!");
     }
 
-    private void OnMessage(object resp, RESTConnector.Error error, string data)
+    private void OnMessage(RESTConnector.ParsedResponse<object> resp)
     {
-        Log.Debug("ExampleConversation", "Conversation: Message Response: {0}", data);
+        Log.Debug("ExampleConversation", "Conversation: Message Response: {0}", resp.JSON);
 
         //  Convert resp to fsdata
         fsData fsdata = null;
-        fsResult r = _serializer.TrySerialize(resp.GetType(), resp, out fsdata);
+        fsResult r = _serializer.TrySerialize(resp.DataObject.GetType(), resp.DataObject, out fsdata);
         if (!r.Succeeded)
             throw new WatsonException(r.FormattedMessages);
 
@@ -127,7 +127,7 @@ public class ExampleConversation : MonoBehaviour
 
         //  Set context for next round of messaging
         object _tempContext = null;
-        (resp as Dictionary<string, object>).TryGetValue("context", out _tempContext);
+        (resp.DataObject as Dictionary<string, object>).TryGetValue("context", out _tempContext);
 
         if (_tempContext != null)
             _context = _tempContext as Dictionary<string, object>;

@@ -387,17 +387,17 @@ public class ExampleSpeechToText : MonoBehaviour
         _speechToText.DeleteAcousticCustomization(HandleDeleteAcousticCustomization, _createdAcousticModelId);
     }
 
-    private void HandleGetModels(ModelSet result, RESTConnector.Error error, string customData)
+    private void HandleGetModels(RESTConnector.ParsedResponse<ModelSet> resp)
     {
 
-        Log.Debug("ExampleSpeechToText", "Speech to Text - Get models response: {0}", customData);
-        _modelNameToGet = (result.models[UnityEngine.Random.Range(0, result.models.Length - 1)] as Model).name;
+        Log.Debug("ExampleSpeechToText", "Speech to Text - Get models response: {0}", resp.JSON);
+        _modelNameToGet = (resp.DataObject.models[UnityEngine.Random.Range(0, resp.DataObject.models.Length - 1)] as Model).name;
         _getModelsTested = true;
     }
 
-    private void HandleGetModel(Model model, RESTConnector.Error error, string customData)
+    private void HandleGetModel(RESTConnector.ParsedResponse<Model> resp)
     {
-        Log.Debug("ExampleSpeechToText", "Speech to Text - Get model response: {0}", customData);
+        Log.Debug("ExampleSpeechToText", "Speech to Text - Get model response: {0}", resp.JSON);
         _getModelTested = true;
     }
 
@@ -427,28 +427,28 @@ public class ExampleSpeechToText : MonoBehaviour
         }
     }
 
-    private void HandleGetCustomizations(Customizations customizations, RESTConnector.Error error, string customData)
+    private void HandleGetCustomizations(RESTConnector.ParsedResponse<Customizations> resp)
     {
-        Log.Debug("ExampleSpeechToText", "Speech to Text - Get customizations response: {0}", customData);
+        Log.Debug("ExampleSpeechToText", "Speech to Text - Get customizations response: {0}", resp.JSON);
         _getCustomizationsTested = true;
     }
 
-    private void HandleCreateCustomization(CustomizationID customizationID, RESTConnector.Error error, string customData)
+    private void HandleCreateCustomization(RESTConnector.ParsedResponse<CustomizationID> resp)
     {
-        Log.Debug("ExampleSpeechToText", "Speech to Text - Create customization response: {0}", customData);
-        _createdCustomizationID = customizationID.customization_id;
+        Log.Debug("ExampleSpeechToText", "Speech to Text - Create customization response: {0}", resp.JSON);
+        _createdCustomizationID = resp.DataObject.customization_id;
         _createCustomizationsTested = true;
     }
 
-    private void HandleGetCustomization(Customization customization, RESTConnector.Error error, string customData)
+    private void HandleGetCustomization(RESTConnector.ParsedResponse<Customization> resp)
     {
-        Log.Debug("ExampleSpeechToText", "Speech to Text - Get customization response: {0}", customData);
+        Log.Debug("ExampleSpeechToText", "Speech to Text - Get customization response: {0}", resp.JSON);
         _getCustomizationTested = true;
     }
 
-    private void HandleDeleteCustomization(bool success, RESTConnector.Error error, string customData)
+    private void HandleDeleteCustomization(RESTConnector.ParsedResponse<object> resp)
     {
-        if (success)
+        if (resp.Success)
         {
             Log.Debug("ExampleSpeechToText", "Speech to Text - Get customization response: Deleted customization {0}!", _createdCustomizationID);
             _createdCustomizationID = default(string);
@@ -461,9 +461,9 @@ public class ExampleSpeechToText : MonoBehaviour
         _deleteCustomizationsTested = true;
     }
 
-    private void HandleTrainCustomization(bool success, RESTConnector.Error error, string customData)
+    private void HandleTrainCustomization(RESTConnector.ParsedResponse<object> resp)
     {
-        if (success)
+        if (resp.Success)
         {
             Log.Debug("ExampleSpeechToText", "Trained customization {0}!", _createdCustomizationID);
         }
@@ -475,9 +475,9 @@ public class ExampleSpeechToText : MonoBehaviour
         _trainCustomizationTested = true;
     }
 
-    //private void HandleUpgradeCustomization(bool success, string customData)
+    //private void HandleUpgradeCustomization(RESTConnector.ParsedResponse<object> resp)
     //{
-    //    if (success)
+    //    if (resp.Success)
     //    {
     //        Log.Debug("ExampleSpeechToText", "Upgrade customization {0}!", _createdCustomizationID);
     //    }
@@ -489,9 +489,9 @@ public class ExampleSpeechToText : MonoBehaviour
     //    _upgradeCustomizationTested = true;
     //}
 
-    private void HandleResetCustomization(bool success, RESTConnector.Error error, string customData)
+    private void HandleResetCustomization(RESTConnector.ParsedResponse<object> resp)
     {
-        if (success)
+        if (resp.Success)
         {
             Log.Debug("ExampleSpeechToText", "Reset customization {0}!", _createdCustomizationID);
         }
@@ -503,15 +503,15 @@ public class ExampleSpeechToText : MonoBehaviour
         _resetCustomizationTested = true;
     }
 
-    private void HandleGetCustomCorpora(Corpora corpora, RESTConnector.Error error, string customData)
+    private void HandleGetCustomCorpora(RESTConnector.ParsedResponse<Corpora> resp)
     {
-        Log.Debug("ExampleSpeechToText", "Speech to Text - Get custom corpora response: {0}", customData);
+        Log.Debug("ExampleSpeechToText", "Speech to Text - Get custom corpora response: {0}", resp.JSON);
         _getCustomCorporaTested = true;
     }
 
-    private void HandleDeleteCustomCorpus(bool success, RESTConnector.Error error, string customData)
+    private void HandleDeleteCustomCorpus(RESTConnector.ParsedResponse<object> resp)
     {
-        if (success)
+        if (resp.Success)
         {
             Log.Debug("ExampleSpeechToText", "Speech to Text - delete custom coprus response: succeeded!");
         }
@@ -523,9 +523,9 @@ public class ExampleSpeechToText : MonoBehaviour
         _deleteCustomCorpusTested = true;
     }
 
-    private void HandleAddCustomCorpus(bool success, RESTConnector.Error error, string customData)
+    private void HandleAddCustomCorpus(RESTConnector.ParsedResponse<object> resp)
     {
-        if(success)
+        if(resp.Success)
         {
             Log.Debug("ExampleSpeechToText", "Speech to Text - Add custom corpus response: succeeded!");
         }
@@ -537,21 +537,21 @@ public class ExampleSpeechToText : MonoBehaviour
         _addCustomCorpusTested = true;
     }
 
-    private void HandleGetCustomCorpus(Corpus corpus, RESTConnector.Error error, string customData)
+    private void HandleGetCustomCorpus(RESTConnector.ParsedResponse<Corpus> resp)
     {
-        Log.Debug("ExampleSpeechToText", "Speech to Text - Get custom corpus response: {0}", customData);
+        Log.Debug("ExampleSpeechToText", "Speech to Text - Get custom corpus response: {0}", resp.JSON);
         _getCustomCorpusTested = true;
     }
 
-    private void HandleGetCustomWords(WordsList wordList, RESTConnector.Error error, string customData)
+    private void HandleGetCustomWords(RESTConnector.ParsedResponse<WordsList> resp)
     {
-        Log.Debug("ExampleSpeechToText", "Speech to Text - Get custom words response: {0}", customData);
+        Log.Debug("ExampleSpeechToText", "Speech to Text - Get custom words response: {0}", resp.JSON);
         _getCustomWordsTested = true;
     }
 
-    private void HandleAddCustomWordsFromPath(bool success, RESTConnector.Error error, string customData)
+    private void HandleAddCustomWordsFromPath(RESTConnector.ParsedResponse<object> resp)
     {
-        if (success)
+        if (resp.Success)
         {
             Log.Debug("ExampleSpeechToText", "Speech to Text - Add custom words from path response: succeeded!");
         }
@@ -563,9 +563,9 @@ public class ExampleSpeechToText : MonoBehaviour
         _addCustomWordsFromPathTested = true;
     }
 
-    private void HandleAddCustomWordsFromObject(bool success, RESTConnector.Error error, string customData)
+    private void HandleAddCustomWordsFromObject(RESTConnector.ParsedResponse<object> resp)
     {
-        if (success)
+        if (resp.Success)
         {
             Log.Debug("ExampleSpeechToText", "Speech to Text - Add custom words from object response: succeeded!");
         }
@@ -577,9 +577,9 @@ public class ExampleSpeechToText : MonoBehaviour
         _addCustomWordsFromObjectTested = true;
     }
 
-    private void HandleDeleteCustomWord(bool success, RESTConnector.Error error, string customData)
+    private void HandleDeleteCustomWord(RESTConnector.ParsedResponse<object> resp)
     {
-        if (success)
+        if (resp.Success)
         {
             Log.Debug("ExampleSpeechToText", "Speech to Text - Delete custom word response: succeeded!");
         }
@@ -591,70 +591,70 @@ public class ExampleSpeechToText : MonoBehaviour
         _deleteCustomWordTested = true;
     }
 
-    private void HandleGetCustomWord(WordData word, RESTConnector.Error error, string customData)
+    private void HandleGetCustomWord(RESTConnector.ParsedResponse<WordData> resp)
     {
-        Log.Debug("ExampleSpeechToText", "Speech to Text - Get custom word response: {0}", customData);
+        Log.Debug("ExampleSpeechToText", "Speech to Text - Get custom word response: {0}", resp.JSON);
         _getCustomWordTested = true;
     }
 
-    private void HandleGetCustomAcousticModels(AcousticCustomizations acousticCustomizations, RESTConnector.Error error, string customData)
+    private void HandleGetCustomAcousticModels(RESTConnector.ParsedResponse<AcousticCustomizations> resp)
     {
-        Log.Debug("ExampleSpeechToText", "acousticCustomizations: {0}", customData);
+        Log.Debug("ExampleSpeechToText", "acousticCustomizations: {0}", resp.JSON);
         _getAcousticCustomizationsTested = true;
     }
 
-    private void HandleCreateAcousticCustomization(CustomizationID customizationID, RESTConnector.Error error, string customData)
+    private void HandleCreateAcousticCustomization(RESTConnector.ParsedResponse<CustomizationID> resp)
     {
-        Log.Debug("ExampleSpeechToText", "customizationId: {0}", customData);
-        _createdAcousticModelId = customizationID.customization_id;
+        Log.Debug("ExampleSpeechToText", "customizationId: {0}", resp.JSON);
+        _createdAcousticModelId = resp.DataObject.customization_id;
         _createAcousticCustomizationsTested = true;
     }
 
-    private void HandleGetCustomAcousticModel(AcousticCustomization acousticCustomization, RESTConnector.Error error, string customData)
+    private void HandleGetCustomAcousticModel(RESTConnector.ParsedResponse<AcousticCustomization> resp)
     {
-        Log.Debug("ExampleSpeechToText", "acousticCustomization: {0}", customData);
+        Log.Debug("ExampleSpeechToText", "acousticCustomization: {0}", resp.JSON);
         _getAcousticCustomizationTested = true;
     }
 
-    private void HandleTrainAcousticCustomization(bool success, RESTConnector.Error error, string customData)
+    private void HandleTrainAcousticCustomization(RESTConnector.ParsedResponse<object> resp)
     {
-        Log.Debug("ExampleSpeechToText", "train customization success: {0}", success);
+        Log.Debug("ExampleSpeechToText", "train customization success: {0}", resp.Success);
         _trainAcousticCustomizationsTested = true;
     }
 
-    private void HandleGetCustomAcousticResources(AudioResources audioResources, RESTConnector.Error error, string customData)
+    private void HandleGetCustomAcousticResources(RESTConnector.ParsedResponse<AudioResources> resp)
     {
-        Log.Debug("ExampleSpeechToText", "audioResources: {0}", customData);
+        Log.Debug("ExampleSpeechToText", "audioResources: {0}", resp.JSON);
         _getAcousticResourcesTested = true;
     }
 
-    private void HandleAddAcousticResource(RESTConnector.Error error, string customData)
+    private void HandleAddAcousticResource(RESTConnector.ParsedResponse<object> resp)
     {
-        Log.Debug("ExampleSpeechToText", "added acoustic resource: {0}", customData);
+        Log.Debug("ExampleSpeechToText", "added acoustic resource: {0}", resp.JSON);
         _addAcousticResourcesTested = true;
     }
 
-    private void HandleGetCustomAcousticResource(AudioListing audioListing, RESTConnector.Error error, string customData)
+    private void HandleGetCustomAcousticResource(RESTConnector.ParsedResponse<AudioListing> resp)
     {
-        Log.Debug("ExampleSpeechToText", "audioListing: {0}", customData);
+        Log.Debug("ExampleSpeechToText", "audioListing: {0}", resp.JSON);
         _getAcousticResourceTested = true;
     }
 
-    private void HandleResetAcousticCustomization(bool success, RESTConnector.Error error, string customData)
+    private void HandleResetAcousticCustomization(RESTConnector.ParsedResponse<object> resp)
     {
-        Log.Debug("ExampleSpeechToText", "reset customization success: {0}", success);
+        Log.Debug("ExampleSpeechToText", "reset customization success: {0}", resp.Success);
         _resetAcousticCustomizationsTested = true;
     }
 
-    private void HandleDeleteAcousticResource(bool success, RESTConnector.Error error, string customData)
+    private void HandleDeleteAcousticResource(RESTConnector.ParsedResponse<object> resp)
     {
-        Log.Debug("ExampleSpeechToText", "deleted acoustic resource: {0}", success);
+        Log.Debug("ExampleSpeechToText", "deleted acoustic resource: {0}", resp.Success);
     }
 
-    private void HandleDeleteAcousticCustomization(bool success, RESTConnector.Error error, string customData)
+    private void HandleDeleteAcousticCustomization(RESTConnector.ParsedResponse<object> resp)
     {
-        Log.Debug("ExampleSpeechToText", "deleted acoustic customization: {0}", success);
-        if (success)
+        Log.Debug("ExampleSpeechToText", "deleted acoustic customization: {0}", resp.Success);
+        if (resp.Success)
             _deleteAcousticCustomizationsTested = true;
         else
             DeleteAcousticCustomization();
@@ -669,13 +669,13 @@ public class ExampleSpeechToText : MonoBehaviour
         _speechToText.GetCustomization(OnCheckCustomizationStatus, customizationID, customizationID);
     }
 
-    private void OnCheckCustomizationStatus(Customization customization, RESTConnector.Error error, string customData)
+    private void OnCheckCustomizationStatus(RESTConnector.ParsedResponse<Customization> resp)
     {
-        if (customization != null)
+        if (resp.DataObject != null)
         {
-            Log.Debug("TestSpeechToText", "Customization status: {0}", customization.status);
-            if (customization.status != "ready" && customization.status != "available")
-                Runnable.Run(CheckCustomizationStatus(customData, 5f));
+            Log.Debug("TestSpeechToText", "Customization status: {0}", resp.DataObject.status);
+            if (resp.DataObject.status != "ready" && resp.DataObject.status != "available")
+                Runnable.Run(CheckCustomizationStatus(resp.CustomData, 5f));
             else
                 _isCustomizationReady = true;
         }
@@ -694,13 +694,13 @@ public class ExampleSpeechToText : MonoBehaviour
         _speechToText.GetCustomAcousticModel(OnCheckAcousticCustomizationStatus, customizationID, customizationID);
     }
 
-    private void OnCheckAcousticCustomizationStatus(AcousticCustomization acousticCustomization, RESTConnector.Error error, string customData)
+    private void OnCheckAcousticCustomizationStatus(RESTConnector.ParsedResponse<AcousticCustomization> resp)
     {
-        if (acousticCustomization != null)
+        if (resp.DataObject != null)
         {
-            Log.Debug("TestSpeechToText", "Acoustic customization status: {0}", acousticCustomization.status);
-            if (acousticCustomization.status != "ready" && acousticCustomization.status != "available")
-                Runnable.Run(CheckAcousticCustomizationStatus(customData, 5f));
+            Log.Debug("TestSpeechToText", "Acoustic customization status: {0}", resp.DataObject.status);
+            if (resp.DataObject.status != "ready" && resp.DataObject.status != "available")
+                Runnable.Run(CheckAcousticCustomizationStatus(resp.CustomData, 5f));
             else
                 _isAcousticCustomizationReady = true;
         }

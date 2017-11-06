@@ -172,10 +172,10 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             yield break;
         }
 
-        private void OnGetDilemma(DilemmasResponse resp, RESTConnector.Error error, string data)
+        private void OnGetDilemma(RESTConnector.ParsedResponse<DilemmasResponse> resp)
         {
-            Log.Debug("ExampleTradeoffAnalyitics", "Tradeoff Analytics - Get Dillema: {0}", data);
-            Test(resp != null);
+            Log.Debug("ExampleTradeoffAnalyitics", "Tradeoff Analytics - Get Dillema: {0}", resp.JSON);
+            Test(resp.DataObject != null);
             _GetDillemaTested = true;
         }
 
