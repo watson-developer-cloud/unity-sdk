@@ -56,27 +56,27 @@ public class ExamplePersonalityInsightsV3 : MonoBehaviour
     private IEnumerator Examples()
     {
         if (!_personalityInsights.GetProfile(OnGetProfileJson, _dataPath, ContentType.TextHtml, ContentLanguage.English, ContentType.ApplicationJson, AcceptLanguage.English, true, true, true))
-            Log.Debug("ExamplePersonalityInsights", "Failed to get profile!");
+            Log.Debug("ExamplePersonalityInsights.GetProfile()", "Failed to get profile!");
         while (!_getProfileJsonTested)
             yield return null;
 
         if (!_personalityInsights.GetProfile(OnGetProfileText, _testString, ContentType.TextHtml, ContentLanguage.English, ContentType.ApplicationJson, AcceptLanguage.English, true, true, true))
-            Log.Debug("ExamplePersonalityInsights", "Failed to get profile!");
+            Log.Debug("ExamplePersonalityInsights.GetProfile()", "Failed to get profile!");
         while (!_getProfileTextTested)
             yield return null;
 
-        Log.Debug("ExamplePersonalityInsights", "Personality insights examples complete.");
+        Log.Debug("ExamplePersonalityInsights.Examples()", "Personality insights examples complete.");
     }
 
     private void OnGetProfileText(RESTConnector.ParsedResponse<Profile> resp)
     {
-        Log.Debug("ExamplePersonaltyInsights", "Personality Insights - GetProfileText Response: {0}", resp.JSON);
+        Log.Debug("ExamplePersonaltyInsights.OnGetProfileText()", "Personality Insights - GetProfileText Response: {0}", resp.JSON);
         _getProfileTextTested = true;
     }
 
     private void OnGetProfileJson(RESTConnector.ParsedResponse<Profile> resp)
     {
-        Log.Debug("ExamplePersonaltyInsights", "Personality Insights - GetProfileJson Response: {0}", resp.JSON);
+        Log.Debug("ExamplePersonaltyInsights.OnGetProfileJson()", "Personality Insights - GetProfileJson Response: {0}", resp.JSON);
         _getProfileJsonTested = true;
     }
 }

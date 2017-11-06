@@ -60,84 +60,84 @@ public class ExampleLanguageTranslator : MonoBehaviour
     private IEnumerator Examples()
     {
         if (!_languageTranslator.GetTranslation(_pharseToTranslate, "en", "es", OnGetTranslation))
-            Log.Debug("TestLanguageTranslator", "Failed to translate.");
+            Log.Debug("ExampleLanguageTranslator.GetTranslation()", "Failed to translate.");
         while (!_getTranslationTested)
             yield return null;
 
         if (!_languageTranslator.GetModels(OnGetModels))
-            Log.Debug("TestLanguageTranslator", "Failed to get models.");
+            Log.Debug("ExampleLanguageTranslator.GetModels()", "Failed to get models.");
         while (!_getModelsTested)
             yield return null;
 
         if (!_languageTranslator.CreateModel(OnCreateModel, _baseModelName, _customModelName, _forcedGlossaryFilePath))
-            Log.Debug("TestLanguageTranslator", "Failed to create model.");
+            Log.Debug("ExampleLanguageTranslator.CreateModel()", "Failed to create model.");
         while (!_createModelTested)
             yield return null;
 
         if (!_languageTranslator.GetModel(OnGetModel, _customLanguageModelId))
-            Log.Debug("TestLanguageTranslator", "Failed to get model.");
+            Log.Debug("ExampleLanguageTranslator.GetModel()", "Failed to get model.");
         while (!_getModelTested)
             yield return null;
 
         if (!_languageTranslator.DeleteModel(OnDeleteModel, _customLanguageModelId))
-            Log.Debug("TestLanguageTranslator", "Failed to delete model.");
+            Log.Debug("ExampleLanguageTranslator.DeleteModel()", "Failed to delete model.");
         while (!_deleteModelTested)
             yield return null;
 
         if (!_languageTranslator.Identify(OnIdentify, _pharseToIdentify))
-            Log.Debug("TestLanguageTranslator", "Failed to identify language.");
+            Log.Debug("ExampleLanguageTranslator.Identify()", "Failed to identify language.");
         while (!_identifyTested)
             yield return null;
 
         if (!_languageTranslator.GetLanguages(OnGetLanguages))
-            Log.Debug("TestLanguageTranslator", "Failed to get languages.");
+            Log.Debug("ExampleLanguageTranslator.GetLanguages()", "Failed to get languages.");
         while (!_getLanguagesTested)
             yield return null;
 
-        Log.Debug("TestLanguageTranslator", "Language Translator examples complete.");
+        Log.Debug("ExampleLanguageTranslator.Examples()", "Language Translator examples complete.");
     }
 
     private void OnGetModels(RESTConnector.ParsedResponse<TranslationModels> resp)
     {
-        Log.Debug("TestLanguageTranslator", "Language Translator - Get models response: {0}", resp.JSON);
+        Log.Debug("ExampleLanguageTranslator.OnGetModels()", "Language Translator - Get models response: {0}", resp.JSON);
         _getModelsTested = true;
     }
 
     private void OnCreateModel(RESTConnector.ParsedResponse<TranslationModel> resp)
     {
-        Log.Debug("TestLanguageTranslator", "Language Translator - Create model response: {0}", resp.JSON);
+        Log.Debug("ExampleLanguageTranslator.OnCreateModel()", "Language Translator - Create model response: {0}", resp.JSON);
         _customLanguageModelId = resp.DataObject.model_id;
         _createModelTested = true;
     }
 
     private void OnGetModel(RESTConnector.ParsedResponse<TranslationModel> resp)
     {
-        Log.Debug("TestLanguageTranslator", "Language Translator - Get model response: {0}", resp.JSON);
+        Log.Debug("ExampleLanguageTranslator.OnGetModel()", "Language Translator - Get model response: {0}", resp.JSON);
         _getModelTested = true;
     }
 
     private void OnDeleteModel(RESTConnector.ParsedResponse<object> resp)
     {
-        Log.Debug("TestLanguageTranslator", "Language Translator - Delete model response: success: {0}", resp.Success);
+        Log.Debug("ExampleLanguageTranslator.OnDeleteModel()", "Language Translator - Delete model response: success: {0}", resp.Success);
         _customLanguageModelId = null;
         _deleteModelTested = true;
     }
 
     private void OnGetTranslation(RESTConnector.ParsedResponse<Translations> resp)
     {
-        Log.Debug("TestLanguageTranslator", "Langauge Translator - Translate Response: {0}", resp.JSON);
+        Log.Debug("ExampleLanguageTranslator.OnGetTranslation()", "Langauge Translator - Translate Response: {0}", resp.JSON);
         _getTranslationTested = true;
     }
 
     private void OnIdentify(RESTConnector.ParsedResponse<IdentifiedLanguages> resp)
     {
-        Log.Debug("TestLanguageTranslator", "Language Translator - Identify response: {0}", resp.JSON);
+        Log.Debug("ExampleLanguageTranslator.OnIdentify()", "Language Translator - Identify response: {0}", resp.JSON);
         _identifyTested = true;
     }
 
     private void OnGetLanguages(RESTConnector.ParsedResponse<Languages> resp)
     {
-        Log.Debug("TestLanguageTranslator", "Language Translator - Get languages response: {0}", resp.JSON);
+        Log.Debug("ExampleLanguageTranslator.OnGetLanguages()", "Language Translator - Get languages response: {0}", resp.JSON);
         _getLanguagesTested = true;
     }
 }

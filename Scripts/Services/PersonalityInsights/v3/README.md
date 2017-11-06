@@ -28,12 +28,12 @@ Extract personality characteristics based on how a person writes.
 private void GetProfile()
 {
   if(!m_personalityInsights.GetProfile(OnGetProfileJson, dataPath, ContentType.TEXT_HTML, ContentLanguage.ENGLISH, ContentType.APPLICATION_JSON, AcceptLanguage.ENGLISH, true, true, true))
-    Log.Debug("ExamplePersonalityInsights", "Failed to get profile!");
+    Log.Debug("ExamplePersonalityInsights.GetProfile()", "Failed to get profile!");
 }
 
 private void OnGetProfile(Profile profile, string data)
 {
-  Log.Debug("ExamplePersonalityInsights", "Profile result: {0}", data);
+  Log.Debug("ExamplePersonalityInsights.OnGetProfile()", "Profile result: {0}", data);
 }
 ```
 

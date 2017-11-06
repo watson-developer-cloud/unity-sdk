@@ -80,7 +80,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             }
             catch
             {
-                Log.Debug("TestConversation", "Failed to get credentials from VCAP_SERVICES file. Please configure credentials to run this test. For more information, see: https://github.com/watson-developer-cloud/unity-sdk/#authentication");
+                Log.Debug("TestConversation.RunTest()", "Failed to get credentials from VCAP_SERVICES file. Please configure credentials to run this test. For more information, see: https://github.com/watson-developer-cloud/unity-sdk/#authentication");
             }
 
             //  Create credential and instantiate service
@@ -91,7 +91,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             //  Test initate with empty string
             if (!_conversation.Message(OnMessage, _workspaceId, ""))
-                Log.Debug("ExampleConversation", "Failed to message!");
+                Log.Debug("TestConversation.RunTest()", "Failed to message!");
 
             //  Test initiate with empty string message object
             MessageRequest messageRequest = new MessageRequest()
@@ -104,10 +104,10 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             };
 
             if (!_conversation.Message(OnMessage, _workspaceId, messageRequest))
-                Log.Debug("ExampleConversation", "Failed to message!");
+                Log.Debug("TestConversation.RunTest()", "Failed to message!");
 
             if (!_conversation.Message(OnMessage, _workspaceId, "hello"))
-                Log.Debug("ExampleConversation", "Failed to message!");
+                Log.Debug("TestConversation.RunTest()", "Failed to message!");
 
             while (_waitingForResponse)
                 yield return null;
@@ -141,7 +141,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             while (_waitingForResponse)
                 yield return null;
 
-            Log.Debug("ExampleConversation", "Conversation examples complete.");
+            Log.Debug("TestConversation.RunTest()", "Conversation examples complete.");
 
             yield break;
         }
@@ -158,12 +158,12 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             };
 
             if (!_conversation.Message(OnMessage, _workspaceId, messageRequest))
-                Log.Debug("ExampleConversation", "Failed to message!");
+                Log.Debug("TestConversation.AskQuestion()", "Failed to message!");
         }
 
         private void OnMessage(RESTConnector.ParsedResponse<object> resp)
         {
-            Log.Debug("ExampleConversation", "Conversation: Message Response: {0}", resp.JSON);
+            Log.Debug("TestConversation.OnMessage()", "Conversation: Message Response: {0}", resp.JSON);
 
             //  Convert resp to fsdata
             fsData fsdata = null;
@@ -185,7 +185,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             if (_tempContext != null)
                 _context = _tempContext as Dictionary<string, object>;
             else
-                Log.Debug("ExampleConversation", "Failed to get context");
+                Log.Debug("TestConversation.OnMessage()", "Failed to get context");
 
             Test(messageResponse != null);
             _waitingForResponse = false;

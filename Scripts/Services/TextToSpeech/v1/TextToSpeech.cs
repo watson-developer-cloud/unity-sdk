@@ -122,7 +122,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
             }
             else
             {
-                Log.Warning("TextToSpeech", "There is no voicetype for {0}!", voiceType);
+                Log.Warning("TextToSpeech.GetVoiceType()", "There is no voicetype for {0}!", voiceType);
                 return null;
             }
         }
@@ -263,12 +263,12 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 
             if (!_audioFormats.ContainsKey(_audioFormat))
             {
-                Log.Error("TextToSpeech", "Unsupported audio format: {0}", _audioFormat.ToString());
+                Log.Error("TextToSpeech.ToSpeech()", "Unsupported audio format: {0}", _audioFormat.ToString());
                 return false;
             }
             if (!_voiceTypes.ContainsKey(_voice))
             {
-                Log.Error("TextToSpeech", "Unsupported voice: {0}", _voice.ToString());
+                Log.Error("TextToSpeech.ToSpeech()", "Unsupported voice: {0}", _voice.ToString());
                 return false;
             }
 
@@ -277,7 +277,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/synthesize");
             if (connector == null)
             {
-                Log.Error("TextToSpeech", "Failed to get connector.");
+                Log.Error("TextToSpeech.ToSpeech()", "Failed to get connector.");
                 return false;
             }
 
@@ -311,7 +311,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
             if (speechReq == null)
                 throw new WatsonException("Wrong type of request object.");
 
-            //Log.Debug( "TextToSpeech", "Request completed in {0} seconds.", resp.ElapsedTime );
+            //Log.Debug( "TextToSpeech.ToSpeechResponse()", "Request completed in {0} seconds.", resp.ElapsedTime );
 
             string customData = ((ToSpeechRequest)req).Data;
 
@@ -319,7 +319,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 
             AudioClip clip = resp.Success ? ProcessResponse(speechReq.TextId, resp.Data) : null;
             if (clip == null)
-                Log.Error("TextToSpeech", "Request Failed: {0}", resp.Error);
+                Log.Error("TextToSpeech.ToSpeechResponse()", "Request Failed: {0}", resp.Error);
             else
                 parsedResp.DataObject = clip;
 
@@ -337,7 +337,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
                     break;
             }
 
-            Log.Error("TextToSpeech", "Unsupported audio format: {0}", _audioFormat.ToString());
+            Log.Error("TextToSpeech.ProcessResponse()", "Unsupported audio format: {0}", _audioFormat.ToString());
             return null;
         }
         #endregion
@@ -946,7 +946,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
         /// <returns></returns>
         public bool AddCustomizationWord(AddCustomizationWordCallback callback, string customizationID, string word, string translation, string customData = default(string))
         {
-            Log.Error("TextToSpeech", "AddCustomizationWord is not supported. Unity WWW does not support PUT method! Use AddCustomizationWords() instead!");
+            Log.Error("TextToSpeech.AddCustomizationWord()", "AddCustomizationWord is not supported. Unity WWW does not support PUT method! Use AddCustomizationWords() instead!");
             if (callback == null)
                 throw new ArgumentNullException("callback");
             if (string.IsNullOrEmpty(customizationID))

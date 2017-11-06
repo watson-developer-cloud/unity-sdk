@@ -145,7 +145,7 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
                 }
 
                 if (documentData == null)
-                    Log.Error("DocumentConversion", "Failed to upload {0}!", documentPath);
+                    Log.Error("DocumentConversion.ConvertDocument()", "Failed to upload {0}!", documentPath);
             }
 
             if (documentData != null)

@@ -376,7 +376,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
             }
             else
             {
-                Log.Error("Translate", "Identify() failed: {0}", resp.Error);
+                Log.Error("LanguageTranslation.OnIdentifyResponse()", "Identify() failed: {0}", resp.Error);
                 if (req.Callback != null)
                     req.Callback(parsedResp);
             }

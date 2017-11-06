@@ -119,7 +119,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             }
             catch
             {
-                Log.Debug("TestSpeechToText", "Failed to get credentials from VCAP_SERVICES file. Please configure credentials to run this test. For more information, see: https://github.com/watson-developer-cloud/unity-sdk/#authentication");
+                Log.Debug("TestSpeechToText.RunTest()", "Failed to get credentials from VCAP_SERVICES file. Please configure credentials to run this test. For more information, see: https://github.com/watson-developer-cloud/unity-sdk/#authentication");
             }
 
             //  Create credential and instantiate service
@@ -139,56 +139,56 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             Runnable.Run(DownloadAcousticResource());
 
-            Log.Debug("TestSpeechToText", "Attempting to recognize");
+            Log.Debug("TestSpeechToText.RunTest()", "Attempting to recognize");
             _speechToText.Recognize(_audioClip, HandleOnRecognize);
             while (!_recognizeTested)
                 yield return null;
 
             //  Get models
-            Log.Debug("TestSpeechToText", "Attempting to get models");
+            Log.Debug("TestSpeechToText.RunTest()", "Attempting to get models");
             _speechToText.GetModels(HandleGetModels);
             while (!_getModelsTested)
                 yield return null;
 
             //  Get model
-            Log.Debug("TestSpeechToText", "Attempting to get model {0}", _modelNameToGet);
+            Log.Debug("TestSpeechToText.RunTest()", "Attempting to get model {0}", _modelNameToGet);
             _speechToText.GetModel(HandleGetModel, _modelNameToGet);
             while (!_getModelTested)
                 yield return null;
 
             //  Get customizations
-            Log.Debug("TestSpeechToText", "Attempting to get customizations");
+            Log.Debug("TestSpeechToText.RunTest()", "Attempting to get customizations");
             _speechToText.GetCustomizations(HandleGetCustomizations);
             while (!_getCustomizationsTested)
                 yield return null;
 
             //  Create customization
-            Log.Debug("TestSpeechToText", "Attempting create customization");
+            Log.Debug("TestSpeechToText.RunTest()", "Attempting create customization");
             _speechToText.CreateCustomization(HandleCreateCustomization, "unity-test-customization", "en-US_BroadbandModel", "Testing customization unity");
             while (!_createCustomizationsTested)
                 yield return null;
 
             //  Get customization
-            Log.Debug("TestSpeechToText", "Attempting to get customization {0}", _createdCustomizationID);
+            Log.Debug("TestSpeechToText.RunTest()", "Attempting to get customization {0}", _createdCustomizationID);
             _speechToText.GetCustomization(HandleGetCustomization, _createdCustomizationID);
             while (!_getCustomizationTested)
                 yield return null;
 
             //  Get custom corpora
-            Log.Debug("TestSpeechToText", "Attempting to get custom corpora for {0}", _createdCustomizationID);
+            Log.Debug("TestSpeechToText.RunTest()", "Attempting to get custom corpora for {0}", _createdCustomizationID);
             _speechToText.GetCustomCorpora(HandleGetCustomCorpora, _createdCustomizationID);
             while (!_getCustomCorporaTested)
                 yield return null;
 
             //  Add custom corpus
-            Log.Debug("TestSpeechToText", "Attempting to add custom corpus {1} in customization {0}", _createdCustomizationID, _createdCorpusName);
+            Log.Debug("TestSpeechToText.RunTest()", "Attempting to add custom corpus {1} in customization {0}", _createdCustomizationID, _createdCorpusName);
             string corpusData = File.ReadAllText(_customCorpusFilePath);
             _speechToText.AddCustomCorpus(HandleAddCustomCorpus, _createdCustomizationID, _createdCorpusName, true, corpusData);
             while (!_addCustomCorpusTested)
                 yield return null;
 
             //  Get custom corpus
-            Log.Debug("TestSpeechToText", "Attempting to get custom corpus {1} in customization {0}", _createdCustomizationID, _createdCorpusName);
+            Log.Debug("TestSpeechToText.RunTest()", "Attempting to get custom corpus {1} in customization {0}", _createdCustomizationID, _createdCorpusName);
             _speechToText.GetCustomCorpus(HandleGetCustomCorpus, _createdCustomizationID, _createdCorpusName);
             while (!_getCustomCorpusTested)
                 yield return null;
@@ -199,13 +199,13 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 yield return null;
 
             //  Get custom words
-            Log.Debug("TestSpeechToText", "Attempting to get custom words.");
+            Log.Debug("TestSpeechToText.RunTest()", "Attempting to get custom words.");
             _speechToText.GetCustomWords(HandleGetCustomWords, _createdCustomizationID);
             while (!_getCustomWordsTested)
                 yield return null;
 
             //  Add custom words from path
-            Log.Debug("TestSpeechToText", "Attempting to add custom words in customization {0} using Words json path {1}", _createdCustomizationID, _customWordsFilePath);
+            Log.Debug("TestSpeechToText.RunTest()", "Attempting to add custom words in customization {0} using Words json path {1}", _createdCustomizationID, _customWordsFilePath);
             string customWords = File.ReadAllText(_customWordsFilePath);
             _speechToText.AddCustomWords(HandleAddCustomWordsFromPath, _createdCustomizationID, customWords);
             while (!_addCustomWordsFromPathTested)
@@ -240,7 +240,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             wordList.Add(w2);
             words.words = wordList.ToArray();
 
-            Log.Debug("TestSpeechToText", "Attempting to add custom words in customization {0} using Words object", _createdCustomizationID);
+            Log.Debug("TestSpeechToText.RunTest()", "Attempting to add custom words in customization {0} using Words object", _createdCustomizationID);
             _speechToText.AddCustomWords(HandleAddCustomWordsFromObject, _createdCustomizationID, words);
             while (!_addCustomWordsFromObjectTested)
                 yield return null;
@@ -252,13 +252,13 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 yield return null;
 
             //  Get custom word
-            Log.Debug("TestSpeechToText", "Attempting to get custom word {1} in customization {0}", _createdCustomizationID, words.words[0].word);
+            Log.Debug("TestSpeechToText.RunTest()", "Attempting to get custom word {1} in customization {0}", _createdCustomizationID, words.words[0].word);
             _speechToText.GetCustomWord(HandleGetCustomWord, _createdCustomizationID, words.words[0].word);
             while (!_getCustomWordTested)
                 yield return null;
 
             //  Train customization
-            Log.Debug("TestSpeechToText", "Attempting to train customization {0}", _createdCustomizationID);
+            Log.Debug("TestSpeechToText.RunTest()", "Attempting to train customization {0}", _createdCustomizationID);
             _speechToText.TrainCustomization(HandleTrainCustomization, _createdCustomizationID);
             while (!_trainCustomizationTested)
                 yield return null;
@@ -270,45 +270,45 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 yield return null;
 
             //  Upgrade customization - not currently implemented in service
-            //Log.Debug("TestSpeechToText", "Attempting to upgrade customization {0}", _createdCustomizationID);
+            //Log.Debug("TestSpeechToText.RunTest()", "Attempting to upgrade customization {0}", _createdCustomizationID);
             //_speechToText.UpgradeCustomization(HandleUpgradeCustomization, _createdCustomizationID);
             //while (!_upgradeCustomizationTested)
             //    yield return null;
 
             //  Delete custom word
-            Log.Debug("TestSpeechToText", "Attempting to delete custom word {1} in customization {0}", _createdCustomizationID, words.words[2].word);
+            Log.Debug("TestSpeechToText.RunTest()", "Attempting to delete custom word {1} in customization {0}", _createdCustomizationID, words.words[2].word);
             _speechToText.DeleteCustomWord(HandleDeleteCustomWord, _createdCustomizationID, words.words[2].word);
             while (!_deleteCustomWordTested)
                 yield return null;
 
             //  Delay
-            Log.Debug("TestSpeechToText", string.Format("Delaying delete environment for {0} sec", _delayTimeInSeconds));
+            Log.Debug("TestSpeechToText.RunTest()", string.Format("Delaying delete environment for {0} sec", _delayTimeInSeconds));
             Runnable.Run(Delay(_delayTimeInSeconds));
             while (!_readyToContinue)
                 yield return null;
 
             _readyToContinue = false;
             //  Delete custom corpus
-            Log.Debug("TestSpeechToText", "Attempting to delete custom corpus {1} in customization {0}", _createdCustomizationID, _createdCorpusName);
+            Log.Debug("TestSpeechToText.RunTest()", "Attempting to delete custom corpus {1} in customization {0}", _createdCustomizationID, _createdCorpusName);
             _speechToText.DeleteCustomCorpus(HandleDeleteCustomCorpus, _createdCustomizationID, _createdCorpusName);
             while (!_deleteCustomCorpusTested)
                 yield return null;
 
             //  Delay
-            Log.Debug("TestSpeechToText", string.Format("Delaying delete environment for {0} sec", _delayTimeInSeconds));
+            Log.Debug("TestSpeechToText.RunTest()", string.Format("Delaying delete environment for {0} sec", _delayTimeInSeconds));
             Runnable.Run(Delay(_delayTimeInSeconds));
             while (!_readyToContinue)
                 yield return null;
 
             _readyToContinue = false;
             //  Reset customization
-            Log.Debug("TestSpeechToText", "Attempting to reset customization {0}", _createdCustomizationID);
+            Log.Debug("TestSpeechToText.RunTest()", "Attempting to reset customization {0}", _createdCustomizationID);
             _speechToText.ResetCustomization(HandleResetCustomization, _createdCustomizationID);
             while (!_resetCustomizationTested)
                 yield return null;
             
             //  Delay
-            Log.Debug("TestSpeechToText", string.Format("Delaying continue for {0} sec", _delayTimeInSeconds));
+            Log.Debug("TestSpeechToText.RunTest()", string.Format("Delaying continue for {0} sec", _delayTimeInSeconds));
             Runnable.Run(Delay(_delayTimeInSeconds));
             while (!_readyToContinue)
                 yield return null;
@@ -316,19 +316,19 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _readyToContinue = false;
 
             //  List acoustic customizations
-            Log.Debug("TestSpeechToText", "Attempting to get acoustic customizations");
+            Log.Debug("TestSpeechToText.RunTest()", "Attempting to get acoustic customizations");
             _speechToText.GetCustomAcousticModels(HandleGetCustomAcousticModels);
             while (!_getAcousticCustomizationsTested)
                 yield return null;
 
             //  Create acoustic customization
-            Log.Debug("TestSpeechToText", "Attempting to create acoustic customization");
+            Log.Debug("TestSpeechToText.RunTest()", "Attempting to create acoustic customization");
             _speechToText.CreateAcousticCustomization(HandleCreateAcousticCustomization, _createdAcousticModelName);
             while (!_createAcousticCustomizationsTested)
                 yield return null;
 
             //  Get acoustic customization
-            Log.Debug("TestSpeechToText", "Attempting to get acoustic customization {0}", _createdAcousticModelId);
+            Log.Debug("TestSpeechToText.RunTest()", "Attempting to get acoustic customization {0}", _createdAcousticModelId);
             _speechToText.GetCustomAcousticModel(HandleGetCustomAcousticModel, _createdAcousticModelId);
             while (!_getAcousticCustomizationTested)
                 yield return null;
@@ -337,7 +337,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 yield return null;
 
             //  Create acoustic resource
-            Log.Debug("TestSpeechToText", "Attempting to create audio resource {1} on {0}", _createdAcousticModelId, _acousticResourceName);
+            Log.Debug("TestSpeechToText.RunTest()", "Attempting to create audio resource {1} on {0}", _createdAcousticModelId, _acousticResourceName);
             string mimeType = Utility.GetMimeType(Path.GetExtension(_acousticResourceUrl));
             _speechToText.AddAcousticResource(HandleAddAcousticResource, _createdAcousticModelId, _acousticResourceName, mimeType, mimeType, true, _acousticResourceData);
             while (!_addAcousticResourcesTested)
@@ -350,19 +350,19 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 yield return null;
 
             //  List acoustic resources
-            Log.Debug("TestSpeechToText", "Attempting to get audio resources {0}", _createdAcousticModelId);
+            Log.Debug("TestSpeechToText.RunTest()", "Attempting to get audio resources {0}", _createdAcousticModelId);
             _speechToText.GetCustomAcousticResources(HandleGetCustomAcousticResources, _createdAcousticModelId);
             while (!_getAcousticResourcesTested)
                 yield return null;
 
             //  Train acoustic customization
-            Log.Debug("TestSpeechToText", "Attempting to train acoustic customization {0}", _createdAcousticModelId);
+            Log.Debug("TestSpeechToText.RunTest()", "Attempting to train acoustic customization {0}", _createdAcousticModelId);
             _speechToText.TrainAcousticCustomization(HandleTrainAcousticCustomization, _createdAcousticModelId, null, true);
             while (!_trainAcousticCustomizationsTested)
                 yield return null;
 
             //  Get acoustic resource
-            Log.Debug("TestSpeechToText", "Attempting to get audio resource {1} from {0}", _createdAcousticModelId, _acousticResourceName);
+            Log.Debug("TestSpeechToText.RunTest()", "Attempting to get audio resource {1} from {0}", _createdAcousticModelId, _acousticResourceName);
             _speechToText.GetCustomAcousticResource(HandleGetCustomAcousticResource, _createdAcousticModelId, _acousticResourceName);
             while (!_getAcousticResourceTested)
                 yield return null;
@@ -374,13 +374,13 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 yield return null;
 
             //  Reset acoustic customization
-            Log.Debug("TestSpeechToText", "Attempting to reset acoustic customization {0}", _createdAcousticModelId);
+            Log.Debug("TestSpeechToText.RunTest()", "Attempting to reset acoustic customization {0}", _createdAcousticModelId);
             _speechToText.ResetAcousticCustomization(HandleResetAcousticCustomization, _createdAcousticModelId);
             while (!_resetAcousticCustomizationsTested)
                 yield return null;
 
             //  Delay
-            Log.Debug("TestSpeechToText", string.Format("Delaying delete acoustic resource for {0} sec", _delayTimeInSeconds));
+            Log.Debug("TestSpeechToText.RunTest()", string.Format("Delaying delete acoustic resource for {0} sec", _delayTimeInSeconds));
             Runnable.Run(Delay(_delayTimeInSeconds));
             while (!_readyToContinue)
                 yield return null;
@@ -389,18 +389,18 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             DeleteAcousticResource();
 
             //  Delay
-            Log.Debug("TestSpeechToText", string.Format("Delaying delete customization for {0} sec", _delayTimeInSeconds));
+            Log.Debug("TestSpeechToText.RunTest()", string.Format("Delaying delete customization for {0} sec", _delayTimeInSeconds));
             Runnable.Run(Delay(_delayTimeInSeconds));
             while (!_readyToContinue)
                 yield return null;
 
             _readyToContinue = false;
             //  Delete customization
-            Log.Debug("TestSpeechToText", "Attempting to delete customization {0}", _createdCustomizationID);
+            Log.Debug("TestSpeechToText.RunTest()", "Attempting to delete customization {0}", _createdCustomizationID);
             _speechToText.DeleteCustomization(HandleDeleteCustomization, _createdCustomizationID);
 
             //  Delay
-            Log.Debug("TestSpeechToText", string.Format("Delaying delete acoustic customization for {0} sec", _delayTimeInSeconds));
+            Log.Debug("TestSpeechToText.RunTest()", string.Format("Delaying delete acoustic customization for {0} sec", _delayTimeInSeconds));
             Runnable.Run(Delay(_delayTimeInSeconds));
             while (!_readyToContinue)
                 yield return null;
@@ -409,12 +409,12 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             DeleteAcousticCustomization();
 
             //  Delay
-            Log.Debug("TestSpeechToText", string.Format("Delaying complete for {0} sec", _delayTimeInSeconds));
+            Log.Debug("TestSpeechToText.RunTest()", string.Format("Delaying complete for {0} sec", _delayTimeInSeconds));
             Runnable.Run(Delay(_delayTimeInSeconds));
             while (!_readyToContinue)
                 yield return null;
 
-            Log.Debug("TestSpeechToText", "Speech to Text examples complete.");
+            Log.Debug("TestSpeechToText.RunTest()", "Speech to Text examples complete.");
 
             yield break;
         }
@@ -422,7 +422,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void HandleGetModels(RESTConnector.ParsedResponse<ModelSet> resp)
         {
 
-            Log.Debug("TestSpeechToText", "Speech to Text - Get models response: {0}", resp.JSON);
+            Log.Debug("TestSpeechToText.HandleGetModels()", "Speech to Text - Get models response: {0}", resp.JSON);
             _modelNameToGet = (resp.DataObject.models[UnityEngine.Random.Range(0, resp.DataObject.models.Length - 1)] as Model).name;
             Test(resp.DataObject != null);
             _getModelsTested = true;
@@ -430,7 +430,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void HandleGetModel(RESTConnector.ParsedResponse<Model> resp)
         {
-            Log.Debug("TestSpeechToText", "Speech to Text - Get model response: {0}", resp.JSON);
+            Log.Debug("TestSpeechToText.HandleGetModel()", "Speech to Text - Get model response: {0}", resp.JSON);
             Test(resp.DataObject != null);
             _getModelTested = true;
         }
@@ -444,7 +444,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                     foreach (var alt in res.alternatives)
                     {
                         string text = alt.transcript;
-                        Log.Debug("TestSpeechToText", string.Format("{0} ({1}, {2:0.00})\n", text, res.final ? "Final" : "Interim", alt.confidence));
+                        Log.Debug("TestSpeechToText.HandleOnRecognize()", string.Format("{0} ({1}, {2:0.00})\n", text, res.final ? "Final" : "Interim", alt.confidence));
 
                         if (res.final)
                             _recognizeTested = true;
@@ -457,14 +457,14 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void HandleGetCustomizations(RESTConnector.ParsedResponse<Customizations> resp)
         {
-            Log.Debug("TestSpeechToText", "Speech to Text - Get customizations response: {0}", resp.JSON);
+            Log.Debug("TestSpeechToText.HandleGetCustomizations()", "Speech to Text - Get customizations response: {0}", resp.JSON);
             Test(resp.DataObject != null);
             _getCustomizationsTested = true;
         }
 
         private void HandleCreateCustomization(RESTConnector.ParsedResponse<CustomizationID> resp)
         {
-            Log.Debug("TestSpeechToText", "Speech to Text - Create customization response: {0}", resp.JSON);
+            Log.Debug("TestSpeechToText.HandleCreateCustomization()", "Speech to Text - Create customization response: {0}", resp.JSON);
             _createdCustomizationID = resp.DataObject.customization_id;
             Test(resp.DataObject != null);
             _createCustomizationsTested = true;
@@ -472,7 +472,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void HandleGetCustomization(RESTConnector.ParsedResponse<Customization> resp)
         {
-            Log.Debug("TestSpeechToText", "Speech to Text - Get customization response: {0}", resp.JSON);
+            Log.Debug("TestSpeechToText.HandleGetCustomization()", "Speech to Text - Get customization response: {0}", resp.JSON);
             Test(resp.DataObject != null);
             _getCustomizationTested = true;
         }
@@ -481,12 +481,12 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         {
             if (resp.Success)
             {
-                Log.Debug("TestSpeechToText", "Speech to Text - Get customization response: Deleted customization {0}!", _createdCustomizationID);
+                Log.Debug("TestSpeechToText.HandleDeleteCustomization()", "Speech to Text - Get customization response: Deleted customization {0}!", _createdCustomizationID);
                 _createdCustomizationID = default(string);
             }
             else
             {
-                Log.Debug("TestSpeechToText", "Failed to delete customization!");
+                Log.Debug("TestSpeechToText.HandleDeleteCustomization()", "Failed to delete customization!");
             }
         }
 
@@ -495,11 +495,11 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         {
             if (resp.Success)
             {
-                Log.Debug("TestSpeechToText", "Trained customization {0}!", _createdCustomizationID);
+                Log.Debug("TestSpeechToText.HandleTrainCustomization()", "Trained customization {0}!", _createdCustomizationID);
             }
             else
             {
-                Log.Debug("TestSpeechToText", "Failed to train customization!");
+                Log.Debug("TestSpeechToText.HandleTrainCustomization()", "Failed to train customization!");
             }
             Test(resp.Success);
 
@@ -510,14 +510,13 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         //{
         //    if (resp.Success)
         //    {
-        //        Log.Debug("TestSpeechToText", "Upgrade customization {0}!", _createdCustomizationID);
+        //        Log.Debug("TestSpeechToText.HandleUpgradeCustomization()", "Upgrade customization {0}!", _createdCustomizationID);
         //    }
         //    else
         //    {
-        //        Log.Debug("TestSpeechToText", "Failed to upgrade customization!");
+        //        Log.Debug("TestSpeechToText.HandleUpgradeCustomization()", "Failed to upgrade customization!");
         //    }
         //Test(resp.Success);
-
         //    _upgradeCustomizationTested = true;
         //}
 
@@ -525,11 +524,11 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         {
             if (resp.Success)
             {
-                Log.Debug("TestSpeechToText", "Reset customization {0}!", _createdCustomizationID);
+                Log.Debug("TestSpeechToText.HandleResetCustomization()", "Reset customization {0}!", _createdCustomizationID);
             }
             else
             {
-                Log.Debug("TestSpeechToText", "Failed to reset customization!");
+                Log.Debug("TestSpeechToText.HandleResetCustomization()", "Failed to reset customization!");
             }
             Test(resp.Success);
 
@@ -538,7 +537,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void HandleGetCustomCorpora(RESTConnector.ParsedResponse<Corpora> resp)
         {
-            Log.Debug("TestSpeechToText", "Speech to Text - Get custom corpora response: {0}", resp.JSON);
+            Log.Debug("TestSpeechToText.HandleGetCustomCorpora()", "Speech to Text - Get custom corpora response: {0}", resp.JSON);
             Test(resp.DataObject != null);
             _getCustomCorporaTested = true;
         }
@@ -547,11 +546,11 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         {
             if (resp.Success)
             {
-                Log.Debug("TestSpeechToText", "Speech to Text - delete custom coprus response: succeeded!");
+                Log.Debug("TestSpeechToText.HandleDeleteCustomCorpus()", "Speech to Text - delete custom coprus response: succeeded!");
             }
             else
             {
-                Log.Debug("TestSpeechToText", "Failed to delete custom corpus!");
+                Log.Debug("TestSpeechToText.HandleDeleteCustomCorpus()", "Failed to delete custom corpus!");
             }
             Test(resp.Success);
 
@@ -562,11 +561,11 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         {
             if (resp.Success)
             {
-                Log.Debug("TestSpeechToText", "Speech to Text - Add custom corpus response: succeeded!");
+                Log.Debug("TestSpeechToText.HandleAddCustomCorpus()", "Speech to Text - Add custom corpus response: succeeded!");
             }
             else
             {
-                Log.Debug("TestSpeechToText", "Failed to add custom corpus!");
+                Log.Debug("TestSpeechToText.HandleAddCustomCorpus()", "Failed to add custom corpus!");
             }
             Test(resp.Success);
 
@@ -575,14 +574,14 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void HandleGetCustomCorpus(RESTConnector.ParsedResponse<Corpus> resp)
         {
-            Log.Debug("TestSpeechToText", "Speech to Text - Get custom corpus response: {0}", resp.JSON);
+            Log.Debug("TestSpeechToText.HandleGetCustomCorpus()", "Speech to Text - Get custom corpus response: {0}", resp.JSON);
             Test(resp.DataObject != null);
             _getCustomCorpusTested = true;
         }
 
         private void HandleGetCustomWords(RESTConnector.ParsedResponse<WordsList> resp)
         {
-            Log.Debug("TestSpeechToText", "Speech to Text - Get custom words response: {0}", resp.JSON);
+            Log.Debug("TestSpeechToText.HandleGetCustomWords()", "Speech to Text - Get custom words response: {0}", resp.JSON);
             Test(resp.DataObject != null);
             _getCustomWordsTested = true;
         }
@@ -591,11 +590,11 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         {
             if (resp.Success)
             {
-                Log.Debug("TestSpeechToText", "Speech to Text - Add custom words from path response: succeeded!");
+                Log.Debug("TestSpeechToText.HandleAddCustomWordsFromPath()", "Speech to Text - Add custom words from path response: succeeded!");
             }
             else
             {
-                Log.Debug("TestSpeechToText", "Failed to delete custom word!");
+                Log.Debug("TestSpeechToText.HandleAddCustomWordsFromPath()", "Failed to delete custom word!");
             }
             Test(resp.Success);
 
@@ -606,11 +605,11 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         {
             if (resp.Success)
             {
-                Log.Debug("TestSpeechToText", "Speech to Text - Add custom words from object response: succeeded!");
+                Log.Debug("TestSpeechToText.HandleAddCustomWordsFromObject()", "Speech to Text - Add custom words from object response: succeeded!");
             }
             else
             {
-                Log.Debug("TestSpeechToText", "Failed to delete custom word!");
+                Log.Debug("TestSpeechToText.HandleAddCustomWordsFromObject()", "Failed to delete custom word!");
             }
             Test(resp.Success);
 
@@ -621,11 +620,11 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         {
             if (resp.Success)
             {
-                Log.Debug("TestSpeechToText", "Speech to Text - Delete custom word response: succeeded!");
+                Log.Debug("TestSpeechToText.HandleDeleteCustomWord()", "Speech to Text - Delete custom word response: succeeded!");
             }
             else
             {
-                Log.Debug("TestSpeechToText", "Failed to delete custom word!");
+                Log.Debug("TestSpeechToText.HandleDeleteCustomWord()", "Failed to delete custom word!");
             }
             Test(resp.Success);
 
@@ -634,21 +633,21 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void HandleGetCustomWord(RESTConnector.ParsedResponse<WordData> resp)
         {
-            Log.Debug("TestSpeechToText", "Speech to Text - Get custom word response: {0}", resp.JSON);
+            Log.Debug("TestSpeechToText.HandleGetCustomWord()", "Speech to Text - Get custom word response: {0}", resp.JSON);
             Test(resp.DataObject != null);
             _getCustomWordTested = true;
         }
         
         private void HandleGetCustomAcousticModels(RESTConnector.ParsedResponse<AcousticCustomizations> resp)
         {
-            Log.Debug("TestSpeechToText", "acousticCustomizations: {0}", resp.JSON);
+            Log.Debug("TestSpeechToText.HandleGetCustomAcousticModels()", "acousticCustomizations: {0}", resp.JSON);
             Test(resp.DataObject != null);
             _getAcousticCustomizationsTested = true;
         }
 
         private void HandleCreateAcousticCustomization(RESTConnector.ParsedResponse<CustomizationID> resp)
         {
-            Log.Debug("TestSpeechToText", "customizationId: {0}", resp.JSON);
+            Log.Debug("TestSpeechToText.HandleCreateAcousticCustomization()", "customizationId: {0}", resp.JSON);
             _createdAcousticModelId = resp.DataObject.customization_id;
             Test(!string.IsNullOrEmpty(_createdAcousticModelId));
             _createAcousticCustomizationsTested = true;
@@ -656,59 +655,59 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void HandleGetCustomAcousticModel(RESTConnector.ParsedResponse<AcousticCustomization> resp)
         {
-            Log.Debug("TestSpeechToText", "acousticCustomization: {0}", resp.JSON);
+            Log.Debug("TestSpeechToText.HandleGetCustomAcousticModel()", "acousticCustomization: {0}", resp.JSON);
             Test(resp.DataObject != null);
             _getAcousticCustomizationTested = true;
         }
 
         private void HandleTrainAcousticCustomization(RESTConnector.ParsedResponse<object> resp)
         {
-            Log.Debug("TestSpeechToText", "train customization success: {0}", resp.Success);
+            Log.Debug("TestSpeechToText.HandleTrainAcousticCustomization()", "train customization success: {0}", resp.Success);
             Test(resp.Success);
             _trainAcousticCustomizationsTested = true;
         }
 
         private void HandleGetCustomAcousticResources(RESTConnector.ParsedResponse<AudioResources> resp)
         {
-            Log.Debug("TestSpeechToText", "audioResources: {0}", resp.JSON);
+            Log.Debug("TestSpeechToText.HandleGetCustomAcousticResources()", "audioResources: {0}", resp.JSON);
             Test(resp.DataObject != null);
             _getAcousticResourcesTested = true;
         }
 
         private void HandleAddAcousticResource(RESTConnector.ParsedResponse<object> resp)
         {
-            Log.Debug("TestSpeechToText", "added acoustic resource: {0}", resp.JSON);
+            Log.Debug("TestSpeechToText.HandleAddAcousticResource()", "added acoustic resource: {0}", resp.JSON);
             Test(resp.Success);
             _addAcousticResourcesTested = true;
         }
 
         private void HandleGetCustomAcousticResource(RESTConnector.ParsedResponse<AudioListing> resp)
         {
-            Log.Debug("TestSpeechToText", "audioListing: {0}", resp.JSON);
+            Log.Debug("TestSpeechToText.HandleGetCustomAcousticResource()", "audioListing: {0}", resp.JSON);
             Test(resp.DataObject != null);
             _getAcousticResourceTested = true;
         }
 
         private void HandleResetAcousticCustomization(RESTConnector.ParsedResponse<object> resp)
         {
-            Log.Debug("TestSpeechToText", "reset customization success: {0}", resp.Success);
+            Log.Debug("TestSpeechToText.HandleResetAcousticCustomization()", "reset customization success: {0}", resp.Success);
             Test(resp.Success);
             _resetAcousticCustomizationsTested = true;
         }
 
         private void HandleDeleteAcousticResource(RESTConnector.ParsedResponse<object> resp)
         {
-            Log.Debug("TestSpeechToText", "deleted acoustic resource: {0}", resp.Success);
+            Log.Debug("TestSpeechToText.HandleDeleteAcousticResource()", "deleted acoustic resource: {0}", resp.Success);
         }
 
         private void HandleDeleteAcousticCustomization(RESTConnector.ParsedResponse<object> resp)
         {
-            Log.Debug("TestSpeechToText", "deleted acoustic customization: {0}", resp.Success);
+            Log.Debug("TestSpeechToText.HandleDeleteAcousticCustomization()", "deleted acoustic customization: {0}", resp.Success);
         }
 
         private IEnumerator CheckCustomizationStatus(string customizationID, float delay = 0.1f)
         {
-            Log.Debug("TestSpeechToText", "Checking customization status in {0} seconds...", delay.ToString());
+            Log.Debug("TestSpeechToText.CheckCustomizationStatus()", "Checking customization status in {0} seconds...", delay.ToString());
             yield return new WaitForSeconds(delay);
 
             //	passing customizationID in custom data
@@ -719,7 +718,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         {
             if (resp.DataObject != null)
             {
-                Log.Debug("TestSpeechToText", "Customization status: {0}", resp.DataObject.status);
+                Log.Debug("TestSpeechToText.OnCheckCustomizationStatus()", "Customization status: {0}", resp.DataObject.status);
                 if (resp.DataObject.status != "ready" && resp.DataObject.status != "available")
                     Runnable.Run(CheckCustomizationStatus(resp.CustomData, 5f));
                 else
@@ -727,13 +726,13 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             }
             else
             {
-                Log.Debug("TestSpeechToText", "Check customization status failed!");
+                Log.Debug("TestSpeechToText.OnCheckCustomizationStatus()", "Check customization status failed!");
             }
         }
 
         private IEnumerator CheckAcousticCustomizationStatus(string customizationID, float delay = 0.1f)
         {
-            Log.Debug("TestSpeechToText", "Checking acoustic customization status in {0} seconds...", delay.ToString());
+            Log.Debug("TestSpeechToText.CheckAcousticCustomizationStatus()", "Checking acoustic customization status in {0} seconds...", delay.ToString());
             yield return new WaitForSeconds(delay);
 
             //	passing customizationID in custom data
@@ -744,7 +743,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         {
             if (resp.DataObject != null)
             {
-                Log.Debug("TestSpeechToText", "Acoustic customization status: {0}", resp.DataObject.status);
+                Log.Debug("TestSpeechToText.OnCheckAcousticCustomizationStatus()", "Acoustic customization status: {0}", resp.DataObject.status);
                 if (resp.DataObject.status != "ready" && resp.DataObject.status != "available")
                     Runnable.Run(CheckAcousticCustomizationStatus(resp.CustomData, 5f));
                 else
@@ -752,7 +751,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             }
             else
             {
-                Log.Debug("TestSpeechToText", "Check acoustic customization status failed!");
+                Log.Debug("TestSpeechToText.OnCheckAcousticCustomizationStatus()", "Check acoustic customization status failed!");
             }
         }
 
@@ -764,24 +763,24 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private IEnumerator DownloadAcousticResource()
         {
-            Log.Debug("TestSpeechToText", "downloading acoustic resource from {0}", _acousticResourceUrl);
+            Log.Debug("TestSpeechToText.DownloadAcousticResource()", "downloading acoustic resource from {0}", _acousticResourceUrl);
             WWW www = new WWW(_acousticResourceUrl);
             yield return www;
 
-            Log.Debug("TestSpeechToText", "acoustic resource downloaded");
+            Log.Debug("TestSpeechToText.DownloadAcousticResource()", "acoustic resource downloaded");
             _acousticResourceData = www.bytes;
             _isAudioLoaded = true;
         }
 
         private void DeleteAcousticResource()
         {
-            Log.Debug("TestSpeechToText", "Attempting to delete audio resource {1} from {0}", _createdAcousticModelId, _acousticResourceName);
+            Log.Debug("TestSpeechToText.DeleteAcousticResource()", "Attempting to delete audio resource {1} from {0}", _createdAcousticModelId, _acousticResourceName);
             _speechToText.DeleteAcousticResource(HandleDeleteAcousticResource, _createdAcousticModelId, _acousticResourceName);
         }
 
         private void DeleteAcousticCustomization()
         {
-            Log.Debug("TestSpeechToText", "Attempting to delete acoustic customization {0}", _createdAcousticModelId);
+            Log.Debug("TestSpeechToText.DeleteAcousticCustomization()", "Attempting to delete acoustic customization {0}", _createdAcousticModelId);
             _speechToText.DeleteAcousticCustomization(HandleDeleteAcousticCustomization, _createdAcousticModelId);
         }
     }

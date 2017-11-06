@@ -68,13 +68,13 @@ public class ExampleNaturalLanguageClassifier : MonoBehaviour
     {
         //  Get classifiers
         if (!naturalLanguageClassifier.GetClassifiers(OnGetClassifiers))
-            Log.Debug("ExampleNaturalLanguageClassifier", "Failed to get classifiers!");
+            Log.Debug("ExampleNaturalLanguageClassifier.GetClassifiers()", "Failed to get classifiers!");
 
         while (!_getClassifiersTested)
             yield return null;
 
         if (_classifierIds.Count == 0)
-            Log.Debug("ExampleNaturalLanguageClassifier", "There are no trained classifiers. Please train a classifier...");
+            Log.Debug("ExampleNaturalLanguageClassifier.Examples()", "There are no trained classifiers. Please train a classifier...");
 
         if (_classifierIds.Count > 0)
         {
@@ -82,7 +82,7 @@ public class ExampleNaturalLanguageClassifier : MonoBehaviour
             foreach (string classifierId in _classifierIds)
             {
                 if (!naturalLanguageClassifier.GetClassifier(classifierId, OnGetClassifier))
-                    Log.Debug("ExampleNaturalLanguageClassifier", "Failed to get classifier {0}!", classifierId);
+                    Log.Debug("ExampleNaturalLanguageClassifier.GetClassifier()", "Failed to get classifier {0}!", classifierId);
             }
 
             while (!_getClassifierTested)
@@ -90,14 +90,14 @@ public class ExampleNaturalLanguageClassifier : MonoBehaviour
         }
 
         if (!_areAnyClassifiersAvailable && _classifierIds.Count > 0)
-            Log.Debug("ExampleNaturalLanguageClassifier", "All classifiers are training...");
+            Log.Debug("ExampleNaturalLanguageClassifier.Examples()", "All classifiers are training...");
 
         //  Train classifier
 #if TRAIN_CLASSIFIER
         string dataPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/weather_data_train.csv";
         var trainingContent = File.ReadAllText(dataPath);
         if (!naturalLanguageClassifier.TrainClassifier(_classifierName + "/" + DateTime.Now.ToString(), "en", trainingContent, OnTrainClassifier))
-            Log.Debug("ExampleNaturalLanguageClassifier", "Failed to train clasifier!");
+            Log.Debug("ExampleNaturalLanguageClassifier.TrainClassifier()", "Failed to train clasifier!");
 
         while (!_trainClassifierTested)
             yield return null;
@@ -106,25 +106,25 @@ public class ExampleNaturalLanguageClassifier : MonoBehaviour
 #if DELETE_TRAINED_CLASSIFIER
         if (!string.IsNullOrEmpty(_classifierToDelete))
             if (!naturalLanguageClassifier.DeleteClassifer(_classifierToDelete, OnDeleteTrainedClassifier))
-                Log.Debug("ExampleNaturalLanguageClassifier", "Failed to delete clasifier {0}!", _classifierToDelete);
+                Log.Debug("ExampleNaturalLanguageClassifier.DeleteClassifer()", "Failed to delete clasifier {0}!", _classifierToDelete);
 #endif
 
         //  Classify
         if (_areAnyClassifiersAvailable)
         {
             if (!naturalLanguageClassifier.Classify(_classifierId, _inputString, OnClassify))
-                Log.Debug("ExampleNaturalLanguageClassifier", "Failed to classify!");
+                Log.Debug("ExampleNaturalLanguageClassifier.Classify()", "Failed to classify!");
 
             while (!_classifyTested)
                 yield return null;
         }
 
-        Log.Debug("ExampleNaturalLanguageClassifier", "Natural language classifier examples complete.");
+        Log.Debug("ExampleNaturalLanguageClassifier.Examples()", "Natural language classifier examples complete.");
     }
 
     private void OnGetClassifiers(RESTConnector.ParsedResponse<Classifiers> resp)
     {
-        Log.Debug("ExampleNaturalLanguageClassifier", "Natural Language Classifier - GetClassifiers  Response: {0}", resp.JSON);
+        Log.Debug("ExampleNaturalLanguageClassifier.OnGetClassifiers()", "Natural Language Classifier - GetClassifiers  Response: {0}", resp.JSON);
 
         foreach (Classifier classifier in resp.DataObject.classifiers)
             _classifierIds.Add(classifier.classifier_id);
@@ -134,14 +134,14 @@ public class ExampleNaturalLanguageClassifier : MonoBehaviour
 
     private void OnClassify(RESTConnector.ParsedResponse<ClassifyResult> resp)
     {
-        Log.Debug("ExampleNaturalLanguageClassifier", "Natural Language Classifier - Classify Response: {0}", resp.JSON);
+        Log.Debug("ExampleNaturalLanguageClassifier.OnClassify()", "Natural Language Classifier - Classify Response: {0}", resp.JSON);
         _classifyTested = true;
     }
 
 #if TRAIN_CLASSIFIER
     private void OnTrainClassifier(RESTConnector.ParsedResponse<Classifier> resp)
     {
-        Log.Debug("ExampleNaturalLanguageClassifier", "Natural Language Classifier - Train Classifier: {0}", resp.JSON);
+        Log.Debug("ExampleNaturalLanguageClassifier.OnTrainClassifier()", "Natural Language Classifier - Train Classifier: {0}", resp.JSON);
 #if DELETE_TRAINED_CLASSIFIER
         _classifierToDelete = classifier.classifier_id;
 #endif
@@ -151,7 +151,7 @@ public class ExampleNaturalLanguageClassifier : MonoBehaviour
 
     private void OnGetClassifier(RESTConnector.ParsedResponse<Classifier> resp)
     {
-        Log.Debug("ExampleNaturalLanguageClassifier", "Natural Language Classifier - Get Classifier {0}: {1}", resp.DataObject.classifier_id, resp.JSON);
+        Log.Debug("ExampleNaturalLanguageClassifier.OnGetClassifier()", "Natural Language Classifier - Get Classifier {0}: {1}", resp.DataObject.classifier_id, resp.JSON);
 
         //  Get any classifier that is available
         if (!string.IsNullOrEmpty(resp.DataObject.status) && resp.DataObject.status.ToLower() == "available")
@@ -167,7 +167,7 @@ public class ExampleNaturalLanguageClassifier : MonoBehaviour
 #if DELETE_TRAINED_CLASSIFIER
     private void OnDeleteTrainedClassifier(RESTConnector.ParsedResponse<bool> resp)
     {
-        Log.Debug("ExampleNaturalLanguageClassifier", "Natural Language Classifier - Delete Trained Classifier {0} | success: {1} {2}", _classifierToDelete, resp.Success, resp.JSON);
+        Log.Debug("ExampleNaturalLanguageClassifier.OnDeleteTrainedClassifier()", "Natural Language Classifier - Delete Trained Classifier {0} | success: {1} {2}", _classifierToDelete, resp.Success, resp.JSON);
     }
 #endif
 }

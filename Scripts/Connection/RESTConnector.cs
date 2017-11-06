@@ -24,8 +24,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading;
 using UnityEngine;
+using UnityEngine.Networking;
 using FullSerializer;
 using MiniJSON;
 
@@ -464,9 +464,9 @@ namespace IBM.Watson.DeveloperCloud.Connection
                     else if (value is Int32 || value is Int64 || value is UInt32 || value is UInt64 || value is float || value is bool)
                         value = value.ToString();
                     else if (value != null)
-                        Log.Warning("RESTConnector", "Unsupported parameter value type {0}", value.GetType().Name);
+                        Log.Warning("RESTConnector.ProcessRequestQueue()", "Unsupported parameter value type {0}", value.GetType().Name);
                     else
-                        Log.Error("RESTConnector", "Parameter {0} value is null", key);
+                        Log.Error("RESTConnector.ProcessRequestQueue()", "Parameter {0} value is null", key);
 
                     if (args == null)
                         args = new StringBuilder();
@@ -504,14 +504,14 @@ namespace IBM.Watson.DeveloperCloud.Connection
                                 else if (formData.Value.BoxedObject is int)
                                     form.AddField(formData.Key, (int)formData.Value.BoxedObject);
                                 else if (formData.Value.BoxedObject != null)
-                                    Log.Warning("RESTConnector", "Unsupported form field type {0}", formData.Value.BoxedObject.GetType().ToString());
+                                    Log.Warning("RESTConnector.ProcessRequestQueue()", "Unsupported form field type {0}", formData.Value.BoxedObject.GetType().ToString());
                             }
                             foreach (var headerData in form.headers)
                                 req.Headers[headerData.Key] = headerData.Value;
                         }
                         catch (Exception e)
                         {
-                            Log.Error("RESTConnector", "Exception when initializing WWWForm: {0}", e.ToString());
+                            Log.Error("RESTConnector.ProcessRequestQueue()", "Exception when initializing WWWForm: {0}", e.ToString());
                         }
                         www = new WWW(url, form.data, req.Headers);
                     }
@@ -575,15 +575,15 @@ namespace IBM.Watson.DeveloperCloud.Connection
                         error.Response = www.text;
 
                         if (bError)
-                            Log.Error("RESTConnector", "URL: {0}, ErrorCode: {1}, Error: {2}, Response: {3}", url, nErrorCode, www.error,
+                            Log.Error("RESTConnector.ProcessRequestQueue()", "URL: {0}, ErrorCode: {1}, Error: {2}, Response: {3}", url, nErrorCode, www.error,
                                 string.IsNullOrEmpty(www.text) ? "" : www.text);
                         else
-                            Log.Warning("RESTConnector", "URL: {0}, ErrorCode: {1}, Error: {2}, Response: {3}", url, nErrorCode, www.error,
+                            Log.Warning("RESTConnector.ProcessRequestQueue()", "URL: {0}, ErrorCode: {1}, Error: {2}, Response: {3}", url, nErrorCode, www.error,
                                 string.IsNullOrEmpty(www.text) ? "" : www.text);
                     }
                     if (!www.isDone)
                     {
-                        Log.Error("RESTConnector", "Request timed out for URL: {0}", url);
+                        Log.Error("RESTConnector.ProcessRequestQueue()", "Request timed out for URL: {0}", url);
                         bError = true;
 
                         error = new Error();
@@ -592,7 +592,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
                     }
                     /*if (!bError && (www.bytes == null || www.bytes.Length == 0))
                     {
-                        Log.Warning("RESTConnector", "No data recevied for URL: {0}", url);
+                        Log.Warning("RESTConnector.ProcessRequestQueue()", "No data recevied for URL: {0}", url);
                         bError = true;
                     }*/
 
@@ -616,7 +616,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
 
                     // if the response is over a threshold, then log with status instead of debug
                     if (resp.ElapsedTime > LogResponseTime)
-                        Log.Warning("RESTConnector", "Request {0} completed in {1} seconds.", url, resp.ElapsedTime);
+                        Log.Warning("RESTConnector.ProcessRequestQueue()", "Request {0} completed in {1} seconds.", url, resp.ElapsedTime);
 
                     if (req.OnResponse != null)
                         req.OnResponse(req, resp);
@@ -627,14 +627,14 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 {
 
 #if ENABLE_DEBUGGING
-                    Log.Debug("RESTConnector", "Delete Request URL: {0}", url);
+                    Log.Debug("RESTConnector.ProcessRequestQueue90", "Delete Request URL: {0}", url);
 #endif
 
 #if UNITY_EDITOR
                     float timeout = Mathf.Max(Constants.Config.Timeout, req.Timeout);
 
                     DeleteRequest deleteReq = new DeleteRequest();
-                    deleteReq.Send(url, req.Headers);
+                    Runnable.Run(deleteReq.Send(url, req.Headers));
                     while (!deleteReq.IsComplete)
                     {
                         if (req.Cancel)
@@ -650,7 +650,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
                     resp.Success = deleteReq.Success;
 
 #else
-                    Log.Warning( "RESTConnector", "DELETE method is supported in the editor only." );
+                    Log.Warning( "RESTConnector.ProcessRequestQueue()", "DELETE method is supported in the editor only." );
                     resp.Success = false;
 #endif
                     resp.ElapsedTime = (float)(DateTime.Now - startTime).TotalSeconds;
@@ -664,7 +664,6 @@ namespace IBM.Watson.DeveloperCloud.Connection
             yield break;
         }
 
-#if UNITY_EDITOR
         private class DeleteRequest
         {
             public string URL { get; set; }
@@ -672,15 +671,11 @@ namespace IBM.Watson.DeveloperCloud.Connection
             public bool IsComplete { get; set; }
             public bool Success { get; set; }
 
-            private Thread _thread = null;
-
-            public bool Send(string url, Dictionary<string, string> headers)
+            public IEnumerator Send(string url, Dictionary<string, string> headers)
             {
 #if ENABLE_DEBUGGING
-                Log.Debug("RESTConnector", "DeleteRequest, Send: {0}, _thread:{1}", url, _thread);
+                Log.Debug("DeleteRequest.Send()", "DeleteRequest, Send: {0}, _thread:{1}", url, _thread);
 #endif
-                if (_thread != null && _thread.IsAlive)
-                    return false;
 
                 URL = url;
                 Headers = new Dictionary<string, string>();
@@ -690,42 +685,36 @@ namespace IBM.Watson.DeveloperCloud.Connection
                         Headers[kp.Key] = kp.Value;
                 }
 
-                _thread = new Thread(ProcessRequest);
-
-                _thread.Start();
-                return true;
-            }
-
-            private void ProcessRequest()
-            {
                 // This fixes the exception thrown by self-signed certificates.
                 ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(delegate { return true; });
 
 #if ENABLE_DEBUGGING
-                Log.Debug("RESTConnector", "DeleteRequest, ProcessRequest {0}", URL);
+                Log.Debug("DeleteRequest.Send()", "DeleteRequest, ProcessRequest {0}", URL);
 #endif
-
-                WebRequest deleteReq = WebRequest.Create(URL);
-
+                UnityWebRequest deleteReq = UnityWebRequest.Delete(URL);
+				deleteReq.method = UnityWebRequest.kHttpVerbDELETE;
                 foreach (var kp in Headers)
-                    deleteReq.Headers.Add(kp.Key, kp.Value);
-                deleteReq.Method = "DELETE";
-
-#if ENABLE_DEBUGGING
-                Log.Debug("RESTConnector", "DeleteRequest, sending deletereq {0}", deleteReq);
+                    deleteReq.SetRequestHeader(kp.Key, kp.Value);
+#if UNITY_2017_2_OR_NEWER
+                deleteReq.SendWebRequest();
+#else
+                deleteReq.Send();
 #endif
-                HttpWebResponse deleteResp = deleteReq.GetResponse() as HttpWebResponse;
 #if ENABLE_DEBUGGING
-                Log.Debug("RESTConnector", "DELETE Request SENT: {0}", URL);
+                Log.Debug("DeleteRequest.Send()", "DeleteRequest, sending deletereq {0}", deleteReq);
 #endif
-                Success = deleteResp.StatusCode == HttpStatusCode.OK || deleteResp.StatusCode == HttpStatusCode.NoContent;
+                while (!deleteReq.isDone)
+                    yield return null;
 #if ENABLE_DEBUGGING
-                Log.Debug("RESTConnector", "DELETE Request COMPLETE: {0}", URL);
+                Log.Debug("DeleteRequest.Send()", "DELETE Request SENT: {0}", URL);
+#endif
+                Success = deleteReq.responseCode == (long)HttpStatusCode.OK || deleteReq.responseCode == (long)HttpStatusCode.NoContent;
+#if ENABLE_DEBUGGING
+                Log.Debug("DeleteRequest.Send()", "DELETE Request COMPLETE: {0}", URL);
 #endif
                 IsComplete = true;
             }
         };
-#endif
-        #endregion
+#endregion
     }
 }

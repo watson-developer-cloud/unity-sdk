@@ -30,7 +30,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
   {
     public static void RunTests()
     {
-      Log.Debug("TravisIntegrationTests", "***** Running Integration tests!");
+      Log.Debug("TravisIntegrationTests.RunTests()", "***** Running Integration tests!");
 
 #if UNITY_EDITOR
       Runnable.EnableRunnableInEditor();
@@ -68,7 +68,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
     }
     static void OnTravisIntegrationTestsComplete()
     {
-      Log.Debug("TravisIntegrationTests", " ***** Integration tests complete!");
+      Log.Debug("TravisIntegrationTests.OnTravisIntegrationTestsComplete()", " ***** Integration tests complete!");
     }
   }
 }

@@ -26,16 +26,16 @@ void Classify()
 {
     //  Classify using image url
 	if(!_visualRecognition.Classify(<image-url>, OnClassify))
-    	Log.Debug("ExampleVisualRecognition", "Classify image failed!");
+    	Log.Debug("ExampleVisualRecognition.Classify()", "Classify image failed!");
 
     //  Classify using image path
     if(!_visualRecognition.Classify(OnClassify, <image-path>, <classifier-owners>, <classifier-ids>, 0.5f))
-        Log.Debug("ExampleVisualRecognition", "Classify image failed!");
+        Log.Debug("ExampleVisualRecognition.Classify()", "Classify image failed!");
 }
 
 private void OnClassify(ClassifyTopLevelMultiple classify)
 {
-    Log.Debug("ExampleVisualRecognition", "Classify result: {0}", data);
+    Log.Debug("ExampleVisualRecognition.OnClassify()", "Classify result: {0}", data);
 }
 ```
 
@@ -48,16 +48,16 @@ void DetectFaces()
 {
     //  Classify using image url
 	if(!_visualRecognition.DetectFaces(<image-url>, OnDetectFaces))
-        Log.Debug("ExampleVisualRecognition", "Detect faces failed!");
+        Log.Debug("ExampleVisualRecognition.DetectFaces()", "Detect faces failed!");
 
     //  Classify using image path
     if(!_visualRecognition.DetectFaces(OnDetectFaces, <image-path>))
-        Log.Debug("ExampleVisualRecognition", "Detect faces failed!");
+        Log.Debug("ExampleVisualRecognition.DetectFaces()", "Detect faces failed!");
 }
 
 private void OnDetectFaces(FacesTopLevelMultiple multipleImages)
 {
-    Log.Debug("ExampleVisualRecognition", "Detect faces result: {0}", data);
+    Log.Debug("ExampleVisualRecognition.OnDetectFaces()", "Detect faces result: {0}", data);
 }
 ```
 
@@ -71,12 +71,12 @@ The compressed file containing negative examples is not used to create a class w
 void TrainClassifier()
 {
     if(!_visualRecognition.TrainClassifier(<classifier-name>, <class-name>, <positive-examples-path>, <negative-examples-path>, OnTrainClassifier))
-        Log.Debug("ExampleVisualRecognition", "Train classifier failed!");
+        Log.Debug("ExampleVisualRecognition.TrainClassifier()", "Train classifier failed!");
 }
 
-private void OnTrainClassifier(GetClassifiersPerClassifierVerbose classifier)
+private void OnTrainClassifier(GetClassifiersPerClassifierVerbose classifier, string data)
 {
-    Log.Debug("ExampleVisualRecognition", "Train classifier result: {0}", data);
+    Log.Debug("ExampleVisualRecognition.OnTrainClassifier()", "Train classifier result: {0}", data);
 }
 ```
 
@@ -86,12 +86,12 @@ Retrieve a list of user-created classifiers.
 void GetClassifiers()
 {
 	if(!_visualRecognition.GetClassifiers(OnGetClassifiers))
-        Log.Debug("ExampleVisualRecognition", "Getting classifiers failed!");
+        Log.Debug("ExampleVisualRecognition.GetClassifiers()", "Getting classifiers failed!");
 }
 
-private void OnGetClassifiers (GetClassifiersTopLevelBrief classifiers)
+private void OnGetClassifiers(GetClassifiersTopLevelBrief classifiers, string data)
 {
-    Log.Debug("ExampleVisualRecognition", "Get classifiers result: {0}", data);
+    Log.Debug("ExampleVisualRecognition.OnGetClassifiers()", "Get classifiers result: {0}", data);
 }
 ```
 
@@ -101,12 +101,12 @@ Retrieve information about a specific classifier.
 void GetClassifier()
 {
     if(!_visualRecognition.GetClassifier(<classifier-id>, OnGetClassifier))
-        Log.Debug("ExampleVisualRecognition", "Getting classifier failed!");
+        Log.Debug("ExampleVisualRecognition.GetClassifier()", "Getting classifier failed!");
 }
 
-private void OnGetClassifier(GetClassifiersPerClassifierVerbose classifier)
+private void OnGetClassifier(GetClassifiersPerClassifierVerbose classifier, string data)
 {
-    Log.Debug("ExampleVisualRecognition", "Get classifier result: {0}", data);
+    Log.Debug("ExampleVisualRecognition.OnGetClassifier()", "Get classifier result: {0}", data);
 }
 ```
 
@@ -124,12 +124,12 @@ private VisualRecognition _visualRecognition = new VisualRecognition();
 void UpdateClassifier()
 {
    if(!_visualRecognition.UpdateClassifier(OnUpdateClassifier, <classifier-id>, <classifier-name>, <class-name>, <positive-examples-path>))
-        Log.Debug("ExampleVisualRecognition", "Update classifier failed!");
+        Log.Debug("ExampleVisualRecognition.UpdateClassifier()", "Update classifier failed!");
 }
 
-private void OnUpdateClassifier(GetClassifiersPerClassifierVerbose classifier)
+private void OnUpdateClassifier(GetClassifiersPerClassifierVerbose classifier, string data)
 {
-    Log.Debug("ExampleVisualRecognition", "Update classifier result: {0}", data);
+    Log.Debug("ExampleVisualRecognition.OnUpdateClassifier()", "Update classifier result: {0}", data);
 }
 ```
 
@@ -139,12 +139,12 @@ Delete a custom classifier with the specified classifier ID.
 void DeleteClassifier()
 {
     if(!_visualRecognition.DeleteClassifier(<classifier-id>, OnDeleteClassifier))
-        Log.Debug("ExampleVisualRecognition", "Deleting classifier failed!");
+        Log.Debug("ExampleVisualRecognition.DeleteClassifier()", "Deleting classifier failed!");
 }
 
 private void OnDeleteClassifier(bool success)
 {
-    Log.Debug("ExampleVisualRecognition", "Update classifier result: {0}", success);
+    Log.Debug("ExampleVisualRecognition.OnDeleteClassifier()", "Update classifier result: {0}", success);
 }
 ```
 
@@ -154,12 +154,12 @@ Create a new collection of images to search. You can create a maximum of 5 colle
 void CreateCollection()
 {
     if(!_visualRecognition.CreateCollection(OnCreateCollection, <collection-name>))
-        Log.Debug("ExampleVisualRecognition", "Failed to create collection");
+        Log.Debug("ExampleVisualRecognition.CreateCollectionMethod()", "Failed to create collection");
 }
 
-private void OnCreateCollection(CreateCollection collection, string customData)
+private void OnCreateCollection(CreateCollection collection, string data)
 {
-      Log.Debug("ExampleVisualRecognition", "Create collection result: {0}", customData);
+      Log.Debug("ExampleVisualRecognition.OnCreateCollection()", "Create collection result: {0}", data);
 }
 ```
 
@@ -169,12 +169,12 @@ List all custom collections.
 void GetCollections()
 {
     if(!_visualRecognition.GetCollections(OnGetCollections))
-        Log.Debug("ExampleVisualRecognition", "Failed to get collections");
+        Log.Debug("ExampleVisualRecognition.GetCollectionsMethod()", "Failed to get collections");
 }
 
-private void OnGetCollections(GetCollections collections, string customData)
+private void OnGetCollections(GetCollections collections, string data)
 {
-    Log.Debug("ExampleVisualRecognition", "Get collections result: {0}", customData);
+    Log.Debug("ExampleVisualRecognition.OnGetCollections()", "Get collections result: {0}", data);
 }
 ```
 
@@ -184,12 +184,12 @@ Retrieve information about a specific collection.
 void GetCollection()
 {
     if(!_visualRecognition.GetCollection(OnGetCollection, <collection-id>))
-        Log.Debug("ExampleVisualRecognition", "Failed to get collection");
+        Log.Debug("ExampleVisualRecognition.GetCollection()", "Failed to get collection");
 }
 
-private void OnGetCollection(CreateCollection collection, string customData)
+private void OnGetCollection(CreateCollection collection, string data)
 {
-    Log.Debug("ExampleVisualRecognition", "Get collections result: {0}", customData);
+    Log.Debug("ExampleVisualRecognition.OnGetCollection()", "Get collections result: {0}", data);
 }
 ```
 
@@ -199,12 +199,12 @@ Delete a user created collection.
 void DeleteCollection()
 {
     if(!_visualRecognition.DeleteCollection(OnDeleteCollection, <collection-id>))
-        Log.Debug("ExampleVisualRecognition", "Failed to delete collection");
+        Log.Debug("ExampleVisualRecognition.DeleteCollection()", "Failed to delete collection");
 }
 
-private void OnDeleteCollection(bool success, string customData)
+private void OnDeleteCollection(bool success, string data)
 {
-    Log.Debug("ExampleVisualRecognition", "Delete collection result: {0}", customData);
+    Log.Debug("ExampleVisualRecognition.OnDeleteCollection()", "Delete collection result: {0}", data);
 }
 ```
 
@@ -214,11 +214,11 @@ Add images to a collection. Each collection can contain 1000000 images. It takes
 void AddCollectionImage()
 {
     if(!_visualRecognition.AddCollectionImage(OnAddImageToCollection, <collection-id>, <collection-path>, <image-metadata>))
-        Log.Debug("ExampleVisualRecognition", "Failed to add images to collection");
+        Log.Debug("ExampleVisualRecognition.AddCollectionImage()", "Failed to add images to collection");
 }
-private void OnAddImageToCollection(CollectionsConfig images, string customData)
+private void OnAddImageToCollection(CollectionsConfig images, string data)
 {
-    Log.Debug("ExampleVisualRecognition", "Add collectionimage result: {0}", customData);
+    Log.Debug("ExampleVisualRecognition.OnAddImageToCollectionMethod()", "Add collectionimage result: {0}", data);
 }
 ```
 
@@ -228,12 +228,12 @@ List 100 images in a collection. This returns an arbitrary selection of 100 imag
 void GetCollectionImages()
 {
     if(!_visualRecognition.GetCollectionImages(OnGetCollectionImages, <collection-id>))
-        Log.Debug("ExampleVisualRecognition", "Failed to get collection images");
+        Log.Debug("ExampleVisualRecognition.GetCollectionImages()", "Failed to get collection images");
 }
 
-private void OnGetCollectionImages(GetCollectionImages collections, string customData)
+private void OnGetCollectionImages(GetCollectionImages collections, string data)
 {
-    Log.Debug("ExampleVisualRecognition", "Get collection images result: {0}", customData);
+    Log.Debug("ExampleVisualRecognition.OnGetCollectionImages()", "Get collection images result: {0}", data);
 }
 ```
 
@@ -243,12 +243,12 @@ List details about a specific image in a collection.
 void GetImage()
 {
     if(!_visualRecognition.GetImage(OnGetImage, <collection-id>, <image-name>))
-        Log.Debug("ExampleVisualRecognition", "Failed to get collection image");
+        Log.Debug("ExampleVisualRecognition.GetImage()", "Failed to get collection image");
 }
 
-private void OnGetImage(GetCollectionsBrief image, string customData)
+private void OnGetImage(GetCollectionsBrief image, string data)
 {
-    Log.Debug("ExampleVisualRecognition", "Get collection image result: {0}", customData);
+    Log.Debug("ExampleVisualRecognition.OnGetImage()", "Get collection image result: {0}", data);
 }
 ```
 
@@ -258,12 +258,12 @@ Delete an image from a collection.
 void DeleteCollectionImage()
 {
     if(!_visualRecognition.DeleteCollectionImage(OnDeleteCollectionImage, <collection-id>, <image-name>))
-        Log.Debug("ExampleVisualRecognition", "Failed to delete collection image");
+        Log.Debug("ExampleVisualRecognition.DeleteCollectionImage()", "Failed to delete collection image");
 }
 
-private void OnDeleteCollectionImage(bool success, string customData)
+private void OnDeleteCollectionImage(bool success, string data)
 {
-    Log.Debug("ExampleVisualRecognition", "Delete collection image result: {0}", customData);
+    Log.Debug("ExampleVisualRecognition.OnDeleteCollectionImage()", "Delete collection image result: {0}", data);
 }
 ```
 
@@ -273,12 +273,12 @@ View the metadata for a specific image in a collection.
 void GetMetadata()
 {
     if(!_visualRecognition.GetMetadata(OnGetMetadata, <collection-id>, <image-name>))
-        Log.Debug("ExampleVisualRecognition", "Failed to get metadata");
+        Log.Debug("ExampleVisualRecognition.GetMetadata()", "Failed to get metadata");
 }
 
-private void OnGetMetadata(object responseObject, string customData)
+private void OnGetMetadata(object responseObject, string data)
 {
-    Log.Debug("ExampleVisualRecognition", "Get metadata result: {0}", customData);
+    Log.Debug("ExampleVisualRecognition.OnGetMetadata()", "Get metadata result: {0}", data);
 }
 ```
 
@@ -288,12 +288,12 @@ Delete all metadata associated with an image.
 void DeleteMetadata()
 {
     if(!_visualRecognition.DeleteCollectionImageMetadata(OnDeleteMetadata, <collection-id>, <image-name>)
-        Log.Debug("ExampleVisualRecognition", "Failed to delete image metadata");
+        Log.Debug("ExampleVisualRecognition.DeleteCollectionImageMetadata()", "Failed to delete image metadata");
 }
 
-private void OnDeleteMetadata(bool success, string customData)
+private void OnDeleteMetadata(bool success, string data)
 {
-    Log.Debug("ExampleVisualRecognition", "Delete image metadata result: {0}", success);
+    Log.Debug("ExampleVisualRecognition.OnDeleteMetadata()", "Delete image metadata result: {0}", success);
 
 }
 ```
@@ -304,12 +304,12 @@ Upload an image to find similar images in your custom collection.
 void FindSimilar()
 {
     if(!visualRecognition.FindSimilar(OnFindSimilar, <collection-d>, <image-path>))
-        Log.Debug("ExampleVisualRecognition", "Failed to find similar images");
+        Log.Debug("ExampleVisualRecognition.FindSimilar()", "Failed to find similar images");
 }
 
-private void OnFindSimilar(SimilarImagesConfig images, string customData)
+private void OnFindSimilar(SimilarImagesConfig images, string data)
 {
-    Log.Debug("ExampleVisualRecognition", "Find similar result: {0}", customData);
+    Log.Debug("ExampleVisualRecognition.OnFindSimilar()", "Find similar result: {0}", data);
 }
 ```
 

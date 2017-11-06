@@ -56,7 +56,7 @@ public class ExampleConversation : MonoBehaviour
     private IEnumerator Examples()
     {
         if (!_conversation.Message(OnMessage, _workspaceId, "hello"))
-            Log.Debug("ExampleConversation", "Failed to message!");
+            Log.Debug("ExampleConversation.Message()", "Failed to message!");
 
         while (_waitingForResponse)
             yield return null;
@@ -90,7 +90,7 @@ public class ExampleConversation : MonoBehaviour
         while (_waitingForResponse)
             yield return null;
 
-        Log.Debug("ExampleConversation", "Conversation examples complete.");
+        Log.Debug("ExampleConversation.Examples()", "Conversation examples complete.");
     }
 
     private void AskQuestion()
@@ -105,12 +105,12 @@ public class ExampleConversation : MonoBehaviour
         };
 
         if (!_conversation.Message(OnMessage, _workspaceId, messageRequest))
-            Log.Debug("ExampleConversation", "Failed to message!");
+            Log.Debug("ExampleConversation.AskQuestion()", "Failed to message!");
     }
 
     private void OnMessage(RESTConnector.ParsedResponse<object> resp)
     {
-        Log.Debug("ExampleConversation", "Conversation: Message Response: {0}", resp.JSON);
+        Log.Debug("ExampleConversation.OnMessage()", "Conversation: Message Response: {0}", resp.JSON);
 
         //  Convert resp to fsdata
         fsData fsdata = null;
@@ -132,7 +132,7 @@ public class ExampleConversation : MonoBehaviour
         if (_tempContext != null)
             _context = _tempContext as Dictionary<string, object>;
         else
-            Log.Debug("ExampleConversation", "Failed to get context");
+            Log.Debug("ExampleConversation.OnMessage()", "Failed to get context");
         _waitingForResponse = false;
     }
 }

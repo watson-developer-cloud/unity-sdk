@@ -81,7 +81,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             }
             catch
             {
-                Log.Debug("TestPersonalityInsights", "Failed to get credentials from VCAP_SERVICES file. Please configure credentials to run this test. For more information, see: https://github.com/watson-developer-cloud/unity-sdk/#authentication");
+                Log.Debug("TestPersonalityInsights.RunTest()", "Failed to get credentials from VCAP_SERVICES file. Please configure credentials to run this test. For more information, see: https://github.com/watson-developer-cloud/unity-sdk/#authentication");
             }
 
             //  Create credential and instantiate service
@@ -99,30 +99,30 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _dataPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/personalityInsights.json";
 
             if (!_personalityInsights.GetProfile(OnGetProfileJson, _dataPath, ContentType.TextHtml, ContentLanguage.English, ContentType.ApplicationJson, AcceptLanguage.English, true, true, true))
-                Log.Debug("ExamplePersonalityInsights", "Failed to get profile!");
+                Log.Debug("ExamplePersonalityInsights.GetProfile()", "Failed to get profile!");
             while (!_getProfileJsonTested)
                 yield return null;
 
             if (!_personalityInsights.GetProfile(OnGetProfileText, _testString, ContentType.TextHtml, ContentLanguage.English, ContentType.ApplicationJson, AcceptLanguage.English, true, true, true))
-                Log.Debug("ExamplePersonalityInsights", "Failed to get profile!");
+                Log.Debug("ExamplePersonalityInsights.GetProfile()", "Failed to get profile!");
             while (!_getProfileTextTested)
                 yield return null;
 
-            Log.Debug("ExamplePersonalityInsights", "Personality insights examples complete.");
+            Log.Debug("ExamplePersonalityInsights.RunTest()", "Personality insights examples complete.");
 
             yield break;
         }
 
         private void OnGetProfileText(RESTConnector.ParsedResponse<Profile> resp)
         {
-            Log.Debug("ExamplePersonaltyInsights", "Personality Insights - GetProfileText Response: {0}", resp.JSON);
+            Log.Debug("ExamplePersonaltyInsights.OnGetProfileText()", "Personality Insights - GetProfileText Response: {0}", resp.JSON);
             Test(resp.DataObject != null);
             _getProfileTextTested = true;
         }
 
         private void OnGetProfileJson(RESTConnector.ParsedResponse<Profile> resp)
         {
-            Log.Debug("ExamplePersonaltyInsights", "Personality Insights - GetProfileJson Response: {0}", resp.JSON);
+            Log.Debug("ExamplePersonaltyInsights.OnGetProfileJson()", "Personality Insights - GetProfileJson Response: {0}", resp.JSON);
             Test(resp.DataObject != null);
             _getProfileJsonTested = true;
         }

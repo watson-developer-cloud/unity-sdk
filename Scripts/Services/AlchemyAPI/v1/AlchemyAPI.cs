@@ -151,7 +151,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             }
             else
             {
-                Log.Error("Alchemy Language", "Either a URL or a html page source is required for GetAuthors!");
+                Log.Error("AlchemyAPI.GetAuthors()", "Either a URL or a html page source is required for GetAuthors!");
                 return false;
             }
 
@@ -669,7 +669,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             }
             else if (source.StartsWith(Application.dataPath) && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
             {
-                Log.Error("Alchemy Language", "A URL source is required for DetectFeeds!");
+                Log.Error("AlchemyAPI.DetectFeeds()", "A URL source is required for DetectFeeds!");
                 return false;
                 //                service = SERVICE_DETECT_FEEDS_HTML;
                 //                string htmlData = default(string);
@@ -678,7 +678,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             }
             else
             {
-                Log.Error("Alchemy Language", "A URL source is required for DetectFeeds!");
+                Log.Error("AlchemyAPI.DetectFeeds()", "A URL source is required for DetectFeeds!");
                 return false;
             }
 
@@ -966,7 +966,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             }
             else if (source.StartsWith(Application.dataPath) && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
             {
-                Log.Error("Alchemy Language", "A URL source is required for GetMicroformats!");
+                Log.Error("AlchemyAPI.GetMicroformats()", "A URL source is required for GetMicroformats!");
                 return false;
                 //                service = SERVICE_GET_MICROFORMAT_HTML;
                 //                string htmlData = default(string);
@@ -975,7 +975,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             }
             else
             {
-                Log.Error("Alchemy Language", "A URL source is required for GetMicroformats!");
+                Log.Error("AlchemyAPI.GetMicroformats()", "A URL source is required for GetMicroformats!");
                 return false;
             }
 
@@ -1069,7 +1069,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             }
             else
             {
-                Log.Error("Alchemy Language", "Either a URL or a html page source is required for GetPublicationDate!");
+                Log.Error("AlchemyAPI.GetPublicationDate()", "Either a URL or a html page source is required for GetPublicationDate!");
                 return false;
             }
 
@@ -1592,7 +1592,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             }
             else
             {
-                Log.Error("Alchemy Language", "Either a URL or a html page source is required for GetText!");
+                Log.Error("AlchemyAPI.GetText()", "Either a URL or a html page source is required for GetText!");
                 return false;
             }
 
@@ -1681,7 +1681,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             }
             else
             {
-                Log.Error("Alchemy Language", "Either a URL or a html page source is required for GetRawText!");
+                Log.Error("AlchemyAPI.GetRawText()", "Either a URL or a html page source is required for GetRawText!");
                 return false;
             }
 
@@ -1752,7 +1752,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             }
             else
             {
-                Log.Error("Alchemy Language", "Either a URL or a html page source is required for GetTitle!");
+                Log.Error("AlchemyAPI.GetTitle()", "Either a URL or a html page source is required for GetTitle!");
                 return false;
             }
 

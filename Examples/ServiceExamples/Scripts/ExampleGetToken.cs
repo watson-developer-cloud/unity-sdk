@@ -43,7 +43,7 @@ public class ExampleGetToken : MonoBehaviour
     {
         //  Get token
         if (!Utility.GetToken(OnGetToken, _url, _username, _password))
-            Log.Debug("ExampleGetToken", "Failed to get token.");
+            Log.Debug("ExampleGetToken.GetToken()", "Failed to get token.");
 
         while (!_receivedAuthToken)
             yield return null;
@@ -55,14 +55,14 @@ public class ExampleGetToken : MonoBehaviour
     private void OnGetToken(AuthenticationToken authenticationToken, string customData)
     {
         _authenticationToken = authenticationToken;
-        Log.Debug("ExampleGetToken", "created: {0} | time to expiration: {1} minutes | token: {2}", _authenticationToken.Created, _authenticationToken.TimeUntilExpiration, _authenticationToken.Token);
+        Log.Debug("ExampleGetToken.OnGetToken()", "created: {0} | time to expiration: {1} minutes | token: {2}", _authenticationToken.Created, _authenticationToken.TimeUntilExpiration, _authenticationToken.Token);
         _receivedAuthToken = true;
     }
 
     private IEnumerator GetTokenTimeRemaining(float time)
     {
         yield return new WaitForSeconds(time);
-        Log.Debug("ExampleGetToken", "created: {0} | time to expiration: {1} minutes | token: {2}", _authenticationToken.Created, _authenticationToken.TimeUntilExpiration, _authenticationToken.Token);
+        Log.Debug("ExampleGetToken.GetTokenTimeRemaining()", "created: {0} | time to expiration: {1} minutes | token: {2}", _authenticationToken.Created, _authenticationToken.TimeUntilExpiration, _authenticationToken.Token);
     }
 
     private void Message()
@@ -81,7 +81,7 @@ public class ExampleGetToken : MonoBehaviour
 
     private void OnMessage(RESTConnector.ParsedResponse<object> resp)
     {
-        Log.Debug("ExampleGetToken", "message response: {0}", resp.JSON);
+        Log.Debug("ExampleGetToken.OnMessage()", "message response: {0}", resp.JSON);
 
         //  Check token time remaining
         Runnable.Run(GetTokenTimeRemaining(0f));
