@@ -102,7 +102,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// <summary>
         /// On get authors delegate.
         /// </summary>
-        public delegate void OnGetAuthors(AuthorsData authorExtractionData, string data);
+        public delegate void OnGetAuthors(RESTConnector.ParsedResponse<AuthorsData> resp);
 
         /// <summary>
         /// Extracts authors from a source.
@@ -180,32 +180,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
         private void OnGetAuthorsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            AuthorsData authorsData = new AuthorsData();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = authorsData;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("AlchemyAPI.OnGetAuthorsResponse()", "OnGetAuthorsResponse Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((GetAuthorsRequest)req).Data;
+
+            RESTConnector.ParsedResponse<AuthorsData> parsedResp = new RESTConnector.ParsedResponse<AuthorsData>(resp, customData, _serializer);
+
             if (((GetAuthorsRequest)req).Callback != null)
-                ((GetAuthorsRequest)req).Callback(resp.Success ? authorsData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+                ((GetAuthorsRequest)req).Callback(parsedResp);
         }
         #endregion
 
@@ -217,7 +197,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// <summary>
         /// On get ranked concepts delegate.
         /// </summary>
-        public delegate void OnGetRankedConcepts(ConceptsData conceptExtractionData, string data);
+        public delegate void OnGetRankedConcepts(RESTConnector.ParsedResponse<ConceptsData> resp);
 
         /// <summary>
         /// Extracts concepts from a source.
@@ -308,32 +288,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
         private void OnGetRankedConceptsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            ConceptsData conceptsData = new ConceptsData();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = conceptsData;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("AlchemyApi.OnGetRankedConceptsResponse()", "OnGetRankedConceptsResponse Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((GetRankedConceptsRequest)req).Data;
+
+            RESTConnector.ParsedResponse<ConceptsData> parsedResp = new RESTConnector.ParsedResponse<ConceptsData>(resp, customData, _serializer);
+
             if (((GetRankedConceptsRequest)req).Callback != null)
-                ((GetRankedConceptsRequest)req).Callback(resp.Success ? conceptsData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+                ((GetRankedConceptsRequest)req).Callback(parsedResp);
         }
         #endregion
 
@@ -345,7 +305,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// <summary>
         /// On get dates delegate.
         /// </summary>
-        public delegate void OnGetDates(DateData dateData, string data);
+        public delegate void OnGetDates(RESTConnector.ParsedResponse<DateData> resp);
 
         /// <summary>
         /// Extracts dates from a source.
@@ -429,32 +389,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
         private void OnGetDatesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DateData dateData = new DateData();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = dateData;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("AlchemyApi.OnGetDatesResponse()", "OnDatesResponse Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((GetDatesRequest)req).Data;
+
+            RESTConnector.ParsedResponse<DateData> parsedResp = new RESTConnector.ParsedResponse<DateData>(resp, customData, _serializer);
+
             if (((GetDatesRequest)req).Callback != null)
-                ((GetDatesRequest)req).Callback(resp.Success ? dateData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+                ((GetDatesRequest)req).Callback(parsedResp);
         }
 
         private string GetCurrentDatetime()
@@ -473,7 +413,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// <summary>
         /// On get emotions delegate.
         /// </summary>
-        public delegate void OnGetEmotions(EmotionData emotionData, string data);
+        public delegate void OnGetEmotions(RESTConnector.ParsedResponse<EmotionData> resp);
 
         /// <summary>
         /// Gets the emotions from a source.
@@ -553,32 +493,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
         private void OnGetEmotionsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            EmotionData emotionData = new EmotionData();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = emotionData;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("AlchemyApi.OnGetEmotionsResponse()", "OnGetEmotionsResponse Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((GetEmotionsRequest)req).Data;
+
+            RESTConnector.ParsedResponse<EmotionData> parsedResp = new RESTConnector.ParsedResponse<EmotionData>(resp, customData, _serializer);
+
             if (((GetEmotionsRequest)req).Callback != null)
-                ((GetEmotionsRequest)req).Callback(resp.Success ? emotionData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+                ((GetEmotionsRequest)req).Callback(parsedResp);
         }
         #endregion
 
@@ -590,7 +510,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// <summary>
         /// On get entities delegate.
         /// </summary>
-        public delegate void OnGetEntities(EntityData entityData, string data);
+        public delegate void OnGetEntities(RESTConnector.ParsedResponse<EntityData> resp);
 
         /// <summary>
         /// Extracts the entities from a source.
@@ -696,32 +616,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
         private void OnGetEntitiesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            EntityData entityData = new EntityData();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = entityData;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("AlchemyApi.OnGetEntitiesResponse()", "OnGetEntitiesResponse Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((GetEntitiesRequest)req).Data;
+
+            RESTConnector.ParsedResponse<EntityData> parsedResp = new RESTConnector.ParsedResponse<EntityData>(resp, customData, _serializer);
+
             if (((GetEntitiesRequest)req).Callback != null)
-                ((GetEntitiesRequest)req).Callback(resp.Success ? entityData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+                ((GetEntitiesRequest)req).Callback(parsedResp);
         }
         #endregion
 
@@ -732,7 +632,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// <summary>
         /// On detect feeds delegate.
         /// </summary>
-        public delegate void OnDetectFeeds(FeedData feedData, string data);
+        public delegate void OnDetectFeeds(RESTConnector.ParsedResponse<FeedData> resp);
 
         /// <summary>
         /// Detects RSS feeds in a source.
@@ -807,32 +707,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
         private void OnDetectFeedsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            FeedData feedData = new FeedData();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = feedData;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("AlchemyApi.OnDetectFeedsResponse()", "OnDetectFeedsResponse Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((DetectFeedsRequest)req).Data;
+
+            RESTConnector.ParsedResponse<FeedData> parsedResp = new RESTConnector.ParsedResponse<FeedData>(resp, customData, _serializer);
+
             if (((DetectFeedsRequest)req).Callback != null)
-                ((DetectFeedsRequest)req).Callback(resp.Success ? feedData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+                ((DetectFeedsRequest)req).Callback(parsedResp);
         }
         #endregion
 
@@ -844,7 +724,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// <summary>
         /// On get keywords delegate.
         /// </summary>
-        public delegate void OnGetKeywords(KeywordData keywordData, string data);
+        public delegate void OnGetKeywords(RESTConnector.ParsedResponse<KeywordData> resp);
 
         /// <summary>
         /// Extracts the keywords from a source.
@@ -936,32 +816,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
         private void OnGetKeywordsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            KeywordData keywordData = new KeywordData();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = keywordData;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("AlchemyApi.OnGetKeywordsResponse()", "OnGetKeywordsResponse Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((GetKeywordsRequest)req).Data;
+
+            RESTConnector.ParsedResponse<KeywordData> parsedResp = new RESTConnector.ParsedResponse<KeywordData>(resp, customData, _serializer);
+
             if (((GetKeywordsRequest)req).Callback != null)
-                ((GetKeywordsRequest)req).Callback(resp.Success ? keywordData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+                ((GetKeywordsRequest)req).Callback(parsedResp);
         }
         #endregion
 
@@ -973,7 +833,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// <summary>
         /// On get languages.
         /// </summary>
-        public delegate void OnGetLanguages(LanguageData languageData, string data);
+        public delegate void OnGetLanguages(RESTConnector.ParsedResponse<LanguageData> resp);
 
         /// <summary>
         /// Extracts the language a source is written.
@@ -1053,32 +913,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
         private void OnGetLanguagesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            LanguageData languageData = new LanguageData();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = languageData;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("AlchemyApi.OnGetLanguagesResponse()", "OnGetEmotionsResponse Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((GetLanguagesRequest)req).Data;
+
+            RESTConnector.ParsedResponse<LanguageData> parsedResp = new RESTConnector.ParsedResponse<LanguageData>(resp, customData, _serializer);
+
             if (((GetLanguagesRequest)req).Callback != null)
-                ((GetLanguagesRequest)req).Callback(resp.Success ? languageData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+                ((GetLanguagesRequest)req).Callback(parsedResp);
         }
         #endregion
 
@@ -1089,7 +929,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// <summary>
         /// On get microformats.
         /// </summary>
-        public delegate void OnGetMicroformats(MicroformatData microformatData, string data);
+        public delegate void OnGetMicroformats(RESTConnector.ParsedResponse<MicroformatData> resp);
 
         /// <summary>
         /// Extracts microformats from a URL source.
@@ -1164,32 +1004,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
         private void OnGetMicroformatsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            MicroformatData microformatData = new MicroformatData();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = microformatData;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("AlchemyApi.OnGetMicroformatsResponse()", "OnGetMicroformatsResponse Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((GetMicroformatsRequest)req).Data;
+
+            RESTConnector.ParsedResponse<MicroformatData> parsedResp = new RESTConnector.ParsedResponse<MicroformatData>(resp, customData, _serializer);
+
             if (((GetMicroformatsRequest)req).Callback != null)
-                ((GetMicroformatsRequest)req).Callback(resp.Success ? microformatData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+                ((GetMicroformatsRequest)req).Callback(parsedResp);
         }
         #endregion
 
@@ -1200,7 +1020,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// <summary>
         /// On get publication date delegate.
         /// </summary>
-        public delegate void OnGetPublicationDate(PubDateData pubDateData, string data);
+        public delegate void OnGetPublicationDate(RESTConnector.ParsedResponse<PubDateData> resp);
 
         /// <summary>
         /// Extracts the publication date from a source.
@@ -1278,32 +1098,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
         private void OnGetPublicationDateResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            PubDateData pubDateData = new PubDateData();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = pubDateData;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("AlchemyApi.OnGetPublicationDateResponse()", "OnGetPublicationDateResponse Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((GetPublicationDateRequest)req).Data;
+
+            RESTConnector.ParsedResponse<PubDateData> parsedResp = new RESTConnector.ParsedResponse<PubDateData>(resp, customData, _serializer);
+
             if (((GetPublicationDateRequest)req).Callback != null)
-                ((GetPublicationDateRequest)req).Callback(resp.Success ? pubDateData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+                ((GetPublicationDateRequest)req).Callback(parsedResp);
         }
         #endregion
 
@@ -1315,7 +1115,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// <summary>
         /// On get relations delegate.
         /// </summary>
-        public delegate void OnGetRelations(RelationsData relationData, string data);
+        public delegate void OnGetRelations(RESTConnector.ParsedResponse<RelationsData> resp);
 
         /// <summary>
         /// Extracts the relations from a source.
@@ -1428,32 +1228,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
         private void OnGetRelationsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            RelationsData relationsData = new RelationsData();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = relationsData;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("AlchemyApi.OnGetRelationsResponse()", "OnGetRelationsResponse Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((GetRelationsRequest)req).Data;
+
+            RESTConnector.ParsedResponse<RelationsData> parsedResp = new RESTConnector.ParsedResponse<RelationsData>(resp, customData, _serializer);
+
             if (((GetRelationsRequest)req).Callback != null)
-                ((GetRelationsRequest)req).Callback(resp.Success ? relationsData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+                ((GetRelationsRequest)req).Callback(parsedResp);
         }
         #endregion
 
@@ -1465,7 +1245,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// <summary>
         /// On get text sentiment delegate.
         /// </summary>
-        public delegate void OnGetTextSentiment(SentimentData sentimentData, string data);
+        public delegate void OnGetTextSentiment(RESTConnector.ParsedResponse<SentimentData> resp);
 
         /// <summary>
         /// Extracts the sentiment from a source.
@@ -1545,32 +1325,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
         private void OnGetTextSentimentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            SentimentData sentimentData = new SentimentData();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = sentimentData;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("AlchemyApi.OnGetTextSentimentResponse()", "OnGetTextSentimentResponse Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((GetTextSentimentRequest)req).Data;
+
+            RESTConnector.ParsedResponse<SentimentData> parsedResp = new RESTConnector.ParsedResponse<SentimentData>(resp, customData, _serializer);
+
             if (((GetTextSentimentRequest)req).Callback != null)
-                ((GetTextSentimentRequest)req).Callback(resp.Success ? sentimentData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+                ((GetTextSentimentRequest)req).Callback(parsedResp);
         }
         #endregion
 
@@ -1582,7 +1342,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// <summary>
         /// On get targeted sentiment delegate.
         /// </summary>
-        public delegate void OnGetTargetedSentiment(TargetedSentimentData targetedSentimentData, string data);
+        public delegate void OnGetTargetedSentiment(RESTConnector.ParsedResponse<TargetedSentimentData> resp);
 
         /// <summary>
         /// Extracts targeted sentiment from a source.
@@ -1666,32 +1426,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
         private void OnGetTargetedSentimentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            TargetedSentimentData sentimentData = new TargetedSentimentData();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = sentimentData;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("AlchemyApi.OnGetTargetedSentimentResponse()", "OnGetTargetedSentimentResponse Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((GetTargetedSentimentRequest)req).Data;
+
+            RESTConnector.ParsedResponse<TargetedSentimentData> parsedResp = new RESTConnector.ParsedResponse<TargetedSentimentData>(resp, customData, _serializer);
+
             if (((GetTargetedSentimentRequest)req).Callback != null)
-                ((GetTargetedSentimentRequest)req).Callback(resp.Success ? sentimentData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+                ((GetTargetedSentimentRequest)req).Callback(parsedResp);
         }
         #endregion
 
@@ -1703,7 +1443,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// <summary>
         /// On get ranked taxonomy delegate.
         /// </summary>
-        public delegate void OnGetRankedTaxonomy(TaxonomyData taxonomyData, string data);
+        public delegate void OnGetRankedTaxonomy(RESTConnector.ParsedResponse<TaxonomyData> resp);
 
         /// <summary>
         /// Extracts the ranked taxonomy from a source.
@@ -1783,32 +1523,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
         private void OnGetRankedTaxonomyResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            TaxonomyData taxonomyData = new TaxonomyData();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = taxonomyData;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("AlchemyApi.OnGetRankedTaxonomyResponse()", "OnGetRankedTaxonomyResponse Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((GetRankedTaxomomyRequest)req).Data;
+
+            RESTConnector.ParsedResponse<TaxonomyData> parsedResp = new RESTConnector.ParsedResponse<TaxonomyData>(resp, customData, _serializer);
+
             if (((GetRankedTaxomomyRequest)req).Callback != null)
-                ((GetRankedTaxomomyRequest)req).Callback(resp.Success ? taxonomyData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+                ((GetRankedTaxomomyRequest)req).Callback(parsedResp);
         }
         #endregion
 
@@ -1819,7 +1539,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// <summary>
         /// On get text delegate.
         /// </summary>
-        public delegate void OnGetText(TextData textData, string data);
+        public delegate void OnGetText(RESTConnector.ParsedResponse<TextData> resp);
 
         /// <summary>
         /// Extracts text from a source.
@@ -1901,32 +1621,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
         private void OnGetTextResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            TextData textData = new TextData();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = textData;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("AlchemyApi.OnGetTextResponse()", "OnGetTextResponse Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((GetTextRequest)req).Data;
+
+            RESTConnector.ParsedResponse<TextData> parsedResp = new RESTConnector.ParsedResponse<TextData>(resp, customData, _serializer);
+
             if (((GetTextRequest)req).Callback != null)
-                ((GetTextRequest)req).Callback(resp.Success ? textData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+                ((GetTextRequest)req).Callback(parsedResp);
         }
         #endregion
 
@@ -2001,7 +1701,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// <summary>
         /// On get title delegate.
         /// </summary>
-        public delegate void OnGetTitle(Title titleData, string data);
+        public delegate void OnGetTitle(RESTConnector.ParsedResponse<Title> resp);
 
         /// <summary>
         /// Extracts the title from a source.
@@ -2081,32 +1781,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
         private void OnGetTitleResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            Title titleData = new Title();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = titleData;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("AlchemyApi.OnGetTitleResponse()", "OnGetTitleResponse Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((GetTitleRequest)req).Data;
+
+            RESTConnector.ParsedResponse<Title> parsedResp = new RESTConnector.ParsedResponse<Title>(resp, customData, _serializer);
+
             if (((GetTitleRequest)req).Callback != null)
-                ((GetTitleRequest)req).Callback(resp.Success ? titleData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+                ((GetTitleRequest)req).Callback(parsedResp);
         }
         #endregion
 
@@ -2118,7 +1798,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// <summary>
         /// On get combined data delegate.
         /// </summary>
-        public delegate void OnGetCombinedData(CombinedCallData combinedData, string data);
+        public delegate void OnGetCombinedData(RESTConnector.ParsedResponse<CombinedCallData> resp);
 
         /// <summary>
         /// Access multiple services in one call.
@@ -2274,32 +1954,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
         private void OnCombinedCallResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            CombinedCallData combinedData = new CombinedCallData();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = combinedData;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("AlchemyApi.OnCombinedCallResponse()", "OnCombinedCallResponse Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((CombinedCallRequest)req).Data;
+
+            RESTConnector.ParsedResponse<CombinedCallData> parsedResp = new RESTConnector.ParsedResponse<CombinedCallData>(resp, customData, _serializer);
+
             if (((CombinedCallRequest)req).Callback != null)
-                ((CombinedCallRequest)req).Callback(resp.Success ? combinedData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+                ((CombinedCallRequest)req).Callback(parsedResp);
         }
         #endregion
 
@@ -2309,7 +1969,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// <summary>
         /// On get news delegate.
         /// </summary>
-        public delegate void OnGetNews(NewsResponse newsData, string data);
+        public delegate void OnGetNews(RESTConnector.ParsedResponse<NewsResponse> resp);
 
         /// <summary>
         /// Gets news.
@@ -2380,32 +2040,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
         private void OnGetNewsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            NewsResponse newsData = new NewsResponse();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = newsData;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("AlchemyAPI.OnGetNewsResponse()", "OnGetNewsResponse Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((GetNewsRequest)req).Data;
+
+            RESTConnector.ParsedResponse<NewsResponse> parsedResp = new RESTConnector.ParsedResponse<NewsResponse>(resp, customData, _serializer);
+
             if (((GetNewsRequest)req).Callback != null)
-                ((GetNewsRequest)req).Callback(resp.Success ? newsData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+                ((GetNewsRequest)req).Callback(parsedResp);
         }
         #endregion
 

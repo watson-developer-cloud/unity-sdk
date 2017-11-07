@@ -19,6 +19,7 @@ using UnityEngine;
 using IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
+using IBM.Watson.DeveloperCloud.Connection;
 using System.Collections;
 
 public class ExamplePersonalityInsightsV3 : MonoBehaviour
@@ -67,15 +68,15 @@ public class ExamplePersonalityInsightsV3 : MonoBehaviour
         Log.Debug("ExamplePersonalityInsights.Examples()", "Personality insights examples complete.");
     }
 
-    private void OnGetProfileText(Profile profile, string data)
+    private void OnGetProfileText(RESTConnector.ParsedResponse<Profile> resp)
     {
-        Log.Debug("ExamplePersonaltyInsights.OnGetProfileText()", "Personality Insights - GetProfileText Response: {0}", data);
+        Log.Debug("ExamplePersonaltyInsights.OnGetProfileText()", "Personality Insights - GetProfileText Response: {0}", resp.JSON);
         _getProfileTextTested = true;
     }
 
-    private void OnGetProfileJson(Profile profile, string data)
+    private void OnGetProfileJson(RESTConnector.ParsedResponse<Profile> resp)
     {
-        Log.Debug("ExamplePersonaltyInsights.OnGetProfileJson()", "Personality Insights - GetProfileJson Response: {0}", data);
+        Log.Debug("ExamplePersonaltyInsights.OnGetProfileJson()", "Personality Insights - GetProfileJson Response: {0}", resp.JSON);
         _getProfileJsonTested = true;
     }
 }

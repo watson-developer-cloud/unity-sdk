@@ -105,7 +105,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
         /// The callback delegate for the Message() function.
         /// </summary>
         /// <param name="resp">The response object to a call to Message().</param>
-        public delegate void OnMessage(object resp, string customData);
+        public delegate void OnMessage(RESTConnector.ParsedResponse<object> resp);
 
         /// <summary>
         /// Message the specified workspaceId, input and callback.
@@ -209,28 +209,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 
         private void MessageResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            object dataObject = null;
-            string data = "";
-
-            if (resp.Success)
-            {
-                try
-                {
-                    //  For deserializing into a generic object
-                    data = Encoding.UTF8.GetString(resp.Data);
-                    dataObject = Json.Deserialize(data);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("Conversation.MessageResp()", "MessageResp Exception: {0}", e.ToString());
-                    data = e.Message;
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((MessageReq)req).Data;
+
+            RESTConnector.ParsedResponse<object> parsedResp = new RESTConnector.ParsedResponse<object>(resp, customData, null);
+
             if (((MessageReq)req).Callback != null)
-                ((MessageReq)req).Callback(resp.Success ? dataObject : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+                ((MessageReq)req).Callback(parsedResp);
         }
         #endregion
 

@@ -20,6 +20,7 @@ using System.Collections;
 using IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
+using IBM.Watson.DeveloperCloud.Connection;
 using System.IO;
 using FullSerializer;
 using System;
@@ -293,63 +294,63 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             yield break;
         }
 
-        private void OnGetClusters(SolrClusterListResponse resp, string data)
+        private void OnGetClusters(RESTConnector.ParsedResponse<SolrClusterListResponse> resp)
         {
-            Log.Debug("TestRetrieveAndRank.OnGetClusters()", "Retrieve and rank - Get clusters response: {0}", data);
-            Test(resp != null);
+            Log.Debug("TestRetrieveAndRank.OnGetClusters()", "Retrieve and rank - Get clusters response: {0}", resp.JSON);
+            Test(resp.DataObject != null);
             _getClustersTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
         }
 
-        private void OnCreateCluster(SolrClusterResponse resp, string data)
+        private void OnCreateCluster(RESTConnector.ParsedResponse<SolrClusterResponse> resp)
         {
-            Log.Debug("TestRetrieveAndRank.OnCreateCluster()", "Retrieve and rank - Create cluster response: {0}", data);
-            _clusterToDelete = resp.solr_cluster_id;
-            Test(resp != null);
+            Log.Debug("TestRetrieveAndRank.OnCreateCluster()", "Retrieve and rank - Create cluster response: {0}", resp.JSON);
+            _clusterToDelete = resp.DataObject.solr_cluster_id;
+            Test(resp.DataObject != null);
             _createClusterTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
         }
 
-        private void OnDeleteCluster(bool success, string data)
+        private void OnDeleteCluster(RESTConnector.ParsedResponse<object> resp)
         {
-            Log.Debug("TestRetrieveAndRank.OnDeleteCluster()", "Retrieve and rank - Delete cluster response: {0}", data);
-            Test(success);
+            Log.Debug("TestRetrieveAndRank.OnDeleteCluster()", "Retrieve and rank - Delete cluster response: {0}", resp.JSON);
+            Test(resp.Success);
             _deleteClusterTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
         }
 
-        private void OnGetCluster(SolrClusterResponse resp, string data)
+        private void OnGetCluster(RESTConnector.ParsedResponse<SolrClusterResponse> resp)
         {
-            Log.Debug("TestRetrieveAndRank.OnGetCluster()", "Retrieve and rank - Get cluster response: {0}", data);
-            Test(resp != null);
+            Log.Debug("TestRetrieveAndRank.OnGetCluster()", "Retrieve and rank - Get cluster response: {0}", resp.JSON);
+            Test(resp.DataObject != null);
             _getClusterTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
         }
 
-        private void OnGetClusterConfigs(SolrConfigList resp, string data)
+        private void OnGetClusterConfigs(RESTConnector.ParsedResponse<SolrConfigList> resp)
         {
-            Log.Debug("TestRetrieveAndRank.OnGetClusterConfigs()", "Retrieve and rank - Get cluster config response: {0}", data);
-            Test(resp != null);
+            Log.Debug("TestRetrieveAndRank.OnGetClusterConfigs()", "Retrieve and rank - Get cluster config response: {0}", resp.JSON);
+            Test(resp.DataObject != null);
             _getClusterConfigsTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
         }
 
-        private void OnDeleteClusterConfig(bool success, string data)
+        private void OnDeleteClusterConfig(RESTConnector.ParsedResponse<object> resp)
         {
-            Log.Debug("TestRetrieveAndRank.OnDeleteClusterConfig()", "Retrieve and rank - Deletecluster config response: {0}", data);
-            Test(success);
+            Log.Debug("TestRetrieveAndRank.OnDeleteClusterConfig()", "Retrieve and rank - Deletecluster config response: {0}", resp.JSON);
+            Test(resp.Success);
             _deleteClusterConfigTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
         }
         
-        private void OnGetClusterConfig(byte[] respData, string data)
+        private void OnGetClusterConfig(RESTConnector.ParsedResponse<object> resp)
         {
 #if UNITY_EDITOR
-            Log.Debug("TestRetrieveAndRank.OnGetClusterConfig()", "Retrieve and rank - Get cluster config response: {0}", data);
+            Log.Debug("TestRetrieveAndRank.OnGetClusterConfig()", "Retrieve and rank - Get cluster config response: {0}", resp.JSON);
 #else
 		Log.Debug("TestRetrieveAndRank.RunTest()", "Not in editor - skipping download.");
 #endif
-            Test(respData != null);
+            Test(resp.Data != null);
             _getClusterConfigTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
         }
@@ -362,91 +363,91 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         //    Runnable.Run(ReadyToContinue(_waitTime));
         //}
 
-        private void OnUploadClusterConfig(UploadResponse resp, string data)
+        private void OnUploadClusterConfig(RESTConnector.ParsedResponse<UploadResponse> resp)
         {
-            Log.Debug("TestRetrieveAndRank.OnUploadClusterConfig()", "Retrieve and rank - Upload cluster config response: {0}", data);
-            Test(resp != null);
+            Log.Debug("TestRetrieveAndRank.OnUploadClusterConfig()", "Retrieve and rank - Upload cluster config response: {0}", resp.JSON);
+            Test(resp.DataObject != null);
             _uploadClusterConfigTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
         }
 
-        private void OnGetCollections(CollectionsResponse resp, string data)
+        private void OnGetCollections(RESTConnector.ParsedResponse<CollectionsResponse> resp)
         {
-            Log.Debug("TestRetrieveAndRank.OnGetCollections()", "Retrieve and rank - Get collections response: {0}", data);
-            Test(resp != null);
+            Log.Debug("TestRetrieveAndRank.OnGetCollections()", "Retrieve and rank - Get collections response: {0}", resp.JSON);
+            Test(resp.DataObject != null);
             _getCollectionsTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
         }
 
-        private void OnCreateCollection(CollectionsResponse resp, string data)
+        private void OnCreateCollection(RESTConnector.ParsedResponse<CollectionsResponse> resp)
         {
-            Log.Debug("TestRetrieveAndRank.OnCreateCollection()", "Retrieve and rank - Get collections response: {0}", data);
-            Test(resp != null);
+            Log.Debug("TestRetrieveAndRank.OnCreateCollection()", "Retrieve and rank - Get collections response: {0}", resp.JSON);
+            Test(resp.DataObject != null);
             _createCollectionTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
         }
 
-        private void OnDeleteCollection(CollectionsResponse resp, string data)
+        private void OnDeleteCollection(RESTConnector.ParsedResponse<CollectionsResponse> resp)
         {
-            Log.Debug("TestRetrieveAndRank.OnDeleteCollection()", "Retrieve and rank - Get collections response: {0}", data);
-            Test(resp != null);
+            Log.Debug("TestRetrieveAndRank.OnDeleteCollection()", "Retrieve and rank - Get collections response: {0}", resp.JSON);
+            Test(resp.Success);
             _deleteCollectionTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
         }
 
-        private void OnIndexDocuments(IndexResponse resp, string data)
+        private void OnIndexDocuments(RESTConnector.ParsedResponse<IndexResponse> resp)
         {
-            Log.Debug("TestRetrieveAndRank.OnIndexDocuments()", "Retrieve and rank - Index documents response: {0}", data);
-            Test(resp != null);
+            Log.Debug("TestRetrieveAndRank.OnIndexDocuments()", "Retrieve and rank - Index documents response: {0}", resp.JSON);
+            Test(resp.DataObject != null);
             _indexDocumentsTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
         }
 
-        private void OnGetRankers(ListRankersPayload resp, string data)
+        private void OnGetRankers(RESTConnector.ParsedResponse<ListRankersPayload> resp)
         {
-            Log.Debug("TestRetrieveAndRank.OnGetRankers()", "Retrieve and rank - Get rankers response: {0}", data);
-            Test(resp != null);
+            Log.Debug("TestRetrieveAndRank.OnGetRankers()", "Retrieve and rank - Get rankers response: {0}", resp.JSON);
+            Test(resp.DataObject != null);
             _getRankersTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
         }
 
-        private void OnCreateRanker(RankerStatusPayload resp, string data)
+        private void OnCreateRanker(RESTConnector.ParsedResponse<RankerStatusPayload> resp)
         {
-            Log.Debug("TestRetrieveAndRank.OnCreateRanker()", "Retrieve and rank - Create ranker response: {0}", data);
-            _rankerIdToDelete = resp.ranker_id;
-            Test(resp != null);
+            Log.Debug("TestRetrieveAndRank.OnCreateRanker()", "Retrieve and rank - Create ranker response: {0}", resp.JSON);
+            _rankerIdToDelete = resp.DataObject.ranker_id;
+            Test(resp.DataObject != null);
             _createRankerTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
         }
 
-        private void OnRank(RankerOutputPayload resp, string data)
+        private void OnRank(RESTConnector.ParsedResponse<RankerOutputPayload> resp)
         {
-            Log.Debug("TestRetrieveAndRank.OnRank()", "Retrieve and rank - Rank response: {0}", data);
-            Test(resp != null);
+            Log.Debug("TestRetrieveAndRank.OnRank()", "Retrieve and rank - Rank response: {0}", resp.JSON);
+            Test(resp.DataObject != null);
             _rankTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
         }
 
-        private void OnGetRanker(RankerStatusPayload resp, string data)
+        private void OnGetRanker(RESTConnector.ParsedResponse<RankerStatusPayload> resp)
         {
-            Log.Debug("TestRetrieveAndRank.OnGetRanker()", "Retrieve and rank - Get ranker response: {0}", data);
-            Test(resp != null);
+            Log.Debug("TestRetrieveAndRank.OnGetRanker()", "Retrieve and rank - Get ranker response: {0}", resp.JSON);
+            Test(resp.DataObject != null);
             _getRankerTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
         }
 
-        private void OnDeleteRanker(bool success, string data)
+        private void OnDeleteRanker(RESTConnector.ParsedResponse<object> resp)
         {
-            Log.Debug("TestRetrieveAndRank.OnDeleteRanker()", "Retrieve and rank - Delete ranker response: {0}", data);
-            Test(success);
+            Log.Debug("TestRetrieveAndRank.OnDeleteRanker()", "Retrieve and rank - Delete ranker response: {0}", resp.JSON);
+            Test(resp.Success);
             _deleteRankerTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
         }
 
-        private void OnSearchStandard(SearchResponse resp, string data)
+        private void OnSearchStandard(RESTConnector.ParsedResponse<SearchResponse> resp)
         {
-            Log.Debug("TestRetrieveAndRank.OnSearchStandard()", "Retrieve and rank - Search standard response: {0}", data);
-            Test(resp != null);
+            Log.Debug("TestRetrieveAndRank.OnSearchStandard()", "Retrieve and rank - Search standard response: {0}", resp.JSON);
+            Test(resp.DataObject != null);
             _searchStandardTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
         }
@@ -455,10 +456,10 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         {
             yield return new WaitForSeconds(waitTime);
 
-            if (!_retrieveAndRank.GetCluster((SolrClusterResponse resp, string data) =>
+            if (!_retrieveAndRank.GetCluster((RESTConnector.ParsedResponse<SolrClusterResponse> resp) =>
             {
-                Log.Debug("TestRetrieveAndRank.CheckClusterStatus()", "Solr cluster status is '{0}'", resp.solr_cluster_status);
-                if (resp.solr_cluster_status.ToLower() != "ready")
+                Log.Debug("TestRetrieveAndRank.CheckClusterStatus()", "Solr cluster status is '{0}'", resp.DataObject.solr_cluster_status);
+                if (resp.DataObject.solr_cluster_status.ToLower() != "ready")
                 {
                     Log.Debug("TestRetrieveAndRank.CheckClusterStatus()", "Checking cluster status in 10 seconds");
                     Runnable.Run(CheckClusterStatus(waitTime));
@@ -475,10 +476,10 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         {
             yield return new WaitForSeconds(waitTime);
 
-            if (!_retrieveAndRank.GetRanker((RankerStatusPayload resp, string data) =>
+            if (!_retrieveAndRank.GetRanker((RESTConnector.ParsedResponse<RankerStatusPayload> resp) =>
             {
-                Log.Debug("TestRetrieveAndRank.CheckRankerStatus()", "Solr ranker status is '{0}'", resp.status);
-                if (resp.status.ToLower() != "available")
+                Log.Debug("TestRetrieveAndRank.CheckRankerStatus()", "Solr ranker status is '{0}'", resp.DataObject.status);
+                if (resp.DataObject.status.ToLower() != "available")
                 {
                     Log.Debug("TestRetrieveAndRank.CheckRankerStatus()", "Checking ranker status in 10 seconds");
                     Runnable.Run(CheckRankerStatus(10f));

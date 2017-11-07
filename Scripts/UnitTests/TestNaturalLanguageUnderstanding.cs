@@ -19,6 +19,7 @@ using System.Collections;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
+using IBM.Watson.DeveloperCloud.Connection;
 using FullSerializer;
 using System;
 using System.IO;
@@ -126,22 +127,22 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             yield break;
         }
 
-        private void OnGetModels(ListModelsResults resp, string customData)
+        private void OnGetModels(RESTConnector.ParsedResponse<ListModelsResults> resp)
         {
             fsData data = null;
-            _serializer.TrySerialize(resp, out data).AssertSuccess();
+            _serializer.TrySerialize(resp.DataObject, out data).AssertSuccess();
             Log.Debug("TestNaturalLanguageUnderstanding.OnGetModels()", "ListModelsResult: {0}", data.ToString());
-            Test(resp != null);
+            Test(resp.DataObject != null);
 
             _getModelsTested = true;
         }
 
-        private void OnAnalyze(AnalysisResults resp, string customData)
+        private void OnAnalyze(RESTConnector.ParsedResponse<AnalysisResults> resp)
         {
             fsData data = null;
-            _serializer.TrySerialize(resp, out data).AssertSuccess();
+            _serializer.TrySerialize(resp.DataObject, out data).AssertSuccess();
             Log.Debug("TestNaturalLanguageUnderstanding.OnAnalyze()", "AnalysisResults: {0}", data.ToString());
-            Test(resp != null);
+            Test(resp.DataObject != null);
             _analyzeTested = true;
         }
     }

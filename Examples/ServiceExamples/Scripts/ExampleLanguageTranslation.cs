@@ -18,6 +18,7 @@
 using UnityEngine;
 using IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2;
 using IBM.Watson.DeveloperCloud.Utilities;
+using IBM.Watson.DeveloperCloud.Connection;
 using IBM.Watson.DeveloperCloud.Logging;
 
 public class ExampleLanguageTranslation : MonoBehaviour
@@ -38,9 +39,9 @@ public class ExampleLanguageTranslation : MonoBehaviour
         _languageTranslation.GetTranslation(_pharseToTranslate, "en", "es", OnGetTranslation);
     }
 
-    private void OnGetTranslation(Translations translation, string customData)
+    private void OnGetTranslation(RESTConnector.ParsedResponse<Translations> resp)
     {
-        if (translation != null && translation.translations.Length > 0)
-            Log.Debug("ExampleLangaugeTranslation.OnGetTranslation()", "Spanish Translation: " + translation.translations[0].translation);
+        if (resp.DataObject != null && resp.DataObject.translations.Length > 0)
+            Log.Debug("ExampleLangaugeTranslation.OnGetTranslation()", "Spanish Translation: " + resp.DataObject.translations[0].translation);
     }
 }

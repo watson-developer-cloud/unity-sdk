@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using IBM.Watson.DeveloperCloud.Services.TradeoffAnalytics.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
 using IBM.Watson.DeveloperCloud.Logging;
+using IBM.Watson.DeveloperCloud.Connection;
 
 public class ExampleTradeoffAnalytics : MonoBehaviour
 {
@@ -127,9 +128,9 @@ public class ExampleTradeoffAnalytics : MonoBehaviour
         Log.Debug("ExampleTradeoffAnalyitics.Examples()", "Tradeoff analytics examples complete.");
     }
 
-    private void OnGetDilemma(DilemmasResponse resp, string data)
+    private void OnGetDilemma(RESTConnector.ParsedResponse<DilemmasResponse> resp)
     {
-        Log.Debug("ExampleTradeoffAnalyitics.OnGetDilemma()", "Tradeoff Analytics - Get Dillema: {0}", data);
+        Log.Debug("ExampleTradeoffAnalyitics.OnGetDilemma()", "Tradeoff Analytics - Get Dillema: {0}", resp.JSON);
         _GetDillemaTested = true;
     }
 

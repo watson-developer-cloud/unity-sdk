@@ -19,6 +19,7 @@ using System.Collections;
 using IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
+using IBM.Watson.DeveloperCloud.Connection;
 using FullSerializer;
 using System;
 using System.IO;
@@ -100,10 +101,10 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             yield break;
         }
 
-        private void OnGetToneAnalyze(ToneAnalyzerResponse resp, string data)
+        private void OnGetToneAnalyze(RESTConnector.ParsedResponse<ToneAnalyzerResponse> resp)
         {
-            Log.Debug("ExampleToneAnalyzer.OnGetToneAnalyze()", "Tone Analyzer - Analyze Response: {0}", data);
-            Test(resp != null);
+            Log.Debug("ExampleToneAnalyzer.OnGetToneAnalyze()", "Tone Analyzer - Analyze Response: {0}", resp.JSON);
+            Test(resp.DataObject != null);
             _analyzeToneTested = true;
         }
     }

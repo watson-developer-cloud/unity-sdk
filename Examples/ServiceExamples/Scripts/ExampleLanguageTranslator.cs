@@ -19,6 +19,7 @@ using UnityEngine;
 using IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2;
 using IBM.Watson.DeveloperCloud.Utilities;
 using IBM.Watson.DeveloperCloud.Logging;
+using IBM.Watson.DeveloperCloud.Connection;
 using System.Collections;
 
 public class ExampleLanguageTranslator : MonoBehaviour
@@ -96,47 +97,47 @@ public class ExampleLanguageTranslator : MonoBehaviour
         Log.Debug("ExampleLanguageTranslator.Examples()", "Language Translator examples complete.");
     }
 
-    private void OnGetModels(TranslationModels models, string customData)
+    private void OnGetModels(RESTConnector.ParsedResponse<TranslationModels> resp)
     {
-        Log.Debug("ExampleLanguageTranslator.OnGetModels()", "Language Translator - Get models response: {0}", customData);
+        Log.Debug("ExampleLanguageTranslator.OnGetModels()", "Language Translator - Get models response: {0}", resp.JSON);
         _getModelsTested = true;
     }
 
-    private void OnCreateModel(TranslationModel model, string customData)
+    private void OnCreateModel(RESTConnector.ParsedResponse<TranslationModel> resp)
     {
-        Log.Debug("ExampleLanguageTranslator.OnCreateModel()", "Language Translator - Create model response: {0}", customData);
-        _customLanguageModelId = model.model_id;
+        Log.Debug("ExampleLanguageTranslator.OnCreateModel()", "Language Translator - Create model response: {0}", resp.JSON);
+        _customLanguageModelId = resp.DataObject.model_id;
         _createModelTested = true;
     }
 
-    private void OnGetModel(TranslationModel model, string customData)
+    private void OnGetModel(RESTConnector.ParsedResponse<TranslationModel> resp)
     {
-        Log.Debug("ExampleLanguageTranslator.OnGetModel()", "Language Translator - Get model response: {0}", customData);
+        Log.Debug("ExampleLanguageTranslator.OnGetModel()", "Language Translator - Get model response: {0}", resp.JSON);
         _getModelTested = true;
     }
 
-    private void OnDeleteModel(bool success, string customData)
+    private void OnDeleteModel(RESTConnector.ParsedResponse<object> resp)
     {
-        Log.Debug("ExampleLanguageTranslator.OnDeleteModel()", "Language Translator - Delete model response: success: {0}", success);
+        Log.Debug("ExampleLanguageTranslator.OnDeleteModel()", "Language Translator - Delete model response: success: {0}", resp.Success);
         _customLanguageModelId = null;
         _deleteModelTested = true;
     }
 
-    private void OnGetTranslation(Translations translation, string customData)
+    private void OnGetTranslation(RESTConnector.ParsedResponse<Translations> resp)
     {
-        Log.Debug("ExampleLanguageTranslator.OnGetTranslation()", "Langauge Translator - Translate Response: {0}", customData);
+        Log.Debug("ExampleLanguageTranslator.OnGetTranslation()", "Langauge Translator - Translate Response: {0}", resp.JSON);
         _getTranslationTested = true;
     }
 
-    private void OnIdentify(string lang, string customData)
+    private void OnIdentify(RESTConnector.ParsedResponse<IdentifiedLanguages> resp)
     {
-        Log.Debug("ExampleLanguageTranslator.OnIdentify()", "Language Translator - Identify response: {0}", customData);
+        Log.Debug("ExampleLanguageTranslator.OnIdentify()", "Language Translator - Identify response: {0}", resp.JSON);
         _identifyTested = true;
     }
 
-    private void OnGetLanguages(Languages languages, string customData)
+    private void OnGetLanguages(RESTConnector.ParsedResponse<Languages> resp)
     {
-        Log.Debug("ExampleLanguageTranslator.OnGetLanguages()", "Language Translator - Get languages response: {0}", customData);
+        Log.Debug("ExampleLanguageTranslator.OnGetLanguages()", "Language Translator - Get languages response: {0}", resp.JSON);
         _getLanguagesTested = true;
     }
 }

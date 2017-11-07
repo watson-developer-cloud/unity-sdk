@@ -103,8 +103,7 @@ namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
         /// The Get Tone Analyzed callback delegate.
         /// </summary>
         /// <param name="resp"></param>
-        /// <param name="data"></param>
-        public delegate void OnGetToneAnalyzed(ToneAnalyzerResponse resp, string data);
+        public delegate void OnGetToneAnalyzed(RESTConnector.ParsedResponse<ToneAnalyzerResponse> resp);
 
         /// <summary>
         /// Gets the tone analyze.
@@ -144,32 +143,12 @@ namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
 
         private void GetToneAnalyzerResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            ToneAnalyzerResponse response = new ToneAnalyzerResponse();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = response;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("ToneAnalyzer.GetToneAnalyzerResponse()", "GetToneAnalyzerResponse Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((GetToneAnalyzerRequest)req).Data;
+
+            RESTConnector.ParsedResponse<ToneAnalyzerResponse> parsedResp = new RESTConnector.ParsedResponse<ToneAnalyzerResponse>(resp, customData, _serializer);
+
             if (((GetToneAnalyzerRequest)req).Callback != null)
-                ((GetToneAnalyzerRequest)req).Callback(resp.Success ? response : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+                ((GetToneAnalyzerRequest)req).Callback(parsedResp);
         }
 
 

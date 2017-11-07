@@ -26,6 +26,8 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
+using FullSerializer;
+using MiniJSON;
 
 #if UNITY_EDITOR
 using System.Net;
@@ -69,9 +71,9 @@ namespace IBM.Watson.DeveloperCloud.Connection
             /// </summary>
             public bool Success { get; set; }
             /// <summary>
-            /// Error message if Success is false.
+            /// Error object if Success is false (null otherwise).
             /// </summary>
-            public string Error { get; set; }
+            public Error Error { get; set; }
             /// <summary>
             /// The data returned by the request.
             /// </summary>
@@ -82,6 +84,130 @@ namespace IBM.Watson.DeveloperCloud.Connection
             public float ElapsedTime { get; set; }
             #endregion
         };
+
+        /// <summary>
+        /// The server response with parsed data and user data.
+        /// </summary>
+        public class ParsedResponse<T> where T : new()
+        {
+            /// <summary>
+            /// True if the request was successful.
+            /// </summary>
+            public bool Success { get; set; }
+            /// <summary>
+            /// Error object if Success is false (null otherwise).
+            /// </summary>
+            public Error Error { get; set; }
+            /// <summary>
+            /// The data returned by the request.
+            /// </summary>
+            public byte[] Data { get; set; }
+            /// <summary>
+            /// The JSON representation of the data.
+            /// </summary>
+            public string JSON { get; set; }
+            /// <summary>
+            /// The parsed data object.
+            /// </summary>
+            public T DataObject { get; set; }
+            /// <summary>
+            /// Custom data the user passed with the request.
+            /// </summary>
+            public string CustomData { get; set; }
+            /// <summary>
+            /// The amount of time in seconds it took to get this response from the server.
+            /// </summary>
+            public float ElapsedTime { get; set; }
+
+            /// <summary>
+            /// Initializes a new instance of the ParsedResponse class.
+            /// </summary>
+            /// <param name="resp">The server response.</param>
+            /// <param name="customData">User custom data.</param>
+            /// <param name="serializer">Serializer to parse data.</param>
+            public ParsedResponse(Response resp, string customData, fsSerializer serializer, bool isJSON = true)
+            {
+                Success = resp.Success;
+                Error = resp.Error;
+                Data = resp.Data;
+                ElapsedTime = resp.ElapsedTime;
+                CustomData = customData;
+
+                if (Success)
+                    Success = Parse(serializer, isJSON);
+            }
+
+            private bool Parse(fsSerializer serializer, bool isJSON)
+            {
+                if (Data == null || Data.Length == 0)
+                    return true;
+
+                try
+                {
+                    if (serializer != null)
+                    {
+                        T dataObject = new T();
+                        fsData data = null;
+
+                        fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(Data), out data);
+                        if (!r.Succeeded)
+                            throw new WatsonException(r.FormattedMessages);
+
+                        object obj = dataObject;
+                        r = serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                        if (!r.Succeeded)
+                            throw new WatsonException(r.FormattedMessages);
+
+                        JSON = data.ToString();
+                        DataObject = dataObject;
+                    }
+                    else if (isJSON)
+                    {
+                        JSON = Encoding.UTF8.GetString(Data);
+                        DataObject = (T)Json.Deserialize(JSON);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Log.Error("ParsedResponse", "Parse Exception: {0}", e.ToString());
+                    Error = new Error();
+                    Error.ErrorMessage = e.ToString();
+                    return false;
+                }
+
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// Class to encapsulate an error returned from a server request.
+        /// </summary>
+        public class Error
+        {
+            /// <summary>
+            /// The url that generated the error.
+            /// </summary>
+            public string URL { get; set; }
+            /// <summary>
+            /// The error code returned from the server.
+            /// </summary>
+            public int ErrorCode { get; set; }
+            /// <summary>
+            /// The error message returned from the server.
+            /// </summary>
+            public string ErrorMessage { get; set; }
+            /// <summary>
+            /// The contents of the response from the server.
+            /// </summary>
+            public string Response { get; set; }
+
+            public override string ToString()
+            {
+                return string.Format("URL: {0}, ErrorCode: {1}, Error: {2}, Response: {3}", URL, ErrorCode,
+                                     string.IsNullOrEmpty(ErrorMessage) ? "" : ErrorMessage,
+                                     string.IsNullOrEmpty(Response) ? "" : Response);
+            }
+        }
 
         /// <summary>
         /// Multi-part form data class.
@@ -422,6 +548,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
                         continue;
 
                     bool bError = false;
+                    Error error = null;
                     if (!string.IsNullOrEmpty(www.error))
                     {
                         long nErrorCode = -1;
@@ -440,6 +567,12 @@ namespace IBM.Watson.DeveloperCloud.Connection
                             }
                         }
 
+                        error = new Error();
+                        error.URL = url;
+                        error.ErrorCode = nErrorCode;
+                        error.ErrorMessage = www.error;
+                        error.Response = www.text;
+
                         if (bError)
                             Log.Error("RESTConnector.ProcessRequestQueue()", "URL: {0}, ErrorCode: {1}, Error: {2}, Response: {3}", url, nErrorCode, www.error,
                                 string.IsNullOrEmpty(www.text) ? "" : www.text);
@@ -451,6 +584,10 @@ namespace IBM.Watson.DeveloperCloud.Connection
                     {
                         Log.Error("RESTConnector.ProcessRequestQueue()", "Request timed out for URL: {0}", url);
                         bError = true;
+
+                        error = new Error();
+                        error.URL = url;
+                        error.ErrorMessage = "Timeout";
                     }
                     /*if (!bError && (www.bytes == null || www.bytes.Length == 0))
                     {
@@ -463,13 +600,15 @@ namespace IBM.Watson.DeveloperCloud.Connection
                     if (!bError)
                     {
                         resp.Success = true;
+                        resp.Error = null;
                         resp.Data = www.bytes;
                     }
                     else
                     {
                         resp.Success = false;
-                        resp.Error = string.Format("Request Error.\nURL: {0}\nError: {1}",
-                            url, string.IsNullOrEmpty(www.error) ? "Timeout" : www.error);
+                        //resp.Error = string.Format("Request Error.\nURL: {0}\nError: {1}",
+                        //    url, string.IsNullOrEmpty(www.error) ? "Timeout" : www.error);
+                        resp.Error = error;
                     }
 
                     resp.ElapsedTime = (float)(DateTime.Now - startTime).TotalSeconds;

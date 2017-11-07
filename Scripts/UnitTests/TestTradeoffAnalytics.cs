@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using IBM.Watson.DeveloperCloud.Services.TradeoffAnalytics.v1;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
+using IBM.Watson.DeveloperCloud.Connection;
 using UnityEngine;
 using FullSerializer;
 using System;
@@ -171,10 +172,10 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             yield break;
         }
 
-        private void OnGetDilemma(DilemmasResponse resp, string data)
+        private void OnGetDilemma(RESTConnector.ParsedResponse<DilemmasResponse> resp)
         {
-            Log.Debug("ExampleTradeoffAnalyitics.OnGetDilemma()", "Tradeoff Analytics - Get Dillema: {0}", data);
-            Test(resp != null);
+            Log.Debug("ExampleTradeoffAnalyitics.OnGetDilemma()", "Tradeoff Analytics - Get Dillema: {0}", resp.JSON);
+            Test(resp.DataObject != null);
             _GetDillemaTested = true;
         }
 

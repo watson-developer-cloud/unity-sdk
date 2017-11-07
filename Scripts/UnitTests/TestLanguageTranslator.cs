@@ -19,6 +19,7 @@ using FullSerializer;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2;
 using IBM.Watson.DeveloperCloud.Utilities;
+using IBM.Watson.DeveloperCloud.Connection;
 using System;
 using System.Collections;
 using System.IO;
@@ -140,54 +141,54 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             yield break;
         }
 
-        private void OnGetModels(TranslationModels models, string customData)
+        private void OnGetModels(RESTConnector.ParsedResponse<TranslationModels> resp)
         {
-            Log.Debug("TestLanguageTranslator.OnGetModels()", "Language Translator - Get models response: {0}", customData);
-            Test(models != null);
+            Log.Debug("TestLanguageTranslator.OnGetModels()", "Language Translator - Get models response: {0}", resp.JSON);
+            Test(resp.DataObject != null);
             _getModelsTested = true;
         }
 
-        private void OnCreateModel(TranslationModel model, string customData)
+        private void OnCreateModel(RESTConnector.ParsedResponse<TranslationModel> resp)
         {
-            Log.Debug("TestLanguageTranslator.OnCreateModel()", "Language Translator - Create model response: {0}", customData);
-            _customLanguageModelId = model.model_id;
-            Test(model != null);
+            Log.Debug("TestLanguageTranslator.OnCreateModel()", "Language Translator - Create model response: {0}", resp.JSON);
+            _customLanguageModelId = resp.DataObject.model_id;
+            Test(resp.DataObject != null);
             _createModelTested = true;
         }
 
-        private void OnGetModel(TranslationModel model, string customData)
+        private void OnGetModel(RESTConnector.ParsedResponse<TranslationModel> resp)
         {
-            Log.Debug("TestLanguageTranslator.OnGetModel()", "Language Translator - Get model response: {0}", customData);
-            Test(model != null);
+            Log.Debug("TestLanguageTranslator.OnGetModel()", "Language Translator - Get model response: {0}", resp.JSON);
+            Test(resp.DataObject != null);
             _getModelTested = true;
         }
 
-        private void OnDeleteModel(bool success, string customData)
+        private void OnDeleteModel(RESTConnector.ParsedResponse<object> resp)
         {
-            Log.Debug("TestLanguageTranslator.OnDeleteModel()", "Language Translator - Delete model response: success: {0}", success);
-            Test(success);
+            Log.Debug("TestLanguageTranslator.OnDeleteModel()", "Language Translator - Delete model response: success: {0}", resp.Success);
+            Test(resp.Success);
             _customLanguageModelId = null;
             _deleteModelTested = true;
         }
 
-        private void OnGetTranslation(Translations translation, string customData)
+        private void OnGetTranslation(RESTConnector.ParsedResponse<Translations> resp)
         {
-            Log.Debug("TestLanguageTranslator.OnGetTranslation()", "Langauge Translator - Translate Response: {0}", customData);
-            Test(translation != null);
+            Log.Debug("TestLanguageTranslator.OnGetTranslation()", "Langauge Translator - Translate Response: {0}", resp.JSON);
+            Test(resp.DataObject != null);
             _getTranslationTested = true;
         }
 
-        private void OnIdentify(string lang, string customData)
+        private void OnIdentify(RESTConnector.ParsedResponse<IdentifiedLanguages> resp)
         {
-            Log.Debug("TestLanguageTranslator.OnIdentify()", "Language Translator - Identify response: {0}", customData);
-            Test(lang != null);
+            Log.Debug("TestLanguageTranslator.OnIdentify()", "Language Translator - Identify response: {0}", resp.JSON);
+            Test(resp.DataObject != null);
             _identifyTested = true;
         }
 
-        private void OnGetLanguages(Languages languages, string customData)
+        private void OnGetLanguages(RESTConnector.ParsedResponse<Languages> resp)
         {
-            Log.Debug("TestLanguageTranslator.OnGetLanguages()", "Language Translator - Get languages response: {0}", customData);
-            Test(languages != null);
+            Log.Debug("TestLanguageTranslator.OnGetLanguages()", "Language Translator - Get languages response: {0}", resp.JSON);
+            Test(resp.DataObject != null);
             _getLanguagesTested = true;
         }
     }

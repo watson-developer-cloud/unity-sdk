@@ -88,7 +88,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TradeoffAnalytics.v1
         /// The On Dilemma callback delegate.
         /// </summary>
         /// <param name="resp"></param>
-        public delegate void OnDilemma(DilemmasResponse resp, string CustomData);
+        public delegate void OnDilemma(RESTConnector.ParsedResponse<DilemmasResponse> resp);
 
         public bool GetDilemma(OnDilemma callback, Problem problem, Boolean generateVisualization, string customData = default(string))
         {
@@ -122,32 +122,12 @@ namespace IBM.Watson.DeveloperCloud.Services.TradeoffAnalytics.v1
 
         private void GetDilemmaResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DilemmasResponse response = new DilemmasResponse();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = response;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("TradeoffAnalytics.GetDilemmaResponse()", "GetDilemmaResponse Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((GetDilemmaRequest)req).Data;
+
+            RESTConnector.ParsedResponse<DilemmasResponse> parsedResp = new RESTConnector.ParsedResponse<DilemmasResponse>(resp, customData, _serializer);
+
             if (((GetDilemmaRequest)req).Callback != null)
-                ((GetDilemmaRequest)req).Callback(resp.Success ? response : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+                ((GetDilemmaRequest)req).Callback(parsedResp);
         }
 
         #endregion

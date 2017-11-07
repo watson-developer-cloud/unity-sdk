@@ -17,6 +17,7 @@
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Services.Discovery.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
+using IBM.Watson.DeveloperCloud.Connection;
 using System.Collections;
 using UnityEngine;
 
@@ -257,11 +258,11 @@ public class ExampleDiscoveryV1 : MonoBehaviour
         }
     }
 
-    private void HandleCheckEnvironmentState(Environment resp, string data)
+    private void HandleCheckEnvironmentState(RESTConnector.ParsedResponse<Environment> resp)
     {
-        Log.Debug("ExampleDiscovery.Examples()", "Environment {0} is {1}", resp.environment_id, resp.status);
+        Log.Debug("ExampleDiscovery.Examples()", "Environment {0} is {1}", resp.DataObject.environment_id, resp.DataObject.status);
 
-        if (resp.status.ToLower() == "active")
+        if (resp.DataObject.status.ToLower() == "active")
             _isEnvironmentReady = true;
         else
         {
@@ -275,138 +276,138 @@ public class ExampleDiscoveryV1 : MonoBehaviour
     }
     #endregion
 
-    private void OnGetEnvironments(GetEnvironmentsResponse resp, string data)
+    private void OnGetEnvironments(RESTConnector.ParsedResponse<GetEnvironmentsResponse> resp)
     {
-        Log.Debug("ExampleDiscovery.OnGetEnvironments()", "Discovery - GetEnvironments Response: {0}", data);
+        Log.Debug("ExampleDiscovery.OnGetEnvironments()", "Discovery - GetEnvironments Response: {0}", resp.JSON);
         _getEnvironmentsTested = true;
     }
 
-    private void OnGetEnvironment(Environment resp, string data)
+    private void OnGetEnvironment(RESTConnector.ParsedResponse<Environment> resp)
     {
-        Log.Debug("ExampleDiscovery.OnGetEnvironment()", "Discovery - GetEnvironment Response: {0}", data);
+        Log.Debug("ExampleDiscovery.OnGetEnvironment()", "Discovery - GetEnvironment Response: {0}", resp.JSON);
         _getEnvironmentTested = true;
     }
 
-    private void OnAddEnvironment(Environment resp, string data)
+    private void OnAddEnvironment(RESTConnector.ParsedResponse<Environment> resp)
     {
-        Log.Debug("ExampleDiscovery.OnAddEnvironment()", "Discovery - AddEnvironment Response: {0}", data);
-        _createdEnvironmentID = resp.environment_id;
+        Log.Debug("ExampleDiscovery.OnAddEnvironment()", "Discovery - AddEnvironment Response: {0}", resp.JSON);
+        _createdEnvironmentID = resp.DataObject.environment_id;
         _addEnvironmentTested = true;
     }
 
-    private void OnGetConfigurations(GetConfigurationsResponse resp, string data)
+    private void OnGetConfigurations(RESTConnector.ParsedResponse<GetConfigurationsResponse> resp)
     {
-        Log.Debug("ExampleDiscovery.OnGetConfigurations()", "Discovery - GetConfigurations Response: {0}", data);
+        Log.Debug("ExampleDiscovery.OnGetConfigurations()", "Discovery - GetConfigurations Response: {0}", resp.JSON);
         _getConfigurationsTested = true;
     }
 
-    private void OnGetConfiguration(Configuration resp, string data)
+    private void OnGetConfiguration(RESTConnector.ParsedResponse<Configuration> resp)
     {
-        Log.Debug("ExampleDiscovery.OnGetConfiguration()", "Discovery - GetConfiguration Response: {0}", data);
+        Log.Debug("ExampleDiscovery.OnGetConfiguration()", "Discovery - GetConfiguration Response: {0}", resp.JSON);
         _getConfigurationTested = true;
 
     }
 
-    private void OnAddConfiguration(Configuration resp, string data)
+    private void OnAddConfiguration(RESTConnector.ParsedResponse<Configuration> resp)
     {
-        Log.Debug("ExampleDiscovery.OnAddConfiguration()", "Discovery - AddConfiguration Response: {0}", data);
-        _createdConfigurationID = resp.configuration_id;
+        Log.Debug("ExampleDiscovery.OnAddConfiguration()", "Discovery - AddConfiguration Response: {0}", resp.JSON);
+        _createdConfigurationID = resp.DataObject.configuration_id;
         _addConfigurationTested = true;
     }
 
-    private void OnPreviewConfiguration(TestDocument resp, string data)
+    private void OnPreviewConfiguration(RESTConnector.ParsedResponse<TestDocument> resp)
     {
         _previewConfigurationTested = true;
-        Log.Debug("ExampleDiscovery.OnPreviewConfiguration()", "Discovery - Preview configuration Response: {0}", data);
+        Log.Debug("ExampleDiscovery.OnPreviewConfiguration()", "Discovery - Preview configuration Response: {0}", resp.JSON);
     }
 
-    private void OnGetCollections(GetCollectionsResponse resp, string data)
+    private void OnGetCollections(RESTConnector.ParsedResponse<GetCollectionsResponse> resp)
     {
-        Log.Debug("ExampleDiscovery.OnGetCollections()", "Discovery - Get collections Response: {0}", data);
+        Log.Debug("ExampleDiscovery.OnGetCollections()", "Discovery - Get collections Response: {0}", resp.JSON);
         _getCollectionsTested = true;
     }
 
-    private void OnGetCollection(Collection resp, string data)
+    private void OnGetCollection(RESTConnector.ParsedResponse<Collection> resp)
     {
-        Log.Debug("ExampleDiscovery.OnGetCollection()", "Discovery - Get colletion Response: {0}", data);
+        Log.Debug("ExampleDiscovery.OnGetCollection()", "Discovery - Get colletion Response: {0}", resp.JSON);
         _getCollectionTested = true;
     }
 
-    private void OnAddCollection(CollectionRef resp, string data)
+    private void OnAddCollection(RESTConnector.ParsedResponse<CollectionRef> resp)
     {
-        Log.Debug("ExampleDiscovery.OnAddCollection()", "Discovery - Add collection Response: {0}", data);
-         _createdCollectionID = resp.collection_id;
+        Log.Debug("ExampleDiscovery.OnAddCollection()", "Discovery - Add collection Response: {0}", resp.JSON);
+        _createdCollectionID = resp.DataObject.collection_id;
         _addCollectionTested = true;
     }
 
-    private void OnGetFields(GetFieldsResponse resp, string data)
+    private void OnGetFields(RESTConnector.ParsedResponse<GetFieldsResponse> resp)
     {
-        Log.Debug("ExampleDiscovery.OnGetFields()", "Discovery - Get fields Response: {0}", data);
+        Log.Debug("ExampleDiscovery.OnGetFields()", "Discovery - Get fields Response: {0}", resp.JSON);
         _getFieldsTested = true;
     }
 
-    private void OnAddDocument(DocumentAccepted resp, string data)
+    private void OnAddDocument(RESTConnector.ParsedResponse<DocumentAccepted> resp)
     {
-        Log.Debug("ExampleDiscovery.OnAddDocument()", "Discovery - Add document Response: {0}", data);
-        _createdDocumentID = resp.document_id;
+        Log.Debug("ExampleDiscovery.OnAddDocument()", "Discovery - Add document Response: {0}", resp.JSON);
+        _createdDocumentID = resp.DataObject.document_id;
         _addDocumentTested = true;
     }
 
-    private void OnGetDocument(DocumentStatus resp, string data)
+    private void OnGetDocument(RESTConnector.ParsedResponse<DocumentStatus> resp)
     {
-        Log.Debug("ExampleDiscovery.OnGetDocument()", "Discovery - Get document Response: {0}", data);
+        Log.Debug("ExampleDiscovery.OnGetDocument()", "Discovery - Get document Response: {0}", resp.JSON);
         _getDocumentTested = true;
     }
 
-    private void OnUpdateDocument(DocumentAccepted resp, string data)
+    private void OnUpdateDocument(RESTConnector.ParsedResponse<DocumentAccepted> resp)
     {
-        Log.Debug("ExampleDiscovery.OnUpdateDocument()", "Discovery - Update document Response: {0}", data);
+        Log.Debug("ExampleDiscovery.OnUpdateDocument()", "Discovery - Update document Response: {0}", resp.JSON);
         _updateDocumentTested = true;
     }
 
-    private void OnDeleteDocument(bool success, string data)
+    private void OnDeleteDocument(RESTConnector.ParsedResponse<object> resp)
     {
-        Log.Debug("ExampleDiscovery.OnDeleteDocument()", "Discovery - Delete document Response: deleted:{0}", success);
+        Log.Debug("ExampleDiscovery.OnDeleteDocument()", "Discovery - Delete document Response: deleted:{0}", resp.Success);
 
-        if (success)
+        if (resp.Success)
             _createdDocumentID = default(string);
 
         _deleteDocumentTested = true;
     }
 
-    private void OnDeleteCollection(bool success, string data)
+    private void OnDeleteCollection(RESTConnector.ParsedResponse<object> resp)
     {
-        Log.Debug("ExampleDiscovery.OnDeleteCollection()", "Discovery - Delete collection Response: deleted:{0}", success);
+        Log.Debug("ExampleDiscovery.OnDeleteCollection()", "Discovery - Delete collection Response: deleted:{0}", resp.Success);
 
-        if (success)
+        if (resp.Success)
             _createdCollectionID = default(string);
 
         _deleteCollectionTested = true;
     }
 
-    private void OnDeleteConfiguration(bool success, string data)
+    private void OnDeleteConfiguration(RESTConnector.ParsedResponse<object> resp)
     {
-        Log.Debug("ExampleDiscovery.OnDeleteConfiguration()", "Discovery - DeleteConfiguration Response: deleted:{0}", success);
+        Log.Debug("ExampleDiscovery.OnDeleteConfiguration()", "Discovery - DeleteConfiguration Response: deleted:{0}", resp.Success);
 
-        if (success)
+        if (resp.Success)
             _createdConfigurationID = default(string);
 
         _deleteConfigurationTested = true;
     }
 
-    private void OnDeleteEnvironment(bool success, string data)
+    private void OnDeleteEnvironment(RESTConnector.ParsedResponse<object> resp)
     {
-        Log.Debug("ExampleDiscovery.OnDeleteEnvironment()", "Discovery - DeleteEnvironment Response: deleted:{0}", success);
+        Log.Debug("ExampleDiscovery.OnDeleteEnvironment()", "Discovery - DeleteEnvironment Response: deleted:{0}", resp.Success);
 
-        if (success)
+        if (resp.Success)
             _createdEnvironmentID = default(string);
 
         _deleteEnvironmentTested = true;
     }
 
-    private void OnQuery(QueryResponse resp, string data)
+    private void OnQuery(RESTConnector.ParsedResponse<QueryResponse> resp)
     {
-        Log.Debug("ExampleDiscovery.OnQuery()", "Discovery - Query Response: {0}", data);
+        Log.Debug("ExampleDiscovery.OnQuery()", "Discovery - Query Response: {0}", resp.JSON);
         _queryTested = true;
     }
 }

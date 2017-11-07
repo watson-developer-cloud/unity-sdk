@@ -24,6 +24,7 @@ using UnityEngine;
 using IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
 using IBM.Watson.DeveloperCloud.Logging;
+using IBM.Watson.DeveloperCloud.Connection;
 using System.Collections.Generic;
 using System.Collections;
 
@@ -121,26 +122,26 @@ public class ExampleNaturalLanguageClassifier : MonoBehaviour
         Log.Debug("ExampleNaturalLanguageClassifier.Examples()", "Natural language classifier examples complete.");
     }
 
-    private void OnGetClassifiers(Classifiers classifiers, string data)
+    private void OnGetClassifiers(RESTConnector.ParsedResponse<Classifiers> resp)
     {
-        Log.Debug("ExampleNaturalLanguageClassifier.OnGetClassifiers()", "Natural Language Classifier - GetClassifiers  Response: {0}", data);
+        Log.Debug("ExampleNaturalLanguageClassifier.OnGetClassifiers()", "Natural Language Classifier - GetClassifiers  Response: {0}", resp.JSON);
 
-        foreach (Classifier classifier in classifiers.classifiers)
+        foreach (Classifier classifier in resp.DataObject.classifiers)
             _classifierIds.Add(classifier.classifier_id);
 
         _getClassifiersTested = true;
     }
 
-    private void OnClassify(ClassifyResult result, string data)
+    private void OnClassify(RESTConnector.ParsedResponse<ClassifyResult> resp)
     {
-        Log.Debug("ExampleNaturalLanguageClassifier.OnClassify()", "Natural Language Classifier - Classify Response: {0}", data);
+        Log.Debug("ExampleNaturalLanguageClassifier.OnClassify()", "Natural Language Classifier - Classify Response: {0}", resp.JSON);
         _classifyTested = true;
     }
 
 #if TRAIN_CLASSIFIER
-    private void OnTrainClassifier(Classifier classifier, string data)
+    private void OnTrainClassifier(RESTConnector.ParsedResponse<Classifier> resp)
     {
-        Log.Debug("ExampleNaturalLanguageClassifier.OnTrainClassifier()", "Natural Language Classifier - Train Classifier: {0}", data);
+        Log.Debug("ExampleNaturalLanguageClassifier.OnTrainClassifier()", "Natural Language Classifier - Train Classifier: {0}", resp.JSON);
 #if DELETE_TRAINED_CLASSIFIER
         _classifierToDelete = classifier.classifier_id;
 #endif
@@ -148,25 +149,25 @@ public class ExampleNaturalLanguageClassifier : MonoBehaviour
     }
 #endif
 
-    private void OnGetClassifier(Classifier classifier, string data)
+    private void OnGetClassifier(RESTConnector.ParsedResponse<Classifier> resp)
     {
-        Log.Debug("ExampleNaturalLanguageClassifier.OnGetClassifier()", "Natural Language Classifier - Get Classifier {0}: {1}", classifier.classifier_id, data);
+        Log.Debug("ExampleNaturalLanguageClassifier.OnGetClassifier()", "Natural Language Classifier - Get Classifier {0}: {1}", resp.DataObject.classifier_id, resp.JSON);
 
         //  Get any classifier that is available
-        if (!string.IsNullOrEmpty(classifier.status) && classifier.status.ToLower() == "available")
+        if (!string.IsNullOrEmpty(resp.DataObject.status) && resp.DataObject.status.ToLower() == "available")
         {
             _areAnyClassifiersAvailable = true;
-            _classifierId = classifier.classifier_id;
+            _classifierId = resp.DataObject.classifier_id;
         }
 
-        if (classifier.classifier_id == _classifierIds[_classifierIds.Count - 1])
+        if (resp.DataObject.classifier_id == _classifierIds[_classifierIds.Count - 1])
             _getClassifierTested = true;
     }
 
 #if DELETE_TRAINED_CLASSIFIER
-    private void OnDeleteTrainedClassifier(bool success, string data)
+    private void OnDeleteTrainedClassifier(RESTConnector.ParsedResponse<bool> resp)
     {
-        Log.Debug("ExampleNaturalLanguageClassifier.OnDeleteTrainedClassifier()", "Natural Language Classifier - Delete Trained Classifier {0} | success: {1} {2}", _classifierToDelete, success, data);
+        Log.Debug("ExampleNaturalLanguageClassifier.OnDeleteTrainedClassifier()", "Natural Language Classifier - Delete Trained Classifier {0} | success: {1} {2}", _classifierToDelete, resp.Success, resp.JSON);
     }
 #endif
 }

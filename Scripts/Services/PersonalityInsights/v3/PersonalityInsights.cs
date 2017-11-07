@@ -99,7 +99,7 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3
         #region Profile
         private const string ProfileEndpoint = "/v3/profile";
 
-        public delegate void OnGetProfile(Profile profile, string data);
+        public delegate void OnGetProfile(RESTConnector.ParsedResponse<Profile> resp);
 
         public bool GetProfile(OnGetProfile callback, string source,
             string contentType = ContentType.TextPlain,
@@ -172,32 +172,12 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3
 
         private void GetProfileResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            Profile response = new Profile();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = response;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("PersonalityInsights.GetProfileResponse()", "GetProfileResponse Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((GetProfileRequest)req).Data;
+
+            RESTConnector.ParsedResponse<Profile> parsedResp = new RESTConnector.ParsedResponse<Profile>(resp, customData, _serializer);
+
             if (((GetProfileRequest)req).Callback != null)
-                ((GetProfileRequest)req).Callback(resp.Success ? response : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+                ((GetProfileRequest)req).Callback(parsedResp);
         }
         #endregion
 

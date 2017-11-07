@@ -25,6 +25,7 @@ using System.Collections;
 using IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
+using IBM.Watson.DeveloperCloud.Connection;
 using FullSerializer;
 using System;
 using System.IO;
@@ -210,81 +211,81 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             yield break;
         }
 
-        private void OnGetClassifiers(GetClassifiersTopLevelBrief classifiers, string data)
+        private void OnGetClassifiers(RESTConnector.ParsedResponse<GetClassifiersTopLevelBrief> resp)
         {
-            Log.Debug("TestVisualRecognition.OnGetClassifiers()", "VisualRecognition - GetClassifiers Response: {0}", data);
-            Test(classifiers != null);
+            Log.Debug("TestVisualRecognition.OnGetClassifiers()", "VisualRecognition - GetClassifiers Response: {0}", resp.JSON);
+            Test(resp.DataObject != null);
             _getClassifiersTested = true;
         }
 
-        private void OnGetClassifier(GetClassifiersPerClassifierVerbose classifier, string data)
+        private void OnGetClassifier(RESTConnector.ParsedResponse<GetClassifiersPerClassifierVerbose> resp)
         {
-            Log.Debug("TestVisualRecognition.OnGetClassifier()", "VisualRecognition - GetClassifier Response: {0}", data);
-            Test(classifier != null);
+            Log.Debug("TestVisualRecognition.OnGetClassifier()", "VisualRecognition - GetClassifier Response: {0}", resp.JSON);
+            Test(resp.DataObject != null);
             _getClassifierTested = true;
         }
 
 #if DELETE_TRAINED_CLASSIFIER
-        private void OnDeleteClassifier(bool success, string data)
+        private void OnDeleteClassifier(RESTConnector.ParsedResponse<object> resp)
         {
-            Log.Debug("TestVisualRecognition.OnDeleteClassifier()", "VisualRecognition - DeleteClassifier Response: {0}", success);
-            Test(success);
+            Log.Debug("TestVisualRecognition.OnDeleteClassifier()", "VisualRecognition - DeleteClassifier Response: {0}", resp.Success);
+            Test(resp.Success);
             _deleteClassifierTested = true;
         }
 #endif
 
 #if TRAIN_CLASSIFIER
-        private void OnTrainClassifier(GetClassifiersPerClassifierVerbose classifier, string data)
+        private void OnTrainClassifier(RESTConnector.ParsedResponse<GetClassifiersPerClassifierVerbose> resp)
         {
-            Log.Debug("TestVisualRecognition.OnTrainClassifier()", "VisualRecognition - TrainClassifier Response: {0}", data);
+            Log.Debug("TestVisualRecognition.OnTrainClassifier()", "VisualRecognition - TrainClassifier Response: {0}", resp.JSON);
 
 #if DELETE_TRAINED_CLASSIFIER
-            _classifierToDelete = classifier.classifier_id;
+            _classifierToDelete = resp.DataObject.classifier_id;
 #endif
-            _classifierID = classifier.classifier_id;
-            Test(classifier != null);
+            _classifierID = resp.DataObject.classifier_id;
+            Test(resp.DataObject != null);
             _trainClassifierTested = true;
         }
 #endif
 
-        private void OnClassifyGet(ClassifyTopLevelMultiple classify, string data)
+        private void OnClassifyGet(RESTConnector.ParsedResponse<ClassifyTopLevelMultiple> resp)
         {
-            Log.Debug("TestVisualRecognition.OnClassifyGet()", "VisualRecognition - ClassifyGet Response: {0}", data);
-            Test(classify != null);
+            Log.Debug("TestVisualRecognition.OnClassifyGet()", "VisualRecognition - ClassifyGet Response: {0}", resp.JSON);
+            Test(resp.DataObject != null);
             _classifyGetTested = true;
 
         }
 
-        private void OnClassifyPost(ClassifyTopLevelMultiple classify, string data)
+        private void OnClassifyPost(RESTConnector.ParsedResponse<ClassifyTopLevelMultiple> resp)
         {
-            Log.Debug("TestVisualRecognition.OnClassifyPost()", "VisualRecognition - ClassifyPost Response: {0}", data);
-            Test(classify != null);
+            Log.Debug("TestVisualRecognition.OnClassifyPost()", "VisualRecognition - ClassifyPost Response: {0}", resp.JSON);
+            Test(resp.DataObject != null);
             _classifyPostTested = true;
         }
 
-        private void OnDetectFacesGet(FacesTopLevelMultiple multipleImages, string data)
+        private void OnDetectFacesGet(RESTConnector.ParsedResponse<FacesTopLevelMultiple> resp)
         {
-            Log.Debug("TestVisualRecognition.OnDetectFacesGet()", "VisualRecognition - DetectFacesGet Response: {0}", data);
-            Test(multipleImages != null);
+            Log.Debug("TestVisualRecognition.OnDetectFacesGet()", "VisualRecognition - DetectFacesGet Response: {0}", resp.JSON);
+            Test(resp.DataObject != null);
             _detectFacesGetTested = true;
         }
 
-        private void OnDetectFacesPost(FacesTopLevelMultiple multipleImages, string data)
+        private void OnDetectFacesPost(RESTConnector.ParsedResponse<FacesTopLevelMultiple> resp)
         {
-            Log.Debug("TestVisualRecognition.OnDetectFacesPost()", "VisualRecognition - DetectFacesPost Response: {0}", data);
-            Test(multipleImages != null);
+            Log.Debug("TestVisualRecognition.OnDetectFacesPost()", "VisualRecognition - DetectFacesPost Response: {0}", resp.JSON);
+            Test(resp.DataObject != null);
             _detectFacesPostTested = true;
         }
 
-        //private void OnRecognizeTextGet(TextRecogTopLevelMultiple multipleImages, string data)
+        //private void OnRecognizeTextGet(RESTConnector.ParsedResponse<TextRecogTopLevelMultiple> resp)
         //{
-        //    Log.Debug("TestVisualRecognition.OnRecognizeTextGet()", "VisualRecognition - RecognizeTextGet Response: {0}", data);
+        //    Log.Debug("TestVisualRecognition.OnRecognizeTextGet()", "VisualRecognition - RecognizeTextGet Response: {0}", resp.JSON);
         //    _recognizeTextGetTested = true;
         //}
 
-        //private void OnRecognizeTextPost(TextRecogTopLevelMultiple multipleImages, string data)
+        //private void OnRecognizeTextPost(RESTConnector.ParsedResponse<TextRecogTopLevelMultiple> resp)
         //{
-        //    Log.Debug("TestVisualRecognition.OnRecognizeTextPost()", "VisualRecognition - RecognizeTextPost Response: {0}", data);
+        //    Log.Debug("TestVisualRecognition.OnRecognizeTextPost()", "VisualRecognition - RecognizeTextPost Response: {0}", resp.JSON);
         //    _recognizeTextPostTested = true;
         //}
 

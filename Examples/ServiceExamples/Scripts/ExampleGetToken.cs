@@ -18,6 +18,7 @@
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Services.Conversation.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
+using IBM.Watson.DeveloperCloud.Connection;
 using System.Collections;
 using UnityEngine;
 
@@ -78,9 +79,9 @@ public class ExampleGetToken : MonoBehaviour
         conversation.Message(OnMessage, _workspaceId, "hello");
     }
 
-    private void OnMessage(object resp, string customData)
+    private void OnMessage(RESTConnector.ParsedResponse<object> resp)
     {
-        Log.Debug("ExampleGetToken.OnMessage()", "message response: {0}", customData);
+        Log.Debug("ExampleGetToken.OnMessage()", "message response: {0}", resp.JSON);
 
         //  Check token time remaining
         Runnable.Run(GetTokenTimeRemaining(0f));

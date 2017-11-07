@@ -36,111 +36,75 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <summary>
         /// The callback used by the GetClassifiers() method.
         /// </summary>
-        /// <param name="classifiers">A brief description of classifiers.</param>
-        /// <param name="data">Optional data</param>
-        public delegate void OnGetClassifiers(GetClassifiersTopLevelBrief classifiers, string data);
+        public delegate void OnGetClassifiers(RESTConnector.ParsedResponse<GetClassifiersTopLevelBrief> resp);
         /// <summary>
         /// Callback used by the GetClassifier() method.
         /// </summary>
-        /// <param name="classifier">The classifier found by ID.</param>
-        /// <param name="data">Optional data</param>
-        public delegate void OnGetClassifier(GetClassifiersPerClassifierVerbose classifier, string data);
+        public delegate void OnGetClassifier(RESTConnector.ParsedResponse<GetClassifiersPerClassifierVerbose> resp);
         /// <summary>
         /// This callback is used by the DeleteClassifier() method.
         /// </summary>
-        /// <param name="success">Success or failure of the delete call.</param>
-        /// <param name="data">Optional data</param>
-        public delegate void OnDeleteClassifier(bool success, string data);
+        public delegate void OnDeleteClassifier(RESTConnector.ParsedResponse<object> resp);
         /// <summary>
         /// Callback used by the TrainClassifier() method.
         /// </summary>
-        /// <param name="classifier">The classifier created.</param>
-        /// <param name="data">Optional data</param>
-        public delegate void OnTrainClassifier(GetClassifiersPerClassifierVerbose classifier, string data);
+        public delegate void OnTrainClassifier(RESTConnector.ParsedResponse<GetClassifiersPerClassifierVerbose> resp);
         /// <summary>
         /// This callback is used by the Classify() method.
         /// </summary>
-        /// <param name="classify">Returned classification.</param>
-        /// <param name="data">Optional data</param>
-        public delegate void OnClassify(ClassifyTopLevelMultiple classify, string data);
+        public delegate void OnClassify(RESTConnector.ParsedResponse<ClassifyTopLevelMultiple> resp);
         /// <summary>
         /// This callback is used by the DetectFaces() method.
         /// </summary>
-        /// <param name="faces">Faces Detected.</param>
-        /// <param name="data">Optional data</param>
-        public delegate void OnDetectFaces(FacesTopLevelMultiple faces, string data);
+        public delegate void OnDetectFaces(RESTConnector.ParsedResponse<FacesTopLevelMultiple> resp);
         /// <summary>
         /// This callback is used by the RecognizeText() method.
         /// </summary>
-        /// <param name="text">Text Recognized.</param>
-        /// <param name="data">Optional data</param>
-        public delegate void OnRecognizeText(TextRecogTopLevelMultiple text, string data);
+        public delegate void OnRecognizeText(RESTConnector.ParsedResponse<TextRecogTopLevelMultiple> resp);
         /// <summary>
         /// This callback is used by the GetCollections() method.
         /// </summary>
-        /// <param name="collections">Collections.</param>
-        /// <param name="data">Optional data</param>
-        public delegate void OnGetCollections(GetCollections collections, string data);
+        public delegate void OnGetCollections(RESTConnector.ParsedResponse<GetCollections> resp);
         /// <summary>
         /// This callback is used by the CreateCollection() method.
         /// </summary>
-        /// <param name="collection">The created collection.</param>
-        /// <param name="data">Optional data</param>
-        public delegate void OnCreateCollection(CreateCollection collection, string data);
+        public delegate void OnCreateCollection(RESTConnector.ParsedResponse<CreateCollection> resp);
         /// <summary>
         /// This callback is used by the DeleteCollection() method.
         /// </summary>
-        /// <param name="success">Success of the delete call.</param>
-        /// <param name="data">Optional data</param>
-        public delegate void OnDeleteCollection(bool success, string data);
+        public delegate void OnDeleteCollection(RESTConnector.ParsedResponse<object> resp);
         /// <summary>
         /// This callback is used y the GetCollection() method.
         /// </summary>
-        /// <param name="collection">The collection.</param>
-        /// <param name="data">Optional data</param>
-        public delegate void OnGetCollection(CreateCollection collection, string data);
+        public delegate void OnGetCollection(RESTConnector.ParsedResponse<CreateCollection> resp);
         /// <summary>
         /// This callback is used by the GetCollectionImages() method.
         /// </summary>
-        /// <param name="images">Collection images.</param>
-        /// <param name="data">Optional data</param>
-        public delegate void OnGetCollectionImages(GetCollectionImages images, string data);
+        public delegate void OnGetCollectionImages(RESTConnector.ParsedResponse<GetCollectionImages> resp);
         /// <summary>
         /// This callback is used by the AddCollectionImage() method.
         /// </summary>
-        /// <param name="config">The collection config.</param>
-        /// <param name="data">Optional data</param>
-        public delegate void OnAddCollectionImage(CollectionsConfig config, string data);
+        public delegate void OnAddCollectionImage(RESTConnector.ParsedResponse<CollectionsConfig> resp);
         /// <summary>
         /// This callback is used by the DeleteCollectionImage() method.
         /// </summary>
-        /// <param name="success">Success or failure of deleting collection image.</param>
-        /// <param name="data">Optional data</param>
-        public delegate void OnDeleteCollectionImage(bool success, string data);
+        public delegate void OnDeleteCollectionImage(RESTConnector.ParsedResponse<object> resp);
         /// <summary>
         /// This callback is used by the GetImageDetails() method.
         /// </summary>
-        /// <param name="image">The image details.</param>
-        /// <param name="data">Optional data</param>
-        public delegate void OnGetImageDetails(GetCollectionsBrief image, string data);
+        public delegate void OnGetImageDetails(RESTConnector.ParsedResponse<GetCollectionsBrief> resp);
         /// <summary>
         /// This callback is used by the DeleteImageMetadata() method.
         /// </summary>
-        /// <param name="success">Success of the delete call.</param>
-        /// <param name="data">Optional data</param>
-        public delegate void OnDeleteImageMetadata(bool success, string data);
+        public delegate void OnDeleteImageMetadata(RESTConnector.ParsedResponse<object> resp);
         /// <summary>
         /// This callback is used by the GetImageMetadata() method.
         /// </summary>
-        /// <param name="metadata"></param>
-        /// <param name="data">Optional data</param>
-        public delegate void OnGetImageMetadata(object metadata, string data);
+        public delegate void OnGetImageMetadata(RESTConnector.ParsedResponse<GetCollectionsBrief> resp);
         /// <summary>
         /// This callback is used by the FindSimilar() method.
         /// </summary>
-        /// <param name="similarImages"></param>
-        /// <param name="data">Optional data</param>
-        public delegate void OnFindSimilar(SimilarImagesConfig similarImages, string data);
+        public delegate void OnFindSimilar(RESTConnector.ParsedResponse<SimilarImagesConfig> resp);
 
         /// <summary>
         /// The delegate for loading a file, used by TrainClassifier().
@@ -388,33 +352,12 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
         private void OnClassifyResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            ClassifyTopLevelMultiple classify = null;
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    classify = new ClassifyTopLevelMultiple();
-
-                    object obj = classify;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("VisualRecognition.OnClassifyResp()", "Classify exception: {0}", e.ToString());
-                }
-            }
-
             string customData = ((ClassifyReq)req).Data;
+
+            RESTConnector.ParsedResponse<ClassifyTopLevelMultiple> parsedResp = new RESTConnector.ParsedResponse<ClassifyTopLevelMultiple>(resp, customData, _serializer);
+
             if (((ClassifyReq)req).Callback != null)
-                ((ClassifyReq)req).Callback(resp.Success ? classify : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+                ((ClassifyReq)req).Callback(parsedResp);
         }
         #endregion
 
@@ -545,33 +488,12 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
         private void OnDetectFacesResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            FacesTopLevelMultiple faces = null;
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    faces = new FacesTopLevelMultiple();
-
-                    object obj = faces;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("VisualRecognition.OnDetectFacesResp()", "Detect faces exception: {0}", e.ToString());
-                }
-            }
-
             string customData = ((DetectFacesReq)req).Data;
+
+            RESTConnector.ParsedResponse<FacesTopLevelMultiple> parsedResp = new RESTConnector.ParsedResponse<FacesTopLevelMultiple>(resp, customData, _serializer);
+
             if (((DetectFacesReq)req).Callback != null)
-                ((DetectFacesReq)req).Callback(resp.Success ? faces : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+                ((DetectFacesReq)req).Callback(parsedResp);
         }
         #endregion
 
@@ -700,33 +622,12 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
         private void OnRecognizeTextResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            TextRecogTopLevelMultiple text = null;
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    text = new TextRecogTopLevelMultiple();
-
-                    object obj = text;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("VisualRecognition.OnRecognizeTextResp()", "Detect text exception: {0}", e.ToString());
-                }
-            }
-
             string customData = ((RecognizeTextReq)req).Data;
+
+            RESTConnector.ParsedResponse<TextRecogTopLevelMultiple> parsedResp = new RESTConnector.ParsedResponse<TextRecogTopLevelMultiple>(resp, customData, _serializer);
+
             if (((RecognizeTextReq)req).Callback != null)
-                ((RecognizeTextReq)req).Callback(resp.Success ? text : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+                ((RecognizeTextReq)req).Callback(parsedResp);
         }
         #endregion
         
@@ -778,31 +679,12 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
         private void OnGetClassifiersResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            GetClassifiersTopLevelBrief classifiers = new GetClassifiersTopLevelBrief();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-
-                    object obj = classifiers;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("VisualRecognition.OnGetClassifiersResp()", "GetClassifiers Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((GetClassifiersReq)req).Data;
+
+            RESTConnector.ParsedResponse<GetClassifiersTopLevelBrief> parsedResp = new RESTConnector.ParsedResponse<GetClassifiersTopLevelBrief>(resp, customData, _serializer);
+
             if (((GetClassifiersReq)req).Callback != null)
-                ((GetClassifiersReq)req).Callback(resp.Success ? classifiers : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+                ((GetClassifiersReq)req).Callback(parsedResp);
         }
         #endregion
 
@@ -851,32 +733,12 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
         private void OnGetClassifierResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            GetClassifiersPerClassifierVerbose classifier = new GetClassifiersPerClassifierVerbose();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = classifier;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("VisualRecognition.OnGetClassifierResp()", "GetClassifier Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((GetClassifierReq)req).Data;
+
+            RESTConnector.ParsedResponse<GetClassifiersPerClassifierVerbose> parsedResp = new RESTConnector.ParsedResponse<GetClassifiersPerClassifierVerbose>(resp, customData, _serializer);
+
             if (((GetClassifierReq)req).Callback != null)
-                ((GetClassifierReq)req).Callback(resp.Success ? classifier : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+                ((GetClassifierReq)req).Callback(parsedResp);
         }
         #endregion
 
@@ -991,32 +853,12 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
         private void OnTrainClassifierResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            GetClassifiersPerClassifierVerbose classifier = new GetClassifiersPerClassifierVerbose();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = classifier;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("VisualRecognition.OnTrainClassifierResp()", "TrainClassifiers Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((TrainClassifierReq)req).Data;
+
+            RESTConnector.ParsedResponse<GetClassifiersPerClassifierVerbose> parsedResp = new RESTConnector.ParsedResponse<GetClassifiersPerClassifierVerbose>(resp, customData, _serializer);
+
             if (((TrainClassifierReq)req).Callback != null)
-                ((TrainClassifierReq)req).Callback(resp.Success ? classifier : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+                ((TrainClassifierReq)req).Callback(parsedResp);
         }
         #endregion
 
@@ -1165,8 +1007,12 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
         private void OnDeleteClassifierResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
+            string customData = ((DeleteClassifierReq)req).Data;
+
+            RESTConnector.ParsedResponse<object> parsedResp = new RESTConnector.ParsedResponse<object>(resp, customData, null);
+
             if (((DeleteClassifierReq)req).Callback != null)
-                ((DeleteClassifierReq)req).Callback(resp.Success, ((DeleteClassifierReq)req).Data);
+                ((DeleteClassifierReq)req).Callback(parsedResp);
         }
         #endregion
 
@@ -1216,31 +1062,12 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
         private void OnGetCollectionsResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            GetCollections collections = new GetCollections();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-
-                    object obj = collections;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("VisualRecognition.OnGetCollectionsResp()", "GetCollections Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((GetCollectionsReq)req).Data;
+
+            RESTConnector.ParsedResponse<GetCollections> parsedResp = new RESTConnector.ParsedResponse<GetCollections>(resp, customData, _serializer);
+
             if (((GetCollectionsReq)req).Callback != null)
-                ((GetCollectionsReq)req).Callback(resp.Success ? collections : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+                ((GetCollectionsReq)req).Callback(parsedResp);
         }
         #endregion
 
@@ -1301,31 +1128,12 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
         private void OnCreateCollectionResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            CreateCollection collection = new CreateCollection();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-
-                    object obj = collection;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("VisualRecognition.OnCreateCollectionResp()", "OnCreateCollectionResp Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((CreateCollectionReq)req).Data;
+
+            RESTConnector.ParsedResponse<CreateCollection> parsedResp = new RESTConnector.ParsedResponse<CreateCollection>(resp, customData, _serializer);
+
             if (((CreateCollectionReq)req).Callback != null)
-                ((CreateCollectionReq)req).Callback(resp.Success ? collection : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+                ((CreateCollectionReq)req).Callback(parsedResp);
         }
         #endregion
 
@@ -1383,8 +1191,12 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
         private void OnDeleteCollectionResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
+            string customData = ((DeleteCollectionReq)req).Data;
+
+            RESTConnector.ParsedResponse<object> parsedResp = new RESTConnector.ParsedResponse<object>(resp, customData, null);
+
             if (((DeleteCollectionReq)req).Callback != null)
-                ((DeleteCollectionReq)req).Callback(resp.Success, ((DeleteCollectionReq)req).Data);
+                ((DeleteCollectionReq)req).Callback(parsedResp);
         }
         #endregion
 
@@ -1441,31 +1253,12 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
         private void OnGetCollectionResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            CreateCollection collection = new CreateCollection();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-
-                    object obj = collection;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("VisualRecognition.OnGetCollectionResp()", "GetCollection Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((GetCollectionReq)req).Data;
+
+            RESTConnector.ParsedResponse<CreateCollection> parsedResp = new RESTConnector.ParsedResponse<CreateCollection>(resp, customData, _serializer);
+
             if (((GetCollectionReq)req).Callback != null)
-                ((GetCollectionReq)req).Callback(resp.Success ? collection : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+                ((GetCollectionReq)req).Callback(parsedResp);
         }
         #endregion
 
@@ -1522,31 +1315,12 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
         private void OnGetCollectionImagesResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            GetCollectionImages collectionImages = new GetCollectionImages();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-
-                    object obj = collectionImages;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("VisualRecognition.OnGetCollectionImagesResp()", "GetCollectionImages Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((GetCollectionImagesReq)req).Data;
+
+            RESTConnector.ParsedResponse<GetCollectionImages> parsedResp = new RESTConnector.ParsedResponse<GetCollectionImages>(resp, customData, _serializer);
+
             if (((GetCollectionImagesReq)req).Callback != null)
-                ((GetCollectionImagesReq)req).Callback(resp.Success ? collectionImages : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+                ((GetCollectionImagesReq)req).Callback(parsedResp);
         }
         #endregion
 
@@ -1717,31 +1491,12 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
         private void OnAddCollectionImageResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            CollectionsConfig collectionsConfig = new CollectionsConfig();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-
-                    object obj = collectionsConfig;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("VisualRecognition.OnAddCollectionImageResp()", "OnCreateCollectionResp Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((AddCollectionImageReq)req).Data;
+
+            RESTConnector.ParsedResponse<CollectionsConfig> parsedResp = new RESTConnector.ParsedResponse<CollectionsConfig>(resp, customData, _serializer);
+
             if (((AddCollectionImageReq)req).Callback != null)
-                ((AddCollectionImageReq)req).Callback(resp.Success ? collectionsConfig : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+                ((AddCollectionImageReq)req).Callback(parsedResp);
         }
         #endregion
 
@@ -1807,8 +1562,12 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
         private void OnDeleteCollectionImageResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
+            string customData = ((DeleteCollectionImageReq)req).Data;
+
+            RESTConnector.ParsedResponse<object> parsedResp = new RESTConnector.ParsedResponse<object>(resp, customData, null);
+
             if (((DeleteCollectionImageReq)req).Callback != null)
-                ((DeleteCollectionImageReq)req).Callback(resp.Success, ((DeleteCollectionImageReq)req).Data);
+                ((DeleteCollectionImageReq)req).Callback(parsedResp);
         }
         #endregion
 
@@ -1872,31 +1631,12 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
         private void OnGetCollectionImageResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            GetCollectionsBrief image = new GetCollectionsBrief();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-
-                    object obj = image;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("VisualRecognition.OnGetCollectionImageResp()", "GetCollectionImage Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((GetCollectionImageReq)req).Data;
+
+            RESTConnector.ParsedResponse<GetCollectionsBrief> parsedResp = new RESTConnector.ParsedResponse<GetCollectionsBrief>(resp, customData, _serializer);
+
             if (((GetCollectionImageReq)req).Callback != null)
-                ((GetCollectionImageReq)req).Callback(resp.Success ? image : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+                ((GetCollectionImageReq)req).Callback(parsedResp);
         }
         #endregion
 
@@ -1962,8 +1702,12 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
         private void OnDeleteCollectionImageMetadataResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
+            string customData = ((DeleteCollectionImageMetadataReq)req).Data;
+
+            RESTConnector.ParsedResponse<object> parsedResp = new RESTConnector.ParsedResponse<object>(resp, customData, null);
+
             if (((DeleteCollectionImageMetadataReq)req).Callback != null)
-                ((DeleteCollectionImageMetadataReq)req).Callback(resp.Success, ((DeleteCollectionImageMetadataReq)req).Data);
+                ((DeleteCollectionImageMetadataReq)req).Callback(parsedResp);
         }
         #endregion
 
@@ -2028,31 +1772,12 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
         private void OnGetCollectionImageMetadataResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            GetCollectionsBrief image = new GetCollectionsBrief();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-
-                    object obj = image;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("VisualRecognition.OnGetCollectionImageMetadataResp()", "GetCollectionImage Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((GetCollectionImageMetadataReq)req).Data;
+
+            RESTConnector.ParsedResponse<GetCollectionsBrief> parsedResp = new RESTConnector.ParsedResponse<GetCollectionsBrief>(resp, customData, _serializer);
+
             if (((GetCollectionImageMetadataReq)req).Callback != null)
-                ((GetCollectionImageMetadataReq)req).Callback(resp.Success ? image : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+                ((GetCollectionImageMetadataReq)req).Callback(parsedResp);
         }
         #endregion
 
@@ -2170,31 +1895,12 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 
         private void OnFindSimilarResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            SimilarImagesConfig config = new SimilarImagesConfig();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-
-                    object obj = config;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("VisualRecognition.OnFindSimilarResp()", "OnCreateCollectionResp Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
             string customData = ((FindSimilarReq)req).Data;
+
+            RESTConnector.ParsedResponse<SimilarImagesConfig> parsedResp = new RESTConnector.ParsedResponse<SimilarImagesConfig>(resp, customData, _serializer);
+
             if (((FindSimilarReq)req).Callback != null)
-                ((FindSimilarReq)req).Callback(resp.Success ? config : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+                ((FindSimilarReq)req).Callback(parsedResp);
         }
         #endregion
 

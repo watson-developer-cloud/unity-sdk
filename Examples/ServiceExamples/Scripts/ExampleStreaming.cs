@@ -21,6 +21,7 @@ using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Services.SpeechToText.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
 using IBM.Watson.DeveloperCloud.DataTypes;
+using IBM.Watson.DeveloperCloud.Connection;
 using System.Collections.Generic;
 
 public class ExampleStreaming : MonoBehaviour
@@ -168,7 +169,7 @@ public class ExampleStreaming : MonoBehaviour
         yield break;
     }
 
-    private void OnRecognize(SpeechRecognitionEvent result)
+    private void OnRecognize(SpeechRecognitionEvent result, RESTConnector.Error error)
     {
         if (result != null && result.results.Length > 0)
         {
@@ -201,7 +202,7 @@ public class ExampleStreaming : MonoBehaviour
         }
     }
 
-    private void OnRecognizeSpeaker(SpeakerRecognitionEvent result)
+    private void OnRecognizeSpeaker(SpeakerRecognitionEvent result, RESTConnector.Error error)
     {
         if (result != null)
         {

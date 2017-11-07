@@ -20,6 +20,7 @@ using System.Collections;
 using IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
+using IBM.Watson.DeveloperCloud.Connection;
 using FullSerializer;
 using System;
 using System.IO;
@@ -35,7 +36,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         //private string _token = "<authentication-token>";
 
         private string _examplePath;
-        private string _conversionTarget = ConversionTarget.NormalizedHtml;
+        private string _conversionTarget = ConversionTarget.Answerunits;
         private bool _convertDocumentTested = false;
 
         public override IEnumerator RunTest()
@@ -100,10 +101,10 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             yield break;
         }
 
-        private void OnConvertDocument(ConvertedDocument documentConversionResponse, string data)
+        private void OnConvertDocument(RESTConnector.ParsedResponse<ConvertedDocument> resp)
         {
-            Log.Debug("TestDoucmentConversion.OnConvertDocument()", "DocumentConversion - Convert document Response: {0}", documentConversionResponse.htmlContent);
-            Test(documentConversionResponse != null);
+            Log.Debug("TestDoucmentConversion.OnConvertDocument()", "DocumentConversion - Convert document Response: {0}", resp.DataObject.htmlContent);
+            Test(resp.DataObject != null);
             _convertDocumentTested = true;
         }
     }
