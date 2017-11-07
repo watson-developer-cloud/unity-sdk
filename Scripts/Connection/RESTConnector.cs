@@ -41,6 +41,9 @@ namespace IBM.Watson.DeveloperCloud.Connection
     {
         public const string AUTHENTICATION_TOKEN_AUTHORIZATION_HEADER = "X-Watson-Authorization-Token";
         public const string AUTHENTICATION_AUTHORIZATION_HEADER = "Authorization";
+        public const long HTTP_STATUS_OK = 200;
+        public const long HTTP_STATUS_CREATED = 201;
+        public const long HTTP_STATUS_NO_CONTENT = 204;
         #region Public Types
         /// <summary>
         /// This delegate type is declared for a Response handler function.
@@ -421,14 +424,14 @@ namespace IBM.Watson.DeveloperCloud.Connection
                     bool bError = false;
                     if (!string.IsNullOrEmpty(www.error))
                     {
-                        int nErrorCode = -1;
+                        long nErrorCode = -1;
                         int nSeperator = www.error.IndexOf(' ');
-                        if (nSeperator > 0 && int.TryParse(www.error.Substring(0, nSeperator).Trim(), out nErrorCode))
+                        if (nSeperator > 0 && long.TryParse(www.error.Substring(0, nSeperator).Trim(), out nErrorCode))
                         {
                             switch (nErrorCode)
                             {
-                                case 200:
-                                case 201:
+                                case HTTP_STATUS_OK:
+                                case HTTP_STATUS_CREATED:
                                     bError = false;
                                     break;
                                 default:
@@ -542,8 +545,10 @@ namespace IBM.Watson.DeveloperCloud.Connection
                         Headers[kp.Key] = kp.Value;
                 }
 
+#if !NETFX_CORE
                 // This fixes the exception thrown by self-signed certificates.
                 ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(delegate { return true; });
+#endif
 
 #if ENABLE_DEBUGGING
                 Log.Debug("DeleteRequest.Send()", "DeleteRequest, ProcessRequest {0}", URL);
@@ -565,7 +570,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
 #if ENABLE_DEBUGGING
                 Log.Debug("DeleteRequest.Send()", "DELETE Request SENT: {0}", URL);
 #endif
-                Success = deleteReq.responseCode == (long)HttpStatusCode.OK || deleteReq.responseCode == (long)HttpStatusCode.NoContent;
+                Success = deleteReq.responseCode == HTTP_STATUS_OK || deleteReq.responseCode == HTTP_STATUS_OK || deleteReq.responseCode == HTTP_STATUS_NO_CONTENT;
 #if ENABLE_DEBUGGING
                 Log.Debug("DeleteRequest.Send()", "DELETE Request COMPLETE: {0}", URL);
 #endif
