@@ -139,13 +139,13 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 if (Data == null || Data.Length == 0)
                     return true;
 
-                T dataObject = new T();
-                fsData data = null;
-
                 try
                 {
                     if (serializer != null)
                     {
+                        T dataObject = new T();
+                        fsData data = null;
+
                         fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(Data), out data);
                         if (!r.Succeeded)
                             throw new WatsonException(r.FormattedMessages);
@@ -162,10 +162,6 @@ namespace IBM.Watson.DeveloperCloud.Connection
                     {
                         JSON = Encoding.UTF8.GetString(Data);
                         DataObject = (T)Json.Deserialize(JSON);
-                    }
-                    else
-                    {
-                        DataObject = (T)(object)Encoding.UTF8.GetString(Data);
                     }
                 }
                 catch (Exception e)

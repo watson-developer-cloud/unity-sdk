@@ -522,6 +522,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
             req.Callback = callback;
             req.Send = Encoding.UTF8.GetBytes(text);
             req.Headers["Content-Type"] = "text/plain";
+            req.Headers["Accept"] = "application/json";
             req.OnResponse = OnIdentifyResponse;
 
             return connector.Send(req);
