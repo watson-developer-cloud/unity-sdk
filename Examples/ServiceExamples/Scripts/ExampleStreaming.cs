@@ -107,12 +107,12 @@ public class ExampleStreaming : MonoBehaviour
     {
         Active = false;
 
-        Log.Debug("ExampleStreaming", "Error! {0}", error);
+        Log.Debug("ExampleStreaming.OnError()", "Error! {0}", error);
     }
 
     private IEnumerator RecordingHandler()
     {
-        Log.Debug("ExampleStreaming", "devices: {0}", Microphone.devices);
+        Log.Debug("ExampleStreaming.RecordingHandler()", "devices: {0}", Microphone.devices);
         _recording = Microphone.Start(_microphoneID, true, _recordingBufferSize, _recordingHZ);
         yield return null;      // let _recordingRoutine get set..
 
@@ -131,7 +131,7 @@ public class ExampleStreaming : MonoBehaviour
             int writePos = Microphone.GetPosition(_microphoneID);
             if (writePos > _recording.samples || !Microphone.IsRecording(_microphoneID))
             {
-                Log.Error("MicrophoneWidget", "Microphone disconnected.");
+                Log.Error("ExampleStreaming.RecordingHandler()", "Microphone disconnected.");
 
                 StopRecording();
                 yield break;
@@ -177,14 +177,14 @@ public class ExampleStreaming : MonoBehaviour
                 foreach (var alt in res.alternatives)
                 {
                     string text = alt.transcript;
-                    Log.Debug("ExampleStreaming", string.Format("{0} ({1}, {2:0.00})\n", text, res.final ? "Final" : "Interim", alt.confidence));
+                    Log.Debug("ExampleStreaming.OnRecognize()", string.Format("{0} ({1}, {2:0.00})\n", text, res.final ? "Final" : "Interim", alt.confidence));
                 }
 
                 if (res.keywords_result != null && res.keywords_result.keyword != null)
                 {
                     foreach (var keyword in res.keywords_result.keyword)
                     {
-                        Log.Debug("ExampleSpeechToText", "keyword: {0}, confidence: {1}, start time: {2}, end time: {3}", keyword.normalized_text, keyword.confidence, keyword.start_time, keyword.end_time);
+                        Log.Debug("ExampleStreaming.OnRecognize()", "keyword: {0}, confidence: {1}, start time: {2}, end time: {3}", keyword.normalized_text, keyword.confidence, keyword.start_time, keyword.end_time);
                     }
                 }
 
@@ -192,9 +192,9 @@ public class ExampleStreaming : MonoBehaviour
                 {
                     foreach (var wordAlternative in res.word_alternatives)
                     {
-                        Log.Debug("ExampleSpeechToText", "Word alternatives found. Start time: {0} | EndTime: {1}", wordAlternative.start_time, wordAlternative.end_time);
+                        Log.Debug("ExampleStreaming.OnRecognize()", "Word alternatives found. Start time: {0} | EndTime: {1}", wordAlternative.start_time, wordAlternative.end_time);
                         foreach(var alternative in wordAlternative.alternatives)
-                            Log.Debug("ExampleSpeechToText", "\t word: {0} | confidence: {1}", alternative.word, alternative.confidence);
+                            Log.Debug("ExampleStreaming.OnRecognize()", "\t word: {0} | confidence: {1}", alternative.word, alternative.confidence);
                     }
                 }
             }
@@ -207,7 +207,7 @@ public class ExampleStreaming : MonoBehaviour
         {
             foreach (SpeakerLabelsResult labelResult in result.speaker_labels)
             {
-                Log.Debug("ExampleStreaming", string.Format("speaker result: {0} | confidence: {3} | from: {1} | to: {2}", labelResult.speaker, labelResult.from, labelResult.to, labelResult.confidence));
+                Log.Debug("ExampleStreaming.OnRecognize()", string.Format("speaker result: {0} | confidence: {3} | from: {1} | to: {2}", labelResult.speaker, labelResult.from, labelResult.to, labelResult.confidence));
             }
         }
 

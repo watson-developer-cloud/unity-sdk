@@ -151,7 +151,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             }
             else
             {
-                Log.Error("Alchemy Language", "Either a URL or a html page source is required for GetAuthors!");
+                Log.Error("AlchemyAPI.GetAuthors()", "Either a URL or a html page source is required for GetAuthors!");
                 return false;
             }
 
@@ -198,7 +198,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("AlchemyLanguage", "OnGetAuthorsResponse Exception: {0}", e.ToString());
+                    Log.Error("AlchemyAPI.OnGetAuthorsResponse()", "OnGetAuthorsResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -326,7 +326,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("AlchemyLanguage", "OnGetRankedConceptsResponse Exception: {0}", e.ToString());
+                    Log.Error("AlchemyApi.OnGetRankedConceptsResponse()", "OnGetRankedConceptsResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -447,7 +447,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("AlchemyLanguage", "OnDatesResponse Exception: {0}", e.ToString());
+                    Log.Error("AlchemyApi.OnGetDatesResponse()", "OnDatesResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -571,7 +571,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("AlchemyLanguage", "OnGetEmotionsResponse Exception: {0}", e.ToString());
+                    Log.Error("AlchemyApi.OnGetEmotionsResponse()", "OnGetEmotionsResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -714,7 +714,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("AlchemyLanguage", "OnGetEntitiesResponse Exception: {0}", e.ToString());
+                    Log.Error("AlchemyApi.OnGetEntitiesResponse()", "OnGetEntitiesResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -769,7 +769,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             }
             else if (source.StartsWith(Application.dataPath) && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
             {
-                Log.Error("Alchemy Language", "A URL source is required for DetectFeeds!");
+                Log.Error("AlchemyAPI.DetectFeeds()", "A URL source is required for DetectFeeds!");
                 return false;
                 //                service = SERVICE_DETECT_FEEDS_HTML;
                 //                string htmlData = default(string);
@@ -778,7 +778,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             }
             else
             {
-                Log.Error("Alchemy Language", "A URL source is required for DetectFeeds!");
+                Log.Error("AlchemyAPI.DetectFeeds()", "A URL source is required for DetectFeeds!");
                 return false;
             }
 
@@ -825,7 +825,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("AlchemyLanguage", "OnDetectFeedsResponse Exception: {0}", e.ToString());
+                    Log.Error("AlchemyApi.OnDetectFeedsResponse()", "OnDetectFeedsResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -954,7 +954,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("AlchemyLanguage", "OnGetKeywordsResponse Exception: {0}", e.ToString());
+                    Log.Error("AlchemyApi.OnGetKeywordsResponse()", "OnGetKeywordsResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -1071,7 +1071,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("AlchemyLanguage", "OnGetEmotionsResponse Exception: {0}", e.ToString());
+                    Log.Error("AlchemyApi.OnGetLanguagesResponse()", "OnGetEmotionsResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -1126,7 +1126,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             }
             else if (source.StartsWith(Application.dataPath) && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
             {
-                Log.Error("Alchemy Language", "A URL source is required for GetMicroformats!");
+                Log.Error("AlchemyAPI.GetMicroformats()", "A URL source is required for GetMicroformats!");
                 return false;
                 //                service = SERVICE_GET_MICROFORMAT_HTML;
                 //                string htmlData = default(string);
@@ -1135,7 +1135,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             }
             else
             {
-                Log.Error("Alchemy Language", "A URL source is required for GetMicroformats!");
+                Log.Error("AlchemyAPI.GetMicroformats()", "A URL source is required for GetMicroformats!");
                 return false;
             }
 
@@ -1182,7 +1182,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("AlchemyLanguage", "OnGetMicroformatsResponse Exception: {0}", e.ToString());
+                    Log.Error("AlchemyApi.OnGetMicroformatsResponse()", "OnGetMicroformatsResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -1249,7 +1249,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             }
             else
             {
-                Log.Error("Alchemy Language", "Either a URL or a html page source is required for GetPublicationDate!");
+                Log.Error("AlchemyAPI.GetPublicationDate()", "Either a URL or a html page source is required for GetPublicationDate!");
                 return false;
             }
 
@@ -1296,7 +1296,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("AlchemyLanguage", "OnGetPublicationDateResponse Exception: {0}", e.ToString());
+                    Log.Error("AlchemyApi.OnGetPublicationDateResponse()", "OnGetPublicationDateResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -1446,7 +1446,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("AlchemyLanguage", "OnGetRelationsResponse Exception: {0}", e.ToString());
+                    Log.Error("AlchemyApi.OnGetRelationsResponse()", "OnGetRelationsResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -1563,7 +1563,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("AlchemyLanguage", "OnGetTextSentimentResponse Exception: {0}", e.ToString());
+                    Log.Error("AlchemyApi.OnGetTextSentimentResponse()", "OnGetTextSentimentResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -1684,7 +1684,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("AlchemyLanguage", "OnGetTargetedSentimentResponse Exception: {0}", e.ToString());
+                    Log.Error("AlchemyApi.OnGetTargetedSentimentResponse()", "OnGetTargetedSentimentResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -1801,7 +1801,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("AlchemyLanguage", "OnGetRankedTaxonomyResponse Exception: {0}", e.ToString());
+                    Log.Error("AlchemyApi.OnGetRankedTaxonomyResponse()", "OnGetRankedTaxonomyResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -1872,7 +1872,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             }
             else
             {
-                Log.Error("Alchemy Language", "Either a URL or a html page source is required for GetText!");
+                Log.Error("AlchemyAPI.GetText()", "Either a URL or a html page source is required for GetText!");
                 return false;
             }
 
@@ -1919,7 +1919,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("AlchemyLanguage", "OnGetTextResponse Exception: {0}", e.ToString());
+                    Log.Error("AlchemyApi.OnGetTextResponse()", "OnGetTextResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -1981,7 +1981,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             }
             else
             {
-                Log.Error("Alchemy Language", "Either a URL or a html page source is required for GetRawText!");
+                Log.Error("AlchemyAPI.GetRawText()", "Either a URL or a html page source is required for GetRawText!");
                 return false;
             }
 
@@ -2052,7 +2052,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             }
             else
             {
-                Log.Error("Alchemy Language", "Either a URL or a html page source is required for GetTitle!");
+                Log.Error("AlchemyAPI.GetTitle()", "Either a URL or a html page source is required for GetTitle!");
                 return false;
             }
 
@@ -2099,7 +2099,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("AlchemyLanguage", "OnGetTitleResponse Exception: {0}", e.ToString());
+                    Log.Error("AlchemyApi.OnGetTitleResponse()", "OnGetTitleResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -2292,7 +2292,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("AlchemyLanguage", "OnCombinedCallResponse Exception: {0}", e.ToString());
+                    Log.Error("AlchemyApi.OnCombinedCallResponse()", "OnCombinedCallResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -2398,7 +2398,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("AlchemyDataNews", "OnGetNewsResponse Exception: {0}", e.ToString());
+                    Log.Error("AlchemyAPI.OnGetNewsResponse()", "OnGetNewsResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }

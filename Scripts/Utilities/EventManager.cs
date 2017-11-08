@@ -102,7 +102,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                 {
                     if (receivers[i] == null)
                     {
-                        Log.Warning("EventManager", "Removing invalid event receiver.");
+                        Log.Warning("EventManager.SendEvent()", "Removing invalid event receiver.");
                         receivers.RemoveAt(i--);
                         continue;
                     }
@@ -112,7 +112,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                     }
                     catch (Exception ex)
                     {
-                        Log.Error("EventManager", "Event Receiver Exception: {0}", ex.ToString());
+                        Log.Error("EventManager.SendEvent()", "Event Receiver Exception: {0}", ex.ToString());
                     }
                 }
                 return true;

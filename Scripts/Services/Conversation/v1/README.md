@@ -29,12 +29,12 @@ Send a message to the Conversation instance
 private void Message()
 {
   if (!_conversation.Message(OnMessage, <workspace-id>, <input-string>))
-    Log.Debug("ExampleConversation", "Failed to message!");
+    Log.Debug("ExampleConversation.Message()", "Failed to message!");
 }
 
 private void OnMessage(object resp, string data)
 {
-  Log.Debug("ExampleConversation", "Conversation: Message Response: {0}", data);
+  Log.Debug("ExampleConversation.OnMessage()", "Conversation: Message Response: {0}", data);
 }
 ```
 ```cs
@@ -50,12 +50,12 @@ private void Message()
   };
 
   if (!_conversation.Message(OnMessage, <workspace-id>, messageRequest))
-    Log.Debug("ExampleConversation", "Failed to message!");
+    Log.Debug("ExampleConversation.Message()", "Failed to message!");
 }
 
 private void OnMessage(object resp, string data)
 {
-  Log.Debug("ExampleConversation", "Conversation: Message Response: {0}", data);
+  Log.Debug("ExampleConversation.OnMessage()", "Conversation: Message Response: {0}", data);
 }
 ```
 ```cs
@@ -65,12 +65,12 @@ Dictionary<string, object> _context; // context to persist
 private void Message0()
 {
   if (!_conversation.Message(OnMessage, <workspace-id>, <input-string0>))
-    Log.Debug("ExampleConversation", "Failed to message!");
+    Log.Debug("ExampleConversation.Message()", "Failed to message!");
 }
 
 private void OnMessage0(object resp, string data)
 {
-  Log.Debug("ExampleConversation", "Conversation: Message Response: {0}", data);
+  Log.Debug("ExampleConversation.OnMessage0()", "Conversation: Message Response: {0}", data);
 
   //  Set context for next round of messaging
   object _tempContext = null;
@@ -79,7 +79,7 @@ private void OnMessage0(object resp, string data)
   if (_tempContext != null)
       _context = _tempContext as Dictionary<string, object>;
   else
-      Log.Debug("ExampleConversation", "Failed to get context");
+      Log.Debug("ExampleConversation.OnMessage0()", "Failed to get context");
 }
 
 private void Message1()
@@ -94,12 +94,12 @@ private void Message1()
   };
 
   if (!_conversation.Message(OnMessage, <workspace-id>, messageRequest))
-    Log.Debug("ExampleConversation", "Failed to message!");
+    Log.Debug("ExampleConversation.Message1()", "Failed to message!");
 }
 
 private void OnMessage1(object resp, string data)
 {
-  Log.Debug("ExampleConversation", "Conversation: Message Response: {0}", data);
+  Log.Debug("ExampleConversation.OnMessage1()", "Conversation: Message Response: {0}", data);
 }
 ```
 

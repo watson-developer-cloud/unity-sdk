@@ -324,11 +324,11 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("SpeechToText", "Caught exception {0} when parsing GetModel() response: {1}", e.ToString(), Encoding.UTF8.GetString(resp.Data));
+                    Log.Error("SpeechToText.OnGetModelsResponse()", "Caught exception {0} when parsing GetModel() response: {1}", e.ToString(), Encoding.UTF8.GetString(resp.Data));
                 }
 
                 if (resp == null)
-                    Log.Error("SpeechToText", "Failed to parse GetModel response.");
+                    Log.Error("SpeechToText.OnGetModelsResponse()", "Failed to parse GetModel response.");
             }
 
             string customData = ((GetModelsRequest)req).Data;
@@ -396,11 +396,11 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("SpeechToText", "Caught exception {0} when parsing GetModel() response: {1}", e.ToString(), Encoding.UTF8.GetString(resp.Data));
+                    Log.Error("SpeechToText.OnGetModelResponse()", "Caught exception {0} when parsing GetModel() response: {1}", e.ToString(), Encoding.UTF8.GetString(resp.Data));
                 }
 
                 if (resp == null)
-                    Log.Error("SpeechToText", "Failed to parse GetModel response.");
+                    Log.Error("SpeechToText.OnGetModelResponse()", "Failed to parse GetModel response.");
             }
 
             string customData = ((GetModelRequest)req).Data;
@@ -481,7 +481,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                         // check the length of this queue and do something if it gets too full.
                         if (_listenRecordings.Count > MaxQueuedRecordings)
                         {
-                            Log.Error("SpeechToText", "Recording queue is full.");
+                            Log.Error("SpeechToText.OnListen()", "Recording queue is full.");
 
                             StopListening();
                             if (OnError != null)
@@ -499,7 +499,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                 // by LISTEN_TIMEOUT. If not, then stop listening and record the error.
                 if (!_listenActive && (DateTime.Now - _lastStartSent).TotalSeconds > ListenTimeout)
                 {
-                    Log.Error("SpeechToText", "Failed to enter listening state.");
+                    Log.Error("SpeechToText.OnListen()", "Failed to enter listening state.");
 
                     StopListening();
                     if (OnError != null)
@@ -560,7 +560,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                 else
                 {
 #if ENABLE_DEBUGGING
-                    Log.Debug("SpeechToText", "Created listen socket. Model: {0}, parsedParams: {1}", WWW.EscapeURL(_recognizeModel), parsedParams);
+                    Log.Debug("SpeechToText.CreateListenConnector()", "Created listen socket. Model: {0}, parsedParams: {1}", WWW.EscapeURL(_recognizeModel), parsedParams);
 #endif
                 }
 
@@ -603,7 +603,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 
             _listenSocket.Send(new WSConnector.TextMessage(Json.Serialize(start)));
 #if ENABLE_DEBUGGING
-            Log.Debug("SpeechToText", "SendStart() with the following params: {0}", Json.Serialize(start));
+            Log.Debug("SpeechToText.SendStart()", "SendStart() with the following params: {0}", Json.Serialize(start));
 #endif
             _lastStartSent = DateTime.Now;
         }
@@ -638,7 +638,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                     AudioClip _keepAliveClip = Resources.Load<AudioClip>("highHat");
 
 #if ENABLE_DEBUGGING
-                    Log.Debug("SpeechToText", "Sending keep alive.");
+                    Log.Debug("SpeechToText.KeepAlive()", "Sending keep alive.");
 #endif
                     _listenSocket.Send(new WSConnector.BinaryMessage(AudioClipUtil.GetL16(_keepAliveClip)));
                     _keepAliveClip = null;
@@ -646,7 +646,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                     _lastKeepAlive = DateTime.Now;
                 }
             }
-            Log.Debug("SpeechToText", "KeepAlive exited.");
+            Log.Debug("SpeechToText.KeepAlive()", "KeepAlive exited.");
         }
 
         private void OnListenMessage(WSConnector.Message msg)
@@ -665,7 +665,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                         {
                             //// when we get results, start listening for the next block ..
                             if (results.HasFinalResult())
-                                Log.Debug("SpeechToText", "final json response: {0}", tm.Text);
+                                Log.Debug("SpeechToText.OnListenMessage()", "final json response: {0}", tm.Text);
                             //    SendStart();
 
                             if (_listenCallback != null)
@@ -674,14 +674,14 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                                 StopListening();            // automatically stop listening if our callback is destroyed.
                         }
                         else
-                            Log.Error("SpeechToText", "Failed to parse results: {0}", tm.Text);
+                            Log.Error("SpeechToText.OnListenMessage()", "Failed to parse results: {0}", tm.Text);
                     }
                     else if (json.Contains("state"))
                     {
                         string state = (string)json["state"];
 
 #if ENABLE_DEBUGGING
-                        Log.Debug("SpeechToText", "Server state is {0}", state);
+                        Log.Debug("SpeechToText.OnListenMessage()", "Server state is {0}", state);
 #endif
                         if (state == "listening")
                         {
@@ -714,7 +714,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                     else if (json.Contains("error"))
                     {
                         string error = (string)json["error"];
-                        Log.Error("SpeechToText", "Error: {0}", error);
+                        Log.Error("SpeechToText.OnListenMessage()", "Error: {0}", error);
 
                         StopListening();
                         if (OnError != null)
@@ -722,12 +722,12 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                     }
                     else
                     {
-                        Log.Warning("SpeechToText", "Unknown message: {0}", tm.Text);
+                        Log.Warning("SpeechToText.OnListenMessage()", "Unknown message: {0}", tm.Text);
                     }
                 }
                 else
                 {
-                    Log.Error("SpeechToText", "Failed to parse JSON from server: {0}", tm.Text);
+                    Log.Error("SpeechToText.OnListenMessage()", "Failed to parse JSON from server: {0}", tm.Text);
                 }
             }
         }
@@ -735,7 +735,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         private void OnListenClosed(WSConnector connector)
         {
 #if ENABLE_DEBUGGING
-            Log.Debug("SpeechToText", "OnListenClosed(), State = {0}", connector.State.ToString());
+            Log.Debug("SpeechToText.OnListenClosed()", "OnListenClosed(), State = {0}", connector.State.ToString());
 #endif
 
             _listenActive = false;
@@ -780,7 +780,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             req.Send = WaveFile.CreateWAV(clip);
             if (req.Send.Length > MaxRecognizeClipSize)
             {
-                Log.Error("SpeechToText", "AudioClip is too large for Recognize().");
+                Log.Error("SpeechToText.Recognize()", "AudioClip is too large for Recognize().");
                 return false;
             }
             if(!string.IsNullOrEmpty(AcousticCustomizationId))
@@ -828,7 +828,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                 result = ParseRecognizeResponse(resp.Data);
                 if (result == null)
                 {
-                    Log.Error("SpeechToText", "Failed to parse json response: {0}",
+                    Log.Error("SpeechToText.OnRecognizeResponse()", "Failed to parse json response: {0}",
                         resp.Data != null ? Encoding.UTF8.GetString(resp.Data) : "");
                 }
                 else
@@ -839,7 +839,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             }
             else
             {
-                Log.Error("SpeechToText", "Recognize Error: {0}", resp.Error);
+                Log.Error("SpeechToText.OnRecognizeResponse()", "Recognize Error: {0}", resp.Error);
             }
 
             if (recognizeReq.Callback != null)
@@ -893,7 +893,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             }
             catch (Exception e)
             {
-                Log.Error("SpeechToText", "ParseSpeakerRecognitionResponse exception: {0}", e.ToString());
+                Log.Error("SpeechToText.ParseSpeakerRecognitionResponse()", "ParseSpeakerRecognitionResponse exception: {0}", e.ToString());
                 return null;
             }
         }
@@ -1059,7 +1059,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             }
             catch (Exception e)
             {
-                Log.Error("SpeechToText", "ParseJsonResponse exception: {0}", e.ToString());
+                Log.Error("SpeechToText.ParseRecognizeResponse()", "ParseJsonResponse exception: {0}", e.ToString());
                 return null;
             }
         }
@@ -1130,7 +1130,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Speech To Text", "GetCustomizations Exception: {0}", e.ToString());
+                    Log.Error("SpeechToText.OnGetCustomizationsResp()", "GetCustomizations Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -1218,7 +1218,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Speech To Text", "CreateCustomization Exception: {0}", e.ToString());
+                    Log.Error("SpeechToText.OnCreateCustomizationResp()", "CreateCustomization Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -1343,7 +1343,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Speech To Text", "GetCustomization Exception: {0}", e.ToString());
+                    Log.Error("SpeechToText.OnGetCustomizationResp()", "GetCustomization Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -1586,7 +1586,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Speech To Text", "OnGetCustomCorporaResp Exception: {0}", e.ToString());
+                    Log.Error("SpeechToText.OnGetCustomCorporaResp()", "OnGetCustomCorporaResp Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -1666,7 +1666,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Speech To Text", "OnGetCustomCorpusResp Exception: {0}", e.ToString());
+                    Log.Error("SpeechToText.OnGetCustomCorpusResp()", "OnGetCustomCorpusResp Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -1892,7 +1892,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Speech To Text", "OnGetCustomWordsResp Exception: {0}", e.ToString());
+                    Log.Error("SpeechToText.OnGetCustomWordsResp()", "OnGetCustomWordsResp Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -2128,7 +2128,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Speech To Text", "OnGetCustomWordResp Exception: {0}", e.ToString());
+                    Log.Error("SpeechToText.OnGetCustomWordResp()", "OnGetCustomWordResp Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -2196,7 +2196,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Speech To Text", "OnGetCustomAcousticModelsResp Exception: {0}", e.ToString());
+                    Log.Error("SpeechToText.OnGetCustomAcousticModelsResp()", "OnGetCustomAcousticModelsResp Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -2283,7 +2283,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Speech To Text", "OnCreateAcousticCustomizationResp Exception: {0}", e.ToString());
+                    Log.Error("SpeechToText.OnCreateAcousticCustomizationResp()", "OnCreateAcousticCustomizationResp Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -2403,7 +2403,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Speech To Text", "OnGetCustomAcousticModelResp Exception: {0}", e.ToString());
+                    Log.Error("SpeechToText.OnGetCustomAcousticModelResp()", "OnGetCustomAcousticModelResp Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -2573,7 +2573,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Speech To Text", "OnGetCustomAcousticResourcesResp Exception: {0}", e.ToString());
+                    Log.Error("SpeechToText.OnGetCustomAcousticResourcesResp()", "OnGetCustomAcousticResourcesResp Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -2701,7 +2701,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Speech To Text", "OnGetCustomAcousticResourceResp Exception: {0}", e.ToString());
+                    Log.Error("SpeechToText.OnGetCustomAcousticResourceResp()", "OnGetCustomAcousticResourceResp Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }

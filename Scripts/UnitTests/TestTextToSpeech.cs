@@ -1,4 +1,4 @@
-﻿/**
+/**
 * Copyright 2015 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,6 +35,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         TextToSpeech _textToSpeech;
         string _testString = "<speak version=\"1.0\"><say-as interpret-as=\"letters\">I'm sorry</say-as>. <prosody pitch=\"150Hz\">This is Text to Speech!</prosody><express-as type=\"GoodNews\">I'm sorry. This is Text to Speech!</express-as></speak>";
+        string _testConversationString = "<phoneme alphabet=\\\"ipa\\\" ph=\\\"\\u02c8\\u025b\\u0259\\u02c8\\u0279\\u0259n\\\">Arin</phoneme>";
 
         string _createdCustomizationId;
         CustomVoiceUpdate _customVoiceUpdate;
@@ -44,6 +45,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         string _testWord = "Watson";
 
         private bool _synthesizeTested = false;
+        private bool _synthesizeConversationTested = false;
         private bool _getVoicesTested = false;
         private bool _getVoiceTested = false;
         private bool _getPronuciationTested = false;
@@ -93,7 +95,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             }
             catch
             {
-                Log.Debug("TestTextToSpeech", "Failed to get credentials from VCAP_SERVICES file. Please configure credentials to run this test. For more information, see: https://github.com/watson-developer-cloud/unity-sdk/#authentication");
+                Log.Debug("TestTextToSpeech.RunTest()", "Failed to get credentials from VCAP_SERVICES file. Please configure credentials to run this test. For more information, see: https://github.com/watson-developer-cloud/unity-sdk/#authentication");
             }
 
             //  Create credential and instantiate service
@@ -108,51 +110,58 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _textToSpeech = new TextToSpeech(credentials);
 
             //  Synthesize
-            Log.Debug("ExampleTextToSpeech", "Attempting synthesize.");
+            Log.Debug("TestTextToSpeech.RunTest()", "Attempting synthesize.");
             _textToSpeech.Voice = VoiceType.en_US_Allison;
             _textToSpeech.ToSpeech(_testString, HandleToSpeechCallback, true);
             while (!_synthesizeTested)
                 yield return null;
 
+            //  Synthesize Conversation string
+            Log.Debug("TestTextToSpeech.RunTest()", "Attempting synthesize a string as returned by Watson Conversation.");
+            _textToSpeech.Voice = VoiceType.en_US_Allison;
+            _textToSpeech.ToSpeech(_testConversationString, HandleConversationToSpeechCallback, true);
+            while (!_synthesizeConversationTested)
+                yield return null;
+
             //	Get Voices
-            Log.Debug("ExampleTextToSpeech", "Attempting to get voices.");
+            Log.Debug("TestTextToSpeech.RunTest()", "Attempting to get voices.");
             _textToSpeech.GetVoices(OnGetVoices);
             while (!_getVoicesTested)
                 yield return null;
 
             //	Get Voice
-            Log.Debug("ExampleTextToSpeech", "Attempting to get voice {0}.", VoiceType.en_US_Allison);
+            Log.Debug("TestTextToSpeech.RunTest()", "Attempting to get voice {0}.", VoiceType.en_US_Allison);
             _textToSpeech.GetVoice(OnGetVoice, VoiceType.en_US_Allison);
             while (!_getVoiceTested)
                 yield return null;
 
             //	Get Pronunciation
-            Log.Debug("ExampleTextToSpeech", "Attempting to get pronunciation of {0}", _testWord);
+            Log.Debug("TestTextToSpeech.RunTest()", "Attempting to get pronunciation of {0}", _testWord);
             _textToSpeech.GetPronunciation(OnGetPronunciation, _testWord, VoiceType.en_US_Allison);
             while (!_getPronuciationTested)
                 yield return null;
 
             //  Get Customizations
-            Log.Debug("ExampleTextToSpeech", "Attempting to get a list of customizations");
+            Log.Debug("TestTextToSpeech.RunTest()", "Attempting to get a list of customizations");
             _textToSpeech.GetCustomizations(OnGetCustomizations);
             while (!_getCustomizationsTested)
                 yield return null;
 
             //  Create Customization
-            Log.Debug("ExampleTextToSpeech", "Attempting to create a customization");
+            Log.Debug("TestTextToSpeech.RunTest()", "Attempting to create a customization");
             _textToSpeech.CreateCustomization(OnCreateCustomization, _customizationName, _customizationLanguage, _customizationDescription);
             while (!_createCustomizationTested)
                 yield return null;
 
             //  Get Customization
-            Log.Debug("ExampleTextToSpeech", "Attempting to get a customization");
+            Log.Debug("TestTextToSpeech.RunTest()", "Attempting to get a customization");
             if (!_textToSpeech.GetCustomization(OnGetCustomization, _createdCustomizationId))
-                Log.Debug("ExampleTextToSpeech", "Failed to get custom voice model!");
+                Log.Debug("TestTextToSpeech.RunTest()", "Failed to get custom voice model!");
             while (!_getCustomizationTested)
                 yield return null;
 
             //  Update Customization
-            Log.Debug("ExampleTextToSpeech", "Attempting to update a customization");
+            Log.Debug("TestTextToSpeech.RunTest()", "Attempting to update a customization");
             Word[] wordsToUpdateCustomization =
             {
             new Word()
@@ -180,20 +189,20 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             };
 
             if (!_textToSpeech.UpdateCustomization(OnUpdateCustomization, _createdCustomizationId, _customVoiceUpdate))
-                Log.Debug("ExampleTextToSpeech", "Failed to update customization!");
+                Log.Debug("TestTextToSpeech.UpdateCustomization()", "Failed to update customization!");
             while (!_updateCustomizationTested)
                 yield return null;
 
             //  Get Customization Words
-            Log.Debug("ExampleTextToSpeech", "Attempting to get a customization's words");
+            Log.Debug("TestTextToSpeech.RunTest()", "Attempting to get a customization's words");
             string customIdentifierToGetWords = "1476ea80-5355-4911-ac99-ba39162a2d34";
             if (!_textToSpeech.GetCustomizationWords(OnGetCustomizationWords, customIdentifierToGetWords))
-                Log.Debug("ExampleTextToSpeech", "Failed to get {0} words!", customIdentifierToGetWords);
+                Log.Debug("TestTextToSpeech.GetCustomizationWords()", "Failed to get {0} words!", customIdentifierToGetWords);
             while (!_getCustomizationWordsTested)
                 yield return null;
 
             //  Add Customization Words
-            Log.Debug("ExampleTextToSpeech", "Attempting to add words to a customization");
+            Log.Debug("TestTextToSpeech.RunTest()", "Attempting to add words to a customization");
             Word[] wordArrayToAddToCustomization =
             {
             new Word()
@@ -219,34 +228,34 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             };
 
             if (!_textToSpeech.AddCustomizationWords(OnAddCustomizationWords, _createdCustomizationId, wordsToAddToCustomization))
-                Log.Debug("ExampleTextToSpeech", "Failed to add words to {0}!", _createdCustomizationId);
+                Log.Debug("TestTextToSpeech.AddCustomizationWords()", "Failed to add words to {0}!", _createdCustomizationId);
             while (!_addCustomizationWordsTested)
                 yield return null;
 
             //  Get Customization Word
-            Log.Debug("ExampleTextToSpeech", "Attempting to get the translation of a custom voice model's word.");
+            Log.Debug("TestTextToSpeech.RunTest()", "Attempting to get the translation of a custom voice model's word.");
             string customIdentifierWord = wordsToUpdateCustomization[0].word;
             if (!_textToSpeech.GetCustomizationWord(OnGetCustomizationWord, _createdCustomizationId, customIdentifierWord))
-                Log.Debug("ExampleTextToSpeech", "Failed to get the translation of {0} from {1}!", customIdentifierWord, _createdCustomizationId);
+                Log.Debug("TestTextToSpeech.GetCustomizationWord()", "Failed to get the translation of {0} from {1}!", customIdentifierWord, _createdCustomizationId);
             while (!_getCustomizationWordTested)
                 yield return null;
 
             //  Delete Customization Word
-            Log.Debug("ExampleTextToSpeech", "Attempting to delete customization word from custom voice model.");
+            Log.Debug("TestTextToSpeech.RunTest()", "Attempting to delete customization word from custom voice model.");
             string wordToDelete = "goodbye";
             if (!_textToSpeech.DeleteCustomizationWord(OnDeleteCustomizationWord, _createdCustomizationId, wordToDelete))
-                Log.Debug("ExampleTextToSpeech", "Failed to delete {0} from {1}!", wordToDelete, _createdCustomizationId);
+                Log.Debug("TestTextToSpeech.DeleteCustomizationWord()", "Failed to delete {0} from {1}!", wordToDelete, _createdCustomizationId);
             while (!_deleteCustomizationWordTested)
                 yield return null;
 
             //  Delete Customization
-            Log.Debug("ExampleTextToSpeech", "Attempting to delete a customization");
+            Log.Debug("TestTextToSpeech.RunTest()", "Attempting to delete a customization");
             if (!_textToSpeech.DeleteCustomization(OnDeleteCustomization, _createdCustomizationId))
-                Log.Debug("ExampleTextToSpeech", "Failed to delete custom voice model!");
+                Log.Debug("TestTextToSpeech.DeleteCustomization()", "Failed to delete custom voice model!");
             while (!_deleteCustomizationTested)
                 yield return null;
 
-            Log.Debug("ExampleTextToSpeech", "Text to Speech examples complete.");
+            Log.Debug("TestTextToSpeech.RunTest()", "Text to Speech examples complete.");
 
             yield break;
         }
@@ -273,37 +282,43 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             }
         }
 
+        private void HandleConversationToSpeechCallback(AudioClip clip, string customData) {
+            if(clip != null) {
+                _synthesizeConversationTested = true;
+            }
+        }
+
         private void OnGetVoices(Voices voices, string customData)
         {
-            Log.Debug("ExampleTextToSpeech", "Text to Speech - Get voices response: {0}", customData);
+            Log.Debug("TestTextToSpeech.OnGetVoices()", "Text to Speech - Get voices response: {0}", customData);
             Test(voices != null);
             _getVoicesTested = true;
         }
 
         private void OnGetVoice(Voice voice, string customData)
         {
-            Log.Debug("ExampleTextToSpeech", "Text to Speech - Get voice  response: {0}", customData);
+            Log.Debug("TestTextToSpeech.OnGetVoice()", "Text to Speech - Get voice  response: {0}", customData);
             Test(voice != null);
             _getVoiceTested = true;
         }
 
         private void OnGetPronunciation(Pronunciation pronunciation, string customData)
         {
-            Log.Debug("ExampleTextToSpeech", "Text to Speech - Get pronunciation response: {0}", customData);
+            Log.Debug("TestTextToSpeech.OnGetPronunciation()", "Text to Speech - Get pronunciation response: {0}", customData);
             Test(pronunciation != null);
             _getPronuciationTested = true;
         }
 
         private void OnGetCustomizations(Customizations customizations, string customData)
         {
-            Log.Debug("ExampleTextToSpeech", "Text to Speech - Get customizations response: {0}", customData);
+            Log.Debug("TestTextToSpeech.OnGetCustomizations()", "Text to Speech - Get customizations response: {0}", customData);
             Test(customizations != null);
             _getCustomizationsTested = true;
         }
 
         private void OnCreateCustomization(CustomizationID customizationID, string customData)
         {
-            Log.Debug("ExampleTextToSpeech", "Text to Speech - Create customization response: {0}", customData);
+            Log.Debug("TestTextToSpeech.OnCreateCustomization()", "Text to Speech - Create customization response: {0}", customData);
             _createdCustomizationId = customizationID.customization_id;
             Test(customizationID != null);
             _createCustomizationTested = true;
@@ -311,7 +326,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void OnDeleteCustomization(bool success, string customData)
         {
-            Log.Debug("ExampleTextToSpeech", "Text to Speech - Delete customization response: {0}", customData);
+            Log.Debug("TestTextToSpeech.OnDeleteCustomization()", "Text to Speech - Delete customization response: {0}", customData);
             _createdCustomizationId = null;
             Test(success);
             _deleteCustomizationTested = true;
@@ -319,42 +334,42 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void OnGetCustomization(Customization customization, string customData)
         {
-            Log.Debug("ExampleTextToSpeech", "Text to Speech - Get customization response: {0}", customData);
+            Log.Debug("TestTextToSpeech.OnGetCustomization()", "Text to Speech - Get customization response: {0}", customData);
             Test(customization != null);
             _getCustomizationTested = true;
         }
 
         private void OnUpdateCustomization(bool success, string customData)
         {
-            Log.Debug("ExampleTextToSpeech", "Text to Speech - Update customization response: {0}", customData);
+            Log.Debug("TestTextToSpeech.OnUpdateCustomization()", "Text to Speech - Update customization response: {0}", customData);
             Test(success);
             _updateCustomizationTested = true;
         }
 
         private void OnGetCustomizationWords(Words words, string customData)
         {
-            Log.Debug("ExampleTextToSpeech", "Text to Speech - Get customization words response: {0}", customData);
+            Log.Debug("TestTextToSpeech.OnGetCustomizationWords()", "Text to Speech - Get customization words response: {0}", customData);
             Test(words != null);
             _getCustomizationWordsTested = true;
         }
 
         private void OnAddCustomizationWords(bool success, string customData)
         {
-            Log.Debug("ExampleTextToSpeech", "Text to Speech - Add customization words response: {0}", customData);
+            Log.Debug("TestTextToSpeech.OnAddCustomizationWords()", "Text to Speech - Add customization words response: {0}", customData);
             Test(success);
             _addCustomizationWordsTested = true;
         }
 
         private void OnDeleteCustomizationWord(bool success, string customData)
         {
-            Log.Debug("ExampleTextToSpeech", "Text to Speech - Delete customization word response: {0}", customData);
+            Log.Debug("TestTextToSpeech.OnDeleteCustomizationWord()", "Text to Speech - Delete customization word response: {0}", customData);
             Test(success);
             _deleteCustomizationWordTested = true;
         }
 
         private void OnGetCustomizationWord(Translation translation, string customData)
         {
-            Log.Debug("ExampleTextToSpeech", "Text to Speech - Get customization word response: {0}", customData);
+            Log.Debug("TestTextToSpeech.OnGetCustomizationWord()", "Text to Speech - Get customization word response: {0}", customData);
             Test(translation != null);
             _getCustomizationWordTested = true;
         }

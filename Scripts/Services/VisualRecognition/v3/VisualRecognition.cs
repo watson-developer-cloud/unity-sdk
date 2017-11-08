@@ -312,7 +312,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 }
 
                 if (imageData == null)
-                    Log.Error("VisualRecognition", "Failed to upload {0}!", imagePath);
+                    Log.Error("VisualRecognition.Classify()", "Failed to upload {0}!", imagePath);
             }
 
             return Classify(callback, imageData, owners, classifierIDs, threshold, acceptLanguage);
@@ -408,7 +408,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Visual Recognition", "Classify exception: {0}", e.ToString());
+                    Log.Error("VisualRecognition.OnClassifyResp()", "Classify exception: {0}", e.ToString());
                 }
             }
 
@@ -484,7 +484,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 }
 
                 if (imageData == null)
-                    Log.Error("VisualRecognition", "Failed to upload {0}!", imagePath);
+                    Log.Error("VisualRecognition.DetectFaces()", "Failed to upload {0}!", imagePath);
             }
 
             return DetectFaces(callback, imageData, customData);
@@ -565,7 +565,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Visual Recognition", "Detect faces exception: {0}", e.ToString());
+                    Log.Error("VisualRecognition.OnDetectFacesResp()", "Detect faces exception: {0}", e.ToString());
                 }
             }
 
@@ -644,7 +644,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 }
 
                 if (imageData == null)
-                    Log.Error("VisualRecognition", "Failed to upload {0}!", imagePath);
+                    Log.Error("VisualRecognition.RecognizeText()", "Failed to upload {0}!", imagePath);
             }
 
             return RecognizeText(callback, imageData, customData);
@@ -720,7 +720,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Visual Recognition", "Detect text exception: {0}", e.ToString());
+                    Log.Error("VisualRecognition.OnRecognizeTextResp()", "Detect text exception: {0}", e.ToString());
                 }
             }
 
@@ -795,7 +795,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 }
                 catch (Exception e)
                 {
-                    Log.Error("VisualRecognition", "GetClassifiers Exception: {0}", e.ToString());
+                    Log.Error("VisualRecognition.OnGetClassifiersResp()", "GetClassifiers Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -869,7 +869,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Visual Recognition", "GetClassifier Exception: {0}", e.ToString());
+                    Log.Error("VisualRecognition.OnGetClassifierResp()", "GetClassifier Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -926,7 +926,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             }
 
             if (positiveExamplesData.Count == 0 || negativeExamplesData == null)
-                Log.Error("VisualRecognition", "Failed to upload positive or negative examples!");
+                Log.Error("VisualRecognition.TrainClassifier()", "Failed to upload positive or negative examples!");
 
             return TrainClassifier(callback, classifierName, positiveExamplesData, negativeExamplesData, mimeType, customData);
         }
@@ -1009,7 +1009,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 }
                 catch (Exception e)
                 {
-                    Log.Error("VisualRecognition", "TrainClassifiers Exception: {0}", e.ToString());
+                    Log.Error("VisualRecognition.OnTrainClassifierResp()", "TrainClassifiers Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -1067,7 +1067,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             }
 
             if (positiveExamplesData.Count == 0 && negativeExamplesData == null)
-                Log.Error("VisualRecognition", "Failed to upload positive or negative examples!");
+                Log.Error("VisualRecognition.UpdateClassifier()", "Failed to upload positive or negative examples!");
 
             return UpdateClassifier(callback, classifierID, classifierName, positiveExamplesData, negativeExamplesData, mimeType, customData);
         }
@@ -1135,7 +1135,6 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
 
-            Log.Debug("VisualRecognition", "Attempting to delete classifier {0}", classifierId);
             RESTConnector connector = RESTConnector.GetConnector(Credentials, ClassifiersEndpoint + "/" + classifierId);
             if (connector == null)
                 return false;
@@ -1234,7 +1233,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 }
                 catch (Exception e)
                 {
-                    Log.Error("VisualRecognition", "GetCollections Exception: {0}", e.ToString());
+                    Log.Error("VisualRecognition.OnGetCollectionsResp()", "GetCollections Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -1319,7 +1318,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 }
                 catch (Exception e)
                 {
-                    Log.Error("VisualRecognition", "OnCreateCollectionResp Exception: {0}", e.ToString());
+                    Log.Error("VisualRecognition.OnCreateCollectionResp()", "OnCreateCollectionResp Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -1459,7 +1458,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 }
                 catch (Exception e)
                 {
-                    Log.Error("VisualRecognition", "GetCollection Exception: {0}", e.ToString());
+                    Log.Error("VisualRecognition.OnGetCollectionResp()", "GetCollection Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -1540,7 +1539,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 }
                 catch (Exception e)
                 {
-                    Log.Error("VisualRecognition", "GetCollectionImages Exception: {0}", e.ToString());
+                    Log.Error("VisualRecognition.OnGetCollectionImagesResp()", "GetCollectionImages Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -1589,7 +1588,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 }
 
                 if (imageData == null)
-                    Log.Error("VisualRecognition", "Failed to upload {0}!", imagePath);
+                    Log.Error("VisualRecognition.AddCollectionImage()", "Failed to upload {0}!", imagePath);
             }
 
             return AddCollectionImage(callback, collectionID, imageData, Path.GetFileName(imagePath), GetMetadataJson(metadata), customData);
@@ -1632,7 +1631,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 }
 
                 if (imageData == null)
-                    Log.Error("VisualRecognition", "Failed to upload {0}!", imagePath);
+                    Log.Error("VisualRecognition.AddCollectionImage()", "Failed to upload {0}!", imagePath);
             }
 
             string metadata = null;
@@ -1641,7 +1640,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 metadata = File.ReadAllText(metadataPath);
 
                 if (string.IsNullOrEmpty(metadata))
-                    Log.Error("VisualRecognition", "Failed to read {0}!", imagePath);
+                    Log.Error("VisualRecognition.AddCollectionImage()", "Failed to read {0}!", imagePath);
             }
 
             return AddCollectionImage(callback, collectionID, imageData, Path.GetFileName(imagePath), metadata, customData);
@@ -1735,7 +1734,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 }
                 catch (Exception e)
                 {
-                    Log.Error("VisualRecognition", "OnCreateCollectionResp Exception: {0}", e.ToString());
+                    Log.Error("VisualRecognition.OnAddCollectionImageResp()", "OnCreateCollectionResp Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -1890,7 +1889,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 }
                 catch (Exception e)
                 {
-                    Log.Error("VisualRecognition", "GetCollectionImage Exception: {0}", e.ToString());
+                    Log.Error("VisualRecognition.OnGetCollectionImageResp()", "GetCollectionImage Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -2046,7 +2045,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 }
                 catch (Exception e)
                 {
-                    Log.Error("VisualRecognition", "GetCollectionImage Exception: {0}", e.ToString());
+                    Log.Error("VisualRecognition.OnGetCollectionImageMetadataResp()", "GetCollectionImage Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -2095,7 +2094,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 }
 
                 if (imageData == null)
-                    Log.Error("VisualRecognition", "Failed to upload {0}!", imagePath);
+                    Log.Error("VisualRecognition.FindSimilar()", "Failed to upload {0}!", imagePath);
             }
 
             return FindSimilar(callback, collectionID, imageData, limit, customData);
@@ -2188,7 +2187,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 }
                 catch (Exception e)
                 {
-                    Log.Error("VisualRecognition", "OnCreateCollectionResp Exception: {0}", e.ToString());
+                    Log.Error("VisualRecognition.OnFindSimilarResp()", "OnCreateCollectionResp Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }

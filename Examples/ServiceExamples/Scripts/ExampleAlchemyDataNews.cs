@@ -50,17 +50,17 @@ public class ExampleAlchemyDataNews : MonoBehaviour
         queryFields.Add(Fields.EnrichedUrlCleanedtitle, "Washington");
         string[] returnFields = { Fields.EnrichedUrlEntities, Fields.EnrichedUrlKeywords };
         if (!_alchemyAPI.GetNews(OnGetNews, returnFields, queryFields))
-            Log.Debug("ExampleAlchemyDataNews", "Failed to get news!");
+            Log.Debug("ExampleAlchemyDataNews.GetNews()", "Failed to get news!");
 
         while (!_getNewsTested)
             yield return null;
 
-        Log.Debug("ExampleAlchemyDataNews", "Alchemy data news examples complete!");
+        Log.Debug("ExampleAlchemyDataNews.Examples()", "Alchemy data news examples complete!");
     }
 
     private void OnGetNews(NewsResponse newsData, string data)
     {
-        Log.Debug("ExampleAlchemyDataNews", "Alchemy data news - Get news Response: {0}", data);
+        Log.Debug("ExampleAlchemyDataNews.OnGetNews()", "Alchemy data news - Get news Response: {0}", data);
         _getNewsTested = true;
     }
 }
