@@ -1,4 +1,4 @@
-﻿/**
+/**
 * Copyright 2015 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,6 +35,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         TextToSpeech _textToSpeech;
         string _testString = "<speak version=\"1.0\"><say-as interpret-as=\"letters\">I'm sorry</say-as>. <prosody pitch=\"150Hz\">This is Text to Speech!</prosody><express-as type=\"GoodNews\">I'm sorry. This is Text to Speech!</express-as></speak>";
+        string _testConversationString = "<phoneme alphabet=\\\"ipa\\\" ph=\\\"\\u02c8\\u025b\\u0259\\u02c8\\u0279\\u0259n\\\">Arin</phoneme>";
 
         string _createdCustomizationId;
         CustomVoiceUpdate _customVoiceUpdate;
@@ -44,6 +45,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         string _testWord = "Watson";
 
         private bool _synthesizeTested = false;
+        private bool _synthesizeConversationTested = false;
         private bool _getVoicesTested = false;
         private bool _getVoiceTested = false;
         private bool _getPronuciationTested = false;
@@ -112,6 +114,13 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _textToSpeech.Voice = VoiceType.en_US_Allison;
             _textToSpeech.ToSpeech(_testString, HandleToSpeechCallback, true);
             while (!_synthesizeTested)
+                yield return null;
+
+            //  Synthesize Conversation string
+            Log.Debug("TestTextToSpeech.RunTest()", "Attempting synthesize a string as returned by Watson Conversation.");
+            _textToSpeech.Voice = VoiceType.en_US_Allison;
+            _textToSpeech.ToSpeech(_testConversationString, HandleConversationToSpeechCallback, true);
+            while (!_synthesizeConversationTested)
                 yield return null;
 
             //	Get Voices
@@ -270,6 +279,12 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 GameObject.Destroy(audioObject, clip.length);
 
                 _synthesizeTested = true;
+            }
+        }
+
+        private void HandleConversationToSpeechCallback(AudioClip clip, string customData) {
+            if(clip != null) {
+                _synthesizeConversationTested = true;
             }
         }
 
