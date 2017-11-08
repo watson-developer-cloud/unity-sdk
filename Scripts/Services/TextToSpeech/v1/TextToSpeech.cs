@@ -1,4 +1,4 @@
-﻿/**
+/**
 * Copyright 2015 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,6 +24,7 @@ using System.Text;
 using MiniJSON;
 using System;
 using FullSerializer;
+using System.Text.RegularExpressions;
 
 namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 {
@@ -315,7 +316,11 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
                 return false;
             }
 
-            string textId = Utility.GetMD5(text);
+            //for responses from Watson Conversaton
+            string escapedText = text.Replace("\\\"", "\"");
+            string decodedText = DecodeUnicodeCharacters(escapedText);
+
+            string textId = Utility.GetMD5(decodedText);
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/synthesize");
             if (connector == null)
@@ -326,7 +331,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 
             ToSpeechRequest req = new ToSpeechRequest();
             req.TextId = textId;
-            req.Text = text;
+            req.Text = decodedText;
             req.Callback = callback;
             req.Parameters["accept"] = _audioFormats[_audioFormat];
             req.Parameters["voice"] = _voiceTypes[_voice];
@@ -335,14 +340,14 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
             if (usePost)
             {
                 Dictionary<string, string> upload = new Dictionary<string, string>();
-                upload["text"] = text;
+                upload["text"] = decodedText;
 
                 req.Send = Encoding.UTF8.GetBytes(Json.Serialize(upload));
                 req.Headers["Content-Type"] = "application/json";
             }
             else
             {
-                req.Parameters["text"] = text;
+                req.Parameters["text"] = decodedText;
             }
 
             return connector.Send(req);
@@ -376,6 +381,23 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 
             Log.Error("TextToSpeech.ProcessResponse()", "Unsupported audio format: {0}", _audioFormat.ToString());
             return null;
+        }
+
+        private string DecodeUnicodeCharacters(string text)
+        {
+            string decodedString = text;
+
+            MatchCollection matches = Regex.Matches(text, @"\\u.{4}");
+
+            foreach(Match match in matches) {
+                string pureCode = match.ToString().Replace("\\u", "");
+                int codeNumber = int.Parse(pureCode, System.Globalization.NumberStyles.HexNumber);
+                string unicodeString = char.ConvertFromUtf32(codeNumber);
+
+                decodedString = decodedString.Replace("\\u" + pureCode, unicodeString);
+            }
+
+            return decodedString;
         }
         #endregion
 
