@@ -1041,6 +1041,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                                 {
                                     IDictionary iKeywordDictionary = k as IDictionary;
                                     KeywordResult keywordResult = new KeywordResult();
+                                    keywordResult.keyword = keyword;
                                     keywordResult.confidence = (double)iKeywordDictionary["confidence"];
                                     keywordResult.end_time = (double)iKeywordDictionary["end_time"];
                                     keywordResult.start_time = (double)iKeywordDictionary["start_time"];
