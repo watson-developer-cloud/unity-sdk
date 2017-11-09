@@ -296,6 +296,10 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
     public class KeywordResult
     {
         /// <summary>
+        /// Original keyword requested by user. 
+        /// </summary>
+        public string keyword { get; set; }
+        /// <summary>
         /// Specified keyword normalized to the spoken phrase that matched in the audio input. 
         /// </summary>
         public string normalized_text { get; set; }
