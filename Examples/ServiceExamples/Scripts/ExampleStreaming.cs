@@ -177,7 +177,7 @@ public class ExampleStreaming : MonoBehaviour
 
                 //  Create AudioData and use the samples we just created
                 AudioData record = new AudioData();
-                record.MaxLevel = Mathf.Abs(Mathf.Max(samples));
+                record.MaxLevel = Mathf.Max(Mathf.Abs(Mathf.Min(samples)), Mathf.Max(samples));
                 record.Clip = AudioClip.Create("Recording", chunkSize, _recording.channels, _recordingHZ, false);
                 record.Clip.SetData(samples, 0);
 
