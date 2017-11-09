@@ -24,12 +24,12 @@ Returns an empty array if no classifiers are available.
 private void GetClassifiers()
 {
   if (!naturalLanguageClassifier.GetClassifiers(OnGetClassifiers))
-    Log.Debug("ExampleNaturalLanguageClassifier", "Failed to get classifiers!");
+    Log.Debug("ExampleNaturalLanguageClassifier.GetClassifiers()", "Failed to get classifiers!");
 }
 
 private void OnGetClassifiers(Classifiers classifiers, string data)
 {
-  Log.Debug("ExampleNaturalLanguageClassifier", "Natural Language Classifier - GetClassifiers  Response: {0}", data);
+  Log.Debug("ExampleNaturalLanguageClassifier.OnGetClassifiers()", "Natural Language Classifier - GetClassifiers  Response: {0}", data);
 }
 ```
 
@@ -42,12 +42,12 @@ The status must be Available before you can use the classifier to classify calls
 private void Classify()
 {
   if (!naturalLanguageClassifier.Classify(<classifier-id>, <input>, OnClassify))
-    Log.Debug("ExampleNaturalLanguageClassifier", "Failed to classify!");
+    Log.Debug("ExampleNaturalLanguageClassifier.Classify()", "Failed to classify!");
 }
 
 private void OnClassify(ClassifyResult result, string data)
 {
-    Log.Debug("ExampleNaturalLanguageClassifier", "Natural Language Classifier - Classify Response: {0}", data);
+    Log.Debug("ExampleNaturalLanguageClassifier.OnClassify()", "Natural Language Classifier - Classify Response: {0}", data);
 }
 ```
 
@@ -60,12 +60,12 @@ Sends data to create and train a classifier and returns information about the ne
 private void TrainClassifier()
 {
   if (!naturalLanguageClassifier.TrainClassifier(<classifier-name>, <classifier-language>, <training-data>, OnTrainClassifier))
-    Log.Debug("ExampleNaturalLanguageClassifier", "Failed to train clasifier!");
+    Log.Debug("ExampleNaturalLanguageClassifier.TrainClassifier()", "Failed to train clasifier!");
 }
 
 private void OnTrainClassifier(Classifier classifier, string data)
 {
-    Log.Debug("ExampleNaturalLanguageClassifier", "Natural Language Classifier - Train Classifier: {0}", data);
+    Log.Debug("ExampleNaturalLanguageClassifier.OnTrainClassifier()", "Natural Language Classifier - Train Classifier: {0}", data);
 }
 ```
 
@@ -77,12 +77,12 @@ Returns status and other information about a classifier
 private void GetClassifier()
 {
   if (!naturalLanguageClassifier.GetClassifier(<classifier-id>, OnGetClassifier))
-    Log.Debug("ExampleNaturalLanguageClassifier", "Failed to get classifier {0}!", classifierId);
+    Log.Debug("ExampleNaturalLanguageClassifier.GetClassifier()", "Failed to get classifier {0}!", classifierId);
 }
 
 private void OnGetClassifier(Classifier classifier, string data)
 {
-    Log.Debug("ExampleNaturalLanguageClassifier", "Natural Language Classifier - Get Classifier {0}: {1}", classifier.classifier_id, data);
+    Log.Debug("ExampleNaturalLanguageClassifier.OnGetClassifier()", "Natural Language Classifier - Get Classifier {0}: {1}", classifier.classifier_id, data);
 }
 ```
 
@@ -95,12 +95,12 @@ Deletes a classifier
 private void DeleteClassifier()
 {
   if (!naturalLanguageClassifier.DeleteClassifer(<classifier-id>, OnDeleteTrainedClassifier))
-    Log.Debug("ExampleNaturalLanguageClassifier", "Failed to delete clasifier {0}!", <classifier-id>);
+    Log.Debug("ExampleNaturalLanguageClassifier.DeleteClassifier()", "Failed to delete clasifier {0}!", <classifier-id>);
 }
 
 private void OnDeleteTrainedClassifier(bool success, string data)
 {
-    Log.Debug("ExampleNaturalLanguageClassifier", "Natural Language Classifier - Delete Trained Classifier {0} | success: {1} {2}", <classifier-id>, success, data);
+    Log.Debug("ExampleNaturalLanguageClassifier.OnDeleteTrainedClassifier()", "Natural Language Classifier - Delete Trained Classifier {0} | success: {1} {2}", <classifier-id>, success, data);
 }
 ```
 

@@ -196,7 +196,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("RetriveAndRank", "OnGetClustersResponse Exception: {0}", e.ToString());
+                    Log.Error("RetriveAndRank.OnGetClustersResponse()", "OnGetClustersResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -288,7 +288,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("RetriveAndRank", "OnCreateClusterResponse Exception: {0}", e.ToString());
+                    Log.Error("RetriveAndRank.OnCreateClusterResponse()", "OnCreateClusterResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -448,7 +448,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("RetriveAndRank", "OnGetClusterResponse Exception: {0}", e.ToString());
+                    Log.Error("RetriveAndRank.OnGetClusterResponse()", "OnGetClusterResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -540,7 +540,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("RetriveAndRank", "OnGetClusterConfigsResponse Exception: {0}", e.ToString());
+                    Log.Error("RetriveAndRank.OnGetClusterConfigsResponse()", "OnGetClusterConfigsResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -730,7 +730,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                 catch (Exception e)
                 {
                     success = false;
-                    Log.Error("RetrieveAndRank", "Caught exception: {0}", e.ToString());
+                    Log.Error("RetrieveAndRank.SaveConfig()", "Caught exception: {0}", e.ToString());
                 }
             }
 
@@ -788,7 +788,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             }
 
             if (configData == null)
-                Log.Error("RetrieveAndRank", "Failed to upload {0}!", configPath);
+                Log.Error("RetrieveAndRank.UploadClusterConfig()", "Failed to upload {0}!", configPath);
 
             req.Headers["Content-Type"] = "application/zip";
             req.Send = configData;
@@ -839,7 +839,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("RetriveAndRank", "UploadClusterConfigResponse Exception: {0}", e.ToString());
+                    Log.Error("RetriveAndRank.UploadClusterConfigResponse()", "UploadClusterConfigResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -968,7 +968,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("RetriveAndRank", "OnForwardCollectionRequestResponse exception: {0}", e.ToString());
+                    Log.Error("RetriveAndRank.OnForwardCollectionRequestResponse()", "OnForwardCollectionRequestResponse exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -1028,7 +1028,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             }
 
             if (indexData == null)
-                Log.Error("RetrieveAndRank", "Failed to upload {0}!", indexDataPath);
+                Log.Error("RetrieveAndRank.IndexDocuments()", "Failed to upload {0}!", indexDataPath);
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(CollectionUpdateEndpoint, clusterID, collectionName));
             if (connector == null)
@@ -1078,7 +1078,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                 try
                 {
                     string json = Encoding.UTF8.GetString(resp.Data);
-                    Log.Debug("RetriveAndRank", "json: {0}", json);
+                    Log.Debug("RetriveAndRank.OnIndexDocumentsResponse()", "json: {0}", json);
                     fsResult r = fsJsonParser.Parse(json, out data);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -1089,7 +1089,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("RetriveAndRank", "OnIndexDocumentsResponse Exception: {0}", e.ToString());
+                    Log.Error("RetriveAndRank.OnIndexDocumentsResponse()", "OnIndexDocumentsResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -1214,7 +1214,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("RetriveAndRank", "OnSearchResponse Exception: {0}", e.ToString());
+                    Log.Error("RetriveAndRank.OnSearchResponse()", "OnSearchResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -1292,7 +1292,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("RetriveAndRank", "OnGetRankersResponse Exception: {0}", e.ToString());
+                    Log.Error("RetriveAndRank.OnGetRankersResponse()", "OnGetRankersResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -1348,7 +1348,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             }
 
             if (trainingData == null)
-                Log.Error("RetrieveAndRank", "Failed to upload {0}!", trainingDataPath);
+                Log.Error("RetrieveAndRank.CreateRanker()", "Failed to upload {0}!", trainingDataPath);
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, RankersEndpoint);
             if (connector == null)
@@ -1408,7 +1408,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("RetriveAndRank", "OnCreateRankerResponse Exception: {0}", e.ToString());
+                    Log.Error("RetriveAndRank.OnCreateRankerResponse()", "OnCreateRankerResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -1464,7 +1464,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             }
 
             if (searchResultData == null)
-                Log.Error("RetrieveAndRank", "Failed to upload {0}!", searchResultData);
+                Log.Error("RetrieveAndRank.Rank()", "Failed to upload {0}!", searchResultData);
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(RankEndpoint, rankerID));
             if (connector == null)
@@ -1528,7 +1528,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("RetriveAndRank", "OnRankResponse Exception: {0}", e.ToString());
+                    Log.Error("RetriveAndRank.OnRankResponse()", "OnRankResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -1688,7 +1688,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("RetriveAndRank", "OnGetRankerResponse Exception: {0}", e.ToString());
+                    Log.Error("RetriveAndRank.OnGetRankerResponse()", "OnGetRankerResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }

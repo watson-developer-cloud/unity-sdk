@@ -146,7 +146,7 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
                 }
 
                 if (documentData == null)
-                    Log.Error("DocumentConversion", "Failed to upload {0}!", documentPath);
+                    Log.Error("DocumentConversion.ConvertDocument()", "Failed to upload {0}!", documentPath);
             }
 
             if (documentData != null)
@@ -191,7 +191,7 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
                     }
                     catch (Exception e)
                     {
-                        Log.Error("DocumentConversion", "ConvertDocumentResponse Exception: {0}", e.ToString());
+                        Log.Error("DocumentConversion.ConvertDocumentResponse()", "ConvertDocumentResponse Exception: {0}", e.ToString());
                         resp.Success = false;
                     }
                 }

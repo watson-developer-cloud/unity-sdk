@@ -74,7 +74,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             }
             catch
             {
-                Log.Debug("TestTradeoffAnalytics", "Failed to get credentials from VCAP_SERVICES file. Please configure credentials to run this test. For more information, see: https://github.com/watson-developer-cloud/unity-sdk/#authentication");
+                Log.Debug("TestTradeoffAnalytics.RunTest()", "Failed to get credentials from VCAP_SERVICES file. Please configure credentials to run this test. For more information, see: https://github.com/watson-developer-cloud/unity-sdk/#authentication");
             }
 
             //  Create credential and instantiate service
@@ -166,14 +166,14 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             while (!_GetDillemaTested)
                 yield return null;
 
-            Log.Debug("ExampleTradeoffAnalyitics", "Tradeoff analytics examples complete.");
+            Log.Debug("ExampleTradeoffAnalyitics.RunTest()", "Tradeoff analytics examples complete.");
 
             yield break;
         }
 
         private void OnGetDilemma(DilemmasResponse resp, string data)
         {
-            Log.Debug("ExampleTradeoffAnalyitics", "Tradeoff Analytics - Get Dillema: {0}", data);
+            Log.Debug("ExampleTradeoffAnalyitics.OnGetDilemma()", "Tradeoff Analytics - Get Dillema: {0}", data);
             Test(resp != null);
             _GetDillemaTested = true;
         }

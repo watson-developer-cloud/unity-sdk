@@ -117,7 +117,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 
                 Runnable.Instance._routines[ID] = this;
 #if ENABLE_RUNNABLE_DEBUGGING
-                Debug.Log( string.Format("Coroutine {0} started.", ID ) ); 
+                Log.Debug("Runnable.Routine()", "Coroutine {0} started.", ID ); 
 #endif
             }
 
@@ -133,7 +133,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                 {
                     Runnable.Instance._routines.Remove(ID);      // remove from the mapping
 #if ENABLE_RUNNABLE_DEBUGGING
-                    Debug.Log( string.Format("Coroutine {0} stopped.", ID ) );
+                    Log.Debug("Runnable.Routine()", "Coroutine {0} stopped.", ID );
 #endif
                 }
 

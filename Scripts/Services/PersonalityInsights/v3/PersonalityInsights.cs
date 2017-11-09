@@ -190,7 +190,7 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3
                 }
                 catch (Exception e)
                 {
-                    Log.Error("PersonalityInsights", "GetProfileResponse Exception: {0}", e.ToString());
+                    Log.Error("PersonalityInsights.GetProfileResponse()", "GetProfileResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }

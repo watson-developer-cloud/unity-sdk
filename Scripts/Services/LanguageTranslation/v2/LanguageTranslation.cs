@@ -198,7 +198,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Natural Language Classifier", "GetTranslation Exception: {0}", e.ToString());
+                    Log.Error("LanguageTranslation.TranslateResponse()", "GetTranslation Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -289,7 +289,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Natural Language Classifier", "GetModels Exception: {0}", e.ToString());
+                    Log.Error("LanguageTranslation.GetModelsResponse()", "GetModels Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -347,7 +347,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Natural Language Classifier", "GetModel Exception: {0}", e.ToString());
+                    Log.Error("LanguageTranslation.GetModelResponse()", "GetModel Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -403,7 +403,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Natural Language Classifier", "GetLanguages Exception: {0}", e.ToString());
+                    Log.Error("LanguageTranslation.GetLanguagesResponse()", "GetLanguages Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -458,7 +458,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
             }
             else
             {
-                Log.Error("Translate", "Identify() failed: {0}", resp.Error);
+                Log.Error("LanguageTranslation.OnIdentifyResponse()", "Identify() failed: {0}", resp.Error);
                 if (req.Callback != null)
                     req.Callback(null);
             }

@@ -163,7 +163,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Natural Language Classifier", "GetClassifiers Exception: {0}", e.ToString());
+                    Log.Error("NaturalLanguageClassifier.OnGetClassifiersResp()", "GetClassifiers Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -225,7 +225,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Natural Language Classifier", "GetClassifiers Exception: {0}", e.ToString());
+                    Log.Error("NaturalLanguageClassifier.OnGetClassifierResp()", "GetClassifiers Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -300,7 +300,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Natural Language Classifier", "GetClassifiers Exception: {0}", e.ToString());
+                    Log.Error("NaturalLanguageClassifier.OnTrainClassifierResp()", "GetClassifiers Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -414,7 +414,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Natural Language Classifier", "GetClassifiers Exception: {0}", e.ToString());
+                    Log.Error("NaturalLanguageClassifier.OnTrainClassifierResp()", "GetClassifiers Exception: {0}", e.ToString());
                 }
 
             }

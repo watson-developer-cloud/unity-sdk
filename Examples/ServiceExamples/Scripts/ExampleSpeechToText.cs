@@ -111,7 +111,7 @@ public class ExampleSpeechToText : MonoBehaviour
             yield return null;
 
         //  Recognize
-        Log.Debug("ExampleSpeechToText", "Attempting to recognize");
+        Log.Debug("ExampleSpeechToText.Examples()", "Attempting to recognize");
         List<string> keywords = new List<string>();
         keywords.Add("speech");
         _speechToText.KeywordsThreshold = 0.5f;
@@ -128,50 +128,50 @@ public class ExampleSpeechToText : MonoBehaviour
             yield return null;
 
         //  Get models
-        Log.Debug("ExampleSpeechToText", "Attempting to get models");
+        Log.Debug("ExampleSpeechToText.Examples()", "Attempting to get models");
         _speechToText.GetModels(HandleGetModels);
         while (!_getModelsTested)
             yield return null;
 
         //  Get model
-        Log.Debug("ExampleSpeechToText", "Attempting to get model {0}", _modelNameToGet);
+        Log.Debug("ExampleSpeechToText.Examples()", "Attempting to get model {0}", _modelNameToGet);
         _speechToText.GetModel(HandleGetModel, _modelNameToGet);
         while (!_getModelTested)
             yield return null;
 
         //  Get customizations
-        Log.Debug("ExampleSpeechToText", "Attempting to get customizations");
+        Log.Debug("ExampleSpeechToText.Examples()", "Attempting to get customizations");
         _speechToText.GetCustomizations(HandleGetCustomizations);
         while (!_getCustomizationsTested)
             yield return null;
 
         //  Create customization
-        Log.Debug("ExampleSpeechToText", "Attempting create customization");
+        Log.Debug("ExampleSpeechToText.Examples()", "Attempting create customization");
         _speechToText.CreateCustomization(HandleCreateCustomization, "unity-test-customization", "en-US_BroadbandModel", "Testing customization unity");
         while (!_createCustomizationsTested)
             yield return null;
 
         //  Get customization
-        Log.Debug("ExampleSpeechToText", "Attempting to get customization {0}", _createdCustomizationID);
+        Log.Debug("ExampleSpeechToText.Examples()", "Attempting to get customization {0}", _createdCustomizationID);
         _speechToText.GetCustomization(HandleGetCustomization, _createdCustomizationID);
         while (!_getCustomizationTested)
             yield return null;
 
         //  Get custom corpora
-        Log.Debug("ExampleSpeechToText", "Attempting to get custom corpora for {0}", _createdCustomizationID);
+        Log.Debug("ExampleSpeechToText.Examples()", "Attempting to get custom corpora for {0}", _createdCustomizationID);
         _speechToText.GetCustomCorpora(HandleGetCustomCorpora, _createdCustomizationID);
         while (!_getCustomCorporaTested)
             yield return null;
 
         //  Add custom corpus
-        Log.Debug("ExampleSpeechToText", "Attempting to add custom corpus {1} in customization {0}", _createdCustomizationID, _createdCorpusName);
+        Log.Debug("ExampleSpeechToText.Examples()", "Attempting to add custom corpus {1} in customization {0}", _createdCustomizationID, _createdCorpusName);
         string corpusData = File.ReadAllText(_customCorpusFilePath);
         _speechToText.AddCustomCorpus(HandleAddCustomCorpus, _createdCustomizationID, _createdCorpusName, true, corpusData);
         while (!_addCustomCorpusTested)
             yield return null;
 
         //  Get custom corpus
-        Log.Debug("ExampleSpeechToText", "Attempting to get custom corpus {1} in customization {0}", _createdCustomizationID, _createdCorpusName);
+        Log.Debug("ExampleSpeechToText.Examples()", "Attempting to get custom corpus {1} in customization {0}", _createdCustomizationID, _createdCorpusName);
         _speechToText.GetCustomCorpus(HandleGetCustomCorpus, _createdCustomizationID, _createdCorpusName);
         while (!_getCustomCorpusTested)
             yield return null;
@@ -182,13 +182,13 @@ public class ExampleSpeechToText : MonoBehaviour
             yield return null;
 
         //  Get custom words
-        Log.Debug("ExampleSpeechToText", "Attempting to get custom words.");
+        Log.Debug("ExampleSpeechToText.Examples()", "Attempting to get custom words.");
         _speechToText.GetCustomWords(HandleGetCustomWords, _createdCustomizationID);
         while (!_getCustomWordsTested)
             yield return null;
 
         //  Add custom words from path
-        Log.Debug("ExampleSpeechToText", "Attempting to add custom words in customization {0} using Words json path {1}", _createdCustomizationID, _customWordsFilePath);
+        Log.Debug("ExampleSpeechToText.Examples()", "Attempting to add custom words in customization {0} using Words json path {1}", _createdCustomizationID, _customWordsFilePath);
         string customWords = File.ReadAllText(_customWordsFilePath);
         _speechToText.AddCustomWords(HandleAddCustomWordsFromPath, _createdCustomizationID, customWords);
         while (!_addCustomWordsFromPathTested)
@@ -223,7 +223,7 @@ public class ExampleSpeechToText : MonoBehaviour
         wordList.Add(w2);
         words.words = wordList.ToArray();
 
-        Log.Debug("ExampleSpeechToText", "Attempting to add custom words in customization {0} using Words object", _createdCustomizationID);
+        Log.Debug("ExampleSpeechToText.Examples()", "Attempting to add custom words in customization {0} using Words object", _createdCustomizationID);
         _speechToText.AddCustomWords(HandleAddCustomWordsFromObject, _createdCustomizationID, words);
         while (!_addCustomWordsFromObjectTested)
             yield return null;
@@ -235,13 +235,13 @@ public class ExampleSpeechToText : MonoBehaviour
             yield return null;
 
         //  Get custom word
-        Log.Debug("ExampleSpeechToText", "Attempting to get custom word {1} in customization {0}", _createdCustomizationID, words.words[0].word);
+        Log.Debug("ExampleSpeechToText.Examples()", "Attempting to get custom word {1} in customization {0}", _createdCustomizationID, words.words[0].word);
         _speechToText.GetCustomWord(HandleGetCustomWord, _createdCustomizationID, words.words[0].word);
         while (!_getCustomWordTested)
             yield return null;
 
         //  Train customization
-        Log.Debug("ExampleSpeechToText", "Attempting to train customization {0}", _createdCustomizationID);
+        Log.Debug("ExampleSpeechToText.Examples()", "Attempting to train customization {0}", _createdCustomizationID);
         _speechToText.TrainCustomization(HandleTrainCustomization, _createdCustomizationID);
         while (!_trainCustomizationTested)
             yield return null;
@@ -253,77 +253,81 @@ public class ExampleSpeechToText : MonoBehaviour
             yield return null;
 
         //  Upgrade customization - not currently implemented in service
-        //Log.Debug("ExampleSpeechToText", "Attempting to upgrade customization {0}", _createdCustomizationID);
+        //Log.Debug("ExampleSpeechToText.Examples()", "Attempting to upgrade customization {0}", _createdCustomizationID);
         //_speechToText.UpgradeCustomization(HandleUpgradeCustomization, _createdCustomizationID);
         //while (!_upgradeCustomizationTested)
         //    yield return null;
 
         //  Delete custom word
-        Log.Debug("ExampleSpeechToText", "Attempting to delete custom wreord {1} in customization {0}", _createdCustomizationID, words.words[2].word);
+        Log.Debug("ExampleSpeechToText", "Attempting to delete custom word {1} in customization {0}", _createdCustomizationID, words.words[2].word);
         _speechToText.DeleteCustomWord(HandleDeleteCustomWord, _createdCustomizationID, words.words[2].word);
         while (!_deleteCustomWordTested)
             yield return null;
 
         //  Delay
-        Log.Debug("ExampleDiscovery", string.Format("Delaying delete environment for {0} sec", _delayTimeInSeconds));
+        Log.Debug("ExampleSpeechToText.Examples()", string.Format("Delaying delete environment for {0} sec", _delayTimeInSeconds));
         Runnable.Run(Delay(_delayTimeInSeconds));
         while (!_readyToContinue)
             yield return null;
 
         _readyToContinue = false;
         //  Delete custom corpus
-        Log.Debug("ExampleSpeechToText", "Attempting to delete custom corpus {1} in customization {0}", _createdCustomizationID, _createdCorpusName);
+        Log.Debug("ExampleSpeechToText.Examples()", "Attempting to delete custom corpus {1} in customization {0}", _createdCustomizationID, _createdCorpusName);
         _speechToText.DeleteCustomCorpus(HandleDeleteCustomCorpus, _createdCustomizationID, _createdCorpusName);
         while (!_deleteCustomCorpusTested)
             yield return null;
 
         //  Delay
-        Log.Debug("ExampleDiscovery", string.Format("Delaying delete environment for {0} sec", _delayTimeInSeconds));
+        Log.Debug("ExampleSpeechToText.Examples()", string.Format("Delaying delete environment for {0} sec", _delayTimeInSeconds));
         Runnable.Run(Delay(_delayTimeInSeconds));
         while (!_readyToContinue)
             yield return null;
 
         _readyToContinue = false;
         //  Reset customization
-        Log.Debug("ExampleSpeechToText", "Attempting to reset customization {0}", _createdCustomizationID);
+        Log.Debug("ExampleSpeechToText.Examples()", "Attempting to reset customization {0}", _createdCustomizationID);
         _speechToText.ResetCustomization(HandleResetCustomization, _createdCustomizationID);
         while (!_resetCustomizationTested)
             yield return null;
 
         //  Delay
-        Log.Debug("ExampleDiscovery", string.Format("Delaying delete environment for {0} sec", _delayTimeInSeconds));
+        Log.Debug("ExampleSpeechToText.Examples()", string.Format("Delaying delete environment for {0} sec", _delayTimeInSeconds));
         Runnable.Run(Delay(_delayTimeInSeconds));
         while (!_readyToContinue)
             yield return null;
 
         _readyToContinue = false;
         //  Delete customization
-        Log.Debug("ExampleSpeechToText", "Attempting to delete customization {0}", _createdCustomizationID);
+        Log.Debug("ExampleSpeechToText.Examples()", "Attempting to delete customization {0}", _createdCustomizationID);
         _speechToText.DeleteCustomization(HandleDeleteCustomization, _createdCustomizationID);
         while (!_deleteCustomizationsTested)
             yield return null;
 
         //  List acoustic customizations
-        Log.Debug("ExampleSpeechToText", "Attempting to get acoustic customizations");
+        Log.Debug("ExampleSpeechToText.Examples()", "Attempting to get acoustic customizations");
         _speechToText.GetCustomAcousticModels(HandleGetCustomAcousticModels);
         while (!_getAcousticCustomizationsTested)
             yield return null;
 
         //  Create acoustic customization
-        Log.Debug("ExampleSpeechToText", "Attempting to create acoustic customization");
+        Log.Debug("ExampleSpeechToText.Examples()", "Attempting to create acoustic customization");
         _speechToText.CreateAcousticCustomization(HandleCreateAcousticCustomization, _createdAcousticModelName);
         while (!_createAcousticCustomizationsTested)
             yield return null;
 
         //  Get acoustic customization
-        Log.Debug("ExampleSpeechToText", "Attempting to get acoustic customization {0}", _createdAcousticModelId);
+        Log.Debug("ExampleSpeechToText.Examples()", "Attempting to get acoustic customization {0}", _createdAcousticModelId);
         _speechToText.GetCustomAcousticModel(HandleGetCustomAcousticModel, _createdAcousticModelId);
         while (!_getAcousticCustomizationTested)
             yield return null;
 
+        while (!_isAudioLoaded)
+            yield return null;
+
         //  Create acoustic resource
-        Log.Debug("ExampleSpeechToText", "Attempting to create audio resource {1} on {0}", _createdAcousticModelId, _acousticResourceName);
-        _speechToText.AddAcousticResource(HandleAddAcousticResource, _createdAcousticModelId, _acousticResourceName, _acousticResourceMimeType, _acousticResourceMimeType, true, _acousticResourceData);
+        Log.Debug("ExampleSpeechToText.Examples()", "Attempting to create audio resource {1} on {0}", _createdAcousticModelId, _acousticResourceName);
+        string mimeType = Utility.GetMimeType(Path.GetExtension(_acousticResourceUrl));
+        _speechToText.AddAcousticResource(HandleAddAcousticResource, _createdAcousticModelId, _acousticResourceName, mimeType, mimeType, true, _acousticResourceData);
         while (!_addAcousticResourcesTested)
             yield return null;
 
@@ -334,19 +338,19 @@ public class ExampleSpeechToText : MonoBehaviour
             yield return null;
 
         //  List acoustic resources
-        Log.Debug("ExampleSpeechToText", "Attempting to get audio resources {0}", _createdAcousticModelId);
+        Log.Debug("ExampleSpeechToText.Examples()", "Attempting to get audio resources {0}", _createdAcousticModelId);
         _speechToText.GetCustomAcousticResources(HandleGetCustomAcousticResources, _createdAcousticModelId);
         while (!_getAcousticResourcesTested)
             yield return null;
 
         //  Train acoustic customization
-        Log.Debug("ExampleSpeechToText", "Attempting to train acoustic customization {0}", _createdAcousticModelId);
+        Log.Debug("ExampleSpeechToText.Examples()", "Attempting to train acoustic customization {0}", _createdAcousticModelId);
         _speechToText.TrainAcousticCustomization(HandleTrainAcousticCustomization, _createdAcousticModelId, null, true);
         while (!_trainAcousticCustomizationsTested)
             yield return null;
 
         //  Get acoustic resource
-        Log.Debug("ExampleSpeechToText", "Attempting to get audio resource {1} from {0}", _createdAcousticModelId, _acousticResourceName);
+        Log.Debug("ExampleSpeechToText.Examples()", "Attempting to get audio resource {1} from {0}", _createdAcousticModelId, _acousticResourceName);
         _speechToText.GetCustomAcousticResource(HandleGetCustomAcousticResource, _createdAcousticModelId, _acousticResourceName);
         while (!_getAcousticResourceTested)
             yield return null;
@@ -358,13 +362,13 @@ public class ExampleSpeechToText : MonoBehaviour
             yield return null;
 
         //  Reset acoustic customization
-        Log.Debug("ExampleSpeechToText", "Attempting to reset acoustic customization {0}", _createdAcousticModelId);
+        Log.Debug("ExampleSpeechToText.Examples()", "Attempting to reset acoustic customization {0}", _createdAcousticModelId);
         _speechToText.ResetAcousticCustomization(HandleResetAcousticCustomization, _createdAcousticModelId);
         while (!_resetAcousticCustomizationsTested)
             yield return null;
 
         //  Delay
-        Log.Debug("ExampleSpeechToText", string.Format("Delaying delete acoustic resource for {0} sec", _delayTimeInSeconds));
+        Log.Debug("ExampleSpeechToText.Examples()", string.Format("Delaying delete acoustic resource for {0} sec", _delayTimeInSeconds));
         Runnable.Run(Delay(_delayTimeInSeconds));
         while (!_readyToContinue)
             yield return null;
@@ -373,7 +377,7 @@ public class ExampleSpeechToText : MonoBehaviour
         DeleteAcousticResource();
 
         //  Delay
-        Log.Debug("ExampleSpeechToText", string.Format("Delaying delete acoustic customization for {0} sec", _delayTimeInSeconds));
+        Log.Debug("ExampleSpeechToText.Examples()", string.Format("Delaying delete acoustic customization for {0} sec", _delayTimeInSeconds));
         Runnable.Run(Delay(_delayTimeInSeconds));
         while (!_readyToContinue)
             yield return null;
@@ -384,37 +388,37 @@ public class ExampleSpeechToText : MonoBehaviour
             yield return null;
 
         //  Delay
-        Log.Debug("ExampleSpeechToText", string.Format("Delaying complete for {0} sec", _delayTimeInSeconds));
+        Log.Debug("ExampleSpeechToText.Examples()", string.Format("Delaying complete for {0} sec", _delayTimeInSeconds));
         Runnable.Run(Delay(_delayTimeInSeconds));
         while (!_readyToContinue)
             yield return null;
 
-        Log.Debug("ExampleSpeechToText", "Speech to Text examples complete.");
+        Log.Debug("ExampleSpeechToText.Examples()", "Speech to Text examples complete.");
     }
 
     private void DeleteAcousticResource()
     {
-        Log.Debug("ExampleSpeechToText", "Attempting to delete audio resource {1} from {0}", _createdAcousticModelId, _acousticResourceName);
+        Log.Debug("ExampleSpeechToText.Examples()", "Attempting to delete audio resource {1} from {0}", _createdAcousticModelId, _acousticResourceName);
         _speechToText.DeleteAcousticResource(HandleDeleteAcousticResource, _createdAcousticModelId, _acousticResourceName);
     }
 
     private void DeleteAcousticCustomization()
     {
-        Log.Debug("ExampleSpeechToText", "Attempting to delete acoustic customization {0}", _createdAcousticModelId);
+        Log.Debug("ExampleSpeechToText.Examples()", "Attempting to delete acoustic customization {0}", _createdAcousticModelId);
         _speechToText.DeleteAcousticCustomization(HandleDeleteAcousticCustomization, _createdAcousticModelId);
     }
 
     private void HandleGetModels(ModelSet result, string customData)
     {
 
-        Log.Debug("ExampleSpeechToText", "Speech to Text - Get models response: {0}", customData);
+        Log.Debug("ExampleSpeechToText.Examples()", "Speech to Text - Get models response: {0}", customData);
         _modelNameToGet = (result.models[UnityEngine.Random.Range(0, result.models.Length - 1)] as Model).name;
         _getModelsTested = true;
     }
 
     private void HandleGetModel(Model model, string customData)
     {
-        Log.Debug("ExampleSpeechToText", "Speech to Text - Get model response: {0}", customData);
+        Log.Debug("ExampleSpeechToText.Examples()", "Speech to Text - Get model response: {0}", customData);
         _getModelTested = true;
     }
 
@@ -427,7 +431,7 @@ public class ExampleSpeechToText : MonoBehaviour
                 foreach (var alt in res.alternatives)
                 {
                     string text = alt.transcript;
-                    Log.Debug("ExampleSpeechToText", string.Format("{0} ({1}, {2:0.00})\n", text, res.final ? "Final" : "Interim", alt.confidence));
+                    Log.Debug("ExampleSpeechToText.HandleOnRecognize()", string.Format("{0} ({1}, {2:0.00})\n", text, res.final ? "Final" : "Interim", alt.confidence));
 
                     if (res.final)
                         _recognizeTested = true;
@@ -437,7 +441,7 @@ public class ExampleSpeechToText : MonoBehaviour
                 {
                     foreach (var keyword in res.keywords_result.keyword)
                     {
-                        Log.Debug("ExampleSpeechToText", "keyword: {0}, confidence: {1}, start time: {2}, end time: {3}", keyword.normalized_text, keyword.confidence, keyword.start_time, keyword.end_time);
+                        Log.Debug("ExampleSpeechToText.HandleOnRecognize()", "keyword: {0}, confidence: {1}, start time: {2}, end time: {3}", keyword.normalized_text, keyword.confidence, keyword.start_time, keyword.end_time);
                     }
                 }
             }
@@ -472,20 +476,20 @@ public class ExampleSpeechToText : MonoBehaviour
 
     private void HandleGetCustomizations(Customizations customizations, string customData)
     {
-        Log.Debug("ExampleSpeechToText", "Speech to Text - Get customizations response: {0}", customData);
+        Log.Debug("ExampleSpeechToText.HandleGetCustomizations()", "Speech to Text - Get customizations response: {0}", customData);
         _getCustomizationsTested = true;
     }
 
     private void HandleCreateCustomization(CustomizationID customizationID, string customData)
     {
-        Log.Debug("ExampleSpeechToText", "Speech to Text - Create customization response: {0}", customData);
+        Log.Debug("ExampleSpeechToText.HandleCreateCustomization()", "Speech to Text - Create customization response: {0}", customData);
         _createdCustomizationID = customizationID.customization_id;
         _createCustomizationsTested = true;
     }
 
     private void HandleGetCustomization(Customization customization, string customData)
     {
-        Log.Debug("ExampleSpeechToText", "Speech to Text - Get customization response: {0}", customData);
+        Log.Debug("ExampleSpeechToText.HandleGetCustomization()", "Speech to Text - Get customization response: {0}", customData);
         _getCustomizationTested = true;
     }
 
@@ -493,12 +497,12 @@ public class ExampleSpeechToText : MonoBehaviour
     {
         if (success)
         {
-            Log.Debug("ExampleSpeechToText", "Speech to Text - Get customization response: Deleted customization {0}!", _createdCustomizationID);
+            Log.Debug("ExampleSpeechToText.HandleDeleteCustomization()", "Speech to Text - Get customization response: Deleted customization {0}!", _createdCustomizationID);
             _createdCustomizationID = default(string);
         }
         else
         {
-            Log.Debug("ExampleSpeechToText", "Failed to delete customization!");
+            Log.Debug("ExampleSpeechToText.Examples()", "Failed to delete customization!");
         }
 
         _deleteCustomizationsTested = true;
@@ -508,11 +512,11 @@ public class ExampleSpeechToText : MonoBehaviour
     {
         if (success)
         {
-            Log.Debug("ExampleSpeechToText", "Trained customization {0}!", _createdCustomizationID);
+            Log.Debug("ExampleSpeechToText.HandleTrainCustomization()", "Trained customization {0}!", _createdCustomizationID);
         }
         else
         {
-            Log.Debug("ExampleSpeechToText", "Failed to train customization!");
+            Log.Debug("ExampleSpeechToText.HandleTrainCustomization()", "Failed to train customization!");
         }
 
         _trainCustomizationTested = true;
@@ -522,11 +526,11 @@ public class ExampleSpeechToText : MonoBehaviour
     //{
     //    if (success)
     //    {
-    //        Log.Debug("ExampleSpeechToText", "Upgrade customization {0}!", _createdCustomizationID);
+    //        Log.Debug("ExampleSpeechToText.HandleUpgradeCustomization()", "Upgrade customization {0}!", _createdCustomizationID);
     //    }
     //    else
     //    {
-    //        Log.Debug("ExampleSpeechToText", "Failed to upgrade customization!");
+    //        Log.Debug("ExampleSpeechToText.HandleUpgradeCustomization()", "Failed to upgrade customization!");
     //    }
 
     //    _upgradeCustomizationTested = true;
@@ -536,11 +540,11 @@ public class ExampleSpeechToText : MonoBehaviour
     {
         if (success)
         {
-            Log.Debug("ExampleSpeechToText", "Reset customization {0}!", _createdCustomizationID);
+            Log.Debug("ExampleSpeechToText.HandleResetCustomization()", "Reset customization {0}!", _createdCustomizationID);
         }
         else
         {
-            Log.Debug("ExampleSpeechToText", "Failed to reset customization!");
+            Log.Debug("ExampleSpeechToText.HandleResetCustomization()", "Failed to reset customization!");
         }
 
         _resetCustomizationTested = true;
@@ -548,7 +552,7 @@ public class ExampleSpeechToText : MonoBehaviour
 
     private void HandleGetCustomCorpora(Corpora corpora, string customData)
     {
-        Log.Debug("ExampleSpeechToText", "Speech to Text - Get custom corpora response: {0}", customData);
+        Log.Debug("ExampleSpeechToText.HandleGetCustomCorpora()", "Speech to Text - Get custom corpora response: {0}", customData);
         _getCustomCorporaTested = true;
     }
 
@@ -556,11 +560,11 @@ public class ExampleSpeechToText : MonoBehaviour
     {
         if (success)
         {
-            Log.Debug("ExampleSpeechToText", "Speech to Text - delete custom coprus response: succeeded!");
+            Log.Debug("ExampleSpeechToText.HandleDeleteCustomCorpus()", "Speech to Text - delete custom coprus response: succeeded!");
         }
         else
         {
-            Log.Debug("ExampleSpeechToText", "Failed to delete custom corpus!");
+            Log.Debug("ExampleSpeechToText.HandleDeleteCustomCorpus()", "Failed to delete custom corpus!");
         }
 
         _deleteCustomCorpusTested = true;
@@ -570,11 +574,11 @@ public class ExampleSpeechToText : MonoBehaviour
     {
         if(success)
         {
-            Log.Debug("ExampleSpeechToText", "Speech to Text - Add custom corpus response: succeeded!");
+            Log.Debug("ExampleSpeechToText.HandleAddCustomCorpus()", "Speech to Text - Add custom corpus response: succeeded!");
         }
         else
         {
-            Log.Debug("ExampleSpeechToText", "Failed to add custom corpus!");
+            Log.Debug("ExampleSpeechToText.HandleAddCustomCorpus()", "Failed to add custom corpus!");
         }
 
         _addCustomCorpusTested = true;
@@ -582,13 +586,13 @@ public class ExampleSpeechToText : MonoBehaviour
 
     private void HandleGetCustomCorpus(Corpus corpus, string customData)
     {
-        Log.Debug("ExampleSpeechToText", "Speech to Text - Get custom corpus response: {0}", customData);
+        Log.Debug("ExampleSpeechToText.HandleGetCustomCorpus()", "Speech to Text - Get custom corpus response: {0}", customData);
         _getCustomCorpusTested = true;
     }
 
     private void HandleGetCustomWords(WordsList wordList, string customData)
     {
-        Log.Debug("ExampleSpeechToText", "Speech to Text - Get custom words response: {0}", customData);
+        Log.Debug("ExampleSpeechToText.HandleGetCustomWords()", "Speech to Text - Get custom words response: {0}", customData);
         _getCustomWordsTested = true;
     }
 
@@ -596,11 +600,11 @@ public class ExampleSpeechToText : MonoBehaviour
     {
         if (success)
         {
-            Log.Debug("ExampleSpeechToText", "Speech to Text - Add custom words from path response: succeeded!");
+            Log.Debug("ExampleSpeechToText.HandleAddCustomWordsFromPath()", "Speech to Text - Add custom words from path response: succeeded!");
         }
         else
         {
-            Log.Debug("ExampleSpeechToText", "Failed to delete custom word!");
+            Log.Debug("ExampleSpeechToText.HandleAddCustomWordsFromPath()", "Failed to delete custom word!");
         }
 
         _addCustomWordsFromPathTested = true;
@@ -610,11 +614,11 @@ public class ExampleSpeechToText : MonoBehaviour
     {
         if (success)
         {
-            Log.Debug("ExampleSpeechToText", "Speech to Text - Add custom words from object response: succeeded!");
+            Log.Debug("ExampleSpeechToText.HandleAddCustomWordsFromObject()", "Speech to Text - Add custom words from object response: succeeded!");
         }
         else
         {
-            Log.Debug("ExampleSpeechToText", "Failed to delete custom word!");
+            Log.Debug("ExampleSpeechToText.HandleAddCustomWordsFromObject()", "Failed to delete custom word!");
         }
 
         _addCustomWordsFromObjectTested = true;
@@ -624,11 +628,11 @@ public class ExampleSpeechToText : MonoBehaviour
     {
         if (success)
         {
-            Log.Debug("ExampleSpeechToText", "Speech to Text - Delete custom word response: succeeded!");
+            Log.Debug("ExampleSpeechToText.HandleDeleteCustomWord()", "Speech to Text - Delete custom word response: succeeded!");
         }
         else
         {
-            Log.Debug("ExampleSpeechToText", "Failed to delete custom word!");
+            Log.Debug("ExampleSpeechToText.HandleDeleteCustomWord()", "Failed to delete custom word!");
         }
 
         _deleteCustomWordTested = true;
@@ -636,67 +640,67 @@ public class ExampleSpeechToText : MonoBehaviour
 
     private void HandleGetCustomWord(WordData word, string customData)
     {
-        Log.Debug("ExampleSpeechToText", "Speech to Text - Get custom word response: {0}", customData);
+        Log.Debug("ExampleSpeechToText.HandleGetCustomWord()", "Speech to Text - Get custom word response: {0}", customData);
         _getCustomWordTested = true;
     }
 
     private void HandleGetCustomAcousticModels(AcousticCustomizations acousticCustomizations, string customData)
     {
-        Log.Debug("ExampleSpeechToText", "acousticCustomizations: {0}", customData);
+        Log.Debug("ExampleSpeechToText.HandleGetCustomAcousticModels()", "acousticCustomizations: {0}", customData);
         _getAcousticCustomizationsTested = true;
     }
 
     private void HandleCreateAcousticCustomization(CustomizationID customizationID, string customData)
     {
-        Log.Debug("ExampleSpeechToText", "customizationId: {0}", customData);
+        Log.Debug("ExampleSpeechToText.HandleCreateAcousticCustomization()", "customizationId: {0}", customData);
         _createdAcousticModelId = customizationID.customization_id;
         _createAcousticCustomizationsTested = true;
     }
 
     private void HandleGetCustomAcousticModel(AcousticCustomization acousticCustomization, string customData)
     {
-        Log.Debug("ExampleSpeechToText", "acousticCustomization: {0}", customData);
+        Log.Debug("ExampleSpeechToText.HandleGetCustomAcousticModel()", "acousticCustomization: {0}", customData);
         _getAcousticCustomizationTested = true;
     }
 
     private void HandleTrainAcousticCustomization(bool success, string customData)
     {
-        Log.Debug("ExampleSpeechToText", "train customization success: {0}", success);
+        Log.Debug("ExampleSpeechToText.HandleTrainAcousticCustomization()", "train customization success: {0}", success);
         _trainAcousticCustomizationsTested = true;
     }
 
     private void HandleGetCustomAcousticResources(AudioResources audioResources, string customData)
     {
-        Log.Debug("ExampleSpeechToText", "audioResources: {0}", customData);
+        Log.Debug("ExampleSpeechToText.HandleGetCustomAcousticResources()", "audioResources: {0}", customData);
         _getAcousticResourcesTested = true;
     }
 
     private void HandleAddAcousticResource(string customData)
     {
-        Log.Debug("ExampleSpeechToText", "added acoustic resource: {0}", customData);
+        Log.Debug("ExampleSpeechToText.HandleAddAcousticResource()", "added acoustic resource: {0}", customData);
         _addAcousticResourcesTested = true;
     }
 
     private void HandleGetCustomAcousticResource(AudioListing audioListing, string customData)
     {
-        Log.Debug("ExampleSpeechToText", "audioListing: {0}", customData);
+        Log.Debug("ExampleSpeechToText.HandleGetCustomAcousticResource()", "audioListing: {0}", customData);
         _getAcousticResourceTested = true;
     }
 
     private void HandleResetAcousticCustomization(bool success, string customData)
     {
-        Log.Debug("ExampleSpeechToText", "reset customization success: {0}", success);
+        Log.Debug("ExampleSpeechToText.HandleResetAcousticCustomization()", "reset customization success: {0}", success);
         _resetAcousticCustomizationsTested = true;
     }
 
     private void HandleDeleteAcousticResource(bool success, string customData)
     {
-        Log.Debug("ExampleSpeechToText", "deleted acoustic resource: {0}", success);
+        Log.Debug("ExampleSpeechToText.HandleDeleteAcousticResource()", "deleted acoustic resource: {0}", success);
     }
 
     private void HandleDeleteAcousticCustomization(bool success, string customData)
     {
-        Log.Debug("ExampleSpeechToText", "deleted acoustic customization: {0}", success);
+        Log.Debug("ExampleSpeechToText.HandleDeleteAcousticCustomization()", "deleted acoustic customization: {0}", success);
         if (success)
             _deleteAcousticCustomizationsTested = true;
         else
@@ -705,7 +709,7 @@ public class ExampleSpeechToText : MonoBehaviour
 
     private IEnumerator CheckCustomizationStatus(string customizationID, float delay = 0.1f)
     {
-        Log.Debug("TestSpeechToText", "Checking customization status in {0} seconds...", delay.ToString());
+        Log.Debug("ExampleSpeechToText.CheckCustomizationStatus()", "Checking customization status in {0} seconds...", delay.ToString());
         yield return new WaitForSeconds(delay);
 
         //	passing customizationID in custom data
@@ -716,7 +720,7 @@ public class ExampleSpeechToText : MonoBehaviour
     {
         if (customization != null)
         {
-            Log.Debug("TestSpeechToText", "Customization status: {0}", customization.status);
+            Log.Debug("ExampleSpeechToText.OnCheckCustomizationStatus()", "Customization status: {0}", customization.status);
             if (customization.status != "ready" && customization.status != "available")
                 Runnable.Run(CheckCustomizationStatus(customData, 5f));
             else
@@ -724,13 +728,13 @@ public class ExampleSpeechToText : MonoBehaviour
         }
         else
         {
-            Log.Debug("TestSpeechToText", "Check customization status failed!");
+            Log.Debug("ExampleSpeechToText.OnCheckCustomizationStatus()", "Check customization status failed!");
         }
     }
 
     private IEnumerator CheckAcousticCustomizationStatus(string customizationID, float delay = 0.1f)
     {
-        Log.Debug("TestSpeechToText", "Checking acoustic customization status in {0} seconds...", delay.ToString());
+        Log.Debug("ExampleSpeechToText.CheckAcousticCustomizationStatus()", "Checking acoustic customization status in {0} seconds...", delay.ToString());
         yield return new WaitForSeconds(delay);
 
         //	passing customizationID in custom data
@@ -741,7 +745,7 @@ public class ExampleSpeechToText : MonoBehaviour
     {
         if (acousticCustomization != null)
         {
-            Log.Debug("TestSpeechToText", "Acoustic customization status: {0}", acousticCustomization.status);
+            Log.Debug("ExampleSpeechToText.CheckAcousticCustomizationStatus()", "Acoustic customization status: {0}", acousticCustomization.status);
             if (acousticCustomization.status != "ready" && acousticCustomization.status != "available")
                 Runnable.Run(CheckAcousticCustomizationStatus(customData, 5f));
             else
@@ -749,7 +753,7 @@ public class ExampleSpeechToText : MonoBehaviour
         }
         else
         {
-            Log.Debug("TestSpeechToText", "Check acoustic customization status failed!");
+            Log.Debug("ExampleSpeechToText.CheckAcousticCustomizationStatus()", "Check acoustic customization status failed!");
         }
     }
 
@@ -761,11 +765,11 @@ public class ExampleSpeechToText : MonoBehaviour
 
     private IEnumerator DownloadAcousticResource()
     {
-        Log.Debug("ExampleSpeechToText", "downloading acoustic resource from {0}", _acousticResourceUrl);
+        Log.Debug("ExampleSpeechToText.DownloadAcousticResource()", "downloading acoustic resource from {0}", _acousticResourceUrl);
         WWW www = new WWW(_acousticResourceUrl);
         yield return www;
-        
-        Log.Debug("ExampleSpeechToText", "acoustic resource downloaded");
+
+        Log.Debug("ExampleSpeechToText.DownloadAcousticResource()", "acoustic resource downloaded");
         _acousticResourceData = www.bytes;
         _isAudioLoaded = true;
         www.Dispose();

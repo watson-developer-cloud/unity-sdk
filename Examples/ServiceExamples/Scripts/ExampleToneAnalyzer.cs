@@ -50,17 +50,17 @@ public class ExampleToneAnalyzer : MonoBehaviour
     {
         //  Analyze tone
         if (!_toneAnalyzer.GetToneAnalyze(OnGetToneAnalyze, _stringToTestTone))
-            Log.Debug("ExampleToneAnalyzer", "Failed to analyze!");
+            Log.Debug("ExampleToneAnalyzer.Examples()", "Failed to analyze!");
 
         while (!_analyzeToneTested)
             yield return null;
 
-        Log.Debug("ExampleToneAnalyzer", "Tone analyzer examples complete.");
+        Log.Debug("ExampleToneAnalyzer.Examples()", "Tone analyzer examples complete.");
     }
 
     private void OnGetToneAnalyze(ToneAnalyzerResponse resp, string data)
     {
-        Log.Debug("ExampleToneAnalyzer", "Tone Analyzer - Analyze Response: {0}", data);
+        Log.Debug("ExampleToneAnalyzer.OnGetToneAnalyze()", "Tone Analyzer - Analyze Response: {0}", data);
         _analyzeToneTested = true;
     }
 }

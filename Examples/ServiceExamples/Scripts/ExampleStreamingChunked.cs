@@ -24,12 +24,12 @@ using IBM.Watson.DeveloperCloud.DataTypes;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
-public class ExampleStreaming : MonoBehaviour
+public class ExampleStreamingChunked : MonoBehaviour
 {
     private string _username = null;
     private string _password = null;
     private string _url = null;
-    
+
     public Text ResultsField;
 
     private int _recordingRoutine = 0;
@@ -37,6 +37,7 @@ public class ExampleStreaming : MonoBehaviour
     private AudioClip _recording = null;
     private int _recordingBufferSize = 1;
     private int _recordingHZ = 22050;
+    private int _chunkCount = 50;
 
     private SpeechToText _speechToText;
 
@@ -104,14 +105,15 @@ public class ExampleStreaming : MonoBehaviour
     {
         Active = false;
 
-        Log.Debug("ExampleStreaming.OnError()", "Error! {0}", error);
+        Log.Debug("ExampleStreaming", "Error! {0}", error);
     }
 
     private IEnumerator RecordingHandler()
     {
-        Log.Debug("ExampleStreaming.RecordingHandler()", "devices: {0}", Microphone.devices);
+        Log.Debug("ExampleStreamingChunks", "devices: {0}", Microphone.devices);
+        //  Start recording
         _recording = Microphone.Start(_microphoneID, true, _recordingBufferSize, _recordingHZ);
-        yield return null;      // let _recordingRoutine get set..
+        yield return null;
 
         if (_recording == null)
         {
@@ -119,47 +121,84 @@ public class ExampleStreaming : MonoBehaviour
             yield break;
         }
 
-        bool bFirstBlock = true;
-        int midPoint = _recording.samples / 2;
+#if ENABLE_TIME_LOGGING
+        //  Set a reference to now to check timing
+        DateTime now = DateTime.Now;
+#endif
+
+        //  Current chunk number
+        int chunkNum = 0;
+
+        //  Size of the chunk in samples
+        int chunkSize = _recording.samples / _chunkCount;
+
+        //  Init samples
         float[] samples = null;
 
         while (_recordingRoutine != 0 && _recording != null)
         {
-            int writePos = Microphone.GetPosition(_microphoneID);
-            if (writePos > _recording.samples || !Microphone.IsRecording(_microphoneID))
+            //  Get the mic position
+            int microphonePosition = Microphone.GetPosition(_microphoneID);
+            if (microphonePosition > _recording.samples || !Microphone.IsRecording(_microphoneID))
             {
-                Log.Error("ExampleStreaming.RecordingHandler()", "Microphone disconnected.");
+                Log.Error("ExampleStreaming", "Microphone disconnected.");
 
                 StopRecording();
                 yield break;
             }
 
-            if ((bFirstBlock && writePos >= midPoint)
-              || (!bFirstBlock && writePos < midPoint))
-            {
-                // front block is recorded, make a RecordClip and pass it onto our callback.
-                samples = new float[midPoint];
-                _recording.GetData(samples, bFirstBlock ? 0 : midPoint);
+            int sampleStart = chunkSize * chunkNum;
+            int sampleEnd = chunkSize * (chunkNum + 1);
 
+#if ENABLE_DEBUGGING
+            Log.Debug("ExampleStreamingChunks", "microphonePosition: {0} | sampleStart: {1} | sampleEnd: {2} | chunkNum: {3}",
+                microphonePosition.ToString(),
+                sampleStart.ToString(),
+                sampleEnd.ToString(),
+                chunkNum.ToString());
+#endif
+            //If the write position is past the end of the chunk or if write position is before the start of the chunk
+            while (microphonePosition > sampleEnd || microphonePosition < sampleStart)
+            {
+                //  Init samples
+                samples = new float[chunkSize];
+                //  Write data from recording into samples starting from the chunkStart
+                _recording.GetData(samples, sampleStart);
+
+                //  Create AudioData and use the samples we just created
                 AudioData record = new AudioData();
-                record.MaxLevel = Mathf.Abs(Mathf.Max(samples));
-                record.Clip = AudioClip.Create("Recording", midPoint, _recording.channels, _recordingHZ, false);
+                record.MaxLevel = Mathf.Max(Mathf.Abs(Mathf.Min(samples)), Mathf.Max(samples));
+                record.Clip = AudioClip.Create("Recording", chunkSize, _recording.channels, _recordingHZ, false);
                 record.Clip.SetData(samples, 0);
 
+                //  Send the newly created AudioData to the service
                 _speechToText.OnListen(record);
 
-                bFirstBlock = !bFirstBlock;
-            }
-            else
-            {
-                // calculate the number of samples remaining until we ready for a block of audio, 
-                // and wait that amount of time it will take to record.
-                int remaining = bFirstBlock ? (midPoint - writePos) : (_recording.samples - writePos);
-                float timeRemaining = (float)remaining / (float)_recordingHZ;
+                //  Iterate or reset chunkNum
+                if (chunkNum < _chunkCount - 1)
+                {
+                    chunkNum++;
+#if ENABLE_DEBUGGING
+                    Log.Debug("ExampleStreamingChunks", "Iterating chunkNum: {0}", chunkNum);
+#endif
+                }
+                else
+                {
+                    chunkNum = 0;
+#if ENABLE_DEBUGGING
+                    Log.Debug("ExampleStreamingChunks", "Resetting chunkNum: {0}", chunkNum);
+#endif
+                }
 
-                yield return new WaitForSeconds(timeRemaining);
+#if ENABLE_TIME_LOGGING
+                Log.Debug("ExampleStreamingChunks", "Sending data - time since last transmission: {0} ms", Mathf.Floor((float)(DateTime.Now - now).TotalMilliseconds));
+                now = DateTime.Now;
+#endif
+                sampleStart = chunkSize * chunkNum;
+                sampleEnd = chunkSize * (chunkNum + 1);
             }
 
+            yield return 0;
         }
 
         yield break;
@@ -174,7 +213,7 @@ public class ExampleStreaming : MonoBehaviour
                 foreach (var alt in res.alternatives)
                 {
                     string text = string.Format("{0} ({1}, {2:0.00})\n", alt.transcript, res.final ? "Final" : "Interim", alt.confidence);
-                    Log.Debug("ExampleStreaming.OnRecognize()", text);
+                    Log.Debug("ExampleStreaming", text);
                     ResultsField.text = text;
                 }
 
@@ -182,7 +221,7 @@ public class ExampleStreaming : MonoBehaviour
                 {
                     foreach (var keyword in res.keywords_result.keyword)
                     {
-                        Log.Debug("ExampleStreaming.OnRecognize()", "keyword: {0}, confidence: {1}, start time: {2}, end time: {3}", keyword.normalized_text, keyword.confidence, keyword.start_time, keyword.end_time);
+                        Log.Debug("ExampleSpeechToText", "keyword: {0}, confidence: {1}, start time: {2}, end time: {3}", keyword.normalized_text, keyword.confidence, keyword.start_time, keyword.end_time);
                     }
                 }
 
@@ -190,9 +229,9 @@ public class ExampleStreaming : MonoBehaviour
                 {
                     foreach (var wordAlternative in res.word_alternatives)
                     {
-                        Log.Debug("ExampleStreaming.OnRecognize()", "Word alternatives found. Start time: {0} | EndTime: {1}", wordAlternative.start_time, wordAlternative.end_time);
-                        foreach(var alternative in wordAlternative.alternatives)
-                            Log.Debug("ExampleStreaming.OnRecognize()", "\t word: {0} | confidence: {1}", alternative.word, alternative.confidence);
+                        Log.Debug("ExampleSpeechToText", "Word alternatives found. Start time: {0} | EndTime: {1}", wordAlternative.start_time, wordAlternative.end_time);
+                        foreach (var alternative in wordAlternative.alternatives)
+                            Log.Debug("ExampleSpeechToText", "\t word: {0} | confidence: {1}", alternative.word, alternative.confidence);
                     }
                 }
             }
@@ -205,7 +244,7 @@ public class ExampleStreaming : MonoBehaviour
         {
             foreach (SpeakerLabelsResult labelResult in result.speaker_labels)
             {
-                Log.Debug("ExampleStreaming.OnRecognize()", string.Format("speaker result: {0} | confidence: {3} | from: {1} | to: {2}", labelResult.speaker, labelResult.from, labelResult.to, labelResult.confidence));
+                Log.Debug("ExampleStreaming", string.Format("speaker result: {0} | confidence: {3} | from: {1} | to: {2}", labelResult.speaker, labelResult.from, labelResult.to, labelResult.confidence));
             }
         }
     }

@@ -74,7 +74,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             }
             catch
             {
-                Log.Debug("TestToneAnalyzer", "Failed to get credentials from VCAP_SERVICES file. Please configure credentials to run this test. For more information, see: https://github.com/watson-developer-cloud/unity-sdk/#authentication");
+                Log.Debug("TestToneAnalyzer.RunTest()", "Failed to get credentials from VCAP_SERVICES file. Please configure credentials to run this test. For more information, see: https://github.com/watson-developer-cloud/unity-sdk/#authentication");
             }
             //  Create credential and instantiate service
             Credentials credentials = new Credentials(_username, _password, _url);
@@ -90,19 +90,19 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             //  Analyze tone
             if (!_toneAnalyzer.GetToneAnalyze(OnGetToneAnalyze, _stringToTestTone))
-                Log.Debug("ExampleToneAnalyzer", "Failed to analyze!");
+                Log.Debug("ExampleToneAnalyzer.GetToneAnalyze()", "Failed to analyze!");
 
             while (!_analyzeToneTested)
                 yield return null;
 
-            Log.Debug("ExampleToneAnalyzer", "Tone analyzer examples complete.");
+            Log.Debug("ExampleToneAnalyzer.RunTest()", "Tone analyzer examples complete.");
 
             yield break;
         }
 
         private void OnGetToneAnalyze(ToneAnalyzerResponse resp, string data)
         {
-            Log.Debug("ExampleToneAnalyzer", "Tone Analyzer - Analyze Response: {0}", data);
+            Log.Debug("ExampleToneAnalyzer.OnGetToneAnalyze()", "Tone Analyzer - Analyze Response: {0}", data);
             Test(resp != null);
             _analyzeToneTested = true;
         }
