@@ -109,6 +109,8 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         private string _acoustic_customization_id = null;
         private float _customization_weight = 0.3f;
         private bool _streamMultipart = false;           //  If true sets `Transfer-Encoding` header of multipart request to `chunked`.
+        private float _silenceDuration = 0.0f;
+        private float _silenceCutoff = 1.0f;
 
         private fsSerializer _serializer = new fsSerializer();
         private Credentials _credentials = null;
@@ -465,7 +467,17 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                     SendStart();
                 }
 
-                if (!DetectSilence || clip.MaxLevel >= _silenceThreshold)
+                // If silence persists for _silenceCutoff seconds, send stop and discard clips until audio resumes
+                if (DetectSilence && clip.MaxLevel < _silenceThreshold)
+                {
+                    _silenceDuration += clip.Clip.length;
+                }
+                else
+                {
+                    _silenceDuration = 0.0f;
+                }
+
+                if (!DetectSilence || _silenceDuration < _silenceCutoff)
                 {
                     if (_listenActive)
                     {
