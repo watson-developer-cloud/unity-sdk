@@ -63,10 +63,10 @@ public class ExampleStreaming : MonoBehaviour
         {
             if (value && !_speechToText.IsListening)
             {
-                _speechToText.DetectSilence = false;
+                _speechToText.DetectSilence = true;
                 _speechToText.EnableWordConfidence = true;
                 _speechToText.EnableTimestamps = true;
-                _speechToText.SilenceThreshold = 0.1f;
+                _speechToText.SilenceThreshold = 0.01f;
                 _speechToText.MaxAlternatives = 0;
                 _speechToText.EnableInterimResults = true;
                 _speechToText.OnError = OnError;
@@ -177,7 +177,7 @@ public class ExampleStreaming : MonoBehaviour
 
                 //  Create AudioData and use the samples we just created
                 AudioData record = new AudioData();
-                record.MaxLevel = Mathf.Max(samples);
+                record.MaxLevel = Mathf.Max(Mathf.Abs(Mathf.Min(samples)), Mathf.Max(samples));
                 record.Clip = AudioClip.Create("Recording", chunkSize, _recording.channels, _recordingHZ, false);
                 record.Clip.SetData(samples, 0);
 
