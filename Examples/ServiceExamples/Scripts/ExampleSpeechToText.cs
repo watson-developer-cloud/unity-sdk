@@ -259,7 +259,7 @@ public class ExampleSpeechToText : MonoBehaviour
         //    yield return null;
 
         //  Delete custom word
-        Log.Debug("ExampleSpeechToText", "Attempting to delete custom word {1} in customization {0}", _createdCustomizationID, words.words[2].word);
+        Log.Debug("ExampleSpeechToText.Examples()", "Attempting to delete custom word {1} in customization {0}", _createdCustomizationID, words.words[2].word);
         _speechToText.DeleteCustomWord(HandleDeleteCustomWord, _createdCustomizationID, words.words[2].word);
         while (!_deleteCustomWordTested)
             yield return null;
