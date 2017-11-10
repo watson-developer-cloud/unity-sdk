@@ -135,74 +135,74 @@ public class ExampleStreamingChunked : MonoBehaviour
         //  Init samples
         float[] samples = null;
 
-        while (_recordingRoutine != 0 && _recording != null)
-        {
-            //  Get the mic position
-            int microphonePosition = Microphone.GetPosition(_microphoneID);
-            if (microphonePosition > _recording.samples || !Microphone.IsRecording(_microphoneID))
-            {
-                Log.Error("ExampleStreaming", "Microphone disconnected.");
+		while (_recordingRoutine != 0 && _recording != null)
+		{
+			//  Get the mic position
+			int microphonePosition = Microphone.GetPosition(_microphoneID);
+			if (microphonePosition > _recording.samples || !Microphone.IsRecording(_microphoneID))
+			{
+				Log.Error("ExampleStreaming", "Microphone disconnected.");
 
-                StopRecording();
-                yield break;
-            }
+				StopRecording();
+				yield break;
+			}
 
-            int sampleStart = chunkSize * chunkNum;
-            int sampleEnd = chunkSize * (chunkNum + 1);
+			int sampleStart = chunkSize * chunkNum;
+			int sampleEnd = chunkSize * (chunkNum + 1);
 
-#if ENABLE_DEBUGGING
-            Log.Debug("ExampleStreamingChunks", "microphonePosition: {0} | sampleStart: {1} | sampleEnd: {2} | chunkNum: {3}",
-                microphonePosition.ToString(),
-                sampleStart.ToString(),
-                sampleEnd.ToString(),
-                chunkNum.ToString());
-#endif
-            //If the write position is past the end of the chunk or if write position is before the start of the chunk
-            while (microphonePosition > sampleEnd || microphonePosition < sampleStart)
-            {
-                //  Init samples
-                samples = new float[chunkSize];
-                //  Write data from recording into samples starting from the chunkStart
-                _recording.GetData(samples, sampleStart);
+			#if ENABLE_DEBUGGING
+			Log.Debug("ExampleStreamingChunks", "microphonePosition: {0} | sampleStart: {1} | sampleEnd: {2} | chunkNum: {3}",
+			microphonePosition.ToString(),
+			sampleStart.ToString(),
+			sampleEnd.ToString(),
+			chunkNum.ToString());
+			#endif
+			//If the write position is past the end of the chunk or if write position is before the start of the chunk
+			while (microphonePosition > sampleEnd || microphonePosition < sampleStart)
+			{
+				//  Init samples
+				samples = new float[chunkSize];
+				//  Write data from recording into samples starting from the chunkStart
+				_recording.GetData(samples, sampleStart);
 
-                //  Create AudioData and use the samples we just created
-                AudioData record = new AudioData();
-                record.MaxLevel = Mathf.Max(Mathf.Abs(Mathf.Min(samples)), Mathf.Max(samples));
-                record.Clip = AudioClip.Create("Recording", chunkSize, _recording.channels, _recordingHZ, false);
-                record.Clip.SetData(samples, 0);
+				//  Create AudioData and use the samples we just created
+				AudioData record = new AudioData();
+				record.MaxLevel = Mathf.Max(samples);
+				record.Clip = AudioClip.Create("Recording", chunkSize, _recording.channels, _recordingHZ, false);
+				record.Clip.SetData(samples, 0);
 
-                //  Send the newly created AudioData to the service
-                _speechToText.OnListen(record);
+				//  Send the newly created AudioData to the service
+				_speechToText.OnListen(record);
 
-                //  Iterate or reset chunkNum
-                if (chunkNum < _chunkCount - 1)
-                {
-                    chunkNum++;
-#if ENABLE_DEBUGGING
-                    Log.Debug("ExampleStreamingChunks", "Iterating chunkNum: {0}", chunkNum);
-#endif
-                }
-                else
-                {
-                    chunkNum = 0;
-#if ENABLE_DEBUGGING
-                    Log.Debug("ExampleStreamingChunks", "Resetting chunkNum: {0}", chunkNum);
-#endif
-                }
+				//  Iterate or reset chunkNum
+				if (chunkNum < _chunkCount - 1)
+				{
+					chunkNum++;
+					#if ENABLE_DEBUGGING
+					Log.Debug("ExampleStreamingChunks", "Iterating chunkNum: {0}", chunkNum);
+					#endif
+				}
+				else
+				{
+					chunkNum = 0;
+					#if ENABLE_DEBUGGING
+					Log.Debug("ExampleStreamingChunks", "Resetting chunkNum: {0}", chunkNum);
+					#endif
+				}
 
-#if ENABLE_TIME_LOGGING
-                Log.Debug("ExampleStreamingChunks", "Sending data - time since last transmission: {0} ms", Mathf.Floor((float)(DateTime.Now - now).TotalMilliseconds));
-                now = DateTime.Now;
-#endif
-                sampleStart = chunkSize * chunkNum;
-                sampleEnd = chunkSize * (chunkNum + 1);
-            }
+				#if ENABLE_TIME_LOGGING
+				Log.Debug("ExampleStreamingChunks", "Sending data - time since last transmission: {0} ms", Mathf.Floor((float)(DateTime.Now - now).TotalMilliseconds));
+				now = DateTime.Now;
+				#endif
+				sampleStart = chunkSize * chunkNum;
+				sampleEnd = chunkSize * (chunkNum + 1);
+			}
 
-            yield return 0;
-        }
+			yield return 0;
+		}
 
-        yield break;
-    }
+		yield break;
+	}
 
     private void OnRecognize(SpeechRecognitionEvent result)
     {
