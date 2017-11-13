@@ -24,7 +24,7 @@ using IBM.Watson.DeveloperCloud.DataTypes;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
-public class ExampleStreamingChunked : MonoBehaviour
+public class ExampleStreamingSplitSamples : MonoBehaviour
 {
     private string _username = null;
     private string _password = null;
@@ -37,7 +37,7 @@ public class ExampleStreamingChunked : MonoBehaviour
     private AudioClip _recording = null;
     private int _recordingBufferSize = 1;
     private int _recordingHZ = 22050;
-    private int _chunkCount = 50;
+	private int _sampleSegments = 50;
 
     private SpeechToText _speechToText;
 
@@ -105,12 +105,12 @@ public class ExampleStreamingChunked : MonoBehaviour
     {
         Active = false;
 
-        Log.Debug("ExampleStreaming", "Error! {0}", error);
+		Log.Debug("ExampleStreamingSplitSamples.OnError()", "Error! {0}", error);
     }
 
     private IEnumerator RecordingHandler()
     {
-        Log.Debug("ExampleStreamingChunks", "devices: {0}", Microphone.devices);
+		Log.Debug("ExampleStreamingSplitSamples.RecordingHandler()", "devices: {0}", Microphone.devices);
         //  Start recording
         _recording = Microphone.Start(_microphoneID, true, _recordingBufferSize, _recordingHZ);
         yield return null;
@@ -126,11 +126,11 @@ public class ExampleStreamingChunked : MonoBehaviour
         DateTime now = DateTime.Now;
 #endif
 
-        //  Current chunk number
-        int chunkNum = 0;
+        //  Current sample segment number
+		int sampleSegmentNum = 0;
 
-        //  Size of the chunk in samples
-        int chunkSize = _recording.samples / _chunkCount;
+        //  Size of the sample segment in samples
+		int sampleSegmentSize = _recording.samples / _sampleSegments;
 
         //  Init samples
         float[] samples = null;
@@ -141,61 +141,61 @@ public class ExampleStreamingChunked : MonoBehaviour
 			int microphonePosition = Microphone.GetPosition(_microphoneID);
 			if (microphonePosition > _recording.samples || !Microphone.IsRecording(_microphoneID))
 			{
-				Log.Error("ExampleStreaming", "Microphone disconnected.");
+				Log.Error("ExampleStreamingSplitSamples.RecordingHandler()", "Microphone disconnected.");
 
 				StopRecording();
 				yield break;
 			}
 
-			int sampleStart = chunkSize * chunkNum;
-			int sampleEnd = chunkSize * (chunkNum + 1);
+			int sampleStart = sampleSegmentSize * sampleSegmentNum;
+			int sampleEnd = sampleSegmentSize * (sampleSegmentNum + 1);
 
 			#if ENABLE_DEBUGGING
-			Log.Debug("ExampleStreamingChunks", "microphonePosition: {0} | sampleStart: {1} | sampleEnd: {2} | chunkNum: {3}",
+			Log.Debug("ExampleStreamingSplitSamples.RecordinHandler", "microphonePosition: {0} | sampleStart: {1} | sampleEnd: {2} | sampleSegmentNum: {3}",
 			microphonePosition.ToString(),
 			sampleStart.ToString(),
 			sampleEnd.ToString(),
-			chunkNum.ToString());
+			sampleSegmentNum.ToString());
 			#endif
-			//If the write position is past the end of the chunk or if write position is before the start of the chunk
+			//If the write position is past the end of the sample segment or if write position is before the start of the sample segment
 			while (microphonePosition > sampleEnd || microphonePosition < sampleStart)
 			{
 				//  Init samples
-				samples = new float[chunkSize];
-				//  Write data from recording into samples starting from the chunkStart
+				samples = new float[sampleSegmentSize];
+				//  Write data from recording into samples starting from the sampleSegmentStart
 				_recording.GetData(samples, sampleStart);
 
 				//  Create AudioData and use the samples we just created
 				AudioData record = new AudioData();
 				record.MaxLevel = Mathf.Max(Mathf.Abs(Mathf.Min(samples)), Mathf.Max(samples));
-				record.Clip = AudioClip.Create("Recording", chunkSize, _recording.channels, _recordingHZ, false);
+				record.Clip = AudioClip.Create("Recording", sampleSegmentSize, _recording.channels, _recordingHZ, false);
 				record.Clip.SetData(samples, 0);
 
 				//  Send the newly created AudioData to the service
 				_speechToText.OnListen(record);
 
-				//  Iterate or reset chunkNum
-				if (chunkNum < _chunkCount - 1)
+				//  Iterate or reset sampleSegmentNum
+				if (sampleSegmentNum < _sampleSegments - 1)
 				{
-					chunkNum++;
+					sampleSegmentNum++;
 					#if ENABLE_DEBUGGING
-					Log.Debug("ExampleStreamingChunks", "Iterating chunkNum: {0}", chunkNum);
+					Log.Debug("ExampleStreamingSplitSamples.RecordingHandler()", "Iterating sampleSegmentNum: {0}", sampleSegmentNum);
 					#endif
 				}
 				else
 				{
-					chunkNum = 0;
+					sampleSegmentNum = 0;
 					#if ENABLE_DEBUGGING
-					Log.Debug("ExampleStreamingChunks", "Resetting chunkNum: {0}", chunkNum);
+					Log.Debug("ExampleStreamingSplitSamples.RecordingHandler()", "Resetting sampleSegmentNum: {0}", sampleSegmentNum);
 					#endif
 				}
 
 				#if ENABLE_TIME_LOGGING
-				Log.Debug("ExampleStreamingChunks", "Sending data - time since last transmission: {0} ms", Mathf.Floor((float)(DateTime.Now - now).TotalMilliseconds));
+				Log.Debug("ExampleStreamingSplitSamples.RecordingHandler", "Sending data - time since last transmission: {0} ms", Mathf.Floor((float)(DateTime.Now - now).TotalMilliseconds));
 				now = DateTime.Now;
 				#endif
-				sampleStart = chunkSize * chunkNum;
-				sampleEnd = chunkSize * (chunkNum + 1);
+				sampleStart = sampleSegmentSize * sampleSegmentNum;
+				sampleEnd = sampleSegmentSize * (sampleSegmentNum + 1);
 			}
 
 			yield return 0;
@@ -213,7 +213,7 @@ public class ExampleStreamingChunked : MonoBehaviour
                 foreach (var alt in res.alternatives)
                 {
                     string text = string.Format("{0} ({1}, {2:0.00})\n", alt.transcript, res.final ? "Final" : "Interim", alt.confidence);
-                    Log.Debug("ExampleStreaming", text);
+					Log.Debug("ExampleStreamingSplitSamples.OnRecognize()", text);
                     ResultsField.text = text;
                 }
 
@@ -221,7 +221,7 @@ public class ExampleStreamingChunked : MonoBehaviour
                 {
                     foreach (var keyword in res.keywords_result.keyword)
                     {
-                        Log.Debug("ExampleSpeechToText", "keyword: {0}, confidence: {1}, start time: {2}, end time: {3}", keyword.normalized_text, keyword.confidence, keyword.start_time, keyword.end_time);
+						Log.Debug("ExampleStreamingSplitSamples.OnRecognize", "keyword: {0}, confidence: {1}, start time: {2}, end time: {3}", keyword.normalized_text, keyword.confidence, keyword.start_time, keyword.end_time);
                     }
                 }
 
@@ -229,9 +229,9 @@ public class ExampleStreamingChunked : MonoBehaviour
                 {
                     foreach (var wordAlternative in res.word_alternatives)
                     {
-                        Log.Debug("ExampleSpeechToText", "Word alternatives found. Start time: {0} | EndTime: {1}", wordAlternative.start_time, wordAlternative.end_time);
+						Log.Debug("ExampleStreamingSplitSamples.OnRecognize()", "Word alternatives found. Start time: {0} | EndTime: {1}", wordAlternative.start_time, wordAlternative.end_time);
                         foreach (var alternative in wordAlternative.alternatives)
-                            Log.Debug("ExampleSpeechToText", "\t word: {0} | confidence: {1}", alternative.word, alternative.confidence);
+							Log.Debug("ExampleStreamingSplitSamples.OnRecognie()", "\t word: {0} | confidence: {1}", alternative.word, alternative.confidence);
                     }
                 }
             }
@@ -244,7 +244,7 @@ public class ExampleStreamingChunked : MonoBehaviour
         {
             foreach (SpeakerLabelsResult labelResult in result.speaker_labels)
             {
-                Log.Debug("ExampleStreaming", string.Format("speaker result: {0} | confidence: {3} | from: {1} | to: {2}", labelResult.speaker, labelResult.from, labelResult.to, labelResult.confidence));
+				Log.Debug("ExampleStreamingSplitSamples.OnRecongizeSpeaker()", string.Format("speaker result: {0} | confidence: {3} | from: {1} | to: {2}", labelResult.speaker, labelResult.from, labelResult.to, labelResult.confidence));
             }
         }
     }
