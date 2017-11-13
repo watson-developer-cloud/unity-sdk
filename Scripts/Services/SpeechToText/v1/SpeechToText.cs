@@ -457,8 +457,11 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// microphone input is sent to this function.
         /// </summary>
         /// <param name="clip">A AudioData object containing the AudioClip and max level found in the clip.</param>
-        public void OnListen(AudioData clip)
+        /// <returns>True if audio was sent or enqueued, false if audio was discarded.</returns>
+        public bool OnListen(AudioData clip)
         {
+            bool audioSentOrEnqueued = false;
+
             if (_isListening)
             {
                 if (_recordingHZ < 0)
@@ -483,12 +486,14 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                     {
                         _listenSocket.Send(new WSConnector.BinaryMessage(AudioClipUtil.GetL16(clip.Clip)));
                         _audioSent = true;
+                        audioSentOrEnqueued = true;
                     }
                     else
                     {
                         // we have not received the "listening" state yet from the server, so just queue
                         // the audio clips until that happens.
                         _listenRecordings.Enqueue(clip);
+                        audioSentOrEnqueued = true;
 
                         // check the length of this queue and do something if it gets too full.
                         if (_listenRecordings.Count > MaxQueuedRecordings)
@@ -518,6 +523,8 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                         OnError("Failed to enter listening state.");
                 }
             }
+
+            return audioSentOrEnqueued;
         }
 
         /// <summary>
