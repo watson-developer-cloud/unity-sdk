@@ -315,7 +315,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
 
 				while (_connectionState == ConnectionState.CONNECTED)
 				{
-					_sendEvent.WaitOne(500);
+					_sendEvent.WaitOne(50);
 
 					Message msg = null;
 					lock (_sendQueue)
