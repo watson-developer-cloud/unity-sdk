@@ -409,20 +409,27 @@ namespace IBM.Watson.DeveloperCloud.Connection
                             msg = _sendQueue.Dequeue();
                     }
 
-                    if (msg == null)
-                        continue;
+                    while (msg != null)
+                    {
+                        if (msg is TextMessage)
+                        {
+                            webSocket.Control.MessageType = SocketMessageType.Utf8;
+                            messageWriter.WriteString(((TextMessage)msg).Text);
+                            await messageWriter.StoreAsync();
+                        }
+                        else if (msg is BinaryMessage)
+                        {
+                            webSocket.Control.MessageType = SocketMessageType.Binary;
+                            messageWriter.WriteBytes(((BinaryMessage)msg).Data);
+                            await messageWriter.StoreAsync();
+                        }
 
-                    if (msg is TextMessage)
-                    {
-                        webSocket.Control.MessageType = SocketMessageType.Utf8;
-                        messageWriter.WriteString(((TextMessage)msg).Text);
-                        await messageWriter.StoreAsync();
-                    }
-                    else if (msg is BinaryMessage)
-                    {
-                        webSocket.Control.MessageType = SocketMessageType.Binary;
-                        messageWriter.WriteBytes(((BinaryMessage)msg).Data);
-                        await messageWriter.StoreAsync();
+                        msg = null;
+                        lock (_sendQueue)
+                        {
+                            if (_sendQueue.Count > 0)
+                                msg = _sendQueue.Dequeue();
+                        }
                     }
                 }
 
