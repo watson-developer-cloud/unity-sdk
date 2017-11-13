@@ -296,51 +296,58 @@ namespace IBM.Watson.DeveloperCloud.Connection
         #region Threaded Functions
         // NOTE: ALl functions in this region are operating in a background thread, do NOT call any Unity functions!
 #if !NETFX_CORE
-        private void SendMessages()
-        {
-            try
-            {
-                WebSocket ws = null;
+		private void SendMessages()
+		{
+			try
+			{
+				WebSocket ws = null;
 
-                ws = new WebSocket(URL);
-                //if (Headers != null)
-                //    ws.Headers = Headers;
-                if (Authentication != null)
-                    ws.SetCredentials(Authentication.Username, Authentication.Password, true);
-                ws.OnOpen += OnWSOpen;
-                ws.OnClose += OnWSClose;
-                ws.OnError += OnWSError;
-                ws.OnMessage += OnWSMessage;
-                ws.Connect();
+				ws = new WebSocket(URL);
+				//if (Headers != null)
+				//    ws.Headers = Headers;
+				if (Authentication != null)
+					ws.SetCredentials(Authentication.Username, Authentication.Password, true);
+				ws.OnOpen += OnWSOpen;
+				ws.OnClose += OnWSClose;
+				ws.OnError += OnWSError;
+				ws.OnMessage += OnWSMessage;
+				ws.Connect();
 
-                while (_connectionState == ConnectionState.CONNECTED)
-                {
-                    _sendEvent.WaitOne(500);
+				while (_connectionState == ConnectionState.CONNECTED)
+				{
+					_sendEvent.WaitOne(50);
 
-                    Message msg = null;
-                    lock (_sendQueue)
-                    {
-                        if (_sendQueue.Count > 0)
-                            msg = _sendQueue.Dequeue();
-                    }
+					Message msg = null;
+					lock (_sendQueue)
+					{
+						if (_sendQueue.Count > 0)
+							msg = _sendQueue.Dequeue();
+					}
 
-                    if (msg == null)
-                        continue;
+					while (msg != null)
+					{
+						if (msg is TextMessage)
+							ws.Send(((TextMessage)msg).Text);
+						else if (msg is BinaryMessage)
+							ws.Send(((BinaryMessage)msg).Data);
 
-                    if (msg is TextMessage)
-                        ws.Send(((TextMessage)msg).Text);
-                    else if (msg is BinaryMessage)
-                        ws.Send(((BinaryMessage)msg).Data);
-                }
+						msg = null;
+						lock (_sendQueue)
+						{
+							if (_sendQueue.Count > 0)
+								msg = _sendQueue.Dequeue();
+						}
+					}
+				}
 
-                ws.Close();
-            }
-            catch (System.Exception e)
-            {
-                _connectionState = ConnectionState.DISCONNECTED;
-                Log.Error("WSConnector.SendMessages()", "Caught WebSocket exception: {0}", e.ToString());
-            }
-        }
+				ws.Close();
+			}
+			catch (System.Exception e)
+			{
+				_connectionState = ConnectionState.DISCONNECTED;
+				Log.Error("WSConnector", "Caught WebSocket exception: {0}", e.ToString());
+			}
+		}
 
         private void OnWSOpen(object sender, System.EventArgs e)
         {
@@ -393,7 +400,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
 
                 while (_connectionState == ConnectionState.CONNECTED)
                 {
-                    _sendEvent.WaitOne(500);
+                    _sendEvent.WaitOne(50);
 
                     Message msg = null;
                     lock (_sendQueue)
@@ -402,20 +409,27 @@ namespace IBM.Watson.DeveloperCloud.Connection
                             msg = _sendQueue.Dequeue();
                     }
 
-                    if (msg == null)
-                        continue;
+                    while (msg != null)
+                    {
+                        if (msg is TextMessage)
+                        {
+                            webSocket.Control.MessageType = SocketMessageType.Utf8;
+                            messageWriter.WriteString(((TextMessage)msg).Text);
+                            await messageWriter.StoreAsync();
+                        }
+                        else if (msg is BinaryMessage)
+                        {
+                            webSocket.Control.MessageType = SocketMessageType.Binary;
+                            messageWriter.WriteBytes(((BinaryMessage)msg).Data);
+                            await messageWriter.StoreAsync();
+                        }
 
-                    if (msg is TextMessage)
-                    {
-                        webSocket.Control.MessageType = SocketMessageType.Utf8;
-                        messageWriter.WriteString(((TextMessage)msg).Text);
-                        await messageWriter.StoreAsync();
-                    }
-                    else if (msg is BinaryMessage)
-                    {
-                        webSocket.Control.MessageType = SocketMessageType.Binary;
-                        messageWriter.WriteBytes(((BinaryMessage)msg).Data);
-                        await messageWriter.StoreAsync();
+                        msg = null;
+                        lock (_sendQueue)
+                        {
+                            if (_sendQueue.Count > 0)
+                                msg = _sendQueue.Dequeue();
+                        }
                     }
                 }
 

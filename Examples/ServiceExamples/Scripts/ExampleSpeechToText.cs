@@ -29,7 +29,6 @@ public class ExampleSpeechToText : MonoBehaviour
     private string _password = null;
     private string _url = null;
 
-    private AudioClip _audioClip;
     private SpeechToText _speechToText;
 
     private string _modelNameToGet;
@@ -38,13 +37,19 @@ public class ExampleSpeechToText : MonoBehaviour
     private string _customCorpusFilePath;
     private string _customWordsFilePath;
     private string _acousticResourceUrl = "https://ia802302.us.archive.org/10/items/Greatest_Speeches_of_the_20th_Century/TheFirstAmericaninEarthOrbit.mp3";
+    private string _oggResourceUrl = "https://ia802302.us.archive.org/10/items/Greatest_Speeches_of_the_20th_Century/InauguralAddress-1981.ogg";
     private bool _isAudioLoaded = false;
     private string _createdAcousticModelId;
     private string _acousticResourceName = "unity-acoustic-resource";
     private string _createdAcousticModelName = "unity-example-acoustic-model";
     private byte[] _acousticResourceData;
+    private string _acousticResourceMimeType;
+    private byte[] _oggResourceData;
+    private string _oggResourceMimeType;
+    private bool _isOggLoaded = false;
 
     private bool _recognizeTested = false;
+    private bool _recognizeOggTested = false;
     private bool _getModelsTested = false;
     private bool _getModelTested = false;
     private bool _getCustomizationsTested = false;
@@ -87,6 +92,10 @@ public class ExampleSpeechToText : MonoBehaviour
         _speechToText = new SpeechToText(credentials);
         _customCorpusFilePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/theJabberwocky-utf8.txt";
         _customWordsFilePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/test-stt-words.json";
+        _acousticResourceMimeType = Utility.GetMimeType(Path.GetExtension(_acousticResourceUrl));
+        _oggResourceMimeType = Utility.GetMimeType(Path.GetExtension(_oggResourceUrl));
+
+        _speechToText.StreamMultipart = true;
 
         Runnable.Run(Examples());
     }
@@ -94,6 +103,12 @@ public class ExampleSpeechToText : MonoBehaviour
     private IEnumerator Examples()
     {
         Runnable.Run(DownloadAcousticResource());
+        while (!_isAudioLoaded)
+            yield return null;
+
+        Runnable.Run(DownloadOggResource());
+        while (!_isOggLoaded)
+            yield return null;
 
         //  Recognize
         Log.Debug("ExampleSpeechToText.Examples()", "Attempting to recognize");
@@ -101,8 +116,15 @@ public class ExampleSpeechToText : MonoBehaviour
         keywords.Add("speech");
         _speechToText.KeywordsThreshold = 0.5f;
         _speechToText.Keywords = keywords.ToArray();
-        _speechToText.Recognize(_audioClip, HandleOnRecognize);
+        _speechToText.Recognize(_acousticResourceData, _acousticResourceMimeType, HandleOnRecognize);
         while (!_recognizeTested)
+            yield return null;
+
+        //  Recognize ogg
+        _speechToText.StreamMultipart = true;
+        Log.Debug("ExampleSpeechToText", "Attempting to recognize ogg: mimeType: {0} | _speechTText.StreamMultipart: {1}", _oggResourceMimeType, _speechToText.StreamMultipart);
+        _speechToText.Recognize(_oggResourceData, _oggResourceMimeType + ";codecs=vorbis", HandleOnRecognizeOgg);
+        while (!_recognizeOggTested)
             yield return null;
 
         //  Get models
@@ -426,6 +448,32 @@ public class ExampleSpeechToText : MonoBehaviour
         }
     }
 
+    private void HandleOnRecognizeOgg(SpeechRecognitionEvent result)
+    {
+        if (result != null && result.results.Length > 0)
+        {
+            foreach (var res in result.results)
+            {
+                foreach (var alt in res.alternatives)
+                {
+                    string text = alt.transcript;
+                    Log.Debug("ExampleSpeechToText", string.Format("{0} ({1}, {2:0.00})\n", text, res.final ? "Final" : "Interim", alt.confidence));
+
+                    if (res.final)
+                        _recognizeOggTested = true;
+                }
+
+                if (res.keywords_result != null && res.keywords_result.keyword != null)
+                {
+                    foreach (var keyword in res.keywords_result.keyword)
+                    {
+                        Log.Debug("ExampleSpeechToText", "keyword: {0}, confidence: {1}, start time: {2}, end time: {3}", keyword.normalized_text, keyword.confidence, keyword.start_time, keyword.end_time);
+                    }
+                }
+            }
+        }
+    }
+
     private void HandleGetCustomizations(Customizations customizations, string customData)
     {
         Log.Debug("ExampleSpeechToText.HandleGetCustomizations()", "Speech to Text - Get customizations response: {0}", customData);
@@ -724,5 +772,18 @@ public class ExampleSpeechToText : MonoBehaviour
         Log.Debug("ExampleSpeechToText.DownloadAcousticResource()", "acoustic resource downloaded");
         _acousticResourceData = www.bytes;
         _isAudioLoaded = true;
+        www.Dispose();
+    }
+
+    private IEnumerator DownloadOggResource()
+    {
+        Log.Debug("ExampleSpeechToText", "downloading ogg resource from {0}", _oggResourceUrl);
+        WWW www = new WWW(_oggResourceUrl);
+        yield return www;
+
+        Log.Debug("ExampleSpeechToText", "ogg resource downloaded");
+        _oggResourceData = www.bytes;
+        _isOggLoaded = true;
+        www.Dispose();
     }
 }

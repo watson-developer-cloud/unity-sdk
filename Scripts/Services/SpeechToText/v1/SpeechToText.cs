@@ -55,7 +55,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// <summary>
         /// How many recording AudioClips will we queue before we enter a error state.
         /// </summary>
-        private const int MaxQueuedRecordings = 30;
+        private const int MaxQueuedRecordings = 1000;
         /// <summary>
         /// Size of a clip in bytes that can be sent through the Recognize function.
         /// </summary>
@@ -107,8 +107,10 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         private int _inactivityTimeout = 60;
         private string _customization_id = null;
         private string _acoustic_customization_id = null;
-        public float _customization_weight = 0.3f;
-        public bool _streamMultipart = false;           //  If true sets `Transfer-Encoding` header of multipart request to `chunked`.
+        private float _customization_weight = 0.3f;
+        private bool _streamMultipart = false;           //  If true sets `Transfer-Encoding` header of multipart request to `chunked`.
+        private float _silenceDuration = 0.0f;
+        private float _silenceCutoff = 1.0f;
 
         private fsSerializer _serializer = new fsSerializer();
         private Credentials _credentials = null;
@@ -455,8 +457,11 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// microphone input is sent to this function.
         /// </summary>
         /// <param name="clip">A AudioData object containing the AudioClip and max level found in the clip.</param>
-        public void OnListen(AudioData clip)
+        /// <returns>True if audio was sent or enqueued, false if audio was discarded.</returns>
+        public bool OnListen(AudioData clip)
         {
+            bool audioSentOrEnqueued = false;
+
             if (_isListening)
             {
                 if (_recordingHZ < 0)
@@ -465,18 +470,30 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                     SendStart();
                 }
 
-                if (!DetectSilence || clip.MaxLevel >= _silenceThreshold)
+                // If silence persists for _silenceCutoff seconds, send stop and discard clips until audio resumes
+                if (DetectSilence && clip.MaxLevel < _silenceThreshold)
+                {
+                    _silenceDuration += clip.Clip.length;
+                }
+                else
+                {
+                    _silenceDuration = 0.0f;
+                }
+
+                if (!DetectSilence || _silenceDuration < _silenceCutoff)
                 {
                     if (_listenActive)
                     {
                         _listenSocket.Send(new WSConnector.BinaryMessage(AudioClipUtil.GetL16(clip.Clip)));
                         _audioSent = true;
+                        audioSentOrEnqueued = true;
                     }
                     else
                     {
                         // we have not received the "listening" state yet from the server, so just queue
                         // the audio clips until that happens.
                         _listenRecordings.Enqueue(clip);
+                        audioSentOrEnqueued = true;
 
                         // check the length of this queue and do something if it gets too full.
                         if (_listenRecordings.Count > MaxQueuedRecordings)
@@ -506,6 +523,8 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                         OnError("Failed to enter listening state.");
                 }
             }
+
+            return audioSentOrEnqueued;
         }
 
         /// <summary>
@@ -764,26 +783,45 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                 throw new ArgumentNullException("clip");
             if (callback == null)
                 throw new ArgumentNullException("callback");
+            
+            return Recognize(WaveFile.CreateWAV(clip), "audio/wav", callback);
+        }
+
+        /// <summary>
+        /// This function POSTs the given audio clip the recognize function and convert speech into text. This function should be used
+        /// only on AudioClips under 4MB once they have been converted into WAV format. Use the StartListening() for continuous
+        /// recognition of text.
+        /// </summary>
+        /// <param name="audioData">The audio data.</param>
+        /// <param name="contentType">The content type of the audio data.</param>
+        /// <param name="callback">A callback to invoke with the results.</param>
+        /// <returns></returns>
+        public bool Recognize(byte[] audioData, string contentType, OnRecognize callback)
+        {
+            if (audioData == null)
+                throw new ArgumentNullException("audioData");
+            if (callback == null)
+                throw new ArgumentNullException("callback");
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/recognize");
             if (connector == null)
                 return false;
 
             RecognizeRequest req = new RecognizeRequest();
-            req.Clip = clip;
+            req.AudioData = audioData;
             req.Callback = callback;
 
-            req.Headers["Content-Type"] = "audio/wav";
+            req.Headers["Content-Type"] = contentType;
             if (StreamMultipart)
                 req.Headers["Transfer-Encoding"] = "chunked";
 
-            req.Send = WaveFile.CreateWAV(clip);
+            req.Send = audioData;
             if (req.Send.Length > MaxRecognizeClipSize)
             {
                 Log.Error("SpeechToText.Recognize()", "AudioClip is too large for Recognize().");
                 return false;
             }
-            if(!string.IsNullOrEmpty(AcousticCustomizationId))
+            if (!string.IsNullOrEmpty(AcousticCustomizationId))
                 req.Parameters["acoustic_customization_id"] = AcousticCustomizationId;
             if (!string.IsNullOrEmpty(CustomizationId))
             {
@@ -801,7 +839,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             req.Parameters["timestamps"] = EnableTimestamps ? "true" : "false";
             if (Credentials.HasAuthorizationToken())
                 req.Parameters["watson-token"] = Credentials.AuthenticationToken;
-            if(WordAlternativesThreshold != null)
+            if (WordAlternativesThreshold != null)
                 req.Parameters["word_alternatives_threshold"] = WordAlternativesThreshold;
             req.Parameters["word_confidence"] = EnableWordConfidence ? "true" : "false";
 
@@ -812,7 +850,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 
         private class RecognizeRequest : RESTConnector.Request
         {
-            public AudioClip Clip { get; set; }
+            public byte[] AudioData { get; set; }
             public OnRecognize Callback { get; set; }
         };
 
