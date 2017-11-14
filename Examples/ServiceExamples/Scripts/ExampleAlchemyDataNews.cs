@@ -21,6 +21,7 @@ using IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
 using System.Collections;
+using IBM.Watson.DeveloperCloud.Connection;
 
 public class ExampleAlchemyDataNews : MonoBehaviour
 {
@@ -49,7 +50,8 @@ public class ExampleAlchemyDataNews : MonoBehaviour
         queryFields.Add(Fields.EnrichedUrlRelationsRelationSubjectText, "Obama");
         queryFields.Add(Fields.EnrichedUrlCleanedtitle, "Washington");
         string[] returnFields = { Fields.EnrichedUrlEntities, Fields.EnrichedUrlKeywords };
-        if (!_alchemyAPI.GetNews(OnGetNews, returnFields, queryFields))
+
+        if (!_alchemyAPI.GetNews(OnGetNewsSuccess<NewsResponse>, OnFail, returnFields, queryFields))
             Log.Debug("ExampleAlchemyDataNews.GetNews()", "Failed to get news!");
 
         while (!_getNewsTested)
@@ -58,9 +60,14 @@ public class ExampleAlchemyDataNews : MonoBehaviour
         Log.Debug("ExampleAlchemyDataNews.Examples()", "Alchemy data news examples complete!");
     }
 
-    private void OnGetNews(NewsResponse newsData, string data)
+    private void OnGetNewsSuccess<T>(T resp, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyDataNews.OnGetNews()", "Alchemy data news - Get news Response: {0}", data);
         _getNewsTested = true;
+        Log.Debug("ExampleAlchemyDataNews.OnSuccess()", "Response received: {0}", customData["json"].ToString());
+    }
+
+    private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
+    {
+        Log.Error("ExampleAlchemyDataNews.OnFail()", "Error received: {0}", error.ToString());
     }
 }
