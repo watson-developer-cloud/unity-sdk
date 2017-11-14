@@ -15,10 +15,12 @@
 *
 */
 
+using IBM.Watson.DeveloperCloud.Connection;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Services.Conversation.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ExampleGetToken : MonoBehaviour
@@ -75,14 +77,18 @@ public class ExampleGetToken : MonoBehaviour
         Conversation conversation = new Conversation(credentials);
         conversation.VersionDate = _conversationVersionDate;
 
-        conversation.Message(OnMessage, _workspaceId, "hello");
+        conversation.Message(OnMessage, OnFail, _workspaceId, "hello");
     }
 
-    private void OnMessage(object resp, string customData)
+    private void OnMessage(object resp, Dictionary<string, object> customData)
     {
         Log.Debug("ExampleGetToken.OnMessage()", "message response: {0}", customData);
 
         //  Check token time remaining
         Runnable.Run(GetTokenTimeRemaining(0f));
+    }
+    private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
+    {
+        Log.Error("ExampleGetToken.OnFail()", "Error received: {0}", error.ToString());
     }
 }

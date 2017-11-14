@@ -51,7 +51,7 @@ public class ExampleAlchemyDataNews : MonoBehaviour
         queryFields.Add(Fields.EnrichedUrlCleanedtitle, "Washington");
         string[] returnFields = { Fields.EnrichedUrlEntities, Fields.EnrichedUrlKeywords };
 
-        if (!_alchemyAPI.GetNews(OnGetNewsSuccess<NewsResponse>, OnFail, returnFields, queryFields))
+        if (!_alchemyAPI.GetNews(OnGetNewsSuccess, OnFail, returnFields, queryFields))
             Log.Debug("ExampleAlchemyDataNews.GetNews()", "Failed to get news!");
 
         while (!_getNewsTested)
@@ -60,7 +60,7 @@ public class ExampleAlchemyDataNews : MonoBehaviour
         Log.Debug("ExampleAlchemyDataNews.Examples()", "Alchemy data news examples complete!");
     }
 
-    private void OnGetNewsSuccess<T>(T resp, Dictionary<string, object> customData)
+    private void OnGetNewsSuccess(NewsResponse resp, Dictionary<string, object> customData)
     {
         _getNewsTested = true;
         Log.Debug("ExampleAlchemyDataNews.OnSuccess()", "Response received: {0}", customData["json"].ToString());
