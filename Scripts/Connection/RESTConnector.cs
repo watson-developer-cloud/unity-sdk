@@ -71,7 +71,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
             /// <summary>
             /// Error message if Success is false.
             /// </summary>
-            public string Error { get; set; }
+            public Error Error { get; set; }
             /// <summary>
             /// The data returned by the request.
             /// </summary>
@@ -80,8 +80,46 @@ namespace IBM.Watson.DeveloperCloud.Connection
             /// The amount of time in seconds it took to get this response from the server.
             /// </summary>
             public float ElapsedTime { get; set; }
+            /// <summary>
+            /// The http response code from the server
+            /// </summary>
+            public long HttpResponseCode { get; set; }
             #endregion
         };
+
+        /// <summary>
+        /// Class to encapsulate an error returned from a server request.
+        /// </summary>
+        public class Error
+        {
+            /// <summary>
+            /// The url that generated the error.
+            /// </summary>
+            public string URL { get; set; }
+            /// <summary>
+            /// The error code returned from the server.
+            /// </summary>
+            public long ErrorCode { get; set; }
+            /// <summary>
+            /// The error message returned from the server.
+            /// </summary>
+            public string ErrorMessage { get; set; }
+            /// <summary>
+            /// The contents of the response from the server.
+            /// </summary>
+            public string Response { get; set; }
+            /// <summary>
+            /// Dictionary of headers returned by the request.
+            /// </summary>
+            public Dictionary<string, string> ResponseHeaders { get; set; }
+
+            public override string ToString()
+            {
+                return string.Format("URL: {0}, ErrorCode: {1}, Error: {2}, Response: {3}", URL, ErrorCode,
+                                     string.IsNullOrEmpty(ErrorMessage) ? "" : ErrorMessage,
+                                     string.IsNullOrEmpty(Response) ? "" : Response);
+            }
+        }
 
         /// <summary>
         /// Multi-part form data class.
@@ -422,6 +460,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
                         continue;
 
                     bool bError = false;
+                    Error error = null;
                     if (!string.IsNullOrEmpty(www.error))
                     {
                         long nErrorCode = -1;
@@ -439,6 +478,15 @@ namespace IBM.Watson.DeveloperCloud.Connection
                                     break;
                             }
                         }
+
+                        error = new Error()
+                        {
+                            URL = url,
+                            ErrorCode = resp.HttpResponseCode = nErrorCode,
+                            ErrorMessage = www.error,
+                            Response = www.text,
+                            ResponseHeaders = www.responseHeaders
+                        };
 
                         if (bError)
                             Log.Error("RESTConnector.ProcessRequestQueue()", "URL: {0}, ErrorCode: {1}, Error: {2}, Response: {3}", url, nErrorCode, www.error,
@@ -468,8 +516,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
                     else
                     {
                         resp.Success = false;
-                        resp.Error = string.Format("Request Error.\nURL: {0}\nError: {1}",
-                            url, string.IsNullOrEmpty(www.error) ? "Timeout" : www.error);
+                        resp.Error = error;
                     }
 
                     resp.ElapsedTime = (float)(DateTime.Now - startTime).TotalSeconds;
@@ -554,7 +601,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 Log.Debug("DeleteRequest.Send()", "DeleteRequest, ProcessRequest {0}", URL);
 #endif
                 UnityWebRequest deleteReq = UnityWebRequest.Delete(URL);
-				deleteReq.method = UnityWebRequest.kHttpVerbDELETE;
+                deleteReq.method = UnityWebRequest.kHttpVerbDELETE;
                 foreach (var kp in Headers)
                     deleteReq.SetRequestHeader(kp.Key, kp.Value);
 #if UNITY_2017_2_OR_NEWER
@@ -577,6 +624,6 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 IsComplete = true;
             }
         };
-#endregion
+        #endregion
     }
 }
