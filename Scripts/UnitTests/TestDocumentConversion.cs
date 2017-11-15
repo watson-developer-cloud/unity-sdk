@@ -23,6 +23,8 @@ using IBM.Watson.DeveloperCloud.Utilities;
 using FullSerializer;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using IBM.Watson.DeveloperCloud.Connection;
 
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
@@ -89,7 +91,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _documentConversion = new DocumentConversion(credentials);
             _examplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/watson_beats_jeopardy.html";
 
-            if (!_documentConversion.ConvertDocument(OnConvertDocument, _examplePath, _conversionTarget))
+            if (!_documentConversion.ConvertDocument(OnConvertDocument, OnFail, _examplePath, _conversionTarget))
                 Log.Debug("TestDocumentConversion.RunTest()", "Document conversion failed!");
 
             while (!_convertDocumentTested)
@@ -100,11 +102,16 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             yield break;
         }
 
-        private void OnConvertDocument(ConvertedDocument documentConversionResponse, string data)
+        private void OnConvertDocument(ConvertedDocument documentConversionResponse, Dictionary<string, object> customData)
         {
             Log.Debug("TestDoucmentConversion.OnConvertDocument()", "DocumentConversion - Convert document Response: {0}", documentConversionResponse.htmlContent);
             Test(documentConversionResponse != null);
             _convertDocumentTested = true;
+        }
+
+        private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
+        {
+            Log.Error("TestDoucmentConversion.OnFail()", "Error received: {0}", error.ToString());
         }
     }
 }

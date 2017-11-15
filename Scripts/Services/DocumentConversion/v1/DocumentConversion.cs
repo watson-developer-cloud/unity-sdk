@@ -84,12 +84,22 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
 
         #region ConvertDocument
         private const string ConvertDocumentEndpoint = "/v1/convert_document";
+
+        #region Callback delegates
         /// <summary>
-        /// The OnConvertDocument callback.
+        /// Success callback delegate.
         /// </summary>
-        /// <param name="resp"></param>
-        /// <param name="data"></param>
-        public delegate void OnConvertDocument(ConvertedDocument resp, string data);
+        /// <typeparam name="T">Type of the returned object.</typeparam>
+        /// <param name="response">The returned object.</param>
+        /// <param name="customData">user defined custom data including raw json.</param>
+        public delegate void SuccessCallback<T>(T response, Dictionary<string, object> customData);
+        /// <summary>
+        /// Fail callback delegate.
+        /// </summary>
+        /// <param name="error">The error object.</param>
+        /// <param name="customData">User defined custom data</param>
+        public delegate void FailCallback(RESTConnector.Error error, Dictionary<string, object> customData);
+        #endregion
 
         /// <summary>
         /// The delegate for loading a file, used by TrainClassifier().
@@ -106,15 +116,18 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
         /// <summary>
         /// Convert document to use in other Watson services.
         /// </summary>
-        /// <param name="callback"></param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="documentPath"></param>
         /// <param name="conversionTarget"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        public bool ConvertDocument(OnConvertDocument callback, string documentPath, string conversionTarget, string data = null)
+        public bool ConvertDocument(SuccessCallback<ConvertedDocument> successCallback, FailCallback failCallback, string documentPath, string conversionTarget, Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(documentPath))
                 throw new ArgumentNullException("A document path is needed to convert document.");
             if (string.IsNullOrEmpty(conversionTarget))
@@ -125,11 +138,12 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
                 return false;
 
             ConvertDocumentRequest req = new ConvertDocumentRequest();
-            req.Callback = callback;
-            req.OnResponse = ConvertDocumentResponse;
-            req.Data = data;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.ConversionTarget = conversionTarget;
             req.Parameters["version"] = Version.DocumentConversion;
+            req.OnResponse = ConvertDocumentResponse;
 
             byte[] documentData = null;
             if (documentPath != default(string))
@@ -163,9 +177,22 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
 
         private class ConvertDocumentRequest : RESTConnector.Request
         {
-            public string Data { get; set; }
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<ConvertedDocument> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
+            /// <summary>
+            /// The conversion target.
+            /// </summary>
             public string ConversionTarget { get; set; }
-            public OnConvertDocument Callback { get; set; }
         };
 
         private void ConvertDocumentResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -173,6 +200,7 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
             ConvertedDocument response = new ConvertedDocument();
             fsData data = null;
             fsResult r;
+            Dictionary<string, object> customData = ((ConvertDocumentRequest)req).CustomData;
 
             if (resp.Success)
             {
@@ -188,6 +216,8 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
                         r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                         if (!r.Succeeded)
                             throw new WatsonException(r.FormattedMessages);
+
+                        customData.Add("json", data);
                     }
                     catch (Exception e)
                     {
@@ -202,6 +232,7 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
 #else
                     response.htmlContent = System.Text.Encoding.Default.GetString(resp.Data);
 #endif
+                    customData.Add("json", data);
                 }
                 else if ((req as ConvertDocumentRequest).ConversionTarget == ConversionTarget.NormalizedText)
                 {
@@ -210,11 +241,20 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
 #else
                     response.textContent = System.Text.Encoding.Default.GetString(resp.Data);
 #endif
+                    customData.Add("json", data);
                 }
             }
 
-            if (((ConvertDocumentRequest)req).Callback != null)
-                ((ConvertDocumentRequest)req).Callback(resp.Success ? response : null, ((ConvertDocumentRequest)req).Data);
+            if (resp.Success)
+            {
+                if (((ConvertDocumentRequest)req).SuccessCallback != null)
+                    ((ConvertDocumentRequest)req).SuccessCallback(response, customData);
+            }
+            else
+            {
+                if (((ConvertDocumentRequest)req).FailCallback != null)
+                    ((ConvertDocumentRequest)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
 

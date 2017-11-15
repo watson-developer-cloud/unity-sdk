@@ -101,7 +101,18 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
         #endregion
 
         #region Callback delegates
+        /// <summary>
+        /// Success callback delegate.
+        /// </summary>
+        /// <typeparam name="T">Type of the returned object.</typeparam>
+        /// <param name="response">The returned object.</param>
+        /// <param name="customData">user defined custom data including raw json.</param>
         public delegate void SuccessCallback<T>(T response, Dictionary<string, object> customData);
+        /// <summary>
+        /// Fail callback delegate.
+        /// </summary>
+        /// <param name="error">The error object.</param>
+        /// <param name="customData">User defined custom data</param>
         public delegate void FailCallback(RESTConnector.Error error, Dictionary<string, object> customData);
         #endregion
 
