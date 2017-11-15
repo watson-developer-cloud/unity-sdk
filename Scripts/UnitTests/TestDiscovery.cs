@@ -22,6 +22,8 @@ using System.Collections;
 using IBM.Watson.DeveloperCloud.Utilities;
 using FullSerializer;
 using System.IO;
+using System.Collections.Generic;
+using IBM.Watson.DeveloperCloud.Connection;
 
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
@@ -126,14 +128,14 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             //  Get Environments
             Log.Debug("TestDiscovery.RunTest()", "Attempting to get environments");
-            if (!_discovery.GetEnvironments(OnGetEnvironments))
+            if (!_discovery.GetEnvironments(OnGetEnvironments, OnFail))
                 Log.Debug("TestDiscovery.GetEnvironments()", "Failed to get environments");
             while (!_getEnvironmentsTested)
                 yield return null;
 
             //  AddEnvironment
             Log.Debug("TestDiscovery.RunTest()", "Attempting to add environment");
-            if (!_discovery.AddEnvironment(OnAddEnvironment, "unity-testing-AddEnvironment-do-not-delete-until-active", "Testing addEnvironment in Unity SDK. Please do not delete this environment until the status is 'active'", 1))
+            if (!_discovery.AddEnvironment(OnAddEnvironment, OnFail, "unity-testing-AddEnvironment-do-not-delete-until-active", "Testing addEnvironment in Unity SDK. Please do not delete this environment until the status is 'active'", 1))
                 Log.Debug("TestDiscovery.AddEnvironment()", "Failed to add environment");
             while (!_addEnvironmentTested)
                 yield return null;
@@ -145,96 +147,96 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             //  GetEnvironment
             Log.Debug("TestDiscovery.RunTest()", "Attempting to get environment");
-            if (!_discovery.GetEnvironment(OnGetEnvironment, _createdEnvironmentID))
+            if (!_discovery.GetEnvironment(OnGetEnvironment, OnFail, _createdEnvironmentID))
                 Log.Debug("TestDiscovery.GetEnvironment()", "Failed to get environment");
             while (!_getEnvironmentTested)
                 yield return null;
 
             //  Get Configurations
             Log.Debug("TestDiscovery.RunTest()", "Attempting to get configurations");
-            if (!_discovery.GetConfigurations(OnGetConfigurations, _createdEnvironmentID))
+            if (!_discovery.GetConfigurations(OnGetConfigurations, OnFail, _createdEnvironmentID))
                 Log.Debug("TestDiscovery.GetConfigurations()", "Failed to get configurations");
             while (!_getConfigurationsTested)
                 yield return null;
 
             //  Add Configuration
             Log.Debug("TestDiscovery.RunTest()", "Attempting to add configuration");
-            if (!_discovery.AddConfiguration(OnAddConfiguration, _createdEnvironmentID, _configurationJsonPath))
+            if (!_discovery.AddConfiguration(OnAddConfiguration, OnFail, _createdEnvironmentID, _configurationJsonPath))
                 Log.Debug("TestDiscovery.AddConfiguration()", "Failed to add configuration");
             while (!_addConfigurationTested)
                 yield return null;
 
             //  Get Configuration
             Log.Debug("TestDiscovery.RunTest()", "Attempting to get configuration");
-            if (!_discovery.GetConfiguration(OnGetConfiguration, _createdEnvironmentID, _createdConfigurationID))
+            if (!_discovery.GetConfiguration(OnGetConfiguration, OnFail, _createdEnvironmentID, _createdConfigurationID))
                 Log.Debug("TestDiscovery.GetConfiguration()", "Failed to get configuration");
             while (!_getConfigurationTested)
                 yield return null;
 
             //  Preview Configuration
             Log.Debug("TestDiscovery.RunTest()", "Attempting to preview configuration");
-            if (!_discovery.PreviewConfiguration(OnPreviewConfiguration, _createdEnvironmentID, _createdConfigurationID, null, _filePathToIngest, _metadata))
+            if (!_discovery.PreviewConfiguration(OnPreviewConfiguration, OnFail, _createdEnvironmentID, _createdConfigurationID, null, _filePathToIngest, _metadata))
                 Log.Debug("TestDiscovery.PreviewConfiguration()", "Failed to preview configuration");
             while (!_previewConfigurationTested)
                 yield return null;
 
             //  Get Collections
             Log.Debug("TestDiscovery.RunTest()", "Attempting to get collections");
-            if (!_discovery.GetCollections(OnGetCollections, _createdEnvironmentID))
+            if (!_discovery.GetCollections(OnGetCollections, OnFail, _createdEnvironmentID))
                 Log.Debug("TestDiscovery.GetCollections()", "Failed to get collections");
             while (!_getCollectionsTested)
                 yield return null;
 
             //  Add Collection
             Log.Debug("TestDiscovery.RunTest()", "Attempting to add collection");
-            if (!_discovery.AddCollection(OnAddCollection, _createdEnvironmentID, _createdCollectionName, _createdCollectionDescription, _createdConfigurationID))
+            if (!_discovery.AddCollection(OnAddCollection, OnFail, _createdEnvironmentID, _createdCollectionName, _createdCollectionDescription, _createdConfigurationID))
                 Log.Debug("TestDiscovery.AddCollection()", "Failed to add collection");
             while (!_addCollectionTested)
                 yield return null;
 
             //  Get Collection
             Log.Debug("TestDiscovery.RunTest()", "Attempting to get collection");
-            if (!_discovery.GetCollection(OnGetCollection, _createdEnvironmentID, _createdCollectionID))
+            if (!_discovery.GetCollection(OnGetCollection, OnFail, _createdEnvironmentID, _createdCollectionID))
                 Log.Debug("TestDiscovery.GetCollection()", "Failed to get collection");
             while (!_getCollectionTested)
                 yield return null;
 
-            if (!_discovery.GetFields(OnGetFields, _createdEnvironmentID, _createdCollectionID))
+            if (!_discovery.GetFields(OnGetFields, OnFail, _createdEnvironmentID, _createdCollectionID))
                 Log.Debug("TestDiscovery.GetFields()", "Failed to get fields");
             while (!_getFieldsTested)
                 yield return null;
 
             //  Add Document
             Log.Debug("TestDiscovery.RunTest()", "Attempting to add document");
-            if (!_discovery.AddDocument(OnAddDocument, _createdEnvironmentID, _createdCollectionID, _documentFilePath, _createdConfigurationID, null))
+            if (!_discovery.AddDocument(OnAddDocument, OnFail, _createdEnvironmentID, _createdCollectionID, _documentFilePath, _createdConfigurationID, null))
                 Log.Debug("TestDiscovery.AddDocument()", "Failed to add document");
             while (!_addDocumentTested)
                 yield return null;
 
             //  Get Document
             Log.Debug("TestDiscovery.RunTest()", "Attempting to get document");
-            if (!_discovery.GetDocument(OnGetDocument, _createdEnvironmentID, _createdCollectionID, _createdDocumentID))
+            if (!_discovery.GetDocument(OnGetDocument, OnFail, _createdEnvironmentID, _createdCollectionID, _createdDocumentID))
                 Log.Debug("TestDiscovery.GetDocument()", "Failed to get document");
             while (!_getDocumentTested)
                 yield return null;
 
             //  Update Document
             Log.Debug("TestDiscovery.RunTest()", "Attempting to update document");
-            if (!_discovery.UpdateDocument(OnUpdateDocument, _createdEnvironmentID, _createdCollectionID, _createdDocumentID, _documentFilePath, _createdConfigurationID, null))
+            if (!_discovery.UpdateDocument(OnUpdateDocument, OnFail, _createdEnvironmentID, _createdCollectionID, _createdDocumentID, _documentFilePath, _createdConfigurationID, null))
                 Log.Debug("TestDiscovery.UpdateDocument()", "Failed to update document");
             while (!_updateDocumentTested)
                 yield return null;
 
             //  Query
             Log.Debug("TestDiscovery.RunTest()", "Attempting to query");
-            if (!_discovery.Query(OnQuery, _createdEnvironmentID, _createdCollectionID, null, _query, null, 10, null, 0))
+            if (!_discovery.Query(OnQuery, OnFail, _createdEnvironmentID, _createdCollectionID, null, _query, null, 10, null, 0))
                 Log.Debug("TestDiscovery.Query()", "Failed to query");
             while (!_queryTested)
                 yield return null;
 
             //  Delete Document
             Log.Debug("TestDiscovery.RunTest()", "Attempting to delete document {0}", _createdDocumentID);
-            if (!_discovery.DeleteDocument(OnDeleteDocument, _createdEnvironmentID, _createdCollectionID, _createdDocumentID))
+            if (!_discovery.DeleteDocument(OnDeleteDocument, OnFail, _createdEnvironmentID, _createdCollectionID, _createdDocumentID))
                 Log.Debug("TestDiscovery.DeleteDocument()", "Failed to delete document");
             while (!_deleteDocumentTested)
                 yield return null;
@@ -253,7 +255,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _readyToContinue = false;
             //  Delete Collection
             Log.Debug("TestDiscovery.RunTest()", "Attempting to delete collection {0}", _createdCollectionID);
-            if (!_discovery.DeleteCollection(OnDeleteCollection, _createdEnvironmentID, _createdCollectionID))
+            if (!_discovery.DeleteCollection(OnDeleteCollection, OnFail, _createdEnvironmentID, _createdCollectionID))
                 Log.Debug("TestDiscovery.DeleteCollection()", "Failed to add collection");
             while (!_deleteCollectionTested)
                 yield return null;
@@ -272,7 +274,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _readyToContinue = false;
             //  Delete Configuration
             Log.Debug("TestDiscovery.RunTest()", "Attempting to delete configuration {0}", _createdConfigurationID);
-            if (!_discovery.DeleteConfiguration(OnDeleteConfiguration, _createdEnvironmentID, _createdConfigurationID))
+            if (!_discovery.DeleteConfiguration(OnDeleteConfiguration, OnFail, _createdEnvironmentID, _createdConfigurationID))
                 Log.Debug("TestDiscovery.DeleteConfiguration()", "Failed to delete configuration");
             while (!_deleteConfigurationTested)
                 yield return null;
@@ -291,16 +293,16 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _readyToContinue = false;
             //  Delete Environment
             Log.Debug("TestDiscovery.RunTest()", "Attempting to delete environment {0}", _createdEnvironmentID);
-            if (!_discovery.DeleteEnvironment(OnDeleteEnvironment, _createdEnvironmentID))
+            if (!_discovery.DeleteEnvironment(OnDeleteEnvironment, OnFail, _createdEnvironmentID))
                 Log.Debug("TestDiscovery.DeleteEnvironment()", "Failed to delete environment");
             while (!_deleteEnvironmentTested)
                 yield return null;
 
             if (!string.IsNullOrEmpty(_createdEnvironmentID))
             {
-                if (!_discovery.GetEnvironment(OnGetEnvironment, _createdEnvironmentID))
+                if (!_discovery.GetEnvironment(OnGetEnvironment, OnFail, _createdEnvironmentID))
                 {
-                    _discovery.DeleteEnvironment(OnDeleteEnvironment, _createdEnvironmentID);
+                    _discovery.DeleteEnvironment(OnDeleteEnvironment, OnFail, _createdEnvironmentID);
                 }
             }
 
@@ -317,7 +319,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             Log.Debug("TestDiscovery.CheckEnvironmentState()", "Attempting to get environment state");
             try
             {
-                _discovery.GetEnvironment(HandleCheckEnvironmentState, _createdEnvironmentID);
+                _discovery.GetEnvironment(HandleCheckEnvironmentState, OnFail, _createdEnvironmentID);
             }
             catch (System.Exception e)
             {
@@ -326,7 +328,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             }
         }
 
-        private void HandleCheckEnvironmentState(Environment resp, string data)
+        private void HandleCheckEnvironmentState(Environment resp, Dictionary<string, object> customData)
         {
             Log.Debug("TestDiscovery.HandleCheckEnvironmentState()", "Environment {0} is {1}", resp.environment_id, resp.status);
 
@@ -345,158 +347,159 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         }
         #endregion
 
-        private void OnGetEnvironments(GetEnvironmentsResponse resp, string data)
+        private void OnGetEnvironments(GetEnvironmentsResponse resp, Dictionary<string, object> customData)
         {
-            Log.Debug("TestDiscovery.OnGetEnvironments()", "Discovery - GetEnvironments Response: {0}", data);
+            Log.Debug("TestDiscovery.OnGetEnvironments()", "Discovery - GetEnvironments Response: {0}", customData["json"].ToString());
             Test(resp != null);
             _getEnvironmentsTested = true;
         }
 
-        private void OnGetEnvironment(Environment resp, string data)
+        private void OnGetEnvironment(Environment resp, Dictionary<string, object> customData)
         {
-            Log.Debug("TestDiscovery.OnGetEnvironment()", "Discovery - GetEnvironment Response: {0}", data);
+            Log.Debug("TestDiscovery.OnGetEnvironment()", "Discovery - GetEnvironment Response: {0}", customData["json"].ToString());
             Test(resp != null);
             _getEnvironmentTested = true;
         }
 
-        private void OnAddEnvironment(Environment resp, string data)
+        private void OnAddEnvironment(Environment resp, Dictionary<string, object> customData)
         {
-            Log.Debug("TestDiscovery.OnAddEnvironment()", "Discovery - AddEnvironment Response: {0}", data);
+            Log.Debug("TestDiscovery.OnAddEnvironment()", "Discovery - AddEnvironment Response: {0}", customData["json"].ToString());
             _createdEnvironmentID = resp.environment_id;
             Test(resp != null);
             _addEnvironmentTested = true;
         }
 
-        private void OnGetConfigurations(GetConfigurationsResponse resp, string data)
+        private void OnGetConfigurations(GetConfigurationsResponse resp, Dictionary<string, object> customData)
         {
-            Log.Debug("TestDiscovery.OnGetConfigurations()", "Discovery - GetConfigurations Response: {0}", data);
+            Log.Debug("TestDiscovery.OnGetConfigurations()", "Discovery - GetConfigurations Response: {0}", customData["json"].ToString());
             Test(resp != null);
             _getConfigurationsTested = true;
         }
 
-        private void OnGetConfiguration(Configuration resp, string data)
+        private void OnGetConfiguration(Configuration resp, Dictionary<string, object> customData)
         {
-            Log.Debug("TestDiscovery.OnGetConfiguration()", "Discovery - GetConfiguration Response: {0}", data);
+            Log.Debug("TestDiscovery.OnGetConfiguration()", "Discovery - GetConfiguration Response: {0}", customData["json"].ToString());
             Test(resp != null);
             _getConfigurationTested = true;
 
         }
 
-        private void OnAddConfiguration(Configuration resp, string data)
+        private void OnAddConfiguration(Configuration resp, Dictionary<string, object> customData)
         {
-            Log.Debug("TestDiscovery.OnAddConfiguration()", "Discovery - AddConfiguration Response: {0}", data);
+            Log.Debug("TestDiscovery.OnAddConfiguration()", "Discovery - AddConfiguration Response: {0}", customData["json"].ToString());
             _createdConfigurationID = resp.configuration_id;
             Test(resp != null);
             _addConfigurationTested = true;
         }
 
-        private void OnPreviewConfiguration(TestDocument resp, string data)
+        private void OnPreviewConfiguration(TestDocument resp, Dictionary<string, object> customData)
         {
-            Log.Debug("TestDiscovery.OnPreviewConfiguration()", "Discovery - Preview configuration Response: {0}", data);
+            Log.Debug("TestDiscovery.OnPreviewConfiguration()", "Discovery - Preview configuration Response: {0}", customData["json"].ToString());
             Test(resp != null);
             _previewConfigurationTested = true;
         }
 
-        private void OnGetCollections(GetCollectionsResponse resp, string data)
+        private void OnGetCollections(GetCollectionsResponse resp, Dictionary<string, object> customData)
         {
-            Log.Debug("TestDiscovery.OnGetCollections()", "Discovery - Get collections Response: {0}", data);
+            Log.Debug("TestDiscovery.OnGetCollections()", "Discovery - Get collections Response: {0}", customData["json"].ToString());
             Test(resp != null);
             _getCollectionsTested = true;
         }
 
-        private void OnGetCollection(Collection resp, string data)
+        private void OnGetCollection(Collection resp, Dictionary<string, object> customData)
         {
-            Log.Debug("TestDiscovery.OnGetCollection()", "Discovery - Get colletion Response: {0}", data);
+            Log.Debug("TestDiscovery.OnGetCollection()", "Discovery - Get colletion Response: {0}", customData["json"].ToString());
             Test(resp != null);
             _getCollectionTested = true;
         }
 
-        private void OnAddCollection(CollectionRef resp, string data)
+        private void OnAddCollection(CollectionRef resp, Dictionary<string, object> customData)
         {
-            Log.Debug("TestDiscovery.OnAddCollection()", "Discovery - Add collection Response: {0}", data);
+            Log.Debug("TestDiscovery.OnAddCollection()", "Discovery - Add collection Response: {0}", customData["json"].ToString());
             _createdCollectionID = resp.collection_id;
             Test(resp != null);
             _addCollectionTested = true;
         }
 
-        private void OnGetFields(GetFieldsResponse resp, string data)
+        private void OnGetFields(GetFieldsResponse resp, Dictionary<string, object> customData)
         {
-            Log.Debug("TestDiscovery.OnGetFields()", "Discovery - Get fields Response: {0}", data);
+            Log.Debug("TestDiscovery.OnGetFields()", "Discovery - Get fields Response: {0}", customData["json"].ToString());
             Test(resp != null);
             _getFieldsTested = true;
         }
 
-        private void OnAddDocument(DocumentAccepted resp, string data)
+        private void OnAddDocument(DocumentAccepted resp, Dictionary<string, object> customData)
         {
-            Log.Debug("TestDiscovery.OnAddDocument()", "Discovery - Add document Response: {0}", data);
+            Log.Debug("TestDiscovery.OnAddDocument()", "Discovery - Add document Response: {0}", customData["json"].ToString());
             _createdDocumentID = resp.document_id;
             Test(resp != null);
             _addDocumentTested = true;
         }
 
-        private void OnGetDocument(DocumentStatus resp, string data)
+        private void OnGetDocument(DocumentStatus resp, Dictionary<string, object> customData)
         {
-            Log.Debug("TestDiscovery.OnGetDocument()", "Discovery - Get document Response: {0}", data);
+            Log.Debug("TestDiscovery.OnGetDocument()", "Discovery - Get document Response: {0}", customData["json"].ToString());
             Test(resp != null);
             _getDocumentTested = true;
         }
 
-        private void OnUpdateDocument(DocumentAccepted resp, string data)
+        private void OnUpdateDocument(DocumentAccepted resp, Dictionary<string, object> customData)
         {
-            Log.Debug("TestDiscovery.OnUpdateDocument()", "Discovery - Update document Response: {0}", data);
+            Log.Debug("TestDiscovery.OnUpdateDocument()", "Discovery - Update document Response: {0}", customData["json"].ToString());
             Test(resp != null);
             _updateDocumentTested = true;
         }
 
-        private void OnDeleteDocument(bool success, string data)
+        private void OnDeleteDocument(DeleteDocumentResponse resp, Dictionary<string, object> customData)
         {
-            Log.Debug("TestDiscovery.OnDeleteDocument()", "Discovery - Delete document Response: deleted:{0}", success);
+            Log.Debug("TestDiscovery.OnDeleteDocument()", "Discovery - Delete document Response: deleted:{0}", customData["json"].ToString());
 
-            if (success)
-                _createdDocumentID = default(string);
-            Test(success);
+            _createdDocumentID = default(string);
+            Test(resp != null);
 
             _deleteDocumentTested = true;
         }
 
-        private void OnDeleteCollection(bool success, string data)
+        private void OnDeleteCollection(DeleteCollectionResponse resp, Dictionary<string, object> customData)
         {
-            Log.Debug("TestDiscovery.OnDeleteCollection()", "Discovery - Delete collection Response: deleted:{0}", success);
+            Log.Debug("TestDiscovery.OnDeleteCollection()", "Discovery - Delete collection Response: deleted:{0}", customData["json"].ToString());
 
-            if (success)
                 _createdCollectionID = default(string);
-            Test(success);
+            Test(resp != null);
 
             _deleteCollectionTested = true;
         }
 
-        private void OnDeleteConfiguration(bool success, string data)
+        private void OnDeleteConfiguration(DeleteConfigurationResponse resp, Dictionary<string, object> customData)
         {
-            Log.Debug("TestDiscovery.OnDeleteConfiguration()", "Discovery - Delete configuration Response: deleted:{0}", success);
+            Log.Debug("TestDiscovery.OnDeleteConfiguration()", "Discovery - Delete configuration Response: deleted:{0}", customData["json"].ToString());
 
-            if (success)
                 _createdConfigurationID = default(string);
-            Test(success);
-
+            Test(resp != null);
+            
             _deleteConfigurationTested = true;
         }
 
-        private void OnDeleteEnvironment(bool success, string data)
+        private void OnDeleteEnvironment(DeleteEnvironmentResponse resp, Dictionary<string, object> customData)
         {
-            Log.Debug("TestDiscovery.OnDeleteEnvironment()", "Discovery - Delete environment Response: deleted:{0}", success);
+            Log.Debug("TestDiscovery.OnDeleteEnvironment()", "Discovery - Delete environment Response: deleted:{0}", customData["json"].ToString());
 
-            if (success)
-                _createdEnvironmentID = default(string);
-            Test(success);
+            _createdEnvironmentID = default(string);
+            Test(resp != null);
 
             _deleteEnvironmentTested = true;
         }
 
-        private void OnQuery(QueryResponse resp, string data)
+        private void OnQuery(QueryResponse resp, Dictionary<string, object> customData)
         {
-            Log.Debug("TestDiscovery.OnQuery()", "Discovery - Query Response: {0}", data);
+            Log.Debug("TestDiscovery.OnQuery()", "Discovery - Query Response: {0}", customData["json"].ToString());
             Test(resp != null);
             _queryTested = true;
+        }
+
+        private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
+        {
+            Log.Error("ExampleAlchemyLanguage.OnFail()", "Error received: {0}", error.ToString());
         }
     }
 }

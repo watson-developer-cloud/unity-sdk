@@ -512,6 +512,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
                     {
                         resp.Success = true;
                         resp.Data = www.bytes;
+                        resp.HttpResponseCode = GetResponseCode(www);
                     }
                     else
                     {
@@ -537,7 +538,6 @@ namespace IBM.Watson.DeveloperCloud.Connection
                     Log.Debug("RESTConnector.ProcessRequestQueue90", "Delete Request URL: {0}", url);
 #endif
 
-#if UNITY_EDITOR
                     float timeout = Mathf.Max(Constants.Config.Timeout, req.Timeout);
 
                     DeleteRequest deleteReq = new DeleteRequest();
@@ -555,11 +555,9 @@ namespace IBM.Watson.DeveloperCloud.Connection
                         continue;
 
                     resp.Success = deleteReq.Success;
-
-#else
-                    Log.Warning( "RESTConnector.ProcessRequestQueue()", "DELETE method is supported in the editor only." );
-                    resp.Success = false;
-#endif
+                    resp.Data = deleteReq.Data;
+                    resp.Error = deleteReq.Error;
+                    resp.HttpResponseCode = deleteReq.HttpResponseCode;
                     resp.ElapsedTime = (float)(DateTime.Now - startTime).TotalSeconds;
                     if (req.OnResponse != null)
                         req.OnResponse(req, resp);
@@ -571,12 +569,57 @@ namespace IBM.Watson.DeveloperCloud.Connection
             yield break;
         }
 
+        public static int GetResponseCode(WWW request)
+        {
+            int ret = -1;
+            if (request.responseHeaders == null)
+            {
+                Log.Error("RESTConnector.GetResponseCode()", "no response headers.");
+            }
+            else
+            {
+                if (!request.responseHeaders.ContainsKey("STATUS"))
+                {
+                    Log.Error("RESTConnector.GetResponseCode()", "response headers has no STATUS.");
+                }
+                else
+                {
+                    ret = ParseResponseCode(request.responseHeaders["STATUS"]);
+                }
+            }
+
+            return ret;
+        }
+
+        public static int ParseResponseCode(string statusLine)
+        {
+            int ret = -1;
+
+            string[] components = statusLine.Split(' ');
+            if (components.Length < 3)
+            {
+                Log.Error("RESTConnector.ParseResponseCode()", "invalid response status: " + statusLine);
+            }
+            else
+            {
+                if (!int.TryParse(components[1], out ret))
+                {
+                    Log.Error("RESTConnector.ParseResponseCode()", "invalid response code: " + components[1]);
+                }
+            }
+
+            return ret;
+        }
+
         private class DeleteRequest
         {
             public string URL { get; set; }
             public Dictionary<string, string> Headers { get; set; }
             public bool IsComplete { get; set; }
             public bool Success { get; set; }
+            public long HttpResponseCode { get; set; }
+            public byte[] Data { get; set; }
+            public Error Error { get; set; }
 
             public IEnumerator Send(string url, Dictionary<string, string> headers)
             {
@@ -602,25 +645,32 @@ namespace IBM.Watson.DeveloperCloud.Connection
 #endif
                 UnityWebRequest deleteReq = UnityWebRequest.Delete(URL);
                 deleteReq.method = UnityWebRequest.kHttpVerbDELETE;
+                deleteReq.downloadHandler = new DownloadHandlerBuffer();
+
                 foreach (var kp in Headers)
                     deleteReq.SetRequestHeader(kp.Key, kp.Value);
 #if UNITY_2017_2_OR_NEWER
-                deleteReq.SendWebRequest();
+                yield return deleteReq.SendWebRequest();
 #else
-                deleteReq.Send();
+                yield return deleteReq.Send();
 #endif
-#if ENABLE_DEBUGGING
-                Log.Debug("DeleteRequest.Send()", "DeleteRequest, sending deletereq {0}", deleteReq);
-#endif
-                while (!deleteReq.isDone)
-                    yield return null;
-#if ENABLE_DEBUGGING
-                Log.Debug("DeleteRequest.Send()", "DELETE Request SENT: {0}", URL);
-#endif
+                Error error = null;
+                if (!string.IsNullOrEmpty(deleteReq.error))
+                {
+                    error = new Error()
+                    {
+                        URL = url,
+                        ErrorCode = deleteReq.responseCode,
+                        ErrorMessage = deleteReq.error,
+                        Response = deleteReq.downloadHandler.text,
+                        ResponseHeaders = deleteReq.GetResponseHeaders()
+                    };
+                }
+
                 Success = deleteReq.responseCode == HTTP_STATUS_OK || deleteReq.responseCode == HTTP_STATUS_OK || deleteReq.responseCode == HTTP_STATUS_NO_CONTENT;
-#if ENABLE_DEBUGGING
-                Log.Debug("DeleteRequest.Send()", "DELETE Request COMPLETE: {0}", URL);
-#endif
+                HttpResponseCode = deleteReq.responseCode;
+                Data = deleteReq.downloadHandler.data;
+                Error = error;
                 IsComplete = true;
             }
         };
