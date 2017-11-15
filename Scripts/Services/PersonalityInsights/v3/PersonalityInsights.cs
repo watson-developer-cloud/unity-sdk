@@ -20,6 +20,7 @@ using IBM.Watson.DeveloperCloud.Connection;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using UnityEngine;
@@ -96,12 +97,28 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3
         }
         #endregion
 
+        #region Callback delegates
+        /// <summary>
+        /// Success callback delegate.
+        /// </summary>
+        /// <typeparam name="T">Type of the returned object.</typeparam>
+        /// <param name="response">The returned object.</param>
+        /// <param name="customData">user defined custom data including raw json.</param>
+        public delegate void SuccessCallback<T>(T response, Dictionary<string, object> customData);
+        /// <summary>
+        /// Fail callback delegate.
+        /// </summary>
+        /// <param name="error">The error object.</param>
+        /// <param name="customData">User defined custom data</param>
+        public delegate void FailCallback(RESTConnector.Error error, Dictionary<string, object> customData);
+        #endregion
+
         #region Profile
         private const string ProfileEndpoint = "/v3/profile";
 
-        public delegate void OnGetProfile(Profile profile, string data);
-
-        public bool GetProfile(OnGetProfile callback, string source,
+        public bool GetProfile(SuccessCallback<Profile> successCallback, 
+            FailCallback failCallback, 
+            string source,
             string contentType = ContentType.TextPlain,
             string contentLanguage = ContentLanguage.English,
             string accept = ContentType.ApplicationJson,
@@ -110,10 +127,12 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3
             bool csv_headers = false,
             bool consumption_preferences = false,
             string version = PersonalityInsightsVersion.Version,
-            string data = default(string))
+            Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(source))
                 throw new ArgumentNullException("A JSON or Text source is required for GetProfile!");
 
@@ -122,9 +141,9 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3
                 return false;
 
             GetProfileRequest req = new GetProfileRequest();
-            req.Source = source;
-            req.Callback = callback;
-            req.Data = data;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.OnResponse = GetProfileResponse;
 
             req.Parameters["raw_scores"] = raw_scores.ToString();
@@ -157,23 +176,24 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3
         public class GetProfileRequest : RESTConnector.Request
         {
             /// <summary>
-            /// The source string.
+            /// The success callback.
             /// </summary>
-            public string Source { get; set; }
+            public SuccessCallback<Profile> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
             /// <summary>
             /// Custom data.
             /// </summary>
-            public string Data { get; set; }
-            /// <summary>
-            /// The callback.
-            /// </summary>
-            public OnGetProfile Callback { get; set; }
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         private void GetProfileResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             Profile response = new Profile();
             fsData data = null;
+            Dictionary<string, object> customData = ((GetProfileRequest)req).CustomData;
 
             if (resp.Success)
             {
@@ -187,6 +207,8 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -195,9 +217,16 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3
                 }
             }
 
-            string customData = ((GetProfileRequest)req).Data;
-            if (((GetProfileRequest)req).Callback != null)
-                ((GetProfileRequest)req).Callback(resp.Success ? response : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+            if (resp.Success)
+            {
+                if (((GetProfileRequest)req).SuccessCallback != null)
+                    ((GetProfileRequest)req).SuccessCallback(response, customData);
+            }
+            else
+            {
+                if (((GetProfileRequest)req).FailCallback != null)
+                    ((GetProfileRequest)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
 
