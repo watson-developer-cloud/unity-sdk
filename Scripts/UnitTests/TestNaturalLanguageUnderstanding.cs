@@ -22,6 +22,8 @@ using IBM.Watson.DeveloperCloud.Utilities;
 using FullSerializer;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using IBM.Watson.DeveloperCloud.Connection;
 
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
@@ -88,7 +90,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _naturalLanguageUnderstanding = new NaturalLanguageUnderstanding(credentials);
 
             Log.Debug("TestNaturalLanguageUnderstanding.RunTests()", "attempting to get models...");
-            if (!_naturalLanguageUnderstanding.GetModels(OnGetModels))
+            if (!_naturalLanguageUnderstanding.GetModels(OnGetModels, OnFail))
                 Log.Debug("TestNaturalLanguageUnderstanding.GetModels()", "Failed to get models.");
             while (!_getModelsTested)
                 yield return null;
@@ -116,7 +118,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             };
 
             Log.Debug("TestNaturalLanguageUnderstanding.RunTests()", "attempting to analyze...");
-            if (!_naturalLanguageUnderstanding.Analyze(OnAnalyze, parameters))
+            if (!_naturalLanguageUnderstanding.Analyze(OnAnalyze, OnFail, parameters))
                 Log.Debug("TestNaturalLanguageUnderstanding.Analyze()", "Failed to get models.");
             while (!_analyzeTested)
                 yield return null;
@@ -126,23 +128,23 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             yield break;
         }
 
-        private void OnGetModels(ListModelsResults resp, string customData)
+        private void OnGetModels(ListModelsResults resp, Dictionary<string, object> customData)
         {
-            fsData data = null;
-            _serializer.TrySerialize(resp, out data).AssertSuccess();
-            Log.Debug("TestNaturalLanguageUnderstanding.OnGetModels()", "ListModelsResult: {0}", data.ToString());
+            Log.Debug("TestNaturalLanguageUnderstanding.OnGetModels()", "ListModelsResult: {0}", customData["json"].ToString());
             Test(resp != null);
-
             _getModelsTested = true;
         }
 
-        private void OnAnalyze(AnalysisResults resp, string customData)
+        private void OnAnalyze(AnalysisResults resp, Dictionary<string, object> customData)
         {
-            fsData data = null;
-            _serializer.TrySerialize(resp, out data).AssertSuccess();
-            Log.Debug("TestNaturalLanguageUnderstanding.OnAnalyze()", "AnalysisResults: {0}", data.ToString());
+            Log.Debug("TestNaturalLanguageUnderstanding.OnAnalyze()", "AnalysisResults: {0}", customData["json"].ToString());
             Test(resp != null);
             _analyzeTested = true;
+        }
+
+        private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
+        {
+            Log.Error("TestNaturalLanguageUnderstanding.OnFail()", "Error received: {0}", error.ToString());
         }
     }
 }

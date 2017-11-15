@@ -16,10 +16,12 @@
 */
 
 using FullSerializer;
+using IBM.Watson.DeveloperCloud.Connection;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ExampleNaturalLanguageUnderstandingV1 : MonoBehaviour
@@ -49,7 +51,7 @@ public class ExampleNaturalLanguageUnderstandingV1 : MonoBehaviour
     private IEnumerator Examples()
     {
         Log.Debug("ExampleNaturalLanguageUnderstanding.Examples()", "attempting to get models...");
-        if (!_naturalLanguageUnderstanding.GetModels(OnGetModels))
+        if (!_naturalLanguageUnderstanding.GetModels(OnGetModels, OnFail))
             Log.Debug("ExampleNaturalLanguageUnderstanding.GetModels()", "Failed to get models.");
         while (!_getModelsTested)
             yield return null;
@@ -77,7 +79,7 @@ public class ExampleNaturalLanguageUnderstandingV1 : MonoBehaviour
         };
 
         Log.Debug("ExampleNaturalLanguageUnderstanding.Examples()", "attempting to analyze...");
-        if (!_naturalLanguageUnderstanding.Analyze(OnAnalyze, parameters))
+        if (!_naturalLanguageUnderstanding.Analyze(OnAnalyze, OnFail, parameters))
             Log.Debug("ExampleNaturalLanguageUnderstanding.Analyze()", "Failed to get models.");
         while (!_analyzeTested)
             yield return null;
@@ -85,21 +87,20 @@ public class ExampleNaturalLanguageUnderstandingV1 : MonoBehaviour
         Log.Debug("ExampleNaturalLanguageUnderstanding.Examples()", "Natural language understanding examples complete.");
     }
 
-    private void OnGetModels(ListModelsResults resp, string customData)
+    private void OnGetModels(ListModelsResults resp, Dictionary<string, object> customData)
     {
-        fsData data = null;
-        _serializer.TrySerialize(resp, out data).AssertSuccess();
-        Log.Debug("ExampleNaturalLanguageUnderstanding.Examples()", "ListModelsResult: {0}", data.ToString());
-
+        Log.Debug("ExampleNaturalLanguageUnderstanding.OnGetModels()", "ListModelsResult: {0}", customData["json"].ToString());
         _getModelsTested = true;
     }
 
-    private void OnAnalyze(AnalysisResults resp, string customData)
+    private void OnAnalyze(AnalysisResults resp, Dictionary<string, object> customData)
     {
-        fsData data = null;
-        _serializer.TrySerialize(resp, out data).AssertSuccess();
-        Log.Debug("ExampleNaturalLanguageUnderstanding.Examples()", "AnalysisResults: {0}", data.ToString());
-
+        Log.Debug("ExampleNaturalLanguageUnderstanding.OnAnalyze()", "AnalysisResults: {0}", customData["json"].ToString());
         _analyzeTested = true;
+    }
+
+    private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
+    {
+        Log.Error("ExampleNaturalLanguageUnderstanding.OnFail()", "Error received: {0}", error.ToString());
     }
 }
