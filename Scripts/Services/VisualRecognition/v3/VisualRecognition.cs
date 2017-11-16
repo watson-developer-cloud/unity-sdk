@@ -34,115 +34,6 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
     {
         #region Public Types
         /// <summary>
-        /// The callback used by the GetClassifiers() method.
-        /// </summary>
-        /// <param name="classifiers">A brief description of classifiers.</param>
-        /// <param name="data">Optional data</param>
-        public delegate void OnGetClassifiers(GetClassifiersTopLevelBrief classifiers, string data);
-        /// <summary>
-        /// Callback used by the GetClassifier() method.
-        /// </summary>
-        /// <param name="classifier">The classifier found by ID.</param>
-        /// <param name="data">Optional data</param>
-        public delegate void OnGetClassifier(GetClassifiersPerClassifierVerbose classifier, string data);
-        /// <summary>
-        /// This callback is used by the DeleteClassifier() method.
-        /// </summary>
-        /// <param name="success">Success or failure of the delete call.</param>
-        /// <param name="data">Optional data</param>
-        public delegate void OnDeleteClassifier(bool success, string data);
-        /// <summary>
-        /// Callback used by the TrainClassifier() method.
-        /// </summary>
-        /// <param name="classifier">The classifier created.</param>
-        /// <param name="data">Optional data</param>
-        public delegate void OnTrainClassifier(GetClassifiersPerClassifierVerbose classifier, string data);
-        /// <summary>
-        /// This callback is used by the Classify() method.
-        /// </summary>
-        /// <param name="classify">Returned classification.</param>
-        /// <param name="data">Optional data</param>
-        public delegate void OnClassify(ClassifyTopLevelMultiple classify, string data);
-        /// <summary>
-        /// This callback is used by the DetectFaces() method.
-        /// </summary>
-        /// <param name="faces">Faces Detected.</param>
-        /// <param name="data">Optional data</param>
-        public delegate void OnDetectFaces(FacesTopLevelMultiple faces, string data);
-        /// <summary>
-        /// This callback is used by the RecognizeText() method.
-        /// </summary>
-        /// <param name="text">Text Recognized.</param>
-        /// <param name="data">Optional data</param>
-        public delegate void OnRecognizeText(TextRecogTopLevelMultiple text, string data);
-        /// <summary>
-        /// This callback is used by the GetCollections() method.
-        /// </summary>
-        /// <param name="collections">Collections.</param>
-        /// <param name="data">Optional data</param>
-        public delegate void OnGetCollections(GetCollections collections, string data);
-        /// <summary>
-        /// This callback is used by the CreateCollection() method.
-        /// </summary>
-        /// <param name="collection">The created collection.</param>
-        /// <param name="data">Optional data</param>
-        public delegate void OnCreateCollection(CreateCollection collection, string data);
-        /// <summary>
-        /// This callback is used by the DeleteCollection() method.
-        /// </summary>
-        /// <param name="success">Success of the delete call.</param>
-        /// <param name="data">Optional data</param>
-        public delegate void OnDeleteCollection(bool success, string data);
-        /// <summary>
-        /// This callback is used y the GetCollection() method.
-        /// </summary>
-        /// <param name="collection">The collection.</param>
-        /// <param name="data">Optional data</param>
-        public delegate void OnGetCollection(CreateCollection collection, string data);
-        /// <summary>
-        /// This callback is used by the GetCollectionImages() method.
-        /// </summary>
-        /// <param name="images">Collection images.</param>
-        /// <param name="data">Optional data</param>
-        public delegate void OnGetCollectionImages(GetCollectionImages images, string data);
-        /// <summary>
-        /// This callback is used by the AddCollectionImage() method.
-        /// </summary>
-        /// <param name="config">The collection config.</param>
-        /// <param name="data">Optional data</param>
-        public delegate void OnAddCollectionImage(CollectionsConfig config, string data);
-        /// <summary>
-        /// This callback is used by the DeleteCollectionImage() method.
-        /// </summary>
-        /// <param name="success">Success or failure of deleting collection image.</param>
-        /// <param name="data">Optional data</param>
-        public delegate void OnDeleteCollectionImage(bool success, string data);
-        /// <summary>
-        /// This callback is used by the GetImageDetails() method.
-        /// </summary>
-        /// <param name="image">The image details.</param>
-        /// <param name="data">Optional data</param>
-        public delegate void OnGetImageDetails(GetCollectionsBrief image, string data);
-        /// <summary>
-        /// This callback is used by the DeleteImageMetadata() method.
-        /// </summary>
-        /// <param name="success">Success of the delete call.</param>
-        /// <param name="data">Optional data</param>
-        public delegate void OnDeleteImageMetadata(bool success, string data);
-        /// <summary>
-        /// This callback is used by the GetImageMetadata() method.
-        /// </summary>
-        /// <param name="metadata"></param>
-        /// <param name="data">Optional data</param>
-        public delegate void OnGetImageMetadata(object metadata, string data);
-        /// <summary>
-        /// This callback is used by the FindSimilar() method.
-        /// </summary>
-        /// <param name="similarImages"></param>
-        /// <param name="data">Optional data</param>
-        public delegate void OnFindSimilar(SimilarImagesConfig similarImages, string data);
-
-        /// <summary>
         /// The delegate for loading a file, used by TrainClassifier().
         /// </summary>
         /// <param name="filename">The filename to load.</param>
@@ -168,7 +59,6 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         private const string FindSimilarEndpoint = "/v3/collections/{0}/find_similar";
         private string _apikey = null;
         private fsSerializer _serializer = new fsSerializer();
-        private const float REQUEST_TIMEOUT = 10.0f * 60.0f;
         private Credentials _credentials = null;
         private string _url = "https://gateway.watsonplatform.net/tone-analyzer/api";
         private string _versionDate;
@@ -230,38 +120,56 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         }
         #endregion
 
+        #region Callback delegates
+        /// <summary>
+        /// Success callback delegate.
+        /// </summary>
+        /// <typeparam name="T">Type of the returned object.</typeparam>
+        /// <param name="response">The returned object.</param>
+        /// <param name="customData">user defined custom data including raw json.</param>
+        public delegate void SuccessCallback<T>(T response, Dictionary<string, object> customData);
+        /// <summary>
+        /// Fail callback delegate.
+        /// </summary>
+        /// <param name="error">The error object.</param>
+        /// <param name="customData">User defined custom data</param>
+        public delegate void FailCallback(RESTConnector.Error error, Dictionary<string, object> customData);
+        #endregion
+
         #region Classify Image
         /// <summary>
         /// Classifies image specified by URL.
         /// </summary>
         /// <param name="url">URL.</param>
-        /// <param name="callback">Callback.</param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="owners">Owners.</param>
         /// <param name="classifierIDs">Classifier IDs to be classified against.</param>
         /// <param name="threshold">Threshold.</param>
         /// <param name="acceptLanguage">Accept language.</param>
         /// <param name="customData">Custom data.</param>
-        public bool Classify(OnClassify callback, string url, string[] owners = default(string[]), string[] classifierIDs = default(string[]), float threshold = default(float), string acceptLanguage = "en", string customData = default(string))
+        public bool Classify(string url, SuccessCallback<ClassifyTopLevelMultiple> successCallback, FailCallback failCallback, string[] owners = default(string[]), string[] classifierIDs = default(string[]), float threshold = default(float), string acceptLanguage = "en", Dictionary<string, object> customData = null)
         {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(_apikey))
                 _apikey = Credentials.ApiKey;
             if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
             if (string.IsNullOrEmpty(url))
                 throw new ArgumentNullException("url");
-            if (callback == null)
-                throw new ArgumentNullException("callback");
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, ClassifyEndpoint);
             if (connector == null)
                 return false;
 
             ClassifyReq req = new ClassifyReq();
-            req.Callback = callback;
-            req.Data = customData;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.OnResponse = OnClassifyResp;
-            req.Timeout = REQUEST_TIMEOUT;
-            req.AcceptLanguage = acceptLanguage;
             req.Headers["Accepted-Language"] = acceptLanguage;
             req.Parameters["api_key"] = _apikey;
             req.Parameters["url"] = url;
@@ -279,21 +187,24 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <summary>
         /// Classifies an image from the file system.
         /// </summary>
-        /// <param name="callback">Callback.</param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="imagePath">Image path.</param>
         /// <param name="owners">Owners.</param>
         /// <param name="classifierIDs">Classifier I ds.</param>
         /// <param name="threshold">Threshold.</param>
         /// <param name="acceptLanguage">Accept language.</param>
         /// <param name="customData">Custom data.</param>
-        public bool Classify(string imagePath, OnClassify callback, string[] owners = default(string[]), string[] classifierIDs = default(string[]), float threshold = default(float), string acceptLanguage = "en", string customData = default(string))
+        public bool Classify(SuccessCallback<ClassifyTopLevelMultiple> successCallback, FailCallback failCallback, string imagePath, string[] owners = default(string[]), string[] classifierIDs = default(string[]), float threshold = default(float), string acceptLanguage = "en", Dictionary<string, object> customData = null)
         {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(_apikey))
                 _apikey = Credentials.ApiKey;
             if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
-            if (callback == null)
-                throw new ArgumentNullException("callback");
             if (string.IsNullOrEmpty(imagePath))
                 throw new ArgumentNullException("Define an image path to classify!");
 
@@ -315,13 +226,14 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                     Log.Error("VisualRecognition.Classify()", "Failed to upload {0}!", imagePath);
             }
 
-            return Classify(callback, imageData, owners, classifierIDs, threshold, acceptLanguage);
+            return Classify(successCallback, failCallback, imageData, owners, classifierIDs, threshold, acceptLanguage, customData);
         }
 
         /// <summary>
         /// Classifies an image using byte data.
         /// </summary>
-        /// <param name="callback">Callback.</param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="imageData">Byte array of image data.</param>
         /// <param name="owners">Owners.</param>
         /// <param name="classifierIDs">An array of classifier identifiers.</param>
@@ -329,14 +241,16 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <param name="acceptLanguage">Accepted language.</param>
         /// <param name="customData">Custom data.</param>
         /// <returns></returns>
-        public bool Classify(OnClassify callback, byte[] imageData, string[] owners = default(string[]), string[] classifierIDs = default(string[]), float threshold = default(float), string acceptLanguage = "en", string customData = default(string))
+        public bool Classify(SuccessCallback<ClassifyTopLevelMultiple> successCallback, FailCallback failCallback, byte[] imageData, string[] owners = default(string[]), string[] classifierIDs = default(string[]), float threshold = default(float), string acceptLanguage = "en", Dictionary<string, object> customData = null)
         {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(_apikey))
                 _apikey = Credentials.ApiKey;
             if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
-            if (callback == null)
-                throw new ArgumentNullException("callback");
             if (imageData == null)
                 throw new ArgumentNullException("Image data is required to classify!");
 
@@ -344,11 +258,10 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if (connector == null)
                 return false;
             ClassifyReq req = new ClassifyReq();
-            req.Callback = callback;
-            req.Data = customData;
-            req.Timeout = REQUEST_TIMEOUT;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.OnResponse = OnClassifyResp;
-            req.AcceptLanguage = acceptLanguage;
             req.Parameters["api_key"] = _apikey;
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
@@ -373,23 +286,24 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         public class ClassifyReq : RESTConnector.Request
         {
             /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<ClassifyTopLevelMultiple> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
             /// Custom data.
             /// </summary>
-            public string Data { get; set; }
-            /// <summary>
-            /// The OnClasify callback delegate.
-            /// </summary>
-            public OnClassify Callback { get; set; }
-            /// <summary>
-            /// Accept language string.
-            /// </summary>
-            public string AcceptLanguage { get; set; }
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         private void OnClassifyResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            ClassifyTopLevelMultiple classify = null;
+            ClassifyTopLevelMultiple result = null;
             fsData data = null;
+            Dictionary<string, object> customData = ((ClassifyReq)req).CustomData;
 
             if (resp.Success)
             {
@@ -399,12 +313,14 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    classify = new ClassifyTopLevelMultiple();
+                    result = new ClassifyTopLevelMultiple();
 
-                    object obj = classify;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -412,9 +328,16 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 }
             }
 
-            string customData = ((ClassifyReq)req).Data;
-            if (((ClassifyReq)req).Callback != null)
-                ((ClassifyReq)req).Callback(resp.Success ? classify : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+            if (resp.Success)
+            {
+                if (((ClassifyReq)req).SuccessCallback != null)
+                    ((ClassifyReq)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((ClassifyReq)req).FailCallback != null)
+                    ((ClassifyReq)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
 
@@ -424,14 +347,17 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// </summary>
         /// <returns><c>true</c>, if faces was detected, <c>false</c> otherwise.</returns>
         /// <param name="url">URL.</param>
-        /// <param name="callback">Callback.</param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="customData">Custom data.</param>
-        public bool DetectFaces(OnDetectFaces callback, string url, string customData = default(string))
+        public bool DetectFaces(string url, SuccessCallback<FacesTopLevelMultiple> successCallback, FailCallback failCallback, Dictionary<string, object> customData = null)
         {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(url))
                 throw new ArgumentNullException("url");
-            if (callback == null)
-                throw new ArgumentNullException("callback");
             if (string.IsNullOrEmpty(_apikey))
                 _apikey = Credentials.ApiKey;
             if (string.IsNullOrEmpty(_apikey))
@@ -442,10 +368,10 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 return false;
 
             DetectFacesReq req = new DetectFacesReq();
-            req.Callback = callback;
-            req.Data = customData;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.OnResponse = OnDetectFacesResp;
-            req.Timeout = REQUEST_TIMEOUT;
             req.Parameters["api_key"] = _apikey;
             req.Parameters["url"] = url;
             req.Parameters["version"] = VersionDate;
@@ -457,11 +383,16 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// Detects faces in a jpg, gif, png or zip file.
         /// </summary>
         /// <returns><c>true</c>, if faces was detected, <c>false</c> otherwise.</returns>
-        /// <param name="callback">Callback.</param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="imagePath">Image path.</param>
         /// <param name="customData">Custom data.</param>
-        public bool DetectFaces(string imagePath, OnDetectFaces callback, string customData = default(string))
+        public bool DetectFaces(SuccessCallback<FacesTopLevelMultiple> successCallback, FailCallback failCallback, string imagePath, Dictionary<string, object> customData = null)
         {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(imagePath))
                 throw new ArgumentNullException("Define an image path to classify!");
             if (string.IsNullOrEmpty(_apikey))
@@ -487,24 +418,27 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                     Log.Error("VisualRecognition.DetectFaces()", "Failed to upload {0}!", imagePath);
             }
 
-            return DetectFaces(callback, imageData, customData);
+            return DetectFaces(successCallback, failCallback, imageData, customData);
         }
 
         /// <summary>
         /// Detect faces in an image's byteData.
         /// </summary>
-        /// <param name="callback">Callback.</param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="imageData">ByteArray of image data.</param>
         /// <param name="customData">Custom data.</param>
         /// <returns></returns>
-        public bool DetectFaces(OnDetectFaces callback, byte[] imageData = default(byte[]), string customData = default(string))
+        public bool DetectFaces(SuccessCallback<FacesTopLevelMultiple> successCallback, FailCallback failCallback, byte[] imageData = default(byte[]), Dictionary<string, object> customData = null)
         {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(_apikey))
                 _apikey = Credentials.ApiKey;
             if (string.IsNullOrEmpty(_apikey))
                 throw new WatsonException("No API Key was found!");
-            if (callback == null)
-                throw new ArgumentNullException("callback");
             if (imageData == null)
                 throw new ArgumentNullException("Image data is required to DetectFaces!");
 
@@ -512,9 +446,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if (connector == null)
                 return false;
             DetectFacesReq req = new DetectFacesReq();
-            req.Callback = callback;
-            req.Data = customData;
-            req.Timeout = REQUEST_TIMEOUT;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.OnResponse = OnDetectFacesResp;
             req.Parameters["api_key"] = _apikey;
             req.Parameters["version"] = VersionDate;
@@ -534,19 +468,24 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         public class DetectFacesReq : RESTConnector.Request
         {
             /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<FacesTopLevelMultiple> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
             /// Custom data.
             /// </summary>
-            public string Data { get; set; }
-            /// <summary>
-            /// The OnDetectFaces callback delegate.
-            /// </summary>
-            public OnDetectFaces Callback { get; set; }
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         private void OnDetectFacesResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            FacesTopLevelMultiple faces = null;
+            FacesTopLevelMultiple result = null;
             fsData data = null;
+            Dictionary<string, object> customData = ((DetectFacesReq)req).CustomData;
 
             if (resp.Success)
             {
@@ -556,12 +495,14 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    faces = new FacesTopLevelMultiple();
+                    result = new FacesTopLevelMultiple();
 
-                    object obj = faces;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -569,178 +510,33 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 }
             }
 
-            string customData = ((DetectFacesReq)req).Data;
-            if (((DetectFacesReq)req).Callback != null)
-                ((DetectFacesReq)req).Callback(resp.Success ? faces : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
-        }
-        #endregion
-
-        #region Recognize Text
-        /// <summary>
-        /// Recognizes text given an image url.
-        /// </summary>
-        /// <returns><c>true</c>, if text was recognized, <c>false</c> otherwise.</returns>
-        /// <param name="url">URL.</param>
-        /// <param name="callback">Callback.</param>
-        /// <param name="customData">Custom data.</param>
-        public bool RecognizeText(OnRecognizeText callback, string url, string customData = default(string))
-        {
-            if (string.IsNullOrEmpty(url))
-                throw new ArgumentNullException("url");
-            if (callback == null)
-                throw new ArgumentNullException("callback");
-            if (string.IsNullOrEmpty(_apikey))
-                _apikey = Credentials.ApiKey;
-            if (string.IsNullOrEmpty(_apikey))
-                throw new WatsonException("No API Key was found!");
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, RecognizeTextEndpoint);
-            if (connector == null)
-                return false;
-
-            RecognizeTextReq req = new RecognizeTextReq();
-            req.Callback = callback;
-            req.Data = customData;
-            req.Timeout = REQUEST_TIMEOUT;
-            req.OnResponse = OnRecognizeTextResp;
-            req.Timeout = REQUEST_TIMEOUT;
-            req.Parameters["api_key"] = _apikey;
-            req.Parameters["url"] = url;
-            req.Parameters["version"] = VersionDate;
-
-            return connector.Send(req);
-        }
-
-        /// <summary>
-        /// Recognizes text in a given image.
-        /// </summary>
-        /// <returns><c>true</c>, if text was recognized, <c>false</c> otherwise.</returns>
-        /// <param name="callback">Callback.</param>
-        /// <param name="imagePath">Image path.</param>
-        /// <param name="customData">Custom data.</param>
-        public bool RecognizeText(string imagePath, OnRecognizeText callback, string customData = default(string))
-        {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
-            if (string.IsNullOrEmpty(imagePath))
-                throw new ArgumentNullException("Define an image path to classify!");
-            if (string.IsNullOrEmpty(_apikey))
-                _apikey = Credentials.ApiKey;
-            if (string.IsNullOrEmpty(_apikey))
-                throw new WatsonException("No API KEy was found!");
-
-            byte[] imageData = null;
-            if (imagePath != default(string))
-            {
-                if (LoadFile != null)
-                {
-                    imageData = LoadFile(imagePath);
-                }
-                else
-                {
-#if !UNITY_WEBPLAYER
-                    imageData = File.ReadAllBytes(imagePath);
-#endif
-                }
-
-                if (imageData == null)
-                    Log.Error("VisualRecognition.RecognizeText()", "Failed to upload {0}!", imagePath);
-            }
-
-            return RecognizeText(callback, imageData, customData);
-        }
-
-        /// <summary>
-        /// Recognizes text in image bytedata.
-        /// </summary>
-        /// <param name="callback">Callback.</param>
-        /// <param name="imageData">Image's byte array data.</param>
-        /// <param name="customData">Custom data.</param>
-        /// <returns></returns>
-        public bool RecognizeText(OnRecognizeText callback, byte[] imageData = default(byte[]), string customData = default(string))
-        {
-            if (string.IsNullOrEmpty(_apikey))
-                _apikey = Credentials.ApiKey;
-            if (string.IsNullOrEmpty(_apikey))
-                throw new WatsonException("No API Key was found!");
-            if (callback == null)
-                throw new ArgumentNullException("callback");
-            if (imageData == null)
-                throw new ArgumentNullException("Image data is required to RecognizeText!");
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, RecognizeTextEndpoint);
-            if (connector == null)
-                return false;
-            RecognizeTextReq req = new RecognizeTextReq();
-            req.Callback = callback;
-            req.Data = customData;
-            req.Timeout = REQUEST_TIMEOUT;
-            req.OnResponse = OnRecognizeTextResp;
-
-            req.Parameters["api_key"] = _apikey;
-            req.Parameters["version"] = VersionDate;
-
-            if (imageData != null)
-                req.Send = imageData;
-
-            return connector.Send(req);
-        }
-
-        public class RecognizeTextReq : RESTConnector.Request
-        {
-            /// <summary>
-            /// Custom data.
-            /// </summary>
-            public string Data { get; set; }
-            /// <summary>
-            /// The OnRecognizeText callback delegate.
-            /// </summary>
-            public OnRecognizeText Callback { get; set; }
-        }
-
-        private void OnRecognizeTextResp(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            TextRecogTopLevelMultiple text = null;
-            fsData data = null;
-
             if (resp.Success)
             {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    text = new TextRecogTopLevelMultiple();
-
-                    object obj = text;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("VisualRecognition.OnRecognizeTextResp()", "Detect text exception: {0}", e.ToString());
-                }
+                if (((DetectFacesReq)req).SuccessCallback != null)
+                    ((DetectFacesReq)req).SuccessCallback(result, customData);
             }
-
-            string customData = ((RecognizeTextReq)req).Data;
-            if (((RecognizeTextReq)req).Callback != null)
-                ((RecognizeTextReq)req).Callback(resp.Success ? text : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+            else
+            {
+                if (((DetectFacesReq)req).FailCallback != null)
+                    ((DetectFacesReq)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
-        
+
         #region Get Classifiers
         /// <summary>
         /// Gets a list of all classifiers.
         /// </summary>
         /// <returns><c>true</c>, if classifiers was gotten, <c>false</c> otherwise.</returns>
-        /// <param name="callback">Callback.</param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="customData">CustomData.</param>
-        public bool GetClassifiers(OnGetClassifiers callback, string customData = default(string))
+        public bool GetClassifiers(SuccessCallback<GetClassifiersTopLevelBrief> successCallback, FailCallback failCallback, Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(_apikey))
                 _apikey = Credentials.ApiKey;
             if (string.IsNullOrEmpty(_apikey))
@@ -751,8 +547,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 return false;
 
             GetClassifiersReq req = new GetClassifiersReq();
-            req.Callback = callback;
-            req.Data = customData;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Parameters["api_key"] = _apikey;
             req.Parameters["version"] = VersionDate;
             req.Timeout = 20.0f * 60.0f;
@@ -767,19 +564,24 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         public class GetClassifiersReq : RESTConnector.Request
         {
             /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<GetClassifiersTopLevelBrief> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
             /// Custom data.
             /// </summary>
-            public string Data { get; set; }
-            /// <summary>
-            /// The OnGetClassifier callback delegate.
-            /// </summary>
-            public OnGetClassifiers Callback { get; set; }
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         private void OnGetClassifiersResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            GetClassifiersTopLevelBrief classifiers = new GetClassifiersTopLevelBrief();
+            GetClassifiersTopLevelBrief result = new GetClassifiersTopLevelBrief();
             fsData data = null;
+            Dictionary<string, object> customData = ((GetClassifiersReq)req).CustomData;
 
             if (resp.Success)
             {
@@ -787,11 +589,13 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 {
                     fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
 
-                    object obj = classifiers;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
 
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -800,9 +604,16 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 }
             }
 
-            string customData = ((GetClassifiersReq)req).Data;
-            if (((GetClassifiersReq)req).Callback != null)
-                ((GetClassifiersReq)req).Callback(resp.Success ? classifiers : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+            if (resp.Success)
+            {
+                if (((GetClassifiersReq)req).SuccessCallback != null)
+                    ((GetClassifiersReq)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((GetClassifiersReq)req).FailCallback != null)
+                    ((GetClassifiersReq)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
 
@@ -811,14 +622,17 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// Gets a classifier by classifierId.
         /// </summary>
         /// <returns><c>true</c>, if classifier was gotten, <c>false</c> otherwise.</returns>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="classifierId">Classifier identifier.</param>
-        /// <param name="callback">Callback.</param>
-        public bool GetClassifier(OnGetClassifier callback, string classifierId, string customData = default(string))
+        public bool GetClassifier(SuccessCallback<GetClassifiersPerClassifierVerbose> successCallback, FailCallback failCallback, string classifierId, Dictionary<string, object> customData = null)
         {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(classifierId))
                 throw new ArgumentNullException("classifierId");
-            if (callback == null)
-                throw new ArgumentNullException("callback");
             if (string.IsNullOrEmpty(_apikey))
                 _apikey = Credentials.ApiKey;
             if (string.IsNullOrEmpty(_apikey))
@@ -829,7 +643,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 return false;
 
             GetClassifierReq req = new GetClassifierReq();
-            req.Callback = callback;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Parameters["api_key"] = _apikey;
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnGetClassifierResp;
@@ -840,19 +656,24 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         public class GetClassifierReq : RESTConnector.Request
         {
             /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<GetClassifiersPerClassifierVerbose> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
             /// Custom data.
             /// </summary>
-            public string Data { get; set; }
-            /// <summary>
-            /// OnGetClassifier callback delegate
-            /// </summary>
-            public OnGetClassifier Callback { get; set; }
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         private void OnGetClassifierResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            GetClassifiersPerClassifierVerbose classifier = new GetClassifiersPerClassifierVerbose();
+            GetClassifiersPerClassifierVerbose result = new GetClassifiersPerClassifierVerbose();
             fsData data = null;
+            Dictionary<string, object> customData = ((GetClassifierReq)req).CustomData;
 
             if (resp.Success)
             {
@@ -862,10 +683,12 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = classifier;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -874,9 +697,16 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 }
             }
 
-            string customData = ((GetClassifierReq)req).Data;
-            if (((GetClassifierReq)req).Callback != null)
-                ((GetClassifierReq)req).Callback(resp.Success ? classifier : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+            if (resp.Success)
+            {
+                if (((GetClassifierReq)req).SuccessCallback != null)
+                    ((GetClassifierReq)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((GetClassifierReq)req).FailCallback != null)
+                    ((GetClassifierReq)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
 
@@ -887,13 +717,18 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// The total size of all files must be below 256mb. Additional training can be done by using UpdateClassifier.
         /// </summary>
         /// <returns><c>true</c>, if classifier was trained, <c>false</c> otherwise.</returns>
-        /// <param name="callback">Callback.</param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="classifierName">Classifier name.</param>
         /// <param name="positiveExamples">Dictionary of class name and positive example paths.</param>
         /// <param name="negativeExamplesPath">Negative example file path.</param>
         /// <param name="mimeType">Mime type of the positive examples and negative examples data. Use GetMimeType to get Mimetype from filename.</param>
-        public bool TrainClassifier(OnTrainClassifier callback, string classifierName, Dictionary<string, string> positiveExamples, string negativeExamplesPath = default(string), string mimeType = "application/zip", string customData = default(string))
+        public bool TrainClassifier(SuccessCallback<GetClassifiersPerClassifierVerbose> successCallback, FailCallback failCallback, string classifierName, Dictionary<string, string> positiveExamples, string negativeExamplesPath = default(string), string mimeType = "application/zip", Dictionary<string, object> customData = null)
         {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(_apikey))
                 _apikey = Credentials.ApiKey;
             if (string.IsNullOrEmpty(_apikey))
@@ -904,8 +739,6 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 throw new ArgumentNullException("Need at least one positive example!");
             if (positiveExamples.Count < 2 && string.IsNullOrEmpty(negativeExamplesPath))
                 throw new ArgumentNullException("At least two positive example zips or one positive example zip and one negative example zip are required to train a classifier!");
-            if (callback == null)
-                throw new ArgumentNullException("callback");
 
             Dictionary<string, byte[]> positiveExamplesData = new Dictionary<string, byte[]>();
             byte[] negativeExamplesData = null;
@@ -928,20 +761,25 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if (positiveExamplesData.Count == 0 || negativeExamplesData == null)
                 Log.Error("VisualRecognition.TrainClassifier()", "Failed to upload positive or negative examples!");
 
-            return TrainClassifier(callback, classifierName, positiveExamplesData, negativeExamplesData, mimeType, customData);
+            return TrainClassifier(successCallback, failCallback, classifierName, positiveExamplesData, negativeExamplesData, mimeType, customData);
         }
 
         /// <summary>
         /// Trains a classifier  
         /// </summary>
-        /// <param name="callback">Callback.</param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="classifierName">Classifier name.</param>
         /// <param name="positiveExamplesData">Dictionary of class name and class training zip or image byte data.</param>
         /// <param name="negativeExamplesData">Negative examples zip or image byte data.</param>
         /// <param name="mimeType">Mime type of the positive examples and negative examples data.</param>
         /// <returns></returns>
-        public bool TrainClassifier(OnTrainClassifier callback, string classifierName, Dictionary<string, byte[]> positiveExamplesData, byte[] negativeExamplesData = null, string mimeType = "application/zip", string customData = default(string))
+        public bool TrainClassifier(SuccessCallback<GetClassifiersPerClassifierVerbose> successCallback, FailCallback failCallback, string classifierName, Dictionary<string, byte[]> positiveExamplesData, byte[] negativeExamplesData = null, string mimeType = "application/zip", Dictionary<string, object> customData = null)
         {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(_apikey))
                 _apikey = Credentials.ApiKey;
             if (string.IsNullOrEmpty(_apikey))
@@ -950,17 +788,16 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 throw new ArgumentNullException("ClassifierName");
             if (positiveExamplesData.Count < 2 && negativeExamplesData == null)
                 throw new ArgumentNullException("At least two positive example zips or one positive example zip and one negative example zip are required to train a classifier!");
-            if (callback == null)
-                throw new ArgumentNullException("callback");
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, ClassifiersEndpoint);
             if (connector == null)
                 return false;
 
             TrainClassifierReq req = new TrainClassifierReq();
-            req.Callback = callback;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.OnResponse = OnTrainClassifierResp;
-            req.Timeout = REQUEST_TIMEOUT;
             req.Parameters["api_key"] = _apikey;
             req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
@@ -980,19 +817,24 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         public class TrainClassifierReq : RESTConnector.Request
         {
             /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<GetClassifiersPerClassifierVerbose> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
             /// Custom data.
             /// </summary>
-            public string Data { get; set; }
-            /// <summary>
-            /// The OnTrainClassifier callback delegate.
-            /// </summary>
-            public OnTrainClassifier Callback { get; set; }
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         private void OnTrainClassifierResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            GetClassifiersPerClassifierVerbose classifier = new GetClassifiersPerClassifierVerbose();
+            GetClassifiersPerClassifierVerbose result = new GetClassifiersPerClassifierVerbose();
             fsData data = null;
+            Dictionary<string, object> customData = ((TrainClassifierReq)req).CustomData;
 
             if (resp.Success)
             {
@@ -1002,10 +844,12 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = classifier;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -1013,10 +857,17 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                     resp.Success = false;
                 }
             }
-
-            string customData = ((TrainClassifierReq)req).Data;
-            if (((TrainClassifierReq)req).Callback != null)
-                ((TrainClassifierReq)req).Callback(resp.Success ? classifier : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+            
+            if (resp.Success)
+            {
+                if (((TrainClassifierReq)req).SuccessCallback != null)
+                    ((TrainClassifierReq)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((TrainClassifierReq)req).FailCallback != null)
+                    ((TrainClassifierReq)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
 
@@ -1025,14 +876,19 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// Updates a trained classifier. The total size of all files must be below 256mb.
         /// </summary>
         /// <returns><c>true</c>, if classifier was updated, <c>false</c> otherwise.</returns>
-        /// <param name="callback">Callback.</param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="classifierID">Classifier identifier.</param>
         /// <param name="classifierName">Classifier name.</param>
         /// <param name="positiveExamples">Dictionary of class name and positive example paths.</param>
         /// <param name="negativeExamplesPath">Negative example file path.</param>
         /// <param name="mimeType">Mimetype of the file. Use GetMimeType to get Mimetype from filename.</param>
-        public bool UpdateClassifier(OnTrainClassifier callback, string classifierID, string classifierName, Dictionary<string, string> positiveExamples, string negativeExamplesPath = default(string), string mimeType = "application/zip", string customData = default(string))
+        public bool UpdateClassifier(SuccessCallback<GetClassifiersPerClassifierVerbose> successCallback, FailCallback failCallback, string classifierID, string classifierName, Dictionary<string, string> positiveExamples, string negativeExamplesPath = default(string), string mimeType = "application/zip", Dictionary<string, object> customData = null)
         {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(_apikey))
                 _apikey = Credentials.ApiKey;
             if (string.IsNullOrEmpty(_apikey))
@@ -1041,8 +897,6 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 throw new ArgumentNullException("ClassifierName");
             if (positiveExamples.Count == 0 && string.IsNullOrEmpty(negativeExamplesPath))
                 throw new ArgumentNullException("Need at least one positive example or one negative example!");
-            if (callback == null)
-                throw new ArgumentNullException("callback");
 
             Dictionary<string, byte[]> positiveExamplesData = new Dictionary<string, byte[]>();
             byte[] negativeExamplesData = null;
@@ -1069,21 +923,26 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if (positiveExamplesData.Count == 0 && negativeExamplesData == null)
                 Log.Error("VisualRecognition.UpdateClassifier()", "Failed to upload positive or negative examples!");
 
-            return UpdateClassifier(callback, classifierID, classifierName, positiveExamplesData, negativeExamplesData, mimeType, customData);
+            return UpdateClassifier(successCallback, failCallback, classifierID, classifierName, positiveExamplesData, negativeExamplesData, mimeType, customData);
         }
 
         /// <summary>
         /// Updates a classifier using byte data.
         /// </summary>
-        /// <param name="callback">Callback.</param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="classifierID">Classifier identifier.</param>
         /// <param name="classifierName">Classifier name.</param>
         /// <param name="positiveExamplesData">Dictionary of class name and class training zip or image byte data.</param>
         /// <param name="negativeExamplesData">Negative examples zip or image byte data.</param>
         /// <param name="mimeType">Mimetype of the file. Use GetMimeType to get Mimetype from filename.</param>
         /// <returns></returns>
-        public bool UpdateClassifier(OnTrainClassifier callback, string classifierID, string classifierName, Dictionary<string, byte[]> positiveExamplesData, byte[] negativeExamplesData = null, string mimeType = "application/zip", string customData = default(string))
+        public bool UpdateClassifier(SuccessCallback<GetClassifiersPerClassifierVerbose> successCallback, FailCallback failCallback, string classifierID, string classifierName, Dictionary<string, byte[]> positiveExamplesData, byte[] negativeExamplesData = null, string mimeType = "application/zip", Dictionary<string, object> customData = null)
         {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(_apikey))
                 _apikey = Credentials.ApiKey;
             if (string.IsNullOrEmpty(_apikey))
@@ -1092,17 +951,16 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 throw new ArgumentNullException("ClassifierName");
             if (positiveExamplesData.Count == 0 && negativeExamplesData == null)
                 throw new ArgumentNullException("Need at least one positive example or one negative example!");
-            if (callback == null)
-                throw new ArgumentNullException("callback");
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, ClassifiersEndpoint + "/" + classifierID);
             if (connector == null)
                 return false;
 
             TrainClassifierReq req = new TrainClassifierReq();
-            req.Callback = callback;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.OnResponse = OnTrainClassifierResp;
-            req.Timeout = REQUEST_TIMEOUT;
             req.Parameters["api_key"] = _apikey;
             req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
@@ -1122,14 +980,17 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// Deletes the classifier by classifierID.
         /// </summary>
         /// <returns><c>true</c>, if classifier was deleted, <c>false</c> otherwise.</returns>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="classifierId">Classifier identifier.</param>
-        /// <param name="callback">Callback.</param>
-        public bool DeleteClassifier(OnDeleteClassifier callback, string classifierId, string customData = default(string))
+        public bool DeleteClassifier(SuccessCallback<bool> successCallback, FailCallback failCallback, string classifierId, Dictionary<string, object> customData = null)
         {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(classifierId))
                 throw new ArgumentNullException("classifierId");
-            if (callback == null)
-                throw new ArgumentNullException("callback");
             if (string.IsNullOrEmpty(_apikey))
                 _apikey = Credentials.ApiKey;
             if (string.IsNullOrEmpty(_apikey))
@@ -1140,9 +1001,9 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 return false;
 
             DeleteClassifierReq req = new DeleteClassifierReq();
-            req.Callback = callback;
-            req.Data = customData;
-            req.Timeout = REQUEST_TIMEOUT;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Parameters["api_key"] = _apikey;
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnDeleteClassifierResp;
@@ -1154,1047 +1015,35 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         public class DeleteClassifierReq : RESTConnector.Request
         {
             /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<bool> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
             /// Custom data.
             /// </summary>
-            public string Data { get; set; }
-            /// <summary>
-            /// The OnDeleteClassifier callback delegate.
-            /// </summary>
-            public OnDeleteClassifier Callback { get; set; }
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         private void OnDeleteClassifierResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            if (((DeleteClassifierReq)req).Callback != null)
-                ((DeleteClassifierReq)req).Callback(resp.Success, ((DeleteClassifierReq)req).Data);
-        }
-        #endregion
-
-        #region Get Collections
-        /// <summary>
-        /// Get all collections.
-        /// </summary>
-        /// <param name="callback">The callback.</param>
-        /// <param name="customData">Custom data.</param>
-        /// <returns>Returns true if succeess, false if failure.</returns>
-        public bool GetCollections(OnGetCollections callback, string customData = default(string))
-        {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
-            if (string.IsNullOrEmpty(_apikey))
-                _apikey = Credentials.ApiKey;
-            if (string.IsNullOrEmpty(_apikey))
-                throw new WatsonException("No API Key was found!");
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, CollectionsEndpoint);
-            if (connector == null)
-                return false;
-
-            GetCollectionsReq req = new GetCollectionsReq();
-            req.Callback = callback;
-            req.Data = customData;
-
-            req.Parameters["api_key"] = _apikey;
-            req.Parameters["version"] = VersionDate;
-            req.Timeout = 20.0f * 60.0f;
-            req.OnResponse = OnGetCollectionsResp;
-
-            return connector.Send(req);
-        }
-
-        private class GetCollectionsReq : RESTConnector.Request
-        {
-            /// <summary>
-            /// OnGetCollections callback.
-            /// </summary>
-            public OnGetCollections Callback { get; set; }
-            /// <summary>
-            /// Optional data.
-            /// </summary>
-            public string Data { get; set; }
-        }
-
-        private void OnGetCollectionsResp(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            GetCollections collections = new GetCollections();
-            fsData data = null;
+            Dictionary<string, object> customData = ((DeleteClassifierReq)req).CustomData;
 
             if (resp.Success)
             {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                customData.Add("json", "code: " + resp.HttpResponseCode + ", success: " + resp.Success);
 
-                    object obj = collections;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("VisualRecognition.OnGetCollectionsResp()", "GetCollections Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
+                if (((DeleteClassifierReq)req).SuccessCallback != null)
+                    ((DeleteClassifierReq)req).SuccessCallback(resp.Success, customData);
             }
-
-            string customData = ((GetCollectionsReq)req).Data;
-            if (((GetCollectionsReq)req).Callback != null)
-                ((GetCollectionsReq)req).Callback(resp.Success ? collections : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
-        }
-        #endregion
-
-        #region Create collection
-        /// <summary>
-        /// Create a new collection of images to search. You can create a maximum of 5 collections.
-        /// </summary>
-        /// <param name="callback">The callback.</param>
-        /// <param name="name">The name of the created collection.</param>
-        /// <param name="customData">Optional custom data.</param>
-        /// <returns>Returns true if succeess, false if failure.</returns>
-        public bool CreateCollection(OnCreateCollection callback, string name, string customData = null)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
-            if (string.IsNullOrEmpty(name))
-                throw new ArgumentNullException("name");
-            if (string.IsNullOrEmpty(_apikey))
-                _apikey = Credentials.ApiKey;
-            if (string.IsNullOrEmpty(_apikey))
-                throw new WatsonException("No API Key was found!");
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, CollectionsEndpoint);
-            if (connector == null)
-                return false;
-
-            CreateCollectionReq req = new CreateCollectionReq();
-            req.Callback = callback;
-            req.Name = name;
-            req.Data = customData;
-            req.Parameters["api_key"] = _apikey;
-            req.Parameters["version"] = VersionDate;
-            req.Forms = new Dictionary<string, RESTConnector.Form>();
-            req.Forms["name"] = new RESTConnector.Form(name);
-            req.Forms["disregard"] = new RESTConnector.Form(new byte[4]);
-
-            req.Timeout = 20.0f * 60.0f;
-            req.OnResponse = OnCreateCollectionResp;
-
-            return connector.Send(req);
-        }
-
-        private class CreateCollectionReq : RESTConnector.Request
-        {
-            /// <summary>
-            /// OnCreateCollection callback.
-            /// </summary>
-            public OnCreateCollection Callback { get; set; }
-            /// <summary>
-            /// Name of the collection to create.
-            /// </summary>
-            public string Name { get; set; }
-            /// <summary>
-            /// Optional data.
-            /// </summary>
-            public string Data { get; set; }
-        }
-
-        private void OnCreateCollectionResp(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            CreateCollection collection = new CreateCollection();
-            fsData data = null;
-
-            if (resp.Success)
+            else
             {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-
-                    object obj = collection;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("VisualRecognition.OnCreateCollectionResp()", "OnCreateCollectionResp Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
+                if (((DeleteClassifierReq)req).FailCallback != null)
+                    ((DeleteClassifierReq)req).FailCallback(resp.Error, customData);
             }
-
-            string customData = ((CreateCollectionReq)req).Data;
-            if (((CreateCollectionReq)req).Callback != null)
-                ((CreateCollectionReq)req).Callback(resp.Success ? collection : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
-        }
-        #endregion
-
-        #region Delete Collection
-        /// <summary>
-        /// Deletes a collection.
-        /// </summary>
-        /// <param name="callback">The OnDeleteCollection callback.</param>
-        /// <param name="collectionID">The collection identifier to delete.</param>
-        /// <param name="customData">Optional custom data.</param>
-        /// <returns>Returns true if succeess, false if failure.</returns>
-        public bool DeleteCollection(OnDeleteCollection callback, string collectionID, string customData = null)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
-            if (string.IsNullOrEmpty(collectionID))
-                throw new ArgumentNullException("collectionID");
-            if (string.IsNullOrEmpty(_apikey))
-                _apikey = Credentials.ApiKey;
-            if (string.IsNullOrEmpty(_apikey))
-                throw new WatsonException("No API Key was found!");
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(CollectionEndpoint, collectionID));
-            if (connector == null)
-                return false;
-
-            DeleteCollectionReq req = new DeleteCollectionReq();
-            req.Callback = callback;
-            req.CollectionID = collectionID;
-            req.Data = customData;
-            req.Parameters["api_key"] = _apikey;
-            req.Parameters["version"] = VersionDate;
-            req.Delete = true;
-            req.Timeout = 20.0f * 60.0f;
-            req.OnResponse = OnDeleteCollectionResp;
-
-            return connector.Send(req);
-        }
-
-        private class DeleteCollectionReq : RESTConnector.Request
-        {
-            /// <summary>
-            /// OnDeleteCollection callback.
-            /// </summary>
-            public OnDeleteCollection Callback { get; set; }
-            /// <summary>
-            /// Collection identifier of the collection to be deleted.
-            /// </summary>
-            public string CollectionID { get; set; }
-            /// <summary>
-            /// Optional data.
-            /// </summary>
-            public string Data { get; set; }
-        }
-
-        private void OnDeleteCollectionResp(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            if (((DeleteCollectionReq)req).Callback != null)
-                ((DeleteCollectionReq)req).Callback(resp.Success, ((DeleteCollectionReq)req).Data);
-        }
-        #endregion
-
-        #region Get Collection
-        /// <summary>
-        /// Retrieve information about a specific collection. Only user-created collections can be specified.
-        /// </summary>
-        /// <param name="callback">The callback.</param>
-        /// <param name="collectionID">The requested collection identifier.</param>
-        /// <param name="customData">Custom data.</param>
-        /// <returns>Returns true if succeess, false if failure.</returns>
-        public bool GetCollection(OnGetCollection callback, string collectionID, string customData = default(string))
-        {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
-            if (string.IsNullOrEmpty(collectionID))
-                throw new ArgumentNullException(collectionID);
-            if (string.IsNullOrEmpty(_apikey))
-                _apikey = Credentials.ApiKey;
-            if (string.IsNullOrEmpty(_apikey))
-                throw new WatsonException("No API Key was found!");
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(CollectionEndpoint, collectionID));
-            if (connector == null)
-                return false;
-
-            GetCollectionReq req = new GetCollectionReq();
-            req.Callback = callback;
-            req.Data = customData;
-            req.CollectionID = collectionID;
-            req.Parameters["api_key"] = _apikey;
-            req.Parameters["version"] = VersionDate;
-            req.Timeout = 20.0f * 60.0f;
-            req.OnResponse = OnGetCollectionResp;
-
-            return connector.Send(req);
-        }
-
-        private class GetCollectionReq : RESTConnector.Request
-        {
-            /// <summary>
-            /// OnGetCollections callback.
-            /// </summary>
-            public OnGetCollection Callback { get; set; }
-            /// <summary>
-            /// Collection identifier of the requested collection.
-            /// </summary>
-            public string CollectionID { get; set; }
-            /// <summary>
-            /// Optional data.
-            /// </summary>
-            public string Data { get; set; }
-        }
-
-        private void OnGetCollectionResp(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            CreateCollection collection = new CreateCollection();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-
-                    object obj = collection;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("VisualRecognition.OnGetCollectionResp()", "GetCollection Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
-            string customData = ((GetCollectionReq)req).Data;
-            if (((GetCollectionReq)req).Callback != null)
-                ((GetCollectionReq)req).Callback(resp.Success ? collection : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
-        }
-        #endregion
-
-        #region Get Collection Images
-        /// <summary>
-        /// List 100 images in a collection
-        /// </summary>
-        /// <param name="callback">The callback.</param>
-        /// <param name="collectionID">The requested collection identifier.</param>
-        /// <param name="customData">Custom data.</param>
-        /// <returns>Returns true if succeess, false if failure.</returns>
-        public bool GetCollectionImages(OnGetCollectionImages callback, string collectionID, string customData = default(string))
-        {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
-            if (string.IsNullOrEmpty(collectionID))
-                throw new ArgumentNullException(collectionID);
-            if (string.IsNullOrEmpty(_apikey))
-                _apikey = Credentials.ApiKey;
-            if (string.IsNullOrEmpty(_apikey))
-                throw new WatsonException("No API Key was found!");
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(ImagesEndpoint, collectionID));
-            if (connector == null)
-                return false;
-
-            GetCollectionImagesReq req = new GetCollectionImagesReq();
-            req.Callback = callback;
-            req.Data = customData;
-            req.CollectionID = collectionID;
-            req.Parameters["api_key"] = _apikey;
-            req.Parameters["version"] = VersionDate;
-            req.Timeout = 20.0f * 60.0f;
-            req.OnResponse = OnGetCollectionImagesResp;
-
-            return connector.Send(req);
-        }
-
-        private class GetCollectionImagesReq : RESTConnector.Request
-        {
-            /// <summary>
-            /// OnGetCollections callback.
-            /// </summary>
-            public OnGetCollectionImages Callback { get; set; }
-            /// <summary>
-            /// Collection identifier of the requested collection.
-            /// </summary>
-            public string CollectionID { get; set; }
-            /// <summary>
-            /// Optional data.
-            /// </summary>
-            public string Data { get; set; }
-        }
-
-        private void OnGetCollectionImagesResp(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            GetCollectionImages collectionImages = new GetCollectionImages();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-
-                    object obj = collectionImages;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("VisualRecognition.OnGetCollectionImagesResp()", "GetCollectionImages Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
-            string customData = ((GetCollectionImagesReq)req).Data;
-            if (((GetCollectionImagesReq)req).Callback != null)
-                ((GetCollectionImagesReq)req).Callback(resp.Success ? collectionImages : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
-        }
-        #endregion
-
-        #region Add Collection Images
-        /// <summary>
-        /// Add an image to a collection via image path on file system and metadata as dictionary.
-        /// </summary>
-        /// <param name="callback">The callback.</param>
-        /// <param name="collectionID">The identifier of the collection to add images to.</param>
-        /// <param name="imagePath">The path in the filesystem of the image to add.</param>
-        /// <param name="metadata">Optional Dictionary key value pairs of metadata associated with the specified image.</param>
-        /// <param name="customData">Optional custom data.</param>
-        /// <returns>Returns true if succeess, false if failure.</returns>
-        public bool AddCollectionImage(OnAddCollectionImage callback, string collectionID, string imagePath, Dictionary<string, string> metadata = null, string customData = null)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
-            if (string.IsNullOrEmpty(collectionID))
-                throw new ArgumentNullException("collectionID");
-            if (string.IsNullOrEmpty(imagePath))
-                throw new ArgumentNullException("imagePath");
-            if (string.IsNullOrEmpty(_apikey))
-                _apikey = Credentials.ApiKey;
-            if (string.IsNullOrEmpty(_apikey))
-                throw new WatsonException("No API Key was found!");
-
-            byte[] imageData = null;
-            if (!string.IsNullOrEmpty(imagePath))
-            {
-                if (LoadFile != null)
-                {
-                    imageData = LoadFile(imagePath);
-                }
-                else
-                {
-#if !UNITY_WEBPLAYER
-                    imageData = File.ReadAllBytes(imagePath);
-#endif
-                }
-
-                if (imageData == null)
-                    Log.Error("VisualRecognition.AddCollectionImage()", "Failed to upload {0}!", imagePath);
-            }
-
-            return AddCollectionImage(callback, collectionID, imageData, Path.GetFileName(imagePath), GetMetadataJson(metadata), customData);
-        }
-
-        /// <summary>
-        /// Add an image to a collection via image path on file system and metadata path on file system.
-        /// </summary>
-        /// <param name="callback">The callback.</param>
-        /// <param name="collectionID">The identifier of the collection to add images to.</param>
-        /// <param name="imagePath">The path in the filesystem of the image to add.</param>
-        /// <param name="metadataPath">Optional path to metadata json associated with the specified image.</param>
-        /// <param name="customData">Optional custom data.</param>
-        /// <returns>Returns true if succeess, false if failure.</returns>
-        public bool AddCollectionImage(OnAddCollectionImage callback, string collectionID, string imagePath, string metadataPath = null, string customData = null)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
-            if (string.IsNullOrEmpty(collectionID))
-                throw new ArgumentNullException("collectionID");
-            if (string.IsNullOrEmpty(imagePath))
-                throw new ArgumentNullException("imagePath");
-            if (string.IsNullOrEmpty(_apikey))
-                _apikey = Credentials.ApiKey;
-            if (string.IsNullOrEmpty(_apikey))
-                throw new WatsonException("No API Key was found!");
-
-            byte[] imageData = null;
-            if (!string.IsNullOrEmpty(imagePath))
-            {
-                if (LoadFile != null)
-                {
-                    imageData = LoadFile(imagePath);
-                }
-                else
-                {
-#if !UNITY_WEBPLAYER
-                    imageData = File.ReadAllBytes(imagePath);
-#endif
-                }
-
-                if (imageData == null)
-                    Log.Error("VisualRecognition.AddCollectionImage()", "Failed to upload {0}!", imagePath);
-            }
-
-            string metadata = null;
-            if (!string.IsNullOrEmpty(metadataPath))
-            {
-                metadata = File.ReadAllText(metadataPath);
-
-                if (string.IsNullOrEmpty(metadata))
-                    Log.Error("VisualRecognition.AddCollectionImage()", "Failed to read {0}!", imagePath);
-            }
-
-            return AddCollectionImage(callback, collectionID, imageData, Path.GetFileName(imagePath), metadata, customData);
-        }
-
-        /// <summary>
-        /// Add an image to a collection.
-        /// </summary>
-        /// <param name="callback">The callback.</param>
-        /// <param name="collectionID">The identifier of the collection to add images to.</param>
-        /// <param name="imageData">The byte[] data of the image to add.</param>
-        /// <param name="metadata">Optional json metadata associated with the specified image.</param>
-        /// <param name="customData">Optional custom data.</param>
-        /// <returns></returns>
-        public bool AddCollectionImage(OnAddCollectionImage callback, string collectionID, byte[] imageData, string filename, string metadata = null, string customData = null)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
-            if (string.IsNullOrEmpty(collectionID))
-                throw new ArgumentNullException("collectionID");
-            if (imageData == default(byte[]))
-                throw new WatsonException("Image data is required!");
-            if (string.IsNullOrEmpty(_apikey))
-                _apikey = Credentials.ApiKey;
-            if (string.IsNullOrEmpty(_apikey))
-                throw new WatsonException("No API Key was found!");
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(ImagesEndpoint, collectionID));
-            if (connector == null)
-                return false;
-
-            AddCollectionImageReq req = new AddCollectionImageReq();
-            req.Callback = callback;
-            req.CollectionID = collectionID;
-            req.ImageData = imageData;
-            req.Metadata = metadata;
-            req.Data = customData;
-
-            req.Parameters["api_key"] = _apikey;
-            req.Parameters["version"] = VersionDate;
-            req.Forms = new Dictionary<string, RESTConnector.Form>();
-            req.Forms["image_file"] = new RESTConnector.Form(imageData, filename, GetMimeType(filename));
-            req.Forms["metadata"] = new RESTConnector.Form(Encoding.UTF8.GetBytes(metadata), "application/json");
-
-            req.Timeout = 20.0f * 60.0f;
-            req.OnResponse = OnAddCollectionImageResp;
-
-            return connector.Send(req);
-        }
-
-        private class AddCollectionImageReq : RESTConnector.Request
-        {
-            /// <summary>
-            /// OnCreateCollection callback.
-            /// </summary>
-            public OnAddCollectionImage Callback { get; set; }
-            /// <summary>
-            /// The collection identifier to add images to.
-            /// </summary>
-            public string CollectionID { get; set; }
-            /// <summary>
-            /// Byte array of Image Data to add to the collection.
-            /// </summary>
-            public byte[] ImageData { get; set; }
-            /// <summary>
-            /// Json metadata associated with this image.
-            /// </summary>
-            public string Metadata { get; set; }
-            /// <summary>
-            /// Optional data.
-            /// </summary>
-            public string Data { get; set; }
-        }
-
-        private void OnAddCollectionImageResp(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            CollectionsConfig collectionsConfig = new CollectionsConfig();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-
-                    object obj = collectionsConfig;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("VisualRecognition.OnAddCollectionImageResp()", "OnCreateCollectionResp Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
-            string customData = ((AddCollectionImageReq)req).Data;
-            if (((AddCollectionImageReq)req).Callback != null)
-                ((AddCollectionImageReq)req).Callback(resp.Success ? collectionsConfig : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
-        }
-        #endregion
-
-        #region Delete Image
-        /// <summary>
-        /// Deletes an image from a collection.
-        /// </summary>
-        /// <param name="callback">The OnDeleteCollection callback.</param>
-        /// <param name="collectionID">The collection identifier holding the image to delete.</param>
-        /// <param name="imageID">The identifier of the image to delete.</param>
-        /// <param name="customData">Optional custom data.</param>
-        /// <returns>Returns true if succeess, false if failure.</returns>
-        public bool DeleteCollectionImage(OnDeleteCollectionImage callback, string collectionID, string imageID, string customData = null)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
-            if (string.IsNullOrEmpty(collectionID))
-                throw new ArgumentNullException("collectionID");
-            if (string.IsNullOrEmpty(imageID))
-                throw new ArgumentNullException("imageID");
-            if (string.IsNullOrEmpty(_apikey))
-                _apikey = Credentials.ApiKey;
-            if (string.IsNullOrEmpty(_apikey))
-                throw new WatsonException("No API Key was found!");
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(ImageEndpoint, collectionID, imageID));
-            if (connector == null)
-                return false;
-
-            DeleteCollectionImageReq req = new DeleteCollectionImageReq();
-            req.Callback = callback;
-            req.CollectionID = collectionID;
-            req.ImageID = imageID;
-            req.Data = customData;
-            req.Parameters["api_key"] = _apikey;
-            req.Parameters["version"] = VersionDate;
-            req.Delete = true;
-            req.Timeout = 20.0f * 60.0f;
-            req.OnResponse = OnDeleteCollectionImageResp;
-
-            return connector.Send(req);
-        }
-
-        private class DeleteCollectionImageReq : RESTConnector.Request
-        {
-            /// <summary>
-            /// OnDeleteCollection callback.
-            /// </summary>
-            public OnDeleteCollectionImage Callback { get; set; }
-            /// <summary>
-            /// Collection identifier containing the image to be deleted.
-            /// </summary>
-            public string CollectionID { get; set; }
-            /// <summary>
-            /// The identifier of the image to be deleted.
-            /// </summary>
-            public string ImageID { get; set; }
-            /// <summary>
-            /// Optional data.
-            /// </summary>
-            public string Data { get; set; }
-        }
-
-        private void OnDeleteCollectionImageResp(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            if (((DeleteCollectionImageReq)req).Callback != null)
-                ((DeleteCollectionImageReq)req).Callback(resp.Success, ((DeleteCollectionImageReq)req).Data);
-        }
-        #endregion
-
-        #region Get Image
-        /// <summary>
-        /// List an image's details.
-        /// </summary>
-        /// <param name="callback">The callback.</param>
-        /// <param name="collectionID">The requested collection identifier.</param>
-        /// <param name="customData">Custom data.</param>
-        /// <returns>Returns true if succeess, false if failure.</returns>
-        public bool GetImage(OnGetImageDetails callback, string collectionID, string imageID, string customData = default(string))
-        {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
-            if (string.IsNullOrEmpty(collectionID))
-                throw new ArgumentNullException(collectionID);
-            if (string.IsNullOrEmpty(imageID))
-                throw new ArgumentNullException(imageID);
-            if (string.IsNullOrEmpty(_apikey))
-                _apikey = Credentials.ApiKey;
-            if (string.IsNullOrEmpty(_apikey))
-                throw new WatsonException("No API Key was found!");
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(ImageEndpoint, collectionID, imageID));
-            if (connector == null)
-                return false;
-
-            GetCollectionImageReq req = new GetCollectionImageReq();
-            req.Callback = callback;
-            req.Data = customData;
-            req.CollectionID = collectionID;
-            req.ImageID = imageID;
-            req.Parameters["api_key"] = _apikey;
-            req.Parameters["version"] = VersionDate;
-            req.Timeout = 20.0f * 60.0f;
-            req.OnResponse = OnGetCollectionImageResp;
-
-            return connector.Send(req);
-        }
-
-        private class GetCollectionImageReq : RESTConnector.Request
-        {
-            /// <summary>
-            /// OnGetCollections callback.
-            /// </summary>
-            public OnGetImageDetails Callback { get; set; }
-            /// <summary>
-            /// Collection identifier of the requested collection.
-            /// </summary>
-            public string CollectionID { get; set; }
-            /// <summary>
-            /// Image identifier for the requested collection.
-            /// </summary>
-            public string ImageID { get; set; }
-            /// <summary>
-            /// Optional data.
-            /// </summary>
-            public string Data { get; set; }
-        }
-
-        private void OnGetCollectionImageResp(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            GetCollectionsBrief image = new GetCollectionsBrief();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-
-                    object obj = image;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("VisualRecognition.OnGetCollectionImageResp()", "GetCollectionImage Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
-            string customData = ((GetCollectionImageReq)req).Data;
-            if (((GetCollectionImageReq)req).Callback != null)
-                ((GetCollectionImageReq)req).Callback(resp.Success ? image : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
-        }
-        #endregion
-
-        #region Delete Image Metadata
-        /// <summary>
-        /// Deletes an image metadata.
-        /// </summary>
-        /// <param name="callback">The Callback.</param>
-        /// <param name="collectionID">The collection identifier holding the image metadata to delete.</param>
-        /// <param name="imageID">The identifier of the image metadata to delete.</param>
-        /// <param name="customData">Optional custom data.</param>
-        /// <returns>Returns true if succeess, false if failure.</returns>
-        public bool DeleteCollectionImageMetadata(OnDeleteImageMetadata callback, string collectionID, string imageID, string customData = null)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
-            if (string.IsNullOrEmpty(collectionID))
-                throw new ArgumentNullException("collectionID");
-            if (string.IsNullOrEmpty(imageID))
-                throw new ArgumentNullException("imageID");
-            if (string.IsNullOrEmpty(_apikey))
-                _apikey = Credentials.ApiKey;
-            if (string.IsNullOrEmpty(_apikey))
-                throw new WatsonException("No API Key was found!");
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(MetadataEndpoint, collectionID, imageID));
-            if (connector == null)
-                return false;
-
-            DeleteCollectionImageMetadataReq req = new DeleteCollectionImageMetadataReq();
-            req.Callback = callback;
-            req.CollectionID = collectionID;
-            req.ImageID = imageID;
-            req.Data = customData;
-            req.Parameters["api_key"] = _apikey;
-            req.Parameters["version"] = VersionDate;
-            req.Delete = true;
-            req.Timeout = 20.0f * 60.0f;
-            req.OnResponse = OnDeleteCollectionImageMetadataResp;
-
-            return connector.Send(req);
-        }
-
-        private class DeleteCollectionImageMetadataReq : RESTConnector.Request
-        {
-            /// <summary>
-            /// OnDeleteCollection callback.
-            /// </summary>
-            public OnDeleteImageMetadata Callback { get; set; }
-            /// <summary>
-            /// Collection identifier containing the image to be deleted.
-            /// </summary>
-            public string CollectionID { get; set; }
-            /// <summary>
-            /// The identifier of the image to be deleted.
-            /// </summary>
-            public string ImageID { get; set; }
-            /// <summary>
-            /// Optional data.
-            /// </summary>
-            public string Data { get; set; }
-        }
-
-        private void OnDeleteCollectionImageMetadataResp(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            if (((DeleteCollectionImageMetadataReq)req).Callback != null)
-                ((DeleteCollectionImageMetadataReq)req).Callback(resp.Success, ((DeleteCollectionImageMetadataReq)req).Data);
-        }
-        #endregion
-
-        #region List Image Metadata
-        /// <summary>
-        /// List image metadata..
-        /// </summary>
-        /// <param name="callback">The callback.</param>
-        /// <param name="collectionID">The requested collection identifier.</param>
-        /// <param name="imageID">The requested image identifier.</param>
-        /// <param name="customData">Custom data.</param>
-        /// <returns>Returns true if succeess, false if failure.</returns>
-        public bool GetMetadata(OnGetImageMetadata callback, string collectionID, string imageID, string customData = default(string))
-        {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
-            if (string.IsNullOrEmpty(collectionID))
-                throw new ArgumentNullException(collectionID);
-            if (string.IsNullOrEmpty(imageID))
-                throw new ArgumentNullException(imageID);
-            if (string.IsNullOrEmpty(_apikey))
-                _apikey = Credentials.ApiKey;
-            if (string.IsNullOrEmpty(_apikey))
-                throw new WatsonException("No API Key was found!");
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(MetadataEndpoint, collectionID, imageID));
-            if (connector == null)
-                return false;
-
-            GetCollectionImageMetadataReq req = new GetCollectionImageMetadataReq();
-            req.Callback = callback;
-            req.Data = customData;
-            req.CollectionID = collectionID;
-            req.ImageID = imageID;
-            req.Parameters["api_key"] = _apikey;
-            req.Parameters["version"] = VersionDate;
-            req.Timeout = 20.0f * 60.0f;
-            req.OnResponse = OnGetCollectionImageMetadataResp;
-
-            return connector.Send(req);
-        }
-
-        private class GetCollectionImageMetadataReq : RESTConnector.Request
-        {
-            /// <summary>
-            /// OnGetCollections callback.
-            /// </summary>
-            public OnGetImageMetadata Callback { get; set; }
-            /// <summary>
-            /// Collection identifier of the requested metadata.
-            /// </summary>
-            public string CollectionID { get; set; }
-            /// <summary>
-            /// Image identifier for the requested metadata.
-            /// </summary>
-            public string ImageID { get; set; }
-            /// <summary>
-            /// Optional data.
-            /// </summary>
-            public string Data { get; set; }
-        }
-
-        private void OnGetCollectionImageMetadataResp(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            GetCollectionsBrief image = new GetCollectionsBrief();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-
-                    object obj = image;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("VisualRecognition.OnGetCollectionImageMetadataResp()", "GetCollectionImage Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
-            string customData = ((GetCollectionImageMetadataReq)req).Data;
-            if (((GetCollectionImageMetadataReq)req).Callback != null)
-                ((GetCollectionImageMetadataReq)req).Callback(resp.Success ? image : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
-        }
-        #endregion
-
-        #region Find Similar Images
-        /// <summary>
-        /// Find Similar Images by image path.
-        /// </summary>
-        /// <param name="callback">The callback.</param>
-        /// <param name="collectionID">The identifier of the collection to add images to.</param>
-        /// <param name="imagePath">The path in the filesystem of the image to query.</param>
-        /// <param name="limit">The number of similar results you want returned. Default limit is 10 results, you can specify a maximum limit of 100 results.</param>
-        /// <param name="customData">Optional custom data.</param>
-        /// <returns>Returns true if succeess, false if failure.</returns>
-        public bool FindSimilar(OnFindSimilar callback, string collectionID, string imagePath, int limit = 10, string customData = null)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
-            if (string.IsNullOrEmpty(collectionID))
-                throw new ArgumentNullException("collectionID");
-            if (string.IsNullOrEmpty(imagePath))
-                throw new ArgumentNullException("imagePath");
-            if (string.IsNullOrEmpty(_apikey))
-                _apikey = Credentials.ApiKey;
-            if (string.IsNullOrEmpty(_apikey))
-                throw new WatsonException("No API Key was found!");
-
-            byte[] imageData = null;
-            if (!string.IsNullOrEmpty(imagePath))
-            {
-                if (LoadFile != null)
-                {
-                    imageData = LoadFile(imagePath);
-                }
-                else
-                {
-#if !UNITY_WEBPLAYER
-                    imageData = File.ReadAllBytes(imagePath);
-#endif
-                }
-
-                if (imageData == null)
-                    Log.Error("VisualRecognition.FindSimilar()", "Failed to upload {0}!", imagePath);
-            }
-
-            return FindSimilar(callback, collectionID, imageData, limit, customData);
-        }
-
-        /// <summary>
-        /// Find Similar Images by byte[].
-        /// </summary>
-        /// <param name="callback">The callback.</param>
-        /// <param name="collectionID">The identifier of the collection to add images to.</param>
-        /// <param name="imageData">The byte[] data of the image to query.</param>
-        /// <param name="limit">The number of similar results you want returned. Default limit is 10 results, you can specify a maximum limit of 100 results.</param>
-        /// <param name="customData">Optional custom data.</param>
-        /// <returns></returns>
-        public bool FindSimilar(OnFindSimilar callback, string collectionID, byte[] imageData, int limit = 10, string customData = null)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
-            if (string.IsNullOrEmpty(collectionID))
-                throw new ArgumentNullException("collectionID");
-            if (imageData == default(byte[]))
-                throw new WatsonException("Image data is required!");
-            if (string.IsNullOrEmpty(_apikey))
-                _apikey = Credentials.ApiKey;
-            if (string.IsNullOrEmpty(_apikey))
-                throw new WatsonException("No API Key was found!");
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(FindSimilarEndpoint, collectionID));
-            if (connector == null)
-                return false;
-
-            FindSimilarReq req = new FindSimilarReq();
-            req.Callback = callback;
-            req.CollectionID = collectionID;
-            req.ImageData = imageData;
-            req.Limit = limit;
-            req.Data = customData;
-
-            req.Parameters["api_key"] = _apikey;
-            req.Parameters["version"] = VersionDate;
-            req.Forms = new Dictionary<string, RESTConnector.Form>();
-            req.Forms["image_file"] = new RESTConnector.Form(imageData);
-
-            req.Timeout = 20.0f * 60.0f;
-            req.OnResponse = OnFindSimilarResp;
-
-            return connector.Send(req);
-        }
-
-        private class FindSimilarReq : RESTConnector.Request
-        {
-            /// <summary>
-            /// OnCreateCollection callback.
-            /// </summary>
-            public OnFindSimilar Callback { get; set; }
-            /// <summary>
-            /// The collection identifier to add images to.
-            /// </summary>
-            public string CollectionID { get; set; }
-            /// <summary>
-            /// Byte array of Image Data to add to the collection.
-            /// </summary>
-            public byte[] ImageData { get; set; }
-            /// <summary>
-            /// Json metadata associated with this image.
-            /// </summary>
-            public int Limit { get; set; }
-            /// <summary>
-            /// Optional data.
-            /// </summary>
-            public string Data { get; set; }
-        }
-
-        private void OnFindSimilarResp(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            SimilarImagesConfig config = new SimilarImagesConfig();
-            fsData data = null;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-
-                    object obj = config;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("VisualRecognition.OnFindSimilarResp()", "OnCreateCollectionResp Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
-            string customData = ((FindSimilarReq)req).Data;
-            if (((FindSimilarReq)req).Callback != null)
-                ((FindSimilarReq)req).Callback(resp.Success ? config : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
         }
         #endregion
 
