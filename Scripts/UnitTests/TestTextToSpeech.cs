@@ -293,35 +293,35 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void OnGetVoices(Voices voices, Dictionary<string, object> customData)
         {
-            Log.Debug("TestTextToSpeech.OnGetVoices()", "Text to Speech - Get voices response: {0}", customData["json"].ToString());
+            Log.Debug("TestTextToSpeech.OnGetVoices()", "{0}", customData["json"].ToString());
             Test(voices != null);
             _getVoicesTested = true;
         }
 
         private void OnGetVoice(Voice voice, Dictionary<string, object> customData)
         {
-            Log.Debug("TestTextToSpeech.OnGetVoice()", "Text to Speech - Get voice  response: {0}", customData["json"].ToString());
+            Log.Debug("TestTextToSpeech.OnGetVoice()", "{0}", customData["json"].ToString());
             Test(voice != null);
             _getVoiceTested = true;
         }
 
         private void OnGetPronunciation(Pronunciation pronunciation, Dictionary<string, object> customData)
         {
-            Log.Debug("TestTextToSpeech.OnGetPronunciation()", "Text to Speech - Get pronunciation response: {0}", customData["json"].ToString());
+            Log.Debug("TestTextToSpeech.OnGetPronunciation()", "{0}", customData["json"].ToString());
             Test(pronunciation != null);
             _getPronuciationTested = true;
         }
 
         private void OnGetCustomizations(Customizations customizations, Dictionary<string, object> customData)
         {
-            Log.Debug("TestTextToSpeech.OnGetCustomizations()", "Text to Speech - Get customizations response: {0}", customData["json"].ToString());
+            Log.Debug("TestTextToSpeech.OnGetCustomizations()", "{0}", customData["json"].ToString());
             Test(customizations != null);
             _getCustomizationsTested = true;
         }
 
         private void OnCreateCustomization(CustomizationID customizationID, Dictionary<string, object> customData)
         {
-            Log.Debug("TestTextToSpeech.OnCreateCustomization()", "Text to Speech - Create customization response: {0}", customData["json"].ToString());
+            Log.Debug("TestTextToSpeech.OnCreateCustomization()", "{0}", customData["json"].ToString());
             _createdCustomizationId = customizationID.customization_id;
             Test(customizationID != null);
             _createCustomizationTested = true;
@@ -329,7 +329,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void OnDeleteCustomization(bool success, Dictionary<string, object> customData)
         {
-            Log.Debug("TestTextToSpeech.OnDeleteCustomization()", "Text to Speech - Delete customization response: {0}", customData["json"].ToString());
+            Log.Debug("TestTextToSpeech.OnDeleteCustomization()", "{0}", customData["json"].ToString());
             _createdCustomizationId = null;
             Test(success);
             _deleteCustomizationTested = true;
@@ -337,42 +337,42 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void OnGetCustomization(Customization customization, Dictionary<string, object> customData)
         {
-            Log.Debug("TestTextToSpeech.OnGetCustomization()", "Text to Speech - Get customization response: {0}", customData["json"].ToString());
+            Log.Debug("TestTextToSpeech.OnGetCustomization()", "{0}", customData["json"].ToString());
             Test(customization != null);
             _getCustomizationTested = true;
         }
 
         private void OnUpdateCustomization(bool success, Dictionary<string, object> customData)
         {
-            Log.Debug("TestTextToSpeech.OnUpdateCustomization()", "Text to Speech - Update customization response: {0}", customData["json"].ToString());
+            Log.Debug("TestTextToSpeech.OnUpdateCustomization()", "{0}", customData["json"].ToString());
             Test(success);
             _updateCustomizationTested = true;
         }
 
         private void OnGetCustomizationWords(Words words, Dictionary<string, object> customData)
         {
-            Log.Debug("TestTextToSpeech.OnGetCustomizationWords()", "Text to Speech - Get customization words response: {0}", customData["json"].ToString());
+            Log.Debug("TestTextToSpeech.OnGetCustomizationWords()", "{0}", customData["json"].ToString());
             Test(words != null);
             _getCustomizationWordsTested = true;
         }
 
         private void OnAddCustomizationWords(bool success, Dictionary<string, object> customData)
         {
-            Log.Debug("TestTextToSpeech.OnAddCustomizationWords()", "Text to Speech - Add customization words response: {0}", customData["json"].ToString());
+            Log.Debug("TestTextToSpeech.OnAddCustomizationWords()", "{0}", customData["json"].ToString());
             Test(success);
             _addCustomizationWordsTested = true;
         }
 
         private void OnDeleteCustomizationWord(bool success, Dictionary<string, object> customData)
         {
-            Log.Debug("TestTextToSpeech.OnDeleteCustomizationWord()", "Text to Speech - Delete customization word response: {0}", customData["json"].ToString());
+            Log.Debug("TestTextToSpeech.OnDeleteCustomizationWord()", "{0}", customData["json"].ToString());
             Test(success);
             _deleteCustomizationWordTested = true;
         }
 
         private void OnGetCustomizationWord(Translation translation, Dictionary<string, object> customData)
         {
-            Log.Debug("TestTextToSpeech.OnGetCustomizationWord()", "Text to Speech - Get customization word response: {0}", customData["json"].ToString());
+            Log.Debug("TestTextToSpeech.OnGetCustomizationWord()", "{0}", customData["json"].ToString());
             Test(translation != null);
             _getCustomizationWordTested = true;
         }

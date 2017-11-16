@@ -433,20 +433,20 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void DeleteAcousticResource()
         {
-            Log.Debug("ExampleSpeechToText.Examples()", "Attempting to delete audio resource {1} from {0}", _createdAcousticModelId, _acousticResourceName);
+            Log.Debug("ExampleSpeechToText.DeleteAcousticResource()", "Attempting to delete audio resource {1} from {0}", _createdAcousticModelId, _acousticResourceName);
             _speechToText.DeleteAcousticResource(HandleDeleteAcousticResource, OnFail, _createdAcousticModelId, _acousticResourceName);
         }
 
         private void DeleteAcousticCustomization()
         {
-            Log.Debug("ExampleSpeechToText.Examples()", "Attempting to delete acoustic customization {0}", _createdAcousticModelId);
+            Log.Debug("ExampleSpeechToText.DeleteAcousticCustomization()", "Attempting to delete acoustic customization {0}", _createdAcousticModelId);
             _speechToText.DeleteAcousticCustomization(HandleDeleteAcousticCustomization, OnFail, _createdAcousticModelId);
         }
 
         private void HandleGetModels(ModelSet result, Dictionary<string, object> customData)
         {
 
-            Log.Debug("ExampleSpeechToText.Examples()", "Speech to Text - Get models response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleSpeechToText.HandleGetModels()", "{0}", customData["json"].ToString());
             _modelNameToGet = (result.models[UnityEngine.Random.Range(0, result.models.Length - 1)] as Model).name;
             Test(result != null);
             _getModelsTested = true;
@@ -454,7 +454,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void HandleGetModel(Model model, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleSpeechToText.Examples()", "Speech to Text - Get model response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleSpeechToText.HandleGetModel()", "{0}", customData["json"].ToString());
             Test(model != null);
             _getModelTested = true;
         }
