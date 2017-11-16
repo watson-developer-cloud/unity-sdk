@@ -191,7 +191,7 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3
 
         private void GetProfileResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            Profile response = new Profile();
+            Profile result = new Profile();
             fsData data = null;
             Dictionary<string, object> customData = ((GetProfileRequest)req).CustomData;
 
@@ -203,7 +203,7 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = response;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -220,7 +220,7 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3
             if (resp.Success)
             {
                 if (((GetProfileRequest)req).SuccessCallback != null)
-                    ((GetProfileRequest)req).SuccessCallback(response, customData);
+                    ((GetProfileRequest)req).SuccessCallback(result, customData);
             }
             else
             {

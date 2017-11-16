@@ -199,7 +199,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
         private void OnGetAuthorsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            AuthorsData authorsData = new AuthorsData();
+            AuthorsData result = new AuthorsData();
             fsData data = null;
             Dictionary<string, object> customData = ((GetAuthorsRequest)req).CustomData;
 
@@ -211,7 +211,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = authorsData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -228,7 +228,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             if (resp.Success)
             {
                 if (((GetAuthorsRequest)req).SuccessCallback != null)
-                    ((GetAuthorsRequest)req).SuccessCallback(authorsData, customData);
+                    ((GetAuthorsRequest)req).SuccessCallback(result, customData);
             }
             else
             {
@@ -340,7 +340,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
         private void OnGetRankedConceptsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            ConceptsData conceptsData = new ConceptsData();
+            ConceptsData result = new ConceptsData();
             fsData data = null;
             Dictionary<string, object> customData = ((GetRankedConceptsRequest)req).CustomData;
 
@@ -352,7 +352,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = conceptsData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -369,7 +369,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             if (resp.Success)
             {
                 if (((GetRankedConceptsRequest)req).SuccessCallback != null)
-                    ((GetRankedConceptsRequest)req).SuccessCallback(conceptsData, customData);
+                    ((GetRankedConceptsRequest)req).SuccessCallback(result, customData);
             }
             else
             {
@@ -479,7 +479,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
         private void OnGetDatesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DateData dateData = new DateData();
+            DateData result = new DateData();
             fsData data = null;
             Dictionary<string, object> customData = ((GetDatesRequest)req).CustomData;
 
@@ -491,7 +491,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = dateData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -508,7 +508,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             if (resp.Success)
             {
                 if (((GetDatesRequest)req).SuccessCallback != null)
-                    ((GetDatesRequest)req).SuccessCallback(dateData, customData);
+                    ((GetDatesRequest)req).SuccessCallback(result, customData);
             }
             else
             {
@@ -621,7 +621,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
         private void OnGetEmotionsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            EmotionData emotionData = new EmotionData();
+            EmotionData result = new EmotionData();
             fsData data = null;
             Dictionary<string, object> customData = ((GetEmotionsRequest)req).CustomData;
 
@@ -633,7 +633,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = emotionData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -650,7 +650,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             if (resp.Success)
             {
                 if (((GetEmotionsRequest)req).SuccessCallback != null)
-                    ((GetEmotionsRequest)req).SuccessCallback(emotionData, customData);
+                    ((GetEmotionsRequest)req).SuccessCallback(result, customData);
             }
             else
             {
@@ -782,7 +782,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
         private void OnGetEntitiesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            EntityData entityData = new EntityData();
+            EntityData result = new EntityData();
             fsData data = null;
             Dictionary<string, object> customData = ((GetEntitiesRequest)req).CustomData;
 
@@ -794,7 +794,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = entityData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -811,7 +811,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             if (resp.Success)
             {
                 if (((GetEntitiesRequest)req).SuccessCallback != null)
-                    ((GetEntitiesRequest)req).SuccessCallback(entityData, customData);
+                    ((GetEntitiesRequest)req).SuccessCallback(result, customData);
             }
             else
             {
@@ -911,7 +911,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
         private void OnDetectFeedsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            FeedData feedData = new FeedData();
+            FeedData result = new FeedData();
             fsData data = null;
             Dictionary<string, object> customData = ((DetectFeedsRequest)req).CustomData;
 
@@ -923,7 +923,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = feedData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -940,7 +940,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             if (resp.Success)
             {
                 if (((DetectFeedsRequest)req).SuccessCallback != null)
-                    ((DetectFeedsRequest)req).SuccessCallback(feedData, customData);
+                    ((DetectFeedsRequest)req).SuccessCallback(result, customData);
             }
             else
             {
@@ -1058,7 +1058,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
         private void OnGetKeywordsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            KeywordData keywordData = new KeywordData();
+            KeywordData result = new KeywordData();
             fsData data = null;
             Dictionary<string, object> customData = ((GetKeywordsRequest)req).CustomData;
 
@@ -1070,7 +1070,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = keywordData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -1087,7 +1087,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             if (resp.Success)
             {
                 if (((GetKeywordsRequest)req).SuccessCallback != null)
-                    ((GetKeywordsRequest)req).SuccessCallback(keywordData, customData);
+                    ((GetKeywordsRequest)req).SuccessCallback(result, customData);
             }
             else
             {
@@ -1193,7 +1193,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
         private void OnGetLanguagesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            LanguageData languageData = new LanguageData();
+            LanguageData result = new LanguageData();
             fsData data = null;
             Dictionary<string, object> customData = ((GetLanguagesRequest)req).CustomData;
 
@@ -1205,7 +1205,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = languageData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -1222,7 +1222,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             if (resp.Success)
             {
                 if (((GetLanguagesRequest)req).SuccessCallback != null)
-                    ((GetLanguagesRequest)req).SuccessCallback(languageData, customData);
+                    ((GetLanguagesRequest)req).SuccessCallback(result, customData);
             }
             else
             {
@@ -1322,7 +1322,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
         private void OnGetMicroformatsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            MicroformatData microformatData = new MicroformatData();
+            MicroformatData result = new MicroformatData();
             fsData data = null;
             Dictionary<string, object> customData = ((GetMicroformatsRequest)req).CustomData;
 
@@ -1334,7 +1334,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = microformatData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -1351,7 +1351,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             if (resp.Success)
             {
                 if (((GetMicroformatsRequest)req).SuccessCallback != null)
-                    ((GetMicroformatsRequest)req).SuccessCallback(microformatData, customData);
+                    ((GetMicroformatsRequest)req).SuccessCallback(result, customData);
             }
             else
             {
@@ -1454,7 +1454,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
         private void OnGetPublicationDateResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            PubDateData pubDateData = new PubDateData();
+            PubDateData result = new PubDateData();
             fsData data = null;
             Dictionary<string, object> customData = ((GetPublicationDateRequest)req).CustomData;
 
@@ -1466,7 +1466,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = pubDateData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -1483,7 +1483,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             if (resp.Success)
             {
                 if (((GetPublicationDateRequest)req).SuccessCallback != null)
-                    ((GetPublicationDateRequest)req).SuccessCallback(pubDateData, customData);
+                    ((GetPublicationDateRequest)req).SuccessCallback(result, customData);
             }
             else
             {
@@ -1622,7 +1622,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
         private void OnGetRelationsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            RelationsData relationsData = new RelationsData();
+            RelationsData result = new RelationsData();
             fsData data = null;
             Dictionary<string, object> customData = ((GetRelationsRequest)req).CustomData;
 
@@ -1634,7 +1634,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = relationsData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -1651,7 +1651,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             if (resp.Success)
             {
                 if (((GetRelationsRequest)req).SuccessCallback != null)
-                    ((GetRelationsRequest)req).SuccessCallback(relationsData, customData);
+                    ((GetRelationsRequest)req).SuccessCallback(result, customData);
             }
             else
             {
@@ -1757,7 +1757,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
         private void OnGetTextSentimentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            SentimentData sentimentData = new SentimentData();
+            SentimentData result = new SentimentData();
             fsData data = null;
             Dictionary<string, object> customData = ((GetTextSentimentRequest)req).CustomData;
 
@@ -1769,7 +1769,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = sentimentData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -1786,7 +1786,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             if (resp.Success)
             {
                 if (((GetTextSentimentRequest)req).SuccessCallback != null)
-                    ((GetTextSentimentRequest)req).SuccessCallback(sentimentData, customData);
+                    ((GetTextSentimentRequest)req).SuccessCallback(result, customData);
             }
             else
             {
@@ -1896,7 +1896,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
         private void OnGetTargetedSentimentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            TargetedSentimentData sentimentData = new TargetedSentimentData();
+            TargetedSentimentData result = new TargetedSentimentData();
             fsData data = null;
             Dictionary<string, object> customData = ((GetTargetedSentimentRequest)req).CustomData;
 
@@ -1908,7 +1908,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = sentimentData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -1925,7 +1925,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             if (resp.Success)
             {
                 if (((GetTargetedSentimentRequest)req).SuccessCallback != null)
-                    ((GetTargetedSentimentRequest)req).SuccessCallback(sentimentData, customData);
+                    ((GetTargetedSentimentRequest)req).SuccessCallback(result, customData);
             }
             else
             {
@@ -2031,7 +2031,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
         private void OnGetRankedTaxonomyResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            TaxonomyData taxonomyData = new TaxonomyData();
+            TaxonomyData result = new TaxonomyData();
             fsData data = null;
             Dictionary<string, object> customData = ((GetRankedTaxonomyRequest)req).CustomData;
 
@@ -2043,7 +2043,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = taxonomyData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -2060,7 +2060,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             if (resp.Success)
             {
                 if (((GetRankedTaxonomyRequest)req).SuccessCallback != null)
-                    ((GetRankedTaxonomyRequest)req).SuccessCallback(taxonomyData, customData);
+                    ((GetRankedTaxonomyRequest)req).SuccessCallback(result, customData);
             }
             else
             {
@@ -2167,7 +2167,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
         private void OnGetTextResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            TextData textData = new TextData();
+            TextData result = new TextData();
             fsData data = null;
             Dictionary<string, object> customData = ((GetTextRequest)req).CustomData;
 
@@ -2179,7 +2179,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = textData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -2196,7 +2196,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             if (resp.Success)
             {
                 if (((GetTextRequest)req).SuccessCallback != null)
-                    ((GetTextRequest)req).SuccessCallback(textData, customData);
+                    ((GetTextRequest)req).SuccessCallback(result, customData);
             }
             else
             {
@@ -2369,7 +2369,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
         private void OnGetTitleResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            Title titleData = new Title();
+            Title result = new Title();
             fsData data = null;
             Dictionary<string, object> customData = ((GetTitleRequest)req).CustomData;
 
@@ -2381,7 +2381,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = titleData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -2398,7 +2398,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             if (resp.Success)
             {
                 if (((GetTitleRequest)req).SuccessCallback != null)
-                    ((GetTitleRequest)req).SuccessCallback(titleData, customData);
+                    ((GetTitleRequest)req).SuccessCallback(result, customData);
             }
             else
             {
@@ -2580,7 +2580,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
         private void OnCombinedCallResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            CombinedCallData combinedData = new CombinedCallData();
+            CombinedCallData result = new CombinedCallData();
             fsData data = null;
             Dictionary<string, object> customData = ((CombinedCallRequest)req).CustomData;
 
@@ -2592,7 +2592,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = combinedData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -2609,7 +2609,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             if (resp.Success)
             {
                 if (((CombinedCallRequest)req).SuccessCallback != null)
-                    ((CombinedCallRequest)req).SuccessCallback(combinedData, customData);
+                    ((CombinedCallRequest)req).SuccessCallback(result, customData);
             }
             else
             {
@@ -2704,7 +2704,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
 
         private void OnGetNewsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            NewsResponse newsData = new NewsResponse();
+            NewsResponse result = new NewsResponse();
             fsData data = null;
             Dictionary<string, object> customData = ((GetNewsRequest)req).CustomData;
 
@@ -2716,7 +2716,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = newsData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -2733,7 +2733,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             if (resp.Success)
             {
                 if (((GetNewsRequest)req).SuccessCallback != null)
-                    ((GetNewsRequest)req).SuccessCallback(newsData, customData);
+                    ((GetNewsRequest)req).SuccessCallback(result, customData);
             }
             else
             {

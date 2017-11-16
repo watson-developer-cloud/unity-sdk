@@ -197,7 +197,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
         };
         private void TranslateResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            Translations translations = new Translations();
+            Translations result = new Translations();
             fsData data = null;
             Dictionary<string, object> customData = ((TranslateReq)req).CustomData;
 
@@ -209,7 +209,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = translations;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -226,7 +226,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
             if (resp.Success)
             {
                 if (((TranslateReq)req).SuccessCallback != null)
-                    ((TranslateReq)req).SuccessCallback(translations, customData);
+                    ((TranslateReq)req).SuccessCallback(result, customData);
             }
             else
             {
@@ -317,7 +317,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
 
         private void GetModelsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            TranslationModels translationModels = new TranslationModels();
+            TranslationModels result = new TranslationModels();
             fsData data = null;
             Dictionary<string, object> customData = ((GetModelsReq)req).CustomData;
 
@@ -329,7 +329,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = translationModels;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -346,7 +346,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
             if (resp.Success)
             {
                 if (((GetModelsReq)req).SuccessCallback != null)
-                    ((GetModelsReq)req).SuccessCallback(translationModels, customData);
+                    ((GetModelsReq)req).SuccessCallback(result, customData);
             }
             else
             {
@@ -402,7 +402,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
 
         private void GetModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            TranslationModel translationModel = new TranslationModel();
+            TranslationModel result = new TranslationModel();
             fsData data = null;
             Dictionary<string, object> customData = ((GetModelReq)req).CustomData;
 
@@ -414,7 +414,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = translationModel;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -431,7 +431,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
             if (resp.Success)
             {
                 if (((GetModelReq)req).SuccessCallback != null)
-                    ((GetModelReq)req).SuccessCallback(translationModel, customData);
+                    ((GetModelReq)req).SuccessCallback(result, customData);
             }
             else
             {
@@ -486,7 +486,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
 
         private void GetLanguagesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            Languages languages = new Languages();
+            Languages result = new Languages();
             fsData data = null;
             Dictionary<string, object> customData = ((GetLanguagesReq)req).CustomData;
 
@@ -498,7 +498,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = languages;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -515,7 +515,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
             if (resp.Success)
             {
                 if (((GetLanguagesReq)req).SuccessCallback != null)
-                    ((GetLanguagesReq)req).SuccessCallback(languages, customData);
+                    ((GetLanguagesReq)req).SuccessCallback(result, customData);
             }
             else
             {
@@ -575,7 +575,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
 
         private void OnIdentifyResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            IdentifyReq identifyReq = new IdentifyReq();
+            IdentifyReq result = new IdentifyReq();
             fsData data = null;
             Dictionary<string, object> customData = ((IdentifyReq)req).CustomData;
 
@@ -587,7 +587,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = identifyReq;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -604,7 +604,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
             if (resp.Success)
             {
                 if (((IdentifyReq)req).SuccessCallback != null)
-                    ((IdentifyReq)req).SuccessCallback(identifyReq, customData);
+                    ((IdentifyReq)req).SuccessCallback(result, customData);
             }
             else
             {

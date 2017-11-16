@@ -197,7 +197,7 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
 
         private void ConvertDocumentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            ConvertedDocument response = new ConvertedDocument();
+            ConvertedDocument result = new ConvertedDocument();
             fsData data = null;
             fsResult r;
             Dictionary<string, object> customData = ((ConvertDocumentRequest)req).CustomData;
@@ -212,7 +212,7 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
                         if (!r.Succeeded)
                             throw new WatsonException(r.FormattedMessages);
 
-                        object obj = response;
+                        object obj = result;
                         r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                         if (!r.Succeeded)
                             throw new WatsonException(r.FormattedMessages);
@@ -230,7 +230,7 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
 #if NETFX_CORE
                     response.htmlContent = System.Text.Encoding.GetEncoding(0).GetString(resp.Data);
 #else
-                    response.htmlContent = System.Text.Encoding.Default.GetString(resp.Data);
+                    result.htmlContent = System.Text.Encoding.Default.GetString(resp.Data);
 #endif
                     customData.Add("json", data);
                 }
@@ -239,7 +239,7 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
 #if NETFX_CORE
                     response.textContent = System.Text.Encoding.GetEncoding(0).GetString(resp.Data);
 #else
-                    response.textContent = System.Text.Encoding.Default.GetString(resp.Data);
+                    result.textContent = System.Text.Encoding.Default.GetString(resp.Data);
 #endif
                     customData.Add("json", data);
                 }
@@ -248,7 +248,7 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
             if (resp.Success)
             {
                 if (((ConvertDocumentRequest)req).SuccessCallback != null)
-                    ((ConvertDocumentRequest)req).SuccessCallback(response, customData);
+                    ((ConvertDocumentRequest)req).SuccessCallback(result, customData);
             }
             else
             {

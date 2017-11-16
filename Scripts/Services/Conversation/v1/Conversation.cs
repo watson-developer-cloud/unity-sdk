@@ -235,7 +235,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 
         private void MessageResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            object dataObject = null;
+            object result = null;
             string data = "";
             Dictionary<string, object> customData = ((MessageReq)req).CustomData;
 
@@ -245,7 +245,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
                 {
                     //  For deserializing into a generic object
                     data = Encoding.UTF8.GetString(resp.Data);
-                    dataObject = Json.Deserialize(data);
+                    result = Json.Deserialize(data);
                     customData.Add("json", data);
                 }
                 catch (Exception e)
@@ -259,7 +259,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
             if (resp.Success)
             {
                 if (((MessageReq)req).SuccessCallback != null)
-                    ((MessageReq)req).SuccessCallback(dataObject, customData);
+                    ((MessageReq)req).SuccessCallback(result, customData);
             }
             else
             {

@@ -174,7 +174,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         private void OnGetEnvironmentsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            GetEnvironmentsResponse environmentsData = new GetEnvironmentsResponse();
+            GetEnvironmentsResponse result = new GetEnvironmentsResponse();
             fsData data = null;
             Dictionary<string, object> customData = ((GetEnvironmentsRequest)req).CustomData;
 
@@ -186,7 +186,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = environmentsData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -203,7 +203,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             if (resp.Success)
             {
                 if (((GetEnvironmentsRequest)req).SuccessCallback != null)
-                    ((GetEnvironmentsRequest)req).SuccessCallback(environmentsData, customData);
+                    ((GetEnvironmentsRequest)req).SuccessCallback(result, customData);
             }
             else
             {
@@ -292,7 +292,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         private void OnAddEnvironmentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            Environment environmentData = new Environment();
+            Environment result = new Environment();
             fsData data = null;
             Dictionary<string, object> customData = ((AddEnvironmentRequest)req).CustomData;
 
@@ -304,7 +304,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = environmentData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -321,7 +321,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             if (resp.Success)
             {
                 if (((AddEnvironmentRequest)req).SuccessCallback != null)
-                    ((AddEnvironmentRequest)req).SuccessCallback(environmentData, customData);
+                    ((AddEnvironmentRequest)req).SuccessCallback(result, customData);
             }
             else
             {
@@ -381,7 +381,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         private void OnGetEnvironmentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            Environment environmentData = new Environment();
+            Environment result = new Environment();
             fsData data = null;
             Dictionary<string, object> customData = ((GetEnvironmentRequest)req).CustomData;
 
@@ -393,7 +393,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = environmentData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -410,7 +410,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             if (resp.Success)
             {
                 if (((GetEnvironmentRequest)req).SuccessCallback != null)
-                    ((GetEnvironmentRequest)req).SuccessCallback(environmentData, customData);
+                    ((GetEnvironmentRequest)req).SuccessCallback(result, customData);
             }
             else
             {
@@ -471,7 +471,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         private void OnDeleteEnvironmentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DeleteEnvironmentResponse deleteEnvironmentResponse = new DeleteEnvironmentResponse();
+            DeleteEnvironmentResponse result = new DeleteEnvironmentResponse();
             fsData data = null;
             Dictionary<string, object> customData = ((DeleteEnvironmentRequest)req).CustomData;
 
@@ -483,7 +483,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = deleteEnvironmentResponse;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -500,7 +500,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             if (resp.Success)
             {
                 if (((DeleteEnvironmentRequest)req).SuccessCallback != null)
-                    ((DeleteEnvironmentRequest)req).SuccessCallback(deleteEnvironmentResponse, customData);
+                    ((DeleteEnvironmentRequest)req).SuccessCallback(result, customData);
             }
             else
             {
@@ -565,7 +565,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         private void OnGetConfigurationsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            GetConfigurationsResponse configurations = new GetConfigurationsResponse();
+            GetConfigurationsResponse result = new GetConfigurationsResponse();
             fsData data = null;
             Dictionary<string, object> customData = ((GetConfigurationsRequest)req).CustomData;
 
@@ -577,7 +577,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = configurations;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -594,7 +594,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             if (resp.Success)
             {
                 if (((GetConfigurationsRequest)req).SuccessCallback != null)
-                    ((GetConfigurationsRequest)req).SuccessCallback(configurations, customData);
+                    ((GetConfigurationsRequest)req).SuccessCallback(result, customData);
             }
             else
             {
@@ -694,7 +694,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         private void OnAddConfigurationResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            Configuration configuration = new Configuration();
+            Configuration result = new Configuration();
             fsData data = null;
             Dictionary<string, object> customData = ((AddConfigurationRequest)req).CustomData;
 
@@ -706,7 +706,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = configuration;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -723,7 +723,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             if (resp.Success)
             {
                 if (((AddConfigurationRequest)req).SuccessCallback != null)
-                    ((AddConfigurationRequest)req).SuccessCallback(configuration, customData);
+                    ((AddConfigurationRequest)req).SuccessCallback(result, customData);
             }
             else
             {
@@ -786,7 +786,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         private void OnGetConfigurationResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            Configuration configuration = new Configuration();
+            Configuration result = new Configuration();
             fsData data = null;
             Dictionary<string, object> customData = ((GetConfigurationRequest)req).CustomData;
 
@@ -798,7 +798,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = configuration;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -815,7 +815,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             if (resp.Success)
             {
                 if (((GetConfigurationRequest)req).SuccessCallback != null)
-                    ((GetConfigurationRequest)req).SuccessCallback(configuration, customData);
+                    ((GetConfigurationRequest)req).SuccessCallback(result, customData);
             }
             else
             {
@@ -879,7 +879,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         private void OnDeleteConfigurationResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DeleteConfigurationResponse deleteConfigurationResponse = new DeleteConfigurationResponse();
+            DeleteConfigurationResponse result = new DeleteConfigurationResponse();
             fsData data = null;
             Dictionary<string, object> customData = ((DeleteConfigurationRequest)req).CustomData;
 
@@ -891,7 +891,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = deleteConfigurationResponse;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -908,7 +908,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             if (resp.Success)
             {
                 if (((DeleteConfigurationRequest)req).SuccessCallback != null)
-                    ((DeleteConfigurationRequest)req).SuccessCallback(deleteConfigurationResponse, customData);
+                    ((DeleteConfigurationRequest)req).SuccessCallback(result, customData);
             }
             else
             {
@@ -1063,7 +1063,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         private void OnPreviewConfigurationResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            TestDocument testDocument = new TestDocument();
+            TestDocument result = new TestDocument();
             fsData data = null;
             Dictionary<string, object> customData = ((PreviewConfigurationRequest)req).CustomData;
 
@@ -1075,7 +1075,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = testDocument;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -1092,7 +1092,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             if (resp.Success)
             {
                 if (((PreviewConfigurationRequest)req).SuccessCallback != null)
-                    ((PreviewConfigurationRequest)req).SuccessCallback(testDocument, customData);
+                    ((PreviewConfigurationRequest)req).SuccessCallback(result, customData);
             }
             else
             {
@@ -1158,7 +1158,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         private void OnGetCollectionsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            GetCollectionsResponse collections = new GetCollectionsResponse();
+            GetCollectionsResponse result = new GetCollectionsResponse();
             fsData data = null;
             Dictionary<string, object> customData = ((GetCollectionsRequest)req).CustomData;
 
@@ -1170,7 +1170,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = collections;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -1187,7 +1187,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             if (resp.Success)
             {
                 if (((GetCollectionsRequest)req).SuccessCallback != null)
-                    ((GetCollectionsRequest)req).SuccessCallback(collections, customData);
+                    ((GetCollectionsRequest)req).SuccessCallback(result, customData);
             }
             else
             {
@@ -1283,7 +1283,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         private void OnAddCollectionResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            CollectionRef collection = new CollectionRef();
+            CollectionRef result = new CollectionRef();
             fsData data = null;
             Dictionary<string, object> customData = ((AddCollectionRequest)req).CustomData;
 
@@ -1295,7 +1295,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = collection;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -1312,7 +1312,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             if (resp.Success)
             {
                 if (((AddCollectionRequest)req).SuccessCallback != null)
-                    ((AddCollectionRequest)req).SuccessCallback(collection, customData);
+                    ((AddCollectionRequest)req).SuccessCallback(result, customData);
             }
             else
             {
@@ -1375,7 +1375,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         private void OnGetCollectionResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            Collection collection = new Collection();
+            Collection result = new Collection();
             fsData data = null;
             Dictionary<string, object> customData = ((GetCollectionRequest)req).CustomData;
 
@@ -1387,7 +1387,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = collection;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -1404,7 +1404,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             if (resp.Success)
             {
                 if (((GetCollectionRequest)req).SuccessCallback != null)
-                    ((GetCollectionRequest)req).SuccessCallback(collection, customData);
+                    ((GetCollectionRequest)req).SuccessCallback(result, customData);
             }
             else
             {
@@ -1468,7 +1468,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         private void OnDeleteCollectionResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DeleteCollectionResponse deleteCollectionResponse = new DeleteCollectionResponse();
+            DeleteCollectionResponse result = new DeleteCollectionResponse();
             fsData data = null;
             Dictionary<string, object> customData = ((DeleteCollectionRequest)req).CustomData;
 
@@ -1480,7 +1480,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = deleteCollectionResponse;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -1497,7 +1497,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             if (resp.Success)
             {
                 if (((DeleteCollectionRequest)req).SuccessCallback != null)
-                    ((DeleteCollectionRequest)req).SuccessCallback(deleteCollectionResponse, customData);
+                    ((DeleteCollectionRequest)req).SuccessCallback(result, customData);
             }
             else
             {
@@ -1560,7 +1560,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         private void OnGetFieldsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            GetFieldsResponse fields = new GetFieldsResponse();
+            GetFieldsResponse result = new GetFieldsResponse();
             fsData data = null;
             Dictionary<string, object> customData = ((GetFieldsRequest)req).CustomData;
 
@@ -1572,7 +1572,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = fields;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -1589,7 +1589,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             if (resp.Success)
             {
                 if (((GetFieldsRequest)req).SuccessCallback != null)
-                    ((GetFieldsRequest)req).SuccessCallback(fields, customData);
+                    ((GetFieldsRequest)req).SuccessCallback(result, customData);
             }
             else
             {
@@ -1837,7 +1837,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         private void OnAddDocumentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DocumentAccepted doucmentAccepted = new DocumentAccepted();
+            DocumentAccepted result = new DocumentAccepted();
             fsData data = null;
             Dictionary<string, object> customData = ((AddDocumentRequest)req).CustomData;
 
@@ -1849,7 +1849,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = doucmentAccepted;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -1866,7 +1866,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             if (resp.Success)
             {
                 if (((AddDocumentRequest)req).SuccessCallback != null)
-                    ((AddDocumentRequest)req).SuccessCallback(doucmentAccepted, customData);
+                    ((AddDocumentRequest)req).SuccessCallback(result, customData);
             }
             else
             {
@@ -1933,7 +1933,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         private void OnDeleteDocumentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DeleteDocumentResponse deleteDocumentResponse = new DeleteDocumentResponse();
+            DeleteDocumentResponse result = new DeleteDocumentResponse();
             fsData data = null;
             Dictionary<string, object> customData = ((DeleteDocumentRequest)req).CustomData;
 
@@ -1945,7 +1945,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = deleteDocumentResponse;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -1962,7 +1962,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             if (resp.Success)
             {
                 if (((DeleteDocumentRequest)req).SuccessCallback != null)
-                    ((DeleteDocumentRequest)req).SuccessCallback(deleteDocumentResponse, customData);
+                    ((DeleteDocumentRequest)req).SuccessCallback(result, customData);
             }
             else
             {
@@ -2028,7 +2028,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         private void OnGetDocumentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DocumentStatus documentStatus = new DocumentStatus();
+            DocumentStatus result = new DocumentStatus();
             fsData data = null;
             Dictionary<string, object> customData = ((GetDocumentRequest)req).CustomData;
 
@@ -2040,7 +2040,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = documentStatus;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -2057,7 +2057,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             if (resp.Success)
             {
                 if (((GetDocumentRequest)req).SuccessCallback != null)
-                    ((GetDocumentRequest)req).SuccessCallback(documentStatus, customData);
+                    ((GetDocumentRequest)req).SuccessCallback(result, customData);
             }
             else
             {
@@ -2299,7 +2299,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         private void OnUpdateDocumentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DocumentAccepted doucmentAccepted = new DocumentAccepted();
+            DocumentAccepted result = new DocumentAccepted();
             fsData data = null;
             Dictionary<string, object> customData = ((UpdateDocumentRequest)req).CustomData;
 
@@ -2311,7 +2311,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = doucmentAccepted;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -2328,7 +2328,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             if (resp.Success)
             {
                 if (((UpdateDocumentRequest)req).SuccessCallback != null)
-                    ((UpdateDocumentRequest)req).SuccessCallback(doucmentAccepted, customData);
+                    ((UpdateDocumentRequest)req).SuccessCallback(result, customData);
             }
             else
             {
@@ -2421,7 +2421,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         private void OnQueryResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            QueryResponse queryResponse = new QueryResponse();
+            QueryResponse result = new QueryResponse();
             fsData data = null;
             Dictionary<string, object> customData = ((QueryRequest)req).CustomData;
 
@@ -2433,7 +2433,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = queryResponse;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -2450,7 +2450,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             if (resp.Success)
             {
                 if (((QueryRequest)req).SuccessCallback != null)
-                    ((QueryRequest)req).SuccessCallback(queryResponse, customData);
+                    ((QueryRequest)req).SuccessCallback(result, customData);
             }
             else
             {
