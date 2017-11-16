@@ -22,6 +22,8 @@ using IBM.Watson.DeveloperCloud.Utilities;
 using FullSerializer;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using IBM.Watson.DeveloperCloud.Connection;
 
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
@@ -89,7 +91,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _toneAnalyzer.VersionDate = _toneAnalyzerVersionDate;
 
             //  Analyze tone
-            if (!_toneAnalyzer.GetToneAnalyze(OnGetToneAnalyze, _stringToTestTone))
+            if (!_toneAnalyzer.GetToneAnalyze(OnGetToneAnalyze, OnFail, _stringToTestTone))
                 Log.Debug("ExampleToneAnalyzer.GetToneAnalyze()", "Failed to analyze!");
 
             while (!_analyzeToneTested)
@@ -100,11 +102,15 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             yield break;
         }
 
-        private void OnGetToneAnalyze(ToneAnalyzerResponse resp, string data)
+        private void OnGetToneAnalyze(ToneAnalyzerResponse resp, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleToneAnalyzer.OnGetToneAnalyze()", "Tone Analyzer - Analyze Response: {0}", data);
+            Log.Debug("ExampleToneAnalyzer.OnGetToneAnalyze()", "Tone Analyzer - Analyze Response: {0}", customData["json"].ToString());
             Test(resp != null);
             _analyzeToneTested = true;
+        }
+        private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
+        {
+            Log.Error("ExampleRetrieveAndRank.OnFail()", "Error received: {0}", error.ToString());
         }
     }
 }
