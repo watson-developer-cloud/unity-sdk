@@ -84,6 +84,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private bool _readyToContinue = false;
         private bool _deleteAcousticCustomizationsTested = false;
         private bool _deleteCustomizationsTested = false;
+        private bool _deleteAcousticResource = false;
         private float _delayTimeInSeconds = 10f;
 
         public override IEnumerator RunTest()
@@ -146,14 +147,16 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 yield return null;
 
             //  Recognize
-            //Log.Debug("ExampleSpeechToText.Examples()", "Attempting to recognize");
-            //List<string> keywords = new List<string>();
-            //keywords.Add("speech");
-            //_speechToText.KeywordsThreshold = 0.5f;
-            //_speechToText.Keywords = keywords.ToArray();
-            //_speechToText.Recognize(_acousticResourceData, _acousticResourceMimeType, HandleOnRecognize);
-            //while (!_recognizeTested)
-            //    yield return null;
+            Log.Debug("ExampleSpeechToText.Examples()", "Attempting to recognize");
+            List<string> keywords = new List<string>();
+            keywords.Add("speech");
+            _speechToText.KeywordsThreshold = 0.5f;
+            _speechToText.InactivityTimeout = 120;
+            _speechToText.StreamMultipart = false;
+            _speechToText.Keywords = keywords.ToArray();
+            _speechToText.Recognize(HandleOnRecognize, OnFail, _acousticResourceData, _acousticResourceMimeType);
+            while (!_recognizeTested)
+                yield return null;
 
             //  Get models
             Log.Debug("ExampleSpeechToText.Examples()", "Attempting to get models");
@@ -388,11 +391,10 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             Runnable.Run(CheckAcousticCustomizationStatus(_createdAcousticModelId));
             while (!_isAcousticCustomizationReady)
                 yield return null;
-
-            //  Reset acoustic customization
-            Log.Debug("ExampleSpeechToText.Examples()", "Attempting to reset acoustic customization {0}", _createdAcousticModelId);
-            _speechToText.ResetAcousticCustomization(HandleResetAcousticCustomization, OnFail, _createdAcousticModelId);
-            while (!_resetAcousticCustomizationsTested)
+            
+            //  Delete acoustic resource
+            DeleteAcousticResource();
+            while (!_deleteAcousticResource)
                 yield return null;
 
             //  Delay
@@ -401,9 +403,12 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             while (!_readyToContinue)
                 yield return null;
 
-            //  Delete acoustic resource
-            DeleteAcousticResource();
-
+            //  Reset acoustic customization
+            Log.Debug("ExampleSpeechToText.Examples()", "Attempting to reset acoustic customization {0}", _createdAcousticModelId);
+            _speechToText.ResetAcousticCustomization(HandleResetAcousticCustomization, OnFail, _createdAcousticModelId);
+            while (!_resetAcousticCustomizationsTested)
+                yield return null;
+            
             //  Delay
             Log.Debug("ExampleSpeechToText.Examples()", string.Format("Delaying delete acoustic customization for {0} sec", _delayTimeInSeconds));
             Runnable.Run(Delay(_delayTimeInSeconds));
@@ -443,208 +448,206 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             Log.Debug("ExampleSpeechToText.Examples()", "Speech to Text - Get models response: {0}", customData["json"].ToString());
             _modelNameToGet = (result.models[UnityEngine.Random.Range(0, result.models.Length - 1)] as Model).name;
+            Test(result != null);
             _getModelsTested = true;
         }
 
         private void HandleGetModel(Model model, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleSpeechToText.Examples()", "Speech to Text - Get model response: {0}", customData["json"].ToString());
+            Test(model != null);
             _getModelTested = true;
         }
 
-        private void HandleOnRecognize(SpeechRecognitionEvent result)
+        private void HandleOnRecognize(SpeechRecognitionEvent result, Dictionary<string, object> customData)
         {
-            if (result != null && result.results.Length > 0)
-            {
-                foreach (var res in result.results)
-                {
-                    foreach (var alt in res.alternatives)
-                    {
-                        string text = alt.transcript;
-                        Log.Debug("ExampleSpeechToText.HandleOnRecognize()", string.Format("{0} ({1}, {2:0.00})\n", text, res.final ? "Final" : "Interim", alt.confidence));
-
-                        if (res.final)
-                            _recognizeTested = true;
-                    }
-
-                    if (res.keywords_result != null && res.keywords_result.keyword != null)
-                    {
-                        foreach (var keyword in res.keywords_result.keyword)
-                        {
-                            Log.Debug("ExampleSpeechToText.HandleOnRecognize()", "keyword: {0}, confidence: {1}, start time: {2}, end time: {3}", keyword.normalized_text, keyword.confidence, keyword.start_time, keyword.end_time);
-                        }
-                    }
-                }
-            }
+            Log.Debug("ExampleSpeechToText.HandleOnRecognize()", "{0}", customData["json"].ToString());
+            Test(result != null);
+            _recognizeTested = true;
         }
 
         private void HandleGetCustomizations(Customizations customizations, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleSpeechToText.HandleGetCustomizations()", "Speech to Text - Get customizations response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleSpeechToText.HandleGetCustomizations()", "{0}", customData["json"].ToString());
+            Test(customizations != null);
             _getCustomizationsTested = true;
         }
 
         private void HandleCreateCustomization(CustomizationID customizationID, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleSpeechToText.HandleCreateCustomization()", "Speech to Text - Create customization response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleSpeechToText.HandleCreateCustomization()", "{0}", customData["json"].ToString());
             _createdCustomizationID = customizationID.customization_id;
+            Test(customizationID != null);
             _createCustomizationsTested = true;
         }
 
         private void HandleGetCustomization(Customization customization, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleSpeechToText.HandleGetCustomization()", "Speech to Text - Get customization response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleSpeechToText.HandleGetCustomization()", "{0}", customData["json"].ToString());
+            Test(customization != null);
             _getCustomizationTested = true;
         }
 
         private void HandleDeleteCustomization(bool success, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleSpeechToText.HandleDeleteCustomization()", customData["json"].ToString());
+            Log.Debug("ExampleSpeechToText.HandleDeleteCustomization()", "{0}", customData["json"].ToString());
             _createdCustomizationID = default(string);
+            Test(success);
             _deleteCustomizationsTested = true;
         }
 
         private void HandleTrainCustomization(bool success, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleSpeechToText.HandleTrainCustomization()", customData["json"].ToString());
+            Log.Debug("ExampleSpeechToText.HandleTrainCustomization()", "{0}", customData["json"].ToString());
+            Test(success);
             _trainCustomizationTested = true;
         }
 
         //private void HandleUpgradeCustomization(bool success, Dictionary<string, object> customData)
         //{
-        //    if (success)
-        //    {
-        //        Log.Debug("ExampleSpeechToText.HandleUpgradeCustomization()", "Upgrade customization {0}!", customData["json"].ToString());
-        //    }
-        //    else
-        //    {
-        //        Log.Debug("ExampleSpeechToText.HandleUpgradeCustomization()", "Failed to upgrade customization!");
-        //    }
-
+        //     Test(success);
         //    _upgradeCustomizationTested = true;
         //}
 
         private void HandleResetCustomization(bool success, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleSpeechToText.HandleResetCustomization()", customData["json"].ToString());
+            Log.Debug("ExampleSpeechToText.HandleResetCustomization()", "{0}", customData["json"].ToString());
+            Test(success);
             _resetCustomizationTested = true;
         }
 
         private void HandleGetCustomCorpora(Corpora corpora, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleSpeechToText.HandleGetCustomCorpora()", customData["json"].ToString());
+            Log.Debug("ExampleSpeechToText.HandleGetCustomCorpora()", "{0}", customData["json"].ToString());
+            Test(corpora != null);
             _getCustomCorporaTested = true;
         }
 
         private void HandleDeleteCustomCorpus(bool success, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleSpeechToText.HandleDeleteCustomCorpus()", customData["json"].ToString());
+            Log.Debug("ExampleSpeechToText.HandleDeleteCustomCorpus()", "{0}", customData["json"].ToString());
+            Test(success);
             _deleteCustomCorpusTested = true;
         }
 
         private void HandleAddCustomCorpus(bool success, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleSpeechToText.HandleAddCustomCorpus()", customData["json"].ToString());
+            Log.Debug("ExampleSpeechToText.HandleAddCustomCorpus()", "{0}", customData["json"].ToString());
+            Test(success);
             _addCustomCorpusTested = true;
         }
 
         private void HandleGetCustomCorpus(Corpus corpus, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleSpeechToText.HandleGetCustomCorpus()", customData["json"].ToString());
+            Log.Debug("ExampleSpeechToText.HandleGetCustomCorpus()", "{0}", customData["json"].ToString());
+            Test(corpus != null);
             _getCustomCorpusTested = true;
         }
 
         private void HandleGetCustomWords(WordsList wordList, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleSpeechToText.HandleGetCustomWords()", customData["json"].ToString());
+            Log.Debug("ExampleSpeechToText.HandleGetCustomWords()", "{0}", customData["json"].ToString());
+            Test(wordList != null);
             _getCustomWordsTested = true;
         }
 
         private void HandleAddCustomWordsFromPath(bool success, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleSpeechToText.HandleAddCustomWordsFromPath()", customData["json"].ToString());
+            Log.Debug("ExampleSpeechToText.HandleAddCustomWordsFromPath()", "{0}", customData["json"].ToString());
+            Test(success);
             _addCustomWordsFromPathTested = true;
         }
 
         private void HandleAddCustomWordsFromObject(bool success, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleSpeechToText.HandleAddCustomWordsFromObject()", customData["json"].ToString());
+            Log.Debug("ExampleSpeechToText.HandleAddCustomWordsFromObject()", "{0}", customData["json"].ToString());
+            Test(success);
             _addCustomWordsFromObjectTested = true;
         }
 
         private void HandleDeleteCustomWord(bool success, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleSpeechToText.HandleDeleteCustomWord()", customData["json"].ToString());
+            Log.Debug("ExampleSpeechToText.HandleDeleteCustomWord()", "{0}", customData["json"].ToString());
+            Test(success);
             _deleteCustomWordTested = true;
         }
 
         private void HandleGetCustomWord(WordData word, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleSpeechToText.HandleGetCustomWord()", customData["json"].ToString());
+            Log.Debug("ExampleSpeechToText.HandleGetCustomWord()", "{0}", customData["json"].ToString());
+            Test(word != null);
             _getCustomWordTested = true;
         }
 
         private void HandleGetCustomAcousticModels(AcousticCustomizations acousticCustomizations, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleSpeechToText.HandleGetCustomAcousticModels()", customData["json"].ToString());
+            Log.Debug("ExampleSpeechToText.HandleGetCustomAcousticModels()", "{0}", customData["json"].ToString());
+            Test(acousticCustomizations != null);
             _getAcousticCustomizationsTested = true;
         }
 
         private void HandleCreateAcousticCustomization(CustomizationID customizationID, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleSpeechToText.HandleCreateAcousticCustomization()", customData["json"].ToString());
+            Log.Debug("ExampleSpeechToText.HandleCreateAcousticCustomization()", "{0}", customData["json"].ToString());
             _createdAcousticModelId = customizationID.customization_id;
+            Test(customizationID != null);
             _createAcousticCustomizationsTested = true;
         }
 
         private void HandleGetCustomAcousticModel(AcousticCustomization acousticCustomization, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleSpeechToText.HandleGetCustomAcousticModel()", customData["json"].ToString());
+            Log.Debug("ExampleSpeechToText.HandleGetCustomAcousticModel()", "{0}", customData["json"].ToString());
+            Test(acousticCustomization != null);
             _getAcousticCustomizationTested = true;
         }
 
         private void HandleTrainAcousticCustomization(bool success, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleSpeechToText.HandleTrainAcousticCustomization()", customData["json"].ToString());
+            Log.Debug("ExampleSpeechToText.HandleTrainAcousticCustomization()", "{0}", customData["json"].ToString());
+            Test(success);
             _trainAcousticCustomizationsTested = true;
         }
 
         private void HandleGetCustomAcousticResources(AudioResources audioResources, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleSpeechToText.HandleGetCustomAcousticResources()", customData["json"].ToString());
+            Log.Debug("ExampleSpeechToText.HandleGetCustomAcousticResources()", "{0}", customData["json"].ToString());
+            Test(audioResources != null);
             _getAcousticResourcesTested = true;
         }
 
         private void HandleAddAcousticResource(bool success, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleSpeechToText.HandleAddAcousticResource()", customData["json"].ToString());
+            Log.Debug("ExampleSpeechToText.HandleAddAcousticResource()", "{0}", customData["json"].ToString());
+            Test(success);
             _addAcousticResourcesTested = true;
         }
 
         private void HandleGetCustomAcousticResource(AudioListing audioListing, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleSpeechToText.HandleGetCustomAcousticResource()", customData["json"].ToString());
+            Log.Debug("ExampleSpeechToText.HandleGetCustomAcousticResource()", "{0}", customData["json"].ToString());
+            Test(audioListing != null);
             _getAcousticResourceTested = true;
         }
 
         private void HandleResetAcousticCustomization(bool success, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleSpeechToText.HandleResetAcousticCustomization()", customData["json"].ToString());
+            Log.Debug("ExampleSpeechToText.HandleResetAcousticCustomization()", "{0}", customData["json"].ToString());
+            Test(success);
             _resetAcousticCustomizationsTested = true;
         }
 
         private void HandleDeleteAcousticResource(bool success, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleSpeechToText.HandleDeleteAcousticResource()", customData["json"].ToString());
+            Log.Debug("ExampleSpeechToText.HandleDeleteAcousticResource()", "{0}", customData["json"].ToString());
+            Test(success);
+            _deleteAcousticResource = true;
         }
 
         private void HandleDeleteAcousticCustomization(bool success, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleSpeechToText.HandleDeleteAcousticCustomization()", customData["json"].ToString());
-            if (success)
-                _deleteAcousticCustomizationsTested = true;
-            else
-                DeleteAcousticCustomization();
+            Log.Debug("ExampleSpeechToText.HandleDeleteAcousticCustomization()", "{0}", customData["json"].ToString());
+            Test(success);
+            _deleteAcousticCustomizationsTested = true;
         }
 
         private IEnumerator CheckCustomizationStatus(string customizationID, float delay = 0.1f)

@@ -172,13 +172,14 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             foreach (Classifier classifier in classifiers.classifiers)
                 _classifierIds.Add(classifier.classifier_id);
-
+            Test(classifiers != null);
             _getClassifiersTested = true;
         }
 
         private void OnClassify(ClassifyResult result, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleNaturalLanguageClassifier.OnClassify()", "Natural Language Classifier - Classify Response: {0}", customData["json"].ToString());
+            Test(result != null);
             _classifyTested = true;
         }
 
@@ -189,6 +190,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 #if DELETE_TRAINED_CLASSIFIER
             _classifierToDelete = classifier.classifier_id;
 #endif
+            Test(classifier != null);
             _trainClassifierTested = true;
         }
 #endif
@@ -196,6 +198,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnGetClassifier(Classifier classifier, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleNaturalLanguageClassifier.OnGetClassifier()", "Natural Language Classifier - Get Classifier {0}: {1}", classifier.classifier_id, customData["json"].ToString());
+            Test(classifier != null);
 
             //  Get any classifier that is available
             if (!string.IsNullOrEmpty(classifier.status) && classifier.status.ToLower() == "available")
@@ -212,6 +215,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnDeleteTrainedClassifier(bool success, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleNaturalLanguageClassifier.OnDeleteTrainedClassifier()", "Natural Language Classifier - Delete Trained Classifier {0} | response: {1}", _classifierToDelete, customData["json"].ToString());
+            Test(success);
         }
 #endif
 

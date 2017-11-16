@@ -823,17 +823,20 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// only on AudioClips under 4MB once they have been converted into WAV format. Use the StartListening() for continuous
         /// recognition of text.
         /// </summary>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="clip">The AudioClip object.</param>
-        /// <param name="callback">A callback to invoke with the results.</param>
         /// <returns></returns>
-        public bool Recognize(AudioClip clip, OnRecognize callback)
+        public bool Recognize(SuccessCallback<SpeechRecognitionEvent> successCallback, FailCallback failCallback, AudioClip clip, Dictionary<string, object> customData = null)
         {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (clip == null)
                 throw new ArgumentNullException("clip");
-            if (callback == null)
-                throw new ArgumentNullException("callback");
             
-            return Recognize(WaveFile.CreateWAV(clip), "audio/wav", callback);
+            return Recognize(successCallback, failCallback, WaveFile.CreateWAV(clip), "audio/wav", customData);
         }
 
         /// <summary>
@@ -841,24 +844,29 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// only on AudioClips under 4MB once they have been converted into WAV format. Use the StartListening() for continuous
         /// recognition of text.
         /// </summary>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="audioData">The audio data.</param>
         /// <param name="contentType">The content type of the audio data.</param>
-        /// <param name="callback">A callback to invoke with the results.</param>
         /// <returns></returns>
-        public bool Recognize(byte[] audioData, string contentType, OnRecognize callback)
+        public bool Recognize(SuccessCallback<SpeechRecognitionEvent> successCallback, FailCallback failCallback, byte[] audioData, string contentType, Dictionary<string, object> customData = null)
         {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (audioData == null)
                 throw new ArgumentNullException("audioData");
-            if (callback == null)
-                throw new ArgumentNullException("callback");
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/recognize");
             if (connector == null)
                 return false;
 
             RecognizeRequest req = new RecognizeRequest();
-            req.AudioData = audioData;
-            req.Callback = callback;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            req.Timeout = int.MaxValue;
 
             req.Headers["Content-Type"] = contentType;
             if (StreamMultipart)
@@ -899,38 +907,72 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 
         private class RecognizeRequest : RESTConnector.Request
         {
-            public byte[] AudioData { get; set; }
-            public OnRecognize Callback { get; set; }
+            //public byte[] AudioData { get; set; }
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<SpeechRecognitionEvent> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
         };
 
         private void OnRecognizeResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            RecognizeRequest recognizeReq = req as RecognizeRequest;
-            if (recognizeReq == null)
-                throw new WatsonException("Unexpected request type.");
-
             SpeechRecognitionEvent result = null;
+            fsData data = null;
+            Dictionary<string, object> customData = ((RecognizeRequest)req).CustomData;
+
             if (resp.Success)
             {
-                result = ParseRecognizeResponse(resp.Data);
-                if (result == null)
+                try
                 {
-                    Log.Error("SpeechToText.OnRecognizeResponse()", "Failed to parse json response: {0}",
-                        resp.Data != null ? Encoding.UTF8.GetString(resp.Data) : "");
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    result = ParseRecognizeResponse(resp.Data);
+                    if (result == null)
+                    {
+                        Log.Error("SpeechToText.OnRecognizeResponse()", "Failed to parse json response: {0}",
+                            resp.Data != null ? Encoding.UTF8.GetString(resp.Data) : "");
+                    }
+                    else
+                    {
+                        Log.Status("SpeechToText.OnRecognizeResponse()", "Received Recognize Response, Elapsed Time: {0}, Results: {1}",
+                            resp.ElapsedTime, result.results.Length);
+                    }
+
+                    customData.Add("json", data);
                 }
-                else
+                catch(Exception e)
                 {
-                    Log.Status("SpeechToText", "Received Recognize Response, Elapsed Time: {0}, Results: {1}",
-                        resp.ElapsedTime, result.results.Length);
+                    Log.Error("SpeechToText.OnRecognizeResponse()", "OnGetAuthorsResponse Exception: {0}", e.ToString());
+                    resp.Success = false;
                 }
+
             }
             else
             {
                 Log.Error("SpeechToText.OnRecognizeResponse()", "Recognize Error: {0}", resp.Error);
+                resp.Success = false;
             }
 
-            if (recognizeReq.Callback != null)
-                recognizeReq.Callback(result);
+            if (resp.Success)
+            {
+                if (((RecognizeRequest)req).SuccessCallback != null)
+                    ((RecognizeRequest)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((RecognizeRequest)req).FailCallback != null)
+                    ((RecognizeRequest)req).FailCallback(resp.Error, customData);
+            }
         }
 
         private SpeechRecognitionEvent ParseRecognizeResponse(byte[] json)

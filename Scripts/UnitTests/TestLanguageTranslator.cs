@@ -145,6 +145,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnGetModels(TranslationModels models, Dictionary<string, object> customData)
         {
             Log.Debug("TestLanguageTranslator.OnGetModels()", "Language Translator - Get models response: {0}", customData["json"].ToString());
+            Test(models != null);
             _getModelsTested = true;
         }
 
@@ -152,12 +153,14 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         {
             Log.Debug("TestLanguageTranslator.OnCreateModel()", "Language Translator - Create model response: {0}", customData["json"].ToString());
             _customLanguageModelId = model.model_id;
+            Test(model != null);
             _createModelTested = true;
         }
 
         private void OnGetModel(TranslationModel model, Dictionary<string, object> customData)
         {
             Log.Debug("TestLanguageTranslator.OnGetModel()", "Language Translator - Get model response: {0}", customData["json"].ToString());
+            Test(model != null);
             _getModelTested = true;
         }
 
@@ -165,24 +168,28 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         {
             Log.Debug("TestLanguageTranslator.OnDeleteModel()", "Language Translator - Delete model response: success: {0}", customData["json"].ToString());
             _customLanguageModelId = null;
+            Test(deleteModelResult != null);
             _deleteModelTested = true;
         }
 
         private void OnGetTranslation(Translations translation, Dictionary<string, object> customData)
         {
             Log.Debug("TestLanguageTranslator.OnGetTranslation()", "Langauge Translator - Translate Response: {0}", customData["json"].ToString());
+            Test(translation != null);
             _getTranslationTested = true;
         }
 
         private void OnIdentify(IdentifiedLanguages identifiedLanguages, Dictionary<string, object> customData)
         {
             Log.Debug("TestLanguageTranslator.OnIdentify()", "Language Translator - Identify response: {0}", customData["json"].ToString());
+            Test(identifiedLanguages != null);
             _identifyTested = true;
         }
 
         private void OnGetLanguages(Languages languages, Dictionary<string, object> customData)
         {
             Log.Debug("TestLanguageTranslator.OnGetLanguages()", "Language Translator - Get languages response: {0}", customData["json"].ToString());
+            Test(languages != null);
             _getLanguagesTested = true;
         }
 

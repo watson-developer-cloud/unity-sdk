@@ -297,7 +297,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void OnGetClusters(SolrClusterListResponse resp, Dictionary<string, object> customData)
         {
-            Log.Debug("TestRetrieveAndRank.OnGetClusters()", customData["json"].ToString());
+            Log.Debug("TestRetrieveAndRank.OnGetClusters()", "{0}", customData["json"].ToString());
             Test(resp != null);
             _getClustersTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
@@ -305,7 +305,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void OnCreateCluster(SolrClusterResponse resp, Dictionary<string, object> customData)
         {
-            Log.Debug("TestRetrieveAndRank.OnCreateCluster()", customData["json"].ToString());
+            Log.Debug("TestRetrieveAndRank.OnCreateCluster()", "{0}", customData["json"].ToString());
             _clusterToDelete = resp.solr_cluster_id;
             Test(resp != null);
             _createClusterTested = true;
@@ -314,7 +314,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void OnDeleteCluster(bool success, Dictionary<string, object> customData)
         {
-            Log.Debug("TestRetrieveAndRank.OnDeleteCluster()", customData["json"].ToString());
+            Log.Debug("TestRetrieveAndRank.OnDeleteCluster()", "{0}", customData["json"].ToString());
             Test(success);
             _deleteClusterTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
@@ -322,7 +322,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void OnGetCluster(SolrClusterResponse resp, Dictionary<string, object> customData)
         {
-            Log.Debug("TestRetrieveAndRank.OnGetCluster()", customData["json"].ToString());
+            Log.Debug("TestRetrieveAndRank.OnGetCluster()", "{0}", customData["json"].ToString());
             Test(resp != null);
             _getClusterTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
@@ -330,7 +330,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void OnGetClusterConfigs(SolrConfigList resp, Dictionary<string, object> customData)
         {
-            Log.Debug("TestRetrieveAndRank.OnGetClusterConfigs()", customData["json"].ToString());
+            Log.Debug("TestRetrieveAndRank.OnGetClusterConfigs()", "{0}", customData["json"].ToString());
             Test(resp != null);
             _getClusterConfigsTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
@@ -338,7 +338,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void OnDeleteClusterConfig(bool success, Dictionary<string, object> customData)
         {
-            Log.Debug("TestRetrieveAndRank.OnDeleteClusterConfig()", customData["json"].ToString());
+            Log.Debug("TestRetrieveAndRank.OnDeleteClusterConfig()", "{0}", customData["json"].ToString());
             Test(success);
             _deleteClusterConfigTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
@@ -347,7 +347,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnGetClusterConfig(byte[] respData, Dictionary<string, object> customData)
         {
 #if UNITY_EDITOR
-            Log.Debug("TestRetrieveAndRank.OnGetClusterConfig()", customData["json"].ToString());
+            Log.Debug("TestRetrieveAndRank.OnGetClusterConfig()", "{0}", customData["json"].ToString());
 #else
 		Log.Debug("TestRetrieveAndRank.RunTest()", "Not in editor - skipping download.");
 #endif
@@ -358,7 +358,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         //private void OnSaveConfig(bool success, Dictionary<string, object> customData)
         //{
-        //    Log.Debug("TestRetrieveAndRank.OnSaveConfig()", customData["json"].ToString());
+        //    Log.Debug("TestRetrieveAndRank.OnSaveConfig()", "{0}", customData["json"].ToString());
         //Test(success);
         //    _saveConfigTested = true;
         //    Runnable.Run(ReadyToContinue(_waitTime));
@@ -366,7 +366,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void OnUploadClusterConfig(UploadResponse resp, Dictionary<string, object> customData)
         {
-            Log.Debug("TestRetrieveAndRank.OnUploadClusterConfig()", customData["json"].ToString());
+            Log.Debug("TestRetrieveAndRank.OnUploadClusterConfig()", "{0}", customData["json"].ToString());
             Test(resp != null);
             _uploadClusterConfigTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
@@ -374,7 +374,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void OnGetCollections(CollectionsResponse resp, Dictionary<string, object> customData)
         {
-            Log.Debug("TestRetrieveAndRank.OnGetCollections()", customData["json"].ToString());
+            Log.Debug("TestRetrieveAndRank.OnGetCollections()", "{0}", customData["json"].ToString());
             Test(resp != null);
             _getCollectionsTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
@@ -382,7 +382,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void OnCreateCollection(CollectionsResponse resp, Dictionary<string, object> customData)
         {
-            Log.Debug("TestRetrieveAndRank.OnCreateCollection()", customData["json"].ToString());
+            Log.Debug("TestRetrieveAndRank.OnCreateCollection()", "{0}", customData["json"].ToString());
             Test(resp != null);
             _createCollectionTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
@@ -390,7 +390,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void OnDeleteCollection(CollectionsResponse resp, Dictionary<string, object> customData)
         {
-            Log.Debug("TestRetrieveAndRank.OnDeleteCollection()", customData["json"].ToString());
+            Log.Debug("TestRetrieveAndRank.OnDeleteCollection()", "{0}", customData["json"].ToString());
             Test(resp != null);
             _deleteCollectionTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
@@ -398,7 +398,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void OnIndexDocuments(IndexResponse resp, Dictionary<string, object> customData)
         {
-            Log.Debug("TestRetrieveAndRank.OnIndexDocuments()", customData["json"].ToString());
+            Log.Debug("TestRetrieveAndRank.OnIndexDocuments()", "{0}", customData["json"].ToString());
             Test(resp != null);
             _indexDocumentsTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
@@ -406,7 +406,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void OnGetRankers(ListRankersPayload resp, Dictionary<string, object> customData)
         {
-            Log.Debug("TestRetrieveAndRank.OnGetRankers()", customData["json"].ToString());
+            Log.Debug("TestRetrieveAndRank.OnGetRankers()", "{0}", customData["json"].ToString());
             Test(resp != null);
             _getRankersTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
@@ -414,7 +414,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void OnCreateRanker(RankerStatusPayload resp, Dictionary<string, object> customData)
         {
-            Log.Debug("TestRetrieveAndRank.OnCreateRanker()", customData["json"].ToString());
+            Log.Debug("TestRetrieveAndRank.OnCreateRanker()", "{0}", customData["json"].ToString());
             _rankerIdToDelete = resp.ranker_id;
             Test(resp != null);
             _createRankerTested = true;
@@ -423,7 +423,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void OnRank(RankerOutputPayload resp, Dictionary<string, object> customData)
         {
-            Log.Debug("TestRetrieveAndRank.OnRank()", customData["json"].ToString());
+            Log.Debug("TestRetrieveAndRank.OnRank()", "{0}", customData["json"].ToString());
             Test(resp != null);
             _rankTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
@@ -431,7 +431,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void OnGetRanker(RankerStatusPayload resp, Dictionary<string, object> customData)
         {
-            Log.Debug("TestRetrieveAndRank.OnGetRanker()", customData["json"].ToString());
+            Log.Debug("TestRetrieveAndRank.OnGetRanker()", "{0}", customData["json"].ToString());
             Test(resp != null);
             _getRankerTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
@@ -439,7 +439,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void OnDeleteRanker(bool success, Dictionary<string, object> customData)
         {
-            Log.Debug("TestRetrieveAndRank.OnDeleteRanker()", customData["json"].ToString());
+            Log.Debug("TestRetrieveAndRank.OnDeleteRanker()", "{0}", customData["json"].ToString());
             Test(success);
             _deleteRankerTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
@@ -447,7 +447,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void OnSearchStandard(SearchResponse resp, Dictionary<string, object> customData)
         {
-            Log.Debug("TestRetrieveAndRank.OnSearchStandard()", customData["json"].ToString());
+            Log.Debug("TestRetrieveAndRank.OnSearchStandard()", "{0}", customData["json"].ToString());
             Test(resp != null);
             _searchStandardTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));

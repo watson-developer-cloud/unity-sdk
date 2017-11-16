@@ -80,6 +80,7 @@ public class ExampleSpeechToText : MonoBehaviour
     private bool _addAcousticResourcesTested = false;
     private bool _isCustomizationReady = false;
     private bool _isAcousticCustomizationReady = false;
+    private bool _deleteAcousticResource = false;
     private bool _readyToContinue = false;
     private float _delayTimeInSeconds = 10f;
 
@@ -117,14 +118,14 @@ public class ExampleSpeechToText : MonoBehaviour
         keywords.Add("speech");
         _speechToText.KeywordsThreshold = 0.5f;
         _speechToText.Keywords = keywords.ToArray();
-        _speechToText.Recognize(_acousticResourceData, _acousticResourceMimeType, HandleOnRecognize);
+        _speechToText.Recognize(HandleOnRecognize, OnFail, _acousticResourceData, _acousticResourceMimeType);
         while (!_recognizeTested)
             yield return null;
 
         //  Recognize ogg
         _speechToText.StreamMultipart = true;
         Log.Debug("ExampleSpeechToText", "Attempting to recognize ogg: mimeType: {0} | _speechTText.StreamMultipart: {1}", _oggResourceMimeType, _speechToText.StreamMultipart);
-        _speechToText.Recognize(_oggResourceData, _oggResourceMimeType + ";codecs=vorbis", HandleOnRecognizeOgg);
+        _speechToText.Recognize(HandleOnRecognizeOgg, OnFail, _oggResourceData, _oggResourceMimeType + ";codecs=vorbis");
         while (!_recognizeOggTested)
             yield return null;
 
@@ -362,12 +363,6 @@ public class ExampleSpeechToText : MonoBehaviour
         while (!_isAcousticCustomizationReady)
             yield return null;
 
-        //  Reset acoustic customization
-        Log.Debug("ExampleSpeechToText.Examples()", "Attempting to reset acoustic customization {0}", _createdAcousticModelId);
-        _speechToText.ResetAcousticCustomization(HandleResetAcousticCustomization, OnFail, _createdAcousticModelId);
-        while (!_resetAcousticCustomizationsTested)
-            yield return null;
-
         //  Delay
         Log.Debug("ExampleSpeechToText.Examples()", string.Format("Delaying delete acoustic resource for {0} sec", _delayTimeInSeconds));
         Runnable.Run(Delay(_delayTimeInSeconds));
@@ -376,6 +371,14 @@ public class ExampleSpeechToText : MonoBehaviour
 
         //  Delete acoustic resource
         DeleteAcousticResource();
+        while (!_deleteAcousticResource)
+            yield return null;
+
+        //  Reset acoustic customization
+        Log.Debug("ExampleSpeechToText.Examples()", "Attempting to reset acoustic customization {0}", _createdAcousticModelId);
+        _speechToText.ResetAcousticCustomization(HandleResetAcousticCustomization, OnFail, _createdAcousticModelId);
+        while (!_resetAcousticCustomizationsTested)
+            yield return null;
 
         //  Delay
         Log.Debug("ExampleSpeechToText.Examples()", string.Format("Delaying delete acoustic customization for {0} sec", _delayTimeInSeconds));
@@ -423,56 +426,16 @@ public class ExampleSpeechToText : MonoBehaviour
         _getModelTested = true;
     }
 
-    private void HandleOnRecognize(SpeechRecognitionEvent result)
+    private void HandleOnRecognize(SpeechRecognitionEvent result, Dictionary<string, object> customData)
     {
-        if (result != null && result.results.Length > 0)
-        {
-            foreach (var res in result.results)
-            {
-                foreach (var alt in res.alternatives)
-                {
-                    string text = alt.transcript;
-                    Log.Debug("ExampleSpeechToText.HandleOnRecognize()", string.Format("{0} ({1}, {2:0.00})\n", text, res.final ? "Final" : "Interim", alt.confidence));
-
-                    if (res.final)
-                        _recognizeTested = true;
-                }
-
-                if (res.keywords_result != null && res.keywords_result.keyword != null)
-                {
-                    foreach (var keyword in res.keywords_result.keyword)
-                    {
-                        Log.Debug("ExampleSpeechToText.HandleOnRecognize()", "keyword: {0}, confidence: {1}, start time: {2}, end time: {3}", keyword.normalized_text, keyword.confidence, keyword.start_time, keyword.end_time);
-                    }
-                }
-            }
-        }
+        Log.Debug("ExampleSpeechToText.HandleOnRecognize()", "Speech to Text - Get model response: {0}", customData["json"].ToString());
+        _recognizeTested = true;
     }
 
-    private void HandleOnRecognizeOgg(SpeechRecognitionEvent result)
+    private void HandleOnRecognizeOgg(SpeechRecognitionEvent result, Dictionary<string, object> customData)
     {
-        if (result != null && result.results.Length > 0)
-        {
-            foreach (var res in result.results)
-            {
-                foreach (var alt in res.alternatives)
-                {
-                    string text = alt.transcript;
-                    Log.Debug("ExampleSpeechToText", string.Format("{0} ({1}, {2:0.00})\n", text, res.final ? "Final" : "Interim", alt.confidence));
-
-                    if (res.final)
-                        _recognizeOggTested = true;
-                }
-
-                if (res.keywords_result != null && res.keywords_result.keyword != null)
-                {
-                    foreach (var keyword in res.keywords_result.keyword)
-                    {
-                        Log.Debug("ExampleSpeechToText", "keyword: {0}, confidence: {1}, start time: {2}, end time: {3}", keyword.normalized_text, keyword.confidence, keyword.start_time, keyword.end_time);
-                    }
-                }
-            }
-        }
+        Log.Debug("ExampleSpeechToText.HandleOnRecognizeOgg()", "Speech to Text - Get model response: {0}", customData["json"].ToString());
+        _recognizeOggTested = true;
     }
 
     private void HandleGetCustomizations(Customizations customizations, Dictionary<string, object> customData)
@@ -633,6 +596,7 @@ public class ExampleSpeechToText : MonoBehaviour
     private void HandleDeleteAcousticResource(bool success, Dictionary<string, object> customData)
     {
         Log.Debug("ExampleSpeechToText.HandleDeleteAcousticResource()", customData["json"].ToString());
+        _deleteAcousticResource = true;
     }
 
     private void HandleDeleteAcousticCustomization(bool success, Dictionary<string, object> customData)
