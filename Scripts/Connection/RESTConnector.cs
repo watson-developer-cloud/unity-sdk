@@ -27,7 +27,7 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
 
-#if UNITY_EDITOR
+#if !NETFX_CORE
 using System.Net;
 using System.Net.Security;
 #endif
