@@ -30,7 +30,7 @@ using IBM.Watson.DeveloperCloud.Connection;
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
 
-    public class TestPersonalityInsightsV3 : UnitTest
+    public class TestPersonalityInsights : UnitTest
     {
         private string _username = null;
         private string _password = null;

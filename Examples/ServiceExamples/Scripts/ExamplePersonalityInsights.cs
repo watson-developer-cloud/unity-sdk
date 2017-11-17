@@ -23,7 +23,7 @@ using System.Collections;
 using IBM.Watson.DeveloperCloud.Connection;
 using System.Collections.Generic;
 
-public class ExamplePersonalityInsightsV3 : MonoBehaviour
+public class ExamplePersonalityInsights : MonoBehaviour
 {
     private string _username = null;
     private string _password = null;

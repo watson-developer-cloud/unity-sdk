@@ -60,7 +60,7 @@ public class ExampleDocumentConversion : MonoBehaviour
 
     private void OnConvertDocument(ConvertedDocument documentConversionResponse, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleDoucmentConversion.OnConvertDocument()", "DocumentConversion - Convert document Response: {0}", customData["json"].ToString());
+        Log.Debug("ExampleDoucmentConversion.OnConvertDocument()", "DocumentConversion - Convert document Response: {0}", documentConversionResponse.htmlContent);
         _convertDocumentTested = true;
     }
 

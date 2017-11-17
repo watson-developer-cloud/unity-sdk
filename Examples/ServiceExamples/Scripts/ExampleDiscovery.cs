@@ -22,7 +22,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ExampleDiscoveryV1 : MonoBehaviour
+public class ExampleDiscovery : MonoBehaviour
 {
     private string _username = null;
     private string _password = null;
