@@ -98,13 +98,18 @@ private void GetDillema()
 
   problemToSolve.options = listOption.ToArray();
 
-  if(!_tradeoffAnalytics.GetDilemma(OnGetDilemma, problemToSolve, false))
+  if(!_tradeoffAnalytics.GetDilemma(OnGetDilemma, OnFail, problemToSolve, false))
     Log.Debug("ExampleTradeoffAnalytics.GetDilemma()", "Failed to get dillema!");
 }
 
-private void OnGetDillema(DilemmasResponse resp, string data)
+private void OnGetDillema(DilemmasResponse resp, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleTradeoffAnalytics.OnGetDillema()", "Get dillema result: {0}", data);
+  Log.Debug("ExampleTradeoffAnalytics.OnGetDillema()", "Get dillema result: {0}", customData["json"].ToString());
+}
+
+private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
+{
+    Log.Error("ExampleTradeoffAnalytics.OnFail()", "Error received: {0}", error.ToString());
 }
 
 public class TestDataValue : IBM.Watson.DeveloperCloud.Services.TradeoffAnalytics.v1.ApplicationDataValue

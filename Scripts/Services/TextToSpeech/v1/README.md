@@ -53,7 +53,14 @@ void Start()
 }
 ```
 
-
+### Fail handler
+These examples use a common fail handler.
+```cs
+private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
+{
+    Log.Error("ExampleTextToSpeech.OnFail()", "Error received: {0}", error.ToString());
+}
+```
 
 
 
@@ -63,13 +70,13 @@ Retrieves a list of all voices available for use with the service. The informati
 ```cs
 private void GetVoices()
 {
-  if(!_textToSpeech.GetVoices(OnGetVoices))
+  if(!_textToSpeech.GetVoices(OnGetVoices, OnFail))
     Log.Debug("ExampleTextToSpeech.GetVoices()", "Failed to get voices!");
 }
 
-private void OnGetVoices(Voices voices, string data)
+private void OnGetVoices(Voices voices, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleTextToSpeech.OnGetVoices()", "Text to Speech - Get voices response: {0}", data);
+  Log.Debug("ExampleTextToSpeech.OnGetVoices()", "Text to Speech - Get voices response: {0}", customData["json"].ToString());
 }
 ```
 
@@ -83,13 +90,13 @@ Lists information about the specified voice. Specify a customization_id to obtai
 ```cs
 private void GetVoice()
 {
-  if(!_textToSpeech.GetVoice(OnGetVoice, <voicetype>))
+  if(!_textToSpeech.GetVoice(OnGetVoice, OnFail, <voicetype>))
     Log.Debug("ExampleTextToSpeech.GetVoice()", "Failed to get voice!");
 }
 
-private void OnGetVoice(Voice voice, string data)
+private void OnGetVoice(Voice voice, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleTextToSpeech.OnGetVoice()", "Text to Speech - Get voice response: {0}", data);
+  Log.Debug("ExampleTextToSpeech.OnGetVoice()", "Text to Speech - Get voice response: {0}", customData["json"].ToString());
 }
 ```
 
@@ -111,11 +118,11 @@ With either request method, you can provide plain text or text that is annotated
 private void Synthesize()
 {
   _textToSpeech.Voice = <voice-type>;
-  if(!_textToSpeech.ToSpeech(<text-to-synthesize>, OnSynthesize, <use-post>))
+  if(!_textToSpeech.ToSpeech(OnSynthesize, OnFail, <text-to-synthesize>, <use-post>))
     Log.Debug("ExampleTextToSpeech.ToSpeech()", "Failed to synthesize!");
 }
 
-private void OnSynthesize(AudioClip clip, string data)
+private void OnSynthesize(AudioClip clip, Dictionary<string, object> customData)
 {
   PlayClip(clip);
 }
@@ -158,13 +165,13 @@ Returns the phonetic pronunciation for the specified word. You can request the p
 ```cs
 private void GetPronunciation()
 {
-  if(!_textToSpeech.GetPronunciation(OnGetPronunciation, <word>, <voicetype>))
+  if(!_textToSpeech.GetPronunciation(OnGetPronunciation, OnFail, <word>, <voicetype>))
     Log.Debug("ExampleTextToSpeech.GetPronunciation()", "Failed to get pronunication!");
 }
 
-private void OnGetPronunciation(Pronunciation pronunciation, string data)
+private void OnGetPronunciation(Pronunciation pronunciation, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleTextToSpeech.OnGetPronunciation()", "Text to Speech - Get pronunciation response: {0}", data);
+  Log.Debug("ExampleTextToSpeech.OnGetPronunciation()", "Text to Speech - Get pronunciation response: {0}", customData["json"].ToString());
 }
 ```
 
@@ -178,13 +185,13 @@ Creates a new empty custom voice model that is owned by the requesting user.
 ```cs
 private void CreateCustomization()
 {
-  if(!_textToSpeech.CreateCustomization(OnCreateCustomization, <customization-name>, <customization-language>, <customization-description>))
+  if(!_textToSpeech.CreateCustomization(OnCreateCustomization, OnFail, <customization-name>, <customization-language>, <customization-description>))
     Log.Debug("ExampleTextToSpeech.CreateCustomization()", "Failed to create customization!");
 }
 
-private void OnCreateCustomization(CustomizationID customizationID, string data)
+private void OnCreateCustomization(CustomizationID customizationID, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleTextToSpeech.OnCreateCustomization()", "Text to Speech - Create customization response: {0}", data);
+  Log.Debug("ExampleTextToSpeech.OnCreateCustomization()", "Text to Speech - Create customization response: {0}", customData["json"].ToString());
 }
 ```
 
@@ -205,11 +212,11 @@ private void UpdateCustomization()
     name = <customization-name>
   }
 
-  if(!_textToSpeech.UpdateCustomization(OnUpdateCustomization, <customization-id>, _customVoiceUpdate))
+  if(!_textToSpeech.UpdateCustomization(OnUpdateCustomization, OnFail, <customization-id>, _customVoiceUpdate))
     Log.Debug("ExampleTextToSpeech.UpdateCustomization()", "Failed to update customization!");
 }
 
-private void OnUpdateCustomization(bool success, string data)
+private void OnUpdateCustomization(bool success, Dictionary<string, object> customData)
 {
   Log.Debug("ExampleTextToSpeech.OnUpdateCustomization()", "Text to Speech - Update customization response: {0}", success);
 }
@@ -225,13 +232,13 @@ Lists metadata such as the name and description for all custom voice models that
 ```cs
 private void GetCustomizations()
 {
-  if(!_textToSpeech.GetCustomizations(OnGetCustomizations))
+  if(!_textToSpeech.GetCustomizations(OnGetCustomizations, OnFail))
     Log.Debug("ExampleTextToSpeech.GetCustomizations()", "Failed to get customizations!");
 }
 
-private void OnGetCustomizations(Customizations customizations, string data)
+private void OnGetCustomizations(Customizations customizations, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleTextToSpeech.OnGetCustomizations()", "Text to Speech - Get customizations response: {0}", data);
+  Log.Debug("ExampleTextToSpeech.OnGetCustomizations()", "Text to Speech - Get customizations response: {0}", customData["json"].ToString());
 }
 ```
 
@@ -245,13 +252,13 @@ Lists all information about the specified custom voice model. In addition to met
 ```cs
 private void GetCustomization()
 {
-  if(!_textToSpeech.GetCustomization(OnGetCustomization))
+  if(!_textToSpeech.GetCustomization(OnGetCustomization, OnFail))
     Log.Debug("ExampleTextToSpeech.GetCustomization()", "Failed to get customization!");
 }
 
-private void OnGetCustomization(Customization customization, string data)
+private void OnGetCustomization(Customization customization, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleTextToSpeech.OnGetCustomization()", "Text to Speech - Get customization response: {0}", data);
+  Log.Debug("ExampleTextToSpeech.OnGetCustomization()", "Text to Speech - Get customization response: {0}", customData["json"].ToString());
 }
 ```
 
@@ -265,11 +272,11 @@ Deletes the custom voice model with the specified customization_id. Only the own
 ```cs
 private void DeleteCustomization()
 {
-  if(!_textToSpeech.DeleteCustomization(OnDeleteCustomization, <customization-id>))
+  if(!_textToSpeech.DeleteCustomization(OnDeleteCustomization, OnFail, <customization-id>))
     Log.Debug("ExampleTextToSpeech.DeleteCustomization()", "Failed to delete customization!");
 }
 
-private void OnDeleteCustomization(bool success, string data)
+private void OnDeleteCustomization(bool success, Dictionary<string, object> customData)
 {
   Log.Debug("ExampleTextToSpeech.OnDeleteCustomization()", "Text to Speech - Get customization response: {0}", success);
 }
@@ -307,7 +314,7 @@ Words wordsToAddToCustomization = new Words()
     words = wordArrayToAddToCustomization
 };
 
-if (!_textToSpeech.AddCustomizationWords(OnAddCustomizationWords, <customization-id>, _wordsToAddToCustomization))
+if (!_textToSpeech.AddCustomizationWords(OnAddCustomizationWords, OnFail, <customization-id>, _wordsToAddToCustomization))
     Log.Debug("ExampleTextToSpeech.AddCustomizationWords()", "Failed to add words customization!");
 ```
 
@@ -326,13 +333,13 @@ Lists all of the words and their translations for the specified custom voice mod
 ```cs
 private void GetCustomizationWords()
 {
-  if(!_textToSpeech.GetCustomizationWords(OnGetCustomizationWords, <customization-id>))
+  if(!_textToSpeech.GetCustomizationWords(OnGetCustomizationWords, OnFail, <customization-id>))
     Log.Debug("ExampleTextToSpeech.GetCustomizationWords()", "Failed to get customization words!");
 }
 
-private void OnGetCustomizationWords(Words words, string data)
+private void OnGetCustomizationWords(Words words, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleTextToSpeech.OnGetCustomizationWords()", "Text to Speech - Get customization words response: {0}", data);
+  Log.Debug("ExampleTextToSpeech.OnGetCustomizationWords()", "Text to Speech - Get customization words response: {0}", customData["json"].ToString());
 }
 ```
 
@@ -351,11 +358,11 @@ Deletes a single word from the specified custom voice model. Only the owner of a
 ```cs
 private void DeleteCustomizationWord()
 {
-  if(!_textToSpeech.DeleteCustomizationWords(OnDeleteCustomizationWords, <customization-id>, <customization-word>))
+  if(!_textToSpeech.DeleteCustomizationWords(OnDeleteCustomizationWords, OnFail, <customization-id>, <customization-word>))
     Log.Debug("ExampleTextToSpeech.DeleteCustomizationWord()", "Failed to get delete word!");
 }
 
-private void OnDeleteCustomizationWords(bool success, string data)
+private void OnDeleteCustomizationWords(bool success, Dictionary<string, object> customData)
 {
   Log.Debug("ExampleTextToSpeech.OnDeleteCustomizationWords()", "Text to Speech - Delete customization word response: {0}", success);
 }

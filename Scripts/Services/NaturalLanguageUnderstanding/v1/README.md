@@ -20,18 +20,27 @@ void Start()
 }
 ```
 
+### Fail handler
+These examples use a common fail handler.
+```cs
+private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
+{
+    Log.Error("ExampleNaturalLanguageUnderstanding.OnFail()", "Error received: {0}", error.ToString());
+}
+```
+
 ### Analyze
 Analyze features of natural language content.
 ```cs
 private void Analyze()
 {
-  if (!_naturalLanguageUnderstanding.Analyze(OnAnalyze, <parameters>))
+  if (!_naturalLanguageUnderstanding.Analyze(OnAnalyze, OnFail, <parameters>))
       Log.Debug("ExampleNaturalLanguageUnderstanding.Analyze()", "Failed to get models.");
 }
 
-private void OnAnalyze(AnalysisResults resp, string data)
+private void OnAnalyze(AnalysisResults resp, Dictionary<string, object> customData)
 {
-    Log.Debug("ExampleNaturalLanguageUnderstanding.OnAnalyze()", "AnalysisResults: {0}", data);
+    Log.Debug("ExampleNaturalLanguageUnderstanding.OnAnalyze()", "AnalysisResults: {0}", customData["json"].ToString());
 }
 ```
 
@@ -42,13 +51,13 @@ List available custom models.
 ```cs
 private void GetModels()
 {
-  if (!_naturalLanguageUnderstanding.GetModels(OnGetModels))
+  if (!_naturalLanguageUnderstanding.GetModels(OnGetModels, OnFail))
       Log.Debug("ExampleNaturalLanguageUnderstanding.GetModels()", "Failed to get models.");
 }
 
-private void OnGetModels(ListModelsResults resp, string data)
+private void OnGetModels(ListModelsResults resp, Dictionary<string, object> customData)
 {
-    Log.Debug("ExampleNaturalLanguageUnderstanding.OnGetModels()", "ListModelsResult: {0}", data);
+    Log.Debug("ExampleNaturalLanguageUnderstanding.OnGetModels()", "ListModelsResult: {0}", customData["json"].ToString());
 }
 ```
 
@@ -59,11 +68,11 @@ Delete a custom model.
 ```cs
 private void DeleteModel()
 {
-  if (!_naturalLanguageUnderstanding.DeleteModel(OnDeleteModel, <model-id>))
+  if (!_naturalLanguageUnderstanding.DeleteModel(OnDeleteModel, OnFail, <model-id>))
       Log.Debug("ExampleNaturalLanguageUnderstanding.DeleteModel()", "Failed to delete model.");
 }
 
-private void OnDeleteModel(bool success, string data)
+private void OnDeleteModel(bool success, Dictionary<string, object> customData)
 {
     Log.Debug("ExampleNaturalLanguageUnderstanding.OnDeleteModel()", "DeleteModelResult: {0}", success);
 }
