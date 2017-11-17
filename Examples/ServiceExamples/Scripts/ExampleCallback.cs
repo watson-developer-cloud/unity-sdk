@@ -51,12 +51,12 @@ namespace IBM.Watson.DeveloperCloud.Examples
             discovery.VersionDate = "2016-12-01";
             
             //  Call with generic callbacks
-            conversation.Message(OnSuccess, OnMessageFail, _workspaceId, "");
+            conversation.Message(OnSuccess, OnFail, _workspaceId, "");
             discovery.GetEnvironments(OnSuccess, OnFail);
 
             //  Call with sepcific callbacks
-            conversation.Message(OnMessage, OnGetEnvironmentsFail, _workspaceId, "");
-            discovery.GetEnvironments(OnGetEnvironments, OnFail);
+            conversation.Message(OnMessage, OnMessageFail, _workspaceId, "");
+            discovery.GetEnvironments(OnGetEnvironments, OnGetEnvironmentsFail);
         }
 
         //  Generic success callback
