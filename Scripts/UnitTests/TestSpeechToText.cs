@@ -36,7 +36,6 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private fsSerializer _serializer = new fsSerializer();
         //private string _token = "<authentication-token>";
 
-        private AudioClip _audioClip;
         private SpeechToText _speechToText;
 
         private string _modelNameToGet;
@@ -138,8 +137,6 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _speechToText = new SpeechToText(credentials);
             _customCorpusFilePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/theJabberwocky-utf8.txt";
             _customWordsFilePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/test-stt-words.json";
-            _wavFilePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/test-audio.wav";
-            _audioClip = WaveFile.ParseWAV("testClip", File.ReadAllBytes(_wavFilePath));
             _acousticResourceMimeType = Utility.GetMimeType(Path.GetExtension(_acousticResourceUrl));
 
             Runnable.Run(DownloadAcousticResource());

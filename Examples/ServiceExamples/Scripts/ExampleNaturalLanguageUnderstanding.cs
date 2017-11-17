@@ -29,7 +29,6 @@ public class ExampleNaturalLanguageUnderstanding : MonoBehaviour
     private string _username = null;
     private string _password = null;
     private string _url = null;
-    private fsSerializer _serializer = new fsSerializer();
 
     NaturalLanguageUnderstanding _naturalLanguageUnderstanding;
 
